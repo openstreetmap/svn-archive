@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roadsignpreset country="SK">
+<sign icon="A1a.png" id="A1a"  ref="SK:A1a" name="zákruta vpravo" sk.name="zákruta vpravo">
+</sign>
+<sign icon="A1b.png" id="A1b"  ref="SK:A1b" name="zákruta vľavo" sk.name="zákruta vľavo">
+</sign>
+<sign icon="A2a.png" id="A2a"  ref="SK:A2a" name="dvojitá zákruta, prvá vpravo" sk.name="dvojitá zákruta, prvá vpravo">
+</sign>
+<sign icon="A2b.png" id="A2b"  ref="SK:A2b" name="dvojitá zákruta, prvá vľavo" sk.name="dvojitá zákruta, prvá vľavo">
+</sign>
+<sign icon="A3a.png" id="A3a"  ref="SK:A3a" name="nebezpečné klesanie" sk.name="nebezpečné klesanie">
+</sign>
+<sign icon="A3b.png" id="A3b"  ref="SK:A3b" name="nebezpečné stúpanie" sk.name="nebezpečné stúpanie">
+</sign>
+<sign icon="A4a.png" id="A4a"  ref="SK:A4a" name="zúžená vozovka z oboch strán" sk.name="zúžená vozovka z oboch strán">
+</sign>
+<sign icon="A4a_alt.png" id="A4a_alt"  ref="SK:A4a" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A4b.png" id="A4b"  ref="SK:A4b" name="zúžená vozovka sprava" sk.name="zúžená vozovka sprava">
+</sign>
+<sign icon="A4b_alt.png" id="A4b_alt"  ref="SK:A4b" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A4c.png" id="A4c"  ref="SK:A4c" name="zúžená vozovka zľava" sk.name="zúžená vozovka zľava">
+</sign>
+<sign icon="A4c_alt.png" id="A4c_alt"  ref="SK:A4c" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A5.png" id="A5"  ref="SK:A5" name="nerovnosť vozovky" sk.name="nerovnosť vozovky">
+</sign>
+<sign icon="A5_alt.png" id="A5_alt"  ref="SK:A5" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A6.png" id="A6"  ref="SK:A6" name="spomaľovací prah" sk.name="spomaľovací prah">
+</sign>
+<sign icon="A7.png" id="A7"  ref="SK:A7" name="nebezpečná krajnica" sk.name="nebezpečná krajnica">
+</sign>
+<sign icon="A7_alt.png" id="A7_alt"  ref="SK:A7" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A8.png" id="A8"  ref="SK:A8" name="nebezpečenstvo šmyku" sk.name="nebezpečenstvo šmyku">
+</sign>
+<sign icon="A8_alt.png" id="A8_alt"  ref="SK:A8" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A9.png" id="A9"  ref="SK:A9" name="sneh alebo poľadovica" sk.name="sneh alebo poľadovica">
+</sign>
+<sign icon="A10.png" id="A10"  ref="SK:A10" name="hmla" sk.name="hmla">
+</sign>
+<sign icon="A11.png" id="A11"  ref="SK:A11" name="odletujúci štrk" sk.name="odletujúci štrk">
+</sign>
+<sign icon="A11_alt.png" id="A11_alt"  ref="SK:A11" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A12.png" id="A12"  ref="SK:A12" name="svetelné signály" sk.name="svetelné signály">
+</sign>
+<sign icon="A12_alt.png" id="A12_alt"  ref="SK:A12" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A13.png" id="A13"  ref="SK:A13" name="priechod pre chodcov" sk.name="priechod pre chodcov">
+</sign>
+<sign icon="A14.png" id="A14"  ref="SK:A14" name="pozor, chodci" sk.name="pozor, chodci">
+</sign>
+<sign icon="A15.png" id="A15"  ref="SK:A15" name="pozor, deti" sk.name="pozor, deti">
+</sign>
+<sign icon="A16.png" id="A16"  ref="SK:A16" name="pozor, cyklisti" sk.name="pozor, cyklisti">
+  	 <supplementary id="E16d"/> <!-- Priečna jazda cyklistov -->
+</sign>
+<sign icon="A17.png" id="A17"  ref="SK:A17" name="pozor, zvieratá" sk.name="pozor, zvieratá">
+</sign>
+<sign icon="A18.png" id="A18"  ref="SK:A18" name="pozor, zver" sk.name="pozor, zver">
+</sign>
+<sign icon="A18_alt.png" id="A18_alt"  ref="SK:A18" name="pozor, zver" sk.name="pozor, zver">
+</sign>
+<sign icon="A19.png" id="A19"  ref="SK:A19" name="práca na ceste" sk.name="práca na ceste">
+</sign>
+<sign icon="A19_alt.png" id="A19_alt"  ref="SK:A19" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A20.png" id="A20"  ref="SK:A20" name="padajúce kamene" sk.name="padajúce kamene">
+</sign>
+<sign icon="A21.png" id="A21"  ref="SK:A21" name="obojsmerná premávka" sk.name="obojsmerná premávka">
+  	 <supplementary id="E2"/> <!-- Vzdialenosť -->
+  	 <supplementary id="E1"/> <!-- Počet -->
+</sign>
+<sign icon="A21_alt.png" id="A21_alt"  ref="SK:A21" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+  	 <supplementary id="E2"/> <!-- Vzdialenosť -->
+  	 <supplementary id="E1"/> <!-- Počet -->
+</sign>
+<sign icon="A22.png" id="A22"  ref="SK:A22" name="pozor, električka" sk.name="pozor, električka">
+</sign>
+<sign icon="A23.png" id="A23"  ref="SK:A23" name="kolóny" sk.name="kolóny">
+</sign>
+<sign icon="A23_alt.png" id="A23_alt"  ref="SK:A23" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="A24.png" id="A24"  ref="SK:A24" name="tunel" sk.name="tunel">
+</sign>
+<sign icon="A25.png" id="A25"  ref="SK:A25" name="železničné priecestie so závorami" sk.name="železničné priecestie so závorami">
+  	 <supplementary id="E2"/> <!-- Vzdialenosť -->
+</sign>
+<sign icon="A26.png" id="A26"  ref="SK:A26" name="železničné priecestie bez závor" sk.name="železničné priecestie bez závor">
+  	 <supplementary id="E2"/> <!-- Vzdialenosť -->
+</sign>
+<sign icon="A27a.png" id="A27a"  ref="SK:A27a" name="návestná tabuľa ľavá (240 m)" sk.name="návestná tabuľa ľavá (240 m)">
+  	 <supplementary id="E7"/> <!-- Smerová šípka -->
+</sign>
+<sign icon="A27b.png" id="A27b"  ref="SK:A27b" name="návestná tabuľa pravá (240 m)" sk.name="návestná tabuľa pravá (240 m)">
+</sign>
+<sign icon="A28a.png" id="A28a"  ref="SK:A28a" name="návestná tabuľa ľavá (160 m)" sk.name="návestná tabuľa ľavá (160 m)">
+</sign>
+<sign icon="A28b.png" id="A28b"  ref="SK:A28b" name="návestná tabuľa pravá (160 m)" sk.name="návestná tabuľa pravá (160 m)">
+</sign>
+<sign icon="A29a.png" id="A29a"  ref="SK:A29a" name="návestná tabuľa ľavá (80 m)" sk.name="návestná tabuľa ľavá (80 m)">
+</sign>
+<sign icon="A29b.png" id="A29b"  ref="SK:A29b" name="návestná tabuľa pravá (80 m)" sk.name="návestná tabuľa pravá (80 m)">
+  	 <supplementary id="E7"/> <!-- Smerová šípka -->
+</sign>
+<sign icon="A30a.png" id="A30a"  ref="SK:A30a" name="výstražný kríž pre železničné priecestie jednokoľajové" sk.name="výstražný kríž pre železničné priecestie jednokoľajové">
+</sign>
+<sign icon="A30b.png" id="A30b"  ref="SK:A30b" name="výstražný kríž pre železničné priecestie viackoľajové" sk.name="výstražný kríž pre železničné priecestie viackoľajové">
+</sign>
+<sign icon="A31.png" id="A31"  ref="SK:A31" name="pozor, lietadlá" sk.name="pozor, lietadlá">
+</sign>
+<sign icon="A32.png" id="A32"  ref="SK:A32" name="bočný vietor" sk.name="bočný vietor">
+</sign>
+<sign icon="A33.png" id="A33"  ref="SK:A33" name="nehoda" sk.name="nehoda">
+  	 <supplementary id="E4"/> <!-- Dĺžka úseku alebo platnosti -->
+</sign>
+<sign icon="A34.png" id="A34"  ref="SK:A34" name="iné nebezpečenstvo" sk.name="iné nebezpečenstvo">
+</sign>
+<sign icon="A34_alt.png" id="A34_alt"  ref="SK:A34" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="P1.png" id="P1"  ref="SK:P1" name="daj prednosť v jazde" sk.name="daj prednosť v jazde">
+  	 <supplementary id="P13"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="P14"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="P15"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="E2"/> <!-- Vzdialenosť -->
+  	 <supplementary id="E16d"/> <!-- Priečna jazda cyklistov -->
+</sign>
+<sign icon="P2.png" id="P2"  ref="SK:P2" name="stoj, daj prednosť v jazde" sk.name="stoj, daj prednosť v jazde">
+  	 <supplementary id="P13"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="P14"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="P15"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="E16d"/> <!-- Priečna jazda cyklistov -->
+</sign>
+<sign icon="P3.png" id="P3"  ref="SK:P3" name="daj prednosť v jazde električke" sk.name="daj prednosť v jazde električke">
+</sign>
+<sign icon="P4.png" id="P4"  ref="SK:P4" name="križovatka" sk.name="križovatka">
+</sign>
+<sign icon="P5.png" id="P5"  ref="SK:P5" name="križovatka s vedľajšou cestou" sk.name="križovatka s vedľajšou cestou">
+</sign>
+<sign icon="P6.png" id="P6"  ref="SK:P6" name="križovatka s vedľajšou cestou (vzor)" sk.name="križovatka s vedľajšou cestou (vzor)">
+</sign>
+<sign icon="P6_alt.png" id="P6_alt"  ref="SK:P6" name="križovatka s vedľajšou cestou (vzor)" sk.name="križovatka s vedľajšou cestou (vzor)">
+</sign>
+<sign icon="P7.png" id="P7"  ref="SK:P7" name="okružná križovatka" sk.name="okružná križovatka">
+</sign>
+<sign icon="P8.png" id="P8"  ref="SK:P8" name="hlavná cesta" sk.name="hlavná cesta">
+  	 <supplementary id="P13"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="P14"/> <!-- tvar križovatky (vzor) -->
+  	 <supplementary id="P15"/> <!-- tvar križovatky (vzor) -->
+</sign>
+<sign icon="P9.png" id="P9"  ref="SK:P9" name="koniec hlavnej cesty" sk.name="koniec hlavnej cesty">
+</sign>
+<sign icon="P10.png" id="P10"  ref="SK:P10" name="prednosť protiidúcich vozidiel" sk.name="prednosť protiidúcich vozidiel">
+</sign>
+<sign icon="P11.png" id="P11"  ref="SK:P11" name="prednosť pred protiidúcimi vozidlami" sk.name="prednosť pred protiidúcimi vozidlami">
+</sign>
+<sign icon="P12.png" id="P12"  ref="SK:P12" supplementary="yes" name="tvar križovatky (vzor)" sk.name="tvar križovatky (vzor)">
+</sign>
+<sign icon="P13.png" id="P13"  ref="SK:P13" supplementary="yes" name="tvar križovatky (vzor)" sk.name="tvar križovatky (vzor)">
+</sign>
+<sign icon="P14.png" id="P14"  ref="SK:P14" supplementary="yes" name="tvar križovatky (vzor)" sk.name="tvar križovatky (vzor)">
+</sign>
+<sign icon="P15.png" id="P15"  ref="SK:P15" supplementary="yes" name="tvar križovatky (vzor)" sk.name="tvar križovatky (vzor)">
+</sign>
+<sign icon="B1.png" id="B1"  ref="SK:B1" name="zákaz vjazdu všetkých vozidiel (v oboch smeroch)" sk.name="zákaz vjazdu všetkých vozidiel (v oboch smeroch)">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B2.png" id="B2"  ref="SK:B2" name="zákaz vjazdu všetkých vozidiel" sk.name="zákaz vjazdu všetkých vozidiel">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+  	 <supplementary id="E16b"/> <!-- Jazda cyklistov v protismere povolená -->
+</sign>
+<sign icon="B3.png" id="B3"  ref="SK:B3" name="zákaz vjazdu všetkých motorových vozidiel" sk.name="zákaz vjazdu všetkých motorových vozidiel">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B4.png" id="B4"  ref="SK:B4" name="zákaz vjazdu všetkých motorových vozidiel s výnimkou motocyklov bez postranného vozíka" sk.name="zákaz vjazdu všetkých motorových vozidiel s výnimkou motocyklov bez postranného vozíka">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B5.png" id="B5"  ref="SK:B5" name="zákaz vjazdu osobných automobilov" sk.name="zákaz vjazdu osobných automobilov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B6.png" id="B6"  ref="SK:B6" name="zákaz vjazdu nákladných automobilov" sk.name="zákaz vjazdu nákladných automobilov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B7.png" id="B7"  ref="SK:B7" name="zákaz vjazdu autobusov" sk.name="zákaz vjazdu autobusov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B8.png" id="B8"  ref="SK:B8" name="zákaz vjazdu motocyklov" sk.name="zákaz vjazdu motocyklov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B9.png" id="B9"  ref="SK:B9" name="zákaz vjazdu traktorov" sk.name="zákaz vjazdu traktorov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B10.png" id="B10"  ref="SK:B10" name="zákaz vjazdu mopedov" sk.name="zákaz vjazdu mopedov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B11.png" id="B11"  ref="SK:B11" name="zákaz vjazdu bicyklov" sk.name="zákaz vjazdu bicyklov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B12.png" id="B12"  ref="SK:B12" name="zákaz vjazdu jazdcov na koňoch" sk.name="zákaz vjazdu jazdcov na koňoch">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B13.png" id="B13"  ref="SK:B13" name="zákaz vstupu chodcov" sk.name="zákaz vstupu chodcov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B14.png" id="B14"  ref="SK:B14" name="zákaz vstupu korčuliarov" sk.name="zákaz vstupu korčuliarov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B15.png" id="B15"  ref="SK:B15" name="zákaz vjazdu záprahových vozidiel" sk.name="zákaz vjazdu záprahových vozidiel">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B16.png" id="B16"  ref="SK:B16" name="zákaz vjazdu ručných vozíkov" sk.name="zákaz vjazdu ručných vozíkov">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B17.png" id="B17"  ref="SK:B17" name="zákaz vjazdu motorových vozidiel s prívesmi" sk.name="zákaz vjazdu motorových vozidiel s prívesmi">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B18.png" id="B18"  ref="SK:B18" name="zákaz vjazdu vyznačených vozidiel" sk.name="zákaz vjazdu vyznačených vozidiel">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B19.png" id="B19"  ref="SK:B19" name="zákaz jazdy motorových vozidiel vo vzdialenosti kratšej" sk.name="zákaz jazdy motorových vozidiel vo vzdialenosti kratšej">
+</sign>
+<sign icon="B20.png" id="B20"  ref="SK:B20" name="zákaz vjazdu vozidiel alebo súprav vozidiel, ktorých dĺžka presahuje vyznačenú hranicu" sk.name="zákaz vjazdu vozidiel alebo súprav vozidiel, ktorých dĺžka presahuje vyznačenú hranicu">
+       <tag key="car:distance" value="$val"/>
+				       <parameter ident="val" input="textfield" suffix="m" default="70" field_width="2"/>
+</sign>
+<sign icon="B21.png" id="B21"  ref="SK:B21" name="zákaz vjazdu vozidiel prepravujúcich nebezpečné veci" sk.name="zákaz vjazdu vozidiel prepravujúcich nebezpečné veci">
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+</sign>
+<sign icon="B22.png" id="B22"  ref="SK:B22" name="zákaz vjazdu vozidiel prepravujúcich náklad, ktorý môže spôsobiť znečistenie vody" sk.name="zákaz vjazdu vozidiel prepravujúcich náklad, ktorý môže spôsobiť znečistenie vody">
+</sign>
+<sign icon="B23.png" id="B23"  ref="SK:B23" name="zákaz vjazdu vozidiel, ktorých šírka presahuje vyznačenú hranicu" sk.name="zákaz vjazdu vozidiel, ktorých šírka presahuje vyznačenú hranicu">
+       <tag key="maxwidth" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="2"/>
+</sign>
+<sign icon="B24.png" id="B24"  ref="SK:B24" name="zákaz vjazdu vozidiel, ktorých výška presahuje vyznačenú hranicu" sk.name="zákaz vjazdu vozidiel, ktorých výška presahuje vyznačenú hranicu">
+       <tag key="maxheight" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="2"/>
+</sign>
+<sign icon="B25.png" id="B25"  ref="SK:B25" name="zákaz vjazdu vozidiel, ktorých okamžitá hmotnosť presahuje vyznačenú hranicu" sk.name="zákaz vjazdu vozidiel, ktorých okamžitá hmotnosť presahuje vyznačenú hranicu">
+       <tag key="maxweight" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="2"/>
+</sign>
+<sign icon="B26.png" id="B26"  ref="SK:B26" name="zákaz vjazdu vozidiel, ktorých okamžitá hmotnosť pripadajúca na nápravu presahuje vyznačenú hranicu" sk.name="zákaz vjazdu vozidiel, ktorých okamžitá hmotnosť pripadajúca na nápravu presahuje vyznačenú hranicu">
+       <tag key="maxaxleload" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="2"/>
+</sign>
+<sign icon="B27a.png" id="B27a"  ref="SK:B27a" name="zákaz odbočovania vpravo" sk.name="zákaz odbočovania vpravo">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B27b.png" id="B27b"  ref="SK:B27b" name="zákaz odbočovania vľavo" sk.name="zákaz odbočovania vľavo">
+</sign>
+<sign icon="B28.png" id="B28"  ref="SK:B28" name="zákaz otáčania" sk.name="zákaz otáčania">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B29a.png" id="B29a"  ref="SK:B29a" name="zákaz predchádzania" sk.name="zákaz predchádzania">
+</sign>
+<sign icon="B29b.png" id="B29b"  ref="SK:B29b" name="koniec zákazu predchádzania" sk.name="koniec zákazu predchádzania">
+</sign>
+<sign icon="B30a.png" id="B30a"  ref="SK:B30a" name="zákaz predchádzania pre nákladné automobily" sk.name="zákaz predchádzania pre nákladné automobily">
+</sign>
+<sign icon="B30b.png" id="B30b"  ref="SK:B30b" name="koniec zákazu predchádzania pre nákladné automobily" sk.name="koniec zákazu predchádzania pre nákladné automobily">
+</sign>
+<sign icon="B31a.png" id="B31a"  ref="SK:B31a" name="najvyššia dovolená rýchlosť" sk.name="najvyššia dovolená rýchlosť">
+</sign>
+<sign icon="B31b.png" id="B31b"  ref="SK:B31b" name="koniec najvyššej dovolenej rýchlosti" sk.name="koniec najvyššej dovolenej rýchlosti">
+</sign>
+<sign icon="B32a.png" id="B32a"  ref="SK:B32a" name="zákaz zvukových výstražných zariadení" sk.name="zákaz zvukových výstražných zariadení">
+</sign>
+<sign icon="B32b.png" id="B32b"  ref="SK:B32b" name="koniec zákazu zvukových výstražných zariadení" sk.name="koniec zákazu zvukových výstražných zariadení">
+</sign>
+<sign icon="B33.png" id="B33"  ref="SK:B33" name="zákaz státia" sk.name="zákaz státia">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B34.png" id="B34"  ref="SK:B34" name="zákaz zastavenia" sk.name="zákaz zastavenia">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B35.png" id="B35"  ref="SK:B35" name="zákaz státia v nepárnych dňoch" sk.name="zákaz státia v nepárnych dňoch">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B36.png" id="B36"  ref="SK:B36" name="zákaz státia v párnych dňoch" sk.name="zákaz státia v párnych dňoch">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B37.png" id="B37"  ref="SK:B37" name="iný zákaz" sk.name="iný zákaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B37_alt.png" id="B37_alt"  ref="SK:B37" name="iný zákaz" sk.name="iný zákaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B37_alt2.png" id="B37_alt2"  ref="SK:B37" name="iný zákaz" sk.name="iný zákaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B37_alt3.png" id="B37_alt3"  ref="SK:B37" name="iný zákaz" sk.name="iný zákaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+</sign>
+<sign icon="B38.png" id="B38"  ref="SK:B38" name="povinnosť zastaviť vozidlo" sk.name="povinnosť zastaviť vozidlo">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="B38_alt.png" id="B38_alt"  ref="SK:B38" name="povinnosť zastaviť vozidlo" sk.name="povinnosť zastaviť vozidlo">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="B38_alt2.png" id="B38_alt2"  ref="SK:B38" name="povinnosť zastaviť vozidlo" sk.name="povinnosť zastaviť vozidlo">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="B39.png" id="B39"  ref="SK:B39" name="koniec viacerých zákazov" sk.name="koniec viacerých zákazov">
+</sign>
+<sign icon="C1.png" id="C1"  ref="SK:C1" name="prikázaný smer jazdy priamo" sk.name="prikázaný smer jazdy priamo">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+  	 <supplementary id="E16a"/> <!-- Povolený smer jazdy cyklistov -->
+  	 <supplementary id="E7"/> <!-- Smerová šípka -->
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+</sign>
+<sign icon="C2.png" id="C2"  ref="SK:C2" name="prikázaný smer jazdy vpravo" sk.name="prikázaný smer jazdy vpravo">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+  	 <supplementary id="E16a"/> <!-- Povolený smer jazdy cyklistov -->
+  	 <supplementary id="E7"/> <!-- Smerová šípka -->
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+</sign>
+<sign icon="C3.png" id="C3"  ref="SK:C3" name="prikázaný smer jazdy vľavo" sk.name="prikázaný smer jazdy vľavo">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+  	 <supplementary id="E16a"/> <!-- Povolený smer jazdy cyklistov -->
+  	 <supplementary id="E7"/> <!-- Smerová šípka -->
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+</sign>
+<sign icon="C4a.png" id="C4a"  ref="SK:C4a" name="prikázaný smer jazdy vpravo a vľavo" sk.name="prikázaný smer jazdy vpravo a vľavo">
+</sign>
+<sign icon="C4b.png" id="C4b"  ref="SK:C4b" name="prikázaný smer jazdy priamo a vpravo" sk.name="prikázaný smer jazdy priamo a vpravo">
+</sign>
+<sign icon="C4c.png" id="C4c"  ref="SK:C4c" name="prikázaný smer jazdy priamo a vľavo" sk.name="prikázaný smer jazdy priamo a vľavo">
+</sign>
+<sign icon="C5.png" id="C5"  ref="SK:C5" name="prikázaný smer otáčania" sk.name="prikázaný smer otáčania">
+  	 <supplementary id="E12"/> <!-- Dodatková tabuľka s textom  -->
+  	 <supplementary id="E16a"/> <!-- Povolený smer jazdy cyklistov -->
+  	 <supplementary id="E7"/> <!-- Smerová šípka -->
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+</sign>
+<sign icon="C6a.png" id="C6a"  ref="SK:C6a" name="prikázaný smer obchádzania vpravo" sk.name="prikázaný smer obchádzania vpravo">
+</sign>
+<sign icon="C6b.png" id="C6b"  ref="SK:C6b" name="prikázaný smer obchádzania vľavo" sk.name="prikázaný smer obchádzania vľavo">
+</sign>
+<sign icon="C6c.png" id="C6c"  ref="SK:C6c" name="prikázaný smer obchádzania vpravo a vľavo" sk.name="prikázaný smer obchádzania vpravo a vľavo">
+</sign>
+<sign icon="C7.png" id="C7"  ref="SK:C7" name="kruhový objazd" sk.name="kruhový objazd">
+</sign>
+<sign icon="C8.png" id="C8"  ref="SK:C8" name="cestička pre cyklistov" sk.name="cestička pre cyklistov">
+</sign>
+<sign icon="C9.png" id="C9"  ref="SK:C9" name="cestička pre chodcov" sk.name="cestička pre chodcov">
+</sign>
+<sign icon="C10.png" id="C10"  ref="SK:C10" name="cestička pre korčuliarov" sk.name="cestička pre korčuliarov">
+</sign>
+<sign icon="C11.png" id="C11"  ref="SK:C11" name="cestička pre jazdcov na koňoch" sk.name="cestička pre jazdcov na koňoch">
+</sign>
+<sign icon="C12.png" id="C12"  ref="SK:C12" name="cestička pre vyznačených užívateľov" sk.name="cestička pre vyznačených užívateľov">
+</sign>
+<sign icon="C13.png" id="C13"  ref="SK:C13" name="cestička pre vyznačených užívateľov" sk.name="cestička pre vyznačených užívateľov">
+</sign>
+<sign icon="C14.png" id="C14"  ref="SK:C14" name="použiť protisklzové reťaze" sk.name="použiť protisklzové reťaze">
+</sign>
+<sign icon="C15.png" id="C15"  ref="SK:C15" name="najnižšia dovolená rýchlosť" sk.name="najnižšia dovolená rýchlosť">
+</sign>
+<sign icon="C16.png" id="C16"  ref="SK:C16" name="iný príkaz" sk.name="iný príkaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="C16_alt.png" id="C16_alt"  ref="SK:C16" name="iný príkaz" sk.name="iný príkaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="C16_alt2.png" id="C16_alt2"  ref="SK:C16" name="iný príkaz" sk.name="iný príkaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="C16_alt3.png" id="C16_alt3"  ref="SK:C16" name="iný príkaz" sk.name="iný príkaz">
+<!-- !!FIX ME!! treba lepsi tag ako note -->
+       <tag key="note" value="$val"/>
+				       <parameter ident="val" input="textfield" default="" field_width="5"/>
+</sign>
+<sign icon="C17.png" id="C17"  ref="SK:C17" name="rozsvieť svetlá" sk.name="rozsvieť svetlá">
+</sign>
+<sign icon="C18.png" id="C18"  ref="SK:C18" name="koniec príkazu" sk.name="koniec príkazu">
+</sign>
+<sign icon="C19.png" id="C19"  ref="SK:C19" name="prikázaný smer prepravy vyznačených vozidiel a vecí" sk.name="prikázaný smer prepravy vyznačených vozidiel a vecí">
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+  	 <supplementary id="E14"/> <!-- Kategória tunela -->
+</sign>
+<sign icon="C20.png" id="C20"  ref="SK:C20" name="usporiadanie jazdných pruhov" sk.name="usporiadanie jazdných pruhov">
+</sign>
+<sign icon="C20_alt.png" id="C20_alt"  ref="SK:C20" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C21.png" id="C21"  ref="SK:C21" name="usporiadanie jazdných pruhov" sk.name="usporiadanie jazdných pruhov">
+</sign>
+<sign icon="C21_alt.png" id="C21_alt"  ref="SK:C21" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C22a.png" id="C22a"  ref="SK:C22a" name="zvýšenie počtu jazdných pruhov" sk.name="zvýšenie počtu jazdných pruhov">
+</sign>
+<sign icon="C22a_alt.png" id="C22a_alt"  ref="SK:C22a" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C22b.png" id="C22b"  ref="SK:C22b" name="zníženie počtu jazdných pruhov" sk.name="zníženie počtu jazdných pruhov">
+</sign>
+<sign icon="C22b_alt.png" id="C22b_alt"  ref="SK:C22b" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C22c.png" id="C22c"  ref="SK:C22c" name="zvýšenie počtu jazdných pruhov pre pomalé vozidlá" sk.name="zvýšenie počtu jazdných pruhov pre pomalé vozidlá">
+</sign>
+<sign icon="C22c_alt.png" id="C22c_alt"  ref="SK:C22c" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C23a.png" id="C23a"  ref="SK:C23a" name="obmedzenie v jazdných pruhoch" sk.name="obmedzenie v jazdných pruhoch">
+</sign>
+<sign icon="C23a_alt.png" id="C23a_alt"  ref="SK:C23a" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C23b.png" id="C23b"  ref="SK:C23b" name="obmedzenie v jazdných pruhoch" sk.name="obmedzenie v jazdných pruhoch">
+</sign>
+<sign icon="C23b_alt.png" id="C23b_alt"  ref="SK:C23b" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C24a.png" id="C24a"  ref="SK:C24a" name="vyhradený jazdný pruh" sk.name="vyhradený jazdný pruh">
+</sign>
+<sign icon="C24b.png" id="C24b"  ref="SK:C24b" name="koniec vyhradeného jazdného pruhu" sk.name="koniec vyhradeného jazdného pruhu">
+</sign>
+<sign icon="C25.png" id="C25"  ref="SK:C25" name="radenie jazdných pruhov pred križovatkou" sk.name="radenie jazdných pruhov pred križovatkou">
+</sign>
+<sign icon="C25_alt.png" id="C25_alt"  ref="SK:C25" name="ako dočasná dopravná značka" sk.name="ako dočasná dopravná značka">
+</sign>
+<sign icon="C26.png" id="C26"  ref="SK:C26" name="zmena smeru jazdy" sk.name="zmena smeru jazdy">
+</sign>
+<sign icon="C27.png" id="C27"  ref="SK:C27" name="obchádzanie električky" sk.name="obchádzanie električky">
+</sign>
+<sign icon="C28.png" id="C28"  ref="SK:C28" name="zmena smeru jazdy" sk.name="zmena smeru jazdy">
+</sign>
+<sign icon="C29.png" id="C29"  ref="SK:C29" name="zmena smeru jazdy" sk.name="zmena smeru jazdy">
+</sign>
+<sign icon="C30.png" id="C30"  ref="SK:C30" name="striedavé radenie" sk.name="striedavé radenie">
+</sign>
+<sign icon="IP1.png" id="IP1"  ref="SK:IP1" name="okruh" sk.name="okruh">
+</sign>
+<sign icon="IP2.png" id="IP2"  ref="SK:IP2" name="zmena smeru okruhu" sk.name="zmena smeru okruhu">
+</sign>
+<sign icon="IP3a.png" id="IP3a"  ref="SK:IP3a" name="jednosmerná premávka" sk.name="jednosmerná premávka">
+  	 <supplementary id="E16c"/> <!-- Jazda cyklistov v oboch smeroch povolená -->
+</sign>
+<sign icon="IP3a_alt.png" id="IP3a_alt"  ref="SK:IP3a" name="jednosmerná premávka" sk.name="jednosmerná premávka">
+  	 <supplementary id="E16c"/> <!-- Jazda cyklistov v oboch smeroch povolená -->
+</sign>
+<sign icon="IP3b.png" id="IP3b"  ref="SK:IP3b" name="jednosmerná premávka" sk.name="jednosmerná premávka">
+  	 <supplementary id="E16c"/> <!-- Jazda cyklistov v oboch smeroch povolená -->
+</sign>
+<sign icon="IP4.png" id="IP4"  ref="SK:IP4" name="slepá pozemná komunikácia" sk.name="slepá pozemná komunikácia">
+</sign>
+<sign icon="IP5.png" id="IP5"  ref="SK:IP5" name="návesť pred slepou pozemnou komunikáciou" sk.name="návesť pred slepou pozemnou komunikáciou">
+</sign>
+<sign icon="IP5_alt.png" id="IP5_alt"  ref="SK:IP5" name="návesť pred slepou pozemnou komunikáciou" sk.name="návesť pred slepou pozemnou komunikáciou">
+</sign>
+<sign icon="IP6.png" id="IP6"  ref="SK:IP6" name="priechod pre chodcov" sk.name="priechod pre chodcov">
+</sign>
+<sign icon="IP6_alt.png" id="IP6_alt"  ref="SK:IP6" name="priechod pre chodcov" sk.name="priechod pre chodcov">
+</sign>
+<sign icon="IP7.png" id="IP7"  ref="SK:IP7" name="priechod pre cyklistov" sk.name="priechod pre cyklistov">
+</sign>
+<sign icon="IP7_alt.png" id="IP7_alt"  ref="SK:IP7" name="priechod pre cyklistov" sk.name="priechod pre cyklistov">
+</sign>
+<sign icon="IP8.png" id="IP8"  ref="SK:IP8" name="spomaľovací prah" sk.name="spomaľovací prah">
+</sign>
+<sign icon="IP9.png" id="IP9"  ref="SK:IP9" name="podchod alebo nadchod" sk.name="podchod alebo nadchod">
+</sign>
+<sign icon="IP10.png" id="IP10"  ref="SK:IP10" name="odporúčaná rýchlosť" sk.name="odporúčaná rýchlosť">
+</sign>
+<sign icon="IP11.png" id="IP11"  ref="SK:IP11" name="núdzová odstavná plocha" sk.name="núdzová odstavná plocha">
+</sign>
+<sign icon="IP12.png" id="IP12"  ref="SK:IP12" name="parkovisko" sk.name="parkovisko">
+</sign>
+<sign icon="IP13a.png" id="IP13a"  ref="SK:IP13a" name="parkovisko (kolmé státie)" sk.name="parkovisko (kolmé státie)">
+</sign>
+<sign icon="IP13b.png" id="IP13b"  ref="SK:IP13b" name="parkovisko (šikmé státie)" sk.name="parkovisko (šikmé státie)">
+</sign>
+<sign icon="IP13c.png" id="IP13c"  ref="SK:IP13c" name="parkovisko (pozdĺžne státie)" sk.name="parkovisko (pozdĺžne státie)">
+</sign>
+<sign icon="IP14a.png" id="IP14a"  ref="SK:IP14a" name="parkovisko (státie na chodníku kolmé alebo šikmé)" sk.name="parkovisko (státie na chodníku kolmé alebo šikmé)">
+</sign>
+<sign icon="IP14b.png" id="IP14b"  ref="SK:IP14b" name="parkovisko (státie na chodníku pozdĺžne)" sk.name="parkovisko (státie na chodníku pozdĺžne)">
+</sign>
+<sign icon="IP15a.png" id="IP15a"  ref="SK:IP15a" name="parkovisko (čiastočné státie na chodníku kolmé alebo šikmé)" sk.name="parkovisko (čiastočné státie na chodníku kolmé alebo šikmé)">
+</sign>
+<sign icon="IP15b.png" id="IP15b"  ref="SK:IP15b" name="parkovisko (čiastočné státie na chodníku pozdĺžne)" sk.name="parkovisko (čiastočné státie na chodníku pozdĺžne)">
+</sign>
+<sign icon="IP16.png" id="IP16"  ref="SK:IP16" name="vyhradené parkovisko" sk.name="vyhradené parkovisko">
+  	 <supplementary id="E13"/> <!-- Dodatková tabuľka pre vyhradené parkovanie -->
+</sign>
+<sign icon="IP17a.png" id="IP17a"  ref="SK:IP17a" name="platené parkovisko (parkovacie miesta s plateným státím)" sk.name="platené parkovisko (parkovacie miesta s plateným státím)">
+</sign>
+<sign icon="IP17b.png" id="IP17b"  ref="SK:IP17b" name="platené parkovisko (parkovacie miesta s regulovaným státím)" sk.name="platené parkovisko (parkovacie miesta s regulovaným státím)">
+</sign>
+<sign icon="IP18.png" id="IP18"  ref="SK:IP18" name="kryté parkovisko" sk.name="kryté parkovisko">
+</sign>
+<sign icon="IP19.png" id="IP19"  ref="SK:IP19" name="parkovisko P+R" sk.name="parkovisko P+R">
+</sign>
+<sign icon="IP20a.png" id="IP20a"  ref="SK:IP20a" name="stanovište polície" sk.name="stanovište polície">
+</sign>
+<sign icon="IP20b.png" id="IP20b"  ref="SK:IP20b" name="stanovište taxi" sk.name="stanovište taxi">
+</sign>
+<sign icon="IP21a.png" id="IP21a"  ref="SK:IP21a" name="tunel" sk.name="tunel">
+</sign>
+<sign icon="IP21a_alt.png" id="IP21a_alt"  ref="SK:IP21a" name="tunel (s jedným tubusom)" sk.name="tunel (s jedným tubusom)">
+</sign>
+<sign icon="IP21a_alt2.png" id="IP21a_alt2"  ref="SK:IP21a" name="tunel (s názvom)" sk.name="tunel (s názvom)">
+</sign>
+<sign icon="IP21b.png" id="IP21b"  ref="SK:IP21b" name="koniec tunela" sk.name="koniec tunela">
+</sign>
+<sign icon="IP21b_alt.png" id="IP21b_alt"  ref="SK:IP21b" name="koniec tunela (s jedným tubusom)" sk.name="koniec tunela (s jedným tubusom)">
+</sign>
+<sign icon="IP21b_alt2.png" id="IP21b_alt2"  ref="SK:IP21b" name="koniec tunela (s názvom)" sk.name="koniec tunela (s názvom)">
+</sign>
+<sign icon="IP22a.png" id="IP22a"  ref="SK:IP22a" name="Rýchlostná cesta" sk.name="Rýchlostná cesta">
+</sign>
+<sign icon="IP22b.png" id="IP22b"  ref="SK:IP22b" name="Koniec rýchlostnej cesty" sk.name="Koniec rýchlostnej cesty">
+</sign>
+<sign icon="IP23a.png" id="IP23a"  ref="SK:IP23a" name="Diaľnica" sk.name="Diaľnica">
+</sign>
+<sign icon="IP23b.png" id="IP23b"  ref="SK:IP23b" name="Koniec diaľnice" sk.name="Koniec diaľnice">
+</sign>
+<sign icon="IP24a.png" id="IP24a"  ref="SK:IP24a" name="zóna s dopravným obmedzením" sk.name="zóna s dopravným obmedzením">
+</sign>
+<sign icon="IP24b.png" id="IP24b"  ref="SK:IP24b" name="koniec zóny s dopravným obmedzením" sk.name="koniec zóny s dopravným obmedzením">
+</sign>
+<sign icon="IP25a.png" id="IP25a"  ref="SK:IP25a" name="pešia zóna" sk.name="pešia zóna">
+</sign>
+<sign icon="IP25b.png" id="IP25b"  ref="SK:IP25b" name="koniec pešej zóny" sk.name="koniec pešej zóny">
+</sign>
+<sign icon="IP26a.png" id="IP26a"  ref="SK:IP26a" name="školská zóna" sk.name="školská zóna">
+</sign>
+<sign icon="IP26b.png" id="IP26b"  ref="SK:IP26b" name="koniec školskej zóny" sk.name="koniec školskej zóny">
+</sign>
+<sign icon="IP27a.png" id="IP27a"  ref="SK:IP27a" name="zóna s plateným parkovaním" sk.name="zóna s plateným parkovaním">
+</sign>
+<sign icon="IP27b.png" id="IP27b"  ref="SK:IP27b" name="koniec zóny s plateným parkovaním" sk.name="koniec zóny s plateným parkovaním">
+</sign>
+<sign icon="IP28a.png" id="IP28a"  ref="SK:IP28a" name="obytná zóna" sk.name="obytná zóna">
+</sign>
+<sign icon="IP28b.png" id="IP28b"  ref="SK:IP28b" name="koniec obytnej zóny" sk.name="koniec obytnej zóny">
+</sign>
+<sign icon="IP29.png" id="IP29"  ref="SK:IP29" name="úniková zóna" sk.name="úniková zóna">
+</sign>
+<sign icon="IP30.png" id="IP30"  ref="SK:IP30" name="zmena miestnej úpravy" sk.name="zmena miestnej úpravy">
+</sign>
+<sign icon="IP31a.png" id="IP31a"  ref="SK:IP31a" name="hmlové body" sk.name="hmlové body">
+</sign>
+<sign icon="IP31b.png" id="IP31b"  ref="SK:IP31b" name="hmlové body" sk.name="hmlové body">
+</sign>
+<sign icon="IP31c.png" id="IP31c"  ref="SK:IP31c" name="hmlové body" sk.name="hmlové body">
+</sign>
+<sign icon="IP32.png" id="IP32"  ref="SK:IP32" name="bezpečná vzdialenosť" sk.name="bezpečná vzdialenosť">
+</sign>
+<sign icon="IP33a.png" id="IP33a"  ref="SK:IP33a" name="všeobecne najvyššie dovolené rýchlosti" sk.name="všeobecne najvyššie dovolené rýchlosti">
+</sign>
+<sign icon="IP33b.png" id="IP33b"  ref="SK:IP33b" name="všeobecné informácie o povinnosti úhrady" sk.name="všeobecné informácie o povinnosti úhrady">
+</sign>
+<sign icon="IP34a.png" id="IP34a"  ref="SK:IP34a" name="všeobecné informácie o dopravných obmedzeniach" sk.name="všeobecné informácie o dopravných obmedzeniach">
+</sign>
+<sign icon="IP34b.png" id="IP34b"  ref="SK:IP34b" name="všeobecné informácie o dopravných obmedzeniach" sk.name="všeobecné informácie o dopravných obmedzeniach">
+</sign>
+<sign icon="IP34c.png" id="IP34c"  ref="SK:IP34c" name="všeobecné informácie o dopravných obmedzeniach" sk.name="všeobecné informácie o dopravných obmedzeniach">
+</sign>
+<sign icon="IS1a.png" id="IS1a"  ref="SK:IS1a" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS1b.png" id="IS1b"  ref="SK:IS1b" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS2.png" id="IS2"  ref="SK:IS2" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS3.png" id="IS3"  ref="SK:IS3" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS4.png" id="IS4"  ref="SK:IS4" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS5a.png" id="IS5a"  ref="SK:IS5a" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS5b.png" id="IS5b"  ref="SK:IS5b" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS6.png" id="IS6"  ref="SK:IS6" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS7a.png" id="IS7a"  ref="SK:IS7a" name="smerová tabuľa" sk.name="smerová tabuľa">
+</sign>
+<sign icon="IS7b.png" id="IS7b"  ref="SK:IS7b" name="výjazd" sk.name="výjazd">
+</sign>
+<sign icon="IS8.png" id="IS8"  ref="SK:IS8" name="diaľková návesť" sk.name="diaľková návesť">
+</sign>
+<sign icon="IS9.png" id="IS9"  ref="SK:IS9" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS10.png" id="IS10"  ref="SK:IS10" name="návesť pred križovatkou" sk.name="návesť pred križovatkou">
+</sign>
+<sign icon="IS11.png" id="IS11"  ref="SK:IS11" name="návesť pred kultúrnym alebo turistickým cieľom" sk.name="návesť pred kultúrnym alebo turistickým cieľom">
+</sign>
+<sign icon="IS12.png" id="IS12"  ref="SK:IS12" name="návesť pred križovatkou s obmedzením" sk.name="návesť pred križovatkou s obmedzením">
+</sign>
+<sign icon="IS13.png" id="IS13"  ref="SK:IS13" name="návesť pred križovatkou s obmedzením" sk.name="návesť pred križovatkou s obmedzením">
+</sign>
+<sign icon="IS14.png" id="IS14"  ref="SK:IS14" name="návesť pred križovatkou s obmedzením" sk.name="návesť pred križovatkou s obmedzením">
+</sign>
+<sign icon="IS15.png" id="IS15"  ref="SK:IS15" name="návesť pred obchádzkou" sk.name="návesť pred obchádzkou">
+</sign>
+<sign icon="IS16.png" id="IS16"  ref="SK:IS16" name="návesť pred obchádzkou (odklonom)" sk.name="návesť pred obchádzkou (odklonom)">
+</sign>
+<sign icon="IS17a.png" id="IS17a"  ref="SK:IS17a" name="smerová tabuľa (s jedným cieľom)" sk.name="smerová tabuľa (s jedným cieľom)">
+</sign>
+<sign icon="IS17b.png" id="IS17b"  ref="SK:IS17b" name="smerová tabuľa (s jedným cieľom)" sk.name="smerová tabuľa (s jedným cieľom)">
+</sign>
+<sign icon="IS18a.png" id="IS18a"  ref="SK:IS18a" name="smerová tabuľa (s dvomi cieľmi)" sk.name="smerová tabuľa (s dvomi cieľmi)">
+</sign>
+<sign icon="IS18b.png" id="IS18b"  ref="SK:IS18b" name="smerová tabuľa (s dvomi cieľmi)" sk.name="smerová tabuľa (s dvomi cieľmi)">
+</sign>
+<sign icon="IS19a.png" id="IS19a"  ref="SK:IS19a" name="smerová tabuľa pre príjazd k diaľnici" sk.name="smerová tabuľa pre príjazd k diaľnici">
+</sign>
+<sign icon="IS19b.png" id="IS19b"  ref="SK:IS19b" name="smerová tabuľa pre príjazd k diaľnici" sk.name="smerová tabuľa pre príjazd k diaľnici">
+</sign>
+<sign icon="IS20a.png" id="IS20a"  ref="SK:IS20a" name="smerová tabuľa pre príjazd k rýchlostnej ceste" sk.name="smerová tabuľa pre príjazd k rýchlostnej ceste">
+</sign>
+<sign icon="IS20b.png" id="IS20b"  ref="SK:IS20b" name="smerová tabuľa pre príjazd k rýchlostnej ceste" sk.name="smerová tabuľa pre príjazd k rýchlostnej ceste">
+</sign>
+<sign icon="IS21.png" id="IS21"  ref="SK:IS21" name="smerová tabuľa k miestnemu cieľu" sk.name="smerová tabuľa k miestnemu cieľu">
+</sign>
+<sign icon="IS22a.png" id="IS22a"  ref="SK:IS22a" name="smerová tabuľa k inému cieľu" sk.name="smerová tabuľa k inému cieľu">
+</sign>
+<sign icon="IS22b.png" id="IS22b"  ref="SK:IS22b" name="smerová tabuľa k inému cieľu" sk.name="smerová tabuľa k inému cieľu">
+</sign>
+<sign icon="IS23a.png" id="IS23a"  ref="SK:IS23a" name="smerová tabuľa ku kultúrnemu alebo turistickému cieľu" sk.name="smerová tabuľa ku kultúrnemu alebo turistickému cieľu">
+</sign>
+<sign icon="IS23b.png" id="IS23b"  ref="SK:IS23b" name="smerová tabuľa ku komunálnemu cieľu" sk.name="smerová tabuľa ku komunálnemu cieľu">
+</sign>
+<sign icon="IS24.png" id="IS24"  ref="SK:IS24" name="smerová tabuľa ku komunálnemu cieľu" sk.name="smerová tabuľa ku komunálnemu cieľu">
+</sign>
+<sign icon="IS25.png" id="IS25"  ref="SK:IS25" name="smerová tabuľa na vyznačenie obchádzky" sk.name="smerová tabuľa na vyznačenie obchádzky">
+</sign>
+<sign icon="IS26.png" id="IS26"  ref="SK:IS26" name="smerová tabuľa na vyznačenie obchádzky" sk.name="smerová tabuľa na vyznačenie obchádzky">
+</sign>
+<sign icon="IS27.png" id="IS27"  ref="SK:IS27" name="diaľnica" sk.name="diaľnica">
+</sign>
+<sign icon="IS28.png" id="IS28"  ref="SK:IS28" name="rýchlostná cesta" sk.name="rýchlostná cesta">
+</sign>
+<sign icon="IS29.png" id="IS29"  ref="SK:IS29" name="cesta I. triedy" sk.name="cesta I. triedy">
+</sign>
+<sign icon="IS30.png" id="IS30"  ref="SK:IS30" name="cesta II. triedy" sk.name="cesta II. triedy">
+</sign>
+<sign icon="IS31.png" id="IS31"  ref="SK:IS31" name="medzinárodná trasa" sk.name="medzinárodná trasa">
+</sign>
+<sign icon="IS32a.png" id="IS32a"  ref="SK:IS32a" name="kilometrovník" sk.name="kilometrovník">
+</sign>
+<sign icon="IS32b.png" id="IS32b"  ref="SK:IS32b" name="kilometrovník" sk.name="kilometrovník">
+</sign>
+<sign icon="IS32c.png" id="IS32c"  ref="SK:IS32c" name="kilometrovník" sk.name="kilometrovník">
+</sign>
+<sign icon="IS33.png" id="IS33"  ref="SK:IS33" name="hranica kraja" sk.name="hranica kraja">
+</sign>
+<sign icon="IS34.png" id="IS34"  ref="SK:IS34" name="hranica okresu" sk.name="hranica okresu">
+</sign>
+<sign icon="IS35.png" id="IS35"  ref="SK:IS35" name="iný názov" sk.name="iný názov">
+</sign>
+<sign icon="IS36a.png" id="IS36a"  ref="SK:IS36a" name="obec" sk.name="obec">
+</sign>
+<sign icon="IS36b.png" id="IS36b"  ref="SK:IS36b" name="koniec obce" sk.name="koniec obce">
+</sign>
+<sign icon="IS36c.png" id="IS36c"  ref="SK:IS36c" name="miestna časť obce" sk.name="miestna časť obce">
+</sign>
+<sign icon="IS36d.png" id="IS36d"  ref="SK:IS36d" name="koniec miestnej časti obce" sk.name="koniec miestnej časti obce">
+</sign>
+<sign icon="IS37a.png" id="IS37a"  ref="SK:IS37a" name="označenie začiatku obce v jazyku maďarskej menšiny" sk.name="označenie začiatku obce v jazyku maďarskej menšiny">
+</sign>
+<sign icon="IS37b.png" id="IS37b"  ref="SK:IS37b" name="označenie koniec obce v jazyku maďarskej menšiny" sk.name="označenie koniec obce v jazyku maďarskej menšiny">
+</sign>
+<sign icon="IS38.png" id="IS38"  ref="SK:IS38" name="hraničný priechod" sk.name="hraničný priechod">
+</sign>
+<sign icon="IS39.png" id="IS39"  ref="SK:IS39" name="hranica štátu" sk.name="hranica štátu">
+</sign>
+<sign icon="IS40a.png" id="IS40a"  ref="SK:IS40a" name="Smerová tabuľa pre cyklistov (s jedným cieľom)" sk.name="Smerová tabuľa pre cyklistov (s jedným cieľom)">
+</sign>
+<sign icon="IS40b.png" id="IS40b"  ref="SK:IS40b" name="Smerová tabuľa pre cyklistov (s dvoma cieľmi)" sk.name="Smerová tabuľa pre cyklistov (s dvoma cieľmi)">
+</sign>
+<sign icon="IS40c.png" id="IS40c"  ref="SK:IS40c" name="Smerová tabuľa pre cyklistov (s jedným cieľom)" sk.name="Smerová tabuľa pre cyklistov (s jedným cieľom)">
+</sign>
+<sign icon="IS40d.png" id="IS40d"  ref="SK:IS40d" name="Smerová tabuľa pre cyklistov (s dvoma cieľmi)" sk.name="Smerová tabuľa pre cyklistov (s dvoma cieľmi)">
+</sign>
+<sign icon="IS40e.png" id="IS40e"  ref="SK:IS40e" name="Návesť pred križovatkou pre cyklistov" sk.name="Návesť pred križovatkou pre cyklistov">
+</sign>
+<sign icon="IS40f.png" id="IS40f"  ref="SK:IS40f" name="Smerová tabuľa pre cyklistov" sk.name="Smerová tabuľa pre cyklistov">
+</sign>
+<sign icon="IS40g.png" id="IS40g"  ref="SK:IS40g" name="Smerová tabuľa pre cyklistov" sk.name="Smerová tabuľa pre cyklistov">
+</sign>
+<sign icon="IS40h.png" id="IS40h"  ref="SK:IS40h" name="Smerová tabuľa pre cyklistov" sk.name="Smerová tabuľa pre cyklistov">
+</sign>
+<sign icon="IS40i.png" id="IS40i"  ref="SK:IS40i" name="Koniec cyklistickej trasy" sk.name="Koniec cyklistickej trasy">
+</sign>
+<sign icon="E1.png" id="E1"  ref="SK:E1" supplementary="yes" name="Počet" sk.name="Počet">
+</sign>
+<sign icon="E2.png" id="E2"  ref="SK:E2" supplementary="yes" name="Vzdialenosť" sk.name="Vzdialenosť">
+</sign>
+<sign icon="E3.png" id="E3"  ref="SK:E3" supplementary="yes" name="Vzdialenosť" sk.name="Vzdialenosť">
+</sign>
+<sign icon="E4.png" id="E4"  ref="SK:E4" supplementary="yes" name="Dĺžka úseku alebo platnosti" sk.name="Dĺžka úseku alebo platnosti">
+</sign>
+<sign icon="E5a.png" id="E5a"  ref="SK:E5a" supplementary="yes" name="Úsek platnosti" sk.name="Úsek platnosti">
+</sign>
+<sign icon="E5b.png" id="E5b"  ref="SK:E5b" supplementary="yes" name="Úsek platnosti" sk.name="Úsek platnosti">
+</sign>
+<sign icon="E6.png" id="E6"  ref="SK:E6" supplementary="yes" name="Celková hmotnosť" sk.name="Celková hmotnosť">
+</sign>
+<sign icon="E7.png" id="E7"  ref="SK:E7" supplementary="yes" name="Smerová šípka" sk.name="Smerová šípka">
+</sign>
+<sign icon="E8a.png" id="E8a"  ref="SK:E8a" supplementary="yes" name="Začiatok úseku platnosti" sk.name="Začiatok úseku platnosti">
+</sign>
+<sign icon="E8b.png" id="E8b"  ref="SK:E8b" supplementary="yes" name="Priebeh úseku platnosti" sk.name="Priebeh úseku platnosti">
+</sign>
+<sign icon="E8c.png" id="E8c"  ref="SK:E8c" supplementary="yes" name="Koniec úseku platnosti" sk.name="Koniec úseku platnosti">
+</sign>
+<sign icon="E9.png" id="E9"  ref="SK:E9" supplementary="yes" name="Nepriaznivé poveternostné podmienky" sk.name="Nepriaznivé poveternostné podmienky">
+</sign>
+<sign icon="E10.png" id="E10"  ref="SK:E10" supplementary="yes" name="Druh vozidla" sk.name="Druh vozidla">
+</sign>
+<sign icon="E11.png" id="E11"  ref="SK:E11" supplementary="yes" name="Tvar kríženia cesty so železničnou dráhou" sk.name="Tvar kríženia cesty so železničnou dráhou">
+</sign>
+<sign icon="E12.png" id="E12"  ref="SK:E12" supplementary="yes" name="Dodatková tabuľka s textom" sk.name="Dodatková tabuľka s textom">
+</sign>
+<sign icon="E13.png" id="E13"  ref="SK:E13" supplementary="yes" name="Dodatková tabuľka pre vyhradené parkovanie" sk.name="Dodatková tabuľka pre vyhradené parkovanie">
+</sign>
+<sign icon="E14.png" id="E14"  ref="SK:E14" supplementary="yes" name="Kategória tunela" sk.name="Kategória tunela">
+</sign>
+<sign icon="E15.png" id="E15"  ref="SK:E15" name="Dodatková tabuľka na označenie vyhradeného parkovacieho miesta pre osobu so zdravotným postihnutím" sk.name="Dodatková tabuľka na označenie vyhradeného parkovacieho miesta pre osobu so zdravotným postihnutím">
+</sign>
+<sign icon="E16a.png" id="E16a"  ref="SK:E16a" name="Povolený smer jazdy cyklistov" sk.name="Povolený smer jazdy cyklistov">
+</sign>
+<sign icon="E16b.png" id="E16b"  ref="SK:E16b" name="Jazda cyklistov v protismere povolená" sk.name="Jazda cyklistov v protismere povolená">
+</sign>
+<sign icon="E16c.png" id="E16c"  ref="SK:E16c" name="Jazda cyklistov v oboch smeroch povolená" sk.name="Jazda cyklistov v oboch smeroch povolená">
+</sign>
+<sign icon="E16d.png" id="E16d"  ref="SK:E16d" name="Priečna jazda cyklistov" sk.name="Priečna jazda cyklistov">
+</sign>
+<sign icon="II1a.png" id="II1a"  ref="SK:II1a" name="Telefón núdzového volania" sk.name="Telefón núdzového volania">
+</sign>
+<sign icon="II1b.png" id="II1b"  ref="SK:II1b" name="Núdzové volanie" sk.name="Núdzové volanie">
+</sign>
+<sign icon="II2.png" id="II2"  ref="SK:II2" name="Telefón" sk.name="Telefón">
+</sign>
+<sign icon="II3.png" id="II3"  ref="SK:II3" name="Hasiaci prístroj" sk.name="Hasiaci prístroj">
+</sign>
+<sign icon="II4.png" id="II4"  ref="SK:II4" name="Prvá pomoc" sk.name="Prvá pomoc">
+</sign>
+<sign icon="II5.png" id="II5"  ref="SK:II5" name="Nemocnica" sk.name="Nemocnica">
+</sign>
+<sign icon="II6a.png" id="II6a"  ref="SK:II6a" name="Informácie" sk.name="Informácie">
+</sign>
+<sign icon="II6b.png" id="II6b"  ref="SK:II6b" name="Rádio (vzor)" sk.name="Rádio (vzor)">
+</sign>
+<sign icon="II7a.png" id="II7a"  ref="SK:II7a" name="Zastávka autobusu" sk.name="Zastávka autobusu">
+</sign>
+<sign icon="II7b.png" id="II7b"  ref="SK:II7b" name="Zastávka trolejbusu" sk.name="Zastávka trolejbusu">
+</sign>
+<sign icon="II7c.png" id="II7c"  ref="SK:II7c" name="Zastávka električky" sk.name="Zastávka električky">
+</sign>
+<sign icon="II8a.png" id="II8a"  ref="SK:II8a" name="Čerpacia stanica" sk.name="Čerpacia stanica">
+</sign>
+<sign icon="II8b.png" id="II8b"  ref="SK:II8b" name="Čerpacia stanica skvapalneného ropného plynu (LPG)" sk.name="Čerpacia stanica skvapalneného ropného plynu (LPG)">
+</sign>
+<sign icon="II8c.png" id="II8c"  ref="SK:II8c" name="Čerpacia stanica stlačeného prírodného plynu (CNG)" sk.name="Čerpacia stanica stlačeného prírodného plynu (CNG)">
+</sign>
+<sign icon="II9.png" id="II9"  ref="SK:II9" name="Opraváreň" sk.name="Opraváreň">
+</sign>
+<sign icon="II10.png" id="II10"  ref="SK:II10" name="Hotel alebo motel" sk.name="Hotel alebo motel">
+</sign>
+<sign icon="II11.png" id="II11"  ref="SK:II11" name="Reštaurácia" sk.name="Reštaurácia">
+</sign>
+<sign icon="II12.png" id="II12"  ref="SK:II12" name="Občerstvenie" sk.name="Občerstvenie">
+</sign>
+<sign icon="II13.png" id="II13"  ref="SK:II13" name="WC" sk.name="WC">
+</sign>
+<sign icon="II14.png" id="II14"  ref="SK:II14" name="Odpočívadlo" sk.name="Odpočívadlo">
+</sign>
+<sign icon="II15a.png" id="II15a"  ref="SK:II15a" name="Táborisko pre stany" sk.name="Táborisko pre stany">
+</sign>
+<sign icon="II15b.png" id="II15b"  ref="SK:II15b" name="Táborisko pre obytné prívesy" sk.name="Táborisko pre obytné prívesy">
+</sign>
+<sign icon="II15c.png" id="II15c"  ref="SK:II15c" name="Táborisko pre stany a obytné prívesy" sk.name="Táborisko pre stany a obytné prívesy">
+</sign>
+<sign icon="II16.png" id="II16"  ref="SK:II16" name="Pláž alebo kúpalisko" sk.name="Pláž alebo kúpalisko">
+</sign>
+<sign icon="II17a.png" id="II17a"  ref="SK:II17a" name="Lyžiarsky vlek" sk.name="Lyžiarsky vlek">
+</sign>
+<sign icon="II17b.png" id="II17b"  ref="SK:II17b" name="Sedačková lanovka" sk.name="Sedačková lanovka">
+</sign>
+<sign icon="II17c.png" id="II17c"  ref="SK:II17c" name="Kabínková lanovka" sk.name="Kabínková lanovka">
+</sign>
+<sign icon="II18a.png" id="II18a"  ref="SK:II18a" name="Odpočívadlo s objektmi služieb (vzor)" sk.name="Odpočívadlo s objektmi služieb (vzor)">
+</sign>
+<sign icon="II18b.png" id="II18b"  ref="SK:II18b" name="Odpočívadlo s objektmi služieb (vzor)" sk.name="Odpočívadlo s objektmi služieb (vzor)">
+</sign>
+<sign icon="II18c.png" id="II18c"  ref="SK:II18c" name="Odpočívadlo s objektmi služieb (vzor)" sk.name="Odpočívadlo s objektmi služieb (vzor)">
+</sign>
+<sign icon="II19a.png" id="II19a"  ref="SK:II19a" name="Núdzový východ" sk.name="Núdzový východ">
+</sign>
+<sign icon="II19b.png" id="II19b"  ref="SK:II19b" name="Núdzový východ" sk.name="Núdzový východ">
+</sign>
+<sign icon="II20a.png" id="II20a"  ref="SK:II20a" name="Úniková cesta (vzor)" sk.name="Úniková cesta (vzor)">
+</sign>
+<sign icon="II20b.png" id="II20b"  ref="SK:II20b" name="Úniková cesta (vzor)" sk.name="Úniková cesta (vzor)">
+</sign>
+<sign icon="II20c.png" id="II20c"  ref="SK:II20c" name="Úniková cesta (vzor)" sk.name="Úniková cesta (vzor)">
+</sign>
+<sign icon="Z9.png" id="Z9"  ref="SK:Z9" name="Ukazovateľ smeru a sily bočného vetra" sk.name="Ukazovateľ smeru a sily bočného vetra">
+</sign>
+<sign icon="Z10.png" id="Z10"  ref="SK:Z10" name="Varovná tabuľa" sk.name="Varovná tabuľa">
+</sign>
+<sign icon="Z11a.png" id="Z11a"  ref="SK:Z11a" name="Elektronické panely na premenné značky" sk.name="Elektronické panely na premenné značky">
+</sign>
+<sign icon="Z11a_alt.png" id="Z11a_alt"  ref="SK:Z11a_alt" name="Elektronické panely na premenné značky" sk.name="Elektronické panely na premenné značky">
+</sign>
+<sign icon="Z11a_alt2.png" id="Z11a_alt2"  ref="SK:Z11a_alt2" name="Elektronické panely na premenné značky" sk.name="Elektronické panely na premenné značky">
+</sign>
+<sign icon="Z11a_alt3.png" id="Z11a_alt3"  ref="SK:Z11a_alt3" name="Elektronické panely na premenné značky" sk.name="Elektronické panely na premenné značky">
+</sign>
+<sign icon="Z11b.png" id="Z11b"  ref="SK:Z11b" name="Elektromechanické panely na premenné značky" sk.name="Elektromechanické panely na premenné značky">
+</sign>
+<sign icon="Z11b_alt.png" id="Z11b_alt"  ref="SK:Z11b_alt" name="Elektromechanické panely na premenné značky" sk.name="Elektromechanické panely na premenné značky">
+</sign>
+<sign icon="Z11b_alt2.png" id="Z11b_alt2"  ref="SK:Z11b_alt2" name="Elektromechanické panely na premenné značky" sk.name="Elektromechanické panely na premenné značky">
+</sign>
+<sign icon="Z11b_alt3.png" id="Z11b_alt3"  ref="SK:Z11b_alt3" name="Elektromechanické panely na premenné značky" sk.name="Elektromechanické panely na premenné značky">
+</sign>
+<sign icon="Z12.png" id="Z12"  ref="SK:Z12" name="Elektronické panely na premenné prevádzkové informácie" sk.name="Elektronické panely na premenné prevádzkové informácie">
+</sign>
+<sign icon="Z12_alt.png" id="Z12_alt"  ref="SK:Z12_alt" name="Elektronické panely na premenné prevádzkové informácie" sk.name="Elektronické panely na premenné prevádzkové informácie">
+</sign>
+<sign icon="Z12_alt2.png" id="Z12_alt2"  ref="SK:Z12_alt2" name="Elektronické panely na premenné prevádzkové informácie" sk.name="Elektronické panely na premenné prevádzkové informácie">
+</sign>
+<sign icon="V5b.png" id="V5b"  ref="SK:V5b" name="Priečna súvislá čiara so symbolom “Daj prednos v jazde!“" sk.name="Priečna súvislá čiara so symbolom “Daj prednos v jazde!“">
+       <tag key="highway" value="give_way"/>
+</sign>
+<sign icon="V5c.png" id="V5c"  ref="SK:V5c" name="Priečna súvislá čiara s nápisom “STOP“" sk.name="Priečna súvislá čiara s nápisom “STOP“">
+       <tag key="highway" value="stop"/>
+</sign>
+<sign icon="V6a.png" id="V6a"  ref="SK:V6a" name="Priechod pre chodcov" sk.name="Priechod pre chodcov">
+       <tag key="highway" value="crossing"/>
+</sign>
+<sign icon="V6b.png" id="V6b"  ref="SK:V6b" name="Priechod pre chodcov s vodiacim pásom pre nevidiacich" sk.name="Priechod pre chodcov s vodiacim pásom pre nevidiacich">
+       <tag key="highway" value="corssing"/>
+       <tag key="tactile_paving" value="yes"/>
+</sign>
+<sign icon="V7.png" id="V7"  ref="SK:V7" name="Priechod pre cyklistov" sk.name="Priechod pre cyklistov">
+</sign>
+<sign icon="V10a.png" id="V10a"  ref="SK:V10a" name="Parkovacie miesta s kolmým státím" sk.name="Parkovacie miesta s kolmým státím">
+</sign>
+<sign icon="V10b.png" id="V10b"  ref="SK:V10b" name="Parkovacie miesta so šikmým státím" sk.name="Parkovacie miesta so šikmým státím">
+</sign>
+<sign icon="V10c.png" id="V10c"  ref="SK:V10c" name="Parkovacie miesta s pozdĺžným státím" sk.name="Parkovacie miesta s pozdĺžným státím">
+</sign>
+<sign icon="V10d.png" id="V10d"  ref="SK:V10d" name="Parkovacie miesta s vyhradeným státím" sk.name="Parkovacie miesta s vyhradeným státím">
+</sign>
+<sign icon="V10e.png" id="V10e"  ref="SK:V10e" name="Stanovište TAXI" sk.name="Stanovište TAXI">
+</sign>
+<sign icon="V11a.png" id="V11a"  ref="SK:V11a" name="Zastávka autobusu, trolejbusu a električky" sk.name="Zastávka autobusu, trolejbusu a električky">
+</sign>
+<sign icon="V12a.png" id="V12a"  ref="SK:V12a" name="Žltá kľukatá čiara" sk.name="Žltá kľukatá čiara">
+</sign>
+<sign icon="V12b.png" id="V12b"  ref="SK:V12b" name="Žltá súvislá čiara" sk.name="Žltá súvislá čiara">
+</sign>
+<sign icon="V12c.png" id="V12c"  ref="SK:V12c" name="Žltá prerušovaná čiara" sk.name="Žltá prerušovaná čiara">
+</sign>
+<sign icon="V15.png" id="V15"  ref="SK:V15" name="Bezpečná vzdialenosť" sk.name="Bezpečná vzdialenosť">
+</sign>
+<sign icon="V16.png" id="V16"  ref="SK:V16" name="Optická psychologická brzda" sk.name="Optická psychologická brzda">
+</sign>
+</roadsignpreset>

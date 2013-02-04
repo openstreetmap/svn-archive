@@ -1,0 +1,1881 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Author: keltoi (artmaz@go2.pl)
+-->
+<roadsignpreset country="PL">
+
+<sign ref="PL:B-1" name="All vehicles prohibited" pl.name="zakaz ruchu w obu kierunkach"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu na drodze wszelkich pojazdów, kolumn pieszych oraz jeźdźców i poganiaczy.;Pod znakiem mogą być umieszczone tabliczki;;T-22 'tabliczka wskazująca, że znak nie dotyczy rowerów jednośladowych',;jeżeli dopuszcza się inne odstępstwa od stosowania się do znaku B-1, na tabliczce pod znakiem umieszcza się właściwą informację o treści 'Nie dotyczy...'.;;Odmiany B-1:;Po odpowiedniej zmianie znaku może, zakazywać ruchu w obu kierunkach w określonych przepisach w innym celu. Zasady zakazu ruchu w obu kierunkach w każdym przypadku są takie same lecz dla określonych przepisów, (link zewnętrzny).;;;Znak;Informacja;;"
+	>
+	<tag key="vehicle" value="no"/>
+	<supplementary id="PL:T-22"/>
+</sign>
+
+<sign ref="PL:B-2" name="no entry - oneway exit" pl.name="zakaz wjazdu"
+	long_name=""
+	pl.long_name="Znak zakazuje wjazdu na drogę lub jezdnię od strony jego umieszczenia pojazdów, kolumn pieszych oraz jeźdźców i poganiaczy.;Umieszczona pod znakiem tabliczka T-22 'tabliczka wskazująca, że znak nie dotyczy rowerów jednośladowych' wskazuje, że znak nie dotyczy rowerów jednośladowych, gdy jest dla nich wyznaczony pas ruchu.;Często stosowany na drogach i jezdniach jednokierunkowych do wyznaczania kierunku ruchu. Znak może być także stosowany na drogach dwukierunkowych w celu zabronienia wjazdu na tę drogę na danym skrzyżowaniu.;;"
+	wiki="Key:oneway"
+	>
+	<tag key="oneway" value="-1"/>
+	<supplementary id="PL:T-22"/>
+</sign>
+
+<sign ref="PL:B-3" name="Motorcars prohibited" pl.name="zakaz wjazdu pojazdów silnikowych, z wyjątkiem motocykli jednośladowych"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów silnikowych, nie dotyczy motocykli jednośladowych. Stosowany na odcinkach dróg o niedostatecznej szerokości lub nośności, gdzie ruch pojazdów silnikowych wielośladowy (w tym motocykli z przyczepą) nie może być dopuszczony.;"
+	wiki="Key:motorcar"
+	>
+	<tag key="motorcar" value="no"/>
+</sign>
+
+<sign ref="PL:B-3a" name="zakaz wjazdu autobusów" pl.name="zakaz wjazdu autobusów"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu autobusów. Stosowany w celu wyeliminowania ruchu autobusów z obszarów, gdzie duża ich liczba może powodować zakłócenia ruchu innych pojazdów.;"
+	wiki="Key:psv"
+	>
+	<tag key="psv" value="no"/>
+</sign>
+
+<sign ref="PL:B-4" name="Motorcycles prohibited" pl.name="zakaz wjazdu motocykli"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu motocykli. Stosowany na drogach, na których trzeba ograniczyć hałas wytwarzany przez motocykle, np. w pobliżu szpitali.;"
+	>
+	<tag key="motorcycle" value="no"/>
+</sign>
+
+<sign ref="PL:B-5" name="Heavy goods vehicles prohibited" pl.name="zakaz wjazdu samochodów ciężarowych"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu:;;samochodów ciężarowych o dopuszczalnej masie całkowitej przekraczającej 3,5 t,;ciągników samochodowych,;pojazdów specjalnych i używanych do celów specjalnych o dopuszczalnej masie całkowitej przekraczającej 3,5 t,;ciągników rolniczych,;pojazdów wolnobieżnych.;;Jeżeli znak dotyczy pojazdów o innej niż 3,5 t dopuszczalnej masie całkowitej, wówczas na znaku lub na tabliczce podaje się określoną wartość.;Odmiany B-5:;;;Znak;Informacja;;"
+	wiki="Key:hgv"
+	>
+	<tag key="hgv" value="no"/>
+</sign>
+
+<sign ref="PL:B-5a[$val]" id="PL:B-5a" name="zakaz wjazdu samochodów ciężarowych o określonej masie" pl.name="zakaz wjazdu samochodów ciężarowych o określonej masie"
+	>
+	<tag key="maxweight:hgv" value="$val"/>
+	<parameter ident="val" input="textfield" default="6" suffix="t" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-6" name="zakaz wjazdu ciągników rolniczych" pl.name="zakaz wjazdu ciągników rolniczych"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu ciągników rolniczych i pojazdów wolnobieżnych. Stosowany na ulicach, na których występuje duże natężenie ruchu, a pojazdy wolnobieżne mogą powodować tamowanie ruchu.;"
+	>
+</sign>
+
+<sign ref="PL:B-7" name="zakaz wjazdu pojazdów silnikowych z przyczepą" pl.name="zakaz wjazdu pojazdów silnikowych z przyczepą"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów z przyczepą. Nie dotyczy pojazdów z przyczepą jednoosiową lub naczepą. Pod znakiem może być umieszczana tabliczka z wartością dopuszczalnej masy całkowitej przyczepy. Stosowany przy niekorzystnych warunkach drogowych, np. spadkach podłużnych, ostrych skrętach.;Odmiany B-7:;;;Znak;Informacja;;"
+	wiki="Key:articulated"
+	>
+	<tag key="articulated" value="no"/>
+</sign>
+
+<sign ref="PL:B-7a[$val]" id="PL:B-7a" name="zakaz wjazdu pojazdów silnikowych z przyczepą o określonej masie" pl.name="zakaz wjazdu pojazdów silnikowych z przyczepą o określonej masie"
+	wiki="Key:maxweight:articulated"
+	>
+	<tag key="maxweight:articulated" value="$val"/>
+	<parameter ident="val" input="textfield" default="5" suffix="t" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-8" name="horse drawn" pl.name="zakaz wjazdu pojazdów zaprzęgowych"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów zaprzęgowych, a także jeźdźców i poganiaczy. Stosowany na drogach, na których występuje duże natężenie ruchu, gdzie ruch pojazdów zaprzęgowych może powodować tamowanie ruchu.;"
+	wiki="Key:horse_drawn"
+	>
+	<tag key="horse_drawn" value="no"/>
+</sign>
+
+<sign ref="PL:B-9" name="Bicycles prohibited" pl.name="zakaz wjazdu rowerów"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu zarówno na jezdni i poboczu rowerów i wózków rowerowych. Stosowany na drogach o dużym natężeniu ruchu lub dużej dopuszczalnej prędkości stanowiących niebezpieczeństwo dla kierujących rowerami oraz tam, gdzie w pobliżu została wyznaczona droga dla rowerów oznaczona znakiem C-13.;"
+	wiki="Key:bicycle"
+	>
+	<tag key="bicycle" value="no"/>
+</sign>
+
+<sign ref="PL:B-10" name="Mopeds prohibited" pl.name="zakaz wjazdu motorowerów"
+	long_name=""
+	pl.long_name="Znak zakazuje wjazdu motorowerów. Stosowany, gdy istnieje potrzeba zamknięcia ruchu dla wszelkich pojazdów wyposażonych w silnik na drogach, gdzie zabroniony został ruch pojazdów samochodowych.;"
+	>
+	<tag key="mofa" value="no"/>
+</sign>
+
+<sign ref="PL:B-11" name="zakaz wjazdu wózków rowerowych" pl.name="zakaz wjazdu wózków rowerowych"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu rowerów wielośladowych. Stosowany na drogach o dużym natężeniu ruchu, gdzie ruch tych pojazdów może powodować tamowanie ruchu.;"
+	>
+</sign>
+
+<sign ref="PL:B-12" name="zakaz wjazdu wózków ręcznych" pl.name="zakaz wjazdu wózków ręcznych"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu na jezdni i poboczu wózków ręcznych prowadzonych, ciągniętych lub pchanych.;"
+	>
+</sign>
+
+<sign ref="PL:B-13" name="zakaz wjazdu pojazdów z towarami wybuchowymi lub łatwo zapalnymi" pl.name="zakaz wjazdu pojazdów z towarami wybuchowymi lub łatwo zapalnymi"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów przewożących w ilościach, dla których jest wymagane oznakowanie pojazdu tablicami ostrzegawczymi barwy pomarańczowej, towary klas ADR:;;1 - materiały i przedmioty wybuchowe,;2 F - gazy palne;3 - materiały ciekłe zapalne,;4.1 - materiały stałe zapalne, materiały samoreaktywne,;4.2 - materiały samozapalne,;4.3 - materiały wytwarzające w zetknięciu z wodą gazy palne,;5.1 - materiały utleniające,;5.2 - nadtlenki organiczne.;;;"
+	wiki="Key:access:explosives"
+	>
+	<tag key="access:explosives" value="no"/>
+</sign>
+
+<sign ref="PL:B-13a" name="Hazardous cargo prohibited" pl.name="zakaz wjazdu pojazdów z towarami niebezpiecznymi"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów przewożących towary niebezpieczne w ilościach, dla których jest wymagane oznakowanie pojazdu tablicami ostrzegawczymi barwy pomarańczowej. Pod znakiem może być umieszczona tabliczka wskazująca, że zakaz dotyczy określonych grup towarów lub T-31 'tabliczka wskazująca kategorię tunelu':;;T-31b (B) - zakaz wjazdu pojazdów przewożących towary zagrażające wybuchem o bardzo dużym zasięgu,;T-31c (C) - zakaz wjazdu pojazdów przewożących towary zagrażające wybuchem o bardzo dużym zasięgu, wybuchem o dużym zasięgu oraz towary zagrażające masowym zatruciem,;T-31d (D) - zakaz wjazdu pojazdów przewożących towary zagrażające wybuchem o bardzo dużym zasięgu, wybuchem o dużym zasięgu, towary zagrażające masowym zatruciem oraz towary zagrażające pożarem o dużym zasięgu,;T-31e (E) - zakaz wjazdu pojazdów przewożących jakiekolwiek towary niebezpieczne w ilościach wymagających oznakowania pojazdów tablicami barwy pomarańczowej, z wyjątkiem niektórych materiałów promieniotwórczych, odpadów medycznych i próbek diagnostycznych - UN 2919, 3291, 3331,3359 i 3373.;;;"
+	wiki="Key:hazmat"
+	>
+	<tag key="hazmat" value="no"/>
+	<supplementary id="PL:T-31"/>
+</sign>
+
+<sign ref="PL:B-14" name="Water polluting cargo prohibited" pl.name="zakaz wjazdu pojazdów z towarami, które mogą skazić wodę"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów przewożących w ilościach, dla których jest wymagane oznakowanie pojazdu tablicami ostrzegawczymi barwy pomarańczowej, towary klas ADR:;;2 T - gazy trujące,;2 TC - gazy żrące,;3 - materiały ciekłe zapalne,;4.3 - materiały wytwarzające w zetknięciu z wodą gazy palne,;6.1 - materiały trujące,;6.2 - materiały zakaźne,;8 - materiały żrące,;materiały zagrażające środowisku klasy 9.;;;"
+	wiki="Key:hazmat"
+	>
+	<tag key="hazmat:water" value="no"/>
+</sign>
+
+<sign ref="PL:B-15[$val]" id="PL:B-15" name="Width limit" pl.name="zakaz wjazdu pojazdów o szerokości ponad ...m"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów, których szerokość wraz z ładunkiem jest większa od wartości podanej na znaku. Ruch pojazdów ze względu na szerokość ogranicza się, gdy szerokość przejazdu jest mniejsza niż 3,5 m. Na znaku podaje się odległość między elementami konstrukcyjnymi ograniczającymi skrajnie poziomą pomniejszoną o 1 m. Stawiany jest ze względu na wąskie obiekty drogowe jak np. tunele, mosty, a także wąskie ulice i pasy ruchu (wówczas znak może być umieszczony nad pasem ruchu, którego dotyczy lub jako element znaku F-22 'ograniczenia na pasie ruchu').;"
+	wiki="Key:maxwidth"
+	>
+	<tag key="maxwidth" value="$val"/>
+	<parameter ident="val" input="textfield" default="2" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-16[$val]" id="PL:B-16" name="Height limit" pl.name="zakaz wjazdu pojazdów o wysokości ponad ...m"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów, których wysokość wraz z ładunkiem jest większa od wartości podanej na znaku. Ruch pojazdów ze względu na wysokość ogranicza się, gdy wysokość przejazdu jest mniejsza niż 4,5 m. Na znaku podaje się wysokość obiektu nad jezdnią pomniejszoną o 0,5 m. Jest ustawiany ze względu na niskie tunele, wiadukty, linie sieci napowietrznej.;"
+	wiki="Key:maxheight"
+	>
+	<tag key="maxheight" value="$val"/>
+	<parameter ident="val" input="textfield" default="3.5" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-17[$val]" id="PL:B-17" name="Length limit" pl.name="zakaz wjazdu pojazdów o długości ponad ...m"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów lub zespołów pojazdów, których długość wraz z ładunkiem jest większa od wartości podanej na znaku. Ruch pojazdów ze względu na długość ogranicza się na drogach o ostrych i wąskich zakrętach oraz tam, gdzie ruch takich pojazdów może utrudniać ruch.;"
+	wiki="Key:maxlength"
+	>
+	<tag key="maxlength" value="$val"/>
+	<parameter ident="val" input="textfield" default="6" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-18[$val]" id="PL:B-18" name="Weight limit" pl.name="zakaz wjazdu pojazdów o rzeczywistej masie całkowitej ponad ...t"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów lub zespołów pojazdów, których rzeczywista masa całkowita jest większa od wartości podanej na znaku. Stawiany jest ze względu na odcinki dróg o niewystarczającej nośności.;"
+	wiki="Key:maxweight"
+	>
+	<tag key="maxweight" value="$val"/>
+	<parameter ident="val" input="textfield" default="7" suffix="t" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-19[$val]" id="PL:B-19" name="Axle weight limit" pl.name="zakaz wjazdu pojazdów o nacisku osi większym niż ...t"
+	long_name=""
+	pl.long_name="Znak zakazuje ruchu pojazdów, których nacisk osi jest większy od nacisku odpowiadającego masie podanej na znaku. W przypadku osi wielokrotnej nacisk żadnej z osi składowych nie może odpowiadać masie większej niż 80% masy podanej na znaku.;Znak stosuje się:;;na odcinkach dróg o nośności niedostosowanej do nacisku osi pojedynczej 80 kN,;na odcinkach dróg krajowych o nośności niedostosowanej do nacisku osi pojedynczej 100 kN.;;Przykładowo nacisk osi ograniczony do 5 t odpowiada nośności 5000 [kg] · g ≈ 50 [kN], dla g ≈ 10 m/s2.;;"
+	wiki="Key:maxaxleload"
+	>
+	<tag key="maxaxleload" value="$val"/>
+	<parameter ident="val" input="textfield" default="5" suffix="t" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-20" name="stop" pl.name="stop"
+	long_name=""
+	pl.long_name="Znak zakazuje przejazdu bez zatrzymania pojazdu przed:;;wjazdem na skrzyżowanie z drogą z pierwszeństwem.;niestrzeżonym przejazdem kolejowym,;przejazdem tramwajowym,;w innych miejscach przecinania się kierunków ruchu.;;Kierujący zobowiązany jest ustąpić pierwszeństwa poruszającym się drogą z pierwszeństwem i analogicznie w pozostałych sytuacjach. Zatrzymanie pojazdu powinno nastąpić w miejscu wyznaczonym znakiem poziomym P-12 'linia bezwzględnego zatrzymania - stop', w rejonie przejazdu kolejowego dodatkowo przed znakiem G-3 lub G-4 'krzyż św. Andrzeja'. W razie braku wyznaczonego miejsca, zatrzymanie powinno nastąpić w takim miejscu, w którym kierujący może upewnić się, że nie utrudni ruchu na drodze z pierwszeństwem.;Pod znakiem B-20 może być tabliczka T-6c 'tabliczka wskazująca rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie (umieszczana na drodze podporządkowanej)' i T-6d 'tabliczka wskazująca prostopadły przebieg drogi z pierwszeństwem przez skrzyżowanie oraz układ dróg podporządkowanych (umieszczana na drodze podporządkowanej)'.;Na drogach o dopuszczalnej prędkości powyżej 60 km/h znak B-20 poprzedzany jest znakiem A-7 'ustąp pierwszeństwa' z tabliczką T-1 'tabliczka wskazująca odległość znaku ostrzegawczego od miejsca niebezpiecznego' z napisem STOP.;Znak jest stosowany, gdy nie są spełnione warunki widoczności (mała widoczność na zatrzymanie).;;"
+	>
+	<tag key="highway" value="stop" ident="yield"/>
+	<supplementary id="PL:T-6c"/>
+	<supplementary id="PL:T-6d"/>
+	<supplementary id="PL:T-1"/>
+</sign>
+
+<sign ref="PL:B-21" name="zakaz skręcania w lewo" pl.name="zakaz skręcania w lewo"
+	long_name=""
+	pl.long_name="Znak zabrania skręcania w lewo i zawracania na skrzyżowaniu, przed którym jest ustawiony.;Znak znajdujący się w obrębie skrzyżowania dotyczy tylko najbliższej jezdni, przed którą został umieszczony, co jest istotne w przypadku skrzyżowań z drogą dwujezdniową.;Umieszczona pod znakiem tabliczka T-22 'tabliczka wskazująca, że znak nie dotyczy rowerów jednośladowych' wskazuje, że znak nie dotyczy rowerów jednośladowych, gdy jest dla nich wyznaczony pas ruchu.;Razem z B-21 może występować znak F-7 'sposób jazdy w związku z zakazem skręcania w lewo', który wskazuje możliwy dojazd do drogi, w którą skręcanie jest zabronione.;Stosowany na skrzyżowaniach z jezdnią jednokierunkową, na którą nie ma wjazdu od strony skrzyżowania oraz, gdy pojazdy skręcające w lewo mogą utrudniać ruch.;;"
+	>
+	<supplementary id="PL:T-22"/>
+</sign>
+
+<sign ref="PL:B-22" name="zakaz skręcania w prawo" pl.name="zakaz skręcania w prawo"
+	long_name=""
+	pl.long_name="Znak zabrania skręcania w prawo na skrzyżowaniu, przed którym jest ustawiony. Stosowany analogicznie jak B-21.;Rozporządzenie w sprawie szczegółowych warunków technicznych dla znaków i sygnałów drogowych oraz urządzeń bezpieczeństwa ruchu drogowego i warunków ich umieszczania na drogach przewiduje stosowanie odmiany znaku F-7 'sposób jazdy w związku z zakazem skręcania w lewo' występującej wraz ze znakiem B-22. Nie ma jej jednak w Rozporządzeniu w sprawie znaków i sygnałów drogowych.;;"
+	>
+</sign>
+
+<sign ref="PL:B-23" name="zakaz zawracania" pl.name="zakaz zawracania"
+	long_name=""
+	pl.long_name="Znak zabrania zawracania od miejsca jego ustawienia do najbliższego skrzyżowania włącznie lub znaku B-24 'koniec zakazu zawracania'. Stosowany w miejscach, gdzie manewr zawracania może powodować utrudnienie ruchu.;"
+	>
+</sign>
+
+<sign ref="PL:B-24" name="koniec zakazu zawracania" pl.name="koniec zakazu zawracania"
+	long_name=""
+	pl.long_name="Znak odwołuje zakaz zawracania.;"
+	>
+</sign>
+
+<sign ref="PL:B-25" name="zakaz wyprzedzania" pl.name="zakaz wyprzedzania"
+	long_name=""
+	pl.long_name="Znak zabrania kierującym pojazdami silnikowymi wyprzedzania pojazdów silnikowych wielośladowych od miejsca jego ustawienia do najbliższego skrzyżowania lub znaku B-27 'koniec zakazu wyprzedzania'. Pod znakiem mogą być umieszczone tabliczki T-23a - T-23j wskazujące rodzaj pojazdów, których obowiązuje zakaz wyprzedzania.;Stosowany w miejscach, gdzie manewr wyprzedzania może powodować zagrożenie bezpieczeństwa ruchu, w szczególności przy braku dostatecznej widoczności pojazdów nadjeżdżających z przeciwka.;;"
+	wiki="Key:overtaking"
+	>
+	<tag key="overtaking" value="no" ident="restriction"/>
+	<supplementary id="PL:T-23a"/>
+	<supplementary id="PL:T-23b"/>
+	<supplementary id="PL:T-23c"/>
+	<supplementary id="PL:T-23d"/>
+	<supplementary id="PL:T-23e"/>
+	<supplementary id="PL:T-23f"/>
+	<supplementary id="PL:T-23g"/>
+	<supplementary id="PL:T-23h"/>
+	<supplementary id="PL:T-23i"/>
+	<supplementary id="PL:T-23j"/>
+</sign>
+
+<sign ref="PL:B-26" name="zakaz wyprzedzania przez samochody ciężarowe" pl.name="zakaz wyprzedzania przez samochody ciężarowe"
+	long_name=""
+	pl.long_name="Znak zabrania wyprzedzania pojazdów silnikowych wielośladowych od miejsca jego ustawienia do najbliższego skrzyżowania lub znaku B-28 'koniec zakazu wyprzedzania przez samochody ciężarowe' kierującym:;;samochodami ciężarowymi o dopuszczalnej masie całkowitej przekraczającej 3,5 t,;ciągnikiem samochodowym,;pojazdem specjalnym lub do celów specjalnych - o dopuszczalnej masie całkowitej przekraczająca 3,5 t.;;;"
+	>
+	<tag key="overtaking:hgv" value="no"/>
+</sign>
+
+<sign ref="PL:B-27" name="koniec zakazu wyprzedzania" pl.name="koniec zakazu wyprzedzania"
+	long_name=""
+	pl.long_name="Znak odwołuje zakaz wyprzedzania.;"
+	>
+</sign>
+
+<sign ref="PL:B-28" name="koniec zakazu wyprzedzania przez samochody ciężarowe" pl.name="koniec zakazu wyprzedzania przez samochody ciężarowe"
+	long_name=""
+	pl.long_name="Znak odwołuje zakaz wyprzedzania przez samochody ciężarowe.;"
+	>
+</sign>
+
+<sign ref="PL:B-29" name="zakaz używania sygnałów dźwiękowych" pl.name="zakaz używania sygnałów dźwiękowych"
+	long_name=""
+	pl.long_name="Znak zabrania używania sygnałów dźwiękowych, chyba że jest to konieczne w celu ostrzeżenia o bezpośrednim zagrożeniu bezpieczeństwa ruchu. Zakaz obowiązuje od miejsca ustawienia znaku do najbliższego skrzyżowania lub znaku B-30 'koniec zakazu używania sygnałów dźwiękowych'.;Stosowany jest tylko poza obszarem zabudowanym w miejscach, gdzie należy ograniczyć hałas: parki, rezerwaty przyrody, ośrodki wypoczynkowe itp. Należy pamiętać, że zgodnie z art. 29 Ustawy - Prawo o ruch drogowym, w obszarze zabudowanym używanie sygnałów dźwiękowych jest zawsze zabronione z podobnym zastrzeżeniem dotyczącym ostrzeżenia o bezpośrednim zagrożeniu bezpieczeństwa ruchu.;;"
+	>
+</sign>
+
+<sign ref="PL:B-30" name="koniec zakazu używania sygnałów dźwiękowych" pl.name="koniec zakazu używania sygnałów dźwiękowych"
+	long_name=""
+	pl.long_name="Znak odwołuje zakaz używania sygnałów dźwiękowych.;"
+	>
+</sign>
+
+<sign ref="PL:B-31" name="pierwszeństwo dla nadjeżdżających z przeciwka" pl.name="pierwszeństwo dla nadjeżdżających z przeciwka"
+	long_name=""
+	pl.long_name="Znak zabrania kierującym wjazdu lub wejścia na zwężony odcinek jezdni, jeżeli zmusiłoby to kierujących znajdujących się na tym odcinku lub zbliżających się do niego z przeciwnej strony do zatrzymania się.;Po przeciwnej stronie zwężenia ustawiany jest znak D-5 'pierwszeństwo na zwężonym odcinku jezdni'. Taka organizacja ruchu wprowadzana jest na zwężonych odcinkach krótszych niż 150 m, gdzie nie mogą wyminąć się pojazdy o szerokości 2,5 m oraz gdy kierujący mają dobrą widoczność pojazdów nadjeżdżających z przeciwka.;;"
+	>
+</sign>
+
+<sign ref="PL:B-32" name="stój - kontrola celna" pl.name="stój - kontrola celna"
+	long_name=""
+	pl.long_name="Znak zabrania przejazdu bez zatrzymania się do kontroli celnej. Zatrzymanie powinno nastąpić w miejscu wyznaczonym w tym celu, a jeżeli nie jest wyznaczone - przed znakiem. Dalszy ruch może nastąpić za zgodą uprawnionej osoby lub po nadaniu sygnału zezwalającego na ruch.;Odmiany B-32:;Po odpowiedniej zmianie napisu znak może wskazywać obowiązek zatrzymania pojazdu z innej przyczyny. Zasady zatrzymania pojazdu i zezwolenia na dalszy ruch w każdym przypadku są takie same.;;;Znak;Informacja;;"
+	>
+</sign>
+
+<sign ref="PL:B-32a" name="stój - kontrola graniczna" pl.name="stój - kontrola graniczna"
+	>
+</sign>
+
+<sign ref="PL:B-32b" name="stój - rogatka uszkodzona" pl.name="stój - rogatka uszkodzona"
+	>
+</sign>
+
+<sign ref="PL:B-32c" name="stój - sygnalizacja uszkodzona" pl.name="stój - sygnalizacja uszkodzona"
+	>
+</sign>
+
+<sign ref="PL:B-32d" name="stój - wjazd na prom" pl.name="stój - wjazd na prom"
+	>
+</sign>
+
+<sign ref="PL:B-32e" name="stój - kontrola drogowa" pl.name="stój - kontrola drogowa"
+	>
+</sign>
+
+<sign ref="PL:B-32f" name="stój - pobór opłat" pl.name="stój - pobór opłat"
+	>
+</sign>
+
+<sign ref="PL:B-33[$val]" id="PL:B-33" name="Speed limit" pl.name="ograniczenie prędkości"
+	long_name=""
+	pl.long_name="Znak zabrania przekraczania prędkości określonej liczbą kilometrów na godzinę. Ograniczenie obowiązuje od miejsca ustawienia znaku do:;;najbliższego skrzyżowania,;wprowadzenia innej dopuszczalnej prędkości znakiem B-33 lub B-43 'strefa ograniczonej prędkości',;początku strefy zamieszkania oznaczonej znakiem D-40,;początku lub końca obszaru zabudowanego, oznaczonych odpowiednio znakami D-42 i D-43,;znaku B-34 'koniec ograniczenia prędkości'.;;Pod znakiem mogą być umieszczone tabliczki T-23a - T-23j wskazujące rodzaj pojazdów, których obowiązuje ograniczenie prędkości.;Dopuszczalna prędkość większa niż 60 km/h na obszarze zabudowanym dotyczy samochodu osobowego, motocykla i samochodu ciężarowego o dopuszczalnej masie całkowitej nieprzekraczającej 3,5 t, z wyjątkiem:;;pojazdu przewożącego towary niebezpieczne,;pojazdu z urządzeniem wystającym do przodu więcej niż 1,5 m od siedzenia kierującego (dopuszczalna prędkość 30 km/h na obszarze zabudowanym i 60 km/h poza obszarem zabudowanym),;pojazdu holującego pojazd silnikowy (dopuszczalna prędkość 30 km/h na obszarze zabudowanym i 60 km/h poza obszarem zabudowanym),;motocykla, którym przewozi się dziecko w wieku do lat 7 (dopuszczalna prędkość 40 km/h),;samochodu ciężarowego przewożącego osoby poza kabiną kierowcy.;;Prędkość pojazdów ogranicza ze względu na wymagające tego warunki drogowe, gdy inne działania nie wpływają na poprawę bezpieczeństwa ruchu drogowego. W przypadku braku lub uchylenia ograniczenia prędkości wyrażonej znakiem B-33, obowiązują dopuszczalne prędkości określone w ustawie - Prawo o ruchu drogowym.;;"
+	wiki="Key:maxspeed"
+	>
+	<tag key="maxspeed" value="$val" ident="restriction"/>
+	<parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" suffix="km/h" values="5,10,20,30,40,50,60,70,80,90,100,110,120,130" default="50" field_width="3"/>
+	<supplementary id="PL:T-23a"/>
+	<supplementary id="PL:T-23b"/>
+	<supplementary id="PL:T-23c"/>
+	<supplementary id="PL:T-23d"/>
+	<supplementary id="PL:T-23e"/>
+	<supplementary id="PL:T-23f"/>
+	<supplementary id="PL:T-23g"/>
+	<supplementary id="PL:T-23h"/>
+	<supplementary id="PL:T-23i"/>
+	<supplementary id="PL:T-23j"/>
+</sign>
+
+<sign ref="PL:B-34[$val]" id="PL:B-34" name="koniec ograniczenia prędkości" pl.name="koniec ograniczenia prędkości"
+	long_name=""
+	pl.long_name="Znak odwołuje ograniczenie prędkości.;"
+	>
+	<parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" suffix="km/h" values="5,10,20,30,40,50,60,70,80,90,100,110,120,130" default="50" field_width="3"/>
+</sign>
+
+<sign ref="PL:B-35" name="zakaz postoju" pl.name="zakaz postoju"
+	long_name=""
+	pl.long_name="Znak zakazuje postoju pojazdu rozumianego jako unieruchomienie pojazdu niewynikające z warunków lub przepisów ruchu drogowego, trwające dłużej niż 1 minutę. Oznacza to, że znak dopuszcza chwilowe zatrzymanie pojazdu np. w celu zabrania lub wysadzenia pasażera. Zakaz obowiązuje od miejsca ustawienia znaku do najbliższego skrzyżowania po tej stronie drogi, po której ustawiono znak.;Pod znakiem mogą być umieszczone tabliczki:;;T-24 'tabliczka wskazująca, że pozostawiony pojazd zostanie usunięty na koszt właściciela',;T-25a 'tabliczka wskazująca początek zakazu postoju lub zatrzymywania';T-25b 'tabliczka wskazująca kontynuację zakazu postoju lub zatrzymywania';T-25c 'tabliczka wskazująca odwołanie zakazu postoju lub zatrzymywania';T-26 'tabliczka wskazująca, że zakaz postoju lub zatrzymywania dotyczy strony placu';dopuszczalny czas unieruchomienia pojazdu dłuższy niż 1 minuta lub obowiązywanie znaku w określonych godzinach może być wskazane napisem na znaku albo na umieszczonej pod nim tabliczce,;jeżeli dopuszcza się inne odstępstwa od stosowania się do znaku B-35, na tabliczce pod znakiem umieszcza się właściwą informację o treści 'Nie dotyczy...'.;;Odmiany B-35:;Po odpowiedniej zmianie znaku, może on wskazywać zakaz postoju w określony w przepisach inny sposób. Zasady zakazu postoju w każdym przypadku są takie same lecz dla określonych przepisów, (link zewnętrzny).;;;znak;Informacja;;"
+	>
+	<supplementary id="PL:T-24"/>
+	<supplementary id="PL:T-25a"/>
+	<supplementary id="PL:T-25b"/>
+	<supplementary id="PL:T-25c"/>
+	<supplementary id="PL:T-26"/>
+</sign>
+
+<sign ref="PL:B-36" name="zakaz zatrzymywania się" pl.name="zakaz zatrzymywania się"
+	long_name=""
+	pl.long_name="Znak zabrania zatrzymywania pojazdu z wyjątkiem unieruchomionia ze względu na warunki lub przepisy ruchu drogowego. Pozostałe przepisy są analogiczne jak w przypadku znaku B-35 'zakaz postoju'.;"
+	wiki="Key:stopping"
+	>
+	<tag key="stopping" value="no"/>
+	<tag key="traffic_restriction" value="no_stopping"/>
+</sign>
+
+<sign ref="PL:B-37" name="zakaz postoju w dni nieparzyste" pl.name="zakaz postoju w dni nieparzyste"
+	long_name=""
+	pl.long_name="Znak zabrania postoju w takim samym zakresie, jak znak B-35 'zakaz postoju', lecz obowiązuje tylko w dni nieparzyste. Stosowany wraz ze znakiem B-38 'zakaz postoju w dni parzyste' dla udostępnienia jednej strony jezdni co drugi dzień, np. w celu wywozu śmieci, zaopatrzenia sklepów.;"
+	>
+</sign>
+
+<sign ref="PL:B-38" name="zakaz postoju w dni parzyste" pl.name="zakaz postoju w dni parzyste"
+	long_name=""
+	pl.long_name="Znak stosowany tak jak znak B-37, obowiązuje w dni parzyste.;"
+	>
+</sign>
+
+<sign ref="PL:B-39[$day w godz. $val_on-$val_off]" id="PL:B-39" name="strefa ograniczonego postoju" pl.name="strefa ograniczonego postoju"
+	long_name=""
+	pl.long_name="Znak wskazuje wjazd do strefy, w której obowiązuje zakaz postoju pojazdów na wszystkich drogach. Na znaku podaje się informacje o zakresie obowiązywania np. czas obowiązywania, dopuszczalny czas postoju, określone rodzaje pojazdów. W przypadku braku takich informacji, zakaz obowiązuje w takim samym zakresie, jak wyrażony znakiem B-35 'zakaz postoju'.;Znak B-39 nie dotyczy:;;pojazdu komunikacji publicznej zatrzymującego się na wyznaczonym dla niego miejscu,;pojazdu zatrzymującego się w miejscu oznaczonymi znakami:;;D-18 'parking';D-18a 'parking - miejsce zastrzeżone';D-18b 'parking zadaszony';D-44 'strefa parkowania';;;pojazdu unieruchomionego ze względu na warunki lub przepisy ruchu drogowego,;autobusu szkolnego.;;;"
+	>
+	<tag key="time_on" value="$val_on"/>
+	<tag key="time_off" value="$val_off"/>
+	<parameter ident="day" input="textfield" default="W dni powszednie" field_width="11"/>
+	<parameter ident="val_on" input="textfield" prefix="od" default="7" field_width="2"/>
+	<parameter ident="val_off" input="textfield" prefix="do" default="21" field_width="2"/>
+</sign>
+
+<sign ref="PL:B-40" name="koniec strefy ograniczonego postoju" pl.name="koniec strefy ograniczonego postoju"
+	long_name=""
+	pl.long_name="Oznacza wyjazd ze strefy ograniczonego postoju.;"
+	>
+</sign>
+
+<sign ref="PL:B-41" name="Pedestrians prohibited" pl.name="zakaz ruchu pieszych"
+	long_name=""
+	pl.long_name="Znak zabrania ruchu pieszych po tej stronie drogi, po której znak jest umieszczony. Stosowany ze względu na brak chodnika przy dużym ruchu pojazdów stanowiących niebezpieczeństwo dla pieszych lub gdy droga posiada wydzielony ciąg przeznaczony do ruchu pieszego.;"
+	>
+	<tag key="foot" value="no"/>
+</sign>
+
+<sign ref="PL:B-42" name="koniec zakazów" pl.name="koniec zakazów"
+	long_name=""
+	pl.long_name="Znak odwołuje wszystkie obowiązujące zakazy wyrażone znakami posiadającymi własny znak odwołujący:;;B-23 'zakaz zawracania',;B-25 'zakaz wyprzedzania',;B-26 'zakaz wyprzedzania przez samochody ciężarowe',;B-29 'zakaz używania sygnałów dźwiękowych';B-33 'ograniczenie prędkości'.;;;"
+	>
+	<tag key="maxspeed" value="national"/>
+</sign>
+
+<sign ref="PL:B-43[$val]" id="PL:B-43" name="Speed limit zone" pl.name="strefa ograniczonej prędkości"
+	long_name=""
+	pl.long_name="Znak wskazuje wjazd do strefy, w której na wszystkich drogach obowiązuje zakaz przekraczania prędkości, określonej na znaku przez liczbę kilometrów na godzinę. Dopuszczalna prędkość mniejsza lub równa 30 km/h oznacza, że umieszczone w strefie urządzenia wymuszające powolną jazdę (progi zwalniające, miejscowe przewężenia) nie muszą być oznakowane znakami ostrzegawczymi. Strefy ograniczonej prędkości wyznacza się na obszarach z dużą liczbą skrzyżowań oraz dużym natężeniu ruchu pojazdów i pieszych.;"
+	>
+	<tag key="maxspeed" value="$val"/>
+	<tag key="zone:maxspeed" value="PL:$val"/>
+	<parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" suffix="km/h" values="20,30" default="30" field_width="2"/>
+</sign>
+
+<sign ref="PL:B-44[$val]" id="PL:B-44" name="koniec strefy ograniczonej prędkości" pl.name="koniec strefy ograniczonej prędkości"
+	long_name=""
+	pl.long_name="Znak wskazuje wyjazd ze strefy ograniczonej prędkości.;"
+	>
+	<parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" suffix="km/h" values="20,30" default="30" field_width="2"/>
+</sign>
+
+<sign ref="PL:B-3/4" name="Motor vehicles prohibited" pl.name="zakaz wjazdu pojazdów silnikowych"
+	icon="PL_B-3_4.png"
+	>
+	<tag key="motor_vehicle" value="no"/>
+</sign>
+
+<sign ref="PL:B-6/8" name="zakaz wjazdu ciągników rolniczych i pojazdów zaprzęgowych" pl.name="zakaz wjazdu ciągników rolniczych i pojazdów zaprzęgowych"
+	icon="PL_B-6_8.png"
+	>
+	<tag key="horse_drawn" value="no"/>
+</sign>
+
+<sign ref="PL:B-6/8/9" name="zakaz wjazdu pojazdów innych niż samochodowe" pl.name="zakaz wjazdu pojazdów innych niż samochodowe"
+	icon="PL_B-6_8_9.png"
+	>
+	<tag key="bicycle" value="no"/>
+	<tag key="horse_drawn" value="no"/>
+</sign>
+
+<sign ref="PL:B-9/12" name="zakaz wjazdu rowerów i wózków ręcznych" pl.name="zakaz wjazdu rowerów i wózków ręcznych"
+	icon="PL_B-9_12.png"
+	>
+	<tag key="bicycle" value="no"/>
+</sign>
+
+<sign ref="PL:B-13/14" name="zakaz wjazdu pojazdów z towarami wybuchowymi lub łatwo zapalnymi oraz towarami mogącymi skazić wodę" pl.name="zakaz wjazdu pojazdów z towarami wybuchowymi lub łatwo zapalnymi oraz towarami mogącymi skazić wodę"
+	icon="PL_B-13_14.png"
+	>
+	<tag key="hazmat:water" value="no"/>
+	<tag key="access:explosives" value="no"/>
+</sign>
+
+<sign ref="PL:B-3/4/10" name="zakaz wjazdu pojazdów silnikowych i motorowerów" pl.name="zakaz wjazdu pojazdów silnikowych i motorowerów"
+	icon="PL_B-3_4_10.png"
+	>
+	<tag key="motorcar" value="no"/>
+	<tag key="motorcycle" value="no"/>
+	<tag key="mofa" value="no"/>
+</sign>
+
+
+<sign ref="PL:C-1" name="nakaz jazdy w prawo przed znakiem" pl.name="nakaz jazdy w prawo przed znakiem"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu skręt w prawo przed znakiem. Znak ten umieszczony jest na przedłużeniu osi części jezdni, jadących którą nakaz dotyczy. Stosowany zwykle na skrzyżowaniach z jezdnią jednokierunkową, gdzie nie ma możliwości jazdy na wprost.;"
+	>
+</sign>
+
+<sign ref="PL:C-2" name="nakaz jazdy w prawo za znakiem" pl.name="nakaz jazdy w prawo za znakiem"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu skręt w prawo za znakiem. Znak ten umieszczony jest obok jezdni, której dotyczy i obowiązuje na najbliższym skrzyżowaniu lub w miejscu, gdzie występuje możliwość zmiany kierunku jazdy.;"
+	>
+</sign>
+
+<sign ref="PL:C-3" name="nakaz jazdy w lewo przed znakiem" pl.name="nakaz jazdy w lewo przed znakiem"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu skręt w lewo przed znakiem. Stosowany analogicznie jak znak C-1.;"
+	>
+</sign>
+
+<sign ref="PL:C-4" name="nakaz jazdy w lewo za znakiem" pl.name="nakaz jazdy w lewo za znakiem"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu skręt w lewo za znakiem. Stosowany analogicznie jak znak C-2.;"
+	>
+</sign>
+
+<sign ref="PL:C-5" name="nakaz jazdy prosto" pl.name="nakaz jazdy prosto"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu jazdę prosto. Znak obowiązuje na najbliższym skrzyżowaniu lub w miejscu, gdzie występuje możliwość zmiany kierunku jazdy. Często stosowany jest poza skrzyżowaniami na drogach o dużym natężeniu ruchu w celu wyeliminowania skręcania (szczególnie w lewo) pojazdów do obiektów przydrożnych.;"
+	>
+</sign>
+
+<sign ref="PL:C-6" name="nakaz jazdy prosto lub w prawo" pl.name="nakaz jazdy prosto lub w prawo"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu jazdę prosto lub w prawo. Stosowany na skrzyżowaniach o więcej niż czterech wlotach, gdy nie można zastosować znaku B-21 'zakaz skręcania w lewo'.;"
+	>
+</sign>
+
+<sign ref="PL:C-7" name="nakaz jazdy prosto lub w lewo" pl.name="nakaz jazdy prosto lub w lewo"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu jazdę prosto lub w lewo. Stosowany na skrzyżowaniach o więcej niż czterech wlotach, gdy nie można zastosować znaku B-22 'zakaz skręcania w prawo'.;"
+	>
+</sign>
+
+<sign ref="PL:C-8" name="nakaz jazdy w prawo lub w lewo" pl.name="nakaz jazdy w prawo lub w lewo"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu jazdę w prawo lub w lewo. Stosowany, gdy zabroniona jest jazda prosto.;"
+	>
+</sign>
+
+<sign ref="PL:C-9" name="nakaz jazdy z prawej strony znaku" pl.name="nakaz jazdy z prawej strony znaku"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu ominięcie wysepki lub przeszkody na jezdni z prawej strony znaku. Umieszczony na pasie dzielącym drogi oznacza początek jezdni jednokierunkowej.;"
+	>
+</sign>
+
+<sign ref="PL:C-10" name="nakaz jazdy z lewej strony znaku" pl.name="nakaz jazdy z lewej strony znaku"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu ominięcie wysepki lub przeszkody na jezdni po lewej stronie znaku, lecz nie oznacza jednocześnie jezdni jednokierunkowej.;"
+	>
+</sign>
+
+<sign ref="PL:C-11" name="nakaz jazdy z prawej lub z lewej strony znaku" pl.name="nakaz jazdy z prawej lub z lewej strony znaku"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu ominięcie wysepki lub przeszkody na jezdni z lewej lub prawej strony znaku. Umieszczany jest w miejscu rozdzielenia jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:C-12" name="Roundabout" pl.name="ruch okrężny"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu jazdę dookoła wyspy lub placu w kierunku wskazanym na znaku (skrzyżowanie o ruchu okrężnym). Znak C-12 najczęściej występuje łącznie ze znakiem A-7 'ustąp pierwszeństwa', co oznacza pierwszeństwo kierującego znajdującego się na skrzyżowaniu przed kierującym wjeżdżającym na to skrzyżowanie. W przypadku znaku C-12 występującego samodzielnie, pojazd znajdujący się na skrzyżowaniu ustępuje pierwszeństwa pojazdowi na wjeżdżającemu (zgodnie z zasadą prawej ręki).;"
+	wiki="Tag:junction=roundabout"
+	>
+	<tag key="junction" value="roundabout"/>
+</sign>
+
+<sign ref="PL:C-13" name="Bicycle path" pl.name="droga dla rowerów"
+	long_name=""
+	pl.long_name="Znak nakazuje kierującemu rowerem jednośladowym jazdę drogą dla rowerów.;"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="bicycle" value="official"/>
+</sign>
+
+<sign ref="PL:C-13a" name="koniec drogi dla rowerów" pl.name="koniec drogi dla rowerów"
+	long_name=""
+	pl.long_name="Znak oznacza koniec drogi przeznaczonej dla kierujących rowerami jednośladowymi.;"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="bicycle" value="no"/>
+</sign>
+
+<sign ref="PL:C-14[$val]" id="PL:C-14" name="Minimum speed limit" pl.name="prędkość minimalna"
+	long_name=""
+	pl.long_name="Znak oznacza obowiązek jazdy z prędkością nie mniejszą niż określona na znaku liczbą kilometrów na godzinę przy zachowaniu ograniczeń prędkości wynikających z przepisów ustawy – Prawo o ruchu drogowym, chyba że warunki ruchu lub jego bezpieczeństwo wymagają zmniejszenia prędkości. Zgodnie z art. 19 ustawy – Prawo o ruchu drogowym, kierujący jest w każdej sytuacji zobowiązany jechać z prędkością nieutrudniającą jazdy innym kierującym. Znak C-14 stosowany jest, gdy kierujący nagminnie zmniejszają prędkość jazdy z przyczyn niewynikających ze stanu technicznego drogi.;"
+	wiki="Key:minspeed"
+	>
+	<tag key="minspeed" value="$val"/>
+	<parameter ident="val" input="textfield" suffix="km/h" default="30" field_width="2"/>
+</sign>
+
+<sign ref="PL:C-15[$val]" id="PL:C-15" name="koniec prędkości minimalnej" pl.name="koniec prędkości minimalnej"
+	long_name=""
+	pl.long_name="Znak oznacza miejsce, w którym prędkość minimalna określona znakiem C-14 przestaje obowiązywać.;"
+	>
+	<parameter ident="val" input="textfield" suffix="km/h" default="30" field_width="2"/>
+</sign>
+
+<sign ref="PL:C-16" name="Pedestrian path" pl.name="droga dla pieszych"
+	long_name=""
+	pl.long_name="Znak nakazuje pieszym korzystanie z drogi przeznaczonej wyłącznie do ruchu pieszego. Stosowany tam, gdzie ze względu na duże natężenie ruchu pieszego, wyeliminowanie ruchu pojazdów zapewnia poprawę bezpieczeństwa.;"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="foot" value="official"/>
+</sign>
+
+<sign ref="PL:C-16a" name="koniec drogi dla pieszych" pl.name="koniec drogi dla pieszych"
+	long_name=""
+	pl.long_name="Znak oznacza koniec drogi przeznaczonej tylko dla pieszych.;"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="foot" value="no"/>
+</sign>
+
+<sign ref="PL:C-17[$val]" id="PL:C-17" name="nakazany kierunek jazdy dla pojazdów z towarami niebezpiecznymi" pl.name="nakazany kierunek jazdy dla pojazdów z towarami niebezpiecznymi"
+	long_name=""
+	pl.long_name="Znak wskazuje kierunek jazdy na skrzyżowaniu dla pojazdów przewożących towary niebezpieczne w ilościach, dla których jest wymagane oznakowanie pojazdu tablicami ostrzegawczymi barwy pomarańczowej. Kierunek wskazany może być symbolem znaku C-2, C-4, C-5, C-6, C-7 lub C-8. Znak stosowany w szczególności do wskazania miejsc postojowych dla pojazdów z towarami niebezpiecznymi, np. w terminalach odpraw celnych.;"
+	>
+	<parameter ident="val" input="textfield" prefix="znak kierunku:" default="PL:C-2" field_width="5"/>
+</sign>
+
+<sign ref="PL:C-18" name="nakaz używania łańcuchów przeciwpoślizgowych" pl.name="nakaz używania łańcuchów przeciwpoślizgowych"
+	long_name=""
+	pl.long_name="Znak oznacza, że kierujący pojazdem silnikowym ma obowiązek stosować łańcuchy przeciwpoślizgowe na co najmniej dwóch kołach napędowych. Stosowany w okresie zimowym na drogach, na których podczas opadów śniegu występują trudności poruszania się pojazdów niewyposażonych w łańcuchy. Umieszczona pod znakiem tabliczka od T-23a do T-23j oznacza, że nakaz dotyczy pojazdów określonych na tabliczce.;"
+	>
+	<supplementary id="PL:T-23a"/>
+	<supplementary id="PL:T-23b"/>
+	<supplementary id="PL:T-23c"/>
+	<supplementary id="PL:T-23d"/>
+	<supplementary id="PL:T-23e"/>
+	<supplementary id="PL:T-23f"/>
+	<supplementary id="PL:T-23g"/>
+	<supplementary id="PL:T-23h"/>
+	<supplementary id="PL:T-23i"/>
+	<supplementary id="PL:T-23j"/>
+</sign>
+
+<sign ref="PL:C-19" name="koniec nakazu używania łańcuchów przeciwpoślizgowych" pl.name="koniec nakazu używania łańcuchów przeciwpoślizgowych"
+	long_name=""
+	pl.long_name="Znak oznacza miejsce, w którym nakaz używania łańcuchów przeciwpoślizgowych przestaje obowiązywać.;"
+	>
+</sign>
+
+<sign ref="PL:C-13/16a" name="Split pedestrian &amp; bicycle path" pl.name="wskazujący ruch rowerów lewą stroną drogi i ruch pieszych prawą stroną drogi"
+	icon="PL_C-13_16a.png"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="foot" value="official"/>
+	<tag key="bicycle" value="official"/>
+	<tag key="segregated" value="yes"/>
+</sign>
+
+<sign ref="PL:C-13/16b" name="Split pedestrian &amp; bicycle path" pl.name="wskazujący ruch pieszych lewą stroną drogi i ruch rowerów prawą stroną drogi"
+	icon="PL_C-13_16b.png"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="foot" value="official"/>
+	<tag key="bicycle" value="official"/>
+	<tag key="segregated" value="yes"/>
+</sign>
+
+<sign ref="PL:C-13/16c" name="Pedestrian &amp; bicycle path" pl.name="wskazujący ruch pieszych i rowerów na tej samej drodze"
+	icon="PL_C-13_16c.png"
+	>
+	<tag key="highway" value="path"/>
+	<tag key="foot" value="official"/>
+	<tag key="bicycle" value="official"/>
+</sign>
+
+
+<sign ref="PL:A-1" name="hazardous turn right" pl.name="niebezpieczny zakręt w prawo"
+	long_name=""
+	pl.long_name="Znak ostrzega przed pojedynczym niebezpiecznym zakrętem w prawo. Stosuje się go na ogół poza miastami, gdy kąt zwrotu łuku drogi jest większy niż 5°, a jego promień jest mniejszy niż 750 m oraz w zależności od przechyłki. Ustawiany także na zakrętach o ograniczonej widoczności, bądź gdzie dochodzi do częstych wypadków lub kolizji.;"
+	>
+	<tag key="hazard" value="turn_right"/>
+</sign>
+
+<sign ref="PL:A-2" name="hazardous turn left" pl.name="niebezpieczny zakręt w lewo"
+	long_name=""
+	pl.long_name="Znak ostrzega przed pojedynczym niebezpiecznym zakrętem w lewo. Stosuje się go analogicznie jak znak A-1.;"
+	>
+	<tag key="hazard" value="turn_left"/>
+</sign>
+
+<sign ref="PL:A-3" name="multiple hazardous turns - first right" pl.name="niebezpieczne zakręty - pierwszy w prawo"
+	long_name=""
+	pl.long_name="Znak ostrzega przed niebezpiecznymi zakrętami, z których pierwszy jest w prawo. Stosuje się go na tych samych zasadach, co znaki A-1 i A-2, gdy odległość od końca pierwszego zakrętu do początku kolejnego wymagającego oznakowania zakrętu (niezależnie od tego, w którym jest kierunku) jest mniejsza niż 300 m.;Gdy liczba zakrętów jest większa niż 2, pod znakiem mogą być umieszczone tabliczki:;;T-2 'tabliczka wskazująca długość odcinka drogi, na którym powtarza się lub występuje niebezpieczeństwo' (koniec tego odcinka wskazuje tabliczka T-3),;T-4 'tabliczka wskazująca liczbę zakrętów',;T-5 'tabliczka wskazująca początek drogi krętej' (gdy krętość odcinka przekracza 160°/km).;;;"
+	>
+	<tag key="hazard" value="turns_first_right" ident="haz"/>
+	<supplementary id="PL:T-2"/>
+	<supplementary id="PL:T-3"/>
+	<supplementary id="PL:T-4"/>
+	<supplementary id="PL:T-5"/>
+</sign>
+
+<sign ref="PL:A-4" name="multiple hazardous turns - first left" pl.name="niebezpieczne zakręty - pierwszy w lewo"
+	long_name=""
+	pl.long_name="Znak ostrzega przed niebezpiecznymi zakrętami, z których pierwszy jest w lewo. Stosuje się go analogicznie jak znak A-3.;Gdy liczba zakrętów jest większa niż 2, pod znakiem mogą być umieszczone tabliczki:;;T-2 'tabliczka wskazująca długość odcinka drogi, na którym powtarza się lub występuje niebezpieczeństwo' (koniec tego odcinka wskazuje tabliczka T-3),;T-4 'tabliczka wskazująca liczbę zakrętów',;T-5 'tabliczka wskazująca początek drogi krętej' (gdy krętość odcinka przekracza 160°/km).;;;"
+	>
+	<tag key="hazard" value="turns_first_left" ident="haz"/>
+	<supplementary id="PL:T-2"/>
+	<supplementary id="PL:T-3"/>
+	<supplementary id="PL:T-4"/>
+	<supplementary id="PL:T-5"/>
+</sign>
+
+<sign ref="PL:A-5" name="equal priority road crossing" pl.name="skrzyżowanie dróg"
+	long_name=""
+	pl.long_name="Znak ostrzega przed skrzyżowaniem dróg, na którym pierwszeństwo nie jest określone znakami (skrzyżowanie równorzędne). Stosowany wyłącznie wtedy, gdy jedna z dróg miała nadane pierwszeństwo znakiem D-1 'droga z pierwszeństwem', A-6a, A-6b, A-6c, A-6d, A-6e 'skrzyżowanie z drogą podporządkowaną', lub gdy układ skrzyżowania może sugerować inne zasady pierwszeństwa.;"
+	>
+	<tag key="hazard" value="crossing_equal"/>
+</sign>
+
+<sign ref="PL:A-6a" name="minor priority road crossing" pl.name="skrzyżowanie z drogą podporządkowaną występującą po obu stronach"
+	long_name=""
+	pl.long_name="Znak ostrzega przed skrzyżowaniem z drogą podporządkowaną występującą po obu stronach drogi z pierwszeństwem. Stosowany jest poza obszarem zabudowanym dla wskazania pierwszeństwa drogi przebiegającej na wprost, przy której jest ustawiony. Jeżeli osie dróg poprzecznych nie przecinają się na skrzyżowaniu, stosuje się tabliczkę T-6b 'tabliczka wskazująca układ dróg podporządkowanych'.;"
+	>
+	<tag key="hazard" value="crossing_minor"/>
+	<supplementary id="PL:T-6b"/>
+</sign>
+
+<sign ref="PL:A-6b" name="minor priority road crossing on right hand side" pl.name="skrzyżowanie z drogą podporządkowaną występującą po prawej stronie"
+	long_name=""
+	pl.long_name="Znak, stosowany podobnie jak A-6a, ostrzega przed skrzyżowaniem z drogą podporządkowaną występującą po prawej stronie drogi z pierwszeństwem.;"
+	>
+	<tag key="hazard" value="crossing_minor_right"/>
+</sign>
+
+<sign ref="PL:A-6c" name="minor priority road crossing on left hand side" pl.name="skrzyżowanie z drogą podporządkowaną występującą po lewej stronie"
+	long_name=""
+	pl.long_name="Znak, stosowany podobnie jak A-6a, ostrzega przed skrzyżowaniem z drogą podporządkowaną występującą po lewej stronie drogi z pierwszeństwem.;"
+	>
+	<tag key="hazard" value="crossing_minor_left"/>
+</sign>
+
+<sign ref="PL:A-6d" name="wlot drogi jednokierunkowej z prawej strony" pl.name="wlot drogi jednokierunkowej z prawej strony"
+	long_name=""
+	pl.long_name="Znak ostrzega przed skrzyżowaniem z podporządkowanym wlotem - drogą kończącą się pasem włączania z prawej strony.;"
+	>
+</sign>
+
+<sign ref="PL:A-6e" name="wlot drogi jednokierunkowej z lewej strony" pl.name="wlot drogi jednokierunkowej z lewej strony"
+	long_name=""
+	pl.long_name="Znak ostrzega przed skrzyżowaniem z podporządkowanym wlotem - drogą kończącą się pasem włączania z lewej strony.;"
+	>
+</sign>
+
+<sign ref="PL:A-7" name="yield" pl.name="ustąp pierwszeństwa"
+	long_name=""
+	pl.long_name="Znak ostrzega przed koniecznością ustąpienia pierwszeństwa. Umieszczony jest na drodze podporządkowanej przed skrzyżowaniem z drogą z pierwszeństwem, gdy spełnione są warunki widoczności (w innym wypadku stosuje się znak B-20 'stop'). Znak dotyczy tylko najbliższej jezdni, przed którą został umieszczony. Może być umieszczony w innych miejscach, gdzie z przepisów ustawy - Prawo o ruchu drogowym wynika obowiązek ustąpienia pierwszeństwa, np. wyjazd z obiektu, torowisko tramwajowe.;Pod znakiem może być umieszczona tabliczka T-6c 'tabliczka wskazująca rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie';Na drogach o dopuszczalnej prędkości powyżej 60 km/h znak A-7 poprzedzany jest znakiem A-7 z tabliczką T-1 'tabliczka wskazująca odległość znaku ostrzegawczego od miejsca niebezpiecznego'.;;"
+	wiki="Yield"
+	>
+	<tag key="highway" value="give_way" ident="yield"/>
+	<supplementary id="PL:T-6c"/>
+	<supplementary id="PL:T-1"/>
+</sign>
+
+<sign ref="PL:A-8" name="roundabout" pl.name="skrzyżowanie o ruchu okrężnym"
+	long_name=""
+	pl.long_name="Znak ostrzega przed skrzyżowaniem, na którym ruch odbywa się dookoła wyspy lub placu w kierunku wskazanym na znaku, oznaczonym znakiem C-12 'ruch okrężny'. Stosowany zwykle, gdy droga miała wcześniej nadane pierwszeństwo lub skrzyżowanie nie jest widoczne z dostatecznej odległości.;"
+	>
+	<tag key="hazard" value="roundabout"/>
+</sign>
+
+<sign ref="PL:A-9" name="railway crossing" pl.name="przejazd kolejowy z zaporami"
+	long_name=""
+	pl.long_name="Znak ostrzega przed przejazdem kolejowym wyposażonym w zapory zamykające całą szerokość jezdni lub półzapory zamykające wjazd na przejazd. Wraz ze znakiem stosuje się słupki wskaźnikowe G-1a, G-1b, G-1c (po prawej stronie jezdni), 'G-1d, G-1e, G-1f (po lewej stronie jezdni na jezdniach jednokierunkowych).;"
+	wiki="Key:railway"
+	>
+	<tag key="railway" value="level_crossing"/>
+</sign>
+
+<sign ref="PL:A-10" name="no barrier railway crossing" pl.name="przejazd kolejowy bez zapór"
+	long_name=""
+	pl.long_name="Znak ostrzega przed przejazdem kolejowym niewyposażonym w zapory lub półzapory. Przejazd może być wyposażony w samoczynną sygnalizację świetlną.;W przypadku przejazdów niebezpiecznych ze względu na ostry kąt przecięcia się drogi z linią kolejową lub przebieg linii kolejowej po łuku, pod znakiem stosuje się tabliczkę T-7 'tabliczka wskazująca układ torów i drogi na przejeździe'.;Wraz ze znakiem również stosuje się słupki wskaźnikowe, a także 'krzyż św. Andrzeja' G-3 lub G-4, wyznaczający miejsce, w którym powinien być zatrzymany pojazd w związku z przejazdem pociągu (nie bliżej niż 5 m od skrajnej szyny).;;"
+	wiki="Key:railway"
+	>
+	<tag key="railway" value="crossing"/>
+	<supplementary id="PL:T-7"/>
+</sign>
+
+<sign ref="PL:A-11" name="nierówna droga" pl.name="nierówna droga"
+	long_name=""
+	pl.long_name="Znak ostrzega przed odcinkiem jezdni na którym występują poprzeczne nierówności jezdni, które mogą być niebezpieczne dla ruchu lub obniżają komfort jazdy.;"
+	>
+</sign>
+
+<sign ref="PL:A-11a" name="próg zwalniający" pl.name="próg zwalniający"
+	long_name=""
+	pl.long_name="Znak ostrzega przed progiem zwalniającym - wypukłością zastosowaną na jezdni w celu spowolnienia ruchu pojazdów.;"
+	>
+</sign>
+
+<sign ref="PL:A-12a" name="zwężenie jezdni - dwustronne" pl.name="zwężenie jezdni - dwustronne"
+	long_name=""
+	pl.long_name="Znak ostrzega przed zwężeniem jezdni, które może powodować utrudnienia ruchu lub być niebezpieczne dla kierujących, gdy występuje zmniejszenie szerokości po obu stronach jezdni przekraczające 0,2 m, a szerokość zwężonego odcinka wynosi mniej niż 5,5 m.;"
+	>
+</sign>
+
+<sign ref="PL:A-12b" name="zwężenie jezdni - prawostronne" pl.name="zwężenie jezdni - prawostronne"
+	long_name=""
+	pl.long_name="Znak ostrzega przed zwężeniem jezdni, które może powodować utrudnienia ruchu lub być niebezpieczne dla kierujących, gdy występuje zmniejszenie szerokości po prawej stronie jezdni przekraczające 0,2 m, a szerokość zwężonego odcinka wynosi mniej niż 5,5 m.;"
+	>
+</sign>
+
+<sign ref="PL:A-12c" name="zwężenie jezdni - lewostronne" pl.name="zwężenie jezdni - lewostronne"
+	long_name=""
+	pl.long_name="Znak ostrzega przed zwężeniem jezdni, które może powodować utrudnienia ruchu lub być niebezpieczne dla kierujących, gdy występuje zmniejszenie szerokości po lewej stronie jezdni przekraczające 0,2 m, a szerokość zwężonego odcinka wynosi mniej niż 5,5 m.;"
+	>
+</sign>
+
+<sign ref="PL:A-13" name="ruchomy most" pl.name="ruchomy most"
+	long_name=""
+	pl.long_name="Znak ostrzega przed mostem o ruchomym przęśle. Umieszczany jest przed wjazdem na czynny most zwodzony lub obrotowy.;"
+	>
+</sign>
+
+<sign ref="PL:A-14" name="roboty na drodze" pl.name="roboty na drodze"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem, w którym prowadzone są na drodze roboty, gdzie kierujący może spotkać osoby pracujące na drodze lub przeszkody utrudniające ruch, takie jak maszyny, materiały.;Umieszczona pod znakiem tabliczka T-19 wskazuje na malowanie znaków poziomych.;;"
+	>
+	<supplementary id="PL:T-19"/>
+</sign>
+
+<sign ref="PL:A-15" name="śliska jezdnia" pl.name="śliska jezdnia"
+	long_name=""
+	pl.long_name="Znak ostrzega przed możliwością poślizgu pojazdu z powodu zmniejszonej szorstkości jezdni spowodowanej w szczególności:;;zmianą nawierzchni jezdni,;stałym lub okresowym zawilgoceniem nawierzchni jezdni.;;;"
+	>
+	<tag key="hazard" value="slippery_road"/>
+</sign>
+
+<sign ref="PL:A-16" name="pedestrians crossing" pl.name="przejście dla pieszych"
+	long_name=""
+	pl.long_name="Znak ostrzega przed przejściem dla pieszych. Umieszcza się go przed przejściem bez sygnalizacji świetlnej na drogach o dopuszczalnej prędkości powyżej 60 km/h lub przed przejściem poza skrzyżowaniami, gdy może nie być widoczne odpowiednio wcześnie.;"
+	>
+	<tag key="hazard" value="pedestrians"/>
+</sign>
+
+<sign ref="PL:A-17" name="children" pl.name="dzieci"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem na drodze szczególnie uczęszczanym przez dzieci w wieku od 7 do 15 lat. Znak umieszcza się zwłaszcza w pobliżu szkół podstawowych, gimnazjów, placówek prowadzących zajęcia z dziećmi, terenów zabaw itp.;"
+	>
+	<tag key="hazard" value="children"/>
+</sign>
+
+<sign ref="PL:A-18a" name="household animals" pl.name="zwierzęta gospodarskie"
+	long_name=""
+	pl.long_name="Znak ostrzega przed możliwością napotkania na drodze zwierząt gospodarskich. Stosuje się go do oznaczania miejsc, w których odbywa się regularny przepęd zwierząt wzdłuż lub w poprzek (przy ośrodkach hodowlanych, pastwiskach itp.);"
+	>
+	<tag key="hazard" value="sheep"/>
+	<tag key="hazard" value="cattle"/>
+	<tag key="hazard" value="household_animals"/>
+</sign>
+
+<sign ref="PL:A-18b" name="wild animals" pl.name="zwierzęta dzikie"
+	long_name=""
+	pl.long_name="Znak ostrzega przed możliwością napotkania na drodze zwierząt dzikich. Stosuje się go do oznaczania miejsc, w których zwierzęta dziko żyjące często przekraczają drogę (lasy z dużą ilością zwierzyny, szlaki wędrówek zwierząt);"
+	>
+	<tag key="hazard" value="wild_animals"/>
+</sign>
+
+<sign ref="PL:A-19" name="side wind" pl.name="boczny wiatr"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem, w którym mogą występować silne boczne podmuchy wiatru, np. przy wyjeździe z gęstego lasu, głębokiego wykopu, obszaru o zwartej zabudowie na otwarty teren. W miejscach występowania silnych podmuchów wiatru może być ustawiony sygnalizator pokazujący siłę i kierunek wiatru w danej chwili.;"
+	>
+	<tag key="hazard" value="side_wind"/>
+</sign>
+
+<sign ref="PL:A-20" name="odcinek jezdni o ruchu dwukierunkowym" pl.name="odcinek jezdni o ruchu dwukierunkowym"
+	long_name=""
+	pl.long_name="Znak ostrzega jadących jezdnią jednokierunkową przed miejscem, w którym rozpoczyna się ruch dwukierunkowy. Stosowany w sytuacji, gdy:;;dwie jezdnie jednokierunkowe łączą się w jedną jezdnię dwukierunkową,;przy wprowadzeniu ruchu w przeciwnym kierunku na jezdnię mającą dotychczas ruch jednokierunkowy.;;;"
+	>
+</sign>
+
+<sign ref="PL:A-21" name="tram" pl.name="tramwaj"
+	long_name=""
+	pl.long_name="Znak ostrzega przed przecięciem drogi przez tory tramwajowe w taki sposób, że kierujący mogą nie zorientować się odpowiednio wcześnie o istnieniu tych torów.;Przed przejazdami tramwajowymi niebezpiecznymi ze względu na ostry kąt przecięcia się drogi z linią kolejową lub przebieg torów po łuku, pod znakiem stosuje się tabliczkę T-7 'tabliczka wskazująca układ torów i drogi na przejeździe'.;Tabliczka T-8 pod znakiem wskazuje pas ruchu skierowany na tory tramwajowe.;;"
+	>
+	<tag key="hazard" value="tram"/>
+	<supplementary id="PL:T-7"/>
+	<supplementary id="PL:T-8"/>
+</sign>
+
+<sign ref="PL:A-22" name="Incline down" pl.name="niebezpieczny zjazd"
+	long_name=""
+	pl.long_name="Znak ostrzega przed znacznym spadkiem podłużnym drogi, co najmniej 10% w terenie górskim, a na pozostałych drogach co najmniej 7%, bądź gdy zjazd jest niebezpieczny ze względu na ostre zakręty lub zły stan nawierzchni. Umieszczona pod znakiem tabliczka T-9 wskazuje rzeczywistą wielkość spadku.;"
+	wiki="Key:incline"
+	>
+	<tag key="incline" value="down" ident="incl"/>
+	<supplementary id="PL:T-9"/>
+</sign>
+
+<sign ref="PL:A-23" name="Incline up" pl.name="stromy podjazd"
+	long_name=""
+	pl.long_name="Znak ostrzega przed znacznym wzniesieniem drogi, co najmniej 8% w terenie górskim, a na pozostałych drogach co najmniej 6%, bądź gdy wjazd na wzniesienie jest utrudniony ze względu na ostre zakręty lub zły stan nawierzchni. Umieszczona pod znakiem tabliczka T-9 wskazuje rzeczywistą wielkość wzniesienia.;"
+	wiki="Key:incline"
+	>
+	<tag key="incline" value="up" ident="incl"/>
+	<supplementary id="PL:T-9"/>
+</sign>
+
+<sign ref="PL:A-24" name="cyclists" pl.name="rowerzyści"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem, w którym rowerzyści wyjeżdżają z drogi dla rowerów. Umieszcza się go też przed przejazdem dla rowerzystów na drogach o dopuszczalnej prędkości powyżej 60 km/h lub przed przejazdem poza skrzyżowaniami, albo gdy przejazd może nie być widoczny odpowiednio wcześnie.;"
+	>
+	<tag key="hazard" value="cyclists"/>
+</sign>
+
+<sign ref="PL:A-25" name="falling rocks" pl.name="spadające odłamki skalne"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem, w którym na drogę mogą staczać się lub zalegać na niej odłamki skalne, stanowiące niebezpieczeństwo dla nadjeżdżających pojazdów.;"
+	>
+	<tag key="hazard" value="falling_rocks"/>
+</sign>
+
+<sign ref="PL:A-26" name="airport" pl.name="lotnisko"
+	long_name=""
+	pl.long_name="Znak ostrzega przed możliwością nagłego pojawienia się nisko przelatującego samolotu lub śmigłowca. Znak stosuje się w pobliżu lotnisk, gdzie nagłe pojawienie się przelatującego nisko samolotu może przestraszyć kierującego pojazdem i spowodować nieprawidłowy manewr.;"
+	>
+	<tag key="hazard" value="airport"/>
+</sign>
+
+<sign ref="PL:A-27" name="water bank" pl.name="nabrzeże lub brzeg rzeki"
+	long_name=""
+	pl.long_name="Znak ostrzega przed odcinkiem drogi prowadzącym bezpośrednio do nabrzeża lub wzdłuż brzegu rzeki lub innego zbiornika wodnego w odległości mniejszej niż 10 m, gdzie nie są zastosowane bariery ochronne.;"
+	>
+	<tag key="hazard" value="water_bank"/>
+</sign>
+
+<sign ref="PL:A-28" name="loose gravel" pl.name="sypki żwir"
+	long_name=""
+	pl.long_name="Znak ostrzega przed odcinkiem drogi pokrytej żwirem (grysem), który może być wyrzucany spod kół jadących pojazdów. Dotyczy to przede wszystkim nawierzchni tłuczniowych oraz nawierzchni, na których przeprowadzone powierzchniowe utrwalenie warstwy ścieralnej do czasu stabilnego oblepienia kruszywa przez bitum. Ponadto znak może być umieszczony przed wyjazdami z kamieniołomów lub żwirowni.;"
+	>
+	<tag key="hazard" value="loose_gravel"/>
+</sign>
+
+<sign ref="PL:A-29" name="traffic signals" pl.name="sygnały świetlne"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem, w którym ruch jest kierowany za pomocą sygnalizacji świetlnej. Znak stosuje się:;;przed każdą sygnalizacją świetną poza obszarem zabudowanym,;przed pierwszą sygnalizacją w obszarze zabudowanych,;w każdym miejscu, gdzie sygnalizacja zastosowana została do kierowania ruchem wahadłowym,;w każdym miejscu, gdy sygnalizator jest tylko zawieszony nad jezdnią.;;;"
+	>
+	<tag key="hazard" value="traffic_signals"/>
+</sign>
+
+<sign ref="PL:A-30" name="inne niebezpieczeństwo" pl.name="inne niebezpieczeństwo"
+	long_name=""
+	pl.long_name="Znak ostrzega przed niebezpieczeństwem innego rodzaju niż określone pozostałymi znakami ostrzegawczymi. Umieszczona pod znakiem tabliczka wskazuje rodzaj niebezpieczeństwa za pomocą symbolu lub napisu. Ze znakiem A-30 najczęściej stosowane są następujące tabliczki:;;T-10 'tabliczka wskazująca bocznicę kolejową lub tor o podobnym charakterze' - w miejscu tak oznakowanym ruch na drodze jest wstrzymywany przez pracownika kolei podczas przejeżdżania (przetaczania) pociągu,;T-11 'tabliczka wskazująca przeprawę promową',;T-12 'tabliczka wskazująca podłużny uskok nawierzchni',;T-13 'tabliczka wskazująca odcinek drogi, na którym występują deformacje nawierzchni w postaci kolein',;T-14 'tabliczka wskazująca miejsce częstych wypadków o charakterze wskazanym na tabliczce',;T-15 'tabliczka wskazująca miejsce częstych wypadków spowodowanych śliską nawierzchnią jezdni ze względu na opady deszczu',;T-16 'tabliczka wskazująca miejsce wyjazdu pojazdów uprzywilejowanych wskazanych na tabliczce',;T-17 'tabliczka wskazująca granicę państwa',;T-18 'tabliczka wskazująca nieoczekiwaną zmianę kierunku ruchu o przebiegu wskazanym na tabliczce'.;;;"
+	>
+	<supplementary id="PL:T-10"/>
+	<supplementary id="PL:T-11"/>
+	<supplementary id="PL:T-12"/>
+	<supplementary id="PL:T-13"/>
+	<supplementary id="PL:T-14"/>
+	<supplementary id="PL:T-14a"/>
+	<supplementary id="PL:T-14b"/>
+	<supplementary id="PL:T-15"/>
+	<supplementary id="PL:T-16"/>
+	<supplementary id="PL:T-16a"/>
+	<supplementary id="PL:T-17"/>
+	<supplementary id="PL:T-18"/>
+</sign>
+
+<sign ref="PL:A-31" name="hazardous roadside" pl.name="niebezpieczne pobocze"
+	long_name=""
+	pl.long_name="Znak ostrzega przed niebezpiecznym poboczem (wąskim, miękkim, zbyt wysokim lub obniżonym) lub końcem pobocza bitumicznego przechodzącego w ziemne. Znak z odwróconym symbolem ostrzega o niebezpiecznym poboczu występującym po lewej stronie drogi.;Odmiany A-31:;;;znak;Informacja;;"
+	>
+	<tag key="hazard" value="roadside"/>
+</sign>
+
+<sign ref="PL:A-31a" name="hazardous left roadside" pl.name="niebezpieczne pobocze po lewej stronie"
+	>
+	<tag key="hazard" value="roadside_left"/>
+</sign>
+
+<sign ref="PL:A-32" name="frost on the roadway" pl.name="oszronienie jezdni"
+	long_name=""
+	pl.long_name="Znak ostrzega przed mogącym występować na drodze oszronieniem jezdni lub gołoledzią. Stosowany jest wyłącznie w okresie zimowym przed mostami i wiaduktami, na których oszronienie jezdni lub gołoledź pojawia się, gdy nie występuje jeszcze na innych odcinkach drogi oraz w pobliżu rzek i zbiorników wodnych.;"
+	>
+	<tag key="hazard" value="frost"/>
+</sign>
+
+<sign ref="PL:A-33" name="traffic jam" pl.name="zator drogowy"
+	long_name=""
+	pl.long_name="Znak ostrzega przed częstym występowaniem zablokowania ruchu ze względu na natężenie ruchu pojazdów, gdy stojące pojazdy mogą nie zostać w porę dostrzeżone przez kierującego, np. przed skrzyżowaniem z sygnalizacją świetlną, gdy odcinek jezdni jest niewidoczny ze względu na zakręt lub wzniesienie.;"
+	>
+	<tag key="hazard" value="traffic_jam"/>
+</sign>
+
+<sign ref="PL:A-34" name="road accident" pl.name="wypadek drogowy"
+	long_name=""
+	pl.long_name="Znak ostrzega przed miejscem, w którym na skutek wypadku drogowego nastąpiło zablokowanie drogi lub znaczne utrudnienie ruchu pojazdów. Znak ustawiany jest przez służby zabezpieczające miejsce wypadku.;"
+	>
+	<tag key="hazard" value="accident"/>
+</sign>
+
+
+<sign ref="PL:D-1" name="droga z pierwszeństwem" pl.name="droga z pierwszeństwem"
+	long_name=""
+	pl.long_name="Oznacza początek lub kontynuację drogi z pierwszeństwem. Znak posiada dwie wersje różniące się wielkością:;;o długości boku 600 lub 900 mm – umieszczaną na początku drogi z pierwszeństwem w obszarze zabudowanym oraz przed każdym skrzyżowaniem na który droga z pierwszeństwem zmienia kierunek wraz tabliczkami T-6a albo T-6b wskazującymi odpowiednio rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie lub układ dróg podporządkowanych (gruba linia na tabliczkach oznacza drogę z pierwszeństwem) w odległości do 50 m od skrzyżowania.;o długości boku 400 mm – powtarzaną przed skrzyżowaniami wzdłuż drogi z pierwszeństwem.;;;"
+	>
+	<supplementary id="PL:T-6a"/>
+	<supplementary id="PL:T-6b"/>
+</sign>
+
+<sign ref="PL:D-2" name="koniec drogi z pierwszeństwem" pl.name="koniec drogi z pierwszeństwem"
+	long_name=""
+	pl.long_name="Oznacza odwołanie pierwszeństwa nadanego znakiem drogi D-1 droga z pierwszeństwem przed skrzyżowaniem z inną drogą z pierwszeństwem, skrzyżowaniem równorzędnym lub skrzyżowaniem o ruchu okrężnym.;"
+	>
+</sign>
+
+<sign ref="PL:D-3" name="oneway" pl.name="droga jednokierunkowa"
+	long_name=""
+	pl.long_name="Oznacza początek lub kontynuację drogi lub jezdni, na której ruch odbywa się w jednym kierunku. Umieszczona pod znakiem tabliczka T-22 wskazuje, że ruch rowerów jednośladowych na wyznaczonym na jezdni pasie ruchu przeznaczonym dla tych pojazdów odbywa się w kierunku przeciwnym do wskazanego na znaku.;"
+	wiki="Key:oneway"
+	>
+	<tag key="oneway" value="yes" ident="onew"/>
+	<supplementary id="PL:T-22"/>
+</sign>
+
+<sign ref="PL:D-4a" name="droga bez przejazdu" pl.name="droga bez przejazdu"
+	long_name=""
+	pl.long_name="Oznacza początek drogi, której przeciwległy koniec nie ma połączenia z inną drogą lub wjazd do zamkniętego obszaru, z którego wyjazd jest możliwy tylko w tym samym miejscu.;"
+	wiki="Key:noexit"
+	>
+	<tag key="noexit" value="yes"/>
+</sign>
+
+<sign ref="PL:D-4b" name="wjazd na drogę bez przejazdu" pl.name="wjazd na drogę bez przejazdu"
+	long_name=""
+	pl.long_name="Oznacza, że droga za skrzyżowaniem jest drogą bez przejazdu.;Odmiany D-4b:;;;znak;Informacja;;"
+	>
+</sign>
+
+<sign ref="PL:D-4c" name="wjazd na drogę bez przejazdu z lewej strony" pl.name="wjazd na drogę bez przejazdu z lewej strony"
+	>
+</sign>
+
+<sign ref="PL:D-5" name="pierwszeństwo na zwężonym odcinku jezdni" pl.name="pierwszeństwo na zwężonym odcinku jezdni"
+	long_name=""
+	pl.long_name="Oznacza, że kierujący przejeżdżają lub przechodzą przed kierującymi zbliżającymi się z kierunku przeciwnego.;Po przeciwnej stronie zwężenia ustawiany jest znak B-31 pierwszeństwo dla nadjeżdżających z przeciwka. Taka organizacja ruchu wprowadzana jest na zwężonych odcinkach krótszych niż 150 m, gdzie nie mogą wyminąć się pojazdy o szerokości 2,5 m oraz gdy kierujący mają dobrą widoczność pojazdów nadjeżdżających z przeciwka.;;"
+	>
+</sign>
+
+<sign ref="PL:D-6" name="przejście dla pieszych" pl.name="przejście dla pieszych"
+	long_name=""
+	pl.long_name="Onacza miejsce przeznaczone do przechodzenia pieszych w poprzek drogi. Znak umieszcza się bezpośrednio przed przejściem dla pieszych oznaczonym znakiem poziomym P-10. Kierujący pojazdem zbliżający się do miejsca oznaczonego znakiem jest obowiązany zmniejszyć prędkość tak, aby nie narazić na niebezpieczeństwo pieszych znajdujących się w tych miejscach lub na nie wchodzących. Umieszczona pod znakiem tabliczka T-27 wskazuje, że przejście dla pieszych jest szczególnie uczęszczane przez dzieci.;"
+	wiki="Tag:highway=crossing"
+	>
+	<tag key="highway" value="crossing"/>
+	<supplementary id="PL:T-27"/>
+</sign>
+
+<sign ref="PL:D-6a" name="przejazd dla rowerzystów" pl.name="przejazd dla rowerzystów"
+	long_name=""
+	pl.long_name="Oznacza miejsce przeznaczone do przejeżdżania rowerzystów w poprzek drogi. Znak umieszcza się bezpośrednio przed przejazdem dla rowerzystów oznaczonym znakiem poziomym P-11. Kierujący pojazdem zbliżający się do miejsca oznaczonego znakiem jest obowiązany zmniejszyć prędkość tak, aby nie narazić na niebezpieczeństwo rowerzystów znajdujących się w tych miejscach lub na nie wjeżdżających.;"
+	wiki="Tag:highway=crossing"
+	>
+	<tag key="highway" value="crossing"/>
+</sign>
+
+<sign ref="PL:D-6b" name="przejście dla pieszych i przejazd dla rowerzystów" pl.name="przejście dla pieszych i przejazd dla rowerzystów"
+	long_name=""
+	pl.long_name="Oznacza miejsce przeznaczone do przechodzenia pieszych i przejeżdżania rowerzystów w poprzek drogi. Znak umieszcza się bezpośrednio przed przejazd dla rowerzystów i przejazdem dla rowerzystów znajdującymi się obok siebie. Kierujący pojazdem zbliżający się do miejsca oznaczonego znakiem jest obowiązany zmniejszyć prędkość tak, aby nie narazić na niebezpieczeństwo pieszych znajdujących się w tych miejscach lub na nie wchodzących oraz rowerzystów znajdujących się w tych miejscach lub na nie wjeżdżających. Umieszczona pod znakiem tabliczka T-27 wskazuje, że przejście dla pieszych jest szczególnie uczęszczane przez dzieci.;"
+	wiki="Tag:highway=crossing"
+	>
+	<tag key="highway" value="crossing"/>
+	<supplementary id="PL:T-27"/>
+</sign>
+
+<sign ref="PL:D-7" name="droga ekspresowa" pl.name="droga ekspresowa"
+	long_name=""
+	pl.long_name="Oznacza początek lub kontynuację drogi ekspresowej. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do początku drogi. Umieszczona pod znakiem tabliczka T-28 wskazuje, że za przejazd pobierane są opłaty.;"
+	>
+	<supplementary id="PL:T-1a"/>
+	<supplementary id="PL:T-28"/>
+</sign>
+
+<sign ref="PL:D-8" name="koniec drogi ekspresowej" pl.name="koniec drogi ekspresowej"
+	long_name=""
+	pl.long_name="Oznacza koniec drogi ekspresowej. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do końca drogi.;"
+	>
+	<supplementary id="PL:T-1a"/>
+</sign>
+
+<sign ref="PL:D-9" name="autostrada" pl.name="autostrada"
+	long_name=""
+	pl.long_name="Oznacza początek lub kontynuację autostrady. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do początku autostrady. Umieszczona pod znakiem tabliczka T-28 wskazuje, że za przejazd pobierane są opłaty.;"
+	>
+	<supplementary id="PL:T-1a"/>
+	<supplementary id="PL:T-28"/>
+</sign>
+
+<sign ref="PL:D-10" name="koniec autostrady" pl.name="koniec autostrady"
+	long_name=""
+	pl.long_name="Oznacza koniec autostrady. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do końca autostrady.;"
+	>
+	<supplementary id="PL:T-1a"/>
+</sign>
+
+<sign ref="PL:D-11" name="początek pasa ruchu dla autobusów" pl.name="początek pasa ruchu dla autobusów"
+	long_name=""
+	pl.long_name="Oznacza początek pasa ruchu przeznaczonego tylko dla autobusów i trolejbusów oraz innych pojazdów wykonujących odpłatny przewóz osób na regularnych liniach. Jeżeli na pasie dopuszczony jest ruch innych pojazdów, na znaku umieszczony jest odpowidni napis, np. TAXI, co oznacza, że na pasie oznaczonym tym znakiem jest dopuszczony także ruch taksówek.;Wyznaczanie pasów ruchu dla autobusów i trolejbusów ma na celu poprawienie sprawności kursowania tych pojazdów na zatłoczonych ulicach.;;"
+	>
+</sign>
+
+<sign ref="PL:D-12" name="pas ruchu dla autobusów" pl.name="pas ruchu dla autobusów"
+	long_name=""
+	pl.long_name="Oznacza kontynuację pasa ruchu dla autobusów i innych pojazdów wykonującymi odpłatny przewóz na regularnych liniach. Znak D-12 z tabliczką T-3a oznacza koniec pasa ruchu przed znajdujący się przed skrzyżowaniem.;"
+	>
+	<!-- ident="info" -->
+	<supplementary id="PL:T-3a"/>
+</sign>
+
+<sign ref="PL:D-13[$val]" id="PL:D-13" name="początek pasa ruchu powolnego" pl.name="początek pasa ruchu powolnego"
+	long_name=""
+	pl.long_name="Oznacza początek pasa ruchu, z którego są obowiązani korzystać kierujący pojazdami nieosiągającymi na wzniesieniu minimalnej prędkości określonej na znaku liczbą kilometrów na godzinę. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do początku pasa ruchu.;"
+	>
+	<parameter ident="val" input="textfield" suffix="km/h" default="30" field_width="2"/>
+	<supplementary id="PL:T-1a"/>
+</sign>
+
+<sign ref="PL:D-13a" name="początek pasa ruchu" pl.name="początek pasa ruchu"
+	long_name=""
+	pl.long_name="Oznacza początek pasa ruchu po stronie wskazanej na znaku. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do początku lub końca pasa ruchu.;"
+	>
+	<supplementary id="PL:T-1a"/>
+</sign>
+
+<sign ref="PL:D-14" name="koniec pasa ruchu" pl.name="koniec pasa ruchu"
+	long_name=""
+	pl.long_name="Oznacza koniec skrajnego pasa ruchu, znajdującego się po stronie wskazanej na znaku. Znak D-14 umieszczony przy pasie ruchu powolnego oznacza koniec tego pasa ruchu. Umieszczona pod znakiem tabliczka T-1a wskazuje odległość do początku lub końca pasa ruchu.;"
+	>
+	<supplementary id="PL:T-1a"/>
+</sign>
+
+<sign ref="PL:D-15" name="przystanek autobusowy" pl.name="przystanek autobusowy"
+	long_name=""
+	pl.long_name="Oznacza miejsce zatrzymywania się wskazanych na znaku pojazdów wykonujących odpłatny przewóz osób na regularnych liniach. Oznacza ponadto miejsce do zatrzymywania się innych niż autobus pojazdów samochodowych wykonujących odpłatny przewóz osób na regularnych liniach i pojazdów przeznaczonych do przewozu dzieci do szkół i przedszkoli.;"
+	>
+</sign>
+
+<sign ref="PL:D-16" name="przystanek trolejbusowy" pl.name="przystanek trolejbusowy"
+	long_name=""
+	pl.long_name="Oznacza miejsce zatrzymywania się wskazanych na znaku pojazdów wykonujących odpłatny przewóz osób na regularnych liniach.;"
+	>
+</sign>
+
+<sign ref="PL:D-17" name="przystanek tramwajowy" pl.name="przystanek tramwajowy"
+	long_name=""
+	pl.long_name="Oznacza miejsce zatrzymywania się wskazanych na znaku pojazdów wykonujących odpłatny przewóz osób na regularnych liniach.;"
+	>
+</sign>
+
+<sign ref="PL:D-18" name="parking" pl.name="parking"
+	long_name=""
+	pl.long_name="Oznacza miejsce przeznaczone na postój pojazdów (zespołów pojazdów), z wyjątkiem przyczep kempingowych; umieszczona pod znakiem tabliczka T-23e oznacza, że na parkingu jest dopuszczony także postój przyczep kempingowych. Umieszczona pod znakiem D-18 tabliczka T-30 wskazuje sposób ustawienia pojazdu względem krawędzi jezdni (oznaczonej na tabliczce barwą szarą) oraz że miejsce jest przeznaczone dla pojazdów samochodowych o dopuszczalnej masie całkowitej nieprzekraczającej 2,5 t. Umieszczona pod znakiem D-18 tabliczka T-3a wskazuje koniec miejsca przeznaczonego na postój. Umieszczona pod znakiem tabliczka T-29 informuje o miejscu przeznaczonym dla pojazdu samochodowego uprawnionej osoby niepełnosprawnej o obniżonej sprawności ruchowej oraz dla kierującego pojazdem przewożącego taką osobę. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	wiki="Tag:amenity=parking"
+	>
+	<tag key="amenity" value="parking" ident="info"/>
+	<supplementary id="PL:T-23e"/>
+	<supplementary id="PL:T-30"/>
+	<supplementary id="PL:T-30a"/>
+	<supplementary id="PL:T-30b"/>
+	<supplementary id="PL:T-30c"/>
+	<supplementary id="PL:T-30d"/>
+	<supplementary id="PL:T-30e"/>
+	<supplementary id="PL:T-30f"/>
+	<supplementary id="PL:T-30g"/>
+	<supplementary id="PL:T-30h"/>
+	<supplementary id="PL:T-30i"/>
+	<supplementary id="PL:T-3a"/>
+	<supplementary id="PL:T-29"/>
+</sign>
+
+<sign ref="PL:D-18a" name="parking - miejsce zastrzeżone" pl.name="parking - miejsce zastrzeżone"
+	long_name=""
+	pl.long_name="Oznacza miejsce przeznaczone na postój pojazdu uprawnionej osoby. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-18b" name="parking zadaszony" pl.name="parking zadaszony"
+	long_name=""
+	pl.long_name="Oznacza zadaszone miejsce przeznaczone na postój pojazdów (np. znajdujące się w budynku lub pod wiatą). Umieszczona pod znakiem tabliczka T-29 informuje o miejscu przeznaczonym dla pojazdu samochodowego uprawnionej osoby niepełnosprawnej o obniżonej sprawności ruchowej oraz dla kierującego pojazdem przewożącego taką osobę. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+	<supplementary id="PL:T-29"/>
+</sign>
+
+<sign ref="PL:D-19" name="postój taksówek" pl.name="postój taksówek"
+	long_name=""
+	pl.long_name="Oznacza miejsce przeznaczone na postój taksówek osobowych, z wyjątkiem taksówek zajętych. Umieszczony dodatkowo na znaku napis 'Bagażowe' wskazuje, że znak ten dotyczy taksówek bagażowych. Jeśli na postoju taksówek nie umieszczono znaku D-20, to kończy się on w odległości nie większej niż 20m przed znakiem D-19.;Odmiany D-19:;;;znak;Informacja;;"
+	>
+	<tag key="taxi" value="yes" />
+</sign>
+
+<sign ref="PL:D-19a" name="postój taksówek bagażowych" pl.name="postój taksówek bagażowych"
+	>
+</sign>
+
+<sign ref="PL:D-20" name="koniec postoju taksówek" pl.name="koniec postoju taksówek"
+	long_name=""
+	pl.long_name="Oznacza miejsce, w którym kończy się postój taksówek. Umieszczony dodatkowo na znaku napis 'Bagażowe' wskazuje, że znak ten dotyczy taksówek bagażowych.;Odmiany D-20:;;;znak;Informacja;;"
+	>
+	<tag key="taxi" value="no" />
+</sign>
+
+<sign ref="PL:D-20a" name="koniec postoju taksówek bagażowych" pl.name="koniec postoju taksówek bagażowych"
+	>
+</sign>
+
+<sign ref="PL:D-21" name="szpital" pl.name="szpital"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-21a" name="policja" pl.name="policja"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-22" name="punkt opatrunkowy" pl.name="punkt opatrunkowy"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-23" name="stacja paliwowa" pl.name="stacja paliwowa"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Umieszczony w dolnej części znaku napis 'LPG GAZ' informuje, że stacja prowadzi także sprzedaż gazu do napędu pojazdów. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-23a" name="stacja paliwowa tylko z gazem do napędu pojazdów" pl.name="stacja paliwowa tylko z gazem do napędu pojazdów"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-24" name="telefon" pl.name="telefon"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-25" name="poczta" pl.name="poczta"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Umieszczony na znaku symbol słuchawki telefonicznej informuje, że na poczcie znajduje się ogólnodostępny telefon. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-26" name="stacja obsługi technicznej" pl.name="stacja obsługi technicznej"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-26a" name="wulkanizacja" pl.name="wulkanizacja"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-26b" name="" pl.name=""
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-26c" name="toaleta publiczna" pl.name="toaleta publiczna"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Umieszczony w dolnej części znaku napis BUS informuje o możliwości opróżniania toalet zainstalowanych w pojazdach. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-26d" name="natrysk" pl.name="natrysk"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-27" name="bufet lub kawiarnia" pl.name="bufet lub kawiarnia"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-28" name="restauracja" pl.name="restauracja"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-29" name="Hotel (motel)" pl.name="Hotel (motel)"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni, znak informuje również o innych miejscach noclegowych.;"
+	>
+</sign>
+
+<sign ref="PL:D-30" name="Obozowisko (camping)" pl.name="Obozowisko (camping)"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-31" name="obozowisko (camping) wyposażone w podłączenia elektryczne dla przyczep kempingowych" pl.name="obozowisko (camping) wyposażone w podłączenia elektryczne dla przyczep kempingowych"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-32" name="pole biwakowe" pl.name="pole biwakowe"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-33" name="schronisko młodzieżowe" pl.name="schronisko młodzieżowe"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-34" name="punkt informacji turystycznej" pl.name="punkt informacji turystycznej"
+	long_name=""
+	pl.long_name="Informuje o wskazanym na znaku obiekcie znajdującym się przy drodze. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-34a[Radio $val1 $val2 MHz]" id="PL:D-34a" name="informacja radiowa o ruchu drogowym" pl.name="informacja radiowa o ruchu drogowym"
+	long_name=""
+	pl.long_name="Iinformuje o stacjach radiowych podających informacje o warunkach ruchu drogowego.;"
+	>
+	<parameter ident="val1" input="textfield" prefix="Radio" default="" field_width="4"/>
+	<parameter ident="val2" input="textfield" suffix="MHz" default="" field_width="4"/>
+</sign>
+
+<sign ref="PL:D-35" name="przejście podziemne dla pieszych" pl.name="przejście podziemne dla pieszych"
+	long_name=""
+	pl.long_name="Informuje o możliwości przechodzenia pieszych na drugą stronę drogi gdy przejście mieści się pod nią, oraz że w ten sposób jest bezpieczniej.;"
+	>
+</sign>
+
+<sign ref="PL:D-35a" name="schody ruchome w dół" pl.name="schody ruchome w dół"
+	long_name=""
+	pl.long_name="Jest tym samym znakiem co D-35 lecz posiada ruchome schody.;"
+	>
+</sign>
+
+<sign ref="PL:D-36" name="przejście nadziemne dla pieszych" pl.name="przejście nadziemne dla pieszych"
+	long_name=""
+	pl.long_name="Informuje o możliwości przechodzenia pieszych na drugą stronę drogi gdy przejście mieści się nad nią, oraz że w ten sposób jest bezpieczniej.;"
+	>
+</sign>
+
+<sign ref="PL:D-36a" name="schody ruchome w górę" pl.name="schody ruchome w górę"
+	long_name=""
+	pl.long_name="Jest tym samym znakiem co D-36 lecz posiada ruchome schody.;"
+	>
+</sign>
+
+<sign ref="PL:D-37" name="Tunnel" pl.name="tunel"
+	long_name=""
+	pl.long_name="Oznacza wjazd do tunelu, nakazuje jeszcze włączenie w pojeździe przednich świateł mijania.;"
+	>
+	<tag key="tunnel" value="yes"/>
+</sign>
+
+<sign ref="PL:D-38" name="koniec tunelu" pl.name="koniec tunelu"
+	long_name=""
+	pl.long_name="Oznacza wyjazd z tunelu.;"
+	>
+</sign>
+
+<sign ref="PL:D-39" name="dopuszczalne prędkości" pl.name="dopuszczalne prędkości"
+	long_name=""
+	pl.long_name="Informuje o dopuszczalnych prędkościach obowiązujących na terytorium Rzeczypospolitej Polskiej. Na przejściu granicznym mogą być także umieszczone tablice z napisami lub symbolami, podające informacje o obowiązujących na terytorium naszego państwa przepisach ruchu drogowego.;"
+	>
+</sign>
+
+<sign ref="PL:D-39a" name="opłaty drogowe" pl.name="opłaty drogowe"
+	long_name=""
+	pl.long_name="Informuje o płatnościach drogowych na terytorium Rzeczypospolitej Polskiej.;"
+	>
+</sign>
+
+<sign ref="PL:D-40" name="Pedestrian zone" pl.name="strefa zamieszkania"
+	long_name=""
+	pl.long_name="Oznacza wjazd do strefy zamieszkania. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni. Informuje ponadto, że umieszczone w tej strefie urządzenia wymuszające powolną jazdę (progi zwalniające) mogą nie być oznakowane znakami ostrzegawczymi."
+	wiki="Tag:highway%3Dpedestrian"
+	>
+	<tag key="highway" value="pedestrian"/>
+</sign>
+
+<sign ref="PL:D-41" name="koniec strefy zamieszkania" pl.name="koniec strefy zamieszkania"
+	long_name=""
+	pl.long_name="Oznacza wyjazd ze strefy zamieszkania. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-42" name="obszar zabudowany" pl.name="obszar zabudowany"
+	long_name=""
+	pl.long_name="Oznacza wjazd na obszar zabudowany.;Do dnia 31 grudnia 2005 roku tablica z białym tłem oraz czarnym obrzeżem i napisem określającym nazwę miejscowości miała takie samo znaczenie, jak znak D-42. Obecnie tablica taka nie ma żadnej wykładni prawnej.;;"
+	>
+</sign>
+
+<sign ref="PL:D-43" name="koniec obszaru zabudowanego" pl.name="koniec obszaru zabudowanego"
+	long_name=""
+	pl.long_name="Oznacza wyjazd z obszaru zabudowanego.;Do dnia 31 grudnia 2005 roku tablica z białym tłem oraz czarnym obrzeżem i napisem określającym nazwę miejscowości, przekreślona czerwoną linią, miała takie samo znaczenie, jak znak D-43. Obecnie tablica taka nie ma żadnej wykładni prawnej.;;"
+	>
+</sign>
+
+<sign ref="PL:D-44[$val_on-$val_off]" id="PL:D-44" name="strefa parkowania" pl.name="strefa parkowania"
+	long_name=""
+	pl.long_name="Oznacza wjazd do strefy, w której za postój pojazdu jest pobierana opłata. W strefie tej zabroniony jest postój pojazdu bez wniesienia opłaty, z wyjątkiem postoju pojazdów osób lub jednostek, dla których ustalona została zerowa stawka opłaty, oraz postoju pojazdów komunikacji publicznej na wyznaczonych dla nich miejscach.;"
+	>
+	<tag key="time_on" value="$val_on"/>
+	<tag key="time_off" value="$val_off"/>
+	<parameter ident="val_on" input="textfield" prefix="od" default="7" field_width="2"/>
+	<parameter ident="val_off" input="textfield" prefix="do" default="18" field_width="2"/>
+</sign>
+
+<sign ref="PL:D-45" name="koniec strefy parkowania" pl.name="koniec strefy parkowania"
+	long_name=""
+	pl.long_name="Oznacza wyjazd ze strefy parkowania.;"
+	>
+</sign>
+
+<sign ref="PL:D-46" name="droga wewnętrzna" pl.name="droga wewnętrzna"
+	long_name=""
+	pl.long_name="Oznacza początek ogólnodostępnej drogi niepublicznej; napis umieszczony na znaku wskazuje zarządcę tej drogi. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-47" name="koniec drogi wewnętrznej" pl.name="koniec drogi wewnętrznej"
+	long_name=""
+	pl.long_name="Oznacza wyjazd z drogi wewnętrznej na drogę publiczną. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni.;"
+	>
+</sign>
+
+<sign ref="PL:D-48[$val]" id="PL:D-48" name="zmiana pierwszeństwa" pl.name="zmiana pierwszeństwa"
+	long_name=""
+	pl.long_name="Uprzedza o mającej nastąpić lub niedawno wprowadzonej zmianie obowiązujących dotychczas zasad pierwszeństwa na najbliższym skrzyżowaniu; umieszczony pod znakiem napis określa datę wprowadzenia nowej zasady pierwszeństwa pokazanej znakami A-5, A-6a, A-6b, A-6c, A-7, A-30, B-20, B-31, D-1 i D-5.;Odmiany D-20:;;;znak;Informacja;;"
+	>
+	<parameter ident="val" input="textfield" prefix="znak:" default="PL:A-5" field_width="5"/>
+</sign>
+
+<sign ref="PL:D-48a" name="zmiana pierwszeństwa z trójkątem wskazujący wlot podporządkowany" pl.name="zmiana pierwszeństwa z trójkątem wskazujący wlot podporządkowany"
+	>
+</sign>
+
+<sign ref="PL:D-49" name="pobór opłat" pl.name="pobór opłat"
+	long_name=""
+	pl.long_name="Uprzedza o miejscu, w którym są pobierane opłaty za przejazd.;"
+	>
+</sign>
+
+<sign ref="PL:D-50" name="zatoka" pl.name="zatoka"
+	long_name=""
+	pl.long_name="Informuje o zatoce występującej w tunelu. Umieszczona pod znakiem tabliczka T-33 lub umieszczony na znaku napis SOS informuje, że w zatoce znajduje się telefon alarmowy i gaśnica.;"
+	wiki="Tag:highway=emergency bay"
+	>
+	<tag key="highway" value="emergency_bay"/>
+	<supplementary id="PL:T-33"/>
+</sign>
+
+<sign ref="PL:D-51" name="automatyczna kontrola prędkości" pl.name="automatyczna kontrola prędkości"
+	long_name=""
+	pl.long_name="Uprzedza o miejscu lub odcinku drogi, na którym prędkość jazdy jest kontrolowana i rejestrowana przez urządzenia działające samoczynnie.;"
+	>
+</sign>
+
+<sign ref="PL:D-52" name="strefa ruchu" pl.name="strefa ruchu"
+	long_name=""
+	pl.long_name="Stosuje się w celu oznakowania strefy ruchu. Znak ten umieszcza się na początku strefy ruchu na wszystkich drogach droprowadzających do niej ruch. Decyzję o ustaleniu takiej strefy podejmuje zarządca (czyli właściciel) terenu, na którym położona jest strefa ruchu. W strefie ruchu stosuje się znaki takie jak na drogach wewnętrznych.;"
+	>
+</sign>
+
+<sign ref="PL:D-53" name="koniec strefy ruchu" pl.name="koniec strefy ruchu"
+	long_name=""
+	pl.long_name="Stosuje się w celu wyjazdu pojazdu z drogi wewnętrznej położonej w strefie ruchu położoną na drogę publiczną zarządzaną przez administrację rządową lub samorządową. Znak ten umieszcza się na wszystkich drogach wylotowych ze strefy oznakowanej znakami D-52,w tym samym przekroju poprzecznym drogi co znak D-52. Znak ten może być umieszczany po lewej stronie jezdni, na odwrotnej stronie znaku D-52.;"
+	>
+</sign>
+
+
+<sign ref="PL:T-1[$val]" id="PL:T-1" name="tabliczka wskazująca odległość znaku ostrzegawczego od miejsca niebezpiecznego" pl.name="tabliczka wskazująca odległość znaku ostrzegawczego od miejsca niebezpiecznego"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje odległość od danego miejsca niebezpiecznego. Stosowana do znaków ostrzegawczych wskazujących niebezpieczeństwo występujące pojedynczo, gdy znak nie został ustawiony w określonej w Rozporządzenie w sprawie znaków i sygnałów drogowych odległości od miejsca niebezpiecznego.;"
+	>
+	<parameter ident="val" input="textfield" default="100" suffix="m" field_width="3"/>
+	<tag tag_ref="yield" append_value=""/>
+</sign>
+
+<sign ref="PL:T-1a[$val]" id="PL:T-1a" name="tabliczka wskazująca odległość znaku informacyjnego od początku (końca) drogi lub pasa ruchu" pl.name="tabliczka wskazująca odległość znaku informacyjnego od początku (końca) drogi lub pasa ruchu"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje odległość do miejsca początku lub końca drogi lub pasa ruchu. Stosowana jest wraz z następującymi znakami informacyjnymi: D-7 droga ekspresowa, D-8 koniec drogi ekspresowej, D-9 autostrada, D-10 koniec autostrady, D-11 początek pasa ruchu dla autobusów, D-13 początek pasa ruchu powolnego, D-13a początek pasa ruchu, D-14 koniec pasa ruchu.;"
+	>
+	<parameter ident="val" input="textfield" default="100" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-1b[$val]" id="PL:T-1b" name="tabliczka wskazująca długość tunelu lub odcinek drogi do końca tunelu" pl.name="tabliczka wskazująca długość tunelu lub odcinek drogi do końca tunelu"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka stosowana ze znakiem D-37. Umieszczona przed wjazdem do tunelu o długości powyżej 500 m wskazuje jego długość. W tunelu o długości przekraczającej 3000 m umieszczana jest samodzielnie co 1000 m i wskazuje długość odcinka do końca tunelu. Należy tu dodać, że najdłuższy obecnie tunel drogowy w Polsce (Tunel Wisłostrady) ma długość 900 m.;"
+	>
+	<parameter ident="val" input="textfield" default="1000" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-2[$val]" id="PL:T-2" name="tabliczka wskazująca długość odcinka drogi, na którym powtarza się lub występuje niebezpieczeństwo" pl.name="tabliczka wskazująca długość odcinka drogi, na którym powtarza się lub występuje niebezpieczeństwo"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje długość odcinka drogi, na którym występuje wyrażone znakiem ostrzegawczym niebezpieczeństwo. Stosowana do znaków ostrzegawczych wskazujących niebezpieczeństwo występujące na pewnej długości, gdy długość wskazanego odcinka jest większa niż 500 m.;"
+	>
+	<parameter ident="val" input="textfield" default="3.5" suffix="km" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-3" name="tabliczka wskazująca koniec odcinka, na którym powtarza się lub występuje niebezpieczeństwo" pl.name="tabliczka wskazująca koniec odcinka, na którym powtarza się lub występuje niebezpieczeństwo"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczona pod znakiem ostrzegawczym wskazuje koniec odcinka, na którym występowało niebezpieczeństwo.;"
+	>
+	<tag tag_ref="haz" append_value=""/>
+</sign>
+
+<sign ref="PL:T-3a" name="tabliczka wskazująca koniec miejsca przeznaczonego na postój" pl.name="tabliczka wskazująca koniec miejsca przeznaczonego na postój"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka stosowana ze znakami D-18 parking i D-18b parking zadaszony. Wskazuje koniec parkingu, szczególnie w przypadku parkingów wyznaczonych wzdłuż krawędzi jezdni.;"
+	>
+	<tag tag_ref="info" append_value=""/>
+</sign>
+
+<sign ref="PL:T-4[$val]" id="PL:T-4" name="tabliczka wskazująca liczbę zakrętów" pl.name="tabliczka wskazująca liczbę zakrętów"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje ilość zakrętów. Stosowana ze znakami A-3 niebezpieczne zakręty - pierwszy w prawo i A-4 niebezpieczne zakręty - pierwszy w lewo, gdy liczba wymagających oznakowania zakrętów jest większa niż dwa, a odległość pomiędzy nimi jest mniejsza niż 300 m.;"
+	>
+	<parameter ident="val" input="textfield" default="3" suffix="" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-5" name="tabliczka wskazująca początek drogi krętej" pl.name="tabliczka wskazująca początek drogi krętej"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje drogę o krętości przekraczającej 160°/km. Stosowana ze znakami A-3 niebezpieczne zakręty - pierwszy w prawo i A-4 niebezpieczne zakręty - pierwszy w lewo.;"
+	>
+</sign>
+
+<sign ref="PL:T-6a" name="tabliczka wskazująca rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie (umieszczana na drodze z pierwszeństwem)" pl.name="tabliczka wskazująca rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie (umieszczana na drodze z pierwszeństwem)"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka, umieszczana na drodze z pierwszeństwem przed skrzyżowaniem z drogą podporządkowaną, wskazuje przebieg drogi pierwszeństwem (oznaczonej grubszą linią). Stosowana ze znakiem D-1 droga z pierwszeństwem, gdy droga z pierwszeństwem nie przebiega na wprost przez skrzyżowanie.;"
+	>
+</sign>
+
+<sign ref="PL:T-6b" name="tabliczka wskazująca układ dróg podporządkowanych (umieszczana na drodze z pierwszeństwem)" pl.name="tabliczka wskazująca układ dróg podporządkowanych (umieszczana na drodze z pierwszeństwem)"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka, umieszczana na drodze z pierwszeństwem, wskazuje niesymetryczny układ dróg podporządkowanych po obu stronach drogi z pierwszeństwem. Stosowana ze znakami A-6a skrzyżowanie z drogą podporządkowaną występującą po obu stronach i D-1 droga z pierwszeństwem.;"
+	>
+</sign>
+
+<sign ref="PL:T-6c" name="tabliczka wskazująca rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie (umieszczana na drodze podporządkowanej)" pl.name="tabliczka wskazująca rzeczywisty przebieg drogi z pierwszeństwem przez skrzyżowanie (umieszczana na drodze podporządkowanej)"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka, umieszczana na drodze podporządkowanej przed skrzyżowaniem z drogą z pierwszeństwem, wskazuje przebieg drogi pierwszeństwem (oznaczonej grubszą linią). Stosowana ze znakami A-7 ustąp pierwszeństwa i B-20 stop, gdy droga z pierwszeństwem nie przebiega na wprost przez skrzyżowanie.;"
+	>
+</sign>
+
+<sign ref="PL:T-6d" name="tabliczka wskazująca prostopadły przebieg drogi z pierwszeństwem przez skrzyżowanie oraz układ dróg podporządkowanych (umieszczana na drodze podporządkowanej)" pl.name="tabliczka wskazująca prostopadły przebieg drogi z pierwszeństwem przez skrzyżowanie oraz układ dróg podporządkowanych (umieszczana na drodze podporządkowanej)"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka, umieszczana na drodze podporządkowanej przed skrzyżowaniem z drogą z pierwszeństwem, wskazuje niesymetryczny układ dróg podporządkowanych po obu stronach drogi z pierwszeństwem. Stosowana ze znakami A-7 ustąp pierwszeństwa i B-20 stop.;"
+	>
+</sign>
+
+<sign ref="PL:T-7" name="tabliczka wskazująca układ torów i drogi na przejeździe" pl.name="tabliczka wskazująca układ torów i drogi na przejeździe"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje układ torów na przejeździe tramwajowym lub kolejowym. Stosowana ze znakami: A-9 przejazd kolejowy z zaporami, A-10 przejazd kolejowy bez zapór i A-21 tramwaj, ze względu na ostry kąt przecięcia się drogi z linią kolejową lub przebieg torów po łuku.;"
+	>
+</sign>
+
+<sign ref="PL:T-8" name="tabliczka wskazująca miejsce, w którym ruch pojazdów został skierowany na tory tramwajowe" pl.name="tabliczka wskazująca miejsce, w którym ruch pojazdów został skierowany na tory tramwajowe"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje miejsce, w którym pas ruchu jest skierowany na torowisko tramwajowe. Stosowana ze znakami A-21 tramwaj lub A-30 inne niebezpieczeństwo.;"
+	>
+</sign>
+
+<sign ref="PL:T-9[$val]" id="PL:T-9" name="tabliczka wskazująca rzeczywistą wielkość spadku lub wzniesienia drogi" pl.name="tabliczka wskazująca rzeczywistą wielkość spadku lub wzniesienia drogi"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka, stosowana ze znakami A-22 niebezpieczny zjazd i A-23 stromy podjazd wskazuje rzeczywistą wartość spadku w procentach tangensa kąta nachylenia drogi do poziomu.;"
+	>
+	<tag tag_ref="incl" append_value="$val%"/>
+	<parameter input="textfield" name="max. incline" pl.name="maksymalne pochylenie" type="int" ident="val" default="10" suffix="%" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-10" name="tabliczka wskazująca bocznicę kolejową lub tor o podobnym charakterze" pl.name="tabliczka wskazująca bocznicę kolejową lub tor o podobnym charakterze"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje miejsce przecięcia drogi przez bocznicę kolejową, tor manewrowy lub linię kolejową wykorzystywaną sporadycznie. W czasie przetaczania pociągu ruch na drodze jest zatrzymywany przez pracownika kolei. Stosowana ze znakiem A-30 inne niebezpieczeństwo.;"
+	>
+</sign>
+
+<sign ref="PL:T-11" name="tabliczka wskazująca przeprawę promową" pl.name="tabliczka wskazująca przeprawę promową"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana jest wraz ze znakiem A-30 inne niebezpieczeństwo przed dojazdem do przeprawy promowej.;"
+	>
+</sign>
+
+<sign ref="PL:T-12" name="tabliczka wskazująca podłużny uskok nawierzchni" pl.name="tabliczka wskazująca podłużny uskok nawierzchni"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana jest wraz ze znakiem A-30 inne niebezpieczeństwo w miejscu, gdzie występuje podłużny uskok nawierzchni powstały podczas kładzenia nawierzchni drogi.;"
+	>
+</sign>
+
+<sign ref="PL:T-13" name="tabliczka wskazująca odcinek drogi, na którym występują deformacje nawierzchni w postaci kolein" pl.name="tabliczka wskazująca odcinek drogi, na którym występują deformacje nawierzchni w postaci kolein"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana jest wraz ze znakiem A-30 inne niebezpieczeństwo przed odcinkiem jezdni, na nawierzchni której występują koleiny.;"
+	>
+</sign>
+
+<sign ref="PL:T-14" name="tabliczka wskazująca miejsce częstych wypadków o charakterze wskazanym na tabliczce" pl.name="tabliczka wskazująca miejsce częstych wypadków o charakterze wskazanym na tabliczce"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje miejsce szczególnie niebezpieczne, w którym w ciągu roku zdarzyły się co najmniej cztery wypadki o wskazanym charakterze z ofiarami w ludziach na odcinku drogi 0,5 km w obszarze zabudowanym lub 1 km poza obszarem zabudowanym. W przypadku przejazdów kolejowych jako niebezpieczne oznaczone są te, na których miały miejsce dwa wypadki w ciągu roku. Tabliczka posiada pięć odmian, stosowana jest ze znakiem A-30 inne niebezpieczeństwo.;Odmiany T-14:;;;znak;Informacja;;"
+	>
+</sign>
+
+<sign ref="PL:T-14a" name="tabliczka wskazująca miejsce częstych zderzeń z poprzedzającymi pojazdami" pl.name="tabliczka wskazująca miejsce częstych zderzeń z poprzedzającymi pojazdami"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-14b" name="tabliczka wskazująca miejsce częstych zderzeń czołowych" pl.name="tabliczka wskazująca miejsce częstych zderzeń czołowych"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-15" name="tabliczka wskazująca miejsce częstych wypadków spowodowanych śliską nawierzchnią jezdni ze względu na opady deszczu" pl.name="tabliczka wskazująca miejsce częstych wypadków spowodowanych śliską nawierzchnią jezdni ze względu na opady deszczu"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana jest wraz ze znakiem A-30 inne niebezpieczeństwo w miejscu, gdzie dochodzi do częstych wypadków lub kolizji spowodowanych śliską nawierzchnią drogi występującą w czasie lub po opadach deszczu.;"
+	>
+</sign>
+
+<sign ref="PL:T-16" name="tabliczka wskazująca miejsce wyjazdu pojazdów uprzywilejowanych wskazanych na tabliczce" pl.name="tabliczka wskazująca miejsce wyjazdu pojazdów uprzywilejowanych wskazanych na tabliczce"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana przed miejscami, w których pojazdy uprzywilejowane wyjeżdżają na drogę. Tabliczkę stosuje samodzielnie bezpośrednio przed miejscem wyjazdu, a także wraz ze znakiem A-30 inne niebezpieczeństwo w odległości obowiązującej dla znaków ostrzegawczych, zwłaszcza gdy w momencie wyjazdu pojazdów uprzywilejowanych uruchamiana jest specjalna sygnalizacja świetlna.;Odmiany T-16:;;;znak;Informacja;;"
+	>
+</sign>
+
+<sign ref="PL:T-16a" name="tabliczka wskazująca miejsce wyjazdu karetek pogotowia" pl.name="tabliczka wskazująca miejsce wyjazdu karetek pogotowia"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-17" name="tabliczka wskazująca granicę państwa" pl.name="tabliczka wskazująca granicę państwa"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana jest wraz ze znakiem A-30 inne niebezpieczeństwo przed miejscem w którym droga przecina granicę państwa, niezależnie od tego, czy ruch przez granicę jest otwarty czy zamknięty.;"
+	>
+</sign>
+
+<sign ref="PL:T-18" name="tabliczka wskazująca nieoczekiwaną zmianę kierunku ruchu o przebiegu wskazanym na tabliczce" pl.name="tabliczka wskazująca nieoczekiwaną zmianę kierunku ruchu o przebiegu wskazanym na tabliczce"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje nieoczekiwaną zmianę kierunku ruchu lub przebiegu drogi. Tabliczka stosowana wraz ze znakiem A-30 inne niebezpieczeństwo.;Odmiany T-18:;;;znak;Informacja;;"
+	>
+</sign>
+
+
+<sign ref="PL:T-19" name="tabliczka wskazująca na malowanie znaków poziomych" pl.name="tabliczka wskazująca na malowanie znaków poziomych"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka umieszczana jest wraz ze znakiem A-14 roboty na drodze w czasie, gdy na drodze prowadzone są prace związane z umieszczaniem lub odnową znaków poziomych.;"
+	>
+</sign>
+
+<sign ref="PL:T-20[$val]" id="PL:T-20" name="tabliczka wskazująca długość odcinka jezdni, na którym zakaz obowiązuje" pl.name="tabliczka wskazująca długość odcinka jezdni, na którym zakaz obowiązuje"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje długość odcinka drogi, na którym obowiązuje zakaz. Stosowana do znaków zakazu: B-33 ograniczenie prędkości, B-35 zakaz postoju, B-36 zakaz zatrzymywania się, B-37 zakaz postoju w dni nieparzyste, B-38 zakaz postoju w dni parzyste, B-41 zakaz ruchu pieszych, gdy długość wskazanego odcinka nie przekracza 500 m.;"
+	>
+	<parameter ident="val" input="textfield" default="500" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-21[$val]" id="PL:T-21" name="tabliczka wskazująca odległość znaku od miejsca, od którego lub w którym zakaz obowiązuje" pl.name="tabliczka wskazująca odległość znaku od miejsca, od którego lub w którym zakaz obowiązuje"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje odległość od miejsca, od którego obowiązuje zakaz. Stosowana do znaków zakazu, gdy znak nie został ustawiony w miejscu początku obowiązywania zakazu.;"
+	>
+	<parameter ident="val" input="textfield" default="50" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-22" name="tabliczka wskazująca, że znak nie dotyczy rowerów jednośladowych" pl.name="tabliczka wskazująca, że znak nie dotyczy rowerów jednośladowych"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak zakazu nie dotyczy rowerów jednośladowych. Stosowana do znaków zakazu: B-1 zakaz ruchu w obu kierunkach, a także B-2 zakaz wjazdu, B-21 zakaz skręcania w lewo, B-22 zakaz skręcania w prawo, D-3 droga jednokierunkowa, gdy na drodze jednokierunkowej zastosowano kontrapas rowerowy.;"
+	>
+	<tag key="bicycle" value="yes"/>
+</sign>
+
+<sign ref="PL:T-23a" name="tabliczka wskazująca motocykle" pl.name="tabliczka wskazująca motocykle"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko motocykli. Stosowana do:;;znaków zakazu: B-25 zakaz wyprzedzania, B-33 ograniczenie prędkości,;znaków nakazu: od C-1 do C-11 oraz C-14 prędkość minimalna i C-18 nakaz używania łańcuchów przeciwpoślizgowych,;znaków informacyjnych: D-18 parking, D-18a parking - miejsce zastrzeżone, D-18b parking zadaszony.;;;"
+	>
+	<tag tag_ref="restriction" condition="motorcycle"/>
+</sign>
+
+<sign ref="PL:T-23b" name="Heavy goods vehicles only" pl.name="tabliczka wskazująca samochody ciężarowe, pojazdy specjalne, pojazdy używane do celów specjalnych, o dopuszczalnej masie całkowitej przekraczającej 3,5 t, oraz ciągniki samochodowe"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko wymienionych rodzajów pojazdów. Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	>
+	<tag tag_ref="restriction" condition="hgv"/>
+</sign>
+
+<sign ref="PL:T-23c" name="tabliczka wskazująca ciągniki rolnicze i pojazdy wolnobieżne" pl.name="tabliczka wskazująca ciągniki rolnicze i pojazdy wolnobieżne"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko ciągników rolniczych i pojazdów wolnobieżnych. Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	>
+</sign>
+
+<sign ref="PL:T-23d" name="tabliczka wskazująca pojazdy silnikowe z przyczepą, z wyjątkiem pojazdów z przyczepą jednoosiową lub naczepą" pl.name="tabliczka wskazująca pojazdy silnikowe z przyczepą, z wyjątkiem pojazdów z przyczepą jednoosiową lub naczepą"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko pojazdy silnikowe z przyczepą wieloosiową. Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	>
+	<tag tag_ref="restriction" condition="articulated"/>
+</sign>
+
+<sign ref="PL:T-23e" name="tabliczka wskazująca pojazdy z przyczepą kempingową" pl.name="tabliczka wskazująca pojazdy z przyczepą kempingową"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko pojazdy z przyczepą kempingową. Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	wiki="Key:caravan"
+	>
+	<tag tag_ref="restriction" condition="caravan"/>
+</sign>
+
+<sign ref="PL:T-23f" name="tabliczka wskazująca autobusy" pl.name="tabliczka wskazująca autobusy"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko autobusów. Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	wiki="Key:psv"
+	>
+	<tag tag_ref="restriction" condition="psv"/>
+</sign>
+
+<sign ref="PL:T-23g" name="tabliczka wskazująca trolejbusy" pl.name="tabliczka wskazująca trolejbusy"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko trolejbusów. Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	>
+</sign>
+
+<sign ref="PL:T-23h" name="tabliczka wskazująca pojazdy z towarami niebezpiecznymi" pl.name="tabliczka wskazująca pojazdy z towarami niebezpiecznymi"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko pojazdy z towarami niebezpiecznymi (obejmuje ten sam zakres pojazdów, które znak B-13a). Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j. Nie jest stosowana ze znakami nakazu C-1 - C-11, zamiast tego używany jest znak C-17 nakazany kierunek jazdy dla pojazdów z towarami niebezpiecznymi.;"
+	>
+	<tag tag_ref="restriction" condition="hazmat"/>
+</sign>
+
+<sign ref="PL:T-23i" name="tabliczka wskazująca pojazdy z towarami wybuchowymi lub łatwozapalnymi" pl.name="tabliczka wskazująca pojazdy z towarami wybuchowymi lub łatwozapalnymi"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko pojazdów z towarami wybuchowymi lub łatwozapalnymi (obejmuje ten sam zakres pojazdów, które znak B-13). Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	>
+</sign>
+
+<sign ref="PL:T-23j" name="tabliczka wskazująca pojazdy z towarami, które mogą skazić wodę" pl.name="tabliczka wskazująca pojazdy z towarami, które mogą skazić wodę"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że znak dotyczy tylko pojazdów z towarami, które mogą skazić wodę (obejmuje ten sam zakres pojazdów, które znak B-14). Stosowana analogicznie, jak wszystkie tabliczki T-23a - T-23j.;"
+	>
+	<tag tag_ref="restriction" condition="hazmat:water"/>
+</sign>
+
+<sign ref="PL:T-24" name="tabliczka wskazująca, że pozostawiony pojazd zostanie usunięty na koszt właściciela" pl.name="tabliczka wskazująca, że pozostawiony pojazd zostanie usunięty na koszt właściciela"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że pojazd pozostawiony w miejscu, w którym obowiązuje zakaz wyrażony znakami B-35 zakaz postoju lub B-36 zakaz zatrzymywania się zostanie usunięty na koszt właściciela. Tabliczkę stosuje w pobliżu obiektów takich jak banki, sądy, obiekty wojskowe oraz w miejscach, gdzie pozostawienie pojazdu utrudnia lub zagraża bezpieczeństwu ruchu drogowego.;"
+	>
+</sign>
+
+<sign ref="PL:T-25a" name="tabliczka wskazująca początek zakazu postoju lub zatrzymywania" pl.name="tabliczka wskazująca początek zakazu postoju lub zatrzymywania"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje miejsce, w którym zaczyna obowiązywać zakaz wyrażony znakami B-35 zakaz postoju lub B-36 zakaz zatrzymywania się. Stosowana, gdy zakaz rozpoczyna się niebezpośrednio za skrzyżowaniem.;"
+	>
+</sign>
+
+<sign ref="PL:T-25b" name="tabliczka wskazująca kontynuację zakazu postoju lub zatrzymywania" pl.name="tabliczka wskazująca kontynuację zakazu postoju lub zatrzymywania"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje kontynuację zakazu wyrażonego znakami B-35 zakaz postoju lub B-36 zakaz zatrzymywania się. Stosowana za miejscem przeznaczonym do zawracania, za wyjazdami z dróg wewnętrznych, obiektów przydrożnych oraz na odcinkach obowiązywania zakazu między skrzyżowaniami o długości ponad 400 m.;"
+	>
+</sign>
+
+<sign ref="PL:T-25c" name="tabliczka wskazująca odwołanie zakazu postoju lub zatrzymywania" pl.name="tabliczka wskazująca odwołanie zakazu postoju lub zatrzymywania"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje miejsce, w którym przestaje obowiązywać zakaz wyrażony znakami B-35 zakaz postoju lub B-36 zakaz zatrzymywania się.;"
+	>
+</sign>
+
+<sign ref="PL:T-26" name="tabliczka wskazująca, że zakaz postoju lub zatrzymywania dotyczy strony placu" pl.name="tabliczka wskazująca, że zakaz postoju lub zatrzymywania dotyczy strony placu"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje stronę placu, przy której obowiązuje zakaz wyrażony znakami B-35 zakaz postoju lub B-36 zakaz zatrzymywania się. Znak umieszczany jest na środku objętego zakazem boku placu równolegle do jego krawędzi.;"
+	>
+</sign>
+
+<sign ref="PL:T-27" name="tabliczka wskazująca, że przejście dla pieszych jest szczególnie uczęszczane przez dzieci" pl.name="tabliczka wskazująca, że przejście dla pieszych jest szczególnie uczęszczane przez dzieci"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, przejście dla pieszych szczególnie uczęszczane przez dzieci w wieku od 7 do 15 lat, przede wszystkim w pobliżu szkół. Stosowana ze znakami D-6 przejście dla pieszych i D-6b przejście dla pieszych i przejazd dla rowerzystów.;"
+	>
+</sign>
+
+<sign ref="PL:T-28" name="tabliczka wskazująca, że za przejazd drogą pobierana jest opłata" pl.name="tabliczka wskazująca, że za przejazd drogą pobierana jest opłata"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że za przejazd drogę ekspresową, oznaczoną znakiem D-7, lub autostradą, oznaczoną znakiem D-9, pobierana jest opłata.;"
+	>
+</sign>
+
+<sign ref="PL:T-29" name="tabliczka informująca o miejscu przeznaczonym dla pojazdu samochodowego uprawnionej osoby niepełnosprawnej o obniżonej sprawności ruchowej" pl.name="tabliczka informująca o miejscu przeznaczonym dla pojazdu samochodowego uprawnionej osoby niepełnosprawnej o obniżonej sprawności ruchowej"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka wskazuje, że parking posiada miejsca przeznaczone dla pojazdów przewożących lub kierowanych przez osoby niepełnosprawne. Stosowana ze znakami D-18 parking, D-18a parking - miejsce zastrzeżone i D-18b parking zadaszony.;"
+	>
+</sign>
+
+<sign ref="PL:T-30" name="tabliczka wskazująca sposób ustawienia pojazdu względem krawędzi jezdni" pl.name="tabliczka wskazująca sposób ustawienia pojazdu względem krawędzi jezdni"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Tabliczka stosowana ze znakiem D-18 parking wskazuje właściwy sposób ustawienia pojazdu względem krawędzi jezdni (oznaczonej kolorem szarym). Jednocześnie oznacza, że miejsce przeznaczone jest dla pojazdów samochodowych o dopuszczalnej masie całkowitej nie przekraczającej 2,5 t.;Odmiany T-30:;;;znak;Informacja;;"
+	>
+</sign>
+
+<sign ref="PL:T-30a" name="tabliczka wskazująca postój całego pojazdu na chodniku równolegle do krawężnika" pl.name="tabliczka wskazująca postój całego pojazdu na chodniku równolegle do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30b" name="tabliczka wskazująca postój całego pojazdu na chodniku prostopadle do krawężnika" pl.name="tabliczka wskazująca postój całego pojazdu na chodniku prostopadle do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30c" name="tabliczka wskazująca postój całego pojazdu na chodniku skośnie do krawężnika" pl.name="tabliczka wskazująca postój całego pojazdu na chodniku skośnie do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30d" name="tabliczka wskazująca postój na chodniku kołami przedniej osi pojazdu prostopadle do krawężnika" pl.name="tabliczka wskazująca postój na chodniku kołami przedniej osi pojazdu prostopadle do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30e" name="tabliczka wskazująca postój na chodniku kołami przedniej osi pojazdu skośnie do krawężnika" pl.name="tabliczka wskazująca postój na chodniku kołami przedniej osi pojazdu skośnie do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30f" name="tabliczka wskazująca postój całego pojazdu na jezdni prostopadle do krawężnika" pl.name="tabliczka wskazująca postój całego pojazdu na jezdni prostopadle do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30g" name="tabliczka wskazująca postój całego pojazdu na jezdni skośnie do krawężnika" pl.name="tabliczka wskazująca postój całego pojazdu na jezdni skośnie do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30h" name="tabliczka wskazująca postój na chodniku kołami jednego boku pojazdu równolegle do krawężnika" pl.name="tabliczka wskazująca postój na chodniku kołami jednego boku pojazdu równolegle do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-30i" name="tabliczka wskazująca postój całego pojazdu na jezdni równolegle do krawężnika" pl.name="tabliczka wskazująca postój całego pojazdu na jezdni równolegle do krawężnika"
+	supplementary="yes"
+	>
+</sign>
+
+<sign ref="PL:T-31" name="tabliczka wskazująca kategorię tunelu" pl.name="tabliczka wskazująca kategorię tunelu"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Wskazuje kategorię tunelu, tabliczkę stosuje się do znaku D-37.;Odmiany T-31:;;;znak;Informacja;Szczegóły;;"
+	>
+</sign>
+
+<sign ref="PL:T-32[$val]" id="PL:T-32" name="tabliczka wskazująca minimalny odstęp od poprzedzającego pojazdu" pl.name="tabliczka wskazująca minimalny odstęp od poprzedzającego pojazdu"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Wskazuje odległość od poprzedzających pojazdów, tabliczkę stosuje się do znaku D-37.;"
+	>
+	<parameter ident="val" input="textfield" default="20" suffix="m" field_width="3"/>
+</sign>
+
+<sign ref="PL:T-33" name="emergency phone" pl.name="tabliczka wskazująca umieszczenie w zatoce telefonu alarmowego i gaśnicy"
+	supplementary="yes"
+	long_name=""
+	pl.long_name="Wskazuje, że jest tu telefon alarmowy i gaśnica, tabliczkę stosuje się do znaku D-50.;"
+	wiki="Tag:emergency=phone"
+	>
+	<tag key="emergency" value="phone"/>
+</sign>
+
+</roadsignpreset>

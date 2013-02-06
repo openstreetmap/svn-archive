@@ -41,6 +41,8 @@ public class RoadSignsPlugin extends Plugin {
     public static List<Sign> signs;
     public static List<String> iconDirs;
 
+    public static RoadSignsPlugin plugin;
+
     public final static PresetMetaData PRESET_DE = new PresetMetaData("DE", tr("Germany"), "resource://data/roadsignpresetDE.xml", "resource://images/DE/");
     public final static PresetMetaData PRESET_PL = new PresetMetaData("PL", tr("Poland"), "resource://data/roadsignpresetPL.xml", "resource://images/PL/");
     public final static PresetMetaData PRESET_SK = new PresetMetaData("SK", tr("Slovakia"), "resource://data/roadsignpresetSK.xml", "resource://images/SK/");
@@ -48,7 +50,16 @@ public class RoadSignsPlugin extends Plugin {
 
     public RoadSignsPlugin(PluginInformation info) {
         super(info);
+        plugin = this;
         registerAction();
+    }
+
+    public static File pluginDir() {
+        File dir = new File(plugin.getPluginDir());
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
     }
 
     private void registerAction() {

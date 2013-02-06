@@ -13,6 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +67,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MultiSplitLayout;
+import org.openstreetmap.josm.gui.MultiSplitLayout.Node;
 import org.openstreetmap.josm.gui.MultiSplitPane;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin.PresetMetaData;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
@@ -66,6 +75,7 @@ import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Pair;
+import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * Input dialog for road sign.
@@ -92,9 +102,14 @@ class RoadSignInputDialog extends ExtendedDialog {
     protected JPanel pnlPossibleSupplements;
     protected JEditorPane info;
     protected JScrollPane scrollInfo;
+    
+    private MultiSplitPane multiSplitPane;
 
     public RoadSignInputDialog() {
         super(Main.parent, tr("Road Sign Plugin"), new String[] {tr("OK"), tr("Cancel")}, false /* modal */);
+        setRememberWindowGeometry(getClass().getName() + ".geometry",
+            WindowGeometry.centerInWindow(Main.parent, new Dimension(750, 550)));
+
         this.signs = RoadSignsPlugin.signs;
         sel = new SignSelection();
         setButtonIcons(new String[] { "ok.png", "cancel.png" });
@@ -128,6 +143,27 @@ class RoadSignInputDialog extends ExtendedDialog {
         super.buttonAction(i, evt);
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        if (!visible) {
+            if (multiSplitPane != null) {
+                Node model = multiSplitPane.getMultiSplitLayout().getModel();
+                File f = new File(RoadSignsPlugin.pluginDir(), "roadsigns-layout.xml");
+                try {
+                    XMLEncoder xmlenc = new XMLEncoder(
+                            new BufferedOutputStream(new FileOutputStream(f))
+                    );
+                    xmlenc.writeObject(model);
+                    xmlenc.close();
+                } catch (FileNotFoundException ex) {
+                    Main.warn("unable to write dialog layout: "+ex);
+                }
+            }
+        }
+        super.setVisible(visible);
+    }
+
+
     private Command createCommand(Collection<OsmPrimitive> selPrim) {
         List<Command> cmds = new LinkedList<Command>();
         for (int i=0; i<previewModel.getRowCount(); i++) {
@@ -149,7 +185,6 @@ class RoadSignInputDialog extends ExtendedDialog {
                 "(ROW weight=0.3 (LEAF name=upperleft weight=1.0) upperright) "+
                 "(ROW weight=0.5 (LEAF name=middleleft weight=0.5) (LEAF name=middleright weight=0.5)) "+
                 "(LEAF name=bottom weight=0.2))";
-        MultiSplitLayout.Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
 
         FlowLayout fLayout = new FlowLayout(FlowLayout.LEFT);
         fLayout.setAlignOnBaseline(true);
@@ -161,9 +196,19 @@ class RoadSignInputDialog extends ExtendedDialog {
         pnlPossibleSupplements = new FixedWidthPanel();
         fillSigns();
 
-        MultiSplitPane multiSplitPane = new MultiSplitPane();
-        multiSplitPane.setPreferredSize(new Dimension(700, 500));
-        multiSplitPane.getMultiSplitLayout().setModel(modelRoot);
+        multiSplitPane = new MultiSplitPane();
+        try {
+            File f = new File(RoadSignsPlugin.pluginDir(), "roadsigns-layout.xml");
+            XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(f)));
+            Node model = (Node) decoder.readObject();
+            decoder.close();
+            multiSplitPane.getMultiSplitLayout().setModel(model);
+            multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
+        }
+        catch (Exception ex) {
+            Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
+            multiSplitPane.getMultiSplitLayout().setModel(modelRoot);
+        }
         multiSplitPane.add(new JScrollPane(pnlSignSelection), "upperleft");
         multiSplitPane.add(buildPreviewPanel(), "upperright");
         JScrollPane scroll1 = new JScrollPane(pnlPossibleSigns, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

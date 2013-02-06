@@ -182,7 +182,6 @@ public class RoadSignsPlugin extends Plugin {
     protected static void loadSignPreset() throws IOException {
         List<PresetMetaData> presetsData =  getAvailablePresetsMetaData();
         String code = Main.pref.get("plugin.roadsigns.preset.selection", null);
-        if (selectedPreset != null && selectedPreset.code.equals(code)) return;
 
         for (PresetMetaData data : presetsData) {
             if (data.code.equals(code)) {

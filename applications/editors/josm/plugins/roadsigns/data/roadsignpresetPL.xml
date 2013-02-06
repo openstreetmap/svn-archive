@@ -1348,7 +1348,7 @@
 	pl.long_name="Oznacza wjazd do strefy zamieszkania. Znak może być umieszczony w innym miejscu niż po prawej stronie jezdni. Informuje ponadto, że umieszczone w tej strefie urządzenia wymuszające powolną jazdę (progi zwalniające) mogą nie być oznakowane znakami ostrzegawczymi."
 	wiki="Tag:highway%3Dpedestrian"
 	>
-	<tag key="highway" value="pedestrian"/>
+	<tag key="highway" value="living_street"/>
 </sign>
 
 <sign ref="PL:D-41" name="koniec strefy zamieszkania" pl.name="koniec strefy zamieszkania"

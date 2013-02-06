@@ -28,6 +28,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -35,6 +36,7 @@ import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -693,8 +695,6 @@ class RoadSignInputDialog extends ExtendedDialog {
             }
             fireTableDataChanged();
         }
-
-
     }
 
     /**
@@ -813,6 +813,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
         private List<PresetMetaData> presetsData;
         private JComboBox selectionBox;
+        JRadioButton rbAll, rbUseful;
 
         public SettingsPanel(boolean standalone, final Action update) {
             super(new GridBagLayout());
@@ -830,6 +831,29 @@ class RoadSignInputDialog extends ExtendedDialog {
             this.add(new JLabel(tr("Country preset:")), GBC.std().insets(5, 5, 5, 5));
             this.add(selectionBox, GBC.eol().insets(0, 5, 5, 5));
             if (!standalone) {
+                String snd = "Hide signs that do not have an OSM tag assigned";
+
+                rbAll = new JRadioButton(tr("Show all signs"));
+                rbUseful = new JRadioButton(tr("Show a selection of the most useful signs"));
+
+                ButtonGroup grp = new ButtonGroup();
+                grp.add(rbAll);
+                grp.add(rbUseful);
+
+                String filterPref = Main.pref.get("plugin.roadsigns.preset.filter");
+                if (filterPref.equals("useful")) {
+                    rbUseful.setSelected(true);
+                } else {
+                    rbAll.setSelected(true);
+                }
+
+                JPanel pnFilter = new JPanel(new GridBagLayout());
+                pnFilter.setBorder(BorderFactory.createTitledBorder(tr("Filter")));
+                pnFilter.add(rbAll, GBC.eop());
+                pnFilter.add(rbUseful, GBC.eop());
+
+                this.add(pnFilter, GBC.eol().insets(5, 0, 5, 5));
+
                 JButton apply = new JButton(new AbstractAction(tr("Apply")) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -847,6 +871,17 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
 
         public void apply() throws IOException {
+            String filter = null;
+            if (rbAll != null) {
+                if (rbAll.isSelected()) {
+                    filter = "all";
+                } else if (rbUseful.isSelected()) {
+                    filter = "useful";
+                }
+            }
+            if (filter != null) {
+                Main.pref.put("plugin.roadsigns.preset.filter", filter);
+            }
             RoadSignsPlugin.setSelectedPreset(presetsData.get(selectionBox.getSelectedIndex()));
         }
     }

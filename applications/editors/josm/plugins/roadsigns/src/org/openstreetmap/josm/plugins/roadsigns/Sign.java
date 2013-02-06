@@ -33,6 +33,7 @@ public class Sign {
     public String loc_wiki;
     public String wiki;
     public String help;
+    public Boolean useful;
 
     public JLabel label; // FIXME: don't put gui stuff here
 
@@ -117,6 +118,11 @@ public class Sign {
             return null;
         }
         return null;
+    }
+
+    public boolean isUseful() {
+        if (useful != null) return useful;
+        return !tags.isEmpty();
     }
 
     @Override

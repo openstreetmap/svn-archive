@@ -3,8 +3,6 @@ Road Signs Plugin
 
 Shows a GUI dialog to tag objects by clicking on road sign symbols.
 It tries to generate the corresponding tags for the object.
-As tagging schemes are under constant development, the definitions
-need to be updated when needed.
 
 Author:
     Paul Hartmann <phaaurlt@googlemail.com>
@@ -17,8 +15,81 @@ Acknowledgements:
     Basically, this plugin is a port to Java and the JOSM (plugin) framework.
     [1] http://osmtools.de/traffic_signs/
 
-    Pics have been derived from
+    Pics for the German preset have been derived from
         http://de.wikipedia.org/wiki/Bildtafel_der_Verkehrszeichen_in_Deutschland (german street sign SVGs)
+
+How to install a custom preset
+------------------------------
+
+Add the following entry in the advanced preferences [1]:
+
+  plugin.roadsigns.sources=/path/to/myroadsignpreset.xml
+
+(The value can be either "simple" or "list" type)
+The chosen preset should be loaded automatically after a restart.
+
+Images can be placed in the same folder as the preset .xml file. Alternatively, you can also specify a path for icons:
+
+  plugin.roadsigns.icon.sources=/path/to/image/folder
+
+[1] http://josm.openstreetmap.de/wiki/Help/Preferences/Advanced
+
+Preset Format
+-------------
+
+The first preset was data/roadsignpresetDE.xml, so you might want to look there for examples.
+
+Some values can contain parameters like $foo, that will be replaced by the value of the parameter named foo.
+
+sign:
+    ref                 Short official designation of the sign that can be used for the traffic_sign tag. (accepts parameters)
+    id                  Unique identifier. (If missing, equals ref. Either id or ref must be present.)
+    icon                Icon image name. (If missing, id or ref is used as image name. In this case ':' and '.' characters are converted to underscore '_'.)
+    name                Name of the sign. (required)
+    long_name           Long (e.g. official) name of the sign.
+    traffic_sign_tag    Value that should be used for traffic_sign tag (if different from ref).
+    help                Some notes to guide the user.
+    wiki                Page in the osm wiki
+    deprecated          Set to "yes" if authorities have decided to no longer install signs of this kind.
+                        (But old signs may still be there and need to be recorded.)
+    useful              (optional) The user can choose to show only a selection of the most useful signs.
+                        By default, a sign with <tag> information is treated as useful. This can be overridden
+                        by setting this attribute. Possible values: true, false.
+
+tag:
+    Some tags can be named (ident=*) and modified by other subsequent tags. If this finally results in an
+    empty value (""), then the tag is skipped altogether. Note that the default value of a named tag is
+    only used if there are no appending tags. E.g. access=no becomes access=delivery and not access=no;delivery.
+
+    static tags:
+        key             The key text. (accepts parameters)
+        value           The value text. (accepts parameters)
+
+    named tags:
+        key             The key text.
+        value           The default value text. If the final evaluation of the value results in an empty string, the tag is dropped.
+        ident           Name a tag so it can later be changed by other tags.
+
+    modifying tags:
+        appending:
+            tag_ref         Name of the tag to be changed.
+            append_value    Append a string to the value of the tag. The default value of the identified tag is dropped (unless there is no
+                            modifying tag appending a value).
+        condition:
+            tag_ref         Name of the tag to be changed.
+            condition       The condition to add. (K=V becomes K:cond=V.)
+
+parameter:
+    ident           identifier to get the value of this parameter (required)
+    input           input type (currently "textfield" and "combo" are possible values) (required)
+    prefix          text to put before the input area
+    suffix          text to put after the input area
+    field_width     for text fields: the width of the field (number of characters)
+    default         default value (required)
+
+supplementary: (list of recommended additional signs)
+    id         the id of the supplementary sign
+
 
 JavaCC usage:
 -------------

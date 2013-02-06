@@ -224,8 +224,8 @@
 <sign icon="B19.png" id="B19"  ref="SK:B19" name="zákaz jazdy motorových vozidiel vo vzdialenosti kratšej" sk.name="zákaz jazdy motorových vozidiel vo vzdialenosti kratšej">
 </sign>
 <sign icon="B20.png" id="B20"  ref="SK:B20" name="zákaz vjazdu vozidiel alebo súprav vozidiel, ktorých dĺžka presahuje vyznačenú hranicu" sk.name="zákaz vjazdu vozidiel alebo súprav vozidiel, ktorých dĺžka presahuje vyznačenú hranicu">
-       <tag key="car:distance" value="$val"/>
-				       <parameter ident="val" input="textfield" suffix="m" default="70" field_width="2"/>
+       <tag key="maxlength" value="$val"/>
+				       <parameter ident="val" input="textfield" suffix="m" default="10" field_width="2"/>
 </sign>
 <sign icon="B21.png" id="B21"  ref="SK:B21" name="zákaz vjazdu vozidiel prepravujúcich nebezpečné veci" sk.name="zákaz vjazdu vozidiel prepravujúcich nebezpečné veci">
   	 <supplementary id="E14"/> <!-- Kategória tunela -->

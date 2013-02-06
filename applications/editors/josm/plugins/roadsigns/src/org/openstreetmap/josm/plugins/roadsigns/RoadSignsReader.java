@@ -21,13 +21,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.OsmDataParsingException;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
-import org.openstreetmap.josm.tools.LanguageInfo;
-
 import org.openstreetmap.josm.plugins.roadsigns.javacc.ParseException;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.TokenMgrError;
+import org.openstreetmap.josm.tools.LanguageInfo;
 
 /**
  * Parses a road sign preset file.
@@ -112,6 +112,11 @@ public class RoadSignsReader {
                 curSign.loc_wiki = getLocalized(atts, "wiki");
 
                 curSign.help = getLocalized(atts, "help");
+
+                String useful = atts.getValue("useful");
+                if (useful != null) {
+                    curSign.useful = Boolean.parseBoolean(useful);
+                }
 
             } else if (curSign != null && qname.equals("tag")) {
                 if (curSign == null) {
@@ -311,7 +316,18 @@ public class RoadSignsReader {
             factory.setNamespaceAware(true);
             factory.newSAXParser().parse(inputSource, parser);
             parser.wireSupplements();
-            return parser.allSigns;
+            String filterPref = Main.pref.get("plugin.roadsigns.preset.filter");
+            if (filterPref.equals("useful")) {
+                List<Sign> filtered = new ArrayList<Sign>();
+                for (Sign s : parser.allSigns) {
+                    if (s.isUseful()) {
+                        filtered.add(s);
+                    }
+                }
+                return filtered;
+            } else {
+                return parser.allSigns;
+            }
         } catch (ParserConfigurationException e) {
             e.printStackTrace(); // broken SAXException chaining
             throw new SAXException(e);

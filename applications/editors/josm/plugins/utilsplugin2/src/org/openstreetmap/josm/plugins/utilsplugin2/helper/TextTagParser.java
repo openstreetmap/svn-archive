@@ -1,11 +1,9 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.helper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.openstreetmap.josm.data.osm.Tag;
 
 public class TextTagParser {
 
@@ -25,40 +23,13 @@ public class TextTagParser {
         n = data.length();
     }
     
-    /**
-     * Read tags from format, tag1\t val1 \n tag2 \t vat2 
-     * if possible
-     */
-    Collection<Tag> getFormattedTags() {
-         String lines[] = data.split("\n");
-         
-         Pattern p = Pattern.compile("(.*?)\t(.*?)");
-         List<Tag> tags = new ArrayList<Tag>();
-         String k=null, v=null;
-         for (String  line: lines) {
-            if (line.trim().isEmpty()) continue; // skiip empty lines
-            Matcher m = p.matcher(line);
-            if (m.matches()) {
-                 k=m.group(1).trim(); v=m.group(2).trim();
-                 tags.add(new Tag(k,v));
-            } else {
-                tags.clear();
-                break;
-            }
-         }
-         if (!tags.isEmpty()) {
-            return tags;
-        }  else {
-            return null;
-        }
-    }
-
+    
     /**
      * Read tags from "Free format"
      */
-    Collection<Tag> getParsedTags() {
+    Map<String, String>  getFreeParsedTags() {
         String k, v;
-        List<Tag> tags = new ArrayList<Tag>();
+        Map<String, String> tags = new HashMap<String,String>();
 
         while (true) {
             skipEmpty();
@@ -76,7 +47,7 @@ public class TextTagParser {
                 break; 
             }
             v = parseString(false);
-            tags.add(new Tag(k, v));
+            tags.put(k, v);
         }
         return tags;
     }
@@ -145,13 +116,82 @@ public class TextTagParser {
         }
     }
 
-    public static Collection<Tag> readTagsFromText(String buf) {
-        TextTagParser parser = new TextTagParser(buf);
-        Collection<Tag> tags;
-        tags = parser.getFormattedTags(); // try "tag\tvalue\n" format
-        if (tags == null) {
-            tags = parser.getParsedTags();
+    private static String unescape(String k) {
+        if(! (k.startsWith("\"") && k.endsWith("\"")) ) {
+            if (k.contains("=")) {
+                // '=' not in quotes will be treated as an error!
+                return null;
+            } else {
+                return k;
+            }
         }
+        String text = k.substring(1,k.length()-1);
+        return (new TextTagParser(text)).parseString(false);
+    }
+
+    /**
+     * Try to find tag-value pairs in given  @param text
+     * @param splitRegex - text is splitted into parts with this delimiter
+     * @param tagRegex - each part is matched against this regex
+     * @param unescapeTextInQuotes - if true, matched tag and value will be analyzed more thoroughly
+     */
+    public static Map<String, String> readTagsByRegexp(String text, String splitRegex, String tagRegex, boolean unescapeTextInQuotes) {
+         String lines[] = text.split(splitRegex);
+         Pattern p = Pattern.compile(tagRegex);
+         Map<String, String> tags = new HashMap<String,String>();
+         String k=null, v=null;
+         for (String  line: lines) {
+            if (line.trim().isEmpty()) continue; // skiip empty lines
+            Matcher m = p.matcher(line);
+            if (m.matches()) {
+                 k=m.group(1).trim(); v=m.group(2).trim();
+                 if (unescapeTextInQuotes) {
+                     k = unescape(k);
+                     v = unescape(v);
+                     if (k==null || v==null) return null;
+                 } 
+                 tags.put(k,v);
+            } else {
+                return null;
+            }
+         }
+         if (!tags.isEmpty()) {
+            return tags;
+         }  else {
+            return null;
+         }    
+    }
+ 
+    public static Map<String,String> readTagsFromText(String buf) {
+        Map<String,String> tags;
+        
+        // Format
+        // tag1\tval1\ntag2\tval2\n
+        tags = readTagsByRegexp(buf, "[\r\n]+]", "(.*?)\t(.*?)", false);
+                // try "tag\tvalue\n" format
+        if (tags!=null) return tags;
+
+        // Format
+        // a=b \n c=d \n "a b"=hello 
+        // SORRY: "a=b" = c is not supported fror now, only first = will be considered
+        // a = "b=c" is OK
+        // a = b=c  - this method of parsing fails intentionally
+        tags = readTagsByRegexp(buf, "[\\n\\t\\r]+", "(.*?)=(.*?)", true);
+                // try format  t1=v1\n t2=v2\n ...
+        if (tags!=null) return tags;
+        
+        // JSON-format
+        String bufJson = buf.trim();
+        if (bufJson.startsWith("{") && bufJson.endsWith("}") ) bufJson = bufJson.substring(1,bufJson.length()-1);
+        tags = readTagsByRegexp(bufJson, "[\\s]*,[\\s]*", 
+                "[\\s]*(\\\".*?[^\\\\]\\\")"+"[\\s]*:[\\s]*"+"(\\\".*?[^\\\\]\\\")[\\s]*", true);
+        if (tags!=null) return tags;
+
+        // Free format 
+        // a 1 "b" 2 c=3 d 4 e "5"
+        TextTagParser parser = new TextTagParser(buf);
+        System.out.println("free");
+        tags = parser.getFreeParsedTags();
         return tags;
 
     }

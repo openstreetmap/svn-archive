@@ -27,12 +27,10 @@ public class URLList {
         items.add("http://en.wikipedia.org/w/index.php?search={name}&fulltext=Search");
         items.add("Wikipedia RU");
         items.add(defaultURL);
-        items.add("LatLon buildings");
-        items.add("http://latlon.org/buildings?zoom=17&lat={#lat}&lon={#lon}&layers=B");
-        items.add("AMDMi3 Russian streets");
-        items.add("http://addresses.amdmi3.ru/?zoom=11&lat={#lat}&lon={#lon}&layers=B00");
-        items.add("Mapki - More  History with CT");
-        items.add("http://osm.mapki.com/history/{#type}.php?id={#id}");
+        items.add("Who Dit It?");
+        items.add("http://simon04.dev.openstreetmap.org/whodidit/?zoom=12&lat={#lat}&lon={#lat}&layers=BTT");
+        items.add("Keep Right validator");
+        items.add("http://keepright.ipax.at/report_map.php?zoom=14&lat={#lat}&lon={#lat}&layers=B0T");
         items.add("Element history [demo, =Ctrl-Shift-H]");
         items.add("http://www.openstreetmap.org/browse/{#type}/{#id}/history");
         items.add("Browse element [demo, =Ctrl-Shift-I]");

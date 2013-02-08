@@ -54,7 +54,7 @@ const double merc_lat_max = +85.0511;
 
 int MAX_VERTICES = 1024*1024;
 
-static int count_node,    max_node;
+static long int count_node,    max_node;
 static int count_way,     max_way;
 static int count_rel,     max_rel;
 
@@ -64,7 +64,7 @@ static int count_rel,     max_rel;
 */
 static double node_lon, node_lat;
 static struct keyval nds;
-static int osm_id;
+static long int osm_id;
 struct rb_table *nodes_table;
 struct rb_table *ways_table;
 
@@ -95,7 +95,7 @@ static void project_exit(void)
 static void printStatus(void)
 {
     if( isatty(STDERR_FILENO) )
-      fprintf(stderr, "\rProcessing: Node(%dk) Way(%dk) Relation(%dk)    ",
+      fprintf(stderr, "\rProcessing: Node(%ldk) Way(%dk) Relation(%dk)    ",
               count_node/1000, count_way/1000, count_rel/1000);
 }
 
@@ -247,7 +247,7 @@ void EndElement(const xmlChar *name)
         }
         storeway->nds[i] = 0;
         if( i == 1 )
-          fprintf(stderr, "Wierd: way %d only has %d nodes\n", osm_id, i);
+          fprintf(stderr, "Wierd: way %ld only has %d nodes\n", osm_id, i);
         if( i >= 2 )
                 rb_insert( ways_table, storeway );
         resetList(&nds);
@@ -678,7 +678,7 @@ int main(int argc, char *argv[])
     
     if (count_node || count_way || count_rel) {
         fprintf(stderr, "\n");
-        fprintf(stderr, "Node stats: total(%d), max(%d)\n", count_node, max_node);
+        fprintf(stderr, "Node stats: total(%ld), max(%ld)\n", count_node, max_node);
         fprintf(stderr, "Way stats: total(%d), max(%d)\n", count_way, max_way);
         fprintf(stderr, "Relation stats: total(%d), max(%d)\n", count_rel, max_rel);
     }

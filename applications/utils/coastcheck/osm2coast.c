@@ -37,7 +37,7 @@
 
 #include "input.h"
 
-#define MAX_NODE_ID (2100*1000*1000)
+#define MAX_NODE_ID (3000000000L)
 #define MAX_NODES_PER_WAY 2000
 
 static int count_node,    max_node;
@@ -49,11 +49,11 @@ static int count_rel,     max_rel;
    start tag and can therefore be cached.
 */
 static double node_lon, node_lat;
-static int32_t *nds;
-static int nd_count;
+static int64_t *nds;
+static long int nd_count;
 static unsigned char *bitmap;
 int pass, wanted;
-static int osm_id;
+static long int osm_id;
 
 static void printStatus(void)
 {
@@ -121,7 +121,7 @@ void StartElement(xmlTextReaderPtr reader, const xmlChar *name)
         xid  = xmlTextReaderGetAttribute(reader, BAD_CAST "ref");
         assert(xid);
 
-        int id = strtol((char *)xid, NULL, 10);
+        long int id = strtol((char *)xid, NULL, 10);
         if( id > 0 && nd_count <= MAX_NODES_PER_WAY)
             nds[nd_count] = id;
         nd_count++;
@@ -151,31 +151,31 @@ void EndElement(const xmlChar *name)
         {
             if( osm_id > MAX_NODE_ID )
             {
-              fprintf( stderr, "Exceeded maximum node ID: %d\n", MAX_NODE_ID );
+              fprintf( stderr, "Exceeded maximum node ID: %ld\n", MAX_NODE_ID );
               exit(1);
             }
             if( bitmap[ osm_id >> 3 ] & (1<<(osm_id&7)) )
-                printf( "<node id=\"%d\" lat=\"%f\" lon=\"%f\" />\n", osm_id, node_lat, node_lon );
+                printf( "<node id=\"%ld\" lat=\"%f\" lon=\"%f\" />\n", osm_id, node_lat, node_lon );
         }
     } else if (xmlStrEqual(name, BAD_CAST "way")) {
         if( nd_count > MAX_NODES_PER_WAY )
         {
-            fprintf(stderr, "Exceeded maximum node count (%d > %d) way=%d\n", nd_count, MAX_NODES_PER_WAY, osm_id );
+            fprintf(stderr, "Exceeded maximum node count (%ld > %d) way=%ld\n", nd_count, MAX_NODES_PER_WAY, osm_id );
         }
 
         if( pass == 0 && wanted )
         {
-            int i;
-            printf( "<way id=\"%d\">\n", osm_id );
+            long int i;
+            printf( "<way id=\"%ld\">\n", osm_id );
             for( i=0; i<nd_count; i++ )
             {
                 if( nds[i] > MAX_NODE_ID )
                 {
-                  fprintf( stderr, "Exceeded maximum node ID: %d\n", MAX_NODE_ID );
+                  fprintf( stderr, "Exceeded maximum node ID: %ld\n", MAX_NODE_ID );
                   exit(1);
                 }
                 bitmap[ nds[i] >> 3 ] |= (1<<(nds[i]&7));
-                printf( "<nd ref=\"%d\" />\n", nds[i] );
+                printf( "<nd ref=\"%ld\" />\n", nds[i] );
             }
             printf( "</way>\n" );
         }

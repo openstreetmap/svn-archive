@@ -25,7 +25,7 @@ public class PasteTagsExtendedAction extends JosmAction {
     public PasteTagsExtendedAction() {
         super(tr("Paste tags [testing]"), "pastetags", tr("Apply tags parsed from buffer to all selected items.."),
             Shortcut.registerShortcut("tools:pastetags", tr("Tool: {0}", tr("Paste tags")),
-            KeyEvent.VK_T, Shortcut.CTRL), true, "textpastetags", false); // TODO: shortcut is temporary, will be on Ctrl-Shift-V
+            KeyEvent.VK_T, Shortcut.CTRL), true, "textpastetags", true); // TODO: shortcut is temporary, will be on Ctrl-Shift-V
         //putValue("help", ht("/Action/Paste"));
     }
     

@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.io.XmlWriter;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class TextTagParser {
 
@@ -162,6 +168,11 @@ public class TextTagParser {
          }    
     }
  
+    public static Map<String,String> getTagsFromText(String buf) {
+        Map<String,String> tags = readTagsFromText(buf);
+        return validateTags(tags) ? tags : null;
+    }
+    
     public static Map<String,String> readTagsFromText(String buf) {
         Map<String,String> tags;
         
@@ -190,12 +201,51 @@ public class TextTagParser {
         // Free format 
         // a 1 "b" 2 c=3 d 4 e "5"
         TextTagParser parser = new TextTagParser(buf);
-        System.out.println("free");
         tags = parser.getFreeParsedTags();
         return tags;
-
     }
 
-
+    private static boolean validateTags(Map<String, String> tags) {
+        String value;
+        int r;
+        if (tags.size()>30) {
+            r=warning(tr("There was {0} tags found in the buffer, it is suspicious!",tags.size()), "", "toomanytags");
+            if (r==2) return false; if (r==3) return true;
+        }
+        for (String key: tags.keySet()) {
+            value = tags.get(key);
+            if (key.length()>50) {
+                r = warning(tr("Key is too long:"), key+"="+value, "keytoolong");
+                if (r==2) return false; if (r==3) return true;
+            }
+            if (!key.matches("[a-zA-Z:_]*")) {
+                r = warning(tr("Suspiciouns characters in tag:"), key, "keydoesnotmatch");
+                if (r==2) return false; if (r==3) return true;
+            }
+            if (value.length()>255) {
+                r= warning(tr("Value too long (max 255 characters):"), value, "valuetoolong");
+                if (r==2) return false; if (r==3) return true;
+            }
+        }
+        return true;
+    }
     
+    private static int warning(String text, String data, String code) {
+        ExtendedDialog ed = new ExtendedDialog(
+                    Main.parent,
+                    tr("Do you want to paste these tags?"),
+                    new String[]{tr("Ok"), tr("Cancel"), tr("Ingore warnings")});
+        ed.setButtonIcons(new String[]{"ok.png", "cancel.png", "pastetags.png"});
+        ed.setContent("<html><b>"+text + "</b><br/><br/> <div width=\"300px\">"+XmlWriter.encode(data,true)+"</html>");
+        ed.setDefaultButton(2);
+        ed.setCancelButton(2);
+        ed.setIcon(JOptionPane.WARNING_MESSAGE);
+        ed.toggleEnable(code);
+        ed.showDialog();
+        Object o = ed.getValue();
+        if (o instanceof Integer) 
+            return ((Integer)o).intValue(); 
+        else 
+            return 2;
+    }
 }

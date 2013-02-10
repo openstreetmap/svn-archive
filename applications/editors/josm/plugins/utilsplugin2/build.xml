@@ -30,7 +30,7 @@
 <project name="utilsplugin2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: improved pasting tags: paste from JOSM, support JSON format"/>
+    <property name="commit.message" value="Utilsplugin2: validation for pasting tags"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4980"/>
 

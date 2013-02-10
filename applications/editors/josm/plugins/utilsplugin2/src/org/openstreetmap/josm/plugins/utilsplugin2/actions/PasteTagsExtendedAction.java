@@ -47,7 +47,7 @@ public class PasteTagsExtendedAction extends JosmAction {
                 commands.add(new ChangePropertyCommand(selection, tag.getKey(), "".equals(tag.getValue())?null:tag.getValue()));
             }
         } else { // Paste tags from arbitrary text
-            Map<String, String> tags = TextTagParser.readTagsFromText(buf);
+            Map<String, String> tags = TextTagParser.getTagsFromText(buf);
             if (tags==null) return;
             String v;
             for (String key: tags.keySet()) {

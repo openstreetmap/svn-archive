@@ -10,6 +10,7 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.io.XmlWriter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
 public class TextTagParser {
 
@@ -208,8 +209,12 @@ public class TextTagParser {
     private static boolean validateTags(Map<String, String> tags) {
         String value;
         int r;
-        if (tags.size()>30) {
-            r=warning(tr("There was {0} tags found in the buffer, it is suspicious!",tags.size()), "", "toomanytags");
+        int s = tags.size();
+        if (s > 30) {
+            // Use trn() even if for english it makes no sense, as s > 30
+            r=warning(trn("There was {0} tag found in the buffer, it is suspicious!",
+            "There were {0} tags found in the buffer, it is suspicious!", s,
+            s), "", "toomanytags");
             if (r==2) return false; if (r==3) return true;
         }
         for (String key: tags.keySet()) {

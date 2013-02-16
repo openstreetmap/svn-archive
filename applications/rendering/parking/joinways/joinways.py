@@ -67,11 +67,11 @@ class JoinDB (OSMDB):
         return highways
 
 
-    def get_next_deleted_highway(self):
-        """ Gets the next deleted highway (osm_id) """
-        select = "select osm_id from planet_line_join_deleted_segments limit 1"
-        highway_osm_id=self.select_one(select)
-        return highway_osm_id
+    def get_next_deleted_highways(self,count=1):
+        """ Gets the next count deleted highways (osm_id) """
+        select = "select osm_id from planet_line_join_deleted_segments limit {count}".format(count=count)
+        highway_osm_id_list=self.select_list(select)
+        return highway_osm_id_list
 
     def get_next_pending_highway(self):
         """ Gets the next unhandled highway (osm_id+dict) """
@@ -251,10 +251,10 @@ class JoinDB (OSMDB):
         update = "update planet_line set jrhandled=False where {bbox} jrhandled is True".format(bbox=bbox_condition_sql)
         self.update(update)
 
-    def find_joinway_by_segment(self,segment_id):
-        """ Find the join_id of a highway segment. None if none found """
-        select="select join_id from planet_line_joinmap where segment_id={seg}".format(seg=segment_id)
-        return self.select_one(select)
+    def find_joinways_by_segments(self,segment_id_list):
+        """ Find the join_ids of a set of highway segments. None if none found """
+        select="select join_id from planet_line_joinmap where segment_id in {segs}".format(seg=self.sql_list_of_ids(segment_id_list))
+        return self.select_list(select)
 
     def flush_deleted_segment(self,segment_id):
         """ Removes a "deleted highway" from the deleted_segments table. """
@@ -269,6 +269,11 @@ class JoinDB (OSMDB):
 
     def get_segments_of_joinway(self,joinway_id):
         select="select segment_id from planet_line_joinmap where join_id={jid}".format(jid=joinway_id)
+        segments=self.select_list(select)
+        return segments
+
+    def get_segments_of_joinways(self,joinway_id_list):
+        select="select segment_id from planet_line_joinmap where join_id in {jid}".format(jid=self.sql_list_of_ids(joinway_id_list))
         segments=self.select_list(select)
         return segments
 
@@ -304,10 +309,10 @@ class JoinDB (OSMDB):
         self.mark_segments_unhandled(dirtylist)
         self.remove_joinway(joinway_id)
         
-    def remove_joinway(self,joinway_id):
-        delete="delete from planet_line_join where join_id={j}".format(j=joinway_id)
+    def remove_joinways(self,joinway_id_list):
+        delete="delete from planet_line_join where join_id in {j}".format(j=self.sql_list_of_ids(joinway_id_list))
         self.delete(delete)
-        delete="delete from planet_line_joinmap where join_id={j}".format(j=joinway_id)
+        delete="delete from planet_line_joinmap where join_id in {j}".format(j=self.sql_list_of_ids(joinway_id_list))
         self.delete(delete)
 
     def area_of_joinway(self,joinway):
@@ -324,27 +329,26 @@ class JoinDB (OSMDB):
         i=0
         j=0
         while True:
-            segment_id=self.get_next_deleted_highway()
-            if segment_id==None:
+            segment_id_list=self.get_next_deleted_highways(100)
+            logging.info("Deleting {} segments").format(len(segment_id_list))
+            if not segment_id_list:
                 break
-            #print "[] Handling deleted segment {seg}".format(seg=segment_id)
-            joinway_id=self.find_joinway_by_segment(segment_id)
-            if joinway_id==None:  # deleted segment was not in joined highway -> ignore
-                self.flush_deleted_segment(segment_id)
-                continue
-            dirtylist=self.get_segments_of_joinway(joinway_id)
-            name_of_joinway=self.get_name_of_joinway(joinway_id)
-            #print "   [] '{jwname}': list of segments to mark: {l}".format(jwname=name_of_joinway,l=dirtylist)
+            dirty_joinways_list=self.find_joinways_by_segments(segment_id_list)
+            logging.info("   that are in {} joinways").format(len(dirty_joinways_list))
+
+            # the dirty_segments_list is a list of segments that are not deleted but are affected
+            # since they are in the same joinway (also dirty) as a deleted segment
+            dirty_segments_list=self.get_segments_of_joinways(dirty_joinways_list)
+            logging.info("      that contain {} segments").format(len(dirty_segments_list))
+
             # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
             # all of those must fail gracefully if an entry is not there (anymore).
-            self.mark_segments_unhandled(dirtylist)
-            self.flush_deleted_segments(dirtylist)
-            self.remove_joinway(joinway_id)
-            i+=1
-            j+=len(dirtylist)
-            logging.info("Deleted {i}. ({id}) '{jwname}' ({l} segments).".format(i=i,id=segment_id,jwname=name_of_joinway,l=dirtylist))
-            if i%100==0:
-                self.commit()
+            self.mark_segments_unhandled(dirty_segments_list)
+            self.flush_deleted_segments(dirty_segments_list)
+            self.remove_joinways(dirty_joinways_list)
+            i+=len(segment_id_list)
+            j+=len(dirty_segments_list)
+            self.commit()
             if self.maxobjects>0 and i>=self.maxobjects:
                 break
         self.commit()

@@ -205,7 +205,7 @@ class JoinDB (OSMDB):
         # note that the set of segments may be larger than the newly calculated joinway's segments (joinset parameter).
         logging.warn("Merger: Joinway {jw}'s segment set {l} is in the following (to be removed) joinways {jwl}".format(jw=join_id,l=self.sql_list_of_ids(segments),jwl=self.sql_list_of_ids(existing_joinways)))
         #
-        # FIXME: temp workaround for endless loop:
+        # workaround for endless loop:
         # build a queue and check that join_ids are not looping
         #
         self.loop_detect_queue.add_id(join_id)
@@ -329,10 +329,8 @@ class JoinDB (OSMDB):
                 break
             #print "[] Handling deleted segment {seg}".format(seg=segment_id)
             joinway_id=self.find_joinway_by_segment(segment_id)
-            if joinway_id==None:  # deleted segment was not in joined highway -> ignore (FIXME: and warn)
-                #print "   [] was not a joinway. Ignoring and flushing."
+            if joinway_id==None:  # deleted segment was not in joined highway -> ignore
                 self.flush_deleted_segment(segment_id)
-                ### FIXME: zur sicherheit in planet_line als dirty markieren (falls vorhanden), oder besser: ASSERT ERROR falls in planet_line vorhanden und jrhandled=True
                 continue
             dirtylist=self.get_segments_of_joinway(joinway_id)
             name_of_joinway=self.get_name_of_joinway(joinway_id)
@@ -357,7 +355,6 @@ class JoinDB (OSMDB):
 
     def handle_new_highway_segments(self):
         """ handle unhandled (or dirty) highway segments """
-        ### FIXME: was passiert, wenn zu einem Segment eins angehängt wird, vorher müssten die alten segmente rausgelöscht werden.
         addstarttime=time.time()
         i=0
         while True:

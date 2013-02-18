@@ -20,17 +20,15 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import utils.TimedKeyReleaseListener;
 
 
-public class ImageryAdjustMapMode extends MapMode implements MouseListener, MouseMotionListener, AWTEventListener, MapFrame.MapModeChangeListener{
+public class ImageryAdjustMapMode extends MapMode implements MouseListener, MouseMotionListener, MapFrame.MapModeChangeListener{
     boolean mouseDown;
     EastNorth prevEastNorth;
     private ImageryLayer adjustingLayer;
     private MapMode oldMapMode;
 
-    private final TreeSet<Integer> set = new TreeSet<Integer>();
-    private Timer timer;
-    private KeyEvent releaseEvent;
     
     public ImageryAdjustMapMode(MapFrame mapFrame) {
         super(tr("Adjust imagery"), "adjustimg",
@@ -57,7 +55,8 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     }
     
     
-    
+    TimedKeyReleaseListener listener;
+            
     @Override public void enterMode() {
         super.enterMode();
         if (!hasImageryLayersToAdjust()) {
@@ -75,26 +74,17 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         if (!adjustingLayer.isVisible()) {
             adjustingLayer.setVisible(true);
         }
-       Main.map.mapView.addMouseListener(this);
+        Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
-        timer = new Timer(0, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                 timer.stop();
-                 if (set.remove(releaseEvent.getKeyCode())) {
-                  doKeyReleaseEvent(releaseEvent);
-                 }
+        listener = new TimedKeyReleaseListener() {
+                @Override
+                protected void doKeyReleaseEvent(KeyEvent evt) {
+                    if (releaseEvent.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
+                    if (oldMapMode!=null && !(oldMapMode instanceof ImageryAdjustMapMode))
+                    Main.map.selectMapMode(oldMapMode);
+                }
             }
-
-        });
-        
-        try {
-            Toolkit.getDefaultToolkit().addAWTEventListener(this,
-                    AWTEvent.KEY_EVENT_MASK);
-        } catch (SecurityException ex) {
-        }
-        
-        
+        };
     }
 
     @Override public void exitMode() {
@@ -102,10 +92,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
         adjustingLayer = null;
-        try {
-            Toolkit.getDefaultToolkit().removeAWTEventListener(this);
-        } catch (SecurityException ex) {
-        }
+        listener.stop();
     }
 
     @Override public void mousePressed(MouseEvent e) {
@@ -136,50 +123,15 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         prevEastNorth = null;
     }
     
-    private void doKeyEvent(KeyEvent keyEvent) {
-    }
-
-    private void doKeyReleaseEvent(KeyEvent releaseEvent) {
-        if (releaseEvent.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
-            if (oldMapMode!=null && !(oldMapMode instanceof ImageryAdjustMapMode))
-            Main.map.selectMapMode(oldMapMode);
-        }
-    }
-
     @Override public boolean layerIsSupported(Layer l) {
         //return hasImageryLayersToAdjust();
         return true;        
     }
 
     @Override
-    public void eventDispatched(AWTEvent event) {
-        if (event instanceof KeyEvent) {
-        KeyEvent e=(KeyEvent) event;
-        
-        if (event.getID() == KeyEvent.KEY_PRESSED) {
-             if (timer.isRunning()) {
-                  timer.stop();
-                } else {
-                  if (set.add((e.getKeyCode()))) doKeyEvent((KeyEvent) event);
-                }
-        }
-        if (event.getID() == KeyEvent.KEY_RELEASED) {
-            if (timer.isRunning()) {
-              timer.stop();
-               if (set.remove(e.getKeyCode())) doKeyReleaseEvent(e);
-            } else {
-              releaseEvent = e;
-              timer.restart();
-            }
-        }
-        }
-    }
-
-    @Override
     public void mapModeChange(MapMode oldMapMode, MapMode newMapMode) {
         this.oldMapMode = oldMapMode;
     }
-
 
     /**
      * the list cell renderer used to render layer list entries

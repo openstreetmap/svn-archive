@@ -3,6 +3,7 @@ package touchscreenhelper;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -11,20 +12,42 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.tools.Shortcut;
+import uitils.TimedKeyReleaseListener;
 
 public class BrowseAction extends MapMode implements MouseListener,
-    MouseMotionListener {
+    MouseMotionListener, MapFrame.MapModeChangeListener {
+
+    private MapMode oldMapMode;
+    private TimedKeyReleaseListener listener;
 
     public BrowseAction(MapFrame mapFrame) {
         super(tr("Browse"), "browse", tr("Browse map with left button"),
+            Shortcut.registerShortcut("touchscreenhelper:browse", tr("Mode: {0}", tr("Browse map with left button")),
+                KeyEvent.VK_T, Shortcut.DIRECT),
             mapFrame, Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+        MapFrame.addMapModeChangeListener(this);
     }
-
+    
+    @Override
+    public void mapModeChange(MapMode oldMapMode, MapMode newMapMode) {
+        this.oldMapMode = oldMapMode;
+    }
+    
     @Override public void enterMode() {
         super.enterMode();
-
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
+
+        listener = new TimedKeyReleaseListener() {
+            @Override
+            protected void doKeyReleaseEvent(KeyEvent evt) {
+                if (evt.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
+                    if (oldMapMode!=null && !(oldMapMode instanceof BrowseAction))
+                    Main.map.selectMapMode(oldMapMode);
+                }
+            }
+        };
     }
 
     @Override public void exitMode() {
@@ -32,6 +55,7 @@ public class BrowseAction extends MapMode implements MouseListener,
 
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
+        listener.stop();
     }
 
     public void mouseDragged(MouseEvent e) {

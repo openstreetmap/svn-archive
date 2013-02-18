@@ -126,7 +126,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         eps=settings.startingEps;
         mv = Main.map.mapView;
         line.setMv(mv);
-
+        
         if (getCurrentDataSet() == null) return;
 
         Main.map.mapView.addMouseListener(this);
@@ -194,7 +194,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         } else {
             g.setStroke(strokeForOriginal);
         }
-
+        
         Point p1, p2;
         LatLon pp1, pp2;
         p1 = line.getPoint(pts.get(0));
@@ -307,6 +307,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             updateCursor();
             return;
         }
+        autoCloseIfNeeded();
 
         if (ctrl && shift) {newDrawing();repaint();return;}
         if (!ctrl && shift) {
@@ -426,7 +427,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 return;
             }
         }
-        //statusText = getLatLon(e).toString();        updateStatusLine();
+        autoCloseIfNeeded();
     }
 
     private void doKeyEvent(KeyEvent e) {
@@ -720,6 +721,25 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private void repaint() {
         Main.map.mapView.repaint();
     }
+    
+    private void tryToLoadWay() {
+        updateCursor();
+        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
+        if (selectedWays!=null // if there is a selection
+            && selectedWays.size()==1 // and one way is selected
+            && line.getPoints().size()==0) /* and ther is no already drawn line */ {
+            // we can start drawing new way starting from old one
+            Way w = selectedWays.iterator().next();
+            
+            if (w.isNew()) loadFromWay(w);
+        }
+    }
+
+    private void autoCloseIfNeeded() {
+        if (settings.drawClosed && line.getPointCount()>1 && !line.isClosed()) {
+            line.closeLine();
+        }
+    }
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Helper functions">
@@ -734,19 +754,5 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         return mv.getLatLon(e.getX(), e.getY());
     }
 // </editor-fold>
-
-    private void tryToLoadWay() {
-        updateCursor();
-        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
-        if (selectedWays!=null // if there is a selection
-            && selectedWays.size()==1 // and one way is selected
-            && line.getPoints().size()==0) /* and ther is no already drawn line */ {
-            // we can start drawing new way starting from old one
-            Way w = selectedWays.iterator().next();
-            
-            if (w.isNew()) loadFromWay(w);
-        }
-    }
-
 
 }

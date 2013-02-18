@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import javax.xml.stream.events.StartDocument;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MapView;
@@ -377,6 +376,10 @@ public class DrawnPolyLine {
             }
         return Math.round(maxpkm);
             
+    }
+
+    int getPointCount() {
+        return points.size();
     }
 
 }

@@ -4,9 +4,10 @@
  */
 package org.openstreetmap.josm.plugins.fastdraw;
 
-import org.openstreetmap.josm.tools.GBC;
+import java.awt.Component;
 import java.awt.GridBagLayout;
 import javax.swing.JOptionPane;
+import org.openstreetmap.josm.tools.GBC;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import org.openstreetmap.josm.Main;
@@ -41,6 +42,8 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         JCheckBox snapCb=new JCheckBox(tr("Snap to nodes"));
         JCheckBox fixedClickCb = new JCheckBox(tr("Add fixed points on click"));
         JCheckBox fixedSpaceCb = new JCheckBox(tr("Add fixed points on spacebar"));
+        JCheckBox drawClosedCb = new JCheckBox(tr("Draw closed polygons only"));
+        
         all.add(label1,GBC.std().insets(10,0,0,0));
         all.add(text1, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
         all.add(label2,GBC.std().insets(10,0,0,0));
@@ -53,6 +56,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         all.add(snapCb,GBC.eop().insets(20,0,0,0));
         all.add(fixedClickCb,GBC.eop().insets(20,0,0,0));
         all.add(fixedSpaceCb,GBC.eop().insets(20,0,0,0));
+        all.add(drawClosedCb,GBC.eop().insets(20,0,0,0));
         
         text1.setValue(settings.epsilonMult);
         text2.setValue(settings.startingEps);
@@ -60,8 +64,9 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         snapCb.setSelected(settings.snapNodes);
         fixedClickCb.setSelected(settings.fixedClick);
         fixedSpaceCb.setSelected(settings.fixedSpacebar);
+        drawClosedCb.setSelected(settings.drawClosed);
         combo1.setSelectedIndex(settings.simplifyMode);
-
+        
         ExtendedDialog dialog = new ExtendedDialog(Main.parent,
                 tr("FastDraw settings"),
                 new String[] {tr("Ok"), tr("Cancel")}
@@ -83,6 +88,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
             settings.snapNodes=snapCb.isSelected();
             settings.fixedClick=fixedClickCb.isSelected();
             settings.fixedSpacebar=fixedSpaceCb.isSelected();
+            settings.drawClosed=drawClosedCb.isSelected();
             settings.simplifyMode=combo1.getSelectedIndex();
             settings.savePrefs();
             } catch (ParseException e) {

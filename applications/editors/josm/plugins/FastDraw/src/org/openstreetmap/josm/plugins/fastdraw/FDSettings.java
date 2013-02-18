@@ -32,6 +32,8 @@ public class FDSettings {
     public boolean fixedSpacebar;
     // option for simplifiction: 0="Autosimplify and wait",
     //1="Simplify and wait", 2="Save as is"
+
+    public boolean drawClosed;
     public int simplifyMode;
     public float lineWidth;
     
@@ -53,6 +55,7 @@ public class FDSettings {
         snapNodes = Main.pref.getBoolean("fastdraw.snapnodes", true);
         fixedClick = Main.pref.getBoolean("fastdraw.fixedclick", false);
         fixedSpacebar = Main.pref.getBoolean("fastdraw.fixedspacebar", false);
+        drawClosed =  Main.pref.getBoolean("fastdraw.drawclosed", false);
         simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0);
         lineWidth = (float) Main.pref.getDouble("fastdraw.linewidth", 2);
     }
@@ -75,6 +78,7 @@ public class FDSettings {
          Main.pref.put("fastdraw.snapnodes", snapNodes);
          Main.pref.put("fastdraw.fixedclick", fixedClick);
          Main.pref.put("fastdraw.fixedspacebar", fixedSpacebar);
+         Main.pref.put("fastdraw.drawclosed", drawClosed);
          Main.pref.putInteger("fastdraw.simplifymode", simplifyMode);
          Main.pref.putDouble("fastdraw.linewidth",(double)lineWidth);
          try {Main.pref.save();} catch (IOException e) {

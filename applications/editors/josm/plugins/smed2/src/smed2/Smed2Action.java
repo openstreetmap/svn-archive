@@ -46,8 +46,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		@Override
 		public void nodeMoved(NodeMovedEvent e) {
 			if (map != null) {
-				Node node = e.getNode();
-				map.moveNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());
+				makeMap();
 			}
 		}
 
@@ -209,15 +208,15 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				if (osm instanceof Node) {
 					map.addNode(((Node) osm).getUniqueId(), ((Node) osm).getCoor().lat(), ((Node) osm).getCoor().lon());
 				} else if (osm instanceof Way) {
-					map.addWay(((Way) osm).getUniqueId());
+					map.addEdge(((Way) osm).getUniqueId());
 					for (Node node : ((Way) osm).getNodes()) {
-						map.addToWay((node.getUniqueId()));
+						map.addToEdge((node.getUniqueId()));
 					}
 				} else if ((osm instanceof Relation) && ((Relation) osm).isMultipolygon()) {
-					map.addMpoly(((Relation) osm).getUniqueId());
+					map.addArea(((Relation) osm).getUniqueId());
 					for (RelationMember mem : ((Relation) osm).getMembers()) {
 						if (mem.getType() == OsmPrimitiveType.WAY)
-							map.addToMpoly(mem.getUniqueId(), (mem.getRole().equals("outer")));
+							map.addToArea(mem.getUniqueId(), (mem.getRole().equals("outer")));
 					}
 				}
 				for (Entry<String, String> entry : osm.getKeys().entrySet()) {

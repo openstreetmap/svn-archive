@@ -2,8 +2,8 @@ package seamap;
 
 import java.awt.geom.Point2D;
 
-import seamap.SeaMap.Coord;
+import seamap.SeaMap.*;
 
 public interface MapHelper {
-	Point2D getPoint(Coord coord);
+	Point2D getPoint(Snode coord);
 }

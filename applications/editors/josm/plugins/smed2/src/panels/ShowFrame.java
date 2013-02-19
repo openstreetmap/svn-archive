@@ -13,8 +13,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import seamap.MapHelper;
 import seamap.Renderer;
 import seamap.SeaMap;
-import seamap.SeaMap.Coord;
-import seamap.SeaMap.Feature;
+import seamap.SeaMap.*;
 
 public class ShowFrame extends JFrame implements MapHelper {
 	
@@ -32,8 +31,8 @@ public class ShowFrame extends JFrame implements MapHelper {
 		feature = map.index.get(id);
 		showMap = new SeaMap();
 		showMap.nodes = map.nodes;
-		showMap.ways = map.ways;
-		showMap.mpolys = map.mpolys;
+		showMap.edges = map.edges;
+		showMap.areas = map.areas;
 		showMap.index = map.index;
 		if (feature != null) {
 			showMap.features.put(feature.type, new ArrayList<Feature>());
@@ -43,7 +42,7 @@ public class ShowFrame extends JFrame implements MapHelper {
 	}
 	
 	@Override
-	public Point2D getPoint(Coord coord) {
+	public Point2D getPoint(Snode coord) {
 		return new Point2D.Double(150, 150);
 	}
 	

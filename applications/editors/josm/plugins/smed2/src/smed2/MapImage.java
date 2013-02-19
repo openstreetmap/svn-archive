@@ -20,7 +20,7 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
 import seamap.MapHelper;
 import seamap.Renderer;
-import seamap.SeaMap.Coord;
+import seamap.SeaMap.*;
 
 public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHelper {
 
@@ -86,7 +86,7 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 		}
 	}
 
-	public Point2D.Double getPoint(Coord coord) {
+	public Point2D.Double getPoint(Snode coord) {
 		return (Double) Main.map.mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
 	}
 }

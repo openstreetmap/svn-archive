@@ -10,20 +10,20 @@ import s57.S57obj.*;
 public class S57att {
 	
 	public enum Att {
-	  UNKATT, AGENCY, BCNSHP, BUISHP, BOYSHP, BURDEP, CALSGN, CATAIR, CATACH, CATBRG, CATBUA, CATCBL, CATCAN, CATCAM, CATCHP, CATCOA, CATCTR, CATCON, CATCOV, CATCRN,
-	  CATDAM, CATDIS, CATDOC, CATDPG, CATFNC, CATFRY, CATFIF, CATFOG, CATFOR, CATGAT, CATHAF, CATHLK, CATICE, CATINB, CATLND, CATLMK, CATLAM, CATLIT, CATMFA, CATMPA,
-	  CATMOR, CATNAV, CATOBS, CATOFP, CATOLB, CATPLE, CATPIL, CATPIP, CATPRA, CATPYL, CATQUA, CATRAS, CATRTB, CATROS, CATTRK, CATRSC, CATREA, CATROD, CATRUN, CATSEA,
-	  CATSLC, CATSIT, CATSIW, CATSIL, CATSLO, CATSCF, CATSPM, CATTSS, CATVEG, CATWAT, CATWED, CATWRK, CATZOC, $SPACE, $CHARS, COLOUR, COLPAT, COMCHA, $CSIZE, CPDATE,
-	  CSCALE, CONDTN, CONRAD, CONVIS, CURVEL, DATEND, DATSTA, DRVAL1, DRVAL2, DUNITS, ELEVAT, ESTRNG, EXCLIT, EXPSOU, FUNCTN, HEIGHT, HUNITS, HORACC, HORCLR, HORLEN,
-	  HORWID, ICEFAC, INFORM, JRSDTN, $JUSTH, $JUSTV, LIFCAP, LITCHR, LITVIS, MARSYS, MLTYLT, NATION, NATCON, NATSUR, NATQUA, NMDATE, OBJNAM, ORIENT, PEREND, PERSTA,
-	  PICREP, PILDST, PRCTRY, PRODCT, PUBREF, QUASOU, RADWAL, RADIUS, RECDAT, RECIND, RYRMGV, RESTRN, SCAMAX, SCAMIN, SCVAL1, SCVAL2, SECTR1, SECTR2, SHIPAM, SIGFRQ,
-	  SIGGEN, SIGGRP, SIGPER, SIGSEQ, SOUACC, SDISMX, SDISMN, SORDAT, SORIND, STATUS, SURATH, SUREND, SURSTA, SURTYP, $SCALE, $SCODE, TECSOU, $TXSTR, TXTDSC, TS_TSP,
-	  TS_TSV, T_ACWL, T_HWLW, T_MTOD, T_THDF, T_TINT, T_TSVL, T_VAHC, TIMEND, TIMSTA, $TINTS, TOPSHP, TRAFIC, VALACM, VALDCO, VALLMA, VALMAG, VALMXR, VALNMR, VALSOU,
-	  VERACC, VERCLR, VERCCL, VERCOP, VERCSA, VERDAT, VERLEN, WATLEV, CAT_TS, PUNITS, NINFOM, NOBJNM, NPLDST, $NTXST, NTXTDS, HORDAT, POSACC, QUAPOS, CLSDNG, DIRIMP,
-	  DISBK1, DISBK2, DISIPU, DISIPD, ELEVA1, ELEVA2, FNCTNM, WTWDIS, BUNVES, BNKWTW, COMCTN, HORCLL, HORCLW, TRSHGD, UNLOCD, HIGWAT, HIGNAM, LOWWAT, LOWNAM, MEAWAT,
-	  MEANAM, OTHWAT, OTHNAM, REFLEV, SDRLEV, VCRLEV, SCHREF, USESHP, CURVHW, CURVLW, CURVMW, CURVOW, APTREF, SHPTYP, UPDMSG, ADDMRK, CATBNK, CATNMK, CATBRT, CATBUN,
-	  CATCCL, CATCOM, CATHBR, CATRFD, CATTML, CATGAG, CATVTR, CATTAB, CATEXS, CATWWM, LG_SPD, LG_SPR, LG_BME, LG_LGS, LG_DRT, LG_WDP, LG_WDU, LG_REL, LG_FNC, LG_DES,
-	  LG_PBR, LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, LITRAD
+	  UNKATT, AGENCY, BCNSHP, BUISHP, BOYSHP, BURDEP, CALSGN, CATAIR, CATACH, CATBRG, CATBUA, CATCBL, CATCAN, CATCAM, CATCHP, CATCOA, CATCTR, CATCON, CATCRN, CATDAM,
+	  CATDIS, CATDOC, CATDPG, CATFNC, CATFRY, CATFIF, CATFOG, CATFOR, CATGAT, CATHAF, CATHLK, CATICE, CATINB, CATLND, CATLMK, CATLAM, CATLIT, CATMFA, CATMPA, CATMOR,
+	  CATNAV, CATOBS, CATOFP, CATOLB, CATPLE, CATPIL, CATPIP, CATPRA, CATPYL, CATRAS, CATRTB, CATROS, CATTRK, CATRSC, CATREA, CATROD, CATRUN, CATSEA, CATSLC, CATSIT,
+	  CATSIW, CATSIL, CATSLO, CATSCF, CATSPM, CATTSS, CATVEG, CATWAT, CATWED, CATWRK, CATZOC, COLOUR, COLPAT, COMCHA, CPDATE, CSCALE, CONDTN, CONRAD, CONVIS, CURVEL,
+	  DATEND, DATSTA, DRVAL1, DRVAL2, DUNITS, ELEVAT, ESTRNG, EXCLIT, EXPSOU, FUNCTN, HEIGHT, HUNITS, HORACC, HORCLR, HORLEN, HORWID, ICEFAC, INFORM, JRSDTN, LIFCAP,
+	  LITCHR, LITVIS, MARSYS, MLTYLT, NATION, NATCON, NATSUR, NATQUA, NMDATE, OBJNAM, ORIENT, PEREND, PERSTA, PICREP, PILDST, PRCTRY, PRODCT, PUBREF, QUASOU, RADWAL,
+	  RADIUS, RECDAT, RECIND, RYRMGV, RESTRN, SCAMAX, SCAMIN, SCVAL1, SCVAL2, SECTR1, SECTR2, SHIPAM, SIGFRQ, SIGGEN, SIGGRP, SIGPER, SIGSEQ, SOUACC, SDISMX, SDISMN,
+	  SORDAT, SORIND, STATUS, SURATH, SUREND, SURSTA, SURTYP, TECSOU, TXTDSC, TS_TSP, TS_TSV, T_ACWL, T_HWLW, T_MTOD, T_THDF, T_TINT, T_TSVL, T_VAHC, TIMEND, TIMSTA,
+	  TOPSHP, TRAFIC, VALACM, VALDCO, VALLMA, VALMAG, VALMXR, VALNMR, VALSOU, VERACC, VERCLR, VERCCL, VERCOP, VERCSA, VERDAT, VERLEN, WATLEV, CAT_TS, PUNITS, NINFOM,
+	  NOBJNM, NPLDST, NTXTDS, HORDAT, POSACC, QUAPOS, CLSDNG, DIRIMP, DISBK1, DISBK2, DISIPU, DISIPD, ELEVA1, ELEVA2, FNCTNM, WTWDIS, BUNVES, BNKWTW, COMCTN, HORCLL,
+	  HORCLW, TRSHGD, UNLOCD, HIGWAT, HIGNAM, LOWWAT, LOWNAM, MEAWAT, MEANAM, OTHWAT, OTHNAM, REFLEV, SDRLEV, VCRLEV, SCHREF, USESHP, CURVHW, CURVLW, CURVMW, CURVOW,
+	  APTREF, SHPTYP, UPDMSG, ADDMRK, CATBNK, CATNMK, CATBRT, CATBUN, CATCCL, CATCOM, CATHBR, CATRFD, CATTML, CATGAG, CATVTR, CATTAB, CATEXS, CATWWM, LG_SPD, LG_SPR,
+	  LG_BME, LG_LGS, LG_DRT, LG_WDP, LG_WDU, LG_REL, LG_FNC, LG_DES, LG_PBR, LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1,
+	  LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, LITRAD
 	}
 
 	private static final EnumMap<Att, Integer> AttS57 = new EnumMap<Att, Integer>(Att.class);
@@ -31,33 +31,32 @@ public class S57att {
 		AttS57.put(Att.UNKATT, 0); AttS57.put(Att.AGENCY, 1); AttS57.put(Att.BCNSHP, 2); AttS57.put(Att.BUISHP, 3); AttS57.put(Att.BOYSHP, 4); AttS57.put(Att.BURDEP, 5);
 		AttS57.put(Att.CALSGN, 6); AttS57.put(Att.CATAIR, 7); AttS57.put(Att.CATACH, 8); AttS57.put(Att.CATBRG, 9); AttS57.put(Att.CATBUA, 10); AttS57.put(Att.CATCBL, 11);
 		AttS57.put(Att.CATCAN, 12); AttS57.put(Att.CATCAM, 13); AttS57.put(Att.CATCHP, 14); AttS57.put(Att.CATCOA, 15); AttS57.put(Att.CATCTR, 16); AttS57.put(Att.CATCON, 17);
-		AttS57.put(Att.CATCOV, 18); AttS57.put(Att.CATCRN, 19); AttS57.put(Att.CATDAM, 20); AttS57.put(Att.CATDIS, 21); AttS57.put(Att.CATDOC, 22); AttS57.put(Att.CATDPG, 23);
-		AttS57.put(Att.CATFNC, 24); AttS57.put(Att.CATFRY, 25); AttS57.put(Att.CATFIF, 26); AttS57.put(Att.CATFOG, 27); AttS57.put(Att.CATFOR, 28); AttS57.put(Att.CATGAT, 29);
-		AttS57.put(Att.CATHAF, 30); AttS57.put(Att.CATHLK, 31); AttS57.put(Att.CATICE, 32); AttS57.put(Att.CATINB, 33); AttS57.put(Att.CATLND, 34); AttS57.put(Att.CATLMK, 35);
-		AttS57.put(Att.CATLAM, 36); AttS57.put(Att.CATLIT, 37); AttS57.put(Att.CATMFA, 38); AttS57.put(Att.CATMPA, 39); AttS57.put(Att.CATMOR, 40); AttS57.put(Att.CATNAV, 41);
-		AttS57.put(Att.CATOBS, 42); AttS57.put(Att.CATOFP, 43); AttS57.put(Att.CATOLB, 44); AttS57.put(Att.CATPLE, 45); AttS57.put(Att.CATPIL, 46); AttS57.put(Att.CATPIP, 47);
-		AttS57.put(Att.CATPRA, 48); AttS57.put(Att.CATPYL, 49); AttS57.put(Att.CATQUA, 50); AttS57.put(Att.CATRAS, 51); AttS57.put(Att.CATRTB, 52); AttS57.put(Att.CATROS, 53);
-		AttS57.put(Att.CATTRK, 54); AttS57.put(Att.CATRSC, 55); AttS57.put(Att.CATREA, 56); AttS57.put(Att.CATROD, 57); AttS57.put(Att.CATRUN, 58); AttS57.put(Att.CATSEA, 59);
-		AttS57.put(Att.CATSLC, 60); AttS57.put(Att.CATSIT, 61); AttS57.put(Att.CATSIW, 62); AttS57.put(Att.CATSIL, 63); AttS57.put(Att.CATSLO, 64); AttS57.put(Att.CATSCF, 65);
-		AttS57.put(Att.CATSPM, 66); AttS57.put(Att.CATTSS, 67); AttS57.put(Att.CATVEG, 68); AttS57.put(Att.CATWAT, 69); AttS57.put(Att.CATWED, 70); AttS57.put(Att.CATWRK, 71);
-		AttS57.put(Att.CATZOC, 72); AttS57.put(Att.COLOUR, 75); AttS57.put(Att.COLPAT, 76); AttS57.put(Att.COMCHA, 77); AttS57.put(Att.CONDTN, 81); AttS57.put(Att.CONRAD, 82);
-		AttS57.put(Att.CONVIS, 83); AttS57.put(Att.CURVEL, 84); AttS57.put(Att.DATEND, 85); AttS57.put(Att.DATSTA, 86); AttS57.put(Att.DRVAL1, 87); AttS57.put(Att.DRVAL2, 88);
-		AttS57.put(Att.DUNITS, 89); AttS57.put(Att.ELEVAT, 90); AttS57.put(Att.ESTRNG, 91); AttS57.put(Att.EXCLIT, 92); AttS57.put(Att.EXPSOU, 93); AttS57.put(Att.FUNCTN, 94);
-		AttS57.put(Att.HEIGHT, 95); AttS57.put(Att.HUNITS, 96); AttS57.put(Att.HORACC, 97); AttS57.put(Att.HORCLR, 98); AttS57.put(Att.HORLEN, 99); AttS57.put(Att.HORWID, 100);
-		AttS57.put(Att.ICEFAC, 101); AttS57.put(Att.INFORM, 102); AttS57.put(Att.JRSDTN, 103); AttS57.put(Att.$JUSTH, 104); AttS57.put(Att.$JUSTV, 105); AttS57.put(Att.LIFCAP, 106);
-		AttS57.put(Att.LITCHR, 107); AttS57.put(Att.LITVIS, 108); AttS57.put(Att.MARSYS, 109); AttS57.put(Att.MLTYLT, 110); AttS57.put(Att.NATION, 111); AttS57.put(Att.NATCON, 112);
-		AttS57.put(Att.NATSUR, 113); AttS57.put(Att.NATQUA, 114); AttS57.put(Att.NMDATE, 115); AttS57.put(Att.OBJNAM, 116); AttS57.put(Att.ORIENT, 117); AttS57.put(Att.PEREND, 118);
-		AttS57.put(Att.PERSTA, 119); AttS57.put(Att.PICREP, 120); AttS57.put(Att.PILDST, 121); AttS57.put(Att.PRCTRY, 122); AttS57.put(Att.PRODCT, 123); AttS57.put(Att.PUBREF, 124);
-		AttS57.put(Att.QUASOU, 125); AttS57.put(Att.RADWAL, 126); AttS57.put(Att.RADIUS, 127); AttS57.put(Att.RECDAT, 128); AttS57.put(Att.RECIND, 129); AttS57.put(Att.RYRMGV, 130);
-		AttS57.put(Att.RESTRN, 131); AttS57.put(Att.SECTR1, 136); AttS57.put(Att.SECTR2, 137); AttS57.put(Att.SHIPAM, 138); AttS57.put(Att.SIGFRQ, 139); AttS57.put(Att.SIGGEN, 140);
-		AttS57.put(Att.SIGGRP, 141); AttS57.put(Att.SIGPER, 142); AttS57.put(Att.SIGSEQ, 143); AttS57.put(Att.SOUACC, 144); AttS57.put(Att.SDISMX, 145); AttS57.put(Att.SDISMN, 146);
-		AttS57.put(Att.SORDAT, 147); AttS57.put(Att.SORIND, 148); AttS57.put(Att.STATUS, 149); AttS57.put(Att.SURATH, 150); AttS57.put(Att.SUREND, 151); AttS57.put(Att.SURSTA, 152);
-		AttS57.put(Att.SURTYP, 153); AttS57.put(Att.TECSOU, 156); AttS57.put(Att.TXTDSC, 158); AttS57.put(Att.TIMEND, 168); AttS57.put(Att.TIMSTA, 169); AttS57.put(Att.TOPSHP, 171);
-		AttS57.put(Att.TRAFIC, 172); AttS57.put(Att.VALACM, 173); AttS57.put(Att.VALDCO, 174); AttS57.put(Att.VALLMA, 175); AttS57.put(Att.VALMAG, 176); AttS57.put(Att.VALMXR, 177);
-		AttS57.put(Att.VALNMR, 178); AttS57.put(Att.VALSOU, 179); AttS57.put(Att.VERACC, 180); AttS57.put(Att.VERCLR, 181); AttS57.put(Att.VERCCL, 182); AttS57.put(Att.VERCOP, 183);
-		AttS57.put(Att.VERCSA, 184); AttS57.put(Att.VERDAT, 185); AttS57.put(Att.VERLEN, 186); AttS57.put(Att.WATLEV, 187); AttS57.put(Att.CAT_TS, 188); AttS57.put(Att.PUNITS, 189);
-		AttS57.put(Att.NINFOM, 300); AttS57.put(Att.NOBJNM, 301); AttS57.put(Att.NPLDST, 302); AttS57.put(Att.NTXTDS, 304); AttS57.put(Att.HORDAT, 400); AttS57.put(Att.POSACC, 401);
-		AttS57.put(Att.QUAPOS, 402);
+		AttS57.put(Att.CATCRN, 19); AttS57.put(Att.CATDAM, 20); AttS57.put(Att.CATDIS, 21); AttS57.put(Att.CATDOC, 22); AttS57.put(Att.CATDPG, 23);	AttS57.put(Att.CATFNC, 24);
+		AttS57.put(Att.CATFRY, 25); AttS57.put(Att.CATFIF, 26); AttS57.put(Att.CATFOG, 27); AttS57.put(Att.CATFOR, 28); AttS57.put(Att.CATGAT, 29); AttS57.put(Att.CATHAF, 30);
+		AttS57.put(Att.CATHLK, 31); AttS57.put(Att.CATICE, 32); AttS57.put(Att.CATINB, 33); AttS57.put(Att.CATLND, 34); AttS57.put(Att.CATLMK, 35);	AttS57.put(Att.CATLAM, 36);
+		AttS57.put(Att.CATLIT, 37); AttS57.put(Att.CATMFA, 38); AttS57.put(Att.CATMPA, 39); AttS57.put(Att.CATMOR, 40); AttS57.put(Att.CATNAV, 41);	AttS57.put(Att.CATOBS, 42);
+		AttS57.put(Att.CATOFP, 43); AttS57.put(Att.CATOLB, 44); AttS57.put(Att.CATPLE, 45); AttS57.put(Att.CATPIL, 46); AttS57.put(Att.CATPIP, 47);	AttS57.put(Att.CATPRA, 48);
+		AttS57.put(Att.CATPYL, 49); AttS57.put(Att.CATRAS, 51); AttS57.put(Att.CATRTB, 52); AttS57.put(Att.CATROS, 53);	AttS57.put(Att.CATTRK, 54); AttS57.put(Att.CATRSC, 55);
+		AttS57.put(Att.CATREA, 56); AttS57.put(Att.CATROD, 57); AttS57.put(Att.CATRUN, 58); AttS57.put(Att.CATSEA, 59);	AttS57.put(Att.CATSLC, 60); AttS57.put(Att.CATSIT, 61);
+		AttS57.put(Att.CATSIW, 62); AttS57.put(Att.CATSIL, 63); AttS57.put(Att.CATSLO, 64); AttS57.put(Att.CATSCF, 65);	AttS57.put(Att.CATSPM, 66); AttS57.put(Att.CATTSS, 67);
+		AttS57.put(Att.CATVEG, 68); AttS57.put(Att.CATWAT, 69); AttS57.put(Att.CATWED, 70); AttS57.put(Att.CATWRK, 71);	AttS57.put(Att.CATZOC, 72); AttS57.put(Att.COLOUR, 75);
+		AttS57.put(Att.COLPAT, 76); AttS57.put(Att.COMCHA, 77); AttS57.put(Att.CONDTN, 81); AttS57.put(Att.CONRAD, 82);	AttS57.put(Att.CONVIS, 83); AttS57.put(Att.CURVEL, 84);
+		AttS57.put(Att.DATEND, 85); AttS57.put(Att.DATSTA, 86); AttS57.put(Att.DRVAL1, 87); AttS57.put(Att.DRVAL2, 88);	AttS57.put(Att.DUNITS, 89); AttS57.put(Att.ELEVAT, 90);
+		AttS57.put(Att.ESTRNG, 91); AttS57.put(Att.EXCLIT, 92); AttS57.put(Att.EXPSOU, 93); AttS57.put(Att.FUNCTN, 94);	AttS57.put(Att.HEIGHT, 95); AttS57.put(Att.HUNITS, 96);
+		AttS57.put(Att.HORACC, 97); AttS57.put(Att.HORCLR, 98); AttS57.put(Att.HORLEN, 99); AttS57.put(Att.HORWID, 100); AttS57.put(Att.ICEFAC, 101); AttS57.put(Att.INFORM, 102);
+		AttS57.put(Att.JRSDTN, 103); AttS57.put(Att.LIFCAP, 106); AttS57.put(Att.LITCHR, 107); AttS57.put(Att.LITVIS, 108);	AttS57.put(Att.MARSYS, 109); AttS57.put(Att.MLTYLT, 110);
+		AttS57.put(Att.NATION, 111); AttS57.put(Att.NATCON, 112); AttS57.put(Att.NATSUR, 113); AttS57.put(Att.NATQUA, 114);	AttS57.put(Att.NMDATE, 115); AttS57.put(Att.OBJNAM, 116);
+		AttS57.put(Att.ORIENT, 117); AttS57.put(Att.PEREND, 118);	AttS57.put(Att.PERSTA, 119); AttS57.put(Att.PICREP, 120);	AttS57.put(Att.PILDST, 121); AttS57.put(Att.PRCTRY, 122);
+		AttS57.put(Att.PRODCT, 123); AttS57.put(Att.PUBREF, 124);	AttS57.put(Att.QUASOU, 125); AttS57.put(Att.RADWAL, 126);	AttS57.put(Att.RADIUS, 127); AttS57.put(Att.RECDAT, 128);
+		AttS57.put(Att.RECIND, 129); AttS57.put(Att.RYRMGV, 130);	AttS57.put(Att.RESTRN, 131); AttS57.put(Att.SECTR1, 136);	AttS57.put(Att.SECTR2, 137); AttS57.put(Att.SHIPAM, 138);
+		AttS57.put(Att.SIGFRQ, 139); AttS57.put(Att.SIGGEN, 140);	AttS57.put(Att.SIGGRP, 141); AttS57.put(Att.SIGPER, 142);	AttS57.put(Att.SIGSEQ, 143); AttS57.put(Att.SOUACC, 144);
+		AttS57.put(Att.SDISMX, 145); AttS57.put(Att.SDISMN, 146);	AttS57.put(Att.SORDAT, 147); AttS57.put(Att.SORIND, 148);	AttS57.put(Att.STATUS, 149); AttS57.put(Att.SURATH, 150);
+		AttS57.put(Att.SUREND, 151); AttS57.put(Att.SURSTA, 152);	AttS57.put(Att.SURTYP, 153); AttS57.put(Att.TECSOU, 156);	AttS57.put(Att.TXTDSC, 158); AttS57.put(Att.TIMEND, 168);
+		AttS57.put(Att.TIMSTA, 169); AttS57.put(Att.TOPSHP, 171);	AttS57.put(Att.TRAFIC, 172); AttS57.put(Att.VALACM, 173);	AttS57.put(Att.VALDCO, 174); AttS57.put(Att.VALLMA, 175);
+		AttS57.put(Att.VALMAG, 176); AttS57.put(Att.VALMXR, 177);	AttS57.put(Att.VALNMR, 178); AttS57.put(Att.VALSOU, 179);	AttS57.put(Att.VERACC, 180); AttS57.put(Att.VERCLR, 181);
+		AttS57.put(Att.VERCCL, 182); AttS57.put(Att.VERCOP, 183);	AttS57.put(Att.VERCSA, 184); AttS57.put(Att.VERDAT, 185);	AttS57.put(Att.VERLEN, 186); AttS57.put(Att.WATLEV, 187);
+		AttS57.put(Att.CAT_TS, 188); AttS57.put(Att.PUNITS, 189);	AttS57.put(Att.NINFOM, 300); AttS57.put(Att.NOBJNM, 301);	AttS57.put(Att.NPLDST, 302); AttS57.put(Att.NTXTDS, 304);
+		AttS57.put(Att.HORDAT, 400); AttS57.put(Att.POSACC, 401);	AttS57.put(Att.QUAPOS, 402);
 	}
 
 	private static final EnumMap<Att, Integer> AttIENC = new EnumMap<Att, Integer>(Att.class);
@@ -99,7 +98,7 @@ public class S57att {
 		AttStr.put(Att.BURDEP, "depth_buried"); AttStr.put(Att.CALSGN, "callsign"); AttStr.put(Att.CATAIR, "category"); AttStr.put(Att.CATACH, "category");
 		AttStr.put(Att.CATBRG, "category"); AttStr.put(Att.CATBUA, "category"); AttStr.put(Att.CATCBL, "category"); AttStr.put(Att.CATCAN, "category");
 		AttStr.put(Att.CATCAM, "category"); AttStr.put(Att.CATCHP, "category"); AttStr.put(Att.CATCOA, "category"); AttStr.put(Att.CATCTR, "category");
-		AttStr.put(Att.CATCON, "category"); AttStr.put(Att.CATCOV, "category"); AttStr.put(Att.CATCRN, "category"); AttStr.put(Att.CATDAM, "category");
+		AttStr.put(Att.CATCON, "category"); AttStr.put(Att.CATCRN, "category"); AttStr.put(Att.CATDAM, "category");
 		AttStr.put(Att.CATDIS, "category"); AttStr.put(Att.CATDOC, "category"); AttStr.put(Att.CATDPG, "category"); AttStr.put(Att.CATFNC, "category");
 		AttStr.put(Att.CATFRY, "category"); AttStr.put(Att.CATFIF, "category"); AttStr.put(Att.CATFOG, "category"); AttStr.put(Att.CATFOR, "category");
 		AttStr.put(Att.CATGAT, "category"); AttStr.put(Att.CATHAF, "category"); AttStr.put(Att.CATHLK, "category"); AttStr.put(Att.CATICE, "category");
@@ -107,7 +106,7 @@ public class S57att {
 		AttStr.put(Att.CATLIT, "category"); AttStr.put(Att.CATMFA, "category"); AttStr.put(Att.CATMPA, "category"); AttStr.put(Att.CATMOR, "category");
 		AttStr.put(Att.CATNAV, "category"); AttStr.put(Att.CATOBS, "category"); AttStr.put(Att.CATOFP, "category"); AttStr.put(Att.CATOLB, "category");
 		AttStr.put(Att.CATPLE, "category"); AttStr.put(Att.CATPIL, "category"); AttStr.put(Att.CATPIP, "category"); AttStr.put(Att.CATPRA, "category");
-		AttStr.put(Att.CATPYL, "category"); AttStr.put(Att.CATQUA, "category"); AttStr.put(Att.CATRAS, "category"); AttStr.put(Att.CATRTB, "category");
+		AttStr.put(Att.CATPYL, "category"); AttStr.put(Att.CATRAS, "category"); AttStr.put(Att.CATRTB, "category");
 		AttStr.put(Att.CATROS, "category"); AttStr.put(Att.CATTRK, "category"); AttStr.put(Att.CATRSC, "category"); AttStr.put(Att.CATREA, "category");
 		AttStr.put(Att.CATROD, "category"); AttStr.put(Att.CATRUN, "category"); AttStr.put(Att.CATSEA, "category"); AttStr.put(Att.CATSLC, "category");
 		AttStr.put(Att.CATSIT, "category"); AttStr.put(Att.CATSIW, "category"); AttStr.put(Att.CATSIL, "category"); AttStr.put(Att.CATSLO, "category");
@@ -119,37 +118,36 @@ public class S57att {
 		AttStr.put(Att.ELEVAT, "elevation"); AttStr.put(Att.ESTRNG, "estimated_range"); AttStr.put(Att.EXCLIT, "exhibition"); AttStr.put(Att.EXPSOU, "exposition");
 		AttStr.put(Att.FUNCTN, "function"); AttStr.put(Att.HEIGHT, "height"); AttStr.put(Att.HUNITS, "height_units"); AttStr.put(Att.HORACC, "accuracy");
 		AttStr.put(Att.HORCLR, "clearance"); AttStr.put(Att.HORLEN, "length"); AttStr.put(Att.HORWID, "width"); AttStr.put(Att.ICEFAC, "factor");
-		AttStr.put(Att.INFORM, "information"); AttStr.put(Att.JRSDTN, "jurisdiction"); AttStr.put(Att.$JUSTH, ""); AttStr.put(Att.$JUSTV, "");
-		AttStr.put(Att.LIFCAP, "maximum_load"); AttStr.put(Att.LITCHR, "character"); AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system");
-		AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality"); AttStr.put(Att.NATCON, "construction"); AttStr.put(Att.NATSUR, "surface");
-		AttStr.put(Att.NATQUA, "surface_qualification"); AttStr.put(Att.NMDATE, "nm_date"); AttStr.put(Att.OBJNAM, "name"); AttStr.put(Att.ORIENT, "orientation");
-		AttStr.put(Att.PEREND, "end_date"); AttStr.put(Att.PERSTA, "start_date"); AttStr.put(Att.PICREP, "representation"); AttStr.put(Att.PILDST, "pilot_district");
-		AttStr.put(Att.PRCTRY, "producing_country"); AttStr.put(Att.PRODCT, "product"); AttStr.put(Att.PUBREF, "reference"); AttStr.put(Att.QUASOU, "quality");
-		AttStr.put(Att.RADWAL, "wavelength"); AttStr.put(Att.RADIUS, "radius"); AttStr.put(Att.RECDAT, "date"); AttStr.put(Att.RECIND, "indication");
-		AttStr.put(Att.RYRMGV, "year"); AttStr.put(Att.RESTRN, "restriction"); AttStr.put(Att.SECTR1, "sector_start"); AttStr.put(Att.SECTR2, "sector_end");
-		AttStr.put(Att.SHIPAM, "shift"); AttStr.put(Att.SIGFRQ, "frequency"); AttStr.put(Att.SIGGEN, "generation"); AttStr.put(Att.SIGGRP, "group");
-		AttStr.put(Att.SIGPER, "period"); AttStr.put(Att.SIGSEQ, "sequence"); AttStr.put(Att.SOUACC, "accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");
-		AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "source_date"); AttStr.put(Att.SORIND, "source"); AttStr.put(Att.STATUS, "status");
-		AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "end_date"); AttStr.put(Att.SURSTA, "start_date"); AttStr.put(Att.SURTYP, "survey");
-		AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "description"); AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");
-		AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "flow"); AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth");
-		AttStr.put(Att.VALLMA, "anomaly"); AttStr.put(Att.VALMAG, "variation"); AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");
-		AttStr.put(Att.VALSOU, "sounding"); AttStr.put(Att.VERACC, "vertical_accuracy"); AttStr.put(Att.VERCLR, "clearance_height");
-		AttStr.put(Att.VERCCL, "clearance_height_closed"); AttStr.put(Att.VERCOP, "clearance_height_open"); AttStr.put(Att.VERCSA, "clearance_height_safe");
-		AttStr.put(Att.VERDAT, "vertical_datum"); AttStr.put(Att.VERLEN, "vertical_length"); AttStr.put(Att.WATLEV, "water_level"); AttStr.put(Att.CAT_TS, "category");
-		AttStr.put(Att.PUNITS, "units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name"); AttStr.put(Att.NPLDST, "national_pilot_district");
-		AttStr.put(Att.NTXTDS, "national_description"); AttStr.put(Att.HORDAT, "horizontal_datum"); AttStr.put(Att.POSACC, "positional_accuracy");
-		AttStr.put(Att.QUAPOS, "position_quality"); AttStr.put(Att.ADDMRK, "addition"); AttStr.put(Att.BNKWTW, "bank");AttStr.put(Att.CATBNK, "category");
-		AttStr.put(Att.CATNMK, "category"); AttStr.put(Att.CLSDNG, "class"); AttStr.put(Att.DIRIMP, "impact"); AttStr.put(Att.DISBK1, "distance_start");
-		AttStr.put(Att.DISBK2, "distance_end");AttStr.put(Att.DISIPU, "distance_up"); AttStr.put(Att.DISIPD, "distance_down"); AttStr.put(Att.ELEVA1, "minimum_elevation");
-		AttStr.put(Att.ELEVA2, "maximum_elevation"); AttStr.put(Att.FNCTNM, "function"); AttStr.put(Att.WTWDIS, "distance"); AttStr.put(Att.BUNVES, "availibility");
-		AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category"); AttStr.put(Att.CATHBR, "category");
-		AttStr.put(Att.CATRFD, "category"); AttStr.put(Att.CATTML, "category"); AttStr.put(Att.COMCTN, "communication"); AttStr.put(Att.HORCLL, "clearance_length");
-		AttStr.put(Att.HORCLW, "clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode"); AttStr.put(Att.CATGAG, "category");
-		AttStr.put(Att.HIGWAT, "high_value"); AttStr.put(Att.HIGNAM, "high_name"); AttStr.put(Att.LOWWAT, "low_value"); AttStr.put(Att.LOWNAM, "low_name");
-		AttStr.put(Att.MEAWAT, "mean_value"); AttStr.put(Att.MEANAM, "mean_name"); AttStr.put(Att.OTHWAT, "local_value"); AttStr.put(Att.OTHNAM, "local_name");
-		AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name"); AttStr.put(Att.CATVTR, "category");
-		AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
+		AttStr.put(Att.INFORM, "information"); AttStr.put(Att.JRSDTN, "jurisdiction"); AttStr.put(Att.LIFCAP, "maximum_load"); AttStr.put(Att.LITCHR, "character");
+		AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system");	AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality");
+		AttStr.put(Att.NATCON, "construction"); AttStr.put(Att.NATSUR, "surface"); AttStr.put(Att.NATQUA, "surface_qualification"); AttStr.put(Att.NMDATE, "nm_date");
+		AttStr.put(Att.OBJNAM, "name"); AttStr.put(Att.ORIENT, "orientation"); AttStr.put(Att.PEREND, "end_date"); AttStr.put(Att.PERSTA, "start_date");
+		AttStr.put(Att.PICREP, "representation"); AttStr.put(Att.PILDST, "pilot_district");	AttStr.put(Att.PRCTRY, "producing_country"); AttStr.put(Att.PRODCT, "product");
+		AttStr.put(Att.PUBREF, "reference"); AttStr.put(Att.QUASOU, "quality");	AttStr.put(Att.RADWAL, "wavelength"); AttStr.put(Att.RADIUS, "radius");
+		AttStr.put(Att.RECDAT, "date"); AttStr.put(Att.RECIND, "indication");	AttStr.put(Att.RYRMGV, "year"); AttStr.put(Att.RESTRN, "restriction");
+		AttStr.put(Att.SECTR1, "sector_start"); AttStr.put(Att.SECTR2, "sector_end");	AttStr.put(Att.SHIPAM, "shift"); AttStr.put(Att.SIGFRQ, "frequency");
+		AttStr.put(Att.SIGGEN, "generation"); AttStr.put(Att.SIGGRP, "group"); AttStr.put(Att.SIGPER, "period"); AttStr.put(Att.SIGSEQ, "sequence");
+		AttStr.put(Att.SOUACC, "accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");	AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "source_date");
+		AttStr.put(Att.SORIND, "source"); AttStr.put(Att.STATUS, "status");	AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "end_date");
+		AttStr.put(Att.SURSTA, "start_date"); AttStr.put(Att.SURTYP, "survey");	AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "description");
+		AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");	AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "flow");
+		AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth"); AttStr.put(Att.VALLMA, "anomaly"); AttStr.put(Att.VALMAG, "variation");
+		AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");	AttStr.put(Att.VALSOU, "sounding"); AttStr.put(Att.VERACC, "vertical_accuracy");
+		AttStr.put(Att.VERCLR, "clearance_height");	AttStr.put(Att.VERCCL, "clearance_height_closed"); AttStr.put(Att.VERCOP, "clearance_height_open");
+		AttStr.put(Att.VERCSA, "clearance_height_safe"); AttStr.put(Att.VERDAT, "vertical_datum"); AttStr.put(Att.VERLEN, "vertical_length"); AttStr.put(Att.WATLEV, "water_level");
+		AttStr.put(Att.CAT_TS, "category");	AttStr.put(Att.PUNITS, "units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name");
+		AttStr.put(Att.NPLDST, "national_pilot_district"); AttStr.put(Att.NTXTDS, "national_description"); AttStr.put(Att.HORDAT, "horizontal_datum");
+		AttStr.put(Att.POSACC, "positional_accuracy"); AttStr.put(Att.QUAPOS, "position_quality"); AttStr.put(Att.ADDMRK, "addition"); AttStr.put(Att.BNKWTW, "bank");
+		AttStr.put(Att.CATBNK, "category");	AttStr.put(Att.CATNMK, "category"); AttStr.put(Att.CLSDNG, "class"); AttStr.put(Att.DIRIMP, "impact");
+		AttStr.put(Att.DISBK1, "distance_start");	AttStr.put(Att.DISBK2, "distance_end");AttStr.put(Att.DISIPU, "distance_up"); AttStr.put(Att.DISIPD, "distance_down");
+		AttStr.put(Att.ELEVA1, "minimum_elevation"); AttStr.put(Att.ELEVA2, "maximum_elevation"); AttStr.put(Att.FNCTNM, "function"); AttStr.put(Att.WTWDIS, "distance");
+		AttStr.put(Att.BUNVES, "availibility");	AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category");
+		AttStr.put(Att.CATHBR, "category");	AttStr.put(Att.CATRFD, "category"); AttStr.put(Att.CATTML, "category"); AttStr.put(Att.COMCTN, "communication");
+		AttStr.put(Att.HORCLL, "clearance_length");	AttStr.put(Att.HORCLW, "clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode");
+		AttStr.put(Att.CATGAG, "category");	AttStr.put(Att.HIGWAT, "high_value"); AttStr.put(Att.HIGNAM, "high_name"); AttStr.put(Att.LOWWAT, "low_value");
+		AttStr.put(Att.LOWNAM, "low_name");	AttStr.put(Att.MEAWAT, "mean_value"); AttStr.put(Att.MEANAM, "mean_name"); AttStr.put(Att.OTHWAT, "local_value");
+		AttStr.put(Att.OTHNAM, "local_name");	AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name");
+		AttStr.put(Att.CATVTR, "category");	AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
 		AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
 		AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.CATWWM, "category"); AttStr.put(Att.SHPTYP, "ship"); AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
 	}
@@ -186,8 +184,7 @@ public class S57att {
 	  objatt.add(new ObjAtt(Obj.HULKES, Att.CATHLK)); objatt.add(new ObjAtt(Obj.ICEARE, Att.CATICE)); objatt.add(new ObjAtt(Obj.LIGHTS, Att.CATLIT));
 	  objatt.add(new ObjAtt(Obj.LNDRGN, Att.CATLND)); objatt.add(new ObjAtt(Obj.LNDMRK, Att.FUNCTN)); objatt.add(new ObjAtt(Obj.LNDMRK, Att.CATLMK));
 	  objatt.add(new ObjAtt(Obj.MARCUL, Att.CATMFA)); objatt.add(new ObjAtt(Obj.MIPARE, Att.CATMPA)); objatt.add(new ObjAtt(Obj.MORFAC, Att.CATMOR));
-	  objatt.add(new ObjAtt(Obj.MORFAC, Att.BOYSHP)); objatt.add(new ObjAtt(Obj.M_COVR, Att.CATCOV)); objatt.add(new ObjAtt(Obj.M_QUAL, Att.CATQUA));
-	  objatt.add(new ObjAtt(Obj.M_QUAL, Att.CATZOC)); objatt.add(new ObjAtt(Obj.NAVLNE, Att.CATNAV)); objatt.add(new ObjAtt(Obj.NOTMRK, Att.CATNMK));
+	  objatt.add(new ObjAtt(Obj.MORFAC, Att.BOYSHP)); objatt.add(new ObjAtt(Obj.NAVLNE, Att.CATNAV)); objatt.add(new ObjAtt(Obj.NOTMRK, Att.CATNMK));
 	  objatt.add(new ObjAtt(Obj.NOTMRK, Att.FNCTNM)); objatt.add(new ObjAtt(Obj.OBSTRN, Att.CATOBS)); objatt.add(new ObjAtt(Obj.OFSPLF, Att.CATOFP));
 	  objatt.add(new ObjAtt(Obj.OILBAR, Att.CATOLB)); objatt.add(new ObjAtt(Obj.OSPARE, Att.CATPRA)); objatt.add(new ObjAtt(Obj.PILBOP, Att.CATPIL));
 	  objatt.add(new ObjAtt(Obj.PILPNT, Att.CATPLE)); objatt.add(new ObjAtt(Obj.PIPARE, Att.CATPIP)); objatt.add(new ObjAtt(Obj.PIPOHD, Att.CATPIP));

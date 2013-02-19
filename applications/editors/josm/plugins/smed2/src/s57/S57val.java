@@ -114,10 +114,6 @@ public class S57val {
 	private static final EnumMap<CatCON, S57enum> Catcon = new EnumMap<CatCON, S57enum>(CatCON.class); static { Catcon.put(CatCON.CON_UNKN, new S57enum(0, ""));
 		Catcon.put(CatCON.CAT_AERL, new S57enum(1, "aerial")); Catcon.put(CatCON.CAT_BELT, new S57enum(2, "belt"));
 	}
-	public enum CatCOV { COV_UNKN, COV_COVG, COV_NCOV }
-	private static final EnumMap<CatCOV, S57enum> Catcov = new EnumMap<CatCOV, S57enum>(CatCOV.class); static { Catcov.put(CatCOV.COV_UNKN, new S57enum(0, ""));
-		Catcov.put(CatCOV.COV_COVG, new S57enum(1, "coverage")); Catcov.put(CatCOV.COV_NCOV, new S57enum(2, "no_coverage"));
-	}
 	public enum CatCRN { CRN_UNKN, CRN_NONS, CRN_CONT, CRN_SHRL, CRN_TRAV, CRN_AFRM } 
 	private static final EnumMap<CatCRN, S57enum> Catcrn = new EnumMap<CatCRN, S57enum>(CatCRN.class); static { Catcrn.put(CatCRN.CRN_UNKN, new S57enum(0, ""));
 		Catcrn.put(CatCRN.CRN_NONS, new S57enum(1, "non-specific")); Catcrn.put(CatCRN.CRN_CONT, new S57enum(2, "container")); Catcrn.put(CatCRN.CRN_SHRL, new S57enum(3, "sheerlegs"));
@@ -307,11 +303,6 @@ public class S57val {
 		Catpyl.put(CatPYL.PYL_POWR, new S57enum(1, "power")); Catpyl.put(CatPYL.PYL_TELE, new S57enum(2, "telecom")); Catpyl.put(CatPYL.PYL_AERL, new S57enum(3, "aerial"));
 		Catpyl.put(CatPYL.PYL_BRDG, new S57enum(4, "bridge")); Catpyl.put(CatPYL.PYL_PIER, new S57enum(5, "bridge_pier"));
 	}
-	public enum CatQUA { QUA_UNKN, QUA_A, QUA_B, QUA_C, QUA_D, QUA_E, QUA_NEVL } 
-	private static final EnumMap<CatQUA, S57enum> Catqua = new EnumMap<CatQUA, S57enum>(CatQUA.class); static { Catqua.put(CatQUA.QUA_UNKN, new S57enum(0, ""));
-		Catqua.put(CatQUA.QUA_A, new S57enum(1, "a")); Catqua.put(CatQUA.QUA_B, new S57enum(2, "b")); Catqua.put(CatQUA.QUA_C, new S57enum(3, "c"));
-		Catqua.put(CatQUA.QUA_D, new S57enum(4, "d")); Catqua.put(CatQUA.QUA_E, new S57enum(5, "e")); Catqua.put(CatQUA.QUA_NEVL, new S57enum(6, "not_evaluated"));
-	}
 	public enum CatRAS { RAS_UNKN, RAS_SURV, RAS_COST }
 	private static final EnumMap<CatRAS, S57enum> Catras = new EnumMap<CatRAS, S57enum>(CatRAS.class); static { Catras.put(CatRAS.RAS_UNKN, new S57enum(0, ""));
 		Catras.put(CatRAS.RAS_SURV, new S57enum(1, "surveillance")); Catras.put(CatRAS.RAS_COST, new S57enum(2, "coast"));
@@ -339,7 +330,7 @@ public class S57val {
 		Catrsc.put(CatRSC.RSC_RDIO, new S57enum(7, "radio")); Catrsc.put(CatRSC.RSC_FSTA, new S57enum(8, "first_aid"));
 	}
 	public enum CatREA { REA_UNKN, REA_SFTY, REA_NANC, REA_NFSH, REA_NATR, REA_BRDS, REA_GRSV, REA_SEAL, REA_DEGR, REA_MILY, REA_HIST, REA_INST,
-		REA_NASF, REA_STRD, REA_MINE, REA_NDIV, REA_TBAV, REA_PROH, REA_SWIM, REA_WAIT, REA_RSCH, REA_DREG, REA_FSNC, REA_ERES, REA_NWAK, REA_SWNG, REA_WSKI } 
+		REA_NASF, REA_STRD, REA_MINE, REA_NDIV, REA_TBAV, REA_PROH, REA_SWIM, REA_WAIT, REA_RSCH, REA_DREG, REA_FSNC, REA_ERES, REA_NWAK, REA_SWNG, REA_WSKI, REA_ESSA, REA_PSSA } 
 	private static final EnumMap<CatREA, S57enum> Catrea = new EnumMap<CatREA, S57enum>(CatREA.class); static { Catrea.put(CatREA.REA_UNKN, new S57enum(0, ""));
 		Catrea.put(CatREA.REA_SFTY, new S57enum(1, "safety")); Catrea.put(CatREA.REA_NANC, new S57enum(2, "no_anchoring")); Catrea.put(CatREA.REA_NFSH, new S57enum(3, "no_fishing"));
 		Catrea.put(CatREA.REA_NATR, new S57enum(4, "nature_reserve")); Catrea.put(CatREA.REA_BRDS, new S57enum(5, "bird_sanctuary")); Catrea.put(CatREA.REA_GRSV, new S57enum(6, "game_reserve"));
@@ -350,6 +341,7 @@ public class S57val {
 	  Catrea.put(CatREA.REA_WAIT, new S57enum(19, "waiting")); Catrea.put(CatREA.REA_RSCH, new S57enum(20, "research")); Catrea.put(CatREA.REA_DREG, new S57enum(21, "dredging"));
 	  Catrea.put(CatREA.REA_FSNC, new S57enum(22, "fish_sanctuary")); Catrea.put(CatREA.REA_ERES, new S57enum(23, "ecological_reserve")); Catrea.put(CatREA.REA_NWAK, new S57enum(24, "no_wake"));
 	  Catrea.put(CatREA.REA_SWNG, new S57enum(25, "swinging")); Catrea.put(CatREA.REA_WSKI, new S57enum(26, "water_skiing"));
+	  Catrea.put(CatREA.REA_ESSA, new S57enum(27, "environmentally_sensitive")); Catrea.put(CatREA.REA_PSSA, new S57enum(28, "particularly_sensitive"));
 	}
 	public enum CatROD { ROD_UNKN, ROD_MWAY, ROD_MAJR, ROD_MINR, ROD_TRAK, ROD_MAJS, ROD_MINS, ROD_CRSG, ROD_PATH } 
 	private static final EnumMap<CatROD, S57enum> Catrod = new EnumMap<CatROD, S57enum>(CatROD.class); static { Catrod.put(CatROD.ROD_UNKN, new S57enum(0, ""));
@@ -996,93 +988,89 @@ public class S57val {
 		keys.put(Att.CATBRG, new S57key(Conv.L, Catbrg)); keys.put(Att.CATBUA, new S57key(Conv.E, Catbua)); keys.put(Att.CATCBL, new S57key(Conv.E, Catcbl));
 		keys.put(Att.CATCAN, new S57key(Conv.E, Catcan)); keys.put(Att.CATCAM, new S57key(Conv.E, Catcam)); keys.put(Att.CATCHP, new S57key(Conv.E, Catchp));
 		keys.put(Att.CATCOA, new S57key(Conv.E, Catcoa)); keys.put(Att.CATCTR, new S57key(Conv.E, Catctr)); keys.put(Att.CATCON, new S57key(Conv.E, Catcon));
-		keys.put(Att.CATCOV, new S57key(Conv.E, Catcov)); keys.put(Att.CATCRN, new S57key(Conv.E, Catcrn)); keys.put(Att.CATDAM, new S57key(Conv.E, Catdam));
-		keys.put(Att.CATDIS, new S57key(Conv.E, Catdis)); keys.put(Att.CATDOC, new S57key(Conv.E, Catdoc)); keys.put(Att.CATDPG, new S57key(Conv.L, Catdpg));
-		keys.put(Att.CATFNC, new S57key(Conv.E, Catfnc)); keys.put(Att.CATFRY, new S57key(Conv.E, Catfry)); keys.put(Att.CATFIF, new S57key(Conv.E, Catfif));
-		keys.put(Att.CATFOG, new S57key(Conv.E, Catfog)); keys.put(Att.CATFOR, new S57key(Conv.E, Catfor)); keys.put(Att.CATGAT, new S57key(Conv.E, Catgat));
-		keys.put(Att.CATHAF, new S57key(Conv.L, Cathaf)); keys.put(Att.CATHLK, new S57key(Conv.L, Cathlk)); keys.put(Att.CATICE, new S57key(Conv.E, Catice));
-		keys.put(Att.CATINB, new S57key(Conv.E, Catinb)); keys.put(Att.CATLND, new S57key(Conv.L, Catlnd)); keys.put(Att.CATLMK, new S57key(Conv.L, Catlmk));
-		keys.put(Att.CATLAM, new S57key(Conv.E, Catlam)); keys.put(Att.CATLIT, new S57key(Conv.L, Catlit)); keys.put(Att.CATMFA, new S57key(Conv.E, Catmfa));
-		keys.put(Att.CATMPA, new S57key(Conv.L, Catmpa)); keys.put(Att.CATMOR, new S57key(Conv.E, Catmor)); keys.put(Att.CATNAV, new S57key(Conv.E, Catnav));
-		keys.put(Att.CATOBS, new S57key(Conv.E, Catobs)); keys.put(Att.CATOFP, new S57key(Conv.L, Catofp)); keys.put(Att.CATOLB, new S57key(Conv.E, Catolb));
-		keys.put(Att.CATPLE, new S57key(Conv.E, Catple)); keys.put(Att.CATPIL, new S57key(Conv.E, Catpil)); keys.put(Att.CATPIP, new S57key(Conv.L, Catpip));
-		keys.put(Att.CATPRA, new S57key(Conv.E, Catpra)); keys.put(Att.CATPYL, new S57key(Conv.E, Catpyl)); keys.put(Att.CATQUA, new S57key(Conv.E, Catqua));
-		keys.put(Att.CATRAS, new S57key(Conv.E, Catras)); keys.put(Att.CATRTB, new S57key(Conv.E, Catrtb)); keys.put(Att.CATROS, new S57key(Conv.L, Catros));
-		keys.put(Att.CATTRK, new S57key(Conv.E, Cattrk)); keys.put(Att.CATRSC, new S57key(Conv.L, Catrsc)); keys.put(Att.CATREA, new S57key(Conv.L, Catrea));
-		keys.put(Att.CATROD, new S57key(Conv.E, Catrod)); keys.put(Att.CATRUN, new S57key(Conv.E, Catrun)); keys.put(Att.CATSEA, new S57key(Conv.E, Catsea));
-		keys.put(Att.CATSIL, new S57key(Conv.E, Catsil)); keys.put(Att.CATSLO, new S57key(Conv.E, Catslo)); keys.put(Att.CATSCF, new S57key(Conv.L, Catscf));
-		keys.put(Att.CATSLC, new S57key(Conv.E, Catslc)); keys.put(Att.CATSIT, new S57key(Conv.L, Catsit)); keys.put(Att.CATSIW, new S57key(Conv.L, Catsiw));
-		keys.put(Att.CATSPM, new S57key(Conv.L, Catspm)); keys.put(Att.CATTSS, new S57key(Conv.E, Cattss)); keys.put(Att.CATVEG, new S57key(Conv.L, Catveg));
-		keys.put(Att.CATWAT, new S57key(Conv.E, Catwat)); keys.put(Att.CATWED, new S57key(Conv.E, Catwed)); keys.put(Att.CATWRK, new S57key(Conv.E, Catwrk));
-		keys.put(Att.CATZOC, new S57key(Conv.E, Catzoc)); keys.put(Att.$SPACE, new S57key(Conv.E, null)); keys.put(Att.$CHARS, new S57key(Conv.A, null));
-		keys.put(Att.COLOUR, new S57key(Conv.L, Colour)); keys.put(Att.COLPAT, new S57key(Conv.L, Colpat)); keys.put(Att.COMCHA, new S57key(Conv.A, null));
-		keys.put(Att.$CSIZE, new S57key(Conv.F, null)); keys.put(Att.CPDATE, new S57key(Conv.A, null)); keys.put(Att.CSCALE, new S57key(Conv.I, null));
-		keys.put(Att.CONDTN, new S57key(Conv.E, Condtn)); keys.put(Att.CONRAD, new S57key(Conv.E, Conrad)); keys.put(Att.CONVIS, new S57key(Conv.E, Convis));
-		keys.put(Att.CURVEL, new S57key(Conv.F, null)); keys.put(Att.DATEND, new S57key(Conv.A, null)); keys.put(Att.DATSTA, new S57key(Conv.A, null));
-		keys.put(Att.DRVAL1, new S57key(Conv.F, null)); keys.put(Att.DRVAL2, new S57key(Conv.F, null)); keys.put(Att.DUNITS, new S57key(Conv.E, Dunits));
-		keys.put(Att.ELEVAT, new S57key(Conv.F, null)); keys.put(Att.ESTRNG, new S57key(Conv.F, null)); keys.put(Att.EXCLIT, new S57key(Conv.E, Exclit));
-		keys.put(Att.EXPSOU, new S57key(Conv.E, Expsou)); keys.put(Att.FUNCTN, new S57key(Conv.L, Functn)); keys.put(Att.HEIGHT, new S57key(Conv.F, null));
-		keys.put(Att.HUNITS, new S57key(Conv.E, Hunits)); keys.put(Att.HORACC, new S57key(Conv.F, null)); keys.put(Att.HORCLR, new S57key(Conv.F, null));
-		keys.put(Att.HORLEN, new S57key(Conv.F, null)); keys.put(Att.HORWID, new S57key(Conv.F, null)); keys.put(Att.ICEFAC, new S57key(Conv.F, null));
-		keys.put(Att.INFORM, new S57key(Conv.S, null)); keys.put(Att.JRSDTN, new S57key(Conv.E, Jrsdtn)); keys.put(Att.$JUSTH, new S57key(Conv.E, null));
-		keys.put(Att.$JUSTV, new S57key(Conv.E, null)); keys.put(Att.LIFCAP, new S57key(Conv.F, null)); keys.put(Att.LITCHR, new S57key(Conv.E, Litchr));
-		keys.put(Att.LITVIS, new S57key(Conv.L, Litvis)); keys.put(Att.MARSYS, new S57key(Conv.E, Marsys)); keys.put(Att.MLTYLT, new S57key(Conv.I, null));
-		keys.put(Att.NATION, new S57key(Conv.A, null)); keys.put(Att.NATCON, new S57key(Conv.E, Natcon)); keys.put(Att.NATSUR, new S57key(Conv.L, Natsur));
-		keys.put(Att.NATQUA, new S57key(Conv.L, Natqua)); keys.put(Att.NMDATE, new S57key(Conv.A, null)); keys.put(Att.OBJNAM, new S57key(Conv.S, null));
-		keys.put(Att.ORIENT, new S57key(Conv.F, null)); keys.put(Att.PEREND, new S57key(Conv.A, null)); keys.put(Att.PERSTA, new S57key(Conv.A, null));
-		keys.put(Att.PICREP, new S57key(Conv.S, null)); keys.put(Att.PILDST, new S57key(Conv.S, null)); keys.put(Att.PRCTRY, new S57key(Conv.A, null));
-		keys.put(Att.PRODCT, new S57key(Conv.L, Prodct)); keys.put(Att.PUBREF, new S57key(Conv.S, null)); keys.put(Att.QUASOU, new S57key(Conv.L, Quasou));
-		keys.put(Att.RADWAL, new S57key(Conv.A, null)); keys.put(Att.RADIUS, new S57key(Conv.F, null)); keys.put(Att.RECDAT, new S57key(Conv.A, null));
-		keys.put(Att.RECIND, new S57key(Conv.A, null)); keys.put(Att.RYRMGV, new S57key(Conv.A, null)); keys.put(Att.RESTRN, new S57key(Conv.L, Restrn));
-		keys.put(Att.SCAMAX, new S57key(Conv.I, null)); keys.put(Att.SCAMIN, new S57key(Conv.I, null)); keys.put(Att.SCVAL1, new S57key(Conv.I, null));
-		keys.put(Att.SCVAL2, new S57key(Conv.I, null)); keys.put(Att.SECTR1, new S57key(Conv.F, null)); keys.put(Att.SECTR2, new S57key(Conv.F, null));
-		keys.put(Att.SHIPAM, new S57key(Conv.A, null)); keys.put(Att.SIGFRQ, new S57key(Conv.I, null)); keys.put(Att.SIGGEN, new S57key(Conv.E, Siggen));
-		keys.put(Att.SIGGRP, new S57key(Conv.A, null)); keys.put(Att.SIGPER, new S57key(Conv.F, null)); keys.put(Att.SIGSEQ, new S57key(Conv.A, null));
-		keys.put(Att.SOUACC, new S57key(Conv.F, null)); keys.put(Att.SDISMX, new S57key(Conv.I, null)); keys.put(Att.SDISMN, new S57key(Conv.I, null));
-		keys.put(Att.SORDAT, new S57key(Conv.A, null)); keys.put(Att.SORIND, new S57key(Conv.A, null)); keys.put(Att.STATUS, new S57key(Conv.L, Status));
-		keys.put(Att.SURATH, new S57key(Conv.S, null)); keys.put(Att.SUREND, new S57key(Conv.A, null)); keys.put(Att.SURSTA, new S57key(Conv.A, null));
-		keys.put(Att.SURTYP, new S57key(Conv.L, Surtyp)); keys.put(Att.$SCALE, new S57key(Conv.F, null)); keys.put(Att.$SCODE, new S57key(Conv.A, null));
-		keys.put(Att.TECSOU, new S57key(Conv.L, Tecsou)); keys.put(Att.$TXSTR, new S57key(Conv.S, null)); keys.put(Att.TXTDSC, new S57key(Conv.S, null));
-		keys.put(Att.TS_TSP, new S57key(Conv.A, null)); keys.put(Att.TS_TSV, new S57key(Conv.A, null)); keys.put(Att.T_ACWL, new S57key(Conv.E, null));
-		keys.put(Att.T_HWLW, new S57key(Conv.A, null)); keys.put(Att.T_MTOD, new S57key(Conv.E, null)); keys.put(Att.T_THDF, new S57key(Conv.A, null));
-		keys.put(Att.T_TINT, new S57key(Conv.I, null)); keys.put(Att.T_TSVL, new S57key(Conv.A, null)); keys.put(Att.T_VAHC, new S57key(Conv.A, null));
-		keys.put(Att.TIMEND, new S57key(Conv.A, null)); keys.put(Att.TIMSTA, new S57key(Conv.A, null)); keys.put(Att.$TINTS, new S57key(Conv.E, null));
-		keys.put(Att.TOPSHP, new S57key(Conv.E, Topshp)); keys.put(Att.TRAFIC, new S57key(Conv.E, Trafic)); keys.put(Att.VALACM, new S57key(Conv.F, null));
-		keys.put(Att.VALDCO, new S57key(Conv.F, null)); keys.put(Att.VALLMA, new S57key(Conv.F, null)); keys.put(Att.VALMAG, new S57key(Conv.F, null));
-		keys.put(Att.VALMXR, new S57key(Conv.F, null)); keys.put(Att.VALNMR, new S57key(Conv.F, null)); keys.put(Att.VALSOU, new S57key(Conv.F, null));
-		keys.put(Att.VERACC, new S57key(Conv.F, null)); keys.put(Att.VERCLR, new S57key(Conv.F, null)); keys.put(Att.VERCCL, new S57key(Conv.F, null));
-		keys.put(Att.VERCOP, new S57key(Conv.F, null)); keys.put(Att.VERCSA, new S57key(Conv.F, null)); keys.put(Att.VERDAT, new S57key(Conv.E, Verdat));
-		keys.put(Att.VERLEN, new S57key(Conv.F, null)); keys.put(Att.WATLEV, new S57key(Conv.E, Watlev)); keys.put(Att.CAT_TS, new S57key(Conv.E, Cat_ts));
-		keys.put(Att.PUNITS, new S57key(Conv.E, Punits)); keys.put(Att.NINFOM, new S57key(Conv.S, null)); keys.put(Att.NOBJNM, new S57key(Conv.S, null));
-		keys.put(Att.NPLDST, new S57key(Conv.S, null)); keys.put(Att.$NTXST, new S57key(Conv.S, null)); keys.put(Att.NTXTDS, new S57key(Conv.S, null));
-		keys.put(Att.HORDAT, new S57key(Conv.E, null)); keys.put(Att.POSACC, new S57key(Conv.F, null)); keys.put(Att.QUAPOS, new S57key(Conv.E, Quapos));
-		keys.put(Att.CLSDNG, new S57key(Conv.E, Clsdng)); keys.put(Att.DIRIMP, new S57key(Conv.L, Dirimp)); keys.put(Att.DISBK1, new S57key(Conv.F, null));
-		keys.put(Att.DISBK2, new S57key(Conv.F, null)); keys.put(Att.DISIPU, new S57key(Conv.F, null)); keys.put(Att.DISIPD, new S57key(Conv.F, null));
-		keys.put(Att.ELEVA1, new S57key(Conv.F, null)); keys.put(Att.ELEVA2, new S57key(Conv.F, null)); keys.put(Att.FNCTNM, new S57key(Conv.E, Fnctnm));
-		keys.put(Att.WTWDIS, new S57key(Conv.F, null)); keys.put(Att.BUNVES, new S57key(Conv.E, Bunves)); keys.put(Att.COMCTN, new S57key(Conv.S, null));
-		keys.put(Att.HORCLL, new S57key(Conv.F, null)); keys.put(Att.HORCLW, new S57key(Conv.F, null)); keys.put(Att.TRSHGD, new S57key(Conv.L, Trshgd));
-		keys.put(Att.UNLOCD, new S57key(Conv.S, null)); keys.put(Att.HIGWAT, new S57key(Conv.F, null)); keys.put(Att.HIGNAM, new S57key(Conv.S, null));
-		keys.put(Att.LOWWAT, new S57key(Conv.F, null)); keys.put(Att.LOWNAM, new S57key(Conv.S, null)); keys.put(Att.MEAWAT, new S57key(Conv.F, null));
-		keys.put(Att.MEANAM, new S57key(Conv.S, null)); keys.put(Att.OTHWAT, new S57key(Conv.F, null)); keys.put(Att.OTHNAM, new S57key(Conv.S, null));
-		keys.put(Att.REFLEV, new S57key(Conv.E, Reflev)); keys.put(Att.SDRLEV, new S57key(Conv.S, null)); keys.put(Att.VCRLEV, new S57key(Conv.S, null));
-		keys.put(Att.SCHREF, new S57key(Conv.S, null)); keys.put(Att.USESHP, new S57key(Conv.E, Useshp)); keys.put(Att.CURVHW, new S57key(Conv.F, null));
-		keys.put(Att.CURVLW, new S57key(Conv.F, null)); keys.put(Att.CURVMW, new S57key(Conv.F, null)); keys.put(Att.CURVOW, new S57key(Conv.F, null));
-		keys.put(Att.APTREF, new S57key(Conv.S, null)); keys.put(Att.SHPTYP, new S57key(Conv.E, Shptyp)); keys.put(Att.UPDMSG, new S57key(Conv.S, null));
-		keys.put(Att.ADDMRK, new S57key(Conv.L, Addmrk)); keys.put(Att.BNKWTW, new S57key(Conv.E, Bnkwtw)); keys.put(Att.CATBNK, new S57key(Conv.E, Catbnk));
-		keys.put(Att.CATNMK, new S57key(Conv.E, Catnmk)); keys.put(Att.CATBRT, new S57key(Conv.L, Catbrt)); keys.put(Att.CATBUN, new S57key(Conv.L, Catbun));
-		keys.put(Att.CATCCL, new S57key(Conv.L, Catccl)); keys.put(Att.CATCOM, new S57key(Conv.L, Catcom)); keys.put(Att.CATHBR, new S57key(Conv.L, Cathbr));
-		keys.put(Att.CATRFD, new S57key(Conv.L, Catrfd)); keys.put(Att.CATTML, new S57key(Conv.L, Cattml)); keys.put(Att.CATGAG, new S57key(Conv.L, Catgag));
-		keys.put(Att.CATVTR, new S57key(Conv.L, Catvtr)); keys.put(Att.CATTAB, new S57key(Conv.E, Cattab)); keys.put(Att.CATEXS, new S57key(Conv.E, Catexs));
-		keys.put(Att.CATWWM, new S57key(Conv.E, Catwwm)); keys.put(Att.LG_SPD, new S57key(Conv.F, null)); keys.put(Att.LG_SPR, new S57key(Conv.L, Lg_spr));
-		keys.put(Att.LG_BME, new S57key(Conv.F, null)); keys.put(Att.LG_LGS, new S57key(Conv.F, null)); keys.put(Att.LG_DRT, new S57key(Conv.F, null));
-		keys.put(Att.LG_WDP, new S57key(Conv.F, null)); keys.put(Att.LG_WDU, new S57key(Conv.E, Lg_wdu)); keys.put(Att.LG_REL, new S57key(Conv.L, Lg_rel));
-		keys.put(Att.LG_FNC, new S57key(Conv.L, Lg_fnc)); keys.put(Att.LG_DES, new S57key(Conv.S, null)); keys.put(Att.LG_PBR, new S57key(Conv.S, null));
-		keys.put(Att.LC_CSI, new S57key(Conv.L, Lc_csi)); keys.put(Att.LC_CSE, new S57key(Conv.L, Lc_cse)); keys.put(Att.LC_ASI, new S57key(Conv.L, Lc_asi));
-		keys.put(Att.LC_ASE, new S57key(Conv.L, Lc_ase)); keys.put(Att.LC_CCI, new S57key(Conv.L, Lc_cci)); keys.put(Att.LC_CCE, new S57key(Conv.L, Lc_cce));
-		keys.put(Att.LC_BM1, new S57key(Conv.F, null)); keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null));
-		keys.put(Att.LC_LG2, new S57key(Conv.F, null)); keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null));
-		keys.put(Att.LC_SP1, new S57key(Conv.F, null)); keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null));
-		keys.put(Att.LC_WD2, new S57key(Conv.F, null)); keys.put(Att.LITRAD, new S57key(Conv.A, null));
+		keys.put(Att.CATCRN, new S57key(Conv.E, Catcrn)); keys.put(Att.CATDAM, new S57key(Conv.E, Catdam));	keys.put(Att.CATDIS, new S57key(Conv.E, Catdis));
+		keys.put(Att.CATDOC, new S57key(Conv.E, Catdoc)); keys.put(Att.CATDPG, new S57key(Conv.L, Catdpg));	keys.put(Att.CATFNC, new S57key(Conv.E, Catfnc));
+		keys.put(Att.CATFRY, new S57key(Conv.E, Catfry)); keys.put(Att.CATFIF, new S57key(Conv.E, Catfif));	keys.put(Att.CATFOG, new S57key(Conv.E, Catfog));
+		keys.put(Att.CATFOR, new S57key(Conv.E, Catfor)); keys.put(Att.CATGAT, new S57key(Conv.E, Catgat));	keys.put(Att.CATHAF, new S57key(Conv.L, Cathaf));
+		keys.put(Att.CATHLK, new S57key(Conv.L, Cathlk)); keys.put(Att.CATICE, new S57key(Conv.E, Catice));	keys.put(Att.CATINB, new S57key(Conv.E, Catinb));
+		keys.put(Att.CATLND, new S57key(Conv.L, Catlnd)); keys.put(Att.CATLMK, new S57key(Conv.L, Catlmk));	keys.put(Att.CATLAM, new S57key(Conv.E, Catlam));
+		keys.put(Att.CATLIT, new S57key(Conv.L, Catlit)); keys.put(Att.CATMFA, new S57key(Conv.E, Catmfa));	keys.put(Att.CATMPA, new S57key(Conv.L, Catmpa));
+		keys.put(Att.CATMOR, new S57key(Conv.E, Catmor)); keys.put(Att.CATNAV, new S57key(Conv.E, Catnav));	keys.put(Att.CATOBS, new S57key(Conv.E, Catobs));
+		keys.put(Att.CATOFP, new S57key(Conv.L, Catofp)); keys.put(Att.CATOLB, new S57key(Conv.E, Catolb));	keys.put(Att.CATPLE, new S57key(Conv.E, Catple));
+		keys.put(Att.CATPIL, new S57key(Conv.E, Catpil)); keys.put(Att.CATPIP, new S57key(Conv.L, Catpip));	keys.put(Att.CATPRA, new S57key(Conv.E, Catpra));
+		keys.put(Att.CATPYL, new S57key(Conv.E, Catpyl)); keys.put(Att.CATRAS, new S57key(Conv.E, Catras)); keys.put(Att.CATRTB, new S57key(Conv.E, Catrtb));
+		keys.put(Att.CATROS, new S57key(Conv.L, Catros));	keys.put(Att.CATTRK, new S57key(Conv.E, Cattrk)); keys.put(Att.CATRSC, new S57key(Conv.L, Catrsc));
+		keys.put(Att.CATREA, new S57key(Conv.L, Catrea));	keys.put(Att.CATROD, new S57key(Conv.E, Catrod)); keys.put(Att.CATRUN, new S57key(Conv.E, Catrun));
+		keys.put(Att.CATSEA, new S57key(Conv.E, Catsea));	keys.put(Att.CATSIL, new S57key(Conv.E, Catsil)); keys.put(Att.CATSLO, new S57key(Conv.E, Catslo));
+		keys.put(Att.CATSCF, new S57key(Conv.L, Catscf));	keys.put(Att.CATSLC, new S57key(Conv.E, Catslc)); keys.put(Att.CATSIT, new S57key(Conv.L, Catsit));
+		keys.put(Att.CATSIW, new S57key(Conv.L, Catsiw));	keys.put(Att.CATSPM, new S57key(Conv.L, Catspm)); keys.put(Att.CATTSS, new S57key(Conv.E, Cattss));
+		keys.put(Att.CATVEG, new S57key(Conv.L, Catveg));	keys.put(Att.CATWAT, new S57key(Conv.E, Catwat)); keys.put(Att.CATWED, new S57key(Conv.E, Catwed));
+		keys.put(Att.CATWRK, new S57key(Conv.E, Catwrk));	keys.put(Att.CATZOC, new S57key(Conv.E, Catzoc));	keys.put(Att.COLOUR, new S57key(Conv.L, Colour));
+		keys.put(Att.COLPAT, new S57key(Conv.L, Colpat));	keys.put(Att.COMCHA, new S57key(Conv.A, null)); keys.put(Att.CPDATE, new S57key(Conv.A, null));
+		keys.put(Att.CSCALE, new S57key(Conv.I, null));	keys.put(Att.CONDTN, new S57key(Conv.E, Condtn)); keys.put(Att.CONRAD, new S57key(Conv.E, Conrad));
+		keys.put(Att.CONVIS, new S57key(Conv.E, Convis));	keys.put(Att.CURVEL, new S57key(Conv.F, null)); keys.put(Att.DATEND, new S57key(Conv.A, null));
+		keys.put(Att.DATSTA, new S57key(Conv.A, null));	keys.put(Att.DRVAL1, new S57key(Conv.F, null)); keys.put(Att.DRVAL2, new S57key(Conv.F, null));
+		keys.put(Att.DUNITS, new S57key(Conv.E, Dunits));	keys.put(Att.ELEVAT, new S57key(Conv.F, null)); keys.put(Att.ESTRNG, new S57key(Conv.F, null));
+		keys.put(Att.EXCLIT, new S57key(Conv.E, Exclit));	keys.put(Att.EXPSOU, new S57key(Conv.E, Expsou)); keys.put(Att.FUNCTN, new S57key(Conv.L, Functn));
+		keys.put(Att.HEIGHT, new S57key(Conv.F, null));	keys.put(Att.HUNITS, new S57key(Conv.E, Hunits)); keys.put(Att.HORACC, new S57key(Conv.F, null));
+		keys.put(Att.HORCLR, new S57key(Conv.F, null));	keys.put(Att.HORLEN, new S57key(Conv.F, null)); keys.put(Att.HORWID, new S57key(Conv.F, null));
+		keys.put(Att.ICEFAC, new S57key(Conv.F, null));	keys.put(Att.INFORM, new S57key(Conv.S, null)); keys.put(Att.JRSDTN, new S57key(Conv.E, Jrsdtn));
+		keys.put(Att.LIFCAP, new S57key(Conv.F, null));	keys.put(Att.LITCHR, new S57key(Conv.E, Litchr));	keys.put(Att.LITVIS, new S57key(Conv.L, Litvis));
+		keys.put(Att.MARSYS, new S57key(Conv.E, Marsys));	keys.put(Att.MLTYLT, new S57key(Conv.I, null));	keys.put(Att.NATION, new S57key(Conv.A, null));
+		keys.put(Att.NATCON, new S57key(Conv.E, Natcon));	keys.put(Att.NATSUR, new S57key(Conv.L, Natsur));	keys.put(Att.NATQUA, new S57key(Conv.L, Natqua));
+		keys.put(Att.NMDATE, new S57key(Conv.A, null));	keys.put(Att.OBJNAM, new S57key(Conv.S, null));	keys.put(Att.ORIENT, new S57key(Conv.F, null));
+		keys.put(Att.PEREND, new S57key(Conv.A, null));	keys.put(Att.PERSTA, new S57key(Conv.A, null));	keys.put(Att.PICREP, new S57key(Conv.S, null));
+		keys.put(Att.PILDST, new S57key(Conv.S, null));	keys.put(Att.PRCTRY, new S57key(Conv.A, null));	keys.put(Att.PRODCT, new S57key(Conv.L, Prodct));
+		keys.put(Att.PUBREF, new S57key(Conv.S, null));	keys.put(Att.QUASOU, new S57key(Conv.L, Quasou));	keys.put(Att.RADWAL, new S57key(Conv.A, null));
+		keys.put(Att.RADIUS, new S57key(Conv.F, null));	keys.put(Att.RECDAT, new S57key(Conv.A, null));	keys.put(Att.RECIND, new S57key(Conv.A, null));
+		keys.put(Att.RYRMGV, new S57key(Conv.A, null));	keys.put(Att.RESTRN, new S57key(Conv.L, Restrn));	keys.put(Att.SCAMAX, new S57key(Conv.I, null));
+		keys.put(Att.SCAMIN, new S57key(Conv.I, null));	keys.put(Att.SCVAL1, new S57key(Conv.I, null));	keys.put(Att.SCVAL2, new S57key(Conv.I, null));
+		keys.put(Att.SECTR1, new S57key(Conv.F, null));	keys.put(Att.SECTR2, new S57key(Conv.F, null));	keys.put(Att.SHIPAM, new S57key(Conv.A, null));
+		keys.put(Att.SIGFRQ, new S57key(Conv.I, null));	keys.put(Att.SIGGEN, new S57key(Conv.E, Siggen));	keys.put(Att.SIGGRP, new S57key(Conv.A, null));
+		keys.put(Att.SIGPER, new S57key(Conv.F, null));	keys.put(Att.SIGSEQ, new S57key(Conv.A, null));	keys.put(Att.SOUACC, new S57key(Conv.F, null));
+		keys.put(Att.SDISMX, new S57key(Conv.I, null));	keys.put(Att.SDISMN, new S57key(Conv.I, null));	keys.put(Att.SORDAT, new S57key(Conv.A, null));
+		keys.put(Att.SORIND, new S57key(Conv.A, null));	keys.put(Att.STATUS, new S57key(Conv.L, Status));	keys.put(Att.SURATH, new S57key(Conv.S, null));
+		keys.put(Att.SUREND, new S57key(Conv.A, null));	keys.put(Att.SURSTA, new S57key(Conv.A, null));	keys.put(Att.SURTYP, new S57key(Conv.L, Surtyp));
+		keys.put(Att.TECSOU, new S57key(Conv.L, Tecsou));	keys.put(Att.TXTDSC, new S57key(Conv.S, null));	keys.put(Att.TS_TSP, new S57key(Conv.A, null));
+		keys.put(Att.TS_TSV, new S57key(Conv.A, null));	keys.put(Att.T_ACWL, new S57key(Conv.E, null));	keys.put(Att.T_HWLW, new S57key(Conv.A, null));
+		keys.put(Att.T_MTOD, new S57key(Conv.E, null));	keys.put(Att.T_THDF, new S57key(Conv.A, null));	keys.put(Att.T_TINT, new S57key(Conv.I, null));
+		keys.put(Att.T_TSVL, new S57key(Conv.A, null));	keys.put(Att.T_VAHC, new S57key(Conv.A, null));	keys.put(Att.TIMEND, new S57key(Conv.A, null));
+		keys.put(Att.TIMSTA, new S57key(Conv.A, null));	keys.put(Att.TOPSHP, new S57key(Conv.E, Topshp)); keys.put(Att.TRAFIC, new S57key(Conv.E, Trafic));
+		keys.put(Att.VALACM, new S57key(Conv.F, null));	keys.put(Att.VALDCO, new S57key(Conv.F, null)); keys.put(Att.VALLMA, new S57key(Conv.F, null));
+		keys.put(Att.VALMAG, new S57key(Conv.F, null));	keys.put(Att.VALMXR, new S57key(Conv.F, null)); keys.put(Att.VALNMR, new S57key(Conv.F, null));
+		keys.put(Att.VALSOU, new S57key(Conv.F, null));	keys.put(Att.VERACC, new S57key(Conv.F, null)); keys.put(Att.VERCLR, new S57key(Conv.F, null));
+		keys.put(Att.VERCCL, new S57key(Conv.F, null));	keys.put(Att.VERCOP, new S57key(Conv.F, null)); keys.put(Att.VERCSA, new S57key(Conv.F, null));
+		keys.put(Att.VERDAT, new S57key(Conv.E, Verdat));	keys.put(Att.VERLEN, new S57key(Conv.F, null)); keys.put(Att.WATLEV, new S57key(Conv.E, Watlev));
+		keys.put(Att.CAT_TS, new S57key(Conv.E, Cat_ts));	keys.put(Att.PUNITS, new S57key(Conv.E, Punits)); keys.put(Att.NINFOM, new S57key(Conv.S, null));
+		keys.put(Att.NOBJNM, new S57key(Conv.S, null));	keys.put(Att.NPLDST, new S57key(Conv.S, null)); keys.put(Att.NTXTDS, new S57key(Conv.S, null));
+		keys.put(Att.HORDAT, new S57key(Conv.E, null));	keys.put(Att.POSACC, new S57key(Conv.F, null)); keys.put(Att.QUAPOS, new S57key(Conv.E, Quapos));
+		keys.put(Att.CLSDNG, new S57key(Conv.E, Clsdng));	keys.put(Att.DIRIMP, new S57key(Conv.L, Dirimp)); keys.put(Att.DISBK1, new S57key(Conv.F, null));
+		keys.put(Att.DISBK2, new S57key(Conv.F, null));	keys.put(Att.DISIPU, new S57key(Conv.F, null)); keys.put(Att.DISIPD, new S57key(Conv.F, null));
+		keys.put(Att.ELEVA1, new S57key(Conv.F, null));	keys.put(Att.ELEVA2, new S57key(Conv.F, null)); keys.put(Att.FNCTNM, new S57key(Conv.E, Fnctnm));
+		keys.put(Att.WTWDIS, new S57key(Conv.F, null));	keys.put(Att.BUNVES, new S57key(Conv.E, Bunves)); keys.put(Att.COMCTN, new S57key(Conv.S, null));
+		keys.put(Att.HORCLL, new S57key(Conv.F, null));	keys.put(Att.HORCLW, new S57key(Conv.F, null)); keys.put(Att.TRSHGD, new S57key(Conv.L, Trshgd));
+		keys.put(Att.UNLOCD, new S57key(Conv.S, null));	keys.put(Att.HIGWAT, new S57key(Conv.F, null)); keys.put(Att.HIGNAM, new S57key(Conv.S, null));
+		keys.put(Att.LOWWAT, new S57key(Conv.F, null));	keys.put(Att.LOWNAM, new S57key(Conv.S, null)); keys.put(Att.MEAWAT, new S57key(Conv.F, null));
+		keys.put(Att.MEANAM, new S57key(Conv.S, null));	keys.put(Att.OTHWAT, new S57key(Conv.F, null)); keys.put(Att.OTHNAM, new S57key(Conv.S, null));
+		keys.put(Att.REFLEV, new S57key(Conv.E, Reflev));	keys.put(Att.SDRLEV, new S57key(Conv.S, null)); keys.put(Att.VCRLEV, new S57key(Conv.S, null));
+		keys.put(Att.SCHREF, new S57key(Conv.S, null));	keys.put(Att.USESHP, new S57key(Conv.E, Useshp)); keys.put(Att.CURVHW, new S57key(Conv.F, null));
+		keys.put(Att.CURVLW, new S57key(Conv.F, null));	keys.put(Att.CURVMW, new S57key(Conv.F, null)); keys.put(Att.CURVOW, new S57key(Conv.F, null));
+		keys.put(Att.APTREF, new S57key(Conv.S, null));	keys.put(Att.SHPTYP, new S57key(Conv.E, Shptyp)); keys.put(Att.UPDMSG, new S57key(Conv.S, null));
+		keys.put(Att.ADDMRK, new S57key(Conv.L, Addmrk));	keys.put(Att.BNKWTW, new S57key(Conv.E, Bnkwtw)); keys.put(Att.CATBNK, new S57key(Conv.E, Catbnk));
+		keys.put(Att.CATNMK, new S57key(Conv.E, Catnmk));	keys.put(Att.CATBRT, new S57key(Conv.L, Catbrt)); keys.put(Att.CATBUN, new S57key(Conv.L, Catbun));
+		keys.put(Att.CATCCL, new S57key(Conv.L, Catccl));	keys.put(Att.CATCOM, new S57key(Conv.L, Catcom)); keys.put(Att.CATHBR, new S57key(Conv.L, Cathbr));
+		keys.put(Att.CATRFD, new S57key(Conv.L, Catrfd));	keys.put(Att.CATTML, new S57key(Conv.L, Cattml)); keys.put(Att.CATGAG, new S57key(Conv.L, Catgag));
+		keys.put(Att.CATVTR, new S57key(Conv.L, Catvtr));	keys.put(Att.CATTAB, new S57key(Conv.E, Cattab)); keys.put(Att.CATEXS, new S57key(Conv.E, Catexs));
+		keys.put(Att.CATWWM, new S57key(Conv.E, Catwwm));	keys.put(Att.LG_SPD, new S57key(Conv.F, null)); keys.put(Att.LG_SPR, new S57key(Conv.L, Lg_spr));
+		keys.put(Att.LG_BME, new S57key(Conv.F, null));	keys.put(Att.LG_LGS, new S57key(Conv.F, null)); keys.put(Att.LG_DRT, new S57key(Conv.F, null));
+		keys.put(Att.LG_WDP, new S57key(Conv.F, null));	keys.put(Att.LG_WDU, new S57key(Conv.E, Lg_wdu)); keys.put(Att.LG_REL, new S57key(Conv.L, Lg_rel));
+		keys.put(Att.LG_FNC, new S57key(Conv.L, Lg_fnc));	keys.put(Att.LG_DES, new S57key(Conv.S, null)); keys.put(Att.LG_PBR, new S57key(Conv.S, null));
+		keys.put(Att.LC_CSI, new S57key(Conv.L, Lc_csi));	keys.put(Att.LC_CSE, new S57key(Conv.L, Lc_cse)); keys.put(Att.LC_ASI, new S57key(Conv.L, Lc_asi));
+		keys.put(Att.LC_ASE, new S57key(Conv.L, Lc_ase));	keys.put(Att.LC_CCI, new S57key(Conv.L, Lc_cci)); keys.put(Att.LC_CCE, new S57key(Conv.L, Lc_cce));
+		keys.put(Att.LC_BM1, new S57key(Conv.F, null));	keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null));
+		keys.put(Att.LC_LG2, new S57key(Conv.F, null));	keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null));
+		keys.put(Att.LC_SP1, new S57key(Conv.F, null));	keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null));
+		keys.put(Att.LC_WD2, new S57key(Conv.F, null));	keys.put(Att.LITRAD, new S57key(Conv.A, null));
 	}
 	
 	public static Object nullVal(Att att) {

@@ -9,7 +9,6 @@
 
 package seamap;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.AffineTransform;
@@ -178,7 +177,7 @@ public class Rules {
 				Renderer.lineVector(feature, new LineStyle( Color.black, 4, new float[] { 10, 10 }, null));
 			break;
 		case FAIRWY:
-			if (Renderer.calcArea(feature) > 2.0) {
+			if (feature.area > 2.0) {
 				if (zoom < 16)
 					Renderer.lineVector(feature, new LineStyle(new Color(0xc480ff), 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
 				else

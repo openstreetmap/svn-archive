@@ -17,9 +17,8 @@ public class S57obj {
 		RESARE, RETRFL, RIVERS, RIVBNK, ROADWY, RUNWAY, SNDWAV, SEAARE, SPLARE, SBDARE, SLCONS, SISTAT, SISTAW, SILTNK, SLOTOP, SLOGRD,
 		SMCFAC, SOUNDG, SPRING, SQUARE, STSLNE, SUBTLN, SWPARE, TESARE, TS_PRH, TS_PNH, TS_PAD, TS_TIS, T_HMON, T_NHMN, T_TIMS, TIDEWY,
 		TOPMAR, TSELNE, TSSBND, TSSCRS, TSSLPT, TSSRON, TSEZNE, TUNNEL, TWRTPT, UWTROC, UNSARE, VEGATN, WATTUR, WATFAL, WEDKLP, WRECKS,
-		TS_FEB, M_ACCY, M_CSCL, M_COVR, M_HDAT, M_HOPA, M_NPUB, M_NSYS, M_PROD, M_QUAL, M_SDAT, M_SREL, M_UNIT, M_VDAT, C_AGGR, C_ASSO,
-		C_STAC, $AREAS, $LINES, $CSYMB, $COMPS, $TEXTS, NOTMRK, WTWAXS, WTWPRF, BRGARE, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE,
-		BCNWTW, BOYWTW, REFDMP, RTPLPT, TERMNL, TRNBSN, WTWARE, WTWGAG, TISDGE, VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ
+		TS_FEB, NOTMRK, WTWAXS, WTWPRF, BRGARE, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, BCNWTW, BOYWTW, REFDMP, RTPLPT, TERMNL,
+		TRNBSN, WTWARE, WTWGAG, TISDGE, VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ
 	}
 
 	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<Obj, Integer>(Obj.class);
@@ -57,11 +56,7 @@ public class S57obj {
 		ObjS57.put(Obj.TSELNE,145);	ObjS57.put(Obj.TSSBND,146);	ObjS57.put(Obj.TSSCRS,147);	ObjS57.put(Obj.TSSLPT,148);	ObjS57.put(Obj.TSSRON,149);
 		ObjS57.put(Obj.TSEZNE,150);	ObjS57.put(Obj.TUNNEL,151);	ObjS57.put(Obj.TWRTPT,152);	ObjS57.put(Obj.UWTROC,153);	ObjS57.put(Obj.UNSARE,154);
 		ObjS57.put(Obj.VEGATN,155);	ObjS57.put(Obj.WATTUR,156);	ObjS57.put(Obj.WATFAL,157);	ObjS57.put(Obj.WEDKLP,158);	ObjS57.put(Obj.WRECKS,159);
-		ObjS57.put(Obj.TS_FEB,160);	ObjS57.put(Obj.M_ACCY,300);	ObjS57.put(Obj.M_CSCL,301);	ObjS57.put(Obj.M_COVR,302);	ObjS57.put(Obj.M_HDAT,303);
-		ObjS57.put(Obj.M_HOPA,304);	ObjS57.put(Obj.M_NPUB,305);	ObjS57.put(Obj.M_NSYS,306);	ObjS57.put(Obj.M_PROD,307);	ObjS57.put(Obj.M_QUAL,308);
-		ObjS57.put(Obj.M_SDAT,309);	ObjS57.put(Obj.M_SREL,310);	ObjS57.put(Obj.M_UNIT,311);	ObjS57.put(Obj.M_VDAT,312);	ObjS57.put(Obj.C_AGGR,400);
-		ObjS57.put(Obj.C_ASSO,401);	ObjS57.put(Obj.C_STAC,402);	ObjS57.put(Obj.$AREAS,500);	ObjS57.put(Obj.$LINES,501);	ObjS57.put(Obj.$CSYMB,502);
-		ObjS57.put(Obj.$COMPS,503);	ObjS57.put(Obj.$TEXTS,504);
+		ObjS57.put(Obj.TS_FEB,160);
 	}
 
 	private static final EnumMap<Obj, Integer> ObjIENC = new EnumMap<Obj, Integer>(Obj.class);
@@ -69,15 +64,14 @@ public class S57obj {
 		ObjIENC.put(Obj.UNKOBJ, 0);	ObjIENC.put(Obj.ACHBRT, 17000);	ObjIENC.put(Obj.ACHARE, 17001);	ObjIENC.put(Obj.CANBNK, 17002);	ObjIENC.put(Obj.DEPARE, 17003);
 		ObjIENC.put(Obj.DISMAR, 17004);	ObjIENC.put(Obj.RESARE, 17005);	ObjIENC.put(Obj.RIVBNK, 17006);	ObjIENC.put(Obj.SISTAT, 17007);	ObjIENC.put(Obj.SISTAW, 17008);
 		ObjIENC.put(Obj.TOPMAR, 17009);	ObjIENC.put(Obj.BERTHS, 17010);	ObjIENC.put(Obj.BRIDGE, 17011);	ObjIENC.put(Obj.CBLOHD, 17012);	ObjIENC.put(Obj.FERYRT, 17013);
-		ObjIENC.put(Obj.HRBARE, 17014);	ObjIENC.put(Obj.HRBFAC, 17015);	ObjIENC.put(Obj.LOKBSN, 17016);	ObjIENC.put(Obj.RDOCAL, 17017);	ObjIENC.put(Obj.M_NSYS, 17018);
-		ObjIENC.put(Obj.CURENT, 17019);	ObjIENC.put(Obj.HULKES, 17020);	ObjIENC.put(Obj.PONTON, 17021);	ObjIENC.put(Obj.M_SDAT, 17022);	ObjIENC.put(Obj.M_VDAT, 17023);
-		ObjIENC.put(Obj.PIPOHD, 17024);	ObjIENC.put(Obj.FLODOC, 17025);	ObjIENC.put(Obj.CHKPNT, 17027);	ObjIENC.put(Obj.BCNLAT, 17028);	ObjIENC.put(Obj.BOYLAT, 17029);
-		ObjIENC.put(Obj.CRANES, 17030);	ObjIENC.put(Obj.GATCON, 17031);	ObjIENC.put(Obj.SLCONS, 17032);	ObjIENC.put(Obj.UWTROC, 17033);	ObjIENC.put(Obj.CONVYR, 17034);
-		ObjIENC.put(Obj.NOTMRK, 17050);	ObjIENC.put(Obj.WTWAXS, 17051);	ObjIENC.put(Obj.WTWPRF, 17052);	ObjIENC.put(Obj.BRGARE, 17053);	ObjIENC.put(Obj.BUNSTA, 17054);
-		ObjIENC.put(Obj.COMARE, 17055);	ObjIENC.put(Obj.HRBBSN, 17056);	ObjIENC.put(Obj.LOKARE, 17057);	ObjIENC.put(Obj.LKBSPT, 17058);	ObjIENC.put(Obj.PRTARE, 17059);
-		ObjIENC.put(Obj.BCNWTW, 17060);	ObjIENC.put(Obj.BOYWTW, 17061);	ObjIENC.put(Obj.REFDMP, 17062);	ObjIENC.put(Obj.RTPLPT, 17063);	ObjIENC.put(Obj.TERMNL, 17064);
-		ObjIENC.put(Obj.TRNBSN, 17065);	ObjIENC.put(Obj.WTWARE, 17066);	ObjIENC.put(Obj.WTWGAG, 17067);	ObjIENC.put(Obj.TISDGE, 17068);	ObjIENC.put(Obj.VEHTRF, 17069);
-		ObjIENC.put(Obj.EXCNST, 17070);	ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
+		ObjIENC.put(Obj.HRBARE, 17014);	ObjIENC.put(Obj.HRBFAC, 17015);	ObjIENC.put(Obj.LOKBSN, 17016);	ObjIENC.put(Obj.RDOCAL, 17017); ObjIENC.put(Obj.CURENT, 17019);
+		ObjIENC.put(Obj.HULKES, 17020);	ObjIENC.put(Obj.PONTON, 17021);	ObjIENC.put(Obj.PIPOHD, 17024);	ObjIENC.put(Obj.FLODOC, 17025);	ObjIENC.put(Obj.CHKPNT, 17027);
+		ObjIENC.put(Obj.BCNLAT, 17028);	ObjIENC.put(Obj.BOYLAT, 17029);	ObjIENC.put(Obj.CRANES, 17030);	ObjIENC.put(Obj.GATCON, 17031);	ObjIENC.put(Obj.SLCONS, 17032);
+		ObjIENC.put(Obj.UWTROC, 17033);	ObjIENC.put(Obj.CONVYR, 17034);	ObjIENC.put(Obj.NOTMRK, 17050);	ObjIENC.put(Obj.WTWAXS, 17051);	ObjIENC.put(Obj.WTWPRF, 17052);
+		ObjIENC.put(Obj.BRGARE, 17053);	ObjIENC.put(Obj.BUNSTA, 17054);	ObjIENC.put(Obj.COMARE, 17055);	ObjIENC.put(Obj.HRBBSN, 17056);	ObjIENC.put(Obj.LOKARE, 17057);
+		ObjIENC.put(Obj.LKBSPT, 17058);	ObjIENC.put(Obj.PRTARE, 17059);	ObjIENC.put(Obj.BCNWTW, 17060);	ObjIENC.put(Obj.BOYWTW, 17061);	ObjIENC.put(Obj.REFDMP, 17062);
+		ObjIENC.put(Obj.RTPLPT, 17063);	ObjIENC.put(Obj.TERMNL, 17064);	ObjIENC.put(Obj.TRNBSN, 17065);	ObjIENC.put(Obj.WTWARE, 17066);	ObjIENC.put(Obj.WTWGAG, 17067);
+		ObjIENC.put(Obj.TISDGE, 17068);	ObjIENC.put(Obj.VEHTRF, 17069);	ObjIENC.put(Obj.EXCNST, 17070);	ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
 	}
 
 	private static final HashMap<Integer, Obj> S57Obj = new HashMap<Integer, Obj>();
@@ -134,16 +128,13 @@ public class S57obj {
 		ObjStr.put(Obj.TSSLPT, "separation_lane"); ObjStr.put(Obj.TSSRON, "separation_roundabout");	ObjStr.put(Obj.TSEZNE, "separation_zone"); ObjStr.put(Obj.TUNNEL, "tunnel");
 		ObjStr.put(Obj.TWRTPT, "two-way_route"); ObjStr.put(Obj.UWTROC, "rock"); ObjStr.put(Obj.UNSARE, "unsurveyed_area");	ObjStr.put(Obj.VEGATN, "vegetation");
 		ObjStr.put(Obj.WATTUR, "water_turbulence");	ObjStr.put(Obj.WATFAL, "waterfall"); ObjStr.put(Obj.WEDKLP, "weed"); ObjStr.put(Obj.WRECKS, "wreck");
-		ObjStr.put(Obj.TS_FEB, "tidal_stream");	ObjStr.put(Obj.M_ACCY, "");	ObjStr.put(Obj.M_CSCL, "");	ObjStr.put(Obj.M_COVR, "coverage");	ObjStr.put(Obj.M_HDAT, "");
-		ObjStr.put(Obj.M_HOPA, "");	ObjStr.put(Obj.M_NPUB, "");	ObjStr.put(Obj.M_NSYS, "");	ObjStr.put(Obj.M_PROD, "");	ObjStr.put(Obj.M_QUAL, "data_quality");
-		ObjStr.put(Obj.M_SDAT, "");	ObjStr.put(Obj.M_SREL, "");	ObjStr.put(Obj.M_UNIT, "");	ObjStr.put(Obj.M_VDAT, "");	ObjStr.put(Obj.C_AGGR, "");	ObjStr.put(Obj.C_ASSO, "");
-		ObjStr.put(Obj.C_STAC, "");	ObjStr.put(Obj.$AREAS, "");	ObjStr.put(Obj.$LINES, "");	ObjStr.put(Obj.$CSYMB, "");	ObjStr.put(Obj.$COMPS, "");	ObjStr.put(Obj.$TEXTS, "");
-		ObjStr.put(Obj.NOTMRK, "notice");	ObjStr.put(Obj.WTWAXS, "waterway_axis"); ObjStr.put(Obj.WTWPRF, "waterway_profile"); ObjStr.put(Obj.BRGARE, "bridge_area");
-		ObjStr.put(Obj.BUNSTA, "bunker_station");	ObjStr.put(Obj.COMARE, "communication_area");	ObjStr.put(Obj.HRBBSN, "harbour_basin"); ObjStr.put(Obj.LOKARE, "lock_area");
-		ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area");	ObjStr.put(Obj.BCNWTW, "beacon_waterway"); ObjStr.put(Obj.BOYWTW, "buoy_waterway");
-		ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal"); ObjStr.put(Obj.TRNBSN, "turning_basin");
-		ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");	ObjStr.put(Obj.VEHTRF, "vehicle_transfer");
-		ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.LG_SDM, ""); ObjStr.put(Obj.LG_VSP, ""); ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor");
+		ObjStr.put(Obj.TS_FEB, "tidal_stream");	ObjStr.put(Obj.NOTMRK, "notice");	ObjStr.put(Obj.WTWAXS, "waterway_axis"); ObjStr.put(Obj.WTWPRF, "waterway_profile");
+		ObjStr.put(Obj.BRGARE, "bridge_area"); ObjStr.put(Obj.BUNSTA, "bunker_station");	ObjStr.put(Obj.COMARE, "communication_area");	ObjStr.put(Obj.HRBBSN, "harbour_basin");
+		ObjStr.put(Obj.LOKARE, "lock_area"); ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area");	ObjStr.put(Obj.BCNWTW, "beacon_waterway");
+		ObjStr.put(Obj.BOYWTW, "buoy_waterway"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
+		ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");
+		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.LG_SDM, ""); ObjStr.put(Obj.LG_VSP, "");
+		ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor");
 	}
 	
 	private static final HashMap<String, Obj> StrObj = new HashMap<String, Obj>();

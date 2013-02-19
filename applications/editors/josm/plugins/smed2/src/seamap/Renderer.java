@@ -9,21 +9,12 @@
 
 package seamap;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.*;
+import java.awt.geom.*;
+import java.util.*;
 
-import s57.S57att.Att;
-import s57.S57obj.Obj;
+import s57.S57att.*;
+import s57.S57obj.*;
 import s57.S57val.*;
 import s57.S57val;
 import seamap.SeaMap;
@@ -70,78 +61,8 @@ public class Renderer {
 		}
 	}
 
-	public static double signedArea(Feature feature) {
-	  if (feature.flag == Fflag.AREA) {
-			ArrayList<Long> way;
-			if (map.mpolys.containsKey(feature.refs)) {
-				way = map.ways.get(map.mpolys.get(feature.refs));
-			} else {
-				way = map.ways.get(feature.refs);
-			}
-			Coord coord = map.nodes.get(way.get(0));
-	    double llon = coord.lon;
-	    double llat = coord.lat;
-	    double sigma = 0.0;
-			for (long node : way) {
-				coord = map.nodes.get(node);
-				double lat = coord.lat;
-				double lon = coord.lon;
-				sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
-				llon = lon;
-				llat = lat;
-	    }
-	    return sigma;
-	  }
-	  return 0;
-	}
-
-	public boolean handOfArea(Feature feature) {
-		return (signedArea(feature) < 0);
-	}
-	
-	public static double calcArea(Feature feature) {
-	  return Math.abs(signedArea(feature)) * 3444 * 3444 / 2.0;
-	}
-
-	public static Coord findCentroid(Feature feature) {
-		Coord coord;
-		ArrayList<Long> way;
-		if (map.mpolys.containsKey(feature.refs)) {
-			way = map.ways.get(map.mpolys.get(feature.refs).get(0));
-		} else {
-			way = map.ways.get(feature.refs);
-		}
-		switch (feature.flag) {
-		case NODE:
-			return map.nodes.get(feature.refs);
-		case LINE:
-			coord = map.nodes.get(way.get(1));
-			break;
-		case AREA:
-		default:
-			coord = map.nodes.get(way.get(0));
-		}
-    double slat = 0.0;
-    double slon = 0.0;
-    double sarc = 0.0;
-    double llat = coord.lat;
-    double llon = coord.lon;
-		for (long node : way) {
-			coord = map.nodes.get(node);
-      double lon = coord.lon;
-      double lat = coord.lat;
-      double arc = (Math.acos(Math.cos(lon-llon) * Math.cos(lat-llat)));
-      slat += (lat * arc);
-      slon += (lon * arc);
-      sarc += arc;
-      llat = lat;
-      llon = lon;
-		}
-		return map.new Coord((sarc > 0.0 ? slat/sarc : 0.0), (sarc > 0.0 ? slon/sarc : 0.0));
-	}
-	
 	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta) {
-		Point2D point = helper.getPoint(findCentroid(feature));
+		Point2D point = helper.getPoint(feature.centre);
 		if (obj == null) {
 			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, null);
 		} else {
@@ -170,7 +91,7 @@ public class Renderer {
 	}
 	
 	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio) {
-		if (feature.flag != Fflag.NODE) {
+		if (feature.flag != Fflag.POINT) {
 			Rectangle prect = symbolSize(prisymb);
 			Rectangle srect = symbolSize(secsymb);
 			if (srect == null)
@@ -179,15 +100,15 @@ public class Renderer {
 				ArrayList<Long> ways = new ArrayList<Long>();
 				double psize = Math.abs(prect.getY()) * sScale;
 				double ssize = (srect != null) ? Math.abs(srect.getY()) * sScale : 0;
-				if (map.outers.containsKey(feature.refs)) {
-					ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
-				} else {
-					if (map.mpolys.containsKey(feature.refs)) {
-						ways.addAll(map.mpolys.get(feature.refs));
-					} else {
-						ways.add(feature.refs);
-					}
-				}
+//				if (map.outers.containsKey(feature.refs)) {
+//					ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
+//				} else {
+//					if (map.mpolys.containsKey(feature.refs)) {
+//						ways.addAll(map.mpolys.get(feature.refs));
+//					} else {
+//						ways.add(feature.refs);
+//					}
+//				}
 				Point2D prev = new Point2D.Double();
 				Point2D next = new Point2D.Double();
 				Point2D curr = new Point2D.Double();
@@ -200,9 +121,9 @@ public class Renderer {
 				Symbol symbol = prisymb;
 				for (long way : ways) {
 					boolean first = true;
-					for (long node : map.ways.get(way)) {
+/*					for (long node : map.ways.get(way)) {
 						prev = next;
-						next = helper.getPoint(map.nodes.get(node));
+						next = helper.getPoint(map.points.get(node));
 						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 						piv = true;
 						if (first) {
@@ -245,29 +166,29 @@ public class Renderer {
 							}
 						}
 					}
-				}
+*/				}
 			}
 		}
 	}
 
 	public static void lineVector (Feature feature, LineStyle style) {
-		if (feature.flag != Fflag.NODE) {
+		if (feature.flag != Fflag.POINT) {
 			ArrayList<Long> ways = new ArrayList<Long>();
-			if (map.outers.containsKey(feature.refs)) {
-				ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
-			} else {
-				if (map.mpolys.containsKey(feature.refs)) {
-					ways.addAll(map.mpolys.get(feature.refs));
-				} else {
-					ways.add(feature.refs);
-				}
-			}
+//			if (map.outers.containsKey(feature.refs)) {
+//				ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
+//			} else {
+//				if (map.mpolys.containsKey(feature.refs)) {
+//					ways.addAll(map.mpolys.get(feature.refs));
+//				} else {
+//					ways.add(feature.refs);
+//				}
+//			}
 			Path2D.Double p = new Path2D.Double();
 			p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
 			for (long way : ways) {
 				boolean first = true;
-				for (long node : map.ways.get(way)) {
-					Point2D point = helper.getPoint(map.nodes.get(node));
+/*				for (long node : map.ways.get(way)) {
+					Point2D point = helper.getPoint(map.points.get(node));
 					if (first) {
 						p.moveTo(point.getX(), point.getY());
 						first = false;
@@ -293,14 +214,14 @@ public class Renderer {
 			if (style.fill != null) {
 				g2.setPaint(style.fill);
 				g2.fill(p);
-			}
+*/			}
 		}
 	}
 	
 	public static void labelText (Feature feature, String str, Font font, Color colour, Delta delta) {
 		Symbol label = new Symbol();
 		label.add(new Instr(Prim.TEXT, new Caption(str, font, colour, (delta == null) ? new Delta(Handle.CC, null) : delta)));
-		Point2D point = helper.getPoint(findCentroid(feature));
+		Point2D point = helper.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, label, tScale, point.getX(), point.getY(), null, null);
 	}
 	

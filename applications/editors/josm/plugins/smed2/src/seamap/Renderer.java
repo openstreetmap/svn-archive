@@ -172,22 +172,26 @@ public class Renderer {
 	}
 
 	public static void lineVector (Feature feature, LineStyle style) {
-		if (feature.flag != Fflag.POINT) {
-			ArrayList<Long> ways = new ArrayList<Long>();
-//			if (map.outers.containsKey(feature.refs)) {
-//				ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
-//			} else {
-//				if (map.mpolys.containsKey(feature.refs)) {
-//					ways.addAll(map.mpolys.get(feature.refs));
-//				} else {
-//					ways.add(feature.refs);
-//				}
-//			}
-			Path2D.Double p = new Path2D.Double();
-			p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		Path2D.Double p = new Path2D.Double();
+		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		switch (feature.flag) {
+		case LINE:
+			break;
+		case AREA:
+			break;
+/*			ArrayList<Long> ways = new ArrayList<Long>();
+			if (map.outers.containsKey(feature.refs)) {
+				ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
+			} else {
+				if (map.mpolys.containsKey(feature.refs)) {
+					ways.addAll(map.mpolys.get(feature.refs));
+				} else {
+					ways.add(feature.refs);
+				}
+			}
 			for (long way : ways) {
 				boolean first = true;
-/*				for (long node : map.ways.get(way)) {
+				for (long node : map.ways.get(way)) {
 					Point2D point = helper.getPoint(map.points.get(node));
 					if (first) {
 						p.moveTo(point.getX(), point.getY());
@@ -214,7 +218,7 @@ public class Renderer {
 			if (style.fill != null) {
 				g2.setPaint(style.fill);
 				g2.fill(p);
-*/			}
+			}*/
 		}
 	}
 	

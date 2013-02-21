@@ -19,6 +19,7 @@ import s57.S57val.*;
 import s57.S57val;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
+import seamap.SeaMap.Area;
 import symbols.Symbols;
 import symbols.Symbols.*;
 
@@ -91,82 +92,84 @@ public class Renderer {
 	}
 	
 	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio) {
-		if (feature.flag != Fflag.POINT) {
-			Rectangle prect = symbolSize(prisymb);
-			Rectangle srect = symbolSize(secsymb);
-			if (srect == null)
-				ratio = 0;
-			if (prect != null) {
-				ArrayList<Long> ways = new ArrayList<Long>();
-				double psize = Math.abs(prect.getY()) * sScale;
-				double ssize = (srect != null) ? Math.abs(srect.getY()) * sScale : 0;
-//				if (map.outers.containsKey(feature.refs)) {
-//					ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
-//				} else {
-//					if (map.mpolys.containsKey(feature.refs)) {
-//						ways.addAll(map.mpolys.get(feature.refs));
-//					} else {
-//						ways.add(feature.refs);
-//					}
-//				}
-				Point2D prev = new Point2D.Double();
-				Point2D next = new Point2D.Double();
-				Point2D curr = new Point2D.Double();
-				Point2D succ = new Point2D.Double();
-				boolean gap = true;
-				boolean piv = false;
-				double len = 0;
-				double angle = 0;
-				int scount = ratio;
-				Symbol symbol = prisymb;
-				for (long way : ways) {
-					boolean first = true;
-/*					for (long node : map.ways.get(way)) {
-						prev = next;
-						next = helper.getPoint(map.points.get(node));
-						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
-						piv = true;
-						if (first) {
-							curr = succ = next;
-							gap  = (space > 0);
-							scount  = ratio;
-							symbol  = prisymb;
-							len = gap ? psize * space * 0.5 : psize;
-							first = false;
-						} else {
-							while (curr.distance(next) >= len) {
-								if (piv) {
-									double rem = len;
-									double s = prev.distance(next);
-									double p = curr.distance(prev);
-									if ((s > 0) && (p > 0)) {
-										double n = curr.distance(next);
-										double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
-										double phi = Math.asin(p / len * Math.sin(theta));
-										rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
-									}
-									succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
-									piv = false;
-								} else {
-									succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
+		Area area;
+		switch (feature.flag) {
+		case LINE:
+			Edge edge = map.edges.get(feature.refs);
+			area = map.new Area();
+			area.add(map.new Bound(map.new Side(edge, true), true));
+			break;
+		case AREA:
+			area = map.areas.get(feature.refs);
+			break;
+		default:
+			return;
+		}
+		Rectangle prect = symbolSize(prisymb);
+		Rectangle srect = symbolSize(secsymb);
+		if (srect == null)
+			ratio = 0;
+		if (prect != null) {
+			double psize = Math.abs(prect.getY()) * sScale;
+			double ssize = (srect != null) ? Math.abs(srect.getY()) * sScale : 0;
+			Point2D prev = new Point2D.Double();
+			Point2D next = new Point2D.Double();
+			Point2D curr = new Point2D.Double();
+			Point2D succ = new Point2D.Double();
+			boolean gap = true;
+			boolean piv = false;
+			double len = 0;
+			double angle = 0;
+			int scount = ratio;
+			Symbol symbol = prisymb;
+			for (Bound bound : area) {
+				BoundIterator bit = map.new BoundIterator(bound);
+				boolean first = true;
+				while (bit.hasNext()) {
+					prev = next;
+					next = helper.getPoint(bit.next());
+					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
+					piv = true;
+					if (first) {
+						curr = succ = next;
+						gap  = (space > 0);
+						scount  = ratio;
+						symbol  = prisymb;
+						len = gap ? psize * space * 0.5 : psize;
+						first = false;
+					} else {
+						while (curr.distance(next) >= len) {
+							if (piv) {
+								double rem = len;
+								double s = prev.distance(next);
+								double p = curr.distance(prev);
+								if ((s > 0) && (p > 0)) {
+									double n = curr.distance(next);
+									double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
+									double phi = Math.asin(p / len * Math.sin(theta));
+									rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
 								}
-								if (!gap) {
-									Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(),
-											new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX()) + Math.toRadians(90)))), null);
-								}
-								if (space > 0) gap = !gap;
-								curr = succ;
-				        len = gap ? (psize * space) : (--scount == 0) ? ssize : psize;
-				        if (scount == 0) {
-				          symbol = secsymb;
-				          scount = ratio;
-				        } else {
-				          symbol = prisymb;
-				        }
+								succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
+								piv = false;
+							} else {
+								succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
+							}
+							if (!gap) {
+								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(),
+										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX()) + Math.toRadians(90)))), null);
+							}
+							if (space > 0) gap = !gap;
+							curr = succ;
+							len = gap ? (psize * space) : (--scount == 0) ? ssize : psize;
+							if (scount == 0) {
+								symbol = secsymb;
+								scount = ratio;
+							} else {
+								symbol = prisymb;
 							}
 						}
 					}
-*/				}
+				}
 			}
 		}
 	}
@@ -174,51 +177,46 @@ public class Renderer {
 	public static void lineVector (Feature feature, LineStyle style) {
 		Path2D.Double p = new Path2D.Double();
 		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		Point2D point;
 		switch (feature.flag) {
 		case LINE:
+			EdgeIterator eit = map.new EdgeIterator(map.edges.get(feature.refs), true);
+			point = helper.getPoint(eit.next());
+			p.moveTo(point.getX(), point.getY());
+			while (eit.hasNext()) {
+				point = helper.getPoint(eit.next());
+				p.lineTo(point.getX(), point.getY());
+			}
 			break;
 		case AREA:
+			for (Bound bound : map.areas.get(feature.refs)) {
+				BoundIterator bit = map.new BoundIterator(bound);
+				point = helper.getPoint(bit.next());
+				p.moveTo(point.getX(), point.getY());
+				while (bit.hasNext()) {
+					point = helper.getPoint(bit.next());
+					p.lineTo(point.getX(), point.getY());
+				}
+			}
 			break;
-/*			ArrayList<Long> ways = new ArrayList<Long>();
-			if (map.outers.containsKey(feature.refs)) {
-				ways.addAll(map.mpolys.get(map.outers.get(feature.refs)));
+		}
+		if (style.line != null) {
+			if (style.dash != null) {
+				float[] dash = new float[style.dash.length];
+				System.arraycopy(style.dash, 0, dash, 0, style.dash.length);
+				for (int i = 0; i < style.dash.length; i++) {
+					dash[i] *= (float) sScale;
+				}
+				g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, dash, 0));
 			} else {
-				if (map.mpolys.containsKey(feature.refs)) {
-					ways.addAll(map.mpolys.get(feature.refs));
-				} else {
-					ways.add(feature.refs);
-				}
+				g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
 			}
-			for (long way : ways) {
-				boolean first = true;
-				for (long node : map.ways.get(way)) {
-					Point2D point = helper.getPoint(map.points.get(node));
-					if (first) {
-						p.moveTo(point.getX(), point.getY());
-						first = false;
-					} else {
-						p.lineTo(point.getX(), point.getY());
-					}
-				}
-			}
-			if (style.line != null) {
-				if (style.dash != null) {
-					float[] dash = new float[style.dash.length];
-					System.arraycopy(style.dash, 0, dash, 0, style.dash.length);
-					for (int i = 0; i < style.dash.length; i++) {
-						dash[i] *= (float) sScale;
-					}
-					g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, dash, 0));
-				} else {
-					g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-				}
-				g2.setPaint(style.line);
-				g2.draw(p);
-			}
-			if (style.fill != null) {
-				g2.setPaint(style.fill);
-				g2.fill(p);
-			}*/
+			g2.setPaint(style.line);
+			g2.draw(p);
+		}
+		if (style.fill != null) {
+			g2.setPaint(style.fill);
+			g2.fill(p);
 		}
 	}
 	

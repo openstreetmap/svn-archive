@@ -274,14 +274,6 @@ public class SeaMap {
 		}
 	}
 	
-	public class AreaIterator {
-		Area area;
-	}
-
-	public class FeatureIterator {
-		Feature feature;
-	}
-
 	public SeaMap() {
 		nodes = new NodeTab();
 		edges = new EdgeTab();

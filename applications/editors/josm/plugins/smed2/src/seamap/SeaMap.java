@@ -200,7 +200,7 @@ public class SeaMap {
 		}
 
 		public boolean hasNext() {
-			return (edge != null) && ((it == null) || (forward && it.hasNext()) || (!forward && it.hasPrevious()));
+			return (edge != null) && ((it == null) || (edge.nodes.isEmpty()) || (forward && it.hasNext()) || (!forward && it.hasPrevious()));
 		}
 
 		public Snode next() {
@@ -370,13 +370,6 @@ public class SeaMap {
 	}
 
 	public void tagsDone(long id) {
-		if ((feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {
-			index.put(id, feature);
-			if (features.get(feature.type) == null) {
-				features.put(feature.type, new ArrayList<Feature>());
-			}
-			features.get(feature.type).add(feature);
-		}
 		switch (feature.flag) {
 		case POINT:
 			Snode node = nodes.get(id);
@@ -431,7 +424,14 @@ public class SeaMap {
 			}
 			break;
 		}
-		feature.centre = findCentroid(feature);
+		if ((feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {
+			index.put(id, feature);
+			if (features.get(feature.type) == null) {
+				features.put(feature.type, new ArrayList<Feature>());
+			}
+			feature.centre = findCentroid(feature);
+			features.get(feature.type).add(feature);
+		}
 	}
 
 	public double signedArea(Bound bound) {
@@ -460,8 +460,10 @@ public class SeaMap {
 	}
 
 	public Snode findCentroid(Feature feature) {
-		double lat, lon, slat, slon, sarc, llat, llon;
-		lat = lon = slat = slon = sarc = llat = llon = 0;
+		double lat, lon, slat, slon, llat, llon;
+		llat = llon = lat = lon = slat = slon = 0;
+		double sarc = 0;
+		boolean first = true;
 		switch (feature.flag) {
 		case POINT:
 			return nodes.get(feature.refs);
@@ -472,20 +474,29 @@ public class SeaMap {
 				Snode node = eit.next();
 				lat = node.lat;
 				lon = node.lon;
-				sarc += (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+				if (first) {
+					first = false;
+				} else {
+					sarc += (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+				}
 				llat = lat;
 				llon = lon;
 			}
 			double harc = sarc / 2;
 			sarc = 0;
+			first = true;
 			eit = new EdgeIterator(edge, true);
 			while (eit.hasNext()) {
 				Snode node = eit.next();
 				lat = node.lat;
 				lon = node.lon;
-				sarc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
-				if (sarc > harc)
-					break;
+				if (first) {
+					first = false;
+				} else {
+					sarc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+					if (sarc > harc)
+						break;
+				}
 				harc -= sarc;
 				llat = lat;
 				llon = lon;
@@ -496,15 +507,19 @@ public class SeaMap {
 			Bound bound = areas.get(feature.refs).get(0);
 			BoundIterator bit = new BoundIterator(bound);
 			while (bit.hasNext()) {
-				llon = lon;
-				llat = lat;
 				Snode node = bit.next();
 				lat = node.lat;
 				lon = node.lon;
-				double arc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
-				slat += (lat * arc);
-				slon += (lon * arc);
-				sarc += arc;
+				if (first) {
+					first = false;
+				} else {
+					double arc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+					slat += (lat * arc);
+					slon += (lon * arc);
+					sarc += arc;
+				}
+				llon = lon;
+				llat = lat;
 			}
 			return new Snode((sarc > 0.0 ? slat / sarc : 0.0), (sarc > 0.0 ? slon / sarc : 0.0));
 		}

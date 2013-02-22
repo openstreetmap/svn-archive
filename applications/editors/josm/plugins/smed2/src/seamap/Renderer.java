@@ -156,7 +156,7 @@ public class Renderer {
 							}
 							if (!gap) {
 								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(),
-										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX()) + Math.toRadians(90)))), null);
+										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))), null);
 							}
 							if (space > 0) gap = !gap;
 							curr = succ;

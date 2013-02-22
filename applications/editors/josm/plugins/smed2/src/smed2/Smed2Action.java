@@ -40,42 +40,58 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void dataChanged(DataChangedEvent e) {
-			System.out.println("DataChangedEvent");
+//			System.out.println("DataChangedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void nodeMoved(NodeMovedEvent e) {
-			System.out.println("NodeMovedEvent");
+//			System.out.println("NodeMovedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void otherDatasetChange(AbstractDatasetChangedEvent e) {
-			System.out.println("AbstractDatasetChangedEvent");
+//			System.out.println("AbstractDatasetChangedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void primitivesAdded(PrimitivesAddedEvent e) {
-			System.out.println("PrimitivesAddedEvent");
+//			System.out.println("PrimitivesAddedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void primitivesRemoved(PrimitivesRemovedEvent e) {
-			System.out.println("PrimitivesRemovedEvent");
+//			System.out.println("PrimitivesRemovedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void relationMembersChanged(RelationMembersChangedEvent e) {
-			System.out.println("RelationMembersChangedEvent");
+//			System.out.println("RelationMembersChangedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void tagsChanged(TagsChangedEvent e) {
-			System.out.println("TagsChangedEvent");
+//			System.out.println("TagsChangedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void wayNodesChanged(WayNodesChangedEvent e) {
-			System.out.println("WayNodesChangedEvent");
+//			System.out.println("WayNodesChangedEvent");
+			makeMap();
+			if (rendering != null) rendering.zoomChanged();
 		}
 	};
 
@@ -108,7 +124,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setLocation(100, 200);
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
-		editFrame.setVisible(true);
+//		editFrame.setVisible(true);
 		panelMain = new PanelMain();
 		editFrame.add(panelMain);
 		panelS57 = new S57dat();
@@ -174,8 +190,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				if (selection.size() == 1) {
 					if (nextNode.compareTo(node) != 0) {
 						node = nextNode;
-						showFrame.setVisible(true);
-						showFrame.showFeature(node, map);
+//						showFrame.setVisible(true);
+//						showFrame.showFeature(node, map);
 					}
 				} else {
 					showFrame.setVisible(false);
@@ -186,8 +202,8 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				if (selection.size() == 1) {
 					if (nextWay.compareTo(way) != 0) {
 						way = nextWay;
-						showFrame.setVisible(true);
-						showFrame.showFeature(way, map);
+//						showFrame.setVisible(true);
+//						showFrame.showFeature(way, map);
 					}
 				} else {
 					showFrame.setVisible(false);

@@ -200,7 +200,7 @@ public class SeaMap {
 		}
 
 		public boolean hasNext() {
-			return (edge != null) && ((it == null) || (edge.nodes.isEmpty()) || (forward && it.hasNext()) || (!forward && it.hasPrevious()));
+			return (edge != null);
 		}
 
 		public Snode next() {
@@ -252,7 +252,7 @@ public class SeaMap {
 		}
 
 		public boolean hasNext() {
-			return side != null;
+			return (side != null) && ((sit.hasNext()) || (eit.hasNext()));
 		}
 
 		public Snode next() {
@@ -501,8 +501,7 @@ public class SeaMap {
 				llat = lat;
 				llon = lon;
 			}
-			double frac = harc / sarc;
-			return new Snode(llat + ((lat - llat) / frac), llon + ((lon - llon) / frac));
+			return new Snode(llat + ((lat - llat) * harc / sarc), llon + ((lon - llon) * harc / sarc));
 		case AREA:
 			Bound bound = areas.get(feature.refs).get(0);
 			BoundIterator bit = new BoundIterator(bound);

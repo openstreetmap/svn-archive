@@ -293,7 +293,8 @@ public class Rules {
 		switch (feature.type) {
 		case ACHARE:
 			if (zoom >= 12) {
-				Renderer.symbol(feature, Harbours.Anchorage, null, null);
+				if (feature.flag != Fflag.LINE)
+					Renderer.symbol(feature, Harbours.Anchorage, null, null);
 				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10);
 				if ((zoom >= 15) && ((name) != null)) {
 					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Color(0x80c480ff), null);

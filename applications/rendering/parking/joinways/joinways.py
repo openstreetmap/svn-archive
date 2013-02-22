@@ -253,7 +253,7 @@ class JoinDB (OSMDB):
 
     def find_joinways_by_segments(self,segment_id_list):
         """ Find the join_ids of a set of highway segments. None if none found """
-        select="select join_id from planet_line_joinmap where segment_id in {segs}".format(seg=self.sql_list_of_ids(segment_id_list))
+        select="select join_id from planet_line_joinmap where segment_id in {segs}".format(segs=self.sql_list_of_ids(segment_id_list))
         return self.select_list(select)
 
     def flush_deleted_segment(self,segment_id):

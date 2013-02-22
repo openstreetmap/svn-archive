@@ -330,7 +330,7 @@ class JoinDB (OSMDB):
         j=0
         while True:
             segment_id_list=self.get_next_deleted_highways(100)
-            logging.info("Deleting {} segments").format(len(segment_id_list))
+            logging.info("Deleting {} segments".format(len(segment_id_list)))
             if not segment_id_list:
                 break
             dirty_joinways_list=self.find_joinways_by_segments(segment_id_list)

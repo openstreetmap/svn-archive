@@ -390,7 +390,8 @@ public class SeaMap {
 			break;
 		case AREA:
 			Area area = new Area();
-			for (ArrayList<Long> role = outers; role != null; role = inners) {
+			ArrayList<Long> role = outers;
+			while (role != null) {
 				while (!role.isEmpty()) {
 					Edge edge = edges.get(role.remove(0));
 					long node1 = edge.first;
@@ -415,13 +416,12 @@ public class SeaMap {
 					area.add(bound);
 				}
 				if (role == outers) {
-					if (area.isEmpty()) {
-						role = null;
-					} else {
-						areas.put(id, area);
-					}
+					role = inners;
+				} else {
+					role = null;
 				}
 			}
+			areas.put(id, area);
 			break;
 		}
 		if ((feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {

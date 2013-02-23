@@ -212,8 +212,7 @@ class JoinDB (OSMDB):
         if self.loop_detect_queue.check_for_duplicates():
             logging.error("***** Loop detected: ignoring and adding duplicate way")
             return
-        for existing_joinway in existing_joinways:
-            self.unhandle_joinway(existing_joinway)
+        self.unhandle_joinways(existing_joinways)
         return
 
     def add_join_highway(self,highway,joinset,joinway):
@@ -295,19 +294,19 @@ class JoinDB (OSMDB):
             jidlist = self.select_list(select)
             if not jidlist:
                 break
-            jid = jidlist[0]
+            jid = jidlist[0] # FIXME: hier muss optimiert werden - Listenoperationen
             logging.warn("osm2pgsql problem: way segment {sid} was found in the joinmap table at joinway {jid} ({n} times).".format(sid=segment_id,jid=jid,n=len(jidlist)))
             #logging.warn("...removing it.")
             # this means mark all segments of the joinway as unhandled. This covers the case that a segment is being separated from a once joined set.
-            self.unhandle_joinway(jid)
+            self.unhandle_joinways([jid])
             #logging.warn("...done.")
         return
 
-    def unhandle_joinway(self,joinway_id):
+    def unhandle_joinways(self,joinway_id_list):
         """ removes a joinway and marks its segments as unhandled """
-        dirtylist=self.get_segments_of_joinway(joinway_id)
+        dirtylist=self.get_segments_of_joinways(joinway_id_list)
         self.mark_segments_unhandled(dirtylist)
-        self.remove_joinway(joinway_id)
+        self.remove_joinways(joinway_id_list)
         
     def remove_joinways(self,joinway_id_list):
         delete="delete from planet_line_join where join_id in {j}".format(j=self.sql_list_of_ids(joinway_id_list))

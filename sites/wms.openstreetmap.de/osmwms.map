@@ -29,7 +29,7 @@ MAP
     NAME png
     DRIVER "AGG/PNG"
     MIMETYPE "image/png"
-    IMAGEMODE RGB
+    IMAGEMODE RGBA
     EXTENSION "png"
   END
 
@@ -593,6 +593,63 @@ LAYER
     PROJECTION
       "init=epsg:900913"
     END
+  END
+
+  LAYER
+    NAME "MUC"
+    METADATA
+     "wms_title"  "Radwegenetz Muenchen (keine amtlichen Daten)"
+     "wms_extent" "11.364118 48.063369 11.716920 48.249042"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "© Stadt MUC CC-BY-3.0-DE"
+    END
+    STATUS ON
+    TYPE LINE
+    DATA "radwege-muenchen/radroute_muc_4326.shp"
+    PROJECTION
+          "init=epsg:4326"
+    END
+    CLASS
+      EXPRESSION ([VERK_AUFK] = 1)
+      STYLE
+        OUTLINEWIDTH 1
+        COLOR 0 255 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      EXPRESSION ([VERK_AUFK] = 2)
+      STYLE
+        OUTLINEWIDTH 1
+        COLOR 0 0 255
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      EXPRESSION ([VERK_AUFK] = 3)
+      STYLE
+        OUTLINEWIDTH 1
+        COLOR 255 0 255
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      EXPRESSION ([VERK_AUFK] = 4)
+      STYLE
+        OUTLINEWIDTH 1
+        COLOR 255 0 0
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      EXPRESSION ([VERK_AUFK] = 5)
+      STYLE
+        OUTLINEWIDTH 1
+        COLOR 0 0 0
+        ANTIALIAS true
+      END
+    END
+
   END
 
 

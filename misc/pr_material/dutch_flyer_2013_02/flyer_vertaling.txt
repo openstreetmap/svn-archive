@@ -1,0 +1,74 @@
+Join OpenStreetMap today!
+
+Waar starten?
+
+De internationale project-website kan je vinden op 
+www.osm.org. Voor alle informatie kan je terecht op
+de wiki of op www.learnosm.org. 
+
+De engelse editie van het boek "OpenStreetMap - Using
+and Enhancing the free Map of the World" door Frederik
+Ramm, Jochem Topf en Steve Chilton (UIT Cambridge) kan
+je bestellen op de website www.openstreetmap.info.
+
+
+OpenStreetMap publiceert data onder de OpenDatabaseLicence
+(ODbL 1.0) en dit is de enige voorwaarden voor het gebruik 
+van OpenStreetMap in eigen werk. Verbertering die aangebracht
+zijn in OpenStreetMap-data moeten terug vrijgegeven worden
+onder ODbl als men ze publiceert.
+
+
+Titel:
+
+Bouw mee aan een vrije open wereldkaart!
+
+Why a free world map?
+
+Waarom een vrije wereldkaart?
+
+De meeste online kaart die gratis zijn in gebruik zijn in
+werkelijkheid sterk beperkt in gebruik waardoor creatief 
+gebruik meestal niet mogelijk is. Een flyer zoals deze zouden
+we bijvoorbeeld niet mogen afdrukken. De meeste online kaarten
+zijn meestal ook niet compleet.
+
+In tegenstelling tot andere kaarten geeft OpenStreetMap de 
+achterliggende data vrij, niet enkel de kaarten zelf. Met deze
+data kan je je eigen kaarten maken, kan je de kaarten kopieren
+op je smarphone of tablet als fietskaart of wandelkaart bijvoorbeeld.
+Om deze data te verzamelen rekent OpenStreetMap op vrijwilligers
+die hun omgeving in kaart brengen en dit resultaat bundelen op één
+lokatie: OpenStreetMap!
+
+Met eigenlijk open data worden we onafhankelijk van restricties en
+beperkingen opgelegd door commerciële providers. Net als Wikipedia
+kan iedereen deelnemen!
+
+Hoe werkt OpenStreetMap?
+
+De data in OpenStreetMap kan op verschillende manieren verzameld 
+worden. De klassieke manier van 'Mapping' gebeurd met gebruik van 
+een GPS-toestel in combinatie met handgeschreven notities: de 
+GPS-tracks worden op de OpenStreetMap website geplaatst en kunnen
+gebruikt worden om straten en andere toe te voegen. Sinds 2010 is
+het ook mogelijk om luchtfoto's te gebruiken om je eigen omgeving 
+in kaart te brengen.
+
+Een voor OpenStreetMap gemaakte applicatie op de website staat het
+gebruik van luchtfoto's en GPS-tracks toe om OpenStreetMap-data toe
+te voegen of aan te passen. De liggen van Straten, gebouwen, bossen 
+en velden kunnen afgeleid worden uit de luchtfoto's terwijl dit kan
+aangevuld worden met de gemaakte notities. Via de notities kunnen 
+'Points Of Interest' kunnen toegevoegd worden zoals huisnummers, je 
+favoriete restaurant of café. Deze data kan gemakkelijk toegevoegd
+worden door gebruik te maken van je eigen kennis van je stad/dorp. 
+Ook het toevoegen van openbaarvervoer en fiets- en wandelroutes is
+mogelijk!
+
+De verzamelde data wordt toegevoegd in de centrale OpenStreetMap 
+database.Vervolgens wordt er automatisch een nieuwe versie van de 
+OpenStreetMap-kaart aangemaakt en verschijnen de laatste wijzigingen.
+
+
+

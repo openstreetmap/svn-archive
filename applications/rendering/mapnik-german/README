@@ -72,7 +72,6 @@ read "mapnik/README".
 
 These shapefiles are also needed by mapnik, but ./get-coastlines does not
 take care of them. Unpack those files to the "mpanik/world_boundaries" directory.
-- http://www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_boundary_lines_land.zip
 
 mapnik-german requires land-polygons files that need to be extracted to the
 "mapnik/world_boundaries" directory as well. It is important that the

@@ -100,65 +100,6 @@ public class Rules {
 		if ((objects = map.features.get(Obj.BCNWTW)) != null) for (Feature feature : objects) beacons(feature);
 	}
 	
-	private static void shoreline(Feature feature) {
-		if (zoom >= 12) {
-			switch ((CatSLC) Renderer.getAttVal(feature, feature.type, 0, Att.CATSLC)) {
-			case SLC_TWAL:
-				WatLEV lev = (WatLEV) Renderer.getAttVal(feature, feature.type, 0, Att.WATLEV);
-				if (lev == WatLEV.LEV_CVRS) {
-					Renderer.lineVector(feature, new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
-					if (zoom >= 15)
-						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), 0.5, 20);
-				} else {
-					Renderer.lineVector(feature, new LineStyle(Color.black, 10, null, null));
-				}
-				if (zoom >= 15)
-					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), 0.5, -20);
-			}
-		}
-	}
-	private static void pipelines(Feature feature) {
-		if (zoom >= 14) {
-			if (feature.type == Obj.PIPSOL) {
-				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, 0);
-			} else if (feature.type == Obj.PIPOHD) {
-
-			}
-		}
-	}
-	private static void cables(Feature feature) {
-		if (zoom >= 14) {
-			if (feature.type == Obj.CBLSUB) {
-				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, 0);
-			} else if (feature.type == Obj.CBLOHD) {
-
-			}
-		}
-	}
-	private static void separation(Feature feature) {
-		switch (feature.type) {
-		case TSEZNE:
-		case TSSCRS:
-		case TSSRON:
-			if (zoom <= 15)
-				Renderer.lineVector(feature, new LineStyle(null, 0, null, new Color(0x80c480ff, true)));
-			else
-				Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
-			AttItem name = feature.atts.get(Att.OBJNAM);
-			if ((zoom >= 10) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), new Color(0x80c480ff), null);
-			break;
-		case TSELNE:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
-			break;
-		case TSSLPT:
-			Renderer.lineSymbols(feature, Areas.LaneArrow, 0.5, null, 0);
-			break;
-		case TSSBND:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, new float[] { 40, 40 }, null));
-			break;
-		}
-	}
 	private static void areas(Feature feature) {
 		AttItem name = feature.atts.get(Att.OBJNAM);
 		switch (feature.type) {
@@ -263,30 +204,104 @@ public class Rules {
   }
  */
 	}
-
-	private static void obstructions(Feature feature) {
-		if ((zoom >= 14) && (feature.type == Obj.UWTROC)) {
-			WatLEV lvl = (WatLEV) Renderer.getAttVal(feature, feature.type, 0, Att.WATLEV);
-			switch (lvl) {
-			case LEV_CVRS:
-				Renderer.symbol(feature, Areas.RockC, null, null);
+	private static void beacons(Feature feature) {
+		BcnSHP shape = (BcnSHP) Renderer.getAttVal(feature, feature.type, 0, Att.BCNSHP);
+		if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY)) && (feature.type == Obj.BCNLAT)) {
+			CatLAM cat = (CatLAM) Renderer.getAttVal(feature, feature.type, 0, Att.CATLAM);
+			switch (cat) {
+			case LAM_PORT:
+				if (shape == BcnSHP.BCN_PRCH)
+					Renderer.symbol(feature, Beacons.PerchPort, null, null);
+				else
+					Renderer.symbol(feature, Beacons.WithyPort, null, null);
 				break;
-			case LEV_AWSH:
-				Renderer.symbol(feature, Areas.RockA, null, null);
+			case LAM_STBD:
+				if (shape == BcnSHP.BCN_PRCH)
+					Renderer.symbol(feature, Beacons.PerchStarboard, null, null);
+				else
+					Renderer.symbol(feature, Beacons.WithyStarboard, null, null);
 				break;
 			default:
-				Renderer.symbol(feature, Areas.Rock, null, null);
+				Renderer.symbol(feature, Beacons.Stake, feature.type, null);
 			}
 		} else {
-			Renderer.symbol(feature, Areas.Rock, null, null);
+			Renderer.symbol(feature, Beacons.Shapes.get(shape), feature.type, null);
+			if (feature.objs.get(Obj.TOPMAR) != null)
+				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Beacons);
 		}
 	}
-	private static void waterways(Feature feature) {
-		if ((zoom >= 14) && (feature.atts.get(Att.OBJNAM) != null)) {
-			// lineText(item_attribute("name"), "font-family:Arial;font-weight:bold;font-size:80;text-anchor:middle", 0.5, 15, line("stroke:none;fill:none"));
+	private static void buoys(Feature feature) {
+		BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
+		Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null);
+		if (feature.objs.get(Obj.TOPMAR) != null) {
+			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Buoys.get(shape));
 		}
 	}
-	private static void transits(Feature feature) {
+	private static void bridges(Feature feature) {
+		if (zoom >= 16) {
+			
+		}
+/*      Att_t *attv = getAtt(getObj(item, BRIDGE, 0), VERCLR);
+      if (attv == NULL) attv = getAtt(getObj(item, BRIDGE, 0), VERCSA);
+      Att_t *attc = getAtt(getObj(item, BRIDGE, 0), VERCCL);
+      Att_t *atto = getAtt(getObj(item, BRIDGE, 0), VERCOP);
+      if (attv != NULL) {
+        renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
+        drawText(item, stringValue(attv->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
+      }
+      else if ((attc != NULL) && (atto == NULL)) {
+        renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
+        drawText(item, stringValue(attc->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
+      }
+      else if ((attc != NULL) && (atto != NULL)) {
+        renderSymbol(item, obja, "clear_v", "", "", RC, 5, 0, 0);
+        drawText(item, stringValue(attc->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", -35, 12);
+        renderSymbol(item, obja, "clear_v", "", "", LC, -5, 0, 0);
+        drawText(item, stringValue(atto->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 35, 12);
+      }
+    }
+*/
+	}
+	private static void cables(Feature feature) {
+		if (zoom >= 14) {
+			if (feature.type == Obj.CBLSUB) {
+				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, 0);
+			} else if (feature.type == Obj.CBLOHD) {
+
+			}
+		}
+	}
+	private static void distances(Feature feature) {
+/*object_rules(distances) {
+  if ((zoom>=16) && (has_attribute("category"))) {
+    attribute_switch("category")
+    attribute_case("installed") symbol("distance_i");
+    attribute_default symbol("distance_u");
+    end_switch
+  }
+}
+*/
+	}
+	private static void floats(Feature feature) {
+		switch (feature.type) {
+		case LITVES:
+			Renderer.symbol(feature, Buoys.Super, feature.type, null);
+			break;
+		case LITFLT:
+			Renderer.symbol(feature, Buoys.Float, feature.type, null);
+			break;
+		case BOYINB:
+			Renderer.symbol(feature, Buoys.Storage, feature.type, null);
+			break;
+		}
+		if (feature.objs.get(Obj.TOPMAR) != null)
+			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Floats);
+	}
+	private static void gauges(Feature feature) {
+/*object_rules(gauge) {
+  if (zoom >= 14) symbol("tide_gauge");
+}
+*/
 	}
 	private static void harbours(Feature feature) {
 		AttItem name = feature.atts.get(Att.OBJNAM);
@@ -303,7 +318,7 @@ public class Rules {
 			break;
 		}
 	}
-	/*
+/*
 	 *   if ((zoom >= 12) && is_type("anchorage")) {
     symbol("anchorage");
     if ((zoom >= 15) && (has_item_attribute("name")))
@@ -322,14 +337,7 @@ public class Rules {
     if ((zoom >= 15) && (has_item_attribute("name")))
       text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -90);
   }
-
-	 */
-	private static void locks(Feature feature) {
-	}
-	private static void distances(Feature feature) {
-	}
-	private static void ports(Feature feature) {
-	}
+*/
 	private static void landmarks(Feature feature) {
 		ArrayList<CatLMK> cats = (ArrayList<CatLMK>) Renderer.getAttVal(feature, feature.type, 0, Att.CATLMK);
 		Symbol catSym = Landmarks.Shapes.get(cats.get(0));
@@ -343,6 +351,93 @@ public class Rules {
 			fncSym = Landmarks.RadioTV;
 		Renderer.symbol(feature, catSym, null, null);
 		Renderer.symbol(feature, fncSym, null, null);
+/*  if (!has_attribute("function") && !has_attribute("category") && has_object("light")) {
+    symbol("lighthouse");
+    if ((zoom >= 15) && has_item_attribute("name"))
+      text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -70);
+  } else {
+    if ((zoom >= 15) && has_item_attribute("name"))
+      text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:start", 60, -50);
+  }
+  if (has_object("fog_signal")) object(fogs);
+  if (has_object("radar_transponder")) object(rtbs);
+  if (has_object("radar_station") && (zoom >= 12)) symbol("radar_station");
+  if (has_object("light")) object(lights);
+}
+*/
+	}
+	private static void lights(Feature feature) {
+		switch (feature.type) {
+		case LITMAJ:
+			Renderer.symbol(feature, Beacons.LightMajor, null, null);
+			break;
+		case LITMIN:
+		case LIGHTS:
+			Renderer.symbol(feature, Beacons.LightMinor, null, null);
+			break;
+		}
+	}
+	private static void locks(Feature feature) {
+/*object_rules(locks) {
+  if ((zoom>=13) && is_type("lock_basin|lock_basin_part")) symbol("lock");
+  if ((zoom>=15) && is_type("gate")) symbol("lock_gate");
+}
+*/
+	}
+	private static void marinas(Feature feature) {
+		if (zoom >= 16) {
+			
+		}
+/*      int n = countObjects(item, type);
+      Atta_t atta = enumAttribute("category", obja);
+      char **map = cluster_map(obja);
+      if (map == NULL) return;
+      switch (n) {
+        case 0: {
+          Obj_t *obj = getObj(item, obja, 0);
+          int n = countValues(getAtt(obj, atta));
+          switch (n) {
+            case 1:
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 0)], "", "", CC, 0, 0, 0);
+              break;
+            case 2:
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 0)], "", "", RC, 0, 0, 0);
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 1)], "", "", LC, 0, 0, 0);
+              break;
+            case 3:
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 0)], "", "", BC, 0, 0, 0);
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 1)], "", "", TR, 0, 0, 0);
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 2)], "", "", TL, 0, 0, 0);
+              break;
+            case 4:
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 0)], "", "", BR, 0, 0, 0);
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 1)], "", "", BL, 0, 0, 0);
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 2)], "", "", TR, 0, 0, 0);
+              renderSymbol(item, obja, map[getAttEnum(obj, atta, 3)], "", "", TL, 0, 0, 0);
+              break;
+          }
+        }
+          break;
+        case 1:
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 1), atta, 0)], "", "", CC, 0, 0, 0);
+          break;
+        case 2:
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 1), atta, 0)], "", "", RC, 0, 0, 0);
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 2), atta, 0)], "", "", LC, 0, 0, 0);
+          break;
+        case 3:
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 1), atta, 0)], "", "", BC, 0, 0, 0);
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 2), atta, 0)], "", "", TR, 0, 0, 0);
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 3), atta, 0)], "", "", TL, 0, 0, 0);
+          break;
+        case 4:
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 1), atta, 0)], "", "", BR, 0, 0, 0);
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 2), atta, 0)], "", "", BL, 0, 0, 0);
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 3), atta, 0)], "", "", TR, 0, 0, 0);
+          renderSymbol(item, obja, map[getAttEnum(getObj(item, obja, 4), atta, 0)], "", "", TL, 0, 0, 0);
+          break;
+      }
+*/
 	}
 	private static void moorings(Feature feature) {
 		CatMOR cat = (CatMOR) Renderer.getAttVal(feature, feature.type, 0, Att.CATMOR);
@@ -364,42 +459,116 @@ public class Rules {
 			Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null);
 			break;
 		}
+/*  if (has_object("fog_signal")) object(fogs);
+  if (has_object("radar_transponder")) object(rtbs);
+  if (has_object("light")) object(lights);
+}
+*/
 	}
 	private static void notices(Feature feature) {
-	}
-	private static void marinas(Feature feature) {
-	}
-	private static void bridges(Feature feature) {
-	}
-	private static void wrecks(Feature feature) {
 		if (zoom >= 14) {
-			CatWRK cat = (CatWRK) Renderer.getAttVal(feature, feature.type, 0, Att.CATWRK);
-			switch (cat) {
-			case WRK_DNGR:
-			case WRK_MSTS:
-				Renderer.symbol(feature, Areas.WreckD, null, null);
-				break;
-			case WRK_HULS:
-				Renderer.symbol(feature, Areas.WreckS, null, null);
-				break;
-			default:
-				Renderer.symbol(feature, Areas.WreckND, null, null);
-			}
-		} else {
-			Renderer.symbol(feature, Areas.WreckND, null, null);
 		}
 	}
-	private static void gauges(Feature feature) {
+	private static void obstructions(Feature feature) {
+		if ((zoom >= 14) && (feature.type == Obj.UWTROC)) {
+			WatLEV lvl = (WatLEV) Renderer.getAttVal(feature, feature.type, 0, Att.WATLEV);
+			switch (lvl) {
+			case LEV_CVRS:
+				Renderer.symbol(feature, Areas.RockC, null, null);
+				break;
+			case LEV_AWSH:
+				Renderer.symbol(feature, Areas.RockA, null, null);
+				break;
+			default:
+				Renderer.symbol(feature, Areas.Rock, null, null);
+			}
+		} else {
+			Renderer.symbol(feature, Areas.Rock, null, null);
+		}
 	}
-	private static void lights(Feature feature) {
+	private static void pipelines(Feature feature) {
+		if (zoom >= 14) {
+			if (feature.type == Obj.PIPSOL) {
+				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, 0);
+			} else if (feature.type == Obj.PIPOHD) {
+
+			}
+		}
+	}
+	private static void platforms(Feature feature) {
+		Renderer.symbol(feature, Landmarks.Platform, null, null);
+/*object_rules(platforms) {
+  if (has_attribute("category")) {
+    attribute_switch("category")
+    attribute_case("fpso") symbol("storage");
+    attribute_default symbol("platform");
+    end_switch
+  } else {
+    symbol("platform");
+  }
+  if ((zoom >= 15) && has_item_attribute("name"))
+    text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:start", 60, -50);
+  if (has_object("fog_signal")) object(fogs);
+  if (has_object("radar_transponder")) object(rtbs);
+  if (has_object("light")) object(lights);
+}
+*/
+	}
+	private static void ports(Feature feature) {
+/*object_rules(ports) {
+  if (zoom>=14) {
+    if (is_type("crane")) {
+      if (attribute_test("category", "container_crane")) symbol("container_crane");
+      else symbol("port_crane");
+    }
+    if (is_type("hulk")) {
+      area("fill:#ffe000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-opacity:1");
+      if ((zoom >= 15) && (has_item_attribute("name")))
+        text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:70; text-anchor:middle", 0, 0);
+    }
+  }
+}
+*/
+	}
+	private static void separation(Feature feature) {
 		switch (feature.type) {
-		case LITMAJ:
-			Renderer.symbol(feature, Beacons.LightMajor, null, null);
+		case TSEZNE:
+		case TSSCRS:
+		case TSSRON:
+			if (zoom <= 15)
+				Renderer.lineVector(feature, new LineStyle(null, 0, null, new Color(0x80c480ff, true)));
+			else
+				Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
+			AttItem name = feature.atts.get(Att.OBJNAM);
+			if ((zoom >= 10) && (name != null))
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), new Color(0x80c480ff), null);
 			break;
-		case LITMIN:
-		case LIGHTS:
-			Renderer.symbol(feature, Beacons.LightMinor, null, null);
+		case TSELNE:
+			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
 			break;
+		case TSSLPT:
+			Renderer.lineSymbols(feature, Areas.LaneArrow, 0.5, null, 0);
+			break;
+		case TSSBND:
+			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, new float[] { 40, 40 }, null));
+			break;
+		}
+	}
+	private static void shoreline(Feature feature) {
+		if (zoom >= 12) {
+			switch ((CatSLC) Renderer.getAttVal(feature, feature.type, 0, Att.CATSLC)) {
+			case SLC_TWAL:
+				WatLEV lev = (WatLEV) Renderer.getAttVal(feature, feature.type, 0, Att.WATLEV);
+				if (lev == WatLEV.LEV_CVRS) {
+					Renderer.lineVector(feature, new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
+					if (zoom >= 15)
+						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), 0.5, 20);
+				} else {
+					Renderer.lineVector(feature, new LineStyle(Color.black, 10, null, null));
+				}
+				if (zoom >= 15)
+					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), 0.5, -20);
+			}
 		}
 	}
 	private static void signals(Feature feature) {
@@ -425,56 +594,61 @@ public class Rules {
 			Renderer.symbol(feature, Harbours.Rescue, null, null);
 			break;
 		}
+/*  if (has_object("fog_signal")) object(fogs);
+  if (has_object("radar_transponder")) object(rtbs);
+  if (has_object("light")) object(lights);
+}
+*/
 	}
-	private static void floats(Feature feature) {
-		switch (feature.type) {
-		case LITVES:
-			Renderer.symbol(feature, Buoys.Super, feature.type, null);
-			break;
-		case LITFLT:
-			Renderer.symbol(feature, Buoys.Float, feature.type, null);
-			break;
-		case BOYINB:
-			Renderer.symbol(feature, Buoys.Storage, feature.type, null);
-			break;
+	private static void transits(Feature feature) {
+/*object_rules(transits) {
+  int ref;
+  if (zoom >= 12) {
+    if (is_type("recommended_track")) ref = line("stroke-width:8; stroke:#000000; stroke-linecap:butt; fill:none");
+    else if (is_type("navigation_line")) ref = line("stroke-width:8; stroke-dasharray:20,20; stroke:#000000; stroke-linecap:butt; fill:none");
+  }
+  if (zoom >= 15) {
+    make_string("");
+    if (has_object("name")) {
+      add_string(item_attribute("name"));
+      add_string(" ");
+    }
+    if (has_attribute("orientation")) {
+      add_string(attribute("orientation"));
+      add_string("¡");
+    }
+    if (has_attribute("category")) {
+      add_string(" (");
+      add_string(attribute("category"));
+      add_string(")");
+    }
+    line_text(string, "font-family:Arial; font-weight:normal; font-size:80; text-anchor:middle", 0.5, -20, ref);
+    free_string
+  }
+}
+*/
+	}
+	private static void waterways(Feature feature) {
+		if ((zoom >= 14) && (feature.atts.get(Att.OBJNAM) != null)) {
+			// lineText(item_attribute("name"), "font-family:Arial;font-weight:bold;font-size:80;text-anchor:middle", 0.5, 15, line("stroke:none;fill:none"));
 		}
-		if (feature.objs.get(Obj.TOPMAR) != null)
-			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Floats);
 	}
-	private static void platforms(Feature feature) {
-		Renderer.symbol(feature, Landmarks.Platform, null, null);
-	}
-	private static void buoys(Feature feature) {
-		BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
-		Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null);
-		if (feature.objs.get(Obj.TOPMAR) != null) {
-			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Buoys.get(shape));
-		}
-	}
-	private static void beacons(Feature feature) {
-		BcnSHP shape = (BcnSHP) Renderer.getAttVal(feature, feature.type, 0, Att.BCNSHP);
-		if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY)) && (feature.type == Obj.BCNLAT)) {
-			CatLAM cat = (CatLAM) Renderer.getAttVal(feature, feature.type, 0, Att.CATLAM);
+	private static void wrecks(Feature feature) {
+		if (zoom >= 14) {
+			CatWRK cat = (CatWRK) Renderer.getAttVal(feature, feature.type, 0, Att.CATWRK);
 			switch (cat) {
-			case LAM_PORT:
-				if (shape == BcnSHP.BCN_PRCH)
-					Renderer.symbol(feature, Beacons.PerchPort, null, null);
-				else
-					Renderer.symbol(feature, Beacons.WithyPort, null, null);
+			case WRK_DNGR:
+			case WRK_MSTS:
+				Renderer.symbol(feature, Areas.WreckD, null, null);
 				break;
-			case LAM_STBD:
-				if (shape == BcnSHP.BCN_PRCH)
-					Renderer.symbol(feature, Beacons.PerchStarboard, null, null);
-				else
-					Renderer.symbol(feature, Beacons.WithyStarboard, null, null);
+			case WRK_HULS:
+				Renderer.symbol(feature, Areas.WreckS, null, null);
 				break;
 			default:
-				Renderer.symbol(feature, Beacons.Stake, feature.type, null);
+				Renderer.symbol(feature, Areas.WreckND, null, null);
 			}
 		} else {
-			Renderer.symbol(feature, Beacons.Shapes.get(shape), feature.type, null);
-			if (feature.objs.get(Obj.TOPMAR) != null)
-				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Beacons);
+			Renderer.symbol(feature, Areas.WreckND, null, null);
 		}
 	}
 }

@@ -1,3 +1,12 @@
+/* Copyright 2013 Malcolm Herring
+ *
+ * This is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
+ */
+
 package smed2;
 
 import java.awt.*;
@@ -137,6 +146,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		showFrame.setLocation(50, (rect.y + rect.height - 200));
 		showFrame.setResizable(false);
 		showFrame.setAlwaysOnTop(true);
+		showFrame.setEnabled(false);
 		showFrame.setVisible(false);
 
 		// System.out.println("hello");
@@ -191,7 +201,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 					if (nextNode.compareTo(node) != 0) {
 						node = nextNode;
 //						showFrame.setVisible(true);
-//						showFrame.showFeature(node, map);
+						showFrame.showFeature(node, map);
 					}
 				} else {
 					showFrame.setVisible(false);
@@ -203,7 +213,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 					if (nextWay.compareTo(way) != 0) {
 						way = nextWay;
 //						showFrame.setVisible(true);
-//						showFrame.showFeature(way, map);
+						showFrame.showFeature(way, map);
 					}
 				} else {
 					showFrame.setVisible(false);

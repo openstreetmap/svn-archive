@@ -615,7 +615,7 @@ public class Rules {
     }
     if (has_attribute("orientation")) {
       add_string(attribute("orientation"));
-      add_string("¡");
+      add_string("\u00A1");
     }
     if (has_attribute("category")) {
       add_string(" (");

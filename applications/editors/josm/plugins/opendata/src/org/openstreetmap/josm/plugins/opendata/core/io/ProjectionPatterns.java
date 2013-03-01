@@ -68,4 +68,9 @@ public class ProjectionPatterns implements OdConstants {
 			return Pattern.compile(coor, Pattern.CASE_INSENSITIVE);
 		}
     }
+
+    @Override
+    public String toString() {
+        return "[xPattern=" + xPattern + ", yPattern=" + yPattern + ", projection=" + projection + "]";
+    }
 }

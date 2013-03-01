@@ -23,11 +23,12 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -69,58 +70,66 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		return handler != null ? handler.getLineNumber() : -1;
 	}
 	
-	private class CoordinateColumns {
+	public static class CoordinateColumns {
 		public int xCol = -1;
 		public int yCol = -1;
 		public final boolean isOk() {
 			return xCol > -1 && yCol > -1;
 		}
+        @Override
+        public String toString() {
+            return "[xCol=" + xCol + ", yCol=" + yCol + "]";
+        }
+	}
+	
+	private final CoordinateColumns addCoorColIfNeeded(List<CoordinateColumns> columns, CoordinateColumns col) {
+        if (col == null || col.isOk()) {
+            columns.add(col = new CoordinateColumns());
+        }
+        return col;
 	}
 	
 	public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
 		System.out.println("Header: "+Arrays.toString(header));
 		
-		Map<ProjectionPatterns, CoordinateColumns> projColumns = new HashMap<ProjectionPatterns, CoordinateColumns>();
+		Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<ProjectionPatterns, List<CoordinateColumns>>();
 		
-		// TODO: faire une liste de coordonnees pour les cas ou plusieurs coordonnées dans la meme projection sont présentes (ex assainissement) 
 		for (int i = 0; i<header.length; i++) {
 			for (ProjectionPatterns pp : PROJECTIONS) {
-				CoordinateColumns col = projColumns.get(pp);
+			    List<CoordinateColumns> columns = projColumns.get(pp);
+			    if (columns == null) {
+			        projColumns.put(pp, columns = new ArrayList<CoordinateColumns>());
+			    }
+				CoordinateColumns col = columns.isEmpty() ? null : columns.get(columns.size()-1);
 				if (pp.getXPattern().matcher(header[i]).matches()) {
-					if (col == null) {
-						projColumns.put(pp, col = new CoordinateColumns());
-					}
-					col.xCol = i;
+				    addCoorColIfNeeded(columns, col).xCol = i;
+					break;
 				} else if (pp.getYPattern().matcher(header[i]).matches()) {
-					if (col == null) {
-						projColumns.put(pp, col = new CoordinateColumns());
-					}
-					col.yCol = i;
+				    addCoorColIfNeeded(columns, col).yCol = i;
+					break;
 				}
 			}
 		}
 
 		Projection proj = null;
-		CoordinateColumns columns = null;
-		Collection<Integer> allProjIndexes = new ArrayList<Integer>();
+		final List<CoordinateColumns> columns = new ArrayList<CoordinateColumns>();
 		
 		for (ProjectionPatterns pp : projColumns.keySet()) {
-			CoordinateColumns col = projColumns.get(pp);
-			if (col.isOk()) {
-				if (proj == null) {
-					proj = pp.getProjection(header[col.xCol], header[col.yCol]);
-					columns = col;
-				}
-				allProjIndexes.add(col.xCol);
-				allProjIndexes.add(col.yCol);
-			}
+		    for (CoordinateColumns col : projColumns.get(pp)) {
+	            if (col.isOk()) {
+                    columns.add(col);
+	                if (proj == null) {
+	                    proj = pp.getProjection(header[col.xCol], header[col.yCol]);
+	                }
+	            }
+		    }
 		}
 
 		final boolean handlerOK = handler != null && handler.handlesProjection();
 
 		if (proj != null) {
 			// projection identified, do nothing
-		} else if (columns != null) {
+		} else if (!columns.isEmpty()) {
 			if (!handlerOK) {
 				// TODO: filter proposed projections with min/max values ?
 				ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(progressMonitor.getWindowParent()).showDialog();
@@ -134,50 +143,80 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 			throw new IllegalArgumentException(tr("No valid coordinates have been found."));
 		}
 
-		System.out.println("Loading data using projection "+proj+" ("+header[columns.xCol]+", "+header[columns.yCol]+")");
-				
+		String message = "";
+		for (CoordinateColumns c : columns) {
+		    if (!message.isEmpty()) {
+		        message += "; ";
+		    }
+		    message += header[c.xCol]+", "+header[c.yCol];
+		}
+		
+		System.out.println("Loading data using projection "+proj+" ("+message+")");
+		
 		final DataSet ds = new DataSet();
 		int lineNumber = 1;
 		
 		String[] fields;
 		while ((fields = readLine(progressMonitor)) != null) {
 			lineNumber++;
-			EastNorth en = new EastNorth(Double.NaN, Double.NaN);
 			if (handler != null) {
 				handler.setXCol(-1);
 				handler.setYCol(-1);
 			}
-			Node n = new Node();
+			
+            final Map<CoordinateColumns, EastNorth> ens = new HashMap<CoordinateColumns, EastNorth>();
+			final Map<CoordinateColumns, Node> nodes = new HashMap<CoordinateColumns, Node>();
+			for (CoordinateColumns c : columns) {
+			    nodes.put(c, new Node());
+			    ens.put(c, new EastNorth(Double.NaN, Double.NaN));
+			}
+			
 			for (int i = 0; i<fields.length; i++) {
 				try {
 					if (i >= header.length) {
 						throw new IllegalArgumentException(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, i+1));
-					} else if (i == columns.xCol) {
-						en.setLocation(parseDouble(fields[i]), en.north());
-						if (handler != null) {
-							handler.setXCol(i);
-						}
-					} else if (i == columns.yCol) {
-						en.setLocation(en.east(), parseDouble(fields[i]));
-						if (handler != null) {
-							handler.setYCol(i);
-						}
-					} else if (!allProjIndexes.contains(i)) {
-						if (!fields[i].isEmpty()) {
-							n.put(header[i], fields[i]);
-						}
+					} else {
+					    boolean coordinate = false;
+					    for (CoordinateColumns c : columns) {
+					        EastNorth en = ens.get(c);
+	                        if (i == c.xCol) {
+	                            coordinate = true;
+	                            en.setLocation(parseDouble(fields[i]), en.north());
+	                            if (handler != null) {
+	                                handler.setXCol(i);
+	                            }
+	                        } else if (i == c.yCol) {
+                                coordinate = true;
+	                            en.setLocation(en.east(), parseDouble(fields[i]));
+	                            if (handler != null) {
+	                                handler.setYCol(i);
+	                            }
+	                        }					        
+					    }
+	                    if (!coordinate) {
+	                        if (!fields[i].isEmpty()) {
+	                            nodes.values().iterator().next().put(header[i], fields[i]);
+	                        }
+	                    }
 					}
 				} catch (ParseException e) {
 					System.err.println("Warning: Parsing error on line "+lineNumber+": "+e.getMessage());
 				}
 			}
-			if (en.isValid()) {
-				n.setCoor(proj != null && !handlerOK ? proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
-			} else {
-				System.err.println("Warning: Skipping line "+lineNumber+" because no valid coordinates have been found.");
+			for (CoordinateColumns c : columns) {
+			    Node n = nodes.get(c);
+			    EastNorth en = ens.get(c);
+    			if (en.isValid()) {
+    				n.setCoor(proj != null && !handlerOK ? proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
+    			} else {
+    				System.err.println("Warning: Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
+    			}
+    			if (n.getCoor() != null) {
+    				ds.addPrimitive(n);
+    			}
 			}
-			if (n.getCoor() != null) {
-				ds.addPrimitive(n);
+			if (handler != null && !Main.pref.getBoolean(PREF_RAWDATA)) {
+			    handler.nodesAdded(ds, nodes, header, lineNumber);
 			}
 		}
 		

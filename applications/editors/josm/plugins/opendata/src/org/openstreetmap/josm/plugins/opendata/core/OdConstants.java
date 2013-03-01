@@ -131,13 +131,15 @@ public interface OdConstants {
     // The list of all ProjectionPatterns (filled at each constructor call)
     public static final Collection<ProjectionPatterns> PROJECTIONS = new ArrayList<ProjectionPatterns>();
     
-    public static final ProjectionPatterns PRJ_UNKNOWN = new ProjectionPatterns("");
     public static final ProjectionPatterns PRJ_WGS84 = new ProjectionPatterns("GPS|WGS84|°décimaux", Projections.getProjectionByCode("EPSG:4326"));
     public static final ProjectionPatterns PRJ_LAMBERT_93 = new ProjectionPatterns("LAMB93|L93", Projections.getProjectionByCode("EPSG:2154"));
     public static final ProjectionPatterns PRJ_LAMBERT_CC_9_ZONES = new LambertCC9ZonesProjectionPatterns("LAMBZ|CC(42|43|44|45|46|47|48|49|50)");
 
     public static final ProjectionPatterns PRJ_LAMBERT_1972 = new ProjectionPatterns("LAMB72|LAMB1972", Projections.getProjectionByCode("EPSG:31370"));
     public static final ProjectionPatterns PRJ_LAMBERT_2008 = new ProjectionPatterns("LAMB08|LAMB2008", Projections.getProjectionByCode("EPSG:3812"));
+
+    // Must always be declared last
+    public static final ProjectionPatterns PRJ_UNKNOWN = new ProjectionPatterns("");
 
     /**
      * Resources

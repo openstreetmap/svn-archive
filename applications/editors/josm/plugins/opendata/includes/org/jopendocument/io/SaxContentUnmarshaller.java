@@ -284,7 +284,7 @@ public class SaxContentUnmarshaller extends DefaultHandler {
         } else if (qName.equals("table:table-cell") || qName.equals("table:covered-table-cell")) {
             final TableTableCell cell = new TableTableCell();
             cell.setTableStyleName(attribs.getValue("table:style-name"));
-            //cell.setTableNumberColumnsRepeated(attribs.getValue("table:number-columns-repeated"));
+            cell.setTableNumberColumnsRepeated(attribs.getValue("table:number-columns-repeated"));
             //cell.setTableNumberColumnsSpanned(attribs.getValue("table:number-columns-spanned"));
             //cell.setTableNumberRowsSpanned(attribs.getValue("table:number-rows-spanned"));
             //cell.setTableValueType(attribs.getValue("office:value-type"));

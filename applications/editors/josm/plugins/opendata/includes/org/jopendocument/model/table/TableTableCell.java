@@ -21,9 +21,20 @@ public class TableTableCell {
 
     private TableTableColumn column;
 
+    protected int tableNumberColumnsRepeated = 1;
+    
     protected String tableStyleName;
 
     private TextP textP;
+
+    protected TableTableCell cloneCell() {
+        final TableTableCell c = new TableTableCell();
+
+        c.tableNumberColumnsRepeated = this.tableNumberColumnsRepeated;
+        c.tableStyleName = this.tableStyleName;
+        c.textP = this.textP;
+        return c;
+    }
 
     private void computeStyle() {
         if (this.column == null) {
@@ -47,8 +58,28 @@ public class TableTableCell {
         return this.tableStyleName;
     }
 
+    /**
+     * Gets the value of the tableNumberColumnsRepeated property.
+     * 
+     */
+    public int getTableNumberColumnsRepeated() {
+        return this.tableNumberColumnsRepeated;
+    }
+    
     public TextP getTextP() {
         return this.textP;
+    }
+
+    /**
+     * Sets the value of the tableNumberColumnsRepeated property.
+     * 
+     * @param value allowed object is {@link String }
+     * 
+     */
+    public void setTableNumberColumnsRepeated(final String value) {
+        if (value != null) {
+            this.tableNumberColumnsRepeated = Integer.valueOf(value);
+        }
     }
 
     /**
@@ -63,7 +94,6 @@ public class TableTableCell {
         this.computeStyle();
 
     }
-
 
     public void setTextP(final TextP p) {
         if (this.textP != null) {

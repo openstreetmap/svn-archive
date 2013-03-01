@@ -23,7 +23,9 @@ import java.util.List;
 import org.jopendocument.model.OpenDocument;
 import org.jopendocument.model.office.OfficeSpreadsheet;
 import org.jopendocument.model.table.TableTable;
+import org.jopendocument.model.table.TableTableCell;
 import org.jopendocument.model.table.TableTableRow;
+import org.jopendocument.model.text.TextP;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
@@ -35,7 +37,7 @@ public class OdsReader extends SpreadSheetReader {
 	private List<TableTableRow> rows;
 	private int rowIndex;
 	
-	private static final String SEP = "TextP:\\[";
+	private static final String SEP = "TextP:[";
 	
 	public OdsReader(SpreadSheetHandler handler) {
 		super(handler);
@@ -78,11 +80,13 @@ public class OdsReader extends SpreadSheetReader {
 
 			List<String> result = new ArrayList<String>();
 			boolean allFieldsBlank = true;
-			for (String text : row.getText().replaceFirst(SEP, "").replaceAll("\\]", "").replaceAll("null", SEP).split(SEP)) {
-				result.add(text);
-				if (allFieldsBlank && !text.isEmpty()) {
-					allFieldsBlank = false;
-				}
+			for (TableTableCell cell : row.getAllCells()) {
+			    TextP textP = cell.getTextP();
+			    String text = textP == null ? "" : textP.toString().replace(SEP, "").replace("]", "").replace("null", "").trim();
+                result.add(text);
+                if (allFieldsBlank && !text.isEmpty()) {
+                    allFieldsBlank = false;
+                }
 			}
 			
 			return rowIndex == 1 || !allFieldsBlank ? result.toArray(new String[0]) : null;

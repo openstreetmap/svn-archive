@@ -118,11 +118,16 @@ public class ChangesetReverter {
      * @param monitor
      * @throws OsmTransferException
      */
-    public ChangesetReverter(int changesetId, RevertType revertType, ProgressMonitor monitor)
+    public ChangesetReverter(int changesetId, RevertType revertType, boolean newLayer, ProgressMonitor monitor)
             throws OsmTransferException {
         this.changesetId = changesetId;
-        this.layer = Main.main.getEditLayer();
-        this.ds = layer.data;
+        if (newLayer) {
+            this.ds = new DataSet();
+            this.layer = new OsmDataLayer(this.ds, tr("Reverted changeset") + tr(" [id: {0}]", changesetId), null);
+        } else {
+            this.layer = Main.main.getEditLayer();
+            this.ds = layer.data;
+        }
         this.revertType = revertType;
 
         OsmServerChangesetReader csr = new OsmServerChangesetReader();
@@ -132,6 +137,9 @@ public class ChangesetReverter {
             cds = csr.downloadChangeset(changesetId, monitor.createSubTaskMonitor(1, false));
         } finally {
             monitor.finishTask();
+            if (newLayer) {
+                Main.main.addLayer(layer);
+            }
         }
 
         // Build our own lists of created/updated/modified objects for better performance
@@ -185,8 +193,11 @@ public class ChangesetReverter {
                     if (ds.getPrimitiveById(p.getPrimitiveId()) == null) {
                         switch (p.getType()) {
                         case NODE: ds.addPrimitive(new Node(p.getUniqueId())); break;
+                        case CLOSEDWAY:
                         case WAY: ds.addPrimitive(new Way(p.getUniqueId())); break;
+                        case MULTIPOLYGON:
                         case RELATION: ds.addPrimitive(new Relation(p.getUniqueId())); break;
+                        default: throw new AssertionError();
                         }
                     }
                 }
@@ -204,9 +215,11 @@ public class ChangesetReverter {
             case NODE:
                 rdr.append(new Node(id.getUniqueId()));
                 break;
+            case CLOSEDWAY:
             case WAY:
                 rdr.append(new Way(id.getUniqueId()));
                 break;
+            case MULTIPOLYGON:
             case RELATION:
                 rdr.append(new Relation(id.getUniqueId()));
                 break;
@@ -228,8 +241,10 @@ public class ChangesetReverter {
         switch (p.getType()) {
         case NODE:
             return new Conflict<Node>((Node)p,new Node((Node)p), isMyDeleted);
+        case CLOSEDWAY:
         case WAY:
             return new Conflict<Way>((Way)p,new Way((Way)p), isMyDeleted);
+        case MULTIPOLYGON:
         case RELATION:
             return new Conflict<Relation>((Relation)p,new Relation((Relation)p), isMyDeleted);
         default: throw new AssertionError();
@@ -243,6 +258,7 @@ public class ChangesetReverter {
             LatLon currentCoor = ((Node)current).getCoor();
             LatLon historyCoor = ((HistoryNode)history).getCoords();
             return currentCoor == historyCoor || (currentCoor != null && historyCoor != null && currentCoor.equals(historyCoor));
+        case CLOSEDWAY:
         case WAY:
             List<Node> currentNodes = ((Way)current).getNodes();
             List<Long> historyNodes = ((HistoryWay)history).getNodes();
@@ -251,6 +267,7 @@ public class ChangesetReverter {
                 if (currentNodes.get(i).getId() != historyNodes.get(i)) return false;
             }
             return true;
+        case MULTIPOLYGON:
         case RELATION:
             List<org.openstreetmap.josm.data.osm.RelationMember> currentMembers =
                 ((Relation)current).getMembers();
@@ -366,6 +383,7 @@ public class ChangesetReverter {
         if (!list.isEmpty()) cmds.add(new DeleteCommand(list));
         return cmds;
     }
+    
     public boolean hasMissingObjects() {
         return !missing.isEmpty();
     }

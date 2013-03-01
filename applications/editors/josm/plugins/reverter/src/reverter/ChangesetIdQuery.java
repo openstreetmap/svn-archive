@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,19 +21,28 @@ import reverter.ChangesetReverter.RevertType;
 
 @SuppressWarnings("serial")
 public class ChangesetIdQuery extends ExtendedDialog {
-    private JFormattedTextField tcid = new JFormattedTextField(NumberFormat.getInstance());
-    private ButtonGroup bgRevertType = new ButtonGroup();
-    private JRadioButton rbFull = new JRadioButton(tr("Revert changeset fully"));
-    private JRadioButton rbSelection = new JRadioButton(tr("Revert selection only"));
-    private JRadioButton rbSelectionUndelete =
-        new JRadioButton(tr("Revert selection and restore deleted objects"));
+    private final JFormattedTextField tcid = new JFormattedTextField(NumberFormat.getInstance());
+    private final ButtonGroup bgRevertType = new ButtonGroup();
+    private final JRadioButton rbFull = new JRadioButton(tr("Revert changeset fully"));
+    private final JRadioButton rbSelection = new JRadioButton(tr("Revert selection only"));
+    private final JRadioButton rbSelectionUndelete = new JRadioButton(tr("Revert selection and restore deleted objects"));
+    private final JCheckBox cbNewLayer = new JCheckBox(tr("Download as new layer"));
 
     public int getChangesetId() {
         try {
-          return NumberFormat.getInstance().parse(tcid.getText()).intValue();
+            return NumberFormat.getInstance().parse(tcid.getText()).intValue();
         } catch (ParseException e) {
-          return 0;
+            return 0;
         }
+    }
+    
+    /**
+     * Replies true if the user requires to download into a new layer
+     *
+     * @return true if the user requires to download into a new layer
+     */
+    public boolean isNewLayerRequired() {
+        return cbNewLayer.isSelected();
     }
 
     public RevertType getRevertType() {
@@ -58,6 +68,10 @@ public class ChangesetIdQuery extends ExtendedDialog {
         panel.add(rbFull, GBC.eol().insets(0,10,0,0).fill(GBC.HORIZONTAL));
         panel.add(rbSelection, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(rbSelectionUndelete, GBC.eol().fill(GBC.HORIZONTAL));
+
+        cbNewLayer.setToolTipText(tr("<html>Select to download data into a new data layer.<br>"
+                +"Unselect to download into the currently active data layer.</html>"));
+        panel.add(cbNewLayer, GBC.eol().fill(GBC.HORIZONTAL));
 
         setContent(panel);
         setupDialog();

@@ -18,20 +18,25 @@ import reverter.ChangesetReverter.RevertType;
 public class RevertChangesetTask extends PleaseWaitRunnable {
     private final int changesetId;
     private final RevertType revertType;
+    private final boolean newLayer;
 
     private ChangesetReverter rev;
-    private boolean downloadConfirmed = false;
+    private boolean downloadConfirmed;
 
-    public RevertChangesetTask(int changesetId, RevertType revertType)
-    {
+    public RevertChangesetTask(int changesetId, RevertType revertType) {
+        this(changesetId, revertType, false);
+    }
+    
+    public RevertChangesetTask(int changesetId, RevertType revertType, boolean autoConfirmDownload) {
+        this(changesetId, revertType, autoConfirmDownload, false);
+    }
+    
+    public RevertChangesetTask(int changesetId, RevertType revertType, boolean autoConfirmDownload, boolean newLayer) {
         super(tr("Reverting..."));
         this.changesetId = changesetId;
         this.revertType = revertType;
-    }
-    public RevertChangesetTask(int changesetId, RevertType revertType, boolean autoConfirmDownload)
-    {
-        this(changesetId, revertType);
-        downloadConfirmed = autoConfirmDownload;
+        this.downloadConfirmed = autoConfirmDownload;
+        this.newLayer = newLayer;
     }
 
     private boolean checkAndDownloadMissing() throws OsmTransferException {
@@ -56,7 +61,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     @Override
     protected void realRun() throws OsmTransferException {
         progressMonitor.indeterminateSubTask(tr("Downloading changeset"));
-        rev = new ChangesetReverter(changesetId, revertType,
+        rev = new ChangesetReverter(changesetId, revertType, newLayer,
                 progressMonitor.createSubTaskMonitor(0, true));
         if (progressMonitor.isCanceled()) return;
 

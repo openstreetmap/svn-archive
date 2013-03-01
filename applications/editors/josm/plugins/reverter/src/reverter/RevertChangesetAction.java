@@ -38,6 +38,7 @@ public class RevertChangesetAction extends JosmAction {
         if (changesetId == 0) return;
         if (revertType == null) return;
 
-        Main.worker.submit(new RevertChangesetTask(changesetId, revertType));
+        boolean newLayer = dlg.isNewLayerRequired();
+        Main.worker.submit(new RevertChangesetTask(changesetId, revertType, newLayer, newLayer));
     }
 }

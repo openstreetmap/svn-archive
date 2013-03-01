@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>reverter</name>
+	<name>JOSM-Reverter</name>
 	<comment></comment>
 	<projects>
 		<project>josm</project>

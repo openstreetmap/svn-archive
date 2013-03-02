@@ -50,6 +50,7 @@ import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.TextTagParser;
 
 class FastDrawingMode extends MapMode implements MapViewPaintable,
         AWTEventListener {
@@ -607,6 +608,12 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             Map<String,String> tgs=new HashMap<String,String>();
             for (Tag t : execute) {
                 w.put(t.getKey(), t.getValue());
+            }
+        }
+        if (!settings.autoTags.isEmpty()) {
+            Map<String, String> tags = TextTagParser.readTagsFromText(settings.autoTags);
+            for (String k: tags.keySet()) {
+                w.put(k, tags.get(k));
             }
         }
         if (delCmd!=null) {

@@ -36,6 +36,7 @@ public class FDSettings {
     public boolean drawClosed;
     public int simplifyMode;
     public float lineWidth;
+    public String autoTags;
     
     public void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
@@ -58,6 +59,7 @@ public class FDSettings {
         drawClosed =  Main.pref.getBoolean("fastdraw.drawclosed", false);
         simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0);
         lineWidth = (float) Main.pref.getDouble("fastdraw.linewidth", 2);
+        autoTags = Main.pref.get("fastdraw.autotags");
     }
 
     public void savePrefs() {
@@ -81,6 +83,7 @@ public class FDSettings {
          Main.pref.put("fastdraw.drawclosed", drawClosed);
          Main.pref.putInteger("fastdraw.simplifymode", simplifyMode);
          Main.pref.putDouble("fastdraw.linewidth",(double)lineWidth);
+         Main.pref.put("fastdraw.autotags", autoTags);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));
          }

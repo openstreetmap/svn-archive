@@ -29,9 +29,9 @@
 -->
 <project name="FastDraw" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="JOSM/FastDraw: add option (Q) to draw closed polygons"/>
+    <property name="commit.message" value="JOSM/FastDraw: allow automatic tag adding (Q) "/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5035"/>
+    <property name="plugin.main.version" value="5738"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties

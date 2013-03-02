@@ -4,25 +4,26 @@
  */
 package org.openstreetmap.josm.plugins.fastdraw;
 
-import java.awt.Component;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.JOptionPane;
-import org.openstreetmap.josm.tools.GBC;
 import java.text.NumberFormat;
 import java.text.ParseException;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.ExtendedDialog;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
-import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.TextTagParser;
 import org.openstreetmap.josm.tools.Utils;
@@ -46,7 +47,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
 //        JComboBox combo1=new JComboBox(new String[]{tr("Autosimplify and wait"),
 //            tr("Autosimplify and save"),tr("Simplify and wait"),tr("Simplify and save"),
 //            tr("Save as is")});
-        JComboBox<String> combo1=new JComboBox(new String[]{tr("Autosimplify"),
+        JComboBox combo1=new JComboBox(new String[]{tr("Autosimplify"),
             tr("Simplify with initial epsilon"),tr("Save as is")});
         JCheckBox snapCb=new JCheckBox(tr("Snap to nodes"));
         JCheckBox fixedClickCb = new JCheckBox(tr("Add fixed points on click"));

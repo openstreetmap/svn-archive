@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.Utils.Function;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -81,6 +83,17 @@ public final class WikipediaApp {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
+        final List<String> clipboardLines = Arrays.asList(Utils.getClipboardContent().split("[\\n\\r]+"));
+        return new ArrayList<WikipediaEntry>(Utils.transform(clipboardLines, new Function<String, WikipediaEntry>() {
+
+            @Override
+            public WikipediaEntry apply(String x) {
+                return new WikipediaEntry(x, wikipediaLang, x);
+            }
+        }));
     }
 
     static void updateWIWOSMStatus(String wikipediaLang, Collection<WikipediaEntry> entries) {

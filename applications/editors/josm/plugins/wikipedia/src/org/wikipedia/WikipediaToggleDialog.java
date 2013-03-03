@@ -46,6 +46,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         createLayout(list, true, Arrays.asList(
                 new SideButton(new WikipediaLoadCoordinatesAction()),
                 new SideButton(new WikipediaLoadCategoryAction()),
+                new SideButton(new PasteWikipediaArticlesAction()),
                 new SideButton(new AddWikipediaTagAction()),
                 new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
@@ -160,6 +161,21 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                     wikipediaLang.get(), category, Main.pref.getInteger("wikipedia.depth", 3));
             setWikipediaEntries(entries);
             titleContext = category;
+            updateTitle();
+        }
+    }
+
+    class PasteWikipediaArticlesAction extends AbstractAction {
+
+        public PasteWikipediaArticlesAction() {
+            super(tr("Clipboard"), ImageProvider.get("paste"));
+            putValue(SHORT_DESCRIPTION, tr("Pastes Wikipedia articles from the system clipboard"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setWikipediaEntries(WikipediaApp.getEntriesFromClipboard(wikipediaLang.get()));
+            titleContext = tr("clipboard");
             updateTitle();
         }
     }

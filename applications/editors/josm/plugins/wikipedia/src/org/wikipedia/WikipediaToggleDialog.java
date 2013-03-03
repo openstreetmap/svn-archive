@@ -51,6 +51,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 new SideButton(new WikipediaSettingsAction(), false)));
         updateTitle();
     }
+    /** A string describing the context (use-case) for determining the dialog title */
+    String titleContext = null;
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
     final Set<String> articles = new HashSet<String>();
     final DefaultListModel model = new DefaultListModel();
@@ -107,7 +109,11 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     }
 
     private void updateTitle() {
-        setTitle(/* I18n: [language].Wikipedia.org: coordinates */ tr("{0}.Wikipedia.org: coordinates", wikipediaLang.get()));
+        if (titleContext == null) {
+            setTitle(/* I18n: [language].Wikipedia.org */ tr("{0}.Wikipedia.org", wikipediaLang.get()));
+        } else {
+            setTitle(/* I18n: [language].Wikipedia.org: [context] */ tr("{0}.Wikipedia.org: {1}", wikipediaLang.get(), titleContext));
+        }
     }
 
     class WikipediaLoadCoordinatesAction extends AbstractAction {
@@ -127,6 +133,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                         wikipediaLang.get(), min, max);
                 // add entries to list model
                 setWikipediaEntries(entries);
+                titleContext = tr("coordinates");
                 updateTitle();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -152,7 +159,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCategory(
                     wikipediaLang.get(), category, Main.pref.getInteger("wikipedia.depth", 3));
             setWikipediaEntries(entries);
-            setTitle(/* I18n: [language].Wikipedia.org: [category] */ tr("{0}.Wikipedia.org: {1}", wikipediaLang.get(), category));
+            titleContext = category;
+            updateTitle();
         }
     }
 

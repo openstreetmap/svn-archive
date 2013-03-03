@@ -4,21 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgeo.proj4j.*;
-import org.osgeo.proj4j.Registry;
 import org.osgeo.proj4j.datum.Datum;
 import org.osgeo.proj4j.datum.Ellipsoid;
 import org.osgeo.proj4j.proj.Projection;
 import org.osgeo.proj4j.proj.TransverseMercatorProjection;
+import org.osgeo.proj4j.units.Angle;
 import org.osgeo.proj4j.units.AngleFormat;
 import org.osgeo.proj4j.units.Unit;
 import org.osgeo.proj4j.units.Units;
+import org.osgeo.proj4j.util.ProjectionMath;
 
 public class Proj4Parser 
 {
-  /* SECONDS_TO_RAD = Pi/180/3600 */
-  private static final double SECONDS_TO_RAD = 4.84813681109535993589914102357e-6;
-  private static final double MILLION = 1000000.0;
-  
   private Registry registry;
   
   public Proj4Parser(Registry registry) {
@@ -43,19 +40,7 @@ public class Proj4Parser
     Projection proj = parseProjection(params, ellipsoid);
     return new CoordinateReferenceSystem(name, args, datum, proj);
   }
-
-  /*
   
-  // not currently used
- private final static double SIXTH = .1666666666666666667; // 1/6 
- private final static double RA4 = .04722222222222222222; // 17/360 
- private final static double RA6 = .02215608465608465608; // 67/3024 
- private final static double RV4 = .06944444444444444444; // 5/72 
- private final static double RV6 = .04243827160493827160; // 55/1296 
- */
-
- private static AngleFormat format = new AngleFormat( AngleFormat.ddmmssPattern, true );
-
  /**
   * Creates a {@link Projection}
   * initialized from a PROJ.4 argument list.
@@ -72,28 +57,11 @@ public class Proj4Parser
    }
 
    projection.setEllipsoid(ellipsoid);
-
-   // not sure what CSes use this??
-   /*
-   s = (String)params.get( "init" );
-   if ( s != null ) {
-     projection = createFromName( s ).getProjection();
-     if ( projection == null )
-       throw new ProjectionException( "Unknown projection: "+s );
-           a = projection.getEquatorRadius();
-           es = projection.getEllipsoid().getEccentricitySquared();
-   }
-   */
-   
    
    //TODO: better error handling for things like bad number syntax.  
    // Should be able to report the original param string in the error message
-   // Also should the exception be lib specific?  (Say ParseException)
+   // Should the exception be lib-specific?  (e.g. ParseException)
    
-   // Other parameters
-//   projection.setProjectionLatitudeDegrees( 0 );
-//   projection.setProjectionLatitude1Degrees( 0 );
-//   projection.setProjectionLatitude2Degrees( 0 );
    s = (String)params.get( Proj4Keyword.alpha );
    if ( s != null ) 
      projection.setAlphaDegrees( Double.parseDouble( s ) );
@@ -157,7 +125,7 @@ public class Proj4Parser
      
    // this must be done last, since behaviour depends on other params being set (eg +south)
    if (projection instanceof TransverseMercatorProjection) {
-     s = (String) params.get("zone");
+     s = (String) params.get(Proj4Keyword.zone);
      if (s != null)
        ((TransverseMercatorProjection) projection).setUTMZone(Integer
            .parseInt(s));
@@ -198,14 +166,15 @@ public class Proj4Parser
      // TODO: better error reporting
      param[i] = Double.parseDouble(numStr[i]);
    }
-   
-   // optimization to detect 3-parameter transform
-   if (param[3] == 0.0 
-       && param[4] == 0.0 
-       && param[5] == 0.0 
-       && param[6] == 0.0 
-       ) {
-     param = new double[] { param[0], param[1], param[2] };
+   if (param.length > 3) {
+     // optimization to detect 3-parameter transform
+     if (param[3] == 0.0 
+         && param[4] == 0.0 
+         && param[5] == 0.0 
+         && param[6] == 0.0 
+         ) {
+       param = new double[] { param[0], param[1], param[2] };
+     }
    }
    
    /**
@@ -215,10 +184,10 @@ public class Proj4Parser
     * These need to be converted to radians and a scale factor. 
     */
    if (param.length > 3) {
-     param[3] *= SECONDS_TO_RAD;
-     param[4] *= SECONDS_TO_RAD;
-     param[5] *= SECONDS_TO_RAD;
-     param[6] = (param[6]/MILLION) + 1;
+     param[3] *= ProjectionMath.SECONDS_TO_RAD;
+     param[4] *= ProjectionMath.SECONDS_TO_RAD;
+     param[5] *= ProjectionMath.SECONDS_TO_RAD;
+     param[6] = (param[6]/ProjectionMath.MILLION) + 1;
    }
    
    return param;
@@ -327,25 +296,27 @@ public class Proj4Parser
    Map params = new HashMap();
    for (int i = 0; i < args.length; i++) {
      String arg = args[i];
+     // strip leading "+" if any
      if (arg.startsWith("+")) {
-       int index = arg.indexOf('=');
-       if (index != -1) {
-         // params of form +pppp=vvvv
-         String key = arg.substring(1, index);
-         String value = arg.substring(index + 1);
-         params.put(key, value);
-       } else {
-         // params of form +ppppp
-         String key = arg.substring(1);
-         params.put(key, null);
-       }
+       arg = arg.substring(1);
+     }
+     int index = arg.indexOf('=');
+     if (index != -1) {
+       // param of form pppp=vvvv
+       String key = arg.substring(0, index);
+       String value = arg.substring(index + 1);
+       params.put(key, value);
+     } else {
+       // param of form ppppp
+       //String key = arg.substring(1);
+       params.put(arg, null);
      }
    }
    return params;
  }
 
  private static double parseAngle( String s ) {
-   return format.parse( s, null ).doubleValue();
+   return Angle.parse(s);
  }
 
 }

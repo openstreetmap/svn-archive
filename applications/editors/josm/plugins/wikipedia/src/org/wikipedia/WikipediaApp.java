@@ -98,12 +98,12 @@ public final class WikipediaApp {
                 URLConnection connection = new URL(url).openConnection();
                 connection.setDoOutput(true);
 
-                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
                 out.write("articles=" + encodeURL(Utils.join(",", articleNames)));
                 out.close();
 
 
-                final Scanner scanner = new Scanner(connection.getInputStream()).useDelimiter("\n");
+                final Scanner scanner = new Scanner(connection.getInputStream(), "UTF-8").useDelimiter("\n");
                 while (scanner.hasNext()) {
                     //[article]\t[0|1]
                     final String line = scanner.next();
@@ -256,7 +256,7 @@ public final class WikipediaApp {
                         + "&lang=" + wikipediaLang
                         + "&article=" + encodeURL(wikipediaArticle);
                 System.out.println("Wikipedia: GET " + url);
-                final Scanner scanner = new Scanner(new URL(url).openStream());
+                final Scanner scanner = new Scanner(new URL(url).openStream(), "UTF-8");
                 wiwosmStatus = scanner.hasNextInt() && scanner.nextInt() == 1;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

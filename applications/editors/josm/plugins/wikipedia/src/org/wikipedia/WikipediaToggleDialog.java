@@ -60,6 +60,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     final JList list = new JList(model) {
 
         {
+            setToolTipText(tr("Double click on item to search for object with article name (and center coordinate)"));
             addMouseListener(new MouseAdapter() {
 
                 @Override

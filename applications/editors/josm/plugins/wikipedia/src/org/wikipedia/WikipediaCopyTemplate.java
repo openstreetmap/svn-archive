@@ -26,7 +26,8 @@ public class WikipediaCopyTemplate {
     public WikipediaCopyTemplate() {
         JosmAction previous = Main.main.menu.copyCoordinates;
         for (final CoordCopyTemplate t : TEMPLATES) {
-            MainMenu.addAfter(Main.main.menu.editMenu, t, false, previous);
+            final JMenuItem menu = MainMenu.addAfter(Main.main.menu.editMenu, t, false, previous);
+            menu.setToolTipText(tr("Copies the template to the system clipboard instantiated with the coordinates of the first selected node"));
             previous = t;
             //MainMenu.addAfter(Main.main.menu.editMenu, coord, false, Main.main.menu.copyCoordinates);
         }

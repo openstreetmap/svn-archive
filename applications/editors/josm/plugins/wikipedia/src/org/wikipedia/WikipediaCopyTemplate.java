@@ -69,7 +69,7 @@ public class WikipediaCopyTemplate {
         }
 
         public CoordCopyTemplate(String name, String toolbarId, String pattern) {
-            super(name, "dialogs/wikipedia", null, null, false, toolbarId, true);
+            super(name, "dialogs/wikipedia", null, null, true, toolbarId, true);
             this.pattern = pattern;
         }
 

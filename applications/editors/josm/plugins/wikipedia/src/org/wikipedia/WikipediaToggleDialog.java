@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -48,7 +49,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 new SideButton(new AddWikipediaTagAction()),
                 new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
-        setTitle(/* I18n: [language].Wikipedia.org */ tr("{0}.Wikipedia.org", wikipediaLang.get()));
+        updateTitle();
     }
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
     final Set<String> articles = new HashSet<String>();
@@ -105,6 +106,10 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         }
     }
 
+    private void updateTitle() {
+        setTitle(/* I18n: [language].Wikipedia.org: coordinates */ tr("{0}.Wikipedia.org: coordinates", wikipediaLang.get()));
+    }
+
     class WikipediaLoadCoordinatesAction extends AbstractAction {
 
         public WikipediaLoadCoordinatesAction() {
@@ -122,7 +127,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                         wikipediaLang.get(), min, max);
                 // add entries to list model
                 setWikipediaEntries(entries);
-                setTitle(/* I18n: [language].Wikipedia.org: coordinates */ tr("{0}.Wikipedia.org: coordinates", wikipediaLang.get()));
+                updateTitle();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -183,6 +188,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                     wikipediaLang.get());
             if (lang != null) {
                 wikipediaLang.put(lang);
+                updateTitle();
                 updateWikipediaArticles();
             }
         }

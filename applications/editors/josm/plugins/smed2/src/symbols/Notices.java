@@ -14,7 +14,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.geom.*;
+import java.util.EnumMap;
 
+import s57.S57val.*;
 import symbols.Symbols.*;
 
 public class Notices {
@@ -251,6 +253,8 @@ public class Notices {
 		NoticeA20.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
 		NoticeA20.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.Waterbike, 1.0, 0, 0, null, null)));
 	}
+	public static final Symbol NoticeB1a = new Symbol();
+	public static final Symbol NoticeB1b = new Symbol();
 	public static final Symbol NoticeB2a = new Symbol();
 	public static final Symbol NoticeB2b = new Symbol();
 	public static final Symbol NoticeB3a = new Symbol();
@@ -258,27 +262,37 @@ public class Notices {
 	public static final Symbol NoticeB4a = new Symbol();
 	public static final Symbol NoticeB4b = new Symbol();
 	public static final Symbol NoticeB5 = new Symbol();
+	public static final Symbol NoticeB6 = new Symbol();
 	public static final Symbol NoticeB7 = new Symbol();
 	public static final Symbol NoticeB8 = new Symbol();
-	public static final Symbol NoticeB11a = new Symbol();
+	public static final Symbol NoticeB9a = new Symbol();
+	public static final Symbol NoticeB9b = new Symbol();
+	public static final Symbol NoticeB11 = new Symbol();
 	static {
-		NoticeB11a.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeB, 1.0, 0, 0, null, null)));
-		NoticeB11a.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.VHF, 1.0, 0, 0, null, null)));
+		NoticeB11.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeB, 1.0, 0, 0, null, null)));
+		NoticeB11.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.VHF, 1.0, 0, 0, null, null)));
 	}
 	public static final Symbol NoticeC1 = new Symbol();
 	public static final Symbol NoticeC2 = new Symbol();
 	public static final Symbol NoticeC3 = new Symbol();
+	public static final Symbol NoticeC4 = new Symbol();
 	public static final Symbol NoticeC5a = new Symbol();
 	public static final Symbol NoticeC5b = new Symbol();
 	public static final Symbol NoticeD1a = new Symbol();
 	public static final Symbol NoticeD1b = new Symbol();
 	public static final Symbol NoticeD2a = new Symbol();
 	public static final Symbol NoticeD2b = new Symbol();
+	public static final Symbol NoticeD3a = new Symbol();
+	public static final Symbol NoticeD3b = new Symbol();
 	public static final Symbol NoticeE1 = new Symbol();
 	public static final Symbol NoticeE2 = new Symbol();
 	public static final Symbol NoticeE3 = new Symbol();
 	public static final Symbol NoticeE4a = new Symbol();
 	public static final Symbol NoticeE4b = new Symbol();
+	public static final Symbol NoticeE5 = new Symbol();
+	public static final Symbol NoticeE5_1 = new Symbol();
+	public static final Symbol NoticeE5_2 = new Symbol();
+	public static final Symbol NoticeE5_3 = new Symbol();
 	public static final Symbol NoticeE5_4 = new Symbol();
 	public static final Symbol NoticeE5_5 = new Symbol();
 	public static final Symbol NoticeE5_6 = new Symbol();
@@ -291,8 +305,98 @@ public class Notices {
 	public static final Symbol NoticeE5_13 = new Symbol();
 	public static final Symbol NoticeE5_14 = new Symbol();
 	public static final Symbol NoticeE5_15 = new Symbol();
+	public static final Symbol NoticeE6 = new Symbol();
+	public static final Symbol NoticeE7 = new Symbol();
 	public static final Symbol NoticeE7_1 = new Symbol();
-	public static final Symbol Notice11 = new Symbol();
-	public static final Symbol Notice13 = new Symbol();
-	public static final Symbol Notice14 = new Symbol();
+	public static final Symbol NoticeE8 = new Symbol();
+	public static final Symbol NoticeE9a = new Symbol();
+	public static final Symbol NoticeE9b = new Symbol();
+	public static final Symbol NoticeE9c = new Symbol();
+	public static final Symbol NoticeE9d = new Symbol();
+	public static final Symbol NoticeE9e = new Symbol();
+	public static final Symbol NoticeE9f = new Symbol();
+	public static final Symbol NoticeE9g = new Symbol();
+	public static final Symbol NoticeE9h = new Symbol();
+	public static final Symbol NoticeE9i = new Symbol();
+	public static final Symbol NoticeE10a = new Symbol();
+	public static final Symbol NoticeE10b = new Symbol();
+	public static final Symbol NoticeE10c = new Symbol();
+	public static final Symbol NoticeE10d = new Symbol();
+	public static final Symbol NoticeE10e = new Symbol();
+	public static final Symbol NoticeE10f = new Symbol();
+	public static final Symbol NoticeE11 = new Symbol();
+	public static final Symbol NoticeE13 = new Symbol();
+	public static final Symbol NoticeE14 = new Symbol();
+	public static final Symbol NoticeE15 = new Symbol();
+	public static final Symbol NoticeE16 = new Symbol();
+	public static final Symbol NoticeE17 = new Symbol();
+	public static final Symbol NoticeE18 = new Symbol();
+	public static final Symbol NoticeE19 = new Symbol();
+	public static final Symbol NoticeE20 = new Symbol();
+	public static final Symbol NoticeE21 = new Symbol();
+	public static final Symbol NoticeE22 = new Symbol();
+	public static final Symbol NoticeE23 = new Symbol();
+	public static final Symbol NoticeE24 = new Symbol();
+
+	public static final EnumMap<CatNMK, Symbol> NmkCevni = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	static {
+		NmkCevni.put(CatNMK.NMK_UNKN, Notice); NmkCevni.put(CatNMK.NMK_NENT, NoticeA1); NmkCevni.put(CatNMK.NMK_CLSA, NoticeA1a); NmkCevni.put(CatNMK.NMK_NOVK, NoticeA2);
+		NmkCevni.put(CatNMK.NMK_NCOV, NoticeA3); NmkCevni.put(CatNMK.NMK_NPAS, NoticeA4); NmkCevni.put(CatNMK.NMK_NBRT, NoticeA5); NmkCevni.put(CatNMK.NMK_NBLL, NoticeA5_1);
+		NmkCevni.put(CatNMK.NMK_NANK, NoticeA6); NmkCevni.put(CatNMK.NMK_NMOR, NoticeA7); NmkCevni.put(CatNMK.NMK_NTRN, NoticeA8); NmkCevni.put(CatNMK.NMK_NWSH, NoticeA9);
+		NmkCevni.put(CatNMK.NMK_NPSL, NoticeA10a); NmkCevni.put(CatNMK.NMK_NPSR, NoticeA10b); NmkCevni.put(CatNMK.NMK_NMTC, NoticeA12); NmkCevni.put(CatNMK.NMK_NSPC, NoticeA13);
+		NmkCevni.put(CatNMK.NMK_NWSK, NoticeA14); NmkCevni.put(CatNMK.NMK_NSLC, NoticeA15); NmkCevni.put(CatNMK.NMK_NUPC, NoticeA16); NmkCevni.put(CatNMK.NMK_NSLB, NoticeA17);
+		NmkCevni.put(CatNMK.NMK_NWBK, NoticeA20); NmkCevni.put(CatNMK.NMK_NHSC, NoticeA18); NmkCevni.put(CatNMK.NMK_NLBG, NoticeA19);
+		NmkCevni.put(CatNMK.NMK_MVTL, NoticeB1a); NmkCevni.put(CatNMK.NMK_MVTR, NoticeB1b); NmkCevni.put(CatNMK.NMK_MVTP, NoticeB2a); NmkCevni.put(CatNMK.NMK_MVTS, NoticeB2b);
+		NmkCevni.put(CatNMK.NMK_KPTP, NoticeB3a); NmkCevni.put(CatNMK.NMK_KPTS, NoticeB3b); NmkCevni.put(CatNMK.NMK_CSTP, NoticeB4a); NmkCevni.put(CatNMK.NMK_CSTS, NoticeB4b);
+		NmkCevni.put(CatNMK.NMK_STOP, NoticeB5); NmkCevni.put(CatNMK.NMK_SPDL, NoticeB6); NmkCevni.put(CatNMK.NMK_SHRN, NoticeB7); NmkCevni.put(CatNMK.NMK_KPLO, NoticeB8);
+		NmkCevni.put(CatNMK.NMK_GWJN, NoticeB9a); NmkCevni.put(CatNMK.NMK_GWCS, NoticeB9b); NmkCevni.put(CatNMK.NMK_MKRC, NoticeB11);
+		NmkCevni.put(CatNMK.NMK_LMDP, NoticeC1); NmkCevni.put(CatNMK.NMK_LMHR, NoticeC2);	NmkCevni.put(CatNMK.NMK_LMWD, NoticeC3); NmkCevni.put(CatNMK.NMK_NAVR, NoticeC4);
+		NmkCevni.put(CatNMK.NMK_CHDL, NoticeC5a); NmkCevni.put(CatNMK.NMK_CHDR, NoticeC5b);
+		NmkCevni.put(CatNMK.NMK_CHTW, NoticeD1a); NmkCevni.put(CatNMK.NMK_CHOW, NoticeD1b); NmkCevni.put(CatNMK.NMK_OPTR, NoticeD2a); NmkCevni.put(CatNMK.NMK_OPTL, NoticeD2b);
+		NmkCevni.put(CatNMK.NMK_PRTL, NoticeD3a); NmkCevni.put(CatNMK.NMK_PRTR, NoticeD3b);
+		NmkCevni.put(CatNMK.NMK_ENTP, NoticeE1); NmkCevni.put(CatNMK.NMK_OVHC, NoticeE2);	NmkCevni.put(CatNMK.NMK_WEIR, NoticeE3); NmkCevni.put(CatNMK.NMK_FERN, NoticeE4a);
+		NmkCevni.put(CatNMK.NMK_FERI, NoticeE4b); NmkCevni.put(CatNMK.NMK_BRTP, NoticeE5);	NmkCevni.put(CatNMK.NMK_BTLL, NoticeE5_1); NmkCevni.put(CatNMK.NMK_BTLS, NoticeE5_2);
+		NmkCevni.put(CatNMK.NMK_BTRL, NoticeE5_3); NmkCevni.put(CatNMK.NMK_BTUP, NoticeE5_4);	NmkCevni.put(CatNMK.NMK_BTP1, NoticeE5_5); NmkCevni.put(CatNMK.NMK_BTP2, NoticeE5_6);
+		NmkCevni.put(CatNMK.NMK_BTP3, NoticeE5_7); NmkCevni.put(CatNMK.NMK_BTUN, NoticeE5_8);	NmkCevni.put(CatNMK.NMK_BTN1, NoticeE5_9); NmkCevni.put(CatNMK.NMK_BTN2, NoticeE5_10);
+		NmkCevni.put(CatNMK.NMK_BTN3, NoticeE5_11); NmkCevni.put(CatNMK.NMK_BTUM, NoticeE5_12);	NmkCevni.put(CatNMK.NMK_BTU1, NoticeE5_13); NmkCevni.put(CatNMK.NMK_BTU2, NoticeE5_14);
+		NmkCevni.put(CatNMK.NMK_BTU3, NoticeE5_15); NmkCevni.put(CatNMK.NMK_ANKP, NoticeE6);	NmkCevni.put(CatNMK.NMK_MORP, NoticeE7); NmkCevni.put(CatNMK.NMK_VLBT, NoticeE7_1);
+		NmkCevni.put(CatNMK.NMK_TRNA, NoticeE8); NmkCevni.put(CatNMK.NMK_SWWC, NoticeE9a);	NmkCevni.put(CatNMK.NMK_SWWR, NoticeE9b); NmkCevni.put(CatNMK.NMK_SWWL, NoticeE9c);
+		NmkCevni.put(CatNMK.NMK_WRSA, NoticeE9d); NmkCevni.put(CatNMK.NMK_WLSA, NoticeE9e);	NmkCevni.put(CatNMK.NMK_WRSL, NoticeE9f); NmkCevni.put(CatNMK.NMK_WLSR, NoticeE9g);
+		NmkCevni.put(CatNMK.NMK_WRAL, NoticeE9h); NmkCevni.put(CatNMK.NMK_WLAR, NoticeE9i);	NmkCevni.put(CatNMK.NMK_MWWC, NoticeE10a); NmkCevni.put(CatNMK.NMK_MWWJ, NoticeE10b);
+		NmkCevni.put(CatNMK.NMK_MWAR, NoticeE10c); NmkCevni.put(CatNMK.NMK_MWAL, NoticeE10d);	NmkCevni.put(CatNMK.NMK_WARL, NoticeE10e); NmkCevni.put(CatNMK.NMK_WALR, NoticeE10f);
+		NmkCevni.put(CatNMK.NMK_PEND, NoticeE11); NmkCevni.put(CatNMK.NMK_DWTR, NoticeE13);	NmkCevni.put(CatNMK.NMK_TELE, NoticeE14); NmkCevni.put(CatNMK.NMK_MTCP, NoticeE15);
+		NmkCevni.put(CatNMK.NMK_SPCP, NoticeE16); NmkCevni.put(CatNMK.NMK_WSKP, NoticeE17);	NmkCevni.put(CatNMK.NMK_SLCP, NoticeE18); NmkCevni.put(CatNMK.NMK_UPCP, NoticeE19);
+		NmkCevni.put(CatNMK.NMK_SLBP, NoticeE20); NmkCevni.put(CatNMK.NMK_RADI, NoticeE23);	NmkCevni.put(CatNMK.NMK_WTBP, NoticeE24); NmkCevni.put(CatNMK.NMK_HSCP, NoticeE21);
+		NmkCevni.put(CatNMK.NMK_LBGP, NoticeE22);
+  };
+
+	public static final EnumMap<CatNMK, Symbol> NmkBniwr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	static {
+		NmkBniwr.put(CatNMK.NMK_NANK, Notice); NmkBniwr.put(CatNMK.NMK_LMHR, Notice); NmkBniwr.put(CatNMK.NMK_OPTR, Notice); NmkBniwr.put(CatNMK.NMK_OPTL, Notice);
+		NmkBniwr.put(CatNMK.NMK_WRAL, Notice); NmkBniwr.put(CatNMK.NMK_WLAR, Notice); NmkBniwr.put(CatNMK.NMK_KTPM, Notice); NmkBniwr.put(CatNMK.NMK_KTSM, Notice);
+		NmkBniwr.put(CatNMK.NMK_KTMR, Notice); NmkBniwr.put(CatNMK.NMK_CRTP, Notice); NmkBniwr.put(CatNMK.NMK_CRTS, Notice); NmkBniwr.put(CatNMK.NMK_TRBM, Notice);
+		NmkBniwr.put(CatNMK.NMK_RSPD, Notice);
+	}
+
+	public static final EnumMap<CatNMK, Symbol> NmkPpwbc = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	static {
+		NmkPpwbc.put(CatNMK.NMK_WRAL, Notice); NmkPpwbc.put(CatNMK.NMK_WLAR, Notice); NmkPpwbc.put(CatNMK.NMK_KTPM, Notice); NmkPpwbc.put(CatNMK.NMK_KTSM, Notice);
+		NmkPpwbc.put(CatNMK.NMK_KTMR, Notice); NmkPpwbc.put(CatNMK.NMK_CRTP, Notice); NmkPpwbc.put(CatNMK.NMK_CRTS, Notice);
+	}
+	
+	public static Symbol getNotice(CatNMK cat, MarSYS sys) {
+		Symbol symbol = null;
+		switch (sys) {
+		case SYS_CEVN:
+			symbol = NmkCevni.get(cat);
+			break;
+		case SYS_BNWR:
+			symbol = NmkBniwr.get(cat);
+			break;
+		case SYS_PPWB:
+			symbol = NmkPpwbc.get(cat);
+			break;
+		}
+		return symbol;
+	}
 }

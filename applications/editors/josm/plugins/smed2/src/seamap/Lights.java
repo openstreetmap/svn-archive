@@ -9,7 +9,7 @@
 
 package seamap;
 
-public class LightRender {
+public class Lights {
 
 /*
 XY_t radial(XY_t centre, double radius, double angle) {

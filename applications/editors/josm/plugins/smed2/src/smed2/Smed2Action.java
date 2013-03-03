@@ -49,58 +49,42 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		@Override
 		public void dataChanged(DataChangedEvent e) {
-//			System.out.println("DataChangedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void nodeMoved(NodeMovedEvent e) {
-//			System.out.println("NodeMovedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void otherDatasetChange(AbstractDatasetChangedEvent e) {
-//			System.out.println("AbstractDatasetChangedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void primitivesAdded(PrimitivesAddedEvent e) {
-//			System.out.println("PrimitivesAddedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void primitivesRemoved(PrimitivesRemovedEvent e) {
-//			System.out.println("PrimitivesRemovedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void relationMembersChanged(RelationMembersChangedEvent e) {
-//			System.out.println("RelationMembersChangedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void tagsChanged(TagsChangedEvent e) {
-//			System.out.println("TagsChangedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 
 		@Override
 		public void wayNodesChanged(WayNodesChangedEvent e) {
-//			System.out.println("WayNodesChangedEvent");
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		}
 	};
 
@@ -179,7 +163,6 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data;
 			makeMap();
-			if (rendering != null) rendering.zoomChanged();
 		} else {
 			data = null;
 			map = null;
@@ -258,6 +241,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				}
 				map.tagsDone(rel.getUniqueId());
 			}
+			if (rendering != null) rendering.zoomChanged();
 		}
 	}
 }

@@ -263,7 +263,9 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
             String s;
             while ((s = fh.readLine()) != null) {
                 String f[] = s.split("\t");
-                crsList.add(new CRSEntry(f[0], f[1], f[2]));
+                if (f.length >= 3) {
+                    crsList.add(new CRSEntry(f[0], f[1], f[2]));
+                }
             }
             fh.close();
         }

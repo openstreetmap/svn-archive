@@ -3716,3 +3716,450 @@ EPSG	32759	WGS 84 / UTM zone 59S
 EPSG	32760	WGS 84 / UTM zone 60S
 EPSG	32761	"WGS 84 / UPS South (N,E)"
 EPSG	32766	WGS 84 / TM 36 SE
+ESRI	37001	GCS WGS 1966
+ESRI	37002	GCS Fischer 1960
+ESRI	37003	GCS Fischer 1968
+ESRI	37004	GCS Fischer Modified
+ESRI	37005	GCS Hough 1960
+ESRI	37006	GCS Everest Modified 1969
+ESRI	37007	GCS Walbeck
+ESRI	37008	GCS Sphere ARC INFO
+ESRI	37201	GCS European 1979
+ESRI	37202	GCS Everest Bangladesh
+ESRI	37203	GCS Everest India Nepal
+ESRI	37204	GCS Hjorsey 1955
+ESRI	37205	GCS Hong Kong 1963
+ESRI	37206	GCS Oman
+ESRI	37207	GCS South Asia Singapore
+ESRI	37208	GCS Ayabelle
+ESRI	37211	GCS Point 58
+ESRI	37212	GCS Beacon E 1945
+ESRI	37213	GCS Tern Island 1961
+ESRI	37214	GCS Astro 1952
+ESRI	37215	GCS Bellevue IGN
+ESRI	37216	GCS Canton 1966
+ESRI	37217	GCS Chatham Island 1971
+ESRI	37218	GCS DOS 1968
+ESRI	37219	GCS Easter Island 1967
+ESRI	37220	GCS Guam 1963
+ESRI	37221	GCS GUX 1
+ESRI	37222	GCS Johnston Island 1961
+ESRI	37223	GCS Carthage Degree
+ESRI	37224	GCS Midway 1961
+ESRI	37226	GCS Pitcairn 1967
+ESRI	37227	GCS Santo DOS 1965
+ESRI	37228	GCS Viti Levu 1916
+ESRI	37229	GCS Wake Eniwetok 1960
+ESRI	37230	GCS Wake Island 1952
+ESRI	37231	GCS Anna 1 1965
+ESRI	37232	GCS Gan 1970
+ESRI	37233	GCS ISTS 073 1969
+ESRI	37234	GCS Kerguelen Island 1949
+ESRI	37235	GCS Reunion
+ESRI	37237	GCS Ascension Island 1958
+ESRI	37238	GCS DOS 71 4
+ESRI	37239	GCS Cape Canaveral
+ESRI	37240	GCS Fort Thomas 1955
+ESRI	37241	GCS Graciosa Base SW 1948
+ESRI	37242	GCS ISTS 061 1968
+ESRI	37243	GCS LC5 1961
+ESRI	37245	GCS Observ Meteorologico 1939
+ESRI	37246	GCS Pico de Las Nieves
+ESRI	37247	GCS Porto Santo 1936
+ESRI	37249	GCS Sao Braz
+ESRI	37250	GCS Selvagem Grande 1938
+ESRI	37251	GCS Tristan 1968
+ESRI	37252	GCS Samoa 1962
+ESRI	37253	GCS Camp Area
+ESRI	37254	GCS Deception Island
+ESRI	37255	GCS Gunung Segara
+ESRI	37257	GCS S42 Hungary
+ESRI	37259	GCS Kusaie 1951
+ESRI	37260	GCS Alaskan Islands
+ESRI	53001	Sphere Plate Carree
+ESRI	53002	Sphere Equidistant Cylindrical
+ESRI	53003	Sphere Miller Cylindrical
+ESRI	53004	Sphere Mercator
+ESRI	53008	Sphere Sinusoidal
+ESRI	53009	Sphere Mollweide
+ESRI	53010	Sphere Eckert VI
+ESRI	53011	Sphere Eckert V
+ESRI	53012	Sphere Eckert IV
+ESRI	53013	Sphere Eckert III
+ESRI	53014	Sphere Eckert II
+ESRI	53015	Sphere Eckert I
+ESRI	53016	Sphere Gall Stereographic
+ESRI	53017	Sphere Behrmann
+ESRI	53018	Sphere Winkel I
+ESRI	53019	Sphere Winkel II
+ESRI	53021	Sphere Polyconic
+ESRI	53022	Sphere Quartic Authalic
+ESRI	53023	Sphere Loximuthal
+ESRI	53024	Sphere Bonne
+ESRI	53025	Sphere Hotine
+ESRI	53026	Sphere Stereographic
+ESRI	53027	Sphere Equidistant Conic
+ESRI	53028	Sphere Cassini
+ESRI	53029	Sphere Van der Grinten I
+ESRI	53030	Sphere Robinson
+ESRI	53031	Sphere Two Point Equidistant
+ESRI	53032	Sphere Azimuthal Equidistant
+ESRI	54001	World Plate Carree
+ESRI	54002	World Equidistant Cylindrical
+ESRI	54003	World Miller Cylindrical
+ESRI	54004	World Mercator
+ESRI	54008	World Sinusoidal
+ESRI	54009	World Mollweide
+ESRI	54010	World Eckert VI
+ESRI	54011	World Eckert V
+ESRI	54012	World Eckert IV
+ESRI	54013	World Eckert III
+ESRI	54014	World Eckert II
+ESRI	54015	World Eckert I
+ESRI	54016	World Gall Stereographic
+ESRI	54017	World Behrmann
+ESRI	54018	World Winkel I
+ESRI	54019	World Winkel II
+ESRI	54021	World Polyconic
+ESRI	54022	World Quartic Authalic
+ESRI	54023	World Loximuthal
+ESRI	54024	World Bonne
+ESRI	54025	World Hotine
+ESRI	54026	World Stereographic
+ESRI	54027	World Equidistant Conic
+ESRI	54028	World Cassini
+ESRI	54029	World Van der Grinten I
+ESRI	54030	World Robinson
+ESRI	54031	World Two Point Equidistant
+ESRI	54032	World Azimuthal Equidistant
+ESRI	65061	NAD 1927 StatePlane Guam FIPS 5400
+ESRI	65161	NAD 1983 StatePlane Guam FIPS 5400
+ESRI	102001	Canada Albers Equal Area Conic
+ESRI	102002	Canada Lambert Conformal Conic
+ESRI	102003	USA Contiguous Albers Equal Area Conic
+ESRI	102004	USA Contiguous Lambert Conformal Conic
+ESRI	102005	USA Contiguous Equidistant Conic
+ESRI	102006	Alaska Albers Equal Area Conic
+ESRI	102007	Hawaii Albers Equal Area Conic
+ESRI	102008	North America Albers Equal Area Conic
+ESRI	102009	North America Lambert Conformal Conic
+ESRI	102010	North America Equidistant Conic
+ESRI	102011	Africa Sinusoidal
+ESRI	102012	Asia Lambert Conformal Conic
+ESRI	102013	Europe Albers Equal Area Conic
+ESRI	102014	Europe Lambert Conformal Conic
+ESRI	102015	South America Lambert Conformal Conic
+ESRI	102016	North Pole Azimuthal Equidistant
+ESRI	102017	North Pole Lambert Azimuthal Equal Area
+ESRI	102018	North Pole Stereographic
+ESRI	102019	South Pole Azimuthal Equidistant
+ESRI	102020	South Pole Lambert Azimuthal Equal Area
+ESRI	102021	South Pole Stereographic
+ESRI	102022	Africa Albers Equal Area Conic
+ESRI	102023	Africa Equidistant Conic
+ESRI	102024	Africa Lambert Conformal Conic
+ESRI	102025	Asia North Albers Equal Area Conic
+ESRI	102026	Asia North Equidistant Conic
+ESRI	102027	Asia North Lambert Conformal Conic
+ESRI	102028	Asia South Albers Equal Area Conic
+ESRI	102029	Asia South Equidistant Conic
+ESRI	102030	Asia South Lambert Conformal Conic
+ESRI	102031	Europe Equidistant Conic
+ESRI	102032	South America Equidistant Conic
+ESRI	102033	South America Albers Equal Area Conic
+ESRI	102065	S-JTSK Krovak
+ESRI	102066	S-JTSK Ferro Krovak East North
+ESRI	102067	S-JTSK Krovak East North
+ESRI	102091	Monte Mario Italy 1
+ESRI	102092	Monte Mario Italy 2
+ESRI	102101	NGO 1948 Norway Zone 1
+ESRI	102102	NGO 1948 Norway Zone 2
+ESRI	102103	NGO 1948 Norway Zone 3
+ESRI	102104	NGO 1948 Norway Zone 4
+ESRI	102105	NGO 1948 Norway Zone 5
+ESRI	102106	NGO 1948 Norway Zone 6
+ESRI	102107	NGO 1948 Norway Zone 7
+ESRI	102108	NGO 1948 Norway Zone 8
+ESRI	102110	RGF 1993 Lambert 93
+ESRI	102114	Old Hawaiian UTM Zone 4N
+ESRI	102115	Old Hawaiian UTM Zone 5N
+ESRI	102120	NAD 1927 Michigan GeoRef Feet US
+ESRI	102121	NAD 1983 Michigan GeoRef Feet US
+ESRI	102122	NAD 1927 Michigan GeoRef Meters
+ESRI	102123	NAD 1983 Michigan GeoRef Meters
+ESRI	102132	NGO 1948 UTM Zone 32N
+ESRI	102133	NGO 1948 UTM Zone 33N
+ESRI	102134	NGO 1948 UTM Zone 34N
+ESRI	102135	NGO 1948 UTM Zone 35N
+ESRI	102140	Hong Kong 1980 Grid
+ESRI	102141	Hong Kong 1980 UTM Zone 49N
+ESRI	102142	Hong Kong 1980 UTM Zone 50N
+ESRI	102151	Tokyo UTM Zone 51N
+ESRI	102152	Tokyo UTM Zone 52N
+ESRI	102153	Tokyo UTM Zone 53N
+ESRI	102154	Tokyo UTM Zone 54N
+ESRI	102155	Tokyo UTM Zone 55N
+ESRI	102156	Tokyo UTM Zone 56N
+ESRI	102160	Datum 73 Hayford Gauss IGeoE
+ESRI	102161	Datum 73 Hayford Gauss IPCC
+ESRI	102162	Graciosa Base SW 1948 UTM Zone 26N
+ESRI	102163	Lisboa Bessel Bonne
+ESRI	102164	Lisboa Hayford Gauss IGeoE
+ESRI	102165	Lisboa Hayford Gauss IPCC
+ESRI	102166	Observ Meteorologico 1939 UTM Zone 25N
+ESRI	102167	Porto Santo 1936 UTM Zone 28N
+ESRI	102168	Sao Braz UTM Zone 26N
+ESRI	102169	Selvagem Grande 1938 UTM Zone 28N
+ESRI	102191	Nord Maroc Degree
+ESRI	102192	Sud Maroc Degree
+ESRI	102193	Sahara Degree
+ESRI	102229	NAD 1983 HARN StatePlane Alabama East FIPS 0101
+ESRI	102230	NAD 1983 HARN StatePlane Alabama West FIPS 0102
+ESRI	102241	NAD 1983 HARN StatePlane California I FIPS 0401
+ESRI	102242	NAD 1983 HARN StatePlane California II FIPS 0402
+ESRI	102243	NAD 1983 HARN StatePlane California III FIPS 0403
+ESRI	102244	NAD 1983 HARN StatePlane California IV FIPS 0404
+ESRI	102245	NAD 1983 HARN StatePlane California V FIPS 0405
+ESRI	102246	NAD 1983 HARN StatePlane California VI FIPS 0406
+ESRI	102248	NAD 1983 HARN StatePlane Arizona East FIPS 0201
+ESRI	102249	NAD 1983 HARN StatePlane Arizona Central FIPS 0202
+ESRI	102250	NAD 1983 HARN StatePlane Arizona West FIPS 0203
+ESRI	102251	NAD 1983 HARN StatePlane Arkansas North FIPS 0301
+ESRI	102252	NAD 1983 HARN StatePlane Arkansas South FIPS 0302
+ESRI	102253	NAD 1983 HARN StatePlane Colorado North FIPS 0501
+ESRI	102254	NAD 1983 HARN StatePlane Colorado Central FIPS 0502
+ESRI	102255	NAD 1983 HARN StatePlane Colorado South FIPS 0503
+ESRI	102256	NAD 1983 HARN StatePlane Connecticut FIPS 0600
+ESRI	102257	NAD 1983 HARN StatePlane Delaware FIPS 0700
+ESRI	102258	NAD 1983 HARN StatePlane Florida East FIPS 0901
+ESRI	102259	NAD 1983 HARN StatePlane Florida West FIPS 0902
+ESRI	102260	NAD 1983 HARN StatePlane Florida North FIPS 0903
+ESRI	102261	NAD 1983 HARN StatePlane Hawaii 1 FIPS 5101
+ESRI	102262	NAD 1983 HARN StatePlane Hawaii 2 FIPS 5102
+ESRI	102263	NAD 1983 HARN StatePlane Hawaii 3 FIPS 5103
+ESRI	102264	NAD 1983 HARN StatePlane Hawaii 4 FIPS 5104
+ESRI	102265	NAD 1983 HARN StatePlane Hawaii 5 FIPS 5105
+ESRI	102266	NAD 1983 HARN StatePlane Georgia East FIPS 1001
+ESRI	102267	NAD 1983 HARN StatePlane Georgia West FIPS 1002
+ESRI	102268	NAD 1983 HARN StatePlane Idaho East FIPS 1101
+ESRI	102269	NAD 1983 HARN StatePlane Idaho Central FIPS 1102
+ESRI	102270	NAD 1983 HARN StatePlane Idaho West FIPS 1103
+ESRI	102271	NAD 1983 HARN StatePlane Illinois East FIPS 1201
+ESRI	102272	NAD 1983 HARN StatePlane Illinois West FIPS 1202
+ESRI	102273	NAD 1983 HARN StatePlane Indiana East FIPS 1301
+ESRI	102274	NAD 1983 HARN StatePlane Indiana West FIPS 1302
+ESRI	102277	NAD 1983 HARN StatePlane Kansas North FIPS 1501
+ESRI	102278	NAD 1983 HARN StatePlane Kansas South FIPS 1502
+ESRI	102279	NAD 1983 HARN StatePlane Kentucky North FIPS 1601
+ESRI	102280	NAD 1983 HARN StatePlane Kentucky South FIPS 1602
+ESRI	102281	NAD 1983 HARN StatePlane Louisiana North FIPS 1701
+ESRI	102282	NAD 1983 HARN StatePlane Louisiana South FIPS 1702
+ESRI	102283	NAD 1983 HARN StatePlane Maine East FIPS 1801
+ESRI	102284	NAD 1983 HARN StatePlane Maine West FIPS 1802
+ESRI	102285	NAD 1983 HARN StatePlane Maryland FIPS 1900
+ESRI	102286	NAD 1983 HARN StatePlane Massachusetts Mainland FIPS 2001
+ESRI	102287	NAD 1983 HARN StatePlane Massachusetts Island FIPS 2002
+ESRI	102288	NAD 1983 HARN StatePlane Michigan North FIPS 2111
+ESRI	102289	NAD 1983 HARN StatePlane Michigan Central FIPS 2112
+ESRI	102290	NAD 1983 HARN StatePlane Michigan South FIPS 2113
+ESRI	102291	NAD 1983 HARN StatePlane Minnesota North FIPS 2201
+ESRI	102292	NAD 1983 HARN StatePlane Minnesota Central FIPS 2202
+ESRI	102293	NAD 1983 HARN StatePlane Minnesota South FIPS 2203
+ESRI	102294	NAD 1983 HARN StatePlane Mississippi East FIPS 2301
+ESRI	102295	NAD 1983 HARN StatePlane Mississippi West FIPS 2302
+ESRI	102296	NAD 1983 HARN StatePlane Missouri East FIPS 2401
+ESRI	102297	NAD 1983 HARN StatePlane Missouri Central FIPS 2402
+ESRI	102298	NAD 1983 HARN StatePlane Missouri West FIPS 2403
+ESRI	102300	NAD 1983 HARN StatePlane Montana FIPS 2500
+ESRI	102304	NAD 1983 HARN StatePlane Nebraska FIPS 2600
+ESRI	102307	NAD 1983 HARN StatePlane Nevada East FIPS 2701
+ESRI	102308	NAD 1983 HARN StatePlane Nevada Central FIPS 2702
+ESRI	102309	NAD 1983 HARN StatePlane Nevada West FIPS 2703
+ESRI	102310	NAD 1983 HARN StatePlane New Hampshire FIPS 2800
+ESRI	102311	NAD 1983 HARN StatePlane New Jersey FIPS 2900
+ESRI	102312	NAD 1983 HARN StatePlane New Mexico East FIPS 3001
+ESRI	102313	NAD 1983 HARN StatePlane New Mexico Central FIPS 3002
+ESRI	102314	NAD 1983 HARN StatePlane New Mexico West FIPS 3003
+ESRI	102315	NAD 1983 HARN StatePlane New York East FIPS 3101
+ESRI	102316	NAD 1983 HARN StatePlane New York Central FIPS 3102
+ESRI	102317	NAD 1983 HARN StatePlane New York West FIPS 3103
+ESRI	102318	NAD 1983 HARN StatePlane New York Long Island FIPS 3104
+ESRI	102320	NAD 1983 HARN StatePlane North Dakota North FIPS 3301
+ESRI	102321	NAD 1983 HARN StatePlane North Dakota South FIPS 3302
+ESRI	102322	NAD 1983 HARN StatePlane Ohio North FIPS 3401
+ESRI	102323	NAD 1983 HARN StatePlane Ohio South FIPS 3402
+ESRI	102324	NAD 1983 HARN StatePlane Oklahoma North FIPS 3501
+ESRI	102325	NAD 1983 HARN StatePlane Oklahoma South FIPS 3502
+ESRI	102326	NAD 1983 HARN StatePlane Oregon North FIPS 3601
+ESRI	102327	NAD 1983 HARN StatePlane Oregon South FIPS 3602
+ESRI	102330	NAD 1983 HARN StatePlane Rhode Island FIPS 3800
+ESRI	102334	NAD 1983 HARN StatePlane South Dakota North FIPS 4001
+ESRI	102335	NAD 1983 HARN StatePlane South Dakota South FIPS 4002
+ESRI	102336	NAD 1983 HARN StatePlane Tennessee FIPS 4100
+ESRI	102337	NAD 1983 HARN StatePlane Texas North FIPS 4201
+ESRI	102338	NAD 1983 HARN StatePlane Texas North Central FIPS 4202
+ESRI	102339	NAD 1983 HARN StatePlane Texas Central FIPS 4203
+ESRI	102340	NAD 1983 HARN StatePlane Texas South Central FIPS 4204
+ESRI	102341	NAD 1983 HARN StatePlane Texas South FIPS 4205
+ESRI	102342	NAD 1983 HARN StatePlane Utah North FIPS 4301
+ESRI	102343	NAD 1983 HARN StatePlane Utah Central FIPS 4302
+ESRI	102344	NAD 1983 HARN StatePlane Utah South FIPS 4303
+ESRI	102345	NAD 1983 HARN StatePlane Vermont FIPS 4400
+ESRI	102346	NAD 1983 HARN StatePlane Virginia North FIPS 4501
+ESRI	102347	NAD 1983 HARN StatePlane Virginia South FIPS 4502
+ESRI	102348	NAD 1983 HARN StatePlane Washington North FIPS 4601
+ESRI	102349	NAD 1983 HARN StatePlane Washington South FIPS 4602
+ESRI	102350	NAD 1983 HARN StatePlane West Virginia North FIPS 4701
+ESRI	102351	NAD 1983 HARN StatePlane West Virginia South FIPS 4702
+ESRI	102352	NAD 1983 HARN StatePlane Wisconsin North FIPS 4801
+ESRI	102353	NAD 1983 HARN StatePlane Wisconsin Central FIPS 4802
+ESRI	102354	NAD 1983 HARN StatePlane Wisconsin South FIPS 4803
+ESRI	102355	NAD 1983 HARN StatePlane Wyoming East FIPS 4901
+ESRI	102356	NAD 1983 HARN StatePlane Wyoming East Central FIPS 4902
+ESRI	102357	NAD 1983 HARN StatePlane Wyoming West Central FIPS 4903
+ESRI	102358	NAD 1983 HARN StatePlane Wyoming West FIPS 4904
+ESRI	102361	NAD 1983 HARN StatePlane Puerto Rico Virgin Islands FIPS 5200
+ESRI	102491	Nord Algerie Ancienne Degree
+ESRI	102492	Sud Algerie Ancienne Degree
+ESRI	102581	NTF France I degrees
+ESRI	102582	NTF France II degrees
+ESRI	102583	NTF France III degrees
+ESRI	102584	NTF France IV degrees
+ESRI	102591	Nord Algerie Degree
+ESRI	102592	Sud Algerie Degree
+ESRI	102629	NAD 1983 StatePlane Alabama East FIPS 0101 Feet
+ESRI	102630	NAD 1983 StatePlane Alabama West FIPS 0102 Feet
+ESRI	102631	NAD 1983 StatePlane Alaska 1 FIPS 5001 Feet
+ESRI	102632	NAD 1983 StatePlane Alaska 2 FIPS 5002 Feet
+ESRI	102633	NAD 1983 StatePlane Alaska 3 FIPS 5003 Feet
+ESRI	102634	NAD 1983 StatePlane Alaska 4 FIPS 5004 Feet
+ESRI	102635	NAD 1983 StatePlane Alaska 5 FIPS 5005 Feet
+ESRI	102636	NAD 1983 StatePlane Alaska 6 FIPS 5006 Feet
+ESRI	102637	NAD 1983 StatePlane Alaska 7 FIPS 5007 Feet
+ESRI	102638	NAD 1983 StatePlane Alaska 8 FIPS 5008 Feet
+ESRI	102639	NAD 1983 StatePlane Alaska 9 FIPS 5009 Feet
+ESRI	102640	NAD 1983 StatePlane Alaska 10 FIPS 5010 Feet
+ESRI	102641	NAD 1983 StatePlane California I FIPS 0401 Feet
+ESRI	102642	NAD 1983 StatePlane California II FIPS 0402 Feet
+ESRI	102643	NAD 1983 StatePlane California III FIPS 0403 Feet
+ESRI	102644	NAD 1983 StatePlane California IV FIPS 0404 Feet
+ESRI	102645	NAD 1983 StatePlane California V FIPS 0405 Feet
+ESRI	102646	NAD 1983 StatePlane California VI FIPS 0406 Feet
+ESRI	102648	NAD 1983 StatePlane Arizona East FIPS 0201 Feet
+ESRI	102649	NAD 1983 StatePlane Arizona Central FIPS 0202 Feet
+ESRI	102650	NAD 1983 StatePlane Arizona West FIPS 0203 Feet
+ESRI	102651	NAD 1983 StatePlane Arkansas North FIPS 0301 Feet
+ESRI	102652	NAD 1983 StatePlane Arkansas South FIPS 0302 Feet
+ESRI	102653	NAD 1983 StatePlane Colorado North FIPS 0501 Feet
+ESRI	102654	NAD 1983 StatePlane Colorado Central FIPS 0502 Feet
+ESRI	102655	NAD 1983 StatePlane Colorado South FIPS 0503 Feet
+ESRI	102656	NAD 1983 StatePlane Connecticut FIPS 0600 Feet
+ESRI	102657	NAD 1983 StatePlane Delaware FIPS 0700 Feet
+ESRI	102658	NAD 1983 StatePlane Florida East FIPS 0901 Feet
+ESRI	102659	NAD 1983 StatePlane Florida West FIPS 0902 Feet
+ESRI	102660	NAD 1983 StatePlane Florida North FIPS 0903 Feet
+ESRI	102661	NAD 1983 StatePlane Hawaii 1 FIPS 5101 Feet
+ESRI	102662	NAD 1983 StatePlane Hawaii 2 FIPS 5102 Feet
+ESRI	102663	NAD 1983 StatePlane Hawaii 3 FIPS 5103 Feet
+ESRI	102664	NAD 1983 StatePlane Hawaii 4 FIPS 5104 Feet
+ESRI	102665	NAD 1983 StatePlane Hawaii 5 FIPS 5105 Feet
+ESRI	102666	NAD 1983 StatePlane Georgia East FIPS 1001 Feet
+ESRI	102667	NAD 1983 StatePlane Georgia West FIPS 1002 Feet
+ESRI	102668	NAD 1983 StatePlane Idaho East FIPS 1101 Feet
+ESRI	102669	NAD 1983 StatePlane Idaho Central FIPS 1102 Feet
+ESRI	102670	NAD 1983 StatePlane Idaho West FIPS 1103 Feet
+ESRI	102671	NAD 1983 StatePlane Illinois East FIPS 1201 Feet
+ESRI	102672	NAD 1983 StatePlane Illinois West FIPS 1202 Feet
+ESRI	102673	NAD 1983 StatePlane Indiana East FIPS 1301 Feet
+ESRI	102674	NAD 1983 StatePlane Indiana West FIPS 1302 Feet
+ESRI	102675	NAD 1983 StatePlane Iowa North FIPS 1401 Feet
+ESRI	102676	NAD 1983 StatePlane Iowa South FIPS 1402 Feet
+ESRI	102677	NAD 1983 StatePlane Kansas North FIPS 1501 Feet
+ESRI	102678	NAD 1983 StatePlane Kansas South FIPS 1502 Feet
+ESRI	102679	NAD 1983 StatePlane Kentucky North FIPS 1601 Feet
+ESRI	102680	NAD 1983 StatePlane Kentucky South FIPS 1602 Feet
+ESRI	102681	NAD 1983 StatePlane Louisiana North FIPS 1701 Feet
+ESRI	102682	NAD 1983 StatePlane Louisiana South FIPS 1702 Feet
+ESRI	102683	NAD 1983 StatePlane Maine East FIPS 1801 Feet
+ESRI	102684	NAD 1983 StatePlane Maine West FIPS 1802 Feet
+ESRI	102685	NAD 1983 StatePlane Maryland FIPS 1900 Feet
+ESRI	102686	NAD 1983 StatePlane Massachusetts Mainland FIPS 2001 Feet
+ESRI	102687	NAD 1983 StatePlane Massachusetts Island FIPS 2002 Feet
+ESRI	102688	NAD 1983 StatePlane Michigan North FIPS 2111 Feet
+ESRI	102689	NAD 1983 StatePlane Michigan Central FIPS 2112 Feet
+ESRI	102690	NAD 1983 StatePlane Michigan South FIPS 2113 Feet
+ESRI	102691	NAD 1983 StatePlane Minnesota North FIPS 2201 Feet
+ESRI	102692	NAD 1983 StatePlane Minnesota Central FIPS 2202 Feet
+ESRI	102693	NAD 1983 StatePlane Minnesota South FIPS 2203 Feet
+ESRI	102694	NAD 1983 StatePlane Mississippi East FIPS 2301 Feet
+ESRI	102695	NAD 1983 StatePlane Mississippi West FIPS 2302 Feet
+ESRI	102696	NAD 1983 StatePlane Missouri East FIPS 2401 Feet
+ESRI	102697	NAD 1983 StatePlane Missouri Central FIPS 2402 Feet
+ESRI	102698	NAD 1983 StatePlane Missouri West FIPS 2403 Feet
+ESRI	102700	NAD 1983 StatePlane Montana FIPS 2500 Feet
+ESRI	102704	NAD 1983 StatePlane Nebraska FIPS 2600 Feet
+ESRI	102707	NAD 1983 StatePlane Nevada East FIPS 2701 Feet
+ESRI	102708	NAD 1983 StatePlane Nevada Central FIPS 2702 Feet
+ESRI	102709	NAD 1983 StatePlane Nevada West FIPS 2703 Feet
+ESRI	102710	NAD 1983 StatePlane New Hampshire FIPS 2800 Feet
+ESRI	102711	NAD 1983 StatePlane New Jersey FIPS 2900 Feet
+ESRI	102712	NAD 1983 StatePlane New Mexico East FIPS 3001 Feet
+ESRI	102713	NAD 1983 StatePlane New Mexico Central FIPS 3002 Feet
+ESRI	102714	NAD 1983 StatePlane New Mexico West FIPS 3003 Feet
+ESRI	102715	NAD 1983 StatePlane New York East FIPS 3101 Feet
+ESRI	102716	NAD 1983 StatePlane New York Central FIPS 3102 Feet
+ESRI	102717	NAD 1983 StatePlane New York West FIPS 3103 Feet
+ESRI	102718	NAD 1983 StatePlane New York Long Island FIPS 3104 Feet
+ESRI	102719	NAD 1983 StatePlane North Carolina FIPS 3200 Feet
+ESRI	102720	NAD 1983 StatePlane North Dakota North FIPS 3301 Feet
+ESRI	102721	NAD 1983 StatePlane North Dakota South FIPS 3302 Feet
+ESRI	102722	NAD 1983 StatePlane Ohio North FIPS 3401 Feet
+ESRI	102723	NAD 1983 StatePlane Ohio South FIPS 3402 Feet
+ESRI	102724	NAD 1983 StatePlane Oklahoma North FIPS 3501 Feet
+ESRI	102725	NAD 1983 StatePlane Oklahoma South FIPS 3502 Feet
+ESRI	102726	NAD 1983 StatePlane Oregon North FIPS 3601 Feet
+ESRI	102727	NAD 1983 StatePlane Oregon South FIPS 3602 Feet
+ESRI	102728	NAD 1983 StatePlane Pennsylvania North FIPS 3701 Feet
+ESRI	102729	NAD 1983 StatePlane Pennsylvania South FIPS 3702 Feet
+ESRI	102730	NAD 1983 StatePlane Rhode Island FIPS 3800 Feet
+ESRI	102733	NAD 1983 StatePlane South Carolina FIPS 3900 Feet
+ESRI	102734	NAD 1983 StatePlane South Dakota North FIPS 4001 Feet
+ESRI	102735	NAD 1983 StatePlane South Dakota South FIPS 4002 Feet
+ESRI	102736	NAD 1983 StatePlane Tennessee FIPS 4100 Feet
+ESRI	102737	NAD 1983 StatePlane Texas North FIPS 4201 Feet
+ESRI	102738	NAD 1983 StatePlane Texas North Central FIPS 4202 Feet
+ESRI	102739	NAD 1983 StatePlane Texas Central FIPS 4203 Feet
+ESRI	102740	NAD 1983 StatePlane Texas South Central FIPS 4204 Feet
+ESRI	102741	NAD 1983 StatePlane Texas South FIPS 4205 Feet
+ESRI	102742	NAD 1983 StatePlane Utah North FIPS 4301 Feet
+ESRI	102743	NAD 1983 StatePlane Utah Central FIPS 4302 Feet
+ESRI	102744	NAD 1983 StatePlane Utah South FIPS 4303 Feet
+ESRI	102745	NAD 1983 StatePlane Vermont FIPS 4400 Feet
+ESRI	102746	NAD 1983 StatePlane Virginia North FIPS 4501 Feet
+ESRI	102747	NAD 1983 StatePlane Virginia South FIPS 4502 Feet
+ESRI	102748	NAD 1983 StatePlane Washington North FIPS 4601 Feet
+ESRI	102749	NAD 1983 StatePlane Washington South FIPS 4602 Feet
+ESRI	102750	NAD 1983 StatePlane West Virginia North FIPS 4701 Feet
+ESRI	102751	NAD 1983 StatePlane West Virginia South FIPS 4702 Feet
+ESRI	102752	NAD 1983 StatePlane Wisconsin North FIPS 4801 Feet
+ESRI	102753	NAD 1983 StatePlane Wisconsin Central FIPS 4802 Feet
+ESRI	102754	NAD 1983 StatePlane Wisconsin South FIPS 4803 Feet
+ESRI	102755	NAD 1983 StatePlane Wyoming East FIPS 4901 Feet
+ESRI	102756	NAD 1983 StatePlane Wyoming East Central FIPS 4902 Feet
+ESRI	102757	NAD 1983 StatePlane Wyoming West Central FIPS 4903 Feet
+ESRI	102758	NAD 1983 StatePlane Wyoming West FIPS 4904 Feet
+ESRI	102761	NAD 1983 StatePlane Puerto Rico Virgin Islands FIPS 5200 Feet
+ESRI	102766	NAD 1983 StatePlane Guam FIPS 5400 Feet
+ESRI	103300	Belge Lambert 1972
+ESRI	104000	GCS Assumed Geographic 1
+ESRI	104101	GCS Estonia 1937
+ESRI	104102	GCS Hermannskogel
+ESRI	104103	GCS Sierra Leone 1960
+ESRI	104104	GCS Hong Kong 1980
+ESRI	104105	GCS Datum Lisboa Bessel
+ESRI	104106	GCS Datum Lisboa Hayford
+ESRI	104107	GCS RGF 1993
+ESRI	104108	GCS NZGD 2000
+ESRI	104261	GCS Merchich Degree
+ESRI	104304	GCS Voirol 1875 Degree
+ESRI	104305	GCS Voirol Unifie 1960 Degree

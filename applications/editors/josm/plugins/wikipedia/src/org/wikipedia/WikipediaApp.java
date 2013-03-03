@@ -105,7 +105,7 @@ public final class WikipediaApp {
         if (!articleNames.isEmpty()) {
             final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
                     + "&lang=" + wikipediaLang;
-            System.out.println("Wikipedia: GET " + url);
+            System.out.println("Wikipedia: POST " + url);
 
             try {
                 URLConnection connection = new URL(url).openConnection();

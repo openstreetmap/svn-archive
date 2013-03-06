@@ -17,6 +17,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -126,7 +127,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
     protected void updateIcon() {
         // todo: change icon based on selection
-        int state = 0; // 0=unknown, 1=add, 2=remove, 3=both
+        final int state; // 0=unknown, 1=add, 2=remove, 3=both
         if( getCurrentDataSet() == null || getCurrentDataSet().getSelected() == null
                 || getCurrentDataSet().getSelected().isEmpty() || rel == null || rel.get() == null )
             state = 0;
@@ -146,15 +147,20 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
                     state = 1;
             }
         }
+        GuiHelper.runInEDT(new Runnable() {
+            @Override
+            public void run() {
 //        String name = state == 0 ? "?" : state == 1 ? "+" : state == 2 ? "-" : "±";
 //        putValue(Action.NAME, name);
-        if( state == 0 ) {
+                if (state == 0) {
 //            putValue(NAME, "?");
-            putValue(SMALL_ICON, ImageProvider.get("relcontext", "addremove"));
-        } else {
-            String iconName = state == 1 ? "add" : state == 2 ? "remove" : "addremove";
-            putValue(NAME, null);
-            putValue(SMALL_ICON, ImageProvider.get("relcontext", iconName));
-        }
+                    putValue(SMALL_ICON, ImageProvider.get("relcontext", "addremove"));
+                } else {
+                    String iconName = state == 1 ? "add" : state == 2 ? "remove" : "addremove";
+                    putValue(NAME, null);
+                    putValue(SMALL_ICON, ImageProvider.get("relcontext", iconName));
+                }
+            }
+        });
     }
 }

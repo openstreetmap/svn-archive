@@ -23,6 +23,7 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -158,9 +159,19 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                     area = 0;
             }
         }
-        selectLengthLabel.setText(NavigatableComponent.getDistText(length));
-        segAngleLabel.setText(new DecimalFormat("#0.0").format(segAngle) + " \u00b0");
-        selectAreaLabel.setText(NavigatableComponent.getAreaText(area));
+        
+        final String lengthLabel = NavigatableComponent.getDistText(length);
+        final String angleLabel = new DecimalFormat("#0.0").format(segAngle) + " \u00b0";
+        final String areaLabel = NavigatableComponent.getAreaText(area);
+        
+        GuiHelper.runInEDT(new Runnable() {
+            @Override
+            public void run() {
+                selectLengthLabel.setText(lengthLabel);
+                segAngleLabel.setText(angleLabel);
+                selectAreaLabel.setText(areaLabel);
+            }
+        });
 	}
 
 	/* (non-Javadoc)

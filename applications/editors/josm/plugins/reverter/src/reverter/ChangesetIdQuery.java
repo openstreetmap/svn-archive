@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -27,7 +28,8 @@ import reverter.ChangesetReverter.RevertType;
 
 @SuppressWarnings("serial")
 public class ChangesetIdQuery extends ExtendedDialog {
-    private final JFormattedTextField tcid = new JFormattedTextField(NumberFormat.getIntegerInstance());
+    private final NumberFormat format = NumberFormat.getIntegerInstance();
+    private final JFormattedTextField tcid = new JFormattedTextField(format);
     private final ButtonGroup bgRevertType = new ButtonGroup();
     private final JRadioButton rbFull = new JRadioButton(tr("Revert changeset fully"));
     private final JRadioButton rbSelection = new JRadioButton(tr("Revert selection only"));
@@ -38,8 +40,8 @@ public class ChangesetIdQuery extends ExtendedDialog {
 
     public int getChangesetId() {
         try {
-            return Integer.parseInt(tcid.getText());
-        } catch (NumberFormatException e) {
+            return format.parse(tcid.getText()).intValue();
+        } catch (ParseException e) {
             return 0;
         }
     }
@@ -100,9 +102,11 @@ public class ChangesetIdQuery extends ExtendedDialog {
             @Override public void insertUpdate(DocumentEvent e) { idChanged(); }
             @Override public void changedUpdate(DocumentEvent e) { idChanged(); }
             private void idChanged() {
-                boolean idOK = getChangesetId() > 0;
-                tcid.setForeground(idOK ? defaultForegroundColor : Color.RED);
-                buttons.get(0).setEnabled(idOK);
+                if (tcid.hasFocus()) {
+                    boolean idOK = getChangesetId() > 0;
+                    tcid.setForeground(idOK ? defaultForegroundColor : Color.RED);
+                    buttons.get(0).setEnabled(idOK);
+                }
             }
         });
         
@@ -111,7 +115,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
         
         // Initially disables the Revert button
         buttons.get(0).setEnabled(false);
-        
+                
         // When pressing Enter in the changeset id field, validate the dialog if the id is correct (i.e. Revert button enabled)
         tcid.addKeyListener(new KeyListener() {
             @Override public void keyPressed(KeyEvent e) {}

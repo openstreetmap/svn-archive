@@ -30,6 +30,7 @@ import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 
@@ -54,7 +55,7 @@ public class ChangesetReverter {
     public final int changesetId;
     public final Changeset changeset;
     public final RevertType revertType;
-
+    
     private final OsmDataLayer layer; // data layer associated with reverter
     private final DataSet ds; // DataSet associated with reverter
     private final ChangesetDataSet cds; // Current changeset data
@@ -138,7 +139,12 @@ public class ChangesetReverter {
         } finally {
             monitor.finishTask();
             if (newLayer) {
-                Main.main.addLayer(layer);
+                GuiHelper.runInEDT(new Runnable() {
+                    @Override
+                    public void run() {
+                        Main.main.addLayer(layer);
+                    }
+                });
             }
         }
 

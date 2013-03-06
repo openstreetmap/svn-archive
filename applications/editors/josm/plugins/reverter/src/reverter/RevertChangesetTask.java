@@ -11,6 +11,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
 
 import reverter.ChangesetReverter.RevertType;
@@ -83,9 +84,14 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         if (progressMonitor.isCanceled()) return;
         if (!checkAndDownloadMissing()) return;
         List<Command> cmds = rev.getCommands();
-        Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
+        final Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
                 "Partially revert changeset #{0}",changesetId),cmds);
-        Main.main.undoRedo.add(cmd);
+        GuiHelper.runInEDT(new Runnable() {
+            @Override
+            public void run() {
+                Main.main.undoRedo.add(cmd);
+            }
+        });
     }
 
     @Override

@@ -160,7 +160,7 @@ public class OsmarenderPlugin extends Plugin {
             panel.add(firefox, GBC.eol().insets(0,5,0,0).fill(GBC.HORIZONTAL));
             panel.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
             firefox.setText(Main.pref.get("osmarender.firefox"));
-            gui.getMapPreference().mapcontent.addTab(tr("Osmarender"), panel);
+            gui.getMapPreference().getTabPane().addTab(tr("Osmarender"), panel);
         }
 
         @Override

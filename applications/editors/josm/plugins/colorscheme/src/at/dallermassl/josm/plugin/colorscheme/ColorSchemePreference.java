@@ -127,7 +127,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
 
         JScrollPane scrollpane = new JScrollPane(panel);
         scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
-        gui.getDisplayPreference().displaycontent.addTab(tr("Color Schemes"), scrollpane);
+        gui.getDisplayPreference().getTabPane().addTab(tr("Color Schemes"), scrollpane);
     }
 
     @Override

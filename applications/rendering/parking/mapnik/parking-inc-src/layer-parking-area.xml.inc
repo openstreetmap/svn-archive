@@ -162,9 +162,9 @@
 <!--
 fee [y,n,-] = SUBSTRING(COALESCE(tags->fee,'-'),1,1)
 access [Private,Residents,Customers,-] = SUBSTRING(COALESCE(tags->access,'-'),1,1)
-condition [Ticket,Disk,Free,Private,Residents,Customers,-] = SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1)
+condition [Ticket,Disk,Free,Private,Residents,Customers,-] = SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1)
 
-FAC = SUBSTRING(COALESCE(tags->fee,'-'),1,1) || SUBSTRING(COALESCE(tags->access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1)
+FAC = SUBSTRING(COALESCE(tags->fee,'-'),1,1) || SUBSTRING(COALESCE(tags->access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1)
 
 fee (new) - [parking:condition:area] = 'ticket'
 fee (old) - [amenity] = 'parking' and [fee]='yes'
@@ -179,22 +179,13 @@ ElseFilter
 Fehlt noch: maxstay auswerten -> disc
 Für inline string-replace nutzen: overlay(string placing string from int [for int])
 
-altes select mit tags->amenity:
-      (SELECT way,(tags->'amenity') AS "amenity",(tags->'tourism') AS "tourism",(tags->'name') AS "name",(tags->'fee') AS "fee",(tags->'access') AS "access",(tags->'parking:condition:area') AS "parking:condition:area",
-        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(tags->'access','-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1))
-...
-      where 
-          (tags ? 'amenity') AND (tags->'amenity') in ('parking')
-          or (tags ? 'tourism') AND (tags->'tourism') in ('camp_site','caravan_site','picnic_site')
-      ) as parking
-
 -->
 
 <Layer name="parking-area" status="on" srs="&osm2pgsql_projection;">
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
+      (SELECT way,amenity,tourism,name, /* (tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area", */
         CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
         WHEN 'surface' THEN 'surface'
         WHEN 'multi-storey' THEN 'multistorey'
@@ -204,7 +195,7 @@ altes select mit tags->amenity:
         WHEN 'garages' THEN 'surface'
 	    ELSE 'surface'
         END AS "parking",
-        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1))
+        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1))
         WHEN '--t' THEN 'ticket'
         WHEN 'y--' THEN 'ticket'
         WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
@@ -250,7 +241,7 @@ altes select mit tags->amenity:
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
+      (SELECT way,amenity,tourism,name, /* (tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area", */
         CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
         WHEN 'surface' THEN 'surface'
         WHEN 'multi-storey' THEN 'multistorey'
@@ -260,7 +251,7 @@ altes select mit tags->amenity:
         WHEN 'garages' THEN 'surface'
 	    ELSE 'surface'
         END AS "parking",
-        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1))
+        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1))
         WHEN '--t' THEN 'ticket'
         WHEN 'y--' THEN 'ticket'
         WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
@@ -311,25 +302,13 @@ altes select mit tags->amenity:
     </Rule>
 </Style>
 
-<!--
-old select:
-      (SELECT way,(tags->'amenity') AS "amenity",(tags->'tourism') AS "tourism",(tags->'name') AS "name",(tags->'fee') AS "fee",(tags->'access') AS "access",(tags->'parking:condition:area') AS "parking:condition:area",
-        (COALESCE(tags->'name',tags->'parking:condition:area:customers',tags->'operator','')
-        /* || ' (' || LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(tags->'access','-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1)) || ')' */
-        ) AS "parkname" 
-      from &prefix;_polygon
-      where 
-          (tags ? 'amenity') AND (tags->'amenity') in ('parking')
-          or (tags ? 'tourism') AND (tags->'tourism') in ('camp_site','caravan_site','picnic_site')
-      ) as parking
--->
 <Layer name="parking-area-text" status="on" srs="&osm2pgsql_projection;">
     <StyleName>parking-area-text</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name,(tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area",
-        (COALESCE(name,tags->'parking:condition:area:customers',operator,'')
-        /* || ' (' || LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area','-'),1,1)) || ')' */
+      (SELECT way,amenity,tourism,name, /* (tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area", */
+        (COALESCE(name,tags->'parking:condition:area:customers',tags->'parking:condition:customers',operator,'')
+        /* || ' (' || LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1)) || ')' */
         ) AS "parkname" 
       from &prefix;_polygon
       where 

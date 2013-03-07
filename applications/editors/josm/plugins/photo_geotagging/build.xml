@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+** This is a template build file for a JOSM  plugin.
+**
+** Maintaining versions
+** ====================
+** See README.template
+**
 ** Usage
 ** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in you default plugin directory) run
-**
-**    > ant  install
-**
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the plugin and make it available to other
-** JOSM users:
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
+** Call "ant help" to get possible build targets.
 **
 -->
 <project name="photo_geotagging" default="dist" basedir=".">
@@ -28,11 +18,13 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4762"/>
 
-    <!--
-    **********************************************************
-    ** include targets that all plugins have in common
-    **********************************************************
-    -->
+    <property name="plugin.author" value="Paul Hartmann"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.photo_geotagging.GeotaggingPlugin"/>
+    <property name="plugin.description" value="Write gps position info to the image file header. Run this feature from the right click menu of the image layer."/>
+    <property name="plugin.icon" value="images/geotagging.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Photo_Geotagging"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
     <!--
@@ -43,54 +35,14 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sanselan sources ... "/>
-        <javac srcdir="${plugin.src.dir}" excludes="org/openstreetmap/**" debug="true" destdir="${plugin.build.dir}" encoding="iso-8859-1">
+        <javac srcdir="${plugin.src.dir}" excludes="org/openstreetmap/**" debug="true" destdir="${plugin.build.dir}" encoding="iso-8859-1" includeantruntime="false">
             <compilerarg value="-Xlint:deprecation"/>
         </javac>
-        <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="${plugin.src.dir}" excludes="org/apache/sanselan/**" classpath="${josm}" debug="true" destdir="${plugin.build.dir}">
+        <echo message="compiling sources for ${plugin.jar} ..."/>
+        <javac srcdir="${plugin.src.dir}" excludes="org/apache/sanselan/**" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-    </target>
-
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-        <!--
-        ************************************************
-        ** configure these properties. Most of them will be copied to the plugins
-        ** manifest file. Property values will also show up in the list available
-        ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-        **
-        ************************************************
-        -->
-            <manifest>
-                <attribute name="Author" value="Paul Hartmann"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.photo_geotagging.GeotaggingPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Write gps position info to the image file header. Run this feature from the right click menu of the image layer."/>
-                <attribute name="Plugin-Icon" value="images/geotagging.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Photo_Geotagging"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
     </target>
 
 </project>

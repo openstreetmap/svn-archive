@@ -24,8 +24,7 @@ public class RevertChangesetAction extends JosmAction {
 
     public void actionPerformed(ActionEvent arg0)  {
         final ChangesetIdQuery dlg = new ChangesetIdQuery();
-        dlg.setVisible(true);
-        if (dlg.getValue() != 1) return;
+        if (dlg.showDialog().getValue() != 1) return;
         final int changesetId = dlg.getChangesetId();
         final RevertType revertType = dlg.getRevertType();
         if (changesetId == 0) return;

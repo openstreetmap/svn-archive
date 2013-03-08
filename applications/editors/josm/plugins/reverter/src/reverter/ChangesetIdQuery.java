@@ -2,48 +2,48 @@ package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.widgets.ChangesetIdTextField;
+import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.tools.GBC;
 
 import reverter.ChangesetReverter.RevertType;
 
 @SuppressWarnings("serial")
 public class ChangesetIdQuery extends ExtendedDialog {
-    private final NumberFormat format = NumberFormat.getIntegerInstance();
-    private final JFormattedTextField tcid = new JFormattedTextField(format);
+    private final JPanel panel = new JPanel(new GridBagLayout());
+    private final ChangesetIdTextField tcid = new ChangesetIdTextField();
+    private final HistoryComboBox cbId = new HistoryComboBox();
     private final ButtonGroup bgRevertType = new ButtonGroup();
     private final JRadioButton rbFull = new JRadioButton(tr("Revert changeset fully"));
     private final JRadioButton rbSelection = new JRadioButton(tr("Revert selection only"));
     private final JRadioButton rbSelectionUndelete = new JRadioButton(tr("Revert selection and restore deleted objects"));
     private final JCheckBox cbNewLayer = new JCheckBox(tr("Download as new layer"));
     
-    private final Color defaultForegroundColor = tcid.getForeground();
-
     public int getChangesetId() {
-        try {
-            return format.parse(tcid.getText()).intValue();
-        } catch (ParseException e) {
-            return 0;
-        }
+        return tcid.getChangesetId();
     }
     
     /**
@@ -65,10 +65,22 @@ public class ChangesetIdQuery extends ExtendedDialog {
     public ChangesetIdQuery() {
         super(Main.parent, tr("Revert changeset"), new String[] {tr("Revert"),tr("Cancel")}, true);
         contentInsets = new Insets(10,10,10,5);
-        setButtonIcons(new String[] {"ok.png", "cancel.png" });
-        JPanel panel = new JPanel(new GridBagLayout());
+        
         panel.add(new JLabel(tr("Changeset id:")));
-        panel.add(tcid, GBC.eol().fill(GBC.HORIZONTAL));
+
+        cbId.setEditor(new BasicComboBoxEditor() {
+            @Override
+            protected JTextField createEditorComponent() {
+                return tcid;
+            }
+        });
+        cbId.setToolTipText(tr("Enter the ID of the changeset that should be reverted"));
+        restoreChangesetsHistory(cbId);
+
+        // forward the enter key stroke to the revert button
+        tcid.getKeymap().removeKeyStrokeBinding(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false));
+        
+        panel.add(cbId, GBC.eol().fill(GBC.HORIZONTAL));
 
         bgRevertType.add(rbFull);
         bgRevertType.add(rbSelection);
@@ -82,6 +94,16 @@ public class ChangesetIdQuery extends ExtendedDialog {
         cbNewLayer.setToolTipText(tr("<html>Select to download data into a new data layer.<br>"
                 +"Unselect to download into the currently active data layer.</html>"));
         panel.add(cbNewLayer, GBC.eol().fill(GBC.HORIZONTAL));
+    }
+
+    @Override
+    public void setupDialog() {
+        setContent(panel, false);
+        setButtonIcons(new String[] {"ok.png", "cancel.png" });
+        setDefaultButton(1);
+        
+        addWindowListener(new InternalWindowListener());
+        super.setupDialog();
         
         final DataSet ds = Main.main.getCurrentDataSet();
         
@@ -103,28 +125,55 @@ public class ChangesetIdQuery extends ExtendedDialog {
             @Override public void changedUpdate(DocumentEvent e) { idChanged(); }
             private void idChanged() {
                 if (tcid.hasFocus()) {
-                    boolean idOK = getChangesetId() > 0;
-                    tcid.setForeground(idOK ? defaultForegroundColor : Color.RED);
-                    buttons.get(0).setEnabled(idOK);
+                    buttons.get(0).setEnabled(tcid.readIds());
                 }
             }
         });
         
-        setContent(panel);
-        setupDialog();
+        if (Main.pref.getBoolean("downloadchangeset.autopaste", true)) { 
+            tcid.tryToPasteFromClipboard();
+        }
         
-        // Initially disables the Revert button
-        buttons.get(0).setEnabled(false);
-                
-        // When pressing Enter in the changeset id field, validate the dialog if the id is correct (i.e. Revert button enabled)
-        tcid.addKeyListener(new KeyListener() {
-            @Override public void keyPressed(KeyEvent e) {}
-            @Override public void keyTyped(KeyEvent e) { }
-            @Override public void keyReleased(KeyEvent e) {
-                if (e != null && e.getKeyCode() == KeyEvent.VK_ENTER && buttons.get(0).isEnabled()) {
-                    buttons.get(0).doClick();
+        // Initially sets the revert button consistent with text id field contents
+        buttons.get(0).setEnabled(tcid.readIds());
+    }
+
+    /**
+     * Restore the current history from the preferences
+     *
+     * @param cbHistory
+     */
+    protected void restoreChangesetsHistory(HistoryComboBox cbHistory) {
+        List<String> cmtHistory = new LinkedList<String>(Main.pref.getCollection(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
+        // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
+        Collections.reverse(cmtHistory);
+        cbHistory.setPossibleItems(cmtHistory);
+    }
+    
+    /**
+     * Remind the current history in the preferences
+     * @param cbHistory
+     */
+    protected void remindChangesetsHistory(HistoryComboBox cbHistory) {
+        cbHistory.addCurrentItemToHistory();
+        Main.pref.putCollection(getClass().getName() + ".changesetsHistory", cbHistory.getHistory());
+    }
+    
+    private class InternalWindowListener implements WindowListener {
+        @Override public void windowClosed(WindowEvent e) {
+            if (e != null && e.getComponent() == ChangesetIdQuery.this && getValue() == 1) {
+                if (!tcid.readIds()) {
+                    return;
                 }
+                remindChangesetsHistory(cbId);
             }
-        });
+        }
+    
+        @Override public void windowOpened(WindowEvent e) {}
+        @Override public void windowClosing(WindowEvent e) {}
+        @Override public void windowIconified(WindowEvent e) {}
+        @Override public void windowDeiconified(WindowEvent e) {}
+        @Override public void windowActivated(WindowEvent e) {}
+        @Override public void windowDeactivated(WindowEvent e) {}
     }
 }

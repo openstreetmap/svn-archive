@@ -300,7 +300,7 @@ public class SimplifyAreaAction extends JosmAction {
                 }
 
                 newWay.setNodes(nodes);
-                if (!way.equals(newWay)) {
+                if (!way.getNodes().equals(nodes)) {
                     commands.add(new ChangeCommand(way, newWay));
                 }
             }

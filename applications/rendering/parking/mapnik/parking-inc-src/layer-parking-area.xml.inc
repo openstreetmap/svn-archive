@@ -195,7 +195,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
           WHEN 'garages' THEN 'surface'
 	      ELSE 'surface'
         END AS "parking",
-        CASE /* fee-access-condition= */ (SUBSTRING("feeX",1,1) || SUBSTRING("accessX",1,1) || SUBSTRING(conditionX,1,1))
+        CASE /* fee-access-condition= */ (SUBSTRING("feeX",1,1) || SUBSTRING("accessX",1,1) || SUBSTRING("conditionX",1,1))
           WHEN '--t' THEN 'ticket'
           WHEN 'y--' THEN 'ticket'
           WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
@@ -269,7 +269,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
           WHEN 'garages' THEN 'surface'
 	      ELSE 'surface'
         END AS "parking",
-        CASE /* fee-access-condition= */ (SUBSTRING("feeX",1,1) || SUBSTRING("accessX",1,1) || SUBSTRING(conditionX,1,1))
+        CASE /* fee-access-condition= */ (SUBSTRING("feeX",1,1) || SUBSTRING("accessX",1,1) || SUBSTRING("conditionX",1,1))
           WHEN '--t' THEN 'ticket'
           WHEN 'y--' THEN 'ticket'
           WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */

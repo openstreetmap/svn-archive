@@ -185,49 +185,67 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name, /* (tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area", */
+      (SELECT way,amenity,tourism,name,
         CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
-        WHEN 'surface' THEN 'surface'
-        WHEN 'multi-storey' THEN 'multistorey'
-        WHEN 'underground' THEN 'underground'
-        WHEN 'sheds' THEN 'surface'
-        WHEN 'carports' THEN 'surface'
-        WHEN 'garages' THEN 'surface'
-	    ELSE 'surface'
+          WHEN 'surface' THEN 'surface'
+          WHEN 'multi-storey' THEN 'multistorey'
+          WHEN 'underground' THEN 'underground'
+          WHEN 'sheds' THEN 'surface'
+          WHEN 'carports' THEN 'surface'
+          WHEN 'garages' THEN 'surface'
+	      ELSE 'surface'
         END AS "parking",
-        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1))
-        WHEN '--t' THEN 'ticket'
-        WHEN 'y--' THEN 'ticket'
-        WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
-        WHEN 'y-c' THEN 'ticket' /* access=customers fee=yes */
-        WHEN 'ycc' THEN 'ticket' /* access=customers fee=yes */
-        WHEN 'y-t' THEN 'ticket'
-        WHEN '--d' THEN 'disc'
-        WHEN 'n-d' THEN 'disc'
-        WHEN '--c' THEN 'customers'
-        WHEN '-c-' THEN 'customers'
-        WHEN '-cc' THEN 'customers'
-        WHEN 'n-c' THEN 'customers'
-        WHEN 'nc-' THEN 'customers'
-        WHEN 'ncc' THEN 'customers'
-        WHEN '-r-' THEN 'residents'
-        WHEN '--r' THEN 'residents'
-        WHEN '-rr' THEN 'residents'
-        WHEN 'nr-' THEN 'residents'
-        WHEN 'n-r' THEN 'residents'
-        WHEN 'nrr' THEN 'residents'
-        WHEN '-p-' THEN 'private'
-        WHEN '--p' THEN 'private'
-        WHEN '-pp' THEN 'private'
-        WHEN 'np-' THEN 'private'
-        WHEN 'n-p' THEN 'private'
-        WHEN 'npp' THEN 'private'
-        WHEN '--f' THEN 'free'
-        WHEN 'n--' THEN 'free'
-        WHEN 'n-f' THEN 'free'
-	    ELSE 'unknown'
-        END AS "cond"
-      from &prefix;_polygon
+        CASE /* fee-access-condition= */ (SUBSTRING("feeX",1,1) || SUBSTRING("accessX",1,1) || SUBSTRING(conditionX,1,1))
+          WHEN '--t' THEN 'ticket'
+          WHEN 'y--' THEN 'ticket'
+          WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
+          WHEN 'y-c' THEN 'ticket' /* access=customers fee=yes */
+          WHEN 'ycc' THEN 'ticket' /* access=customers fee=yes */
+          WHEN 'y-t' THEN 'ticket'
+          WHEN '--d' THEN 'disc'
+          WHEN 'n-d' THEN 'disc'
+          WHEN '--c' THEN 'customers'
+          WHEN '-c-' THEN 'customers'
+          WHEN '-cc' THEN 'customers'
+          WHEN 'n-c' THEN 'customers'
+          WHEN 'nc-' THEN 'customers'
+          WHEN 'ncc' THEN 'customers'
+          WHEN '-r-' THEN 'residents'
+          WHEN '--r' THEN 'residents'
+          WHEN '-rr' THEN 'residents'
+          WHEN 'nr-' THEN 'residents'
+          WHEN 'n-r' THEN 'residents'
+          WHEN 'nrr' THEN 'residents'
+          WHEN '-p-' THEN 'private'
+          WHEN '--p' THEN 'private'
+          WHEN '-pp' THEN 'private'
+          WHEN 'np-' THEN 'private'
+          WHEN 'n-p' THEN 'private'
+          WHEN 'npp' THEN 'private'
+          WHEN '--f' THEN 'free'
+          WHEN 'n--' THEN 'free'
+          WHEN 'n-f' THEN 'free'
+	      ELSE 'unknown'
+        END AS "cond",tags
+      from (
+        /* subselect cleans following values: access->accessX, parking:condition->conditionX, fee->feeX */
+        SELECT osm_id,way,amenity,tourism,name,tags,
+          CASE /* feeX = */ LOWER(COALESCE(tags->'fee','-'))
+            WHEN '-' THEN '-'
+            ELSE LOWER(COALESCE(tags->'fee','-'))
+          END AS "feeX",
+          CASE /* accessX = */ LOWER(COALESCE(access,'-'))
+            WHEN 'permit' THEN 'residentsX'
+            WHEN 'destination' THEN 'customersX'
+            ELSE LOWER(COALESCE(access,'-'))
+          END AS "accessX",
+          CASE /* conditionX = */ LOWER(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'))
+            WHEN 'destination' THEN 'customersX'
+            WHEN 'visitors' THEN 'customersX'
+            ELSE LOWER(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'))
+          END AS "conditionX"
+          from &prefix;_polygon
+        ) as subselect
       where 
           amenity in ('parking')
           or tourism in ('camp_site','caravan_site','picnic_site')
@@ -241,49 +259,67 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name, /* (tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area", */
+      (SELECT way,amenity,tourism,name,
         CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
-        WHEN 'surface' THEN 'surface'
-        WHEN 'multi-storey' THEN 'multistorey'
-        WHEN 'underground' THEN 'underground'
-        WHEN 'sheds' THEN 'surface'
-        WHEN 'carports' THEN 'surface'
-        WHEN 'garages' THEN 'surface'
-	    ELSE 'surface'
+          WHEN 'surface' THEN 'surface'
+          WHEN 'multi-storey' THEN 'multistorey'
+          WHEN 'underground' THEN 'underground'
+          WHEN 'sheds' THEN 'surface'
+          WHEN 'carports' THEN 'surface'
+          WHEN 'garages' THEN 'surface'
+	      ELSE 'surface'
         END AS "parking",
-        CASE /* fee-access-condition= */ LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1))
-        WHEN '--t' THEN 'ticket'
-        WHEN 'y--' THEN 'ticket'
-        WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
-        WHEN 'y-c' THEN 'ticket' /* access=customers fee=yes */
-        WHEN 'ycc' THEN 'ticket' /* access=customers fee=yes */
-        WHEN 'y-t' THEN 'ticket'
-        WHEN '--d' THEN 'disc'
-        WHEN 'n-d' THEN 'disc'
-        WHEN '--c' THEN 'customers'
-        WHEN '-c-' THEN 'customers'
-        WHEN '-cc' THEN 'customers'
-        WHEN 'n-c' THEN 'customers'
-        WHEN 'nc-' THEN 'customers'
-        WHEN 'ncc' THEN 'customers'
-        WHEN '-r-' THEN 'residents'
-        WHEN '--r' THEN 'residents'
-        WHEN '-rr' THEN 'residents'
-        WHEN 'nr-' THEN 'residents'
-        WHEN 'n-r' THEN 'residents'
-        WHEN 'nrr' THEN 'residents'
-        WHEN '-p-' THEN 'private'
-        WHEN '--p' THEN 'private'
-        WHEN '-pp' THEN 'private'
-        WHEN 'np-' THEN 'private'
-        WHEN 'n-p' THEN 'private'
-        WHEN 'npp' THEN 'private'
-        WHEN '--f' THEN 'free'
-        WHEN 'n--' THEN 'free'
-        WHEN 'n-f' THEN 'free'
-	    ELSE 'unknown'
-        END AS "cond"
-      from &prefix;_polygon
+        CASE /* fee-access-condition= */ (SUBSTRING("feeX",1,1) || SUBSTRING("accessX",1,1) || SUBSTRING(conditionX,1,1))
+          WHEN '--t' THEN 'ticket'
+          WHEN 'y--' THEN 'ticket'
+          WHEN 'yc-' THEN 'ticket' /* access=customers fee=yes */
+          WHEN 'y-c' THEN 'ticket' /* access=customers fee=yes */
+          WHEN 'ycc' THEN 'ticket' /* access=customers fee=yes */
+          WHEN 'y-t' THEN 'ticket'
+          WHEN '--d' THEN 'disc'
+          WHEN 'n-d' THEN 'disc'
+          WHEN '--c' THEN 'customers'
+          WHEN '-c-' THEN 'customers'
+          WHEN '-cc' THEN 'customers'
+          WHEN 'n-c' THEN 'customers'
+          WHEN 'nc-' THEN 'customers'
+          WHEN 'ncc' THEN 'customers'
+          WHEN '-r-' THEN 'residents'
+          WHEN '--r' THEN 'residents'
+          WHEN '-rr' THEN 'residents'
+          WHEN 'nr-' THEN 'residents'
+          WHEN 'n-r' THEN 'residents'
+          WHEN 'nrr' THEN 'residents'
+          WHEN '-p-' THEN 'private'
+          WHEN '--p' THEN 'private'
+          WHEN '-pp' THEN 'private'
+          WHEN 'np-' THEN 'private'
+          WHEN 'n-p' THEN 'private'
+          WHEN 'npp' THEN 'private'
+          WHEN '--f' THEN 'free'
+          WHEN 'n--' THEN 'free'
+          WHEN 'n-f' THEN 'free'
+	      ELSE 'unknown'
+        END AS "cond",tags
+      from (
+        /* subselect cleans following values: access->accessX, parking:condition->conditionX, fee->feeX */
+        SELECT osm_id,way,amenity,tourism,name,tags,
+          CASE /* feeX = */ LOWER(COALESCE(tags->'fee','-'))
+            WHEN '-' THEN '-'
+            ELSE LOWER(COALESCE(tags->'fee','-'))
+          END AS "feeX",
+          CASE /* accessX = */ LOWER(COALESCE(access,'-'))
+            WHEN 'permit' THEN 'residentsX'
+            WHEN 'destination' THEN 'customersX'
+            ELSE LOWER(COALESCE(access,'-'))
+          END AS "accessX",
+          CASE /* conditionX = */ LOWER(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'))
+            WHEN 'destination' THEN 'customersX'
+            WHEN 'visitors' THEN 'customersX'
+            ELSE LOWER(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'))
+          END AS "conditionX"
+          from &prefix;_polygon
+        ) as subselect
       where 
           amenity in ('parking')
           or tourism in ('camp_site','caravan_site','picnic_site')
@@ -306,12 +342,11 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <StyleName>parking-area-text</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name, /* (tags->'fee') AS "fee",access,(tags->'parking:condition:area') AS "parking:condition:area", */
+      (SELECT way,amenity,tourism,name,
         (COALESCE(name,tags->'parking:condition:area:customers',tags->'parking:condition:customers',operator,'')
-        /* || ' (' || LOWER(SUBSTRING(COALESCE(tags->'fee','-'),1,1) || SUBSTRING(COALESCE(access,'-'),1,1) || SUBSTRING(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'),1,1)) || ')' */
         ) AS "parkname" 
       from &prefix;_polygon
-      where 
+      where
           amenity in ('parking')
           or tourism in ('camp_site','caravan_site','picnic_site')
       ) as parking

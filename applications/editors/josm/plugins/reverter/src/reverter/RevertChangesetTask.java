@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.ConflictAddCommand;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -86,10 +87,20 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         List<Command> cmds = rev.getCommands();
         final Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
                 "Partially revert changeset #{0}",changesetId),cmds);
+        int n = 0;
+        for (Command c : cmds) {
+            if (c instanceof ConflictAddCommand) {
+                n++;
+            }
+        }
+        final int newConflicts = n;
         GuiHelper.runInEDT(new Runnable() {
             @Override
             public void run() {
                 Main.main.undoRedo.add(cmd);
+                if (newConflicts > 0) {
+                    Main.map.conflictDialog.warnNumNewConflicts(newConflicts);
+                }
             }
         });
     }

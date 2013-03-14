@@ -14,22 +14,12 @@
    height="442.91336"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.3.1 r9886"
    version="1.0"
    sodipodi:docname="osmflyer2.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/burkhard/osm/doc/german_flyer_2013_01/german_flyer_2013_01_2.png"
-   inkscape:export-xdpi="300"
-   inkscape:export-ydpi="300">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs4">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 221.45668 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="1119.6851 : 221.45668 : 1"
-       inkscape:persp3d-origin="559.84253 : 147.63779 : 1"
-       id="perspective256" />
     <linearGradient
        inkscape:collect="always"
        id="linearGradient6832">
@@ -62,23 +52,23 @@
      objecttolerance="10"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.543442"
-     inkscape:cx="501.59545"
-     inkscape:cy="169.62448"
+     inkscape:zoom="0.97570292"
+     inkscape:cx="626.1967"
+     inkscape:cy="187.49441"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      width="316mm"
      height="125mm"
      units="mm"
      showguides="false"
      inkscape:guide-bbox="true"
      inkscape:guide-points="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1029"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-width="1000"
+     inkscape:window-height="739"
+     inkscape:window-x="759"
+     inkscape:window-y="66"
      showgrid="false"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="0">
     <sodipodi:guide
        orientation="vertical"
        position="0"
@@ -183,6 +173,9 @@
        orientation="horizontal"
        position="361.41732"
        id="guide3712" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid4210" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -192,7 +185,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1215,7 +1207,7 @@
          sodipodi:type="arc" />
     </g>
     <image
-       sodipodi:absref="/home/burkhard/osm/doc/german_flyer_2013_01/berlin-background-blaugrau.png"
+       sodipodi:absref="/home/fred/svn.openstreetmap.org/misc/pr_material/german_flyer_2013_01/berlin-background-blaugrau.png"
        xlink:href="berlin-background-blaugrau.png"
        width="1409.6063"
        height="407.48032"
@@ -1223,7 +1215,7 @@
        x="-183.63786"
        y="17.716511" />
     <image
-       sodipodi:absref="/home/burkhard/osm/doc/german_flyer_2013_01/./abzeichnen.png"
+       sodipodi:absref="/home/fred/svn.openstreetmap.org/misc/pr_material/german_flyer_2013_01/./abzeichnen.png"
        xlink:href="./abzeichnen.png"
        y="49.628628"
        x="836.18811"
@@ -1231,8 +1223,8 @@
        height="343.91879"
        width="233.923" />
     <image
-       sodipodi:absref="/home/burkhard/osm/doc/german_flyer_2013_01/./muenster.png"
-       xlink:href="./muenster.png"
+       sodipodi:absref="/home/fred/svn.openstreetmap.org/misc/pr_material/german_flyer_2013_01/./koeln.png"
+       xlink:href="./koeln.png"
        y="49.606285"
        x="311.81104"
        id="image2970"
@@ -1240,7 +1232,7 @@
        width="233.85826" />
     <text
        xml:space="preserve"
-       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Heros;-inkscape-font-specification:TeX Gyre Heros"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FrobisherCondExtrabold"
        x="48.7943"
        y="64.801361"
        id="text3391"
@@ -1251,11 +1243,10 @@
          sodipodi:role="line"
          id="tspan3393"
          x="48.7943"
-         y="64.801361"
-         style="-inkscape-font-specification:TeX Gyre Heros;font-family:TeX Gyre Heros;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Wozu eine freie Weltkarte?</tspan></text>
+         y="64.801361">Wozu eine freie Weltkarte?</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Heros;-inkscape-font-specification:TeX Gyre Heros"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FrobisherCondExtrabold"
        x="574.01575"
        y="64.913361"
        id="text3397"
@@ -1266,8 +1257,7 @@
          sodipodi:role="line"
          id="tspan3399"
          x="574.01575"
-         y="64.913361"
-         style="-inkscape-font-specification:TeX Gyre Heros;font-family:TeX Gyre Heros;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Wie funktioniert OpenStreetMap?</tspan></text>
+         y="64.913361">Wie funktioniert OpenStreetMap?</tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot3401"
@@ -1278,39 +1268,25 @@
        inkscape:export-ydpi="400.01047"><flowRegion
          id="flowRegion3403"><rect
            id="rect3405"
-           width="237.09024"
-           height="338.44376"
+           width="237.09023"
+           height="354.6413"
            x="35.687172"
            y="88.272079"
            style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
-         id="flowPara3407"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">Im Internet gibt es kostenlose Stadtpläne und Karten zuhauf. Aber die Angebote sind meist nur zur privaten Nutzung gedacht und dürfen nicht weiterveröffentlicht werden; in einem Flyer wie diesem hier dürfte man sie zum Beispiel nicht abdrucken. Außerdem sind die kostenlosen Karten meist weder aktuell noch vollständig. Fehler werden nur langsam verbessert.</flowPara><flowPara
-         id="flowPara4230"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn"> </flowPara><flowPara
-         id="flowPara2699"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">            Viel wichtiger ist aber, dass man dort nur fertige</flowPara><flowPara
-         id="flowPara2705"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                Kartenbilder bekommt – nicht jedoch die Da-</flowPara><flowPara
-         id="flowPara2707"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                        ten, aus denen sie berechnet wurden. </flowPara><flowPara
-         id="flowPara5669"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                         Diese Daten braucht man, wenn man</flowPara><flowPara
-         id="flowPara5663"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                         eigene Karten herstellen oder die Karte </flowPara><flowPara
-         id="flowPara4232"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                         auf beliebigen Geräten verwenden will, </flowPara><flowPara
-         id="flowPara5785"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                         beispielsweise zur Routenberechnung.</flowPara><flowPara
-         id="flowPara5787"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn" /><flowPara
-         id="flowPara4218"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                         Deshalb sammeln bei OpenStreetMap</flowPara><flowPara
-         id="flowPara5749"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                         freiwillige Mitarbeiter die Rohdaten</flowPara><flowPara
-         id="flowPara5751"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                        selbst – weltweit, mal im Team und mal</flowPara><flowPara
-         id="flowPara5789"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">                      auf eigene Faust. Mit eigenen Daten und eigener Software lösen wir uns aus der Abhängigkeit von kommerziellen Anbietern. Wie bei der Wikipedia kann jeder mitmachen und etwas beisteuern.  </flowPara></flowRoot>    <flowRoot
+         id="flowPara3407">Im Internet gibt es kostenlose Stadtpläne und Karten zuhauf. Aber die Angebote sind meist nur zur privaten Nutzung gedacht und dürfen nicht weiterveröffentlicht werden; in einem Flyer wie diesem hier dürfte man sie zum Beispiel nicht abdrucken. Außerdem sind die kos-tenlosen Karten meist weder aktuell noch vollständig. Fehler werden nur langsam verbessert.</flowPara><flowPara
+         id="flowPara4230"> </flowPara><flowPara
+         id="flowPara2699">            Viel wichtiger ist aber, dass man dort nur fertige</flowPara><flowPara
+         id="flowPara2705">                Kartenbilder bekommt – nicht jedoch die Da-</flowPara><flowPara
+         id="flowPara2707">                       ten, aus denen sie berechnet wurden. </flowPara><flowPara
+         id="flowPara5669">                        Diese Daten braucht man, wenn man</flowPara><flowPara
+         id="flowPara5663">                        eigene Karten herstellen oder die Karte </flowPara><flowPara
+         id="flowPara4232">                        auf beliebigen Geräten verwenden will, </flowPara><flowPara
+         id="flowPara5785">                        beispielsweise zur Routenberechnung.</flowPara><flowPara
+         id="flowPara5787" /><flowPara
+         id="flowPara4218">                        Deshalb sammeln bei OpenStreetMap</flowPara><flowPara
+         id="flowPara5749">                       freiwillige Mitarbeiter die Rohdaten</flowPara><flowPara
+         id="flowPara5751">                      selbst – weltweit, mal im Team und mal</flowPara><flowPara
+         id="flowPara5789">                     auf eigene Faust. Mit eigenen Daten und eigener Software lösen wir uns aus der Abhängigkeit von kommerziellen Anbietern. Wie bei der Wikipedia kann jeder mitmachen und etwas beisteuern.  </flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot3714"
        style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed"
@@ -1320,25 +1296,26 @@
        inkscape:export-ydpi="400.01047"><flowRegion
          id="flowRegion3716"><rect
            id="rect3718"
-           width="230.86197"
-           height="335.47653"
+           width="233.45358"
+           height="425.53497"
            x="35.687172"
            y="88.272079"
            style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondensed" /></flowRegion><flowPara
-         id="flowPara3724"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">Die Kartendaten für OpenStreetMap werden auf ganz unterschiedliche Weise erfasst. GPS-Gerät und hand- schriftliche Notizen sind klassische Arbeitsmittel; der GPS-Track zeichnet dabei genau auf, welchen Weg der Datenerfasser (im Projekt: „Mapper“) zurückgelegt hat. Mittlerweile stehen dem Projekt vielerorts auch gute <flowSpan
-   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn"
+         id="flowPara3724">Die Kartendaten für OpenStreetMap werden auf ganz unterschiedliche Weise erfasst. GPS-Gerät und hand- schriftliche Notizen sind klassische Arbeitsmittel; der <flowSpan
+   style="font-weight:bold;-inkscape-font-specification:FrobisherCondensed Bold"
+   id="flowSpan3427">GPS-Track</flowSpan> zeichnet dabei genau auf, welchen Weg der Datenerfasser (im Projekt: „Mapper“) zurückgelegt hat. Mittlerweile stehen dem Projekt vielerorts auch gute <flowSpan
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
    id="flowSpan3052">Luftbilder</flowSpan> zur Verfügung.</flowPara><flowPara
-         id="flowPara3038"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn" /><flowPara
-         id="flowPara3036"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">Ein speziell für OpenStreetMap entwickelter Editor stellt Luftbilder und GPS-Tracks dar und zeigt auch bereits bei OSM erfasste Daten. Straßenverläufe, Gebäudeumrisse, Wälder oder Seen können vom Luftbild abgezeichnet werden, aber Informationen wie Hausnummern, Straßennamen oder „Points of Interest“ fehlen im Luftbild. Diese Daten können nur mit genauer Ortskenntnis hinzugefügt werden – oder eben, indem der Mapper vor Ort recherchiert.</flowPara><flowPara
-         id="flowPara3040"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn" /><flowPara
-         id="flowPara3046"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn">Die Ergebnisse werden anschließend an die zentrale Projektdatenbank übertragen. Aus diesen Daten wird dann automatisch die <flowSpan
-   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:112.99999952%;writing-mode:lr-tb;text-anchor:start;font-family:TeX Gyre Heros Cn;-inkscape-font-specification:TeX Gyre Heros Cn"
-   id="flowSpan2929">fertige Karte</flowSpan> berechnet, und schon kurze Zeit später sind die neuen Änderungen für jeden sichtbar.</flowPara></flowRoot>    <rect
+         id="flowPara3038" /><flowPara
+         id="flowPara3036">Ein speziell für OpenStreetMap entwickelter <flowSpan
+   style="font-weight:bold;-inkscape-font-specification:FrobisherCondensed Bold"
+   id="flowSpan3098">Editor</flowSpan> stellt Luftbilder und GPS-Tracks dar und zeigt auch bereits bei OSM erfasste Daten. Straßenverläufe, Ge- bäudeumrisse, Wälder oder Seen können vom Luftbild abgezeichnet werden, aber Informationen wie Haus- nummern, Straßennamen oder „Points of Interest“ fehlen im Luftbild. Diese Daten können nur mit genauer Ortskenntnis hinzugefügt werden – oder eben, indem der Mapper vor Ort recherchiert.</flowPara><flowPara
+         id="flowPara3040" /><flowPara
+         id="flowPara3046">Die Ergebnisse werden anschließend an die zentrale Projektdatenbank übertragen. Aus diesen Daten wird dann automatisch die <flowSpan
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:112.99999952%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
+   id="flowSpan2929">f</flowSpan><flowSpan
+   style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:112.99999952%;writing-mode:lr-tb;text-anchor:start;font-family:FrobisherCondExtrabold;-inkscape-font-specification:FrobisherCondExtrabold"
+   id="flowSpan3056">ertige Karte</flowSpan> berechnet, und schon kurze Zeit später sind die neuen Änderungen für jeden sichtbar.</flowPara></flowRoot>    <rect
        style="fill:none;stroke:#40406d;stroke-width:1.0629921;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3266"
        width="233.85828"
@@ -1359,23 +1336,15 @@
        inkscape:export-xdpi="400.01047"
        inkscape:export-ydpi="400.01047" />
     <image
-       sodipodi:absref="/home/burkhard/osm/doc/german_flyer_2013_01/./gps-screenshot-327.png"
-       xlink:href="./gps-screenshot-327.png"
+       sodipodi:absref="/home/fred/svn.openstreetmap.org/misc/pr_material/german_flyer_2013_01/./gps-screenshot-442.png"
+       xlink:href="./gps-screenshots/442.png"
        y="242.10844"
        x="56.76968"
        id="image3002"
        height="60"
        width="40" />
     <image
-       sodipodi:absref="/home/burkhard/osm/doc/german_flyer_2013_01/./gps-screenshot-442.png"
-       xlink:href="./gps-screenshot-442.png"
-       y="242.10844"
-       x="56.76968"
-       id="image3016"
-       height="59.999996"
-       width="40" />
-    <image
-       sodipodi:absref="/home/burkhard/osm/doc/german_flyer_2013_01/./garmin_62st_empty.png"
+       sodipodi:absref="/home/fred/svn.openstreetmap.org/misc/pr_material/german_flyer_2013_01/./garmin_62st_empty.png"
        xlink:href="./garmin_62st_empty.png"
        y="187.69391"
        x="46.325783"
@@ -1740,14 +1709,13 @@
              height="22.785175"
              width="209.90233"
              id="rect3959-7" /></flowRegion><flowPara
-           id="flowPara3961-7"
-           style="-inkscape-font-specification:TeXGyreHeros;font-family:TeXGyreHeros;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">fertige Karte</flowPara></flowRoot>    </g>
+           id="flowPara3961-7">fertige Karte</flowPara></flowRoot>    </g>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="markings"
-     style="display:inline">
+     style="display:none">
     <text
        xml:space="preserve"
        style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans"
@@ -1763,112 +1731,127 @@
          y="11.9238">Rückseite der Titelseite</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 297.6378,-2.9404297e-05 L 297.6378,17.716511"
+       d="m 297.6378,-2.9404297e-5 0,17.716540404297"
        id="path2224"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 35.433071,-2.9404297e-05 L 35.433071,17.716511"
+       d="m 35.433071,-2.9404297e-5 0,17.716540404297"
        id="path2204"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 17.716535,35.433051 L 0,35.433051"
+       d="M 17.716535,35.433051 0,35.433051"
        id="path2206"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 17.716535,407.48029 L 0,407.48029"
+       d="M 17.716535,407.48029 0,407.48029"
        id="path2208"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 35.433071,425.19683 L 35.433071,442.91336"
+       d="m 35.433071,425.19683 0,17.71653"
        id="path2210"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 297.6378,425.19683 L 297.6378,442.91336"
+       d="m 297.6378,425.19683 0,17.71653"
        id="path2226"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 559.84252,425.19683 L 559.84252,442.91336"
+       d="m 559.84252,425.19683 0,17.71653"
        id="path2228"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 1084.252,425.19683 L 1084.252,442.91336"
+       d="m 1084.252,425.19683 0,17.71653"
        id="path2212"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 1119.685,407.48029 L 1101.9685,407.48029"
+       d="m 1119.685,407.48029 -17.7165,0"
        id="path2214"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 822.04724,425.19683 L 822.04724,442.91336"
+       d="m 822.04724,425.19683 0,17.71653"
        id="path2230"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 1084.252,-2.9404297e-05 L 1084.252,17.716511"
+       d="m 1084.252,-2.9404297e-5 0,17.716540404297"
        id="path2218"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 1119.685,35.433051 L 1101.9685,35.433051"
+       d="m 1119.685,35.433051 -17.7165,0"
        id="path2216"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 822.04724,-2.9404297e-05 L 822.04724,17.716511"
+       d="m 822.04724,-2.9404297e-5 0,17.716540404297"
        id="path2220"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
-       d="M 559.84252,-2.9404297e-05 L 559.84252,17.716511"
+       d="m 559.84252,-2.9404297e-5 0,17.716540404297"
        id="path2222"
        inkscape:export-filename="/tmp/2.png"
        inkscape:export-xdpi="400.01047"
-       inkscape:export-ydpi="400.01047" />
+       inkscape:export-ydpi="400.01047"
+       inkscape:connector-curvature="0" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="mask_all"
-     style="opacity:0.8;display:none">
+     style="opacity:0.8;display:inline">
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;display:inline"
-       d="M -690.1575,-528.54332 L -690.1575,971.45668 L 1809.8426,971.45668 L 1809.8426,-528.54332 L -690.1575,-528.54332 L -690.1575,-528.54332 z M 35.436254,35.42548 L 297.62375,35.42548 L 559.8425,35.42548 L 822.06125,35.42548 L 1084.2488,35.42548 L 1084.2488,407.45668 L 822.06125,407.45668 L 559.8425,407.45668 L 297.62375,407.45668 L 35.436254,407.45668 L 35.436254,35.42548 L 35.436254,35.42548 z"
-       id="rect2997" />
+       d="m -690.1575,-528.54332 0,1500 2500.0001,0 0,-1500 -2500.0001,0 0,0 z m 725.593754,563.9688 262.187496,0 262.21875,0 262.21875,0 262.18755,0 0,372.0312 -262.18755,0 -262.21875,0 -262.21875,0 -262.187496,0 0,-372.0312 0,0 z"
+       id="rect2997"
+       inkscape:connector-curvature="0" />
   </g>
   <g
      inkscape:groupmode="layer"

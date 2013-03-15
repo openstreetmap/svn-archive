@@ -6,9 +6,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
@@ -159,10 +160,29 @@ public class MirroredDownloadAction extends JosmAction {
 
         @Override
         protected String getRequestForBbox(double lon1, double lat1, double lon2, double lat2) {
-            return overpassQuery.isEmpty() && "*".equals(overpassType)
-                    ? super.getRequestForBbox(lon1, lat1, lon2, lat2)
-                    : overpassType + "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "]"
-                        + (MirroredDownloadPlugin.getAddMeta() ? "[@meta]" : "") + overpassQuery;
+            if (overpassQuery.isEmpty() && "*".equals(overpassType))
+                return super.getRequestForBbox(lon1, lat1, lon2, lat2);
+            else
+            {
+                if (MirroredDownloadPlugin.getAddMeta())
+                {
+                    // Overpass compatibility layer
+                    String url = overpassType + "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "]"
+                        + "[@meta]" + overpassQuery;
+                    try
+                    {
+                        url = URLEncoder.encode(url, "UTF-8");
+                    }
+                    catch (UnsupportedEncodingException e)
+                    {
+                    }
+                    return url;
+                }
+                else
+                    // Old style XAPI
+                    return overpassType + "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "]"
+                        + overpassQuery;
+            }
         }
 
         @Override

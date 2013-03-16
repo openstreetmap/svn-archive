@@ -12,11 +12,8 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.mapdb.Serializer;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.Tile;
@@ -24,6 +21,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
+import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 /**
  * 
@@ -32,12 +30,11 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
 class OsmDBTilesLoader extends OsmTileLoader {
     
     
-    private static final Logger log = Logger.getLogger(OsmDBTilesLoader.class.getName());
     public static final long FILE_AGE_ONE_DAY = 1000 * 60 * 60 * 24;
     public static final long FILE_AGE_ONE_WEEK = FILE_AGE_ONE_DAY * 7;
+    
+    public static final boolean debug = new BooleanProperty("imagerycache.debug", false).get();
 
-    
-    
     static class TileDAOMapDB {
         protected HashMap<String, DB> dbs = new HashMap<String, DB>();
         protected HashMap<String, Map<Long,DBTile>> storages  = new HashMap<String, Map<Long,DBTile>>();
@@ -52,15 +49,15 @@ class OsmDBTilesLoader extends OsmTileLoader {
             if (db==null) {
                 try {
                 db = DBMaker
-                    .newFileDB(new File(cacheFolder, source.replaceAll("[\\\\/:*?\"<>| ]", "_")))
+                    .newFileDB(new File(cacheFolder, "tiles_"+source.replaceAll("[\\\\/:*?\"<>| ]", "_")))
                     .randomAccessFileEnableIfNeeded()
                     .journalDisable()
                     .closeOnJvmShutdown()
                     .make();
                 dbs.put(source, db);
                 } catch (Exception e) {
-                    log.warning("Error: Can not create MapDB file");
-                    e.printStackTrace();
+                    System.out.println("Error: Can not create MapDB file");
+                    e.printStackTrace(System.out);
                 }
             }
             return db;
@@ -73,10 +70,10 @@ class OsmDBTilesLoader extends OsmTileLoader {
                     DB d = getDB(source);
                     m = d.getHashMap("tiles");
                     storages.put(source, m);
-                    log.log(Level.FINEST, "Created storage {0}", source);
+                    if (debug) System.out.println("Created storage "+source);
                 } catch (Exception e) {
-                    log.severe("Error: Can not create HashMap in MapDB storage");
-                    e.printStackTrace();
+                    System.out.println("Error: Can not create HashMap in MapDB storage");
+                    e.printStackTrace(System.out);
                 }
             }
             return m;
@@ -92,12 +89,12 @@ class OsmDBTilesLoader extends OsmTileLoader {
         }
 
         protected void updateModTime(String source, long id, DBTile dbTile) {
-            log.finest("Updating modification time");
+            if (debug) System.out.println("Tile "+id+": Updating modification time");
             getStorage(source).put(id, dbTile);
         }
 
         protected void updateTile(String source, long id, DBTile dbTile) {
-            log.finest("Updating tile in base");
+            if (debug) System.out.println("Tile "+id+": Updating tile in base");
             getStorage(source).put(id, dbTile);
         }
 
@@ -239,7 +236,7 @@ class OsmDBTilesLoader extends OsmTileLoader {
                         break;
                     case LastModified:      // (2)
                         if (!isOsmTileNewer(fileAge)) {
-                            log.finest("LastModified test: local version is up to date: " + tile);
+                            System.out.println("Tile "+id+": LastModified test: local version is up to date");
                             dbTile.lastModified = getLastModTime();
                             dao.updateModTime(sourceName, id, dbTile);
                             return;
@@ -270,7 +267,7 @@ class OsmDBTilesLoader extends OsmTileLoader {
                 if (urlConn instanceof HttpURLConnection && ((HttpURLConnection)urlConn).getResponseCode() == 304) {
                     // If we are isModifiedSince or If-None-Match has been set
                     // and the server answers with a HTTP 304 = "Not Modified"
-                    log.finest("Answer from HTTP: 304 / ETag test: local version is up to date: " + tile);
+                    if (debug) System.out.println("Tile "+id+": Answer from HTTP=304 / ETag test: local version is up to date");
                     dbTile.lastModified = getLastModTime();
                     dao.updateModTime(sourceName, id, dbTile);
                     return;
@@ -289,7 +286,7 @@ class OsmDBTilesLoader extends OsmTileLoader {
                             Thread.sleep(5000+(new Random()).nextInt(5000));
                             continue;
                         }
-                        log.log(Level.FINE, "Loading from OSM{0}", tile);
+                        if (debug) System.out.println("Tile "+id+": Loading from OSM, "+ tile);
                         byte[] buffer = loadTileInBuffer(urlConn);
                         if (buffer != null) {
                             tile.loadImage(new ByteArrayInputStream(buffer));
@@ -307,8 +304,8 @@ class OsmDBTilesLoader extends OsmTileLoader {
                 tile.setError(e.getMessage());
                 listener.tileLoadingFinished(tile, false);
                 try {
-                    log.log(Level.SEVERE, "Failed loading {0}: {1}", new Object[]{tile.getUrl(), e.getMessage()});
-                    e.printStackTrace();
+                    System.out.println("Tile "+id+": Error: Failed loading from "+tile.getUrl());
+                    e.printStackTrace(System.out);
                 } catch(IOException i) {
                 }
             } finally {

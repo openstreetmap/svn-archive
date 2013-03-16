@@ -23,6 +23,8 @@ elif [ -s /usr/share/launch4j/launch4j.jar ]; then
     LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
 elif [ -s ../launch4j/launch4j.jar ]; then
     LAUNCH4J="java -jar ../launch4j/launch4j.jar"
+elif [ -s $HOME/launch4j/launch4j.jar ]; then
+    LAUNCH4J="java -jar $HOME/launch4j/launch4j.jar"
 else
     # launch4j installed locally under this nsis folder
     LAUNCH4J="java -jar ./launch4j/launch4j.jar"

@@ -58,6 +58,8 @@ public class IODBReader {
             } else {
                 if( qName.equals("object") ) {
                     fields.isNode = attributes.getValue("type").equals("node");
+                } else if( qName.equals("last-user") ) {
+                    fields.lastUserId = Integer.parseInt(attributes.getValue("id"));
                 } else if( qName.equals("imagery-position") ) {
                     fields.imageryPos = parseLatLon(attributes);
                 } else if( qName.equals("imagery") ) {
@@ -101,8 +103,6 @@ public class IODBReader {
                     fields.imagery = accumulator.toString();
                 } else if( qName.equals("object") ) {
                     fields.objectId = Integer.parseInt(accumulator.toString());
-                } else if( qName.equals("last-user") ) {
-                    fields.lastUserId = Integer.parseInt(accumulator.toString());
                 } else if( qName.equals("offset") || qName.equals("calibration-object") ) {
                     // store offset
                     try {

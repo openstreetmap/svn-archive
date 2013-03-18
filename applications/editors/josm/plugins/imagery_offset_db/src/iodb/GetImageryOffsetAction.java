@@ -2,30 +2,21 @@ package iodb;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
+import java.util.*;
+import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
+import org.openstreetmap.josm.actions.DownloadPrimitiveAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.projection.Projection;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.OsmTransferException;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.xml.sax.SAXException;
 
 /**
  * Download a list of imagery offsets for the current position, let user choose which one to use.
@@ -34,15 +25,15 @@ import org.xml.sax.SAXException;
  */
 public class GetImageryOffsetAction extends JosmAction {
     
-    private List<ImageryOffsetBase> offsets;
-    
     public GetImageryOffsetAction() {
         super(tr("Get Imagery Offset..."), "getoffset", tr("Download offsets for current imagery from a server"),
-                Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")), KeyEvent.VK_I, Shortcut.ALT+Shortcut.CTRL), true);
-        offsets = Collections.emptyList();
+                Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")),
+                KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
     }
 
     public void actionPerformed(ActionEvent e) {
+        if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
+            return;
         Projection proj = Main.map.mapView.getProjection();
         LatLon center = proj.eastNorth2latlon(Main.map.mapView.getCenter());
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
@@ -50,88 +41,123 @@ public class GetImageryOffsetAction extends JosmAction {
         if( imagery == null )
             return;
         
-        List<ImageryOffsetBase> offsets = download(center, imagery); // todo: async
-        /*DownloadOffsets download = new DownloadOffsets();
-        Future<?> future = Main.worker.submit(download);
-        try {
-            future.get();
-        } catch( Exception ex ) {
-            ex.printStackTrace();
+        DownloadOffsetsTask download = new DownloadOffsetsTask(center, layer, imagery);
+        Main.worker.submit(download);
+    }
+
+    @Override
+    protected void updateEnabledState() {
+        boolean state = true;
+        if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
+            state = false;
+        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        if( ImageryOffsetTools.getImageryID(layer) == null )
+            state = false;
+        setEnabled(state);
+    }
+    
+    private void showOffsetDialog( List<ImageryOffsetBase> offsets, ImageryLayer layer ) {
+        if( offsets.isEmpty() ) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("No data for this region. Please adjust imagery layer and upload an offset."),
+                    ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
-        }*/
-        
-        // todo: show a dialog for selecting one of the offsets (without "update" flag)
-        ImageryOffsetBase offset = new OffsetDialog(offsets).showDialog();
+        }
+        final ImageryOffsetBase offset = new OffsetDialog(offsets).showDialog();
         if( offset != null ) {
-            // todo: use the chosen offset
             if( offset instanceof ImageryOffset ) {
                 ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset)offset);
+                Main.map.repaint();
             } else if( offset instanceof CalibrationObject ) {
-                // todo: select object
+                OsmPrimitive obj = ((CalibrationObject)offset).getObject();
+                final List<PrimitiveId> ids = new ArrayList<PrimitiveId>(1);
+                ids.add(obj);
+                DownloadPrimitiveAction.processItems(false, ids, false, true);
+                Main.worker.submit(new AfterCalibrationDownloadTask((CalibrationObject)offset));
+            }
+        }
+    }
+
+    class AfterCalibrationDownloadTask implements Runnable {
+        private CalibrationObject offset;
+
+        public AfterCalibrationDownloadTask( CalibrationObject offset ) {
+            this.offset = offset;
+        }
+
+        @Override
+        public void run() {
+            OsmPrimitive p = getCurrentDataSet().getPrimitiveById(offset.getObject());
+            if( p == null ) {
+                return;
+            }
+            // check for last user
+            if( offset.getLastUserId() > 0 ) {
+                long uid = p.getUser().getId();
+                Date ts = p.getTimestamp();
+                if( p instanceof Way ) {
+                    for( Node n : ((Way)p).getNodes() ) {
+                        if( n.getTimestamp().after(ts) ) {
+                            ts = n.getTimestamp();
+                            uid = n.getUser().getId();
+                        }
+                    }
+                }
+                if( uid != offset.getLastUserId() ) {
+                    int result = JOptionPane.showConfirmDialog(Main.parent,
+                            tr("The calibration object has been changed in unknown way.\n"
+                             + "It may be moved or extended, thus ceasing to be a reliable mark\n"
+                             + "for imagery calibration. Do you want to notify the server of this?"),
+                            ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    if( result == JOptionPane.YES_OPTION ) {
+                        DeprecateOffsetAction.deprecateOffset(offset);
+                        return;
+                    }
+                }
+            }
+            Main.main.getCurrentDataSet().setSelected(p);
+            AutoScaleAction.zoomTo(Collections.singleton(p));
+            if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("An object has been selected on the map. Find the corresponding feature\n"
+                         + "on the imagery layer and move that layer accordingly.\n"
+                         + "DO NOT touch the selected object, so it can be used by others later."),
+                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
+                Main.pref.put("iodb.calibration.message", true);
             }
         }
     }
     
-    private List<ImageryOffsetBase> download( LatLon center, String imagery ) {
-        String base = Main.pref.get("iodb.server.url", "http://offsets.textual.ru/");
-        String query = "get?lat=" + center.getX() + "&lon=" + center.getY();
-        List<ImageryOffsetBase> result = null;
-        try {
-            query = query + "&imagery=" + URLEncoder.encode(imagery, "utf-8");
-            URL url = new URL(base + query);
-            System.out.println("url=" + url);
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.connect();
-            int retCode = connection.getResponseCode();
-            InputStream inp = connection.getInputStream();
-            if( inp != null ) {
-                result = new IODBReader(inp).parse();
-                System.out.println("result.size() = " + result.size());
+    class DownloadOffsetsTask extends SimpleOffsetQueryTask {
+        private ImageryLayer layer;
+        private List<ImageryOffsetBase> offsets;
+
+        public DownloadOffsetsTask( LatLon center, ImageryLayer layer, String imagery ) {
+            super(null, tr("Loading imagery offsets..."));
+            try {
+                String query = "get?lat=" + center.lat() + "&lon=" + center.lon()
+                        + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
+                setQuery(query);
+            } catch( UnsupportedEncodingException e ) {
+                throw new IllegalArgumentException(e);
             }
-            connection.disconnect();
-        } catch( MalformedURLException ex ) {
-            // ?
-        } catch( UnsupportedEncodingException e ) {
-            // do nothing. WTF is that?
-        } catch( IOException e ) {
-            e.printStackTrace();
-            // ?
-        } catch( SAXException e ) {
-            e.printStackTrace();
-            // ?
-        }
-        if( result == null )
-            result = new ArrayList<ImageryOffsetBase>();
-        return result;
-    }
-    
-    class DownloadOffsets extends PleaseWaitRunnable {
-        
-        private boolean cancelled;
-
-        public DownloadOffsets() {
-            super(tr("Downloading calibration data"));
-            cancelled = false;
+            this.layer = layer;
         }
 
         @Override
-        protected void realRun() throws SAXException, IOException, OsmTransferException {
-            // todo: open httpconnection to server and read xml
-            if( cancelled )
-                return;
-            
-        }
-
-        @Override
-        protected void finish() {
-            if( cancelled )
-                return;
-            // todo: parse xml and return an array of ImageryOffsetBase
+        protected void afterFinish() {
+            if( !cancelled && offsets != null )
+                showOffsetDialog(offsets, layer);
         }
         
         @Override
-        protected void cancel() {
-            cancelled = true;
+        protected void processResponse( InputStream inp ) throws UploadException {
+            offsets = null;
+            try {
+                offsets = new IODBReader(inp).parse();
+            } catch( Exception e ) {
+                throw new UploadException("Error processing XML response: " + e.getMessage());
+            }
         }
     }
 }

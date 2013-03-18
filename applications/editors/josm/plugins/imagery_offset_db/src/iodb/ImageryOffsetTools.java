@@ -1,13 +1,14 @@
 package iodb;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Some common static methods for querying imagery layers.
@@ -15,9 +16,11 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
  * @author zverik
  */
 public class ImageryOffsetTools {
-    private static HashMap<String, String> imageryAliases;
+    public static final String DIALOG_TITLE = tr("Imagery Offset");
     
     public static ImageryLayer getTopImageryLayer() {
+        if( Main.map == null || Main.map.mapView == null )
+            return null;
         List<ImageryLayer> layers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
         for( ImageryLayer layer : layers ) {
             if( layer.isVisible() ) {
@@ -27,7 +30,7 @@ public class ImageryOffsetTools {
         return null;
     }
     
-    private static LatLon getMapCenter() {
+    public static LatLon getMapCenter() {
         Projection proj = Main.getProjection();
         return Main.map == null || Main.map.mapView == null
                 ? new LatLon(0, 0) : proj.eastNorth2latlon(Main.map.mapView.getCenter());
@@ -36,7 +39,7 @@ public class ImageryOffsetTools {
     public static LatLon getLayerOffset( ImageryLayer layer, LatLon center ) {
         Projection proj = Main.getProjection();
         EastNorth offsetCenter = proj.latlon2eastNorth(center);
-        EastNorth centerOffset = offsetCenter.add(layer.getDx(), layer.getDy()); // todo: add or substract?
+        EastNorth centerOffset = offsetCenter.add(-layer.getDx(), -layer.getDy()); // todo: add or substract?
         LatLon offsetLL = proj.eastNorth2latlon(centerOffset);
         return offsetLL;
     }
@@ -45,7 +48,7 @@ public class ImageryOffsetTools {
         Projection proj = Main.getProjection();
         EastNorth center = proj.latlon2eastNorth(offset.getPosition());
         EastNorth offsetPos = proj.latlon2eastNorth(offset.getImageryPos());
-        layer.setOffset(offsetPos.getX() - center.getX(), offsetPos.getY() - center.getY()); // todo: + or -?
+        layer.setOffset(center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY());
     }
     
     public static String getImageryID( ImageryLayer layer ) {
@@ -56,24 +59,66 @@ public class ImageryOffsetTools {
         if( url == null )
             return null;
         
-        if( imageryAliases == null )
-            loadImageryAliases();
-        for( String substr : imageryAliases.keySet() )
-            if( url.contains(substr) )
-                return imageryAliases.get(substr);
-        
-        return url; // todo: strip parametric parts, etc
-    }
-    
-    private static void loadImageryAliases() {
-        if( imageryAliases == null )
-            imageryAliases = new HashMap<String, String>();
-        else
-            imageryAliases.clear();
-        
-        // { substring, alias }
-        imageryAliases.put("bing", "bing");
-        // todo: load from a resource?
+        // predefined layers
+        if( layer.getInfo().getImageryType().equals(ImageryInfo.ImageryType.BING) || url.contains("tiles.virtualearth.net") )
+            return "bing";
+
+        if( layer.getInfo().getImageryType().equals(ImageryInfo.ImageryType.SCANEX) && url.toLowerCase().equals("irs") )
+            return "scanex_irs";
+
+        boolean isWMS = layer.getInfo().getImageryType().equals(ImageryInfo.ImageryType.WMS);
+
+        System.out.println(url);
+
+        // Remove protocol
+        int i = url.indexOf("://");
+        url = url.substring(i + 3);
+
+        // Split URL into address and query string
+        i = url.indexOf('?');
+        String query = "";
+        if( i > 0 ) {
+            query = url.substring(i);
+            url = url.substring(0, i);
+        }
+
+        // Parse query parameters into a sorted map
+        Map<String, String> qparams = new TreeMap<String, String>();
+        String[] qparamsStr = query.length() > 1 ? query.substring(1).split("&") : new String[0];
+        for( String param : qparamsStr ) {
+            String[] kv = param.split("=");
+            kv[0] = kv[0].toLowerCase();
+            // WMS: if this is WMS, remove all parameters except map and layers
+            if( isWMS && !(kv[0].equals("map") || kv[0].equals("layers")) )
+                continue;
+            // TMS: skip parameters with variable values
+            if( kv.length > 1 && kv[1].indexOf('{') >= 0 && kv[1].indexOf('}') > 0 )
+                continue;
+            qparams.put(kv[0].toLowerCase(), kv.length > 1 ? kv[1] : null);
+        }
+
+        // Reconstruct query parameters
+        StringBuilder sb = new StringBuilder();
+        for( String qk : qparams.keySet() ) {
+            if( sb.length() > 0 )
+                sb.append('&');
+            else if( query.length() > 0 )
+                sb.append('?');
+            sb.append(qk).append('=').append(qparams.get(qk));
+        }
+        query = sb.toString();
+
+        // TMS: remove /{zoom} and /{y}.png parts
+        url = url.replaceAll("\\/\\{[^}]+\\}(?:\\.\\w+)?", "");
+        // TMS: remove variable parts
+        url = url.replaceAll("\\{[^}]+\\}", "");
+        while( url.contains("..") )
+            url = url.replace("..", ".");
+        if( url.startsWith(".") )
+            url = url.substring(1);
+
+        System.out.println("-> " + url + query);
+        return url + query;
     }
     
     // Following three methods were snatched from TMSLayer
@@ -108,5 +153,9 @@ public class ImageryOffsetTools {
         double result = Math.log(factor) / Math.log(2) / 2 + 1;
         int intResult = (int) Math.floor(result);
         return intResult;
+    }
+
+    public static String getServerURL() {
+        return Main.pref.get("iodb.server.url", "http://offsets.textual.ru/");
     }
 }

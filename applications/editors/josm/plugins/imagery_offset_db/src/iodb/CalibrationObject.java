@@ -17,7 +17,7 @@ public class CalibrationObject extends ImageryOffsetBase {
     }
 
     public CalibrationObject(OsmPrimitive object) {
-        this(object, getLastUserId(object));
+        this(object, 0);
     }
 
     public long getLastUserId() {
@@ -28,16 +28,15 @@ public class CalibrationObject extends ImageryOffsetBase {
         return object;
     }
     
-    private static long getLastUserId( OsmPrimitive object ) {
-        return object.getUser() == null ? -1 : object.getUser().getId(); // todo?
-    }
-
     @Override
     public void putServerParams( Map<String, String> map ) {
         super.putServerParams(map);
         map.put("object", object instanceof Node ? "node" : "way");
         map.put("id", String.valueOf(object.getId()));
-        map.put("lastuser", String.valueOf(lastUserId));
     }
-    
+
+    @Override
+    public String toString() {
+        return "CalibrationObject{" + "object=" + object + ", lastUserId=" + lastUserId + "position=" + position + ", date=" + date + ", author=" + author + ", description=" + description + ", abandonDate=" + abandonDate + '}';
+    }
 }

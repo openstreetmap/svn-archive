@@ -19,10 +19,12 @@ public class ImageryOffsetPlugin extends Plugin {
         getAction = new GetImageryOffsetAction();
         storeAction = new StoreImageryOffsetAction();
         
-        Main.main.menu.imageryMenu.addSeparator();
-        Main.main.menu.imageryMenu.add(getAction);
-        Main.main.menu.imageryMenu.add(storeAction);
-        
-        // todo: make MapMode for viewing and updating imagery offsets
+        // todo: correct menu
+        Main.main.menu.viewMenu.addSeparator();
+        Main.main.menu.viewMenu.add(getAction);
+        Main.main.menu.viewMenu.add(storeAction);
+
+        // todo: add a button on toolbar
+        // todo: make MapMode for viewing and updating imagery offsets (is it needed?)
     }
 }

@@ -12,7 +12,7 @@ public class OffsetDialogButton extends JButton {
     private ImageryOffsetBase offset;
 
     public OffsetDialogButton( ImageryOffsetBase offset ) {
-        super(offset.getDescription() + " (" + offset.getPosition().lat() + ", " + offset.getPosition().lon() + ")");
+        super(offset.getDescription() + " (" + Math.round(offset.getPosition().greatCircleDistance(ImageryOffsetTools.getMapCenter())) + " m)");
         this.offset = offset;
     }
 

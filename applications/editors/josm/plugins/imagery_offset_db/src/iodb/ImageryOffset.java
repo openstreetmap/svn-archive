@@ -56,4 +56,9 @@ public class ImageryOffset extends ImageryOffsetBase {
         if( maxZoom < 30 )
             map.put("maxzoom", String.valueOf(maxZoom));
     }
+
+    @Override
+    public String toString() {
+        return "ImageryOffset{" + "imageryPos=" + imageryPos + ", imagery=" + imagery + "position=" + position + ", date=" + date + ", author=" + author + ", description=" + description + ", abandonDate=" + abandonDate + '}';
+    }
 }

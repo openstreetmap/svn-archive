@@ -11,11 +11,14 @@ import org.openstreetmap.josm.data.coor.LatLon;
  * @author zverik
  */
 public class ImageryOffsetBase {
-    private LatLon position;
-    private Date date;
-    private String author;
-    private String description;
-    private Date abandonDate;
+    protected long offsetId;
+    protected LatLon position;
+    protected Date date;
+    protected String author;
+    protected String description;
+    protected Date abandonDate;
+    protected String abandonAuthor;
+    protected String abandonReason;
     
     public void setBasicInfo( LatLon position, String author, String description, Date date ) {
         this.position = position;
@@ -25,6 +28,14 @@ public class ImageryOffsetBase {
         this.abandonDate = null;
     }
 
+    public void setId( long id ) {
+        this.offsetId = id;
+    }
+
+    public long getId() {
+        return offsetId;
+    }
+
     public void setAbandonDate(Date abandonDate) {
         this.abandonDate = abandonDate;
     }
@@ -32,8 +43,16 @@ public class ImageryOffsetBase {
     public Date getAbandonDate() {
         return abandonDate;
     }
+
+    public String getAbandonAuthor() {
+        return abandonAuthor;
+    }
+
+    public String getAbandonReason() {
+        return abandonReason;
+    }
     
-    public boolean isAbandoned() {
+    public boolean isDeprecated() {
         return abandonDate != null;
     }
 
@@ -49,6 +68,10 @@ public class ImageryOffsetBase {
         return description;
     }
 
+    public void setDescription( String description ) {
+        this.description = description;
+    }
+
     public LatLon getPosition() {
         return position;
     }
@@ -58,5 +81,10 @@ public class ImageryOffsetBase {
         map.put("lon", position.lonToString(CoordinateFormat.DECIMAL_DEGREES));
         map.put("author", author);
         map.put("description", description);
+    }
+
+    @Override
+    public String toString() {
+        return "ImageryOffsetBase{" + "position=" + position + ", date=" + date + ", author=" + author + ", description=" + description + ", abandonDate=" + abandonDate + '}';
     }
 }

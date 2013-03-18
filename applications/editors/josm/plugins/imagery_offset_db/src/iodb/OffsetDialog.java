@@ -28,8 +28,14 @@ public class OffsetDialog extends JDialog implements ActionListener {
         for( ImageryOffsetBase offset : offsets ) {
             OffsetDialogButton button = new OffsetDialogButton(offset);
             button.addActionListener(this);
+/*            JPopupMenu popupMenu = new JPopupMenu();
+            popupMenu.add(new OffsetInfoAction(offset));
+            if( !offset.isDeprecated() )
+                popupMenu.add(new DeprecateOffsetAction(offset));
+            button.add(popupMenu);*/
             buttonPanel.add(button);
         }
+        // todo: calibration objects and deprecated offsets button
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton); // todo: proper button

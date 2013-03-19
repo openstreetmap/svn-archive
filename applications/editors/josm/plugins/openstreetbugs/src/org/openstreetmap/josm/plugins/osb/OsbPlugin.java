@@ -165,7 +165,9 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         try {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    dialog.setEnabled(false);
+                    if (dialog != null) {
+                        dialog.setEnabled(false);
+                    }
                 }
             });
         } catch (Exception e) {

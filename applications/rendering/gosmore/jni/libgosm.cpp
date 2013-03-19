@@ -212,7 +212,7 @@ void GosmSearch (int clon, int clat, const char *key)
         (unsigned) (clon + (clon & (1 << (bits + 16))) * 4 -
                                               (2 << (bits + 16))) >> 16);
       // Now we search through the 4 squares around (clat, clon)
-      for (int mask = 0, maskI = 0; maskI < 4; mask += 0x55555555, maskI++) {
+      for (unsigned mask = 0; (mask & 7) != 4; mask += 0x55555555) {
         int s = GosmIdxSearch (gosmData + idx[count + l],
           (cz ^ (mask & swap)) & ~((4 << (bits << 1)) - 1)) - idx;
 /* Print the square
@@ -2364,7 +2364,7 @@ int SortRelations (void)
       #endif
       
       rel = rel || stricmp (name, "relation") == 0;
-      if (stricmp (name, "relation") == 0 && rStart < member.size ()) {
+      if (stricmp (name, "relation") == 0) { // && rStart < member.size ()) {
         while (rStart < member.size ()) member[rStart++].tags = s->c_str ();
         s = new string (); // It leaks memory, but it cannot be freed until
                            // moments before exit.

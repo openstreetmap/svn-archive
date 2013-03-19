@@ -85,7 +85,6 @@ static HWND   mWnd, dlgWnd = NULL, hwndEdit, button3D, buttons[3];
 #include <gdk/gdkx.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <curl/curl.h>
-#include <curl/types.h>
 #include <curl/easy.h>
 #endif
 #include "openglespolygon.h"
@@ -3518,7 +3517,7 @@ int UserInterface (int argc, char *argv[],
     return 0;
   }
 
-  printf ("%s is in the public domain and comes without warranty\n",argv[0]);
+  printf ("%s is provided as is and any warranties are disclaimed. \n",argv[0]);
   #ifndef HEADLESS
 
   curl_global_init (CURL_GLOBAL_ALL);

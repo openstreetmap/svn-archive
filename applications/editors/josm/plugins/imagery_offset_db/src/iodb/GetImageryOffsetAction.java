@@ -8,11 +8,8 @@ import java.net.*;
 import java.util.*;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.AutoScaleAction;
-import org.openstreetmap.josm.actions.DownloadPrimitiveAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -69,65 +66,20 @@ public class GetImageryOffsetAction extends JosmAction {
                 ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset)offset);
                 Main.map.repaint();
             } else if( offset instanceof CalibrationObject ) {
-                OsmPrimitive obj = ((CalibrationObject)offset).getObject();
-                final List<PrimitiveId> ids = new ArrayList<PrimitiveId>(1);
-                ids.add(obj);
-                DownloadPrimitiveAction.processItems(false, ids, false, true);
-                Main.worker.submit(new AfterCalibrationDownloadTask((CalibrationObject)offset));
+                CalibrationLayer clayer = new CalibrationLayer((CalibrationObject)offset);
+                Main.map.mapView.addLayer(clayer);
+                clayer.panToCenter();
+                if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
+                    JOptionPane.showMessageDialog(Main.parent, // todo: update text
+                            tr("A layer has been added with a calibration geometry. Hide data layers,\n"
+                            + "find the corresponding feature on the imagery layer and move it accordingly."),
+                            ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
+                    Main.pref.put("iodb.calibration.message", true);
+                }
             }
         }
     }
 
-    class AfterCalibrationDownloadTask implements Runnable {
-        private CalibrationObject offset;
-
-        public AfterCalibrationDownloadTask( CalibrationObject offset ) {
-            this.offset = offset;
-        }
-
-        @Override
-        public void run() {
-            OsmPrimitive p = getCurrentDataSet().getPrimitiveById(offset.getObject());
-            if( p == null ) {
-                return;
-            }
-            // check for last user
-            if( offset.getLastUserId() > 0 ) {
-                long uid = p.getUser().getId();
-                Date ts = p.getTimestamp();
-                if( p instanceof Way ) {
-                    for( Node n : ((Way)p).getNodes() ) {
-                        if( n.getTimestamp().after(ts) ) {
-                            ts = n.getTimestamp();
-                            uid = n.getUser().getId();
-                        }
-                    }
-                }
-                if( uid != offset.getLastUserId() ) {
-                    int result = JOptionPane.showConfirmDialog(Main.parent,
-                            tr("The calibration object has been changed in unknown way.\n"
-                             + "It may be moved or extended, thus ceasing to be a reliable mark\n"
-                             + "for imagery calibration. Do you want to notify the server of this?"),
-                            ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                    if( result == JOptionPane.YES_OPTION ) {
-                        DeprecateOffsetAction.deprecateOffset(offset);
-                        return;
-                    }
-                }
-            }
-            Main.main.getCurrentDataSet().setSelected(p);
-            AutoScaleAction.zoomTo(Collections.singleton(p));
-            if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("An object has been selected on the map. Find the corresponding feature\n"
-                         + "on the imagery layer and move that layer accordingly.\n"
-                         + "DO NOT touch the selected object, so it can be used by others later."),
-                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
-                Main.pref.put("iodb.calibration.message", true);
-            }
-        }
-    }
-    
     class DownloadOffsetsTask extends SimpleOffsetQueryTask {
         private ImageryLayer layer;
         private List<ImageryOffsetBase> offsets;
@@ -137,6 +89,9 @@ public class GetImageryOffsetAction extends JosmAction {
             try {
                 String query = "get?lat=" + center.lat() + "&lon=" + center.lon()
                         + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
+                int radius = Main.pref.getInteger("iodb.radius", -1);
+                if( radius > 0 )
+                    query = query + "?radius=" + radius;
                 setQuery(query);
             } catch( UnsupportedEncodingException e ) {
                 throw new IllegalArgumentException(e);

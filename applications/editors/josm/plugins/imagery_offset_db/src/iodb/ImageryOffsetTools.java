@@ -1,5 +1,6 @@
 package iodb;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -17,6 +18,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class ImageryOffsetTools {
     public static final String DIALOG_TITLE = tr("Imagery Offset");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     
     public static ImageryLayer getTopImageryLayer() {
         if( Main.map == null || Main.map.mapView == null )

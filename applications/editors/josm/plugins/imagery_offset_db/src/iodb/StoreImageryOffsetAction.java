@@ -45,33 +45,16 @@ public class StoreImageryOffsetAction extends JosmAction {
         Collection<OsmPrimitive> selectedObjects = getCurrentDataSet().getSelected();
         if( selectedObjects.size() == 1 ) {
             OsmPrimitive selection = selectedObjects.iterator().next();
-            if( selection instanceof Node || selection instanceof Way ) {
-                boolean suitable = !selection.isNewOrUndeleted() && !selection.isDeleted() && !selection.isModified();
-                if( selection instanceof Way ) {
-                    for( Node n : ((Way)selection).getNodes() )
-                        if( n.isNewOrUndeleted() || n.isDeleted() || n.isModified() )
-                            suitable = false;
-                } else if( selection.isReferredByWays(1) ) {
-                    suitable = false;
-                }
-                if( suitable ) {
-                    String[] options = new String[] {tr("Store calibration object"), tr("Store imagery offset"), tr("Cancel")};
-                    int result = JOptionPane.showOptionDialog(Main.parent,
-                            tr("The selected object can be used as a calibration object. What do you intend to do?"), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                            null, options, options[0]);
-                    if( result == 2 || result == JOptionPane.CLOSED_OPTION )
-                        return;
-                    if( result == 0 )
-                        calibration = selection;
-                } else {
-                    String[] options = new String[] {tr("Store imagery offset"), tr("Cancel")};
-                    int result = JOptionPane.showOptionDialog(Main.parent,
-                            tr("You have an object selected and might want to use it as a calibration object.\n"
-                             + "But in this case it should be uploaded to OSM server first."), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-                            null, options, options[1]);
-                    if( result == 1 || result == JOptionPane.CLOSED_OPTION )
-                        return;
-                }
+            if( (selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1) ) {
+                String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset"), tr("Cancel")};
+                int result = JOptionPane.showOptionDialog(Main.parent,
+                        tr("The selected object can be used as a calibration geometry. What do you intend to do?"),
+                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                        null, options, options[0]);
+                if( result == 2 || result == JOptionPane.CLOSED_OPTION )
+                    return;
+                if( result == 0 )
+                    calibration = selection;
             }
         }
 
@@ -87,15 +70,12 @@ public class StoreImageryOffsetAction extends JosmAction {
             }
             LatLon offset = ImageryOffsetTools.getLayerOffset(layer, center);
             offsetObj = new ImageryOffset(ImageryOffsetTools.getImageryID(layer), offset);
-            message = "You are registering an imagery offset.\n"
-                    + "Other users in this area will be able to use it for mapping.\n"
-                    + "Please make sure it is as precise as possible, and\n"
-                    + "describe a region this offset is applicable to.";
+            message = "You are registering an imagery offset. Other users in this area will be able to use it for mapping.\n"
+                    + "Please make sure it is as precise as possible, and describe a region this offset is applicable to.";
         } else {
             // register calibration object
             offsetObj = new CalibrationObject(calibration);
-            message = "You are registering calibration object.\n"
-                    + "It should be the most precisely positioned object,\n"
+            message = "You are registering a calibration geometry. It should be the most precisely positioned object,\n"
                     + "with clearly visible boundaries on various satellite imagery.\n"
                     + "Please describe a region where this object is located.";
         }

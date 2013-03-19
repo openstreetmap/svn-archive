@@ -10,9 +10,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -32,6 +29,7 @@ public class IODBReader {
         private StringBuffer accumulator = new StringBuffer();
         private IOFields fields;
         private boolean parsingOffset;
+        private boolean parsingDeprecate;
         private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
 
         @Override
@@ -50,16 +48,16 @@ public class IODBReader {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             if( !parsingOffset ) {
-                if( qName.equals("offset") || qName.equals("calibration-object") ) {
+                if( qName.equals("offset") || qName.equals("calibration") ) {
                     parsingOffset = true;
+                    parsingDeprecate = false;
                     fields.clear();
                     fields.position = parseLatLon(attributes);
+                    fields.id = Integer.parseInt(attributes.getValue("id"));
                 }
             } else {
-                if( qName.equals("object") ) {
-                    fields.isNode = attributes.getValue("type").equals("node");
-                } else if( qName.equals("last-user") ) {
-                    fields.lastUserId = Integer.parseInt(attributes.getValue("id"));
+                if( qName.equals("node") ) {
+                    fields.geometry.add(parseLatLon(attributes));
                 } else if( qName.equals("imagery-position") ) {
                     fields.imageryPos = parseLatLon(attributes);
                 } else if( qName.equals("imagery") ) {
@@ -69,6 +67,8 @@ public class IODBReader {
                         fields.minZoom = Integer.parseInt(minZoom);
                     if( maxZoom != null )
                         fields.maxZoom = Integer.parseInt(maxZoom);
+                } else if( qName.equals("deprecated") ) {
+                    parsingDeprecate = true;
                 }
             }
             accumulator.setLength(0);
@@ -84,26 +84,28 @@ public class IODBReader {
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if( parsingOffset ) {
                 if( qName.equals("author") ) {
-                    fields.author = accumulator.toString();
+                    if( !parsingDeprecate )
+                        fields.author = accumulator.toString();
+                    else
+                        fields.abandonAuthor = accumulator.toString();
                 } else if( qName.equals("description") ) {
                     fields.description = accumulator.toString();
+                } else if( qName.equals("reason") && parsingDeprecate ) {
+                    fields.abandonReason = accumulator.toString();
                 } else if( qName.equals("date") ) {
                     try {
-                        fields.date = dateParser.parse(accumulator.toString());
+                        if( !parsingDeprecate )
+                            fields.date = dateParser.parse(accumulator.toString());
+                        else
+                            fields.abandonDate = dateParser.parse(accumulator.toString());
                     } catch (ParseException ex) {
                         throw new SAXException(ex);
                     }
                 } else if( qName.equals("deprecated") ) {
-                    try {
-                        fields.abandonDate = dateParser.parse(accumulator.toString());
-                    } catch (ParseException ex) {
-                        throw new SAXException(ex);
-                    }
+                    parsingDeprecate = false;
                 } else if( qName.equals("imagery") ) {
                     fields.imagery = accumulator.toString();
-                } else if( qName.equals("object") ) {
-                    fields.objectId = Integer.parseInt(accumulator.toString());
-                } else if( qName.equals("offset") || qName.equals("calibration-object") ) {
+                } else if( qName.equals("offset") || qName.equals("calibration") ) {
                     // store offset
                     try {
                         offsets.add(fields.constructObject());
@@ -135,58 +137,59 @@ public class IODBReader {
     }
     
     private class IOFields {
+        public int id;
         public LatLon position;
         public Date date;
         public String author;
         public String description;
         public Date abandonDate;
+        public String abandonAuthor;
+        public String abandonReason;
         public LatLon imageryPos;
         public String imagery;
         public int minZoom, maxZoom;
-        public boolean isNode;
-        public long objectId;
-        public long lastUserId;
+        public List<LatLon> geometry;
 
         public IOFields() {
             clear();
         }
         
         public void clear() {
+            id = -1;
             position = null;
             date = null;
             author = null;
             description = null;
             abandonDate = null;
+            abandonAuthor = null;
+            abandonReason = null;
             imageryPos = null;
             imagery = null;
             minZoom = -1;
             maxZoom = -1;
-            isNode = false;
-            objectId = -1;
-            lastUserId = -1;
+            geometry = new ArrayList<LatLon>();
         }
 
         public ImageryOffsetBase constructObject() {
             if( author == null || description == null || position == null || date == null )
                 throw new IllegalArgumentException("Not enought arguments to build an object");
-            if( objectId < 0 ) {
+            ImageryOffsetBase result;
+            if( geometry.isEmpty() ) {
                 if( imagery == null || imageryPos == null )
                     throw new IllegalArgumentException("Both imagery and imageryPos should be sepcified for the offset");
-                ImageryOffset result = new ImageryOffset(imagery, imageryPos);
+                result = new ImageryOffset(imagery, imageryPos);
                 if( minZoom >= 0 )
-                    result.setMinZoom(minZoom);
+                    ((ImageryOffset)result).setMinZoom(minZoom);
                 if( maxZoom >= 0 )
-                    result.setMaxZoom(maxZoom);
-                result.setBasicInfo(position, author, description, date);
-                result.setAbandonDate(abandonDate);
-                return result;
+                    ((ImageryOffset)result).setMaxZoom(maxZoom);
             } else {
-                OsmPrimitive p = isNode ? new Node(objectId) : new Way(objectId);
-                CalibrationObject result = new CalibrationObject(p, lastUserId);
-                result.setBasicInfo(position, author, description, date);
-                result.setAbandonDate(abandonDate);
-                return result;
+                result = new CalibrationObject(geometry.toArray(new LatLon[0]));
             }
+            if( id >= 0 )
+                result.setId(id);
+            result.setBasicInfo(position, author, description, date);
+            result.setDeprecated(abandonDate, abandonAuthor, abandonReason);
+            return result;
         }
     }
 }

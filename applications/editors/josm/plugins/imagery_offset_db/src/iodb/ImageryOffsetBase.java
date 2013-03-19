@@ -36,8 +36,10 @@ public class ImageryOffsetBase {
         return offsetId;
     }
 
-    public void setAbandonDate(Date abandonDate) {
+    public void setDeprecated(Date abandonDate, String author, String reason) {
         this.abandonDate = abandonDate;
+        this.abandonAuthor = author;
+        this.abandonReason = reason;
     }
 
     public Date getAbandonDate() {

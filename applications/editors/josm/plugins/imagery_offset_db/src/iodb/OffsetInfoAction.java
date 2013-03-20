@@ -34,18 +34,29 @@ public class OffsetInfoAction extends AbstractAction {
     public static Object getInformationObject( ImageryOffsetBase offset ) {
         StringBuilder sb = new StringBuilder();
         if( offset instanceof ImageryOffset ) {
-            double[] ld = getLengthAndDirection((ImageryOffset)offset);
-            sb.append(tr("An imagery offset of {0} m to {1}", ld[0], explainDirection(ld[1]))).append('\n');
-            sb.append("Imagery ID: ").append(((ImageryOffset)offset).getImagery());
-        } else
-            sb.append(tr("A calibration {0}", getGeometryType((CalibrationObject)offset)));
-        sb.append("\n\nCreated by ").append(offset.getAuthor());
-        sb.append(" on ").append(DATE_FORMAT.format(offset.getDate())).append("\n");
+            double[] ld = ImageryOffsetTools.getLengthAndDirection((ImageryOffset)offset);
+            sb.append(ld[0] < 1e-3 ? tr("An imagery offset of 0 mm") : tr("An imagery offset of {0} to {1}",
+                    ImageryOffsetTools.formatDistance(ld[0]), explainDirection(ld[1]))).append('\n');
+            sb.append("Imagery ID: ").append(((ImageryOffset)offset).getImagery()).append('\n');
+        } else {
+            sb.append(tr("A calibration {0}", getGeometryType((CalibrationObject)offset))).append('\n');
+        }
+        
+        double dist = ImageryOffsetTools.getMapCenter().greatCircleDistance(offset.getPosition());
+        double heading = dist < 1 ? 0.0 : ImageryOffsetTools.getMapCenter().heading(offset.getPosition());
+        sb.append(dist < 10 ? tr("Determined right here") : tr("Determined at a point {0} to the {1}",
+                ImageryOffsetTools.formatDistance(dist), explainDirection(heading)));
+        
+        sb.append('\n').append('\n');
+        sb.append("Created by ").append(offset.getAuthor());
+        sb.append(" on ").append(DATE_FORMAT.format(offset.getDate())).append('\n');
         sb.append("Description: ").append(offset.getDescription());
+        
         if( offset.isDeprecated() ) {
-            sb.append("\n\nThis geometry was marked obsolete\n");
+            sb.append('\n').append('\n');
+            sb.append("This geometry was marked obsolete").append('\n');
             sb.append("by ").append(offset.getAbandonAuthor());
-            sb.append(" on ").append(DATE_FORMAT.format(offset.getAbandonDate())).append("\n");
+            sb.append(" on ").append(DATE_FORMAT.format(offset.getAbandonDate())).append('\n');
             sb.append("Reason: ").append(offset.getAbandonReason());
         }
         return sb.toString();
@@ -65,18 +76,16 @@ public class OffsetInfoAction extends AbstractAction {
             return "geometry";
     }
 
-    public static double[] getLengthAndDirection( ImageryOffset offset ) {
-        return getLengthAndDirection(offset, 0.0, 0.0);
-    }
-
-    public static double[] getLengthAndDirection( ImageryOffset offset, double dx, double dy ) {
-        double length = 0.0;
-        double direction = 0.0;
-        // todo: calculate length and angular direction
-        return new double[] { length, direction };
-    }
-
     public static String explainDirection( double dir ) {
-        return "nowhere"; // todo
+        dir = dir * 8 / Math.PI;
+        if( dir < 1 || dir >= 15 ) return tr("north");
+        if( dir < 3 ) return tr("northeast");
+        if( dir < 5 ) return tr("east");
+        if( dir < 7 ) return tr("southeast");
+        if( dir < 9 ) return tr("south");
+        if( dir < 11 ) return tr("southwest");
+        if( dir < 13 ) return tr("west");
+        if( dir < 15 ) return tr("northwest");
+        return "nowhere";
     }
 }

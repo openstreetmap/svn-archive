@@ -23,9 +23,8 @@ public class OffsetDialogButton extends JButton {
 
     public OffsetDialogButton( ImageryOffsetBase offset ) {
         super();
-        // todo: fix layout
-        setMinimumSize(new Dimension(500, 80));
-        setMaximumSize(new Dimension(500, 140));
+        setMinimumSize(new Dimension(500, 10));
+        setMaximumSize(new Dimension(500, 150));
         setText("<html>"
                 + Math.round(offset.getPosition().greatCircleDistance(ImageryOffsetTools.getMapCenter())) + " m: "
                 + offset.getDescription() + "</html>");
@@ -40,15 +39,18 @@ public class OffsetDialogButton extends JButton {
         return offset;
     }
 
-/*    @Override
+    @Override
     public Dimension getPreferredSize() {
-        return new Dimension(500, super.getPreferredSize().height);
-    }*/
+        Dimension size = super.getPreferredSize();
+        size.width = 500;
+        size.height = 70;
+        return size;
+    }
 
     private double[] getLengthAndDirection( ImageryOffset offset ) {
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
         double[] dxy = layer == null ? new double[] {0.0, 0.0} : new double[] {layer.getDx(), layer.getDy()};
-        return OffsetInfoAction.getLengthAndDirection((ImageryOffset)offset, dxy[0], dxy[1]);
+        return ImageryOffsetTools.getLengthAndDirection((ImageryOffset)offset, dxy[0], dxy[1]);
     }
 
     class OffsetIcon implements Icon {
@@ -65,7 +67,7 @@ public class OffsetDialogButton extends JButton {
                 background = ImageProvider.get("offset");
                 ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
                 double[] dxy = layer == null ? new double[] {0.0, 0.0} : new double[] { layer.getDx(), layer.getDy() };
-                double[] ld = OffsetInfoAction.getLengthAndDirection((ImageryOffset)offset, dxy[0], dxy[1]);
+                double[] ld = ImageryOffsetTools.getLengthAndDirection((ImageryOffset)offset, dxy[0], dxy[1]);
                 length = ld[0];
                 direction = ld[1];
             } else {

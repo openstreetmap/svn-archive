@@ -1,16 +1,16 @@
 package iodb;
 
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.tools.GBC;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -30,7 +30,7 @@ public class OffsetDialog extends JDialog implements ActionListener {
     public OffsetDialog( List<ImageryOffsetBase> offsets ) {
         super(JOptionPane.getFrameForComponent(Main.parent), ImageryOffsetTools.DIALOG_TITLE, ModalityType.DOCUMENT_MODAL);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setResizable(false);
+//        setResizable(false);
         this.offsets = offsets;
 
         // make this dialog close on "escape"
@@ -40,7 +40,6 @@ public class OffsetDialog extends JDialog implements ActionListener {
     }
     
     private void prepareDialog() {
-        Box dialog = new Box(BoxLayout.Y_AXIS);
         updateButtonPanel();
         final JCheckBox calibrationBox = new JCheckBox(tr("Calibration geometries"));
         calibrationBox.setSelected(Main.pref.getBoolean(PREF_CALIBRATION, true));
@@ -65,6 +64,7 @@ public class OffsetDialog extends JDialog implements ActionListener {
         cancelButton.addActionListener(this);
         cancelButton.setAlignmentX(CENTER_ALIGNMENT);
 
+        Box dialog = new Box(BoxLayout.Y_AXIS);
         dialog.add(buttonPanel);
         dialog.add(checkBoxPanel);
         dialog.add(cancelButton);
@@ -91,7 +91,6 @@ public class OffsetDialog extends JDialog implements ActionListener {
             button.setComponentPopupMenu(popupMenu);
             buttonPanel.add(button);
         }
-//        buttonPanel.setMinimumSize(buttonPanel.getPreferredSize());
         pack();
     }
 

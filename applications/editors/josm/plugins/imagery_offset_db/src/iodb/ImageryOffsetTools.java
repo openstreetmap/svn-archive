@@ -18,7 +18,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class ImageryOffsetTools {
     public static final String DIALOG_TITLE = tr("Imagery Offset");
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     
     public static ImageryLayer getTopImageryLayer() {
         if( Main.map == null || Main.map.mapView == null )
@@ -41,16 +40,25 @@ public class ImageryOffsetTools {
     public static LatLon getLayerOffset( ImageryLayer layer, LatLon center ) {
         Projection proj = Main.getProjection();
         EastNorth offsetCenter = proj.latlon2eastNorth(center);
-        EastNorth centerOffset = offsetCenter.add(-layer.getDx(), -layer.getDy()); // todo: add or substract?
+        EastNorth centerOffset = offsetCenter.add(-layer.getDx(), -layer.getDy());
         LatLon offsetLL = proj.eastNorth2latlon(centerOffset);
         return offsetLL;
     }
     
     public static void applyLayerOffset( ImageryLayer layer, ImageryOffset offset ) {
+        double[] dxy = calculateOffset(offset);
+        layer.setOffset(dxy[0], dxy[1]);
+    }
+
+    /**
+     * Calculate dx and dy for imagery offset.
+     * @return [dx, dy]
+     */
+    public static double[] calculateOffset( ImageryOffset offset ) {
         Projection proj = Main.getProjection();
         EastNorth center = proj.latlon2eastNorth(offset.getPosition());
         EastNorth offsetPos = proj.latlon2eastNorth(offset.getImageryPos());
-        layer.setOffset(center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY());
+        return new double[] { center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY() };
     }
     
     public static String getImageryID( ImageryLayer layer ) {

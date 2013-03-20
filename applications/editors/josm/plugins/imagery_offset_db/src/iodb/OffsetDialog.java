@@ -21,6 +21,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class OffsetDialog extends JDialog implements ActionListener {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
+    private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 5);
 
     private List<ImageryOffsetBase> offsets;
     private ImageryOffsetBase selectedOffset;
@@ -41,8 +42,7 @@ public class OffsetDialog extends JDialog implements ActionListener {
     private void prepareDialog() {
         Box dialog = new Box(BoxLayout.Y_AXIS);
         updateButtonPanel();
-        // todo: calibration objects and deprecated offsets button
-        final JCheckBox calibrationBox = new JCheckBox(tr("Hide calibration geometries"));
+        final JCheckBox calibrationBox = new JCheckBox(tr("Calibration geometries"));
         calibrationBox.setSelected(Main.pref.getBoolean(PREF_CALIBRATION, true));
         calibrationBox.addActionListener(new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
@@ -50,7 +50,7 @@ public class OffsetDialog extends JDialog implements ActionListener {
                 updateButtonPanel();
             }
         });
-        final JCheckBox deprecatedBox = new JCheckBox(tr("Show deprecated offsets"));
+        final JCheckBox deprecatedBox = new JCheckBox(tr("Deprecated offsets"));
         deprecatedBox.setSelected(Main.pref.getBoolean(PREF_DEPRECATED, false));
         deprecatedBox.addActionListener(new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
@@ -91,6 +91,7 @@ public class OffsetDialog extends JDialog implements ActionListener {
             button.setComponentPopupMenu(popupMenu);
             buttonPanel.add(button);
         }
+//        buttonPanel.setMinimumSize(buttonPanel.getPreferredSize());
         pack();
     }
 
@@ -104,6 +105,8 @@ public class OffsetDialog extends JDialog implements ActionListener {
             if( offset instanceof CalibrationObject && !showCalibration )
                 continue;
             filteredOffsets.add(offset);
+            if( filteredOffsets.size() >= MAX_OFFSETS )
+                break;
         }
         return filteredOffsets;
     }

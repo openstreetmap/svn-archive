@@ -46,7 +46,7 @@ public class StoreImageryOffsetAction extends JosmAction {
         if( selectedObjects.size() == 1 ) {
             OsmPrimitive selection = selectedObjects.iterator().next();
             if( (selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1) ) {
-                String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset"), tr("Cancel")};
+                String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset")};
                 int result = JOptionPane.showOptionDialog(Main.parent,
                         tr("The selected object can be used as a calibration geometry. What do you intend to do?"),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
@@ -58,7 +58,7 @@ public class StoreImageryOffsetAction extends JosmAction {
             }
         }
 
-        Object message = "";
+        Object message;
         LatLon center = ImageryOffsetTools.getMapCenter();
         ImageryOffsetBase offsetObj;
         if( calibration == null ) {
@@ -75,25 +75,13 @@ public class StoreImageryOffsetAction extends JosmAction {
         } else {
             // register calibration object
             offsetObj = new CalibrationObject(calibration);
-            message = "You are registering a calibration geometry. It should be the most precisely positioned object,\n"
-                    + "with clearly visible boundaries on various satellite imagery.\n"
-                    + "Please describe a region where this object is located.";
+            message = "You are registering a calibration geometry. It should be the most precisely positioned object, with\n"
+                    + "clearly visible boundaries on various satellite imagery. Please describe this object and its whereabouts.";
         }
+        String description = queryDescription(message);
+        if( description == null )
+            return;
         offsetObj.setBasicInfo(center, userName, null, null);
-        String description = null;
-        boolean iterated = false;
-        while( description == null ) {
-            description = JOptionPane.showInputDialog(Main.parent, message, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
-            if( description == null || description.length() == 0 )
-                return;
-            if( description.length() < 3 || description.length() > 200 ) {
-                description = null;
-                if( !iterated ) {
-                    message = message + "\n" + tr("Description should be 3 to 200 letters long.");
-                    iterated = true;
-                }
-            }
-        }
         offsetObj.setDescription(description);
 
         // upload object info to server
@@ -113,6 +101,27 @@ public class StoreImageryOffsetAction extends JosmAction {
         } catch( UnsupportedEncodingException ex ) {
             // WTF
         }
+    }
+
+    public static String queryDescription( Object message ) {
+        String reason = null;
+        boolean iterated = false;
+        boolean ok = false;
+        while( !ok ) {
+            Object result = JOptionPane.showInputDialog(Main.parent, message, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE, null, null, reason);
+            if( result == null || result.toString().length() == 0 ) {
+                return null;
+            }
+            reason = result.toString();
+            if( reason.length() < 3 || reason.length() > 200 ) {
+                if( !iterated ) {
+                    message = message + "\n" + tr("This string should be 3 to 200 letters long.");
+                    iterated = true;
+                }
+            } else
+                ok = true;
+        }
+        return reason;
     }
 
     @Override

@@ -70,7 +70,7 @@ public class GetImageryOffsetAction extends JosmAction {
                 Main.map.mapView.addLayer(clayer);
                 clayer.panToCenter();
                 if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
-                    JOptionPane.showMessageDialog(Main.parent, // todo: update text
+                    JOptionPane.showMessageDialog(Main.parent,
                             tr("A layer has been added with a calibration geometry. Hide data layers,\n"
                             + "find the corresponding feature on the imagery layer and move it accordingly."),
                             ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);

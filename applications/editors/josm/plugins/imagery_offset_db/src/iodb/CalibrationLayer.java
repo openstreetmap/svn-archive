@@ -86,32 +86,13 @@ public class CalibrationLayer extends Layer {
 
     @Override
     public String getToolTipText() {
-        return "A calibration " + getGeometryType() + " by " + obj.getAuthor();
+        return "A " + (obj.isDeprecated() ? "deprecated " : "") + "calibration " + OffsetInfoAction.getGeometryType(obj)
+                + " by " + obj.getAuthor();
     }
 
     @Override
     public Object getInfoComponent() {
-        String info = "A calibration " + getGeometryType() + "\n"
-                + "Created by " + obj.getAuthor() + " on " + ImageryOffsetTools.DATE_FORMAT.format(obj.getDate()) + "\n"
-                + "Description: " + obj.getDescription();
-        if( obj.isDeprecated() ) {
-            info += "\nThis geometry was marked obsolete\n"
-                    + "by " + obj.getAbandonAuthor() + " on " + ImageryOffsetTools.DATE_FORMAT.format(obj.getAbandonDate()) + "\n"
-                    + "Reason: " + obj.getAbandonReason();
-        }
-        return info;
-    }
-
-    private String getGeometryType() {
-        int n = obj.getGeometry().length;
-        if( n == 1 )
-            return "point";
-        else if( n > 1 && !obj.getGeometry()[0].equals(obj.getGeometry()[n-1]) )
-            return "path";
-        else if( n > 1 && obj.getGeometry()[0].equals(obj.getGeometry()[n-1]) )
-            return "polygon";
-        else
-            return "geometry";
+        return OffsetInfoAction.getInformationObject(obj);
     }
 
     @Override

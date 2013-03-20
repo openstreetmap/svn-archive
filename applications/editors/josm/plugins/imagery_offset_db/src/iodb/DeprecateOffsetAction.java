@@ -29,8 +29,10 @@ public class DeprecateOffsetAction extends AbstractAction {
         if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
             return;
         
+        String desc = offset instanceof ImageryOffset ? "imagery offset is wrong"
+                : "calibration geometry is aligned badly";
         if( JOptionPane.showConfirmDialog(Main.parent,
-                tr("Warning: deprecation is irreversible"), // todo: expand
+                tr("Warning: deprecation is basically irreversible!\nAre you sure this " + desc + "?"),
                 ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION ) {
             return;
         }
@@ -45,22 +47,10 @@ public class DeprecateOffsetAction extends AbstractAction {
         }
 
         String message = "Please enter the reason why you mark this "
-                + (offset instanceof ImageryOffset ? "imagery offset" : "calibraion object") + " as deprecated:";
-        String reason = null;
-        boolean iterated = false;
-        while( reason == null ) {
-            reason = JOptionPane.showInputDialog(Main.parent, message, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
-            if( reason == null || reason.length() == 0 ) {
-                return;
-            }
-            if( reason.length() < 3 || reason.length() > 200 ) {
-                reason = null;
-                if( !iterated ) {
-                    message = message + "\n" + tr("Reason text should be 3 to 200 letters long.");
-                    iterated = true;
-                }
-            }
-        }
+                + (offset instanceof ImageryOffset ? "imagery offset" : "calibraion geometry") + " as deprecated:";
+        String reason = StoreImageryOffsetAction.queryDescription(message);
+        if( reason == null )
+            return;
         
         try {
             String query = "deprecate?id=" + offset.getId()

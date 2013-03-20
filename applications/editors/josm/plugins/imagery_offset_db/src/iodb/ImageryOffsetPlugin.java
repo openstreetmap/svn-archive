@@ -1,8 +1,11 @@
 package iodb;
 
+import java.awt.event.KeyEvent;
+import javax.swing.JMenu;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 
 /**
  * Add some actions to the imagery menu.
@@ -19,10 +22,9 @@ public class ImageryOffsetPlugin extends Plugin {
         getAction = new GetImageryOffsetAction();
         storeAction = new StoreImageryOffsetAction();
         
-        // todo: correct menu
-        Main.main.menu.viewMenu.addSeparator();
-        Main.main.menu.viewMenu.add(getAction);
-        Main.main.menu.viewMenu.add(storeAction);
+        JMenu offsetMenu = Main.main.menu.addMenu(marktr("Offset"), KeyEvent.VK_O, 6, "help");
+        offsetMenu.add(getAction);
+        offsetMenu.add(storeAction);
 
         // todo: add a button on toolbar
         // todo: make MapMode for viewing and updating imagery offsets (is it needed?)

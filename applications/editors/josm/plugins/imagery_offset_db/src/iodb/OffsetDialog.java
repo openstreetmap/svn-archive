@@ -10,28 +10,35 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.gui.NavigatableComponent;
+import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.OpenBrowser;
 
 /**
  * The dialog which presents a choice between imagery align options.
  * 
  * @author zverik
  */
-public class OffsetDialog extends JDialog implements ActionListener {
+public class OffsetDialog extends JDialog implements ActionListener, NavigatableComponent.ZoomChangeListener {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
     private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 5);
+    private static final boolean MODAL = false; // modal does not work for executing actions
 
     private List<ImageryOffsetBase> offsets;
     private ImageryOffsetBase selectedOffset;
     private JPanel buttonPanel;
 
     public OffsetDialog( List<ImageryOffsetBase> offsets ) {
-        super(JOptionPane.getFrameForComponent(Main.parent), ImageryOffsetTools.DIALOG_TITLE, ModalityType.DOCUMENT_MODAL);
+        super(JOptionPane.getFrameForComponent(Main.parent), ImageryOffsetTools.DIALOG_TITLE,
+                MODAL ? ModalityType.DOCUMENT_MODAL : ModalityType.MODELESS);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//        setResizable(false);
+        setResizable(false);
         this.offsets = offsets;
+        NavigatableComponent.addZoomChangeListener(this);
 
         // make this dialog close on "escape"
         getRootPane().registerKeyboardAction(this,
@@ -60,14 +67,17 @@ public class OffsetDialog extends JDialog implements ActionListener {
         Box checkBoxPanel = new Box(BoxLayout.X_AXIS);
         checkBoxPanel.add(calibrationBox);
         checkBoxPanel.add(deprecatedBox);
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton(tr("Cancel"), ImageProvider.get("cancel"));
         cancelButton.addActionListener(this);
-        cancelButton.setAlignmentX(CENTER_ALIGNMENT);
+        JButton helpButton = new JButton(new HelpAction());
+        JPanel cancelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        cancelPanel.add(cancelButton);
+        cancelPanel.add(helpButton);
 
         Box dialog = new Box(BoxLayout.Y_AXIS);
         dialog.add(buttonPanel);
         dialog.add(checkBoxPanel);
-        dialog.add(cancelButton);
+        dialog.add(cancelPanel);
 
         dialog.setBorder(new CompoundBorder(dialog.getBorder(), new EmptyBorder(5, 5, 5, 5)));
         setContentPane(dialog);
@@ -86,8 +96,11 @@ public class OffsetDialog extends JDialog implements ActionListener {
             button.addActionListener(this);
             JPopupMenu popupMenu = new JPopupMenu();
             popupMenu.add(new OffsetInfoAction(offset));
-            if( !offset.isDeprecated() )
-                popupMenu.add(new DeprecateOffsetAction(offset));
+            if( !offset.isDeprecated() ) {
+                DeprecateOffsetAction action = new DeprecateOffsetAction(offset);
+                action.setListener(new DeprecateOffsetListener(offset));
+                popupMenu.add(action);
+            }
             button.setComponentPopupMenu(popupMenu);
             buttonPanel.add(button);
         }
@@ -109,6 +122,14 @@ public class OffsetDialog extends JDialog implements ActionListener {
         }
         return filteredOffsets;
     }
+
+    public void zoomChanged() {
+        for( Component c : buttonPanel.getComponents() ) {
+            if( c instanceof OffsetDialogButton ) {
+                ((OffsetDialogButton)c).updateLocation();
+            }
+        }
+    }
     
     public ImageryOffsetBase showDialog() {
         selectedOffset = null;
@@ -117,11 +138,69 @@ public class OffsetDialog extends JDialog implements ActionListener {
         return selectedOffset;
     }
 
+    public void applyOffset() {
+        if( selectedOffset instanceof ImageryOffset ) {
+            ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+            ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset)selectedOffset);
+            Main.map.repaint();
+            if( !Main.pref.getBoolean("iodb.offset.message", false) ) {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("The topmost imagery layer has been shifted to presumably match\n"
+                        + "OSM data in the area. Please check that the offset is still valid\n"
+                        + "by downloading GPS tracks and comparing them and OSM data to the imagery."),
+                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
+                Main.pref.put("iodb.offset.message", true);
+            }
+        } else if( selectedOffset instanceof CalibrationObject ) {
+            CalibrationLayer clayer = new CalibrationLayer((CalibrationObject)selectedOffset);
+            Main.map.mapView.addLayer(clayer);
+            clayer.panToCenter();
+            if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
+                JOptionPane.showMessageDialog(Main.parent,
+                        tr("A layer has been added with a calibration geometry. Hide data layers,\n"
+                        + "find the corresponding feature on the imagery layer and move it accordingly."),
+                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
+                Main.pref.put("iodb.calibration.message", true);
+            }
+        }
+    }
+
     public void actionPerformed( ActionEvent e ) {
         if( e.getSource() instanceof OffsetDialogButton ) {
             selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
         } else
             selectedOffset = null;
+        NavigatableComponent.removeZoomChangeListener(this);
         setVisible(false);
+        if( !MODAL && selectedOffset != null )
+            applyOffset();
+    }
+
+    private class DeprecateOffsetListener implements QuerySuccessListener {
+        ImageryOffsetBase offset;
+
+        public DeprecateOffsetListener( ImageryOffsetBase offset ) {
+            this.offset = offset;
+        }
+
+        public void queryPassed() {
+            offset.setDeprecated(new Date(), JosmUserIdentityManager.getInstance().getUserName(), "");
+            updateButtonPanel();
+        }
+    }
+
+    class HelpAction extends AbstractAction {
+
+        public HelpAction() {
+            super(tr("Help"));
+            putValue(SMALL_ICON, ImageProvider.get("help"));
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            String base = "http://wiki.openstreetmap.org/wiki/";
+            String page = "Imagery_Offset_Database";
+            String lang = "RU:"; // todo: determine it
+            OpenBrowser.displayUrl(base + lang + page);
+        }
     }
 }

@@ -35,7 +35,7 @@ public class OffsetInfoAction extends AbstractAction {
         StringBuilder sb = new StringBuilder();
         if( offset instanceof ImageryOffset ) {
             double[] ld = ImageryOffsetTools.getLengthAndDirection((ImageryOffset)offset);
-            sb.append(ld[0] < 1e-3 ? tr("An imagery offset of 0 mm") : tr("An imagery offset of {0} to {1}",
+            sb.append(ld[0] < 1e-2 ? tr("An imagery offset of 0 mm") : tr("An imagery offset of {0} to {1}",
                     ImageryOffsetTools.formatDistance(ld[0]), explainDirection(ld[1]))).append('\n');
             sb.append("Imagery ID: ").append(((ImageryOffset)offset).getImagery()).append('\n');
         } else {
@@ -43,8 +43,8 @@ public class OffsetInfoAction extends AbstractAction {
         }
         
         double dist = ImageryOffsetTools.getMapCenter().greatCircleDistance(offset.getPosition());
-        double heading = dist < 1 ? 0.0 : ImageryOffsetTools.getMapCenter().heading(offset.getPosition());
-        sb.append(dist < 10 ? tr("Determined right here") : tr("Determined at a point {0} to the {1}",
+        double heading = dist < 10 ? 0.0 : ImageryOffsetTools.getMapCenter().heading(offset.getPosition());
+        sb.append(dist < 50 ? tr("Determined right here") : tr("Determined at a point {0} to the {1}",
                 ImageryOffsetTools.formatDistance(dist), explainDirection(heading)));
         
         sb.append('\n').append('\n');

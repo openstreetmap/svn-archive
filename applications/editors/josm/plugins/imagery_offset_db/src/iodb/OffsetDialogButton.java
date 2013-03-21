@@ -23,16 +23,23 @@ public class OffsetDialogButton extends JButton {
 
     public OffsetDialogButton( ImageryOffsetBase offset ) {
         super();
+        this.offset = offset;
         setMinimumSize(new Dimension(500, 10));
         setMaximumSize(new Dimension(500, 150));
-        setText("<html>"
-                + Math.round(offset.getPosition().greatCircleDistance(ImageryOffsetTools.getMapCenter())) + " m: "
-                + offset.getDescription() + "</html>");
+        setRelevantText();
         setIcon(new OffsetIcon(offset));
-        this.offset = offset;
 
         offsetLength = offset instanceof ImageryOffset ? getLengthAndDirection((ImageryOffset)offset)[0] : 0.0;
         // todo: layout, info, map distance and direction
+    }
+
+    /**
+     * Update text on the button. This method is to be deleted by release.
+     */
+    public void setRelevantText() {
+        setText("<html>"
+                + ImageryOffsetTools.formatDistance(offset.getPosition().greatCircleDistance(ImageryOffsetTools.getMapCenter()))
+                + ": " + offset.getDescription() + "</html>");
     }
 
     public ImageryOffsetBase getOffset() {
@@ -45,6 +52,14 @@ public class OffsetDialogButton extends JButton {
         size.width = 500;
         size.height = 70;
         return size;
+    }
+
+    /**
+     * Update arrow for the offset location.
+     */
+    public void updateLocation() {
+        // map was moved, update arrow.
+        setRelevantText();
     }
 
     private double[] getLengthAndDirection( ImageryOffset offset ) {

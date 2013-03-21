@@ -1,5 +1,6 @@
 package iodb;
 
+import iodb.QuerySuccessListener;
 import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
@@ -17,6 +18,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class DeprecateOffsetAction extends AbstractAction {
     private ImageryOffsetBase offset;
+    private QuerySuccessListener listener;
     
     public DeprecateOffsetAction( ImageryOffsetBase offset ) {
         super(tr("Deprecate Offset"));
@@ -36,10 +38,18 @@ public class DeprecateOffsetAction extends AbstractAction {
                 ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION ) {
             return;
         }
-        deprecateOffset(offset);
+        deprecateOffset(offset, listener);
+    }
+
+    public void setListener( QuerySuccessListener listener ) {
+        this.listener = listener;
     }
 
     public static void deprecateOffset( ImageryOffsetBase offset ) {
+        deprecateOffset(offset, null);
+    }
+
+    public static void deprecateOffset( ImageryOffsetBase offset, QuerySuccessListener listener ) {
         String userName = JosmUserIdentityManager.getInstance().getUserName();
         if( userName == null ) {
             JOptionPane.showMessageDialog(Main.parent, tr("To store imagery offsets you must be a registered OSM user."), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
@@ -57,6 +67,8 @@ public class DeprecateOffsetAction extends AbstractAction {
                 + "&author=" + URLEncoder.encode(userName, "UTF8")
                 + "&reason=" + URLEncoder.encode(reason, "UTF8");
             SimpleOffsetQueryTask depTask = new SimpleOffsetQueryTask(query, tr("Notifying the server of the deprecation..."));
+            if( listener != null )
+                depTask.setListener(listener);
             Main.worker.submit(depTask);
         } catch( UnsupportedEncodingException ex ) {
             // WTF

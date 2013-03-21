@@ -1,5 +1,6 @@
 package iodb;
 
+import java.text.MessageFormat;
 import java.util.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -176,7 +177,7 @@ public class ImageryOffsetTools {
         EastNorth pos = proj.latlon2eastNorth(offset.getPosition());
         LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(dx, dy));
         double length = correctedCenterLL.greatCircleDistance(offset.getImageryPos());
-        double direction = length < 1e-3 ? 0.0 : correctedCenterLL.heading(offset.getImageryPos());
+        double direction = length < 1e-2 ? 0.0 : correctedCenterLL.heading(offset.getImageryPos());
         // todo: north vs south. Meanwhile, let's fix this dirty:
         direction = Math.PI - direction;
         if( direction < 0 )
@@ -185,13 +186,17 @@ public class ImageryOffsetTools {
     }
 
     public static String formatDistance( double d ) {
-        if( d < 0.0095 ) return tr("{0,number,0} mm", d * 1000);
-        if( d < 0.095 ) return tr("{0,number,0.0} cm", d * 100);
-        if( d < 0.95) return tr("{0,number,0} cm", d * 100);
-        if( d < 9.5 ) return tr("{0,number,0.0} m", d);
-        if( d < 950 ) return tr("{0,number,0} m", d);
-        if( d < 9500 ) return tr("{0,number,0.0} km", d / 1000);
-        return tr("{0,number,0} km", d / 1000);
+        if( d < 0.0095 ) return formatDistance(d * 1000, tr("mm"), false);
+        if( d < 0.095 )  return formatDistance(d * 100,  tr("cm"), true );
+        if( d < 0.95 )   return formatDistance(d * 100,  tr("cm"), false);
+        if( d < 9.5 )    return formatDistance(d,        tr("m"),  true );
+        if( d < 950 )    return formatDistance(d,        tr("m"),  false );
+        if( d < 9500 )   return formatDistance(d / 1000, tr("km"), true);
+        return formatDistance(d / 1000, tr("km"), false);
+    }
+
+    private static String formatDistance( double d, String si, boolean floating ) {
+        return MessageFormat.format(floating ? "{0,number,0.0} {1}" : "{0,number,0} {1}", d, si);
     }
 
     public static String getServerURL() {

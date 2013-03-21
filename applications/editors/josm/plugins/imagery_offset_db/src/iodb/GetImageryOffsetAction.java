@@ -60,24 +60,9 @@ public class GetImageryOffsetAction extends JosmAction {
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        final ImageryOffsetBase offset = new OffsetDialog(offsets).showDialog();
-        if( offset != null ) {
-            if( offset instanceof ImageryOffset ) {
-                ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset)offset);
-                Main.map.repaint();
-            } else if( offset instanceof CalibrationObject ) {
-                CalibrationLayer clayer = new CalibrationLayer((CalibrationObject)offset);
-                Main.map.mapView.addLayer(clayer);
-                clayer.panToCenter();
-                if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr("A layer has been added with a calibration geometry. Hide data layers,\n"
-                            + "find the corresponding feature on the imagery layer and move it accordingly."),
-                            ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
-                    Main.pref.put("iodb.calibration.message", true);
-                }
-            }
-        }
+        OffsetDialog offsetDialog = new OffsetDialog(offsets);
+        if( offsetDialog.showDialog() != null )
+            offsetDialog.applyOffset();
     }
 
     class DownloadOffsetsTask extends SimpleOffsetQueryTask {
@@ -91,7 +76,7 @@ public class GetImageryOffsetAction extends JosmAction {
                         + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
                 int radius = Main.pref.getInteger("iodb.radius", -1);
                 if( radius > 0 )
-                    query = query + "?radius=" + radius;
+                    query = query + "&radius=" + radius;
                 setQuery(query);
             } catch( UnsupportedEncodingException e ) {
                 throw new IllegalArgumentException(e);

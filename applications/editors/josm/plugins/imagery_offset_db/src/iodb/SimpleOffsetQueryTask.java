@@ -21,6 +21,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     private String errorMessage;
     private String title;
     protected boolean cancelled;
+    private QuerySuccessListener listener;
 
     public SimpleOffsetQueryTask( String query, String title ) {
         super(tr("Uploading"));
@@ -31,6 +32,14 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
 
     public void setQuery( String query ) {
         this.query = query;
+    }
+
+    public void setListener( QuerySuccessListener listener ) {
+        this.listener = listener;
+    }
+
+    public void removeListener() {
+        this.listener = null;
     }
 
     @Override
@@ -49,7 +58,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     private void doQuery( String query ) throws UploadException, IOException {
         try {
             URL url = new URL(ImageryOffsetTools.getServerURL() + query);
-            System.out.println("url=" + url);
+            System.out.println("url=" + url); // todo: remove in release
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.connect();
             if( connection.getResponseCode() != 200 ) {
@@ -78,6 +87,8 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     protected void finish() {
         if( errorMessage != null ) {
             JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Imagery Offset"), JOptionPane.ERROR_MESSAGE);
+        } else if( listener != null ) {
+            listener.queryPassed();
         }
     }
 

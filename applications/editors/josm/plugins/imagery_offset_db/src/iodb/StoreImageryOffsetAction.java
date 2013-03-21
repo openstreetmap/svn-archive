@@ -131,6 +131,8 @@ public class StoreImageryOffsetAction extends JosmAction {
             state = false;
         if( ImageryOffsetTools.getTopImageryLayer() == null )
             state = false;
+        if( getCurrentDataSet() == null )
+            state = false;
         setEnabled(state);
     }
 }

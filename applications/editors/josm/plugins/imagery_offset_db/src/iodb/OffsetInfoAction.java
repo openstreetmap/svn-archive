@@ -33,18 +33,17 @@ public class OffsetInfoAction extends AbstractAction {
     public static Object getInformationObject( ImageryOffsetBase offset ) {
         StringBuilder sb = new StringBuilder();
         if( offset instanceof ImageryOffset ) {
-            double[] ld = ImageryOffsetTools.getLengthAndDirection((ImageryOffset)offset);
-            sb.append(ld[0] < 1e-2 ? tr("An imagery offset of 0 mm") : tr("An imagery offset of {0} to {1}",
-                    ImageryOffsetTools.formatDistance(ld[0]), explainDirection(ld[1]))).append('\n');
+            double odist = ((ImageryOffset)offset).getImageryPos().greatCircleDistance(offset.getPosition());
+            sb.append(odist < 1e-2 ? tr("An imagery offset of 0 mm") : tr("An imagery offset of {0}",
+                    ImageryOffsetTools.formatDistance(odist))).append('\n');
             sb.append("Imagery ID: ").append(((ImageryOffset)offset).getImagery()).append('\n');
         } else {
             sb.append(tr("A calibration {0}", getGeometryType((CalibrationObject)offset))).append('\n');
         }
         
         double dist = ImageryOffsetTools.getMapCenter().greatCircleDistance(offset.getPosition());
-        double heading = dist < 10 ? 0.0 : ImageryOffsetTools.getMapCenter().heading(offset.getPosition());
-        sb.append(dist < 50 ? tr("Determined right here") : tr("Determined at a point {0} to the {1}",
-                ImageryOffsetTools.formatDistance(dist), explainDirection(heading)));
+        sb.append(dist < 50 ? tr("Determined right here") : tr("Determined at a point {0} away",
+                ImageryOffsetTools.formatDistance(dist)));
         
         sb.append('\n').append('\n');
         sb.append("Created by ").append(offset.getAuthor());
@@ -73,18 +72,5 @@ public class OffsetInfoAction extends AbstractAction {
             return tr("polygon ({0} nodes)", n - 1);
         else
             return "geometry";
-    }
-
-    public static String explainDirection( double dir ) {
-        dir = dir * 8 / Math.PI;
-        if( dir < 1 || dir >= 15 ) return tr("north");
-        if( dir < 3 ) return tr("northeast");
-        if( dir < 5 ) return tr("east");
-        if( dir < 7 ) return tr("southeast");
-        if( dir < 9 ) return tr("south");
-        if( dir < 11 ) return tr("southwest");
-        if( dir < 13 ) return tr("west");
-        if( dir < 15 ) return tr("northwest");
-        return "nowhere";
     }
 }

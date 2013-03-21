@@ -10,9 +10,12 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
+import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.OpenBrowser;
@@ -22,7 +25,7 @@ import org.openstreetmap.josm.tools.OpenBrowser;
  * 
  * @author zverik
  */
-public class OffsetDialog extends JDialog implements ActionListener, NavigatableComponent.ZoomChangeListener {
+public class OffsetDialog extends JDialog implements ActionListener, NavigatableComponent.ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
     private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 5);
@@ -105,6 +108,7 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
             buttonPanel.add(button);
         }
         pack();
+        Main.map.mapView.repaint();
     }
 
     private List<ImageryOffsetBase> filterOffsets() {
@@ -130,10 +134,31 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
             }
         }
     }
+
+    public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
+        if( offsets == null )
+            return;
+
+        Graphics2D g2 = (Graphics2D)g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setStroke(new BasicStroke(2));
+        for( ImageryOffsetBase offset : filterOffsets() ) {
+            Point p = mv.getPoint(offset.getPosition());
+            g2.setColor(Color.BLACK);
+            g2.fillOval(p.x - 2, p.y - 2, 5, 5);
+            g2.setColor(Color.WHITE);
+            g2.drawOval(p.x - 3, p.y - 3, 7, 7);
+        }
+    }
     
     public ImageryOffsetBase showDialog() {
+        // todo: add a temporary layer showing all offsets
         selectedOffset = null;
         prepareDialog();
+        if( !MODAL ) {
+            Main.map.mapView.addTemporaryLayer(this);
+            Main.map.mapView.repaint();
+        }
         setVisible(true);
         return selectedOffset;
     }
@@ -172,8 +197,12 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
             selectedOffset = null;
         NavigatableComponent.removeZoomChangeListener(this);
         setVisible(false);
-        if( !MODAL && selectedOffset != null )
-            applyOffset();
+        if( !MODAL ) {
+            Main.map.mapView.removeTemporaryLayer(this);
+            Main.map.mapView.repaint();
+            if( selectedOffset != null )
+                applyOffset();
+        }
     }
 
     private class DeprecateOffsetListener implements QuerySuccessListener {

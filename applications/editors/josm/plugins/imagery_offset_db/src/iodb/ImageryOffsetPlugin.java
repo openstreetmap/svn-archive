@@ -25,8 +25,5 @@ public class ImageryOffsetPlugin extends Plugin {
         JMenu offsetMenu = Main.main.menu.addMenu(marktr("Offset"), KeyEvent.VK_O, 6, "help");
         offsetMenu.add(getAction);
         offsetMenu.add(storeAction);
-
-        // todo: add a button on toolbar
-        // todo: make MapMode for viewing and updating imagery offsets (is it needed?)
     }
 }

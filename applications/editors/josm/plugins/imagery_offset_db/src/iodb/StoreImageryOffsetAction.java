@@ -39,6 +39,8 @@ public class StoreImageryOffsetAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent, tr("To store imagery offsets you must be a registered OSM user."), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
+        if( userName.indexOf('@') > 0 )
+            userName = userName.replace('@', ',');
             
         // check if an object suitable for calibration is selected
         OsmPrimitive calibration = null;

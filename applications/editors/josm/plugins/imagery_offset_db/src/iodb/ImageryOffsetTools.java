@@ -175,11 +175,11 @@ public class ImageryOffsetTools {
     public static double[] getLengthAndDirection( ImageryOffset offset, double dx, double dy ) {
         Projection proj = Main.getProjection();
         EastNorth pos = proj.latlon2eastNorth(offset.getPosition());
-        LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(dx, dy));
+        LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(-dx, -dy));
         double length = correctedCenterLL.greatCircleDistance(offset.getImageryPos());
         double direction = length < 1e-2 ? 0.0 : correctedCenterLL.heading(offset.getImageryPos());
         // todo: north vs south. Meanwhile, let's fix this dirty:
-        direction = Math.PI - direction;
+//        direction = Math.PI - direction;
         if( direction < 0 )
             direction += Math.PI * 2;
         return new double[] {length, direction};

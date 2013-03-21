@@ -1,6 +1,5 @@
 package iodb;
 
-import iodb.QuerySuccessListener;
 import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.*;

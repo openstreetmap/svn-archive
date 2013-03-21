@@ -27,7 +27,7 @@ public class StoreImageryOffsetAction extends JosmAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if( Main.map == null || Main.map.mapView == null || getCurrentDataSet() == null )
+        if( Main.map == null || Main.map.mapView == null )
             return;
 
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
@@ -42,19 +42,21 @@ public class StoreImageryOffsetAction extends JosmAction {
             
         // check if an object suitable for calibration is selected
         OsmPrimitive calibration = null;
-        Collection<OsmPrimitive> selectedObjects = getCurrentDataSet().getSelected();
-        if( selectedObjects.size() == 1 ) {
-            OsmPrimitive selection = selectedObjects.iterator().next();
-            if( (selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1) ) {
-                String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset")};
-                int result = JOptionPane.showOptionDialog(Main.parent,
-                        tr("The selected object can be used as a calibration geometry. What do you intend to do?"),
-                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                        null, options, options[0]);
-                if( result == 2 || result == JOptionPane.CLOSED_OPTION )
-                    return;
-                if( result == 0 )
-                    calibration = selection;
+        if( getCurrentDataSet() != null ) {
+            Collection<OsmPrimitive> selectedObjects = getCurrentDataSet().getSelected();
+            if( selectedObjects.size() == 1 ) {
+                OsmPrimitive selection = selectedObjects.iterator().next();
+                if( (selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1) ) {
+                    String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset")};
+                    int result = JOptionPane.showOptionDialog(Main.parent,
+                            tr("The selected object can be used as a calibration geometry. What do you intend to do?"),
+                            ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                            null, options, options[0]);
+                    if( result == 2 || result == JOptionPane.CLOSED_OPTION )
+                        return;
+                    if( result == 0 )
+                        calibration = selection;
+                }
             }
         }
 
@@ -130,8 +132,6 @@ public class StoreImageryOffsetAction extends JosmAction {
         if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
             state = false;
         if( ImageryOffsetTools.getTopImageryLayer() == null )
-            state = false;
-        if( getCurrentDataSet() == null )
             state = false;
         setEnabled(state);
     }

@@ -9,6 +9,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
@@ -72,7 +73,8 @@ public class GetImageryOffsetAction extends JosmAction {
         public DownloadOffsetsTask( LatLon center, ImageryLayer layer, String imagery ) {
             super(null, tr("Loading imagery offsets..."));
             try {
-                String query = "get?lat=" + center.lat() + "&lon=" + center.lon()
+                String query = "get?lat=" + center.latToString(CoordinateFormat.DECIMAL_DEGREES)
+                        + "&lon=" + center.lonToString(CoordinateFormat.DECIMAL_DEGREES)
                         + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
                 int radius = Main.pref.getInteger("iodb.radius", -1);
                 if( radius > 0 )

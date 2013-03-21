@@ -5,7 +5,7 @@ package iodb;
  *
  * @author zverik
  */
-interface QuerySuccessListener {
+public interface QuerySuccessListener {
 
     /**
      * Query has been processed and did not fail.

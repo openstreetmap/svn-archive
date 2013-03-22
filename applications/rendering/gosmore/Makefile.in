@@ -53,13 +53,9 @@ all: gosmore$(EXE)
 
 gosmore:	jni/gosmore.cpp jni/libgosm.cpp jni/libgosm.h jni/bboxes.c \
 		jni/openglespolygon.h jni/openglespolygon.cpp
-		g++ -DCHILDREN=16 ${CFLAGS} ${WARNFLAGS} \
+		g++ ${CFLAGS} ${WARNFLAGS} \
                   jni/gosmore.cpp jni/libgosm.cpp jni/openglespolygon.h \
                   jni/openglespolygon.cpp -o gosmore ${EXTRA} ${XMLFLAGS}
-
-gosmore16:	jni/gosmore.cpp jni/libgosm.cpp jni/libgosm.h
-		g++ -DGOSMZ=16 ${CFLAGS} ${WARNFLAGS} ${XMLFLAGS} \
-                  jni/gosmore.cpp jni/libgosm.cpp -o gosmore16 ${EXTRA}
 
 $(ARCH)gosmore.exe:	jni/gosmore.cpp jni/libgosm.cpp gosmore.rsc jni/resource.h \
                     jni/libgosm.h jni/ceglue.h jni/ceglue.c bboxes.c

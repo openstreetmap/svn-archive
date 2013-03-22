@@ -181,7 +181,7 @@ int main (int argc, char *argv[])
       }
       // The tests for 'level' is not necessary for valid OSM-XML
       else if (level == 3 && strncasecmp (ptr, "id=", 3) == 0) {
-        id = atoi (ptr[3] == '\'' || ptr[3] == '\"' ? ptr + 4 : ptr + 3);
+        id = atoll (ptr[3] == '\'' || ptr[3] == '\"' ? ptr + 4 : ptr + 3);
       }
       else if (level == 3 && strncasecmp (ptr, "lat=", 4) == 0) {
         lat = atof (ptr[4] == '\'' || ptr[4] == '\"' ? ptr + 5 : ptr + 4);
@@ -193,7 +193,7 @@ int main (int argc, char *argv[])
         memberTipe = ptr[5] == '\'' || ptr[5] == '\"' ? ptr[6] : ptr[5];
       }
       else if (level == 4 && strncasecmp (ptr, "ref=", 4) == 0) {
-        ref = atoi (ptr[4] == '\'' || ptr[4] == '\"' ? ptr + 5 : ptr + 4);
+        ref = atoll (ptr[4] == '\'' || ptr[4] == '\"' ? ptr + 5 : ptr + 4);
       }
       ptr = n;
     } while (ptr + 1 < buf + cnt);

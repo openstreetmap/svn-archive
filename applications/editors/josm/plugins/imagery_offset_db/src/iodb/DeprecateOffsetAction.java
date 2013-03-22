@@ -11,14 +11,18 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Download a list of imagery offsets for the current position, let user choose which one to use.
+ * A context-dependent action to deprecate an offset.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class DeprecateOffsetAction extends AbstractAction {
     private ImageryOffsetBase offset;
     private QuerySuccessListener listener;
     
+    /**
+     * Initialize an action with an offset object.
+     */
     public DeprecateOffsetAction( ImageryOffsetBase offset ) {
         super(tr("Deprecate Offset"));
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
@@ -26,6 +30,12 @@ public class DeprecateOffsetAction extends AbstractAction {
         setEnabled(offset != null && !offset.isDeprecated());
     }
 
+    /**
+     * Asks a user if they really want to deprecate an offset (since this
+     * action is virtually irreversible) and calls
+     * {@link #deprecateOffset(iodb.ImageryOffsetBase, iodb.QuerySuccessListener)}
+     * on a positive answer.
+     */
     public void actionPerformed(ActionEvent e) {
         if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
             return;
@@ -40,14 +50,25 @@ public class DeprecateOffsetAction extends AbstractAction {
         deprecateOffset(offset, listener);
     }
 
+    /**
+     * Installs a listener to process successful deprecation event.
+     */
     public void setListener( QuerySuccessListener listener ) {
         this.listener = listener;
     }
 
+    /**
+     * Deprecate the given offset.
+     * @see #deprecateOffset(iodb.ImageryOffsetBase, iodb.QuerySuccessListener) 
+     */
     public static void deprecateOffset( ImageryOffsetBase offset ) {
         deprecateOffset(offset, null);
     }
 
+    /**
+     * Deprecate the given offset and call listener on success. Asks user the reason
+     * and executes {@link SimpleOffsetQueryTask} with a query to deprecate the offset.
+     */
     public static void deprecateOffset( ImageryOffsetBase offset, QuerySuccessListener listener ) {
         String userName = JosmUserIdentityManager.getInstance().getUserName();
         if( userName == null ) {

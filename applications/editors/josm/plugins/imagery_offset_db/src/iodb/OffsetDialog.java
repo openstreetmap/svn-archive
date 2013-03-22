@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -16,25 +19,35 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
+import org.openstreetmap.josm.tools.*;
 import static org.openstreetmap.josm.tools.I18n.tr;
-import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.OpenBrowser;
 
 /**
  * The dialog which presents a choice between imagery align options.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class OffsetDialog extends JDialog implements ActionListener, NavigatableComponent.ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
     private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 5);
-    private static final boolean MODAL = false; // modal does not work for executing actions
+
+    /**
+     * Whether to create a modal frame. It turns out, modal dialogs
+     * block swing worker thread, so offset deprecation, for example, takes
+     * place only after the dialog is closed. Very inconvenient.
+     */
+    private static final boolean MODAL = false;
 
     private List<ImageryOffsetBase> offsets;
     private ImageryOffsetBase selectedOffset;
     private JPanel buttonPanel;
 
+    /**
+     * Initialize the dialog and install listeners. 
+     * @param offsets The list of offset to choose from.
+     */
     public OffsetDialog( List<ImageryOffsetBase> offsets ) {
         super(JOptionPane.getFrameForComponent(Main.parent), ImageryOffsetTools.DIALOG_TITLE,
                 MODAL ? ModalityType.DOCUMENT_MODAL : ModalityType.MODELESS);
@@ -49,6 +62,9 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
     
+    /**
+     * Creates the GUI.
+     */
     private void prepareDialog() {
         updateButtonPanel();
         final JCheckBox calibrationBox = new JCheckBox(tr("Calibration geometries"));
@@ -88,6 +104,10 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         setLocationRelativeTo(Main.parent);
     }
 
+    /**
+     * As the name states, this method updates the button panel. It is called
+     * when a user clicks filtering checkboxes or deprecates an offset.
+     */
     private void updateButtonPanel() {
         List<ImageryOffsetBase> filteredOffsets = filterOffsets();
         if( buttonPanel == null )
@@ -111,6 +131,10 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         Main.map.mapView.repaint();
     }
 
+    /**
+     * Make a filtered offset list out of the full one. Takes into
+     * account both checkboxes.
+     */
     private List<ImageryOffsetBase> filterOffsets() {
         boolean showCalibration = Main.pref.getBoolean(PREF_CALIBRATION, true);
         boolean showDeprecated = Main.pref.getBoolean(PREF_DEPRECATED, false);
@@ -127,6 +151,10 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         return filteredOffsets;
     }
 
+    /**
+     * This listener method is called when a user pans or zooms the map.
+     * It does nothing, only passes the event to all displayed offset buttons.
+     */
     public void zoomChanged() {
         for( Component c : buttonPanel.getComponents() ) {
             if( c instanceof OffsetDialogButton ) {
@@ -135,6 +163,10 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         }
     }
 
+    /**
+     * Draw dots on the map where offsets are located. I doubt it has practical
+     * value, but looks nice.
+     */
     public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
         if( offsets == null )
             return;
@@ -151,6 +183,13 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         }
     }
     
+    /**
+     * Display the dialog and get the return value is case of a modal frame.
+     * Creates GUI, install a temporary map layer (see {@link #paint} and
+     * shows the window.
+     * @return Null for a non-modal dialog, the selected offset
+     * (or, again, a null value) otherwise.
+     */
     public ImageryOffsetBase showDialog() {
         // todo: add a temporary layer showing all offsets
         selectedOffset = null;
@@ -163,6 +202,34 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         return selectedOffset;
     }
 
+    /**
+     * This is a listener method for all buttons (except "Help").
+     * It assigns a selected offset value and closes the dialog.
+     * If the dialog wasn't modal, it applies the offset immediately.
+     * Should it apply the offset either way? Probably.
+     * @see #applyOffset()
+     */
+    public void actionPerformed( ActionEvent e ) {
+        if( e.getSource() instanceof OffsetDialogButton ) {
+            selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
+        } else
+            selectedOffset = null;
+        NavigatableComponent.removeZoomChangeListener(this);
+        setVisible(false);
+        if( !MODAL ) {
+            Main.map.mapView.removeTemporaryLayer(this);
+            Main.map.mapView.repaint();
+            if( selectedOffset != null )
+                applyOffset();
+        }
+    }
+
+
+    /**
+     * Either applies imagery offset or adds a calibration geometry layer.
+     * If the offset for each type was chosen for the first time ever,
+     * it displays an informational message.
+     */
     public void applyOffset() {
         if( selectedOffset instanceof ImageryOffset ) {
             ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
@@ -190,34 +257,31 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         }
     }
 
-    public void actionPerformed( ActionEvent e ) {
-        if( e.getSource() instanceof OffsetDialogButton ) {
-            selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
-        } else
-            selectedOffset = null;
-        NavigatableComponent.removeZoomChangeListener(this);
-        setVisible(false);
-        if( !MODAL ) {
-            Main.map.mapView.removeTemporaryLayer(this);
-            Main.map.mapView.repaint();
-            if( selectedOffset != null )
-                applyOffset();
-        }
-    }
-
+    /**
+     * A lisntener for successful deprecations.
+     */
     private class DeprecateOffsetListener implements QuerySuccessListener {
         ImageryOffsetBase offset;
 
+        /**
+         * Initialize the listener with an offset.
+         */
         public DeprecateOffsetListener( ImageryOffsetBase offset ) {
             this.offset = offset;
         }
 
+        /**
+         * Remove the deprecated offset from the offsets list. Then rebuild the button panel.
+         */
         public void queryPassed() {
             offset.setDeprecated(new Date(), JosmUserIdentityManager.getInstance().getUserName(), "");
             updateButtonPanel();
         }
     }
 
+    /**
+     * Opens a web browser with the wiki page in user's language.
+     */
     class HelpAction extends AbstractAction {
 
         public HelpAction() {
@@ -226,9 +290,20 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         }
 
         public void actionPerformed( ActionEvent e ) {
-            String base = "http://wiki.openstreetmap.org/wiki/";
+            String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
+            String lang = LanguageInfo.getWikiLanguagePrefix();
             String page = "Imagery_Offset_Database";
-            String lang = "RU:"; // todo: determine it
+            try {
+                // this logic was snatched from {@link org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog.HelpAction}
+                HttpURLConnection conn = Utils.openHttpConnection(new URL(base + lang + page));
+                conn.setConnectTimeout(Main.pref.getInteger("socket.timeout.connect", 10) * 1000);
+                if( conn.getResponseCode() != 200 ) {
+                    conn.disconnect();
+                    lang = "";
+                }
+            } catch( IOException ex ) {
+                lang = "";
+            }
             OpenBrowser.displayUrl(base + lang + page);
         }
     }

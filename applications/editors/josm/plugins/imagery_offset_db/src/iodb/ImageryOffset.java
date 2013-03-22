@@ -5,9 +5,12 @@ import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
- * An offset.
+ * An imagery offset. Contains imagery identifier, zoom bracket and a location
+ * of the position point on the imagery layer. The offset is then calculated
+ * as a difference between the two.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class ImageryOffset extends ImageryOffsetBase {
     private LatLon imageryPos;

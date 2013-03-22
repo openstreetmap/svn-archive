@@ -19,7 +19,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * A layer that displays calibration geometry for an offset.
  *
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class CalibrationLayer extends Layer {
     private Color color;
@@ -33,6 +34,10 @@ public class CalibrationLayer extends Layer {
         this.obj = obj;
     }
 
+    /**
+     * Draw the calibration geometry with thin bright lines (or a crosshair
+     * in case of a point).
+     */
     @Override
     public void paint( Graphics2D g, MapView mv, Bounds box ) {
         Stroke oldStroke = g.getStroke();
@@ -78,16 +83,22 @@ public class CalibrationLayer extends Layer {
         return false;
     }
 
+    /**
+     * This is for determining a bounding box for the layer.
+     */
     @Override
     public void visitBoundingBox( BoundingXYVisitor v ) {
         for( LatLon ll : obj.getGeometry() )
             v.visit(ll);
     }
 
+    /**
+     * A simple tooltip with geometry type, status and author.
+     */
     @Override
     public String getToolTipText() {
-        return "A " + (obj.isDeprecated() ? "deprecated " : "") + "calibration " + OffsetInfoAction.getGeometryType(obj)
-                + " by " + obj.getAuthor();
+        return "A " + (obj.isDeprecated() ? "deprecated " : "") + "calibration "
+                + OffsetInfoAction.getGeometryType(obj) + " by " + obj.getAuthor();
     }
 
     @Override
@@ -95,6 +106,9 @@ public class CalibrationLayer extends Layer {
         return OffsetInfoAction.getInformationObject(obj);
     }
 
+    /**
+     * This method returns standard actions plus "zoom to layer" and "change color".
+     */
     @Override
     public Action[] getMenuEntries() {
         return new Action[] {
@@ -110,6 +124,11 @@ public class CalibrationLayer extends Layer {
         };
     }
 
+    /**
+     * This method pans to the geometry, preserving zoom. It is used
+     * from {@link GetImageryOffsetAction}, because {@link AutoScaleAction}
+     * doesn't have a relevant method.
+     */
     public void panToCenter() {
         if( center == null ) {
             LatLon[] geometry = obj.getGeometry();
@@ -124,6 +143,11 @@ public class CalibrationLayer extends Layer {
         Main.map.mapView.zoomTo(center);
     }
 
+    /**
+     * An action to change a color of a geometry. The color
+     * is specified in the constuctor. See {@link #getMenuEntries()} for
+     * the list of enabled colors.
+     */
     class SelectColorAction extends AbstractAction {
         private Color c;
 
@@ -139,6 +163,9 @@ public class CalibrationLayer extends Layer {
         }
     }
 
+    /**
+     * A simple icon with a colored rectangle.
+     */
     class SingleColorIcon implements Icon {
         private Color color;
 
@@ -161,9 +188,14 @@ public class CalibrationLayer extends Layer {
 
     }
 
+    /**
+     * An action that calls {@link AutoScaleAction} which in turn
+     * uses {@link #visitBoundingBox} to pan and zoom to the calibration geometry.
+     */
     class ZoomToLayerAction extends AbstractAction {
         public ZoomToLayerAction() {
             super(tr("Zoom to layer"));
+            putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale/layer"));
         }
 
         public void actionPerformed( ActionEvent e ) {

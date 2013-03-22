@@ -9,15 +9,20 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Download a list of imagery offsets for the current position, let user choose which one to use.
+ * Display an information box for an offset.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class OffsetInfoAction extends AbstractAction {
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
 
     private Object info;
     
+    /**
+     * Initializes the action with an offset object.
+     * Calls {@link #getInformationObject(iodb.ImageryOffsetBase)}.
+     */
     public OffsetInfoAction( ImageryOffsetBase offset ) {
         super(tr("Offset Information"));
         putValue(SMALL_ICON, ImageProvider.get("info"));
@@ -26,10 +31,16 @@ public class OffsetInfoAction extends AbstractAction {
         setEnabled(offset != null);
     }
 
+    /**
+     * Shows a dialog with the pre-constructed message.
+     */
     public void actionPerformed(ActionEvent e) {
         JOptionPane.showMessageDialog(Main.parent, info, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
     }
 
+    /**
+     * Constructs a string with all information about the given offset.
+     */
     public static Object getInformationObject( ImageryOffsetBase offset ) {
         StringBuilder sb = new StringBuilder();
         if( offset instanceof ImageryOffset ) {
@@ -60,6 +71,10 @@ public class OffsetInfoAction extends AbstractAction {
         return sb.toString();
     }
 
+    /**
+     * Explains a calibration object geometry type: whether is's a point,
+     * a path or a polygon.
+     */
     public static String getGeometryType( CalibrationObject obj ) {
         if( obj.getGeometry() == null )
             return tr("nothing");

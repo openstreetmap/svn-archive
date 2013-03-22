@@ -7,16 +7,26 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
+ * A calibration geometry data type. It was called an object long ago,
+ * when it contained an information on an OSM object. I decided not to rename
+ * this class.
  *
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class CalibrationObject extends ImageryOffsetBase {
     private LatLon[] geometry;
 
+    /**
+     * Initialize a calibration object from the array of nodes.
+     */
     public CalibrationObject(LatLon[] geometry) {
         this.geometry = geometry;
     }
 
+    /**
+     * Initialize a calibration object from OSM primitive.
+     */
     public CalibrationObject( OsmPrimitive p ) {
         if( p instanceof Node )
             geometry = new LatLon[] { ((Node)p).getCoor() };
@@ -28,6 +38,9 @@ public class CalibrationObject extends ImageryOffsetBase {
             throw new IllegalArgumentException("Calibration Object can be created either from node or a way");
     }
 
+    /**
+     * Get an array of points for this geometry.
+     */
     public LatLon[] getGeometry() {
         return geometry;
     }

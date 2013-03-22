@@ -19,16 +19,23 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * Download a list of imagery offsets for the current position, let user choose which one to use.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class GetImageryOffsetAction extends JosmAction {
     
+    /**
+     * Initialize the action. Sets "Ctrl+Alt+I" shortcut: the only shortcut in this plugin.
+     */
     public GetImageryOffsetAction() {
         super(tr("Get Imagery Offset..."), "getoffset", tr("Download offsets for current imagery from a server"),
                 Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")),
                 KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
     }
 
+    /**
+     * The action just executes {@link DownloadOffsetsTask}.
+     */
     public void actionPerformed(ActionEvent e) {
         if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
             return;
@@ -43,6 +50,10 @@ public class GetImageryOffsetAction extends JosmAction {
         Main.worker.submit(download);
     }
 
+    /**
+     * This action is enabled when there's a map, mapView and one of the layers
+     * is an imagery layer.
+     */
     @Override
     protected void updateEnabledState() {
         boolean state = true;
@@ -54,7 +65,12 @@ public class GetImageryOffsetAction extends JosmAction {
         setEnabled(state);
     }
     
-    private void showOffsetDialog( List<ImageryOffsetBase> offsets, ImageryLayer layer ) {
+    /**
+     * Display a dialog for choosing between offsets. If there are no offsets in
+     * the list, displays the relevant message instead.
+     * @param offsets List of offset objects to choose from.
+     */
+    private void showOffsetDialog( List<ImageryOffsetBase> offsets ) {
         if( offsets.isEmpty() ) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("No data for this region. Please adjust imagery layer and upload an offset."),
@@ -66,10 +82,21 @@ public class GetImageryOffsetAction extends JosmAction {
             offsetDialog.applyOffset();
     }
 
+    /**
+     * A task that downloads offsets for a given position and imagery layer,
+     * then parses resulting XML and calls
+     * {@link #showOffsetDialog(java.util.List)} on success.
+     */
     class DownloadOffsetsTask extends SimpleOffsetQueryTask {
         private ImageryLayer layer;
         private List<ImageryOffsetBase> offsets;
 
+        /**
+         * Initializes query object from the parameters.
+         * @param center A center point of a map view.
+         * @param layer The topmost imagery layer.
+         * @param imagery Imagery ID for the layer.
+         */
         public DownloadOffsetsTask( LatLon center, ImageryLayer layer, String imagery ) {
             super(null, tr("Loading imagery offsets..."));
             try {
@@ -86,12 +113,20 @@ public class GetImageryOffsetAction extends JosmAction {
             this.layer = layer;
         }
 
+        /**
+         * Displays offset dialog on success.
+         */
         @Override
         protected void afterFinish() {
             if( !cancelled && offsets != null )
-                showOffsetDialog(offsets, layer);
+                showOffsetDialog(offsets);
         }
         
+        /**
+         * Parses the response with {@link IODBReader}.
+         * @param inp Response input stream.
+         * @throws iodb.SimpleOffsetQueryTask.UploadException Thrown on XML parsing error.
+         */
         @Override
         protected void processResponse( InputStream inp ) throws UploadException {
             offsets = null;

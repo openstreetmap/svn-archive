@@ -3,7 +3,8 @@ package iodb;
 /**
  * A listener for {@link SimpleOffsetQueryTask}.
  *
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public interface QuerySuccessListener {
 

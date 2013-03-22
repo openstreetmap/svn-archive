@@ -5,20 +5,27 @@ import java.util.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
- * Some common static methods for querying imagery layers.
+ * Some common static methods for querying and processing imagery layers.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class ImageryOffsetTools {
+    /**
+     * A title for all dialogs created in this plugin.
+     */
     public static final String DIALOG_TITLE = tr("Imagery Offset");
     
+    /**
+     * Returns the topmost visible imagery layer.
+     * @return the layer, or null if it hasn't been found.
+     */
     public static ImageryLayer getTopImageryLayer() {
         if( Main.map == null || Main.map.mapView == null )
             return null;
@@ -31,12 +38,23 @@ public class ImageryOffsetTools {
         return null;
     }
     
+    /**
+     * Calculates the center of a visible map area.
+     * @return the center point, or (0; 0) if there's no map on the screen.
+     */
     public static LatLon getMapCenter() {
         Projection proj = Main.getProjection();
         return Main.map == null || Main.map.mapView == null
                 ? new LatLon(0, 0) : proj.eastNorth2latlon(Main.map.mapView.getCenter());
     }
     
+    /**
+     * Calculates an imagery layer offset.
+     * @param center The center of a visible map area.
+     * @return Coordinates of a point on the imagery which correspond to the
+     * center point on the map.
+     * @see #applyLayerOffset
+     */
     public static LatLon getLayerOffset( ImageryLayer layer, LatLon center ) {
         Projection proj = Main.getProjection();
         EastNorth offsetCenter = Main.map.mapView.getCenter();
@@ -45,6 +63,11 @@ public class ImageryOffsetTools {
         return offsetLL;
     }
     
+    /**
+     * Applies the offset to the imagery layer.
+     * @see #calculateOffset(iodb.ImageryOffset)
+     * @see #getLayerOffset
+     */
     public static void applyLayerOffset( ImageryLayer layer, ImageryOffset offset ) {
         double[] dxy = calculateOffset(offset);
         layer.setOffset(dxy[0], dxy[1]);
@@ -52,7 +75,8 @@ public class ImageryOffsetTools {
 
     /**
      * Calculate dx and dy for imagery offset.
-     * @return [dx, dy]
+     * @return An array of [dx, dy].
+     * @see #applyLayerOffset
      */
     public static double[] calculateOffset( ImageryOffset offset ) {
         Projection proj = Main.getProjection();
@@ -61,79 +85,16 @@ public class ImageryOffsetTools {
         return new double[] { center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY() };
     }
     
+    /**
+     * Generate unique imagery identifier based on its type and URL.
+     * @param layer imagery layer.
+     * @return imagery id.
+     */
     public static String getImageryID( ImageryLayer layer ) {
-        if( layer == null )
-            return null;
-        
-        String url = layer.getInfo().getUrl();
-        if( url == null )
-            return null;
-        
-        // predefined layers
-        if( layer.getInfo().getImageryType().equals(ImageryInfo.ImageryType.BING) || url.contains("tiles.virtualearth.net") )
-            return "bing";
-
-        if( layer.getInfo().getImageryType().equals(ImageryInfo.ImageryType.SCANEX) && url.toLowerCase().equals("irs") )
-            return "scanex_irs";
-
-        boolean isWMS = layer.getInfo().getImageryType().equals(ImageryInfo.ImageryType.WMS);
-
-//        System.out.println(url);
-
-        // Remove protocol
-        int i = url.indexOf("://");
-        url = url.substring(i + 3);
-
-        // Split URL into address and query string
-        i = url.indexOf('?');
-        String query = "";
-        if( i > 0 ) {
-            query = url.substring(i);
-            url = url.substring(0, i);
-        }
-
-        // Parse query parameters into a sorted map
-        final Set<String> removeWMSParams = new TreeSet<String>(Arrays.asList(new String[] {
-            "srs", "width", "height", "bbox", "service", "request", "version", "format", "styles", "transparent"
-        }));
-        Map<String, String> qparams = new TreeMap<String, String>();
-        String[] qparamsStr = query.length() > 1 ? query.substring(1).split("&") : new String[0];
-        for( String param : qparamsStr ) {
-            String[] kv = param.split("=");
-            kv[0] = kv[0].toLowerCase();
-            // WMS: if this is WMS, remove all parameters except map and layers
-            if( isWMS && removeWMSParams.contains(kv[0]) )
-                continue;
-            // TMS: skip parameters with variable values
-            if( kv.length > 1 && kv[1].indexOf('{') >= 0 && kv[1].indexOf('}') > 0 )
-                continue;
-            qparams.put(kv[0].toLowerCase(), kv.length > 1 ? kv[1] : null);
-        }
-
-        // Reconstruct query parameters
-        StringBuilder sb = new StringBuilder();
-        for( String qk : qparams.keySet() ) {
-            if( sb.length() > 0 )
-                sb.append('&');
-            else if( query.length() > 0 )
-                sb.append('?');
-            sb.append(qk).append('=').append(qparams.get(qk));
-        }
-        query = sb.toString();
-
-        // TMS: remove /{zoom} and /{y}.png parts
-        url = url.replaceAll("\\/\\{[^}]+\\}(?:\\.\\w+)?", "");
-        // TMS: remove variable parts
-        url = url.replaceAll("\\{[^}]+\\}", "");
-        while( url.contains("..") )
-            url = url.replace("..", ".");
-        if( url.startsWith(".") )
-            url = url.substring(1);
-
-//        System.out.println("-> " + url + query);
-        return url + query;
+        return layer == null ? null :
+                ImageryIdGenerator.getImageryID(layer.getInfo().getUrl(), layer.getInfo().getImageryType());
     }
-    
+
     // Following three methods were snatched from TMSLayer
     private static double latToTileY(double lat, int zoom) {
         double l = lat / 180 * Math.PI;
@@ -168,25 +129,11 @@ public class ImageryOffsetTools {
         return intResult;
     }
 
-    public static double[] getLengthAndDirection( ImageryOffset offset ) {
-        return getLengthAndDirection(offset, 0.0, 0.0);
-    }
-
-    public static double[] getLengthAndDirection( ImageryOffset offset, double dx, double dy ) {
-        Projection proj = Main.getProjection();
-        EastNorth pos = proj.latlon2eastNorth(offset.getPosition());
-        LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(-dx, -dy));
-        double length = correctedCenterLL.greatCircleDistance(offset.getImageryPos());
-        double direction = length < 1e-2 ? 0.0 : correctedCenterLL.heading(offset.getImageryPos());
-        // todo: north vs south. Meanwhile, let's fix this dirty:
-//        direction = Math.PI - direction;
-        if( direction < 0 )
-            direction += Math.PI * 2;
-        return new double[] {length, direction};
-    }
-
+    /**
+     * Converts distance in meters to a human-readable string.
+     */
     public static String formatDistance( double d ) {
-        if( d < 0.0095 ) return formatDistance(d * 1000, tr("mm"), false);
+        if( d < 0.0095 ) return formatDistance(d * 1000, tr("mm"), true);
         if( d < 0.095 )  return formatDistance(d * 100,  tr("cm"), true );
         if( d < 0.95 )   return formatDistance(d * 100,  tr("cm"), false);
         if( d < 9.5 )    return formatDistance(d,        tr("m"),  true );
@@ -195,11 +142,14 @@ public class ImageryOffsetTools {
         return formatDistance(d / 1000, tr("km"), false);
     }
 
+    /**
+     * Constructs a distance string.
+     * @param d Distance.
+     * @param si Units of measure for distance.
+     * @param floating Whether a floating point is needed.
+     * @return A formatted string.
+     */
     private static String formatDistance( double d, String si, boolean floating ) {
         return MessageFormat.format(floating ? "{0,number,0.0} {1}" : "{0,number,0} {1}", d, si);
-    }
-
-    public static String getServerURL() {
-        return Main.pref.get("iodb.server.url", "http://offsets.textual.ru/");
     }
 }

@@ -17,14 +17,49 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Parses the message from server. It expects XML in UTF-8 with several &lt;offset&gt; elements.
+ * Parses the server response. It expects XML in UTF-8 with several &lt;offset&gt;
+ * and &lt;calibration&gt; elements.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class IODBReader {
     private List<ImageryOffsetBase> offsets;
     private InputSource source;
     
+    /**
+     * Initializes the parser. This constructor creates an input source on the input
+     * stream, so it may throw an exception (though it's highly improbable).
+     * @param source An input stream with XML.
+     * @throws IOException Thrown when something's wrong with the stream.
+     */
+    public IODBReader( InputStream source ) throws IOException {
+        this.source = new InputSource(UTFInputStreamReader.create(source, "UTF-8"));
+        this.offsets = new ArrayList<ImageryOffsetBase>();
+    }
+
+    /**
+     * Parses the XML input stream. Creates {@link Parser} to do it.
+     * @return The list of offsets.
+     * @throws SAXException Thrown when the XML is malformed.
+     * @throws IOException Thrown when the input stream fails.
+     */
+    public List<ImageryOffsetBase> parse() throws SAXException, IOException {
+        Parser parser = new Parser();
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.newSAXParser().parse(source, parser);
+            return offsets;
+        } catch( ParserConfigurationException e ) {
+            throw new SAXException(e);
+        }
+    }
+
+    /**
+     * The SAX handler for XML from the imagery offset server.
+     * Calls {@link IOFields#constructObject()} for every complete object
+     * and appends the result to offsets array.
+     */
     private class Parser extends DefaultHandler {
         private StringBuffer accumulator = new StringBuffer();
         private IOFields fields;
@@ -32,6 +67,9 @@ public class IODBReader {
         private boolean parsingDeprecate;
         private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
 
+        /**
+         * Initialize all fields.
+         */
         @Override
         public void startDocument() throws SAXException {
             fields = new IOFields();
@@ -39,6 +77,13 @@ public class IODBReader {
             parsingOffset = false;
         }
 
+        /**
+         * Parses latitude and longitude from tag attributes.
+         * It expects to find them in "lat" and "lon" attributes
+         * as decimal degrees. Note that it does not check whether
+         * the resulting object is valid: it may not be, especially
+         * for locations near the Poles and 180th meridian.
+         */
         private LatLon parseLatLon(Attributes atts) {
             return new LatLon(
                     Double.parseDouble(atts.getValue("lat")),
@@ -110,6 +155,8 @@ public class IODBReader {
                     try {
                         offsets.add(fields.constructObject());
                     } catch( IllegalArgumentException ex ) {
+                        // On one hand, we don't care, but this situation is one
+                        // of those "it can never happen" cases.
                         System.err.println(ex.getMessage());
                     }
                     parsingOffset = false;
@@ -118,24 +165,11 @@ public class IODBReader {
         }
     }
     
-
-    public IODBReader( InputStream source ) throws IOException {
-        this.source = new InputSource(UTFInputStreamReader.create(source, "UTF-8"));
-        this.offsets = new ArrayList<ImageryOffsetBase>();
-    }
-    
-    public List<ImageryOffsetBase> parse() throws SAXException, IOException {
-        Parser parser = new Parser();
-        try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            factory.newSAXParser().parse(source, parser);
-            return offsets;
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-            throw new SAXException(e);
-        }
-    }
-    
+    /**
+     * An accumulator for parsed fields. When there's enough data, it can construct
+     * an offset object. All fields are public to deliver us from tons of getters
+     * and setters.
+     */
     private class IOFields {
         public int id;
         public LatLon position;
@@ -150,10 +184,16 @@ public class IODBReader {
         public int minZoom, maxZoom;
         public List<LatLon> geometry;
 
+        /**
+         * A constructor just calls {@link #clear()}.
+         */
         public IOFields() {
             clear();
         }
         
+        /**
+         * Clear all fields to <tt>null</tt> and <tt>-1</tt>.
+         */
         public void clear() {
             id = -1;
             position = null;
@@ -170,6 +210,10 @@ public class IODBReader {
             geometry = new ArrayList<LatLon>();
         }
 
+        /**
+         * Creates an offset object from the fields. Also validates them, but not vigorously.
+         * @return A new offset object.
+         */
         public ImageryOffsetBase constructObject() {
             if( author == null || description == null || position == null || date == null )
                 throw new IllegalArgumentException("Not enought arguments to build an object");

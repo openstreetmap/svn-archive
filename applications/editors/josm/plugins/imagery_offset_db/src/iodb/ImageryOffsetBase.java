@@ -6,9 +6,12 @@ import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
- * Stores one imagery offset record.
+ * Stores one offset record. It is the superclass for {@link ImageryOffset}
+ * and {@link CalibrationObject} classes and contains common fields
+ * like position, author and description.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class ImageryOffsetBase {
     protected long offsetId;
@@ -20,6 +23,10 @@ public class ImageryOffsetBase {
     protected String abandonAuthor;
     protected String abandonReason;
     
+    /**
+     * Initialize object with the basic information. It's offset location, author, date
+     * and description.
+     */
     public void setBasicInfo( LatLon position, String author, String description, Date date ) {
         this.position = position;
         this.author = author;
@@ -36,6 +43,10 @@ public class ImageryOffsetBase {
         return offsetId;
     }
 
+    /**
+     * Mark the offset as deprecated. Though there is no exact field for "isDeprecated",
+     * it is deduced from abandonDate, author and reason being not null.
+     */
     public void setDeprecated(Date abandonDate, String author, String reason) {
         this.abandonDate = abandonDate;
         this.abandonAuthor = author;
@@ -54,6 +65,10 @@ public class ImageryOffsetBase {
         return abandonReason;
     }
     
+    /**
+     * Check that {@link #getAbandonDate()} is not null. Note that
+     * is doesn't say anything about abandonAuthor or abandonReason.
+     */
     public boolean isDeprecated() {
         return abandonDate != null;
     }

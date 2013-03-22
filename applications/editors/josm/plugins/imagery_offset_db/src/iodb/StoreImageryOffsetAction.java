@@ -14,18 +14,30 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
- * Upload the current imagery offset or an calibration object information.
+ * Upload the current imagery offset or an calibration geometry information.
  * 
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class StoreImageryOffsetAction extends JosmAction {
 
+    /**
+     * Initializes the action.
+     */
     public StoreImageryOffsetAction() {
         super(tr("Store Imagery Offset..."), "storeoffset",
                 tr("Upload an offset for current imagery (or calibration object information) to a server"),
-                null, false);
+                null, true);
     }
 
+    /**
+     * Asks user for description and calls the upload task.
+     * Also calculates a lot of things, checks whether the selected object
+     * is suitable for calibration geometry, constructs a map of query parameters etc.
+     * The only thing it doesn't do is check for the real user account name.
+     * This is because all server queries should be executed in workers,
+     * and we don't have one when a user name is needed.
+     */
     public void actionPerformed(ActionEvent e) {
         if( Main.map == null || Main.map.mapView == null )
             return;
@@ -35,7 +47,7 @@ public class StoreImageryOffsetAction extends JosmAction {
             return;
 
         String userName = JosmUserIdentityManager.getInstance().getUserName();
-        if( userName == null ) {
+        if( userName == null || userName.length() == 0 ) {
             JOptionPane.showMessageDialog(Main.parent, tr("To store imagery offsets you must be a registered OSM user."), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -107,6 +119,12 @@ public class StoreImageryOffsetAction extends JosmAction {
         }
     }
 
+    /**
+     * Ask a user for a description / reason. This string should be 3 to 200 characters
+     * long, and the method enforces that.
+     * @param message A prompt for the input dialog.
+     * @return Either null or a string 3 to 200 letters long.
+     */
     public static String queryDescription( Object message ) {
         String reason = null;
         boolean iterated = false;
@@ -128,6 +146,10 @@ public class StoreImageryOffsetAction extends JosmAction {
         return reason;
     }
 
+    /**
+     * This action is enabled when there's a map and a visible imagery layer.
+     * Note that it doesn't require edit layer.
+     */
     @Override
     protected void updateEnabledState() {
         boolean state = true;

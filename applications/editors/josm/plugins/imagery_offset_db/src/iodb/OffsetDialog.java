@@ -213,13 +213,23 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
             selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
         } else
             selectedOffset = null;
-        NavigatableComponent.removeZoomChangeListener(this);
-        setVisible(false);
+        boolean closeDialog = MODAL || selectedOffset == null
+                || selectedOffset instanceof CalibrationObject
+                || Main.pref.getBoolean("iodb.close.on.select", true);
+        if( closeDialog ) {
+            NavigatableComponent.removeZoomChangeListener(this);
+            setVisible(false);
+        }
         if( !MODAL ) {
-            Main.map.mapView.removeTemporaryLayer(this);
-            Main.map.mapView.repaint();
-            if( selectedOffset != null )
+            if( closeDialog ) {
+                Main.map.mapView.removeTemporaryLayer(this);
+                Main.map.mapView.repaint();
+            }
+            if( selectedOffset != null ) {
                 applyOffset();
+                if( !closeDialog )
+                    updateButtonPanel();
+            }
         }
     }
 

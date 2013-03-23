@@ -99,6 +99,8 @@ public class IODBReader {
                     fields.clear();
                     fields.position = parseLatLon(attributes);
                     fields.id = Integer.parseInt(attributes.getValue("id"));
+                    if( attributes.getValue("flagged") != null && attributes.getValue("flagged").equals("yes") )
+                        fields.flagged = true;
                 }
             } else {
                 if( qName.equals("node") ) {
@@ -182,6 +184,7 @@ public class IODBReader {
         public LatLon imageryPos;
         public String imagery;
         public int minZoom, maxZoom;
+        public boolean flagged;
         public List<LatLon> geometry;
 
         /**
@@ -207,6 +210,7 @@ public class IODBReader {
             imagery = null;
             minZoom = -1;
             maxZoom = -1;
+            flagged = false;
             geometry = new ArrayList<LatLon>();
         }
 
@@ -233,6 +237,8 @@ public class IODBReader {
                 result.setId(id);
             result.setBasicInfo(position, author, description, date);
             result.setDeprecated(abandonDate, abandonAuthor, abandonReason);
+            if( flagged )
+                result.setFlagged(flagged);
             return result;
         }
     }

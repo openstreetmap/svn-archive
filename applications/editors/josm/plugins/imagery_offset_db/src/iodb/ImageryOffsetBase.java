@@ -22,6 +22,7 @@ public class ImageryOffsetBase {
     protected Date abandonDate;
     protected String abandonAuthor;
     protected String abandonReason;
+    protected boolean flagged;
     
     /**
      * Initialize object with the basic information. It's offset location, author, date
@@ -33,6 +34,7 @@ public class ImageryOffsetBase {
         this.description = description;
         this.date = date;
         this.abandonDate = null;
+        this.flagged = false;
     }
 
     public void setId( long id ) {
@@ -51,6 +53,14 @@ public class ImageryOffsetBase {
         this.abandonDate = abandonDate;
         this.abandonAuthor = author;
         this.abandonReason = reason;
+    }
+
+    public boolean isFlagged() {
+        return flagged;
+    }
+
+    public void setFlagged( boolean flagged ) {
+        this.flagged = flagged;
     }
 
     public Date getAbandonDate() {

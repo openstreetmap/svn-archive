@@ -71,7 +71,10 @@ public class OffsetDialogButton extends JButton {
         updateLocation();
 
         String description = offset.isDeprecated() ? offset.getAbandonReason() : offset.getDescription();
+        description = description.replace("<", "&lt;").replace(">", "&gt;");
         JLabel descriptionLabel = new JLabel("<html><div style=\"width: 300px;\">"+description+"</div></html>");
+        Font descriptionFont = new Font(descriptionLabel.getFont().getName(), Font.BOLD, descriptionLabel.getFont().getSize() - 2);
+        descriptionLabel.setFont(descriptionFont);
 
         double offsetDistance = offset instanceof ImageryOffset
                 ? ((ImageryOffset)offset).getImageryPos().greatCircleDistance(offset.getPosition()) : 0.0;

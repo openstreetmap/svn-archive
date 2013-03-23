@@ -57,15 +57,14 @@ public class OffsetInfoAction extends AbstractAction {
                 ImageryOffsetTools.formatDistance(dist)));
         
         sb.append('\n').append('\n');
-        sb.append("Created by ").append(offset.getAuthor());
-        sb.append(" on ").append(DATE_FORMAT.format(offset.getDate())).append('\n');
+        sb.append(tr("Created by {0} on {1}\n", offset.getAuthor(),
+                DATE_FORMAT.format(offset.getDate()))).append('\n');
         sb.append("Description: ").append(offset.getDescription());
         
         if( offset.isDeprecated() ) {
             sb.append('\n').append('\n');
-            sb.append("This geometry was marked obsolete").append('\n');
-            sb.append("by ").append(offset.getAbandonAuthor());
-            sb.append(" on ").append(DATE_FORMAT.format(offset.getAbandonDate())).append('\n');
+            sb.append(tr("Deprecated by {0} on {1}\n",offset.getAbandonAuthor(),
+                    DATE_FORMAT.format(offset.getAbandonDate()))).append('\n');
             sb.append("Reason: ").append(offset.getAbandonReason());
         }
         return sb.toString();

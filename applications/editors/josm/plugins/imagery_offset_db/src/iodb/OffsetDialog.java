@@ -191,7 +191,6 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
      * (or, again, a null value) otherwise.
      */
     public ImageryOffsetBase showDialog() {
-        // todo: add a temporary layer showing all offsets
         selectedOffset = null;
         prepareDialog();
         if( !MODAL ) {

@@ -1,15 +1,14 @@
 package iodb;
 
 import java.awt.*;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * A button which shows offset information. Must be spectacular, since it's the only
@@ -21,41 +20,17 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class OffsetDialogButton extends JButton {
     
     private ImageryOffsetBase offset;
-    private double offsetLength;
-    private double distance;
-    private double direction;
+
+    private JLabel distanceLabel;
+    private DirectionIcon directionArrow;
 
     /**
      * Initialize the button with an offset. Calculated all relevant values.
      * @param offset An offset to display on the button.
      */
     public OffsetDialogButton( ImageryOffsetBase offset ) {
-        super();
         this.offset = offset;
-//        setMinimumSize(new Dimension(500, 10));
-//        setMaximumSize(new Dimension(500, 150));
-        setRelevantText();
-        setIcon(new OffsetIcon(offset));
-
-        offsetLength = offset instanceof ImageryOffset ? getLengthAndDirection((ImageryOffset)offset)[0] : 0.0;
-        // todo: layout, info, map distance and direction
-        // http://stackoverflow.com/questions/1048224/get-height-of-multi-line-text-with-fixed-width-to-make-dialog-resize-properly
-        // http://docs.oracle.com/javase/tutorial/uiswing/layout/box.html#size
-        // http://stackoverflow.com/questions/8012646/setting-size-of-jbutton-inside-jpanel-with-boxlayout-doesnt-work-as-expected
-        // http://blog.nobel-joergensen.com/2009/01/18/changing-preferred-size-of-a-html-jlabel/
-        // http://thebadprogrammer.com/swing-layout-manager-sizing/
-        // http://stackoverflow.com/questions/3692987/why-will-boxlayout-not-allow-me-to-change-the-width-of-a-jbutton-but-let-me-chan
-
-        // http://stackoverflow.com/questions/2158/creating-a-custom-button-in-java
-    }
-
-    /**
-     * Update text on the button. This method is to be deleted by release.
-     */
-    public void setRelevantText() {
-        setText("<html><div style=\"width: 400px;\">"
-                + ImageryOffsetTools.formatDistance(offset.getPosition().greatCircleDistance(ImageryOffsetTools.getMapCenter()))
-                + ": " + offset.getDescription() + "</div></html>");
+        layoutComponents();
     }
 
     /**
@@ -65,20 +40,59 @@ public class OffsetDialogButton extends JButton {
         return offset;
     }
 
-/*    @Override
-    public Dimension getPreferredSize() {
-        Dimension size = super.getPreferredSize();
-        size.width = 500;
-        size.height = 70;
-        return size;
-    }*/
-
     /**
      * Update arrow for the offset location.
      */
     public void updateLocation() {
-        // map was moved, update arrow.
-        setRelevantText();
+        LatLon center = ImageryOffsetTools.getMapCenter();
+        directionArrow.updateIcon(center);
+        double distance = center.greatCircleDistance(offset.getPosition());
+        distanceLabel.setText(ImageryOffsetTools.formatDistance(distance));
+    }
+
+    /**
+     * Adds a layout to this button and places labels, images and icons.
+     */
+    private void layoutComponents() {
+        String authorAndDate = offset.isDeprecated()
+                ? tr("Deprecated by {0} on {1}\n", offset.getAbandonAuthor(),
+                OffsetInfoAction.DATE_FORMAT.format(offset.getAbandonDate()))
+                : tr("Created by {0} on {1}\n", offset.getAuthor(),
+                OffsetInfoAction.DATE_FORMAT.format(offset.getDate()));
+        JLabel authorAndDateLabel = new JLabel(authorAndDate);
+        Font authorFont = new Font(authorAndDateLabel.getFont().getName(), Font.ITALIC, authorAndDateLabel.getFont().getSize());
+        authorAndDateLabel.setFont(authorFont);
+
+        directionArrow = new DirectionIcon(offset.getPosition());
+        distanceLabel = new JLabel("", directionArrow, SwingConstants.RIGHT);
+        distanceLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        Font distanceFont = new Font(distanceLabel.getFont().getName(), Font.PLAIN, distanceLabel.getFont().getSize());
+        distanceLabel.setFont(distanceFont);
+        updateLocation();
+
+        String description = offset.isDeprecated() ? offset.getAbandonReason() : offset.getDescription();
+        JLabel descriptionLabel = new JLabel("<html><div style=\"width: 300px;\">"+description+"</div></html>");
+
+        double offsetDistance = offset instanceof ImageryOffset
+                ? ((ImageryOffset)offset).getImageryPos().greatCircleDistance(offset.getPosition()) : 0.0;
+        JLabel offsetLabel = new JLabel(offsetDistance > 1 ? ImageryOffsetTools.formatDistance(offsetDistance) : "",
+                new OffsetIcon(offset), SwingConstants.CENTER);
+        Font offsetFont = new Font(offsetLabel.getFont().getName(), Font.PLAIN, offsetLabel.getFont().getSize() - 2);
+        offsetLabel.setFont(offsetFont);
+        offsetLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        offsetLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+
+        Box topLine = new Box(BoxLayout.X_AXIS);
+        topLine.add(authorAndDateLabel);
+        topLine.add(Box.createHorizontalGlue());
+        topLine.add(distanceLabel);
+
+        JPanel p = new JPanel(new BorderLayout(10, 5));
+        p.setOpaque(false);
+        p.add(topLine, BorderLayout.NORTH);
+        p.add(offsetLabel, BorderLayout.WEST);
+        p.add(descriptionLabel, BorderLayout.CENTER);
+        add(p);
     }
 
     /**
@@ -103,18 +117,31 @@ public class OffsetDialogButton extends JButton {
         LatLon correctedCenterLL = proj.eastNorth2latlon(pos.add(-dx, -dy));
         double length = correctedCenterLL.greatCircleDistance(offset.getImageryPos());
         double direction = length < 1e-2 ? 0.0 : correctedCenterLL.heading(offset.getImageryPos());
-        // todo: north vs south. Meanwhile, let's fix this dirty:
-//        direction = Math.PI - direction;
         if( direction < 0 )
             direction += Math.PI * 2;
         return new double[] {length, direction};
+    }
+
+    private static void drawArrow( Graphics g, int cx, int cy, double length, double direction ) {
+        int dx = (int)Math.round(Math.sin(direction) * length / 2);
+        int dy = (int)Math.round(Math.cos(direction) * length / 2);
+        g.drawLine(cx - dx, cy - dy, cx + dx, cy + dy);
+        double wingLength = Math.max(length / 3, 4);
+        double d1 = direction - Math.PI / 6;
+        int dx1 = (int)Math.round(Math.sin(d1) * wingLength);
+        int dy1 = (int)Math.round(Math.cos(d1) * wingLength);
+        g.drawLine(cx + dx, cy + dy, cx + dx - dx1, cy + dy - dy1);
+        double d2 = direction + Math.PI / 6;
+        int dx2 = (int)Math.round(Math.sin(d2) * wingLength);
+        int dy2 = (int)Math.round(Math.cos(d2) * wingLength);
+        g.drawLine(cx + dx, cy + dy, cx + dx - dx2, cy + dy - dy2);
     }
 
     /**
      * An offset icon. Displays a plain calibration icon for a geometry
      * and an arrow for an imagery offset.
      */
-    class OffsetIcon implements Icon {
+    private class OffsetIcon implements Icon {
         private boolean isDeprecated;
         private boolean isCalibration;
         private double direction = -1.0;
@@ -130,9 +157,7 @@ public class OffsetDialogButton extends JButton {
             isCalibration = offset instanceof CalibrationObject;
             if( offset instanceof ImageryOffset ) {
                 background = ImageProvider.get("offset");
-                ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-                double[] dxy = layer == null ? new double[] {0.0, 0.0} : new double[] { layer.getDx(), layer.getDy() };
-                double[] ld = getLengthAndDirection((ImageryOffset)offset, dxy[0], dxy[1]);
+                double[] ld = getLengthAndDirection((ImageryOffset)offset);
                 length = ld[0];
                 direction = ld[1];
             } else {
@@ -158,18 +183,7 @@ public class OffsetDialogButton extends JButton {
                     // draw an arrow
                     double arrowLength = length < 10 ? getIconWidth() / 2 - 1 : getIconWidth() - 4;
                     g2.setStroke(new BasicStroke(2));
-                    int dx = (int)Math.round(Math.sin(direction) * arrowLength / 2);
-                    int dy = (int)Math.round(Math.cos(direction) * arrowLength / 2);
-                    g2.drawLine(c.x - dx, c.y - dy, c.x + dx, c.y + dy);
-                    double wingLength = arrowLength / 3;
-                    double d1 = direction - Math.PI / 6;
-                    int dx1 = (int)Math.round(Math.sin(d1) * wingLength);
-                    int dy1 = (int)Math.round(Math.cos(d1) * wingLength);
-                    g2.drawLine(c.x + dx, c.y + dy, c.x + dx - dx1, c.y + dy - dy1);
-                    double d2 = direction + Math.PI / 6;
-                    int dx2 = (int)Math.round(Math.sin(d2) * wingLength);
-                    int dy2 = (int)Math.round(Math.cos(d2) * wingLength);
-                    g2.drawLine(c.x + dx, c.y + dy, c.x + dx - dx2, c.y + dy - dy2);
+                    drawArrow(g2, c.x, c.y, arrowLength, direction);
                 }
             }
             if( isDeprecated ) {
@@ -188,6 +202,50 @@ public class OffsetDialogButton extends JButton {
 
         public int getIconHeight() {
             return background.getIconHeight();
+        }
+    }
+
+    private class DirectionIcon implements Icon {
+        private static final int SIZE = 10;
+
+        private LatLon to;
+        private double distance;
+        private double direction;
+
+        public DirectionIcon( LatLon to ) {
+            this.to = to;
+        }
+
+        public void updateIcon( LatLon from ) {
+            distance = from.greatCircleDistance(to);
+            direction = to.heading(from);
+        }
+
+        /**
+         * Paints the base image and adds to it according to the offset.
+         */
+        public void paintIcon( Component comp, Graphics g, int x, int y ) {
+            Graphics2D g2 = (Graphics2D)g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(Color.black);
+            Point c = new Point(x + getIconWidth() / 2, y + getIconHeight() / 2);
+            if( distance < 1 ) {
+                // no offset
+                int r = 2;
+                g2.fillOval(c.x - r, c.y - r, r * 2 + 1, r * 2 + 1);
+            } else {
+                // draw an arrow
+                g2.setStroke(new BasicStroke(1));
+                drawArrow(g2, c.x, c.y, SIZE, direction);
+            }
+        }
+
+        public int getIconWidth() {
+            return SIZE;
+        }
+
+        public int getIconHeight() {
+            return SIZE;
         }
     }
 }

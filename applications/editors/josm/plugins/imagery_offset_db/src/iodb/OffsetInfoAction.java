@@ -45,27 +45,27 @@ public class OffsetInfoAction extends AbstractAction {
         StringBuilder sb = new StringBuilder();
         if( offset instanceof ImageryOffset ) {
             double odist = ((ImageryOffset)offset).getImageryPos().greatCircleDistance(offset.getPosition());
-            sb.append(odist < 1e-2 ? tr("An imagery offset of 0 mm") : tr("An imagery offset of {0}",
-                    ImageryOffsetTools.formatDistance(odist))).append('\n');
-            sb.append("Imagery ID: ").append(((ImageryOffset)offset).getImagery()).append('\n');
+            if( odist < 1e-2 ) odist = 0.0;
+            sb.append(tr("An imagery offset of {0}", ImageryOffsetTools.formatDistance(odist))).append('\n');
+            sb.append(tr("Imagery ID")).append(": ").append(((ImageryOffset)offset).getImagery()).append('\n');
         } else {
             sb.append(tr("A calibration {0}", getGeometryType((CalibrationObject)offset))).append('\n');
         }
         
         double dist = ImageryOffsetTools.getMapCenter().greatCircleDistance(offset.getPosition());
-        sb.append(dist < 50 ? tr("Determined right here") : tr("Determined at a point {0} away",
+        sb.append(dist < 50 ? tr("Determined right here") : tr("Determined {0} away",
                 ImageryOffsetTools.formatDistance(dist)));
         
         sb.append('\n').append('\n');
         sb.append(tr("Created by {0} on {1}\n", offset.getAuthor(),
                 DATE_FORMAT.format(offset.getDate()))).append('\n');
-        sb.append("Description: ").append(offset.getDescription());
+        sb.append(tr("Description")).append(": ").append(offset.getDescription());
         
         if( offset.isDeprecated() ) {
             sb.append('\n').append('\n');
             sb.append(tr("Deprecated by {0} on {1}\n",offset.getAbandonAuthor(),
                     DATE_FORMAT.format(offset.getAbandonDate()))).append('\n');
-            sb.append("Reason: ").append(offset.getAbandonReason());
+            sb.append(tr("Reason")).append(": ").append(offset.getAbandonReason());
         }
         return sb.toString();
     }
@@ -76,7 +76,7 @@ public class OffsetInfoAction extends AbstractAction {
      */
     public static String getGeometryType( CalibrationObject obj ) {
         if( obj.getGeometry() == null )
-            return tr("nothing");
+            return "nothing";
         int n = obj.getGeometry().length;
         if( n == 1 )
             return tr("point");

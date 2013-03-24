@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.*;
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -14,6 +16,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -23,14 +26,20 @@ import org.openstreetmap.josm.tools.Shortcut;
  * @license WTFPL
  */
 public class GetImageryOffsetAction extends JosmAction {
+    private Icon iconOffsetOk;
+    private Icon iconOffsetBad;
     
     /**
      * Initialize the action. Sets "Ctrl+Alt+I" shortcut: the only shortcut in this plugin.
+     * Also registers itself with {@link ImageryOffsetWatcher}.
      */
     public GetImageryOffsetAction() {
         super(tr("Get Imagery Offset..."), "getoffset", tr("Download offsets for current imagery from a server"),
                 Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")),
                 KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
+        iconOffsetOk = ImageProvider.get("getoffset");
+        iconOffsetBad = ImageProvider.get("getoffsetnow"); // todo: create icon
+        ImageryOffsetWatcher.getInstance().register(this);
     }
 
     /**
@@ -83,11 +92,27 @@ public class GetImageryOffsetAction extends JosmAction {
     }
 
     /**
+     * Update action icon based on an offset state.
+     */
+    public void offsetStateChanged( boolean isOffsetGood ) {
+        putValue(Action.SMALL_ICON, isOffsetGood ? iconOffsetOk : iconOffsetBad);
+    }
+
+    /**
+     * Remove offset listener.
+     */
+    @Override
+    public void destroy() {
+        ImageryOffsetWatcher.getInstance().unregister(this);
+        super.destroy();
+    }
+
+    /**
      * A task that downloads offsets for a given position and imagery layer,
      * then parses resulting XML and calls
      * {@link #showOffsetDialog(java.util.List)} on success.
      */
-    class DownloadOffsetsTask extends SimpleOffsetQueryTask {
+    private class DownloadOffsetsTask extends SimpleOffsetQueryTask {
         private ImageryLayer layer;
         private List<ImageryOffsetBase> offsets;
 

@@ -16,7 +16,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.tools.*;
@@ -28,7 +27,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author Zverik
  * @license WTFPL
  */
-public class OffsetDialog extends JDialog implements ActionListener, NavigatableComponent.ZoomChangeListener, MapViewPaintable {
+public class OffsetDialog extends JDialog implements ActionListener, MapView.ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
     private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 5);
@@ -54,7 +53,6 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setResizable(false);
         this.offsets = offsets;
-        NavigatableComponent.addZoomChangeListener(this);
 
         // make this dialog close on "escape"
         getRootPane().registerKeyboardAction(this,
@@ -193,6 +191,7 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
     public ImageryOffsetBase showDialog() {
         selectedOffset = null;
         prepareDialog();
+        MapView.addZoomChangeListener(this);
         if( !MODAL ) {
             Main.map.mapView.addTemporaryLayer(this);
             Main.map.mapView.repaint();
@@ -217,7 +216,7 @@ public class OffsetDialog extends JDialog implements ActionListener, Navigatable
                 || selectedOffset instanceof CalibrationObject
                 || Main.pref.getBoolean("iodb.close.on.select", true);
         if( closeDialog ) {
-            NavigatableComponent.removeZoomChangeListener(this);
+            MapView.removeZoomChangeListener(this);
             setVisible(false);
         }
         if( !MODAL ) {

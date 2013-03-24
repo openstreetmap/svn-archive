@@ -98,12 +98,14 @@
     -->
             <manifest>
                 <attribute name="Author" value="Ilya Zverev"/>
+                <attribute name="ru_Author" value="Илья Зверев"/>
                 <attribute name="Plugin-Class" value="iodb.ImageryOffsetPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Database of imagery offsets: share and aquire imagery offsets with one button."/>
                 <attribute name="ru_Plugin-Description" value="База данных смещений подложек: загружайте и делитесь смещениями одной кнопкой."/>
                 <attribute name="Plugin-Icon" value="images/iodb.png"/>
-		<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImageryOffsetDB"/>
+		<attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Imagery_Offset_Database"/>
+		<attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:Imagery_Offset_Database"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

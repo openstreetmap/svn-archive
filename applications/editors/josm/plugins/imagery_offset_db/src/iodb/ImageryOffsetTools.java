@@ -139,7 +139,8 @@ public class ImageryOffsetTools {
         if( d < 9.5 )    return formatDistance(d,        tr("m"),  true );
         if( d < 950 )    return formatDistance(d,        tr("m"),  false );
         if( d < 9500 )   return formatDistance(d / 1000, tr("km"), true);
-        return formatDistance(d / 1000, tr("km"), false);
+        if( d < 1e6 )    return formatDistance(d / 1000, tr("km"), false);
+        return "\u221E";
     }
 
     /**

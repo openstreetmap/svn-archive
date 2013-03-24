@@ -88,6 +88,7 @@ public class OffsetDialogButton extends JButton {
         Box topLine = new Box(BoxLayout.X_AXIS);
         topLine.add(authorAndDateLabel);
         topLine.add(Box.createHorizontalGlue());
+        topLine.add(Box.createHorizontalStrut(10));
         topLine.add(distanceLabel);
 
         JPanel p = new JPanel(new BorderLayout(10, 5));
@@ -176,7 +177,7 @@ public class OffsetDialogButton extends JButton {
 
             Graphics2D g2 = (Graphics2D)g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if( direction >= 0 ) {
+            if( !isCalibration ) {
                 g2.setColor(Color.black);
                 Point c = new Point(x + getIconWidth() / 2, y + getIconHeight() / 2);
                 if( length < 1e-2 ) {

@@ -25,7 +25,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * @author Zverik
  * @license WTFPL
  */
-public class GetImageryOffsetAction extends JosmAction {
+public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetWatcher.OffsetStateListener {
     private Icon iconOffsetOk;
     private Icon iconOffsetBad;
     
@@ -38,7 +38,7 @@ public class GetImageryOffsetAction extends JosmAction {
                 Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")),
                 KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
         iconOffsetOk = ImageProvider.get("getoffset");
-        iconOffsetBad = ImageProvider.get("getoffsetnow"); // todo: create icon
+        iconOffsetBad = ImageProvider.get("getoffsetnow");
         ImageryOffsetWatcher.getInstance().register(this);
     }
 

@@ -11,20 +11,24 @@ import org.openstreetmap.josm.gui.layer.Layer;
  * This class watches imagery layer offsets and notifies listeners when there's a need to update offset
  * for the current layer.
  *
- * @author zverik
+ * @author Zverik
+ * @license WTFPL
  */
 public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView.LayerChangeListener {
     private static final double THRESHOLD = 1e-8;
-    private static final double MAX_DISTANCE = Main.pref.getDouble("iodb.offset.radius", 15) * 1000;
-    private Map<Integer, ImageryLayerData> layers = new TreeMap<Integer, ImageryLayerData>();
-    private List<GetImageryOffsetAction> listeners = new ArrayList<GetImageryOffsetAction>();
-    private Timer time;
     private static ImageryOffsetWatcher instance;
-    private boolean offsetGood;
+    private Map<Integer, ImageryLayerData> layers = new TreeMap<Integer, ImageryLayerData>();
+    private List<OffsetStateListener> listeners = new ArrayList<OffsetStateListener>();
+    private Timer time;
+    private double maxDistance;
+    private boolean offsetGood = true;
 
+    /**
+     * Create an instance and register it as a listener to MapView.
+     * Also starts a timer task.
+     */
     private ImageryOffsetWatcher() {
-        if( MAX_DISTANCE <= 0 )
-            return;
+        maxDistance = Main.pref.getDouble("iodb.offset.radius", 15);
         MapView.addZoomChangeListener(this);
         MapView.addLayerChangeListener(this);
         checkOffset(); // we assume there's at the most one imagery layer at this moment
@@ -41,6 +45,10 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
         time.cancel();
     }
 
+    /**
+     * This class is a singleton, this method returns the instance,
+     * creating it if neccessary.
+     */
     public static ImageryOffsetWatcher getInstance() {
         if( instance == null ) {
             instance = new ImageryOffsetWatcher();
@@ -48,24 +56,40 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
         return instance;
     }
 
-    public void register( GetImageryOffsetAction listener ) {
+    /**
+     * Register an offset state listener.
+     */
+    public void register( OffsetStateListener listener ) {
         listeners.add(listener);
         listener.offsetStateChanged(offsetGood);
     }
 
-    public void unregister( GetImageryOffsetAction listener ) {
+    /**
+     * Unregister an offset state listener.
+     */
+    public void unregister( OffsetStateListener listener ) {
         listeners.remove(listener);
     }
 
+    /**
+     * Change stored offset state, notify listeners if needed.
+     */
     private void setOffsetGood( boolean good ) {
         if( good != offsetGood ) {
-            for( GetImageryOffsetAction listener : listeners )
+            for( OffsetStateListener listener : listeners )
                 listener.offsetStateChanged(good);
         }
         offsetGood = good;
     }
 
+    /**
+     * Check if the offset state has been changed.
+     */
     private void checkOffset() {
+        if( maxDistance <= 0 ) {
+            setOffsetGood(true);
+            return;
+        }
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if( layer == null ) {
             setOffsetGood(true);
@@ -95,11 +119,15 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
                 data.lastChecked = center;
                 setOffsetGood(true);
             } else {
-                setOffsetGood(data.lastChecked != null && center.greatCircleDistance(data.lastChecked) <= MAX_DISTANCE);
+                setOffsetGood(data.lastChecked != null && center.greatCircleDistance(data.lastChecked) <= maxDistance * 1000);
             }
         }
     }
 
+    /**
+     * This class stores an offset and last location for a single imagery layer.
+     * All fields are public, because this is not enterprise.
+     */
     private static class ImageryLayerData {
         public double lastDx = 0.0;
         public double lastDy = 0.0;
@@ -122,10 +150,24 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
         checkOffset();
     }
 
+    /**
+     * This task is run every 1-2 seconds.
+     */
     private class IntervalOffsetChecker extends TimerTask {
+        /**
+         * Reread max radius setting and update offset state.
+         */
         @Override
         public void run() {
+            maxDistance = Main.pref.getDouble("iodb.offset.radius", 15);
             checkOffset();
         }
+    }
+
+    /**
+     * The interface for offset listeners.
+     */
+    public interface OffsetStateListener {
+        void offsetStateChanged( boolean isOffsetGood );
     }
 }

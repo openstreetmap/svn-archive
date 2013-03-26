@@ -1,6 +1,7 @@
 package iodb;
 
 import java.awt.event.KeyEvent;
+import java.util.*;
 import javax.swing.JMenu;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -32,5 +33,14 @@ public class ImageryOffsetPlugin extends Plugin {
         JMenu offsetMenu = Main.main.menu.addMenu(marktr("Offset"), KeyEvent.VK_O, 6, "help");
         offsetMenu.add(getAction);
         offsetMenu.add(storeAction);
+
+        // an ugly hack to add this plugin to the toolbar
+        Collection<String> toolbar = new LinkedList<String>(Main.toolbar.getToolString());
+        if( !toolbar.contains("getoffset") && Main.pref.getBoolean("iodb.modify.toolbar", true) ) {
+            toolbar.add("getoffset");
+            Main.pref.putCollection("toolbar", toolbar);
+            Main.pref.put("iodb.modify.toolbar", false);
+            Main.toolbar.refreshToolbarControl();
+        }
     }
 }

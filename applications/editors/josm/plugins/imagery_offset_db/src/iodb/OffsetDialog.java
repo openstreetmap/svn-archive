@@ -242,6 +242,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         if( selectedOffset instanceof ImageryOffset ) {
             ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
             ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset)selectedOffset);
+            ImageryOffsetWatcher.getInstance().markGood();
             Main.map.repaint();
             if( !Main.pref.getBoolean("iodb.offset.message", false) ) {
                 JOptionPane.showMessageDialog(Main.parent,

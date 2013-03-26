@@ -85,7 +85,7 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
     /**
      * Check if the offset state has been changed.
      */
-    private void checkOffset() {
+    private synchronized void checkOffset() {
         if( maxDistance <= 0 ) {
             setOffsetGood(true);
             return;
@@ -122,6 +122,28 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
                 setOffsetGood(data.lastChecked != null && center.greatCircleDistance(data.lastChecked) <= maxDistance * 1000);
             }
         }
+    }
+
+    public void markGood() {
+        ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
+        if( layer != null ) {
+            LatLon center = ImageryOffsetTools.getMapCenter();
+            Integer hash = layer.hashCode();
+            ImageryLayerData data = layers.get(hash);
+            if( data == null ) {
+                // create entry for this layer and mark as good
+                data = new ImageryLayerData();
+                data.lastDx = layer.getDx();
+                data.lastDy = layer.getDy();
+                data.lastChecked = center;
+                layers.put(hash, data);
+            } else {
+                data.lastDx = layer.getDx();
+                data.lastDy = layer.getDy();
+                data.lastChecked = center;
+            }
+        }
+        setOffsetGood(true);
     }
 
     /**

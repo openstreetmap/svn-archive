@@ -30,7 +30,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class OffsetDialog extends JDialog implements ActionListener, MapView.ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
-    private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 5);
+    private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 4);
 
     /**
      * Whether to create a modal frame. It turns out, modal dialogs

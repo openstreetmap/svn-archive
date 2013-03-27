@@ -6,6 +6,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.Destroyable;
 
 /**
  * This class watches imagery layer offsets and notifies listeners when there's a need to update offset
@@ -14,7 +15,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
  * @author Zverik
  * @license WTFPL
  */
-public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView.LayerChangeListener {
+public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView.LayerChangeListener, Destroyable {
     private static final double THRESHOLD = 1e-8;
     private static ImageryOffsetWatcher instance;
     private Map<Integer, ImageryLayerData> layers = new TreeMap<Integer, ImageryLayerData>();
@@ -117,6 +118,7 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
                 data.lastDx = layer.getDx();
                 data.lastDy = layer.getDy();
                 data.lastChecked = center;
+                storeLayerOffset(layer);
                 setOffsetGood(true);
             } else {
                 setOffsetGood(data.lastChecked != null && center.greatCircleDistance(data.lastChecked) <= maxDistance * 1000);
@@ -124,6 +126,11 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
         }
     }
 
+    /**
+     * Mark the current offset as good. This method is called by {@link OffsetDialog}
+     * to notify the watcher that an offset button has been clicked, and regardless of
+     * whether it has changed an offset, the currect imagery alignment is ok.
+     */
     public void markGood() {
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
         if( layer != null ) {
@@ -142,6 +149,7 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
                 data.lastDy = layer.getDy();
                 data.lastChecked = center;
             }
+            storeLayerOffset(layer);
         }
         setOffsetGood(true);
     }
@@ -165,11 +173,61 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
     }
 
     public void layerAdded( Layer newLayer ) {
+        if( newLayer instanceof ImageryLayer )
+            loadLayerOffset((ImageryLayer)newLayer);
         checkOffset();
     }
 
     public void layerRemoved( Layer oldLayer ) {
         checkOffset();
+    }
+
+    /**
+     * Saves the current imagery layer offset to preferences. It is stored as a
+     * collection of ':'-separated strings: imagery_id:lat:lon:dx:dy. No need for
+     * projections: nobody uses them anyway.
+     */
+    private void storeLayerOffset( ImageryLayer layer ) {
+        String id = ImageryOffsetTools.getImageryID(layer);
+        if( !Main.pref.getBoolean("iodb.remember.offsets", true) || id == null )
+            return;
+        Collection<String> offsets = new LinkedList<String>(Main.pref.getCollection("iodb.stored.offsets"));
+        for( Iterator<String> iter = offsets.iterator(); iter.hasNext(); ) {
+            String[] offset = iter.next().split(":");
+            if( offset.length == 5 && offset[0].equals(id) )
+                iter.remove();
+        }
+        LatLon center = ImageryOffsetTools.getMapCenter();
+        offsets.add(id + ":" + center.lat() + ":" + center.lon() + ":" + layer.getDx() + ":" + layer.getDy());
+        Main.pref.putCollection("iodb.stored.offsets", offsets);
+    }
+
+    /**
+     * Loads the current imagery layer offset from preferences. 
+     */
+    private void loadLayerOffset( ImageryLayer layer ) {
+        String id = ImageryOffsetTools.getImageryID(layer);
+        if( !Main.pref.getBoolean("iodb.remember.offsets", true) || id == null )
+            return;
+        Collection<String> offsets = Main.pref.getCollection("iodb.stored.offsets");
+        for( String offset : offsets ) {
+            String[] parts = offset.split(":");
+            if( parts.length == 5 && parts[0].equals(id) ) {
+                double[] dparts = new double[4];
+                try {
+                    for( int i = 0; i < 4; i++ )
+                        dparts[i] = Double.parseDouble(parts[i+1]);
+                } catch( Exception e ) {
+                    continue;
+                }
+                LatLon lastPos = new LatLon(dparts[0], dparts[1]);
+                if( lastPos.greatCircleDistance(ImageryOffsetTools.getMapCenter()) < Math.max(maxDistance, 3.0) * 1000 ) {
+                    // apply offset
+                    layer.setOffset(dparts[2], dparts[3]);
+                    return;
+                }
+            }
+        }
     }
 
     /**

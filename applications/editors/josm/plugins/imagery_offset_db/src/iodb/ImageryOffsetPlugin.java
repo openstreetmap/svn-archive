@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import javax.swing.JMenu;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -30,17 +31,26 @@ public class ImageryOffsetPlugin extends Plugin {
         getAction = new GetImageryOffsetAction();
         storeAction = new StoreImageryOffsetAction();
         
-        JMenu offsetMenu = Main.main.menu.addMenu(marktr("Offset"), KeyEvent.VK_O, 6, "help");
+        // before 5803 imagery menu was constantly regenerated, erasing extra items
+        // before 5729 it was regenerated only when the imagery list was modified (also bad)
+        int version = Version.getInstance().getVersion();
+        JMenu offsetMenu = version < 5803
+                ? Main.main.menu.addMenu(marktr("Offset"), KeyEvent.VK_O, 6, "help")
+                : Main.main.menu.imageryMenu;
         offsetMenu.add(getAction);
         offsetMenu.add(storeAction);
+        if( version >= 5803 ) // todo: check if this is needed
+            offsetMenu.addSeparator();
 
         // an ugly hack to add this plugin to the toolbar
-        Collection<String> toolbar = new LinkedList<String>(Main.toolbar.getToolString());
-        if( !toolbar.contains("getoffset") && Main.pref.getBoolean("iodb.modify.toolbar", true) ) {
-            toolbar.add("getoffset");
-            Main.pref.putCollection("toolbar", toolbar);
+        if( Main.pref.getBoolean("iodb.modify.toolbar", true) ) {
+            Collection<String> toolbar = new LinkedList<String>(Main.toolbar.getToolString());
+            if( !toolbar.contains("getoffset") ) {
+                toolbar.add("getoffset");
+                Main.pref.putCollection("toolbar", toolbar);
+                Main.toolbar.refreshToolbarControl();
+            }
             Main.pref.put("iodb.modify.toolbar", false);
-            Main.toolbar.refreshToolbarControl();
         }
     }
 }

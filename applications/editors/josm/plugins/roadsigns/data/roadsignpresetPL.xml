@@ -62,6 +62,7 @@
 	long_name=""
 	pl.long_name="Znak zakazuje ruchu ciągników rolniczych i pojazdów wolnobieżnych. Stosowany na ulicach, na których występuje duże natężenie ruchu, a pojazdy wolnobieżne mogą powodować tamowanie ruchu.;"
 	>
+	<tag key="agricultural" value="no"/>
 </sign>
 
 <sign ref="PL:B-7" name="zakaz wjazdu pojazdów silnikowych z przyczepą" pl.name="zakaz wjazdu pojazdów silnikowych z przyczepą"
@@ -418,12 +419,14 @@
 <sign ref="PL:B-6/8" name="zakaz wjazdu ciągników rolniczych i pojazdów zaprzęgowych" pl.name="zakaz wjazdu ciągników rolniczych i pojazdów zaprzęgowych"
 	icon="PL_B-6_8.png"
 	>
+	<tag key="agricultural" value="no"/>
 	<tag key="horse_drawn" value="no"/>
 </sign>
 
 <sign ref="PL:B-6/8/9" name="zakaz wjazdu pojazdów innych niż samochodowe" pl.name="zakaz wjazdu pojazdów innych niż samochodowe"
 	icon="PL_B-6_8_9.png"
 	>
+	<tag key="agricultural" value="no"/>
 	<tag key="bicycle" value="no"/>
 	<tag key="horse_drawn" value="no"/>
 </sign>

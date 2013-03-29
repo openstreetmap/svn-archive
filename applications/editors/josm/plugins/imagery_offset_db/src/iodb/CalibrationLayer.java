@@ -99,9 +99,9 @@ public class CalibrationLayer extends Layer {
     @Override
     public String getToolTipText() {
         if( obj.isDeprecated() )
-            return tr("A deprecated calibration of type {0} by {1}", OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
+            return tr("A deprecated calibration geometry of {0} nodes by {1}", obj.getGeometry().length, obj.getAuthor());
         else
-            return tr("A calibration of type {0} by {1}", OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
+            return tr("A calibration geometry of {0} nodes by {1}", obj.getGeometry().length, obj.getAuthor());
     }
 
     @Override
@@ -197,7 +197,7 @@ public class CalibrationLayer extends Layer {
      */
     class ZoomToLayerAction extends AbstractAction {
         public ZoomToLayerAction() {
-            super(tr("Zoom to layer"));
+            super(tr("Zoom to {0}", tr("layer"))); // to use translation from AutoScaleAction
             putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale/layer"));
         }
 

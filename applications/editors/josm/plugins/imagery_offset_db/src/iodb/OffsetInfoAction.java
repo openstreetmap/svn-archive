@@ -75,7 +75,7 @@ public class OffsetInfoAction extends AbstractAction {
             sb.append(tr("An imagery offset of {0}", ImageryOffsetTools.formatDistance(odist))).append('\n');
             sb.append(tr("Imagery ID")).append(": ").append(((ImageryOffset)offset).getImagery()).append('\n');
         } else {
-            sb.append(tr("A calibration of type {0}", getGeometryType((CalibrationObject)offset))).append('\n');
+            sb.append(tr("A calibration geometry of {0} nodes", ((CalibrationObject)offset).getGeometry().length)).append('\n');
         }
         
         double dist = ImageryOffsetTools.getMapCenter().greatCircleDistance(offset.getPosition());
@@ -99,23 +99,5 @@ public class OffsetInfoAction extends AbstractAction {
         }
 
         return sb.toString();
-    }
-
-    /**
-     * Explains a calibration object geometry type: whether is's a point,
-     * a path or a polygon.
-     */
-    public static String getGeometryType( CalibrationObject obj ) {
-        if( obj.getGeometry() == null )
-            return tr("nothing"); // meant never to happen
-        int n = obj.getGeometry().length;
-        if( n == 1 )
-            return tr("point");
-        else if( n > 1 && !obj.getGeometry()[0].equals(obj.getGeometry()[n - 1]) )
-            return tr("path ({0} nodes)", n);
-        else if( n > 1 && obj.getGeometry()[0].equals(obj.getGeometry()[n - 1]) )
-            return tr("polygon ({0} nodes)", n - 1);
-        else
-            return tr("geometry"); // meant never to happen
     }
 }

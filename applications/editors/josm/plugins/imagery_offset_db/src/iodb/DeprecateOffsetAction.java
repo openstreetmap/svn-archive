@@ -40,10 +40,11 @@ public class DeprecateOffsetAction extends AbstractAction {
         if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
             return;
         
-        String desc = offset instanceof ImageryOffset ? "imagery offset is wrong"
-                : "calibration geometry is aligned badly";
+        String desc = offset instanceof ImageryOffset ?
+                tr("Are you sure this imagery offset is wrong?") :
+                tr("Are you sure this calibration geometry is aligned badly?");
         if( JOptionPane.showConfirmDialog(Main.parent,
-                tr("Warning: deprecation is basically irreversible!\nAre you sure this " + desc + "?"),
+                tr("Warning: deprecation is basically irreversible!\n{0}", desc),
                 ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION ) {
             return;
         }

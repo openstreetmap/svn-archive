@@ -107,7 +107,7 @@ public class OffsetInfoAction extends AbstractAction {
      */
     public static String getGeometryType( CalibrationObject obj ) {
         if( obj.getGeometry() == null )
-            return "nothing";
+            return tr("nothing");
         int n = obj.getGeometry().length;
         if( n == 1 )
             return tr("point");
@@ -116,6 +116,6 @@ public class OffsetInfoAction extends AbstractAction {
         else if( n > 1 && obj.getGeometry()[0].equals(obj.getGeometry()[n - 1]) )
             return tr("polygon ({0} nodes)", n - 1);
         else
-            return "geometry";
+            return tr("geometry");
     }
 }

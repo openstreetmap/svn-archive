@@ -98,10 +98,10 @@ public class CalibrationLayer extends Layer {
     @Override
     public String getToolTipText() {
         if(obj.isDeprecated())
-            return tr("A deprecated calibration {0} by {1}",
+            return tr("A deprecated calibration of type {0} by {1}",
                 OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
         else
-            return tr("A calibration {0} by {1}",
+            return tr("A calibration of type {0} by {1}",
                 OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
     }
 

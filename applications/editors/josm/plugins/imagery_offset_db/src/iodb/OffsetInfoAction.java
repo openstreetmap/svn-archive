@@ -75,7 +75,7 @@ public class OffsetInfoAction extends AbstractAction {
             sb.append(tr("An imagery offset of {0}", ImageryOffsetTools.formatDistance(odist))).append('\n');
             sb.append(tr("Imagery ID")).append(": ").append(((ImageryOffset)offset).getImagery()).append('\n');
         } else {
-            sb.append(tr("A calibration {0}", getGeometryType((CalibrationObject)offset))).append('\n');
+            sb.append(tr("A calibration of type {0}", getGeometryType((CalibrationObject)offset))).append('\n');
         }
         
         double dist = ImageryOffsetTools.getMapCenter().greatCircleDistance(offset.getPosition());

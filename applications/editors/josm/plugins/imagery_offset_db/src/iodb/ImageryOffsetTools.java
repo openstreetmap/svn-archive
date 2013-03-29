@@ -20,7 +20,7 @@ public class ImageryOffsetTools {
     /**
      * A title for all dialogs created in this plugin.
      */
-    public static final String DIALOG_TITLE = tr("Imagery Offset");
+    public static final String DIALOG_TITLE = tr("Imagery Offset Database");
     
     /**
      * Returns the topmost visible imagery layer.

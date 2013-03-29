@@ -29,7 +29,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
      * @param title A title for the progress monitor.
      */
     public SimpleOffsetQueryTask( String query, String title ) {
-        super(tr("Uploading"));
+        super(ImageryOffsetTools.DIALOG_TITLE);
         this.query = query;
         this.title = title;
         cancelled = false;
@@ -120,7 +120,8 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {
         if( errorMessage != null ) {
-            JOptionPane.showMessageDialog(Main.parent, errorMessage, tr("Imagery Offset"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, errorMessage,
+                    ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
         } else if( listener != null ) {
             listener.queryPassed();
         }

@@ -224,7 +224,7 @@ public class IODBReader {
             ImageryOffsetBase result;
             if( geometry.isEmpty() ) {
                 if( imagery == null || imageryPos == null )
-                    throw new IllegalArgumentException("Both imagery and imageryPos should be sepcified for the offset");
+                    throw new IllegalArgumentException("Both imagery and imageryPos should be specified for the offset");
                 result = new ImageryOffset(imagery, imageryPos);
                 if( minZoom >= 0 )
                     ((ImageryOffset)result).setMinZoom(minZoom);

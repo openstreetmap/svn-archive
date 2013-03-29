@@ -44,7 +44,7 @@ public class DeprecateOffsetAction extends AbstractAction {
                 tr("Are you sure this imagery offset is wrong?") :
                 tr("Are you sure this calibration geometry is aligned badly?");
         if( JOptionPane.showConfirmDialog(Main.parent,
-                tr("Warning: deprecation is basically irreversible!\n{0}", desc),
+                tr("Warning: deprecation is basically irreversible!")+ "\n" + desc,
                 ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION ) {
             return;
         }
@@ -77,8 +77,8 @@ public class DeprecateOffsetAction extends AbstractAction {
             return;
         }
 
-        String message = "Please enter the reason why you mark this "
-                + (offset instanceof ImageryOffset ? "imagery offset" : "calibraion geometry") + " as deprecated:";
+        String message = tr("Please enter the reason why you mark {0} as deprecated",
+                offset instanceof ImageryOffset ? tr("this imagery offset") : tr("this calibration geometry")) + ":";
         String reason = StoreImageryOffsetAction.queryDescription(message);
         if( reason == null )
             return;

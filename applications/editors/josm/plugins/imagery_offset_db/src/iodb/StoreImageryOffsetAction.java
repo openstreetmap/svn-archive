@@ -26,7 +26,7 @@ public class StoreImageryOffsetAction extends JosmAction {
      */
     public StoreImageryOffsetAction() {
         super(tr("Store Imagery Offset..."), "storeoffset",
-                tr("Upload an offset for current imagery (or calibration object information) to a server"),
+                tr("Upload an offset for current imagery (or calibration object geometry) to a server"),
                 null, true);
     }
 
@@ -48,7 +48,9 @@ public class StoreImageryOffsetAction extends JosmAction {
 
         String userName = JosmUserIdentityManager.getInstance().getUserName();
         if( userName == null || userName.length() == 0 ) {
-            JOptionPane.showMessageDialog(Main.parent, tr("To store imagery offsets you must be a registered OSM user."), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("To store imagery offsets you must be a registered OSM user."),
+                    ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if( userName.indexOf('@') > 0 )
@@ -81,18 +83,19 @@ public class StoreImageryOffsetAction extends JosmAction {
             // register imagery offset
             if( Math.abs(layer.getDx()) < 1e-8 && Math.abs(layer.getDy()) < 1e-8 ) {
                 if( JOptionPane.showConfirmDialog(Main.parent,
-                        tr("The topmost imagery layer has no offset. Are you sure you want to upload it?"), ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION )
+                        tr("The topmost imagery layer has no offset. Are you sure you want to upload this?"),
+                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION )
                     return;
             }
             LatLon offset = ImageryOffsetTools.getLayerOffset(layer, center);
             offsetObj = new ImageryOffset(ImageryOffsetTools.getImageryID(layer), offset);
-            message = "You are registering an imagery offset. Other users in this area will be able to use it for mapping.\n"
-                    + "Please make sure it is as precise as possible, and describe a region this offset is applicable to.";
+            message = tr("You are registering an imagery offset. Other users in this area will be able to use it for mapping.\n"
+                    + "Please make sure it is as precise as possible, and describe a region this offset is applicable to.");
         } else {
             // register calibration object
             offsetObj = new CalibrationObject(calibration);
-            message = "You are registering a calibration geometry. It should be the most precisely positioned object, with\n"
-                    + "clearly visible boundaries on various satellite imagery. Please describe this object and its whereabouts.";
+            message = tr("You are registering a calibration geometry. It should be the most precisely positioned object, with\n"
+                    + "clearly visible boundaries on various satellite imagery. Please describe this object and its whereabouts.");
         }
         String description = queryDescription(message);
         if( description == null )
@@ -113,7 +116,7 @@ public class StoreImageryOffsetAction extends JosmAction {
                 }
                 query.append(key).append('=').append(URLEncoder.encode(params.get(key), "UTF8"));
             }
-            Main.main.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading the new offset...")));
+            Main.main.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading a new offset...")));
         } catch( UnsupportedEncodingException ex ) {
             // WTF
         }

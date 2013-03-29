@@ -39,8 +39,6 @@ public class ImageryOffsetPlugin extends Plugin {
                 : Main.main.menu.imageryMenu;
         offsetMenu.add(getAction);
         offsetMenu.add(storeAction);
-        if( version >= 5803 ) // todo: check if this is needed
-            offsetMenu.addSeparator();
 
         // an ugly hack to add this plugin to the toolbar
         if( Main.pref.getBoolean("iodb.modify.toolbar", true) ) {

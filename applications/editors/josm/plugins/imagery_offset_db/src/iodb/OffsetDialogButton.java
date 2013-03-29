@@ -76,10 +76,12 @@ public class OffsetDialogButton extends JButton {
         Font descriptionFont = new Font(descriptionLabel.getFont().getName(), Font.BOLD, descriptionLabel.getFont().getSize());
         descriptionLabel.setFont(descriptionFont);
 
+        OffsetIcon offsetIcon = new OffsetIcon(offset);
         double offsetDistance = offset instanceof ImageryOffset
-                ? ((ImageryOffset)offset).getImageryPos().greatCircleDistance(offset.getPosition()) : 0.0;
-        JLabel offsetLabel = new JLabel(offsetDistance > 1 ? ImageryOffsetTools.formatDistance(offsetDistance) : "",
-                new OffsetIcon(offset), SwingConstants.CENTER);
+                ? offsetIcon.getDistance() : 0.0;
+//                ? ((ImageryOffset)offset).getImageryPos().greatCircleDistance(offset.getPosition()) : 0.0;
+        JLabel offsetLabel = new JLabel(offsetDistance > 0.2 ? ImageryOffsetTools.formatDistance(offsetDistance) : "",
+                offsetIcon, SwingConstants.CENTER);
         Font offsetFont = new Font(offsetLabel.getFont().getName(), Font.PLAIN, offsetLabel.getFont().getSize() - 2);
         offsetLabel.setFont(offsetFont);
         offsetLabel.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -149,7 +151,7 @@ public class OffsetDialogButton extends JButton {
         private boolean isDeprecated;
         private boolean isCalibration;
         private double direction = -1.0;
-        private double length;
+        private double distance;
         private ImageIcon background;
 
         /**
@@ -162,11 +164,15 @@ public class OffsetDialogButton extends JButton {
             if( offset instanceof ImageryOffset ) {
                 background = ImageProvider.get("offset");
                 double[] ld = getLengthAndDirection((ImageryOffset)offset);
-                length = ld[0];
+                distance = ld[0];
                 direction = ld[1];
             } else {
                 background = ImageProvider.get("calibration");
             }
+        }
+
+        public double getDistance() {
+            return distance;
         }
 
         /**
@@ -180,12 +186,12 @@ public class OffsetDialogButton extends JButton {
             if( !isCalibration ) {
                 g2.setColor(Color.black);
                 Point c = new Point(x + getIconWidth() / 2, y + getIconHeight() / 2);
-                if( length < 1e-2 ) {
+                if( distance < 1e-2 ) {
                     // no offset
                     g2.fillOval(c.x - 3, c.y - 3, 7, 7);
                 } else {
                     // draw an arrow
-                    double arrowLength = length < 10 ? getIconWidth() / 2 - 1 : getIconWidth() - 4;
+                    double arrowLength = distance < 10 ? getIconWidth() / 2 - 1 : getIconWidth() - 4;
                     g2.setStroke(new BasicStroke(2));
                     drawArrow(g2, c.x, c.y, arrowLength, direction);
                 }

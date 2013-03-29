@@ -40,6 +40,7 @@ public class CalibrationLayer extends Layer {
      */
     @Override
     public void paint( Graphics2D g, MapView mv, Bounds box ) {
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Stroke oldStroke = g.getStroke();
         g.setColor(color);
         g.setStroke(new BasicStroke(1));
@@ -97,12 +98,10 @@ public class CalibrationLayer extends Layer {
      */
     @Override
     public String getToolTipText() {
-        if(obj.isDeprecated())
-            return tr("A deprecated calibration of type {0} by {1}",
-                OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
+        if( obj.isDeprecated() )
+            return tr("A deprecated calibration {0} by {1}", OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
         else
-            return tr("A calibration of type {0} by {1}",
-                OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
+            return tr("A calibration {0} by {1}", OffsetInfoAction.getGeometryType(obj), obj.getAuthor());
     }
 
     @Override

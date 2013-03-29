@@ -158,7 +158,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
             try {
                 offsets = new IODBReader(inp).parse();
             } catch( Exception e ) {
-                throw new UploadException(tr("Error processing XML response") + ": " + e.getMessage());
+                throw new UploadException(tr("Error processing XML response: {0}", e.getMessage()));
             }
         }
     }

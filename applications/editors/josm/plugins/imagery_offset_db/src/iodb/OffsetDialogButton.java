@@ -55,9 +55,9 @@ public class OffsetDialogButton extends JButton {
      */
     private void layoutComponents() {
         String authorAndDate = offset.isDeprecated()
-                ? tr("Deprecated by {0} on {1}\n", offset.getAbandonAuthor(),
+                ? tr("Deprecated by {0} on {1}", offset.getAbandonAuthor(),
                 OffsetInfoAction.DATE_FORMAT.format(offset.getAbandonDate()))
-                : tr("Created by {0} on {1}\n", offset.getAuthor(),
+                : tr("Created by {0} on {1}", offset.getAuthor(),
                 OffsetInfoAction.DATE_FORMAT.format(offset.getDate()));
         JLabel authorAndDateLabel = new JLabel(authorAndDate);
         Font authorFont = new Font(authorAndDateLabel.getFont().getName(), Font.ITALIC, authorAndDateLabel.getFont().getSize());

@@ -8,7 +8,7 @@ import java.awt.geom.Arc2D;
 import java.util.*;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 
 import oseam.Messages;
@@ -1395,7 +1395,7 @@ public class SeaMark extends JPanel {
 		}
 	}
 
-	public void parseMark(Node node) {
+	public void parseMark(OsmPrimitive node) {
 		dlg.manager.showVisualMessage("");
 		String str = Main.pref.get("smedplugin.IALA");
 		if (str.equals("C"))
@@ -2535,7 +2535,7 @@ public class SeaMark extends JPanel {
 		}
 	}
 
-	public void saveSign(Node node) {
+	public void saveSign(OsmPrimitive node) {
 		
 		if (getObject() != Obj.UNKOBJ) {
 

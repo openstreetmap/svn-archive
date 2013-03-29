@@ -20,27 +20,25 @@ public class OSeaMAction {
 	public SmedPluginManager manager = null;;
 	public PanelMain panelMain = null;
 
-	public Node node = null;
+	public OsmPrimitive node = null;
 	private Collection<? extends OsmPrimitive> Selection = null;
 
 	public SelectionChangedListener SmpListener = new SelectionChangedListener() {
 		public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-			Node nextNode = null;
+			OsmPrimitive nextNode = null;
 			Selection = newSelection;
 
 			for (OsmPrimitive osm : Selection) {
-				if (osm instanceof Node) {
-					nextNode = (Node) osm;
-					if (Selection.size() == 1) {
-						if (nextNode.compareTo(node) != 0) {
-							node = nextNode;
-							panelMain.mark.parseMark(node);
-						}
-					} else {
-						node = null;
-						panelMain.mark.clrMark();
-						manager.showVisualMessage(Messages.getString("OneNode"));
+				nextNode = (OsmPrimitive) osm;
+				if (Selection.size() == 1) {
+					if (nextNode.compareTo(node) != 0) {
+						node = nextNode;
+						panelMain.mark.parseMark(node);
 					}
+				} else {
+					node = null;
+					panelMain.mark.clrMark();
+					manager.showVisualMessage(Messages.getString("OneNode"));
 				}
 			}
 			if (nextNode == null) {

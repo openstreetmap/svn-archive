@@ -1,30 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-** This is a template build file for the tag2link plugin.
+** This is a template build file for a JOSM  plugin.
 **
 ** Maintaining versions
 ** ====================
-** see README.template
+** See README.template
 **
 ** Usage
 ** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in you default plugin directory) run
-**
-**    > ant  install
-**
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the plugin and make it available to other
-** JOSM users:
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
+** Call "ant help" to get possible build targets.
 **
 -->
 <project name="tag2link" default="dist" basedir=".">
@@ -33,18 +17,12 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4968"/>
-	
-    <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
-    -->
+
     <property name="plugin.author" value="Don-vip &amp; FrViPofm"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tag2link.Tag2LinkPlugin"/>
     <property name="plugin.description" value="Launch browser to a Web resource about a selected object having known tags, such as Wikipedia"/>
     <property name="plugin.icon" value="images/tag2linkv2_24x24.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
-    <!--<property name="plugin.stage" value="..."/>-->
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

@@ -32,7 +32,7 @@
     </target>
     <!--
     **********************************************************
-    ** compile - complies the source tree
+    ** compile - compiles the source tree
     **********************************************************
     -->
     <target name="compile" depends="init">

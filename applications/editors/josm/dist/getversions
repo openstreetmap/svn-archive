@@ -1,5 +1,6 @@
 #! /usr/bin/perl -w
 
+my $oldsvn = 0; # before 1.7
 my $maxlength = 0;
 my @names = glob "*.jar";
 
@@ -9,6 +10,7 @@ foreach my $plugin (@names)
   $maxlength = $l if $l > $maxlength;
 }
 
+system "svn -q export -r BASE . getrev" if !$oldsvn;
 foreach my $plugin (@names)
 {
   my $date = "";
@@ -22,7 +24,7 @@ foreach my $plugin (@names)
     $mversion = $1 if $manifest =~ /Plugin-Mainversion: ([^\r\n]+)/;
   }
   printf "%-${maxlength}s %28s %6s (%4s)", $plugin,$date,$version,$mversion;
-  my $svnfile = ".svn/text-base/$plugin.svn-base";
+  my $svnfile = $oldsvn ? ".svn/text-base/$plugin.svn-base" : "getrev/$plugin";
   if(-f $svnfile && ($manifest = `unzip -c $svnfile META-INF/MANIFEST.MF`))
   {
     my $svndate = "";
@@ -39,3 +41,4 @@ foreach my $plugin (@names)
   }
   printf "\n";
 }
+system "rm -rf getrev" if !$oldsvn;

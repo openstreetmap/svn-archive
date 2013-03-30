@@ -116,6 +116,7 @@
             <param name="propery.name" value="plugin.stage"/>
             <param name="propery.value" value="${plugin.stage}"/>
         </antcall>
+        <antcall target="additional-manifest" />
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST">
             <zipgroupfileset dir="${plugin.lib.dir}" includes="*.jar" erroronmissingdir="no"/>
         </jar>
@@ -129,6 +130,9 @@
         <manifest file="MANIFEST" mode="update">
             <attribute name="${manifest.attribute}" value="${propery.value}" />
         </manifest>
+    </target>
+    <!-- target to add additional entries, empty in commons -->
+    <target name="additional-manifest">
     </target>
     <target name="check-manifest-attribute">
         <condition property="have-${propery.name}">

@@ -85,7 +85,7 @@ class SimpleOffsetQueryTask extends PleaseWaitRunnable {
         try {
             String serverURL = Main.pref.get("iodb.server.url", "http://offsets.textual.ru/");
             URL url = new URL(serverURL + query);
-            Main.info("IODB URL = " + url); // todo: remove in release
+//            Main.info("IODB URL = " + url); // todo: remove in release
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.connect();
             if( connection.getResponseCode() != 200 ) {

@@ -26,8 +26,7 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 
 	public ImportOsmInspectorBugsAction(OsmInspectorPlugin thePlugin) {
 		super(tr("Import Osm Inspector Bugs..."), "importosmibugs",
-				tr("Import Osm Inspector Bugs..."), Shortcut.registerShortcut(
-						"importosmibugs",
+				tr("Import Osm Inspector Bugs..."), Shortcut.registerShortcut("importosmibugs",
 						tr("Edit: {10}", tr("Import Osm Inspector Bugs...")),
 						KeyEvent.VK_O, Shortcut.ALT_CTRL), true);
 		putValue("help", ht("/Action/ImportOsmInspectorBugs"));

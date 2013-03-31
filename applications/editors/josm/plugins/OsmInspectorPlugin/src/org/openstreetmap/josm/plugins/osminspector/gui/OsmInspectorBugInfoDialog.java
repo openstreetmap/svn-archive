@@ -48,8 +48,7 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 	public OsmInspectorBugInfoDialog(OsmInspectorLayer layer) {
 
 		super(tr("OsmBugInfo"), "select",
-				tr("Open a OSM Inspector selection list window."), Shortcut
-						.registerShortcut("subwindow:select",
+				tr("Open a OSM Inspector selection list window."), Shortcut.registerShortcut("subwindow:select",
 								tr("Toggle: {0}", tr("Current Selected Bug Info")),
 								KeyEvent.VK_D, Shortcut.ALT_SHIFT), 150, // default
 																			// height

@@ -296,10 +296,10 @@ public class TheRing {
 	    relation = new Relation();
 	    relation.put("type", "multipolygon");
 	    for( String key : sourceCopy.keySet() ) {
-		if( !linearTags.contains(key) ) {
-		    relation.put(key, sourceCopy.get(key));
-		    sourceCopy.remove(key);
-		}
+                if( linearTags.contains(key) ) continue;
+                if( key.equals("natural") && sourceCopy.get("natural").equals("coastline") ) continue;
+                relation.put(key, sourceCopy.get(key));
+                sourceCopy.remove(key);
 	    }
 	}
 

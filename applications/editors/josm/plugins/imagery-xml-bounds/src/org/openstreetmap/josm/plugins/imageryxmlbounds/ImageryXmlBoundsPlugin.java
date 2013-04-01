@@ -17,14 +17,12 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
-import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsListAction;
-import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsPropertiesAction;
+import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsSelectionAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.downloadtask.DownloadXmlBoundsTask;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.io.XmlBoundsExporter;
@@ -45,17 +43,17 @@ public class ImageryXmlBoundsPlugin extends Plugin {
     /**
      * Action showing bounds of the selected closed ways in Selection dialog 
      */
-	private final ShowBoundsListAction selectionListAction = new ShowBoundsListAction();
+	private final ShowBoundsAction selectionListAction = new ShowBoundsAction();
 
     /**
      * Action showing bounds of the selected multipolygons in Properties dialog 
      */
-    private final ShowBoundsPropertiesAction propertiesListAction = new ShowBoundsPropertiesAction();
+    private final ShowBoundsAction propertiesListAction = new ShowBoundsAction();
     
 	/**
      * Action showing bounds of the selected multipolygons in Relations dialog
      */
-	private final ShowBoundsListAction relationListAction = new ShowBoundsListAction();
+	private final ShowBoundsAction relationListAction = new ShowBoundsAction();
 
     /**
      * Action showing bounds of the current selection
@@ -81,9 +79,7 @@ public class ImageryXmlBoundsPlugin extends Plugin {
 		DataSet.addSelectionListener(selectionAction);
 		Main.toolbar.register(selectionAction);
 		// Allow JOSM to download *.imagery.xml files
-		if (Version.getInstance().getVersion() >= 4523) {
-		    Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
-		}
+		Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
 	}
 	
     /* (non-Javadoc)
@@ -101,12 +97,23 @@ public class ImageryXmlBoundsPlugin extends Plugin {
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (newFrame != null) {
 		    // Initialize dialogs actions only after the main frame is created 
-            newFrame.selectionListDialog.addPopupMenuSeparator();
-            newFrame.selectionListDialog.addPopupMenuAction(selectionListAction);
-            newFrame.propertiesDialog.addMembershipPopupMenuSeparator();
-            newFrame.propertiesDialog.addMembershipPopupMenuAction(propertiesListAction);
-			newFrame.relationListDialog.addPopupMenuSeparator();
-			newFrame.relationListDialog.addPopupMenuAction(relationListAction);
+            newFrame.selectionListDialog.getPopupMenuHandler().addSeparator();
+            newFrame.selectionListDialog.getPopupMenuHandler().addAction(selectionListAction);
+            newFrame.propertiesDialog.getMembershipPopupMenuHandler().addSeparator();
+            newFrame.propertiesDialog.getMembershipPopupMenuHandler().addAction(propertiesListAction);
+			newFrame.relationListDialog.getPopupMenuHandler().addSeparator();
+			newFrame.relationListDialog.getPopupMenuHandler().addAction(relationListAction);
+		} else if (oldFrame != null) {
+            // Remove listeners from previous frame to avoid memory leaks
+		    if (oldFrame.relationListDialog != null) {
+		        oldFrame.relationListDialog.getPopupMenuHandler().removeAction(relationListAction);
+		    }
+		    if (oldFrame.propertiesDialog != null) {
+		        oldFrame.propertiesDialog.getMembershipPopupMenuHandler().removeAction(propertiesListAction);
+		    }
+		    if (oldFrame.selectionListDialog != null) {
+		        oldFrame.selectionListDialog.getPopupMenuHandler().removeAction(selectionListAction);
+		    }
 		}
 	}
 }

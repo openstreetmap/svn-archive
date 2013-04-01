@@ -18,6 +18,7 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds.actions;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.JOptionPane;
@@ -26,6 +27,8 @@ import javax.swing.JScrollPane;
 import net.boplicity.xmleditor.XmlTextPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.OsmPrimitiveAction;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 
 /**
@@ -33,7 +36,7 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
  *
  */
 @SuppressWarnings("serial")
-public class ShowBoundsAction extends ComputeBoundsAction {
+public class ShowBoundsAction extends ComputeBoundsAction implements OsmPrimitiveAction {
 
 	public ShowBoundsAction() {
 	}
@@ -57,4 +60,9 @@ public class ShowBoundsAction extends ComputeBoundsAction {
         box.add(scrollPane);
         JOptionPane.showMessageDialog(Main.parent, box, ACTION_NAME, JOptionPane.PLAIN_MESSAGE);
 	}
+
+    @Override
+    public void setPrimitives(Collection<? extends OsmPrimitive> primitives) {
+        updateOsmPrimitives(primitives);
+    }
 }

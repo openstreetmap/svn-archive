@@ -73,21 +73,21 @@ public class Tag2LinkPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             // Initialize dialogs listeners only after the main frame is created
-            newFrame.selectionListDialog.addPopupMenuListener(selectionPopupListener = new SelectionPopupListener(newFrame));
-            newFrame.propertiesDialog.addMembershipPopupMenuListener(membershipPopupListener = new MembershipPopupListener(newFrame));
-            newFrame.propertiesDialog.addPropertyPopupMenuListener(propertyPopupListener = new PropertyPopupListener(newFrame));
-            newFrame.relationListDialog.addPopupMenuListener(relationPopupListener = new RelationPopupListener(newFrame));
+            newFrame.selectionListDialog.getPopupMenuHandler().addListener(selectionPopupListener = new SelectionPopupListener(newFrame));
+            newFrame.propertiesDialog.getMembershipPopupMenuHandler().addListener(membershipPopupListener = new MembershipPopupListener(newFrame));
+            newFrame.propertiesDialog.getPropertyPopupMenuHandler().addListener(propertyPopupListener = new PropertyPopupListener(newFrame));
+            newFrame.relationListDialog.getPopupMenuHandler().addListener(relationPopupListener = new RelationPopupListener(newFrame));
         } else if (oldFrame != null) {
             // Remove listeners from previous frame to avoid memory leaks
             if (oldFrame.selectionListDialog != null) {
-                oldFrame.selectionListDialog.removePopupMenuListener(selectionPopupListener);
+                oldFrame.selectionListDialog.getPopupMenuHandler().removeListener(selectionPopupListener);
             }
             if (oldFrame.propertiesDialog != null) {
-                oldFrame.propertiesDialog.removeMembershipPopupMenuListener(membershipPopupListener);
-                oldFrame.propertiesDialog.removePropertyPopupMenuListener(propertyPopupListener);
+                oldFrame.propertiesDialog.getMembershipPopupMenuHandler().removeListener(membershipPopupListener);
+                oldFrame.propertiesDialog.getPropertyPopupMenuHandler().removeListener(propertyPopupListener);
             }
             if (oldFrame.relationListDialog != null) {
-                oldFrame.relationListDialog.removePopupMenuListener(relationPopupListener);
+                oldFrame.relationListDialog.getPopupMenuHandler().removeListener(relationPopupListener);
             }
             selectionPopupListener = null;
             membershipPopupListener = null;

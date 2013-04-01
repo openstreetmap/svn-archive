@@ -1,8 +1,10 @@
 package org.openstreetmap.josm.plugins.fastdraw;
 
 import java.awt.Color;
+import java.awt.Stroke;
 import java.io.IOException;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class FDSettings {
@@ -35,8 +37,12 @@ public class FDSettings {
 
     public boolean drawClosed;
     public int simplifyMode;
-    public float lineWidth;
     public String autoTags;
+    public Stroke normalStroke;
+    public Stroke simplifiedStroke;
+    public Stroke deleteStroke;
+    public int dotSize;
+    public int bigDotSize;
     
     public void loadPrefs() {
         COLOR_DELETE = Main.pref.getColor("fastdraw.color.delete", Color.red);
@@ -45,6 +51,14 @@ public class FDSettings {
         COLOR_NORMAL = Main.pref.getColor("fastdraw.color.normal", Color.red);
         COLOR_SELECTEDFRAGMENT = Main.pref.getColor("fastdraw.color.select", Color.blue);
         COLOR_SIMPLIFIED = Main.pref.getColor("fastdraw.color.simplified", Color.orange);
+        
+        normalStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.normal", "2"));
+        deleteStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.delete", "3"));
+        simplifiedStroke = GuiHelper.getCustomizedStroke(Main.pref.get("fastdraw.stroke.simplified", "2"));
+        
+        bigDotSize = Main.pref.getInteger("fastdraw.point.bigsize", 7);
+        dotSize = Main.pref.getInteger("fastdraw.point.normalsize", 5);
+        
         maxDist = Main.pref.getDouble("fastdraw.maxdist", 5);
         epsilonMult = Main.pref.getDouble("fastdraw.epsilonmult", 1.1);
         //deltaLatLon = Main.pref.getDouble("fastdraw.deltasearch", 0.01);
@@ -58,17 +72,10 @@ public class FDSettings {
         fixedSpacebar = Main.pref.getBoolean("fastdraw.fixedspacebar", false);
         drawClosed =  Main.pref.getBoolean("fastdraw.drawclosed", false);
         simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0);
-        lineWidth = (float) Main.pref.getDouble("fastdraw.linewidth", 2);
         autoTags = Main.pref.get("fastdraw.autotags");
     }
 
     public void savePrefs() {
-         Main.pref.putColor("fastdraw.color.delete", COLOR_DELETE );
-         Main.pref.putColor("fastdraw.color.edit", COLOR_EDITEDFRAGMENT);
-         Main.pref.putColor("fastdraw.color.fixed", COLOR_FIXED);
-         Main.pref.putColor("fastdraw.color.normal", COLOR_NORMAL);
-         Main.pref.putColor("fastdraw.color.select", COLOR_SELECTEDFRAGMENT);
-         Main.pref.getColor("fastdraw.color.simplified", COLOR_SIMPLIFIED);
          Main.pref.putDouble("fastdraw.maxdist", maxDist);
          Main.pref.putDouble("fastdraw.epsilonmult", epsilonMult);
          //Main.pref.putDouble("fastdraw.deltasearch", deltaLatLon);
@@ -82,7 +89,6 @@ public class FDSettings {
          Main.pref.put("fastdraw.fixedspacebar", fixedSpacebar);
          Main.pref.put("fastdraw.drawclosed", drawClosed);
          Main.pref.putInteger("fastdraw.simplifymode", simplifyMode);
-         Main.pref.putDouble("fastdraw.linewidth",(double)lineWidth);
          Main.pref.put("fastdraw.autotags", autoTags);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));

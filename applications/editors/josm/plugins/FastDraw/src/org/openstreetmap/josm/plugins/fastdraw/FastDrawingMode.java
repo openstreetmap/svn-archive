@@ -7,12 +7,10 @@
 package org.openstreetmap.josm.plugins.fastdraw;
 
 import java.awt.AWTEvent;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.*;
@@ -60,8 +58,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private boolean ctrl;
     private boolean shift;
     private double eps;
-    private Stroke strokeForSimplified;
-    private Stroke strokeForOriginal;
     private final Cursor cursorDraw;
     private final Cursor cursorCtrl;
     private final Cursor cursorShift;
@@ -71,7 +67,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private boolean nearSomeNode;
     private LatLon highlighted;
     private int nearestIdx;
-    private Stroke strokeForDelete;
     private int dragNode=-1;
     private SequenceCommand delCmd;
     private List<Node> oldNodes;
@@ -112,12 +107,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         settings.loadPrefs();
         settings.savePrefs();
 
-        strokeForOriginal = new BasicStroke(settings.lineWidth);
-        strokeForDelete = new BasicStroke(3);
-        //strokeForSimplified = new BasicStroke(1,BasicStroke.CAP_ROUND,BasicStroke.JOIN_BEVEL,5f,
-        //        new float[]{5.f,5f},0f);
-        strokeForSimplified = strokeForOriginal;
-        
         eps=settings.startingEps;
         mv = Main.map.mapView;
         line.setMv(mv);
@@ -186,21 +175,23 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
         if (line.wasSimplified()) {
             // we are drawing simplified version, that exists
-            g.setStroke(strokeForSimplified);
+            g.setStroke(settings.simplifiedStroke);
         } else {
-            g.setStroke(strokeForOriginal);
+            g.setStroke(settings.normalStroke);
         }
         
+        int bigDotSize = settings.bigDotSize;
+
         Point p1, p2;
         LatLon pp1, pp2;
         p1 = line.getPoint(pts.get(0));
         g.setColor(settings.COLOR_FIXED);
-        g.fillOval(p1.x - 3, p1.y - 3, 7, 7);
+        g.fillOval(p1.x - bigDotSize/2, p1.y - bigDotSize/2, bigDotSize, bigDotSize);
         Color lineColor,initLineColor;
         initLineColor = line.wasSimplified() ? settings.COLOR_SIMPLIFIED: settings.COLOR_NORMAL;
         lineColor = initLineColor;
         int rp,dp;
-        dp=line.wasSimplified() ? 7:(int)(3+((int) settings.lineWidth)/2*2);  rp=dp/2;
+        dp=line.wasSimplified() ? settings.bigDotSize : settings.dotSize;  rp=dp/2;
         if (pts.size() > 1) {
         Iterator<LatLon> it1,it2;
         it1=pts.listIterator(0);
@@ -217,7 +208,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 if (line.isFixed(pp2)) {
                     lineColor=initLineColor;
                     g.setColor(settings.COLOR_FIXED);
-                    g.fillOval(p2.x - 3, p2.y - 3, 7, 7);
+                    g.fillOval(p2.x - bigDotSize/2, p2.y - bigDotSize/2, bigDotSize, bigDotSize);
                 } else {
                     g.fillRect(p2.x - rp, p2.y - rp, dp, dp);
                 }
@@ -225,17 +216,17 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     if (!line.wasSimplified() && nearestIdx==i+1 ) {
                     if (shift) {
                         // highlight node to delete
-                        g.setStroke(strokeForDelete);
+                        g.setStroke(settings.deleteStroke);
                         g.setColor(settings.COLOR_DELETE);
                         g.drawLine(p2.x - 5, p2.y - 5,p2.x + 5, p2.y + 5);
                         g.drawLine(p2.x - 5, p2.y + 5,p2.x + 5, p2.y - 5);
-                        g.setStroke(strokeForOriginal);
+                        g.setStroke(settings.normalStroke);
                     } else if (ctrl) {
                         // highlight node to toggle fixation
-                        g.setStroke(strokeForDelete);
+                        g.setStroke(settings.deleteStroke);
                         g.setColor( line.isFixed(pp2) ? settings.COLOR_NORMAL: settings.COLOR_FIXED);
-                        g.drawOval(p2.x - 5, p2.y - 5, 11, 11);
-                        g.setStroke(strokeForOriginal);
+                        g.fillOval(p2.x - bigDotSize/2-2, p2.y - bigDotSize/2-2, bigDotSize+4, bigDotSize+4);
+                        g.setStroke(settings.normalStroke);
                     } 
                     }
                 }

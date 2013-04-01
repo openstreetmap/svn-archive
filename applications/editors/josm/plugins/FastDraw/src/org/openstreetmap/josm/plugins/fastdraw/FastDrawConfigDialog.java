@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.openstreetmap.josm.plugins.fastdraw;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

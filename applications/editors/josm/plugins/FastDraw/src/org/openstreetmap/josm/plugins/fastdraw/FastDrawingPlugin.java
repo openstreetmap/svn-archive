@@ -1,7 +1,4 @@
 /*
- * This file is part of ImproveWayAccuracy plugin for JOSM.
- * http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImproveWayAccuracy
- *
  * Licence: GPL v2 or later
  * Author:  Alexei Kasatkin, 2011
  * Ideas: Kotelnikov, Michael Barabanov (ticket #3840)

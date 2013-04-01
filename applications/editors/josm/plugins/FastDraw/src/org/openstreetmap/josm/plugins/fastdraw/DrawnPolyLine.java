@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MapView;
 
 public class DrawnPolyLine {
@@ -93,18 +92,23 @@ public class DrawnPolyLine {
     }
 
     void addFixed(LatLon coor) {
-         addLast(coor);
+        addLast(coor);
         fixed.add(coor);
     }
     void addLast(LatLon coor) {
         if (closedFlag && lastIdx>points.size()-1) return;
         if (lastIdx>=points.size()-1) {
-            //System.out.println("add last "+points.size());
-            points.addLast(coor);if (points.size()>1) lastIdx++;
-            //System.out.println("lastIdx="+lastIdx);
+            // 
+            if (points.isEmpty() || !coor.equals(points.getLast())) {
+                points.addLast(coor); 
+                if (points.size()>1) lastIdx++;
+                }
+        } else {
+            // insert point into midlle of the line
+            if (points.isEmpty() || !coor.equals(points.get(lastIdx))) {
+                points.add(lastIdx+1, coor); 
+                lastIdx++; 
             }
-        else {points.add(lastIdx+1, coor); lastIdx++; 
-            //System.out.println("add at "+lastIdx+"/"+points.size());
         }
     }
   

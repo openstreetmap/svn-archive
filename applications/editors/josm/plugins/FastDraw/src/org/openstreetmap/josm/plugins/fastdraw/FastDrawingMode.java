@@ -1,7 +1,4 @@
 /*
- * This file is part of ImproveWayAccuracy plugin for JOSM.
- * http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImproveWayAccuracy
- *
  * Licence: GPL v2 or later
  * Author:  Alexei Kasatkin, 2011
  * Thanks to authors of BuildingTools, ImproveWayAccuracy and LakeWalker
@@ -12,21 +9,12 @@ package org.openstreetmap.josm.plugins.fastdraw;
 import java.awt.AWTEvent;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Tag;
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -39,6 +27,8 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -51,6 +41,8 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.TextTagParser;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 class FastDrawingMode extends MapMode implements MapViewPaintable,
         AWTEventListener {
@@ -90,7 +82,10 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private KeyEvent releaseEvent;
     private boolean lineWasSaved;
     private boolean deltaChanged;
-    private final int mainKeyCode;
+    /**
+     * used for skipping keyboard AWTTevents while dialogs are active
+     */
+    private boolean listenKeys = false;
     
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), 
@@ -104,7 +99,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         cursorNode = ImageProvider.getCursor("crosshair", "joinnode");
         cursorDrawing = ImageProvider.getCursor("crosshair", "mode");
         //loadPrefs();
-        mainKeyCode = getShortcut().getKeyStroke().getKeyCode();
     }
 
 // <editor-fold defaultstate="collapsed" desc="Event listeners">
@@ -146,6 +140,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             }
         });
         
+        listenKeys = true;
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
@@ -264,7 +259,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     @Override
     public void eventDispatched(AWTEvent event) {
-        if (Main.map == null || Main.map.mapView == null
+        if (!listenKeys || Main.map == null || Main.map.mapView == null
                 || !Main.map.mapView.isActiveLayerDrawable()) {
             return;
         }
@@ -484,18 +479,20 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             else changeDelta(1.1);
         break;
         case KeyEvent.VK_ESCAPE:
-            // less details
             e.consume();
             Point lastPoint = line.getLastPoint();
             if (!line.isClosed()) line.moveToTheEnd();
             if (lastPoint==null || lastPoint.equals(line.getLastPoint())) {
                  if (line.getPoints().size()>5) {
-                 boolean answer = ConditionalOptionPaneUtil.showConfirmationDialog(
-                    "delete_drawn_line", Main.parent,
-                    tr("Are you sure you do not want to save the line containing {0} points?",
-                         line.getPoints().size()), tr("Delete confirmation"),
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION );
-                 if(!answer) break;
+                    // no key events while the dialog is active!
+                    listenKeys = false;
+                    boolean answer = ConditionalOptionPaneUtil.showConfirmationDialog(
+                       "delete_drawn_line", Main.parent,
+                       tr("Are you sure you do not want to save the line containing {0} points?",
+                            line.getPoints().size()), tr("Delete confirmation"),
+                       JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_OPTION );
+                    listenKeys = true;
+                    if(!answer) break;
                 }
                 newDrawing(); // stop drawing
                 exitMode();
@@ -504,25 +501,26 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         break;
         
         case KeyEvent.VK_I:
+           listenKeys = false;
            JOptionPane.showMessageDialog(Main.parent,
                         tr("{0} m - length of the line\n{1} nodes\n{2} points per km (maximum)\n{3} points per km (average)",
                         line.getLength(),line.getPoints().size(),line.getNodesPerKm(settings.pkmBlockSize),
                         line.getNodesPerKm(1000000)),
                         tr("Line information"),JOptionPane.INFORMATION_MESSAGE);
+           listenKeys = true;
         break;            
         case KeyEvent.VK_Q:
             // less details
             e.consume();
             try {
-                Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+                listenKeys = false;
                 new FastDrawConfigDialog(settings);
                 if (line.wasSimplified()) {
                 eps = line.autoSimplify(settings.startingEps, settings.epsilonMult, settings.pkmBlockSize,settings.maxPointsPerKm);
                 showSimplifyHint();
                 }
                 //System.out.println("final eps="+eps);
-                Toolkit.getDefaultToolkit().addAWTEventListener(this,
-                    AWTEvent.KEY_EVENT_MASK);
+                listenKeys = true;
             } catch (SecurityException ex) {  }
             repaint();
         break;
@@ -559,6 +557,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
 // <editor-fold defaultstate="collapsed" desc="Different action helper methods">
     public void newDrawing() {
+        if (delCmd!=null) delCmd.undoCommand();
         delCmd=null; oldNodes=null;
         eps=settings.startingEps;
         line.clear();
@@ -579,11 +578,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
         for (LatLon p : pts) {
             Node nd=null;
-            //if (line.isFixed(p)) {
-                // there may be a node with same ccoords!
-                nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive.isSelectablePredicate);
-            //}
-            if (nd!=null) if (p.greatCircleDistance(nd.getCoor())>0.01) nd=null;
+ 
+            nd = Main.map.mapView.getNearestNode(line.getPoint(p), OsmPrimitive.isSelectablePredicate);
+            // there may be a node with the same coords!
+            
+            if (nd!=null && p.greatCircleDistance(nd.getCoor())>0.01) nd=null;
             if (nd==null) {
                 if (i>0 && p.equals(first)) nd=firstNode; else {
                     nd = new Node(p);
@@ -626,6 +625,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                     if (refs.isEmpty() && !nd.isDeleted() && nd.isUsable()) cmds.add(new DeleteCommand(nd));                                       
                 }
             }
+            delCmd = null; // that is all with this command
             cmds.add(new AddCommand(w));
         } else cmds.add(new AddCommand(w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);

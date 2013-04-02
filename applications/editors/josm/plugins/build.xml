@@ -12,9 +12,8 @@
         <ant antfile="build.xml" target="dist" dir="alignways"/>
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
         <ant antfile="build.xml" target="dist" dir="cadastre-fr"/>
-        <ant antfile="build.xml" target="dist" dir="colorscheme"/>
-        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>	
         <ant antfile="build.xml" target="dist" dir="canvec_helper"/>
+        <ant antfile="build.xml" target="dist" dir="colorscheme"/>
         <ant antfile="build.xml" target="dist" dir="ColumbusCSV"/>
         <ant antfile="build.xml" target="dist" dir="CommandLine"/>
         <ant antfile="build.xml" target="dist" dir="Create_grid_of_ways"/>
@@ -59,11 +58,13 @@
         <ant antfile="build.xml" target="dist" dir="NanoLog"/>
         <ant antfile="build.xml" target="dist" dir="native-password-manager"/>
         <ant antfile="build.xml" target="dist" dir="nearclick"/>
+        <ant antfile="build.xml" target="dist" dir="no_more_mapping"/>
         <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="dist" dir="opendata"/>
         <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
+        <ant antfile="build.xml" target="dist" dir="OsmInspectPlugin"/>
         <ant antfile="build.xml" target="dist" dir="pbf"/>
         <ant antfile="build.xml" target="dist" dir="pdfimport"/>
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
@@ -82,6 +83,7 @@
         <ant antfile="build.xml" target="dist" dir="sds"/>
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
+        <ant antfile="build.xml" target="dist" dir="smed2"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="surveyor2"/>
         <ant antfile="build.xml" target="dist" dir="tag2link"/>
@@ -93,6 +95,7 @@
         <ant antfile="build.xml" target="dist" dir="turnlanes"/>
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="dist" dir="undelete"/>
+        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>	
         <ant antfile="build.xml" target="dist" dir="videomapping"/>
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>
@@ -153,6 +156,7 @@
         <ant antfile="build.xml" target="clean" dir="mirrored_download"/>
         <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="namemanager"/>
+        <ant antfile="build.xml" target="clean" dir="no_more_mapping"/>
         <ant antfile="build.xml" target="clean" dir="NanoLog"/>
         <ant antfile="build.xml" target="clean" dir="native-password-manager"/>
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
@@ -161,6 +165,7 @@
         <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
+        <ant antfile="build.xml" target="clean" dir="OsmInspectPlugin"/>
         <ant antfile="build.xml" target="clean" dir="pbf"/>
         <ant antfile="build.xml" target="clean" dir="pdfimport"/>
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
@@ -179,6 +184,7 @@
         <ant antfile="build.xml" target="clean" dir="sds"/>
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
+        <ant antfile="build.xml" target="clean" dir="smed2"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="surveyor2"/>
         <ant antfile="build.xml" target="clean" dir="tag2link"/>

@@ -70,6 +70,15 @@
             }
             );
         var osm   = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+        var osmde = new OpenLayers.Layer.TMS("OSM DE",
+            "http://tile.openstreetmap.de/tiles/osmde/",
+            {
+              type: 'png', getURL: osm_getTileURL,
+              displayOutsideMaxExtent: true, isBaseLayer: true,
+              numZoomLevels: 19,
+              attribution: 'Map Data from <a href="http://www.openstreetmap.de/">OpenStreetMap</a><br>'
+            }
+            );
 
         var approachicons = new OpenLayers.Layer.Text("Approach Icons",
             {
@@ -78,7 +87,7 @@
             }
             );
 
-        map.addLayers([approach, osm]);
+        map.addLayers([approach, osm, osmde]);
         map.addLayers([approachicons]);
 
         //München lat=48.12568&lon=11.5668&zoom=13

@@ -334,17 +334,22 @@ class JoinDB (OSMDB):
                 break
             dirty_joinways_list=self.find_joinways_by_segments(segment_id_list)
             logging.info("   that are in {} joinways".format(len(dirty_joinways_list)))
-
-            # the dirty_segments_list is a list of segments that are not deleted but are affected
-            # since they are in the same joinway (also dirty) as a deleted segment
-            dirty_segments_list=self.get_segments_of_joinways(dirty_joinways_list)
-            logging.info("      that contain {} segments".format(len(dirty_segments_list)))
+            if len(dirty_joinways_list)==0:
+                dirty_segments_list = []
+            else:
+                # the dirty_segments_list is a list of segments that are not deleted but are affected
+                # since they are in the same joinway (also dirty) as a deleted segment
+                dirty_segments_list=self.get_segments_of_joinways(dirty_joinways_list)
+            ds_number = len(dirty_segments_list)
+            dirty_segments_list = list(set(dirty_segments_list) | set(segment_id_list))
+            logging.info("      that contain {d} segments, together {d2}".format(d=ds_number,d2=len(dirty_segments_list)))
 
             # dirty segments must be removed: * from the deleted_segments table, * from the joinmap, * from the join table
             # all of those must fail gracefully if an entry is not there (anymore).
             self.mark_segments_unhandled(dirty_segments_list)
             self.flush_deleted_segments(dirty_segments_list)
-            self.remove_joinways(dirty_joinways_list)
+            if len(dirty_joinways_list)!=0:
+                self.remove_joinways(dirty_joinways_list)
             i+=len(segment_id_list)
             j+=len(dirty_segments_list)
             self.commit()

@@ -7,11 +7,7 @@ import java.io.Serializable;
  */
 public class Dto implements Serializable
 {
-
-   /**
-    * 
-    */
-   private static final long serialVersionUID = -4025800761473341695L;
+   private static final long serialVersionUID = -4035800761473241695L;
 
    private boolean saveBuilding = true;
    private boolean saveCountry = true;
@@ -21,12 +17,14 @@ public class Dto implements Serializable
    private boolean saveStreet = true;
    private boolean saveHousenumber = true;
 
+   private String building = "yes";
    private String country;
    private String state;
    private String city;
    private String postcode;
    private String street;
    private String housenumber;
+   private int housenumberChangeValue = 0;
 
    public boolean isSaveBuilding()
    {
@@ -156,5 +154,25 @@ public class Dto implements Serializable
    public void setSaveState(boolean saveState)
    {
       this.saveState = saveState;
+   }
+
+   public int getHousenumberChangeValue()
+   {
+      return housenumberChangeValue;
+   }
+
+   public void setHousenumberChangeValue(int housenumberChangeValue)
+   {
+      this.housenumberChangeValue = housenumberChangeValue;
+   }
+
+   public String getBuilding()
+   {
+      return building;
+   }
+
+   public void setBuilding(String building)
+   {
+      this.building = building;
    }
 }

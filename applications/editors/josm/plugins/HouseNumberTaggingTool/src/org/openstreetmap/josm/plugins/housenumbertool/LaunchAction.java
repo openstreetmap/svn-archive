@@ -13,9 +13,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class LaunchAction extends JosmAction implements SelectionChangedListener
 {
 
-   /**
-    * 
-    */
    private static final long serialVersionUID = -3508864293222033185L;
    private OsmPrimitive selection = null;
 

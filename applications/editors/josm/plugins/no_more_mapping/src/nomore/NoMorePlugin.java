@@ -7,8 +7,6 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-Remove this garbage line if you really want to compile the plugin. 
-
 /**
  * Prevent JOSM from loading.
  * 

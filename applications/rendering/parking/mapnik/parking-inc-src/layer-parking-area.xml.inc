@@ -310,6 +310,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
           END AS "feeX",
           CASE /* accessX = */ LOWER(COALESCE(access,'-'))
             WHEN 'permit' THEN 'residentsX'
+            WHEN 'permissive' THEN 'customersX'
             WHEN 'destination' THEN 'customersX'
             ELSE LOWER(COALESCE(access,'-'))
           END AS "accessX",

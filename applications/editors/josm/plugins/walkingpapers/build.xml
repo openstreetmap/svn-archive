@@ -21,7 +21,7 @@
     <property name="plugin.author" value="Frederik Ram"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.walkingpapers.WalkingPapersPlugin"/>
     <property name="plugin.description" value="Supports downloading tiled, scanned maps from walking-papers.org. This plugin is still under early development and may be buggy."/>
-    <property name="plugin.icon" value="images/preferences/walkingpapers.pn"/>
+    <property name="plugin.icon" value="images/preferences/walkingpapers.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/WalkingPapers"/>
 
     <!-- ** include targets that all plugins have in common ** -->

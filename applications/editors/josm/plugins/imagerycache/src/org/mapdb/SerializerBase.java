@@ -33,20 +33,21 @@ import static org.mapdb.SerializationHeader.*;
 public class SerializerBase implements Serializer{
 
 
-    static final Set knownSerializable = new HashSet(Arrays.asList(
+    static final class knownSerializable{
+        static final Set get = new HashSet(Arrays.asList(
             BTreeKeySerializer.STRING,
             BTreeKeySerializer.ZERO_OR_POSITIVE_LONG,
             BTreeKeySerializer.ZERO_OR_POSITIVE_INT,
-
             Utils.COMPARABLE_COMPARATOR, Utils.COMPARABLE_COMPARATOR_WITH_NULLS,
 
             Serializer.STRING_SERIALIZER, Serializer.LONG_SERIALIZER, Serializer.INTEGER_SERIALIZER,
             Serializer.EMPTY_SERIALIZER, Serializer.BASIC_SERIALIZER, Serializer.CRC32_CHECKSUM
     ));
+    }
 
     public static void assertSerializable(Object o){
         if(o!=null && !(o instanceof Serializable)
-                && !knownSerializable.contains(o)){
+                && !knownSerializable.get.contains(o)){
             throw new IllegalArgumentException("Not serializable: "+o.getClass());
         }
     }
@@ -54,7 +55,7 @@ public class SerializerBase implements Serializer{
     /**
      * Utility class similar to ArrayList, but with fast identity search.
      */
-    final static class FastArrayList<K> {
+    protected final static class FastArrayList<K> {
 
         private int size = 0;
         private K[] elementData = (K[]) new Object[1];
@@ -302,9 +303,9 @@ public class SerializerBase implements Serializer{
             out.write(B_TREE_BASIC_KEY_SERIALIZER);
             if(((BTreeKeySerializer.BasicKeySerializer)obj).defaultSerializer!=this) throw new InternalError();
             return;
-        } else if(clazz == CompressLZF.SerializerCompressWrapper.class){
+        } else if(clazz == CompressSerializerWrapper.class){
             out.write(SERIALIZER_COMPRESSION_WRAPPER);
-            serialize(out, ((CompressLZF.SerializerCompressWrapper)obj).serializer, objectStack);
+            serialize(out, ((CompressSerializerWrapper)obj).serializer, objectStack);
             return;
 
         } else if(obj == BTreeKeySerializer.ZERO_OR_POSITIVE_LONG){
@@ -1110,7 +1111,7 @@ public class SerializerBase implements Serializer{
                 ret = deserializeProperties(is, objectStack);
                 break;
             case SERIALIZER_COMPRESSION_WRAPPER:
-                ret = CompressLZF.serializerCompressWrapper((Serializer) deserialize(is, objectStack));
+                ret = CompressLZF.CompressionWrapper((Serializer) deserialize(is, objectStack));
                 break;
             default:
                 ret = deserializeUnknownHeader(is, head, objectStack);

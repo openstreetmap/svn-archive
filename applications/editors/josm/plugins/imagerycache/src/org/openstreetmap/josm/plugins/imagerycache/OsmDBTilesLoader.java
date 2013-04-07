@@ -5,15 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.Tile;
@@ -21,6 +17,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 /**
@@ -34,79 +31,8 @@ class OsmDBTilesLoader extends OsmTileLoader {
     public static final long FILE_AGE_ONE_WEEK = FILE_AGE_ONE_DAY * 7;
     
     public static final boolean debug = new BooleanProperty("imagerycache.debug", false).get();
-
-    static class TileDAOMapDB {
-        protected HashMap<String, DB> dbs = new HashMap<String, DB>();
-        protected HashMap<String, Map<Long,DBTile>> storages  = new HashMap<String, Map<Long,DBTile>>();
-        private final File cacheFolder;
-        
-        /**
-         * Lazy creation of DB object associated to * @param source
-         * or returning from cache
-         */
-        private synchronized DB getDB(String source) {
-            DB db = dbs.get(source);
-            if (db==null) {
-                try {
-                db = DBMaker
-                    .newFileDB(new File(cacheFolder, "tiles_"+source.replaceAll("[\\\\/:*?\"<>| ]", "_")))
-                    .randomAccessFileEnableIfNeeded()
-                    .journalDisable()
-                    .closeOnJvmShutdown()
-                    .make();
-                dbs.put(source, db);
-                } catch (Exception e) {
-                    System.out.println("Error: Can not create MapDB file");
-                    e.printStackTrace(System.out);
-                }
-            }
-            return db;
-        }
-
-        private synchronized Map<Long,DBTile> getStorage(String source) {
-            Map<Long, DBTile> m = storages.get(source);
-            if (m == null) {
-                try {
-                    DB d = getDB(source);
-                    m = d.getHashMap("tiles");
-                    storages.put(source, m);
-                    if (debug) System.out.println("Created storage "+source);
-                } catch (Exception e) {
-                    System.out.println("Error: Can not create HashMap in MapDB storage");
-                    e.printStackTrace(System.out);
-                }
-            }
-            return m;
-        }
-        
-        public TileDAOMapDB(File cacheFolder) {
-            this.cacheFolder = cacheFolder;
-        }
-        
-                
-        DBTile getById(String source, long id) {
-            return getStorage(source).get(id);
-        }
-
-        protected void updateModTime(String source, long id, DBTile dbTile) {
-            if (debug) System.out.println("Tile "+id+": Updating modification time");
-            getStorage(source).put(id, dbTile);
-        }
-
-        protected void updateTile(String source, long id, DBTile dbTile) {
-            if (debug) System.out.println("Tile "+id+": Updating tile in base");
-            getStorage(source).put(id, dbTile);
-        }
-
-        protected void deleteTile(String source, long id) {
-            getStorage(source).remove(id);
-        }
-
-
-    }
             
     TileDAOMapDB dao;
-                        
    
     protected long maxCacheFileAge = FILE_AGE_ONE_WEEK;
     protected long recheckAfter = FILE_AGE_ONE_DAY;
@@ -114,27 +40,25 @@ class OsmDBTilesLoader extends OsmTileLoader {
     
     public OsmDBTilesLoader(TileLoaderListener smap, File cacheFolder) {
         super(smap);
-        dao = new TileDAOMapDB(cacheFolder);
+        dao = TileDAOMapDB.getInstance();
+        dao.setCacheFolder(cacheFolder);
     }
     
     @Override
     public TileJob createTileLoaderJob(final Tile tile) {
         return new DatabaseLoadJob(tile);
     }
-    
-    static class DBTile implements Serializable {
-        byte data[];
-        Map<String, String> metaData;
-        long lastModified;
-    }
 
     protected class DatabaseLoadJob implements TileJob {
 
         private final Tile tile;
         File tileCacheDir;
+        
+        /**
+         * Stores the tile loaded from database, null if nothing found. 
+         */
         DBTile dbTile = null;
         long fileAge = 0;
-        boolean fileTilePainted = false;
         
         long id;
         String sourceName;
@@ -160,34 +84,40 @@ class OsmDBTilesLoader extends OsmTileLoader {
             if (loadTileFromFile()) {
                 return;
             }
-            if (fileTilePainted) {
+            if (dbTile != null) {
                 TileJob job = new TileJob() {
-                    public void run() {
-                        loadOrUpdateTile();
+                    @Override public void run() {
+                        loadOrUpdateTileFromServer();
                     }
-                    public Tile getTile() {
+                    @Override public Tile getTile() {
                         return tile;
                     }
                 };
                 JobDispatcher.getInstance().addJob(job);
             } else {
-                loadOrUpdateTile();
+                loadOrUpdateTileFromServer();
             }
         }
 
+        /**
+         * Loads tile from database. 
+         * There can be dbTile != null but the tile is outdated and reload is still needed
+         * @return true if no loading from server is needed.
+         */
         private boolean loadTileFromFile() {
             ByteArrayInputStream bin = null;
             try {
                 dbTile = dao.getById(sourceName, id);
                 
                 if (dbTile == null) return false;
+                
+                loadMetadata(); 
+                if (debug) System.out.println(id+": found in cache, metadata ="+dbTile.metaData);
 
                 if ("no-tile".equals(tile.getValue("tile-info")))
                 {
                     tile.setError("No tile at this zoom level");
-                    if (dbTile!=null) {
-                        dao.deleteTile(sourceName, id);
-                    }
+                    dao.deleteTile(sourceName, id);
                 } else {
                     bin = new ByteArrayInputStream(dbTile.data);
                     if (bin.available() == 0)
@@ -201,35 +131,42 @@ class OsmDBTilesLoader extends OsmTileLoader {
                 if (!oldTile) {
                     tile.setLoaded(true);
                     listener.tileLoadingFinished(tile, true);
-                    fileTilePainted = true;
-                    return true;
+                    return true; // tile loaded
+                } else {
+                    listener.tileLoadingFinished(tile, true);
+                    return false; // Tile is loaded, but too old. Should be reloaded from server
                 }
-                listener.tileLoadingFinished(tile, true);
-                fileTilePainted = true;
             } catch (Exception e) {
+                System.out.println("Error: Can not load tile from database: "+sourceName+":"+id);
+                e.printStackTrace(System.out);
                 try {
                     if (bin != null) {
                         bin.close();
                         dao.deleteTile(sourceName, id);
                     }
-                } catch (Exception e1) {
-                }
+                } catch (Exception e1) {   }
                 dbTile = null;
                 fileAge = 0;
+                return false; // tile is not because of some error (corrupted database, etc.)
+            } catch (Error e) { // this is bad, bat MapDB throws it
+                System.out.println("Serious database error: Can not load tile from database: "+sourceName+":"+id);
+                e.printStackTrace(System.out);
+                dbTile = null;  fileAge = 0;  return false;                                            
             }
-            return false;
         }
 
         long getLastModTime() {
             return System.currentTimeMillis() - maxCacheFileAge + recheckAfter;
         }
                 
-        private void loadOrUpdateTile() {
+        private void loadOrUpdateTileFromServer() {
             
             try {
                 URLConnection urlConn = loadTileFromOsm(tile);
                 final TileUpdate tileUpdate = tile.getSource().getTileUpdate();
                 if (dbTile != null) {
+                    // MapDB wants simmutable entities
+                    dbTile = new DBTile(dbTile);
                     switch (tileUpdate) {
                     case IfModifiedSince:   // (1)
                         urlConn.setIfModifiedSince(fileAge);
@@ -275,7 +212,7 @@ class OsmDBTilesLoader extends OsmTileLoader {
 
                 loadTileMetadata(tile, urlConn);
                 dbTile.metaData = tile.getMetadata();
-
+                
                 if ("no-tile".equals(tile.getValue("tile-info")))
                 {
                     tile.setError("No tile at this zoom level");
@@ -304,7 +241,7 @@ class OsmDBTilesLoader extends OsmTileLoader {
                 tile.setError(e.getMessage());
                 listener.tileLoadingFinished(tile, false);
                 try {
-                    System.out.println("Tile "+id+": Error: Failed loading from "+tile.getUrl());
+                    System.out.println("Error: Tile "+id+" can not be loaded from"+tile.getUrl());
                     e.printStackTrace(System.out);
                 } catch(IOException i) {
                 }
@@ -380,6 +317,15 @@ class OsmDBTilesLoader extends OsmTileLoader {
             return (osmETag.equals(eTag));
         }
 
+        /**
+         * Loads attribute map from dbTile to tile
+         */
+        private void loadMetadata() {
+            Map<String,String> m = dbTile.metaData;
+            if (m==null) return;
+            for (String k: m.keySet()) {
+                tile.putValue(k, m.get(k));
+            }
+        }
     }
-    
 }

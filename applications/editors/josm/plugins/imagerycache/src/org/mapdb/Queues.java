@@ -1,7 +1,5 @@
 package org.mapdb;
 
-
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -12,7 +10,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Various queues algorithms
+ * Various queue algorithms
  */
 public final class Queues {
 
@@ -106,7 +104,7 @@ public final class Queues {
         @Override
         public void clear() {
             while(!isEmpty())
-                remove();
+                poll();
         }
 
 
@@ -123,7 +121,6 @@ public final class Queues {
             E ret = peek();
             if(ret == null) throw new NoSuchElementException();
             return ret;
-
         }
 
 
@@ -131,7 +128,6 @@ public final class Queues {
         public boolean offer(E e) {
             return add(e);
         }
-
 
 
         @Override
@@ -201,14 +197,13 @@ public final class Queues {
     public static class Stack<E> extends SimpleQueue<E> {
 
         protected final boolean useLocks;
-        protected final Locks.RecidLocks locks;
-
+        protected final ReentrantLock[] locks;
 
 
         public Stack(Engine engine,  Serializer<E> serializer, long headerRecid, boolean useLocks) {
             super(engine, serializer, headerRecid);
             this.useLocks = useLocks;
-            locks = useLocks? new Locks.LongHashMapRecidLocks() : null;
+            locks = useLocks? Utils.newLocks(32) : null;
         }
 
         @Override
@@ -228,16 +223,16 @@ public final class Queues {
             long head2 = 0;
             Node<E> n;
             do{
-                if(useLocks && head2!=0)locks.unlock(head2);
+                if(useLocks && head2!=0)Utils.lock(locks,head2);
                 head2 =head.get();
                 if(head2 == 0) return null;
 
-                if(useLocks && head2!=0)locks.lock(head2);
+                if(useLocks && head2!=0)Utils.lock(locks,head2);
                 n = engine.get(head2, nodeSerializer);
             }while(n==null || !head.compareAndSet(head2, n.next));
             if(useLocks && head2!=0){
                 engine.delete(head2,Serializer.LONG_SERIALIZER);
-                locks.unlock(head2);
+                Utils.unlock(locks,head2);
             }else{
                 engine.update(head2, null, nodeSerializer);
             }
@@ -327,12 +322,7 @@ public final class Queues {
             size = new Atomic.Long(engine,sizeRecid);
         }
 
-
         @Override
-        public boolean isEmpty() {
-            return head.get() == 0;
-        }
-
         public boolean add(E item){
             final long nextTail = engine.put((Node<E>)Node.EMPTY, nodeSerializer);
             Node<E> n = new Node<E>(nextTail, item);
@@ -346,6 +336,7 @@ public final class Queues {
             return true;
         }
 
+        @Override
         public E poll(){
             while(true){
                 long head2 = head.get();
@@ -471,6 +462,19 @@ public final class Queues {
         }
 
         @Override
+        public void clear() {
+            // praise locking
+            lock.lock();
+            try {
+                for (int i = 0; i < size; i++) {
+                    poll();
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        @Override
         public E poll() {
             lock.lock();
             try{
@@ -567,6 +571,5 @@ public final class Queues {
         CircularQueueRoot root = engine.get(rootRecid, new CircularQueueRootSerializer(serializerSerializer));
         return new CircularQueue<E>(engine, root.serializer, root.headerRecid, root.headerInsertRecid,root.sizeRecid);
     }
-
 
 }

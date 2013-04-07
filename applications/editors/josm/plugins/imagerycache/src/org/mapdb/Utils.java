@@ -20,6 +20,9 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 /**
@@ -187,8 +190,8 @@ final public class Utils {
         try{
             File index = File.createTempFile("mapdb","db");
             index.deleteOnExit();
-            new File(index.getPath()+StorageDirect.DATA_FILE_EXT).deleteOnExit();
-            new File(index.getPath()+ StorageJournaled.TRANS_LOG_FILE_EXT).deleteOnExit();
+            new File(index.getPath()+ StoreDirect.DATA_FILE_EXT).deleteOnExit();
+            new File(index.getPath()+ StoreWAL.TRANS_LOG_FILE_EXT).deleteOnExit();
 
             return index;
         }catch(IOException e){
@@ -232,28 +235,30 @@ final public class Utils {
         }
     }
 
-    public static void printer(final AtomicLong value){
-        new Thread("printer"){
+    public static void printProgress(final AtomicLong value){
+        new Thread("printProgress"){
             {
                 setDaemon(true);
             }
 
-
             @Override
             public void run() {
                 long startValue = value.get();
-                long startTime = System.currentTimeMillis();
+                long startTime, time = System.currentTimeMillis();
+                startTime = time;
                 long old = value.get();
                 while(true){
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        return;
+                    time+=1000;
+                    while(time>System.currentTimeMillis()){
+                        LockSupport.parkNanos(1000*1000); //1ms
                     }
 
                     long current = value.get();
-                    long totalSpeed = 1000*(current-startValue)/(System.currentTimeMillis()-startTime);
+                    if(current<0){
+                        System.out.println("Finished, total time: "+(time-startTime)+", aprox items: "+old);
+                        return;
+                    }
+                    long totalSpeed = 1000*(current-startValue)/(time-startTime);
                     System.out.print("total: "+current+" - items per last second: "+(current-old)+" - avg items per second: "+totalSpeed+"\r");
                     old = current;
                 }
@@ -262,4 +267,110 @@ final public class Utils {
         }.start();
     }
 
+    public static <A> DataOutput2 serializer(Serializer<A> serializer, A value) {
+        try{
+            DataOutput2 out = new DataOutput2();
+            serializer.serialize(out,value);
+            return out;
+        }catch(IOException e){
+            throw new IOError(e);
+        }
+
+    }
+
+    public static String randomString(int size) {
+        String chars = "0123456789abcdefghijklmnopqrstuvwxyz !@#$%^&*()_+=-{}[]:\",./<>?|\\";
+        StringBuilder b = new StringBuilder(size);
+        for(int i=0;i<size;i++){
+            b.append(chars.charAt(RANDOM.nextInt(chars.length())));
+        }
+        return b.toString();
+    }
+
+    public static ReentrantReadWriteLock[] newReadWriteLocks(int size) {
+        ReentrantReadWriteLock[] locks = new ReentrantReadWriteLock[size];
+        for(int i=0;i<locks.length;i++) locks[i] = new ReentrantReadWriteLock();
+        return locks;
+    }
+
+    public static ReentrantLock[] newLocks(int size) {
+        ReentrantLock[] locks = new ReentrantLock[size];
+        for(int i=0;i<locks.length;i++) locks[i] = new ReentrantLock();
+        return locks;
+    }
+
+    public static void lock(ReentrantLock[] locks, long recid) {
+        locks[Utils.longHash(recid)%locks.length].lock();
+    }
+
+    public static void lockAll(ReentrantLock[] locks) {
+        for(ReentrantLock lock:locks)lock.lock();
+    }
+
+    public static void unlockAll(ReentrantLock[] locks) {
+        for(ReentrantLock lock:locks)lock.unlock();
+    }
+
+
+    public static void unlock(ReentrantLock[] locks, long recid) {
+        locks[Utils.longHash(recid)%locks.length].unlock();
+    }
+
+
+    public static void readLock(ReentrantReadWriteLock[] locks, long recid) {
+        locks[Utils.longHash(recid)%locks.length].readLock().lock();
+    }
+
+    public static void readUnlock(ReentrantReadWriteLock[] locks, long recid) {
+        locks[Utils.longHash(recid)%locks.length].readLock().unlock();
+    }
+
+    public static void writeLock(ReentrantReadWriteLock[] locks, long recid) {
+        locks[Utils.longHash(recid)%locks.length].writeLock().lock();
+    }
+
+    public static void writeUnlock(ReentrantReadWriteLock[] locks, long recid) {
+        locks[Utils.longHash(recid)%locks.length].writeLock().unlock();
+    }
+
+    public static void writeLockAll(ReentrantReadWriteLock[] locks) {
+        for(ReentrantReadWriteLock l:locks) l.writeLock().lock();
+    }
+
+    public static void writeUnlockAll(ReentrantReadWriteLock[] locks) {
+        for(ReentrantReadWriteLock l:locks) l.writeLock().unlock();
+    }
+
+
+    public static void lock(LongConcurrentHashMap<Thread> locks, long recid){
+        //feel free to rewrite, if you know better (more efficient) way
+        if(locks.get(recid)==Thread.currentThread()){
+            //check node is not already locked by this thread
+            throw new InternalError("node already locked by current thread: "+recid);
+        }
+
+        while(locks.putIfAbsent(recid, Thread.currentThread()) != null){
+            LockSupport.parkNanos(10);
+        }
+    }
+
+
+
+    public static void unlock(LongConcurrentHashMap<Thread> locks,final long recid) {
+        final Thread t = locks.remove(recid);
+        if(t!=Thread.currentThread())
+            throw new InternalError("unlocked wrong thread");
+
+    }
+
+    public static void assertNoLocks(LongConcurrentHashMap<Thread> locks){
+        if(CC.PARANOID){
+            LongMap.LongMapIterator<Thread> i = locks.longMapIterator();
+            while(i.moveToNext()){
+                if(i.value()==Thread.currentThread()){
+                    throw new InternalError("Node "+i.key()+" is still locked");
+                }
+            }
+        }
+    }
 }

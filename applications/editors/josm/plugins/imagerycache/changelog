@@ -1,0 +1,19 @@
+15.03.2013, 29363: Initial commit
+07.04.2013 : 
+* Updated MapDB from GitHub, version 06.04, occasional deadlock on start fixed 
+* Java 1.6 compatibilty due to update of MapDB
+* Metadata is loaded from database correctly
+* Code refactoring, iterfaces introduces
+* Stop background database operations on closing (much less errors on shutdown), needs MapDB one-line hack
+* Multiple JOSM instances now store JOSM in multiple files (Mapnik, Mapnik_1, Mapnik_2, etc.) , Mapnik.lock file indicates that the file is currently used
+* DAO object is a singleton now, one file per JVM will be created
+* Cache directory is created if needed
+
+
+
+        
+
+         
+           
+
+

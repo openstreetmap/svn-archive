@@ -113,7 +113,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
     protected final Comparator comparator;
 
     /** holds node level locks*/
-    protected final Locks.RecidLocks nodeLocks = new Locks.LongHashMapRecidLocks();
+    protected final LongConcurrentHashMap<Thread> nodeLocks = new LongConcurrentHashMap<Thread>();
 
     /** maximal node size allowed in this BTree*/
     protected final int maxNodeSize;
@@ -137,6 +137,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
     private final Values values = new Values(this);
     protected final Serializer defaultSerializer;
+    protected final Atomic.Long counter;
 
 
     static class BTreeRootSerializer implements  Serializer<BTreeRoot>{
@@ -153,6 +154,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
             out.writeBoolean(value.hasValues);
             out.writeBoolean(value.valsOutsideNodes);
             out.writeInt(value.maxNodeSize);
+            out.writeLong(value.counterRecid);
             defaultSerializer.serialize(out, value.keySerializer);
             defaultSerializer.serialize(out, value.valueSerializer);
             defaultSerializer.serialize(out, value.comparator);
@@ -167,6 +169,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
             ret.hasValues = in.readBoolean();
             ret.valsOutsideNodes = in.readBoolean();
             ret.maxNodeSize = in.readInt();
+            ret.counterRecid = in.readLong();
             ret.keySerializer = (BTreeKeySerializer) defaultSerializer.deserialize(in, -1);
             ret.valueSerializer = (Serializer) defaultSerializer.deserialize(in, -1);
             ret.comparator = (Comparator) defaultSerializer.deserialize(in, -1);
@@ -180,12 +183,10 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
         boolean hasValues;
         boolean valsOutsideNodes;
         int maxNodeSize;
+        long counterRecid;
         BTreeKeySerializer keySerializer;
         Serializer valueSerializer;
         Comparator comparator;
-
-
-
     }
 
     /** if <code>valsOutsideNodes</code> is true, this class is used instead of values.
@@ -424,7 +425,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
      * @param valueSerializer Serializer used for values. May be null for default value
      * @param comparator Comparator to sort keys in this BTree, may be null.
      */
-    public BTreeMap(Engine engine, int maxNodeSize, boolean hasValues, boolean valsOutsideNodes,
+    public BTreeMap(Engine engine, int maxNodeSize, boolean hasValues, boolean valsOutsideNodes, boolean keepCounter,
                     Serializer defaultSerializer,
                     BTreeKeySerializer<K> keySerializer, Serializer<V> valueSerializer, Comparator<K> comparator) {
         if(maxNodeSize%2!=0) throw new IllegalArgumentException("maxNodeSize must be dividable by 2");
@@ -448,11 +449,21 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
         this.keySerializer = keySerializer==null ?  new BTreeKeySerializer.BasicKeySerializer(defaultSerializer) :  keySerializer;
         this.valueSerializer = valueSerializer==null ? (Serializer<V>) defaultSerializer : valueSerializer;
 
+
         this.keySet = new KeySet(this, hasValues);
 
         LeafNode emptyRoot = new LeafNode(new Object[]{null, null}, new Object[]{null, null}, 0);
         long rootRecidVal = engine.put(emptyRoot, nodeSerializer);
         rootRecidRef = engine.put(rootRecidVal,Serializer.LONG_SERIALIZER);
+
+        long counterRecid = 0;
+        if(keepCounter){
+            counterRecid = engine.put(0L, Serializer.LONG_SERIALIZER);
+            this.counter = new Atomic.Long(engine,counterRecid);
+            Bind.size(this,counter);
+        }else{
+            this.counter = null;
+        }
 
         BTreeRoot r = new BTreeRoot();
         r.hasValues = this.hasValues;
@@ -462,7 +473,10 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
         r.keySerializer =  this.keySerializer;
         r.valueSerializer =  this.valueSerializer;
         r.comparator =  this.comparator;
+        r.counterRecid = counterRecid;
         this.treeRecid = engine.put(r, new BTreeRootSerializer(this.defaultSerializer));
+
+
     }
 
 
@@ -490,7 +504,15 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
         this.comparator = r.comparator;
         this.valsOutsideNodes = r.valsOutsideNodes;
 
+
         this.keySet = new KeySet(this, hasValues);
+
+        if(r.counterRecid!=0){
+            counter = new Atomic.Long(engine,r.counterRecid);
+            Bind.size(this,counter);
+        }else{
+            this.counter = null;
+        }
     }
 
 
@@ -616,7 +638,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
         while(true){
             boolean found;
             do{
-                nodeLocks.lock(current);
+                Utils.lock(nodeLocks, current);
                 found = true;
                 A = engine.get(current, nodeSerializer);
                 int pos = findChildren(v, A.keys());
@@ -626,8 +648,8 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                     Object oldVal =   (hasValues? A.vals()[pos] : Utils.EMPTY_STRING);
                     if(putOnlyIfAbsent){
                         //is not absent, so quit
-                        nodeLocks.unlock(current);
-                        nodeLocks.assertNoLocks();
+                        Utils.unlock(nodeLocks, current);
+                        Utils.assertNoLocks(nodeLocks);
                         V ret =  valExpand(oldVal);
                         notify(v,ret, value2);
                         return ret;
@@ -642,8 +664,8 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                     A = new LeafNode(Arrays.copyOf(A.keys(), A.keys().length), vals, ((LeafNode)A).next);
                     engine.update(current, A, nodeSerializer);
                     //already in here
-                    nodeLocks.unlock(current);
-                    nodeLocks.assertNoLocks();
+                    Utils.unlock(nodeLocks, current);
+                    Utils.assertNoLocks(nodeLocks);
                     V ret =  valExpand(oldVal);
                     notify(v,ret, value2);
                     return ret;
@@ -651,7 +673,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
                 if(A.highKey() != null && comparator.compare(v, A.highKey())>0){
                     //follow link until necessary
-                    nodeLocks.unlock(current);
+                    Utils.unlock(nodeLocks, current);
                     found = false;
                     int pos2 = findChildren(v, A.keys());
                     while(A!=null && pos2 == A.keys().length){
@@ -685,8 +707,8 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                     engine.update(current, d, nodeSerializer);
                 }
 
-                nodeLocks.unlock(current);
-                nodeLocks.assertNoLocks();
+                Utils.unlock(nodeLocks, current);
+                Utils.assertNoLocks(nodeLocks);
                 notify(v,  null, value2);
                 return null;
             }else{
@@ -733,7 +755,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                 engine.update(current, A, nodeSerializer);
 
                 if(!isRoot){
-                    nodeLocks.unlock(current);
+                    Utils.unlock(nodeLocks, current);
                     p = q;
                     v = (K) A.highKey();
                     level = level+1;
@@ -756,8 +778,8 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
 
                     //TODO update tree levels
-                    nodeLocks.unlock(current);
-                    nodeLocks.assertNoLocks();
+                    Utils.unlock(nodeLocks, current);
+                    Utils.assertNoLocks(nodeLocks);
                     notify(v, null, value2);
                     return null;
                 }
@@ -842,7 +864,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
         while(true){
 
-            nodeLocks.lock(current);
+            Utils.lock(nodeLocks, current);
             A = engine.get(current, nodeSerializer);
             int pos = findChildren(key, A.keys());
             if(pos<A.keys().length&& key!=null && A.keys()[pos]!=null &&
@@ -851,12 +873,12 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                 Object oldVal =  hasValues? A.vals()[pos] : Utils.EMPTY_STRING;
                 oldVal = valExpand(oldVal);
                 if(value!=null && !value.equals(oldVal)){
-                    nodeLocks.unlock(current);
+                    Utils.unlock(nodeLocks, current);
                     return null;
                 }
                 //check for last node which was already deleted
                 if(pos == A.keys().length-1 && value == null){
-                    nodeLocks.unlock(current);
+                    Utils.unlock(nodeLocks, current);
                     return null;
                 }
 
@@ -873,11 +895,11 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
                 A = new LeafNode(keys2, vals2, ((LeafNode)A).next);
                 engine.update(current, A, nodeSerializer);
-                nodeLocks.unlock(current);
+                Utils.unlock(nodeLocks, current);
                 notify((K)key, (V)oldVal, null);
                 return (V) oldVal;
             }else{
-                nodeLocks.unlock(current);
+                Utils.unlock(nodeLocks, current);
                 //follow link until necessary
                 if(A.highKey() != null && comparator.compare(key, A.highKey())>0){
                     int pos2 = findChildren(key, A.keys());
@@ -959,6 +981,9 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
     @Override
     public int size(){
+        if(counter!=null)
+            return (int) counter.get(); //TODO larger then MAX_INT
+
         long size = 0;
         BTreeIterator iter = new BTreeIterator();
         while(iter.hasNext()){
@@ -993,14 +1018,14 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
             node = engine.get(current, nodeSerializer);
         }
 
-        nodeLocks.lock(current);
+        Utils.lock(nodeLocks, current);
         LeafNode leaf = (LeafNode) engine.get(current, nodeSerializer);
 
         int pos = findChildren(key, node.keys());
         while(pos==leaf.keys.length){
             //follow leaf link until necessary
-            nodeLocks.lock(leaf.next);
-            nodeLocks.unlock(current);
+            Utils.lock(nodeLocks, leaf.next);
+            Utils.unlock(nodeLocks, current);
             current = leaf.next;
             leaf = (LeafNode) engine.get(current, nodeSerializer);
             pos = findChildren(key, node.keys());
@@ -1026,7 +1051,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                 ret = true;
             }
         }
-        nodeLocks.unlock(current);
+        Utils.unlock(nodeLocks, current);
         return ret;
     }
 
@@ -1042,14 +1067,14 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
             node = engine.get(current, nodeSerializer);
         }
 
-        nodeLocks.lock(current);
+        Utils.lock(nodeLocks, current);
         LeafNode leaf = (LeafNode) engine.get(current, nodeSerializer);
 
         int pos = findChildren(key, node.keys());
         while(pos==leaf.keys.length){
             //follow leaf link until necessary
-            nodeLocks.lock(leaf.next);
-            nodeLocks.unlock(current);
+            Utils.lock(nodeLocks, leaf.next);
+            Utils.unlock(nodeLocks, current);
             current = leaf.next;
             leaf = (LeafNode) engine.get(current, nodeSerializer);
             pos = findChildren(key, node.keys());
@@ -1072,7 +1097,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
 
         }
-        nodeLocks.unlock(current);
+        Utils.unlock(nodeLocks, current);
         return (V)ret;
     }
 

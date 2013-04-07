@@ -59,7 +59,7 @@ public class DBMaker {
 
     protected byte[] _xteaEncryptionKey = null;
 
-    protected boolean _freeSpaceReclaimDisabled = false;
+    protected int _freeSpaceReclaimQ = 5;
 
     protected boolean _checksumEnabled = false;
 
@@ -123,7 +123,7 @@ public class DBMaker {
         return newTempFileDB()
                 .deleteFilesAfterClose()
                 .closeOnJvmShutdown()
-                .journalDisable()
+                .writeAheadLogDisable()
                 .make()
                 .getTreeMap("temp");
     }
@@ -138,7 +138,7 @@ public class DBMaker {
         return newTempFileDB()
                 .deleteFilesAfterClose()
                 .closeOnJvmShutdown()
-                .journalDisable()
+                .writeAheadLogDisable()
                 .make()
                 .getHashMap("temp");
     }
@@ -153,7 +153,7 @@ public class DBMaker {
         return newTempFileDB()
                 .deleteFilesAfterClose()
                 .closeOnJvmShutdown()
-                .journalDisable()
+                .writeAheadLogDisable()
                 .make()
                 .getTreeSet("temp");
     }
@@ -168,7 +168,7 @@ public class DBMaker {
         return newTempFileDB()
                 .deleteFilesAfterClose()
                 .closeOnJvmShutdown()
-                .journalDisable()
+                .writeAheadLogDisable()
                 .make()
                 .getHashSet("temp");
     }
@@ -209,7 +209,7 @@ public class DBMaker {
      *
      * @return this builder
      */
-    public DBMaker journalDisable(){
+    public DBMaker writeAheadLogDisable(){
         this._journalEnabled = false;
         return this;
     }
@@ -484,25 +484,18 @@ public class DBMaker {
 
 
     /**
-     * In this mode existing free space is not reused,
-     * but records are added to the end of the store.
-     * <p/>
-     * This slightly improves write performance as store does not have
-     * to traverse list of free records to find and reuse existing position.
-     * <p/>
-     * It also decreases chance for store corruption, as existing data
-     * are not overwritten with new record.
-     * <p/>
-     * When this mode is used for longer time, store becomes fragmented.
-     * It is necessary to run defragmentation then.
-     * <p/>
-     * NOTE: this mode is not append-only, just small setting for update-in-place storage.
+     * Set free space reclaim Q.  It is value from 0 to 10, indicating how eagerly MapDB
+     * searchs for free space inside store to reuse, before expanding store file.
+     * 0 means that no free space will be reused and store file will just grow (effectively append only).
+     * 10 means that MapDB tries really hard to reuse free space, even if it may hurt performance.
+     * Default value is 5;
      *
      *
      * @return this builder
      */
-    public DBMaker freeSpaceReclaimDisable(){
-        this._freeSpaceReclaimDisabled = true;
+    public DBMaker freeSpaceReclaimQ(int q){
+        if(q<0||q>10) throw new IllegalArgumentException("wrong Q");
+        this._freeSpaceReclaimQ = q;
         return this;
     }
 
@@ -535,10 +528,10 @@ public class DBMaker {
      *
      * @return this builder
      */
-    public DBMaker powerSavingModeEnable(){
-        this._powerSavingMode = true;
-        return this;
-    }
+//    public DBMaker powerSavingModeEnable(){
+//        this._powerSavingMode = true;
+//        return this;
+//    }
 
 
     /** constructs DB using current settings */
@@ -558,7 +551,7 @@ public class DBMaker {
         if(_readOnly && _file==null)
             throw new UnsupportedOperationException("Can not open in-memory DB in read-only mode.");
 
-        if(_readOnly && !_file.exists()){
+        if(_readOnly && !_file.exists() && !_appendStorage){
             throw new UnsupportedOperationException("Can not open non-existing file in read-only mode.");
         }
 
@@ -570,17 +563,14 @@ public class DBMaker {
                 Volume.fileFactory(_readOnly, _RAF, _file);
 
             engine = _journalEnabled ?
-                new StorageJournaled(folFac, _freeSpaceReclaimDisabled, _deleteFilesAfterClose, _failOnWrongHeader, _readOnly):
-                new StorageDirect(folFac, _freeSpaceReclaimDisabled, _deleteFilesAfterClose , _failOnWrongHeader, _readOnly);
+                    //TODO add extra params
+                //new StoreWAL(folFac, _freeSpaceReclaimDisabled, _deleteFilesAfterClose, _failOnWrongHeader, _readOnly):
+                //new StoreDirect(folFac, _freeSpaceReclaimDisabled, _deleteFilesAfterClose , _failOnWrongHeader, _readOnly);
+                new StoreWAL(folFac,  _readOnly,_deleteFilesAfterClose):
+                new StoreDirect(folFac,  _readOnly,_deleteFilesAfterClose);
         }else{
             if(_file==null) throw new UnsupportedOperationException("Append Storage format is not supported with in-memory dbs");
-            engine = new StorageAppend(_file, _RAF, _readOnly, !_journalEnabled);
-        }
-
-        AsyncWriteEngine engineAsync = null;
-        if(_asyncWriteEnabled && !_readOnly){
-            engineAsync = new AsyncWriteEngine(engine,!_journalEnabled,  _powerSavingMode, _asyncFlushDelay);
-            engine = engineAsync;
+            engine = new StoreAppend(_file, _RAF, _readOnly, !_journalEnabled);
         }
 
         if(_checksumEnabled){
@@ -595,6 +585,14 @@ public class DBMaker {
         if(_compressionEnabled){
             engine = new ByteTransformEngine(engine, CompressLZF.SERIALIZER);
         }
+
+
+        AsyncWriteEngine engineAsync = null;
+        if(_asyncWriteEnabled && !_readOnly){
+            engineAsync = new AsyncWriteEngine(engine,!_journalEnabled,  _powerSavingMode, _asyncFlushDelay);
+            engine = engineAsync;
+        }
+
 
         engine = new SnapshotEngine(engine);
 
@@ -624,6 +622,9 @@ public class DBMaker {
             Runtime.getRuntime().addShutdownHook(new Thread("JDBM shutdown") {
                 @Override
 				public void run() {
+                    
+                    // for JOSM plugin ImageryCache
+                    org.openstreetmap.josm.plugins.imagerycache.TileDAOMapDB.dbNotAvailable = true;
                     if(!engine2.isClosed())
                         engine2.close();
                 }

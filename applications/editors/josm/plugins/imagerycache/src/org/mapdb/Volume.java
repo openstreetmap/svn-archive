@@ -23,24 +23,28 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
-import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.FileChannel;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 
 /**
- * MapDB abstraction over raw storage (file, disk partition, memory etc...)
+ * MapDB abstraction over raw storage (file, disk partition, memory etc...).
+ * <p/>
+ * Implementations needs to be thread safe (especially
+ 'ensureAvailable') operation.
+ * However updates do not have to be atomic, it is clients responsibility
+ * to ensure two threads are not writing/reading into the same location.
  *
  * @author Jan Kotek
  */
 public abstract class Volume {
 
     public static final int BUF_SIZE = 1<<30;
-    public static final int INITIAL_SIZE = 1024*32;
 
     abstract public void ensureAvailable(final long offset);
 
@@ -48,7 +52,7 @@ public abstract class Volume {
     abstract public void putInt(long offset, int value);
     abstract public void putByte(final long offset, final byte value);
 
-    abstract public void putData(final long offset, final byte[] value, int size);
+    abstract public void putData(final long offset, final byte[] src, int srcPos, int srcSize);
     abstract public void putData(final long offset, final ByteBuffer buf);
 
     abstract public long getLong(final long offset);
@@ -88,6 +92,37 @@ public abstract class Volume {
         putByte(offset, (byte)(b & 0xff));
     }
 
+    /**
+     * Reads a long from the indicated position
+     */
+    public final long getSixLong(long pos) {
+        return
+                ((long) (getByte(pos + 0) & 0xff) << 40) |
+                        ((long) (getByte(pos + 1) & 0xff) << 32) |
+                        ((long) (getByte(pos + 2) & 0xff) << 24) |
+                        ((long) (getByte(pos + 3) & 0xff) << 16) |
+                        ((long) (getByte(pos + 4) & 0xff) << 8) |
+                        ((long) (getByte(pos + 5) & 0xff) << 0);
+    }
+
+    /**
+     * Writes a long to the indicated position
+     */
+    public final void putSixLong(long pos, long value) {
+        if(value<0) throw new IllegalArgumentException();
+    	if(value >> (6*8)!=0)
+    		throw new IllegalArgumentException("does not fit");
+        //TODO read/write as integer+short, might be faster
+        putByte(pos + 0, (byte) (0xff & (value >> 40)));
+        putByte(pos + 1, (byte) (0xff & (value >> 32)));
+        putByte(pos + 2, (byte) (0xff & (value >> 24)));
+        putByte(pos + 3, (byte) (0xff & (value >> 16)));
+        putByte(pos + 4, (byte) (0xff & (value >> 8)));
+        putByte(pos + 5, (byte) (0xff & (value >> 0)));
+
+    }
+
+
     /** returns underlying file if it exists */
     abstract public File getFile();
 
@@ -110,8 +145,8 @@ public abstract class Volume {
 
     public static Factory fileFactory(final boolean readOnly, final boolean RAF, final File indexFile){
         return fileFactory(readOnly, RAF, indexFile,
-                new File(indexFile.getPath() + StorageDirect.DATA_FILE_EXT),
-                new File(indexFile.getPath() + StorageJournaled.TRANS_LOG_FILE_EXT));
+                new File(indexFile.getPath() + StoreDirect.DATA_FILE_EXT),
+                new File(indexFile.getPath() + StoreWAL.TRANS_LOG_FILE_EXT));
     }
 
     public static Factory fileFactory(final boolean readOnly,
@@ -141,15 +176,15 @@ public abstract class Volume {
     public static Factory memoryFactory(final boolean useDirectBuffer) {
         return new Factory() {
 
-            @Override public Volume createIndexVolume() {
+            @Override public synchronized  Volume createIndexVolume() {
                 return new MemoryVol(useDirectBuffer);
             }
 
-            @Override public Volume createPhysVolume() {
+            @Override public synchronized Volume createPhysVolume() {
                 return new MemoryVol(useDirectBuffer);
             }
 
-            @Override public Volume createTransLogVolume() {
+            @Override public synchronized Volume createTransLogVolume() {
                 return new MemoryVol(useDirectBuffer);
             }
         };
@@ -180,8 +215,9 @@ public abstract class Volume {
 
             //check for most common case, this is already mapped
             if(buffersPos<buffers.length && buffers[buffersPos]!=null &&
-                    buffers[buffersPos].capacity()>=offset% BUF_SIZE)
+                    buffers[buffersPos].capacity()>=offset% BUF_SIZE){
                 return;
+            }
 
             growLock.lock();
             try{
@@ -190,24 +226,39 @@ public abstract class Volume {
                         buffers[buffersPos].capacity()>=offset% BUF_SIZE)
                     return;
 
+                ByteBuffer[] buffers2 = buffers;
 
                 //grow array if necessary
-                if(buffersPos>=buffers.length){
-                    buffers = Arrays.copyOf(buffers, Math.max(buffersPos, buffers.length * 2));
+                if(buffersPos>=buffers2.length){
+                    buffers2 = Arrays.copyOf(buffers2, Math.max(buffersPos+1, buffers2.length * 2));
                 }
 
+
                 //just remap file buffer
-                ByteBuffer newBuf = makeNewBuffer(offset);
+                if( buffers2[buffersPos] == null){
+                    //make sure previous buffer is fully expanded
+                    if(buffersPos>0){
+                        ByteBuffer oldPrev = buffers2[buffersPos-1];
+                        if(oldPrev == null || oldPrev.capacity()!=BUF_SIZE){
+                            buffers2[buffersPos-1]  = makeNewBuffer(1L*buffersPos*BUF_SIZE-1,buffers2);
+                        }
+                    }
+                }
+
+
+                ByteBuffer newBuf = makeNewBuffer(offset, buffers2);
                 if(readOnly)
                     newBuf = newBuf.asReadOnlyBuffer();
 
-                buffers[buffersPos] = newBuf;
+                buffers2[buffersPos] = newBuf;
+
+                buffers = buffers2;
             }finally{
                 growLock.unlock();
             }
         }
 
-        protected abstract ByteBuffer makeNewBuffer(long offset);
+        protected abstract ByteBuffer makeNewBuffer(long offset, ByteBuffer[] buffers2);
 
         protected final ByteBuffer internalByteBuffer(long offset) {
             final int pos = ((int) (offset / BUF_SIZE));
@@ -232,13 +283,13 @@ public abstract class Volume {
 
 
 
-        @Override public final void putData(final long offset, final byte[] value, final int size) {
+        @Override public void putData(final long offset, final byte[] src, int srcPos, int srcSize){
             final ByteBuffer b1 = internalByteBuffer(offset);
             final int bufPos = (int) (offset% BUF_SIZE);
 
             synchronized (b1){
                 b1.position(bufPos);
-                b1.put(value, 0, size);
+                b1.put(src, srcPos, srcSize);
             }
         }
 
@@ -263,6 +314,9 @@ public abstract class Volume {
         @Override final public int getInt(long offset) {
             try{
                 return internalByteBuffer(offset).getInt((int) (offset% BUF_SIZE));
+            } catch (NullPointerException e) {
+                throw new RuntimeException(""+offset,e);
+
             }catch(IndexOutOfBoundsException e){
                 throw new IOError(new EOFException());
             }
@@ -346,6 +400,9 @@ public abstract class Volume {
         protected final FileChannel.MapMode mapMode;
         protected final java.io.RandomAccessFile raf;
 
+        protected final Map<ByteBuffer, String> unreleasedBuffers =
+                Utils.isWindows() ? new WeakHashMap<ByteBuffer, String>() : null;
+
         static final int BUF_SIZE_INC = 1024*1024;
 
         public MappedFileVol(File file, boolean readOnly) {
@@ -369,9 +426,9 @@ public abstract class Volume {
                     }
                 }else{
                     buffers = new ByteBuffer[1];
-                    buffers[0] = fileChannel.map(mapMode, 0, INITIAL_SIZE);
-                    if(mapMode == FileChannel.MapMode.READ_ONLY)
-                        buffers[0] = buffers[0].asReadOnlyBuffer();
+//                    buffers[0] = fileChannel.map(mapMode, 0, INITIAL_SIZE);
+//                    if(mapMode == FileChannel.MapMode.READ_ONLY)
+//                        buffers[0] = buffers[0].asReadOnlyBuffer();
 
                 }
             } catch (IOException e) {
@@ -393,6 +450,14 @@ public abstract class Volume {
                     }
                 }
                 buffers = null;
+                if(unreleasedBuffers!=null){
+                    for(ByteBuffer b:unreleasedBuffers.keySet().toArray(new MappedByteBuffer[0])){
+                        if(b!=null && (b instanceof MappedByteBuffer)){
+                            unmap((MappedByteBuffer) b);
+                        }
+                    }
+                }
+
             } catch (IOException e) {
                 throw new IOError(e);
             }finally{
@@ -427,20 +492,13 @@ public abstract class Volume {
         }
 
         @Override
-        protected ByteBuffer makeNewBuffer(long offset) {
+        protected ByteBuffer makeNewBuffer(long offset, ByteBuffer[] buffers2) {
             try {
-                //unmap old buffer on windows
-                int bufPos = (int) (offset/BUF_SIZE);
-                if(bufPos<buffers.length && buffers[bufPos]!=null){
-                    unmap((MappedByteBuffer) buffers[bufPos]);
-                    buffers[bufPos] = null;
-                }
-
                 long newBufSize =  offset% BUF_SIZE;
                 newBufSize = newBufSize + newBufSize%BUF_SIZE_INC; //round to BUF_SIZE_INC
-                return fileChannel.map(
-                        mapMode,
-                        offset - offset% BUF_SIZE, newBufSize );
+                ByteBuffer buf =  fileChannel.map( mapMode, offset - offset% BUF_SIZE, newBufSize );
+                if(unreleasedBuffers!=null) unreleasedBuffers.put(buf, "");
+                return buf;
             } catch (IOException e) {
                 if(e.getCause()!=null && e.getCause() instanceof OutOfMemoryError){
                     throw new RuntimeException("File could not be mapped to memory, common problem on 32bit JVM. Use `DBMaker.newRandomAccessFileDB()` as workaround",e);
@@ -462,20 +520,21 @@ public abstract class Volume {
         public MemoryVol(boolean useDirectBuffer) {
             super(false);
             this.useDirectBuffer = useDirectBuffer;
-            ByteBuffer b0 = useDirectBuffer?
-                    ByteBuffer.allocateDirect(INITIAL_SIZE) :
-                    ByteBuffer.allocate(INITIAL_SIZE);
-            buffers = new ByteBuffer[]{b0};
+//            ByteBuffer b0 = useDirectBuffer?
+//                    ByteBuffer.allocateDirect(INITIAL_SIZE) :
+//                    ByteBuffer.allocate(INITIAL_SIZE);
+//            buffers = new ByteBuffer[]{b0};
+            buffers=new ByteBuffer[1];
         }
 
-        @Override protected ByteBuffer makeNewBuffer(long offset) {
+        @Override protected ByteBuffer makeNewBuffer(long offset, ByteBuffer[] buffers2) {
             final int newBufSize = Utils.nextPowTwo((int) (offset % BUF_SIZE));
             //double size of existing in-memory-buffer
             ByteBuffer newBuf = useDirectBuffer?
                     ByteBuffer.allocateDirect(newBufSize):
                     ByteBuffer.allocate(newBufSize);
             final int buffersPos = (int) (offset/ BUF_SIZE);
-            final ByteBuffer oldBuffer = buffers[buffersPos];
+            final ByteBuffer oldBuffer = buffers2[buffersPos];
             if(oldBuffer!=null){
                 //copy old buffer if it exists
                 synchronized (oldBuffer){
@@ -579,13 +638,13 @@ public abstract class Volume {
         }
 
         @Override
-        synchronized public void putData(long offset, byte[] value, int size) {
+        synchronized public void putData(final long offset, final byte[] src, int srcPos, int srcSize){
             try {
                 if(pos!=offset){
                     raf.seek(offset);
                 }
-                pos=offset+size;
-                raf.write(value,0,size);
+                pos=offset+srcSize;
+                raf.write(src,srcPos,srcSize);
             } catch (IOException e) {
                 throw new IOError(e);
             }
@@ -601,7 +660,7 @@ public abstract class Volume {
                 pos=offset+size;
                 byte[] b = new byte[size];
                 buf.get(b);
-                putData(offset, b, size);
+                putData(offset, b, 0, size);
             } catch (IOException e) {
                 throw new IOError(e);
             }
@@ -707,150 +766,6 @@ public abstract class Volume {
         }
     }
 
-    public static class AsyncFileChannelVol extends Volume{
-
-
-        protected AsynchronousFileChannel channel;
-        protected final boolean readOnly;
-        protected final File file;
-
-        public AsyncFileChannelVol(File file, boolean readOnly){
-            this.readOnly = readOnly;
-            this.file = file;
-            try {
-                this.channel = readOnly?
-                        AsynchronousFileChannel.open(file.toPath(),StandardOpenOption.READ):
-                        AsynchronousFileChannel.open(file.toPath(),StandardOpenOption.READ, StandardOpenOption.WRITE);
-
-            } catch (IOException e) {
-                throw new IOError(e);
-            }
-        }
-
-        @Override
-        public void ensureAvailable(long offset) {
-            //we do not have a list of ByteBuffers, so ensure size does not have to do anything
-        }
-
-
-
-        protected void await(Future<Integer> future, int size) {
-            try {
-                int res = future.get();
-                if(res!=size) throw new InternalError("not enough bytes");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        public void putByte(long offset, byte value) {
-            ByteBuffer b = ByteBuffer.allocate(1);
-            b.put(0, value);
-            await(channel.write(b, offset),1);
-        }
-        @Override
-        public void putInt(long offset, int value) {
-            ByteBuffer b = ByteBuffer.allocate(4);
-            b.putInt(0, value);
-            await(channel.write(b, offset),4);
-        }
-
-        @Override
-        public void putLong(long offset, long value) {
-            ByteBuffer b = ByteBuffer.allocate(8);
-            b.putLong(0, value);
-            await(channel.write(b, offset),8);
-        }
-
-        @Override
-        public void putData(long offset, byte[] value, int size) {
-            ByteBuffer b = ByteBuffer.wrap(value);
-            b.limit(size);
-            await(channel.write(b,offset),size);
-        }
-
-        @Override
-        public void putData(long offset, ByteBuffer buf) {
-            await(channel.write(buf,offset), buf.limit() - buf.position());
-        }
-
-
-
-        @Override
-        public long getLong(long offset) {
-            ByteBuffer b = ByteBuffer.allocate(8);
-            await(channel.read(b, offset), 8);
-            b.rewind();
-            return b.getLong();
-        }
-
-        @Override
-        public byte getByte(long offset) {
-            ByteBuffer b = ByteBuffer.allocate(1);
-            await(channel.read(b, offset), 1);
-            b.rewind();
-            return b.get();
-        }
-
-        @Override
-        public int getInt(long offset) {
-            ByteBuffer b = ByteBuffer.allocate(4);
-            await(channel.read(b, offset), 4);
-            b.rewind();
-            return b.getInt();
-        }
-
-
-
-        @Override
-        public DataInput2 getDataInput(long offset, int size) {
-            ByteBuffer b = ByteBuffer.allocate(size);
-            await(channel.read(b, offset), size);
-            b.rewind();
-            return new DataInput2(b,0);
-        }
-
-        @Override
-        public void close() {
-            try {
-                channel.close();
-            } catch (IOException e) {
-                throw new IOError(e);
-            }
-        }
-
-        @Override
-        public void sync() {
-            try {
-                channel.force(true);
-            } catch (IOException e) {
-                throw new IOError(e);
-            }
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return file.length()>0;
-        }
-
-        @Override
-        public void deleteFile() {
-            file.delete();
-        }
-
-        @Override
-        public boolean isSliced() {
-            return false;
-        }
-
-        @Override
-        public File getFile() {
-            return file;
-        }
-    }
 
 
 }

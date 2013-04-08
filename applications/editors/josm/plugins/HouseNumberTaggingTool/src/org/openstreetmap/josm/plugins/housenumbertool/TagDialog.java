@@ -43,6 +43,8 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
  */
 public class TagDialog extends ExtendedDialog
 {
+   private static final String APPLY_CHANGES = tr("Apply Changes");
+   
    public static final String TAG_BUILDING = "building";
    public static final String TAG_ADDR_COUNTRY = "addr:country";
    public static final String TAG_ADDR_STATE = "addr:state";
@@ -121,6 +123,7 @@ public class TagDialog extends ExtendedDialog
       buildingEnabled = new JCheckBox(TAG_BUILDING);
       buildingEnabled.setFocusable(false);
       buildingEnabled.setSelected(dto.isSaveBuilding());
+      buildingEnabled.setToolTipText(APPLY_CHANGES);
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
       c.gridy = 0;
@@ -140,6 +143,7 @@ public class TagDialog extends ExtendedDialog
       countryEnabled = new JCheckBox(TAG_ADDR_COUNTRY);
       countryEnabled.setFocusable(false);
       countryEnabled.setSelected(dto.isSaveCountry());
+      countryEnabled.setToolTipText(APPLY_CHANGES);
       c = new GridBagConstraints();
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
@@ -162,6 +166,7 @@ public class TagDialog extends ExtendedDialog
       stateEnabled = new JCheckBox(TAG_ADDR_STATE);
       stateEnabled.setFocusable(false);
       stateEnabled.setSelected(dto.isSaveState());
+      stateEnabled.setToolTipText(APPLY_CHANGES);
       c = new GridBagConstraints();
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
@@ -184,6 +189,7 @@ public class TagDialog extends ExtendedDialog
       cityEnabled = new JCheckBox(TAG_ADDR_CITY);
       cityEnabled.setFocusable(false);
       cityEnabled.setSelected(dto.isSaveCity());
+      cityEnabled.setToolTipText(APPLY_CHANGES);
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
       c.gridy = 3;
@@ -205,6 +211,7 @@ public class TagDialog extends ExtendedDialog
       zipEnabled = new JCheckBox(TAG_ADDR_POSTCODE);
       zipEnabled.setFocusable(false);
       zipEnabled.setSelected(dto.isSavePostcode());
+      zipEnabled.setToolTipText(APPLY_CHANGES);
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
       c.gridy = 4;
@@ -226,6 +233,7 @@ public class TagDialog extends ExtendedDialog
       streetEnabled = new JCheckBox(TAG_ADDR_STREET);
       streetEnabled.setFocusable(false);
       streetEnabled.setSelected(dto.isSaveStreet());
+      streetEnabled.setToolTipText(APPLY_CHANGES);
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
       c.gridy = 5;
@@ -247,6 +255,7 @@ public class TagDialog extends ExtendedDialog
       housenumberEnabled = new JCheckBox(TAG_ADDR_HOUSENUMBER);
       housenumberEnabled.setFocusable(false);
       housenumberEnabled.setSelected(dto.isSaveHousenumber());
+      housenumberEnabled.setToolTipText(APPLY_CHANGES);
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
       c.gridy = 6;

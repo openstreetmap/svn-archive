@@ -217,12 +217,13 @@ public class SeaMark extends JPanel {
 		LMK_MAST, LMK_WNDS, LMK_CLMN, LMK_OBLK, LMK_STAT, LMK_CROS, LMK_DOME, LMK_SCNR, LMK_WNDL, LMK_SPIR,
 		OFP_OIL, OFP_PRD, OFP_OBS, OFP_ALP, OFP_SALM, OFP_MOR, OFP_ISL, OFP_FPSO, OFP_ACC, OFP_NCCB,
 		RSC_LFB, RSC_RKT, RSC_RSW, RSC_RIT, RSC_MLB, RSC_RAD, RSC_FAE, RSC_SPL, RSC_AIR, RSC_TUG,
-		ROS_BNO, ROS_BND, ROS_BNR, ROS_BNC, ROS_RDF, ROS_QTG, ROS_AER, ROS_DCA, ROS_LRN, ROS_DGPS, ROS_TRN, ROS_OMA,
-		ROS_SDS, ROS_CKA, ROS_PUB, ROS_COM, ROS_FAX, ROS_TIM, RAS_SRV, RAS_CST, PIL_VESS, PIL_HELI, PIL_SHORE,
+		RAS_SRV, RAS_CST, PIL_VESS, PIL_HELI, PIL_SHORE,
 		NTC_A1, NTC_A1a, NTC_A2, NTC_A3, NTC_A4, NTC_A4_1, NTC_A5, NTC_A5_1, NTC_A6, NTC_A7, NTC_A8, NTC_A9,
 		NTC_A10a, NTC_A10b, NTC_A12, NTC_A13, NTC_A14, NTC_A15, NTC_A16, NTC_A17, NTC_A18, NTC_A19, NTC_A20,
 		NTC_B1a, NTC_B1b, NTC_B2a, NTC_B2b, NTC_B3a, NTC_B3b, NTC_B4a, NTC_B4b, NTC_B5, NTC_B6, NTC_B7, NTC_B8, NTC_B9a, NTC_B9b, NTC_B11,
-		NTC_C1, NTC_C2, NTC_C3, NTC_C4, NTC_C5a, NTC_C5b, NTC_D1a, NTC_D1b, NTC_D2a, NTC_D2b, NTC_D3a, NTC_D3b
+		NTC_C1, NTC_C2, NTC_C3, NTC_C4, NTC_C5a, NTC_C5b, NTC_D1a, NTC_D1b, NTC_D2a, NTC_D2b, NTC_D3a, NTC_D3b,
+		NOROS, ROS_UNKN, ROS_OMNI, ROS_DIRL, ROS_ROTP, ROS_CNSL, ROS_RDF, ROS_QTG, ROS_AERO, ROS_DECA, ROS_LORN, ROS_DGPS, ROS_TORN, ROS_OMGA, ROS_SYLD, ROS_CHKA,
+		ROS_PCOM, ROS_COMB, ROS_FACS, ROS_TIME, ROS_PAIS, ROS_SAIS, ROS_VAIS, ROS_VANC, ROS_VASC, ROS_VAEC, ROS_VAWC, ROS_VAPL, ROS_VASL, ROS_VAID, ROS_VASW, ROS_VASP, ROS_VAWK
 	}
 		 
 	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
@@ -333,24 +334,37 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.RSC_TUG, "tug");
 		CatSTR.put(Cat.RAS_SRV, "surveillance");
 		CatSTR.put(Cat.RAS_CST, "coast");
-		CatSTR.put(Cat.ROS_BNO, "beacon_circular");
-		CatSTR.put(Cat.ROS_BND, "beacon_directional");
-		CatSTR.put(Cat.ROS_BNR, "beacon_rotating");
-		CatSTR.put(Cat.ROS_BNC, "beacon_consol");
-		CatSTR.put(Cat.ROS_RDF, "direction_finding");
-		CatSTR.put(Cat.ROS_QTG, "qtg_service");
-		CatSTR.put(Cat.ROS_AER, "beacon_aero");
-		CatSTR.put(Cat.ROS_DCA, "decca");
-		CatSTR.put(Cat.ROS_LRN, "loran");
+		CatSTR.put(Cat.ROS_OMNI, "omnidirectional");
+		CatSTR.put(Cat.ROS_DIRL, "directional");
+		CatSTR.put(Cat.ROS_ROTP, "rotating_pattern");
+		CatSTR.put(Cat.ROS_CNSL, "consol");
+		CatSTR.put(Cat.ROS_RDF, "rdf");
+		CatSTR.put(Cat.ROS_QTG, "qtg");
+		CatSTR.put(Cat.ROS_AERO, "aeronautical");
+		CatSTR.put(Cat.ROS_DECA, "decca");
+		CatSTR.put(Cat.ROS_LORN, "loran");
 		CatSTR.put(Cat.ROS_DGPS, "dgps");
-		CatSTR.put(Cat.ROS_TRN, "toran");
-		CatSTR.put(Cat.ROS_OMA, "omega");
-		CatSTR.put(Cat.ROS_SDS, "syledis");
-		CatSTR.put(Cat.ROS_CKA, "chiaka");
-		CatSTR.put(Cat.ROS_PUB, "public_communication");
-		CatSTR.put(Cat.ROS_COM, "comercial_broadcast");
-		CatSTR.put(Cat.ROS_FAX, "facsimile");
-		CatSTR.put(Cat.ROS_TIM, "time_signal");
+		CatSTR.put(Cat.ROS_TORN, "toran");
+		CatSTR.put(Cat.ROS_OMGA, "omega");
+		CatSTR.put(Cat.ROS_SYLD, "syledis");
+		CatSTR.put(Cat.ROS_CHKA, "chaika");
+		CatSTR.put(Cat.ROS_PCOM, "public_communication");
+		CatSTR.put(Cat.ROS_COMB, "commercial_broadcast");
+		CatSTR.put(Cat.ROS_FACS, "facsimile");
+		CatSTR.put(Cat.ROS_TIME, "time_signal");
+		CatSTR.put(Cat.ROS_PAIS, "ais");
+		CatSTR.put(Cat.ROS_SAIS, "s-ais");
+		CatSTR.put(Cat.ROS_VAIS, "v-ais");
+		CatSTR.put(Cat.ROS_VANC, "v-ais_north_cardinal");
+		CatSTR.put(Cat.ROS_VASC, "v-ais_south_cardinal");
+		CatSTR.put(Cat.ROS_VAEC, "v-ais_east_cardinal");
+		CatSTR.put(Cat.ROS_VAWC, "v-ais_west_cardinal");
+		CatSTR.put(Cat.ROS_VAPL, "v-ais_port_lateral");
+		CatSTR.put(Cat.ROS_VASL, "v-ais_starboard_lateral");
+		CatSTR.put(Cat.ROS_VAID, "v-ais_isolated_danger");
+		CatSTR.put(Cat.ROS_VASW, "v-ais_safe_water");
+		CatSTR.put(Cat.ROS_VASP, "v-ais_special_purpose");
+		CatSTR.put(Cat.ROS_VAWK, "v-ais_wreck"); 
 		CatSTR.put(Cat.NTC_A1, "no_entry");
 		CatSTR.put(Cat.NTC_A1a, "closed_area");
 		CatSTR.put(Cat.NTC_A2, "no_overtaking");
@@ -863,6 +877,17 @@ public class SeaMark extends JPanel {
 		repaint();
 	}
 
+	private Cat RoType = Cat.NOROS;
+
+	public Cat getRadio() {
+		return RoType;
+	}
+
+	public void setRadio(Cat type) {
+		RoType = type;
+		repaint();
+	}
+
 	public enum Rtb {
 		NORTB, REFLECTOR, RACON, RAMARK, LEADING
 	}
@@ -1358,6 +1383,7 @@ public class SeaMark extends JPanel {
 		clrLight();
 		setFogSound(Fog.NOFOG);
 		setRadar(Rtb.NORTB);
+		setRadio(Cat.NOROS);
 		setStatus(Sts.UNKSTS);
 		setConstr(Cns.UNKCNS);
 		setConsp(Con.UNKCON);
@@ -1440,10 +1466,12 @@ public class SeaMark extends JPanel {
 		for (Obj obj : ObjSTR.keySet()) {
 			if (keys.containsKey("seamark:" + ObjSTR.get(obj) + ":category")) {
 				str = keys.get("seamark:" + ObjSTR.get(obj) + ":category");
-				setCategory(Cat.NOCAT);
-				for (Cat cat : CatSTR.keySet()) {
-					if (CatSTR.get(cat).equals(str)) {
-						setCategory(cat);
+				if (obj == getObject()) {
+					setCategory(Cat.NOCAT);
+					for (Cat cat : CatSTR.keySet()) {
+						if (CatSTR.get(cat).equals(str)) {
+							setCategory(cat);
+						}
 					}
 				}
 			}
@@ -1793,6 +1821,16 @@ public class SeaMark extends JPanel {
 		}
 		if (keys.containsKey("seamark:fog_signal:range")) {
 			setFogRange(keys.get("seamark:fog_signal:range"));
+		}
+
+		if (keys.containsKey("seamark:radio_station:category")) {
+			str = keys.get("seamark:radio_station:category");
+			setRadio(Cat.NOROS);
+			for (Cat rdo : CatSTR.keySet()) {
+				if (CatSTR.get(rdo).equals(str)) {
+					setRadio(rdo);
+				}
+			}
 		}
 
 		if (keys.containsKey("seamark:radar_reflector")) {
@@ -2690,6 +2728,10 @@ public class SeaMark extends JPanel {
 				if (!getFogRange().isEmpty()) {
 					Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:fog_signal:range", getFogRange()));
 				}
+			}
+
+			if (RoType != Cat.NOROS) {
+				Main.main.undoRedo.add(new ChangePropertyCommand(node, "seamark:radio_station:category", CatSTR.get(getRadio())));
 			}
 
 			if (RaType != Rtb.NORTB) {

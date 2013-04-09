@@ -14,6 +14,31 @@ import oseam.seamarks.SeaMark.*;
 public class PanelRadar extends JPanel {
 
 	private OSeaMAction dlg;
+	private JToggleButton aisButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/AISButton.png")));
+	private ActionListener alAis = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (aisButton.isSelected()) {
+				radioCatBox.setVisible(true);
+				aisButton.setBorderPainted(true);
+			} else {
+				radioCatBox.setSelectedIndex(0);
+				radioCatBox.setVisible(false);
+				aisButton.setBorderPainted(false);
+			}
+		}
+	};
+	private JComboBox radioCatBox;
+	private EnumMap<Cat, Integer> radioCats = new EnumMap<Cat, Integer>(Cat.class);
+	private ActionListener alRadioCatBox = new ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			for (Cat cat : radioCats.keySet()) {
+				int idx = radioCats.get(cat);
+				if (dlg.node != null && (idx == radioCatBox.getSelectedIndex())) {
+					dlg.panelMain.mark.setRadio(cat);
+				}
+			}
+		}
+	};
 	private ButtonGroup radarButtons = new ButtonGroup();
 	public JRadioButton noRadButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/OffButton.png")));
 	public JRadioButton reflButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarReflectorButton.png")));
@@ -84,7 +109,7 @@ public class PanelRadar extends JPanel {
 		add(getRadButton(ramarkButton, 0, 63, 27, 27, "Ramark", Rtb.RAMARK));
 		add(getRadButton(raconButton, 0, 93, 27, 27, "Racon", Rtb.RACON));
 		add(getRadButton(leadingButton, 0, 123, 27, 27, "LeadingRacon", Rtb.LEADING));
-
+		
 		groupLabel = new JLabel(Messages.getString("Group"), SwingConstants.CENTER);
 		groupLabel.setBounds(new Rectangle(30, 0, 100, 20));
 		add(groupLabel);
@@ -142,6 +167,39 @@ public class PanelRadar extends JPanel {
 		sector2Box.setHorizontalAlignment(SwingConstants.CENTER);
 		add(sector2Box);
 		sector2Box.addFocusListener(flSector2);
+
+		aisButton.setBounds(new Rectangle(270, 3, 27, 27));
+		aisButton.setBorder(BorderFactory.createLoweredBevelBorder());
+		aisButton.setToolTipText("AIS");
+		aisButton.addActionListener(alAis);
+		add(aisButton);
+
+		radioCatBox = new JComboBox();
+		radioCatBox.setBounds(new Rectangle(210, 40, 150, 20));
+		add(radioCatBox);
+		radioCatBox.addActionListener(alRadioCatBox);
+		addROItem("", Cat.NOROS);
+		addROItem(Messages.getString("CircularBeacon"), Cat.ROS_OMNI);
+		addROItem(Messages.getString("DirectionalBeacon"), Cat.ROS_DIRL);
+		addROItem(Messages.getString("RotatingBeacon"), Cat.ROS_ROTP);
+		addROItem(Messages.getString("ConsolBeacon"), Cat.ROS_CNSL);
+		addROItem(Messages.getString("DirectionFinding"), Cat.ROS_RDF);
+		addROItem(Messages.getString("QTGService"), Cat.ROS_QTG);
+		addROItem(Messages.getString("AeronaticalBeacon"), Cat.ROS_AERO);
+		addROItem(Messages.getString("Decca"), Cat.ROS_DECA);
+		addROItem(Messages.getString("LoranC"), Cat.ROS_LORN);
+		addROItem(Messages.getString("DGPS"), Cat.ROS_DGPS);
+		addROItem(Messages.getString("Toran"), Cat.ROS_TORN);
+		addROItem(Messages.getString("Omega"), Cat.ROS_OMGA);
+		addROItem(Messages.getString("Syledis"), Cat.ROS_SYLD);
+		addROItem(Messages.getString("Chiaka"), Cat.ROS_CHKA);
+		addROItem(Messages.getString("PublicCommunication"), Cat.ROS_PCOM);
+		addROItem(Messages.getString("CommercialBroadcast"), Cat.ROS_COMB);
+		addROItem(Messages.getString("Facsimile"), Cat.ROS_FACS);
+		addROItem(Messages.getString("TimeSignal"), Cat.ROS_TIME);
+		addROItem(Messages.getString("AIS"), Cat.ROS_PAIS);
+		addROItem(Messages.getString("S-AIS"), Cat.ROS_SAIS);
+		radioCatBox.setVisible(false);
 	}
 
 	public void syncPanel() {
@@ -168,6 +226,9 @@ public class PanelRadar extends JPanel {
 		rangeBox.setText(dlg.panelMain.mark.getRaconRange());
 		sector1Box.setText(dlg.panelMain.mark.getRaconSector1());
 		sector2Box.setText(dlg.panelMain.mark.getRaconSector2());
+		aisButton.setSelected(dlg.panelMain.mark.getRadio() != Cat.NOROS);
+		aisButton.setBorderPainted(aisButton.isSelected());
+		radioCatBox.setVisible(dlg.panelMain.mark.getRadio() != Cat.NOROS);
 	}
 
 	private JRadioButton getRadButton(JRadioButton button, int x, int y, int w, int h, String tip, Rtb rtb) {
@@ -180,4 +241,8 @@ public class PanelRadar extends JPanel {
 		return button;
 	}
 
+	private void addROItem(String str, Cat cat) {
+		radioCats.put(cat, radioCatBox.getItemCount());
+		radioCatBox.addItem(str);
+	}
 }

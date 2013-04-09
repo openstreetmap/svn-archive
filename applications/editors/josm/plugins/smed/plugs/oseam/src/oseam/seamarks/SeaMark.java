@@ -347,7 +347,7 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.ROS_TORN, "toran");
 		CatSTR.put(Cat.ROS_OMGA, "omega");
 		CatSTR.put(Cat.ROS_SYLD, "syledis");
-		CatSTR.put(Cat.ROS_CHKA, "chaika");
+		CatSTR.put(Cat.ROS_CHKA, "chiaka");
 		CatSTR.put(Cat.ROS_PCOM, "public_communication");
 		CatSTR.put(Cat.ROS_COMB, "commercial_broadcast");
 		CatSTR.put(Cat.ROS_FACS, "facsimile");
@@ -2570,6 +2570,11 @@ public class SeaMark extends JPanel {
 					str += getRaconPeriod() + "s";
 				g2.drawString(str, 0, 50);
 			}
+		}
+
+		if (RoType != Cat.NOROS) {
+			g2.drawImage(new ImageIcon(getClass().getResource("/images/Radar_Station.png")).getImage(), 7, -15, null);
+			g2.drawString("AIS", 0, 30);
 		}
 	}
 

@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
@@ -47,6 +49,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.NationalHandlers;
 
@@ -80,7 +83,7 @@ public class ShpReader extends GeographicReader {
 		}
 	}
 	
-	private void parseFeature(Feature feature, Component parent) 
+	private void parseFeature(Feature feature, final Component parent) 
 			throws UserCancelException, GeoMathTransformException, FactoryException, GeoCrsException, MismatchedDimensionException, TransformException {
 		featurePrimitives.clear();
 		GeometryAttribute geometry = feature.getDefaultGeometryProperty();
@@ -88,11 +91,29 @@ public class ShpReader extends GeographicReader {
 
 			GeometryDescriptor desc = geometry.getDescriptor();
 			
-			if (crs == null && desc != null && desc.getCoordinateReferenceSystem() != null) {
-				crs = desc.getCoordinateReferenceSystem();
-				findMathTransform(parent, true);
-			} else if (crs == null) {
-				throw new GeoCrsException("Unable to detect CRS !");
+			if (crs == null) {
+    			if (desc != null && desc.getCoordinateReferenceSystem() != null) {
+    				crs = desc.getCoordinateReferenceSystem();
+    			} else {
+    			    GuiHelper.runInEDTAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (0 == JOptionPane.showConfirmDialog(
+                                    parent,
+                                    tr("Unable to detect Coordinate Reference System.\nWould you like to fallback to ESPG:4326 (WGS 84) ?"),
+                                    tr("Warning: CRS not found"),
+                                    JOptionPane.YES_NO_CANCEL_OPTION
+                            )) {
+                                crs = wgs84;
+                            }
+                        }
+                    });
+    			}
+                if (crs != null) {
+                    findMathTransform(parent, true);
+                } else {
+                    throw new GeoCrsException(tr("Unable to detect CRS !"));
+                }
 			}
 			
 			OsmPrimitive primitive = null;

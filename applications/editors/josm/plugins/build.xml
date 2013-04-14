@@ -75,7 +75,6 @@
         <ant antfile="build.xml" target="dist" dir="proj4j"/>
         <ant antfile="build.xml" target="dist" dir="public_transport"/>
         <ant antfile="build.xml" target="dist" dir="reltoolbox"/>
-        <ant antfile="build.xml" target="dist" dir="restart"/>
         <ant antfile="build.xml" target="dist" dir="reverter"/>
         <ant antfile="build.xml" target="dist" dir="roadsigns"/>
         <ant antfile="build.xml" target="dist" dir="routes"/>
@@ -176,7 +175,6 @@
         <ant antfile="build.xml" target="clean" dir="proj4j"/>
         <ant antfile="build.xml" target="clean" dir="public_transport"/>
         <ant antfile="build.xml" target="clean" dir="reltoolbox"/>
-        <ant antfile="build.xml" target="clean" dir="restart"/>
         <ant antfile="build.xml" target="clean" dir="reverter"/>
         <ant antfile="build.xml" target="clean" dir="roadsigns"/>
         <ant antfile="build.xml" target="clean" dir="routes"/>

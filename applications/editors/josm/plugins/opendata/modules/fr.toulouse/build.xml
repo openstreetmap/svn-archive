@@ -117,7 +117,7 @@
                 <attribute name="Module-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Module-Description" value="Toulouse"/>
                 <attribute name="Module-Icon" value="images/data.fr.toulouse_24.png"/>
-                <attribute name="Module-Link" value="http://wiki.openstreetmap.org/wiki/Toulouse/GrandToulouseData"/>
+                <attribute name="Module-Link" value="http://wiki.openstreetmap.org/wiki/Toulouse/ToulouseMetropoleData"/>
                 <attribute name="Module-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

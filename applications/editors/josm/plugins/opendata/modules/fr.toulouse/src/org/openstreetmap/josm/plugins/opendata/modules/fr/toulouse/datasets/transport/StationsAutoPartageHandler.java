@@ -19,33 +19,36 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
-public class PMRHandler extends ToulouseDataSetHandler {
+public class StationsAutoPartageHandler extends ToulouseDataSetHandler {
 
-    public PMRHandler() {
-        super(12538, "amenity=parking_space");
-        setWikiPage("PMR");
+    public StationsAutoPartageHandler() {
+        super(19163, "amenity=car_sharing");
+        setName("Stations d'auto partage");
         setCategory(CAT_TRANSPORT);
+        getCsvHandler().setCharset(ISO8859_15);
     }
 
     @Override
     public boolean acceptsFilename(String filename) {
-        return acceptsCsvKmzTabFilename(filename, "Emplacements_PMR");
+        return acceptsCsvKmzTabFilename(filename, "Autopartage");
     }
 
     @Override
     public void updateDataSet(DataSet ds) {
         for (Node n : ds.getNodes()) {
-            n.remove("name");
-            n.put("amenity", "parking_space");
-            n.put("access:disabled", "designated");
-            n.put("wheelchair", "designated");
-            replace(n, "nb_places", "capacity:disabled");
+            n.put("amenity", "car_sharing");
             n.remove("Lib_voie");
+            n.remove("mot_dir");
             n.remove("No");
             n.remove("commune");
             n.remove("code_insee");
-            n.remove("color");
-            replace(n, "id_PMR", REF_TOULOUSE_METROPOLE);
+            replace(n, "id_AUTO", REF_TOULOUSE_METROPOLE);
+            replace(n, "nb_places", "capacity");
+            replace(n, "arrete", "bylaw");
+            replace(n, "Societe", "operator");
+            replace(n, "annee", "start_date");
+            n.remove("photo");
+            replace(n, "obervations", "note");
         }
     }
 }

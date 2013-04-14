@@ -42,7 +42,7 @@ public class SanisetteHandler extends ToulouseDataSetHandler {
             n.put("fee", "no");
             n.put("operator", "JCDecaux");
             n.put("opening_hours", "24/7");
-            replace(n, "numero", "ref:grandtoulouse");
+            replace(n, "numero", REF_TOULOUSE_METROPOLE);
             replace(n, "PMR", "wheelchair", new String[]{"true", "false"}, new String[]{"yes", "no"});
             String valide = n.get("emplacement_valide");
             if (valide != null && valide.equalsIgnoreCase("non")) {

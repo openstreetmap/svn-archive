@@ -60,6 +60,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.tran
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.PMRHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.PistesCyclablesHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.ReseauTisseoHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.StationsAutoPartageHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.TramwayStationHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.VeloToulouseHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport.Zone30Handler;
@@ -111,6 +112,7 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(ChantiersPonctuelsHandler.class);
         handlers.add(ChantiersLineairesHandler.class);
         handlers.add(InstallationSportiveToulouseHandler.class);
+        handlers.add(StationsAutoPartageHandler.class);
     }
     
     public static final DataSet data = new DataSet();

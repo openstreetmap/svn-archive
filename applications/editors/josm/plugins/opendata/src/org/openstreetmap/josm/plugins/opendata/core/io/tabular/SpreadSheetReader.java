@@ -71,14 +71,14 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 	}
 	
 	public static class CoordinateColumns {
+        public Projection proj = null;
 		public int xCol = -1;
 		public int yCol = -1;
 		public final boolean isOk() {
 			return xCol > -1 && yCol > -1;
 		}
-        @Override
-        public String toString() {
-            return "[xCol=" + xCol + ", yCol=" + yCol + "]";
+        @Override public String toString() {
+            return "CoordinateColumns [proj=" + proj + ", xCol=" + xCol + ", yCol=" + yCol + "]";
         }
 	}
 	
@@ -111,15 +111,14 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 			}
 		}
 
-		Projection proj = null;
 		final List<CoordinateColumns> columns = new ArrayList<CoordinateColumns>();
 		
 		for (ProjectionPatterns pp : projColumns.keySet()) {
 		    for (CoordinateColumns col : projColumns.get(pp)) {
 	            if (col.isOk()) {
                     columns.add(col);
-	                if (proj == null) {
-	                    proj = pp.getProjection(header[col.xCol], header[col.yCol]);
+	                if (col.proj == null) {
+	                    col.proj = pp.getProjection(header[col.xCol], header[col.yCol]);
 	                }
 	            }
 		    }
@@ -127,7 +126,16 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 
 		final boolean handlerOK = handler != null && handler.handlesProjection();
 
-		if (proj != null) {
+		boolean projFound = false;
+		
+		for (CoordinateColumns c : columns) {
+		    if (c.proj != null) {
+		        projFound = true;
+		        break;
+		    }
+		}
+		
+		if (projFound) {
 			// projection identified, do nothing
 		} else if (!columns.isEmpty()) {
 			if (!handlerOK) {
@@ -136,7 +144,10 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 				if (dialog.getValue() != 1) {
 					return null; // User clicked Cancel
 				}
-				proj = dialog.getProjection();
+				Projection proj = dialog.getProjection();
+		        for (CoordinateColumns c : columns) {
+		            c.proj = proj;
+		        }
 			}
 			
 		} else {
@@ -148,10 +159,10 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		    if (!message.isEmpty()) {
 		        message += "; ";
 		    }
-		    message += header[c.xCol]+", "+header[c.yCol];
+		    message += c.proj + "("+header[c.xCol]+", "+header[c.yCol]+")";
 		}
 		
-		System.out.println("Loading data using projection "+proj+" ("+message+")");
+		System.out.println("Loading data using projections "+message);
 		
 		final DataSet ds = new DataSet();
 		int lineNumber = 1;
@@ -203,16 +214,24 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 					System.err.println("Warning: Parsing error on line "+lineNumber+": "+e.getMessage());
 				}
 			}
+			Node firstNode = null;
 			for (CoordinateColumns c : columns) {
 			    Node n = nodes.get(c);
 			    EastNorth en = ens.get(c);
     			if (en.isValid()) {
-    				n.setCoor(proj != null && !handlerOK ? proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
+    				n.setCoor(c.proj != null && !handlerOK ? c.proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
     			} else {
     				System.err.println("Warning: Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
     			}
     			if (n.getCoor() != null) {
-    				ds.addPrimitive(n);
+    			    if (firstNode == null) {
+    			        firstNode = n;
+    			    }
+    			    if (n == firstNode || n.getCoor().greatCircleDistance(firstNode.getCoor()) > Main.pref.getDouble(PREF_TOLERANCE, DEFAULT_TOLERANCE)) {
+    			        ds.addPrimitive(n);
+    			    } else {
+    			        nodes.remove(c);
+    			    }
     			}
 			}
 			if (handler != null && !Main.pref.getBoolean(PREF_RAWDATA)) {

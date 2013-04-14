@@ -60,6 +60,9 @@ public interface OdConstants {
 	public static final String PREF_MAXDISTANCE = "opendata.maxdistance";
     public static final double DEFAULT_MAXDISTANCE = 10;
 
+    public static final String PREF_TOLERANCE = "opendata.spreadsheet.tolerance";
+    public static final double DEFAULT_TOLERANCE = 0.1;
+
     public static final String PREF_MODULES = "opendata.modules";
     public static final String PREF_MODULES_SITES = "opendata.modules.sites";
     public final static String GOOGLE_SITE = "http://josm-toulouse-data.googlecode.com/svn/trunk/";

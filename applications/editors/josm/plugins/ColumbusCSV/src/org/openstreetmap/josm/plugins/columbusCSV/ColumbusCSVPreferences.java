@@ -19,15 +19,14 @@ import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 
 /**
  * Implements the preferences dialog for this plugin.
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
-public class ColumbusCSVPreferences implements PreferenceSetting {
+public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
     public static final String PREFIX = "columbuscsv.";
     
     /**

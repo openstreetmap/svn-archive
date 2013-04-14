@@ -63,7 +63,6 @@ public class FixAddressesPlugin extends Plugin {
 
 	@Override
 	public PreferenceSetting getPreferenceSetting() {
-		// TODO Auto-generated method stub
 		return getPreferences();
 	}
 

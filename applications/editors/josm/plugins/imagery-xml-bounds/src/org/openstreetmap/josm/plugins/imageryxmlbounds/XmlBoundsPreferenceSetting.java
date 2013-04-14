@@ -17,11 +17,10 @@ package org.openstreetmap.josm.plugins.imageryxmlbounds;
 
 import javax.swing.JButton;
 
-import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference;
-import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference.ImageryProvidersPanel;
+import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
-import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference.ImageryProvidersPanel;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.EditEntriesAction;
 
 /**

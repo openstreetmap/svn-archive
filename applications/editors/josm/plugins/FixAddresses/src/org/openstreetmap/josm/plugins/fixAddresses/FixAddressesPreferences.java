@@ -13,16 +13,18 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceSettingFactory;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
-public class FixAddressesPreferences implements PreferenceSetting {
+public class FixAddressesPreferences extends DefaultTabPreferenceSetting {
 	private static final String FIX_ADDRESSES_IGNORE_POST_CODE_KEY = "fixAddresses.ignorePostCode";
 	private static final String FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY = "fixAddresses.selectGuessedObjects";
 	
@@ -50,8 +52,6 @@ public class FixAddressesPreferences implements PreferenceSetting {
 	 * Loads the (initial) preference settings.
 	 */
 	private void loadFromPrefs() {
-		@SuppressWarnings("unused")
-		boolean test = Main.pref.getBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, false);
 		setSelectGuessedObjects(Main.pref.getBoolean(FIX_ADDRESSES_SELECT_GUESSED_OBJECTS_KEY, false));
 		setIgnorePostCode(Main.pref.getBoolean(FIX_ADDRESSES_IGNORE_POST_CODE_KEY, false));
 	}
@@ -81,7 +81,8 @@ public class FixAddressesPreferences implements PreferenceSetting {
 	@Override
 	public boolean ok() {
 		saveToPrefs();
-		return true;
+		loadFromPrefs();
+		return false;
 	}
 
 	/**
@@ -116,11 +117,4 @@ public class FixAddressesPreferences implements PreferenceSetting {
 	public void setIgnorePostCode(boolean ignorePostCode) {
 		cbIgnorePostCode.setSelected(ignorePostCode);
 	}
-
-        @Override
-        public boolean isExpert() {
-            return false;
-        }
-
-
 }

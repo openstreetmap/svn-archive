@@ -6,7 +6,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.upload.UploadHook;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.APIDataSet;
-import org.openstreetmap.josm.gui.io.TagSettingsPanel;
+import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.io.UploadDialog;
 
 public class ReverterUploadHook implements UploadHook {
@@ -30,7 +30,7 @@ public class ReverterUploadHook implements UploadHook {
         String created_by = tags.get("created_by");
         if (created_by == null || "".equals(created_by)) {
             if (hasRevertions) {
-                tags.put("created_by", TagSettingsPanel.getDefaultCreatedBy() + ";" + pluginString);
+                tags.put("created_by", Version.getInstance().getAgentString() + ";" + pluginString);
                 ud.setDefaultChangesetTags(tags);
             }
             return true;

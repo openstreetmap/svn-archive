@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Reverter: Update MultiOsmReader to support null data after redaction"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5775"/>
+    <property name="plugin.main.version" value="5865"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
@@ -13,8 +13,6 @@
     <property name="plugin.description" value="Plugin for reverting changesets"/>
     <property name="plugin.icon" value="images/revert-changeset.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Reverter"/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
     <property name="plugin.stage" value="5"/>
 
     <!-- ** include targets that all plugins have in common ** -->

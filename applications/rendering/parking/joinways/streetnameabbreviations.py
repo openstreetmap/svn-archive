@@ -65,10 +65,18 @@ begabbreviations1.update({'Pohjoinen ':'Pohj. ','Eteläinen ':'Et. ','Itäinen '
 begabbreviations2.update({'Pohjoinen ':'P. ','Eteläinen ':'E. ','Itäinen ':'I. ','Läntinen ':'L. '})
 
 #russian
+# http://translate.google.de/translate?sl=ru&tl=en&js=n&prev=_t&hl=de&ie=UTF-8&eotf=1&u=http%3A%2F%2Fru.wikipedia.org%2Fwiki%2F%D0%A3%D0%BB%D0%B8%D1%86%D0%B0
 endabbreviations1.update({'аллея':'ал.','бульвар':'бул.','набережная':'наб.','переулок':'пер.','площадь':'пл.','проезд':'пр.','проспект':'просп.','шоссе':'ш.','тупик':'туп.','улица':'ул.'})
 
 #ladinisch
 begabbreviations1.update({'Streda ':'Str. '})
+
+# malay
+begabbreviations1.update({'Jalan ':'Jln '})
+
+#turkish
+endabbreviations1.update({'Bulvarı':'Blv.','Caddesi':'Cd.','Çıkmazı':'Çk.','Geçidi':'Gd.','Sokak':'Sk.','Sokağı':'Sk.','Yolu':'Yl.','yolu':'Yl.'})
+#bbox=25.66,35.94,38.89,42.15
 
 #errors
 errorbegin = {'strada','via'}

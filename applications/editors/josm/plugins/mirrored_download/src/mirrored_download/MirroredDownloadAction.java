@@ -13,14 +13,14 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 
-import org.openstreetmap.josm.actions.JosmAction;
-
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.actions.downloadtasks.PostDownloadHandler;
 import org.openstreetmap.josm.data.Bounds;

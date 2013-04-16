@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Moar bugfixes"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5737"/>
+    <property name="plugin.main.version" value="5874"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
@@ -13,9 +13,6 @@
     <property name="plugin.description" value="Implements a command line and enables to create your commands. See link for standard commands (arc, circle etc.)"/>
     <property name="plugin.icon" value="images/commandline.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/CommandLine"/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
-    <!--<property name="plugin.stage" value="..."/>-->
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

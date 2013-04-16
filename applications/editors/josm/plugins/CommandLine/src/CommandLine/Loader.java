@@ -7,9 +7,9 @@
  
 package CommandLine;
 
-import java.util.ArrayList;
 import java.io.File;
-import java.util.List;
+import java.util.ArrayList;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 

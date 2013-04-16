@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 
 import org.openstreetmap.josm.actions.JosmAction;
 
-
 /**
  * TODO: Write comment.
  */

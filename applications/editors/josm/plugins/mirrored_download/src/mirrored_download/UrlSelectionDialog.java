@@ -1,74 +1,31 @@
 // License: GPL. For details, see LICENSE file.
 package mirrored_download;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Container;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.DeleteCommand;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
-import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.tools.Utils;
-
-import org.xml.sax.SAXException;
 
 public class UrlSelectionDialog
 {
@@ -159,10 +116,12 @@ public class UrlSelectionDialog
           urls.add(line);
         }
       }
+      Utils.close(reader);
     } catch (IOException e) {
       e.printStackTrace();
+    } finally {
+      Utils.close(in);
     }
-    Utils.close(in);
     for (String url : Main.pref.getCollection("plugin.mirrored_download.custom-urls")) {
       urls.add(url);
     }

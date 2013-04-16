@@ -7,26 +7,12 @@
 
 package CommandLine;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.AWTEvent;
-import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.util.Collection;
-import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 

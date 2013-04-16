@@ -8,18 +8,15 @@
 package CommandLine;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
-import org.openstreetmap.josm.data.gpx.ImmutableGpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.data.osm.BBox;
 
 public class GpxFilter {
 	private BBox bbox;

@@ -1,84 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is the build file for the mirrored_download plugin
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in your default plugin directory) run
-**
-**    > ant  install
-**
-** To build against the core in ../../core, create a correct manifest and deploy to
-** SVN,
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
--->
 <project name="mirrored_download" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value=""/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5097"/>
+    <property name="plugin.main.version" value="5874"/>
 
-    <!--
-    **********************************************************
-    ** include targets that all plugins have in common
-    **********************************************************
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
+    <property name="plugin.author" value="Roland M. Olbricht"/>
+    <property name="plugin.class" value="mirrored_download.MirroredDownloadPlugin"/>
+    <property name="plugin.description" value="Simplifies download from different read-only APIs."/>
+    <property name="plugin.icon" value="images/download_mirror.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/mirrored_download"/>
+
+	<!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <!--
-            ************************************************
-            ** configure these properties. Most of them will be copied to the plugins
-            ** manifest file. Property values will also show up in the list available
-            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-            **
-            ************************************************
-            -->
-            <manifest>
-                <attribute name="Author" value="Roland M. Olbricht"/>
-                <attribute name="Plugin-Class" value="mirrored_download.MirroredDownloadPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Simplifies download from different read-only APIs."/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/mirrored_download"/>
-                <attribute name="Plugin-Icon" value="images/download_mirror.png"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-        </jar>
-    </target>
 </project>

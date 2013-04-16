@@ -65,6 +65,7 @@ import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
+import org.openstreetmap.josm.tools.Utils;
 
 public class CommandLine extends Plugin {
     protected JTextField textField;
@@ -540,14 +541,14 @@ public class CommandLine extends Plugin {
                         gpxFilter.addGpxData(gpxLayer.data);
                     }
                     gpxWriter.write(gpxFilter.getGpxData());
+                    Utils.close(gpxWriter);
                 }
-                osmWriter.close();
+                Utils.close(osmWriter);
                 synchronized (syncObj) {
                     tp.running = false;
                     syncObj.notifyAll();
                 }
             }
-
         });
 
         // Read stdout stream

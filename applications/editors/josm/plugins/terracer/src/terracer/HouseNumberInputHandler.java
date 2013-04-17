@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
@@ -303,19 +304,23 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
                 if (validateInput()) {
                     saveValues();
 
-                    terracerAction.terraceBuilding(
-                        outline,
-                        init,
-                        street,
-                        associatedStreet,
-                        segments(),
-                        dialog.lo.getText(),
-                        dialog.hi.getText(),
-                        stepSize(),
-                        housenumbers,
-                        streetName(),
-                        doHandleRelation(),
-                        doDeleteOutline());
+                    try {
+                        terracerAction.terraceBuilding(
+                            outline,
+                            init,
+                            street,
+                            associatedStreet,
+                            segments(),
+                            dialog.lo.getText(),
+                            dialog.hi.getText(),
+                            stepSize(),
+                            housenumbers,
+                            streetName(),
+                            doHandleRelation(),
+                            doDeleteOutline());
+                    } catch (UserCancelException ex) {
+                        // Ignore
+                    }
 
                     this.dialog.dispose();
                 }

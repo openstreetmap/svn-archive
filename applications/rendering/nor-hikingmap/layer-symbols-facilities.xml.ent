@@ -2,18 +2,8 @@
 
   <Rule>
     &maxscale_zoom15;
-    <Filter>[leisure]='playground'</Filter>
-    <PointSymbolizer file="&symbols;/playground.png"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom15;
     <Filter>[sport]='motor' or [sport]='motocross' or [highway]='raceway'</Filter>
     <PointSymbolizer file="&symbols;/motorsport.png"/>
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    <Filter>[leisure]='miniature_golf'</Filter>
-    <PointSymbolizer file="&symbols;/minigolf.png"/>
   </Rule>
   <Rule>
     &maxscale_zoom14;
@@ -224,7 +214,7 @@
        or waterway='water_point'
        or railway in ('station','subway_entrance','halt','stop')
        or tourism in ('museum','attraction','hotel','motel','hostel','chalet','camp_site','caravan_site')
-       or leisure in ('playground','golf_course','miniature_golf','fishing','marina','slipway')
+       or leisure in ('golf_course','fishing','marina','slipway')
     ) as facilities</Parameter>
     &datasource-settings;
   </Datasource>
@@ -240,7 +230,7 @@
        or sport is not null
        or highway='raceway'
        or tourism in ('museum','attraction','hotel','motel','hostel','chalet','camp_site','caravan_site')
-       or leisure in ('playground','golf_course','miniature_golf','fishing','marina')
+       or leisure in ('golf_course','fishing','marina')
     ) as facilities</Parameter>
     &datasource-settings;
   </Datasource>

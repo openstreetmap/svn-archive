@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeMap;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -31,7 +32,8 @@ public class WikipediaAddNamesAction extends JosmAction {
                 tags.add(new String[]{"name:" + i.lang, i.article});
             }
         }
-        new AddTagsDialog(tags.toArray(new String[tags.size()][]));
+	System.out.println(tags);
+        AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia");
     }
 
     protected boolean useWikipediaLangArticle(WikipediaApp.WikipediaLangArticle i) {

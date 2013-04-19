@@ -17,17 +17,17 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
+import org.openstreetmap.gui.jmapviewer.MapRectangleImpl;
 import org.openstreetmap.josm.data.osm.BBox;
 
-public class BBoxMapRectangle implements MapRectangle {
+public class BBoxMapRectangle extends MapRectangleImpl {
 	private BBox bbox;
 
 	/**
 	 * @param bbox
 	 */
 	public BBoxMapRectangle(BBox bbox) {
-		super();
+		super(null, null);
 		this.bbox = bbox;
 	}
 
@@ -45,5 +45,4 @@ public class BBoxMapRectangle implements MapRectangle {
 	public void paint(Graphics g, Point topLeft, Point bottomRight) {
 			// do nothing here
 	}
-
 }

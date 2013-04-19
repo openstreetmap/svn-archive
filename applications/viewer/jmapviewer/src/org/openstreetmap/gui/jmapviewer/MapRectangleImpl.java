@@ -84,6 +84,6 @@ public class MapRectangleImpl extends MapObjectImpl implements MapRectangle {
     }
     @Override
     public String toString() {
-        return "MapRectangle from " + topLeft + " to " + bottomRight;
+        return "MapRectangle from " + getTopLeft() + " to " + getBottomRight();
     }
 }

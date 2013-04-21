@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -106,7 +107,7 @@ public final class WikipediaApp {
         if (!articleNames.isEmpty()) {
             final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
                     + "&lang=" + wikipediaLang;
-            System.out.println("Wikipedia: POST " + url);
+            System.out.println("Wikipedia: POST " + url + " " + articleNames);
 
             try {
                 URLConnection connection = new URL(url).openConnection();
@@ -327,5 +328,21 @@ public final class WikipediaApp {
         } catch (UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    public static <T> List<List<T>> partitionList(final List<T> list, final int size) {
+        return new AbstractList<List<T>>() {
+            @Override
+            public List<T> get(int index) {
+                final int fromIndex = index * size;
+                final int toIndex = Math.min(fromIndex + size, list.size());
+                return list.subList(fromIndex, toIndex);
+            }
+
+            @Override
+            public int size() {
+                return (int) Math.ceil(((float) list.size()) / size);
+            }
+        };
     }
 }

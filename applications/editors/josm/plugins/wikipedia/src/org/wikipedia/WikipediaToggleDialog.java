@@ -17,10 +17,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.preferences.IntegerProperty;
 import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
@@ -101,15 +102,6 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         }
     };
 
-    private void setWikipediaEntries(List<WikipediaEntry> entries) {
-        Collections.sort(entries);
-        WikipediaApp.updateWIWOSMStatus(wikipediaLang.get(), entries);
-        model.clear();
-        for (WikipediaEntry i : entries) {
-            model.addElement(i);
-        }
-    }
-
     private void updateTitle() {
         if (titleContext == null) {
             setTitle(/* I18n: [language].Wikipedia.org */ tr("{0}.Wikipedia.org", wikipediaLang.get()));
@@ -129,18 +121,50 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         public void actionPerformed(ActionEvent e) {
             try {
                 // determine bbox
-                LatLon min = Main.map.mapView.getLatLon(0, Main.map.mapView.getHeight());
-                LatLon max = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
-                List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates(
-                        wikipediaLang.get(), min, max);
+                final LatLon min = Main.map.mapView.getLatLon(0, Main.map.mapView.getHeight());
+                final LatLon max = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
                 // add entries to list model
-                setWikipediaEntries(entries);
                 titleContext = tr("coordinates");
                 updateTitle();
+                new UpdateWikipediaArticlesSwingWorker() {
+
+                    @Override
+                    List<WikipediaEntry> getEntries() {
+                        return WikipediaApp.getEntriesFromCoordinates(
+                                wikipediaLang.get(), min, max);
+                    }
+                }.execute();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         }
+    }
+
+    abstract class UpdateWikipediaArticlesSwingWorker extends SwingWorker<Void, WikipediaEntry> {
+
+        private final IntegerProperty wikipediaStatusUpdateChunkSize = new IntegerProperty("wikipedia.statusupdate.chunk-size", 20);
+
+        abstract List<WikipediaEntry> getEntries();
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            final List<WikipediaEntry> entries = getEntries();
+            Collections.sort(entries);
+            publish(entries.toArray(new WikipediaEntry[entries.size()]));
+            for (List<WikipediaEntry> chunk : WikipediaApp.partitionList(entries, wikipediaStatusUpdateChunkSize.get())) {
+                WikipediaApp.updateWIWOSMStatus(wikipediaLang.get(), chunk);
+            }
+            return null;
+        }
+
+        @Override
+        protected void process(List<WikipediaEntry> chunks) {
+            model.clear();
+            for (WikipediaEntry i : chunks) {
+                model.addElement(i);
+            }
+        }
+
     }
 
     class WikipediaLoadCategoryAction extends AbstractAction {
@@ -158,11 +182,17 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             if (category == null) {
                 return;
             }
-            List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCategory(
-                    wikipediaLang.get(), category, Main.pref.getInteger("wikipedia.depth", 3));
-            setWikipediaEntries(entries);
+
             titleContext = category;
             updateTitle();
+
+            new UpdateWikipediaArticlesSwingWorker() {
+                @Override
+                List<WikipediaEntry> getEntries() {
+                    return WikipediaApp.getEntriesFromCategory(
+                            wikipediaLang.get(), category, Main.pref.getInteger("wikipedia.depth", 3));
+                }
+            }.execute();
         }
     }
 
@@ -175,9 +205,15 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            setWikipediaEntries(WikipediaApp.getEntriesFromClipboard(wikipediaLang.get()));
             titleContext = tr("clipboard");
             updateTitle();
+            new UpdateWikipediaArticlesSwingWorker() {
+
+                @Override
+                List<WikipediaEntry> getEntries() {
+                    return WikipediaApp.getEntriesFromClipboard(wikipediaLang.get());
+                }
+            }.execute();
         }
     }
 

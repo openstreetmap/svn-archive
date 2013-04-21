@@ -24,6 +24,7 @@ import javax.xml.xpath.XPathFactory;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Utils;
 import org.openstreetmap.josm.tools.Utils.Function;
 import org.w3c.dom.Document;
@@ -136,39 +137,23 @@ public final class WikipediaApp {
         }
     }
 
-    static Collection<String> getWikipediaArticles(String wikipediaLang, OsmPrimitive p) {
-        Collection<String> r = new ArrayList<String>();
+    static Collection<String> getWikipediaArticles(final String wikipediaLang, OsmPrimitive p) {
         final Map<String, String> tags = p.getKeys();
-        // consider wikipedia=[lang]:*
-        final String wp = tags.get("wikipedia");
-        if (wp != null && wp.startsWith("http")) {
-            //wikipedia=http...
-            final WikipediaLangArticle item = WikipediaLangArticle.parseFromUrl(wp);
-            if (item != null && wikipediaLang.equals(item.lang)) {
-                r.add(item.article.replace("_", " "));
+        return Utils.transform(Utils.filter(
+                Arrays.asList(
+                        WikipediaLangArticle.parseTag("wikipedia", tags.get("wikipedia")),
+                        WikipediaLangArticle.parseTag("wikipedia:" + wikipediaLang, tags.get("wikipedia:" + wikipediaLang))
+                ), new Predicate<WikipediaLangArticle>() {
+            @Override
+            public boolean evaluate(WikipediaLangArticle wp) {
+                return wp != null && wikipediaLang.equals(wp.lang);
             }
-        } else if (wp != null) {
-            //wikipedia=[lang]:[article]
-            String[] item = decodeURL(wp).split(":", 2);
-            if (item.length == 2 && wikipediaLang.equals(item[0])) {
-                r.add(item[1].replace("_", " "));
+        }), new Function<WikipediaLangArticle, String>() {
+            @Override
+            public String apply(WikipediaLangArticle wp) {
+                return wp.article;
             }
-        }
-        // consider wikipedia:[lang]=*
-        final String wpLang = tags.get("wikipedia:" + wikipediaLang);
-        if (wpLang != null && wpLang.startsWith("http")) {
-            //wikipedia:[lang]=http...
-            final WikipediaLangArticle item = WikipediaLangArticle.parseFromUrl(wpLang);
-            if (wikipediaLang.equals(item.lang)) {
-                r.add(item.article.replace("_", " "));
-            }
-        } else if (wpLang != null) {
-            //wikipedia:[lang]=[lang]:[article]
-            //wikipedia:[lang]=[article]
-            String[] item = decodeURL(wpLang).split(":", 2);
-            r.add(item[item.length == 2 ? 1 : 0].replace("_", " "));
-        }
-        return r;
+        });
     }
 
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
@@ -215,6 +200,30 @@ public final class WikipediaApp {
                 return null;
             }
             return new WikipediaLangArticle(m.group(1), m.group(2));
+        }
+
+        public static WikipediaLangArticle parseTag(String key, String value) {
+            if (value == null) {
+                return null;
+            } else if (value.startsWith("http")) {
+                //wikipedia=http...
+                return parseFromUrl(value);
+            } else if (value.contains(":")) {
+                //wikipedia=[lang]:[article]
+                //wikipedia:[lang]=[lang]:[article]
+                final String[] item = decodeURL(value).split(":", 2);
+                final String article = item[1].replace("_", " ");
+                return new WikipediaLangArticle(item[0], article);
+            } else if (key.startsWith("wikipedia:")) {
+                //wikipedia:[lang]=[lang]:[article]
+                //wikipedia:[lang]=[article]
+                final String lang = key.split(":", 2)[1];
+                final String[] item = decodeURL(value).split(":", 2);
+                final String article = item[item.length == 2 ? 1 : 0].replace("_", " ");
+                return new WikipediaLangArticle(lang, article);
+            } else {
+                return null;
+            }
         }
     }
 

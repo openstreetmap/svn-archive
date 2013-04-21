@@ -251,7 +251,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             graphViewLayer = null;
         } else if (oldLayer == Main.map.mapView.getEditLayer()) { //data layer removed
             if (graphViewLayer != null) {
-                Main.map.mapView.removeLayer(graphViewLayer);
+                Main.main.removeLayer(graphViewLayer);
                 graphViewLayer = null;
             }
         }

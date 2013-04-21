@@ -269,7 +269,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 				if (layersArray[i].getDataLayer().equals(oldLayer)) {
 					try {
 						// Remove layer
-						Main.map.mapView.removeLayer(layersArray[i]);
+						Main.main.removeLayer(layersArray[i]);
 					} catch (IllegalArgumentException e) {
 					}
 				}

@@ -451,7 +451,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             Main.pref.put("mapdust.pluginState",
                     MapdustPluginState.ONLINE.getValue());
             NavigatableComponent.removeZoomChangeListener(this);
-            Main.map.mapView.removeLayer(layer);
+            Main.main.removeLayer(layer);
             if (mapdustGUI != null) {
                 Main.map.remove(mapdustGUI);
                 mapdustGUI.destroy();

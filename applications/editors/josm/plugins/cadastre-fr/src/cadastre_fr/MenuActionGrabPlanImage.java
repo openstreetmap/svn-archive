@@ -65,7 +65,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
     public void actionInterrupted() {
         actionCompleted();
         if (wmsLayer != null) {
-            Main.map.mapView.removeLayer(wmsLayer);
+            Main.main.removeLayer(wmsLayer);
             wmsLayer = null;
         }
     }
@@ -277,7 +277,7 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
         countMouseClicked = 0;
         if (selectedValue == 0) { // "Cancel"
             // remove layer
-            Main.map.mapView.removeLayer(wmsLayer);
+            Main.main.removeLayer(wmsLayer);
             wmsLayer = null;
             Main.map.mapView.removeMouseListener(this);
             return false;

@@ -54,7 +54,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
 	@Override
 	protected void finish() {
 		if (canceled) {
-			Main.map.mapView.removeLayer(plugin.getChannelDigraphLayer());
+			Main.main.removeLayer(plugin.getChannelDigraphLayer());
 			return;
 		}
 	}

@@ -62,7 +62,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private final Cursor cursorCtrl;
     private final Cursor cursorShift;
     private final Cursor cursorReady;
-    private final Cursor cursorNode;
+    //private final Cursor cursorNode;
     private final Cursor cursorDrawing;
     private boolean nearSomeNode;
     private LatLon highlighted;
@@ -91,7 +91,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         cursorCtrl = ImageProvider.getCursor("crosshair", "fixed");
         cursorShift = ImageProvider.getCursor("crosshair", "new");
         cursorReady = ImageProvider.getCursor("crosshair", "ready");
-        cursorNode = ImageProvider.getCursor("crosshair", "joinnode");
+        //cursorNode = ImageProvider.getCursor("crosshair", "joinnode");
         cursorDrawing = ImageProvider.getCursor("crosshair", "mode");
         //loadPrefs();
     }
@@ -595,7 +595,6 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             ts.add(w);
             TagPaster tp = new TagPaster(Main.pasteBuffer.getDirectlyAdded(), ts);
             List<Tag> execute = tp.execute();
-            Map<String,String> tgs=new HashMap<String,String>();
             for (Tag t : execute) {
                 w.put(t.getKey(), t.getValue());
             }
@@ -674,11 +673,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }*/
 
     private void loadFromWay(Way w) {
-        List<LatLon> pts=line.getPoints();
-
         Collection<Command> cmds = new LinkedList<Command>();
         
-        Node firstNode=null;
         Object[] nodes = w.getNodes().toArray();
         int n=nodes.length;
         if (w.isClosed()) n--;

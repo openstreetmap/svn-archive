@@ -292,7 +292,7 @@ public class DrawnPolyLine {
     }
 
     private double pointSegmentDistance(Point p, Point p1, Point p2) {
-        double a,b,x,y,l,h,kt,kn,dist;
+        double a,b,x,y,l,kt,kn,dist;
         x=p.x-p1.x; y=p.y-p1.y; 
         a=p2.x-p1.x; b=p2.y-p1.y;
         l=Math.hypot(a,b);

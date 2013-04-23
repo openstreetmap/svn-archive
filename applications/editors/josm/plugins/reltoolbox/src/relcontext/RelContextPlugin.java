@@ -1,6 +1,5 @@
 package relcontext;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;

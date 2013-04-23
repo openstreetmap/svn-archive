@@ -106,7 +106,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 				// prefer ways that are already in the database
 				Way tmp = w;
 				w = candidateWay;
-				candidateWay = w;
+				candidateWay = tmp;
 			    }
 			    commands.add(new DeleteCommand(w));
 			}

@@ -1,11 +1,23 @@
 package relcontext.actions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
 
@@ -325,9 +337,9 @@ public class TheRing {
 			referencingRelations.put(rel, Integer.valueOf(i));
 	    }
 	}
-	// todo: когда два кольца меняют одно и то же отношение, в список команд добавляется
-	// изменение базового отношения на новое, а не предыдущего
-	// поэтому сохраняется только первое изменение
+	// todo: ÐºÐ¾Ð³Ð´Ð° Ð´Ð²Ð° ÐºÐ¾Ð»ÑŒÑ†Ð° Ð¼ÐµÐ½Ñ�ÑŽÑ‚ Ð¾Ð´Ð½Ð¾ Ð¸ Ñ‚Ð¾ Ð¶Ðµ Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ðµ, Ð² Ñ�Ð¿Ð¸Ñ�Ð¾Ðº ÐºÐ¾Ð¼Ð°Ð½Ð´ Ð´Ð¾Ð±Ð°Ð²Ð»Ñ�ÐµÑ‚Ñ�Ñ�
+	// Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ Ð±Ð°Ð·Ð¾Ð²Ð¾Ð³Ð¾ Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ� Ð½Ð° Ð½Ð¾Ð²Ð¾Ðµ, Ð° Ð½Ðµ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÐµÐ³Ð¾
+	// Ð¿Ð¾Ñ�Ñ‚Ð¾Ð¼Ñƒ Ñ�Ð¾Ñ…Ñ€Ð°Ð½Ñ�ÐµÑ‚Ñ�Ñ� Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿ÐµÑ€Ð²Ð¾Ðµ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ
 
 	List<Command> commands = new ArrayList<Command>();
 	boolean foundOwnWay = false;
@@ -388,7 +400,7 @@ public class TheRing {
     /**
      * Appends "append" to "base" so the closed polygon forms.
      */
-    private static void closePolygon( List<Node> base, List<Node> append ) {
+    /*private static void closePolygon( List<Node> base, List<Node> append ) {
 	if( append.get(0).equals(base.get(0)) && append.get(append.size() - 1).equals(base.get(base.size() - 1)) ) {
 	    List<Node> ap2 = new ArrayList<Node>(append);
 	    Collections.reverse(ap2);
@@ -396,17 +408,17 @@ public class TheRing {
 	}
 	base.remove(base.size() - 1);
 	base.addAll(append);
-    }
+    }*/
 
     /**
      * Checks if a middle point between two nodes is inside a polygon. Useful to check if the way is inside.
      */
-    private static boolean segmentInsidePolygon( Node n1, Node n2, List<Node> polygon ) {
+    /*private static boolean segmentInsidePolygon( Node n1, Node n2, List<Node> polygon ) {
 	EastNorth en1 = n1.getEastNorth();
 	EastNorth en2 = n2.getEastNorth();
 	Node testNode = new Node(new EastNorth((en1.east() + en2.east()) / 2.0, (en1.north() + en2.north()) / 2.0));
 	return Geometry.nodeInsidePolygon(testNode, polygon);
-    }
+    }*/
     
     private static void log( String s ) {
 //	System.out.println(s);
@@ -419,8 +431,8 @@ public class TheRing {
 	private boolean wasTemplateApplied = false;
 	private boolean isRing;
 
-	private RingSegment() {
-	}
+	/*private RingSegment() {
+	}*/
 
 	public RingSegment( Way w ) {
 	    this(w.getNodes());
@@ -434,10 +446,10 @@ public class TheRing {
 	    references = null;
 	}
 
-	public RingSegment( RingSegment ref ) {
+	/*public RingSegment( RingSegment ref ) {
 	    this.nodes = null;
 	    this.references = ref;
-	}
+	}*/
 
 	/**
 	 * Splits this segment at node n. Retains nodes 0..n and moves
@@ -558,9 +570,9 @@ public class TheRing {
 	 * Compares two segments with respect to referencing.
 	 * @return true if ways are equals, or one references another.
 	 */
-	public boolean isReferencingEqual( RingSegment other ) {
+	/*public boolean isReferencingEqual( RingSegment other ) {
 	    return this.equals(other) || (other.isReference() && other.references == this) || (isReference() && references == other);
-	}
+	}*/
 
 	@Override
 	public String toString() {

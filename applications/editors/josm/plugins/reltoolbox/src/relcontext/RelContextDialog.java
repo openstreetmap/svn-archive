@@ -1,51 +1,98 @@
 package relcontext;
 
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.command.Command;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.awt.Point;
-import java.awt.Component;
-import java.awt.Dimension;
-import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.gui.DefaultNameFormatter;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import relcontext.actions.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog.ModalityType;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+import javax.swing.AbstractListModel;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
-import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
+import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.command.ChangeRelationMemberRoleCommand;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.Shortcut;
+
+import relcontext.actions.AddRemoveMemberAction;
+import relcontext.actions.ClearChosenRelationAction;
+import relcontext.actions.CreateMultipolygonAction;
+import relcontext.actions.CreateRelationAction;
+import relcontext.actions.DeleteChosenRelationAction;
+import relcontext.actions.DownloadChosenRelationAction;
+import relcontext.actions.DownloadParentsAction;
+import relcontext.actions.DuplicateChosenRelationAction;
+import relcontext.actions.EditChosenRelationAction;
+import relcontext.actions.FindRelationAction;
+import relcontext.actions.ReconstructPolygonAction;
+import relcontext.actions.RelationHelpAction;
+import relcontext.actions.SelectInRelationPanelAction;
+import relcontext.actions.SelectMembersAction;
+import relcontext.actions.SelectRelationAction;
+import relcontext.actions.SortAndFixAction;
 
 /**
  * The new, advanced relation editing panel.
@@ -507,7 +554,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return columnIndex == 0 ? Relation.class : String.class;
         }
     }
-
+/*
     private class MultipolygonSettingsAction extends AbstractAction {
         public MultipolygonSettingsAction() {
             super();
@@ -517,10 +564,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         public void actionPerformed( ActionEvent e ) {
             Component c = e.getSource() instanceof Component ? (Component)e.getSource() : Main.parent;
-            Point p = getMousePosition();
             multiPopupMenu.show(c, 0, 0);
         }
-    }
+    }*/
 
     private class MultipolygonSettingsPopup extends JPopupMenu implements ActionListener {
         public MultipolygonSettingsPopup() {

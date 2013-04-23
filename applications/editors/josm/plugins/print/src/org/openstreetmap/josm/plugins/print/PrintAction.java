@@ -69,7 +69,7 @@ public class PrintAction extends JosmAction implements Runnable {
     @Override
 	public void run () {
         PrintPlugin.adjustPrefs();
-        PrintDialog window = new PrintDialog(Main.main.parent);
+        PrintDialog window = new PrintDialog(Main.parent);
         window.setVisible(true);
         PrintPlugin.restorePrefs();
     }

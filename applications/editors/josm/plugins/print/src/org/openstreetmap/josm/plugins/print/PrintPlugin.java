@@ -23,8 +23,6 @@
 
 package org.openstreetmap.josm.plugins.print;
 
-import java.awt.Toolkit;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;

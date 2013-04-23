@@ -32,15 +32,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Shape;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.print.*;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,7 +50,6 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.NavigatableComponent.SystemOfMeasurement;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
@@ -97,7 +95,7 @@ public class PrintableMapView extends MapView implements Printable {
             removeComponentListener(listeners[i]);
         }
         
-        mapView = Main.main.map.mapView;
+        mapView = Main.map.mapView;
     }
 
     /**
@@ -231,23 +229,11 @@ public class PrintableMapView extends MapView implements Printable {
         Bounds box = getRealBounds();
         List<Layer> visibleLayers = getVisibleLayersInZOrder();
         for (Layer l : visibleLayers) {
-            try {
-                if (! (l instanceof OsmDataLayer)) {
-                    /* OsmDataLayer does not need this.*/
-                    
-                    /* This manipulations may have all kinds of unwanted side effects
-                     * but many Layer implementations heavily depend on Main.map.mapView. */
-                    Main.map.mapView = this;
-                }
-                if (l.getOpacity() < 1) {
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)l.getOpacity()));
-                }
-                l.paint(g2d, this, box);
-                g2d.setPaintMode();
+            if (l.getOpacity() < 1) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)l.getOpacity()));
             }
-            finally {
-                Main.map.mapView = mapView;
-            }
+            l.paint(g2d, this, box);
+            g2d.setPaintMode();
         }
 
         g2d.setTransform(at);
@@ -266,10 +252,10 @@ public class PrintableMapView extends MapView implements Printable {
         SystemOfMeasurement som = getSystemOfMeasurement();
         double dist100px = getDist100Pixel() / g2dFactor;
         double dist = dist100px / som.aValue;
-        String unit  = som.aName;
+        //String unit  = som.aName;
         if (!Main.pref.getBoolean("system_of_measurement.use_only_lower_unit", false) && dist > som.bValue / som.aValue) {
             dist = dist100px / som.bValue;
-            unit  = som.bName;
+            //unit  = som.bName;
         }
         long distExponent = (long) Math.floor(Math.log(dist) / Math.log(10));
         double distMantissa = dist / Math.pow(10, distExponent);

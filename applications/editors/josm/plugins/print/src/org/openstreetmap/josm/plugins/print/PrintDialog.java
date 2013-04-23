@@ -27,19 +27,25 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.print.*;
-
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterAbortException;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.text.ParseException;
 
-import javax.print.*;
-import javax.print.attribute.*;
-import javax.print.attribute.standard.*;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.Attribute;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Media;
+import javax.print.attribute.standard.MediaPrintableArea;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -330,7 +336,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             printPreview.setPrintable(mapView);
         }
         JScrollPane previewPane = new JScrollPane(printPreview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        previewPane.setPreferredSize(Main.main != null ? Main.main.map.mapView.getSize() : new Dimension(210,297));
+        previewPane.setPreferredSize(Main.main != null ? Main.map.mapView.getSize() : new Dimension(210,297));
         add(previewPane, GBC.std(0,0).span(1, GBC.RELATIVE).fill().weight(5.0,5.0));
 
         row++;
@@ -393,8 +399,8 @@ public class PrintDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("printer-dialog")) {
-            PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
-            PrintService svc = PrintServiceLookup.lookupDefaultPrintService();
+            /*PrintService[] services =*/ PrintServiceLookup.lookupPrintServices(null, null);
+            /*PrintService svc =*/ PrintServiceLookup.lookupDefaultPrintService();
             if (job.printDialog(attrs)) {
                 updateFields();
             }
@@ -429,7 +435,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 if (msg.length() == 0) {
                     msg = tr("Printing has been cancelled.");
                 }
-                JOptionPane.showMessageDialog(Main.main.parent, msg,
+                JOptionPane.showMessageDialog(Main.parent, msg,
                   tr("Printing stopped"),
                   JOptionPane.WARNING_MESSAGE);
             }
@@ -438,7 +444,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 if (msg.length() == 0) {
                     msg = tr("Printing has failed.");
                 }
-                JOptionPane.showMessageDialog(Main.main.parent, msg,
+                JOptionPane.showMessageDialog(Main.parent, msg,
                   tr("Printing stopped"),
                   JOptionPane.ERROR_MESSAGE);
             }

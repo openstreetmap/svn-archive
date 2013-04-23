@@ -139,7 +139,9 @@ public class EditGpxLayer extends Layer {
         return data.createGpxData(anonTime);
     }
 
-    //context item "Convert to GPX layer"
+    /**
+     * Context item "Convert to GPX layer"
+     */
     public class ConvertToGpxLayerAction extends AbstractAction {
         public ConvertToGpxLayerAction() {
             super(tr("Convert to GPX layer"), ImageProvider.get("converttogpx"));
@@ -156,7 +158,9 @@ public class EditGpxLayer extends Layer {
         }
     }
 
-    //context item "Convert to GPX layer with anonymised time"
+    /**
+     * Context item "Convert to GPX layer with anonymised time"
+     */
     public class ConvertToAnonTimeGpxLayerAction extends AbstractAction {
         public ConvertToAnonTimeGpxLayerAction() {
             super(tr("Convert to GPX layer with anonymised time"), ImageProvider.get("converttogpx"));

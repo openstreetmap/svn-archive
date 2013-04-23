@@ -108,7 +108,7 @@ public class EditGpxLayer extends Layer {
                 for (EditGpxTrackSegment segment: track.getSegments()) {
                     for (EditGpxWayPoint wayPoint: segment.getWayPoints()) {
                         if (!wayPoint.isDeleted()) {
-                            Point pnt = Main.map.mapView.getPoint(wayPoint.getCoor().getEastNorth());
+                            Point pnt = mv.getPoint(wayPoint.getCoor().getEastNorth());
                             g.drawOval(pnt.x - 2, pnt.y - 2, 4, 4);
                         }
                     }

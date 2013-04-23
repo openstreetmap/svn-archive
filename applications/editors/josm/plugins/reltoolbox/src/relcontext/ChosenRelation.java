@@ -113,7 +113,7 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
             return;
         }
 
-        OsmDataLayer dataLayer = Main.map.mapView.getEditLayer();
+        OsmDataLayer dataLayer = mv.getEditLayer();
         float opacity = dataLayer == null ? 0.0f : !dataLayer.isVisible() ? 0.0f : (float)dataLayer.getOpacity();
         if( opacity < 0.01 )
             return;

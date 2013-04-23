@@ -231,11 +231,11 @@ public abstract class PicLayerAbstract extends Layer {
         if ( image != null) {
 
             // Position image at the right graphical place
-            EastNorth center = Main.map.mapView.getCenter();
-            EastNorth leftop = Main.map.mapView.getEastNorth( 0, 0 );
+            EastNorth center = mv.getCenter();
+            EastNorth leftop = mv.getEastNorth( 0, 0 );
             // Number of pixels for one unit in east north space.
             // This is the same in x- and y- direction.
-            double pixel_per_en = ( Main.map.mapView.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
+            double pixel_per_en = ( mv.getWidth() / 2.0 ) / ( center.east() - leftop.east() );
 
             //     This is now the offset in screen pixels
             EastNorth imagePosition = transformer.getImagePosition();
@@ -257,7 +257,7 @@ public abstract class PicLayerAbstract extends Layer {
             g.drawImage( image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null );
 
             // Draw additional rectangle for the active pic layer
-            if ( Main.map.mapView.getActiveLayer() == this ) {
+            if ( mv.getActiveLayer() == this ) {
                 g.setColor( new Color( 0xFF0000 ) );
                 g.drawRect(
                     -image.getWidth(null) / 2,

@@ -161,11 +161,11 @@ public class ImageLayer extends Layer {
         if (image != null && g2 != null) {
 
             // Position image at the right graphical place
-            EastNorth center = Main.map.mapView.getCenter();
-            EastNorth leftop = Main.map.mapView.getEastNorth(0, 0);
-            double pixel_per_east_unit = (Main.map.mapView.getWidth() / 2.0)
+            EastNorth center = mv.getCenter();
+            EastNorth leftop = mv.getEastNorth(0, 0);
+            double pixel_per_east_unit = (mv.getWidth() / 2.0)
                     / (center.east() - leftop.east());
-            double pixel_per_north_unit = (Main.map.mapView.getHeight() / 2.0)
+            double pixel_per_north_unit = (mv.getHeight() / 2.0)
                     / (leftop.north() - center.north());
 
             // This is now the offset in screen pixels
@@ -181,8 +181,7 @@ public class ImageLayer extends Layer {
             g.rotate(angle * Math.PI / 180.0);
 
             // Determine scale to fit JOSM extents
-            ProjectionBounds projbounds = Main.map.mapView
-                    .getProjectionBounds();
+            ProjectionBounds projbounds = mv.getProjectionBounds();
 
             double width = projbounds.maxEast - projbounds.minEast;
             double height = projbounds.maxNorth - projbounds.minNorth;
@@ -192,8 +191,8 @@ public class ImageLayer extends Layer {
             double ratio_y = (this.bbox.getMaxY() - this.bbox.getMinY())
                     / height;
 
-            double pixels4bbox_width = ratio_x * Main.map.mapView.getWidth();
-            double pixels4bbox_height = ratio_y * Main.map.mapView.getHeight();
+            double pixels4bbox_width = ratio_x * mv.getWidth();
+            double pixels4bbox_height = ratio_y * mv.getHeight();
 
             // Scale image to JOSM extents
             double scalex = pixels4bbox_width / image.getWidth();

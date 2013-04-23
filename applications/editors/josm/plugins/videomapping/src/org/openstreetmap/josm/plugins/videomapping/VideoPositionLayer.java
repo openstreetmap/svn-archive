@@ -68,39 +68,38 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
         }
         Collections.sort(ls); //sort basing upon time
         return ls;
-		
 	}
 
 	@Override
 	public void paint(Graphics2D g, MapView map, Bounds bound) {
-		paintGpsTrack(g);
-		paintSyncedTrack(g);
-		paintPositionIcon(g);
+		paintGpsTrack(g, map);
+		paintSyncedTrack(g, map);
+		paintPositionIcon(g, map);
 		//paintInterpolatedSegment(g); //just a test for my own
 	}
 
-	private void paintGpsTrack(Graphics2D g) {
+	private void paintGpsTrack(Graphics2D g, MapView map) {
 		g.setColor(Color.YELLOW);
         for(WayPoint n: gpsTrack) {
-            Point p = Main.map.mapView.getPoint(n.getEastNorth());
+            Point p = map.getPoint(n.getEastNorth());
             g.drawOval(p.x - 2, p.y - 2, 4, 4);
         }
 	}
 	
-	private void paintSyncedTrack(Graphics2D g) {
+	private void paintSyncedTrack(Graphics2D g, MapView map) {
 		g.setColor(Color.GREEN);
 		for (WayPoint n : gpsTrack) {
 			if (n.attr.containsKey("synced"))
 			{
-				Point p = Main.map.mapView.getPoint(n.getEastNorth());
+				Point p = map.getPoint(n.getEastNorth());
 	            g.drawOval(p.x - 2, p.y - 2, 4, 4);
 			}				
 		} 
 		
 	}
 
-	private void paintPositionIcon(Graphics2D g) {
-		Point p=Main.map.mapView.getPoint(iconPosition.getEastNorth());
+	private void paintPositionIcon(Graphics2D g, MapView map) {
+		Point p=map.getPoint(iconPosition.getEastNorth());
         layerIcon.paintIcon(null, g, p.x-layerIcon.getIconWidth()/2, p.y-layerIcon.getIconHeight()/2);
         g.drawString(gpsTimeFormat.format(iconPosition.getTime()),p.x-15,p.y-15);
 	}

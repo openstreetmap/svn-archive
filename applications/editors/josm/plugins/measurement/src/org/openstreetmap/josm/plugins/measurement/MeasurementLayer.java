@@ -75,7 +75,7 @@ public class MeasurementLayer extends Layer {
         g.setColor(Color.green);
         Point l = null;
         for(WayPoint p:points){
-            Point pnt = Main.map.mapView.getPoint(p.getCoor());
+            Point pnt = mv.getPoint(p.getCoor());
             if (l != null){
                 g.drawLine(l.x, l.y, pnt.x, pnt.y);
             }

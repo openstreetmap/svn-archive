@@ -167,7 +167,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         speed.setMajorTickSpacing(50);
         speed.setPaintTicks(true);          
         speed.setOrientation(Adjustable.VERTICAL);
-        Hashtable labelTable = new Hashtable ();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put( new Integer( 100 ), new JLabel("1x") );
         labelTable.put( new Integer( 50 ), new JLabel("-2x") );
         labelTable.put( new Integer( 200 ), new JLabel("2x") );

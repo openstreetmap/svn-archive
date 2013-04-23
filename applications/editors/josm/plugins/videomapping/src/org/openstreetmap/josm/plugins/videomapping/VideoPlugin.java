@@ -48,7 +48,7 @@ import uk.co.caprica.vlcj.player.DeinterlaceMode;
 //Here we manage properties and start the other classes
 public class VideoPlugin extends Plugin implements LayerChangeListener{
 	private JMenu VMenu,VDeinterlacer;
-	private JosmAction VAdd,VRemove,VStart,Vbackward,Vforward,VJump,Vfaster,Vslower,Vloop;
+	private JosmAction VAdd,/*VRemove,*/VStart,Vbackward,Vforward,VJump,Vfaster,Vslower,Vloop;
 	private JRadioButtonMenuItem VIntBob,VIntNone,VIntLinear;
     private JCheckBoxMenuItem VCenterIcon,VSubTitles;
     private JMenuItem VJumpLength,VLoopLength;
@@ -84,9 +84,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
                     importVideoFile();
                 }
         };
-        VRemove= new JosmAction(tr("Remove Video"),"videomapping",tr("removes current video from layer"),null,false) {
-            private static final long serialVersionUID = 1L;
-
+        /*VRemove=*/ new JosmAction(tr("Remove Video"),"videomapping",tr("removes current video from layer"),null,false) {
             public void actionPerformed(ActionEvent arg0) {
             }
         };

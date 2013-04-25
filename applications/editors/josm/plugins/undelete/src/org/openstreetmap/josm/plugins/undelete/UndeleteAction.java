@@ -46,20 +46,22 @@ public class UndeleteAction extends JosmAction {
             return;
         Main.pref.put("undelete.newlayer", dialog.isNewLayerSelected());
         Main.pref.put("undelete.osmid", dialog.getOsmIdsString());
-        undelete(dialog.isNewLayerSelected(), dialog.getOsmIds(), 0);
+        undelete(dialog.isNewLayerSelected(), dialog.getOsmIds(), null);
     }
     
     /**
      * // TODO: undelete relation members if necessary
      */
-    public void undelete(boolean newLayer, final List<PrimitiveId> ids, final long parent) {
+    public void undelete(boolean newLayer, final List<PrimitiveId> ids, final OsmPrimitive parent) {
+        
+        Main.info("Undeleting "+ids+(parent==null?"":" with parent "+parent));
+        
         OsmDataLayer tmpLayer = Main.main.getEditLayer();
         if ((tmpLayer == null) || newLayer) {
             tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
             Main.main.addLayer(tmpLayer);
         }
 
-        final DataSet datas = tmpLayer.data;
         final OsmDataLayer layer = tmpLayer;
 
         HistoryLoadTask task = new HistoryLoadTask();
@@ -74,113 +76,112 @@ public class UndeleteAction extends JosmAction {
             public void run() {
                 List<Node> nodes = new ArrayList<Node>();
                 for (PrimitiveId pid : ids) {
+                    OsmPrimitive primitive = layer.data.getPrimitiveById(pid);
+                    if (primitive == null) { 
+                        try {
+                            final Long id = pid.getUniqueId();
+                            final OsmPrimitiveType type = pid.getType();
 
-                    final Long id = pid.getUniqueId();
-                    final OsmPrimitiveType type = pid.getType();
+                            History h = HistoryDataSet.getInstance().getHistory(id, type);
 
-                    History h = HistoryDataSet.getInstance().getHistory(id, type);
-
-                    OsmPrimitive primitive;
-                    HistoryOsmPrimitive hPrimitive1 = h.getLatest();
-                    HistoryOsmPrimitive hPrimitive2;
-
-                    boolean visible = hPrimitive1.isVisible();
-
-                    if (visible) {
-                        // If the object is not deleted we get the real object
-                        DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
-                        System.out.println(tr("Will get {0}", pid));
-                        download.run();
-
-                        System.out.println(tr("Looking for {0}", pid));
-                        primitive = datas.getPrimitiveById(id, type);
-                        System.out.println(tr("Found {0}", String.valueOf(primitive.getId())));
-                        if (parent > 0 && type.equals(OsmPrimitiveType.NODE)) {
-                            nodes.add((Node) primitive);
-                        }
-                    } else {
-                        if (type.equals(OsmPrimitiveType.NODE)) {
-                            // We get version and user from the latest version,
-                            // coordinates and tags from n-1 version
-                            hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-
-                            Node node = new Node(id, (int) hPrimitive1.getVersion());
-
-                            HistoryNode hNode = (HistoryNode) hPrimitive2;
-                            node.setCoor(hNode.getCoords());
-
-                            primitive = node;
-                            if (parent > 0) {
-                                nodes.add(node);
-                            }
-                        } else if (type.equals(OsmPrimitiveType.WAY)) {
-                            // We get version and user from the latest version,
-                            // nodes and tags from n-1 version
-                            hPrimitive1 = h.getLatest();
-                            hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-
-                            Way way = new Way(id, (int) hPrimitive1.getVersion());
-
-                            HistoryWay hWay = (HistoryWay) hPrimitive2;
-                            // System.out.println(tr("Primitive {0} version {1}: {2} nodes",
-                            // hPrimitive2.getId(), hPrimitive2.getVersion(),
-                            // hWay.getNumNodes()));
-                            List<PrimitiveId> nodeIds = new ArrayList<PrimitiveId>();
-                            for (Long i : hWay.getNodes()) {
-                                nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
-                            }
-                            undelete(false, nodeIds, id);
-
-                            primitive = way;
-                        } else {
-                            primitive = new Relation();
-                            hPrimitive1 = h.getLatest();
-                            hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-
-                            Relation rel = new Relation(id,(int) hPrimitive1.getVersion());
-
-                            HistoryRelation hRel = (HistoryRelation) hPrimitive2;
-
-                            List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
-                            for (RelationMemberData m : hRel.getMembers()) {
-                                OsmPrimitive p = datas.getPrimitiveById(m.getMemberId(), m.getMemberType());
-                                if (p == null) {
-                                    switch (m.getMemberType()) {
-                                    case NODE:
-                                        p = new Node(m.getMemberId());
-                                        break;
-                                    case CLOSEDWAY:
-                                    case WAY:
-                                        p = new Way(m.getMemberId());
-                                        break;
-                                    case MULTIPOLYGON:
-                                    case RELATION:
-                                        p = new Relation(m.getMemberId());
-                                        break;
+                            HistoryOsmPrimitive hPrimitive1 = h.getLatest();
+                            HistoryOsmPrimitive hPrimitive2;
+        
+                            boolean visible = hPrimitive1.isVisible();
+        
+                            if (visible) {
+                                // If the object is not deleted we get the real object
+                                DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
+                                download.run();
+        
+                                primitive = layer.data.getPrimitiveById(id, type);
+                            } else {
+                                if (type.equals(OsmPrimitiveType.NODE)) {
+                                    // We get version and user from the latest version,
+                                    // coordinates and tags from n-1 version
+                                    hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
+        
+                                    Node node = new Node(id, (int) hPrimitive1.getVersion());
+        
+                                    HistoryNode hNode = (HistoryNode) hPrimitive2;
+                                    node.setCoor(hNode.getCoords());
+        
+                                    primitive = node;
+                                } else if (type.equals(OsmPrimitiveType.WAY)) {
+                                    // We get version and user from the latest version,
+                                    // nodes and tags from n-1 version
+                                    hPrimitive1 = h.getLatest();
+                                    hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
+        
+                                    Way way = new Way(id, (int) hPrimitive1.getVersion());
+        
+                                    HistoryWay hWay = (HistoryWay) hPrimitive2;
+                                    // System.out.println(tr("Primitive {0} version {1}: {2} nodes",
+                                    // hPrimitive2.getId(), hPrimitive2.getVersion(),
+                                    // hWay.getNumNodes()));
+                                    List<PrimitiveId> nodeIds = new ArrayList<PrimitiveId>();
+                                    for (Long i : hWay.getNodes()) {
+                                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
                                     }
-                                    datas.addPrimitive(p);
+                                    undelete(false, nodeIds, way);
+        
+                                    primitive = way;
+                                } else {
+                                    primitive = new Relation();
+                                    hPrimitive1 = h.getLatest();
+                                    hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
+        
+                                    Relation rel = new Relation(id,(int) hPrimitive1.getVersion());
+        
+                                    HistoryRelation hRel = (HistoryRelation) hPrimitive2;
+        
+                                    List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
+                                    for (RelationMemberData m : hRel.getMembers()) {
+                                        OsmPrimitive p = layer.data.getPrimitiveById(m.getMemberId(), m.getMemberType());
+                                        if (p == null) {
+                                            switch (m.getMemberType()) {
+                                            case NODE:
+                                                p = new Node(m.getMemberId());
+                                                break;
+                                            case CLOSEDWAY:
+                                            case WAY:
+                                                p = new Way(m.getMemberId());
+                                                break;
+                                            case MULTIPOLYGON:
+                                            case RELATION:
+                                                p = new Relation(m.getMemberId());
+                                                break;
+                                            }
+                                            layer.data.addPrimitive(p);
+                                        }
+                                        members.add(new RelationMember(m.getRole(), p));
+                                    }
+        
+                                    rel.setMembers(members);
+        
+                                    primitive = rel;
                                 }
-                                members.add(new RelationMember(m.getRole(), p));
+        
+                                primitive.setUser(hPrimitive1.getUser());
+                                primitive.setKeys(hPrimitive2.getTags());
+                                primitive.put("history", "retrieved using undelete JOSM plugin");
+                                primitive.setModified(true);
+        
+                                layer.data.addPrimitive(primitive);
                             }
 
-                            rel.setMembers(members);
-
-                            primitive = rel;
+                            // HistoryBrowserDialogManager.getInstance().show(h);
+                        } catch (Throwable t) {
+                            t.printStackTrace();
                         }
-
-                        primitive.setUser(hPrimitive1.getUser());
-                        primitive.setKeys(hPrimitive2.getTags());
-                        primitive.put("history", "retrieved using undelete JOSM plugin");
-                        primitive.setModified(true);
-
-                        datas.addPrimitive(primitive);
                     }
-
-                    // HistoryBrowserDialogManager.getInstance().show(h);
+                    if (parent != null && primitive instanceof Node) {
+                        nodes.add((Node) primitive);
+                    }
                 }
-                if (parent > 0 && !ids.isEmpty() && ids.iterator().next().getType().equals(OsmPrimitiveType.NODE)) {
-                    Way parentWay = (Way) datas.getPrimitiveById(parent, OsmPrimitiveType.WAY);
-                    parentWay.setNodes(nodes);
+                if (parent instanceof Way && !nodes.isEmpty()) {
+                    ((Way) parent).setNodes(nodes);
+                    Main.map.repaint();
                 }
             }
         };

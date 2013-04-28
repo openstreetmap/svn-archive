@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** This is a template build file for a JOSM  plugin.
+**
+** Maintaining versions
+** ====================
+** See README.template
+**
+** Usage
+** =====
+** Call "ant help" to get possible build targets.
+**
+-->
+<project name="geochat" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="GeoChat"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="4666"/>
+
+    <property name="plugin.author" value="Ilya Zverev"/>
+    <property name="plugin.class" value="geochat.GeoChatPlugin"/>
+    <property name="plugin.description" value="Talk with users editing the map nearby, be notified when someone comes close."/>
+    <property name="plugin.icon" value="images/geochat.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/GeoChat"/>
+
+    <target name="additional-manifest">
+        <manifest file="MANIFEST" mode="update">
+            <attribute name="ru_Author" value="Илья Зверев"/>
+            <attribute name="ru_Plugin-Description" value="Панель для общения с редактирующими карту поблизости, а также способ узнать, когда кто-то собирается править окрестности."/>
+        </manifest>
+    </target>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

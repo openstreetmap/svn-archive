@@ -31,7 +31,6 @@ class ChatServerConnection {
         listeners = new HashSet<ChatServerConnectionListener>();
         requestThread = new LogRequest();
         new Thread(requestThread).start();
-        checkLogin();
     }
     
     public static ChatServerConnection getInstance() {
@@ -64,14 +63,13 @@ class ChatServerConnection {
      * Test that userId is still active, log out otherwise.
      */
     public void checkLogin() {
-        final int uid = Main.pref.getInteger("geochar.lastuid", 0);
+        final int uid = Main.pref.getInteger("geochat.lastuid", 0);
         if( uid <= 0 ) return;
         String query = "whoami&uid=" + uid;
         JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
             public void processJson( JSONObject json ) {
-                if( json != null && json.has("name") ) {
+                if( json != null && json.has("name") )
                     login(uid, json.getString("name"));
-                }
             }
         });
     }
@@ -242,7 +240,7 @@ class ChatServerConnection {
         private boolean stopping = false;
 
         public void run() {
-            int interval = Main.pref.getInteger("geochat.interval", 3);
+            int interval = Main.pref.getInteger("geochat.interval", 2);
             while( !stopping ) {
                 process();
                 try {
@@ -328,7 +326,7 @@ class ChatServerConnection {
                     long timeStamp = msg.getLong("timestamp");
                     String author = msg.getString("author");
                     String message = msg.getString("message");
-                    ChatMessage cm = new ChatMessage(id, new LatLon(lat, lon), author, message, new Date(timeStamp));
+                    ChatMessage cm = new ChatMessage(id, new LatLon(lat, lon), author, message, new Date(timeStamp * 1000));
                     cm.setPrivate(priv);
                     result.add(cm);
                 } catch( JSONException e ) {

@@ -11,15 +11,17 @@ import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
 
-
 public class OsmServerMultiObjectReader extends OsmServerReader {
-    private MultiOsmReader rdr = new MultiOsmReader();
-    public void ReadObject(PrimitiveId id, int version, ProgressMonitor progressMonitor) throws OsmTransferException {
-        ReadObject(id.getUniqueId(), version, id.getType(), progressMonitor);
+    private final MultiOsmReader rdr = new MultiOsmReader();
+    
+    public void readObject(PrimitiveId id, int version, ProgressMonitor progressMonitor) throws OsmTransferException {
+        readObject(id.getUniqueId(), version, id.getType(), progressMonitor);
     }
-    public void ReadObject(long id,int version,OsmPrimitiveType type,ProgressMonitor progressMonitor) throws OsmTransferException {
+    
+    public void readObject(long id,int version,OsmPrimitiveType type,ProgressMonitor progressMonitor) throws OsmTransferException {
         StringBuffer sb = new StringBuffer();
         sb.append(type.getAPIName());
         sb.append("/");
@@ -29,16 +31,12 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
         progressMonitor.beginTask("", 1);
         InputStream in = getInputStream(sb.toString(), progressMonitor.createSubTaskMonitor(1, true));
         try {
-            rdr.AddData(in);
+            rdr.addData(in);
         } catch (Exception e) {
             throw new OsmTransferException(e);
         } finally {
             progressMonitor.finishTask();
-            if (in!=null) {
-                try {
-                    in.close();
-                } catch(Exception e) {}
-            }
+            Utils.close(in);
         }
     }
     /**
@@ -52,7 +50,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
         progressMonitor.beginTask("", 1);
         progressMonitor.subTask(tr("Preparing history data..."));
         try {
-            rdr.ProcessData();
+            rdr.processData();
             return rdr.getDataSet();
         } catch (Exception e) {
             throw new OsmTransferException(e);

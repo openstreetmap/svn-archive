@@ -17,7 +17,7 @@ import org.openstreetmap.josm.io.UTFInputStreamReader;
  */
 public class MultiOsmReader extends OsmReader {
 
-    public void AddData(InputStream source) throws IllegalDataException {
+    public void addData(InputStream source) throws IllegalDataException {
         try {
             InputStreamReader ir = UTFInputStreamReader.create(source, "UTF-8");
             XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
@@ -29,7 +29,8 @@ public class MultiOsmReader extends OsmReader {
             throw new IllegalDataException(e);
         }
     }
-    public void ProcessData() throws IllegalDataException {
+    
+    public void processData() throws IllegalDataException {
         prepareDataSet();
     }
 }

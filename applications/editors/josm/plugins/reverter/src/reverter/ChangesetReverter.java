@@ -2,6 +2,7 @@ package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -102,7 +103,7 @@ public class ChangesetReverter {
      * @param entry entry to be checked
      * @return <code>true</code> if {@see ChangesetDataSetEntry} conforms to current RevertType
      */
-    private boolean CheckOsmChangeEntry(ChangesetDataSetEntry entry) {
+    private boolean checkOsmChangeEntry(ChangesetDataSetEntry entry) {
         if (revertType == RevertType.FULL) return true;
         if (revertType == RevertType.SELECTION_WITH_UNDELETE &&
                 entry.getModificationType() == ChangesetModificationType.DELETED) {
@@ -151,7 +152,7 @@ public class ChangesetReverter {
         // Build our own lists of created/updated/modified objects for better performance
         for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
-            if (!CheckOsmChangeEntry(entry)) continue;
+            if (!checkOsmChangeEntry(entry)) continue;
             if (entry.getModificationType() == ChangesetModificationType.CREATED) {
                 created.add(entry.getPrimitive());
             } else if (entry.getModificationType() == ChangesetModificationType.UPDATED) {
@@ -172,7 +173,7 @@ public class ChangesetReverter {
     }
 
     /**
-     * fetch objects that was updated or deleted by changeset
+     * fetch objects that were updated or deleted by changeset
      * @param progressMonitor
      * @throws OsmTransferException
      */
@@ -181,15 +182,12 @@ public class ChangesetReverter {
 
         progressMonitor.beginTask("Downloading objects history",updated.size()+deleted.size()+1);
         try {
-            for (HistoryOsmPrimitive entry : updated) {
-                rdr.ReadObject(entry.getPrimitiveId(), cds.getEarliestVersion(entry.getPrimitiveId())-1,
-                        progressMonitor.createSubTaskMonitor(1, true));
-                if (progressMonitor.isCanceled()) return;
-            }
-            for (HistoryOsmPrimitive entry : deleted) {
-                rdr.ReadObject(entry.getPrimitiveId(), cds.getEarliestVersion(entry.getPrimitiveId())-1,
-                        progressMonitor.createSubTaskMonitor(1, true));
-                if (progressMonitor.isCanceled()) return;
+            for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(new HashSet[]{updated, deleted})) {
+                for (HistoryOsmPrimitive entry : collection) {
+                    PrimitiveId id = entry.getPrimitiveId();
+                    rdr.readObject(id, cds.getEarliestVersion(id)-1, progressMonitor.createSubTaskMonitor(1, true));
+                    if (progressMonitor.isCanceled()) return;
+                }
             }
             nds = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true));
             for (OsmPrimitive p : nds.allPrimitives()) {
@@ -321,7 +319,6 @@ public class ChangesetReverter {
             if (p != null) toDelete.add(p);
         }
 
-
         //////////////////////////////////////////////////////////////////////////
         // Check reversion against current dataset and create necessary conflicts
 
@@ -334,7 +331,7 @@ public class ChangesetReverter {
         // Check objects versions
         for (Iterator<ChangesetDataSetEntry> it = cds.iterator();it.hasNext();) {
             ChangesetDataSetEntry entry = it.next();
-            if (!CheckOsmChangeEntry(entry)) continue;
+            if (!checkOsmChangeEntry(entry)) continue;
             HistoryOsmPrimitive hp = entry.getPrimitive();
             OsmPrimitive dp = ds.getPrimitiveById(hp.getPrimitiveId());
             if (dp == null || dp.isIncomplete())
@@ -344,11 +341,10 @@ public class ChangesetReverter {
             if (hp.getVersion() != dp.getVersion()
                     && (hp.isVisible() || dp.isVisible()) &&
                     /* Don't create conflict if changeset object and dataset object
-                     * has same semantic attributes(but different versions)
-                     */
-                    !hasEqualSemanticAttributes(dp,hp)) {
-
-
+                     * has same semantic attributes (but different versions) */
+                    !hasEqualSemanticAttributes(dp,hp)
+                    /* Don't create conflict if the object has to be deleted but has already been deleted */
+                    && !(toDelete.contains(dp) && dp.isDeleted())) {
                 cmds.add(new ConflictAddCommand(layer,CreateConflict(dp,
                         entry.getModificationType() == ChangesetModificationType.CREATED)));
                 conflicted.add(dp);

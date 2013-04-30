@@ -2,6 +2,7 @@ package reverter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.MultiFetchServerObjectReader;
+import org.openstreetmap.josm.io.OsmApiException;
 import org.openstreetmap.josm.io.OsmTransferException;
 
 import reverter.corehacks.ChangesetDataSet;
@@ -185,7 +187,27 @@ public class ChangesetReverter {
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(new HashSet[]{updated, deleted})) {
                 for (HistoryOsmPrimitive entry : collection) {
                     PrimitiveId id = entry.getPrimitiveId();
-                    rdr.readObject(id, cds.getEarliestVersion(id)-1, progressMonitor.createSubTaskMonitor(1, true));
+                    int version = cds.getEarliestVersion(id)-1;
+                    boolean readOK = false;
+                    while (!readOK && version >= 1) {
+                        try {
+                            rdr.readObject(id, version, progressMonitor.createSubTaskMonitor(1, true));
+                            readOK = true;
+                        } catch (OsmApiException e) {
+                            if (e.getResponseCode() != HttpURLConnection.HTTP_FORBIDDEN) {
+                                throw e;
+                            }
+                            String message = "Version "+version+" of "+id+" is unauthorized";
+                            if (version > 1) {
+                                message += ", requesting previous one";
+                            }
+                            Main.info(message);
+                            version--;
+                        }
+                    }
+                    if (!readOK) {
+                        Main.warn("Cannot retrieve any previous version of "+id);
+                    }
                     if (progressMonitor.isCanceled()) return;
                 }
             }

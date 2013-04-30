@@ -130,8 +130,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         double area = 0.0;
         Node lastNode = null;
         for (OsmPrimitive p : newSelection) {
-            // ignore incomplete nodes
-            if (p instanceof Node && !((Node)p).isIncomplete()) {
+            if (p instanceof Node && ((Node) p).getCoor() != null) {
                 Node n =(Node)p;
                 if (lastNode == null) {
                     lastNode = n;

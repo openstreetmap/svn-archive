@@ -117,11 +117,11 @@ public class OsmInspectorDialog extends ToggleDialog implements
 				Arrays.asList(new SideButton[] { nextButton, prevButton }));
 		this.add(scroll);
 
-		Shortcut sprev = Shortcut.registerShortcut("prev", "Prev OSMI bug",
+		Shortcut sprev = Shortcut.registerShortcut("osmi:prev", tr("Prev OSMI bug"),
 				KeyEvent.VK_J, Shortcut.CTRL_SHIFT);
 		Main.registerActionShortcut(actPrev, sprev);
 
-		Shortcut snext = Shortcut.registerShortcut("next", "Next OSMI bug",
+		Shortcut snext = Shortcut.registerShortcut("osmi:next", tr("Next OSMI bug"),
 				KeyEvent.VK_K, Shortcut.CTRL_SHIFT);
 		Main.registerActionShortcut(actNext, snext);
 
@@ -140,8 +140,8 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	public OsmInspectorDialog(OsmInspectorLayer layer) {
 
 		super(tr("Osm Inspector Bugs"), "selectionlist",
-				tr("Open a OSM Inspector selection list window."), Shortcut.registerShortcut("subwindow:selection",
-								tr("Toggle: {0}", tr("Current Selection")),
+				tr("Open a OSM Inspector selection list window."), Shortcut.registerShortcut("subwindow:osminspector",
+								tr("Toggle: {0}", tr("OSM Inspector Bugs")),
 								KeyEvent.VK_W, Shortcut.ALT_SHIFT), 150, // default
 																			// height
 				true // default is "show dialog"
@@ -149,7 +149,7 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		this.layer = layer;
 		buildContentPanel();
 		bugInfoDialog = new OsmInspectorBugInfoDialog(layer);
-		bugInfoDialog.setTitle("Selected Bug Info");
+		bugInfoDialog.setTitle(tr("Selected Bug Info"));
 	}
 
 	public void updateDialog(OsmInspectorLayer l) {

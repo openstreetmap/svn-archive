@@ -16,6 +16,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
 /**
  *
@@ -30,6 +31,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     private JPanel loginPanel;
     private JPanel gcPanel;
     private ChatServerConnection connection;
+    private Map<String, LatLon> users;
     
     public GeoChatPanel() {
         super(tr("GeoChat"), "geochat", tr("Open GeoChat panel"), null, 200, true);
@@ -42,36 +44,26 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         noData = new JLabel(tr("Zoom in to see messages"), SwingConstants.CENTER);
 
         tabs = new JTabbedPane();
-        tabs.addTab(tr("Public"), chatPane);
+        tabs.addTab(tr("Public"), new JScrollPane(chatPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
-        input = new JTextField() {
+        input = new JPanelTextField() {
             @Override
-            protected void processKeyEvent( KeyEvent e ) {
-                if( e.getID() == KeyEvent.KEY_PRESSED ) {
-                    int code = e.getKeyCode();
-                    if( code == KeyEvent.VK_ENTER ) {
-                        String text = input.getText();
-                        if( text.length() > 0 ) {
-                            connection.postMessage(text);
-                            input.setText("");
-                        }
-                    } else if( code == KeyEvent.VK_TAB ) {
-                        // todo: autocomplete name
-                    } else if( code == KeyEvent.VK_ESCAPE ) {
-                        if( Main.map != null && Main.map.mapView != null )
-                            Main.map.mapView.requestFocus();
-                    }
-                    // Do not pass other events to JOSM
-                    if( code != KeyEvent.VK_LEFT && code != KeyEvent.VK_HOME && code != KeyEvent.VK_RIGHT
-                            && code != KeyEvent.VK_END && code != KeyEvent.VK_BACK_SPACE && code != KeyEvent.VK_DELETE )
-                        e.consume();
-                }
-                super.processKeyEvent(e);
+            protected void processEnter( String text ) {
+                connection.postMessage(text);
             }
 
+            @Override
+            protected String autoComplete( String word ) {
+                return word;
+            }
         };
 
-        final JTextField nameField = new JTextField();
+        final JTextField nameField = new JPanelTextField() {
+            @Override
+            protected void processEnter( String text ) {
+                connection.login(text);
+            }
+        };
         String userName = JosmUserIdentityManager.getInstance().getUserName();
         if( userName == null )
             userName = "";
@@ -96,10 +88,40 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         gcPanel.add(loginPanel, BorderLayout.CENTER);
         createLayout(gcPanel, false, null);
 
+        users = new HashMap<String, LatLon>();
         // Start threads
         connection = ChatServerConnection.getInstance();
         connection.addListener(this);
         connection.checkLogin();
+    }
+
+    private void addLineToPublic( String line ) {
+        Document doc = chatPane.getDocument();
+        try {
+            doc.insertString(doc.getLength(), line, null);
+        } catch( BadLocationException ex ) {
+            // whatever
+        }
+    }
+
+    private String cachedTitle = "";
+    private int cachedAlarm = 0;
+
+    public void setTitle( String title ) {
+        setTitle(title, -1);
+    }
+
+    private void setTitleAlarm( int alarmLevel ) {
+        setTitle(null, alarmLevel);
+    }
+
+    private void setTitle( String title, int alarmLevel ) {
+        if( title != null )
+            cachedTitle = title;
+        if( alarmLevel >= 0 )
+            cachedAlarm = alarmLevel;
+        String alarm = cachedAlarm <= 0 ? "" : cachedAlarm == 1 ? "* " : "[!] ";
+        super.setTitle(alarm + cachedTitle);
     }
 
     public void loggedIn( String userName ) {
@@ -123,6 +145,18 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     }
 
     public void updateUsers( Map<String, LatLon> users ) {
+        for( String name : this.users.keySet() ) {
+            if( !users.containsKey(name) )
+                addLineToPublic(tr("User {0} has left", name));
+        }
+        for( String name : users.keySet() ) {
+            if( !this.users.containsKey(name) )
+                addLineToPublic(tr("User {0} is mapping nearby", name));
+        }
+        // todo: update header with user count
+        setTitle(trn("GeoChat ({0} user)", "GeoChat({0} users)", users.size(), users.size()));
+        // todo: update users location
+        this.users = users;
     }
 
     private final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
@@ -136,15 +170,39 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             sb.append('[').append(TIME_FORMAT.format(msg.getTime())).append("] ");
             sb.append(msg.getAuthor()).append(": ").append(msg.getMessage());
         }
-
-        Document doc = chatPane.getDocument();
-        try {
-            doc.insertString(doc.getLength(), sb.toString(), null);
-        } catch( BadLocationException ex ) {
-            // whatever
-        }
+        addLineToPublic(sb.toString());
     }
 
     public void receivedPrivateMessages( boolean replace, List<ChatMessage> messages ) {
+    }
+
+    private class JPanelTextField extends JTextField {
+        @Override
+        protected void processKeyEvent( KeyEvent e ) {
+            if( e.getID() == KeyEvent.KEY_PRESSED ) {
+                int code = e.getKeyCode();
+                if( code == KeyEvent.VK_ENTER ) {
+                    String text = input.getText();
+                    if( text.length() > 0 ) {
+                        processEnter(text);
+                        input.setText("");
+                    }
+                } else if( code == KeyEvent.VK_TAB ) {
+                    autoComplete(""); // todo
+                } else if( code == KeyEvent.VK_ESCAPE ) {
+                    if( Main.map != null && Main.map.mapView != null )
+                        Main.map.mapView.requestFocus();
+                }
+                // Do not pass other events to JOSM
+                if( code != KeyEvent.VK_LEFT && code != KeyEvent.VK_HOME && code != KeyEvent.VK_RIGHT
+                        && code != KeyEvent.VK_END && code != KeyEvent.VK_BACK_SPACE && code != KeyEvent.VK_DELETE )
+                    e.consume();
+            }
+            super.processKeyEvent(e);
+        }
+
+        protected void processEnter( String text ) { }
+
+        protected String autoComplete( String word ) { return word; }
     }
 }

@@ -84,6 +84,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
         rev.downloadObjectsHistory(progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
         if (progressMonitor.isCanceled()) return;
         if (!checkAndDownloadMissing()) return;
+        rev.fixNodesWithoutCoordinates(progressMonitor);
         List<Command> cmds = rev.getCommands();
         final Command cmd = new RevertChangesetCommand(tr(revertType == RevertType.FULL ? "Revert changeset #{0}" :
                 "Partially revert changeset #{0}",changesetId),cmds);

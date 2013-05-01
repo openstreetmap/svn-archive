@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.net.HttpURLConnection;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -173,6 +174,29 @@ public class ChangesetReverter {
     public void checkMissingDeleted() {
         addMissingHistoryIds(deleted);
     }
+    
+    private void readObjectVersion(OsmServerMultiObjectReader rdr, PrimitiveId id, int version, ProgressMonitor progressMonitor) throws OsmTransferException {
+        boolean readOK = false;
+        while (!readOK && version >= 1) {
+            try {
+                rdr.readObject(id, version, progressMonitor.createSubTaskMonitor(1, true));
+                readOK = true;
+            } catch (OsmApiException e) {
+                if (e.getResponseCode() != HttpURLConnection.HTTP_FORBIDDEN) {
+                    throw e;
+                }
+                String message = "Version "+version+" of "+id+" is unauthorized";
+                if (version > 1) {
+                    message += ", requesting previous one";
+                }
+                Main.info(message);
+                version--;
+            }
+        }
+        if (!readOK) {
+            Main.warn("Cannot retrieve any previous version of "+id);
+        }
+    }
 
     /**
      * fetch objects that were updated or deleted by changeset
@@ -187,27 +211,7 @@ public class ChangesetReverter {
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(new HashSet[]{updated, deleted})) {
                 for (HistoryOsmPrimitive entry : collection) {
                     PrimitiveId id = entry.getPrimitiveId();
-                    int version = cds.getEarliestVersion(id)-1;
-                    boolean readOK = false;
-                    while (!readOK && version >= 1) {
-                        try {
-                            rdr.readObject(id, version, progressMonitor.createSubTaskMonitor(1, true));
-                            readOK = true;
-                        } catch (OsmApiException e) {
-                            if (e.getResponseCode() != HttpURLConnection.HTTP_FORBIDDEN) {
-                                throw e;
-                            }
-                            String message = "Version "+version+" of "+id+" is unauthorized";
-                            if (version > 1) {
-                                message += ", requesting previous one";
-                            }
-                            Main.info(message);
-                            version--;
-                        }
-                    }
-                    if (!readOK) {
-                        Main.warn("Cannot retrieve any previous version of "+id);
-                    }
+                    readObjectVersion(rdr, id, cds.getEarliestVersion(id)-1, progressMonitor);
                     if (progressMonitor.isCanceled()) return;
                 }
             }
@@ -410,5 +414,22 @@ public class ChangesetReverter {
     
     public boolean hasMissingObjects() {
         return !missing.isEmpty();
+    }
+    
+    public void fixNodesWithoutCoordinates(ProgressMonitor progressMonitor) throws OsmTransferException {
+        for (Node n : nds.getNodes()) {
+            if (!n.isDeleted() && n.getCoor() == null) {
+                PrimitiveId id = n.getPrimitiveId();
+                OsmPrimitive p = ds.getPrimitiveById(id);
+                if (p instanceof Node && p.getVersion() > 1) {
+                    final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
+                    readObjectVersion(rdr, id, p.getVersion()-1, progressMonitor);
+                    Collection<OsmPrimitive> result = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true)).allPrimitives();
+                    if (!result.isEmpty()) {
+                        n.setCoor(((Node)result.iterator().next()).getCoor());
+                    }
+                }
+            }
+        }
     }
 }

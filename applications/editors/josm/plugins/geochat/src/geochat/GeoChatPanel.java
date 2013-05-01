@@ -154,7 +154,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                 addLineToPublic(tr("User {0} is mapping nearby", name));
         }
         // todo: update header with user count
-        setTitle(trn("GeoChat ({0} user)", "GeoChat({0} users)", users.size(), users.size()));
+        setTitle(trn("GeoChat ({0} user)", "GeoChat ({0} users)", users.size(), users.size()));
         // todo: update users location
         this.users = users;
     }

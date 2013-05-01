@@ -162,7 +162,10 @@ public class UndeleteAction extends JosmAction {
                                     primitive = rel;
                                 }
         
+                                primitive.setChangesetId((int) hPrimitive1.getChangesetId());
+                                primitive.setTimestamp(hPrimitive1.getTimestamp());
                                 primitive.setUser(hPrimitive1.getUser());
+                                primitive.setVisible(hPrimitive1.isVisible());
                                 primitive.setKeys(hPrimitive2.getTags());
                                 primitive.put("history", "retrieved using undelete JOSM plugin");
                                 primitive.setModified(true);

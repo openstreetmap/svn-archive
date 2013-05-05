@@ -12,6 +12,7 @@ public class ChatMessage implements Comparable {
     private LatLon pos;
     private Date time;
     private String author;
+    private String recipient;
     private String message;
     private long id;
     private boolean priv;
@@ -23,6 +24,11 @@ public class ChatMessage implements Comparable {
         this.pos = pos;
         this.time = time;
         this.priv = false;
+        this.recipient = null;
+    }
+
+    public void setRecipient( String recipient ) {
+        this.recipient = recipient;
     }
 
     public void setPrivate( boolean priv ) {
@@ -31,6 +37,13 @@ public class ChatMessage implements Comparable {
     
     public String getAuthor() {
         return author;
+    }
+
+    /**
+     * Is only set when the message is not incoming, that is, author is the current user.
+     */
+    public String getRecipient() {
+        return recipient;
     }
 
     public long getId() {

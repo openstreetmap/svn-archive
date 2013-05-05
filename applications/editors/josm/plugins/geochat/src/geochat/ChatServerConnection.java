@@ -3,6 +3,7 @@ package geochat;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
+import javax.swing.SwingUtilities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,6 +113,14 @@ class ChatServerConnection {
             listener.loggedIn(userName);
     }
 
+    private void logoutIntl() {
+        ChatServerConnection.this.userId = 0;
+        ChatServerConnection.this.userName = null;
+        Main.pref.put("geochat.lastuid", null);
+        for( ChatServerConnectionListener listener : listeners )
+            listener.notLoggedIn(null);
+    }
+
     private void fireLoginFailed( String reason ) {
         for( ChatServerConnectionListener listener : listeners )
             listener.notLoggedIn(reason);
@@ -127,9 +136,7 @@ class ChatServerConnection {
         JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
             public void processJson( JSONObject json ) {
                 if( json != null && json.has("message") ) {
-                    ChatServerConnection.this.userId = 0;
-                    ChatServerConnection.this.userName = null;
-                    Main.pref.put("geochat.lastuid", null);
+                    logoutIntl();
                 }
             }
         });
@@ -278,17 +285,20 @@ class ChatServerConnection {
                 needReset = false;
             lastUserId = userId;
             lastPosition = pos;
-
+            
             String query = "get&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&uid=" + userId + "&last=" + lastId;
             JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
                 public void processJson( JSONObject json ) {
-                    if( json == null )
-                        fireLoginFailed(tr("Could not get server response, check logs"));
-                    else if( json.has("error") )
-                        fireLoginFailed(tr("Failed to login as {0}:", userName) + "\n" + json.getString("error"));
-                    else {
+                    if( json == null ) {
+                        // do nothing?
+//                        fireLoginFailed(tr("Could not get server response, check logs"));
+//                        logoutIntl(); // todo: uncomment?
+                    } else if( json.has("error") ) {
+                        fireLoginFailed(tr("Failed to get messages as {0}:", userName) + "\n" + json.getString("error"));
+                        logoutIntl();
+                    } else {
                         if( json.has("users") ) {
                             Map<String, LatLon> users = parseUsers(json.getJSONArray("users"));
                             for( ChatServerConnectionListener listener : listeners )
@@ -328,6 +338,8 @@ class ChatServerConnection {
                     String message = msg.getString("message");
                     ChatMessage cm = new ChatMessage(id, new LatLon(lat, lon), author, message, new Date(timeStamp * 1000));
                     cm.setPrivate(priv);
+                    if( msg.has("recipient") && !msg.getBoolean("incoming") )
+                        cm.setRecipient(msg.getString("recipient"));
                     result.add(cm);
                 } catch( JSONException e ) {
                     // do nothing, just skip this message

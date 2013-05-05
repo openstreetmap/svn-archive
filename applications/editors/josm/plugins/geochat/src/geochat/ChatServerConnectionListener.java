@@ -17,7 +17,7 @@ public interface ChatServerConnectionListener {
     
     /**
      * User tried to log in, but failed.
-     * @param reason Why.
+     * @param reason Why. <tt>null</tt> if it is intended logout.
      */
     void notLoggedIn( String reason );
 
@@ -49,6 +49,7 @@ public interface ChatServerConnectionListener {
     /**
      * New private messages were received. See {@link #receivedMessages(boolean, java.util.List)}.
      * Note that the array of messages can be reset, for example, when user has changed.
+     * Also, private messages go both way: check the recipient field.
      * @param replace if set, remove all old messages.
      * @param messages list of new private messages.
      */

@@ -40,6 +40,12 @@ final class DataSetCommandMerger {
         this.targetDataSet = targetDataSet;
         merge();
     }
+    
+    private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget) {
+        if (!target.hasEqualSemanticAttributes(newTarget)) {
+            cmds.add(new ChangeCommand(target,newTarget));
+        }
+    }
 
     private OsmPrimitive getMergeTarget(OsmPrimitive mergeSource) {
         OsmPrimitive p = targetDataSet.getPrimitiveById(mergeSource.getId(), mergeSource.getType());
@@ -68,7 +74,7 @@ final class DataSetCommandMerger {
 
         Node newTarget = new Node(target);
         mergePrimitive(source, target, newTarget);
-        cmds.add(new ChangeCommand(target,newTarget));
+        addChangeCommandIfNotEquals(target,newTarget);
     }
 
     /**
@@ -92,14 +98,14 @@ final class DataSetCommandMerger {
                 conflicts.add(new Conflict<OsmPrimitive>(targetNode, sourceNode, true));
                 Node undeletedTargetNode = new Node(targetNode);
                 undeletedTargetNode.setDeleted(false);
-                cmds.add(new ChangeCommand(targetNode,undeletedTargetNode));
+                addChangeCommandIfNotEquals(targetNode,undeletedTargetNode);
             }
             newNodes.add(targetNode);
         }
         Way newTarget = new Way(target);
         mergePrimitive(source, target, newTarget);
         newTarget.setNodes(newNodes);
-        cmds.add(new ChangeCommand(target,newTarget));
+        addChangeCommandIfNotEquals(target,newTarget);
     }
 
     /**
@@ -127,15 +133,16 @@ final class DataSetCommandMerger {
                 default: throw new AssertionError();
                 }
                 undeletedTargetMember.setDeleted(false);
-                cmds.add(new ChangeCommand(targetMember,undeletedTargetMember));
+                addChangeCommandIfNotEquals(targetMember,undeletedTargetMember);
             }
             newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
         }
         Relation newRelation = new Relation(target);
         mergePrimitive(source, target, newRelation);
         newRelation.setMembers(newMembers);
-        cmds.add(new ChangeCommand(target,newRelation));
+        addChangeCommandIfNotEquals(target,newRelation);
     }
+    
     private void merge() {
         for (Node node: sourceDataSet.getNodes()) {
             mergeNode(node);

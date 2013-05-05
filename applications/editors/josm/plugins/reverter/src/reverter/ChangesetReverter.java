@@ -422,11 +422,17 @@ public class ChangesetReverter {
                 PrimitiveId id = n.getPrimitiveId();
                 OsmPrimitive p = ds.getPrimitiveById(id);
                 if (p instanceof Node && p.getVersion() > 1) {
-                    final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
-                    readObjectVersion(rdr, id, p.getVersion()-1, progressMonitor);
-                    Collection<OsmPrimitive> result = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true)).allPrimitives();
-                    if (!result.isEmpty()) {
-                        n.setCoor(((Node)result.iterator().next()).getCoor());
+                    LatLon coor = ((Node)p).getCoor();
+                    if (coor == null) {
+                        final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
+                        readObjectVersion(rdr, id, p.getVersion()-1, progressMonitor);
+                        Collection<OsmPrimitive> result = rdr.parseOsm(progressMonitor.createSubTaskMonitor(1, true)).allPrimitives();
+                        if (!result.isEmpty()) {
+                            coor = ((Node)result.iterator().next()).getCoor();
+                        }
+                    }
+                    if (coor != null) {
+                        n.setCoor(coor);
                     }
                 }
             }

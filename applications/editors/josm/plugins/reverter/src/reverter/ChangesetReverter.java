@@ -281,13 +281,20 @@ public class ChangesetReverter {
         }
     }
 
-    private static boolean hasEqualSemanticAttributes(OsmPrimitive current,HistoryOsmPrimitive history) {
+    private boolean hasEqualSemanticAttributes(OsmPrimitive current,HistoryOsmPrimitive history) {
         if (!current.getKeys().equals(history.getTags())) return false;
         switch (current.getType()) {
         case NODE:
             LatLon currentCoor = ((Node)current).getCoor();
             LatLon historyCoor = ((HistoryNode)history).getCoords();
-            return currentCoor == historyCoor || (currentCoor != null && historyCoor != null && currentCoor.equals(historyCoor));
+            if (currentCoor == historyCoor || (currentCoor != null && historyCoor != null && currentCoor.equals(historyCoor)))
+                return true;
+            // Handle case where a deleted note has been restored to avoid false conflicts (fix #josm8660)
+            if (currentCoor != null && historyCoor == null) {
+                LatLon previousCoor = ((Node)nds.getPrimitiveById(history.getPrimitiveId())).getCoor();
+                return previousCoor != null && previousCoor.equals(currentCoor);
+            }
+            return false; 
         case CLOSEDWAY:
         case WAY:
             List<Node> currentNodes = ((Way)current).getNodes();

@@ -47,16 +47,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         tabs = new JTabbedPane();
         createChatPane(null);
 
-        tabs.addMouseListener(new MouseAdapter() {
-            @Override public void mousePressed( MouseEvent e ) { check(e); }
-            @Override public void mouseReleased( MouseEvent e ) { check(e); }
-
-            private void check( MouseEvent e ) {
-                if( e.isPopupTrigger() ) {
-                    createPopupMenu().show(tabs, e.getX(), e.getY());
-                }
-            }
-        });
+        tabs.addMouseListener(new PopupAdapter());
 
         input = new JPanelTextField() {
             @Override
@@ -91,9 +82,6 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         });
         nameField.setPreferredSize(new Dimension(nameField.getPreferredSize().width, loginButton.getPreferredSize().height));
 
-//        loginPanel = new JPanel(new BorderLayout());
-//        loginPanel.add(nameField, BorderLayout.CENTER);
-//        loginPanel.add(loginButton, BorderLayout.EAST);
         loginPanel = new JPanel(new GridBagLayout());
         loginPanel.add(nameField, GBC.std().fill(GridBagConstraints.HORIZONTAL).insets(15, 0, 5, 0));
         loginPanel.add(loginButton, GBC.std().fill(GridBagConstraints.NONE).insets(0, 0, 15, 0));
@@ -107,24 +95,6 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         connection = ChatServerConnection.getInstance();
         connection.addListener(this);
         connection.checkLogin();
-    }
-    
-    private JPopupMenu createPopupMenu() {
-        JMenu userMenu = new JMenu(tr("Private chat"));
-        for( String user : users.keySet() ) {
-            if( !chatPanes.containsKey(user) )
-                userMenu.add(new PrivateChatAction(user));
-        }
-
-        JPopupMenu menu = new JPopupMenu();
-        menu.add(new JCheckBoxMenuItem(new ToggleUserLayerAction()));
-        if( userMenu.getComponentCount() > 0 )
-            menu.add(userMenu);
-        if( getRecipient() != null )
-            menu.add(new CloseTabAction());
-        menu.add(new ClearPaneAction());
-        menu.add(new LogoutAction());
-        return menu;
     }
 
     private void addLineToChatPane( String userName, String line ) {
@@ -164,6 +134,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         DefaultCaret caret = (DefaultCaret)chatPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         JScrollPane scrollPane = new JScrollPane(chatPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        chatPane.addMouseListener(new PopupAdapter());
 
         ChatLogEntry entry = new ChatLogEntry();
         entry.pane = chatPane;
@@ -242,7 +213,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         if( zoom < 14 )
             radius /= 2;
 
-        Font font = g2d.getFont().deriveFont(Math.min(zoom * 2, 8));
+        Font font = g2d.getFont().deriveFont(Font.BOLD, Math.max(zoom * 2, 8));
         g2d.setFont(font);
         FontMetrics fm = g2d.getFontMetrics();
 
@@ -256,6 +227,8 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             g2d.drawString(user, p.x - Math.round(rect.getWidth() / 2), p.y);
         }
     }
+
+    /* ============ ChatServerConnectionListener methods ============= */
 
     public void loggedIn( String userName ) {
         if( gcPanel.getComponentCount() == 1 ) {
@@ -350,6 +323,8 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         }
     }
 
+    /* =================== Service classes ==================== */
+
     private class JPanelTextField extends JTextField {
         @Override
         protected void processKeyEvent( KeyEvent e ) {
@@ -388,6 +363,38 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         public boolean notify;
     }
 
+    /* ================= Actions for popup menu ==================== */
+
+
+    private JPopupMenu createPopupMenu() {
+        JMenu userMenu = new JMenu(tr("Private chat"));
+        for( String user : users.keySet() ) {
+            if( !chatPanes.containsKey(user) )
+                userMenu.add(new PrivateChatAction(user));
+        }
+
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(new JCheckBoxMenuItem(new ToggleUserLayerAction()));
+        if( userMenu.getItemCount() > 0 )
+            menu.add(userMenu);
+        if( getRecipient() != null )
+            menu.add(new CloseTabAction());
+//        menu.add(new ClearPaneAction());
+//        menu.add(new LogoutAction());
+        return menu;
+    }
+
+    private class PopupAdapter extends MouseAdapter {
+        @Override public void mousePressed( MouseEvent e ) { check(e); }
+        @Override public void mouseReleased( MouseEvent e ) { check(e); }
+
+        private void check( MouseEvent e ) {
+            if( e.isPopupTrigger() ) {
+                createPopupMenu().show(tabs, e.getX(), e.getY());
+            }
+        }
+    }
+
     private class PrivateChatAction extends AbstractAction {
         private String userName;
 
@@ -406,7 +413,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     private class CloseTabAction extends AbstractAction {
         public CloseTabAction() {
             super(tr("Close tab"));
-            putValue(SMALL_ICON, ImageProvider.get("help"));
+//            putValue(SMALL_ICON, ImageProvider.get("help"));
         }
 
         public void actionPerformed( ActionEvent e ) {
@@ -419,7 +426,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     private class LogoutAction extends AbstractAction {
         public LogoutAction() {
             super(tr("Logout"));
-            putValue(SMALL_ICON, ImageProvider.get("help"));
+//            putValue(SMALL_ICON, ImageProvider.get("help"));
         }
 
         public void actionPerformed( ActionEvent e ) {
@@ -430,7 +437,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     private class ClearPaneAction extends AbstractAction {
         public ClearPaneAction() {
             super(tr("Clear log"));
-            putValue(SMALL_ICON, ImageProvider.get("help"));
+//            putValue(SMALL_ICON, ImageProvider.get("help"));
         }
 
         public void actionPerformed( ActionEvent e ) {
@@ -441,7 +448,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     private class ToggleUserLayerAction extends AbstractAction {
         public ToggleUserLayerAction() {
             super(tr("Show users on map"));
-            putValue(SMALL_ICON, ImageProvider.get("help"));
+//            putValue(SMALL_ICON, ImageProvider.get("help"));
         }
 
         public void actionPerformed( ActionEvent e ) {

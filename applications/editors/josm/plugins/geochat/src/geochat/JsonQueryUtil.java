@@ -28,7 +28,7 @@ public class JsonQueryUtil implements Runnable {
         try {
             String serverURL = Main.pref.get("geochat.server", "http://zverik.dev.openstreetmap.org/osmochat.php?action=");
             URL url = new URL(serverURL + query);
-            System.out.println("GeoChat URL = " + url.toString());
+//            System.out.println("GeoChat URL = " + url.toString());
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.connect();
             if( connection.getResponseCode() != 200 ) {

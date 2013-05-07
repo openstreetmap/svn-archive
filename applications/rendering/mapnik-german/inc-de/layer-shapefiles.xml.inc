@@ -38,7 +38,7 @@
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">&world_boundaries;/shoreline_300</Parameter>
+      <Parameter name="file">&world_boundaries;/simplified_land_polygons</Parameter>
     </Datasource>
 </Layer>
 <Layer name="land_polygons" status="on" srs="&srs900913;">

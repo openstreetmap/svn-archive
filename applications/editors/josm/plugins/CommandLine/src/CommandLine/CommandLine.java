@@ -583,7 +583,7 @@ public class CommandLine extends Plugin {
 
         synchronized (syncObj) {
             try {
-                syncObj.wait(10000);
+                syncObj.wait(Main.pref.getInteger("commandline.timeout", 20000));
             } catch (InterruptedException e) {
             }
         }

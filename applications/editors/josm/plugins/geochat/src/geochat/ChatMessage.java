@@ -16,13 +16,15 @@ public class ChatMessage implements Comparable {
     private String message;
     private long id;
     private boolean priv;
+    private boolean incoming;
 
-    public ChatMessage( long id, LatLon pos, String author, String message, Date time ) {
+    public ChatMessage( long id, LatLon pos, String author, boolean incoming, String message, Date time ) {
         this.id = id;
         this.author = author;
         this.message = message;
         this.pos = pos;
         this.time = time;
+        this.incoming = incoming;
         this.priv = false;
         this.recipient = null;
     }
@@ -60,6 +62,10 @@ public class ChatMessage implements Comparable {
     
     public boolean isPrivate() {
         return priv;
+    }
+
+    public boolean isIncoming() {
+        return incoming;
     }
 
     public Date getTime() {

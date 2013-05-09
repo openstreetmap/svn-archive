@@ -336,9 +336,11 @@ class ChatServerConnection {
                     long timeStamp = msg.getLong("timestamp");
                     String author = msg.getString("author");
                     String message = msg.getString("message");
-                    ChatMessage cm = new ChatMessage(id, new LatLon(lat, lon), author, message, new Date(timeStamp * 1000));
+                    boolean incoming = msg.getBoolean("incoming");
+                    ChatMessage cm = new ChatMessage(id, new LatLon(lat, lon), author,
+                            incoming, message, new Date(timeStamp * 1000));
                     cm.setPrivate(priv);
-                    if( msg.has("recipient") && !msg.getBoolean("incoming") )
+                    if( msg.has("recipient") && !incoming )
                         cm.setRecipient(msg.getString("recipient"));
                     result.add(cm);
                 } catch( JSONException e ) {

@@ -1,9 +1,9 @@
 package geochat;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
-import javax.swing.SwingUtilities;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -142,6 +142,15 @@ class ChatServerConnection {
         });
     }
 
+    /**
+     * Unregister the current user and do not call listeners.
+     * Makes synchronous request to the server.
+     */
+    public void bruteLogout() throws IOException {
+        if( isLoggedIn() )
+            JsonQueryUtil.query("logout&uid=" + userId);
+    }
+
     private void fireMessageFailed( String reason ) {
         for( ChatServerConnectionListener listener : listeners )
             listener.messageSendFailed(reason);
@@ -247,6 +256,7 @@ class ChatServerConnection {
         private boolean stopping = false;
 
         public void run() {
+//            lastId = Main.pref.getLong("geochat.lastid", 0);
             int interval = Main.pref.getInteger("geochat.interval", 2);
             while( !stopping ) {
                 process();
@@ -280,6 +290,7 @@ class ChatServerConnection {
             if( needFullReset || (lastPosition != null && pos.greatCircleDistance(lastPosition) > MAX_JUMP) ) {
                 // reset messages
                 lastId = 0;
+//                Main.pref.put("geochat.lastid", null);
                 needReset = true;
             } else
                 needReset = false;
@@ -321,6 +332,8 @@ class ChatServerConnection {
                                 listener.receivedPrivateMessages(needFullReset, messages);
                         }
                     }
+//                    if( lastId > 0 && Main.pref.getBoolean("geochat.store.lastid", true) )
+//                        Main.pref.putLong("geochat.lastid", lastId);
                 }
             });
         }

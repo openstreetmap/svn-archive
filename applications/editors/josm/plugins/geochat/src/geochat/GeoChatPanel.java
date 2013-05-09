@@ -51,8 +51,8 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             }
 
             @Override
-            protected String autoComplete( String word ) {
-                return autoCompleteUser(word);
+            protected String autoComplete( String word, boolean atStart ) {
+                return autoCompleteUser(word, atStart);
             }
         };
 
@@ -102,13 +102,28 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         connection.logout();
     }
 
-    private String autoCompleteUser( String word ) {
+    @Override
+    public void destroy() {
+        try {
+            if( Main.pref.getBoolean("geochat.logout.on.close", true) ) {
+                connection.removeListener(this);
+                connection.bruteLogout();
+            }
+        } catch( Throwable e ) {
+            Main.warn("Failed to logout from geochat server: " + e.getMessage());
+        }
+        super.destroy();
+    }
+
+    private String autoCompleteUser( String word, boolean atStart ) {
         String result = null;
+        boolean singleUser = true;
         for( String user : users.keySet() ) {
             if( user.startsWith(word) ) {
                 if( result == null )
                     result = user;
                 else {
+                    singleUser = false;
                     int i = word.length();
                     while( i < result.length() && i < user.length() && result.charAt(i) == user.charAt(i) )
                         i++;
@@ -117,7 +132,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                 }
             }
         }
-        return result;
+        return result == null ? null : !singleUser ? result : atStart ? result + ": " : result + " ";
     }
 
     /**
@@ -158,10 +173,10 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         int alarmLevel = chatPanes.getNotifyLevel();
         if( !isDialogInCollapsedView() && alarmLevel > 1 )
             alarmLevel = 1;
-        String name = users.isEmpty() ? tr("GeoChat") :
+        String title = users.isEmpty() ? tr("GeoChat") :
                 trn("GeoChat ({0} user)", "GeoChat ({0} users)", users.size(), users.size());
         String alarm = alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ";
-        setTitle(alarm + name);
+        setTitle(alarm + title);
     }
 
     /**
@@ -217,11 +232,11 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     public void updateUsers( Map<String, LatLon> newUsers ) {
         for( String uname : this.users.keySet() ) {
             if( !newUsers.containsKey(uname) )
-                chatPanes.addLineToPublic(tr("User {0} has left", uname));
+                chatPanes.addLineToPublic(tr("User {0} has left", uname), ChatPaneManager.MESSAGE_TYPE_INFORMATION);
         }
         for( String uname : newUsers.keySet() ) {
             if( !this.users.containsKey(uname) )
-                chatPanes.addLineToPublic(tr("User {0} is mapping nearby", uname));
+                chatPanes.addLineToPublic(tr("User {0} is mapping nearby", uname), ChatPaneManager.MESSAGE_TYPE_INFORMATION);
         }
         this.users = newUsers;
         updateTitleAlarm();
@@ -253,7 +268,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                     chatPanes.addLineToPublic(sb.toString());
                     sb.setLength(0);
                     formatMessage(sb, msg);
-                    chatPanes.addLineToPublicEm(sb.toString());
+                    chatPanes.addLineToPublic(sb.toString(), ChatPaneManager.MESSAGE_TYPE_ATTENTION);
                     sb.setLength(0);
                 } else
                     formatMessage(sb, msg);
@@ -261,6 +276,20 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             chatPanes.addLineToPublic(sb.toString());
             if( alarm > 0 )
                 chatPanes.notify(null, alarm);
+        }
+        if( replace )
+            showNearbyUsers();
+    }
+
+    private void showNearbyUsers() {
+        if( !users.isEmpty() ) {
+            StringBuilder sb = new StringBuilder(tr("Users mapping nearby:"));
+            boolean first = true;
+            for( String user : users.keySet() ) {
+                sb.append(first ? " " : ", ");
+                sb.append(user);
+            }
+            chatPanes.addLineToPublic(sb.toString(), ChatPaneManager.MESSAGE_TYPE_INFORMATION);
         }
     }
 

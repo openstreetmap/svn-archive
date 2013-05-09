@@ -42,13 +42,15 @@ class GeoChatPopupAdapter extends MouseAdapter {
         }
 
         JPopupMenu menu = new JPopupMenu();
+        if( panel.chatPanes.hasSelectedText() )
+            menu.add(new CopyTextAction());
         menu.add(new JCheckBoxMenuItem(new ToggleUserLayerAction()));
         if( userMenu.getItemCount() > 0 )
             menu.add(userMenu);
         if( panel.chatPanes.getRecipient() != null )
             menu.add(new CloseTabAction());
 //        menu.add(new ClearPaneAction());
-//        menu.add(new LogoutAction());
+        menu.add(new LogoutAction());
         return menu;
     }
 
@@ -115,6 +117,17 @@ class GeoChatPopupAdapter extends MouseAdapter {
                 Main.map.mapView.removeTemporaryLayer(panel);
             putValue(SELECTED_KEY, Boolean.valueOf(panel.userLayerActive));
             Main.map.mapView.repaint();
+        }
+    }
+
+    private class CopyTextAction extends AbstractAction {
+        public CopyTextAction() {
+            super(tr("Copy"));
+//            putValue(SMALL_ICON, ImageProvider.get("help"));
+        }
+
+        public void actionPerformed( ActionEvent e ) {
+            panel.chatPanes.copySelectedText();
         }
     }
 }

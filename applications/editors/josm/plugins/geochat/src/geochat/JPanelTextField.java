@@ -36,10 +36,9 @@ public class JPanelTextField extends JTextField {
                 while( start >= 0 && Character.isJavaIdentifierPart(text.charAt(start)) )
                     start--;
                 start++;
-                System.out.println("Autocomplete! Word " + start + "-" + caret + " (not inclusive)");
                 if( start < caret ) {
                     String word = text.substring(start, caret);
-                    String complete = word == null ? null : autoComplete(word);
+                    String complete = word == null ? null : autoComplete(word, start == 0);
                     if( complete != null && !complete.equals(word) ) {
                         StringBuilder sb = new StringBuilder();
                         if( start > 0 )
@@ -74,7 +73,7 @@ public class JPanelTextField extends JTextField {
      * @param word Partly typed word.
      * @return The whole word.
      */
-    protected String autoComplete( String word ) {
+    protected String autoComplete( String word, boolean atStart ) {
         return word;
     }
 }

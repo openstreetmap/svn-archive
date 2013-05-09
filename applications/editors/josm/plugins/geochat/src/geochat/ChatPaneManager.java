@@ -1,5 +1,6 @@
 package geochat;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.*;
@@ -71,7 +72,12 @@ class ChatPaneManager {
             ((ChatTabTitleComponent)tabs.getTabComponentAt(idx)).updateAlarm();
     }
 
-    private void addLineToChatPane( String userName, String line, boolean italic ) {
+    public static int MESSAGE_TYPE_DEFAULT = 0;
+    public static int MESSAGE_TYPE_INFORMATION = 1;
+    public static int MESSAGE_TYPE_ATTENTION = 2;
+    private static Color COLOR_ATTENTION = new Color(0, 0, 192);
+
+    private void addLineToChatPane( String userName, String line, int messageType ) {
         if( line.length() == 0 )
             return;
         if( !chatPanes.containsKey(userName) )
@@ -81,9 +87,12 @@ class ChatPaneManager {
         Document doc = chatPanes.get(userName).pane.getDocument();
         try {
             SimpleAttributeSet attrs = null;
-            if( italic ) {
+            if( messageType != MESSAGE_TYPE_DEFAULT ) {
                 attrs = new SimpleAttributeSet();
-                StyleConstants.setItalic(attrs, true);
+                if( messageType == MESSAGE_TYPE_INFORMATION )
+                    StyleConstants.setItalic(attrs, true);
+                else if( messageType == MESSAGE_TYPE_ATTENTION )
+                    StyleConstants.setForeground(attrs, COLOR_ATTENTION);
             }
             doc.insertString(doc.getLength(), line, attrs);
         } catch( BadLocationException ex ) {
@@ -93,28 +102,19 @@ class ChatPaneManager {
     }
 
     public void addLineToChatPane( String userName, String line ) {
-        addLineToChatPane(userName, line, false);
+        addLineToChatPane(userName, line, MESSAGE_TYPE_DEFAULT);
     }
 
     public void addLineToPublic( String line ) {
         addLineToChatPane(PUBLIC_PANE, line);
     }
 
-    public void clearPublicChatPane() {
-        chatPanes.get(PUBLIC_PANE).pane.setText("");
-        showNearbyUsers();
+    public void addLineToPublic( String line, int messageType ) {
+        addLineToChatPane(PUBLIC_PANE, line, messageType);
     }
 
-    private void showNearbyUsers() {
-        if( !panel.users.isEmpty() ) {
-            StringBuilder sb = new StringBuilder(tr("Users mapping nearby:"));
-            boolean first = true;
-            for( String user : panel.users.keySet() ) {
-                sb.append(first ? " " : ", ");
-                sb.append(user);
-            }
-            addLineToPublic(sb.toString());
-        }
+    public void clearPublicChatPane() {
+        chatPanes.get(PUBLIC_PANE).pane.setText("");
     }
 
     public void clearChatPane( String userName) {
@@ -189,6 +189,21 @@ class ChatPaneManager {
         for( String user : entries )
             if( !user.equals(PUBLIC_PANE) )
                 closeChatPane(user);
+    }
+    
+    public boolean hasSelectedText() {
+        String user = getActiveChatPane();
+        if( user != null ) {
+            JTextPane pane = chatPanes.get(user).pane;
+            return pane.getSelectedText() != null;
+        }
+        return false;
+    }
+
+    public void copySelectedText() {
+        String user = getActiveChatPane();
+        if( user != null )
+            chatPanes.get(user).pane.copy();
     }
     
 

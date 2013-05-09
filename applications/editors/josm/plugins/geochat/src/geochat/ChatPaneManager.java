@@ -71,7 +71,7 @@ class ChatPaneManager {
             ((ChatTabTitleComponent)tabs.getTabComponentAt(idx)).updateAlarm();
     }
 
-    public void addLineToChatPane( String userName, String line ) {
+    private void addLineToChatPane( String userName, String line, boolean italic ) {
         if( line.length() == 0 )
             return;
         if( !chatPanes.containsKey(userName) )
@@ -80,30 +80,24 @@ class ChatPaneManager {
             line = "\n" + line;
         Document doc = chatPanes.get(userName).pane.getDocument();
         try {
-            doc.insertString(doc.getLength(), line, null);
-        } catch( BadLocationException ex ) {
-            // whatever
-        }
-    }
-
-    public void addLineToPublic( String line ) {
-        addLineToChatPane(PUBLIC_PANE, line);
-    }
-
-    /**
-     * Special case: the line contains username, so it must be highlighted.
-     */
-    public void addLineToPublicEm( String line ) {
-        if( !line.startsWith("\n") )
-            line = "\n" + line;
-        Document doc = chatPanes.get(PUBLIC_PANE).pane.getDocument();
-        try {
-            SimpleAttributeSet attrs = new SimpleAttributeSet();
-            StyleConstants.setItalic(attrs, true);
+            SimpleAttributeSet attrs = null;
+            if( italic ) {
+                attrs = new SimpleAttributeSet();
+                StyleConstants.setItalic(attrs, true);
+            }
             doc.insertString(doc.getLength(), line, attrs);
         } catch( BadLocationException ex ) {
             // whatever
         }
+        chatPanes.get(userName).pane.setCaretPosition(doc.getLength());
+    }
+
+    public void addLineToChatPane( String userName, String line ) {
+        addLineToChatPane(userName, line, false);
+    }
+
+    public void addLineToPublic( String line ) {
+        addLineToChatPane(PUBLIC_PANE, line);
     }
 
     public void clearPublicChatPane() {
@@ -139,8 +133,8 @@ class ChatPaneManager {
         chatPane.setEditable(false);
         Font font = chatPane.getFont();
         chatPane.setFont(font.deriveFont(font.getSize2D() - 2));
-        DefaultCaret caret = (DefaultCaret)chatPane.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+//        DefaultCaret caret = (DefaultCaret)chatPane.getCaret(); // does not work
+//        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         JScrollPane scrollPane = new JScrollPane(chatPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chatPane.addMouseListener(new GeoChatPopupAdapter(panel));
 

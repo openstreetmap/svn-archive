@@ -103,7 +103,21 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     }
 
     private String autoCompleteUser( String word ) {
-        return word; // todo: write autocomplete
+        String result = null;
+        for( String user : users.keySet() ) {
+            if( user.startsWith(word) ) {
+                if( result == null )
+                    result = user;
+                else {
+                    int i = word.length();
+                    while( i < result.length() && i < user.length() && result.charAt(i) == user.charAt(i) )
+                        i++;
+                    if( i < result.length() )
+                        result = result.substring(0, i);
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -244,16 +258,37 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             int alarm = 0;
             StringBuilder sb = new StringBuilder();
             for( ChatMessage msg : messages ) {
-                formatMessage(sb, msg);
-                if( msg.isIncoming() ) {
-                    // todo: alarm=2 for private messages
-                    alarm = 1;
+                boolean important = msg.isIncoming() && containsName(msg.getMessage());
+                if( msg.isIncoming() && alarm < 2 ) {
+                    alarm = important ? 2 : 1;
                 }
+                if( important ) {
+                    // add buffer, then add current line with italic, then clear buffer
+                    chatPanes.addLineToPublic(sb.toString());
+                    sb.setLength(0);
+                    formatMessage(sb, msg);
+                    chatPanes.addLineToPublicEm(sb.toString());
+                    sb.setLength(0);
+                } else
+                    formatMessage(sb, msg);
             }
             chatPanes.addLineToPublic(sb.toString());
             if( alarm > 0 )
-                chatPanes.notify(null, alarm > 1);
+                chatPanes.notify(null, alarm);
         }
+    }
+
+    private boolean containsName( String message ) {
+        String userName = connection.getUserName();
+        int length = userName.length();
+        int i = message.indexOf(userName);
+        while( i >= 0 ) {
+            if( (i == 0 || !Character.isJavaIdentifierPart(message.charAt(i - 1)))
+                    && (i + length >= message.length() || !Character.isJavaIdentifierPart(message.charAt(i + length))) )
+                return true;
+            i = message.indexOf(userName, i + 1);
+        }
+        return false;
     }
 
     public void receivedPrivateMessages( boolean replace, List<ChatMessage> messages ) {
@@ -264,7 +299,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             formatMessage(sb, msg);
             chatPanes.addLineToChatPane(msg.isIncoming() ? msg.getAuthor() : msg.getRecipient(), sb.toString());
             if( msg.isIncoming() )
-                chatPanes.notify(msg.getAuthor(), true);
+                chatPanes.notify(msg.getAuthor(), 2);
         }
     }
 }

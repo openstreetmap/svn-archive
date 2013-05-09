@@ -21,13 +21,14 @@
     <property name="plugin.author" value="Ilya Zverev"/>
     <property name="plugin.class" value="geochat.GeoChatPlugin"/>
     <property name="plugin.description" value="Talk with users editing the map nearby, be notified when someone comes close."/>
-    <property name="plugin.icon" value="images/geochat.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/GeoChat"/>
+    <property name="plugin.icon" value="images/dialogs/geochat.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/GeoChat"/>
 
     <target name="additional-manifest">
         <manifest file="MANIFEST" mode="update">
             <attribute name="ru_Author" value="Илья Зверев"/>
             <attribute name="ru_Plugin-Description" value="Панель для общения с редактирующими карту поблизости, а также способ узнать, когда кто-то собирается править окрестности."/>
+            <attribute name="ru_Plugin_Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/GeoChat"/>
         </manifest>
     </target>
 

@@ -1,7 +1,10 @@
 package geochat;
 
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.*;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import org.openstreetmap.josm.Main;
 
 /**
@@ -11,6 +14,10 @@ import org.openstreetmap.josm.Main;
  * @author zverik
  */
 public class JPanelTextField extends JTextField {
+
+    public JPanelTextField() {
+        setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, new HashSet<KeyStroke>());
+    }
 
     @Override
     protected void processKeyEvent( KeyEvent e ) {
@@ -23,10 +30,26 @@ public class JPanelTextField extends JTextField {
                     setText("");
                 }
             } else if( code == KeyEvent.VK_TAB ) {
-                String word = ""; // todo: get the word
-                String complete = word == null ? null : autoComplete(word);
-                if( complete != null && !complete.equals(word) ) {
-                    // todo: replace the word
+                String text = getText();
+                int caret = getCaretPosition();
+                int start = caret - 1;
+                while( start >= 0 && Character.isJavaIdentifierPart(text.charAt(start)) )
+                    start--;
+                start++;
+                System.out.println("Autocomplete! Word " + start + "-" + caret + " (not inclusive)");
+                if( start < caret ) {
+                    String word = text.substring(start, caret);
+                    String complete = word == null ? null : autoComplete(word);
+                    if( complete != null && !complete.equals(word) ) {
+                        StringBuilder sb = new StringBuilder();
+                        if( start > 0 )
+                            sb.append(text.substring(0, start));
+                        sb.append(complete);
+                        if( caret < text.length() )
+                            sb.append(text.substring(caret));
+                        setText(sb.toString());
+                        setCaretPosition(start + complete.length());
+                    }
                 }
             } else if( code == KeyEvent.VK_ESCAPE ) {
                 if( Main.map != null && Main.map.mapView != null )

@@ -6,9 +6,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.Document;
+import javax.swing.text.*;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -52,12 +50,8 @@ class ChatPaneManager {
     public int getNotifyLevel() {
         int alarm = 0;
         for( ChatPane entry : chatPanes.values() ) {
-            if( entry.notify ) {
-                if( entry.isPublic && alarm < 1 )
-                    alarm = 1;
-                else if( !entry.isPublic )
-                    alarm = 2;
-            }
+            if( entry.notify > alarm )
+                alarm = entry.notify;
         }
         return alarm;
     }
@@ -67,20 +61,19 @@ class ChatPaneManager {
             ((ChatTabTitleComponent)tabs.getTabComponentAt(tabs.getSelectedIndex())).updateAlarm();
     }
 
-    public void notify( String user, boolean really ) {
-//        if( user == null && !really && !collapsed )
-//            return;
-        if( !hasUser(user) )
+    public void notify( String user, int alarmLevel ) {
+        if( alarmLevel <= 0 || !hasUser(user) )
             return;
         ChatPane entry = chatPanes.get(user == null ? PUBLIC_PANE : user);
-        System.out.println("Notifying " + user);
-        entry.notify = true;
+        entry.notify = alarmLevel;
         int idx = tabs.indexOfComponent(entry.component);
         if( idx >= 0 )
             ((ChatTabTitleComponent)tabs.getTabComponentAt(idx)).updateAlarm();
     }
 
     public void addLineToChatPane( String userName, String line ) {
+        if( line.length() == 0 )
+            return;
         if( !chatPanes.containsKey(userName) )
             createChatPane(userName);
         if( !line.startsWith("\n") )
@@ -95,6 +88,22 @@ class ChatPaneManager {
 
     public void addLineToPublic( String line ) {
         addLineToChatPane(PUBLIC_PANE, line);
+    }
+
+    /**
+     * Special case: the line contains username, so it must be highlighted.
+     */
+    public void addLineToPublicEm( String line ) {
+        if( !line.startsWith("\n") )
+            line = "\n" + line;
+        Document doc = chatPanes.get(PUBLIC_PANE).pane.getDocument();
+        try {
+            SimpleAttributeSet attrs = new SimpleAttributeSet();
+            StyleConstants.setItalic(attrs, true);
+            doc.insertString(doc.getLength(), line, attrs);
+        } catch( BadLocationException ex ) {
+            // whatever
+        }
     }
 
     public void clearPublicChatPane() {
@@ -138,7 +147,7 @@ class ChatPaneManager {
         ChatPane entry = new ChatPane();
         entry.pane = chatPane;
         entry.component = scrollPane;
-        entry.notify = false;
+        entry.notify = 0;
         entry.userName = userName;
         entry.isPublic = userName == null;
         chatPanes.put(userName == null ? PUBLIC_PANE : userName, entry);
@@ -206,10 +215,9 @@ class ChatPaneManager {
                 normalFont = getFont().deriveFont(Font.PLAIN);
                 boldFont = getFont().deriveFont(Font.BOLD);
             }
-            System.out.println("clauses: collapsed=" + collapsed + ", tabs:" + tabs.getSelectedIndex() + "=" + tabs.indexOfComponent(entry.component));
-            if( entry.notify && !collapsed && tabs.getSelectedIndex() == tabs.indexOfComponent(entry.component) )
-                entry.notify = false;
-            setFont(entry.notify ? boldFont : normalFont);
+            if( entry.notify > 0 && !collapsed && tabs.getSelectedIndex() == tabs.indexOfComponent(entry.component) )
+                entry.notify = 0;
+            setFont(entry.notify > 0 ? boldFont : normalFont);
             panel.updateTitleAlarm();
         }
     }
@@ -219,7 +227,7 @@ class ChatPaneManager {
         public boolean isPublic;
         public JTextPane pane;
         public JScrollPane component;
-        public boolean notify;
+        public int notify;
 
     }
 }

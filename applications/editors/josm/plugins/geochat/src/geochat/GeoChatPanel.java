@@ -151,36 +151,22 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
 
     /* ================== Notifications in the title ======================= */
 
-    private String cachedTitle = null;
-    private int cachedAlarm = 0;
-
-    @Override
-    public void setTitle( String title ) {
-        setTitle(title, -1);
-    }
-
-    private void setTitle( String title, int alarmLevel ) {
-        boolean changed = false;
-        if( title != null && (cachedTitle == null || !cachedTitle.equals(title)) ) {
-            cachedTitle = title;
-            changed = true;
-        }
-        if( alarmLevel >= 0 && cachedAlarm != alarmLevel ) {
-            cachedAlarm = alarmLevel;
-            changed = true;
-        }
-        if( changed ) {
-            String alarm = cachedAlarm <= 0 ? "" : cachedAlarm == 1 ? "* " : "!!! ";
-            super.setTitle(alarm + cachedTitle);
-            // todo: title becomes cut off
-        }
-    }
-
+    /**
+     * Display number of users and notifications in the panel title.
+     */
     protected void updateTitleAlarm() {
-        int notifyLevel = chatPanes.getNotifyLevel();
-        setTitle(null, isDialogInCollapsedView() ? notifyLevel : Math.min(1, notifyLevel));
+        int alarmLevel = chatPanes.getNotifyLevel();
+        if( !isDialogInCollapsedView() && alarmLevel > 1 )
+            alarmLevel = 1;
+        String name = users.isEmpty() ? tr("GeoChat") :
+                trn("GeoChat ({0} user)", "GeoChat ({0} users)", users.size(), users.size());
+        String alarm = alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ";
+        setTitle(alarm + name);
     }
 
+    /**
+     * Track panel collapse events.
+     */
     @Override
     protected void setIsCollapsed( boolean val ) {
         super.setIsCollapsed(val);
@@ -237,8 +223,8 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             if( !this.users.containsKey(uname) )
                 chatPanes.addLineToPublic(tr("User {0} is mapping nearby", uname));
         }
-        setTitle(trn("GeoChat ({0} user)", "GeoChat ({0} users)", newUsers.size(), newUsers.size()));
         this.users = newUsers;
+        updateTitleAlarm();
         if( userLayerActive && Main.map.mapView != null )
             Main.map.mapView.repaint();
     }

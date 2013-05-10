@@ -142,20 +142,22 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
             } else if (p instanceof Way) {
                 Way w = (Way)p;
                 Node lastN = null;
+                double wayArea = 0.0;
                 for (Node n: w.getNodes()) {
                     if (lastN != null && lastN.getCoor() != null && n.getCoor() != null) {
                         length += lastN.getCoor().greatCircleDistance(n.getCoor());
                         //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
-                        area += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
+                        wayArea += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
                         - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
                         segAngle = MeasurementLayer.angleBetween(lastN.getCoor(), n.getCoor());
                     }
                     lastN = n;
                 }
                 if (lastN != null && lastN == w.getNodes().iterator().next())
-                    area = Math.abs(area / 2);
+                    wayArea = Math.abs(wayArea / 2);
                 else
-                    area = 0;
+                    wayArea = 0;
+                area += wayArea;
             }
         }
         

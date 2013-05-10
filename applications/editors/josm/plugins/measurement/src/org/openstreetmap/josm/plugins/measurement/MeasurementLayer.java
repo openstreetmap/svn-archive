@@ -142,39 +142,17 @@ public class MeasurementLayer extends Layer {
             MeasurementPlugin.measurementDialog.pathLengthLabel.setText(NavigatableComponent.getDistText(pathLength));
         }
     }
-
+    
+	/*
+     * Use an equal area sinusoidal projection to improve accuracy and so we can still use normal polygon area calculation
+     * http://stackoverflow.com/questions/4681737/how-to-calculate-the-area-of-a-polygon-on-the-earths-surface-using-python
+     */
     public static double calcX(LatLon p1){
-        double lat1, lon1, lat2, lon2;
-        double dlon, dlat;
-
-        lat1 = p1.lat() * Math.PI / 180.0;
-        lon1 = p1.lon() * Math.PI / 180.0;
-        lat2 = lat1;
-        lon2 = 0;
-
-        dlon = lon2 - lon1;
-        dlat = lat2 - lat1;
-
-        double a = (Math.pow(Math.sin(dlat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon/2), 2));
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return 6367000 * c;
-    }
+        return p1.lat() * Math.PI * 6367000 / 180;
+	}
 
     public static double calcY(LatLon p1){
-        double lat1, lon1, lat2, lon2;
-        double dlon, dlat;
-
-        lat1 = p1.lat() * Math.PI / 180.0;
-        lon1 = p1.lon() * Math.PI / 180.0;
-        lat2 = 0;
-        lon2 = lon1;
-
-        dlon = lon2 - lon1;
-        dlat = lat2 - lat1;
-
-        double a = (Math.pow(Math.sin(dlat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon/2), 2));
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return 6367000 * c;
+        return p1.lon() * ( Math.PI * 6367000 / 180) * Math.cos(p1.lat() * Math.PI / 180);
     }
 
     public static double calcDistance(WayPoint p1, WayPoint p2){

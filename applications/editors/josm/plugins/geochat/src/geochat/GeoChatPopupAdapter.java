@@ -115,6 +115,7 @@ class GeoChatPopupAdapter extends MouseAdapter {
             boolean wasAdded = Main.map.mapView.addTemporaryLayer(panel);
             if( !wasAdded )
                 Main.map.mapView.removeTemporaryLayer(panel);
+            panel.userLayerActive = wasAdded;
             putValue(SELECTED_KEY, Boolean.valueOf(panel.userLayerActive));
             Main.map.mapView.repaint();
         }

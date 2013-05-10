@@ -67,6 +67,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         connection = ChatServerConnection.getInstance();
         connection.addListener(this);
         connection.checkLogin();
+        updateTitleAlarm();
     }
 
     private JPanel createLoginPanel() {
@@ -76,7 +77,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                 connection.login(text);
             }
         };
-        String userName = JosmUserIdentityManager.getInstance().getUserName();
+        String userName = Main.pref.get("geochat.username", JosmUserIdentityManager.getInstance().getUserName());
         if( userName == null )
             userName = "";
         if( userName.contains("@") )
@@ -170,11 +171,20 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
      * Display number of users and notifications in the panel title.
      */
     protected void updateTitleAlarm() {
-        int alarmLevel = chatPanes.getNotifyLevel();
+        int alarmLevel = connection.isLoggedIn() ? chatPanes.getNotifyLevel() : 0;
         if( !isDialogInCollapsedView() && alarmLevel > 1 )
             alarmLevel = 1;
-        String title = users.isEmpty() ? tr("GeoChat") :
-                trn("GeoChat ({0} user)", "GeoChat ({0} users)", users.size(), users.size());
+
+        String comment;
+        if( connection.isLoggedIn() ) {
+            comment = trn("{0} user", "{0} users", users.size() + 1, users.size() + 1);
+        } else {
+            comment = tr("not logged in");
+        }
+
+        String title = tr("GeoChat");
+        if( comment != null )
+            title = title + " (" + comment + ")";
         String alarm = alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ";
         setTitle(alarm + title);
     }
@@ -192,11 +202,13 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     /* ============ ChatServerConnectionListener methods ============= */
 
     public void loggedIn( String userName ) {
+        Main.pref.put("geochat.username", userName);
         if( gcPanel.getComponentCount() == 1 ) {
             gcPanel.remove(0);
             gcPanel.add(tabs, BorderLayout.CENTER);
             gcPanel.add(input, BorderLayout.SOUTH);
         }
+        updateTitleAlarm();
     }
 
     public void notLoggedIn( final String reason ) {
@@ -213,6 +225,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                 gcPanel.add(loginPanel, BorderLayout.CENTER);
             }
         }
+        updateTitleAlarm();
     }
 
     public void messageSendFailed( final String reason ) {

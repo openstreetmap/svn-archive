@@ -26,6 +26,7 @@ import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 
 /**
  * A small tool dialog for displaying the current measurement data.
@@ -129,18 +130,22 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         double segAngle = 0.0;
         double area = 0.0;
         Node lastNode = null;
-        for (OsmPrimitive p : newSelection) {
-            if (p instanceof Node && ((Node) p).getCoor() != null) {
-                Node n =(Node)p;
-                if (lastNode == null) {
-                    lastNode = n;
-                } else {
-                    length += lastNode.getCoor().greatCircleDistance(n.getCoor());
-                    segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
-                    lastNode = n;
+        // Don't mix up way and nodes computation (fix #6872). Priority given to ways
+        SubclassFilteredCollection<OsmPrimitive, Way> ways = new SubclassFilteredCollection<OsmPrimitive, Way>(newSelection, OsmPrimitive.wayPredicate);
+        if (ways.isEmpty()) {
+            for (Node n : new SubclassFilteredCollection<OsmPrimitive, Node>(newSelection, OsmPrimitive.nodePredicate)) {
+                if (n.getCoor() != null) {
+                    if (lastNode == null) {
+                        lastNode = n;
+                    } else {
+                        length += lastNode.getCoor().greatCircleDistance(n.getCoor());
+                        segAngle = MeasurementLayer.angleBetween(lastNode.getCoor(), n.getCoor());
+                        lastNode = n;
+                    }
                 }
-            } else if (p instanceof Way) {
-                Way w = (Way)p;
+            }
+        } else {
+            for (Way w : ways) {
                 Node lastN = null;
                 double wayArea = 0.0;
                 for (Node n: w.getNodes()) {
@@ -148,7 +153,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                         length += lastN.getCoor().greatCircleDistance(n.getCoor());
                         //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
                         wayArea += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
-                        - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
+                                 - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
                         segAngle = MeasurementLayer.angleBetween(lastN.getCoor(), n.getCoor());
                     }
                     lastN = n;

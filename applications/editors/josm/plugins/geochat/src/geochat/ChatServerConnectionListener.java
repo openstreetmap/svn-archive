@@ -1,3 +1,4 @@
+// License: WTFPL
 package geochat;
 
 import java.util.*;

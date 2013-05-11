@@ -1,22 +1,42 @@
+// License: WTFPL
 package geochat;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.util.*;
-import org.openstreetmap.josm.gui.widgets.JosmTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * JTextField tweaked to work in a JOSM panel. It prevents unwanted keystrokes
  * to be caught by the editor.
- * 
+ *
  * @author zverik
  */
-public class JPanelTextField extends JosmTextField {
+public class JPanelTextField extends JTextField {
 
     public JPanelTextField() {
         setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, new HashSet<KeyStroke>());
+        PopupMenuLauncher launcher = new PopupMenuLauncher(createEditMenu());
+        addMouseListener(launcher);
+    }
+
+    private JPopupMenu createEditMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(createMenuItem(DefaultEditorKit.cutAction, tr("Cut")));
+        menu.add(createMenuItem(DefaultEditorKit.copyAction, tr("Copy")));
+        menu.add(createMenuItem(DefaultEditorKit.pasteAction, tr("Paste")));
+        menu.add(createMenuItem(DefaultEditorKit.selectAllAction, tr("Select All")));
+        return menu;
+    }
+
+    private JMenuItem createMenuItem( String action, String label ) {
+        JMenuItem item = new JMenuItem(getActionMap().get(action));
+        item.setText(label);
+        return item;
     }
 
     @Override

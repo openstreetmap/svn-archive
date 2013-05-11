@@ -2,7 +2,6 @@ package geochat;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Rectangle2D;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -56,7 +55,8 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             }
         };
 
-        loginPanel = createLoginPanel();
+        String defaultUserName = constructUserName();
+        loginPanel = createLoginPanel(defaultUserName);
 
         gcPanel = new JPanel(new BorderLayout());
         gcPanel.add(loginPanel, BorderLayout.CENTER);
@@ -66,24 +66,31 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         // Start threads
         connection = ChatServerConnection.getInstance();
         connection.addListener(this);
-        connection.checkLogin();
+        boolean autoLogin = Main.pref.get("geochat.username", null) == null ? false : Main.pref.getBoolean("geochat.autologin", true);
+        connection.autoLoginWithDelay(autoLogin ? defaultUserName : null);
         updateTitleAlarm();
     }
 
-    private JPanel createLoginPanel() {
+    private String constructUserName() {
+        String userName = Main.pref.get("geochat.username", null); // so the default is null
+        if( userName == null )
+            userName = JosmUserIdentityManager.getInstance().getUserName();
+        if( userName == null )
+            userName = "";
+        if( userName.contains("@") )
+            userName = userName.substring(0, userName.indexOf('@'));
+        userName = userName.replace(' ', '_');
+        return userName;
+    }
+
+    private JPanel createLoginPanel( String defaultUserName ) {
         final JTextField nameField = new JPanelTextField() {
             @Override
             protected void processEnter( String text ) {
                 connection.login(text);
             }
         };
-        String userName = Main.pref.get("geochat.username", JosmUserIdentityManager.getInstance().getUserName());
-        if( userName == null )
-            userName = "";
-        if( userName.contains("@") )
-            userName = userName.substring(0, userName.indexOf('@'));
-        userName = userName.replace(' ', '_');
-        nameField.setText(userName);
+        nameField.setText(defaultUserName);
 
         JButton loginButton = new JButton(tr("Login"));
         loginButton.addActionListener(new ActionListener() {
@@ -93,9 +100,17 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         });
         nameField.setPreferredSize(new Dimension(nameField.getPreferredSize().width, loginButton.getPreferredSize().height));
 
+        final JCheckBox autoLoginBox = new JCheckBox(tr("Enable autologin"), Main.pref.getBoolean("geochat.autologin", true));
+        autoLoginBox.addActionListener(new ActionListener() {
+            public void actionPerformed( ActionEvent e ) {
+                Main.pref.put("geochat.autologin", autoLoginBox.isSelected());
+            }
+        });
+
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(nameField, GBC.std().fill(GridBagConstraints.HORIZONTAL).insets(15, 0, 5, 0));
-        panel.add(loginButton, GBC.std().fill(GridBagConstraints.NONE).insets(0, 0, 15, 0));
+        panel.add(loginButton, GBC.eol().fill(GridBagConstraints.NONE).insets(0, 0, 15, 0));
+        panel.add(autoLoginBox, GBC.std().insets(15, 0, 15, 0));
         return panel;
     }
 
@@ -142,26 +157,26 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
      */
     public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
         Graphics2D g2d = (Graphics2D)g.create();
-        g2d.setColor(Color.yellow);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Composite ac04 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+        Composite ac10 = g2d.getComposite();
 
-        int zoom = ChatServerConnection.getCurrentZoom();
-        int radius = Math.max(zoom, 1) * 10;
-        if( zoom < 14 )
-            radius /= 2;
-
-        Font font = g2d.getFont().deriveFont(Font.BOLD, Math.max(zoom * 2, 8));
+        Font font = g2d.getFont().deriveFont(Font.BOLD, g2d.getFont().getSize2D() + 2.0f);
         g2d.setFont(font);
         FontMetrics fm = g2d.getFontMetrics();
 
         for( String user : users.keySet() ) {
+            int stringWidth = fm.stringWidth(user);
+            int radius = stringWidth / 2 + 10;
             Point p = mv.getPoint(users.get(user));
-            g2d.setColor(Color.yellow);
+
+            g2d.setComposite(ac04);
+            g2d.setColor(Color.white);
             g2d.fillOval(p.x - radius, p.y - radius, radius * 2 + 1, radius * 2 + 1);
 
+            g2d.setComposite(ac10);
             g2d.setColor(Color.black);
-            Rectangle2D rect = fm.getStringBounds(user, g2d);
-            g2d.drawString(user, p.x - Math.round(rect.getWidth() / 2), p.y);
+            g2d.drawString(user, p.x - stringWidth / 2, p.y + fm.getDescent());
         }
     }
 

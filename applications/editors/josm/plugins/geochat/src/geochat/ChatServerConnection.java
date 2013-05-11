@@ -64,15 +64,50 @@ class ChatServerConnection {
      * Test that userId is still active, log out otherwise.
      */
     public void checkLogin() {
+        autoLogin(null);
+    }
+
+    /**
+     * Test that userId is still active, if not, tries to login with given user name.
+     * Does not autologin, if userName is null, obviously.
+     */
+    public void autoLogin( final String userName ) {
         final int uid = Main.pref.getInteger("geochat.lastuid", 0);
-        if( uid <= 0 ) return;
-        String query = "whoami&uid=" + uid;
-        JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-            public void processJson( JSONObject json ) {
-                if( json != null && json.has("name") )
-                    login(uid, json.getString("name"));
+        if( uid <= 0 ) {
+            if( userName != null && userName.length() > 1 )
+                login(userName);
+        } else {
+            String query = "whoami&uid=" + uid;
+            JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
+                public void processJson( JSONObject json ) {
+                    if( json != null && json.has("name") )
+                        login(uid, json.getString("name"));
+                    else if( userName != null && userName.length() > 1 )
+                        login(userName);
+                }
+            });
+        }
+    }
+
+    /**
+     * Waits until {@link #getPosition()} is not null, then calls {@link #autoLogin(java.lang.String)}.
+     * If two seconds have passed, stops the waiting. Doesn't wait if userName is empty.
+     */
+    public void autoLoginWithDelay( final String userName ) {
+        if( userName == null || userName.length() == 0 ) {
+            checkLogin();
+            return;
+        }
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    int cnt = 10;
+                    while( getPosition() == null && cnt-- > 0 )
+                        Thread.sleep(200);
+                } catch( InterruptedException e ) {}
+                autoLogin(userName);
             }
-        });
+        }).start();
     }
 
     public void login( final String userName ) {

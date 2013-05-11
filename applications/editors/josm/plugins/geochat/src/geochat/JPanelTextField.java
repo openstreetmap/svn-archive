@@ -3,7 +3,7 @@ package geochat;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.util.*;
-import javax.swing.JTextField;
+import org.openstreetmap.josm.gui.widgets.JosmTextField;
 import javax.swing.KeyStroke;
 import org.openstreetmap.josm.Main;
 
@@ -13,7 +13,7 @@ import org.openstreetmap.josm.Main;
  * 
  * @author zverik
  */
-public class JPanelTextField extends JTextField {
+public class JPanelTextField extends JosmTextField {
 
     public JPanelTextField() {
         setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, new HashSet<KeyStroke>());

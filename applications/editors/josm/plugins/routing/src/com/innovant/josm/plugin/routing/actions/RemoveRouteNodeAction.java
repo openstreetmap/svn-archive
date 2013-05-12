@@ -37,13 +37,12 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 import com.innovant.josm.plugin.routing.RoutingLayer;
 import com.innovant.josm.plugin.routing.RoutingModel;
 import com.innovant.josm.plugin.routing.RoutingPlugin;
-import com.innovant.josm.plugin.routing.gui.RoutingDialog;
 
 /**
  * Accounts for the selection or unselection of the remove route nodes tool in the tool bar,
@@ -53,10 +52,6 @@ import com.innovant.josm.plugin.routing.gui.RoutingDialog;
  *
  */
 public class RemoveRouteNodeAction extends MapMode {
-    /**
-     * Serial.
-     */
-    private static final long serialVersionUID = 1L;
 
     /**
      * Square of the distance radius where route nodes can be removed
@@ -67,17 +62,12 @@ public class RemoveRouteNodeAction extends MapMode {
      * Logger.
      */
     static Logger logger = Logger.getLogger(RoutingLayer.class);
-    /**
-     * Routing Dialog.
-     */
-    private RoutingDialog routingDialog;
 
     public RemoveRouteNodeAction(MapFrame mapFrame) {
         // TODO Use constructor with shortcut
         super(tr("Routing"), "remove",
                 tr("Click to remove destination"),
                 mapFrame, ImageProvider.getCursor("normal", "delete"));
-        this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
     }
 
     @Override public void enterMode() {
@@ -113,7 +103,7 @@ public class RemoveRouteNodeAction extends MapMode {
                     // Remove node
                     logger.debug("Removing node " + nl.get(index));
                     routingModel.removeNode(index);
-                    routingDialog.removeNode(index);
+                    RoutingPlugin.getInstance().getRoutingDialog().removeNode(index);
                     Main.map.repaint();
                 } else {
                     logger.debug("Can't find a node to remove.");

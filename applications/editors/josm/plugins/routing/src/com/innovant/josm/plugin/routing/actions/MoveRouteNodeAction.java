@@ -55,10 +55,6 @@ import com.innovant.josm.plugin.routing.gui.RoutingDialog;
  *
  */
 public class MoveRouteNodeAction extends MapMode {
-    /**
-     * Serial.
-     */
-    private static final long serialVersionUID = 1L;
 
     /**
      * Square of the distance radius where route nodes can be selected for dragging
@@ -69,11 +65,6 @@ public class MoveRouteNodeAction extends MapMode {
      * Logger.
      */
     static Logger logger = Logger.getLogger(RoutingLayer.class);
-
-    /**
-     * Routing Dialog.
-     */
-    private RoutingDialog routingDialog;
 
     /**
      * Index of dragged node
@@ -89,7 +80,6 @@ public class MoveRouteNodeAction extends MapMode {
         super(tr("Routing"), "move",
                 tr("Click and drag to move destination"),
                 mapFrame, ImageProvider.getCursor("normal", "move"));
-        this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
     }
 
     @Override public void enterMode() {
@@ -140,6 +130,7 @@ public class MoveRouteNodeAction extends MapMode {
         if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
             RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
             RoutingModel routingModel = layer.getRoutingModel();
+            RoutingDialog routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
             // Search for nearest highway node
             Node node = null;
             node = layer.getNearestHighwayNode(point);

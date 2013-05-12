@@ -274,13 +274,15 @@ public class RoutingLayer extends Layer {
         if (isActiveLayer) {
         	if(routingModel != null) {
         		if(routingModel.routingGraph != null && routingModel.routingGraph.getGraph() != null) {
-        	    	Color color2 = ColorHelper.html2color("#00ff00");		/* just green for now  */
         	        Set<OsmEdge> graphEdges =  routingModel.routingGraph.getGraph().edgeSet();
-        	        OsmEdge firstedge = (OsmEdge) graphEdges.toArray()[0];
-        	        Point from = mv.getPoint(firstedge.fromEastNorth());
-        	        g.drawRect(from.x-4, from.y+4, from.x+4, from.y-4);
-        	        for(OsmEdge edge : graphEdges) {
-        	        	drawGraph(g, mv, edge, color2, width);
+        	        if (!graphEdges.isEmpty()) {
+            	    	Color color2 = ColorHelper.html2color("#00ff00");		/* just green for now  */
+	        	        OsmEdge firstedge = (OsmEdge) graphEdges.toArray()[0];
+	        	        Point from = mv.getPoint(firstedge.fromEastNorth());
+	        	        g.drawRect(from.x-4, from.y+4, from.x+4, from.y-4);
+	        	        for(OsmEdge edge : graphEdges) {
+	        	        	drawGraph(g, mv, edge, color2, width);
+	        	        }
         	        }
         	     }
         	 }

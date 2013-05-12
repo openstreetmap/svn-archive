@@ -36,13 +36,11 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.tools.ImageProvider;
-
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 import com.innovant.josm.plugin.routing.RoutingLayer;
 import com.innovant.josm.plugin.routing.RoutingPlugin;
-import com.innovant.josm.plugin.routing.gui.RoutingDialog;
 
 /**
  * Accounts for the selection or unselection of the routing tool in the tool bar,
@@ -52,18 +50,11 @@ import com.innovant.josm.plugin.routing.gui.RoutingDialog;
  *
  */
 public class AddRouteNodeAction extends MapMode {
-    /**
-     * Serial.
-     */
-    private static final long serialVersionUID = 1L;
+
     /**
      * Logger.
      */
     static Logger logger = Logger.getLogger(AddRouteNodeAction.class);
-    /**
-     * Routing Dialog.
-     */
-    private RoutingDialog routingDialog;
 
     /**
      * Constructor
@@ -74,7 +65,6 @@ public class AddRouteNodeAction extends MapMode {
         super(tr("Routing"), "add",
                 tr("Click to add destination."),
                 mapFrame, ImageProvider.getCursor("crosshair", null));
-        this.routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
     }
 
     @Override public void enterMode() {
@@ -101,7 +91,7 @@ public class AddRouteNodeAction extends MapMode {
                 }
                 logger.debug("selected node " + node);
                 layer.getRoutingModel().addNode(node);
-                routingDialog.addNode(node);
+                RoutingPlugin.getInstance().getRoutingDialog().addNode(node);
             }
         }
         Main.map.repaint();

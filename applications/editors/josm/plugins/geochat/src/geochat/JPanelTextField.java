@@ -2,8 +2,9 @@
 package geochat;
 
 import java.awt.KeyboardFocusManager;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.HashSet;
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import org.openstreetmap.josm.Main;
@@ -17,11 +18,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author zverik
  */
 public class JPanelTextField extends JTextField {
-
+    
     public JPanelTextField() {
         setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, new HashSet<KeyStroke>());
         PopupMenuLauncher launcher = new PopupMenuLauncher(createEditMenu());
         addMouseListener(launcher);
+        standardKeys = getInputMap(JComponent.WHEN_FOCUSED).allKeys();
     }
 
     private JPopupMenu createEditMenu() {
@@ -38,6 +40,10 @@ public class JPanelTextField extends JTextField {
         item.setText(label);
         return item;
     }
+
+    // list of "standard" OS keys for JTextFiels = cursor moving, selection, copy/paste
+    private final KeyStroke[] standardKeys;
+    private static final int MODIFIERS_MASK = InputEvent.META_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK;
 
     @Override
     protected void processKeyEvent( KeyEvent e ) {
@@ -73,10 +79,20 @@ public class JPanelTextField extends JTextField {
             } else if( code == KeyEvent.VK_ESCAPE ) {
                 if( Main.map != null && Main.map.mapView != null )
                     Main.map.mapView.requestFocus();
+            } 
+
+            boolean keyIsStandard = false;
+            for (KeyStroke ks: standardKeys) {
+                if (code == ks.getKeyCode() && 
+                       (e.getModifiersEx() & MODIFIERS_MASK) == (ks.getModifiers() & MODIFIERS_MASK)) {
+                    keyIsStandard = true;
+                    break;
+                }
             }
             // Do not pass other events to JOSM
-            if( code != KeyEvent.VK_LEFT && code != KeyEvent.VK_HOME && code != KeyEvent.VK_RIGHT && code != KeyEvent.VK_END && code != KeyEvent.VK_BACK_SPACE && code != KeyEvent.VK_DELETE )
+            if( !keyIsStandard ) {
                 e.consume();
+            }
         }
         super.processKeyEvent(e);
     }

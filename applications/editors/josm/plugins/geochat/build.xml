@@ -14,7 +14,7 @@
 <project name="geochat" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="GeoChat"/>
+    <property name="commit.message" value="[josm_geochat] copypaste from keyboard, font size advanced parameters"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4666"/>
 

@@ -134,11 +134,10 @@ class ChatPaneManager {
         JTextPane chatPane = new JTextPane();
         chatPane.setEditable(false);
         Font font = chatPane.getFont();
-        float sizeParameter = Main.pref.getInteger("geochat.panel.fontsize", -1); 
-        float size = sizeParameter;
-        if ( sizeParameter <= 0 ) size += font.getSize2D();
-        chatPane.setFont(font.deriveFont( size ));
-
+        float size = Main.pref.getInteger("geochat.fontsize", -1);
+        if( size < 6 )
+            size += font.getSize2D();
+        chatPane.setFont(font.deriveFont(size));
 //        DefaultCaret caret = (DefaultCaret)chatPane.getCaret(); // does not work
 //        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         JScrollPane scrollPane = new JScrollPane(chatPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

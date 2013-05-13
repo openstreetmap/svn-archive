@@ -56,12 +56,6 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             }
         };
         
-        Font font = input.getFont();
-        float sizeParameter = Main.pref.getInteger("geochat.input.fontsize", 0); 
-        float size = sizeParameter;
-        if ( sizeParameter <= 0 ) size += font.getSize2D();
-        input.setFont(font.deriveFont( size ));
-        
         String defaultUserName = constructUserName();
         loginPanel = createLoginPanel(defaultUserName);
 

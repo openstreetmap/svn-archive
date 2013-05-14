@@ -34,7 +34,6 @@
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
         <ant antfile="build.xml" target="dist" dir="graphview"/>
         <ant antfile="build.xml" target="dist" dir="HouseNumberTaggingTool"/>
-        <ant antfile="build.xml" target="dist" dir="imageryadjust"/>
         <ant antfile="build.xml" target="dist" dir="imagerycache"/>
         <ant antfile="build.xml" target="dist" dir="imagery_offset_db"/>
         <ant antfile="build.xml" target="dist" dir="imagery-xml-bounds"/>
@@ -134,7 +133,6 @@
         <ant antfile="build.xml" target="clean" dir="gpxfilter"/>
         <ant antfile="build.xml" target="clean" dir="graphview"/>
         <ant antfile="build.xml" target="clean" dir="HouseNumberTaggingTool"/>
-        <ant antfile="build.xml" target="clean" dir="imageryadjust"/>
         <ant antfile="build.xml" target="clean" dir="imagerycache"/>
         <ant antfile="build.xml" target="clean" dir="imagery_offset_db"/>
         <ant antfile="build.xml" target="clean" dir="imagery-xml-bounds"/>

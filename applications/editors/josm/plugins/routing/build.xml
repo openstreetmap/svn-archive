@@ -1,35 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is the build file for the routing plugin
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in your default plugin directory) run
-**
-**    > ant  install
-**
-** To build against the core in ../../core, create a correct manifest and deploy to
-** SVN,
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
--->
 <project name="routing" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="added one-way support in roundabouts"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5464"/>
+    <property name="plugin.main.version" value="5960"/>
 
     <!--
     **********************************************************

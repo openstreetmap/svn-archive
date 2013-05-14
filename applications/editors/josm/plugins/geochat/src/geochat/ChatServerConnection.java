@@ -21,6 +21,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  * @author zverik
  */
 class ChatServerConnection {
+    public static final String TOKEN_PREFIX = "=";
+    private static final String TOKEN_PATTERN = "^[a-zA-Z0-9]{10}$";
+    
     private int userId;
     private String userName;
     private static ChatServerConnection instance;
@@ -119,10 +122,17 @@ class ChatServerConnection {
             fireLoginFailed("Position is unknown");
             return;
         }
+        String token = userName.startsWith(TOKEN_PREFIX) ? userName.substring(TOKEN_PREFIX.length()) : null;
+        if( token != null && !token.matches(TOKEN_PATTERN) ) {
+            fireLoginFailed("Incorrect token format");
+            return;
+        }
+
         try {
+            String nameAttr = token != null ? "&token=" + token : "&name=" + URLEncoder.encode(userName, "UTF-8");
             String query = "register&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
-                    + "&name=" + URLEncoder.encode(userName, "UTF8");
+                    + nameAttr;
             JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
                 public void processJson( JSONObject json ) {
                     if( json == null )
@@ -132,7 +142,8 @@ class ChatServerConnection {
                     else if( !json.has("uid") )
                         fireLoginFailed(tr("The server did not return user ID"));
                     else {
-                        login(json.getInt("uid"), userName);
+                        String name = json.has("name") ? json.getString("name") : userName;
+                        login(json.getInt("uid"), name);
                     }
                 }
             });

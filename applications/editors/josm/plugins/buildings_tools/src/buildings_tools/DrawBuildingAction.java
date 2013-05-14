@@ -321,6 +321,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         if (!Main.map.mapView.isActiveLayerDrawable())
             return;
 
+        requestFocusInMapView();
+
         if (mode == Mode.None)
             drawingStart(e);
     }

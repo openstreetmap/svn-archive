@@ -170,7 +170,7 @@ class TracerAction extends MapMode implements MouseListener {
         if (!Main.map.mapView.isActiveLayerDrawable()) {
             return;
         }
-
+        requestFocusInMapView();
         updateKeyModifiers(e);
         if (e.getButton() == MouseEvent.BUTTON1) {
             traceAsync(e.getPoint());

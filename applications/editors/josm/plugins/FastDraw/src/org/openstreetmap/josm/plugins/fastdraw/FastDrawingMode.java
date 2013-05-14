@@ -284,6 +284,8 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     public void mousePressed(MouseEvent e) {
         if (!isEnabled()) return;
         if (e.getButton() != MouseEvent.BUTTON1) return;
+        
+        requestFocusInMapView();
 
         int idx=line.findClosestPoint(e.getPoint(),settings.maxDist);
         if (idx==0 && !line.isClosed()) {

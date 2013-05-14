@@ -80,6 +80,7 @@ public class WMSAdjustAction extends MapMode implements
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
+        requestFocusInMapView();
         boolean ctrl = (e.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
         // boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
         boolean shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;

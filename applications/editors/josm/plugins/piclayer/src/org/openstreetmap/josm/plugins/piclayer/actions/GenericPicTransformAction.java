@@ -60,6 +60,7 @@ public abstract class GenericPicTransformAction extends MapMode implements Mouse
 	        currentLayer = (PicLayerAbstract)Main.map.mapView.getActiveLayer();
 
 	        if ( currentLayer != null && e.getButton() == MouseEvent.BUTTON1 ) {
+	            requestFocusInMapView();
 	            isDragging = true;
 	            prevMousePoint = new Point(e.getPoint());
 	            prevEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());

@@ -96,6 +96,7 @@ public class MoveRouteNodeAction extends MapMode {
         // If left button is pressed
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+                requestFocusInMapView();
                 RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list

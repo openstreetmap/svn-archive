@@ -82,13 +82,14 @@ public class JunctionCheckerMapMode extends MapMode implements LayerChangeListen
 		if (e.getButton() != MouseEvent.BUTTON1) {
 			return;
 		}
+		requestFocusInMapView();
 		digraph.ereaseJunctioncandidate();//um zu verhindern, dass gefundene Kreuzungen/Kandidaten weiterhin weiß gezeichnet werden
 		Point pointReleased = e.getPoint();
 
 		Rectangle r = createRect(pointReleased, pointPressed);
-		boolean ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
+		//boolean ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
 		boolean shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
-		boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
+		//boolean alt = (e.getModifiers() & ActionEvent.ALT_MASK) != 0;
 		if (shift == false) {
 			digraph.ereaseSelectedChannels();
 		}

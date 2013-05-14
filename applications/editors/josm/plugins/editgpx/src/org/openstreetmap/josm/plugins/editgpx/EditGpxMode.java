@@ -71,6 +71,8 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
             return;
         }
 
+        requestFocusInMapView();
+
         Point pointReleased = e.getPoint();
 
         Rectangle r = createRect(pointReleased, pointPressed);

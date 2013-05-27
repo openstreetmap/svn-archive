@@ -168,7 +168,8 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
                     JOptionPane.YES_NO_OPTION) == 0)
                 new SavePictureCalibrationAction((PicLayerAbstract) arg0).actionPerformed(null);
         }
-        boolean enable = Main.map.mapView.getAllLayers().size() != 0;
+        // Why should I do all these checks now?
+        boolean enable = Main.map != null && Main.map.mapView != null && Main.map.mapView.getAllLayers() != null && Main.map.mapView.getAllLayers().size() != 0;
         menu.setEnabled(enable);
     }
 };

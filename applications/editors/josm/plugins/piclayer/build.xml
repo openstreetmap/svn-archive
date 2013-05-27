@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - #7127 - added world file loading option"/>
+    <property name="commit.message" value="PicLayer - #8743 - fixed NPE when removing last layer"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="5960"/>
 	

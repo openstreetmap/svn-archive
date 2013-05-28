@@ -22,12 +22,7 @@
 
 package org.openstreetmap.fma.jtiledownloader;
 
-import org.openstreetmap.fma.jtiledownloader.datatypes.GenericTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.MapSurferProfileTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.MapSurferTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.MapnikTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.OsmarenderTileProvider;
-import org.openstreetmap.fma.jtiledownloader.datatypes.TileProviderIf;
+import org.openstreetmap.fma.jtiledownloader.datatypes.*;
 
 public class TileProviderList
 {
@@ -41,7 +36,6 @@ public class TileProviderList
         super();
         tileProviders = new TileProviderIf[] {
             new MapnikTileProvider(),
-            new OsmarenderTileProvider(),
             new GenericTileProvider("Cyclemap (CloudMade)", "http://c.andy.sandbox.cloudmade.com/tiles/cycle/"),
             new GenericTileProvider("Cyclemap (Thunderflames)", "http://thunderflames.org/tiles/cycle/"),
             new GenericTileProvider("OpenStreetBrowser (Europe)", "http://www.openstreetbrowser.org/tiles/base/"),

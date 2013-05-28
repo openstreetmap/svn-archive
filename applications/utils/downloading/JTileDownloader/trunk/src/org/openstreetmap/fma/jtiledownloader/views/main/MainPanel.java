@@ -160,7 +160,7 @@ public class MainPanel
         _buttonExport.setActionCommand(COMMAND_EXPORT);
 
         _comboOutputZoomLevel.setName(COMPONENT_OUTPUT_ZOOM_LEVEL);
-        for (int outputZoomLevel = 0; outputZoomLevel <= 18; outputZoomLevel++)
+        for (int outputZoomLevel = 0; outputZoomLevel <= 20; outputZoomLevel++)
         {
             _comboOutputZoomLevel.addItem(String.valueOf(outputZoomLevel));
         }

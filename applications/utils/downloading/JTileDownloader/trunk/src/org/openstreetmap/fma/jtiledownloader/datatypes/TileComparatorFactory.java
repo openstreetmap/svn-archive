@@ -63,11 +63,11 @@ public class TileComparatorFactory {
     
     private static class SimpleComparator implements Comparator<Tile> {
         public int compare(Tile t1, Tile t2) {
-            int r = Integer.compare(t1.getZ(), t2.getZ());
+            int r = Integer.valueOf(t1.getZ()).compareTo(Integer.valueOf(t2.getZ()));
             if( r == 0 ) {
-                r = Integer.compare(t1.getX(), t2.getX());
+                r = Integer.valueOf(t1.getX()).compareTo(Integer.valueOf(t2.getX()));
                 if( r == 0 )
-                    r = Integer.compare(t1.getY(), t2.getY());
+                    r = Integer.valueOf(t1.getY()).compareTo(Integer.valueOf(t2.getY()));
             }
             return r;
         }
@@ -75,15 +75,15 @@ public class TileComparatorFactory {
     
     private static class QuadComparator implements Comparator<Tile> {
         public int compare(Tile t1, Tile t2) {
-            int r = Integer.compare(t1.getZ(), t2.getZ());
+            int r = Integer.valueOf(t1.getZ()).compareTo(Integer.valueOf(t2.getZ()));
             if( r == 0 ) {
-                r = Integer.compare(t1.getX() >> 3, t2.getX() >> 3);
+                r = Integer.valueOf(t1.getX() >> 3).compareTo(Integer.valueOf(t2.getX() >> 3));
                 if( r == 0 ) {
-                    r = Integer.compare(t1.getY() >> 3, t2.getY() >> 3);
+                    r = Integer.valueOf(t1.getY() >> 3).compareTo(Integer.valueOf(t2.getY() >> 3));
                     if( r == 0 ) {
-                        r = Integer.compare(t1.getX(), t2.getX());
+                        r = Integer.valueOf(t1.getX()).compareTo(Integer.valueOf(t2.getX()));
                         if (r == 0) {
-                            r = Integer.compare(t1.getY(), t2.getY());
+                            r = Integer.valueOf(t1.getY()).compareTo(Integer.valueOf(t2.getY()));
                         }
                     }
                 }

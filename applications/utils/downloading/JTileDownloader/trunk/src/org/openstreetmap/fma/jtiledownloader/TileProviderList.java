@@ -43,6 +43,7 @@ public class TileProviderList
             new GenericTileProvider("Maplint", "http://tah.openstreetmap.org/Tiles/maplint/"),
             new MapSurferTileProvider(),
             new MapSurferProfileTileProvider(),
+            new OsmFrTileProvider(),
             new GenericTileProvider("CloudMade Web style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/1/256/"),
             new GenericTileProvider("CloudMade Mobile style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/2/256/"),
             new GenericTileProvider("CloudMade NoNames style", "http://tile.cloudmade.com/8bafab36916b5ce6b4395ede3cb9ddea/3/256/"),

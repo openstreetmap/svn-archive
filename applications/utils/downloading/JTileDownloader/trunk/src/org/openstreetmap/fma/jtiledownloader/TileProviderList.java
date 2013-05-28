@@ -36,11 +36,12 @@ public class TileProviderList
         super();
         tileProviders = new TileProviderIf[] {
             new MapnikTileProvider(),
-            new GenericTileProvider("Cyclemap (CloudMade)", "http://c.andy.sandbox.cloudmade.com/tiles/cycle/"),
-            new GenericTileProvider("Cyclemap (Thunderflames)", "http://thunderflames.org/tiles/cycle/"),
+            new ThunderforestTileProvider("OpenCycleMap", "tile.opencyclemap.org/cycle/"),
+            new ThunderforestTileProvider("Thunderforest Transport", "tile2.opencyclemap.org/transport/"),
+            new ThunderforestTileProvider("Thunderforest Landscape", "tile3.opencyclemap.org/landscape/"),
+            new ThunderforestTileProvider("Thunderforest Outdoors", "tile.thunderforest.com/outdoors/"),
             new GenericTileProvider("OpenStreetBrowser (Europe)", "http://www.openstreetbrowser.org/tiles/base/"),
             new GenericTileProvider("OpenPisteMap", "http://openpistemap.org/tiles/contours/"),
-            new GenericTileProvider("Maplint", "http://tah.openstreetmap.org/Tiles/maplint/"),
             new MapSurferTileProvider(),
             new MapSurferProfileTileProvider(),
             new OsmFrTileProvider(),

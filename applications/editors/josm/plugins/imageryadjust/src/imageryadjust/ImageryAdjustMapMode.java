@@ -1,14 +1,27 @@
 package imageryadjust;
 
-import java.awt.*;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.*;
 
-import javax.swing.*;
-import javax.swing.Timer;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -20,6 +33,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+
 import utils.TimedKeyReleaseListener;
 
 
@@ -98,6 +112,8 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     @Override public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1)
             return;
+        
+        requestFocusInMapView();
 
         if (adjustingLayer.isVisible()) {
             prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());

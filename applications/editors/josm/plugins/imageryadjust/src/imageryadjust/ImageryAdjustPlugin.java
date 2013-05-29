@@ -1,6 +1,5 @@
 package imageryadjust;
 
-import javax.swing.Action;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="imageryadjust" default="dist" basedir=".">
     <property name="commit.message" value="ImageryAdjust: Adjust while holding shortcut key"/>
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="5960"/>
 
     <property name="plugin.author" value="Upliner"/>
     <property name="plugin.class" value="imageryadjust.ImageryAdjustPlugin"/>

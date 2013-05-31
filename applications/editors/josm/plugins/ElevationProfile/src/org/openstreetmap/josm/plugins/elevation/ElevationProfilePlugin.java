@@ -59,7 +59,7 @@ public class ElevationProfilePlugin extends Plugin {
 		super.mapFrameInitialized(oldFrame, newFrame);
 		
 		if (newFrame != null) {
-			newFrame.toolGroup.add(eleModeButton);
+			newFrame.addMapMode(eleModeButton);
 			ElevationProfileDialog eleProfileDlg = new ElevationProfileDialog();
 			eleProfileDlg.addModelListener(eleMode);
 			eleProfileDlg.setProfileLayer(getCurrentLayer());
@@ -79,6 +79,4 @@ public class ElevationProfilePlugin extends Plugin {
 		}
 		return currentLayer;
 	}
-
-	
 }

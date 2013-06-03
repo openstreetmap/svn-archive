@@ -226,6 +226,24 @@ public final class WikipediaApp {
                 return null;
             }
         }
+
+        @Override
+        public String toString() {
+            return lang + ":" + article;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            WikipediaLangArticle that = (WikipediaLangArticle) o;
+
+            if (article != null ? !article.equals(that.article) : that.article != null) return false;
+            if (lang != null ? !lang.equals(that.lang) : that.lang != null) return false;
+
+            return true;
+        }
     }
 
     static class WikipediaEntry implements Comparable<WikipediaEntry> {

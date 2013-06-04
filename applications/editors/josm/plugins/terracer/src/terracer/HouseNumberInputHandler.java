@@ -30,6 +30,7 @@ import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
 /**
@@ -47,6 +48,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
     private final TerracerAction terracerAction;
     private final Way outline, street;
     private final String streetName;
+    private final String buildingType;
     private final Node init;
     private final Relation associatedStreet;
     private final ArrayList<Node> housenumbers;
@@ -62,12 +64,13 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      * @param streetName the name of the street, derived from either the street line or
      *            the house numbers which are guaranteed to have the same name
      *            attached (may be null)
+     * @param buildingType The value to add for building key
      * @param associatedStreet a relation where we can add the houses (may be null)
      * @param housenumbers a list of house number nodes in this outline (may be empty)
      * @param title the title
      */
     public HouseNumberInputHandler(final TerracerAction terracerAction,
-            final Way outline, final Node init, final Way street, final String streetName,
+            final Way outline, final Node init, final Way street, final String streetName, final String buildingType,
             final Relation associatedStreet,
             final ArrayList<Node> housenumbers, final String title) {
         this.terracerAction = terracerAction;
@@ -75,11 +78,12 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         this.init = init;
         this.street = street;
         this.streetName = streetName;
+        this.buildingType = buildingType;
         this.associatedStreet = associatedStreet;
         this.housenumbers = housenumbers;
 
         // This dialog is started modal
-        this.dialog = new HouseNumberInputDialog(this, street, streetName,
+        this.dialog = new HouseNumberInputDialog(this, street, streetName, buildingType,
                 associatedStreet != null, housenumbers);
 
         // We're done
@@ -317,7 +321,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
                             housenumbers,
                             streetName(),
                             doHandleRelation(),
-                            doDeleteOutline());
+                            doDeleteOutline(), buildingType());
                     } catch (UserCancelException ex) {
                         // Ignore
                     }
@@ -392,7 +396,23 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         if (streetName != null)
             return streetName;
 
-        Object selected = dialog.streetComboBox.getSelectedItem();
+        return getItemText(dialog.streetComboBox);
+    }
+    
+    /**
+     * Gets the building type.
+     *
+     * @return the building type or null, if not set / invalid.
+     */
+    public String buildingType() {
+        if (buildingType != null)
+            return buildingType;
+
+        return getItemText(dialog.buildingComboBox);
+    }
+    
+    private static String getItemText(AutoCompletingComboBox box) {
+        Object selected = box.getSelectedItem();
         if (selected == null) {
             return null;
         } else {

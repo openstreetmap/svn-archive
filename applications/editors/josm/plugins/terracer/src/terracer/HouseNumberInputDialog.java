@@ -18,6 +18,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import javax.swing.BoxLayout;
@@ -33,6 +34,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.tools.GBC;
 
 
@@ -58,6 +60,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
 
     //final private Way street;
     final private String streetName;
+    final private String buildingType;
     final private boolean relationExists;
     final ArrayList<Node> housenumbers;
 
@@ -73,6 +76,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     JTextField numbers;
     private JLabel streetLabel;
     AutoCompletingComboBox streetComboBox;
+    private JLabel buildingLabel;
+    AutoCompletingComboBox buildingComboBox;
     private JLabel segmentsLabel;
     JTextField segments;
     JTextArea messageLabel;
@@ -89,10 +94,11 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      * @param streetName the name of the street, derived from either the
      *        street line or the house numbers which are guaranteed to have the
      *        same name attached (may be null)
+     * @param buildingType The value to add for building key
      * @param relationExists If the buildings can be added to an existing relation or not.
      * @param housenumbers a list of house numbers in this outline (may be empty)
      */
-    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, String streetName, boolean relationExists, ArrayList<Node> housenumbers) {
+    public HouseNumberInputDialog(HouseNumberInputHandler handler, Way street, String streetName, String buildingType, boolean relationExists, ArrayList<Node> housenumbers) {
         super(Main.parent,
                 tr("Terrace a house"),
                 new String[] { tr("OK"), tr("Cancel")},
@@ -101,6 +107,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         this.inputHandler = handler;
         //this.street = street;
         this.streetName = streetName;
+        this.buildingType = buildingType;
         this.relationExists = relationExists;
         this.housenumbers = housenumbers;
         handler.dialog = this;
@@ -162,20 +169,15 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             messageLabel.setEditable(false);
             messageLabel.setFocusable(false); // Needed so that lowest number can have focus immediately
 
-            interpolationLabel = new JLabel();
-            interpolationLabel.setText(tr("Interpolation"));
-            segmentsLabel = new JLabel();
-            segmentsLabel.setText(tr("Segments"));
-            streetLabel = new JLabel();
-            streetLabel.setText(tr("Street"));
-            loLabel = new JLabel();
-            loLabel.setText(tr("Lowest Number"));
+            interpolationLabel = new JLabel(tr("Interpolation"));
+            segmentsLabel = new JLabel(tr("Segments"));
+            streetLabel = new JLabel(tr("Street"));
+            buildingLabel = new JLabel(tr("Building"));
+            loLabel = new JLabel(tr("Lowest Number"));
             loLabel.setPreferredSize(new Dimension(111, 16));
             loLabel.setToolTipText(tr("Lowest housenumber of the terraced house"));
-            hiLabel = new JLabel();
-            hiLabel.setText(tr("Highest Number"));
-            numbersLabel = new JLabel();
-            numbersLabel.setText(tr("List of Numbers"));
+            hiLabel = new JLabel(tr("Highest Number"));
+            numbersLabel = new JLabel(tr("List of Numbers"));
             loLabel.setPreferredSize(new Dimension(111, 16));
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
 
@@ -203,6 +205,12 @@ public class HouseNumberInputDialog extends ExtendedDialog {
                 inputPanel.add(getStreet(), GBC.eol().insets(5,3,0,0));
             } else {
                 inputPanel.add(new JLabel(tr("Street name: ")+"\""+streetName+"\""), GBC.eol().insets(3,3,0,0));
+            }
+            if (buildingType == null) {
+                inputPanel.add(buildingLabel, GBC.std().insets(3,3,0,0));
+                inputPanel.add(getBuilding(), GBC.eol().insets(5,3,0,0));
+            } else {
+                inputPanel.add(new JLabel(tr("Building: ")+"\""+buildingType+"\""), GBC.eol().insets(3,3,0,0));
             }
             inputPanel.add(handleRelationCheckBox, GBC.eol().insets(3,3,0,0));
             inputPanel.add(deleteOutlineCheckBox, GBC.eol().insets(3,3,0,0));
@@ -289,7 +297,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     /**
      * This method initializes street
      *
-     * @return javax.swing.JTextField
+     * @return AutoCompletingComboBox
      */
     private AutoCompletingComboBox getStreet() {
 
@@ -303,6 +311,25 @@ public class HouseNumberInputDialog extends ExtendedDialog {
 
         }
         return streetComboBox;
+    }
+    
+    /**
+     * This method initializes building
+     *
+     * @return AutoCompletingComboBox
+     */
+    private AutoCompletingComboBox getBuilding() {
+
+        if (buildingComboBox == null) {
+            final List<AutoCompletionListItem> values = Main.main.getCurrentDataSet().getAutoCompletionManager().getValues("building");
+
+            buildingComboBox = new AutoCompletingComboBox();
+            buildingComboBox.setPossibleACItems(values);
+            buildingComboBox.setEditable(true);
+            buildingComboBox.setSelectedItem("yes");
+
+        }
+        return buildingComboBox;
     }
 
     /**

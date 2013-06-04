@@ -220,7 +220,7 @@ public final class TerracerAction extends JosmAction {
             // Special case of one outline and one address node.
             // Don't open the dialog
             try {
-                terraceBuilding(outline, init, street, associatedStreet, 0, null, null, 0, housenumbers, streetname, associatedStreet != null, false);
+                terraceBuilding(outline, init, street, associatedStreet, 0, null, null, 0, housenumbers, streetname, associatedStreet != null, false, "yes");
             } catch (UserCancelException ex) {
                 // Ignore
             } finally {
@@ -230,7 +230,7 @@ public final class TerracerAction extends JosmAction {
         } else {
             String title = trn("Change {0} object", "Change {0} objects", sel.size(), sel.size());
             // show input dialog.
-            new HouseNumberInputHandler(this, outline, init, street, streetname,
+            new HouseNumberInputHandler(this, outline, init, street, streetname, null,
                     associatedStreet, housenumbers, title);
         }
     }
@@ -311,6 +311,7 @@ public final class TerracerAction extends JosmAction {
      * @param handleRelations If the user likes to add a relation or extend an
      *        existing relation
      * @param deleteOutline If the outline way should be deleted when done
+     * @param buildingValue The value for {@code building} key to add
      * @throws UserCancelException 
      */
     public void terraceBuilding(Way outline,
@@ -324,7 +325,7 @@ public final class TerracerAction extends JosmAction {
                 ArrayList<Node> housenumbers,
                 String streetName,
                 boolean handleRelations,
-                boolean deleteOutline) throws UserCancelException {
+                boolean deleteOutline, String buildingValue) throws UserCancelException {
         final int nb;
         Integer to = null, from = null;
         if (housenumbers == null || housenumbers.isEmpty()) {
@@ -396,7 +397,7 @@ public final class TerracerAction extends JosmAction {
                 // add the tags of the outline to each building (e.g. source=*)
                 TagCollection.from(outline).applyTo(terr);
                 ways.add(addressBuilding(terr, street, streetName, associatedStreet, housenumbers, i, 
-                        from != null ? Integer.toString(from + i * step) : null));
+                        from != null ? Integer.toString(from + i * step) : null, buildingValue));
                 
                 this.commands.add(new AddCommand(terr));
             }
@@ -416,7 +417,7 @@ public final class TerracerAction extends JosmAction {
             }
         } else {
             // Single building, just add the address details
-            ways.add(addressBuilding(outline, street, streetName, associatedStreet, housenumbers, 0, From));
+            ways.add(addressBuilding(outline, street, streetName, associatedStreet, housenumbers, 0, From, buildingValue));
         }
 
         // Remove the address nodes since their tags have been incorporated into
@@ -472,10 +473,11 @@ public final class TerracerAction extends JosmAction {
      * @param street The street, the buildings belong to (may be null)
      * @param streetName the name of a street (may be null). Used if not null and street is null.
      * @param associatedStreet The associated street. Used to determine if addr:street should be set or not.
+     * @param buildingValue The value for {@code building} key to add
      * @return {@code outline}
      * @throws UserCancelException 
      */
-    private Way addressBuilding(Way outline, Way street, String streetName, Relation associatedStreet, ArrayList<Node> housenumbers, int i, String defaultNumber) throws UserCancelException {
+    private Way addressBuilding(Way outline, Way street, String streetName, Relation associatedStreet, ArrayList<Node> housenumbers, int i, String defaultNumber, String buildingValue) throws UserCancelException {
         Node houseNum = (housenumbers != null && i >= 0 && i < housenumbers.size()) ? housenumbers.get(i) : null;
         boolean buildingAdded = false;
         boolean numberAdded = false;
@@ -497,7 +499,7 @@ public final class TerracerAction extends JosmAction {
             numberAdded = houseNum.hasKey("addr:housenumber");
         }
         if (!outline.hasKey("building") && !buildingAdded) {
-            this.commands.add(new ChangePropertyCommand(outline, "building", "yes"));
+            this.commands.add(new ChangePropertyCommand(outline, "building", buildingValue));
         }
         if (defaultNumber != null && !numberAdded) {
             this.commands.add(new ChangePropertyCommand(outline, "addr:housenumber", defaultNumber));

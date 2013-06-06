@@ -37,6 +37,7 @@ import org.jgrapht.alg.BellmanFordShortestPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
@@ -240,7 +241,12 @@ public class RoutingGraph {
 	 * @param to
 	 */
 	private void addEdge(Way way,Node from, Node to) {
-		double length = from.getCoor().greatCircleDistance(to.getCoor());
+	    LatLon fromLL = from.getCoor();
+	    LatLon toLL = from.getCoor();
+	    if (fromLL == null || toLL == null) {
+	        return;
+	    }
+		double length = fromLL.greatCircleDistance(toLL);
 
 		OsmEdge edge = new OsmEdge(way, from, to);
 		edge.setSpeed(12.1);
@@ -251,7 +257,6 @@ public class RoutingGraph {
 		logger.debug("edge for way " + way.getId()
 				+ "(from node " + from.getId() + " to node "
 				+ to.getId() + ") has weight: " + weight);
-		//((GraphDelegator<Node,OsmEdge>) graph).setEdgeWeight(edge, weight);
 		((DirectedWeightedMultigraph<Node,OsmEdge>)graph).setEdgeWeight(edge, weight);
 	}
 

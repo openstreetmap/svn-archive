@@ -25,6 +25,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -52,6 +53,11 @@ public class OsmarenderPlugin extends Plugin {
 
         @Override
 		public void actionPerformed(ActionEvent e) {
+            DataSet ds = Main.main.getCurrentDataSet();
+            if (ds == null) {
+                return;
+            }
+            
             // get all stuff visible on screen
             LatLon bottomLeft = Main.map.mapView.getLatLon(0,Main.map.mapView.getHeight());
             LatLon topRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
@@ -72,7 +78,7 @@ public class OsmarenderPlugin extends Plugin {
 
                 // Write nodes, make list of ways and relations
                 Set<OsmPrimitive> parents = new HashSet<OsmPrimitive>();
-                for (Node n : Main.main.getCurrentDataSet().getNodes()) {
+                for (Node n : ds.getNodes()) {
                     if (n.isUsable() && n.getCoor().isWithin(b)) {
                         parents.addAll(n.getReferrers());
                         w.visit(n);

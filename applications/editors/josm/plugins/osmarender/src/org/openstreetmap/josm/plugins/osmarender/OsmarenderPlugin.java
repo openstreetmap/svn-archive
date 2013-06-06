@@ -40,6 +40,7 @@ import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.PlatformHookWindows;
 
 public class OsmarenderPlugin extends Plugin {
 
@@ -106,14 +107,14 @@ public class OsmarenderPlugin extends Plugin {
                 w.close();
 
                 // get the exec line
-                String exec = firefox;
-                if (System.getProperty("os.name").startsWith("Windows"))
-                    exec += " file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
+                String argument; 
+                if (Main.platform instanceof PlatformHookWindows)
+                    argument = "file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
                 else
-                    exec += " "+getPluginDir()+File.separator+"generated.xml";
+                    argument = getPluginDir()+File.separator+"generated.xml";
 
                 // launch up the viewer
-                Runtime.getRuntime().exec(exec);
+                Runtime.getRuntime().exec(new String[]{firefox, argument});
             } catch (IOException e1) {
                 JOptionPane.showMessageDialog(Main.parent, tr("Firefox not found. Please set firefox executable in the Map Settings page of the preferences."));
             }

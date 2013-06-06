@@ -28,6 +28,8 @@
 package com.innovant.josm.jrt.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +89,11 @@ public class RoutingGraph {
 	 */
 	static Logger logger = Logger.getLogger(RoutingGraph.class);
 
+    private static Collection<String> excludedHighwayValues = Arrays.asList(new String[]{
+        "bus_stop", "traffic_signals", "street_lamp", "stop", "construction", 
+        "platform", "give_way", "proposed", "milestone", "speed_camera", "abandoned"
+    });
+	
 	/**
 	 * Graph state
 	 * <code>true</code> Graph in memory.
@@ -319,8 +326,10 @@ public class RoutingGraph {
 	public boolean isvalidWay(Way way) {
 		//if (!way.isTagged())            <---not needed me thinks
 		//    return false;
+	    
+	    String highway = way.get("highway");
 
-		return way.get("highway") != null || way.get("junction") != null
+		return (highway != null && !excludedHighwayValues.contains(highway)) || way.get("junction") != null
 				|| way.get("service") != null;
 
 	}

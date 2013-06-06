@@ -31,7 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.gpx.GpxConstants;
 import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.JMultilineLabel;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
@@ -139,7 +141,7 @@ public class UploadDataGui extends ExtendedDialog {
         descriptionField.setToolTipText(tr("Please enter Description about your trace."));
         
         List<String> descHistory = new LinkedList<String>(Main.pref.getCollection("directupload.description.history", new LinkedList<String>()));
-        // we have to reverse the history, because ComboBoxHistory will reverse it againin addElement()
+        // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         // XXX this should be handled in HistoryComboBox
         Collections.reverse(descHistory);
         descriptionField.setPossibleItems(descHistory);
@@ -174,23 +176,36 @@ public class UploadDataGui extends ExtendedDialog {
     }
 
     private void initTitleAndDescriptionFromGpxData(GpxData gpxData) {
-      String description, title;
-      try {
-          description = gpxData.storageFile.getName().replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
+      String description, title, tags = "";
+      if (gpxData != null) {
+          GpxTrack firstTrack = gpxData.tracks.iterator().next();
+          Object meta_desc = gpxData.attr.get(GpxConstants.META_DESC);
+          if (meta_desc != null) {
+              description = meta_desc.toString();
+          } else if (firstTrack != null && gpxData.tracks.size() == 1 && firstTrack.get("desc") != null) {
+              description = firstTrack.getString("desc");
+          } else {
+              description = gpxData.storageFile.getName().replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
+          }
           title = tr("Selected track: {0}", gpxData.storageFile.getName());
+          Object meta_tags = gpxData.attr.get(GpxConstants.META_KEYWORDS);
+          if (meta_tags != null) {
+              tags = meta_tags.toString();
+          }
       }
-      catch(Exception e) {
+      else {
           description = new SimpleDateFormat("yyMMddHHmmss").format(new Date()); 
           title = tr("No GPX layer selected. Cannot upload a trace.");
       }
       OutputDisplay.setText(title);
       descriptionField.setText(description);
+      tagsField.setText(tags);
     }
 
     /**
      * This is the actual workhorse that manages the upload.
      * @param String Description of the GPX track being uploaded
-     * @param String Tags assosciated with the GPX track being uploaded
+     * @param String Tags associated with the GPX track being uploaded
      * @param boolean Shall the GPX track be public
      * @param GpxData The GPX Data to upload
      */

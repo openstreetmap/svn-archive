@@ -79,7 +79,7 @@ public class OsmarenderPlugin extends Plugin {
                 // Write nodes, make list of ways and relations
                 Set<OsmPrimitive> parents = new HashSet<OsmPrimitive>();
                 for (Node n : ds.getNodes()) {
-                    if (n.isUsable() && n.getCoor().isWithin(b)) {
+                    if (n.isUsable() && n.getCoor() != null && n.getCoor().isWithin(b)) {
                         parents.addAll(n.getReferrers());
                         w.visit(n);
                     }
@@ -89,7 +89,7 @@ public class OsmarenderPlugin extends Plugin {
                 for (OsmPrimitive p : new HashSet<OsmPrimitive>(parents)) {
                     if (p instanceof Way) {
                         for (Node n : ((Way) p).getNodes()) {
-                            if (n.getCoor().isWithin(b))
+                            if (n.getCoor() != null && n.getCoor().isWithin(b))
                                 parents.add(n);
                         }
                     }

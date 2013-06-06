@@ -14,11 +14,21 @@ import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -33,7 +43,7 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
  *
  * @author ramack
  */
-public class MeasurementDialog extends ToggleDialog implements SelectionChangedListener {
+public class MeasurementDialog extends ToggleDialog implements SelectionChangedListener, DataSetListener {
     private static final long serialVersionUID = 4708541586297950021L;
 
     /**
@@ -60,6 +70,11 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
      * The measurement label for the segment angle, actually updated, if 2 nodes are selected
      */
     protected JLabel segAngleLabel;
+    
+    private DataSet ds;
+
+    private Collection<Way> ways;
+    private Collection<Node> nodes;
     
     /**
      * Constructor
@@ -118,7 +133,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     }
 
     /**
-     * Cleans the active Meausurement Layer
+     * Cleans the active Measurement Layer
      */
     public void resetValues(){
         MeasurementPlugin.getCurrentLayer().reset();
@@ -131,9 +146,10 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         double area = 0.0;
         Node lastNode = null;
         // Don't mix up way and nodes computation (fix #6872). Priority given to ways
-        SubclassFilteredCollection<OsmPrimitive, Way> ways = new SubclassFilteredCollection<OsmPrimitive, Way>(newSelection, OsmPrimitive.wayPredicate);
+        ways = new SubclassFilteredCollection<OsmPrimitive, Way>(newSelection, OsmPrimitive.wayPredicate);
         if (ways.isEmpty()) {
-            for (Node n : new SubclassFilteredCollection<OsmPrimitive, Node>(newSelection, OsmPrimitive.nodePredicate)) {
+            nodes = new SubclassFilteredCollection<OsmPrimitive, Node>(newSelection, OsmPrimitive.nodePredicate);
+            for (Node n : nodes) {
                 if (n.getCoor() != null) {
                     if (lastNode == null) {
                         lastNode = n;
@@ -145,6 +161,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                 }
             }
         } else {
+            nodes = null;
             for (Way w : ways) {
                 Node lastN = null;
                 double wayArea = 0.0;
@@ -178,6 +195,18 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                 selectAreaLabel.setText(areaLabel);
             }
         });
+        
+        DataSet currentDs = Main.main.getCurrentDataSet();
+    
+        if (ds != currentDs) {
+            if (ds != null) {
+                ds.removeDataSetListener(this);
+            }
+            if (currentDs != null) {
+                currentDs.addDataSetListener(this);
+            }
+            ds = currentDs;
+        }
 	}
 
 	/* (non-Javadoc)
@@ -187,5 +216,36 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
 	public void destroy() {
 		super.destroy();
 		DataSet.removeSelectionListener(this);
+		if (ds != null) {
+		    ds.removeDataSetListener(this);
+		    ds = null;
+		}
 	}
+
+	private boolean waysContain(Node n) {
+	    if (ways != null) {
+	        for (Way w : ways) {
+	            if (w.containsNode(n)) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+	
+    @Override public void nodeMoved(NodeMovedEvent event) {
+        Node n = event.getNode();
+        // Refresh selection if a node belonging to a selected member has moved (example: scale action)
+        if ((nodes != null && nodes.contains(n)) || waysContain(n)) {
+            selectionChanged(Main.main.getCurrentDataSet().getSelected());
+        }
+    }
+
+    @Override public void primitivesAdded(PrimitivesAddedEvent event) {}
+    @Override public void primitivesRemoved(PrimitivesRemovedEvent event) {}
+    @Override public void tagsChanged(TagsChangedEvent event) {}
+    @Override public void wayNodesChanged(WayNodesChangedEvent event) { }
+    @Override public void relationMembersChanged(RelationMembersChangedEvent event) {}
+    @Override public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
+    @Override public void dataChanged(DataChangedEvent event) {}
 }

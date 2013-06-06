@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
@@ -73,7 +74,8 @@ public class OsmarenderPlugin extends Plugin {
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
             try {
                 // write to plugin dir
-                OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new FileOutputStream(getPluginDir()+File.separator+"data.osm")), false, "0.6");
+                OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new OutputStreamWriter(
+                        new FileOutputStream(getPluginDir()+File.separator+"data.osm"), "UTF-8")), false, "0.6");
                 w.header();
 
                 // Write nodes, make list of ways and relations
@@ -197,9 +199,9 @@ public class OsmarenderPlugin extends Plugin {
 
         BufferedReader reader = new BufferedReader(
                 new FileReader( getPluginDir() + File.separator + "osm-map-features.xml") );
-        PrintWriter writer = new PrintWriter( getPluginDir() + File.separator + "generated.xml");
+        PrintWriter writer = new PrintWriter( getPluginDir() + File.separator + "generated.xml", "UTF-8");
 
-        // osm-map-fetaures.xml contain two placemark
+        // osm-map-features.xml contain two placemark
         // (bounds_mkr1 and bounds_mkr2). We write the bounds tag
         // between the two
         String str = null;

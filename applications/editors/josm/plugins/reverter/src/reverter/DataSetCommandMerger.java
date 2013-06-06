@@ -93,14 +93,15 @@ final class DataSetCommandMerger {
         List<Node> newNodes = new ArrayList<Node>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node)getMergeTarget(sourceNode);
-            if (targetNode.isDeleted() && sourceNode.isIncomplete()
+            if (!targetNode.isDeleted()) {
+                newNodes.add(targetNode);
+            } else if (sourceNode.isIncomplete()
                     && !conflicts.hasConflictForMy(targetNode)) {
                 conflicts.add(new Conflict<OsmPrimitive>(targetNode, sourceNode, true));
                 Node undeletedTargetNode = new Node(targetNode);
                 undeletedTargetNode.setDeleted(false);
                 addChangeCommandIfNotEquals(targetNode,undeletedTargetNode);
             }
-            newNodes.add(targetNode);
         }
         Way newTarget = new Way(target);
         mergePrimitive(source, target, newTarget);

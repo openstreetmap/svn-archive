@@ -255,6 +255,7 @@ public class ImportVectorAction extends JosmAction {
             this.center = projection.latlon2eastNorth(center);
             try {
                 SVGUniverse universe = new SVGUniverse();
+                universe.setVerbose(Main.pref.getBoolean("importvec.verbose", false));
                 for (File f : files) {
                     if (canceled) return;
                     SVGDiagram diagram = universe.getDiagram(f.toURI());

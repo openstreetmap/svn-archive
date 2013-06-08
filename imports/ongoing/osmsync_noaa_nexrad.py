@@ -4,6 +4,11 @@
 ##  Licence: Public Domain, no rights reserved
 ##
 ##  osmsync module to import NOAA NEXRAD radar stations
+##  To make an import:
+##  1) Run this script and save output as "noaa.osm".
+##  2) Import into JOSM.
+##  3) Download 'http://open.mapquestapi.com/xapi/api/0.6/node[radar=NEXRAD]'
+##  4) Compare the two datasets, adjust and commit.
 ##
 ##  See also:
 ##      http://wiki.openstreetmap.org/wiki/Potential_Datasources

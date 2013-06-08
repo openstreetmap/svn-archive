@@ -10,6 +10,7 @@ public class MirroredDownloadPlugin extends Plugin {
 
     public MirroredDownloadPlugin(PluginInformation info) {
         super(info);
+        MainMenu.addAfter(Main.main.menu.fileMenu, new OverpassDownloadAction(), false, Main.main.menu.download);
         MainMenu.addAfter(Main.main.menu.fileMenu, new MirroredDownloadAction(), false, Main.main.menu.download);
         MainMenu.add(Main.main.menu.editMenu, new UrlSelectionAction());
     }

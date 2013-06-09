@@ -376,7 +376,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
                     new Dimension(600, 400))).applySafe(this);
             setCancelled(false);
             btnApply.requestFocusInWindow();
-        } else {
+        } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
         }
         super.setVisible(visible);

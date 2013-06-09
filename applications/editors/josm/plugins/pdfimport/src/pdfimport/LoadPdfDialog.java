@@ -511,11 +511,11 @@ public class LoadPdfDialog extends JFrame{
 		@Override
 		public void setVisible(boolean visible) {
 			if (visible) {
-			new WindowGeometry(
-				getClass().getName() + ".geometry",
-				WindowGeometry.centerOnScreen(new Dimension(400, 300))).applySafe(this);
-			} else {
-			new WindowGeometry(this).remember(getClass().getName() + ".geometry");
+    			new WindowGeometry(
+    				getClass().getName() + ".geometry",
+    				WindowGeometry.centerOnScreen(new Dimension(400, 300))).applySafe(this);
+			} else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
+    			new WindowGeometry(this).remember(getClass().getName() + ".geometry");
 			}
 			super.setVisible(visible);
 		}

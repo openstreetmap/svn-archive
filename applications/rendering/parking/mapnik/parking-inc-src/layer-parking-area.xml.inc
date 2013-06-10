@@ -238,6 +238,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
             WHEN 'permit' THEN 'residentsX'
             WHEN 'permissive' THEN 'customersX'
             WHEN 'destination' THEN 'customersX'
+            WHEN 'yes' THEN '-'
             ELSE LOWER(COALESCE(access,'-'))
           END AS "accessX",
           CASE /* conditionX = */ LOWER(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'))
@@ -314,6 +315,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
             WHEN 'permit' THEN 'residentsX'
             WHEN 'permissive' THEN 'customersX'
             WHEN 'destination' THEN 'customersX'
+            WHEN 'yes' THEN '-'
             ELSE LOWER(COALESCE(access,'-'))
           END AS "accessX",
           CASE /* conditionX = */ LOWER(COALESCE(tags->'parking:condition:area',tags->'parking:condition','-'))

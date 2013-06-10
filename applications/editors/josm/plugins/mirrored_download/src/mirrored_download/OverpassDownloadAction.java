@@ -40,7 +40,7 @@ public class OverpassDownloadAction extends JosmAction {
 
     public OverpassDownloadAction() {
         super(tr("Download from Overpass API ..."), "download_mirror", tr("Download map data from Overpass API server."),
-                Shortcut.registerShortcut("overpass:download", tr("File: {0}", tr("Download from Overpass API ...")), KeyEvent.VK_DOWN, Shortcut.ALT_SHIFT),
+                /*Shortcut.registerShortcut("overpass:download", tr("File: {0}", tr("Download from Overpass API ...")), KeyEvent.VK_DOWN, Shortcut.ALT_SHIFT)*/null,
                 true, "overpassdownload/download", true);
         putValue("help", ht("/Action/OverpassDownload"));
     }
@@ -104,12 +104,8 @@ public class OverpassDownloadAction extends JosmAction {
         @Override
         protected String getBaseUrl() {
             String url = MirroredDownloadPlugin.getDownloadUrl();
-            System.out.println(url.substring(url.length() - 5, url.length()));
             if ("xapi?".equals(url.substring(url.length() - 5, url.length())))
-            {
-                System.out.println(url.substring(0, url.length() - 5));
                 return url.substring(0, url.length() - 5);
-            }
             else
                 return url;
         }

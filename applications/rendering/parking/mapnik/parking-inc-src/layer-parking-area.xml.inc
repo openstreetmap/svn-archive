@@ -185,7 +185,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name,
+      (SELECT way,amenity,name,
         CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
           WHEN 'surface' THEN 'surface'
           WHEN 'multi-storey' THEN 'multistorey'
@@ -229,7 +229,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
         END AS "cond",tags
       from (
         /* subselect cleans following values: access->accessX, parking:condition->conditionX, fee->feeX */
-        SELECT osm_id,way,amenity,tourism,name,tags,
+        SELECT osm_id,way,amenity,name,tags,
           CASE /* feeX = */ LOWER(COALESCE(tags->'fee','-'))
             WHEN '-' THEN '-'
             ELSE LOWER(COALESCE(tags->'fee','-'))
@@ -251,7 +251,6 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
         ) as subselect
       where 
           amenity in ('parking')
-          or tourism in ('camp_site','caravan_site','picnic_site')
       ) as parking
       </Parameter>
       &datasource-settings;
@@ -262,7 +261,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <StyleName>parking-area</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name,
+      (SELECT way,amenity,name,
         CASE /* parking= */ LOWER(COALESCE(tags->'parking','surface'))
           WHEN 'surface' THEN 'surface'
           WHEN 'multi-storey' THEN 'multistorey'
@@ -306,7 +305,7 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
         END AS "cond",tags
       from (
         /* subselect cleans following values: access->accessX, parking:condition->conditionX, fee->feeX */
-        SELECT osm_id,way,amenity,tourism,name,tags,
+        SELECT osm_id,way,amenity,name,tags,
           CASE /* feeX = */ LOWER(COALESCE(tags->'fee','-'))
             WHEN '-' THEN '-'
             ELSE LOWER(COALESCE(tags->'fee','-'))
@@ -328,7 +327,6 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
         ) as subselect
       where 
           amenity in ('parking')
-          or tourism in ('camp_site','caravan_site','picnic_site')
       ) as parking
       </Parameter>
       &datasource-settings;
@@ -348,13 +346,12 @@ Für inline string-replace nutzen: overlay(string placing string from int [for i
     <StyleName>parking-area-text</StyleName>
     <Datasource>
       <Parameter name="table">
-      (SELECT way,amenity,tourism,name,
+      (SELECT way,amenity,name,
         (COALESCE(name,tags->'parking:condition:area:customers',tags->'parking:condition:customers',operator,'')
         ) AS "parkname" 
       from &prefix;_polygon
       where
           amenity in ('parking')
-          or tourism in ('camp_site','caravan_site','picnic_site')
       ) as parking
       </Parameter>
       &datasource-settings;

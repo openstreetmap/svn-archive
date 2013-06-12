@@ -58,6 +58,7 @@ public interface ToulouseConstants extends FrenchConstants {
     public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "");
     public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "");
     public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "");
+    public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "");
     public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "");
     public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "");
     public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "");

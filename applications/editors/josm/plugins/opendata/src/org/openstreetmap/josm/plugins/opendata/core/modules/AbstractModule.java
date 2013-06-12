@@ -133,7 +133,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 				try {
 					result.add(handlerClass.newInstance());
 				} catch (Throwable t) {
-					System.err.println(t.getClass().getName()+": "+t.getMessage());
+					System.err.println("Cannot instantiate "+handlerClass+" because of "+t.getClass().getName()+": "+t.getMessage());
 				}
 			}
 		}

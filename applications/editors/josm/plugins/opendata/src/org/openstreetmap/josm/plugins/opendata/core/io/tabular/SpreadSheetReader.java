@@ -182,34 +182,35 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 			    ens.put(c, new EastNorth(Double.NaN, Double.NaN));
 			}
 			
-			for (int i = 0; i<fields.length; i++) {
+			if (fields.length > header.length) {
+			    Main.warn(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, fields.length));
+			    Main.warn(Arrays.toString(fields));
+			}
+			
+			for (int i = 0; i<Math.min(fields.length, header.length); i++) {
 				try {
-					if (i >= header.length) {
-						throw new IllegalArgumentException(tr("Invalid file. Bad length on line {0}. Expected {1} columns, got {2}.", lineNumber, header.length, i+1));
-					} else {
-					    boolean coordinate = false;
-					    for (CoordinateColumns c : columns) {
-					        EastNorth en = ens.get(c);
-	                        if (i == c.xCol) {
-	                            coordinate = true;
-	                            en.setLocation(parseDouble(fields[i]), en.north());
-	                            if (handler != null) {
-	                                handler.setXCol(i);
-	                            }
-	                        } else if (i == c.yCol) {
-                                coordinate = true;
-	                            en.setLocation(en.east(), parseDouble(fields[i]));
-	                            if (handler != null) {
-	                                handler.setYCol(i);
-	                            }
-	                        }					        
-					    }
-	                    if (!coordinate) {
-	                        if (!fields[i].isEmpty()) {
-	                            nodes.values().iterator().next().put(header[i], fields[i]);
-	                        }
-	                    }
-					}
+				    boolean coordinate = false;
+				    for (CoordinateColumns c : columns) {
+				        EastNorth en = ens.get(c);
+                        if (i == c.xCol) {
+                            coordinate = true;
+                            en.setLocation(parseDouble(fields[i]), en.north());
+                            if (handler != null) {
+                                handler.setXCol(i);
+                            }
+                        } else if (i == c.yCol) {
+                            coordinate = true;
+                            en.setLocation(en.east(), parseDouble(fields[i]));
+                            if (handler != null) {
+                                handler.setYCol(i);
+                            }
+                        }					        
+				    }
+                    if (!coordinate) {
+                        if (!fields[i].isEmpty()) {
+                            nodes.values().iterator().next().put(header[i], fields[i]);
+                        }
+                    }
 				} catch (ParseException e) {
 					System.err.println("Warning: Parsing error on line "+lineNumber+": "+e.getMessage());
 				}

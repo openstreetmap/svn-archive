@@ -36,7 +36,7 @@ endabbreviations2.update({'Straat':'S','straat':'s.'})
 
 #french
 begabbreviations1.update({'Avenue':'Av.','Allée du ':'Al. d. ','Allée':'Al.','Boulevard':'Bl.','Chemin':'Ch.','Impasse':'Imp.','Place':'Pl.','Promenade':'Prmd.','Quartier':'Qu.','Route de la ':'Rt. d. l. ','Rue':'R.','rue':'r.','Square':'Sq.'})
-begabbreviations2.update({'Impasse':'I','Quartier de la ':'Q d l','Quartier des ':'Q d ','Rue de la ':'R d l ','rue ':'r ','Square de la ':'S d l','Square des ':'S d '})
+begabbreviations2.update({'Impasse':'I','Quartier de la ':'Q d l','Quartier des ':'Q d ','Rue de la ':'R d l ','rue ':'r ','Square de la ':'S d l ','Square des ':'S d '})
 
 #spanish
 begabbreviations1.update({'Avenida':'Av.','avenida':'av.','Camino':'Cno.','Plaza de ':'Pl. d. ','Plaza':'Pl.','Rua':'R.','rua':'r.','Rúa':'R.','rúa':'r.','Calle':'C.','calle':'c.'})

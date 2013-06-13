@@ -25,6 +25,7 @@ public class TramwayStationHandler extends ToulouseDataSetHandler {
         super(12611, "tram=yes");
         setName("Stations de tramway");
         setCategory(CAT_TRANSPORT);
+        setMenuIcon("styles/standard/transport/railway_station.png");
     }
 
     @Override

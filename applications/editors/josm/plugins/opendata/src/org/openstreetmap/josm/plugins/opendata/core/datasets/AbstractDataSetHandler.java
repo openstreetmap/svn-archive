@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.swing.ImageIcon;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -43,6 +45,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.util.NamesFrUtils;
+import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public abstract class AbstractDataSetHandler implements OdConstants {
@@ -84,6 +87,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	private DataSetCategory category;
 	private String sourceDate;
 	private File associatedFile;
+	private ImageIcon menuIcon;
 
 	public AbstractDataSetHandler() {
 		setShpHandler(new DefaultShpHandler());
@@ -396,7 +400,19 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 				this.getClass().getPackage().getName().replace(".", "/")+"/"+
 				fileNameWithoutExtension+"."+MAPCSS_EXT);
 	}
-		
+	
+    public final ImageIcon getMenuIcon() {
+        return menuIcon;
+    }
+
+    public final void setMenuIcon(ImageIcon icon) {
+        this.menuIcon = icon;
+    }
+
+    public final void setMenuIcon(String iconName) {
+        setMenuIcon(OdUtils.getImageIcon(iconName));
+    }
+
 	public final void setAssociatedFile(File associatedFile) {
 		this.associatedFile = associatedFile;
 	}

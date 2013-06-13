@@ -25,6 +25,7 @@ public class PMRHandler extends ToulouseDataSetHandler {
         super(12538, "amenity=parking_space");
         setWikiPage("PMR");
         setCategory(CAT_TRANSPORT);
+        setMenuIcon("styles/standard/vehicle/parking/handicapped.png");
     }
 
     @Override

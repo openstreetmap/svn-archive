@@ -50,17 +50,17 @@ public interface ToulouseConstants extends FrenchConstants {
     public static final String TOULOUSE_NEPTUNE_XSD = "/neptune_toulouse/neptune.xsd";
     
     /**
-     * Categories: TODO: icons
+     * Categories
      */
-    public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "");
-    public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "");
-    public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "");
-    public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "");
-    public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "");
-    public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "");
-    public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "");
-    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "");
-    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "");
-    public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "");
-    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "");
+    public static final DataSetCategory CAT_ASSOCIATIONS = new DataSetCategory("Associations", "styles/standard/people.png");
+    public static final DataSetCategory CAT_CITOYENNETE = new DataSetCategory("Citoyenneté", "presets/townhall.png");
+    public static final DataSetCategory CAT_CULTURE = new DataSetCategory("Culture", "presets/arts_centre.png");
+    public static final DataSetCategory CAT_ENFANCE = new DataSetCategory("Enfance", "presets/kindergarten.png");
+    public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "presets/recycling.png");
+    public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "presets/ruins.png");
+    public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "styles/standard/vehicle/services.png");
+    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "presets/soccer.png");
+    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "presets/peak.png");
+    public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "presets/bus.png");
+    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "presets/places.png");
 }

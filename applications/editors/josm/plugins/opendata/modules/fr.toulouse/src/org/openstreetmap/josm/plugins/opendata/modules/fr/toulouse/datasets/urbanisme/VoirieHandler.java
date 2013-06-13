@@ -38,10 +38,11 @@ public class VoirieHandler extends ToulouseDataSetHandler {
         this(12693, "lib_off", "highway");
         setName("Filaire de voirie");
         setCategory(CAT_URBANISME);
+        setMenuIcon("presets/way_secondary.png");
     }
     
-    protected VoirieHandler(int portalId, String streetField, String relevantKey) {
-        super(portalId, relevantKey);
+    protected VoirieHandler(int portalId, String streetField, String relevantTag) {
+        super(portalId, relevantTag);
         this.streetField = streetField;
         map.put("motorway", Arrays.asList(new String[] {"A6", "AUTOROUTE "}));
         map.put("trunk", Arrays.asList(new String[] {"ROCADE "}));

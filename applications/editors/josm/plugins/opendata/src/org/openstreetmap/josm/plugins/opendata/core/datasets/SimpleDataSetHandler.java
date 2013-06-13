@@ -15,6 +15,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.NODE;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.RELATION;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.WAY;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.NODE_RELATION;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.RELATION_WAY;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.WAY_NODE;
+import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.WAY_RELATION;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,10 +31,8 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
 import org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi;
-
-import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.*;
-import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecurseType.*;
 
 public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 
@@ -44,6 +50,14 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 	public SimpleDataSetHandler(String relevantTag) {
 		addRelevantTag(relevantTag);
 		this.relevantUnion = false;
+        Tag tag;
+		String[] kv = relevantTag.split("=");
+		if (kv != null && kv.length == 2) {
+	        tag = new Tag(kv[0], kv[1]);
+		} else {
+		    tag = new Tag(relevantTag);
+		}
+		setMenuIcon(MapPaintStyles.getNodeIcon(tag));
 	}
 	
 	public SimpleDataSetHandler(boolean relevantUnion, String ... relevantTags) {

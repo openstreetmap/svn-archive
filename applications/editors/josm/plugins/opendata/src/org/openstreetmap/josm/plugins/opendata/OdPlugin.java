@@ -18,6 +18,7 @@ package org.openstreetmap.josm.plugins.opendata;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -128,6 +130,7 @@ public final class OdPlugin extends Plugin implements OdConstants {
         			if (cat != null) {
         				if ((endMenu = catMenus.get(cat)) == null) {
         					catMenus.put(cat, endMenu = new JMenu(cat.getName()));
+        					setMenuItemIcon(cat.getIcon(), endMenu);
         					moduleMenu.add(endMenu);
         				}
         			}
@@ -138,8 +141,9 @@ public final class OdPlugin extends Plugin implements OdConstants {
         			if (handlerName == null || handlerName.isEmpty()) {
         				handlerName = handler.getClass().getName();
         			}
+        			JMenuItem handlerItem = null;
         			if (handler.getDataURL() != null) {
-        				endMenu.add(new DownloadDataAction(handlerName, handler.getDataURL()));
+        			    handlerItem = endMenu.add(new DownloadDataAction(handlerName, handler.getDataURL()));
         			} else if (handler.getDataURLs() != null) {
         				JMenu handlerMenu = new JMenu(handlerName);
         				JMenuItem item = null;
@@ -150,8 +154,11 @@ public final class OdPlugin extends Plugin implements OdConstants {
         				}
         				if (item != null) {
         					MenuScroller.setScrollerFor(handlerMenu, (screenHeight / item.getPreferredSize().height)-3);
-        					endMenu.add(handlerMenu);
+        					handlerItem = endMenu.add(handlerMenu);
         				}
+        			}
+        			if (handlerItem != null) {
+        			    setMenuItemIcon(handler.getMenuIcon(), handlerItem);
         			}
         		}
         	}
@@ -163,6 +170,15 @@ public final class OdPlugin extends Plugin implements OdConstants {
         menu.addSeparator();
         /*JMenuItem itemIcon =*/ MainMenu.add(menu, new OpenPreferencesActions());
         //MenuScroller.setScrollerFor(menu, screenHeight / itemIcon.getPreferredSize().height);
+	}
+	
+	private void setMenuItemIcon(ImageIcon icon, JMenuItem menuItem) {
+        if (icon != null) {
+            if (icon.getIconHeight() != 16 || icon.getIconWidth() != 16) { 
+                icon = new ImageIcon(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
+            }
+            menuItem.setIcon(icon);
+        }
 	}
 
 	/* (non-Javadoc)

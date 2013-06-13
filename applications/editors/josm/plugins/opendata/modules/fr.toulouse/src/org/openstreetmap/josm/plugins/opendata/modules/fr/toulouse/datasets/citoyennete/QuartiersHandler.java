@@ -25,6 +25,7 @@ public class QuartiersHandler extends ToulouseDataSetHandler {
         super(12574, "admin_level=11");
         setWikiPage("Quartiers de proximité");
         setCategory(CAT_CITOYENNETE);
+        setMenuIcon("presets/boundaries.png");
     }
 
     @Override

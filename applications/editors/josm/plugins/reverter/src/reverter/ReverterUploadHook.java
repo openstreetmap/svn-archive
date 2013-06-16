@@ -30,7 +30,7 @@ public class ReverterUploadHook implements UploadHook {
         String created_by = tags.get("created_by");
         if (created_by == null || "".equals(created_by)) {
             if (hasRevertions) {
-                tags.put("created_by", Version.getInstance().getAgentString() + ";" + pluginString);
+                tags.put("created_by", Version.getInstance().getAgentString(false) + ";" + pluginString);
                 ud.setDefaultChangesetTags(tags);
             }
             return true;

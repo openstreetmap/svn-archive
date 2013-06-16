@@ -345,7 +345,7 @@ public class GTFSImporterAction extends JosmAction
     {
       int j = consideredLines.elementAt(i);
       if (nodes.elementAt(j) != null)
-        nodes.elementAt(j).visit(box);
+        nodes.elementAt(j).accept(box);
     }
     if (box.getBounds() == null)
       return;

@@ -54,7 +54,7 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
         Way way = (Way) primitive;
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
-        way.visit(visitor);
+        way.accept(visitor);
 
         Node addrNode = new Node(visitor.getBounds().getCenter());
 

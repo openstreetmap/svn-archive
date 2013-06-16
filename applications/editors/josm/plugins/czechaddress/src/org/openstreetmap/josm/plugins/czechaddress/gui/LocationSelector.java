@@ -91,9 +91,9 @@ public class LocationSelector extends ExtendedDialog {
 
         for (OsmPrimitive op : dataSet.allPrimitives()) {
             if (op instanceof Node) {
-                ((Node) op).visit(visitor);
+                ((Node) op).accept(visitor);
             } else if (op instanceof Way) {
-                ((Way) op).visit(visitor);
+                ((Way) op).accept(visitor);
             }
         }
 

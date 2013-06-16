@@ -1221,7 +1221,7 @@ public class RoutePatternAction extends JosmAction {
         {
           if ((itineraryTable.isRowSelected(i)) && (itineraryData.ways.elementAt(i) != null))
           {
-            itineraryData.ways.elementAt(i).visit(box);
+            itineraryData.ways.elementAt(i).accept(box);
           }
         }
       }
@@ -1231,7 +1231,7 @@ public class RoutePatternAction extends JosmAction {
         {
           if (itineraryData.ways.elementAt(i) != null)
           {
-            itineraryData.ways.elementAt(i).visit(box);
+            itineraryData.ways.elementAt(i).accept(box);
           }
         }
       }
@@ -1507,7 +1507,7 @@ public class RoutePatternAction extends JosmAction {
         {
           if (stoplistTable.isRowSelected(i))
           {
-            stoplistData.nodes.elementAt(i).visit(box);
+            stoplistData.nodes.elementAt(i).accept(box);
           }
         }
       }
@@ -1515,7 +1515,7 @@ public class RoutePatternAction extends JosmAction {
       {
         for (int i = 0; i < stoplistData.getRowCount(); ++i)
         {
-          stoplistData.nodes.elementAt(i).visit(box);
+          stoplistData.nodes.elementAt(i).accept(box);
         }
       }
       if (box.getBounds() == null)

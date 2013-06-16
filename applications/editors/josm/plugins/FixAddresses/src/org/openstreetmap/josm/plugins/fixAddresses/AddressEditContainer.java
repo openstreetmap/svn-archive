@@ -532,7 +532,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
 			for (OsmPrimitive osmPrimitive : osmData) {
 				if (osmPrimitive.isUsable()) {
-					osmPrimitive.visit(this);
+					osmPrimitive.accept(this);
 				}
 			}
 

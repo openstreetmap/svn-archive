@@ -3,7 +3,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="fix compile error (core changes)"/>
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5886"/>
+    <property name="plugin.main.version" value="6010"/>
 	
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

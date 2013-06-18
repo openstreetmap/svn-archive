@@ -29,7 +29,7 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 public class CsvReader extends SpreadSheetReader {
 
 	private final Charset charset;
-	private final String sep;
+	private String sep;
 	
 	private BufferedReader reader;
 	private String line;
@@ -56,10 +56,8 @@ public class CsvReader extends SpreadSheetReader {
 			if (csvHandler == null || (csvHandler.getSeparator() != null && csvHandler.getSeparator().equals(";"))) {
 				// If default sep has been used, try comma
 				System.out.println(e.getMessage());
-				CsvReader newReader = new CsvReader(csvHandler, ",");
-				newReader.initResources(in, instance);
-				newReader.line = csvReader.line;
-				return newReader.doParse(newReader.splitLine(), instance);
+				csvReader.sep = ",";
+				return csvReader.doParse(csvReader.splitLine(), instance);
 			} else {
 				throw e;
 			}

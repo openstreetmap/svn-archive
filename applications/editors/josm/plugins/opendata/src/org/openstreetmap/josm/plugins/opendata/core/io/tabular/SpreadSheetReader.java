@@ -34,6 +34,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionChooser;
@@ -89,6 +90,23 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
         return col;
 	}
 	
+	private class ChooserLauncher implements Runnable {
+
+	    public Projection proj = null;
+        private final ProgressMonitor progressMonitor;
+	    
+        public ChooserLauncher(ProgressMonitor progressMonitor) {
+            this.progressMonitor = progressMonitor;
+        }
+
+        @Override public void run() {
+            ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(progressMonitor.getWindowParent()).showDialog();
+            if (dialog.getValue() == 1) {
+                proj = dialog.getProjection();
+            }
+        }
+	}
+	
 	public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
 		System.out.println("Header: "+Arrays.toString(header));
 		
@@ -140,13 +158,13 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		} else if (!columns.isEmpty()) {
 			if (!handlerOK) {
 				// TODO: filter proposed projections with min/max values ?
-				ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(progressMonitor.getWindowParent()).showDialog();
-				if (dialog.getValue() != 1) {
+			    ChooserLauncher launcher = new ChooserLauncher(progressMonitor);
+			    GuiHelper.runInEDTAndWait(launcher);
+				if (launcher.proj == null) {
 					return null; // User clicked Cancel
 				}
-				Projection proj = dialog.getProjection();
 		        for (CoordinateColumns c : columns) {
-		            c.proj = proj;
+		            c.proj = launcher.proj;
 		        }
 			}
 			

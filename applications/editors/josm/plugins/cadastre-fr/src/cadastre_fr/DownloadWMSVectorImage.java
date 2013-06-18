@@ -53,6 +53,9 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                 // grab new images from wms server into active layer
                 wmsLayer.grab(bounds);
             }
+            else if(wmsLayer.getImages().size()==0)
+              // failed to contact WMS of find this commune. Remove layer if empty.
+              Main.main.removeLayer(wmsLayer);
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)
             System.err.println("removed a duplicated layer");

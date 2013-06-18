@@ -370,6 +370,16 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
      * @param dst2 second point "
      */
     private void affineTransform(EastNorth org1, EastNorth org2, EastNorth dst1, EastNorth dst2) {
+        // handle an NPE case I'm not able to reproduce
+        if(org1==null || org2==null || dst1==null || dst2==null)
+        {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Ooops. I failed to catch all coordinates\n"+
+                       "correctly. Retry please."));
+            System.out.println("failed to transform: one coordinate missing:"
+                       +"org1="+org1+", org2="+org2+", dst1="+dst1+", dst2="+dst2);
+            return;
+        }
         double angle = dst1.heading(dst2) - org1.heading(org2);
         double proportion = dst1.distance(dst2)/org1.distance(org2);
         // move

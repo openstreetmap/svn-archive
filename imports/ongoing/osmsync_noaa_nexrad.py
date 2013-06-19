@@ -101,6 +101,7 @@ class osmsync_noaa_nexrad(osmsync):
 
 #######################################################################################
 changeSetTags = {
+    'bot'               : 'yes',
     'source'            : 'osmsync:noaa:nexrad',
     'source:website'    : 'http://www.ncdc.noaa.gov/oa/radar/nexrad.kmz',
     'conflation_key'    : 'source:pkey',

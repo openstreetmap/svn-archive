@@ -82,16 +82,24 @@ public class TagBufferAction extends JosmAction {
             tags.clear();
             tags.putAll(currentTags);
         }
-        rememberSelectionTags();
+        if( getCurrentDataSet() != null)
+            rememberSelectionTags();
 
         setEnabled(selection != null && !selection.isEmpty() && !tags.isEmpty());
     }
 
     private void rememberSelectionTags() {
-        if( getCurrentDataSet() != null && !getCurrentDataSet().getSelected().isEmpty() ) {
+        // Fix #8350 - only care about tagged objects
+        Collection<OsmPrimitive> selectedTaggedObjects = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
+        for (Iterator<OsmPrimitive> it = selectedTaggedObjects.iterator(); it.hasNext(); ) {
+            if (!it.next().isTagged()) {
+                it.remove();
+            }
+        }
+        if( !selectedTaggedObjects.isEmpty() ) {
             currentTags.clear();
             Set<String> bad = new HashSet<String>();
-            for( OsmPrimitive p : getCurrentDataSet().getSelected() ) {
+            for( OsmPrimitive p : selectedTaggedObjects ) {
                 if( currentTags.isEmpty() ) {
                     for( String key : p.keySet() )
                         currentTags.put(key, p.get(key));

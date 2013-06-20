@@ -102,36 +102,36 @@ public class BCJ2_x86_Decoder implements ICompressCoder2 {
                 if (b == 0xE8) {
                     int b0 = _callStream.read();
                     // if(b0 == -1) return HRESULT.S_FALSE;
-                    src = ((int)b0) << 24;
+                    src = (b0) << 24;
                     
                     b0 = _callStream.read();
                     // if(b0 == -1) return HRESULT.S_FALSE;
-                    src |= ((int)b0) << 16;
+                    src |= (b0) << 16;
                     
                     b0 = _callStream.read();
                     // if(b0 == -1) return HRESULT.S_FALSE;
-                    src |= ((int)b0) << 8;
+                    src |= (b0) << 8;
                     
                     b0 = _callStream.read();
                     if(b0 == -1) return HRESULT.S_FALSE;
-                    src |= ((int)b0);
+                    src |= (b0);
                     
                 } else {
                     int b0 = _jumpStream.read();
                     // if(b0 == -1) return HRESULT.S_FALSE;
-                    src = ((int)b0) << 24;
+                    src = (b0) << 24;
                     
                     b0 = _jumpStream.read();
                     // if(b0 == -1) return HRESULT.S_FALSE;
-                    src |= ((int)b0) << 16;
+                    src |= (b0) << 16;
                     
                     b0 = _jumpStream.read();
                     // if(b0 == -1) return HRESULT.S_FALSE;
-                    src |= ((int)b0) << 8;
+                    src |= (b0) << 8;
                     
                     b0 = _jumpStream.read();
                     if(b0 == -1) return HRESULT.S_FALSE;
-                    src |= ((int)b0);
+                    src |= (b0);
                     
                 }
                 int dest = src - ((int)_outStream.GetProcessedSize() + 4) ;
@@ -139,7 +139,7 @@ public class BCJ2_x86_Decoder implements ICompressCoder2 {
                 _outStream.WriteByte((dest >> 8));
                 _outStream.WriteByte((dest >> 16));
                 _outStream.WriteByte((dest >> 24));
-                prevByte = (int)(dest >> 24) & 0xFF;
+                prevByte = dest >> 24 & 0xFF;
                 processedBytes += 4;
             } else
                 prevByte = b;

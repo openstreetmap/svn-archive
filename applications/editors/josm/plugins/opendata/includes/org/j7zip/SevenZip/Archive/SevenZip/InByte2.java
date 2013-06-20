@@ -29,7 +29,7 @@ class InByte2 {
         return (processedSize == size);
     }
     
-    int GetProcessedSize() { return _pos; }
+    //int GetProcessedSize() { return _pos; }
     
     InByte2() {
     }

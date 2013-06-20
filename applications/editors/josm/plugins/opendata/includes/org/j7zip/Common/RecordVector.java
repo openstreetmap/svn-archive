@@ -13,12 +13,4 @@ public class RecordVector<E> extends java.util.Vector<E>
     public E Back() {
         return get(elementCount-1);
     }
-    
-    public E Front() {
-        return get(0);
-    }
-    
-    public void DeleteBack() {
-        remove(elementCount-1);
-    }
 }

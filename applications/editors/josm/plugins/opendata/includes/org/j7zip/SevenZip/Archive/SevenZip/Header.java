@@ -35,7 +35,7 @@ class Header
         public static final int kLastAccessTime = 19;
         public static final int kLastWriteTime = 20;
         public static final int kWinAttributes = 21;
-        public static final int kComment = 22;
+        //public static final int kComment = 22;
 
         public static final int kEncodedHeader = 23;
 

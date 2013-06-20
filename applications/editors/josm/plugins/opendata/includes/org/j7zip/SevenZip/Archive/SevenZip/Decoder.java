@@ -348,7 +348,6 @@ class Decoder {
         int [] temp_useless = new int [1]; // TBD
         int [] tmp1 = new int[1];
         bindInfo.FindOutStream(bindInfo.OutStreams.get(0), tmp1 /* mainCoder */ , temp_useless /* temp */);
-        int mainCoder = tmp1[0];
         
         if (_multiThread) {
            // _mixerCoderMTSpec.SetProgressCoderIndex(mainCoder);

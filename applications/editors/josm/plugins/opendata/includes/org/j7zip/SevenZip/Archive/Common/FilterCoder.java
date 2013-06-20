@@ -119,11 +119,11 @@ public class FilterCoder extends java.io.OutputStream implements ICompressCoder 
         return Init();
     }
     
-    public int ReleaseOutStream() throws IOException {
+    /*public int ReleaseOutStream() throws IOException {
         if (_outStream != null) _outStream.close(); // Release()
         _outStream = null;
         return HRESULT.S_OK;
-    }
+    }*/
     
     public void flush() throws IOException {
         if (_bufferPos != 0) {

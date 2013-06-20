@@ -4,7 +4,7 @@ package org.j7zip.SevenZip.Compression.LZMA;
 
 public class Base
 {
-	public static final int kNumRepDistances = 4;
+	//public static final int kNumRepDistances = 4;
 	public static final int kNumStates = 12;
 	
 	public static final int StateInit()
@@ -42,7 +42,7 @@ public class Base
 	}
 	
 	public static final int kNumPosSlotBits = 6;
-	public static final int kDicLogSizeMin = 0;
+	//public static final int kDicLogSizeMin = 0;
 	// public static final int kDicLogSizeMax = 28;
 	// public static final int kDistTableSizeMax = kDicLogSizeMax * 2;
 	
@@ -56,33 +56,33 @@ public class Base
 		len -= kMatchMinLen;
 		if (len < kNumLenToPosStates)
 			return len;
-		return (int)(kNumLenToPosStates - 1);
+		return kNumLenToPosStates - 1;
 	}
 	
 	public static final int kNumAlignBits = 4;
-	public static final int kAlignTableSize = 1 << kNumAlignBits;
-	public static final int kAlignMask = (kAlignTableSize - 1);
+	/*public static final int kAlignTableSize = 1 << kNumAlignBits;
+	public static final int kAlignMask = (kAlignTableSize - 1);*/
 	
 	public static final int kStartPosModelIndex = 4;
 	public static final int kEndPosModelIndex = 14;
-	public static final int kNumPosModels = kEndPosModelIndex - kStartPosModelIndex;
+	//public static final int kNumPosModels = kEndPosModelIndex - kStartPosModelIndex;
 	
 	public static final  int kNumFullDistances = 1 << (kEndPosModelIndex / 2);
 	
-	public static final  int kNumLitPosStatesBitsEncodingMax = 4;
+	//public static final  int kNumLitPosStatesBitsEncodingMax = 4;
 	public static final  int kNumLitContextBitsMax = 8;
 	
 	public static final  int kNumPosStatesBitsMax = 4;
 	public static final  int kNumPosStatesMax = (1 << kNumPosStatesBitsMax);
-	public static final  int kNumPosStatesBitsEncodingMax = 4;
-	public static final  int kNumPosStatesEncodingMax = (1 << kNumPosStatesBitsEncodingMax);
+	/*public static final  int kNumPosStatesBitsEncodingMax = 4;
+	public static final  int kNumPosStatesEncodingMax = (1 << kNumPosStatesBitsEncodingMax);*/
 	
 	public static final  int kNumLowLenBits = 3;
 	public static final  int kNumMidLenBits = 3;
 	public static final  int kNumHighLenBits = 8;
 	public static final  int kNumLowLenSymbols = 1 << kNumLowLenBits;
 	public static final  int kNumMidLenSymbols = 1 << kNumMidLenBits;
-	public static final  int kNumLenSymbols = kNumLowLenSymbols + kNumMidLenSymbols +
+	/*public static final  int kNumLenSymbols = kNumLowLenSymbols + kNumMidLenSymbols +
 			(1 << kNumHighLenBits);
-	public static final  int kMatchMaxLen = kMatchMinLen + kNumLenSymbols - 1;
+	public static final  int kMatchMaxLen = kMatchMinLen + kNumLenSymbols - 1;*/
 }

@@ -43,13 +43,7 @@ public class OutStreamWithCRC extends java.io.OutputStream {
         if (_stream != null) _stream.close();
         _stream = null;
     }
-    public long GetSize()  {
-        return _size;
-    }
     public int GetCRC()  {
         return _crc.GetDigest();
-    }
-    public void InitCRC() {
-        _crc.Init();
     }
 }

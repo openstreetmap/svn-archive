@@ -23,7 +23,6 @@ import org.j7zip.SevenZip.Compression.RangeCoder.BitTreeDecoder;
 public class Decoder
         extends java.io.InputStream // _ST_MODE
         implements org.j7zip.SevenZip.ICompressCoder , org.j7zip.SevenZip.ICompressSetDecoderProperties2 ,
-        org.j7zip.SevenZip.ICompressGetInStreamProcessedSize,
         // #ifdef _ST_MODE
         org.j7zip.SevenZip.ICompressSetInStream,
         org.j7zip.SevenZip.ICompressSetOutStreamSize
@@ -179,12 +178,6 @@ public class Decoder
         m_RepLenDecoder.Create(numPosStates);
         m_posStateMask = numPosStates - 1;
         return true;
-    }
-    
-    
-    public long GetInStreamProcessedSize() {
-        throw new UnknownError("GetInStreamProcessedSize");
-        // return m_RangeDecoder.GetProcessedSize();
     }
     
     public int ReleaseInStream() throws IOException {
@@ -483,7 +476,7 @@ public class Decoder
         int pb = remainder / 5;
         int dictionarySize = 0;
         for (int i = 0; i < 4; i++)
-            dictionarySize += ((int)(properties[1 + i]) & 0xFF) << (i * 8);
+            dictionarySize += ((properties[1 + i]) & 0xFF) << (i * 8);
         if (!SetLcLpPb(lc, lp, pb))
             return false;
         return SetDictionarySize(dictionarySize);

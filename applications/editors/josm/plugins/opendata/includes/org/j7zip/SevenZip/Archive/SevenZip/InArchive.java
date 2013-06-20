@@ -222,7 +222,7 @@ class InArchive extends Header {
     
     int SkeepData(long size)  throws IOException {
         for (long i = 0; i < size; i++) {
-            int temp = ReadByte();
+            /*int temp =*/ ReadByte();
         }
         return HRESULT.S_OK;
     }
@@ -680,21 +680,21 @@ class InArchive extends Header {
                 high = ReadUInt32();
             }
             switch((int)type) {
-                case NID.kCreationTime:
+                /*case NID.kCreationTime:
                     // file.IsCreationTimeDefined = defined;
                     if (defined)
                         file.CreationTime = FileTimeToLong(high,low);
-                    break;
+                    break;*/
                 case NID.kLastWriteTime:
                     // file.IsLastWriteTimeDefined = defined;
                     if (defined)
                         file.LastWriteTime = FileTimeToLong(high,low);
                     break;
-                case NID.kLastAccessTime:
+                /*case NID.kLastAccessTime:
                     // file.IsLastAccessTimeDefined = defined;
                     if (defined)
                         file.LastAccessTime = FileTimeToLong(high,low);
-                    break;
+                    break;*/
             }
         }
         streamSwitch.close();
@@ -716,7 +716,7 @@ class InArchive extends Header {
         BoolVector digestsDefined = new BoolVector();
         IntVector digests = new IntVector();
         
-        int ret = ReadStreamsInfo(null,
+        /*int ret =*/ ReadStreamsInfo(null,
                 dataOffset,
                 packSizes,
                 packCRCsDefined,
@@ -766,7 +766,7 @@ class InArchive extends Header {
     
     int ReadDatabase(ArchiveDatabaseEx database) throws IOException {
         database.Clear();
-        database.ArchiveInfo.StartPosition = _arhiveBeginStreamPosition;
+        //database.ArchiveInfo.StartPosition = _arhiveBeginStreamPosition;
         
         byte [] btmp = new byte[2];
         int realProcessedSize = ReadDirect(btmp, 2);
@@ -774,7 +774,7 @@ class InArchive extends Header {
             throw new IOException("Unexpected End Of Archive"); // throw CInArchiveException(CInArchiveException::kUnexpectedEndOfArchive);
         
         database.ArchiveInfo.ArchiveVersion_Major = btmp[0];
-        database.ArchiveInfo.ArchiveVersion_Minor = btmp[1];
+        //database.ArchiveInfo.ArchiveVersion_Minor = btmp[1];
         
         if (database.ArchiveInfo.ArchiveVersion_Major != kMajorVersion)
             throw new IOException("Unsupported Version");

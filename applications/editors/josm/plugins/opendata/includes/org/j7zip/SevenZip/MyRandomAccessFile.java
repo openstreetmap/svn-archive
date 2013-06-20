@@ -25,10 +25,6 @@ public class MyRandomAccessFile extends org.j7zip.SevenZip.IInStream  {
     public int read(byte [] data, int off, int size) throws java.io.IOException {
         return _file.read(data,off,size);
     }
-        
-    public int read(byte [] data, int size) throws java.io.IOException {
-        return _file.read(data,0,size);
-    }
     
     public void close() throws java.io.IOException {
         _file.close();

@@ -20,11 +20,9 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
     
     BindInfo _bindInfo = new BindInfo();
     ObjectVector<STCoderInfo> _coders = new ObjectVector<STCoderInfo>();
-    int _mainCoderIndex;
     
     public CoderMixer2ST() {
     }
-    
     
     public void SetBindInfo(BindInfo bindInfo) {
         _bindInfo = bindInfo;
@@ -75,7 +73,7 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         int tmp2 [] = new int[1]; // TBD
         _bindInfo.FindOutStream(_bindInfo.BindPairs.get(binderIndex).OutIndex,
                 tmp1 /* coderIndex */ , tmp2 /* coderStreamIndex */ );
-        int coderIndex = tmp1[0], coderStreamIndex = tmp2[0];
+        int coderIndex = tmp1[0];
         
         CoderInfo coder = _coders.get(coderIndex);
         if (coder.Coder == null)
@@ -96,7 +94,7 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         
         if (coder.NumInStreams > 1)
             return HRESULT.E_NOTIMPL;
-        for (i = 0; i < (int)coder.NumInStreams; i++) {
+        for (i = 0; i < coder.NumInStreams; i++) {
             java.io.InputStream [] tmp = new java.io.InputStream[1];
             int res = GetInStream(inStreams, useless_inSizes, startIndex + i, tmp /* &seqInStream2 */ );
             if (res != HRESULT.S_OK) return res;
@@ -129,7 +127,7 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         int tmp2[] = new int[1];
         _bindInfo.FindInStream(_bindInfo.BindPairs.get(binderIndex).InIndex,
                 tmp1 /* coderIndex*/ , tmp2 /* coderStreamIndex */ );
-        int coderIndex = tmp1[0], coderStreamIndex = tmp2[0];
+        int coderIndex = tmp1[0];
         
         CoderInfo coder = _coders.get(coderIndex);
         if (coder.Coder == null)
@@ -156,7 +154,7 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         
         if (coder.NumOutStreams > 1)
             return HRESULT.E_NOTIMPL;
-        for (i = 0; i < (int)coder.NumOutStreams; i++) {
+        for (i = 0; i < coder.NumOutStreams; i++) {
             java.io.OutputStream [] tmp = new java.io.OutputStream[1];
             int res = GetOutStream(outStreams, useless_outSizes, startIndex + i, tmp /* &seqOutStream2 */ );
             if (res != HRESULT.S_OK) return res;
@@ -207,14 +205,14 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         ObjectVector< java.io.OutputStream > seqOutStreams = new ObjectVector< java.io.OutputStream >(); // CObjectVector< CMyComPtr<ISequentialOutStream> >
         int startInIndex = _bindInfo.GetCoderInStreamIndex(_mainCoderIndex);
         int startOutIndex = _bindInfo.GetCoderOutStreamIndex(_mainCoderIndex);
-        for (i = 0; i < (int)mainCoder.NumInStreams; i++) {
+        for (i = 0; i < mainCoder.NumInStreams; i++) {
             java.io.InputStream tmp [] = new  java.io.InputStream[1];
             int res = GetInStream(inStreams, useless_inSizes, startInIndex + i, tmp /* &seqInStream */ );
             if (res != HRESULT.S_OK) return res;
             java.io.InputStream seqInStream = tmp[0];
             seqInStreams.add(seqInStream);
         }
-        for (i = 0; i < (int)mainCoder.NumOutStreams; i++) {
+        for (i = 0; i < mainCoder.NumOutStreams; i++) {
             java.io.OutputStream tmp [] = new  java.io.OutputStream[1];
             int res = GetOutStream(outStreams, useless_outSizes, startOutIndex + i, tmp);
             if (res != HRESULT.S_OK) return res;
@@ -223,9 +221,9 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         }
         RecordVector< java.io.InputStream > seqInStreamsSpec = new RecordVector< java.io.InputStream >();
         RecordVector< java.io.OutputStream > seqOutStreamsSpec = new RecordVector< java.io.OutputStream >();
-        for (i = 0; i < (int)mainCoder.NumInStreams; i++)
+        for (i = 0; i < mainCoder.NumInStreams; i++)
             seqInStreamsSpec.add(seqInStreams.get(i));
-        for (i = 0; i < (int)mainCoder.NumOutStreams; i++)
+        for (i = 0; i < mainCoder.NumOutStreams; i++)
             seqOutStreamsSpec.add(seqOutStreams.get(i));
         
         for (i = 0; i < _coders.size(); i++) {

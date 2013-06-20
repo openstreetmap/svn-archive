@@ -44,12 +44,7 @@ public class CRC {
         for (int i = 0; i < size; i++)
             _value = Table[(_value ^ data[i]) & 0xFF] ^ (_value >>> 8);
     }
-    
-    public void Update(byte[] data) {
-        for (int i = 0; i < data.length; i++)
-            _value = Table[(_value ^ data[i]) & 0xFF] ^ (_value >>> 8);
-    }
-    
+        
     public void Update(byte[] data, int offset, int size) {
         for (int i = 0; i < size; i++)
             _value = Table[(_value ^ data[offset + i]) & 0xFF] ^ (_value >>> 8);

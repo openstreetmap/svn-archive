@@ -19,7 +19,7 @@ public interface IInArchive {
     
     SevenZipEntry getEntry(int index);
     
-    int size();
+    //int size();
     
     int close() throws IOException ;
     
@@ -33,7 +33,5 @@ public interface IInArchive {
             long maxCheckStartPosition // const UInt64 *maxCheckStartPosition,
             // IArchiveOpenCallback *openArchiveCallback */
             ) throws java.io.IOException;
-
-    
 }
 

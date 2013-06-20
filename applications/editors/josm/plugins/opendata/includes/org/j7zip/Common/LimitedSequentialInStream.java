@@ -4,7 +4,6 @@ public class LimitedSequentialInStream extends java.io.InputStream {
     java.io.InputStream _stream; // ISequentialInStream
     long _size;
     long _pos;
-    boolean _wasFinished;
     
     public LimitedSequentialInStream() {
     }
@@ -16,12 +15,10 @@ public class LimitedSequentialInStream extends java.io.InputStream {
     public void Init(long streamSize) {
         _size = streamSize;
         _pos = 0;
-        _wasFinished = false;
     }
     
     public int read() throws java.io.IOException {
         int ret = _stream.read();
-        if (ret == -1) _wasFinished = true;
         return ret;
     }
     
@@ -34,7 +31,6 @@ public class LimitedSequentialInStream extends java.io.InputStream {
         if (sizeToRead > 0) {
             int realProcessedSize = _stream.read(data, off, sizeToRead);
             if (realProcessedSize == -1) {
-                _wasFinished = true;
                 return -1;
             }
             _pos += realProcessedSize;

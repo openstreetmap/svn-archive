@@ -12,11 +12,6 @@ import org.j7zip.SevenZip.Archive.SevenZipEntry;
 import org.j7zip.SevenZip.Common.LocalCompressProgressInfo;
 import org.j7zip.SevenZip.Common.LocalProgress;
 
-
-
-
-
-
 public class Handler implements org.j7zip.SevenZip.Archive.IInArchive {
     
     // useless LongVector _fileInfoPopIDs = new LongVector();
@@ -25,13 +20,8 @@ public class Handler implements org.j7zip.SevenZip.Archive.IInArchive {
     
     ArchiveDatabaseEx _database;
     
-    int _numThreads;
-    
     public Handler() {
-        _numThreads = 1; // TBD
-        
         _database = new ArchiveDatabaseEx();
-        
     }
     
     public int Open(IInStream stream) throws IOException {
@@ -299,10 +289,10 @@ public class Handler implements org.j7zip.SevenZip.Archive.IInArchive {
         _database.Clear();
         return 0;
     }
-    
+    /*
     public int size() {
         return _database.Files.size();
-    }
+    }*/
     
     long getPackSize(int index2) {
         long packSize = 0;
@@ -315,7 +305,7 @@ public class Handler implements org.j7zip.SevenZip.Archive.IInArchive {
     }
     
     static int GetUInt32FromMemLE(byte [] p , int off) {
-        return p[off] | (((int)p[off + 1]) << 8) | (((int)p[off + 2]) << 16) | (((int)p[off +3]) << 24);
+        return p[off] | ((p[off + 1]) << 8) | ((p[off + 2]) << 16) | ((p[off +3]) << 24);
     }
     
     static String GetStringForSizeValue(int value) {

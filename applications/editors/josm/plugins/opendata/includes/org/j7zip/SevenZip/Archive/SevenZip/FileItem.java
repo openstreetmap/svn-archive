@@ -2,9 +2,9 @@ package org.j7zip.SevenZip.Archive.SevenZip;
 
 public class FileItem {
     
-    public long CreationTime;
+    //public long CreationTime;
     public long LastWriteTime;
-    public long LastAccessTime;
+    //public long LastAccessTime;
     
     public long UnPackSize;
     public long StartPos;
@@ -28,9 +28,9 @@ public class FileItem {
         IsAnti = false;
         IsFileCRCDefined = false;
         AreAttributesDefined = false;
-        CreationTime = 0; // IsCreationTimeDefined = false;
+        //CreationTime = 0; // IsCreationTimeDefined = false;
         LastWriteTime = 0; // IsLastWriteTimeDefined = false;
-        LastAccessTime = 0; // IsLastAccessTimeDefined = false;
+        //LastAccessTime = 0; // IsLastAccessTimeDefined = false;
         IsStartPosDefined = false;
     }
 }

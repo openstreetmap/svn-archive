@@ -54,11 +54,11 @@ public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICry
         System.out.println("");
     }
     public int PrepareOperation(int askExtractMode) {
-        _extractMode = false;
+        /*_extractMode = false;
         switch (askExtractMode) {
             case IInArchive.NExtract_NAskMode_kExtract:
                 _extractMode = true;
-        };
+        };*/
         switch (askExtractMode) {
             case IInArchive.NExtract_NAskMode_kExtract:
                 PrintString("Extracting  ");
@@ -185,13 +185,13 @@ public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICry
     protected File file;
     
     public long NumErrors;
-    boolean PasswordIsDefined;
-    String Password;
-    boolean _extractMode;
+    //boolean PasswordIsDefined;
+    //String Password;
+    //boolean _extractMode;
     
     boolean isDirectory;
     
-    public ArchiveExtractCallback() { PasswordIsDefined = false; }
+    public ArchiveExtractCallback() { /*PasswordIsDefined = false;*/ }
     
     
     public void Init(org.j7zip.SevenZip.Archive.IInArchive archiveHandler) {

@@ -213,7 +213,7 @@
     <Rule>
       <Filter>[landuse] = 'farm' or [landuse]='farmland'</Filter>
       &maxscale_zoom10;
-      <PolygonSymbolizer fill="#ead8bd" fill-opacity="0.7"/>
+      <PolygonSymbolizer fill="#f2e9d7" fill-opacity="0.7"/>
     </Rule>
     <Rule>
       <Filter>[landuse] = 'recreation_ground' or [landuse] = 'conservation'</Filter>

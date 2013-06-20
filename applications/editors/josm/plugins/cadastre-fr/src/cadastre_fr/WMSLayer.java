@@ -161,7 +161,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider",
                         CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
             } else
-                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", Scale.X1.toString())));
+                divideBbox(b, Integer.parseInt(Main.pref.get("cadastrewms.scale", CadastrePreferenceSetting.DEFAULT_GRAB_MULTIPLIER)));
         }
         grabThread.addImages(dividedBbox);
     }
@@ -193,7 +193,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         } else {
             // divide to fixed size squares
             // grab all square in a spiral starting from the center (usually the most interesting place)
-            int c = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", "100"));
+            int c = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", String.valueOf(CadastrePreferenceSetting.DEFAULT_SQUARE_SIZE)));
             lambertMin = lambertMin.add(- minEast%c, - minNorth%c);
             lambertMax = lambertMax.add(c - lambertMax.east()%c, c - lambertMax.north()%c);
             EastNorth mid = lambertMax.getCenter(lambertMin);

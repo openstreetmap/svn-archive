@@ -85,10 +85,12 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
     JLabel jLabelCacheSize = new JLabel(tr("Max. cache size (in MB)"));
     private JTextField cacheSize = new JTextField(20);
 
-    static final String DEFAULT_RASTER_DIVIDER = "5";
+    static final String DEFAULT_RASTER_DIVIDER = "7";
     private JTextField rasterDivider = new JTextField(10);
 
     static final int DEFAULT_CROSSPIECES = 0;
+    
+    static final String DEFAULT_GRAB_MULTIPLIER = Scale.SQUARE_100M.value;
 
     public CadastrePreferenceSetting() {
         super("cadastrewms.gif", I18n.tr("French cadastre WMS"),
@@ -219,7 +221,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         bgGrabMultiplier.add(grabMultiplier2);
         bgGrabMultiplier.add(grabMultiplier3);
         bgGrabMultiplier.add(grabMultiplier4);
-        String currentScale = Main.pref.get("cadastrewms.scale", "1");
+        String currentScale = Main.pref.get("cadastrewms.scale", DEFAULT_GRAB_MULTIPLIER);
         if (currentScale.equals(Scale.X1.value))
             grabMultiplier1.setSelected(true);
         if (currentScale.equals(Scale.X2.value))

@@ -144,11 +144,14 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable, Mou
             clickOnTheMap = false;
             handleNewCoordinates(ea.east(), ea.north());
         } else {
-            countMouseClicked++;
             // ignore clicks outside the image
             if (ea.east() < wmsLayer.getImage(0).min.east() || ea.east() > wmsLayer.getImage(0).max.east()
                     || ea.north() < wmsLayer.getImage(0).min.north() || ea.north() > wmsLayer.getImage(0).max.north())
+            {
+                System.out.println("ignore clic outside the image");
                 return;
+            }
+            countMouseClicked++;
             if (mode == cGetCorners) {
                 if (countMouseClicked == 1) {
                     ea1 = ea;

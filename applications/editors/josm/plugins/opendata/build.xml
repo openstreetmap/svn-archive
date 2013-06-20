@@ -57,6 +57,15 @@
     </target>
     <!--
     **********************************************************
+    ** compile_j7zip - compiles J7zip classes
+    **********************************************************
+    -->
+    <target name="compile_j7zip" depends="init">
+        <echo message="compiling J7Zip ... "/>
+        <javac srcdir="includes/org/j7zip" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8" />
+    </target>
+    <!--
+    **********************************************************
     ** compile_neptune - compiles Neptune classes
     **********************************************************
     -->
@@ -69,7 +78,7 @@
     ** compile - compiles the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_neptune">
+    <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false">
             <classpath>

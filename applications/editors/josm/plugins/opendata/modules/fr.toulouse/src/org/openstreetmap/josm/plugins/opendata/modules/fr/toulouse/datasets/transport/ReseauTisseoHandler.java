@@ -33,7 +33,7 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
         NeptuneReader.registerSchema(neptuneSchemaUrl);
         setName("Réseau Tisséo (Métro, Bus, Tram)");
         setCategory(CAT_TRANSPORT);
-        getZipHandler().setSkipXsdValidation(true);
+        getArchiveHandler().setSkipXsdValidation(true);
     }
 
     @Override

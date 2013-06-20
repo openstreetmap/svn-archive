@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultZipHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 import org.openstreetmap.josm.tools.Pair;
 
@@ -65,7 +65,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 	
 	public EauxDeSurfaceHandler() {
 		setName("Eaux de surface");
-		setZipHandler(new InternalZipHandler());
+		setArchiveHandler(new InternalZipHandler());
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 		return new Pair<String, URL>(a.name, new URL("http://www.rapportage.eaufrance.fr/sites/default/files/SIG/FR"+a.code+"_SW.zip"));
 	}
 	
-	private class InternalZipHandler extends DefaultZipHandler {
+	private class InternalZipHandler extends DefaultArchiveHandler {
 		@Override
 		public void notifyTempFileWritten(File file) {
 			if (file.getName().matches(SHP_PATTERN.replace("(.*)", "F")+"\\.prj")) { // Adour-Garonne .prj files cannot be parsed because they do not contain quotes... 

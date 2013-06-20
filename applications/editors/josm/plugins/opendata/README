@@ -21,5 +21,6 @@ The source code of this plugin is composed of the following folders, with distin
         - commons/collections: Apache Commons Collections 3.2.1 (used by jOpenDocument)
         - commons/lang3: Apache Commons Lang 3.1 (stuff related to WordUtils, used by the plugin itself)
         - poi: Apache POI 3.7 (Excel format support without styles, formulas and writing capabilities, used by the plugin itself)
+    - org/j7zip: J7zip 4.43alpha2 (7z archive read support, LGPL v2.1, see LGPL-2.1.txt)
     - org/jopendocument: jOpenDocument 1.2 (ODS support without styles and writing capabilities, used by the plugin itself) (GPL v3, see GPL-3.0.txt)
     

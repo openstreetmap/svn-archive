@@ -148,7 +148,7 @@
       <Filter>[landuse] = 'allotments'</Filter>
       &maxscale_zoom11;
       &minscale_zoom13;
-      <PolygonSymbolizer fill="#e5c7ab"/>
+      <PolygonSymbolizer fill="#ead8bd"/>
     </Rule>
     <Rule>
       <Filter>[landuse] = 'allotments'</Filter>
@@ -208,7 +208,7 @@
     <Rule>
       <Filter>[landuse]='farmyard'</Filter>
       &maxscale_zoom12;
-      <PolygonSymbolizer fill="#ddbf92" fill-opacity="0.9"/>
+      <PolygonSymbolizer fill="#ead8bd" fill-opacity="0.9"/>
     </Rule>
     <Rule>
       <Filter>[landuse] = 'farm' or [landuse]='farmland'</Filter>

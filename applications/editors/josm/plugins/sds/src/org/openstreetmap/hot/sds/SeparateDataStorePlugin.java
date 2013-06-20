@@ -102,9 +102,9 @@ public class SeparateDataStorePlugin extends Plugin
 	 */
 	protected void learn(IPrimitive prim) {
 		if (prim instanceof OsmPrimitive) {
-			((OsmPrimitive)prim).save().visit(learnVisitor);
+			((OsmPrimitive)prim).save().accept(learnVisitor);
 		} else {
-			prim.visit(learnVisitor);
+			prim.accept(learnVisitor);
 		}
 	}
 	

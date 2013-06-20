@@ -34,8 +34,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
-import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultZipHandler;
-import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultArchiveHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.ArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultGmlHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultShpHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlHandler;
@@ -91,7 +91,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 
 	public AbstractDataSetHandler() {
 		setShpHandler(new DefaultShpHandler());
-		setZipHandler(new DefaultZipHandler());
+		setArchiveHandler(new DefaultArchiveHandler());
 		setCsvHandler(new DefaultCsvHandler());
 		setGmlHandler(new DefaultGmlHandler());
 	}
@@ -459,16 +459,16 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		return gmlHandler;
 	}
 
-	// ------------ Zip handling ------------
+	// ------------ Archive handling ------------
 	
-	private ZipHandler zipHandler;
+	private ArchiveHandler archiveHandler;
 
-	public final void setZipHandler(ZipHandler handler) {
-		zipHandler = handler;
+	public final void setArchiveHandler(ArchiveHandler handler) {
+		archiveHandler = handler;
 	}
 	
-	public ZipHandler getZipHandler() {
-		return zipHandler;
+	public ArchiveHandler getArchiveHandler() {
+		return archiveHandler;
 	}
 	
 	// ------ Spreadsheet handling ----------

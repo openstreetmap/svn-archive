@@ -1,5 +1,5 @@
 //    JOSM opendata plugin.
-//    Copyright (C) 2011-2012 Don-vip
+//    Copyright (C) 2011-2013 Don-vip
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -17,11 +17,22 @@ package org.openstreetmap.josm.plugins.opendata.core.io.archive;
 
 import java.io.File;
 
-public interface ZipHandler {
+public class DefaultArchiveHandler implements ArchiveHandler {
 
-	public void notifyTempFileWritten(File file);
-
-	public boolean skipXsdValidation();
-
-	public void setSkipXsdValidation(boolean skip);
+	private boolean skipXsdValidation = false;
+	
+	@Override
+	public final void setSkipXsdValidation(boolean skip) {
+		skipXsdValidation = skip;
+	}
+	
+	@Override
+	public boolean skipXsdValidation() {
+		return skipXsdValidation;
+	}
+	
+	@Override
+	public void notifyTempFileWritten(File file) {
+		// Do nothing, let subclass override this method if they need it
+	}
 }

@@ -18,11 +18,10 @@ package org.openstreetmap.josm.plugins.opendata.core.io.archive;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -33,175 +32,63 @@ import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.AbstractReader;
-import org.openstreetmap.josm.plugins.opendata.OdPlugin;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
-import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
-import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.geographic.TabReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
-import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
-import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
-public class ZipReader extends AbstractReader implements OdConstants {
+public class ZipReader extends ArchiveReader {
 
 	private final ZipInputStream zis;
-	private final AbstractDataSetHandler handler;
-	private final ZipHandler zipHandler;
-	private final boolean promptUser;
 	
-	private File file;
-    
+	private ZipEntry entry;
+	
     public ZipReader(InputStream in, AbstractDataSetHandler handler, boolean promptUser) {
+        super(handler, handler != null ? handler.getArchiveHandler() : null, promptUser);
         this.zis = in instanceof ZipInputStream ? (ZipInputStream) in : new ZipInputStream(in);
-        this.handler = handler;
-        this.zipHandler = handler != null ? handler.getZipHandler() : null;
-        this.promptUser = promptUser;
     }
 
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
 	        throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
 		return new ZipReader(in, handler, promptUser).parseDoc(instance);
 	}
-	
-	public final File getReadFile() {
-		return file;
-	}
-	
-	public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
-		
-	    final File temp = OdUtils.createTempDir();
-	    final List<File> candidates = new ArrayList<File>();
-	    
-	    try {
-	    	if (progressMonitor != null) {
-	    		progressMonitor.beginTask(tr("Reading Zip file..."));
-	    	}
-			ZipEntry entry;
-			while ((entry = zis.getNextEntry()) != null) {
-				File file = new File(temp + File.separator + entry.getName());
-		    	File parent = file.getParentFile();
-		    	if (parent != null && !parent.exists()) {
-		    		parent.mkdirs();
-		    	}
-			    if (file.exists() && !file.delete()) {
-			        throw new IOException("Could not delete temp file/dir: " + file.getAbsolutePath());
-			    }
-			    if (!entry.isDirectory()) {
-			    	if (!file.createNewFile()) { 
-			    		throw new IOException("Could not create temp file: " + file.getAbsolutePath());
-			    	}
-			    	// Write temp file
-					FileOutputStream fos = new FileOutputStream(file);
-					byte[] buffer = new byte[8192];
-					int count = 0;
-					while ((count = zis.read(buffer, 0, buffer.length)) > 0) {
-						fos.write(buffer, 0, count);
-					}
-					fos.close();
-					// Allow handler to perform specific treatments (for example, fix invalid .prj files)
-					if (zipHandler != null) {
-						zipHandler.notifyTempFileWritten(file);
-					}
-					// Set last modification date
-					long time = entry.getTime();
-					if (time > -1) {
-						file.setLastModified(time);
-					}
-					// Test file name to see if it may contain useful data
-					for (String ext : new String[] {
-							CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, GML_EXT
-					}) {
-						if (entry.getName().toLowerCase().endsWith("."+ext)) {
-							candidates.add(file);
-							System.out.println(entry.getName());
-							break;
-						}
-					}
-					// Special treatment for XML files (check supported XSD), unless handler explicitely skip it
-					if (XML_FILE_FILTER.accept(file) && ((zipHandler != null && zipHandler.skipXsdValidation()) 
-							|| OdPlugin.getInstance().xmlImporter.acceptFile(file))) {
-						candidates.add(file);
-						System.out.println(entry.getName());
-					}
-				} else if (!file.mkdir()) {
-					throw new IOException("Could not create temp dir: " + file.getAbsolutePath());
-				}
-			}
-			
-			file = null;
-			
-			if (promptUser && candidates.size() > 1) {
-				DialogPrompter<CandidateChooser> prompt = new DialogPrompter() {
-					@Override
-					protected CandidateChooser buildDialog() {
-						return new CandidateChooser(progressMonitor.getWindowParent(), candidates);
-					}
-				};
-				if (prompt.promptInEdt().getValue() == 1) {
-					file = prompt.getDialog().getSelectedFile();
-				}
-			} else if (!candidates.isEmpty()) {
-				file = candidates.get(0);
-			}
-			
-			if (file == null) {
-				return null;
-			} else {
-				DataSet from = null;
-				FileInputStream in = new FileInputStream(file);
-				ProgressMonitor instance = null;
-				if (progressMonitor != null) {
-					instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
-				}
-				if (file.getName().toLowerCase().endsWith(CSV_EXT)) {
-					from = CsvReader.parseDataSet(in, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(KML_EXT)) {
-					from = KmlReader.parseDataSet(in, instance);
-				} else if (file.getName().toLowerCase().endsWith(KMZ_EXT)) {
-					from = KmzReader.parseDataSet(in, instance);
-				} else if (file.getName().toLowerCase().endsWith(XLS_EXT)) {
-					from = XlsReader.parseDataSet(in, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(ODS_EXT)) {
-					from = OdsReader.parseDataSet(in, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(SHP_EXT)) {
-					from = ShpReader.parseDataSet(in, file, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(MIF_EXT)) {
-					from = MifReader.parseDataSet(in, file, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
-					from = TabReader.parseDataSet(in, file, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(GML_EXT)) {
-					from = GmlReader.parseDataSet(in, handler, instance);
-				} else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
-					if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
-						from = NeptuneReader.parseDataSet(in, handler, instance);
-					} else {
-						System.err.println("Unsupported XML file: "+file.getName());
-					}
-					
-				} else {
-					System.err.println("Unsupported file extension: "+file.getName());
-				}
-				if (from != null) {
-					ds = from;
-				}
-			}
-	    } catch (IllegalArgumentException e) {
-	    	System.err.println(e.getMessage());
-	    } finally {
-	        OdUtils.deleteDir(temp);
-	    	if (progressMonitor != null) {
-	    		progressMonitor.finishTask();
-	    	}
-	    }
-		
-		return ds;
-	}
+
+    protected void extractArchive(final File temp, final List<File> candidates) throws IOException, FileNotFoundException {
+        while ((entry = zis.getNextEntry()) != null) {
+            File file = new File(temp + File.separator + entry.getName());
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
+            }
+            if (file.exists() && !file.delete()) {
+                throw new IOException("Could not delete temp file/dir: " + file.getAbsolutePath());
+            }
+            if (!entry.isDirectory()) {
+                if (!file.createNewFile()) { 
+                    throw new IOException("Could not create temp file: " + file.getAbsolutePath());
+                }
+                // Write temp file
+                FileOutputStream fos = new FileOutputStream(file);
+                byte[] buffer = new byte[8192];
+                int count = 0;
+                while ((count = zis.read(buffer, 0, buffer.length)) > 0) {
+                    fos.write(buffer, 0, count);
+                }
+                fos.close();
+                // Allow handler to perform specific treatments (for example, fix invalid .prj files)
+                if (archiveHandler != null) {
+                    archiveHandler.notifyTempFileWritten(file);
+                }
+                // Set last modification date
+                long time = entry.getTime();
+                if (time > -1) {
+                    file.setLastModified(time);
+                }
+                lookForCandidate(entry.getName(), candidates, file);
+            } else if (!file.mkdir()) {
+                throw new IOException("Could not create temp dir: " + file.getAbsolutePath());
+            }
+        }
+    }
+
+    @Override protected String getTaskMessage() {
+        return tr("Reading Zip file...");
+    }
 }

@@ -29,6 +29,8 @@ import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.ArchiveReader;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.SevenZipReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ZipReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
@@ -83,6 +85,8 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
     	String contentType = this.activeConnection.getContentType();
     	if (contentType.startsWith("application/zip")) {
     		return ZipReader.class;
+        } else if (contentType.startsWith("application/x-7z-compressed")) {
+            return SevenZipReader.class;
     	} else if (contentType.startsWith("application/vnd.ms-excel")) {
     		return XlsReader.class;
     	} else if (contentType.startsWith("application/octet-stream")) {
@@ -121,6 +125,8 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
     		return GmlReader.class;
     	} else if (filename.endsWith("."+ZIP_EXT)) {
     		return ZipReader.class;
+        } else if (filename.endsWith("."+SEVENZIP_EXT)) {
+            return SevenZipReader.class;
     	} else {
     		return null;
     	}
@@ -150,8 +156,9 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             	filename = url.substring(url.lastIndexOf('/')+1);
             }
             instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
-            if (readerClass.equals(ZipReader.class)) {
-            	ZipReader zipReader = new ZipReader(in, handler, promptUser);
+            if (readerClass.equals(ZipReader.class) || readerClass.equals(SevenZipReader.class)) {
+            	ArchiveReader zipReader = readerClass.equals(ZipReader.class) 
+            	        ? new ZipReader(in, handler, promptUser) : new SevenZipReader(in, handler, promptUser);
             	DataSet ds = zipReader.parseDoc(instance);
             	file = zipReader.getReadFile();
             	return ds;

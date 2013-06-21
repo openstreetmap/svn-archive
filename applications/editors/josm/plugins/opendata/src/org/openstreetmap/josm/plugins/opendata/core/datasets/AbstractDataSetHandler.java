@@ -158,6 +158,10 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 		return acceptsFilename(filename, expected, ZIP_EXT);
 	}
 
+    protected final boolean accepts7ZipFilename(String filename, String ... expected) {
+        return acceptsFilename(filename, expected, SEVENZIP_EXT);
+    }
+
 	protected final boolean acceptsCsvKmzFilename(String filename, String ... expected) {
 		return acceptsFilename(filename, expected, CSV_EXT, KMZ_EXT);
 	}

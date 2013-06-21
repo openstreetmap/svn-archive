@@ -2,10 +2,7 @@ package org.openstreetmap.josm.plugins.imagerycache;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
@@ -16,6 +13,7 @@ import org.openstreetmap.josm.data.preferences.BooleanProperty;
  */
 public class TileDAOMapDB implements TileDAO {
     public static final boolean debug = new BooleanProperty("imagerycache.debug", false).get();
+    public static final boolean noMmap = new BooleanProperty("imagerycache.randomAccessFile", false).get();
     
     public static boolean dbNotAvailable = false;
 
@@ -53,9 +51,15 @@ public class TileDAOMapDB implements TileDAO {
                 if (!lock.createNewFile())  continue;
                 lock.deleteOnExit();
                 
-                db = DBMaker.newFileDB(f)
-                    .randomAccessFileEnableIfNeeded()
-                    .writeAheadLogDisable().closeOnJvmShutdown().make();
+                if (noMmap) {
+                    db = DBMaker.newFileDB(f)
+                        .randomAccessFileEnable()
+                        .writeAheadLogDisable().closeOnJvmShutdown().make();
+                } else {
+                    db = DBMaker.newFileDB(f)
+                        .randomAccessFileEnableIfNeeded()
+                        .writeAheadLogDisable().closeOnJvmShutdown().make();
+                }
                 
                 
                 dbs.put(source, db);

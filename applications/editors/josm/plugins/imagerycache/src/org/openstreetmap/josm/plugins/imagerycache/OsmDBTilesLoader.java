@@ -17,7 +17,6 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 /**

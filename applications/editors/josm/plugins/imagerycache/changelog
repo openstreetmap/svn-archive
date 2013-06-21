@@ -9,11 +9,6 @@
 * DAO object is a singleton now, one file per JVM will be created
 * Cache directory is created if needed
 
-
-
-        
-
-         
-           
-
-
+21.06.2013 :
+* Add optional imagerycache.randomAccessFile parameter for slower but less system-dependent storage 
+(RandomAccessFile instead of memory mapped file)

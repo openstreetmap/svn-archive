@@ -80,7 +80,7 @@
     -->
     <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
         <echo message="compiling sources for  ${plugin.jar} ... "/>
-        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false">
+        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
             <classpath>
         	    <pathelement path="${plugin.build.dir}"/>
                 <pathelement location="${josm}"/>

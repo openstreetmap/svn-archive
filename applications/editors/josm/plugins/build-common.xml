@@ -37,7 +37,7 @@
     -->
     <target name="compile" depends="init">
         <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
+        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
             <classpath>

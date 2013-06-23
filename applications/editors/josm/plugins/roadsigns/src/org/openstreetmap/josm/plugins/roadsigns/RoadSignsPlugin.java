@@ -43,10 +43,11 @@ public class RoadSignsPlugin extends Plugin {
 
     public static RoadSignsPlugin plugin;
 
+    public final static PresetMetaData PRESET_ES = new PresetMetaData("ES", tr("Spain"), "resource://data/roadsignpresetES.xml", "resource://images/ES/");
     public final static PresetMetaData PRESET_DE = new PresetMetaData("DE", tr("Germany"), "resource://data/roadsignpresetDE.xml", "resource://images/DE/");
     public final static PresetMetaData PRESET_PL = new PresetMetaData("PL", tr("Poland"), "resource://data/roadsignpresetPL.xml", "resource://images/PL/");
     public final static PresetMetaData PRESET_SK = new PresetMetaData("SK", tr("Slovakia"), "resource://data/roadsignpresetSK.xml", "resource://images/SK/");
-    public final static Collection<PresetMetaData> DEFAULT_PRESETS = Arrays.asList(PRESET_DE, PRESET_PL, PRESET_SK);
+    public final static Collection<PresetMetaData> DEFAULT_PRESETS = Arrays.asList(PRESET_ES, PRESET_DE, PRESET_PL, PRESET_SK);
 
     public RoadSignsPlugin(PluginInformation info) {
         super(info);

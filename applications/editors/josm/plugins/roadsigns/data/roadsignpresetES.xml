@@ -1,1351 +1,1144 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<roadsignpreset country="ES">
 <!--
 roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 -->
-<roadsignpreset country="ES">
-<sign ref="ES:ruta_europea" name="Ruta europea" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:com:traffic:sign:dir2"  traffic_sign_tag="" name="" es.name="Especificar en qué sentido de la vía de doble sentido está la señal de tráfico: forward (sentido de la vía)   / backward (sentido contrario contraria de la vía)" ca.name="">
+        <tag key="direction"  value="$val10"/>
+        <parameter ident="val10" input="textfield" prefix="" default="forward" suffix="" field_width="10"/>
+		        <tag key="side"  value="$val11"/>
+        <parameter ident="val11" input="textfield" prefix="" default="right" suffix="" field_width="10"/>
+    </sign> 
+
+
+
+<sign ref="ES:ruta_europea" name="" es.name="Ruta europea" ca.name="Ruta europea">
+        <tag key="" value="" />
 		<tag key="ref" value="E-$val"/>
         <parameter ident="val" input="textfield" prefix="E-" default="80" suffix="" field_width="3"/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+</sign> 
 
-<sign ref="ES:motorway" name="Autopista o Autovía" ca.name="Autopista o autovia">
-        <tag key="highway" value="motorway" ident="mode"/>
+<sign ref="ES:motorway" name="" es.name="Autopista o Autovía" ca.name="Autopista o autovia">
+        <tag key="highway" value="motorway" />
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="AP-6" suffix="" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:trunk" name="Carretera Nacional o Carretera autonómica de primer nivel en buen estado" sk.name="">
-        <tag key="highway" value="trunk" ident="mode"/>
+<sign ref="ES:trunk" name="" es.name="Carretera Nacional o Carretera autonómica de primer nivel en buen estado" ca.name="Carretera de primer nivell en bon estat">
+        <tag key="highway" value="trunk" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="N-432" suffix="" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:primary" name="Carretera Nacional o Carretera autonómica de primer nivel en mal estado" sk.name="">
-        <tag key="highway" value="primary" ident="mode"/>
+<sign ref="ES:primary" name="" es.name="Carretera Nacional o Carretera autonómica de primer nivel en mal estado" ca.name="Carretera de primer nivell en mal estat">
+        <tag key="highway" value="primary" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="CL-517" suffix="" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:secondary" name="Carretera Secundaria o autonómica de segundo nivel" sk.name="">
-        <tag key="highway" value="secondary" ident="mode"/>
+<sign ref="ES:secondary" name="" es.name="Carretera Secundaria o autonómica de segundo nivel" ca.name="Carretera comarcal o secundària">
+        <tag key="highway" value="secondary" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="A-450" suffix="" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:tertiary" name="Carretera Local o de Tercer nivel" sk.name="">
-        <tag key="highway" value="tertiary" ident="mode"/>
+<sign ref="ES:tertiary" name="" es.name="Carretera Local o de Tercer nivel" ca.name="Carretera local o terciària">
+        <tag key="highway" value="tertiary" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="CA-408" suffix="" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 			
-<sign ref="ES:p1a" name="Peligro cruce con prioridad a la derecha" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+			<sign ref="ES:p1" name="" es.name="Peligro cruce con prioridad" ca.name="Perill, encreuament amb prioritat">
+        <tag key="" value="" />
+		    </sign>
+						
+<sign ref="ES:p1a" name="" es.name="Peligro cruce con prioridad ,a la derecha" ca.name="Perill, encreuament amb prioritat,a la dreta">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p1b" name="Peligro cruce con prioridad a la izquierda" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p1b" name="" es.name="Peligro cruce con prioridad ,a la izquierda" ca.name="Perill, encreuament amb prioritat,a l'esquerra">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p1c" name="Peligro incorporación a la derecha" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p1c" name="" es.name="Peligro incorporación a la derecha" ca.name="Perill incorporació per la dreta">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p1d" name="Peligro incorporación a la izquierda" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p1d" name="" es.name="Peligro incorporación a la izquierda" ca.name="Perill incorporació per l'esquerra">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p2" name="Peligro cruce sin prioridad establecida" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p2" name="" es.name="Peligro cruce sin prioridad establecida" ca.name="Perill, encreuament sense prioritat establerta">
+        <tag key="" value="" />
+		    </sign>
 
 
-	<sign ref="ES:p3" name="Traffic light" sk.name="Peligro semáforo">
-        <tag key="highway" value="traffic_signals" ident="mode"/>
+	<sign ref="ES:p3" name="Traffic light" es.name="Peligro semáforo" ca.name="Perill semàfor">
+        <tag key="highway" value="traffic_signals" />
 <supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 			
-	<sign ref="ES:p4" name="Peligro rotonda" sk.name="">
+	<sign ref="ES:p4" name="" es.name="Peligro rotonda" ca.name="Perill rotonda">
                 <tag key="junction" value="roundabout"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 			
-<sign ref="ES:p5" name="Peligro puente levadizo" sk.name="">
-        <tag key="bridge" value="drawbridge" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:p5" name="" es.name="Peligro puente levadizo" ca.name="Perill pont llevadís">
+        <tag key="bridge" value="drawbridge" />
 		    </sign> 
 			
-<sign ref="ES:p6" name="Peligro tranvía" sk.name="">
-        <tag key="railway" value="tram" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p6" name="" es.name="Peligro tranvía" ca.name="Perill tramvia">
+        <tag key="railway" value="tram" />
+		    </sign>
 
 	
-<sign ref="ES:p7" name="Peligro paso a nivel con barreras" sk.name="">
-<tag key="railway" value="level_crossing" ident="mode"/>
+<sign ref="ES:p7" name="" es.name="Peligro paso a nivel con barreras" ca.name="Perill pas a nivell amb barreres">
+<tag key="railway" value="level_crossing" />
 		<tag key="level_crossing" value="automatic_barrier"/>
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
 
 
-        		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+        		    		    </sign>
 
-<sign ref="ES:p8" name="Peligro paso a nivel sin barreras" sk.name="">
-<tag key="railway" value="level_crossing" ident="mode"/>
+<sign ref="ES:p8" name="" es.name="Peligro paso a nivel sin barreras" ca.name="Perill pas a nivell sense barreres">
+<tag key="railway" value="level_crossing" />
 		<tag key="level_crossing" value="uncontrolled"/>
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
 
-        		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+        		    		    </sign>
 
-<sign ref="ES:p9a" name="Peligro proximidad paso a nivel lado derecho 300m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p9a" name="" es.name="Peligro proximidad paso a nivel lado derecho 300m" ca.name="Perill proximitat pas a nivell costat dret 300m">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p9b" name="Peligro proximidad paso a nivel lado derecho 200m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p9b" name="" es.name="Peligro proximidad paso a nivel lado derecho 200m" ca.name="Perill proximitat pas a nivell costat dret 200m">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p9c" name="Peligro proximidad paso a nivel lado derecho 100m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p9c" name="" es.name="Peligro proximidad paso a nivel lado derecho 100m" ca.name="Perill proximitat pas a nivell costat dret 100m">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:p10a" name="Peligro proximidad paso a nivel lado izquierdo 300m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p10a" name="" es.name="Peligro proximidad paso a nivel lado izquierdo 300m" ca.name="Perill proximitat pas a nivell costat esquerre 300m">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p10b" name="Peligro proximidad paso a nivel lado izquierdo 200m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p10b" name="" es.name="Peligro proximidad paso a nivel lado izquierdo 200m" ca.name="Perill proximitat pas a nivell costat esquerre 200m">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p10c" name="Peligro proximidad paso a nivel lado izquierdo 100m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p10c" name="" es.name="Peligro proximidad paso a nivel lado izquierdo 100m" ca.name="Perill proximitat pas a nivell costat esquerre 100m">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p11" name="Peligro paso a nivel sin barreras de una vía" sk.name="">
-<tag key="railway" value="level_crossing" ident="mode"/>
+<sign ref="ES:p11" name="" es.name="Peligro paso a nivel sin barreras de una vía" ca.name="Perill pas a nivell sense barreres d'una via">
+<tag key="railway" value="level_crossing" />
 <tag key="level_crossing" value="uncontrolled"/>
 <tag key="tracks" value="1"/>
-        		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+        		    		    </sign> 
 		    
-<sign ref="ES:p11a" name="Peligro paso a nivel sin barreras de más de una vía" sk.name="">
-<tag key="railway" value="level_crossing" ident="mode"/>
+<sign ref="ES:p11a" name="" es.name="Peligro paso a nivel sin barreras de más de una vía" ca.name="Perill pas a nivell sense barreres de més d'una via">
+<tag key="railway" value="level_crossing" />
 <tag key="level_crossing" value="uncontrolled"/>
 <tag key="tracks" value="2"/>
-        		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+        		    		    </sign> 
 		   
-<sign ref="ES:p12" name="Peligro Aeropuerto" sk.name="">
-        <tag key="aeroway" value="aerodrome" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p12" name="" es.name="Peligro Aeropuerto" ca.name="Perill aeroport">
+        <tag key="aeroway" value="aerodrome" />
+		    </sign>
 
-<sign ref="ES:p13a" name="Peligro curva a la derecha" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:p13a" name="" es.name="Peligro curva a la derecha" ca.name="Perill corba a la dreta">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p13b" name="Peligro curva a la izquierda" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:p13b" name="" es.name="Peligro curva a la izquierda" ca.name="Perill corba a l'esquerra">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p14a" name="" sk.name="Peligro curva a derecha e izquierda">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:p14a" name="" es.name="Peligro curva a derecha e izquierda" ca.name="Perill corba a dreta i esquerra">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
 <supplementary id="ES:com:s810"/><!-- Complementaria:En X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p14b" name="" sk.name="Peligro curva a izquierda y derecha">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:p14b" name="" es.name="Peligro curva a izquierda y derecha" ca.name="Perill corba a esquerra i dreta">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
 <supplementary id="ES:com:s810"/><!-- Complementaria:En X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:p15" name="Peligro badenes" sk.name="">
-        <tag key="traffic_calming" value="rumble_strip" ident="mode"/>
+<sign ref="ES:p15" name="" es.name="Peligro badenes" ca.name="">
+        <tag key="traffic_calming" value="rumble_strip" />
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p15a" name="Peligro badén" sk.name="">
-        <tag key="traffic_calming" value="bump" ident="mode"/>
+<sign ref="ES:p15a" name="" es.name="Peligro badén" ca.name="">
+        <tag key="traffic_calming" value="bump" />
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p15b" name="Peligro bache" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p15b" name="" es.name="Peligro bache" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 			
-<sign ref="ES:p16b" icon="ES_p16b" name="Pendiente Máxima de subida" sk.name="Pendiente">
+<sign ref="ES:p16b" icon="ES_p16b" name="" es.name="Pendiente Máxima de subida" ca.name="Pendiente">
         <tag key="incline" value="$val%"/>
-        <parameter input="textfield" name="max. incline" sk.name="Pendiente Máxima de subida" type="int" ident="val" default="10" suffix="%" field_width="3"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
+        <parameter input="textfield" name="" es.name="max. incline" ca.name="Pendiente Máxima de subida" type="int" ident="val" default="10" suffix="%" field_width="3"/>
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+    </sign>
 	
-<sign ref="ES:p16a" icon="ES_p16a" name="Pendiente Máxima de bajada" sk.name="Pendiente">
+<sign ref="ES:p16a" icon="ES_p16a" name="" es.name="Pendiente Máxima de bajada" ca.name="Pendiente">
         <tag key="incline" value="-$val%"/>
-        <parameter input="textfield" name="max. incline" sk.name="Pendiente Máxima de bajada" type="int" ident="val" prefix="-" default="10" suffix="%" field_width="3"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
+        <parameter input="textfield" name="" es.name="max. incline" ca.name="Pendiente Máxima de bajada" type="int" ident="val" prefix="-" default="10" suffix="%" field_width="3"/>
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
 <supplementary id="ES:com:s810"/><!-- Complementaria:En X m. -->
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+    </sign>
 
-<sign ref="ES:p17b" name="Peligro estrechamiento de calzada por la izquierda" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:p17b" name="" es.name="Peligro estrechamiento de calzada por la izquierda" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p17" name="Peligro estrechamiento de calzada" sk.name="">
-        <tag key="narrow" value="yes" ident="mode"/>
+<sign ref="ES:p17" name="" es.name="Peligro estrechamiento de calzada" ca.name="">
+        <tag key="narrow" value="yes" />
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p17a" name="Peligro estrechamiento de calzada por la derecha" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:p17a" name="" es.name="Peligro estrechamiento de calzada por la derecha" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p18" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p18" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p19" name="Peligro calzada deslizante" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p19" name="" es.name="Peligro calzada deslizante" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p20" name="Peligro peatones" sk.name="">
+<sign ref="ES:p20" name="" es.name="Peligro peatones" ca.name="">
         <tag key="highway" value="passing_place" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p21" name="Peligro zona escolar" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p21" name="" es.name="Peligro zona escolar" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:p22" name="Peligro cruce con ciclistas" sk.name="">
+<sign ref="ES:p22" name="" es.name="Peligro cruce con ciclistas" ca.name="">
         <tag key="cycleway" value="lane" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p23" name="Peligro animales domésticos" sk.name="">
+<sign ref="ES:p23" name="" es.name="Peligro animales domésticos" ca.name="">
         <tag key="route" value="horse" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p24" name="Peligro animales en libertad" sk.name="">
+<sign ref="ES:p24" name="" es.name="Peligro animales en libertad" ca.name="">
         <tag key="boundary" value="protected_area" ident="mode"/>
 <supplementary id="ES:com:s810"/><!-- Complementaria:En X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p25" name="Peligro calzada de doble sentido" sk.name="">
+<sign ref="ES:p25" name="" es.name="Peligro calzada de doble sentido" ca.name="">
         <tag key="oneway" value="no" ident="mode"/>
 		<tag key="lanes:forward" value="1" ident="mode"/>
 		<tag key="lanes:backward" value="1" ident="mode"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
+		    </sign>
 
-<sign ref="ES:p26" name="Peligro desprendimientos" sk.name="">
+<sign ref="ES:p26" name="" es.name="Peligro desprendimientos" ca.name="">
         <tag key="natural" value="scree" ident="mode"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
 <supplementary id="ES:com:s810"/><!-- Complementaria:En X m. -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p27" name="Peligro muelle" sk.name="">
+<sign ref="ES:p27" name="" es.name="Peligro muelle" ca.name="">
         <tag key="man_made" value="pier" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p28" name="Peligro gravilla suelta" sk.name="">
+<sign ref="ES:p28" name="" es.name="Peligro gravilla suelta" ca.name="">
         <tag key="surface" value="fine_gravel" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p29" name="Peligro viento lateral" sk.name="">
+<sign ref="ES:p29" name="" es.name="Peligro viento lateral" ca.name="">
         <tag key="aeroway" value="windsock" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p30" name="Peligro escalón lateral" sk.name="">
+<sign ref="ES:p30" name="" es.name="Peligro escalón lateral" ca.name="">
         <tag key="shoulder" value="yes" ident="mode"/>
 		 <tag key="layer" value="-1" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p31" name="Peligro atasco" sk.name="">
+<sign ref="ES:p31" name="" es.name="Peligro atasco" ca.name="">
         <tag key="jams" value="yes" ident="mode"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:p32" name="Peligro accidente" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p32" name="" es.name="Peligro accidente" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:p33" name="Peligro visibilidad reducida" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p33" name="" es.name="Peligro visibilidad reducida" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:p34" name="Peligro pavimento deslizante por hielo o nieve" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p34" name="" es.name="Peligro pavimento deslizante por hielo o nieve" ca.name="">
+        <tag key="" value="" />
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
+		    </sign>
 
-<sign ref="ES:p50" name="Peligro indefinido" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:p50" name="" es.name="Peligro indefinido" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:tp18" name="Peligro obras" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:tp18" name="" es.name="Peligro obras" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
 
-<sign ref="ES:r1" name="Ceda el paso" sk.name="">
+<sign ref="ES:r1" name="" es.name="Ceda el paso" ca.name="">
         <tag key="highway" value="give_way" ident="mode"/>
 <supplementary id="ES:com:s840"/><!-- Complementaria:STOP a X m.-->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r2" name="Stop" sk.name="">
+<sign ref="ES:r2" name="" es.name="Stop" ca.name="">
         <tag key="highway" value="stop" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r3" name="Carretera con preferencia" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r3" name="" es.name="Carretera con preferencia" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s850"/><!-- Complementaria:Preferencia -->
 <supplementary id="ES:com:s851"/><!-- Complementaria:Preferencia -->
 <supplementary id="ES:com:s852"/><!-- Complementaria:Preferencia -->
 <supplementary id="ES:com:s853"/><!-- Complementaria:Preferencia -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r4" name="Fin de carretera con preferencia" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:r4" name="" es.name="Fin de carretera con preferencia" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:r5" name="Paso estrecho sin prioridad" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:r5" name="" es.name="Paso estrecho sin prioridad" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:r6" name="Paso estrecho con prioridad" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r6" name="" es.name="Paso estrecho con prioridad" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r7" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r7" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r8" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r8" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r9" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r9" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r100" name="Circulación prohibida a todo tipo de vehículos" sk.name="">
+<sign ref="ES:r100" name="" es.name="Circulación prohibida a todo tipo de vehículos" ca.name="">
         <tag key="access" value="no" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r101" name="Dirección prohibida" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:r101" name="" es.name="Dirección prohibida" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:r102" name="Prohibido vehículos con motor" sk.name="">
+<sign ref="ES:r102" name="" es.name="Prohibido vehículos con motor" ca.name="">
         <tag key="motor_vehicle" value="no" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 
-			<sign ref="ES:r103" name="Prohibido automóviles" sk.name="">
+			<sign ref="ES:r103" name="" es.name="Prohibido automóviles" ca.name="">
         <tag key="motorcar" value="no" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r104" name="Prohibido motocicletas" sk.name="">
+<sign ref="ES:r104" name="" es.name="Prohibido motocicletas" ca.name="">
         <tag key="motorcycle" value="no" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r105" name="Prohibido ciclomotores" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r105" name="" es.name="Prohibido ciclomotores" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r106" name="Prohibido camiones" sk.name="">
+<sign ref="ES:r106" name="" es.name="Prohibido camiones" ca.name="">
         <tag key="hgv" value="no" ident="mode"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r107" name="Prohibido camiones que superen X toneladas" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r107" name="" es.name="Prohibido camiones que superen X toneladas" ca.name="">
+        <tag key="" value="" />
 		<tag key="maxweight" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="3,5" suffix="t" field_width="4"/>
-		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    		    </sign>
 
-<sign ref="ES:r108" name="Prohibido mercancias peligrosas" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r108" name="" es.name="Prohibido mercancias peligrosas" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r109" name="Prohibido mercancias inflamables" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r109" name="" es.name="Prohibido mercancias inflamables" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r110" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r110" name="" es.name="" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r111" name="Prohibido tractores" sk.name="">
+<sign ref="ES:r111" name="" es.name="Prohibido tractores" ca.name="">
         <tag key="agricultural" value="no" ident="mode"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r112" name="Prohibido remolques de más de 2 toneladas" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r112" name="" es.name="Prohibido remolques de más de 2 toneladas" ca.name="">
+        <tag key="" value="" />
 	<tag key="maxweight" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="2" suffix="t" field_width="4"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r113" name="Prohibido carros tirados por caballos" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r113" name="" es.name="Prohibido carros tirados por caballos" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r114" name="Prohibido bicicletas" sk.name="">
+<sign ref="ES:r114" name="" es.name="Prohibido bicicletas" ca.name="">
         <tag key="bicycle" value="no" ident="mode"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r115" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r115" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r116" name="Prohibido peatones" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r116" name="" es.name="Prohibido peatones" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r117" name="Prohibido caballos" sk.name="">
+<sign ref="ES:r117" name="" es.name="Prohibido caballos" ca.name="">
         <tag key="horse" value="no" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r200" name="Detención obligatoria" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r200" name="" es.name="Detención obligatoria" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-	<sign ref="ES:r200a" name="Detención obligatoria en el peaje" sk.name="">
+	<sign ref="ES:r200a" name="" es.name="Detención obligatoria en el peaje" ca.name="">
         <tag key="barrier" value="toll_booth" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r201" name="Prohibido vehículos con más de ese peso" sk.name="">
+<sign ref="ES:r201" name="" es.name="Prohibido vehículos con más de ese peso" ca.name="">
         <tag key="maxweight" value="$val"/>
         <parameter ident="val" input="textfield" default="5,5" suffix="t" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r202" name="Prohibido vehículos con más de ese peso en un eje" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r202" name="" es.name="Prohibido vehículos con más de ese peso en un eje" ca.name="">
+        <tag key="" value="" />
 	<tag key="maxaxleload" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="2,4" suffix="t" field_width="4"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r203" name="Prohibido camiones de más de esa medida de largo" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r203" name="" es.name="Prohibido camiones de más de esa medida de largo" ca.name="">
+        <tag key="" value="" />
 	<tag key="maxlength" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="10" suffix="m" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r204" name="Prohibido vehículos que excendan ese ancho" sk.name="">
+<sign ref="ES:r204" name="" es.name="Prohibido vehículos que excendan ese ancho" ca.name="">
 	<tag key="maxwidth" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="2" suffix="m" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r205" name="Prohibido vehículos que excendan esa altura" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:r205" name="" es.name="Prohibido vehículos que excendan esa altura" ca.name="">
+        <tag key="" value="" />
 			<tag key="maxheight" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="4,6" suffix="m" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r300" name="Prohibido mantener una distancia más pequeña de" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r300" name="" es.name="Prohibido mantener una distancia más pequeña de" ca.name="">
+        <tag key="" value="" />
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
+		    </sign>
 
-<sign ref="ES:r301-50" name="Prohibido ir a más de "  traffic_sign_tag="maxspeed" sk.name="">
+<sign ref="ES:r301-50" name="" es.name="Prohibido ir a más de "  traffic_sign_tag="maxspeed" ca.name="">
 <tag key="maxspeed" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="50" suffix="" field_width="3"/>
                 <tag key="traffic_sign" value="maxspeed" ident="mode"/>
-				<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
+				<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
 				<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
 
-<sign ref="ES:r302" name="Prohibido girar a la derecha" sk.name="">
+<sign ref="ES:r302" name="" es.name="Prohibido girar a la derecha" ca.name="">
         <tag key="restriction" value="no_right_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r303" name="Prohibido girar a la izquierda" sk.name="">
+<sign ref="ES:r303" name="" es.name="Prohibido girar a la izquierda" ca.name="">
         <tag key="restriction" value="no_left_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:r304" name="Prohibido cambiar de sentido" sk.name="">
+<sign ref="ES:r304" name="" es.name="Prohibido cambiar de sentido" ca.name="">
         <tag key="restriction" value="no_u_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 			
-<sign ref="ES:r305" name="Prohibido adelantar.Hay que especificar.Valores - no=adelantamiento prohibido en las dos direcciones | forward=adelantamiento prohibido en la dirección de ida | backward=adelantamiento prohibido en la dirección de vuelta" traffic_sign_tag="overtaking" sk.name="">
+<sign ref="ES:r305" name="" es.name="Prohibido adelantar.Hay que especificar.Valores - no=adelantamiento prohibido en las dos direcciones | forward=adelantamiento prohibido en la dirección de ida | backward=adelantamiento prohibido en la dirección de vuelta" traffic_sign_tag="overtaking" ca.name="">
 	<tag key="overtaking" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="no" suffix="" field_width="7"/>
 		<tag key="traffic_sign" value="overtaking"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
 		    </sign> 
 			
-<sign ref="ES:r306" name="Prohibido adelantar camiones" sk.name="">
+<sign ref="ES:r306" name="" es.name="Prohibido adelantar camiones" ca.name="">
         <tag key="overtaking:hgv" value="no" ident="mode"/>
-		<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
+		    </sign>
 
-<sign ref="ES:r307" name="Prohibida la parada.Hay que decir el lado de la calle left=izquierda | right=derecha " sk.name="">
+<sign ref="ES:r307" name="" es.name="Prohibida la parada.Hay que decir el lado de la calle left=izquierda | right=derecha " ca.name="">
 	<tag key="parking_lane:$val" value="no_stopping"/>
         <parameter ident="val" input="textfield" prefix="" default="right" suffix="" field_width="7"/>
 		
 <supplementary id="ES:com:s820"/><!-- Complementaria:En la izquierda -->
 <supplementary id="ES:com:s821"/><!-- Complementaria:En la derecha -->
 <supplementary id="ES:com:s830"/><!-- Complementaria:A ambos lados -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 
-<sign ref="ES:r308" name="Prohibido el estacionamento.Hay que decir el lado de la calle left=izquierda | right=derecha" sk.name="">
+<sign ref="ES:r308" name="" es.name="Prohibido el estacionamento.Hay que decir el lado de la calle left=izquierda | right=derecha" ca.name="">
 	<tag key="parking_lane:$val" value="no_parking"/>
         <parameter ident="val" input="textfield" prefix="" default="right" suffix="" field_width="7"/>
 		<supplementary id="ES:com:s820"/><!-- Complementaria:En la izquierda -->
 <supplementary id="ES:com:s821"/><!-- Complementaria:En la derecha -->
 <supplementary id="ES:com:s830"/><!-- Complementaria:A ambos lados -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 
-	<sign ref="ES:r308a" name="Prohibido el estacionamento los días impares" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+	<sign ref="ES:r308a" name="" es.name="Prohibido el estacionamento los días impares" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-	<sign ref="ES:r308b" name="Prohibido el estacionamento los días pares" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+	<sign ref="ES:r308b" name="" es.name="Prohibido el estacionamento los días pares" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-	<sign ref="ES:r308c" name="Prohibido el estacionamento del 1 al 15 del mes" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+	<sign ref="ES:r308c" name="" es.name="Prohibido el estacionamento del 1 al 15 del mes" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-	<sign ref="ES:r308d" name="Prohibido el estacionamento del 16 al 31 del mes" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+	<sign ref="ES:r308d" name="" es.name="Prohibido el estacionamento del 16 al 31 del mes" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:r308e" name="Vado permanente" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r308e" name="" es.name="Vado permanente" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r309" name="Estacionamiento regulado (O.R.A.)" sk.name="">
+<sign ref="ES:r309" name="" es.name="Estacionamiento regulado (O.R.A.)" ca.name="">
 	<tag key="parking_lane:$val" value="no_parking"/>
         <parameter ident="val" input="textfield" prefix="" default="right" suffix="" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 
-<sign ref="ES:r310" name="Prohibido hacer sonar el cláxon" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r310" name="" es.name="Prohibido hacer sonar el cláxon" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:r400a" name="Sentido obligatorio a la derecha" sk.name="">
+<sign ref="ES:r400a" name="" es.name="Sentido obligatorio a la derecha" ca.name="">
         <tag key="restriction" value="only_right_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r400b" name="Sentido obligatorio a la izquierda" sk.name="">
+<sign ref="ES:r400b" name="" es.name="Sentido obligatorio a la izquierda" ca.name="">
         <tag key="restriction" value="only_left_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r400c" name="Sentido obligatorio recto" sk.name="">
+<sign ref="ES:r400c" name="" es.name="Sentido obligatorio recto" ca.name="">
         <tag key="restriction" value="only_straight_on" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r400d" name="Sentido obligatorio hacia la derecha" sk.name="">
+<sign ref="ES:r400d" name="" es.name="Sentido obligatorio hacia la derecha" ca.name="">
         <tag key="restriction" value="only_right_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r400e" name="Sentido obligatorio hacia la izquierda" sk.name="">
+<sign ref="ES:r400e" name="" es.name="Sentido obligatorio hacia la izquierda" ca.name="">
         <tag key="restriction" value="only_left_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 			
-			<sign ref="ES:r400g" name="Sentido obligatorio hacia la izquierda o la derecha" sk.name="">
+			<sign ref="ES:r400g" name="" es.name="Sentido obligatorio hacia la izquierda o la derecha" ca.name="">
         <tag key="restriction" value="no_straight_on" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r401d" name="Sentido obligatorio por la izquierda" sk.name="">
+<sign ref="ES:r401d" name="" es.name="Sentido obligatorio por la izquierda" ca.name="">
         <tag key="restriction" value="only_left_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
+			
+<sign ref="ES:r401e" name="" es.name="Sentido obligatorio por la derecha" ca.name="">
+        <tag key="restriction" value="only_right_turn" ident="mode"/>
+		    </sign> 
 
 
-<sign ref="ES:r402" name="Rotonda" sk.name="">
+<sign ref="ES:r402" name="" es.name="Rotonda" ca.name="">
         <tag key="junction" value="roundabout" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r403a" name="Posibilidad de giro a la izquierda" sk.name="">
+<sign ref="ES:r403a" name="" es.name="Posibilidad de giro a la izquierda" ca.name="">
         <tag key="restriction" value="no_right_turn" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r404" name="Obligatorio automóviles" sk.name="">
+<sign ref="ES:r404" name="" es.name="Obligatorio automóviles" ca.name="">
         <tag key="motorcar" value="designated" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r405" name="Obligatorio motocicletas" sk.name="">
+<sign ref="ES:r405" name="" es.name="Obligatorio motocicletas" ca.name="">
         <tag key="motorcycle" value="designated" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r406" name="Obligatorio camiones" sk.name="">
+<sign ref="ES:r406" name="" es.name="Obligatorio camiones" ca.name="">
         <tag key="hgv" value="designated" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r407" name="Obligatorio bicicletas" sk.name="">
+<sign ref="ES:r407" name="" es.name="Obligatorio bicicletas" ca.name="">
         <tag key="bicycle" value="designated" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r408" name="Obligatorio carros" sk.name="">
+<sign ref="ES:r408" name="" es.name="Obligatorio carros" ca.name="">
         <tag key="highway" value="bridleway" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r410" name="Obligatorio peatones" sk.name="">
+<sign ref="ES:r410" name="" es.name="Obligatorio peatones" ca.name="">
         <tag key="highway" value="pedestrian" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r411" name="Velocidad mínima" sk.name="">
+<sign ref="ES:r411" name="" es.name="Velocidad mínima" ca.name="">
 <tag key="minspeed" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="30" suffix="" field_width="5"/>
-        		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+        		    </sign>
 
 
-<sign ref="ES:r412" name="Obligatorio cadenas" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r412" name="" es.name="Obligatorio cadenas" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:r413" name="Obligatorio luz de cruce" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r413" name="" es.name="Obligatorio luz de cruce" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:r414" name="Obligatorio mercancías peligrosas" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r414" name="" es.name="Obligatorio mercancías peligrosas" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:r415" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r415" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r416" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r416" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r417" name="Obligatorio cinturón de seguridad" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r417" name="" es.name="Obligatorio cinturón de seguridad" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r418" name="Obligatorio Vía T" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r418" name="" es.name="Obligatorio Vía T" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:r500" traffic_sign_tag="maxspeed;overtaking" name="Fin de prohibiciones"  sk.name="">
+<sign ref="ES:r500" traffic_sign_tag="maxspeed;overtaking" name="" es.name="Fin de prohibiciones"  ca.name="">
 <tag key="maxspeed" value="implicit"/>
 		<tag key="overtaking" value="yes" ident="mode"/>
-			<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+			</sign>
 
 
-<sign ref="ES:r501" traffic_sign_tag="maxspeed" name="Fin de límite de velocidad" sk.name="">
+<sign ref="ES:r501" traffic_sign_tag="maxspeed" name="" es.name="Fin de límite de velocidad" ca.name="">
 		<tag key="maxspeed" value="implicit" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:r502" traffic_sign_tag="overtaking" name="Fin de la prohibición de adelantar" sk.name="">
+<sign ref="ES:r502" traffic_sign_tag="overtaking" name="" es.name="Fin de la prohibición de adelantar" ca.name="">
         <tag key="overtaking" value="yes" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r503" name="Fin de la prohibición de adelantar por camiones" sk.name="">
+<sign ref="ES:r503" name="" es.name="Fin de la prohibición de adelantar por camiones" ca.name="">
         <tag key="overtaking:hgv" value="yes" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:r504" name="Fin de estacionamiento controlado" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r504" name="" es.name="Fin de estacionamiento controlado" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:r505" name="Fin del carril bici" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:r505" name="" es.name="Fin del carril bici" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
 
 
-<sign ref="ES:s1" name="Autopista" sk.name="">
+<sign ref="ES:s1" name="" es.name="Autopista" ca.name="">
         <tag key="highway" value="motorway" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s1a" name="Autovía" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s1a" name="" es.name="Autovía" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
 
-<sign ref="ES:s2" name="Fin de autopista" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:s2" name="" es.name="Fin de autopista" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s2a" name="Fin de autovía" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:s2a" name="" es.name="Fin de autovía" ca.name="">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s5" name="Inicio de túnel" sk.name="">
+<sign ref="ES:s5" name="" es.name="Inicio de túnel" ca.name="">
         <tag key="tunnel" value="yes" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s6" name="Final de túnel" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s6" name="" es.name="Final de túnel" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s7" name="Recomendación velocidad" sk.name="">
+<sign ref="ES:s7" name="" es.name="Recomendación velocidad" ca.name="">
         <tag key="recommend_speed" value="$val" ident="mode"/>
 		        <parameter ident="val" input="textfield" prefix="" default="70" suffix="" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s8" name="Fin de recomendación velocidad" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s8" name="" es.name="Fin de recomendación velocidad" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s9" name="Intérvalo recomendado de velocidad.Hay que poner dos velocidades separadas por guión: ejemplo 70-90" sk.name="">
+<sign ref="ES:s9" name="" es.name="Intérvalo recomendado de velocidad.Hay que poner dos velocidades separadas por guión: ejemplo 70-90" ca.name="">
 <tag key="recommend_speed" value="$val" ident="mode"/>
 <parameter ident="val" input="textfield" prefix="" default="70-90" suffix="" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s10" name="Fin de Intérvalo recomendado de velocidad" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s10" name="" es.name="Fin de Intérvalo recomendado de velocidad" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s11" name="Sentido único" sk.name="">
+<sign ref="ES:s11" name="" es.name="Sentido único" ca.name="">
         <tag key="oneway" value="yes" ident="mode"/>
 		<tag key="lanes" value="1"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 
-<sign ref="ES:s11a" name="Doble carril" sk.name="">
+<sign ref="ES:s11a" name="" es.name="Doble carril" ca.name="">
                 <tag key="oneway" value="yes" ident="mode"/>
 		<tag key="lanes" value="2"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s11b" name="Tres carriles" sk.name="">
+<sign ref="ES:s11b" name="" es.name="Tres carriles" ca.name="">
                 <tag key="oneway" value="yes" ident="mode"/>
 		<tag key="lanes" value="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s12" name="Calle de dirección única" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:s12" name="" es.name="Calle de dirección única" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
 			
-<sign ref="ES:s13" name="Paso de peatones" sk.name="">
+<sign ref="ES:s13" name="" es.name="Paso de peatones" ca.name="">
         <tag key="highway" value="crossing" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-	<sign ref="ES:s14a" name="Escaleras superiores" sk.name="">
+	<sign ref="ES:s14a" name="" es.name="Escaleras superiores" ca.name="">
         <tag key="highway" value="steps" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-	<sign ref="ES:s14b" name="Escaleras inferiores" sk.name="">
+	<sign ref="ES:s14b" name="" es.name="Escaleras inferiores" ca.name="">
         <tag key="highway" value="steps" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s15a" name="Calle cortada" sk.name="">
+<sign ref="ES:s15a" name="" es.name="Calle cortada" ca.name="">
         <tag key="noexit" value="yes" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
-<sign ref="ES:s15b" name="A la izquierda calle cortada" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:s15b" name="" es.name="A la izquierda calle cortada" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:s15c" name="Calle adjacente cortada" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:s15c" name="" es.name="Calle adjacente cortada" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:s15d" name="Posibles desvíos" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s15d" name="" es.name="Posibles desvíos" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s16" name="Zona de frenado de emergencia" sk.name="">
+<sign ref="ES:s16" name="" es.name="Zona de frenado de emergencia" ca.name="">
         <tag key="highway" value="escape" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s17" name="Aparcamiento" sk.name="">
+<sign ref="ES:s17" name="" es.name="Aparcamiento" ca.name="">
         <tag key="amenity" value="parking" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s18" name="Parada de Taxis" sk.name="">
+<sign ref="ES:s18" name="" es.name="Parada de Taxis" ca.name="">
         <tag key="amenity" value="taxi" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s19" name="Parada de Bus" sk.name="">
+<sign ref="ES:s19" name="" es.name="Parada de Bus" ca.name="">
         <tag key="highway" value="bus_stop" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s20" name="Parada de tranvía" sk.name="">
+<sign ref="ES:s20" name="" es.name="Parada de tranvía" ca.name="">
         <tag key="railway" value="tram_stop" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s21" name="Condiciones para pasar el puerto" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s21" name="" es.name="Condiciones para pasar el puerto" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s23" name="Hospital" sk.name="">
+<sign ref="ES:s23" name="" es.name="Hospital" ca.name="">
         <tag key="amenity" value="Hospital" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s24" name="Fin de luz de cruce" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s24" name="" es.name="Fin de luz de cruce" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s25" name="Cambio de sentido" sk.name="">
-        <tag key="" value="" ident="mode"/>
+<sign ref="ES:s25" name="" es.name="Cambio de sentido" ca.name="Canvi de sentit">
+        <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+						<supplementary id="ES:com:s800"/><!-- Complementaria:A x. m. -->
+		    </sign>
 
-<sign ref="ES:s26a" name="Salida a 300m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:s26a" name="" es.name="Salida a 300m" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:s26b" name="Salida a 200m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
+<sign ref="ES:s26b" name="" es.name="Salida a 200m" ca.name="">
+        <tag key="" value="" />
 		    </sign> 
-<sign ref="ES:s26c" name="Salida a 100m" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s26c" name="" es.name="Salida a 100m" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s27" name="Poste SOS" sk.name="">
+<sign ref="ES:s27" name="" es.name="Poste SOS" ca.name="">
         <tag key="emergency" value="phone" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s28" name="Zona residencial" sk.name="">
+<sign ref="ES:s28" name="" es.name="Zona residencial" ca.name="">
         <tag key="highway" value="living_street" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s29" name="Fin de zona residencial" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s29" name="" es.name="Fin de zona residencial" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s30" name="Zona 30" traffic_sign_tag="maxspeed" sk.name="">
+<sign ref="ES:s30" name="" es.name="Zona 30" traffic_sign_tag="maxspeed" ca.name="">
         <tag key="maxspeed" value="30" ident="mode"/>
 		 <tag key="source:maxspeed" value="zone" />
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s31" name="Fin de zona 30" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s31" name="" es.name="Fin de zona 30" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s32" name="Posibilidad Vía T" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s32" name="" es.name="Posibilidad Vía T" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s33" name="Recomendado bicicleta" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s33" name="" es.name="Recomendado bicicleta" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s34" name="Carril de parada" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s34" name="" es.name="Carril de parada" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s34a" name="Parada para poste SOS" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s34a" name="" es.name="Parada para poste SOS" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s50a" name="Carril para vehículos rápidos" sk.name="">
+<sign ref="ES:s50a" name="" es.name="Carril para vehículos rápidos" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="lanes:backward" value="1" />
 		<tag key="turn:lanes:forward" value="slight_left|through"/>
 		<tag key="minspeed:lanes:forward" value="$val|" ident="mode"/>
 <parameter ident="val" input="textfield" prefix="" default="70" suffix="" field_width="3"/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+</sign> 
 
-<sign ref="ES:s50b" name="Carril para vehículos lentos" sk.name="">
+<sign ref="ES:s50b" name="" es.name="Carril para vehículos lentos" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="lanes:backward" value="1" />
 		<tag key="turn:lanes:forward" value="through|slight_right"/>
 		<tag key="minspeed:lanes:forward" value="$val|" ident="mode"/>
 <parameter ident="val" input="textfield" prefix="" default="70" suffix="" field_width="3"/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+</sign> 
 
-<sign ref="ES:s50c" name="Carril para vehículos lentos en autopista" sk.name="">
+<sign ref="ES:s50c" name="" es.name="Carril para vehículos lentos en autopista" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|through|slight_right"/>
 		<tag key="minspeed:lanes:forward" value="$val|$val|" ident="mode"/>
 <parameter ident="val" input="textfield" prefix="" default="70" suffix="" field_width="3"/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+</sign> 
 
-<sign ref="ES:s50d" name="Continuación de carril para vehículos lentos" sk.name="">
+<sign ref="ES:s50d" name="" es.name="Continuación de carril para vehículos lentos" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="lanes:backward" value="1" />
 		<tag key="turn:lanes:forward" value="through|through"/>
 		<tag key="minspeed:lanes:forward" value="$val|" ident="mode"/>
 <parameter ident="val" input="textfield" prefix="" default="30" suffix="" field_width="3"/>
-<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
+</sign> 
 
-<sign ref="ES:s50e" name="Continuación de carril para vehículos lentos en autopista" sk.name="">
+<sign ref="ES:s50e" name="" es.name="Continuación de carril para vehículos lentos en autopista" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|through|through"/>
 		<tag key="minspeed:lanes:forward" value="$val|$val|" ident="mode"/>
 <parameter ident="val" input="textfield" prefix="" default="70" suffix="" field_width="3"/>
-<supplementary id="ES:com:noves:3a"/><!-- Complementaria:Cartell Recordi -->
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+<supplementary id="CAT:com:s860"/><!-- Complementaria:Cartell Recordi -->
+</sign> 
 
-<sign ref="ES:s51" name="Parada de bus" sk.name="">
+<sign ref="ES:s51" name="" es.name="Parada de bus" ca.name="">
         <tag key="amenity" value="bus_stop" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 			
-<sign ref="ES:s52" name="Fin del tercer carril" sk.name="">
+<sign ref="ES:s52" name="" es.name="Fin del tercer carril" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|through|slight_left"/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+</sign> 
 
-<sign ref="ES:s52a" name="Fin del segundo carril derecho en vía de doble sentido" sk.name="">
+<sign ref="ES:s52a" name="" es.name="Fin del segundo carril derecho en vía de doble sentido" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="lanes:backward" value="1" />
 		<tag key="turn:lanes:forward" value="through|slight_left"/>
-		<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+		</sign> 
 		
-		<sign ref="ES:s52b" name="Fin del segundo carril izquierdo en vía de doble sentido" sk.name="">
+		<sign ref="ES:s52b" name="" es.name="Fin del segundo carril izquierdo en vía de doble sentido" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="lanes:backward" value="1" />
 		<tag key="turn:lanes:forward" value="slight_right|through"/>
-		<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+		</sign> 
 		
-		<sign ref="ES:s53" name="Surge segundo carril" sk.name="">
+		<sign ref="ES:s53" name="" es.name="Surge segundo carril" ca.name="">
         <tag key="lanes" value="2" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|slight_right"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+		</sign> 
 
-		<sign ref="ES:s53b" name="Surge tercer carril" sk.name="">
+		<sign ref="ES:s53b" name="" es.name="Surge tercer carril" ca.name="">
         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|through|slight_right"/>
-		<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+		</sign> 
 		
-				<sign ref="ES:s60a" name="Carril izquierdo se desvía" sk.name="">
+				<sign ref="ES:s60a" name="" es.name="Carril izquierdo se desvía" ca.name="">
         <tag key="lanes" value="2" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="slight_left|through"/>
-		<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+		</sign> 
 		
 
-	<sign ref="ES:s60b" name="Carril derecho se desvía" sk.name="">
+	<sign ref="ES:s60b" name="" es.name="Carril derecho se desvía" ca.name="">
                 <tag key="lanes" value="2" ident="mode"/>
 		<tag key="lanes:forward" value="2" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|slight_right"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s61a" name="Tercer carril se desvía a la izquierda" sk.name="">
+<sign ref="ES:s61a" name="" es.name="Tercer carril se desvía a la izquierda" ca.name="">
                         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="slight_left|through|through"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 		    
 
 
-	<sign ref="ES:s61b" name="Tercer carril se desvía a la derecha" sk.name="">
+	<sign ref="ES:s61b" name="" es.name="Tercer carril se desvía a la derecha" ca.name="">
                         <tag key="lanes" value="3" ident="mode"/>
 		<tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|through|slight_right"/>
-				    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+				    </sign>
 
-<sign ref="ES:s62a" name="Cuarto carril se desvía a la izquierda" sk.name="">
+<sign ref="ES:s62a" name="" es.name="Cuarto carril se desvía a la izquierda" ca.name="">
         <tag key="lanes" value="4" ident="mode"/>
 		<tag key="lanes:forward" value="4" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="slight_left|through|through|through"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 		   
-	<sign ref="ES:s62b" name="Cuarto carril se desvía a la derecha" sk.name="">
+	<sign ref="ES:s62b" name="" es.name="Cuarto carril se desvía a la derecha" ca.name="">
                         <tag key="lanes" value="4" ident="mode"/>
 		<tag key="lanes:forward" value="4" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="through|through|through|slight_right"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s63" name="Carriles se dividen en dos direcciones" sk.name="">
+<sign ref="ES:s63" name="" es.name="Carriles se dividen en dos direcciones" ca.name="">
 <tag key="lanes" value="4" ident="mode"/>
 		<tag key="lanes:forward" value="4" />
 		<tag key="oneway" value="yes" />
 		<tag key="turn:lanes:forward" value="slight_left|slight_left|slight_right|slight_right"/>
-         <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+         </sign> 
 
-<sign ref="ES:s64b" name="Carril derecho para las bicicletas" sk.name="">
+<sign ref="ES:s64b" name="" es.name="Carril derecho para las bicicletas" ca.name="">
              <tag key="cycleway" value="lane" ident="mode"/>
 			 <tag key="lanes:forward" value="3" />
 		<tag key="oneway" value="yes" />
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s64a" name="Carril derecho para las bicicletas en vía de doble sentido" sk.name="">
+	<sign ref="ES:s64a" name="" es.name="Carril derecho para las bicicletas en vía de doble sentido" ca.name="">
         <tag key="cycleway:right" value="lane" ident="mode"/>
 					 <tag key="lanes:forward" value="2" />
 		<tag key="lanes:backward" value="1" />
-		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    		    </sign>
 
 
-<sign ref="ES:s100" name="Puesto de Socorro" sk.name="">
+<sign ref="ES:s100" name="" es.name="Puesto de Socorro" ca.name="">
         <tag key="amenity" value="doctors" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s101" name="Puesto de Socorro con Ambulancia" sk.name="">
+<sign ref="ES:s101" name="" es.name="Puesto de Socorro con Ambulancia" ca.name="">
         <tag key="amenity" value="clinic" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s102" name="Estación de ITV" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s102" name="" es.name="Estación de ITV" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s103" name="Taller mecánico" sk.name="">
+<sign ref="ES:s103" name="" es.name="Taller mecánico" ca.name="">
         <tag key="shop" value="hadware" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s104" name="Teléfono" sk.name="">
+<sign ref="ES:s104" name="" es.name="Teléfono" ca.name="">
         <tag key="amenity" value="telephone" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s105" name="Gasolinera" sk.name="">
+<sign ref="ES:s105" name="" es.name="Gasolinera" ca.name="">
         <tag key="amenity" value="fuel" ident="mode"/>
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s106" name="Gasolinera y Taller mecánico" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s106" name="" es.name="Gasolinera y Taller mecánico" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s107" name="Zona de acampada" sk.name="">
+<sign ref="ES:s107" name="" es.name="Zona de acampada" ca.name="">
         <tag key="tourism" value="camp_site" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s108" name="Fuente" sk.name="">
+<sign ref="ES:s108" name="" es.name="Fuente" ca.name="">
         <tag key="natural" value="spring" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s109" name="Lugar paisajístico" sk.name="">
+<sign ref="ES:s109" name="" es.name="Lugar paisajístico" ca.name="">
         <tag key="tourism" value="viewpoint" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s110" name="Lugar de pernoctación" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s110" name="" es.name="Lugar de pernoctación" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s111" name="Restaurante" sk.name="">
+<sign ref="ES:s111" name="" es.name="Restaurante" ca.name="">
         <tag key="amenity" value="restaurant" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s112" name="Cafetería" sk.name="">
+<sign ref="ES:s112" name="" es.name="Cafetería" ca.name="">
         <tag key="amenity" value="cafe" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s113" name="Lugar para caravanas" sk.name="">
+<sign ref="ES:s113" name="" es.name="Lugar para caravanas" ca.name="">
         <tag key="tourism" value="caravan_site" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s114" name="Zona de picnic" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s114" name="" es.name="Zona de picnic" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s115" name="Zona para el excursionismo" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s115" name="" es.name="Zona para el excursionismo" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s116" name="Zona de acampada incluso para autocaravanas" sk.name="">
+<sign ref="ES:s116" name="" es.name="Zona de acampada incluso para autocaravanas" ca.name="">
         <tag key="tourism" value="caravan_site" ident="mode"/>
 		<tag key="tents" value="yes"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s117" name="Albergue" sk.name="">
+<sign ref="ES:s117" name="" es.name="Albergue" ca.name="">
         <tag key="tourism" value="picnic_site" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s118" name="Punto de información" sk.name="">
+<sign ref="ES:s118" name="" es.name="Punto de información" ca.name="">
         <tag key="information" value="office" ident="mode"/>
 		<tag key="tourism" value="information" />
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s119" name="Coto de pesca" sk.name="">
+<sign ref="ES:s119" name="" es.name="Coto de pesca" ca.name="">
         <tag key="leisure" value="fishing" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s120" name="Parque natural" sk.name="">
+<sign ref="ES:s120" name="" es.name="Parque natural" ca.name="">
         <tag key="leisure" value="natural_reserve" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s121" name="Monumento" sk.name="">
+<sign ref="ES:s121" name="" es.name="Monumento" ca.name="">
         <tag key="historic" value="monument" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s122" name="" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s122" name="" es.name="" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 
-<sign ref="ES:s123" name="Zona de descanso" sk.name="">
+<sign ref="ES:s123" name="" es.name="Zona de descanso" ca.name="">
         <tag key="highway" value="rest_area" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s124" name="Aparcamiento + tren" sk.name="">
+<sign ref="ES:s124" name="" es.name="Aparcamiento + tren" ca.name="">
         <tag key="amenity" value="parking" ident="mode"/>
 		<tag key="park_ride" value="yes" />
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s125" name="Aparcamiento + metro" sk.name="">
+<sign ref="ES:s125" name="" es.name="Aparcamiento + metro" ca.name="">
         <tag key="amenity" value="parking" ident="mode"/>
 		<tag key="park_ride" value="yes" />
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s126" name="Aparcamiento + bus" sk.name="">
+<sign ref="ES:s126" name="" es.name="Aparcamiento + bus" ca.name="">
         <tag key="amenity" value="parking" ident="mode"/>
 		<tag key="park_ride" value="yes" />
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s127" name="Area de Servicio" sk.name="">
+<sign ref="ES:s127" name="" es.name="Area de Servicio" ca.name="">
         <tag key="highway" value="services" ident="mode"/>
-				    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+				    </sign>
 
-<sign ref="ES:s200" name="Direcciones en rotonda.Se separa cada dirección con |, y se empieza de izquierda a derecha desde la misma dirección" sk.name="">
+<sign ref="ES:s200" name="" es.name="Direcciones en rotonda.Se separa cada dirección con |, y se empieza de izquierda a derecha desde la misma dirección" ca.name="">
         <tag key="junction" value="roundabout"/>
 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Guadarrama|Villalba|A Coruña" suffix="" field_width="40"/>
@@ -1357,11 +1150,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val3" input="textfield" prefix="" default="||A-6;AP-6" suffix="Referencias: Cada panel separado por |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="left|through|right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s220" name="Direcciones en carretera convencional - Se deben separar los diversos paneles por |" sk.name="">
+	<sign ref="ES:s220" name="" es.name="Direcciones en carretera convencional - Se deben separar los diversos paneles por |" ca.name="">
 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Santiago de Compostela|La Estrada" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1370,11 +1162,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val3" input="textfield" prefix="" default="N-525|N-640" suffix="Referencias: Cada panel separado por |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="through|slight_right" suffix=" direcciones,cada panel separado por |" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s222" name="Direcciones por autopista" sk.name="">
+	<sign ref="ES:s222" name="" es.name="Direcciones por autopista" ca.name="">
         		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Villalba" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1383,11 +1174,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val3" input="textfield" prefix="" default="A-6" suffix="Referencias: Cada panel separado por |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s222a" name="Direcciones por autopista o continuación por carretera" sk.name="">
+	<sign ref="ES:s222a" name="" es.name="Direcciones por autopista o continuación por carretera" ca.name="">
                 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Cádiz|Sevilla" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1398,11 +1188,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val3" input="textfield" prefix="" default="|A-4" suffix="Referencias: Cada panel separado por |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="through|slight_right" suffix=" dirección flecha" field_width="20"/>
-		    		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    		    </sign>
 
 
-	<sign ref="ES:s225" name="Direcciones en salida de autopista" sk.name="">
+	<sign ref="ES:s225" name="" es.name="Direcciones en salida de autopista" ca.name="">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Las Matas;Los Peñascales" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1413,11 +1202,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s230" name="Direcciones en salida de carretera" sk.name="">
+<sign ref="ES:s230" name="" es.name="Direcciones en salida de carretera" ca.name="">
 <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Pinto" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1426,11 +1214,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s230a" name="Panel vertical direcciones en salida de carretera" sk.name="">
+<sign ref="ES:s230a" name="" es.name="Panel vertical direcciones en salida de carretera" ca.name="">
 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Teruel|Ademuz" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1441,11 +1228,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="through|slight_right" suffix=" direcciones,cada panel separado por |" field_width="20"/>
 		<tag key="junction:distance" value="$val5 m"/>
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s232" name="Acceso a autopista desde carretera" sk.name="">
+<sign ref="ES:s232" name="" es.name="Acceso a autopista desde carretera" ca.name="">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Pontevedra" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1456,10 +1242,9 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s232a" name="Acceso a autopista desde carretera y continuación" sk.name="">
+<sign ref="ES:s232a" name="" es.name="Acceso a autopista desde carretera y continuación" ca.name="">
 <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Benavente|Tordesillas" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1470,11 +1255,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="through|slight_right" suffix=" direcciones,cada panel separado por |" field_width="20"/>
 		<tag key="junction:distance" value="$val5 m"/>
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s235" name="Acceso a autopista desde carretera" sk.name="">
+<sign ref="ES:s235" name="" es.name="Acceso a autopista desde carretera" ca.name="">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Valladolid" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1487,11 +1271,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 	
 
-<sign ref="ES:s235a" name="Pórtico vertical salida en autovía" sk.name="">
+<sign ref="ES:s235a" name="" es.name="Pórtico vertical salida en autovía" ca.name="">
 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Villalba;A Coruña|Las Rozas" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1504,11 +1287,10 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="junction:ref" value="$val6"/>
         <parameter ident="val6" input="textfield" prefix="" default="44" suffix="Número de salida" field_width="4"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 	
 
-<sign ref="ES:s242" name="Acceso a autopista desde autopista con salidas muy próximas entre ellas." sk.name="">
+<sign ref="ES:s242" name="" es.name="Acceso a autopista desde autopista con salidas muy próximas entre ellas." ca.name="">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Ávila;Segovia" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1519,10 +1301,9 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 	
-<sign ref="ES:s242a" name="Salidas en autopista desde autopista muy próximas entre ellas " sk.name="">
+<sign ref="ES:s242a" name="" es.name="Salidas en autopista desde autopista muy próximas entre ellas " ca.name="">
 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Tordesillas;A Coruña|Ávila;Segovia" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1535,34 +1316,30 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="6"/>
 		<tag key="junction:ref" value="$val6"/>
         <parameter ident="val6" input="textfield" prefix="" default="61AB" suffix="Número de salida" field_width="5"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 	
 
-<sign ref="ES:s250" name="Girar a la izquierda por la primera calle de la derecha" sk.name="">
-        <tag key="" value="" ident="mode"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s250" name="" es.name="Girar a la izquierda por la primera calle de la derecha" ca.name="">
+        <tag key="" value="" />
+		    </sign>
 			
-<sign ref="ES:s260" name="Carril derecho se va a la derecha, izquierdo para continuar o girar" sk.name="">
+<sign ref="ES:s260" name="" es.name="Carril derecho se va a la derecha, izquierdo para continuar o girar" ca.name="">
  <tag key="lanes" value="2" ident="mode"/>
 <tag key="lanes:forward" value="2" />
 <tag key="oneway" value="yes" />
 <tag key="turn:lanes:forward" value="through;left|slight_right"/>
-			<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+			</sign> 
 
-	<sign ref="ES:s261" name="Salida hacia zona de servicios en carretera" sk.name="">
+	<sign ref="ES:s261" name="" es.name="Salida hacia zona de servicios en carretera" ca.name="">
 		<tag key="destination:sign" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="fuel;mechanic;hotel;restaurant" suffix="Símbolo(s)" field_width="50"/>
 		<tag key="junction:distance" value="$val5 m"/>
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="5"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="15"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-	<sign ref="ES:s263" name="Salida hacia zona de servicios con salida compartida" sk.name="">
+	<sign ref="ES:s263" name="" es.name="Salida hacia zona de servicios con salida compartida" ca.name="">
         <tag key="destination:sign" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="fuel;mechanic;hotel;restaurant" suffix="Símbolo(s)" field_width="50"/>
 		<tag key="junction:ref" value="$val3"/>
@@ -1571,20 +1348,42 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val5" input="textfield" prefix="" default="1250" suffix="Distancia a la que está la salida (en m.) |" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-				<sign ref="ES:s263a" name="Salida hacia zona de servicios con salida en exclusiva" sk.name="">
+				<sign ref="ES:s263a" name="" es.name="Salida hacia zona de servicios con salida en exclusiva" ca.name="">
 <tag key="destination:sign" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="fuel;mechanic;hotel;restaurant" suffix="Símbolo(s)" field_width="50"/>
 		<tag key="junction:distance" value="$val5 m"/>
         <parameter ident="val5" input="textfield" prefix="" default="500" suffix="Distancia a la que está la salida (en m.) |" field_width="5"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="15"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
+			
+			<sign ref="ES:s310" name="" es.name="Indicación carretera convencional" ca.name="Indicació carretera convencional">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Logroño" suffix="" field_width="20"/>
+		<tag key="distance" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default=" " suffix="Distancia en km.(si se indica)" field_width="3"/>
+		<tag key="turn:destination" value="$val4"/>
+		<tag key="destination:ref" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="N-111" suffix="Referencia" field_width="10"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
+		    </sign>
+			
+<sign ref="ES:s320" name="" es.name="Indicación carretera convencional" ca.name="Indicació carretera convencional">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="playa" suffix="" field_width="20"/>
+		<tag key="distance" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="3" suffix="Distancia en km.(si se indica)" field_width="3"/>
+		<tag key="turn:destination" value="$val4"/>
+		<tag key="leisure" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="beach" suffix="Símbolo (si lo hay)" field_width="10"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
+		    </sign>
 
-				<sign ref="ES:s351" name="Salida en carretera" sk.name="">
+				<sign ref="ES:s351" name="" es.name="Salida en carretera" ca.name="Sortida en carretera">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="El Escorial" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1595,43 +1394,38 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val6" input="textfield" prefix="" default="16" suffix="Número de salida" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
-<sign ref="ES:s500" traffic_sign_tag="city_limit" name="Límite de población" sk.name="">
+<sign ref="ES:s500" traffic_sign_tag="city_limit" name="" es.name="Límite de población" ca.name="Entrada a la població">
         <tag key="traffic_sign" value="city_limit"/>
 		<tag key="name" value="$val"/>
-        <parameter input="textfield" name="nombre_población" sk.name="Maximale Steigung" type="int" ident="val" default="Vilanova i la Geltrú" suffix="" field_width="12"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+        <parameter input="textfield" name="" es.name="nombre_población" ca.name="Maximale Steigung" type="int" ident="val" default="Vilanova i la Geltrú" suffix="" field_width="12"/>
+		    </sign>
 
-<sign ref="ES:s510" name="Fin de límite de población" sk.name="">        <tag key="name" value="$val"/>
-        <parameter input="textfield" name="nombre_población" sk.name="Maximale Steigung" type="int" ident="val" default="Vilanova i la Geltrú" suffix="" field_width="12"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+<sign ref="ES:s510" name="" es.name="Fin de límite de población" ca.name="Fi de població">        <tag key="name" value="$val"/>
+        <parameter input="textfield" name="" es.name="nombre_población" ca.name="Maximale Steigung" type="int" ident="val" default="Vilanova i la Geltrú" suffix="" field_width="12"/>
+		    </sign>
 
-<sign ref="ES:s570" name="Punto kilométrico autovía" sk.name="">
+<sign ref="ES:s570" name="" es.name="Punto kilométrico autovía" ca.name="Fita quilomètrica autovia">
          <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="A-68" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="275" suffix=" km" field_width="3"/>
-				    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+				    </sign>
 		  
 
-	<sign ref="ES:s570a" name="Punto kilométrico autopista" sk.name="">
+	<sign ref="ES:s570a" name="" es.name="Punto kilométrico autopista" ca.name="Fita quilomètrica autopista">
          <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="AP-7" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="225" suffix=" km" field_width="3"/>
 				  
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s571" name="Punto kilométrico autovía con ruta europea" sk.name="">
+	<sign ref="ES:s571" name="" es.name="Punto kilométrico autovía con ruta europea" ca.name="Fita quilomètrica autovia amb ruta europea">
                  <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref_int" value="E-$val3"/>
         <parameter ident="val3" input="textfield" prefix="E-" default="804" suffix="" field_width="3"/>
@@ -1639,21 +1433,19 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val" input="textfield" prefix="" default="A-68" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="225" suffix=" km" field_width="3"/>
-				  		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+				  		    </sign>
 
 
-	<sign ref="ES:s572" name="Punto kilométrico carretera convencional" sk.name="">
+	<sign ref="ES:s572" name="" es.name="Punto kilométrico carretera convencional" ca.name="Fita quilomètrica carretera convencional">
         <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="C-170" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="162" suffix=" km" field_width="4"/>
-				    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+				    </sign>
 
 
-	<sign ref="ES:s573" name="Punto kilométrico carretera convencional con ruta europea" sk.name="">
+	<sign ref="ES:s573" name="" es.name="Punto kilométrico carretera convencional con ruta europea" ca.name="Fita quilomètrica carretera convencional amb ruta europea">
                 <tag key="highway" value="milestone" ident="mode"/>
 						<tag key="ref_int" value="E-$val3"/>
         <parameter ident="val3" input="textfield" prefix="E-" default="80" suffix="" field_width="3"/>
@@ -1661,248 +1453,270 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val" input="textfield" prefix="" default="N-122" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="162" suffix=" km" field_width="4"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s574" name="Poste kilométrico autovía" sk.name="">
+	<sign ref="ES:s574" name="" es.name="Poste kilométrico autovía" ca.name="Pal quilomètric autovia">
          <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="A-5" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="30" suffix=" km" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s574a" name="Poste kilométrico carretera 1er orden" sk.name="">
+	<sign ref="ES:s574a" name="" es.name="Poste kilométrico carretera 1er orden" ca.name="Pal quilomètric carretera 1r ordre">
                  <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="N-110" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="40" suffix=" km" field_width="4"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s574b" name="Poste kilométrico autopista" sk.name="">
+	<sign ref="ES:s574b" name="" es.name="Poste kilométrico autopista" ca.name="Pal quilomètric autopista">
          <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="AP-7" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="30" suffix=" km" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s575" name="Poste kilométrico carretera convencional" sk.name="">
+	<sign ref="ES:s575" name="" es.name="Poste kilométrico carretera convencional" ca.name="Pal quilomètric carretera convencional">
          <tag key="highway" value="milestone" ident="mode"/>
 		<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="C-241" suffix="" field_width="5"/>
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="510" suffix=" km" field_width="3"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-	<sign ref="ES:s700" name="Indicación urbana Calle" sk.name="">
+	<sign ref="ES:s700" name="" es.name="Indicación urbana Calle" ca.name="Indicación urbana Carrer">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="calle Sierpes" suffix="" field_width="20"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="right" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 			
 			
 
 
-<sign ref="ES:s710" name="Indicación urbana estación de transportes" sk.name="">
+<sign ref="ES:s710" name="" es.name="Indicación urbana estación de transportes" ca.name="Indicació urbana estació de transports">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="estación de Chamartín" suffix="" field_width="20"/>
 		<tag key="public_transport" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="station" suffix="Símbolo (si lo hay)" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s720" name="Indicación urbana recinto deportivo" sk.name="">
+<sign ref="ES:s720" name="" es.name="Indicación urbana recinto deportivo" ca.name="Indicació urbana recinte esportiu">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="estadio B. Villamarín" suffix="" field_width="20"/>
 		<tag key="leisure" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="stadium" suffix="Símbolo (si lo hay)" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="through" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s730" name="Indicación urbana zona natural" sk.name="">
+<sign ref="ES:s730" name="" es.name="Indicación urbana zona natural" ca.name="Indicació urbana zona natural">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="parque del Oeste" suffix="" field_width="20"/>
 		<tag key="leisure" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="garden" suffix="Símbolo (si lo hay)" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s740" name="Indicación urbana zona cultural" sk.name="">
+<sign ref="ES:s740" name="" es.name="Indicación urbana zona cultural" ca.name="Indicació urbana zona cultural">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="ermita de San Saturio" suffix="" field_width="20"/>
 		<tag key="historic" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="monument" suffix="Símbolo (si lo hay)" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="right" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s750" name="Indicación urbana zona industrial" sk.name="">
+<sign ref="ES:s750" name="" es.name="Indicación urbana zona industrial" ca.name="Indicació urbana zona industrial">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="zona industrial" suffix="" field_width="20"/>
 		<tag key="landuse" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="industrial" suffix="Símbolo (si lo hay)" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s760" name="Indicación urbana autopista" sk.name="">
+<sign ref="ES:s760" name="" es.name="Indicación urbana autopista" ca.name="Indicació urbana autopista">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Valencia" suffix="" field_width="20"/>
 		<tag key="destination:ref" value="$val3"/>
         <parameter ident="val3" input="textfield" prefix="" default="A-3" suffix="Referencia (si la hay)" field_width="6"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="right" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
 
 
-<sign ref="ES:s770" name="Indicación urbana carretera" sk.name="">
+<sign ref="ES:s770" name="" es.name="Indicación urbana carretera" ca.name="Indicació urbana carretera">
         <tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Toledo" suffix="" field_width="20"/>
 		<tag key="destination:ref" value="$val3"/>
         <parameter ident="val3" input="textfield" prefix="" default="N-401" suffix="Referencia (si la hay)" field_width="6"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>  
+		    </sign>
+			
+			<!-- Aquí comencen les catalanes -->
+	<sign ref="CAT:s700" name="" es.name="Indicación urbana elementos internos (Catalunya)" ca.name="Indicació urbana elements interns (Catalunya)">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Mercat" suffix="" field_width="20"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" direcció fletxa" field_width="7"/>
+		    </sign>
+			
+				<sign ref="CAT:radar" name="Speed camera" es.name="Radar" ca.name="Radar">
+        <tag key="highway" value="speed_camera"/>
+        <tag key="maxspeed" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="90" suffix="Velocitat radar" field_width="7"/>
+		    </sign>
+			
+			<sign ref="CAT:s230" name="" es.name="Direcciones en salida de carretera (CAT)" ca.name="Direccions en sortida de carretera">
+<tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Lleida;Tàrrega" suffix="" field_width="40"/>
+		<tag key="destination:sign" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="" suffix="Símbol (si n'hi ha)" field_width="10"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="through;slight_right" suffix=" direcció fletxa" field_width="20"/>
+				<supplementary id="ES:com:s800"/><!-- Complementaria:A x. m. -->
+		    </sign>
+			
+						<sign ref="CAT:s300" name="" es.name="Indicación carretera convencional" ca.name="Indicació carretera convencional">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Tàrrega" suffix="" field_width="20"/>
+		<tag key="distance" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="" suffix="Distància en km.(si s'indica)" field_width="3"/>
+		<tag key="turn:destination" value="$val4"/>
+		<tag key="destination:ref" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="C-14" suffix="Referència" field_width="10"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="right" suffix=" direcció fletxa" field_width="7"/>
+		    </sign>
+			
+							<sign ref="CAT:s351" name="" es.name="Salida en carretera" ca.name="Sortida en carretera">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="L'Arboç,Vilanova i la Geltrú" suffix="" field_width="40"/>
+		<tag key="destination:sign" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="" suffix="Símbol (si n'hi ha)" field_width="10"/>
+		<tag key="destination:ref" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="BV-2115" suffix="Referència (si està especificada)" field_width="10"/>
+		<tag key="junction:ref" value="$val6"/>
+        <parameter ident="val6" input="textfield" prefix="" default="" suffix="Número de sortida" field_width="10"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" direcció fletxa" field_width="20"/>
+		    </sign>
+			
 
 <!-- Aquí comencen les suplementàries -->
 
-		    <sign ref="ES:com:traffic:sign:dir" supplementary="yes" traffic_sign_tag="" name="Especificar en qué sentido de la vía de doble sentido está la señal de tráfico: forward (sentido de la vía)   / backward (sentido contrario contraria de la vía)" sk.name="">
-        <tag key="direction"  value="$val10"/>
-        <parameter ident="val10" input="textfield" prefix="" default="forward" suffix="" field_width="10"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
-
-		    <sign ref="ES:com:noves:3a" supplementary="yes" name="Mensaje Recordi" sk.name="">
-        <tag key="message"  value="$val10"/>
+		    <sign ref="CAT:com:s860" supplementary="yes" name="" es.name="Mensaje" ca.name="Missatge">
+        <tag key="name"  value="$val10"/>
         <parameter ident="val10" input="textfield" prefix="" default="RECORDI" suffix="" field_width="10"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-	<sign ref="ES:com:s870" supplementary="yes" name="En la salida.Especificar en qué dirección señala la flecha" sk.name="">
+	<sign ref="ES:com:s870" supplementary="yes" name="" es.name="En la salida.Especificar en qué dirección señala la flecha" ca.name="A la sortida.Especificar en quina direcció assenyala la fletxa.">
         <tag key="turn:lanes:forward"  value="$val10"/>
         <parameter ident="val10" input="textfield" prefix="" default="slight_right" suffix="" field_width="10"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-		<sign ref="ES:com:s850" supplementary="yes" name="Dirección de la preferencia" sk.name="">
+		<sign ref="ES:com:s850" supplementary="yes" name="" es.name="Dirección de la preferencia" ca.name="Direcció de la preferència">
         <tag key="turn:lanes:forward"  value="slight_left"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-			<sign ref="ES:com:s851" supplementary="yes" name="Dirección de la preferencia" sk.name="">
+<sign ref="ES:com:s851" supplementary="yes" name="" es.name="Dirección de la preferencia" ca.name="Direcció de la preferència">
         <tag key="turn:lanes:forward"  value="right"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 		
-					<sign ref="ES:com:s852" supplementary="yes" name="Dirección de la preferencia" sk.name="">
+<sign ref="ES:com:s852" supplementary="yes" name="" es.name="Dirección de la preferencia" ca.name="Direcció de la preferència">
         <tag key="turn:lanes:forward"  value="left"/>
-		    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
 		    </sign> 
 		
-							<sign ref="ES:com:s853" supplementary="yes" name="Dirección de la preferencia" sk.name="">
+<sign ref="ES:com:s853" supplementary="yes" name="" es.name="Dirección de la preferencia" ca.name="Direcció de la preferència">
         <tag key="turn:lanes:forward"  value="slight_right"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-<sign ref="ES:com:s840" supplementary="yes" name="STOP A X m." sk.name="">
+<sign ref="ES:com:s840" supplementary="yes" name="" es.name="STOP A X m." ca.name="STOP A X m.">
   <tag key="distance"  value="$val10 m"/>
   <parameter ident="val10" input="textfield" prefix="" default="150" suffix="" field_width="3"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-	<sign ref="ES:com:s820" supplementary="yes" name="En x. m. a la izquierda" sk.name="">
+	<sign ref="ES:com:s820" supplementary="yes" name="" es.name="En x. m. a la izquierda" ca.name="En x. m. a l'esquerra">
   <tag key="length"  value="$val10"/>
   <parameter ident="val10" input="textfield" prefix="" default="10" suffix="" field_width="3"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-		<sign ref="ES:com:s821" supplementary="yes" name="En x. m. a la derecha" sk.name="">
+		<sign ref="ES:com:s821" supplementary="yes" name="" es.name="En x. m. a la derecha" ca.name="En x. m. a la dreta">
   <tag key="length"  value="$val10"/>
   <parameter ident="val10" input="textfield" prefix="" default="10" suffix="" field_width="3"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-			<sign ref="ES:com:s830" supplementary="yes" name="En x. m. a la derecha y X a la izquierda" sk.name="">
+			<sign ref="ES:com:s830" supplementary="yes" name="" es.name="En x. m. a la derecha y X a la izquierda" ca.name="En x. m. a la dreta i X a l'esquerra">
 <tag key="length:left"  value="$val10"/>
   <parameter ident="val10" input="textfield" prefix="" default="15" suffix="" field_width="3"/>
   <tag key="length:right"  value="$val11"/>
   <parameter ident="val11" input="textfield" prefix="" default="25" suffix="" field_width="3"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-			<sign ref="ES:com:s800" supplementary="yes" name="A x. m. " sk.name="">
+			<sign ref="ES:com:s800" supplementary="yes" name="" es.name="A x. m. " ca.name="A x. m. ">
   <tag key="distance"  value="$val10 m"/>
   <parameter ident="val10" input="textfield" prefix="" default="150" suffix="" field_width="4"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 	
-				<sign ref="ES:com:s810" supplementary="yes" name="En x. m. " sk.name="">
+				<sign ref="ES:com:s810" supplementary="yes" name="" es.name="En x. m. " ca.name="En x. m. ">
   <tag key="length"  value="$val10"/>
   <parameter ident="val10" input="textfield" prefix="" default="4025" suffix="" field_width="5"/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign> 
+    </sign> 
 			
-<sign ref="ES:com:panel:dir:izquierda" name="Curva peligrosa izquierda" sk.name="">
+<sign ref="ES:panel:dir:left" name="" es.name="Curva peligrosa izquierda" ca.name="Corba perillosa a l'esquerra">
  <tag key="" value=""/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>
+    </sign>
 			
-<sign ref="ES:com:panel:dir:izquierda:2" name="Curva peligrosa izquierda" sk.name="">
+<sign ref="ES:panel:dir:left:2" name="" es.name="Curva peligrosa izquierda" ca.name="Corba perillosa a l'esquerra">
  <tag key="" value=""/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>
+</sign>
 			
-<sign ref="ES:com:panel:dir:izquierda:3" name="Curva peligrosa izquierda" sk.name="">
+<sign ref="ES:panel:dir:left:3" name="" es.name="Curva peligrosa izquierda" ca.name="Corba perillosa a l'esquerra">
 <tag key="" value=""/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>
+</sign>
 			
-			<sign ref="ES:com:panel:dir:derecha" name="Curva peligrosa derecha" sk.name="">
+			<sign ref="ES:panel:dir:right" name="" es.name="Curva peligrosa derecha" ca.name="Corba perillosa a la dreta">
  <tag key="" value=""/>
-    <supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>
+    </sign>
 			
-<sign ref="ES:com:panel:dir:derecha:2" name="Curva peligrosa derecha" sk.name="">
+<sign ref="ES:panel:dir:right:2" name="" es.name="Curva peligrosa derecha" ca.name="Corba perillosa a la dreta">
  <tag key="" value=""/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>
+</sign>
 			
-<sign ref="ES:com:panel:dir:derecha:3" name="Curva peligrosa derecha" sk.name="">
+<sign ref="ES:panel:dir:right:3" name="" es.name="Curva peligrosa derecha" ca.name="Corba perillosa a la dreta">
 <tag key="" value=""/>
-<supplementary id="ES:com:traffic:sign:dir"/><!-- Complementaria:Sentido en la que está la señal , vías de doble sentido -->
-		    </sign>
+</sign>
+
+<sign ref="ES:panel:light" name="" es.name="Panel informativo luminoso" ca.name="Panell informatiu il·luminat">
+<tag key="" value=""/>
+</sign>
+
+<sign ref="ES:road:beacon:big" name="" es.name="Hito de vértice" ca.name="Fita de vèrtex">
+<tag key="" value=""/>
+</sign>
+
+<sign ref="ES:road:beacon:little" name="" es.name="Hito abatible" ca.name="Fita abatible">
+<tag key="" value=""/>
+</sign>
 			
 
-	
-
-<!-- Aquí comencen les proves -->
 	
 </roadsignpreset>

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Plugin-Class: cadastre_fr.CadastrePlugin
 Plugin-Description: A special handler for the French land registry WMS server
-Plugin-Version: 0.8
+Plugin-Version: 2.4
 Plugin-Stage: 60
 Plugin-Author: Pieren;<pieren3@gmail.com>

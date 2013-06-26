@@ -130,7 +130,9 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  *                   of multiple municipalities in parallel.
  * 2.2 01-Jul-2011 - replace deprecated Main.proj by newest Main.getProjection()
  *                 - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance
- * 2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626. 
+ * 2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626.
+ * 2.4 27-Jun-2013 - fix raster image georeferencing issues. Add new MenuActionRefineGeoRef for a new georeferencing
+ *                   of already referenced plan image.                   
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.1";

@@ -91,6 +91,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private Action saveAsPng;
 
     private Action cancelGrab;
+    
+    private Action refineGeoRef; 
 
     @SuppressWarnings("serial")
     class ResetOffsetActionMenu extends JosmAction {
@@ -308,6 +310,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         saveAsPng.setEnabled(isRaster);
         cancelGrab = new MenuActionCancelGrab(this);
         cancelGrab.setEnabled(!isRaster && grabThread.getImagesToGrabSize() > 0);
+        refineGeoRef = new MenuActionRefineGeoRef(this);
+        refineGeoRef.setEnabled(isRaster && grabThread.getImagesToGrabSize() == 0);
         Action resetOffset = new ResetOffsetActionMenu();
         resetOffset.setEnabled(!isRaster && images.size() > 0 && (deltaEast!=0.0 || deltaNorth!=0.0));
         return new Action[] {
@@ -316,6 +320,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 new MenuActionLoadFromCache(),
                 saveAsPng,
                 cancelGrab,
+                refineGeoRef,
                 resetOffset, 
                 new LayerListPopup.InfoAction(this),
 

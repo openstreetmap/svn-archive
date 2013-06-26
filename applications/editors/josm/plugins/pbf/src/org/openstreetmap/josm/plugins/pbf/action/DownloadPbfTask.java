@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.pbf.action;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.concurrent.Future;
 
 import org.openstreetmap.josm.Main;
@@ -42,8 +44,13 @@ public class DownloadPbfTask extends DownloadOsmTask implements PbfConstants {
         return Main.worker.submit(downloadTask);
 	}
 
-	@Override
-	public boolean acceptsUrl(String url) {
-		return url != null && url.endsWith(EXTENSION);
-	}
+    @Override
+    public String[] getPatterns() {
+        return new String[]{".*\\."+EXTENSION};
+    }
+
+    @Override
+    public String getTitle() {
+        return tr("Download PBF");
+    }
 }

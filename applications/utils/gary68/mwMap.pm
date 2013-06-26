@@ -172,23 +172,33 @@ sub drawWay {
 
 	my ($nodesRef, $convert, $svgString, $layerName, $layerNumber) = @_ ;
 	my @points = () ;
+	my $valid = 0 ;
 
 	# convert? and expand.
+	my ($lonRef, $latRef, $tagRef) = mwFile::getNodePointers() ;
 	if ($convert) {
-		my ($lonRef, $latRef, $tagRef) = mwFile::getNodePointers() ;
 		foreach my $node (@$nodesRef) {
 			my ($x, $y) = convert ( $$lonRef{$node}, $$latRef{$node}) ;
 			push @points, $x, $y ;
+			if (! coordsOut ($x, $y)) {
+				$valid = 1 ;
+			}
 		}
 	}
 	else {
 		@points = @$nodesRef ;
+		foreach my $node (@$nodesRef) {
+			my ($x, $y) = ( $$lonRef{$node}, $$latRef{$node}) ;
+			if (! coordsOut ($x, $y)) {
+				$valid = 1 ;
+			}
+		}
 	}
 
 	my $refp = simplifyPoints (\@points) ;
 	@points = @$refp ;
 
-	if ( ! coordsOut (@points) ) {
+	if ($valid) {
 
 		my $svg = "<polyline points=\"" ;
 		for (my$i=0; $i<scalar(@points)-1; $i+=2) {
@@ -439,6 +449,7 @@ sub drawArea {
 	my @ways = @$ref ;
 	my $i ;
 	my $svg = "" ;
+	my $valid = 1 ;
 	my @newArray = () ;
 
 	# TODO loop converts original data !!!
@@ -451,6 +462,9 @@ sub drawArea {
 			foreach my $n (@way) {
 				my ($x, $y) = convert ($$lonRef{$n}, $$latRef{$n}) ;
 				push @newCoords, $x, $y ;
+				if (coordsOut ($x, $y)) {
+					$valid = 0 ;
+				}
 			}
 			push @newArray , [@newCoords] ;
 		}
@@ -475,7 +489,9 @@ sub drawArea {
 
 	$svg = $svg . "\" />" ;
 
-	push @{ $svgLayer{ $layer } }, $svg ;
+	if ($valid) {
+		push @{ $svgLayer{ $layer } }, $svg ;
+	}
 }
 
 

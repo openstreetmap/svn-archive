@@ -136,6 +136,7 @@ perl mapgen.pl
 -nobridge (don't draw bridges and tunnels - for lower scale maps)
 -nolabel (label ways and nodes without label with "NO LABEL")
 -halo=<FLOAT> (white halo width for point feature labels; DEFAULT=0)
+-ignorelabels (don't render labels at all)
 
 -grid=<integer> (number parts for grid, 0=no grid, DEFAULT=0)
 -gridcolor=TEXT (color for grid lines and labels (DEFAULT=black)
@@ -238,6 +239,7 @@ my $onewayOpt = 0 ;
 my $onewayColor = "white" ;
 my $nobridgeOpt = 0 ;
 my $nolabelOpt = 0 ;
+my $ignorelabelsOpt = 0 ;
 my $halo = 0 ;
 my $extPoiFileName = "" ;
 my @circles = () ;
@@ -412,6 +414,7 @@ $optResult = GetOptions ( 	"in=s" 		=> \$osmName,		# the in file, mandatory
 				"lonrad:f"	=> \$lonrad,
 				"latrad:f"	=> \$latrad,
 				"halo:f"	=> \$halo,
+				"ignorelabels"	=> \$ignorelabelsOpt,
 				"ruler:i"	=> \$rulerOpt,
 				"rulercolor:s"	=> \$rulerColor,
 				"scale"		=> \$scaleOpt,
@@ -525,6 +528,7 @@ print "png       = $pngOpt\n\n" ;
 print "multionly = $multiOnly " ;
 print "verbose   = $verbose " ;
 print "nolabel   = $nolabelOpt " ;
+print "ignorelabels   = $ignorelabelsOpt " ;
 print "ra        = $ra\n\n" ;
 
 $time0 = time() ;
@@ -760,11 +764,12 @@ foreach my $wayId (sort {$a <=> $b} keys %memWayTags) {
 					drawArea ($test->[$wayIndexColor], $test->[$wayIndexIcon], nodes2Coordinates( @{$memWayNodes{$wayId}} ) ) ;
 					# LABELS
 					my $name = "" ; my $ref1 ;
-					($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
-					if ( ($test->[$wayIndexLabel] ne "none") and 
-						($nolabelOpt eq "1") and 
-						($name eq "") ) { $name = "NO LABEL" ; }
-
+					if ($ignorelabelsOpt eq "0") {
+						($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
+						if ( ($test->[$wayIndexLabel] ne "none") and 
+							($nolabelOpt eq "1") and 
+							($name eq "") ) { $name = "NO LABEL" ; }
+					}
 					if ($name ne "") {
 						my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 						placeLabelAndIcon ($x, $y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
@@ -783,12 +788,13 @@ foreach my $wayId (sort {$a <=>$b} keys %memWayTags) {
 			drawAreaMP ($test->[$wayIndexColor], $test->[$wayIndexIcon], \@{$memWayPaths{$wayId}}, \%lon, \%lat  ) ;
 			# LABELS
 			my $name = "" ; my $ref1 ;
-			($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
+			if ($ignorelabelsOpt eq "0") {
+				($name, $ref1) = createLabel (\@{$memWayTags{$wayId}}, $test->[$wayIndexLabel], 0, 0) ;
 
-			if ( ($test->[$wayIndexLabel] ne "none") and 
-				($nolabelOpt eq "1") and 
-				($name eq "") ) { $name = "NO LABEL" ; }
-
+				if ( ($test->[$wayIndexLabel] ne "none") and 
+					($nolabelOpt eq "1") and 
+					($name eq "") ) { $name = "NO LABEL" ; }
+			}
 			if ($name ne "") {
 				my ($x, $y) = center (nodes2Coordinates(@{$memWayNodes{$wayId}})) ;
 				placeLabelAndIcon ($x,$y, 0, 0, $name, $test->[$wayIndexLabelColor], $test->[$wayIndexLabelSize], $test->[$wayIndexLabelFont], $ppc, "none", 0, 0, $allowIconMoveOpt, $halo) ;
@@ -838,15 +844,17 @@ foreach my $nodeId (keys %memNodeTags) {
 			drawNodeDot ($lon{$nodeId}, $lat{$nodeId}, $test->[$nodeIndexColor], $test->[$nodeIndexThickness]) ;
 		}
 		if ( ($test->[$nodeIndexLabel] ne "none") or ($test->[$nodeIndexIcon] ne "none") ) {
-			my $name = "" ; my $ref1 ;
-			($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel], $lon{$nodeId}, $lat{$nodeId}) ;
-			my @names = @$ref1 ;
+			if ($ignorelabelsOpt eq "0") {
+				my $name = "" ; my $ref1 ;
+				($name, $ref1) = createLabel (\@{$memNodeTags{$nodeId}}, $test->[$nodeIndexLabel], $lon{$nodeId}, $lat{$nodeId}) ;
+				my @names = @$ref1 ;
 
-			if ( ($nolabelOpt eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
+				if ( ($nolabelOpt eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
 
-			placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, 0, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
+				placeLabelAndIcon ($lon{$nodeId}, $lat{$nodeId}, 0, $test->[$nodeIndexThickness], $name, $test->[$nodeIndexLabelColor], $test->[$nodeIndexLabelSize], $test->[$nodeIndexLabelFont], $ppc, 
 				$test->[$nodeIndexIcon], $test->[$nodeIndexIconSize], $test->[$nodeIndexIconSize], $allowIconMoveOpt, $halo) ;
-			# print "TEST ICONS $nodeIndexIcon $nodeIndexIconSize $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize]\n" ;
+				# print "TEST ICONS $nodeIndexIcon $nodeIndexIconSize $test->[$nodeIndexIcon], $test->[$nodeIndexIconSize]\n" ;
+			}
 		}
 	} # defined $test
 } # nodes
@@ -931,7 +939,7 @@ foreach my $wayId (keys %memWayTags) {
 
 
 
-			if ($test->[$wayIndexLabel] ne "none") {
+			if ($ignorelabelsOpt eq "0") and ($test->[$wayIndexLabel] ne "none") {
 
 				my $name = "" ; my $ref1 ; my @names ;
 

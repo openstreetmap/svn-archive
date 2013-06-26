@@ -112,62 +112,62 @@ sub processWays {
 
 
 			# LABEL WAY
+            if ( cv('ignorelabels') eq "0" ) {
+    			if ($$ruleRef{'label'} ne "none") {
 
-			if ($$ruleRef{'label'} ne "none") {
+	    			my $name = "" ; my $ref1 ; my @names ;
 
-				my $name = "" ; my $ref1 ; my @names ;
+		    		if (grep /shield/i, $$ruleRef{'label'} ) {
+				    	($name, $ref1) = createLabel (\@tags, "ref",0, 0) ;
+			    		my $ref = $name ;
 
-				if (grep /shield/i, $$ruleRef{'label'} ) {
-					($name, $ref1) = createLabel (\@tags, "ref",0, 0) ;
-					my $ref = $name ;
+					    if (grep /;/, $ref) {
+						    my @a = split /;/, $ref ;
+    						$ref = $a[0] ; 
+	    				}
 
-					if (grep /;/, $ref) {
-						my @a = split /;/, $ref ;
-						$ref = $a[0] ; 
-					}
+		    			if ($ref ne "") {
+			    			@names = ($ref) ;
+				    		$name = $$ruleRef{'label'} . ":$ref" ;
+					    	# print "DRAW WAY: name set to $name\n" ;
+    					}
+	    				else {
+		    				@names = () ;
+			    			$name = "" ;
+				    	}
 
-					if ($ref ne "") {
-						@names = ($ref) ;
-						$name = $$ruleRef{'label'} . ":$ref" ;
-						# print "DRAW WAY: name set to $name\n" ;
-					}
-					else {
-						@names = () ;
-						$name = "" ;
-					}
+					    # print "WAY: name for shield >$name<\n" ;
+    				}
+	    			else {
+		    			($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'}, 0, 0) ;
+			    		@names = @$ref1 ;
+				    	$name = labelTransform ($name, $$ruleRef{'labeltransform'}) ;
+    				}
 
-					# print "WAY: name for shield >$name<\n" ;
-				}
-				else {
-					($name, $ref1) = createLabel (\@tags, $$ruleRef{'label'}, 0, 0) ;
-					@names = @$ref1 ;
-					$name = labelTransform ($name, $$ruleRef{'labeltransform'}) ;
-				}
+	    			if ( ( cv('nolabel') eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
 
-				if ( ( cv('nolabel') eq "1") and ($name eq "") ) { $name = "NO LABEL" ; }
-
-				if ($name ne "") { 
-					addWayLabel ($wayId, $name, $ruleRef) ; 
-				}
-				if ( ( cv('dir') eq "1") and ( $$ruleRef{'direxclude'} eq "no") ) {
-					if ( cv('grid') > 0) {
-						foreach my $node ( @nodes ) {
-							foreach my $name (@names) {
-								my $sq = gridSquare($$lonRef{$node}, $$latRef{$node}, cv('grid') ) ;
-								if (defined $sq) {
-									addToDirectory($name, $sq) ;
-								}
-							}
-						}
-					}
-					else {
-						foreach my $name (@names) {
-							addToDirectory ($name, undef) ;
-						}
-					}
-				}
-			}  # label
-
+    				if ($name ne "") { 
+	    				addWayLabel ($wayId, $name, $ruleRef) ; 
+		    		}
+			    	if ( ( cv('dir') eq "1") and ( $$ruleRef{'direxclude'} eq "no") ) {
+				    	if ( cv('grid') > 0) {
+					    	foreach my $node ( @nodes ) {
+						    	foreach my $name (@names) {
+							    	my $sq = gridSquare($$lonRef{$node}, $$latRef{$node}, cv('grid') ) ;
+								    if (defined $sq) {
+    								    addToDirectory($name, $sq) ;
+	    							}
+		    					}
+			    			}
+				    	}
+					    else {
+						    foreach my $name (@names) {
+							    addToDirectory ($name, undef) ;
+    						}
+	    				}
+		    		}
+			    }  # label
+            } # ignorelabels
 		}
 
 		# AREAS

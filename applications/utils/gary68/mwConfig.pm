@@ -340,6 +340,7 @@ my $optResult = GetOptions ( 	"in=s" 			=> \$cv{'in'},		# the in file, mandatory
 				"onewayautosize:i" => \$cv{'onewayautosize'},
 				"autobridge:i"	=> \$cv{'autobridge'},
 				"nolabel"	=> \$cv{'nolabel'},
+				"ignorelabels"	=> \$cv{'ignorelabels'},
 				"place:s"	=> \$cv{'place'},		# place to draw
 				"placefile:s"	=> \$cv{'placefile'},		# file to look for places
 				"lonrad:f"	=> \$cv{'lonrad'},

@@ -87,14 +87,16 @@ sub processMultipolygons {
 
 				# LABELS
 				my $name = "" ; my $ref1 ;
-				($name, $ref1) = createLabel ( $multiTags{$multiId}, $$ruleRef{'label'}, 0, 0) ;
+				if ( cv('ignorelabels') eq "0" ) {
+    				($name, $ref1) = createLabel ( $multiTags{$multiId}, $$ruleRef{'label'}, 0, 0) ;
 
-				if ( ( $$ruleRef{'label'} ne "none") and 
-					( cv('nolabel') eq "1" ) and 
-					($name eq "") ) 
-				{ 
-					$name = "NO LABEL" ; 
-				}
+	    			if ( ( $$ruleRef{'label'} ne "none") and 
+		    			( cv('nolabel') eq "1" ) and 
+			    		($name eq "") ) 
+				    { 
+					    $name = "NO LABEL" ; 
+	    			}
+                }
 
 				if ($name ne "") {
 					if ($size >= cv('minarealabelsize') ) {

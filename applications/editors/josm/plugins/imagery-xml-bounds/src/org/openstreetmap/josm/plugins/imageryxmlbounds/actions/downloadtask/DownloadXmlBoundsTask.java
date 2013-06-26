@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.imageryxmlbounds.actions.downloadtask;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.concurrent.Future;
 
 import org.openstreetmap.josm.Main;
@@ -47,8 +49,16 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
     }
 
     @Override
-    public boolean acceptsUrl(String url) {
-        return url != null && (url.equals(XML_LOCATION) || url.matches("http://.*\\."+EXTENSION.replace(".", "\\.")));
+    public String[] getPatterns() {
+        return new String[]{
+                XML_LOCATION.replace(".", "\\."),
+                "http://.*\\."+EXTENSION.replace(".", "\\.")
+        };
+    }
+
+    @Override
+    public String getTitle() {
+        return tr("Download imagery XML bounds");
     }
 
     protected class DownloadTask extends DownloadOsmTask.DownloadTask {

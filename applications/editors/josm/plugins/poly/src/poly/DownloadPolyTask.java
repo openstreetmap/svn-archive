@@ -29,10 +29,15 @@ public class DownloadPolyTask extends DownloadOsmTask {
     }
 
     @Override
-    public boolean acceptsUrl( String url ) {
-        return url != null && url.matches("http://.*/.*\\.poly");
+    public String[] getPatterns() {
+        return new String[]{"http://.*/.*\\.poly"};
     }
-    
+
+    @Override
+    public String getTitle() {
+        return tr("Download Osmosis poly");
+    }
+
     public class ServerPolyReader extends OsmServerReader {
         private String url;
 

@@ -19,6 +19,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,7 +54,29 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 
 	private File file;
 	private String filename;
-	
+    
+    /**
+     * File readers
+     */
+    public static final Map<String, Class<? extends AbstractReader>> FILE_READERS = new HashMap<String, Class<? extends AbstractReader>>();
+    static {
+        FILE_READERS.put(CSV_EXT, CsvReader.class);
+        FILE_READERS.put(KML_EXT, KmlReader.class);
+        FILE_READERS.put(KMZ_EXT, KmzReader.class);
+        FILE_READERS.put(GML_EXT, GmlReader.class);
+        FILE_READERS.put(XLS_EXT, XlsReader.class);
+        FILE_READERS.put(ODS_EXT, OdsReader.class);
+        FILE_READERS.put(SHP_EXT, ShpReader.class);
+        FILE_READERS.put(MIF_EXT, MifReader.class);
+        FILE_READERS.put(TAB_EXT, TabReader.class);
+    }
+    
+    public static final Map<String, Class<? extends AbstractReader>> FILE_AND_ARCHIVE_READERS = new HashMap<String, Class<? extends AbstractReader>>(FILE_READERS);
+    static {
+        FILE_AND_ARCHIVE_READERS.put(ZIP_EXT, ZipReader.class);
+        FILE_AND_ARCHIVE_READERS.put(SEVENZIP_EXT, SevenZipReader.class);
+    }
+
     public NetworkReader(String url, AbstractDataSetHandler handler, boolean promptUser) {
         CheckParameterUtil.ensureParameterNotNull(url, "url");
     	this.url = url;
@@ -75,7 +99,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 			Matcher m = Pattern.compile("attachment;.?filename=(.*)").matcher(cdisp);
 			if (m.matches()) {
 				filename = m.group(1);
-				return findReaderByExtension(filename.toLowerCase());
+				return findReaderByExtension(filename);
 			}
 		}
 		return null;
@@ -104,32 +128,13 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
 	}
 
 	private Class<? extends AbstractReader> findReaderByExtension(String filename) {
-		filename = filename.replace("\"", "");
-    	if (filename.endsWith("."+XLS_EXT)) {
-    		return XlsReader.class;
-    	} else if (filename.endsWith("."+CSV_EXT)) {
-    		return CsvReader.class;
-    	} else if (filename.endsWith("."+ODS_EXT)) {
-    		return OdsReader.class;
-    	} else if (filename.endsWith("."+KML_EXT)) {
-    		return KmlReader.class;
-    	} else if (filename.endsWith("."+KMZ_EXT)) {
-    		return KmzReader.class;
-    	} else if (filename.endsWith("."+MIF_EXT)) {
-    		return MifReader.class;
-    	} else if (filename.endsWith("."+SHP_EXT)) {
-    		return ShpReader.class;
-    	} else if (filename.endsWith("."+TAB_EXT)) {
-    		return TabReader.class;
-    	} else if (filename.endsWith("."+GML_EXT)) {
-    		return GmlReader.class;
-    	} else if (filename.endsWith("."+ZIP_EXT)) {
-    		return ZipReader.class;
-        } else if (filename.endsWith("."+SEVENZIP_EXT)) {
-            return SevenZipReader.class;
-    	} else {
-    		return null;
-    	}
+		filename = filename.replace("\"", "").toLowerCase();
+		for (String ext : FILE_AND_ARCHIVE_READERS.keySet()) {
+		    if (filename.endsWith("."+ext)) {
+		        return FILE_AND_ARCHIVE_READERS.get(ext);
+		    }
+		}
+		return null;
 	}
 
 	@Override
@@ -145,14 +150,14 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
             	readerClass = findReaderByAttachment();
             }
             if (readerClass == null) {
-                readerClass = findReaderByExtension(url.toLowerCase());
+                readerClass = findReaderByExtension(url);
             }
             if (readerClass == null) {
             	readerClass = findReaderByContentType();
             }
             if (readerClass == null) {
            		throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?
-            } else if (findReaderByExtension(url.toLowerCase()) != null) {
+            } else if (findReaderByExtension(url) != null) {
             	filename = url.substring(url.lastIndexOf('/')+1);
             }
             instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);

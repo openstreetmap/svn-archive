@@ -35,6 +35,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
+import org.openstreetmap.josm.plugins.opendata.core.io.NetworkReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
@@ -95,49 +96,9 @@ public abstract class ArchiveReader extends AbstractReader implements OdConstant
                 file = candidates.get(0);
             }
             
-            if (file == null) {
-                return null;
-            } else if (!file.exists()) {
-                Main.warn("File does not exist: "+file.getPath());
-                return null;
-            } else {
-                DataSet from = null;
-                FileInputStream in = new FileInputStream(file);
-                ProgressMonitor instance = null;
-                if (progressMonitor != null) {
-                    instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
-                }
-                if (file.getName().toLowerCase().endsWith(CSV_EXT)) {
-                    from = CsvReader.parseDataSet(in, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(KML_EXT)) {
-                    from = KmlReader.parseDataSet(in, instance);
-                } else if (file.getName().toLowerCase().endsWith(KMZ_EXT)) {
-                    from = KmzReader.parseDataSet(in, instance);
-                } else if (file.getName().toLowerCase().endsWith(XLS_EXT)) {
-                    from = XlsReader.parseDataSet(in, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(ODS_EXT)) {
-                    from = OdsReader.parseDataSet(in, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(SHP_EXT)) {
-                    from = ShpReader.parseDataSet(in, file, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(MIF_EXT)) {
-                    from = MifReader.parseDataSet(in, file, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
-                    from = TabReader.parseDataSet(in, file, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(GML_EXT)) {
-                    from = GmlReader.parseDataSet(in, handler, instance);
-                } else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
-                    if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
-                        from = NeptuneReader.parseDataSet(in, handler, instance);
-                    } else {
-                        System.err.println("Unsupported XML file: "+file.getName());
-                    }
-                    
-                } else {
-                    System.err.println("Unsupported file extension: "+file.getName());
-                }
-                if (from != null) {
-                    ds = from;
-                }
+            DataSet from = getDataForFile(progressMonitor);
+            if (from != null) {
+                ds = from;
             }
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
@@ -151,11 +112,55 @@ public abstract class ArchiveReader extends AbstractReader implements OdConstant
         return ds;
     }
 
+    protected DataSet getDataForFile(final ProgressMonitor progressMonitor)
+            throws FileNotFoundException, IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+        if (file == null) {
+            return null;
+        } else if (!file.exists()) {
+            Main.warn("File does not exist: "+file.getPath());
+            return null;
+        } else {
+            DataSet from = null;
+            FileInputStream in = new FileInputStream(file);
+            ProgressMonitor instance = null;
+            if (progressMonitor != null) {
+                instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
+            }
+            if (file.getName().toLowerCase().endsWith(CSV_EXT)) {
+                from = CsvReader.parseDataSet(in, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(KML_EXT)) {
+                from = KmlReader.parseDataSet(in, instance);
+            } else if (file.getName().toLowerCase().endsWith(KMZ_EXT)) {
+                from = KmzReader.parseDataSet(in, instance);
+            } else if (file.getName().toLowerCase().endsWith(XLS_EXT)) {
+                from = XlsReader.parseDataSet(in, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(ODS_EXT)) {
+                from = OdsReader.parseDataSet(in, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(SHP_EXT)) {
+                from = ShpReader.parseDataSet(in, file, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(MIF_EXT)) {
+                from = MifReader.parseDataSet(in, file, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
+                from = TabReader.parseDataSet(in, file, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(GML_EXT)) {
+                from = GmlReader.parseDataSet(in, handler, instance);
+            } else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
+                if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
+                    from = NeptuneReader.parseDataSet(in, handler, instance);
+                } else {
+                    System.err.println("Unsupported XML file: "+file.getName());
+                }
+                
+            } else {
+                System.err.println("Unsupported file extension: "+file.getName());
+            }
+            return from;
+        }
+    }
+
     protected final void lookForCandidate(String entryName, final List<File> candidates, File file) {
         // Test file name to see if it may contain useful data
-        for (String ext : new String[] {
-                CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT, GML_EXT
-        }) {
+        for (String ext : NetworkReader.FILE_READERS.keySet()) {
             if (entryName.toLowerCase().endsWith("."+ext)) {
                 candidates.add(file);
                 System.out.println(entryName);

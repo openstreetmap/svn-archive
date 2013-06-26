@@ -72,7 +72,7 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 				}
 			}
 		}
-		for (String ext : new String[]{ZIP_EXT, CSV_EXT, KML_EXT, KMZ_EXT, XLS_EXT, ODS_EXT, SHP_EXT, MIF_EXT, TAB_EXT}) {
+		for (String ext : NetworkReader.FILE_AND_ARCHIVE_READERS.keySet()) {
 			if (Pattern.compile(".*\\."+ext, Pattern.CASE_INSENSITIVE).matcher(url).matches()) {
 				return true;
 			}
@@ -80,7 +80,24 @@ public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
 		return false;
 	}
 	
-	protected class InternalDownloadTasK extends DownloadTask {
+    @Override
+    public String[] getPatterns() {
+        String pattern = "";
+        for (String ext : NetworkReader.FILE_AND_ARCHIVE_READERS.keySet()) {
+            if (!pattern.isEmpty()) {
+                pattern += "|";
+            }
+            pattern += "."+ext;
+        }
+        return new String[]{".*(" + pattern + ")"};
+    }
+
+    @Override
+    public String getTitle() {
+        return tr("Download open data");
+    }
+
+    protected class InternalDownloadTasK extends DownloadTask {
 
 		public InternalDownloadTasK(boolean newLayer, NetworkReader reader, ProgressMonitor progressMonitor) {
 			super(newLayer, reader, progressMonitor);

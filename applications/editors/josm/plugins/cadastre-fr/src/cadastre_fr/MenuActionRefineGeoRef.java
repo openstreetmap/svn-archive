@@ -37,21 +37,7 @@ public class MenuActionRefineGeoRef extends JosmAction {
             CadastrePlugin.askToChangeProjection();
         }
         rasterImageGeoreferencer.addListener();
-        if (Main.pref.getBoolean("cadastrewms.noImageCropping", false) == false)
-        {
-            Object[] options = { "Yes", "No" };
-            int ret = JOptionPane.showOptionDialog( null,
-                    tr("Would you like to crop image\nagain ?"),
-                    tr("Image cropping"),
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, options, options[0]);
-            if (ret == JOptionPane.OK_OPTION)
-                rasterImageGeoreferencer.startCropping(wmsLayer);
-            else
-                rasterImageGeoreferencer.startGeoreferencing(wmsLayer);
-        }
-        else
-            rasterImageGeoreferencer.startGeoreferencing(wmsLayer);
+        rasterImageGeoreferencer.startGeoreferencing(wmsLayer);
     }
 
 }

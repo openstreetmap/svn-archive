@@ -41,8 +41,10 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.io.GpxWriter;
+import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.UrlLabel;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  *
@@ -95,7 +97,6 @@ public class UploadDataGui extends ExtendedDialog {
     private JComboBox visibilityCombo;
 
     // Constants used when generating upload request
-    private static final String API_VERSION = "0.6";
     private static final String BOUNDARY = "----------------------------d10f7aa230e8";
     private static final String LINE_END = "\r\n";
     private static final String uploadTraceText = tr("Upload Trace");
@@ -284,10 +285,10 @@ public class UploadDataGui extends ExtendedDialog {
     private HttpURLConnection setupConnection(int contentLength) throws Exception {
 
         // Upload URL
-        URL url = new URL("http://www.openstreetmap.org/api/" + API_VERSION + "/gpx/create");
+        URL url = new URL(OsmApi.getOsmApi().getBaseUrl() + "gpx/create");
 
         // Set up connection and log in
-        HttpURLConnection c = (HttpURLConnection) url.openConnection();
+        HttpURLConnection c = Utils.openHttpConnection(url);
         c.setFixedLengthStreamingMode(contentLength);
         c.setConnectTimeout(15000);
         c.setRequestMethod("POST");

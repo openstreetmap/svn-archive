@@ -38,6 +38,7 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.JMultilineLabel;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.tools.GBC;
@@ -241,20 +242,32 @@ public class UploadDataGui extends ExtendedDialog {
 
             if (canceled) {
                 conn.disconnect();
-                OutputDisplay.setText(tr("Upload canceled"));
-                buttons.get(0).setEnabled(true);
+                GuiHelper.runInEDT(new Runnable() {
+                    @Override public void run() {
+                        OutputDisplay.setText(tr("Upload canceled"));
+                        buttons.get(0).setEnabled(true);
+                    }
+                });
                 canceled = false;
             }
             else {
-                boolean success = finishUpConnection(conn);
-                buttons.get(0).setEnabled(!success);
-                if (success) {
-                    buttons.get(1).setText(tr("Close"));
-                }
+                final boolean success = finishUpConnection(conn);
+                GuiHelper.runInEDT(new Runnable() {
+                    @Override public void run() {
+                        buttons.get(0).setEnabled(!success);
+                        if (success) {
+                            buttons.get(1).setText(tr("Close"));
+                        }
+                    }
+                });
             }
         }
         catch (Exception e) {
-            OutputDisplay.setText(tr("Error while uploading"));
+            GuiHelper.runInEDT(new Runnable() {
+                @Override public void run() {
+                    OutputDisplay.setText(tr("Error while uploading"));
+                }
+            });
             e.printStackTrace();
         }
         finally {
@@ -299,16 +312,22 @@ public class UploadDataGui extends ExtendedDialog {
      */
     private boolean finishUpConnection(HttpURLConnection c) throws Exception {
         String returnMsg = c.getResponseMessage();
-        boolean success = returnMsg.equals("OK");
+        final boolean success = returnMsg.equals("OK");
 
         if (c.getResponseCode() != 200) {
             if (c.getHeaderField("Error") != null)
                 returnMsg += "\n" + c.getHeaderField("Error");
         }
+        
+        final String returnMsgEDT = returnMsg;
 
-        OutputDisplay.setText(success
-            ? tr("GPX upload was successful")
-            : tr("Upload failed. Server returned the following message: ") + returnMsg);
+        GuiHelper.runInEDT(new Runnable() {
+            @Override public void run() {
+                OutputDisplay.setText(success
+                        ? tr("GPX upload was successful")
+                        : tr("Upload failed. Server returned the following message: ") + returnMsgEDT);
+            }
+        });
 
         c.disconnect();
         return success;
@@ -384,7 +403,14 @@ public class UploadDataGui extends ExtendedDialog {
         if(gpxData == null)
             errors += tr("No GPX layer selected. Cannot upload a trace.");
 
-        OutputDisplay.setText(errors);
+        final String errorsEDT = errors;
+        
+        GuiHelper.runInEDT(new Runnable() {
+            @Override public void run() {
+                OutputDisplay.setText(errorsEDT);
+            }
+        });
+        
         return errors.length() > 0;
     }
 

@@ -30,8 +30,7 @@ public abstract class EditorFactory {
     }
 
     public static boolean editStreet(Street street) {
-        StreetEditor dialog = new StreetEditor(street);
-        dialog.setVisible(true);
+        StreetEditor dialog = (StreetEditor) new StreetEditor(street).showDialog();
         if (dialog.getValue() == 1) {
             Reasoner r = Reasoner.getInstance();
             synchronized (r) {
@@ -48,8 +47,7 @@ public abstract class EditorFactory {
     }
 
     public static boolean editHouse(House house) {
-        HouseEditor dialog = new HouseEditor(house);
-        dialog.setVisible(true);
+        HouseEditor dialog = (HouseEditor) new HouseEditor(house).showDialog();
         if (dialog.getValue() == 1) {
             Reasoner r = Reasoner.getInstance();
             synchronized (r) {
@@ -65,8 +63,7 @@ public abstract class EditorFactory {
     }
 
     public static boolean editSuburb(Suburb suburb) {
-        SuburbEditor dialog = new SuburbEditor(suburb);
-        dialog.setVisible(true);
+        SuburbEditor dialog = (SuburbEditor) new SuburbEditor(suburb).showDialog();
         if (dialog.getValue() == 1) {
             suburb.setName(dialog.getSuburbName());
             return true;

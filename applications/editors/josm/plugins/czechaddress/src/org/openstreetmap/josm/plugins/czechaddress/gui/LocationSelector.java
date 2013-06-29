@@ -40,8 +40,7 @@ public class LocationSelector extends ExtendedDialog {
 
 
     public static ElementWithStreets selectLocation() {
-        LocationSelector ls = new LocationSelector();
-        ls.setVisible(true);
+        LocationSelector ls = (LocationSelector) new LocationSelector().showDialog();
 
         if (ls.getValue() == 1)
             return ls.selectedElement;
@@ -57,6 +56,7 @@ public class LocationSelector extends ExtendedDialog {
         setContent(mainPanel);
         setButtonIcons(new String[] {"ok.png", "cancel.png"});
         setDefaultButton(1);
+        setCancelButton(2);
         setupDialog();
 
         oblastComboBox.setRenderer(new AddressElementRenderer());

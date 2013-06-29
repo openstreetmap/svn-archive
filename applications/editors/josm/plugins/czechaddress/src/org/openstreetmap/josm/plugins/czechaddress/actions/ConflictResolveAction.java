@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.gui.ConflictResolver;
@@ -38,6 +39,6 @@ public class ConflictResolveAction extends JosmAction {
      * from {@link CzechAddressPlugin}{@code .conflictResolver}.
      */
     public void actionPerformed(ActionEvent e) {
-        ConflictResolver.getInstance().setVisible(true);
+        ConflictResolver.getInstance().showDialog();
     }
 }

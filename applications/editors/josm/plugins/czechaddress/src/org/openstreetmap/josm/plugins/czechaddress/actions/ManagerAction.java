@@ -24,6 +24,6 @@ public class ManagerAction extends JosmAction {
 
     @Override
 	public void actionPerformed(ActionEvent e) {
-        (new ManagerDialog()).setVisible(true);
+        new ManagerDialog().showDialog();
     }
 }

@@ -1,12 +1,11 @@
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
-import org.openstreetmap.josm.plugins.czechaddress.gui.GroupManipulatorDialog;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
+import org.openstreetmap.josm.plugins.czechaddress.gui.GroupManipulatorDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -40,6 +39,6 @@ public class GroupManipulatorAction extends JosmAction {
      */
     public void actionPerformed(ActionEvent e) {
         if (CzechAddressPlugin.getLocation() == null) return;
-        GroupManipulatorDialog.getInstence().setVisible(true);
+        GroupManipulatorDialog.getInstance().setVisible(true);
     }
 }

@@ -25,6 +25,7 @@ import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.czechaddress.actions.ConflictResolveAction;
@@ -162,7 +163,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         }
         ManagerDialog dialog = new ManagerDialog();
         if (dialog.countAutomaticRenameProposals() > 0)
-            dialog.setVisible(true);
+            dialog.showDialog();
     }
 
     static private ElementWithStreets location = null;
@@ -191,12 +192,16 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
 
     public void pluginStatusChanged(int message) {
         if (message == MESSAGE_DATABASE_LOADED) {
-            czechMenu = Main.main.menu.addMenu(marktr("Adress"), KeyEvent.VK_Z, 4, ht("/Plugin/CzechAddress"));
-            menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
-            menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
-            menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));
-            menuItems.add(MainMenu.add(czechMenu, new ManagerAction()));
-            menuItems.add(MainMenu.add(czechMenu, new HelpAction()));
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override public void run() {
+                    czechMenu = Main.main.menu.addMenu(marktr("Adress"), KeyEvent.VK_Z, 4, ht("/Plugin/CzechAddress"));
+                    menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
+                    menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
+                    menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));
+                    menuItems.add(MainMenu.add(czechMenu, new ManagerAction()));
+                    menuItems.add(MainMenu.add(czechMenu, new HelpAction()));
+                }
+            });
             return;
         }
 

@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.event.ListDataListener;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
@@ -22,9 +24,9 @@ import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.House;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
+import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRenderer;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.Reasoner;
 import org.openstreetmap.josm.plugins.czechaddress.intelligence.ReasonerListener;
-import org.openstreetmap.josm.plugins.czechaddress.gui.utils.UniversalListRenderer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -217,7 +219,7 @@ public class ConflictResolver extends ExtendedDialog {
         if (index >= 0) {
             mainField.setSelectedIndex(index);
             mainField.repaint();
-            setVisible(true);
+            showDialog();
         }
     }
 

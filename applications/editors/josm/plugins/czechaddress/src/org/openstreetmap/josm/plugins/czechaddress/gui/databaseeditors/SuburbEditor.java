@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors;
 
 import javax.swing.DefaultComboBoxModel;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
@@ -54,6 +55,8 @@ public class SuburbEditor extends ExtendedDialog {
         // And finalize initializing the form.
         setContent(mainPanel);
         this.setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setDefaultButton(1);
+        setCancelButton(2);
         setupDialog();
     }
 

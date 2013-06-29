@@ -1,7 +1,5 @@
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.LayoutManager;
@@ -20,6 +18,7 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 import org.openstreetmap.josm.plugins.czechaddress.MapUtils;
 import org.openstreetmap.josm.plugins.czechaddress.StatusListener;
@@ -87,18 +86,26 @@ public class FactoryDialog extends ToggleDialog
 	public void pluginStatusChanged(int message) {
 
         if (message == MESSAGE_DATABASE_LOADED) {
-            relocateButton.setEnabled(true);
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override public void run() {
+                    relocateButton.setEnabled(true);
+                }
+            });
             return;
         }
 
         if (message == MESSAGE_LOCATION_CHANGED) {
             DataSet.addSelectionListener(this);
 
-            streetModel.setParent(CzechAddressPlugin.getLocation());
-            relocateButton.setText("Změnit místo");
-            streetComboBox.setEnabled(true);
-            houseList.setEnabled(true);
-            keepOddityCheckBox.setEnabled(true);
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override public void run() {
+                streetModel.setParent(CzechAddressPlugin.getLocation());
+                relocateButton.setText("Změnit místo");
+                streetComboBox.setEnabled(true);
+                houseList.setEnabled(true);
+                keepOddityCheckBox.setEnabled(true);
+                }
+            });
             return;
         }
     }

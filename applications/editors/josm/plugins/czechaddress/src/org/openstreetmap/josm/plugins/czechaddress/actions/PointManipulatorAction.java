@@ -51,7 +51,6 @@ public class PointManipulatorAction extends JosmAction {
 
         if (CzechAddressPlugin.getLocation() == null) return;
 
-        PointManipulatorDialog dialog = new PointManipulatorDialog(primitive);
-        dialog.setVisible(true);
+        new PointManipulatorDialog(primitive).showDialog();
     }
 }

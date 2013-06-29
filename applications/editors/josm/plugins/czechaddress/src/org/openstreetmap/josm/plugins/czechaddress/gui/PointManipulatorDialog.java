@@ -81,6 +81,8 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         // And finalize initializing the form.
         setContent(mainPanel, false);
         setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setDefaultButton(1);
+        setCancelButton(2);
         setupDialog();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setAlwaysOnTop(false);

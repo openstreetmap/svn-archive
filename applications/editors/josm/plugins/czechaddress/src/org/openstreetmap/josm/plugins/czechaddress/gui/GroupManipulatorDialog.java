@@ -32,7 +32,7 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
 public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerListener {
 
     private static GroupManipulatorDialog singleton = null;
-    public static GroupManipulatorDialog getInstence() {
+    public static GroupManipulatorDialog getInstance() {
         if (singleton == null)
             singleton = new GroupManipulatorDialog();
         return singleton;
@@ -56,6 +56,8 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
         // And finalize initializing the form.
         setContent(mainPanel);
         setButtonIcons(new String[] {"ok.png", "cancel.png"});
+        setDefaultButton(1);
+        setCancelButton(2);
         setupDialog();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 

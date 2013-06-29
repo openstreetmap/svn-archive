@@ -53,7 +53,6 @@
         <ant antfile="build.xml" target="dist" dir="merge-overlap"/>
         <ant antfile="build.xml" target="dist" dir="michigan_left"/>
         <ant antfile="build.xml" target="dist" dir="mirrored_download"/>
-        <ant antfile="build.xml" target="dist" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="dist" dir="namemanager"/>
         <ant antfile="build.xml" target="dist" dir="NanoLog"/>
         <ant antfile="build.xml" target="dist" dir="native-password-manager"/>
@@ -153,7 +152,6 @@
         <ant antfile="build.xml" target="clean" dir="merge-overlap"/>
         <ant antfile="build.xml" target="clean" dir="michigan_left"/>
         <ant antfile="build.xml" target="clean" dir="mirrored_download"/>
-        <ant antfile="build.xml" target="clean" dir="multipoly-convert"/>
         <ant antfile="build.xml" target="clean" dir="namemanager"/>
         <ant antfile="build.xml" target="clean" dir="no_more_mapping"/>
         <ant antfile="build.xml" target="clean" dir="NanoLog"/>

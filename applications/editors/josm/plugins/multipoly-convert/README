@@ -1,4 +1,0 @@
-This plugin allows to simply convert an (or more) area defined by a way into the corresponding multipolygon.
-Just select some ways and press the button. An advanced multipolygon will automatically be created for each 
-way and all the tags (except the source tag) will be copy on the relation conforming the advanced 
-multipolygons specification [http://wiki.openstreetmap.org/wiki/Relation:multipolygon].

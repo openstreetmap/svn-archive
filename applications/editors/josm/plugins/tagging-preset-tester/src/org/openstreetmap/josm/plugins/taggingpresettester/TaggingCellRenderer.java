@@ -33,11 +33,13 @@ final public class TaggingCellRenderer extends DefaultListCellRenderer {
             l.setIcon(new ImageIcon(icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
         else {
             if (a.types == null)
-                l.setIcon(ImageProvider.get("data", "empty"));
+                icon = ImageProvider.getIfAvailable("data", "empty");
             else if (a.types.size() != 1)
-                l.setIcon(ImageProvider.get("data", "object"));
+                icon = ImageProvider.getIfAvailable("data", "object");
             else
-                l.setIcon(ImageProvider.get(a.types.iterator().next().getIconName()));
+                icon = ImageProvider.getIfAvailable(a.types.iterator().next().getIconName());
+            if (icon != null)
+                l.setIcon(icon);
         }
         l.setOpaque(true);
         return l;

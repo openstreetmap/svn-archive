@@ -122,11 +122,13 @@ public class DownloadAlong extends Plugin {
       int latcnt = 0;
 
       for (OsmPrimitive prim : selection) {
-        Way way = (Way) prim;
-        for (Node n : way.getNodes()) {
-          latsum += n.getCoor().lat();
-          latcnt++;
-        }
+          if (prim instanceof Way) {
+              Way way = (Way) prim;
+              for (Node n : way.getNodes()) {
+                  latsum += n.getCoor().lat();
+                  latcnt++;
+              }
+          }
       }
 
       double avglat = latsum / latcnt;

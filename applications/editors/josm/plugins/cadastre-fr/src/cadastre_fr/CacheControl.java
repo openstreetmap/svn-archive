@@ -158,10 +158,10 @@ public class CacheControl implements Runnable {
                 e.printStackTrace();
             }
         }
-        /*
-        Previously contained a call to RasterImageModifier.fixRasterImage() to fix a de-serialization bug on some
-        older java 6 versions. Request a jre update if any complains.  
-        */
+        if (successfulRead && wmsLayer.isRaster()) {
+            // serialized raster bufferedImage hangs-up on Java6. Recreate them here
+            wmsLayer.getImage(0).image = RasterImageModifier.fixRasterImage(wmsLayer.getImage(0).image);
+        }
         return successfulRead;
     }
 

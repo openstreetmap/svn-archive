@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>JOSM-Cadastre-fr</name>
+	<name>cadastre-fr</name>
 	<comment></comment>
 	<projects>
+		<project>JOSM</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

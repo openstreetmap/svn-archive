@@ -53,7 +53,7 @@ public class CloseAction {
         if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
             result = "ok";
         } else {
-            result = HttpUtils.post(uri, null, post, CHARSET);
+            result = HttpUtils.post(uri, post, CHARSET);
         }
 
         if("ok".equalsIgnoreCase(result.trim())) {

@@ -27,83 +27,42 @@
  */
 package org.openstreetmap.josm.plugins.osb.api.util;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+
+import org.openstreetmap.josm.tools.Utils;
 
 public class HttpUtils {
-    public static String get(String url, Map<String, String> headers, String charset) throws IOException {
-        URL page = new URL(url);
-        URLConnection con = page.openConnection();
-        if(headers != null) {
-            for (Iterator<Entry<String,String>> iterator = headers.entrySet().iterator(); iterator.hasNext();) {
-                Entry<String, String> entry = iterator.next();
-                con.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-        }
-
+    public static String get(String url, String charset) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int length = -1;
         byte[] b = new byte[1024];
-        InputStream in = con.getInputStream();
+        InputStream in = Utils.openURL(new URL(url));
         while( (length = in.read(b)) > 0 ) {
             bos.write(b, 0, length);
         }
+        Utils.close(in);
 
         return new String(bos.toByteArray(), charset);
-    }
-
-    public static HttpResponse getResponse(String url, Map<String, String> headers, String charset) throws IOException {
-        URL page = new URL(url);
-        URLConnection con = page.openConnection();
-        if(headers != null) {
-            for (Iterator<Entry<String,String>> iterator = headers.entrySet().iterator(); iterator.hasNext();) {
-                Entry<String, String> entry = iterator.next();
-                con.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-        }
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        int length = -1;
-        byte[] b = new byte[1024];
-        InputStream in = con.getInputStream();
-        while( (length = in.read(b)) > 0 ) {
-            bos.write(b, 0, length);
-        }
-
-        HttpResponse response = new HttpResponse(new String(bos.toByteArray(), charset), con.getHeaderFields());
-        return response;
     }
 
     /**
      *
      * @param url
-     * @param headers
      * @param content the post body
      * @param responseCharset the expected charset of the response
      * @return
      * @throws IOException
      */
-    public static String post(String url, Map<String, String> headers, String content, String responseCharset) throws IOException {
+    public static String post(String url, String content, String responseCharset) throws IOException {
         // initialize the connection
         URL page = new URL(url);
         URLConnection con = page.openConnection();
         con.setDoOutput(true);
-        if(headers != null) {
-            for (Iterator<Entry<String,String>> iterator = headers.entrySet().iterator(); iterator.hasNext();) {
-                Entry<String, String> entry = iterator.next();
-                con.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-        }
 
         //send the post
         OutputStream os = con.getOutputStream();
@@ -118,55 +77,9 @@ public class HttpUtils {
         while( (length = in.read(b)) > 0 ) {
             bos.write(b, 0, length);
         }
+        Utils.close(in);
+        Utils.close(os);
 
         return new String(bos.toByteArray(), responseCharset);
-    }
-
-    /**
-     * Adds a parameter to a given URI
-     * @param uri
-     * @param param
-     * @param value
-     * @return
-     */
-    public static String addParameter(String uri, String param, String value) {
-        StringBuilder sb = new StringBuilder(uri);
-        if(uri.contains("?")) {
-            sb.append('&');
-        } else {
-            sb.append('?');
-        }
-
-        sb.append(param);
-        sb.append('=');
-        sb.append(value);
-
-        return sb.toString();
-    }
-
-    public static Map<String, List<String>> head(String url, Map<String, String> headers, String charset) throws IOException {
-        URL page = new URL(url);
-        URLConnection con = page.openConnection();
-        if(headers != null) {
-            for (Iterator<Entry<String,String>> iterator = headers.entrySet().iterator(); iterator.hasNext();) {
-                Entry<String, String> entry = iterator.next();
-                con.setRequestProperty(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return con.getHeaderFields();
-    }
-
-    public static String getHeaderField(Map<String, List<String>> headers, String headerField) {
-        if(!headers.containsKey(headerField)) {
-            return null;
-        }
-
-        List<String> value = headers.get(headerField);
-        if(value.size() == 1) {
-            return value.get(0);
-        } else {
-            throw new RuntimeException(tr("Header contains several values and cannot be mapped to a single string"));
-        }
     }
 }

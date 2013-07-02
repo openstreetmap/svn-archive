@@ -63,7 +63,7 @@ public class DownloadAction {
         uri = sb.toString();
 
         // download the data
-        String content = HttpUtils.get(uri, null, CHARSET);
+        String content = HttpUtils.get(uri, CHARSET);
 
         // clear dataset
         dataset.clear();

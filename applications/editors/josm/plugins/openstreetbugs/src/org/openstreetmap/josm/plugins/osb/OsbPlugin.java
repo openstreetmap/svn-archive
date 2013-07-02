@@ -272,16 +272,8 @@ public class OsbPlugin extends Plugin implements LayerChangeListener {
         return layer;
     }
 
-    public void setLayer(OsbLayer layer) {
-        this.layer = layer;
-    }
-
     public DataSet getDataSet() {
         return dataSet;
-    }
-
-    public void setDataSet(DataSet dataSet) {
-        this.dataSet = dataSet;
     }
 
     public OsbDialog getDialog() {

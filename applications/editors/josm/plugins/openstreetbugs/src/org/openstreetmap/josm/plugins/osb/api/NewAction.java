@@ -64,7 +64,7 @@ public class NewAction {
         if(Main.pref.getBoolean(ConfigKeys.OSB_API_DISABLED)) {
             result = "ok 12345";
         } else {
-            result = HttpUtils.post(uri, null, post, CHARSET);
+            result = HttpUtils.post(uri, post, CHARSET);
         }
 
         Pattern resultPattern = Pattern.compile("ok\\s+(\\d+)\\s*");

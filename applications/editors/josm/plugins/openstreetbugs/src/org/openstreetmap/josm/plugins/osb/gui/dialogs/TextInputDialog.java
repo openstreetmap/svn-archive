@@ -48,6 +48,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import org.openstreetmap.josm.gui.widgets.ComboBoxHistory;
 import org.openstreetmap.josm.gui.widgets.HistoryChangedListener;
@@ -152,7 +153,7 @@ public class TextInputDialog extends JDialog {
                 btnCancel.setPreferredSize(new java.awt.Dimension(100, 25));
             }
         }
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     public static String showDialog(JComponent parent, String title, String text, List<String> history, HistoryChangedListener l) {

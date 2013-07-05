@@ -118,126 +118,126 @@
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-free.png"/>
     </Rule>
     <!-- left parking lane: disc -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-disc.png"/>
     </Rule>
     <!-- left parking lane: ticket -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-fee.png"/>
     </Rule>
     <!-- left parking lane: customers -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-cust.png"/>
     </Rule>
     <!-- left parking lane: residents -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-resi.png"/>
     </Rule>
     <!-- left parking lane: private -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-priv.png"/>
     </Rule>
     <!-- left parking lane: unknown -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-8-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='parallel' or [parking:lane:left]='inline') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='parallel' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-li-24-unkn.png"/>
     </Rule>
 </Style>
@@ -246,126 +246,126 @@
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-free.png"/>
     </Rule>
     <!-- right parking lane: disc -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-disc.png"/>
     </Rule>
     <!-- right parking lane: ticket -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-fee.png"/>
     </Rule>
     <!-- right parking lane: customers -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-cust.png"/>
     </Rule>
     <!-- right parking lane: residents -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-resi.png"/>
     </Rule>
     <!-- right parking lane: private -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-priv.png"/>
     </Rule>
     <!-- right parking lane: unknown -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-8-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='parallel' or [parking:lane:right]='inline') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='parallel' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ri-24-unkn.png"/>
     </Rule>
 </Style>
@@ -634,126 +634,126 @@
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-free.png"/>
     </Rule>
     <!-- left parking lane: disc -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-disc.png"/>
     </Rule>
     <!-- left parking lane: ticket -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-fee.png"/>
     </Rule>
     <!-- left parking lane: customers -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-cust.png"/>
     </Rule>
     <!-- left parking lane: residents -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-resi.png"/>
     </Rule>
     <!-- left parking lane: private -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-priv.png"/>
     </Rule>
     <!-- left parking lane: unknown -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-8-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='perpendicular' or [parking:lane:left]='orthogonal') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='perpendicular' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lo-24-unkn.png"/>
     </Rule>
 </Style>
@@ -762,126 +762,126 @@
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-free.png"/>
     </Rule>
     <!-- right parking lane: disc -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-disc.png"/>
     </Rule>
     <!-- right parking lane: ticket -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-fee.png"/>
     </Rule>
     <!-- right parking lane: customers -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-cust.png"/>
     </Rule>
     <!-- right parking lane: residents -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-resi.png"/>
     </Rule>
     <!-- right parking lane: private -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-priv.png"/>
     </Rule>
     <!-- right parking lane: unknown -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-8-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='perpendicular' or [parking:lane:right]='orthogonal') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='perpendicular' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-ro-24-unkn.png"/>
     </Rule>
 </Style>
@@ -892,126 +892,126 @@
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='free'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-free.png"/>
     </Rule>
     <!-- left parking lane: disc -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='disc'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-disc.png"/>
     </Rule>
     <!-- left parking lane: ticket -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='ticket'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-fee.png"/>
     </Rule>
     <!-- left parking lane: customers -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='customers'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-cust.png"/>
     </Rule>
     <!-- left parking lane: residents -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='residents'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-resi.png"/>
     </Rule>
     <!-- left parking lane: private -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='private'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-priv.png"/>
     </Rule>
     <!-- left parking lane: unknown -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-8-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:left]='marked') and [parking:condition:left]='unknown'</Filter>
+        <Filter>[parking:lane:left]='marked' and [parking:condition:left]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-lm-24-unkn.png"/>
     </Rule>
 </Style>
@@ -1020,126 +1020,126 @@
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-free.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='free'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='free'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-free.png"/>
     </Rule>
     <!-- right parking lane: disc -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-disc.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='disc'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='disc'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-disc.png"/>
     </Rule>
     <!-- right parking lane: ticket -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-fee.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='ticket'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='ticket'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-fee.png"/>
     </Rule>
     <!-- right parking lane: customers -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-cust.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='customers'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='customers'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-cust.png"/>
     </Rule>
     <!-- right parking lane: residents -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-resi.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='residents'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='residents'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-resi.png"/>
     </Rule>
     <!-- right parking lane: private -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-priv.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='private'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='private'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-priv.png"/>
     </Rule>
     <!-- right parking lane: unknown -->
     <Rule>
         &maxscale_zoom14;
         &minscale_zoom15;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-8-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom16;
         &minscale_zoom17;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-unkn.png"/>
     </Rule>
     <Rule>
         &maxscale_zoom18;
-        <Filter>([parking:lane:right]='marked') and [parking:condition:right]='unknown'</Filter>
+        <Filter>[parking:lane:right]='marked' and [parking:condition:right]='unknown'</Filter>
         <LinePatternSymbolizer file="&symbols;/park-rm-24-unkn.png"/>
     </Rule>
 </Style>
@@ -1156,8 +1156,27 @@
     <Datasource>
         <Parameter name="table">
         (select way,
-                COALESCE(tags->'parking:lane:left',tags->'parking:lane:both') as "parking:lane:left",
-                COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown') as "parking:condition:left"
+                CASE /* parking:lane:left = */ LOWER(COALESCE(tags->'parking:lane:left',tags->'parking:lane:both'))
+            		WHEN 'narrow' THEN 'marked'
+            		WHEN 'inline' THEN 'parallel'
+            		WHEN 'orthogonal' THEN 'perpendicular'
+            		ELSE LOWER(COALESCE(tags->'parking:lane:left',tags->'parking:lane:both'))
+          		END AS "parking:lane:left"
+                COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown') as 
+                CASE /* parking:lane:left = */ LOWER(COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown'))
+                    WHEN 'free' THEN 'free'
+                    WHEN 'disc' THEN 'disc'
+                    WHEN 'ticket' THEN 'ticket'
+                    WHEN 'customers' THEN 'customers'
+                    WHEN 'residents' THEN 'residents'
+                    WHEN 'private' THEN 'private'
+                    WHEN 'unknown' THEN 'unknown'
+            		WHEN 'residents_or_ticket' THEN 'ticket'
+            		WHEN 'residents,ticket' THEN 'ticket'
+            		WHEN 'residents;ticket' THEN 'ticket'
+            		WHEN 'ticket;residents' THEN 'ticket'
+            		ELSE 'unknown'
+          		END AS "parking:condition:left"
                 from &prefix;_line
                 where (tags ? 'parking:lane:left') or (tags ? 'parking:lane:both')
         ) as roads
@@ -1175,8 +1194,26 @@
     <Datasource>
         <Parameter name="table">
         (select way,
-                COALESCE(tags->'parking:lane:right',tags->'parking:lane:both') as "parking:lane:right",
-                COALESCE(tags->'parking:condition:right',tags->'parking:condition:both','unknown') as "parking:condition:right"
+                CASE /* parking:lane:right = */ LOWER(COALESCE(tags->'parking:lane:right',tags->'parking:lane:both'))
+            		WHEN 'narrow' THEN 'marked'
+            		WHEN 'inline' THEN 'parallel'
+            		WHEN 'orthogonal' THEN 'perpendicular'
+            		ELSE LOWER(COALESCE(tags->'parking:lane:right',tags->'parking:lane:both'))
+          		END AS "parking:lane:right"
+                CASE /* parking:lane:right = */ LOWER(COALESCE(tags->'parking:condition:right',tags->'parking:condition:both','unknown'))
+                    WHEN 'free' THEN 'free'
+                    WHEN 'disc' THEN 'disc'
+                    WHEN 'ticket' THEN 'ticket'
+                    WHEN 'customers' THEN 'customers'
+                    WHEN 'residents' THEN 'residents'
+                    WHEN 'private' THEN 'private'
+                    WHEN 'unknown' THEN 'unknown'
+            		WHEN 'residents_or_ticket' THEN 'ticket'
+            		WHEN 'residents,ticket' THEN 'ticket'
+            		WHEN 'residents;ticket' THEN 'ticket'
+            		WHEN 'ticket;residents' THEN 'ticket'
+            		ELSE 'unknown'
+          		END AS "parking:condition:right"
                 from &prefix;_line
                 where (tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')
         ) as roads

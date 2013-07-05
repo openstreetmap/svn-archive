@@ -1157,11 +1157,11 @@
         <Parameter name="table">
         (select way,
                 CASE /* parking:lane:left = */ LOWER(COALESCE(tags->'parking:lane:left',tags->'parking:lane:both'))
-            		WHEN 'narrow' THEN 'marked'
-            		WHEN 'inline' THEN 'parallel'
-            		WHEN 'orthogonal' THEN 'perpendicular'
-            		ELSE LOWER(COALESCE(tags->'parking:lane:left',tags->'parking:lane:both'))
-          		END AS "parking:lane:left"
+                    WHEN 'narrow' THEN 'marked'
+                    WHEN 'inline' THEN 'parallel'
+                    WHEN 'orthogonal' THEN 'perpendicular'
+                    ELSE LOWER(COALESCE(tags->'parking:lane:left',tags->'parking:lane:both'))
+          	    END AS "parking:lane:left",
                 CASE /* parking:condition:left = */ LOWER(COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown'))
                     WHEN 'free' THEN 'free'
                     WHEN 'disc' THEN 'disc'
@@ -1170,12 +1170,12 @@
                     WHEN 'residents' THEN 'residents'
                     WHEN 'private' THEN 'private'
                     WHEN 'unknown' THEN 'unknown'
-            		WHEN 'residents_or_ticket' THEN 'ticket'
-            		WHEN 'residents,ticket' THEN 'ticket'
-            		WHEN 'residents;ticket' THEN 'ticket'
-            		WHEN 'ticket;residents' THEN 'ticket'
-            		ELSE 'unknown'
-          		END AS "parking:condition:left"
+           	        WHEN 'residents_or_ticket' THEN 'ticket'
+                    WHEN 'residents,ticket' THEN 'ticket'
+                    WHEN 'residents;ticket' THEN 'ticket'
+                    WHEN 'ticket;residents' THEN 'ticket'
+                    ELSE 'unknown'
+                END AS "parking:condition:left"
                 from &prefix;_line
                 where (tags ? 'parking:lane:left') or (tags ? 'parking:lane:both')
         ) as roads
@@ -1194,11 +1194,11 @@
         <Parameter name="table">
         (select way,
                 CASE /* parking:lane:right = */ LOWER(COALESCE(tags->'parking:lane:right',tags->'parking:lane:both'))
-            		WHEN 'narrow' THEN 'marked'
-            		WHEN 'inline' THEN 'parallel'
-            		WHEN 'orthogonal' THEN 'perpendicular'
-            		ELSE LOWER(COALESCE(tags->'parking:lane:right',tags->'parking:lane:both'))
-          		END AS "parking:lane:right"
+                    WHEN 'narrow' THEN 'marked'
+                    WHEN 'inline' THEN 'parallel'
+                    WHEN 'orthogonal' THEN 'perpendicular'
+                    ELSE LOWER(COALESCE(tags->'parking:lane:right',tags->'parking:lane:both'))
+          	    END AS "parking:lane:right",
                 CASE /* parking:condition:right = */ LOWER(COALESCE(tags->'parking:condition:right',tags->'parking:condition:both','unknown'))
                     WHEN 'free' THEN 'free'
                     WHEN 'disc' THEN 'disc'
@@ -1207,12 +1207,12 @@
                     WHEN 'residents' THEN 'residents'
                     WHEN 'private' THEN 'private'
                     WHEN 'unknown' THEN 'unknown'
-            		WHEN 'residents_or_ticket' THEN 'ticket'
-            		WHEN 'residents,ticket' THEN 'ticket'
-            		WHEN 'residents;ticket' THEN 'ticket'
-            		WHEN 'ticket;residents' THEN 'ticket'
-            		ELSE 'unknown'
-          		END AS "parking:condition:right"
+            	    WHEN 'residents_or_ticket' THEN 'ticket'
+            	    WHEN 'residents,ticket' THEN 'ticket'
+            	    WHEN 'residents;ticket' THEN 'ticket'
+                    WHEN 'ticket;residents' THEN 'ticket'
+                    ELSE 'unknown'
+          	    END AS "parking:condition:right"
                 from &prefix;_line
                 where (tags ? 'parking:lane:right') or (tags ? 'parking:lane:both')
         ) as roads

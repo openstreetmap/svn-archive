@@ -1162,8 +1162,7 @@
             		WHEN 'orthogonal' THEN 'perpendicular'
             		ELSE LOWER(COALESCE(tags->'parking:lane:left',tags->'parking:lane:both'))
           		END AS "parking:lane:left"
-                COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown') as 
-                CASE /* parking:lane:left = */ LOWER(COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown'))
+                CASE /* parking:condition:left = */ LOWER(COALESCE(tags->'parking:condition:left',tags->'parking:condition:both','unknown'))
                     WHEN 'free' THEN 'free'
                     WHEN 'disc' THEN 'disc'
                     WHEN 'ticket' THEN 'ticket'
@@ -1200,7 +1199,7 @@
             		WHEN 'orthogonal' THEN 'perpendicular'
             		ELSE LOWER(COALESCE(tags->'parking:lane:right',tags->'parking:lane:both'))
           		END AS "parking:lane:right"
-                CASE /* parking:lane:right = */ LOWER(COALESCE(tags->'parking:condition:right',tags->'parking:condition:both','unknown'))
+                CASE /* parking:condition:right = */ LOWER(COALESCE(tags->'parking:condition:right',tags->'parking:condition:both','unknown'))
                     WHEN 'free' THEN 'free'
                     WHEN 'disc' THEN 'disc'
                     WHEN 'ticket' THEN 'ticket'

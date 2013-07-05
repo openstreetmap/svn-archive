@@ -2,7 +2,7 @@
 <project name="utilsplugin2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Utilsplugin2: validation for pasting tags"/>
+    <property name="commit.message" value="[josm_utilsplugin2]: pasting tags is in core long ago. Please update you ancient JOSM :)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4980"/>
 

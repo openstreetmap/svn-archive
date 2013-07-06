@@ -15,10 +15,12 @@ import java.util.concurrent.Future;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTaskList;
+import org.openstreetmap.josm.actions.downloadtasks.DownloadTaskList;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -54,9 +56,9 @@ class DownloadAlongAction extends JosmAction {
 			return;
 		}
 
-		DownloadPanel panel = new DownloadPanel();
+		final DownloadPanel panel = new DownloadPanel();
 		
-        ButtonSpec[] options = new ButtonSpec[] {
+        final ButtonSpec[] options = new ButtonSpec[] {
                 new ButtonSpec(
                         tr("Download"),
                         ImageProvider.get("download"),
@@ -70,14 +72,19 @@ class DownloadAlongAction extends JosmAction {
                         null // no specific help text
                 )
         };
+        
+        panel.addChangeListener(new ChangeListener() {
+			@Override public void stateChanged(ChangeEvent e) {
+				options[0].setEnabled(panel.isDownloadOsmData() || panel.isDownloadGpxData());
+			}
+		});
 
 		if (0 != HelpAwareOptionPane.showOptionDialog(Main.parent, panel, tr("Download from OSM along this track"),
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0], HelpUtil.ht("/Tools/DownloadAlong"))) {
 			return;
 		}
-
-		Main.pref.putDouble(DownloadAlong.PREF_DOWNLOAD_ALONG_TRACK_DISTANCE, panel.getDistance());
-		Main.pref.putDouble(DownloadAlong.PREF_DOWNLOAD_ALONG_TRACK_AREA, panel.getArea());
+		
+		panel.rememberSettings();
 
 		/*
 		 * Find the average latitude for the data we're contemplating, so we
@@ -190,7 +197,7 @@ class DownloadAlongAction extends JosmAction {
 			}
 		}
 		final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor(tr("Download data"));
-		final Future<?> future = new DownloadOsmTaskList().download(false, toDownload, monitor);
+		final Future<?> future = new DownloadTaskList().download(false, toDownload, panel.isDownloadOsmData(), panel.isDownloadGpxData(), monitor);
 		Main.worker.submit(new Runnable() {
 			public void run() {
 				try {

@@ -31,6 +31,7 @@ import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.SideButton;
+import org.openstreetmap.josm.gui.NavigatableComponent.SoMChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -43,7 +44,7 @@ import org.openstreetmap.josm.tools.SubclassFilteredCollection;
  *
  * @author ramack
  */
-public class MeasurementDialog extends ToggleDialog implements SelectionChangedListener, DataSetListener {
+public class MeasurementDialog extends ToggleDialog implements SelectionChangedListener, DataSetListener, SoMChangeListener {
     private static final long serialVersionUID = 4708541586297950021L;
 
     /**
@@ -130,6 +131,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         }));
         
         DataSet.addSelectionListener(this);
+        NavigatableComponent.addSoMChangeListener(this);
     }
 
     /**
@@ -209,12 +211,10 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         }
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#destroy()
-	 */
 	@Override
 	public void destroy() {
 		super.destroy();
+		NavigatableComponent.removeSoMChangeListener(this);
 		DataSet.removeSelectionListener(this);
 		if (ds != null) {
 		    ds.removeDataSetListener(this);
@@ -248,4 +248,10 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     @Override public void relationMembersChanged(RelationMembersChangedEvent event) {}
     @Override public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
     @Override public void dataChanged(DataChangedEvent event) {}
+
+	@Override
+	public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
+		// Refresh selection to take into account new system of measurement
+		selectionChanged(Main.main.getCurrentDataSet().getSelected());
+	}
 }

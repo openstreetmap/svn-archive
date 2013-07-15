@@ -1,0 +1,6 @@
+A slightly different, but for most use cases much faster version of this
+osmgrep program is available here (based on the C++ Osmium framework):
+
+https://github.com/woodpeck/osmium_based_utils
+
+The C++ osmgrep can read .osm.pbf files directly.

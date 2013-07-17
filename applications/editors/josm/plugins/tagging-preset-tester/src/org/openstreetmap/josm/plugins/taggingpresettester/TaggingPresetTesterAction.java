@@ -35,16 +35,17 @@ public class TaggingPresetTesterAction extends JosmAction {
         this();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<String> coll = TaggingPreset.getPresetSources();
 
-        if (coll.size() == 0) {
+        if (coll.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("You have to specify tagging preset sources in the preferences first."));
             return;
         }
 
         String[] taggingPresetSources = new String [coll.size()];
         coll.toArray(taggingPresetSources);
-        new TaggingPresetTester(taggingPresetSources);
+        new TaggingPresetTester(taggingPresetSources).setVisible(true);
     }
 }

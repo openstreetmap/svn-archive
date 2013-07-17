@@ -18,7 +18,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 
 /**
@@ -31,21 +36,27 @@ public class TaggingPresetTester extends JFrame {
     private JPanel taggingPresetPanel = new JPanel(new BorderLayout());
     private JPanel panel = new JPanel(new BorderLayout());
 
-    public void reload() {
+    public final void reload() {
         Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>(TaggingPreset.readAll(Arrays.asList(args), true));
         taggingPresets.setModel(new DefaultComboBoxModel(allPresets));
     }
 
-    public void reselect() {
+    public final void reselect() {
         taggingPresetPanel.removeAll();
         TaggingPreset preset = (TaggingPreset)taggingPresets.getSelectedItem();
         if (preset == null)
             return;
-        Collection<OsmPrimitive> x = Collections.emptySet();
+        Collection<OsmPrimitive> x;
+        if (Main.main.hasEditLayer()) {
+            x = Main.main.getCurrentDataSet().getSelected();
+        } else {
+            x = makeFakeSuitablePrimitive(preset);
+        }
         JPanel p = preset.createPanel(x);
-        p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-        if (p != null)
+        if (p != null) {
+            p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
             taggingPresetPanel.add(p, BorderLayout.NORTH);
+        }
         panel.validate();
         panel.repaint();
     }
@@ -60,6 +71,7 @@ public class TaggingPresetTester extends JFrame {
         panel.add(taggingPresets, BorderLayout.NORTH);
         panel.add(taggingPresetPanel, BorderLayout.CENTER);
         taggingPresets.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
                 reselect();
             }
@@ -68,6 +80,7 @@ public class TaggingPresetTester extends JFrame {
 
         JButton b = new JButton(tr("Reload"));
         b.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
                 int i = taggingPresets.getSelectedIndex();
                 reload();
@@ -80,7 +93,6 @@ public class TaggingPresetTester extends JFrame {
 
         setContentPane(panel);
         setSize(300,500);
-        setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -92,5 +104,24 @@ public class TaggingPresetTester extends JFrame {
         }
         JFrame f = new TaggingPresetTester(args);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private Collection<OsmPrimitive> makeFakeSuitablePrimitive(TaggingPreset preset) {
+        if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.NODE))) {
+            return Collections.<OsmPrimitive>singleton(new Node());
+        } else if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.WAY))) {
+            return Collections.<OsmPrimitive>singleton(new Way());
+        } else if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.RELATION))) {
+            return Collections.<OsmPrimitive>singleton(new Relation());
+        } else if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.CLOSEDWAY))) {
+            Way w = new Way();
+            w.addNode(new Node(new LatLon(0,0)));
+            w.addNode(new Node(new LatLon(0,1)));
+            w.addNode(new Node(new LatLon(1,1)));
+            w.addNode(new Node(new LatLon(0,0)));
+            return Collections.<OsmPrimitive>singleton(w);
+        } else {
+            return Collections.emptySet();
+        }
     }
 }

@@ -3,15 +3,16 @@ package org.openstreetmap.josm.plugins.taggingpresettester;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -25,25 +26,28 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingPresetReader;
+import org.openstreetmap.josm.gui.tagging.TaggingPresetSelector;
+import org.openstreetmap.josm.gui.tagging.TaggingPresetType;
+import org.openstreetmap.josm.tools.GBC;
 
 /**
  * The tagging presets tester window
  */
 public class TaggingPresetTester extends JFrame {
 
-    private JComboBox taggingPresets;
+    private TaggingPresetSelector taggingPresets;
     private final String[] args;
     private JPanel taggingPresetPanel = new JPanel(new BorderLayout());
-    private JPanel panel = new JPanel(new BorderLayout());
+    private JPanel panel = new JPanel(new GridBagLayout());
 
     public final void reload() {
-        Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>(TaggingPreset.readAll(Arrays.asList(args), true));
-        taggingPresets.setModel(new DefaultComboBoxModel(allPresets));
+        taggingPresets.init(TaggingPresetReader.readAll(Arrays.asList(args), true));
     }
 
     public final void reselect() {
         taggingPresetPanel.removeAll();
-        TaggingPreset preset = (TaggingPreset)taggingPresets.getSelectedItem();
+        TaggingPreset preset = taggingPresets.getSelectedPreset();
         if (preset == null)
             return;
         Collection<OsmPrimitive> x;
@@ -64,13 +68,13 @@ public class TaggingPresetTester extends JFrame {
     public TaggingPresetTester(String[] args) {
         super(tr("Tagging Preset Tester"));
         this.args = args;
-        taggingPresets = new JComboBox();
-        taggingPresets.setRenderer(new TaggingCellRenderer());
+        taggingPresets = new TaggingPresetSelector();
+        taggingPresetPanel.setPreferredSize(new Dimension(300,500));
         reload();
 
-        panel.add(taggingPresets, BorderLayout.NORTH);
-        panel.add(taggingPresetPanel, BorderLayout.CENTER);
-        taggingPresets.addActionListener(new ActionListener(){
+        panel.add(taggingPresets, GBC.std(0,0).fill(GBC.BOTH));
+        panel.add(taggingPresetPanel, GBC.std(1,0).fill(GBC.BOTH));
+        taggingPresets.setClickListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 reselect();
@@ -82,17 +86,15 @@ public class TaggingPresetTester extends JFrame {
         b.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                int i = taggingPresets.getSelectedIndex();
+                TaggingPreset p = taggingPresets.getSelectedPreset();
                 reload();
-                if (i < taggingPresets.getItemCount()) {
-                	taggingPresets.setSelectedIndex(i);
-                }
+                if (p!=null)taggingPresets.setSelectedPreset(p);
             }
         });
-        panel.add(b, BorderLayout.SOUTH);
+        panel.add(b, GBC.std(0,1).span(2,1).fill(GBC.HORIZONTAL));
 
         setContentPane(panel);
-        setSize(300,500);
+        setSize(600,500);
     }
 
     public static void main(String[] args) {
@@ -107,13 +109,13 @@ public class TaggingPresetTester extends JFrame {
     }
 
     private Collection<OsmPrimitive> makeFakeSuitablePrimitive(TaggingPreset preset) {
-        if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.NODE))) {
+        if (preset.typeMatches(Collections.singleton(TaggingPresetType.NODE))) {
             return Collections.<OsmPrimitive>singleton(new Node());
-        } else if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.WAY))) {
+        } else if (preset.typeMatches(Collections.singleton(TaggingPresetType.WAY))) {
             return Collections.<OsmPrimitive>singleton(new Way());
-        } else if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.RELATION))) {
+        } else if (preset.typeMatches(Collections.singleton(TaggingPresetType.RELATION))) {
             return Collections.<OsmPrimitive>singleton(new Relation());
-        } else if (preset.typeMatches(Collections.singleton(TaggingPreset.PresetType.CLOSEDWAY))) {
+        } else if (preset.typeMatches(Collections.singleton(TaggingPresetType.CLOSEDWAY))) {
             Way w = new Way();
             w.addNode(new Node(new LatLon(0,0)));
             w.addNode(new Node(new LatLon(0,1)));

@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingPresetReader;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -37,7 +37,7 @@ public class TaggingPresetTesterAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<String> coll = TaggingPreset.getPresetSources();
+        Collection<String> coll = TaggingPresetReader.getPresetSources();
 
         if (coll.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("You have to specify tagging preset sources in the preferences first."));

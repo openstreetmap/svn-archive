@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -14,12 +13,12 @@ import java.util.Collections;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -51,7 +50,7 @@ public class TaggingPresetTester extends JFrame {
         if (preset == null)
             return;
         Collection<OsmPrimitive> x;
-        if (Main.main.hasEditLayer()) {
+        if (Main.main!=null && Main.main.hasEditLayer()) {
             x = Main.main.getCurrentDataSet().getSelected();
         } else {
             x = makeFakeSuitablePrimitive(preset);
@@ -74,10 +73,11 @@ public class TaggingPresetTester extends JFrame {
 
         panel.add(taggingPresets, GBC.std(0,0).fill(GBC.BOTH));
         panel.add(taggingPresetPanel, GBC.std(1,0).fill(GBC.BOTH));
-        taggingPresets.setClickListener(new ActionListener(){
+        taggingPresets.addSelectionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                reselect();
+                if (taggingPresets.getSelectedPreset()!=null)
+                    reselect();
             }
         });
         reselect();
@@ -104,8 +104,13 @@ public class TaggingPresetTester extends JFrame {
                 return;
             args = new String[]{c.getSelectedFile().getPath()};
         }
-        JFrame f = new TaggingPresetTester(args);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        if (args!=null) {
+            Main.pref = new Preferences();
+            System.out.println("Opening file "+args[0]);
+            JFrame f = new TaggingPresetTester(args);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.setVisible(true);
+        }
     }
 
     private Collection<OsmPrimitive> makeFakeSuitablePrimitive(TaggingPreset preset) {

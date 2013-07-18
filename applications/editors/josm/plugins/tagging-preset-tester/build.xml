@@ -25,8 +25,8 @@
 **
 -->
 <project name="tagging-preset-tester" default="dist" basedir=".">
-    <property name="commit.message" value="[josm_tagging_preset_tester] fix #josm8853: use preset seach panel in the plugin instead of the compbobox"/>
-    <property name="plugin.main.version" value="6071"/>
+    <property name="commit.message" value="[josm_tagging_preset_tester] #josm8853: listen for list selection, support standalone mode (ant run)"/>
+    <property name="plugin.main.version" value="6072"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>
@@ -41,6 +41,10 @@
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
+    </target>
+    <target name="run" depends="install">
+        <echo message="creating ${plugin.jar}"/>
+        <java classpath="${josm};${plugin.jar}" classname="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester"/>
     </target>
     <target name="dist" depends="compile,revision">
         <copy todir="${plugin.build.dir}/images">

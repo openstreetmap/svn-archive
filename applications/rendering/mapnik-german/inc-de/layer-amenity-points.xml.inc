@@ -450,7 +450,7 @@
     <StyleName>points</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,ruins
+      (select way,&get_name;,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,ruins
       from &prefix;_point
       where amenity is not null
          or shop is not null
@@ -469,7 +469,7 @@
     <StyleName>points</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,ruins
+      (select way,&get_name;,amenity,shop,tourism,highway,man_made,access,religion,waterway,lock,historic,leisure,ruins
       from &prefix;_polygon
       where amenity is not null
          or shop is not null

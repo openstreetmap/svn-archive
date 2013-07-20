@@ -205,7 +205,7 @@
     <StyleName>state</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,place,coalesce("name:de",name) as name,ref
+      (select way,place,&get_name;,ref
        from &prefix;_point
        where place in ('country','state','continent')
       ) as placenames</Parameter>
@@ -216,7 +216,7 @@
     <StyleName>capital</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,place,coalesce("name:de",name) as name,ref
+      (select way,place,&get_name;,ref
        from &prefix;_point
        where place in ('city','metropolis','town') and capital='yes'
       ) as placenames</Parameter>
@@ -227,7 +227,7 @@
     <StyleName>city1</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,place,coalesce("name:de",name) as name
+      (select way,place,&get_name;
       from &prefix;_point
       where place in ('city','metropolis')
         and (capital is null or capital != 'yes')
@@ -241,7 +241,7 @@
     <StyleName>town2</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,place,coalesce("name:de",name) as name
+      (select way,place,&get_name;
       from &prefix;_point
       where place in ('city','metropolis','town','large_town','small_town')
         and (capital is null or capital != 'yes')
@@ -255,7 +255,7 @@
     <StyleName>hamlet</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,place,coalesce("name:de",name) as name
+      (select way,place,&get_name;
       from &prefix;_point
       where place in ('suburb','village','large_village','hamlet','locality','isolated_dwelling','farm')
       ) as placenames</Parameter>

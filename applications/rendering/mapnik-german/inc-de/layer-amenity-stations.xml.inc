@@ -70,7 +70,7 @@
     <StyleName>stations</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name,railway,aerialway,disused
+      (select way,&get_name;,railway,aerialway,disused
       from &prefix;_point
       where railway in ('station','halt','tram_stop','subway_entrance')
          or aerialway='station'
@@ -83,7 +83,7 @@
     <StyleName>stations</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name,railway,aerialway,disused
+      (select way,&get_name;,railway,aerialway,disused
       from &prefix;_polygon
       where railway in ('station','halt','tram_stop')
          or aerialway='station'

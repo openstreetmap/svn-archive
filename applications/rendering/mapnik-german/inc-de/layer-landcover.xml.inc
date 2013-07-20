@@ -382,7 +382,7 @@
     <StyleName>landcover</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,aeroway,amenity,landuse,leisure,man_made,military,"natural",wood,power,tourism,coalesce("name:de",name) as name,highway,
+      (select way,aeroway,amenity,landuse,leisure,man_made,military,"natural",wood,power,tourism,&get_name;,highway,
        case when religion in ('christian','jewish') then religion else 'INT-generic'::text end as religion
        from &prefix;_polygon
        where landuse is not null

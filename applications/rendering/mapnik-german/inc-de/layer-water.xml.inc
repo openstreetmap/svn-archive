@@ -316,7 +316,7 @@
     <StyleName>water_areas</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,"natural",waterway,landuse,coalesce("name:de",name) as name
+      (select way,"natural",waterway,landuse,&get_name;
       from &prefix;_polygon
       where (waterway in ('dock','mill_pond','riverbank','canal')
          or landuse in ('reservoir','water','basin')
@@ -344,7 +344,7 @@
     <StyleName>glaciers-text</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name,way_area
+      (select way,&get_name;,way_area
       from &prefix;_polygon
       where "natural"='glacier' and building is null
       order by way_area desc
@@ -369,7 +369,7 @@
     <StyleName>water_lines</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,waterway,disused,lock,coalesce("name:de",name) as name,
+      (select way,waterway,disused,lock,&get_name;,
       case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel
       from &prefix;_line
       where waterway in ('weir','river','canal','derelict_canal','stream','drain','ditch','wadi')

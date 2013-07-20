@@ -76,7 +76,7 @@
     <StyleName>dam</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name from &prefix;_line where waterway='dam') as dam</Parameter>
+      (select way,&get_name; from &prefix;_line where waterway='dam') as dam</Parameter>
       &datasource-settings;
     </Datasource>
 </Layer>

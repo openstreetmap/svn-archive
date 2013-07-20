@@ -1,6 +1,7 @@
 DROP VIEW view_osmde_polygon;
 CREATE VIEW view_osmde_polygon AS
 SELECT
+osm_id,
 tags->'access' as "access",
 tags->'addr:housename' as "addr:housename",
 "addr:housenumber" as "addr:housenumber",
@@ -40,6 +41,7 @@ tags->'layer' as "layer",
 tags->'motorcar' as "motorcar",
 tags->'name' as "name",
 tags->'name:de' as "name:de",
+tags->'int_name' as "int_name",  
 tags->'name:en' as "name:en",
 "natural" as "natural",
 tags->'oneway' as "oneway",

@@ -4590,7 +4590,7 @@
     <StyleName>highway-junctions</StyleName>
     <Datasource>
      <Parameter name="table">
-     (select way,ref,coalesce("name:de",name) as name
+     (select way,ref,&get_name;
       from &prefix;_point
       where highway='motorway_junction'
      ) as junctions
@@ -4617,7 +4617,7 @@
      <StyleName>roads-text-name</StyleName>
      <Datasource>
       <Parameter name="table">
-      (select way,highway,coalesce("name:de",name) as name
+      (select way,highway,&get_name;
        from &prefix;_line
        where waterway IS NULL
          and leisure IS NULL
@@ -4639,7 +4639,7 @@
 	    wuerde aus 222.000 einfach 222, aus 222.222 222.22). Desweiteren
 	    wird , statt . als Dezimaltrenner verwendet
 	    -->
-      (select way,amenity,shop,access,leisure,landuse,man_made,"natural",place,tourism,trim(trailing ',' from replace(TO_CHAR(ele,'FM9999D99'), '.', ',')) as ele,coalesce("name:de",name) as name,ref,military,aeroway,waterway,historic,'yes'::text as point
+      (select way,amenity,shop,access,leisure,landuse,man_made,"natural",place,tourism,trim(trailing ',' from replace(TO_CHAR(ele,'FM9999D99'), '.', ',')) as ele,&get_name;,ref,military,aeroway,waterway,historic,'yes'::text as point
        from &prefix;_point
        where amenity is not null
           or shop in ('supermarket','bakery','clothes','fashion','convenience','doityourself','hairdresser','department_store','butcher','car','car_repair','bicycle','florist')
@@ -4663,7 +4663,7 @@
     <Datasource>
       <Parameter name="table">
 	    <!-- ToDo: Style-de hatte shop hier rausgenommen (?) -->
-      (select way,aeroway,shop,access,amenity,leisure,landuse,man_made,"natural",place,tourism,NULL as ele,coalesce("name:de",name) as name,ref,military,waterway,historic,'no'::text as point
+      (select way,aeroway,shop,access,amenity,leisure,landuse,man_made,"natural",place,tourism,NULL as ele,&get_name;,ref,military,waterway,historic,'no'::text as point
        from &prefix;_polygon
        where amenity is not null
           or shop in ('supermarket','bakery','clothes','fashion','convenience','doityourself','hairdresser','department_store', 'butcher','car','car_repair','bicycle')
@@ -4684,7 +4684,7 @@
     <StyleName>area-text</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,way_area, coalesce("name:de",name) as name
+      (select way,way_area, &get_name;
        from &prefix;_polygon
        where name is not null
          and (waterway is null or waterway != 'riverbank')
@@ -4700,7 +4700,7 @@
     <StyleName>boundary</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,way_area,coalesce("name:de",name) as name,boundary from &prefix;_polygon where boundary='national_park' and building is null) as boundary
+      (select way,way_area,&get_name;,boundary from &prefix;_polygon where boundary='national_park' and building is null) as boundary
       </Parameter>
       &datasource-settings;
     </Datasource>
@@ -4709,7 +4709,7 @@
     <StyleName>theme_park</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,coalesce("name:de",name) as name,tourism from &prefix;_polygon where tourism='theme_park') as theme_park
+      (select way,&get_name;,tourism from &prefix;_polygon where tourism='theme_park') as theme_park
       </Parameter>
       &datasource-settings;
     </Datasource>

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils-1.7.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-pool-1.5.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-api-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-coverage-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-data-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-epsg-extension-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-epsg-hsql-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-geotiff-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-main-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-metadata-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-opengis-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-referencing-8.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/gt-shapefile-8.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-api-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-coverage-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-data-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-epsg-extension-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-epsg-hsql-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-geotiff-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-main-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-metadata-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-opengis-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-referencing-9.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gt-shapefile-9.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hsqldb-1.8.0.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/imageio-ext-tiff-1.1.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/imageio-ext-utilities-1.1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/imageio-ext-tiff-1.1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/imageio-ext-utilities-1.1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai_codec-1.1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai_core-1.1.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai_imageio-1.1.jar"/>

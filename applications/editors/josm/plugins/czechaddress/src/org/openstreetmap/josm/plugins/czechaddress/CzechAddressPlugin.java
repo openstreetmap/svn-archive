@@ -89,17 +89,10 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
     public CzechAddressPlugin(PluginInformation info) {
         super(info);
 
-        /*boolean x;
-        x = StringUtils.matchAbbrev("Ahoj lidi", "Ahoj lidi");
-        System.out.println(x ? "Match" : "Differ");
-        x = StringUtils.matchAbbrev("Bož. Němcové", "Boženy Němca.");
-        System.out.println(x ? "Match" : "Differ");*/
-
         addStatusListener(this);
 
         ConflictResolver.getInstance();
         SelectionMonitor.getInstance();
-        FactoryDialog.getInstance();
         Reasoner.getInstance();
 
         boolean assertionsEnabled = true;
@@ -215,7 +208,4 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
     public PreferenceSetting getPreferenceSetting() {
         return Preferences.getInstance();
     }
-
-
-
 }

@@ -27,7 +27,7 @@ public class WaySelectorPlugin extends Plugin {
     public WaySelectorPlugin(PluginInformation info) {
         super(info);
 
-        MainMenu.add(Main.main.menu.toolsMenu, new WaySelectAction());
+        MainMenu.add(Main.main.menu.selectionMenu, new WaySelectAction());
     }
 
     private class WaySelectAction extends JosmAction {

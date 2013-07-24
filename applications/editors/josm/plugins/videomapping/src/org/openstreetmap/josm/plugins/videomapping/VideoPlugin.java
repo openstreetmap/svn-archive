@@ -77,8 +77,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
     }
 
     private void createMenusAndShortCuts() {
-        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
-        VMenu = Main.main.menu.addMenu(marktr("Video"), oldMenu?KeyEvent.VK_D: KeyEvent.VK_Q, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));
+        VMenu = Main.main.menu.addMenu(marktr("Video"), KeyEvent.VK_Q, Main.main.menu.defaultMenuPos,ht("/Plugin/Videomapping"));
         VMenu.setEnabled(false);
         VAdd= new JosmAction(tr("Import Video"),"videomapping",tr("Sync a video against this GPS track"),null,false) {
             @Override public void actionPerformed(ActionEvent arg0) {                 

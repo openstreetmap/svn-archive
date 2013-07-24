@@ -21,7 +21,7 @@ public class TerracerPlugin extends Plugin {
     public TerracerPlugin(PluginInformation info) {
         super(info);
 
-        MainMenu.add(Main.main.menu.toolsMenu, new TerracerAction());
-        MainMenu.add(Main.main.menu.toolsMenu, new ReverseTerraceAction());
+        MainMenu.add(Main.main.menu.moreToolsMenu, new TerracerAction());
+        MainMenu.add(Main.main.menu.moreToolsMenu, new ReverseTerraceAction());
     }
 }

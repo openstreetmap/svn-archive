@@ -95,11 +95,8 @@ public final class OdPlugin extends Plugin implements OdConstants {
         // Load modules
         loadModules();
         // Add menu
-        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
         
-        menu = oldMenu?
-            Main.main.menu.addMenu(marktr("Open Data"), KeyEvent.VK_O, Main.main.menu.defaultMenuPos, ht("/Plugin/OpenData"))
-            : Main.main.menu.dataMenu;
+        menu = Main.main.menu.dataMenu;
         buildMenu();
         // Add download task
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadDataTask.class);

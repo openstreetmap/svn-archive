@@ -115,10 +115,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     public LiveGpsPlugin(PluginInformation info) {
         super(info);
         MainMenu menu = Main.main.menu;
-        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
-        lgpsmenu = oldMenu ?
-                menu.addMenu(marktr("LiveGPS"), KeyEvent.VK_G, menu.defaultMenuPos, ht("/Plugin/LiveGPS"))
-                : menu.gpsMenu;
+        lgpsmenu = menu.gpsMenu;
         if (lgpsmenu.getItemCount()>0) {
             lgpsmenu.addSeparator();
         }

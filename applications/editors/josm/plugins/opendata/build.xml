@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="opendata" default="dist" basedir=".">
-    <property name="plugin.main.version" value="6031"/>
+    <property name="plugin.main.version" value="6082"/>
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.opendata.OdPlugin"/>
     <property name="plugin.description" value="Convert data from Open Data portals to OSM layer"/>

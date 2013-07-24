@@ -34,7 +34,7 @@
         enter the *lowest* JOSM version this plugin is currently compatible
         with
     -->
-    <property name="plugin.main.version" value="5464"/>
+    <property name="plugin.main.version" value="6082"/>
     <!--
         ************************************************ ** should not be
         necessary to change the following properties

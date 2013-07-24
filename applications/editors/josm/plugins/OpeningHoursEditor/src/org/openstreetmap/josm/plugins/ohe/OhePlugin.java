@@ -72,7 +72,7 @@ public class OhePlugin extends Plugin {
      */
     public OhePlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, new OheMenuAction());
+        MainMenu.add(Main.main.menu.dataMenu, new OheMenuAction());
     }
 
     /**
@@ -107,6 +107,7 @@ public class OhePlugin extends Plugin {
             setEnabled(selection != null && !selection.isEmpty());
         }
 
+        @Override
         public void actionPerformed(ActionEvent evt) {
             // fetch active Layer
             OsmDataLayer osmlayer = Main.main.getEditLayer();

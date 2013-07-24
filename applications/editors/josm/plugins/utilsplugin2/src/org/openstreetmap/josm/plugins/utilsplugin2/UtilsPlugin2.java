@@ -70,12 +70,9 @@ public class UtilsPlugin2 extends Plugin {
     
     public UtilsPlugin2(PluginInformation info) {
         super(info);
-        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
-        JMenu toolsMenu = oldMenu
-                ?  Main.main.menu.addMenu(marktr("More tools"), KeyEvent.VK_Q, 4, "help")
-                :  Main.main.menu.moreToolsMenu;
-        
-        JMenu dataMenu = oldMenu ? toolsMenu: Main.main.menu.dataMenu;
+        JMenu toolsMenu = Main.main.menu.moreToolsMenu;
+        JMenu dataMenu = Main.main.menu.dataMenu;
+        JMenu selectionMenu = Main.main.menu.selectionMenu;
                 
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
@@ -93,14 +90,8 @@ public class UtilsPlugin2 extends Plugin {
         latlon = MainMenu.add(toolsMenu, new LatLonAction());
         drawArc = MainMenu.add(toolsMenu, new CurveAction());
 
-        JMenu selectionMenu;
-        if (oldMenu) {
-            selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, 4, "help");
-        } else {
-            selectionMenu = Main.main.menu.selectionMenu;
-            selectionMenu.addSeparator();
-        }
-        
+        selectionMenu.addSeparator();
+           
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
         adjNodes = MainMenu.add(selectionMenu, new AdjacentNodesAction());
         unsNodes = MainMenu.add(selectionMenu, new UnselectNodesAction());

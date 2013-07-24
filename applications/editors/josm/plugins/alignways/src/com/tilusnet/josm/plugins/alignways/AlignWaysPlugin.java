@@ -30,9 +30,9 @@ public class AlignWaysPlugin extends Plugin {
         super(info);
         
         // Add the action entries to the Tools Menu
-        Main.main.menu.toolsMenu.addSeparator();
+        Main.main.menu.moreToolsMenu.addSeparator();
         awAction = new AlignWaysAction();
-        MainMenu.add(Main.main.menu.toolsMenu, awAction);
+        MainMenu.add(Main.main.menu.moreToolsMenu, awAction);
     }
 
     @Override

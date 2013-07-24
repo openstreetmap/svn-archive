@@ -18,10 +18,7 @@ public class ReverterPlugin extends Plugin {
     static boolean reverterUsed = false;
     public ReverterPlugin(PluginInformation info) {
         super(info);
-        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
-        JMenu historyMenu = oldMenu?
-                Main.main.menu.addMenu(marktr("History"), KeyEvent.VK_Y,  Main.main.menu.defaultMenuPos, ht("/Plugin/Reverter"))
-                : Main.main.menu.dataMenu;
+        JMenu historyMenu = Main.main.menu.dataMenu;
         //MainMenu.add(historyMenu, new ObjectsHistoryAction());
         MainMenu.add(historyMenu, new RevertChangesetAction());
         UploadAction.registerUploadHook(new ReverterUploadHook(this));

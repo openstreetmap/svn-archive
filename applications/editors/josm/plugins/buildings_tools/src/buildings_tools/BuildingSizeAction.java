@@ -18,6 +18,7 @@ public class BuildingSizeAction extends JosmAction {
                 true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         BuildingSizeDialog dlg = new BuildingSizeDialog();
         if (dlg.getValue() == 1) {

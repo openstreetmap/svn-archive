@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class LakewalkerPlugin extends Plugin {
     public LakewalkerPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, new LakewalkerAction(tr("Lake Walker")));
+        MainMenu.add(Main.main.menu.moreToolsMenu, new LakewalkerAction(tr("Lake Walker")));
     }
 
     @Override

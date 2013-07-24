@@ -189,8 +189,7 @@ public class CommandLine extends Plugin {
         };
 
         if ( Main.main.menu != null ) {
-            boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
-            commandMenu = Main.main.menu.addMenu(marktr("Commands") , oldMenu?KeyEvent.VK_M : KeyEvent.VK_O, Main.main.menu.defaultMenuPos, ht("/Plugin/CommandLine"));
+            commandMenu = Main.main.menu.addMenu(marktr("Commands") , KeyEvent.VK_O, Main.main.menu.defaultMenuPos, ht("/Plugin/CommandLine"));
             MainMenu.add(commandMenu, new CommandLineAction(this));
         }
         loadCommands();

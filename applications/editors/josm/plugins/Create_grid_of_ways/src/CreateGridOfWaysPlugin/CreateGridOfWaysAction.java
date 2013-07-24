@@ -43,6 +43,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
      * create a grid of ways parallel to those creating the nodes that are its points of union and reusing the
      * existing ones (--this is from a translation machine--)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
         Collection<Node> nodesWay1 = new LinkedList<Node>();

@@ -46,7 +46,7 @@ public class WayDownloaderPlugin extends Plugin {
     public WayDownloaderPlugin(PluginInformation info) {
         super(info);
         //add WayDownloadAction to tools menu
-        MainMenu.add(Main.main.menu.toolsMenu, new WayDownloadAction());
+        MainMenu.add(Main.main.menu.moreToolsMenu, new WayDownloadAction());
     }
 
     private class WayDownloadAction extends JosmAction implements Runnable {
@@ -91,10 +91,11 @@ public class WayDownloaderPlugin extends Plugin {
           }
 
         /** Called when the WayDownloadAction action is triggered (e.g. user clicked the menu option) */
+        @Override
         public void actionPerformed(ActionEvent e) {
             selectedNode = null;
             Collection<Node> selection = Main.main.getCurrentDataSet().getSelectedNodes();
-            if (selection.size()==0) {
+            if (selection.isEmpty()) {
                 Collection<Way> selWays = Main.main.getCurrentDataSet().getSelectedWays();
                 if (!workFromWaySelection(selWays)) {
                     showWarningMessage(tr("<html>Neither a node nor a way with an endpoint outside of the<br>current download areas is selected.<br>Select a node on the start or end of a way or an entire way first.</html>"));
@@ -103,7 +104,7 @@ public class WayDownloaderPlugin extends Plugin {
                 selection = Main.main.getCurrentDataSet().getSelectedNodes();
             }
 
-            if ( selection.size()==0 || selection.size()>1 || ! (selection.iterator().next() instanceof Node)) {
+            if ( selection.isEmpty() || selection.size()>1 || ! (selection.iterator().next() instanceof Node)) {
                 showWarningMessage(tr("<html>Could not find a unique node to start downloading from.</html>"));
                 return;
             }
@@ -114,7 +115,7 @@ public class WayDownloaderPlugin extends Plugin {
             //Before downloading. Figure a few things out.
             //Find connected way
             List<Way> connectedWays = findConnectedWays(selectedNode);
-            if (connectedWays.size()==0) {
+            if (connectedWays.isEmpty()) {
                 showWarningMessage(
                         tr("<html>There are no ways connected to node ''{0}''. Aborting.</html>",
                         selectedNode.getDisplayName(DefaultNameFormatter.getInstance()))
@@ -142,6 +143,7 @@ public class WayDownloaderPlugin extends Plugin {
             // job has finished
             Main.worker.submit(
                     new Runnable() {
+                        @Override
                         public void run() {
                             try {
                                 future.get();
@@ -161,11 +163,12 @@ public class WayDownloaderPlugin extends Plugin {
         /**
          * Logic to excute after the download has happened
          */
+        @Override
         public void run() {
             //Find ways connected to the node after the download
             List<Way> connectedWays = findConnectedWays(selectedNode);
 
-            if (connectedWays.size()==0) {
+            if (connectedWays.isEmpty()) {
                 String msg = tr("Way downloader data inconsistency. Prior connected way ''{0}'' wasn''t discovered after download",
                                 priorConnectedWay.getDisplayName(DefaultNameFormatter.getInstance())
                         );

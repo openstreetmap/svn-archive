@@ -30,7 +30,7 @@ public class OpenPreferencesActions extends JosmAction implements OdConstants {
 	
     public OpenPreferencesActions() {
     	super(false);
-        putValue(NAME, tr("Preferences"));
+        putValue(NAME, tr("OpenData preferences"));
         putValue(SMALL_ICON, ImageProvider.get("dialogs", ICON_CORE_24));
 		putValue("toolbar", "opendata_open_preferences");
     }

@@ -26,6 +26,7 @@ public class ConnectedWaysAction extends JosmAction {
         putValue("help", ht("/Action/SelectConnectedWays"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);

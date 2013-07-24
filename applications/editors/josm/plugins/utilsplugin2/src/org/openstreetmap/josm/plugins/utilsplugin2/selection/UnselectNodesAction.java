@@ -27,6 +27,7 @@ public class UnselectNodesAction extends JosmAction {
         putValue("help", ht("/Action/UnselectNodes"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);

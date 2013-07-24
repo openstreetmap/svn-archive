@@ -23,6 +23,7 @@ public class PasteRelationsAction extends JosmAction {
                 Shortcut.registerShortcut("tools:pasterelations", tr("Tool: {0}",  tr("Paste Relations")), KeyEvent.VK_V, Shortcut.ALT_CTRL), true);
     }
 
+    @Override
     public void actionPerformed( ActionEvent e ) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         if( selection.isEmpty() )

@@ -41,6 +41,7 @@ public class GPSVideoPlayer extends VideoPlayer
 		JButton syncButton= new JButton(tr("Sync"));
 		syncButton.setBackground(Color.RED);		
 		syncButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	resync(e);
             }			

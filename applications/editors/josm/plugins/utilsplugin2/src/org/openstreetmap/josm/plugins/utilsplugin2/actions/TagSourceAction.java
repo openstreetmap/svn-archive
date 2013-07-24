@@ -28,6 +28,7 @@ public class TagSourceAction extends JosmAction {
         source = Main.pref.get("sourcetag.value");
     }
 
+    @Override
     public void actionPerformed( ActionEvent e ) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         if( selection.isEmpty() || source == null || source.length() == 0 )

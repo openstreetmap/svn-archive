@@ -47,6 +47,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
 
         resetButton = new JButton(tr("Reset"));
         resetButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 fillRows(URLList.resetURLList());
             }
@@ -54,6 +55,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
 
         saveButton = new JButton(tr("Save to file"));
         saveButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 URLList.saveURLList(readItemsFromTable());
             }
@@ -61,6 +63,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
 
         loadButton = new JButton(tr("Load from file"));
         loadButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 fillRows(URLList.loadURLList());
             }

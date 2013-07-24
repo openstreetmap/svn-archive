@@ -180,12 +180,11 @@ public final class NodeWayUtils {
     }
 
     public static void addWaysIntersectingWaysRecursively
-            (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays)
-    {
+            (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
             Set<Way> foundWays = new HashSet<Way>();
             foundWays.addAll(initWays);
             newWays.addAll(initWays);
-            Set<Way> newFoundWays = new HashSet<Way>();
+            Set<Way> newFoundWays;
 
             int level=0,c;
             do {
@@ -206,7 +205,6 @@ public final class NodeWayUtils {
                        return;
                  }
             } while ( c >0 && level < maxLevel );
-            return;
     }
 
     public static void addWaysConnectedToWaysRecursively
@@ -233,7 +231,6 @@ public final class NodeWayUtils {
                  }
             } while ( c >0 && level < maxLevel );
            // System.out.println("time = "+(System.currentTimeMillis()-t)+" ways = "+newWays.size());
-            return;
     }
 
     static void addMiddle(Set<Node> selectedNodes, Set<Node> newNodes) {
@@ -268,7 +265,7 @@ public final class NodeWayUtils {
                     }
             }
         }
-        if (newNodes.size()==0) {
+        if (newNodes.isEmpty()) {
                 JOptionPane.showMessageDialog(Main.parent,
                     tr("Please select two nodes connected by way!"),
                     tr("Warning"),

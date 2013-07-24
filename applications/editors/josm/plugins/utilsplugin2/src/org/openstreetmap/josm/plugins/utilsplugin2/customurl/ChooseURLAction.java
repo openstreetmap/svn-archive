@@ -1,19 +1,13 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.customurl;
 
 import java.awt.GridBagLayout;
-import java.awt.event.ItemEvent;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.Main;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -21,7 +15,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.SelectionManager;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 public class ChooseURLAction extends JosmAction {

@@ -1,7 +1,6 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin and Martin Ždila
 package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
-import java.awt.MouseInfo;
 import java.awt.Point;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;

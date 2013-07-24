@@ -70,25 +70,37 @@ public class UtilsPlugin2 extends Plugin {
     
     public UtilsPlugin2(PluginInformation info) {
         super(info);
-
-        JMenu toolsMenu = Main.main.menu.addMenu(marktr("More tools"), KeyEvent.VK_Q, 4, "help");
-        unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
+        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
+        JMenu toolsMenu = oldMenu
+                ?  Main.main.menu.addMenu(marktr("More tools"), KeyEvent.VK_Q, 4, "help")
+                :  Main.main.menu.moreToolsMenu;
+        
+        JMenu dataMenu = oldMenu ? toolsMenu: Main.main.menu.dataMenu;
+                
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
-        
+        alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
+        symmetry = MainMenu.add(toolsMenu, new SymmetryAction());
+        splitOnIntersections = MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
+        unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
         toolsMenu.addSeparator();
         replaceGeometry = MainMenu.add(toolsMenu, new ReplaceGeometryAction());
+        extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
         tagBuffer = MainMenu.add(toolsMenu, new TagBufferAction());
         sourceTag = MainMenu.add(toolsMenu, new TagSourceAction());
         pasteRelations = MainMenu.add(toolsMenu, new PasteRelationsAction());
-        alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
-        splitOnIntersections = MainMenu.add(toolsMenu, new SplitOnIntersectionsAction());
-        extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
-        symmetry = MainMenu.add(toolsMenu, new SymmetryAction());
-        wiki = MainMenu.add(toolsMenu, new OpenPageAction());
+        wiki = MainMenu.add(dataMenu, new OpenPageAction());
         latlon = MainMenu.add(toolsMenu, new LatLonAction());
+        drawArc = MainMenu.add(toolsMenu, new CurveAction());
 
-        JMenu selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, Main.main.menu.defaultMenuPos, "help");
+        JMenu selectionMenu;
+        if (oldMenu) {
+            selectionMenu = Main.main.menu.addMenu(marktr("Selection"), KeyEvent.VK_N, 4, "help");
+        } else {
+            selectionMenu = Main.main.menu.selectionMenu;
+            selectionMenu.addSeparator();
+        }
+        
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
         adjNodes = MainMenu.add(selectionMenu, new AdjacentNodesAction());
         unsNodes = MainMenu.add(selectionMenu, new UnselectNodesAction());
@@ -104,9 +116,8 @@ public class UtilsPlugin2 extends Plugin {
         selectHighway = MainMenu.add(selectionMenu, new SelectHighwayAction());
         selectAreaBoundary = MainMenu.add(selectionMenu, new SelectBoundaryAction());
         
-        selectURL = MainMenu.add(toolsMenu, new ChooseURLAction());
-	drawArc = MainMenu.add(toolsMenu, new CurveAction());
-
+        selectURL = MainMenu.add(dataMenu, new ChooseURLAction());
+	
         // register search operators
         SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
     }

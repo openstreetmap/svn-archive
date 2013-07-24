@@ -19,6 +19,7 @@ public class ObjectsHistoryAction extends JosmAction {
                 true);
         setEnabled(false);
     }
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         new ObjectsHistoryDialog().setVisible(true);
     }

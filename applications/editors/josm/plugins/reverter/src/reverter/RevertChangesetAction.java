@@ -22,6 +22,7 @@ public class RevertChangesetAction extends JosmAction {
                 true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent arg0)  {
         final ChangesetIdQuery dlg = new ChangesetIdQuery();
         if (dlg.showDialog().getValue() != 1) return;

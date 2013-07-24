@@ -29,7 +29,8 @@ import javax.swing.event.ChangeListener;
 
 import uk.co.caprica.vlcj.player.DeinterlaceMode;
 
-//basic UI of a videoplayer for multiple videos incl. notifications
+/** basic UI of a videoplayer for multiple videos incl. notifications
+ */
 public class VideoPlayer extends JFrame implements WindowListener, VideosObserver, VideoPlayerObserver {
 	private static final int notificationIntervall = 500;
 	protected JPanel screenPanel,controlsPanel,canvasPanel;
@@ -204,40 +205,41 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
     private void addUIListeners() {        
         
         play.addActionListener(new ActionListener() {            
-            public void actionPerformed(ActionEvent arg0) {
+            @Override public void actionPerformed(ActionEvent arg0) {
             pause();                
             }
         });
         
         back.addActionListener(new ActionListener() {
             
-            public void actionPerformed(ActionEvent arg0) {
+            @Override public void actionPerformed(ActionEvent arg0) {
                 backward();
             }
         });
         
         forward.addActionListener(new ActionListener() {
             
-            public void actionPerformed(ActionEvent arg0) {
+            @Override public void actionPerformed(ActionEvent arg0) {
                 forward();
             }
         });
         
         loop.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent arg0) {
+            @Override public void actionPerformed(ActionEvent arg0) {
                 toggleLooping();
             }
         });
         
         mute.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent arg0) {
+            @Override public void actionPerformed(ActionEvent arg0) {
                 mute();
             }
         });
         
         timeline.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
         		//skip events, fired by this sliede, one cycle ago            	
             	if(!isManualJump)
@@ -251,6 +253,7 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
         });
         
         speed.addChangeListener(new ChangeListener() {            
+            @Override
             public void stateChanged(ChangeEvent arg0) {            	            
             	if(!speed.getValueIsAdjusting())
             	{
@@ -310,60 +313,52 @@ public class VideoPlayer extends JFrame implements WindowListener, VideosObserve
 		}
 	}
 
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+        @Override
+	public void windowActivated(WindowEvent arg0) { }
 
-	public void windowClosed(WindowEvent arg0) {
-		
-	}
+        @Override
+	public void windowClosed(WindowEvent arg0) { }
 
+        @Override
 	public void windowClosing(WindowEvent arg0) {	
 		videoengine.unload();
 	}
 
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+        @Override
+	public void windowDeactivated(WindowEvent arg0) { }
 
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+        @Override
+	public void windowDeiconified(WindowEvent arg0) { }
 
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+        @Override
+	public void windowIconified(WindowEvent arg0) { }
 
-	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+        @Override
+	public void windowOpened(WindowEvent arg0) { }
 
+        @Override
 	public void update(VideoObserversEvents event) {
-		switch (event)
-		{		
-			case resizing:
-			{
-				pack();
-				break;
-			}
-			case speeding:
-			{
-				speed.setValue(videoengine.getSpeed());
-				break;
-			}
-			case jumping:
-			{			
-				break;
-			}
-		}		
+            switch (event)
+            {		
+                case resizing:
+                {
+                    pack();
+                    break;
+                }
+                case speeding:
+                {
+                    speed.setValue(videoengine.getSpeed());
+                    break;
+                }
+                case jumping:
+                {			
+                    break;
+                }
+            }		
 	}
 
 	//keep internal controls up to date during playback
+        @Override
 	public void update_plays() {
 		timeline.setValue(videoengine.getPosition());
 		setTitle(Long.toString(videoengine.getVideoTime()));

@@ -18,7 +18,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -39,8 +38,9 @@ public class SelectBoundaryAction extends JosmAction {
         putValue("help", ht("/Action/SelectAreaBoundary"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
-        long t=System.currentTimeMillis();
+        //long t=System.currentTimeMillis();
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Node.class);
         LinkedHashSet<Relation> selectedRelations = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);

@@ -39,6 +39,7 @@ public final class OpenPageAction extends JosmAction {
         putValue("help", ht("/Action/OpenPage"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
         OsmPrimitive p=null;
@@ -61,26 +62,26 @@ public final class OpenPageAction extends JosmAction {
         int i=0;
         try {
         while (m.find()) {
-                key=m.group(1); val=null;                
-                if (key.equals("#id")) {
-                    if (p!=null) val=Long.toString(p.getId()); ;
-                } else if (key.equals("#type")) {
-                    if (p!=null) val = OsmPrimitiveType.from(p).getAPIName(); ;
-                } else if (key.equals("#lat")) {
-                    val = Double.toString(center.lat());
-                } else if (key.equals("#lon")) {
-                    val = Double.toString(center.lon());
+            key=m.group(1); val=null;                
+            if (key.equals("#id")) {
+                if (p!=null) val=Long.toString(p.getId());
+            } else if (key.equals("#type")) {
+                if (p!=null) val = OsmPrimitiveType.from(p).getAPIName();
+            } else if (key.equals("#lat")) {
+                val = Double.toString(center.lat());
+            } else if (key.equals("#lon")) {
+                val = Double.toString(center.lon());
+            }
+            else {
+                if (p!=null) {
+                    val =p.get(key);
+                    if (val!=null) val =URLEncoder.encode(p.get(key), "UTF-8"); else return;
                 }
-                else {
-                    if (p!=null) {
-                        val =p.get(key);
-                        if (val!=null) val =URLEncoder.encode(p.get(key), "UTF-8"); else return;
-                    }
-                }
-                keys[i]=m.group();
-                if  (val!=null) vals[i]=val;
-                else vals[i]="";
-                i++;
+            }
+            keys[i]=m.group();
+            if  (val!=null) vals[i]=val;
+            else vals[i]="";
+            i++;
         }
         } catch (UnsupportedEncodingException ex) {
             System.err.println("Encoding error");

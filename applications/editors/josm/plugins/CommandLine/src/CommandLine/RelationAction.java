@@ -24,6 +24,7 @@ public class RelationAction extends MapMode implements AWTEventListener {
 		this.parentPlugin = parentPlugin;
 	}
 
+        @Override
 	public void eventDispatched(AWTEvent arg0) {
 		if (!(arg0 instanceof KeyEvent))
 			return;

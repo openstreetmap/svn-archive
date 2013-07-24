@@ -3,62 +3,48 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
-            <name>reverter</name>
+            <name>videomapping</name>
         </general-data>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
-            <!-- Do not use Project Properties customizer when editing this file manually. -->
-            <name>reverter</name>
-            <properties>
-                <property name="project.dir">.</property>
-                <property name="ant.script">${project.dir}/build.xml</property>
-            </properties>
+            <!-- Не используйте диалоговое окно свойств проекта при редактировании данного файла вручную. -->
+            <name>videomapping</name>
+            <properties/>
             <folders>
                 <source-folder>
-                    <label>reverter</label>
-                    <location>${project.dir}</location>
+                    <label>videomapping</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
                     <label>src</label>
                     <type>java</type>
-                    <location>${project.dir}/src</location>
+                    <location>src</location>
+                    <encoding>UTF-8</encoding>
                 </source-folder>
-                <build-file>
-                    <location>${project.dir}/../../dist/reverter.jar</location>
-                </build-file>
             </folders>
             <ide-actions>
                 <action name="build">
-                    <script>${ant.script}</script>
-                    <target>dist</target>
+                    <target>compile</target>
                 </action>
                 <action name="clean">
-                    <script>${ant.script}</script>
                     <target>clean</target>
-                </action>
-                <action name="rebuild">
-                    <script>${ant.script}</script>
-                    <target>clean</target>
-                    <target>dist</target>
                 </action>
                 <action name="run">
-                    <script>${ant.script}</script>
                     <target>runjosm</target>
                 </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>compile</target>
+                </action>
             </ide-actions>
-            <export>
-                <type>jar</type>
-                <location>${project.dir}/../../dist/reverter.jar</location>
-                <script>${ant.script}</script>
-                <build-target>dist</build-target>
-            </export>
             <view>
                 <items>
                     <source-folder style="packages">
                         <label>src</label>
-                        <location>${project.dir}/src</location>
+                        <location>src</location>
                     </source-folder>
                     <source-file>
-                        <location>${ant.script}</location>
+                        <location>build.xml</location>
                     </source-file>
                 </items>
                 <context-menu>
@@ -72,9 +58,8 @@
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
-                <package-root>${project.dir}/src</package-root>
-                <classpath mode="compile">${project.dir}/../../core/dist/josm-custom.jar</classpath>
-                <built-to>${project.dir}/../../dist/reverter.jar</built-to>
+                <package-root>src</package-root>
+                <classpath mode="compile">../../core/src;lib/jna-3.4.0.jar;lib/platform-3.4.0.jar;lib/vlcj-2.1.0-javadoc.jar;lib/vlcj-2.1.0-sources.jar;lib/vlcj-2.1.0.jar</classpath>
                 <source-level>1.6</source-level>
             </compilation-unit>
         </java-data>

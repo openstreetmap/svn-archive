@@ -119,6 +119,7 @@ public class PointAction extends MapMode implements AWTEventListener {
 		Main.map.mapView.repaint();
 	}
 
+        @Override
 	public void eventDispatched(AWTEvent arg0) {
 		if (!(arg0 instanceof KeyEvent))
 			return;
@@ -156,6 +157,7 @@ public class PointAction extends MapMode implements AWTEventListener {
 		try {
 			// We invoke this to prevent strange things from happening
 			EventQueue.invokeLater(new Runnable() {
+                                @Override
 				public void run() {
 					// Don't change cursor when mode has changed already
 					if (!(Main.map.mapMode instanceof PointAction))

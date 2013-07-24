@@ -27,6 +27,7 @@ public class TagBufferAction extends JosmAction {
 		, true);
     }
 
+    @Override
     public void actionPerformed( ActionEvent e ) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         if( selection.isEmpty() )

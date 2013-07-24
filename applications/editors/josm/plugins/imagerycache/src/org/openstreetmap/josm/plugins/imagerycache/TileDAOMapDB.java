@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 /**
@@ -185,4 +186,18 @@ public class TileDAOMapDB implements TileDAO {
         }
     }
 
+    public void cleanStorage(String name) {
+        Main.info("Cleaning storage: {0}", name);
+        dbs.get(name).close();
+        for (int t=0; t<20; t++) {
+            try {
+                String fname = getDBFileName(name, t);
+                File f = new File(cacheFolder, fname);
+                if (!f.exists() || !f.canWrite()) continue;
+                f.delete();
+            } catch (Exception e) {
+                Main.warn("Can not delete file");
+            }
+        }
+    }
 }

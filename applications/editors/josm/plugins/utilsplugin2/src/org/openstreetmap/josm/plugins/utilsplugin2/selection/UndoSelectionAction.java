@@ -9,9 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
 
@@ -33,11 +31,12 @@ public class UndoSelectionAction extends JosmAction {
     private int myAutomaticSelectionHash;
     private Collection<OsmPrimitive> lastSel;
     private int index;
+    @Override
     public void actionPerformed(ActionEvent e) {
-        LinkedList<Collection<? extends OsmPrimitive>>history
+        LinkedList<Collection<? extends OsmPrimitive>> history
                     = getCurrentDataSet().getSelectionHistory();
+        if (history==null || history.isEmpty()) return; // empty history
         int num=history.size();
-        if (history==null || num==0) return; // empty history
         
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
 

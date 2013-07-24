@@ -32,12 +32,11 @@ public class MiddleNodesAction extends JosmAction {
 
     private  Set<Way> activeWays = new HashSet<Way>();
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
 
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
-        
         // if no 2 nodes and no ways are selected, do nothing
         if (selectedNodes.size() != 2) {
             JOptionPane.showMessageDialog(Main.parent,

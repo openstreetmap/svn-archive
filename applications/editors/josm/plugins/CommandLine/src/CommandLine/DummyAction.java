@@ -17,17 +17,18 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class DummyAction extends MapMode implements AWTEventListener {
-	private CommandLine parentPlugin;
+    private CommandLine parentPlugin;
 
-	public DummyAction(MapFrame mapFrame, CommandLine parentPlugin) {
-		super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", null));
-		this.parentPlugin = parentPlugin;
-	}
+    public DummyAction(MapFrame mapFrame, CommandLine parentPlugin) {
+            super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", null));
+            this.parentPlugin = parentPlugin;
+    }
 
-	public void eventDispatched(AWTEvent arg0) {
-		if (!(arg0 instanceof KeyEvent))
-			return;
-		KeyEvent ev = (KeyEvent) arg0;
+    @Override
+    public void eventDispatched(AWTEvent arg0) {
+        if (!(arg0 instanceof KeyEvent))
+                return;
+        KeyEvent ev = (KeyEvent) arg0;
         if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
             ev.consume();
             cancelDrawing();

@@ -66,6 +66,7 @@ public class Loader extends DefaultHandler {
 		// TODO: Create links for each argument
 	}
 
+        @Override
 	public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs) {
 		int len = attrs.getLength();
 		String Name, Value;
@@ -124,6 +125,7 @@ public class Loader extends DefaultHandler {
 		}
 	}
 
+        @Override
 	public void characters(char ch[], int start, int length) 
 	{
 		String text = (new String(ch, start, length)).trim();
@@ -164,14 +166,17 @@ public class Loader extends DefaultHandler {
 		}
 	}
 
+        @Override
 	public void warning(SAXParseException ex) {
 	  System.err.println("Warning in command xml file " + currentFile + ": " + ex.getMessage());
 	}
 
+        @Override
 	public void error(SAXParseException ex) {
 	  System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
 	}
 
+        @Override
 	public void fatalError(SAXParseException ex) throws SAXException {
 	  System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
 	  throw ex;

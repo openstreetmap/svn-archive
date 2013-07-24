@@ -30,6 +30,7 @@ public class AdjacentNodesAction extends JosmAction {
 
     private  Set<Way> activeWays = new HashSet<Way>();
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);

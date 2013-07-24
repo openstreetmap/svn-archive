@@ -39,6 +39,7 @@ public final class SymmetryAction extends JosmAction {
         putValue("help", ht("/Action/Symmetry"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
         HashSet<Node> nodes = new HashSet<Node>();

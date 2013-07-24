@@ -3,26 +3,22 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
-            <name>ImageryCache</name>
+            <name>CommandLine</name>
         </general-data>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
             <!-- Не используйте диалоговое окно свойств проекта при редактировании данного файла вручную. -->
-            <name>ImageryCache</name>
+            <name>CommandLine</name>
             <properties/>
             <folders>
                 <source-folder>
-                    <label>ImageryCache</label>
-                    <location>.</location>
+                    <label>src</label>
+                    <type>java</type>
+                    <location>src</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>F:\Java\josm\core\src</label>
-                    <location>F:\Java\josm\core\src</location>
-                </source-folder>
-                <source-folder>
-                    <label>F:\Java\josm\core\src</label>
-                    <type>java</type>
-                    <location>F:\Java\josm\core\src</location>
+                    <label>CommandLine</label>
+                    <location>.</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
             </folders>
@@ -40,15 +36,12 @@
                     <target>clean</target>
                     <target>compile</target>
                 </action>
-                <action name="test">
-                    <target>runmain</target>
-                </action>
             </ide-actions>
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>F:\Java\josm\core\src</label>
-                        <location>F:\Java\josm\core\src</location>
+                        <label>src</label>
+                        <location>src</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -59,14 +52,12 @@
                     <ide-action name="rebuild"/>
                     <ide-action name="clean"/>
                     <ide-action name="run"/>
-                    <ide-action name="test"/>
                 </context-menu>
             </view>
-            <subprojects/>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
-                <package-root>F:\Java\josm\core\src</package-root>
+                <package-root>src</package-root>
                 <classpath mode="compile">../../core/src</classpath>
                 <source-level>1.6</source-level>
             </compilation-unit>

@@ -51,6 +51,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
                             KeyEvent.VK_R, Shortcut.CTRL), true);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             enableTracking(lgpscapture.isSelected());
         }
@@ -65,6 +66,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
                             Shortcut.DIRECT), true);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (lgpslayer != null) {
                 lgpslayer.center();
@@ -83,6 +85,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
                             KeyEvent.VK_HOME, Shortcut.CTRL), true);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (lgpslayer != null) {
                 setAutoCenter(lgpsautocenter.isSelected());
@@ -90,12 +93,15 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
         }
     }
 
+    @Override
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
     }
 
+    @Override
     public void layerAdded(Layer newLayer) {
     }
 
+    @Override
     public void layerRemoved(Layer oldLayer) {
         if (oldLayer != lgpslayer)
 		return;
@@ -109,9 +115,14 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     public LiveGpsPlugin(PluginInformation info) {
         super(info);
         MainMenu menu = Main.main.menu;
-        lgpsmenu = menu.addMenu(marktr("LiveGPS"), KeyEvent.VK_G,
-                menu.defaultMenuPos, ht("/Plugin/LiveGPS"));
-
+        boolean oldMenu = org.openstreetmap.josm.data.Version.getInstance().getVersion() < 6082;
+        lgpsmenu = oldMenu ?
+                menu.addMenu(marktr("LiveGPS"), KeyEvent.VK_G, menu.defaultMenuPos, ht("/Plugin/LiveGPS"))
+                : menu.gpsMenu;
+        if (lgpsmenu.getItemCount()>0) {
+            lgpsmenu.addSeparator();
+        }
+            
         JosmAction captureAction = new CaptureAction();
         lgpscapture = new JCheckBoxMenuItem(captureAction);
         lgpsmenu.add(lgpscapture);

@@ -6,11 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.ArrayList;
@@ -19,14 +16,12 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 
-import javax.swing.text.Document;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
@@ -44,7 +39,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 public class LatLonDialog extends ExtendedDialog {
@@ -287,20 +281,21 @@ public class LatLonDialog extends ExtendedDialog {
     }
 
     class LatLonInputVerifier implements DocumentListener {
-        public void changedUpdate(DocumentEvent e) {
+        @Override public void changedUpdate(DocumentEvent e) {
             parseLatLonUserInput();
         }
 
-        public void insertUpdate(DocumentEvent e) {
+        @Override public void insertUpdate(DocumentEvent e) {
             parseLatLonUserInput();
         }
 
-        public void removeUpdate(DocumentEvent e) {
+        @Override public void removeUpdate(DocumentEvent e) {
             parseLatLonUserInput();
         }
     }
 
     static class TextFieldFocusHandler implements FocusListener {
+        @Override 
         public void focusGained(FocusEvent e) {
             Component c = e.getComponent();
             if (c instanceof JTextArea) {
@@ -308,6 +303,7 @@ public class LatLonDialog extends ExtendedDialog {
                 tf.selectAll();
             }
         }
+        @Override 
         public void focusLost(FocusEvent e) {}
     }
 
@@ -447,13 +443,13 @@ public class LatLonDialog extends ExtendedDialog {
     }
 
     private class CoordinateListener implements DocumentListener {
-        public void changedUpdate(DocumentEvent e) {
+        @Override public void changedUpdate(DocumentEvent e) {
             //not fired
         }
-        public void insertUpdate(DocumentEvent e) {
+        @Override public void insertUpdate(DocumentEvent e) {
             updateButtons();
         }
-        public void removeUpdate(DocumentEvent e) {
+        @Override public void removeUpdate(DocumentEvent e) {
             updateButtons();
         }
         private void updateButtons() {

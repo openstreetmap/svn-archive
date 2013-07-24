@@ -31,6 +31,7 @@ public class SelectModWaysAction extends JosmAction {
         putValue("help", ht("/Action/SelectLastModifiedWays"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);

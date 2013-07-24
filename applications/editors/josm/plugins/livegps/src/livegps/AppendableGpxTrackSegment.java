@@ -18,10 +18,12 @@ public class AppendableGpxTrackSegment implements GpxTrackSegment {
     private Bounds bounds;
     private double length;
 
+    @Override
     public Bounds getBounds() {
         return bounds;
     }
 
+    @Override
     public Collection<WayPoint> getWayPoints() {
         return new CopyList<WayPoint>(wayPoints, size);
     }
@@ -50,6 +52,7 @@ public class AppendableGpxTrackSegment implements GpxTrackSegment {
         size++;
     }
 
+    @Override
     public double length() {
         return length;
     }

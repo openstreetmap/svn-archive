@@ -29,8 +29,8 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
 
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
@@ -40,7 +40,6 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
                     getCurrentDataSet().getWays(),
                     selectedWays, newWays);
             getCurrentDataSet().addSelected(newWays);
-            return;
         } else {
              JOptionPane.showMessageDialog(Main.parent,
                tr("Please select some ways to find all connected and intersecting ways!"),

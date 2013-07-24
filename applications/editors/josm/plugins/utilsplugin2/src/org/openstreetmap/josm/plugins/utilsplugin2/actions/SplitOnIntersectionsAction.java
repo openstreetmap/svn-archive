@@ -29,6 +29,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
                 KeyEvent.VK_P, Shortcut.ALT_CTRL_SHIFT), true);
     }
 
+    @Override
     public void actionPerformed( ActionEvent e ) {
         List<Command> list = new ArrayList<Command>();
         List<Way> selectedWays = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);

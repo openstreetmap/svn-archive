@@ -45,6 +45,7 @@ public class UnGlueRelationAction extends JosmAction {
     /**
      * Called when the action is executed.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         LinkedList<Command> cmds = new LinkedList<Command>();

@@ -28,6 +28,7 @@ public class IntersectedWaysAction extends JosmAction {
         putValue("help", ht("/Action/SelectIntersectingWays"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 

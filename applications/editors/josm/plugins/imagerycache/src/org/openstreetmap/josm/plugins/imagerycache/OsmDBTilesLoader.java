@@ -13,6 +13,8 @@ import java.util.Random;
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.Tile;
+import org.openstreetmap.gui.jmapviewer.interfaces.CachedTileLoader;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileClearController;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
@@ -23,7 +25,7 @@ import org.openstreetmap.josm.data.preferences.BooleanProperty;
  * 
  * @author Alexei Kasatkin, based on OsmFileCacheTileLoader by @author Jan Peter Stotz, @author Stefan Zeller
  */
-class OsmDBTilesLoader extends OsmTileLoader {
+class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
     
     
     public static final long FILE_AGE_ONE_DAY = 1000 * 60 * 60 * 24;
@@ -48,6 +50,16 @@ class OsmDBTilesLoader extends OsmTileLoader {
         return new DatabaseLoadJob(tile);
     }
 
+    @Override
+    public void clearCache(TileSource source) {
+        clearCache(source, null);
+    }
+
+    @Override
+    public void clearCache(TileSource source, TileClearController controller) {
+        dao.cleanStorage(source.getName());
+    }
+    
     protected class DatabaseLoadJob implements TileJob {
 
         private final Tile tile;

@@ -39,6 +39,7 @@ public class SelectWayNodesAction extends JosmAction {
      *
      * This method does some checking on the selection and calls the matching selectWayNodes method.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
 

@@ -106,10 +106,11 @@ public class AnyAction extends MapMode implements AWTEventListener {
         super.mousePressed(e);
     }
 
+        @Override
 	public void eventDispatched(AWTEvent arg0) {
-		if (!(arg0 instanceof KeyEvent))
-			return;
-		KeyEvent ev = (KeyEvent) arg0;
+        if (!(arg0 instanceof KeyEvent))
+                return;
+        KeyEvent ev = (KeyEvent) arg0;
         isCtrlDown = (ev.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0;
         if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
             ev.consume();
@@ -141,6 +142,7 @@ public class AnyAction extends MapMode implements AWTEventListener {
         try {
             // We invoke this to prevent strange things from happening
             EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     // Don't change cursor when mode has changed already
                     if (!(Main.map.mapMode instanceof AnyAction))

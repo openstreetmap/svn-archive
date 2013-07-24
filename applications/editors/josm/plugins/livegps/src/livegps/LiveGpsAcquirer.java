@@ -2,7 +2,6 @@ package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.lang.Float;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
 
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -117,6 +115,7 @@ public class LiveGpsAcquirer implements Runnable {
         }
     }
 
+    @Override
     public void run() {
         LiveGpsData oldGpsData = null;
         LiveGpsData gpsData = null;
@@ -132,7 +131,7 @@ public class LiveGpsAcquirer implements Runnable {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ignore) {}
-		};
+		}
 	    }
 
 	    assert (connected);
@@ -166,7 +165,7 @@ public class LiveGpsAcquirer implements Runnable {
 		disconnect();
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException ignore) {} ;
+                } catch (InterruptedException ignore) {} 
                 // send warning to layer
             }
         }
@@ -234,7 +233,7 @@ public class LiveGpsAcquirer implements Runnable {
             try {
                 Watch.put("enable", true);
                 Watch.put("json", true);
-            } catch (JSONException je) {};
+            } catch (JSONException je) {}
 
             String Request = "?WATCH=" + Watch.toString() + ";\n";
             gpsdSocket.getOutputStream().write(Request.getBytes());

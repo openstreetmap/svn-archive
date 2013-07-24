@@ -29,6 +29,7 @@ public class AdjacentWaysAction extends JosmAction {
         putValue("help", ht("/Action/AdjacentWays"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);

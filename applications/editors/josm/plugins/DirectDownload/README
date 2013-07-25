@@ -6,7 +6,7 @@ tracks you previously uploaded on openstreetmap.org without having
 to download them manually first and then having to open the downloaded
 track using the "Open file ..." dialog.
 
-The plugin provides a new entry "Download track ..." in the file
+The plugin provides a new entry "Download track ..." in the GPS
 menu (no keyboard shortcut yet). This opens a dialog that will
 present a list of your uploaded tracks, showing the tracks timestamp
 and filename, from which you can directly pick one track to be

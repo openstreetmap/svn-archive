@@ -16,7 +16,7 @@ public class OpenVisiblePlugin extends Plugin {
 
     public OpenVisiblePlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.fileMenu, new OpenVisibleAction());
+        MainMenu.add(Main.main.menu.gpsMenu, new OpenVisibleAction());
     }
 
 }

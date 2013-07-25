@@ -101,18 +101,16 @@ public class TagDialog extends ExtendedDialog
       // middle of the screen
       setLocationRelativeTo(null);
 
-      SwingUtilities.invokeLater(new Runnable()
-      {
-         public void run()
-         {
+      SwingUtilities.invokeLater(new Runnable()  {
+         @Override
+         public void run() {
             housnumber.requestFocus();
             housnumber.selectAll();
          }
       });
    }
 
-   private JPanel createContentPane()
-   {
+   private JPanel createContentPane() {
       acm = selection.getDataSet().getAutoCompletionManager();
 
       Dto dto = loadDto();
@@ -266,15 +264,11 @@ public class TagDialog extends ExtendedDialog
       housnumber.setPreferredSize(new Dimension(200, 24));
       
       int number = 0;
-      try
-      {
+      try {
          number = Integer.valueOf(dto.getHousenumber()) + dto.getHousenumberChangeValue();
       }
-      catch (NumberFormatException e)
-      {
-      }
-      if (number > 0)
-      {
+      catch (NumberFormatException e)  { }
+      if (number > 0) {
          housnumber.setText(String.valueOf(number));
       }
       
@@ -309,8 +303,7 @@ public class TagDialog extends ExtendedDialog
    @Override
    protected void buttonAction(int buttonIndex, ActionEvent evt)
    {
-      if (buttonIndex == 0)
-      {
+      if (buttonIndex == 0)  {
          Dto dto = new Dto();
          dto.setSaveBuilding(buildingEnabled.isSelected());
          dto.setSaveCity(cityEnabled.isSelected());
@@ -338,20 +331,15 @@ public class TagDialog extends ExtendedDialog
    private String getAutoCompletingComboBoxValue(AutoCompletingComboBox box)
    {
       Object item = box.getSelectedItem();
-      if (item != null)
-      {
-         if (item instanceof String)
-         {
+      if (item != null) {
+         if (item instanceof String) {
             return (String) item;
          }
-         if (item instanceof AutoCompletionListItem)
-         {
+         if (item instanceof AutoCompletionListItem) {
             return ((AutoCompletionListItem) item).getValue();
          }
          return item.toString();
-      }
-      else
-      {
+      } else {
          return "";
       }
    }
@@ -361,23 +349,16 @@ public class TagDialog extends ExtendedDialog
       File path = new File(pluginDir);
       File fileName = new File(pluginDir + TagDialog.TEMPLATE_DATA);
 
-      try
-      {
+      try {
          path.mkdirs();
 
          FileOutputStream file = new FileOutputStream(fileName);
          ObjectOutputStream o = new ObjectOutputStream(file);
          o.writeObject(dto);
          o.close();
-      }
-      catch (Exception ex)
-      {
+      } catch (Exception ex) {
          logger.log(Level.SEVERE, ex.getMessage());
-
-         if (fileName != null)
-         {
-            fileName.delete();
-         }
+         fileName.delete();
       }
    }
 
@@ -385,28 +366,23 @@ public class TagDialog extends ExtendedDialog
    {
       ArrayList<Command> commands = new ArrayList<Command>();
 
-      if (dto.isSaveBuilding())
-      {
+      if (dto.isSaveBuilding()) {
          String value = selection.get(TagDialog.TAG_BUILDING);
-         if (value == null || (value != null && !value.equals(dto.getBuilding())))
-         {
+         if (value == null || (value != null && !value.equals(dto.getBuilding()))) {
             ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_BUILDING, dto.getBuilding());
             commands.add(command);
          }
       }
 
-      if (dto.isSaveCity())
-      {
+      if (dto.isSaveCity()) {
          String value = selection.get(TagDialog.TAG_ADDR_CITY);
-         if (value == null || (value != null && !value.equals(dto.getCity())))
-         {
+         if (value == null || (value != null && !value.equals(dto.getCity()))) {
             ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_ADDR_CITY, dto.getCity());
             commands.add(command);
          }
       }
 
-      if (dto.isSaveCountry())
-      {
+      if (dto.isSaveCountry())  {
          String value = selection.get(TagDialog.TAG_ADDR_COUNTRY);
          if (value == null || (value != null && !value.equals(dto.getCountry())))
          {
@@ -415,28 +391,23 @@ public class TagDialog extends ExtendedDialog
          }
       }
 
-      if (dto.isSaveHousenumber())
-      {
+      if (dto.isSaveHousenumber())  {
          String value = selection.get(TagDialog.TAG_ADDR_HOUSENUMBER);
-         if (value == null || (value != null && !value.equals(dto.getHousenumber())))
-         {
+         if (value == null || (value != null && !value.equals(dto.getHousenumber())))  {
             ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_ADDR_HOUSENUMBER, dto.getHousenumber());
             commands.add(command);
          }
       }
 
-      if (dto.isSavePostcode())
-      {
+      if (dto.isSavePostcode()) {
          String value = selection.get(TagDialog.TAG_ADDR_POSTCODE);
-         if (value == null || (value != null && !value.equals(dto.getPostcode())))
-         {
+         if (value == null || (value != null && !value.equals(dto.getPostcode()))) {
             ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_ADDR_POSTCODE, dto.getPostcode());
             commands.add(command);
          }
       }
 
-      if (dto.isSaveStreet())
-      {
+      if (dto.isSaveStreet()) {
          String value = selection.get(TagDialog.TAG_ADDR_STREET);
          if (value == null || (value != null && !value.equals(dto.getStreet())))
          {
@@ -445,18 +416,15 @@ public class TagDialog extends ExtendedDialog
          }
       }
 
-      if (dto.isSaveState())
-      {
+      if (dto.isSaveState()) {
          String value = selection.get(TagDialog.TAG_ADDR_STATE);
-         if (value == null || (value != null && !value.equals(dto.getState())))
-         {
+         if (value == null || (value != null && !value.equals(dto.getState())))  {
             ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_ADDR_STATE, dto.getState());
             commands.add(command);
          }
       }
 
-      if (commands.size() > 0)
-      {
+      if (commands.size() > 0) {
          SequenceCommand sequenceCommand = new SequenceCommand(trn("Updating properties of up to {0} object", "Updating properties of up to {0} objects", commands.size(), commands.size()), commands);
 
          // executes the commands and adds them to the undo/redo chains
@@ -464,8 +432,7 @@ public class TagDialog extends ExtendedDialog
       }
    }
 
-   private Collection<String> getPossibleStreets()
-   {
+   private Collection<String> getPossibleStreets() {
       /**
        * Generates a list of all visible names of highways in order to do autocompletion on the road name.
        */
@@ -480,24 +447,19 @@ public class TagDialog extends ExtendedDialog
       return names;
    }
 
-   private Dto loadDto()
-   {
+   private Dto loadDto() {
       Dto dto = new Dto();
       File fileName = new File(pluginDir + TagDialog.TEMPLATE_DATA);
 
-      try
-      {
+      try {
 
-         if (fileName.exists())
-         {
+         if (fileName.exists()) {
             FileInputStream file = new FileInputStream(fileName);
             ObjectInputStream o = new ObjectInputStream(file);
 
             dto = (Dto) o.readObject();
             o.close();
-         }
-         else
-         {
+         } else {
             dto.setCity(selection.get(TagDialog.TAG_ADDR_CITY));
             dto.setCountry(selection.get(TagDialog.TAG_ADDR_COUNTRY));
             dto.setHousenumber(selection.get(TagDialog.TAG_ADDR_HOUSENUMBER));
@@ -505,17 +467,10 @@ public class TagDialog extends ExtendedDialog
             dto.setStreet(selection.get(TagDialog.TAG_ADDR_STREET));
             dto.setState(selection.get(TagDialog.TAG_ADDR_STATE));
          }
-
-      }
-      catch (Exception ex)
-      {
-         logger.log(Level.SEVERE, ex.getMessage());
-         if (fileName != null)
-         {
+      } catch (Exception ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
             fileName.delete();
-         }
       }
-
       return dto;
 
    }

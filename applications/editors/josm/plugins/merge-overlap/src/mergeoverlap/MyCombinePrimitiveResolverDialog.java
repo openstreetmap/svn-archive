@@ -323,7 +323,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     protected JPanel buildEmptyConflictsPanel() {
         JPanel pnl = new JPanel();
         pnl.setLayout(new BorderLayout());
-        pnl.add(new JLabel(tr("No conflicts to resolve", null)));
+        pnl.add(new JLabel(tr("No conflicts to resolve")));
         return pnl;
     }
 
@@ -385,12 +385,13 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     class CancelAction extends AbstractAction {
 
         public CancelAction() {
-            putValue(Action.SHORT_DESCRIPTION, tr("Cancel conflict resolution", null));
-            putValue(Action.NAME, tr("Cancel", null));
+            putValue(Action.SHORT_DESCRIPTION, tr("Cancel conflict resolution"));
+            putValue(Action.NAME, tr("Cancel"));
             putValue(Action.SMALL_ICON, ImageProvider.get("", "cancel"));
             setEnabled(true);
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             setCancelled(true);
             setVisible(false);
@@ -400,12 +401,13 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     class ApplyAction extends AbstractAction implements PropertyChangeListener {
 
         public ApplyAction() {
-            putValue(Action.SHORT_DESCRIPTION, tr("Apply resolved conflicts", null));
-            putValue(Action.NAME, tr("Apply", null));
+            putValue(Action.SHORT_DESCRIPTION, tr("Apply resolved conflicts"));
+            putValue(Action.NAME, tr("Apply"));
             putValue(Action.SMALL_ICON, ImageProvider.get("ok"));
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             setVisible(false);
             pnlTagConflictResolver.rememberPreferences();
@@ -416,6 +418,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
                     && pnlRelationMemberConflictResolver.getModel().getNumConflicts() == 0);
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(MyTagConflictResolverModel.NUM_CONFLICTS_PROP)) {
                 updateEnabledState();
@@ -446,14 +449,17 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             addHierarchyBoundsListener(this);
         }
 
+        @Override
         public void ancestorResized(HierarchyEvent e) {
             setDividerLocation((int) (dividerLocation * getHeight()));
         }
 
+        @Override
         public void ancestorMoved(HierarchyEvent e) {
             // do nothing
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(JSplitPane.DIVIDER_LOCATION_PROPERTY)) {
                 int newVal = (Integer) evt.getNewValue();
@@ -799,9 +805,9 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         protected JPanel buildRoleEditingPanel() {
             JPanel pnl = new JPanel();
             pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
-            pnl.add(new JLabel(tr("Role:", null)));
+            pnl.add(new JLabel(tr("Role:")));
             pnl.add(tfRole = new AutoCompletingTextField(10));
-            tfRole.setToolTipText(tr("Enter a role for all relation memberships", null));
+            tfRole.setToolTipText(tr("Enter a role for all relation memberships"));
             pnl.add(new JButton(new ApplyRoleAction()));
             tfRole.addActionListener(new ApplyRoleAction());
             tfRole.addFocusListener(
@@ -818,18 +824,18 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         protected JPanel buildTagRelationsPanel() {
             JPanel pnl = new JPanel();
             pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
-            cbTagRelations = new JCheckBox(tr("Tag modified relations with ", null));
+            cbTagRelations = new JCheckBox(tr("Tag modified relations with "));
             cbTagRelations.addChangeListener(new ToggleTagRelationsAction());
             cbTagRelations.setToolTipText(
                     tr("<html>Select to enable entering a tag which will be applied<br>"
-                            + "to all modified relations.</html>", null));
+                            + "to all modified relations.</html>"));
             pnl.add(cbTagRelations);
             pnl.add(new JLabel(trc("tag", "Key:")));
             pnl.add(tfKey = new AutoCompletingTextField(10));
-            tfKey.setToolTipText(tr("<html>Enter a tag key, i.e. <strong><tt>fixme</tt></strong></html>", null));
-            pnl.add(new JLabel(tr("Value:", null)));
+            tfKey.setToolTipText(tr("<html>Enter a tag key, i.e. <strong><tt>fixme</tt></strong></html>"));
+            pnl.add(new JLabel(tr("Value:")));
             pnl.add(tfValue = new AutoCompletingTextField(10));
-            tfValue.setToolTipText(tr("<html>Enter a tag value, i.e. <strong><tt>check members</tt></strong></html>", null));
+            tfValue.setToolTipText(tr("<html>Enter a tag value, i.e. <strong><tt>check members</tt></strong></html>"));
             cbTagRelations.setSelected(false);
             tfKey.setEnabled(false);
             tfValue.setEnabled(false);
@@ -847,7 +853,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
                     + "The default is to <strong>keep</strong> the first way and <strong>remove</strong> "
                     + "the other ways that are members of the same relation: the combined way will "
                     + "take the place of the original way in the relation."
-                    + "</html>", null));
+                    + "</html>"));
             invalidate();
         }
 
@@ -858,23 +864,25 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
                     + "The default is to <strong>keep</strong> the first node and <strong>remove</strong> "
                     + "the other nodes that are members of the same relation: the target node will "
                     + "take the place of the original node in the relation."
-                    + "</html>", null));
+                    + "</html>"));
             invalidate();
         }
 
         class ApplyRoleAction extends AbstractAction {
             public ApplyRoleAction() {
-                putValue(NAME, tr("Apply", null));
+                putValue(NAME, tr("Apply"));
                 putValue(SMALL_ICON, ImageProvider.get("ok"));
-                putValue(SHORT_DESCRIPTION, tr("Apply this role to all members", null));
+                putValue(SHORT_DESCRIPTION, tr("Apply this role to all members"));
             }
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 model.applyRole(tfRole.getText());
             }
         }
 
         class ToggleTagRelationsAction implements ChangeListener {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 ButtonModel buttonModel = ((AbstractButton) e.getSource()).getModel();
                 tfKey.setEnabled(buttonModel.isSelected());
@@ -956,6 +964,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
          *
          */
         class SelectNextColumnCellAction extends AbstractAction {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 run();
             }
@@ -986,6 +995,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
          */
         class SelectPreviousColumnCellAction extends AbstractAction {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 run();
             }
@@ -1009,10 +1019,12 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             }
         }
 
+        @Override
         public void gotoNextDecision() {
             selectNextColumnCellAction.run();
         }
 
+        @Override
         public void gotoPreviousDecision() {
             selectPreviousColumnCellAction.run();
         }
@@ -1066,6 +1078,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             Collections.sort(
                     displayedKeys,
                     new Comparator<String>() {
+                        @Override
                         public int compare(String key1, String key2) {
                             if (decisions.get(key1).isDecided() && ! decisions.get(key2).isDecided())
                                 return 1;
@@ -1269,15 +1282,16 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             gc.weighty = 1.0;
             gc.weightx = 1.0;
             gc.anchor = GridBagConstraints.LINE_START;
-            pnl.add(new JLabel(tr("<html>Please select the values to keep for the following tags.</html>", null)), gc);
+            pnl.add(new JLabel(tr("<html>Please select the values to keep for the following tags.</html>")), gc);
 
             gc.gridy = 1;
             gc.fill = GridBagConstraints.HORIZONTAL;
             gc.weighty = 0.0;
-            pnl.add(cbShowTagsWithConflictsOnly = new JCheckBox(tr("Show tags with conflicts only", null)), gc);
-            pnl.add(cbShowTagsWithMultiValuesOnly = new JCheckBox(tr("Show tags with multiple values only", null)), gc);
+            pnl.add(cbShowTagsWithConflictsOnly = new JCheckBox(tr("Show tags with conflicts only")), gc);
+            pnl.add(cbShowTagsWithMultiValuesOnly = new JCheckBox(tr("Show tags with multiple values only")), gc);
             cbShowTagsWithConflictsOnly.addChangeListener(
                     new ChangeListener() {
+                        @Override
                         public void stateChanged(ChangeEvent e) {
                             model.setShowTagsWithConflictsOnly(cbShowTagsWithConflictsOnly.isSelected());
                             cbShowTagsWithMultiValuesOnly.setEnabled(cbShowTagsWithConflictsOnly.isSelected());
@@ -1289,6 +1303,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             );
             cbShowTagsWithMultiValuesOnly.addChangeListener(
                     new ChangeListener() {
+                        @Override
                         public void stateChanged(ChangeEvent e) {
                             model.setShowTagsWithMultiValuesOnly(cbShowTagsWithMultiValuesOnly.isSelected());
                         }
@@ -1372,6 +1387,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
          *
          */
         class SelectNextColumnCellAction extends AbstractAction {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 run();
             }
@@ -1402,6 +1418,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
          */
         class SelectPreviousColumnCellAction extends AbstractAction {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 run();
             }
@@ -1425,10 +1442,12 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             }
         }
 
+        @Override
         public void gotoNextDecision() {
             selectNextColumnCellAction.run();
         }
 
+        @Override
         public void gotoPreviousDecision() {
             selectPreviousColumnCellAction.run();
         }

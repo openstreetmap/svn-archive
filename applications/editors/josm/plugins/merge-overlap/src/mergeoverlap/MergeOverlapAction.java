@@ -69,6 +69,7 @@ public class MergeOverlapAction extends JosmAction {
 	 * @param e
 	 *            Action Event
 	 */
+        @Override
 	public void actionPerformed(ActionEvent e) {
 
 		// List of selected ways
@@ -260,6 +261,7 @@ public class MergeOverlapAction extends JosmAction {
 			opositPos = op;
 		}
 
+                @Override
 		public String toString() {
 			return "NodePos: " + pos + ", " + opositPos + ", " + node;
 		}

@@ -10,7 +10,7 @@ public class SimplifyAreaPlugin extends Plugin {
 
     public SimplifyAreaPlugin(final PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, new SimplifyAreaAction());
+        MainMenu.add(Main.main.menu.moreToolsMenu, new SimplifyAreaAction());
     }
 
     @Override

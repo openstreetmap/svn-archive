@@ -17,6 +17,7 @@ import java.util.jar.JarOutputStream;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -134,7 +135,7 @@ public class Smed extends Plugin{
         }
         
         smedTab = new SmedTabAction();
-        item = Main.main.menu.toolsMenu.add(smedTab);
+        item = MainMenu.add(Main.main.menu.dataMenu, smedTab);
         smedTab.setOsmItem(item);
         
         item.setEnabled(false);

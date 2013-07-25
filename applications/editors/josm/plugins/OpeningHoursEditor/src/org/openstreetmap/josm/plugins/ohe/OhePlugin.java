@@ -72,7 +72,7 @@ public class OhePlugin extends Plugin {
      */
     public OhePlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.dataMenu, new OheMenuAction());
+        MainMenu.add(Main.main.menu.dataMenu, new OheMenuAction(), false, 0);
     }
 
     /**

@@ -38,6 +38,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
 						KeyEvent.VK_D, Shortcut.ALT_SHIFT), true);
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(Main.main.getCurrentDataSet().getSelected(), Way.class);
 

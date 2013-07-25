@@ -12,7 +12,7 @@ public class WikipediaPlugin extends Plugin {
     public WikipediaPlugin(PluginInformation info) {
         super(info);
         new WikipediaCopyTemplate();
-        MainMenu.add(Main.main.menu.toolsMenu, new WikipediaAddNamesAction());
+        MainMenu.add(Main.main.menu.dataMenu, new WikipediaAddNamesAction());
     }
 
     @Override

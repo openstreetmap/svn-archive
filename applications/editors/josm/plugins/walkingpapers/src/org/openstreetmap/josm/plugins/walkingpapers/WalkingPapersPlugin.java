@@ -26,8 +26,8 @@ public class WalkingPapersPlugin extends Plugin
     public WalkingPapersPlugin(PluginInformation info)
     {
         super(info);
-        MainMenu menu = Main.main.menu;
-        walkingPapersMenu = menu.addMenu(marktr("Walking Papers"), KeyEvent.VK_K, menu.defaultMenuPos, ht("/Plugin/WalkingPapers"));
-        walkingPapersMenu.add(new JMenuItem(new WalkingPapersAddLayerAction()));
+        walkingPapersMenu = Main.main.menu.imageryMenu;
+         // ht("/Plugin/WalkingPapers"));
+        MainMenu.add(Main.main.menu.imageryMenu, new WalkingPapersAddLayerAction(), false, 0);
     }
 }

@@ -13,8 +13,10 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
+import javax.swing.JMenu;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -40,9 +42,8 @@ public class FixAddressesPlugin extends Plugin {
 		SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
 
 		// ... and add them to the tools menu in main
-		Main.main.menu.toolsMenu.addSeparator();
-		Main.main.menu.toolsMenu.add(action);
-		Main.main.menu.toolsMenu.add(incAddrAction);
+                MainMenu.add(Main.main.menu.dataMenu, action, false, 0);
+		MainMenu.add(Main.main.menu.selectionMenu, incAddrAction);
 
 		// create preferences instance
 		preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();

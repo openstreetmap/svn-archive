@@ -33,9 +33,7 @@ public class MichiganLeft extends Plugin {
 
   public MichiganLeft(PluginInformation info) {
     super(info);
-    MichiganLeft = MainMenu.add(Main.main.menu.toolsMenu,
-        new MichiganLeftAction());
-
+    MichiganLeft = MainMenu.add(Main.main.menu.dataMenu, new MichiganLeftAction());
   }
 
   private class MichiganLeftAction extends JosmAction {
@@ -52,6 +50,7 @@ public class MichiganLeft extends Plugin {
           tr("Michigan Left")), KeyEvent.VK_N, Shortcut.ALT_SHIFT), true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
       Collection<OsmPrimitive> mainSelection = Main.main.getCurrentDataSet()
           .getSelected();

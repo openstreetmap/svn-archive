@@ -63,7 +63,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
                 if (!(prim2 instanceof Way)) continue;
                 if (prim2.equals(area))      continue;
                 Way border = (Way) prim2;
-                if (border.getNodes().size() == 0)   continue;
+                if (border.getNodes().isEmpty())   continue;
                 if (border.keySet().size() > 0) continue;
                 if (!area.getNodes().contains(border.firstNode())) continue;
                 if (!area.getNodes().contains(border.lastNode()))  continue;

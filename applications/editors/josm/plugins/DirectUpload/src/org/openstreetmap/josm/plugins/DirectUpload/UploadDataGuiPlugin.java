@@ -28,7 +28,7 @@ public class UploadDataGuiPlugin extends Plugin {
     public UploadDataGuiPlugin(PluginInformation info) {
         super(info);
         openaction = new UploadAction();
-        Main.main.menu.toolsMenu.add(openaction);
+        Main.main.menu.gpsMenu.add(openaction);
     }
 
     class UploadAction extends JosmAction {

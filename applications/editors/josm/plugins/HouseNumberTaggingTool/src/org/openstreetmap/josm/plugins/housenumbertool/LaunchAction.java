@@ -47,11 +47,13 @@ public class LaunchAction extends JosmAction implements SelectionChangedListener
 
    }
 
+   @Override
    public void actionPerformed(ActionEvent e)
    {
       launchEditor();
    }
 
+   @Override
    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection)
    {
       if ((newSelection != null && newSelection.size() == 1))

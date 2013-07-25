@@ -44,6 +44,7 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (!isEnabled()) {
             return;
@@ -66,6 +67,7 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
      * 
      * @see org.openstreetmap.josm.data.SelectionChangedListener#selectionChanged(java.util.Collection)
      */
+    @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         setEnabled(newSelection != null
                 && Main.main.getCurrentDataSet().getSelectedWays().size() == 1

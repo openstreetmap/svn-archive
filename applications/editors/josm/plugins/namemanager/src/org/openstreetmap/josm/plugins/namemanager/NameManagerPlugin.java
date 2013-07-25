@@ -15,7 +15,7 @@ import org.openstreetmap.josm.plugins.namemanager.listeners.NameManagerAction;
 public class NameManagerPlugin extends Plugin {
     public NameManagerPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, new NameManagerAction());
+        MainMenu.add(Main.main.menu.dataMenu, new NameManagerAction());
     }
 }
 

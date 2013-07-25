@@ -5,17 +5,15 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
-public class HouseNumberTaggingToolPlugin extends Plugin
-{
+public class HouseNumberTaggingToolPlugin extends Plugin {
    LaunchAction action;
 
    /**
     * constructor
     */
-   public HouseNumberTaggingToolPlugin(PluginInformation info)
-   {
+   public HouseNumberTaggingToolPlugin(PluginInformation info) {
       super(info);
       action = new LaunchAction(getPluginDir());
-      MainMenu.add(Main.main.menu.editMenu, action);
+      MainMenu.add(Main.main.menu.dataMenu, action, false,0);
    }
 }

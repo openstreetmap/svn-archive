@@ -20,7 +20,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class WalkingPapersAddLayerAction extends JosmAction {
 
     public WalkingPapersAddLayerAction() {
-        super(tr("Scanned Map..."), "walkingpapers",
+        super(tr("Walking Papers Scanned Map"), "walkingpapers",
             tr("Display a map that was previously scanned and uploaded to walking-papers.org"), null, false);
     }
 

@@ -124,12 +124,10 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
         lgpscapture = new JCheckBoxMenuItem(captureAction);
         lgpsmenu.add(lgpscapture);
         lgpscapture.setAccelerator(captureAction.getShortcut().getKeyStroke());
-
+        
         JosmAction centerAction = new CenterAction();
-        JMenuItem centerMenu = new JMenuItem(centerAction);
-        lgpsmenu.add(centerMenu);
-        centerMenu.setAccelerator(centerAction.getShortcut().getKeyStroke());
-
+        MainMenu.add(lgpsmenu, centerAction);
+        
         JosmAction autoCenterAction = new AutoCenterAction();
         lgpsautocenter = new JCheckBoxMenuItem(autoCenterAction);
         lgpsmenu.add(lgpsautocenter);

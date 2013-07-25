@@ -9,7 +9,7 @@ public class GpxFilterPlugin extends Plugin {
 
     public GpxFilterPlugin(PluginInformation info) {
         super(info);
-        MainMenu.add(Main.main.menu.toolsMenu, new AddEGpxLayerAction());
+        MainMenu.add(Main.main.menu.gpsMenu, new AddEGpxLayerAction(), false, 0);
     }
 
 }

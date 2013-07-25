@@ -98,7 +98,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         boolean assertionsEnabled = true;
         if (assertionsEnabled) initLoggers();
 
-        MainMenu.add(Main.main.menu.toolsMenu, new SplitAreaByEmptyWayAction());
+        MainMenu.add(Main.main.menu.moreToolsMenu, new SplitAreaByEmptyWayAction());
 
         // Prepare for filling the database.
         final MvcrParser parser = new MvcrParser();

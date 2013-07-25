@@ -9,6 +9,6 @@ public class DownloadAlong extends Plugin {
 
 	public DownloadAlong(PluginInformation info) {
 		super(info);
-		MainMenu.add(Main.main.menu.toolsMenu, new DownloadAlongWayAction());
+		MainMenu.add(Main.main.menu.moreToolsMenu, new DownloadAlongWayAction());
 	}
 }

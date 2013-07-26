@@ -74,7 +74,7 @@ public class RoutingMenu extends JMenu {
 	 */
 	public RoutingMenu() {
 		MainMenu mm = Main.main.menu;
-		menu = mm.addMenu(marktr("Routing"), KeyEvent.VK_O, mm.defaultMenuPos, ht("/Plugin/Routing"));
+		menu = mm.addMenu(marktr("Routing"), KeyEvent.VK_O, mm.getDefaultMenuPos(), ht("/Plugin/Routing"));
 
 		startMI = new JMenuItem(tr("Add routing layer"));
 		startMI.addActionListener(new ActionListener() {

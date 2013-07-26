@@ -209,7 +209,7 @@ public class CadastrePlugin extends Plugin {
         MainMenu menu = Main.main.menu;
 
         if (cadastreJMenu == null) {
-            cadastreJMenu = menu.addMenu(marktr("Cadastre"), KeyEvent.VK_C, menu.defaultMenuPos, ht("/Plugin/CadastreFr"));
+            cadastreJMenu = menu.addMenu(marktr("Cadastre"), KeyEvent.VK_C, menu.getDefaultMenuPos(), ht("/Plugin/CadastreFr"));
             JosmAction grab = new MenuActionGrab();
             JMenuItem menuGrab = new JMenuItem(grab);
             KeyStroke ks = grab.getShortcut().getKeyStroke();

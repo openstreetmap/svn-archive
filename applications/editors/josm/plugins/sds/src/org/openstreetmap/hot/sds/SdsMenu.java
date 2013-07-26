@@ -39,7 +39,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener {
 
     public SdsMenu(final SeparateDataStorePlugin thePlugin) {
         MainMenu mm = Main.main.menu;
-        menu = mm.addMenu(marktr("SDS"), KeyEvent.VK_S, mm.defaultMenuPos, null);
+        menu = mm.addMenu(marktr("SDS"), KeyEvent.VK_S, mm.getDefaultMenuPos(), null);
         saveItem = new JMenuItem(new SdsSaveAction());
         menu.add(saveItem);
         loadItem = new JMenuItem(new SdsLoadAction(thePlugin));

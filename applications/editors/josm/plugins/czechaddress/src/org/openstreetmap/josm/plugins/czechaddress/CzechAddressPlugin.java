@@ -187,7 +187,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         if (message == MESSAGE_DATABASE_LOADED) {
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override public void run() {
-                    czechMenu = Main.main.menu.addMenu(marktr("Adress"), KeyEvent.VK_Z, 4, ht("/Plugin/CzechAddress"));
+                    czechMenu = Main.main.menu.addMenu(marktr("Adress"), KeyEvent.VK_Z, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CzechAddress"));
                     menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
                     menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
                     menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));

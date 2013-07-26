@@ -2,7 +2,7 @@
 <project name="PicLayer" default="dist" basedir=".">
     <property name="commit.message" value="PicLayer - #8743 - fixed NPE when removing last layer"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5960"/>
+    <property name="plugin.main.version" value="6088"/>
 	
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

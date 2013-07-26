@@ -30,7 +30,7 @@
 <project name="videomapping" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="videomapping"/>
+    <property name="commit.message" value="fix after JOSM update"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="4980"/>
 

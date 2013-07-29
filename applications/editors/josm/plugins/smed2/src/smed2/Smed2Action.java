@@ -171,40 +171,24 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> selection) {
-		Node nextNode = null;
-		Node node = null;
-		Way nextWay = null;
-		Way way = null;
+		OsmPrimitive nextFeature = null;
+		OsmPrimitive feature = null;
 
 		if (selection.size() == 0) showFrame.setVisible(false);
 		for (OsmPrimitive osm : selection) {
-			if (osm instanceof Node) {
-				nextNode = (Node) osm;
+				nextFeature = osm;
 				if (selection.size() == 1) {
-					if (nextNode.compareTo(node) != 0) {
-						node = nextNode;
+					if (nextFeature.compareTo(feature) != 0) {
+						feature = nextFeature;
 //						showFrame.setVisible(true);
-						showFrame.showFeature(node, map);
+						showFrame.showFeature(feature, map);
 					}
 				} else {
 					showFrame.setVisible(false);
 				}
 			}
-			else if (osm instanceof Way) {
-				nextWay = (Way) osm;
-				if (selection.size() == 1) {
-					if (nextWay.compareTo(way) != 0) {
-						way = nextWay;
-//						showFrame.setVisible(true);
-						showFrame.showFeature(way, map);
-					}
-				} else {
-					showFrame.setVisible(false);
-				}
-			}
-		}
-		if (nextNode == null) {
-			node = null;
+		if (nextFeature == null) {
+			feature = null;
 		}
 	}
 

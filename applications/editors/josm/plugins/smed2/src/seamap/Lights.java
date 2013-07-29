@@ -9,16 +9,18 @@
 
 package seamap;
 
+import java.awt.geom.*;
+
+import seamap.SeaMap.*;
+
 public class Lights {
 
+	private static Point2D.Double radial(Snode centre, double radius, double angle) {
+		Point2D origin = Renderer.helper.getPoint(centre);
+		double mile = Renderer.helper.getPoint(Renderer.map.new Snode((centre.lat + Math.toRadians(1/60)), centre.lon)).getY() - origin.getY();
+		return new Point2D.Double(origin.getX() - (radius * mile * Math.sin(angle)), origin.getY() - (radius * mile * Math.cos(angle)));
+	}
 /*
-XY_t radial(XY_t centre, double radius, double angle) {
-  XY_t position;
-  position.x = centre.x - (radius * mile * sin(d2r(angle)));
-  position.y = centre.y - (radius * mile * cos(d2r(angle)));
-  return position;
-}
-
 void renderFlare(Item_t *item) {
   char *col = light_colours[COL_MAG];
   Obj_t *obj = getObj(item, LIGHTS, 0);

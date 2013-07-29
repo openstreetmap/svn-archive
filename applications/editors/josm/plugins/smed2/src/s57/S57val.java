@@ -169,14 +169,17 @@ public class S57val {
 		Catgat.put(CatGAT.GAT_GNRL, new S57enum(1, "general")); Catgat.put(CatGAT.GAT_FLBG, new S57enum(2, "flood_barrage")); Catgat.put(CatGAT.GAT_CSSN, new S57enum(3, "caisson"));
 		Catgat.put(CatGAT.GAT_LOCK, new S57enum(4, "lock")); Catgat.put(CatGAT.GAT_DYKE, new S57enum(5, "dyke")); Catgat.put(CatGAT.GAT_SLUC, new S57enum(6, "sluice"));
 	}
-	public enum CatHAF { HAF_UNKN, HAF_RORO, HAF_TMBR, HAF_FERY, HAF_FISH, HAF_YCHT, HAF_NAVL, HAF_TNKR, HAF_PSGR, HAF_YARD, HAF_CNTR, HAF_BULK, HAF_SYNC, HAF_STCR, HAF_MRNA, HAF_REPR, HAF_QUAR } 
+	public enum CatHAF { HAF_UNKN, HAF_RORO, HAF_TMBR, HAF_FERY, HAF_FISH, HAF_MRNA, HAF_NAVL, HAF_TNKR, HAF_PSGR, HAF_YARD, HAF_CNTR, HAF_BULK, HAF_SYNC, HAF_STCR, HAF_LUVB,
+		HAF_REPR, HAF_QUAR, HAF_SPLN, HAF_CARG, HAF_OFFS, HAF_SSUP, HAF_MANF } 
 	private static final EnumMap<CatHAF, S57enum> Cathaf = new EnumMap<CatHAF, S57enum>(CatHAF.class); static { Cathaf.put(CatHAF.HAF_UNKN, new S57enum(0, ""));
-		Cathaf.put(CatHAF.HAF_RORO, new S57enum(1, "roro")); Cathaf.put(CatHAF.HAF_TMBR, new S57enum(2, "timber")); Cathaf.put(CatHAF.HAF_FERY, new S57enum(3, "ferry"));
-		Cathaf.put(CatHAF.HAF_FISH, new S57enum(4, "fishing")); Cathaf.put(CatHAF.HAF_YCHT, new S57enum(5, "yacht")); Cathaf.put(CatHAF.HAF_NAVL, new S57enum(6, "naval"));
-		Cathaf.put(CatHAF.HAF_TNKR, new S57enum(7, "tanker")); Cathaf.put(CatHAF.HAF_PSGR, new S57enum(8, "passenger")); Cathaf.put(CatHAF.HAF_YARD, new S57enum(9, "shipyard"));
-		Cathaf.put(CatHAF.HAF_CNTR, new S57enum(10, "container")); Cathaf.put(CatHAF.HAF_BULK, new S57enum(11, "bulk")); Cathaf.put(CatHAF.HAF_SYNC, new S57enum(12, "syncrolift"));
-		Cathaf.put(CatHAF.HAF_STCR, new S57enum(13, "straddle_carrier")); Cathaf.put(CatHAF.HAF_MRNA, new S57enum(14, "marina")); Cathaf.put(CatHAF.HAF_REPR, new S57enum(16, "service_repair"));
-		Cathaf.put(CatHAF.HAF_QUAR, new S57enum(17, "quarantine"));
+		Cathaf.put(CatHAF.HAF_RORO, new S57enum(1, "roro")); Cathaf.put(CatHAF.HAF_FERY, new S57enum(3, "ferry")); Cathaf.put(CatHAF.HAF_FISH, new S57enum(4, "fishing"));
+		Cathaf.put(CatHAF.HAF_MRNA, new S57enum(5, "marina")); Cathaf.put(CatHAF.HAF_NAVL, new S57enum(6, "naval")); Cathaf.put(CatHAF.HAF_TNKR, new S57enum(7, "tanker"));
+		Cathaf.put(CatHAF.HAF_PSGR, new S57enum(8, "passenger")); Cathaf.put(CatHAF.HAF_YARD, new S57enum(9, "shipyard")); Cathaf.put(CatHAF.HAF_CNTR, new S57enum(10, "container"));
+		Cathaf.put(CatHAF.HAF_BULK, new S57enum(11, "bulk")); Cathaf.put(CatHAF.HAF_SYNC, new S57enum(12, "syncrolift")); Cathaf.put(CatHAF.HAF_STCR, new S57enum(13, "straddle_carrier"));
+		Cathaf.put(CatHAF.HAF_LUVB, new S57enum(14, "lay_up")); Cathaf.put(CatHAF.HAF_TMBR, new S57enum(15, "timber"));	Cathaf.put(CatHAF.HAF_REPR, new S57enum(16, "service_repair"));
+		Cathaf.put(CatHAF.HAF_QUAR, new S57enum(17, "quarantine")); Cathaf.put(CatHAF.HAF_SPLN, new S57enum(18, "seaplane")); Cathaf.put(CatHAF.HAF_CARG, new S57enum(19, "cargo"));
+		Cathaf.put(CatHAF.HAF_OFFS, new S57enum(20, "offshore_support"));  Cathaf.put(CatHAF.HAF_OFFS, new S57enum(21, "port_support_base"));
+		Cathaf.put(CatHAF.HAF_MANF, new S57enum(22, "marina_no_facilities"));
 	}
 	public enum CatHLK { HLK_UNKN, HLK_REST, HLK_HIST, HLK_MUSM, HLK_ACCM, HLK_BWTR, HLK_CSNO } 
 	private static final EnumMap<CatHLK, S57enum> Cathlk = new EnumMap<CatHLK, S57enum>(CatHLK.class); static { Cathlk.put(CatHLK.HLK_UNKN, new S57enum(0, ""));
@@ -311,13 +314,21 @@ public class S57val {
 	private static final EnumMap<CatRTB, S57enum> Catrtb = new EnumMap<CatRTB, S57enum>(CatRTB.class); static {Catrtb.put(CatRTB.RTB_UNKN, new S57enum(0, ""));
 		Catrtb.put(CatRTB.RTB_RAMK, new S57enum(1, "ramark")); Catrtb.put(CatRTB.RTB_RACN, new S57enum(2, "racon")); Catrtb.put(CatRTB.RTB_LDG, new S57enum(3, "leading"));
 	}
-	public enum CatROS { ROS_UNKN, ROS_OMNI, ROS_DIRL, ROS_ROTP, ROS_CNSL, ROS_RDF, ROS_QTA, ROS_AERO, ROS_DECA, ROS_LORN, ROS_DAPS, ROS_TORN, ROS_OMGA, ROS_SYLD, ROS_CHKA } 
+	public enum CatROS { ROS_UNKN, ROS_OMNI, ROS_DIRL, ROS_ROTP, ROS_CNSL, ROS_RDF, ROS_QTA, ROS_AERO, ROS_DECA, ROS_LORN, ROS_DGPS, ROS_TORN, ROS_OMGA, ROS_SYLD, ROS_CHKA,
+		ROS_PCOM, ROS_COMB, ROS_FACS, ROS_TIME, ROS_PAIS, ROS_SAIS, ROS_VAIS, ROS_VANC, ROS_VASC, ROS_VAEC, ROS_VAWC, ROS_VAPL, ROS_VASL, ROS_VAID, ROS_VASW, ROS_VASP, ROS_VAWK } 
 	private static final EnumMap<CatROS, S57enum> Catros = new EnumMap<CatROS, S57enum>(CatROS.class); static { Catros.put(CatROS.ROS_UNKN, new S57enum(0, ""));
 		Catros.put(CatROS.ROS_OMNI, new S57enum(1, "omnidirectional")); Catros.put(CatROS.ROS_DIRL, new S57enum(2, "directional"));	Catros.put(CatROS.ROS_ROTP, new S57enum(3, "rotating_pattern"));
 		Catros.put(CatROS.ROS_CNSL, new S57enum(4, "consol")); Catros.put(CatROS.ROS_RDF, new S57enum(5, "rdf")); Catros.put(CatROS.ROS_QTA, new S57enum(6, "qtg"));
 		Catros.put(CatROS.ROS_AERO, new S57enum(7, "aeronautical")); Catros.put(CatROS.ROS_DECA, new S57enum(8, "decca")); Catros.put(CatROS.ROS_LORN, new S57enum(9, "loran"));
-		Catros.put(CatROS.ROS_DAPS, new S57enum(10, "dgps")); Catros.put(CatROS.ROS_TORN, new S57enum(11, "toran")); Catros.put(CatROS.ROS_OMGA, new S57enum(12, "omega"));
-		Catros.put(CatROS.ROS_SYLD, new S57enum(13, "syledis")); Catros.put(CatROS.ROS_CHKA, new S57enum(14, "chaika"));
+		Catros.put(CatROS.ROS_DGPS, new S57enum(10, "dgps")); Catros.put(CatROS.ROS_TORN, new S57enum(11, "toran")); Catros.put(CatROS.ROS_OMGA, new S57enum(12, "omega"));
+		Catros.put(CatROS.ROS_SYLD, new S57enum(13, "syledis")); Catros.put(CatROS.ROS_CHKA, new S57enum(14, "chiaka")); Catros.put(CatROS.ROS_PCOM, new S57enum(15, "public_communication"));
+		Catros.put(CatROS.ROS_COMB, new S57enum(16, "commercial_broadcast")); Catros.put(CatROS.ROS_FACS, new S57enum(17, "facsimile")); Catros.put(CatROS.ROS_TIME, new S57enum(18, "time_signal"));
+		Catros.put(CatROS.ROS_PAIS, new S57enum(19, "ais")); Catros.put(CatROS.ROS_SAIS, new S57enum(20, "s-ais")); Catros.put(CatROS.ROS_VAIS, new S57enum(21, "v-ais"));
+		Catros.put(CatROS.ROS_VANC, new S57enum(22, "v-ais_north_cardinal")); Catros.put(CatROS.ROS_VASC, new S57enum(23, "v-ais_south_cardinal"));
+		Catros.put(CatROS.ROS_VAEC, new S57enum(24, "v-ais_east_cardinal")); Catros.put(CatROS.ROS_VAWC, new S57enum(25, "v-ais_west_cardinal"));
+		Catros.put(CatROS.ROS_VAPL, new S57enum(26, "v-ais_port_lateral")); Catros.put(CatROS.ROS_VASL, new S57enum(27, "v-ais_starboard_lateral"));
+		Catros.put(CatROS.ROS_VAID, new S57enum(28, "v-ais_isolated_danger")); Catros.put(CatROS.ROS_VASW, new S57enum(29, "v-ais_safe_water"));
+		Catros.put(CatROS.ROS_VASP, new S57enum(30, "v-ais_special_purpose")); Catros.put(CatROS.ROS_VAWK, new S57enum(31, "v-ais_wreck")); 
 	}
 	public enum CatTRK { TRK_UNKN, TRK_FIXM, TRK_NFXM }
 	private static final EnumMap<CatTRK, S57enum> Cattrk = new EnumMap<CatTRK, S57enum>(CatTRK.class); static { Cattrk.put(CatTRK.TRK_UNKN, new S57enum(0, ""));
@@ -536,7 +547,7 @@ public class S57val {
 		FNC_DIST, FNC_TRNS, FNC_FCTY, FNC_POWR, FNC_ADMIN, FNC_EDUC, FNC_CHCH, FNC_CHPL, FNC_TMPL, FNC_PGDA, FNC_SHSH, FNC_BTMP, FNC_MOSQ, FNC_MRBT,
 		FNC_LOOK, FNC_COMM, FNC_TV, FNC_RADO, FNC_RADR, FNC_LGHT, FNC_MCWV, FNC_COOL, FNC_OBS, FNC_TMBL, FNC_CLOK, FNC_CTRL, FNC_ASHM, FNC_STAD, FNC_BUSS }
 	private static final EnumMap<FncFNC, S57enum> Functn = new EnumMap<FncFNC, S57enum>(FncFNC.class); static {Functn.put(FncFNC.FNC_UNKN, new S57enum(0, ""));
-		Functn.put(FncFNC.FNC_HBRM, new S57enum(2, "harbour-master")); Functn.put(FncFNC.FNC_CSTM, new S57enum(3, "customs")); Functn.put(FncFNC.FNC_HLTH, new S57enum(4, "health"));
+		Functn.put(FncFNC.FNC_HBRM, new S57enum(2, "harbour_master")); Functn.put(FncFNC.FNC_CSTM, new S57enum(3, "customs")); Functn.put(FncFNC.FNC_HLTH, new S57enum(4, "health"));
 		Functn.put(FncFNC.FNC_HOSP, new S57enum(5, "hospital")); Functn.put(FncFNC.FNC_POST, new S57enum(6, "post_office")); Functn.put(FncFNC.FNC_HOTL, new S57enum(7, "hotel"));
 	  Functn.put(FncFNC.FNC_RAIL, new S57enum(8, "railway_station")); Functn.put(FncFNC.FNC_POLC, new S57enum(9, "police_station")); Functn.put(FncFNC.FNC_WPOL, new S57enum(10, "water-police_station"));
 	  Functn.put(FncFNC.FNC_PILO, new S57enum(11, "pilot_office")); Functn.put(FncFNC.FNC_PILL, new S57enum(12, "pilot_lookout")); Functn.put(FncFNC.FNC_BANK, new S57enum(13, "bank"));
@@ -584,11 +595,12 @@ public class S57val {
 		Marsys.put(MarSYS.SYS_OTHR, new S57enum(10, "other")); Marsys.put(MarSYS.SYS_CEVN, new S57enum(11, "cevni")); Marsys.put(MarSYS.SYS_RIWR, new S57enum(12, "riwr"));
 		Marsys.put(MarSYS.SYS_BWR2, new S57enum(13, "bniwr2")); Marsys.put(MarSYS.SYS_BNWR, new S57enum(14, "bniwr")); Marsys.put(MarSYS.SYS_PPWB, new S57enum(15, "ppwbc"));
 	}
-	public enum NatCON { CON_UNKN, CON_MSNY, CON_CONC, CON_BDRS, CON_HSRF, CON_USRF, CON_WOOD, CON_METL, CON_GRP, CON_PNTD }
+	public enum NatCON { CON_UNKN, CON_MSNY, CON_CONC, CON_BDRS, CON_HSRF, CON_USRF, CON_WOOD, CON_METL, CON_GRP, CON_PNTD, CON_FMWK }
 	private static final EnumMap<NatCON, S57enum> Natcon = new EnumMap<NatCON, S57enum>(NatCON.class); static { Natcon.put(NatCON.CON_UNKN, new S57enum(0, ""));
 		Natcon.put(NatCON.CON_MSNY, new S57enum(1, "masonry")); Natcon.put(NatCON.CON_CONC, new S57enum(2, "concreted")); Natcon.put(NatCON.CON_BDRS, new S57enum(3, "loose_boulders"));
 		Natcon.put(NatCON.CON_HSRF, new S57enum(4, "hard-surfaced")); Natcon.put(NatCON.CON_USRF, new S57enum(5, "unsurfaced")); Natcon.put(NatCON.CON_WOOD, new S57enum(6, "wooden"));
 		Natcon.put(NatCON.CON_METL, new S57enum(7, "metal")); Natcon.put(NatCON.CON_GRP, new S57enum(8, "grp")); Natcon.put(NatCON.CON_PNTD, new S57enum(9, "painted"));
+		Natcon.put(NatCON.CON_FMWK, new S57enum(9, "framework"));
 	}
 	public enum NatSUR { SUR_UNKN, SUR_MUD, SUR_CLAY, SUR_SILT, SUR_SAND, SUR_STON, SUR_GRVL, SUR_PBBL, SUR_CBBL, SUR_ROCK, SUR_LAVA, SUR_CORL, SUR_SHEL, SUR_BLDR } 
 	private static final EnumMap<NatSUR, S57enum> Natsur = new EnumMap<NatSUR, S57enum>(NatSUR.class); static { Natsur.put(NatSUR.SUR_UNKN, new S57enum(0, ""));
@@ -971,13 +983,21 @@ public class S57val {
 		Lc_cce.put(Lc_CCX.CCX_DRY, new S57enum(5, "dry")); Lc_cce.put(Lc_CCX.CCX_LIQD, new S57enum(6, "liquid")); Lc_cce.put(Lc_CCX.CCX_LQDN, new S57enum(7, "liquid_n"));
 		Lc_cce.put(Lc_CCX.CCX_LQDC, new S57enum(8, "liquid_c")); Lc_cce.put(Lc_CCX.CCX_GAS, new S57enum(9, "gas"));
 	}
-	public enum ShpTYP { TYP_UNKN, TYP_CRGO, TYP_CONT, TYP_TNKR, TYP_SAIL, TYP_FISH, TYP_SPPS, TYP_MOWR, TYP_SUBM, TYP_HSPD, TYP_BCAR, TYP_SPLN, TYP_TUGB, TYP_PSGR, TYP_FERY, TYP_BOAT } 
+
+	public enum ShpTYP { TYP_UNKN, TYP_CRGO, TYP_CONT, TYP_TNKR, TYP_SAIL, TYP_FISH, TYP_SPPS, TYP_MOWR, TYP_SUBM, TYP_HSPD, TYP_BCAR, TYP_SPLN, TYP_TUGB, TYP_PSGR, TYP_FERY, TYP_BOAT }
 	private static final EnumMap<ShpTYP, S57enum> Shptyp = new EnumMap<ShpTYP, S57enum>(ShpTYP.class); static { Shptyp.put(ShpTYP.TYP_UNKN, new S57enum(0, ""));
 		Shptyp.put(ShpTYP.TYP_CRGO, new S57enum(1, "cargo")); Shptyp.put(ShpTYP.TYP_CONT, new S57enum(2, "container")); Shptyp.put(ShpTYP.TYP_TNKR, new S57enum(3, "tanker"));
 		Shptyp.put(ShpTYP.TYP_SAIL, new S57enum(4, "sailing")); Shptyp.put(ShpTYP.TYP_FISH, new S57enum(5, "fishing")); Shptyp.put(ShpTYP.TYP_SPPS, new S57enum(6, "special_purpose."));
 		Shptyp.put(ShpTYP.TYP_MOWR, new S57enum(7, "man_of_war")); Shptyp.put(ShpTYP.TYP_SUBM, new S57enum(8, "submarine")); Shptyp.put(ShpTYP.TYP_HSPD, new S57enum(9, "high-speed"));
 		Shptyp.put(ShpTYP.TYP_BCAR, new S57enum(10, "bulk_carrier")); Shptyp.put(ShpTYP.TYP_SPLN, new S57enum(11, "seaplane")); Shptyp.put(ShpTYP.TYP_TUGB, new S57enum(12, "tugboat"));
 		Shptyp.put(ShpTYP.TYP_PSGR, new S57enum(13, "passenger")); Shptyp.put(ShpTYP.TYP_FERY, new S57enum(14, "ferry")); Shptyp.put(ShpTYP.TYP_BOAT, new S57enum(15, "boat"));
+	}
+	public enum AisCLS { AIS_UNKN, AIS_CAMN, AIS_CAMS, AIS_CAME, AIS_CAMW, AIS_LAMP, AIS_LAMS, AIS_SAWM, AIS_ISDM, AIS_SPPM, AIS_WRKM	}
+	private static final EnumMap<AisCLS, S57enum> Aiscls = new EnumMap<AisCLS, S57enum>(AisCLS.class); static { Aiscls.put(AisCLS.AIS_UNKN, new S57enum(0, ""));
+		Aiscls.put(AisCLS.AIS_CAMN, new S57enum(1, "cardinal_north")); Aiscls.put(AisCLS.AIS_CAMS, new S57enum(2, "cardinal_south")); Aiscls.put(AisCLS.AIS_CAME, new S57enum(3, "cardinal_east"));
+		Aiscls.put(AisCLS.AIS_CAMN, new S57enum(4, "cardinal_north")); Aiscls.put(AisCLS.AIS_LAMP, new S57enum(5, "lateral_port")); Aiscls.put(AisCLS.AIS_LAMS, new S57enum(6, "lateral_starboard"));
+		Aiscls.put(AisCLS.AIS_SAWM, new S57enum(7, "safe_water")); Aiscls.put(AisCLS.AIS_ISDM, new S57enum(8, "isolated_danger")); Aiscls.put(AisCLS.AIS_SPPM, new S57enum(9, "special_purpose"));
+		Aiscls.put(AisCLS.AIS_WRKM, new S57enum(10, "wreck"));
 	}
 
 	private static final EnumMap<Att, S57key> keys = new EnumMap<Att, S57key>(Att.class);

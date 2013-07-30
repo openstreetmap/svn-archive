@@ -926,7 +926,7 @@ public class Rules {
 			AttItem name = feature.atts.get(Att.OBJNAM);
 			if (name != null) str += (String)name.val + " ";
 			Double ort = (Double) Renderer.getAttVal(feature, feature.type, 0, Att.ORIENT);
-			if (ort != null) str += ort.toString() + "¼";
+			if (ort != null) str += ort.toString() + "\u0152";
 			if (!str.isEmpty()) Renderer.lineText(feature, str, new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -20);
 	  }
 	}

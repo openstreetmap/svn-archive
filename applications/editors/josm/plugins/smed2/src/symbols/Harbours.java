@@ -28,14 +28,6 @@ public class Harbours {
 		p.lineTo(-31.0,22.0); p.quadTo(-21.0,29.0,-7.0,31.0); p.lineTo(-6.0,-30.0); p.lineTo(-23.0,-30.0); p.lineTo(-23.0,-40.0); p.closePath();
 		Anchor.add(new Instr(Prim.PGON, p));
 	}
-	public static final Symbol Yacht = new Symbol();
-	static {
-		Yacht.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		Path2D.Double p = new Path2D.Double(); p.moveTo(-65.0,50.0); p.curveTo(-36.0,97.0,36.0,97.0,65.0,50.0); p.lineTo(3.0,50.0); p.lineTo(3.0,40.0); p.lineTo(55.0,30.0);
-		p.curveTo(32.0,4.0,25.0,-15.0,26.0,-52.0); p.lineTo(1.5,-40.0); p.lineTo(1.0,-64.0); p.lineTo(-2.0,-64.0); p.lineTo(-4.0,50.0); p.closePath();
-		p.moveTo(-50.0,45.0); p.curveTo(-55.0,3.0,-37.0,-28.5,-7.0,-46.0); p.curveTo(-28.0,-15.0,-26.0,11.0,-20.5,30.0); p.closePath();
-		Yacht.add(new Instr(Prim.PGON, p));
-	}
 	public static final Symbol Anchorage = new Symbol();
 	static {
 		Anchorage.add(new Instr(Prim.FILL, new Color(0xa30075)));
@@ -191,5 +183,13 @@ public class Harbours {
 		TideGauge.add(new Instr(Prim.LINE, new Line2D.Double(-15,-25,15,-25)));
 		TideGauge.add(new Instr(Prim.LINE, new Line2D.Double(-25,-45,25,-45)));
 		TideGauge.add(new Instr(Prim.LINE, new Line2D.Double(-15,-65,15,-65)));
+	}
+	public static final Symbol Yacht = new Symbol();
+	static {
+		Yacht.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-65.0,50.0); p.curveTo(-36.0,97.0,36.0,97.0,65.0,50.0); p.lineTo(3.0,50.0); p.lineTo(3.0,40.0); p.lineTo(55.0,30.0);
+		p.curveTo(32.0,4.0,25.0,-15.0,26.0,-52.0); p.lineTo(1.5,-40.0); p.lineTo(1.0,-64.0); p.lineTo(-2.0,-64.0); p.lineTo(-4.0,50.0); p.closePath();
+		p.moveTo(-50.0,45.0); p.curveTo(-55.0,3.0,-37.0,-28.5,-7.0,-46.0); p.curveTo(-28.0,-15.0,-26.0,11.0,-20.5,30.0); p.closePath();
+		Yacht.add(new Instr(Prim.PGON, p));
 	}
 }

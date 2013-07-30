@@ -292,7 +292,7 @@ public class Rules {
 			Renderer.symbol(feature, Buoys.Float, feature.type, null);
 			break;
 		case BOYINB:
-			Renderer.symbol(feature, Buoys.Storage, feature.type, null);
+			Renderer.symbol(feature, Buoys.Super, feature.type, null);
 			break;
 		}
 		if (feature.objs.get(Obj.TOPMAR) != null)
@@ -709,18 +709,15 @@ public class Rules {
 		}
 	}
 	private static void platforms(Feature feature) {
-		Renderer.symbol(feature, Landmarks.Platform, null, null);
+		ArrayList<CatOFP> cats = (ArrayList<CatOFP>)Renderer.getAttVal(feature, Obj.OFSPLF, 0, Att.CATOFP);
+		if ((CatOFP) cats.get(0) == CatOFP.OFP_FPSO)
+			Renderer.symbol(feature, Buoys.Storage, null, null);
+		else
+			Renderer.symbol(feature, Landmarks.Platform, null, null);
+		AttItem name = feature.atts.get(Att.OBJNAM);
+		if ((zoom >= 15) && (name != null))
+			Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(60, -50)));
 /*object_rules(platforms) {
-  if (has_attribute("category")) {
-    attribute_switch("category")
-    attribute_case("fpso") symbol("storage");
-    attribute_default symbol("platform");
-    end_switch
-  } else {
-    symbol("platform");
-  }
-  if ((zoom >= 15) && has_item_attribute("name"))
-    text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:start", 60, -50);
   if (has_object("fog_signal")) object(fogs);
   if (has_object("radar_transponder")) object(rtbs);
   if (has_object("light")) object(lights);
@@ -728,20 +725,19 @@ public class Rules {
 */
 	}
 	private static void ports(Feature feature) {
-/*object_rules(ports) {
-  if (zoom>=14) {
-    if (is_type("crane")) {
-      if (attribute_test("category", "container_crane")) symbol("container_crane");
-      else symbol("port_crane");
-    }
-    if (is_type("hulk")) {
-      area("fill:#ffe000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-opacity:1");
-      if ((zoom >= 15) && (has_item_attribute("name")))
-        text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:70; text-anchor:middle", 0, 0);
-    }
-  }
-}
-*/
+		if (zoom >= 14) {
+			if (feature.type == Obj.CRANES) {
+				if ((CatCRN) Renderer.getAttVal(feature, feature.type, 0, Att.CATCRN) == CatCRN.CRN_CONT)
+					Renderer.symbol(feature, Harbours.ContainerCrane, null, null);
+				else
+					Renderer.symbol(feature, Harbours.PortCrane, null, null);
+			} else if (feature.type == Obj.HULKES) {
+				Renderer.lineVector(feature, new LineStyle(Color.black, 4, null, new Color(0xffe000)));
+				AttItem name = feature.atts.get(Att.OBJNAM);
+				if ((zoom >= 15) && (name != null))
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, null);
+			}
+		}
 	}
 	private static void separation(Feature feature) {
 		switch (feature.type) {
@@ -778,12 +774,12 @@ public class Rules {
 				if (lev == WatLEV.LEV_CVRS) {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
 					if (zoom >= 15)
-						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), 0.5, 20);
+						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, 20);
 				} else {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 10, null, null));
 				}
 				if (zoom >= 15)
-					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), 0.5, -20);
+					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -20);
 			}
 		}
 	}
@@ -798,49 +794,50 @@ public class Rules {
 				Renderer.symbol(feature, Harbours.SignalStation, null, null);
 				Renderer.symbol(feature, Beacons.RadarStation, null, null);
 				ArrayList<CatROS> cats = (ArrayList<CatROS>)Renderer.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
+				String str = "";
 				for (CatROS ros : cats) {
 					switch (ros) {
 					case ROS_OMNI:
-						Renderer.labelText(feature, " RC", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " RC";
 						break;
 					case ROS_DIRL:
-						Renderer.labelText(feature, " RD", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " RD";
 						break;
 					case ROS_ROTP:
-						Renderer.labelText(feature, " RW", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " RW";
 						break;
 					case ROS_CNSL:
-						Renderer.labelText(feature, " Consol", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Consol";
 						break;
 					case ROS_RDF:
-						Renderer.labelText(feature, " RG", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " RG";
 						break;
 					case ROS_QTA:
-						Renderer.labelText(feature, " R", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " R";
 						break;
 					case ROS_AERO:
-						Renderer.labelText(feature, " AeroRC", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " AeroRC";
 						break;
 					case ROS_DECA:
-						Renderer.labelText(feature, " Decca", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Decca";
 						break;
 					case ROS_LORN:
-						Renderer.labelText(feature, " Loran", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Loran";
 						break;
 					case ROS_DGPS:
-						Renderer.labelText(feature, " DGPS", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " DGPS";
 						break;
 					case ROS_TORN:
-						Renderer.labelText(feature, " Toran", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Toran";
 						break;
 					case ROS_OMGA:
-						Renderer.labelText(feature, " Omega", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Omega";
 						break;
 					case ROS_SYLD:
-						Renderer.labelText(feature, " Syledis", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Syledis";
 						break;
 					case ROS_CHKA:
-						Renderer.labelText(feature, " Chiaka", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " Chiaka";
 						break;
 					case ROS_PCOM:
 					case ROS_COMB:
@@ -849,7 +846,7 @@ public class Rules {
 						break;
 					case ROS_PAIS:
 					case ROS_SAIS:
-						Renderer.labelText(feature, " AIS", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
+						str += " AIS";
 						break;
 					case ROS_VAIS:
 						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 180)));
@@ -896,6 +893,7 @@ public class Rules {
 						break;
 					}
 				}
+				if (!str.isEmpty()) Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 70), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -180)));
 				break;
 			case RADSTA:
 				Renderer.symbol(feature, Harbours.SignalStation, null, null);
@@ -919,37 +917,20 @@ public class Rules {
 */
 	}
 	private static void transits(Feature feature) {
-/*object_rules(transits) {
-  int ref;
-  if (zoom >= 12) {
-    if (is_type("recommended_track")) ref = line("stroke-width:8; stroke:#000000; stroke-linecap:butt; fill:none");
-    else if (is_type("navigation_line")) ref = line("stroke-width:8; stroke-dasharray:20,20; stroke:#000000; stroke-linecap:butt; fill:none");
-  }
-  if (zoom >= 15) {
-    make_string("");
-    if (has_object("name")) {
-      add_string(item_attribute("name"));
-      add_string(" ");
-    }
-    if (has_attribute("orientation")) {
-      add_string(attribute("orientation"));
-      add_string("\u00A1");
-    }
-    if (has_attribute("category")) {
-      add_string(" (");
-      add_string(attribute("category"));
-      add_string(")");
-    }
-    line_text(string, "font-family:Arial; font-weight:normal; font-size:80; text-anchor:middle", 0.5, -20, ref);
-    free_string
-  }
-}
-*/
+	  if (zoom >= 12) {
+	  	if (feature.type == Obj.RECTRC) Renderer.lineVector (feature, new LineStyle(Color.black, 10, null, null));
+	  	else if (feature.type == Obj.NAVLNE) Renderer.lineVector (feature, new LineStyle(Color.black, 10, new float[] { 25, 25 }, null));
+	  }
+	  if (zoom >= 15) {
+	  	String str = "";
+			AttItem name = feature.atts.get(Att.OBJNAM);
+			if (name != null) str += (String)name.val + " ";
+			Double ort = (Double) Renderer.getAttVal(feature, feature.type, 0, Att.ORIENT);
+			if (ort != null) str += ort.toString() + "¼";
+			if (!str.isEmpty()) Renderer.lineText(feature, str, new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -20);
+	  }
 	}
 	private static void waterways(Feature feature) {
-		if ((zoom >= 14) && (feature.atts.get(Att.OBJNAM) != null)) {
-			// lineText(item_attribute("name"), "font-family:Arial;font-weight:bold;font-size:80;text-anchor:middle", 0.5, 15, line("stroke:none;fill:none"));
-		}
 	}
 	private static void wrecks(Feature feature) {
 		if (zoom >= 14) {
@@ -965,8 +946,6 @@ public class Rules {
 			default:
 				Renderer.symbol(feature, Areas.WreckND, null, null);
 			}
-		} else {
-			Renderer.symbol(feature, Areas.WreckND, null, null);
 		}
 	}
 }

@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -13,10 +14,15 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
+import org.openstreetmap.josm.io.FileImporter;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Plugin {
@@ -36,38 +42,29 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
         }
     }
 
-    private static final class LoadImagesAction extends JosmAction {
-        private static final long serialVersionUID = 4480306223276347301L;
+    private final class ImageWaypointImporter extends FileImporter {
 
-        private final ImageWayPointPlugin plugin;
-
-        public LoadImagesAction(final ImageWayPointPlugin plugin) {
-            super(tr("Open images with ImageWayPoint"),
-            "imagewaypoint-open",
-            tr("Load set of images as a new layer."),
-            null,
-            false);
-
-            this.plugin = plugin;
+        public ImageWaypointImporter() {
+            super(new ExtensionFileFilter("jpg,jpeg,png,gif", "jpg", "Image files [by ImageWayPoint plugin] (*.jpg, *.jpeg, *.png, *.gif)"));
         }
 
-        public final void actionPerformed(final ActionEvent actionEvent) {
-            final JFileChooser fileChooser = new JFileChooser(Main.pref.get("tagimages.lastdirectory"));
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            fileChooser.setMultiSelectionEnabled(true);
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            fileChooser.setFileFilter(new ImageFileFilter());
+        @Override
+        public boolean isBatchImporter() {
+            return true;
+        }
 
-            fileChooser.showOpenDialog(Main.parent);
+        @Override
+        public double getPriority() {
+            return -3;
+        }
 
-            final File[] selectedFiles = fileChooser.getSelectedFiles();
-            if (null != selectedFiles && 0 != selectedFiles.length) {
-                Main.pref.put("tagimages.lastdirectory",
-                    fileChooser.getCurrentDirectory().getPath());
-
+        @Override
+        public void importData(List<File> files, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
+            if (null != files && !files.isEmpty()) {
+            
                 // recursively find all files
                 final List<File> allFiles = new ArrayList<File>();
-                this.plugin.addFiles(allFiles, selectedFiles);
+                addFiles(allFiles, files.toArray(new File[0]));
 
                 // add files to ImageEntries
                 ImageEntries.getInstance()
@@ -85,7 +82,12 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
                     }
                 }
                 if (!foundImageWayPointLayer) {
-                    new ImageWayPointLayer();
+                    GuiHelper.runInEDT(new Runnable() {
+                        @Override
+                        public void run() {
+                            new ImageWayPointLayer();
+                        }
+                    });
                 }
             }
         }
@@ -96,9 +98,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
      */
     public ImageWayPointPlugin(PluginInformation info) {
         super(info);
-
-        MainMenu menu = Main.main.menu;
-        menu.add(menu.fileMenu, new LoadImagesAction(this));
+	ExtensionFileFilter.importers.add(new ImageWaypointImporter());
     }
 
     @Override

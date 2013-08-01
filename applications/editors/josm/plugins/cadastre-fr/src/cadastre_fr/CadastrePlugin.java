@@ -132,10 +132,13 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  *                 - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance
  * 2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626.
  * 2.4 27-Jun-2013 - fix raster image georeferencing issues. Add new MenuActionRefineGeoRef for a new georeferencing
- *                   of already referenced plan image.                   
+ *                   of already referenced plan image.
+ * 2.5 01-Aug-2013 - Fix transparency issue on new raster images. Temporary disable georeferences parsing not
+ *                   working on new cadastre WMS. Workaround on address help tool when switching to full
+ *                   screen (and improvement when clicking on existing node address street in mode relation).                   
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "2.1";
+    static String VERSION = "2.5";
 
     static JMenu cadastreJMenu;
 

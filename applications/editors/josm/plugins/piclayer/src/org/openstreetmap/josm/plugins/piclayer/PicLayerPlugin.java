@@ -146,7 +146,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      */
     @Override
     public void layerAdded(Layer arg0) {
-        newLayerFromClipboardAction.setEnabled(true);
+        newLayerFromFileAction.setEnabled(true);
         newLayerFromClipboardAction.setEnabled(true);
     }
 
@@ -164,7 +164,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         }
         // Why should I do all these checks now?
         boolean enable = Main.map != null && Main.map.mapView != null && Main.map.mapView.getAllLayers() != null && Main.map.mapView.getAllLayers().size() != 0;
-        newLayerFromClipboardAction.setEnabled(enable);
+        newLayerFromFileAction.setEnabled(enable);
         newLayerFromClipboardAction.setEnabled(enable);
     }
 };

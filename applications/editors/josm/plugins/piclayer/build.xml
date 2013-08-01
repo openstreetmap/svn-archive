@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="PicLayer" default="dist" basedir=".">
-    <property name="commit.message" value="PicLayer - #8743 - fixed NPE when removing last layer"/>
+    <property name="commit.message" value="[josm/PicLayer] - disable menu items by default"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6097"/>
 	

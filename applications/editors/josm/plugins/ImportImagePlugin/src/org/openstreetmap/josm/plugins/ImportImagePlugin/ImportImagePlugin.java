@@ -15,6 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -87,8 +88,9 @@ public class ImportImagePlugin extends Plugin{
             PluginOperations.loadCRSData(pluginProps);
 
             // create new Action for menu entry
-            LoadImageAction loadFileAction = new LoadImageAction();
+            loadFileAction = new LoadImageAction();
             loadFileAction.setEnabled(true);
+            MainMenu.add(Main.main.menu.imagerySubMenu, loadFileAction);
 
             // add menu entries
             //Main.main.menu.fileMenu.insert(loadFileAction, 8);

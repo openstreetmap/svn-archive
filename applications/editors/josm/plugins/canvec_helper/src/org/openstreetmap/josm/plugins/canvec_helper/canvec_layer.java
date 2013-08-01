@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,14 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-//import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
@@ -82,6 +79,7 @@ public class canvec_layer extends Layer implements MouseListener {
 			System.out.println("exception getting index");
 		}
 	}
+        @Override
 	public Action[] getMenuEntries() {
 		return new Action[]{
 			LayerListDialog.getInstance().createShowHideLayerAction(),
@@ -97,10 +95,13 @@ public class canvec_layer extends Layer implements MouseListener {
 		public MaxZoomAction(canvec_layer parent) {
 			this.parent = parent;
 		}
+                @Override
 		public void actionPerformed(ActionEvent e) {}
+                @Override
 		public boolean supportLayers(List<Layer> layers) {
 			return false;
 		}
+                @Override
 		public Component createMenuComponent() {
 			JMenu max_zoom = new JMenu("max zoom");
 			max_zoom.add(new JMenuItem(new SetMaxZoom(parent,1)));
@@ -116,6 +117,7 @@ public class canvec_layer extends Layer implements MouseListener {
 			super(tile.tileid);
 			this.tile = tile;
 		}
+                @Override
 		public void actionPerformed(ActionEvent arg0) {
 			tile.can_download = true;
 		}
@@ -125,7 +127,9 @@ public class canvec_layer extends Layer implements MouseListener {
 		public OpenOsmAction(canvec_layer layer) {
 			this.layer = layer;
 		}
+                @Override
 		public void actionPerformed(ActionEvent e) {}
+                @Override
 		public Component createMenuComponent() {
 			JMenu OpenOsm = new JMenu("Open tile");
 			for (int i = 0; i < layer.openable.size(); i++) {
@@ -133,6 +137,7 @@ public class canvec_layer extends Layer implements MouseListener {
 			}
 			return OpenOsm;
 		}
+                @Override
 		public boolean supportLayers(List<Layer> layers) {
 			return false;
 		}
@@ -143,6 +148,7 @@ public class canvec_layer extends Layer implements MouseListener {
 			super(tile.tileid);
 			this.tile = tile;
 		}
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			tile.load_raw_osm();
 		}
@@ -152,10 +158,13 @@ public class canvec_layer extends Layer implements MouseListener {
 		public DownloadCanvecAction(canvec_layer parent) {
 			this.parent = parent;
 		}
+                @Override
 		public void actionPerformed(ActionEvent e) {}
+                @Override
 		public boolean supportLayers(List<Layer> layers) {
 			return false;
 		}
+                @Override
 		public Component createMenuComponent() {
 			JMenu downloadCanvec = new JMenu("Download zip's");
 			for (int i = 0; i < parent.downloadable.size(); i++) {
@@ -167,18 +176,25 @@ public class canvec_layer extends Layer implements MouseListener {
 	public void setMaxZoom(int max_zoom) {
 		this.max_zoom = max_zoom;
 	}
+        @Override
 	public Object getInfoComponent() {
 		return getToolTipText();
 	}
+        @Override
 	public String getToolTipText() {
 		return tr("canvec tile helper");
 	}
+        @Override
 	public void visitBoundingBox(BoundingXYVisitor v) {}
+        @Override
 	public boolean isMergable(Layer other) {
 		return false;
 	}
+        @Override
 	public void mergeFrom(Layer from) {}
+        @Override
 	public Icon getIcon() { return layerIcon; }
+        @Override
 	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 		//long start = System.currentTimeMillis();
 		//System.out.println("painting the area covered by "+bounds.toString());
@@ -193,10 +209,15 @@ public class canvec_layer extends Layer implements MouseListener {
 		long end = System.currentTimeMillis();
 		//System.out.println((end-start)+"ms spent");
 	}
+        @Override
 	public void mouseExited(MouseEvent e) {}
+        @Override
 	public void mouseEntered(MouseEvent e) {}
+        @Override
 	public void mouseReleased(MouseEvent e) {}
+        @Override
 	public void mousePressed(MouseEvent e) {}
+        @Override
 	public void mouseClicked(MouseEvent e) {
 		System.out.println("click!");
 	}

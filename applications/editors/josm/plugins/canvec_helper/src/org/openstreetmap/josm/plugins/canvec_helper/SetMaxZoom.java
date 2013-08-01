@@ -11,6 +11,7 @@ class SetMaxZoom extends AbstractAction {
 		this.level = level;
 		this.parent = parent;
 	}
+        @Override
 	public void actionPerformed(ActionEvent ev) {
 		parent.setMaxZoom(level);
 	}

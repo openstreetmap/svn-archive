@@ -4,7 +4,7 @@
 	<!-- enter the SVN commit message -->
 	<property name="commit.message" value="use consistent plugin name (don't mix up the words)" />
 	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="4549" />
+	<property name="plugin.main.version" value="6097" />
 
     <property name="plugin.author" value="Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.ImportImagePlugin.ImportImagePlugin"/>

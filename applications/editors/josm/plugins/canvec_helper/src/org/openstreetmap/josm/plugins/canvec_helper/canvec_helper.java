@@ -9,8 +9,9 @@ public class canvec_helper extends Plugin {
 	public canvec_helper(PluginInformation info) {
 		super(info);
 		System.out.println("in constructor");
-		Main.main.menu.imageryMenu.add(new CanvecHelperAction(this));
+		Main.main.menu.imagerySubMenu.add(new CanvecHelperAction(this));
 	}
+        @Override
 	public void mapFrameInitialized(MapFrame old, MapFrame new1) {
 		updateLayer();
 	}

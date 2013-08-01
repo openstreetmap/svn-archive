@@ -9,6 +9,7 @@ public class CanvecHelperAction extends JosmAction {
 		super("CanVec Helper","layericon24",null,null,false);
 		parent_temp = parent;
 	}
+        @Override
 	public void actionPerformed(java.awt.event.ActionEvent action) {
 		canvec_layer layer;
 		layer = new canvec_layer("canvec tile helper",parent_temp);

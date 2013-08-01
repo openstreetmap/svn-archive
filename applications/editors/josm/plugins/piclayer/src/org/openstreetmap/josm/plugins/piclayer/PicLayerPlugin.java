@@ -20,21 +20,19 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
@@ -63,8 +61,8 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
     public static List<IconToggleButton> buttonList = null;
 
     // Plugin menu
-    private JMenu menu = null;
-
+    JosmAction newLayerFromFileAction = new NewLayerFromFileAction();
+    JosmAction newLayerFromClipboardAction = new NewLayerFromClipboardAction();
     /**
      * Constructor...
      */
@@ -72,17 +70,10 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         super(info);
 
         // Create menu entry
-        if ( Main.main.menu != null ) {
-            menu = Main.main.menu.addMenu(marktr("PicLayer") , KeyEvent.VK_L, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/PicLayer"));
-        }
-
+        
         // Add menu items
-        if ( menu != null ) {
-            menu.add(new NewLayerFromFileAction());
-            menu.add(new NewLayerFromClipboardAction());
-            menu.setEnabled(false);
-        }
-
+        MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromFileAction);
+        MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromClipboardAction);
         // Listen to layers
         MapView.addLayerChangeListener(this);
     }
@@ -153,7 +144,8 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      */
     @Override
     public void layerAdded(Layer arg0) {
-        menu.setEnabled(true);
+        newLayerFromClipboardAction.setEnabled(true);
+        newLayerFromClipboardAction.setEnabled(true);
     }
 
     /**
@@ -170,6 +162,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         }
         // Why should I do all these checks now?
         boolean enable = Main.map != null && Main.map.mapView != null && Main.map.mapView.getAllLayers() != null && Main.map.mapView.getAllLayers().size() != 0;
-        menu.setEnabled(enable);
+        newLayerFromClipboardAction.setEnabled(enable);
+        newLayerFromClipboardAction.setEnabled(enable);
     }
 };

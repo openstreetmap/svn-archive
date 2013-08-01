@@ -16,7 +16,7 @@ public class PdfImportPlugin extends Plugin {
 
 	public PdfImportPlugin(PluginInformation info) {
 		super(info);
-		name = tr("Import PDf file");
-		MainMenu.add(Main.main.menu.dataMenu, new PdfImportAction());
+		name = tr("Import PDF file");
+		MainMenu.add(Main.main.menu.imagerySubMenu, new PdfImportAction());
 	}
 }

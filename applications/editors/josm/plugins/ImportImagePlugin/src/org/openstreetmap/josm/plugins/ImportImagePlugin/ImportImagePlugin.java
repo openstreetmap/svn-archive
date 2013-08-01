@@ -13,6 +13,7 @@ import javax.swing.JMenu;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -90,8 +91,11 @@ public class ImportImagePlugin extends Plugin{
             loadFileAction.setEnabled(true);
 
             // add menu entries
-            Main.main.menu.fileMenu.insert(loadFileAction, 8);
-            Main.main.menu.fileMenu.insertSeparator(9);
+            //Main.main.menu.fileMenu.insert(loadFileAction, 8);
+            
+            //Main.main.menu.fileMenu.insertSeparator(9);
+            
+            ExtensionFileFilter.importers.add(new ImportImageFileImporter());
 
         } catch (Exception e) {
             logger.fatal("Error while loading plugin", e);

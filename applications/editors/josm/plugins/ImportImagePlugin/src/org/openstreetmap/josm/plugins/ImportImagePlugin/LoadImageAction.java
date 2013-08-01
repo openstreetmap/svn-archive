@@ -28,7 +28,7 @@ public class LoadImageAction extends JosmAction {
      * Constructor...
      */
     public LoadImageAction() {
-        super(tr("Import image"), (String)null, tr("Import georeferenced image"), null, false, "importimage/loadimage", true);
+        super(tr("Import image"), (String)null, tr("Import georeferenced image"), null, true, "importimage/loadimage", true);
     }
 
     @Override

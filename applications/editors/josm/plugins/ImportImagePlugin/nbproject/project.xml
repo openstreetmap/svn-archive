@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>ImportImagePlugin</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
+            <!-- Не используйте диалоговое окно свойств проекта при редактировании данного файла вручную. -->
+            <name>ImportImagePlugin</name>
+            <properties/>
+            <folders>
+                <source-folder>
+                    <label>ImportImagePlugin</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src</label>
+                    <type>java</type>
+                    <location>src</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <target>compile</target>
+                </action>
+                <action name="clean">
+                    <target>clean</target>
+                </action>
+                <action name="run">
+                    <target>runjosm</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>compile</target>
+                </action>
+            </ide-actions>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>src</label>
+                        <location>src</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="run"/>
+                </context-menu>
+            </view>
+            <subprojects/>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
+            <compilation-unit>
+                <package-root>src</package-root>
+                <classpath mode="compile">../../core/src;../jts/lib/jts-1.13.jar;../log4j/lib/log4j-1.2.17.jar;../geotools/lib/commons-beanutils-1.7.0.jar;../geotools/lib/commons-pool-1.5.4.jar;../geotools/lib/gt-api-9.3.jar;../geotools/lib/gt-coverage-9.3.jar;../geotools/lib/gt-data-9.3.jar;../geotools/lib/gt-epsg-extension-9.3.jar;../geotools/lib/gt-epsg-hsql-9.3.jar;../geotools/lib/gt-geotiff-9.3.jar;../geotools/lib/gt-main-9.3.jar;../geotools/lib/gt-metadata-9.3.jar;../geotools/lib/gt-opengis-9.3.jar;../geotools/lib/gt-referencing-9.3.jar;../geotools/lib/gt-shapefile-9.3.jar;../geotools/lib/hsqldb-1.8.0.7.jar;../geotools/lib/imageio-ext-tiff-1.1.7.jar;../geotools/lib/imageio-ext-utilities-1.1.7.jar;../geotools/lib/jai_codec-1.1.3.jar;../geotools/lib/jai_core-1.1.3.jar;../geotools/lib/jai_imageio-1.1.jar;../geotools/lib/jdom-1.0.jar;../geotools/lib/jsr-275-1.0-beta-2.jar;../geotools/lib/jt-contour-1.3.0.jar;../geotools/lib/jt-rangelookup-1.3.0.jar;../geotools/lib/jt-utils-1.3.0.jar;../geotools/lib/jt-vectorbinarize-1.3.0.jar;../geotools/lib/jt-vectorize-1.3.0.jar;../geotools/lib/jt-zonalstats-1.3.0.jar;../geotools/lib/vecmath-1.3.2.jar</classpath>
+                <source-level>1.6</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>

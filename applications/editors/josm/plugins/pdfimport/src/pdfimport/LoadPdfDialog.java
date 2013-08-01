@@ -64,7 +64,7 @@ import pdfimport.pdfbox.PdfBoxParser;
 
 public class LoadPdfDialog extends JFrame{
 
-	class LoadProgressRenderer implements ProgressRenderer{
+    	class LoadProgressRenderer implements ProgressRenderer{
 		private final JProgressBar pBar;
 		private String title = "";
 
@@ -166,8 +166,8 @@ public class LoadPdfDialog extends JFrame{
 		this.addListeners();
 		this.removeLayer();
 	}
-
-	private void addListeners() {
+        
+ 	private void addListeners() {
 
 		this.projectionCombo.addActionListener(new ActionListener() {
 			@Override

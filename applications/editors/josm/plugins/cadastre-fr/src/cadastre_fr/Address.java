@@ -112,7 +112,14 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             super.exitMode();
             Main.map.mapView.removeMouseListener(this);
         }
-        dialog.setVisible(false);
+//        dialog.setVisible(false);
+        // kill the window completely to fix an issue on some linux distro and
+        // full screen mode.
+        if(dialog != null)
+        {
+            dialog.dispose();
+            dialog = null;
+        }
     }
 
     @Override
@@ -131,11 +138,11 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             // click on existing node
             setNewSelection(currentMouseNode);
             String num = currentMouseNode.get(tagHouseNumber);
-            if (num != null //
-                    && currentMouseNode.get(tagHouseStreet) == null //
-                    && findWayInRelationAddr(currentMouseNode) == null //
+            if (num != null
+                    && currentMouseNode.get(tagHouseStreet) == null
+                    && findWayInRelationAddr(currentMouseNode) == null
                     && !inputStreet.getText().equals("")) {
-                // address already present but not linked to a street
+                // house number already present but not linked to a street
                 Collection<Command> cmds = new LinkedList<Command>();
                 addStreetNameOrRelation(currentMouseNode, cmds);
                 Command c = new SequenceCommand("Add node address", cmds);
@@ -153,14 +160,16 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                     }
                 }
                 if (currentMouseNode.get(tagHouseStreet) != null) {
-                    inputStreet.setText(currentMouseNode.get(tagHouseStreet));
-                    if (ctrl) {
-                        Collection<Command> cmds = new LinkedList<Command>();
-                        addAddrToPrimitive(currentMouseNode, cmds);
-                        if (num == null)
-                            applyInputNumberChange();
+                    if(Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
+                        inputStreet.setText(currentMouseNode.get(tagHouseStreet));
+                        if (ctrl) {
+                            Collection<Command> cmds = new LinkedList<Command>();
+                            addAddrToPrimitive(currentMouseNode, cmds);
+                            if (num == null)
+                                applyInputNumberChange();
+                        }
+                        setSelectedWay((Way)null);
                     }
-                    setSelectedWay((Way)null);
                 } else {
                     // check if the node belongs to an associatedStreet relation
                     Way wayInRelationAddr = findWayInRelationAddr(currentMouseNode);
@@ -527,6 +536,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             link.setEnabled(false);
         } else
             link.setEnabled(true);
+        link.repaint();
     }
     
     private void setNewSelection(OsmPrimitive osm) {

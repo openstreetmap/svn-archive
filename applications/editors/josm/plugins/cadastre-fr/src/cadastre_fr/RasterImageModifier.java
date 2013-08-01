@@ -4,6 +4,7 @@ package cadastre_fr;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ComponentColorModel;
+import java.awt.image.IndexColorModel;
 
 import org.openstreetmap.josm.Main;
 
@@ -59,7 +60,8 @@ public class RasterImageModifier extends ImageModifier {
     }
 
     private void makeTransparent() {
-        if (bufferedImage.getColorModel() instanceof ComponentColorModel) {
+        if (bufferedImage.getColorModel() instanceof ComponentColorModel ||
+            bufferedImage.getColorModel() instanceof IndexColorModel) {
             int width = bufferedImage.getWidth();
             int height = bufferedImage.getHeight();
             BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

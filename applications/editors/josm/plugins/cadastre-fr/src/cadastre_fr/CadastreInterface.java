@@ -507,38 +507,40 @@ public class CadastreInterface {
     }
 
     private void parseGeoreferences(WMSLayer wmsLayer, String input) {
-        if (input.lastIndexOf(cBBoxCommunStart) != -1) {
-            input = input.substring(input.lastIndexOf(cBBoxCommunStart));
-            input = input.substring(input.indexOf(cBBoxCommunEnd)+cBBoxCommunEnd.length());
-            int i = input.indexOf(",");
-            int j = input.indexOf(",", i+1);
-            String str = input.substring(i+1, j);
-            double unknown_yet = tryParseDouble(str);
-            int j_ = input.indexOf(",", j+1);
-            double angle = Double.parseDouble(input.substring(j+1, j_));
-            int k = input.indexOf(",", j_+1);
-            double scale_origin = Double.parseDouble(input.substring(j_+1, k));
-            int l = input.indexOf(",", k+1);
-            double dpi = Double.parseDouble(input.substring(k+1, l));
-            int m = input.indexOf(",", l+1);
-            double fX = Double.parseDouble(input.substring(l+1, m));
-            int n = input.indexOf(",", m+1);
-            double fY = Double.parseDouble(input.substring(m+1, n));
-            int o = input.indexOf(",", n+1);
-            double X0 = Double.parseDouble(input.substring(n+1, o));
-            int p = input.indexOf(",", o+1);
-            double Y0 = Double.parseDouble(input.substring(o+1, p));
-            if (X0 != 0.0 && Y0 != 0) {
-                wmsLayer.setAlreadyGeoreferenced(true);
-                wmsLayer.fX = fX;
-                wmsLayer.fY = fY;
-                wmsLayer.angle = angle;
-                wmsLayer.X0 = X0;
-                wmsLayer.Y0 = Y0;
-            }
-            System.out.println("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
-                    fY+","+X0+","+Y0);
-        }
+        /* commented since cadastre WMS changes mid july 2013 
+         * until new GeoBox coordinates parsing is solved */
+//        if (input.lastIndexOf(cBBoxCommunStart) != -1) {
+//            input = input.substring(input.lastIndexOf(cBBoxCommunStart));
+//            input = input.substring(input.indexOf(cBBoxCommunEnd)+cBBoxCommunEnd.length());
+//            int i = input.indexOf(",");
+//            int j = input.indexOf(",", i+1);
+//            String str = input.substring(i+1, j);
+//            double unknown_yet = tryParseDouble(str);
+//            int j_ = input.indexOf(",", j+1);
+//            double angle = Double.parseDouble(input.substring(j+1, j_));
+//            int k = input.indexOf(",", j_+1);
+//            double scale_origin = Double.parseDouble(input.substring(j_+1, k));
+//            int l = input.indexOf(",", k+1);
+//            double dpi = Double.parseDouble(input.substring(k+1, l));
+//            int m = input.indexOf(",", l+1);
+//            double fX = Double.parseDouble(input.substring(l+1, m));
+//            int n = input.indexOf(",", m+1);
+//            double fY = Double.parseDouble(input.substring(m+1, n));
+//            int o = input.indexOf(",", n+1);
+//            double X0 = Double.parseDouble(input.substring(n+1, o));
+//            int p = input.indexOf(",", o+1);
+//            double Y0 = Double.parseDouble(input.substring(o+1, p));
+//            if (X0 != 0.0 && Y0 != 0) {
+//                wmsLayer.setAlreadyGeoreferenced(true);
+//                wmsLayer.fX = fX;
+//                wmsLayer.fY = fY;
+//                wmsLayer.angle = angle;
+//                wmsLayer.X0 = X0;
+//                wmsLayer.Y0 = Y0;
+//            }
+//            System.out.println("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
+//                    fY+","+X0+","+Y0);
+//        }
     }
 
     private double tryParseDouble(String str) {

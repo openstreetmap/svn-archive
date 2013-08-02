@@ -109,18 +109,50 @@ public class OverpassDownloadAction extends JosmAction {
             else
                 return url;
         }
+        
+        private String completeOverpassQuery(String query)
+        {
+            int firstColon = query.indexOf(";");
+            if (firstColon == -1)
+                return "[bbox];" + query;
+            int bboxPos = query.indexOf("[bbox");
+            if (bboxPos > -1 && bboxPos < firstColon)
+                return query;
+                
+            int bracketCount = 0;
+            int pos = 0;
+            for (; pos < firstColon; ++pos)
+            {
+                if (query.charAt(pos) == '[')
+                    ++bracketCount;
+                else if (query.charAt(pos) == '[')
+                    --bracketCount;
+                else if (bracketCount == 0)
+                {
+                    if (!Character.isWhitespace(query.charAt(pos)))
+                        break;
+                }
+            }
+            
+            if (pos < firstColon)
+                // We start with a statement, not with declarations
+                return "[bbox];" + query;
+                
+            // We start with declarations. Add just one more declaration in this case.
+            return "[bbox]" + query;
+        }
 
         @Override
         protected String getRequestForBbox(double lon1, double lat1, double lon2, double lat2) {
             if (overpassQuery.isEmpty())
-                return "xapi?" + super.getRequestForBbox(lon1, lat1, lon2, lat2);
+                return "" + super.getRequestForBbox(lon1, lat1, lon2, lat2);
             else
             {
-                String url = "interpreter?data=" + overpassQuery + "&bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2;
-                    
+                String realQuery = completeOverpassQuery(overpassQuery);
+                String url = "interpreter?data=" + realQuery + "&bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2;
                 try
                 {
-                    url = "interpreter?data=" + URLEncoder.encode(overpassQuery, "UTF-8") + "&bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2;
+                    url = "interpreter?data=" + URLEncoder.encode(realQuery, "UTF-8") + "&bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2;
                 }
                 catch (UnsupportedEncodingException e) {}
                 return url;

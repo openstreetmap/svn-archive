@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -83,8 +84,11 @@ public class OverpassDownloadAction extends JosmAction {
         @Override
         protected void buildMainPanelAboveDownloadSelections(JPanel pnl) {
             overpassQuery = new JTextArea("[timeout:15];", 8, 80);
+            JScrollPane scrollPane = new JScrollPane(overpassQuery);
             pnl.add(new JLabel(tr("Overpass query: ")), GBC.std().insets(5, 5, 5, 5));
-            pnl.add(new JScrollPane(overpassQuery), GBC.eol().fill(GridBagConstraints.BOTH));
+            GridBagConstraints gbc = GBC.eol().fill();
+            gbc.ipady = 300;
+            pnl.add(scrollPane, gbc);
         }
 
         public String getOverpassQuery() {

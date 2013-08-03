@@ -557,6 +557,12 @@ public class CommandLine extends Plugin {
                     Utils.close(gpxWriter);
                 }
                 Utils.close(osmWriter);
+                synchronized (syncObj) {
+                    if (currentCommand.asynchronous) {
+                        tp.running = false;
+                        syncObj.notifyAll();
+                    }
+                }
             }
         });
 

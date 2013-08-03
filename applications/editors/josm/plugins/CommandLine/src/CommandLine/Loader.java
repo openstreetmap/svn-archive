@@ -84,9 +84,10 @@ public class Loader extends DefaultHandler {
 				else if (Name.equals("tracks")) {
 					if (Value.equals("bbox"))
 						currentCommand.tracks = true;
-				}
-				else if (Name.equals("icon")) {
+				} else if (Name.equals("icon")) {
 					currentCommand.icon = Value;
+				} else if (Name.equals("asynchronous")) {
+					currentCommand.asynchronous = Value.equals("true") ? true : false;
 				}
 			}
 		}
@@ -125,7 +126,7 @@ public class Loader extends DefaultHandler {
 		}
 	}
 
-        @Override
+	@Override
 	public void characters(char ch[], int start, int length) 
 	{
 		String text = (new String(ch, start, length)).trim();
@@ -166,19 +167,19 @@ public class Loader extends DefaultHandler {
 		}
 	}
 
-        @Override
+	@Override
 	public void warning(SAXParseException ex) {
-	  System.err.println("Warning in command xml file " + currentFile + ": " + ex.getMessage());
+		System.err.println("Warning in command xml file " + currentFile + ": " + ex.getMessage());
 	}
 
-        @Override
+	@Override
 	public void error(SAXParseException ex) {
-	  System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
+		System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
 	}
 
-        @Override
+	@Override
 	public void fatalError(SAXParseException ex) throws SAXException {
-	  System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
-	  throw ex;
+		System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
+		throw ex;
 	}
 }

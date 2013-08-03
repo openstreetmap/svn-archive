@@ -25,8 +25,9 @@ public class Command {
     public ArrayList<Parameter> optParameters;	// Optional parameters list
     public int currentParameterNum;
     public boolean tracks;
+    public boolean asynchronous;
 
-    public Command () {	parameters = new ArrayList<Parameter>(); optParameters = new ArrayList<Parameter>(); currentParameterNum = 0; tracks = false; icon = ""; }
+    public Command () {	parameters = new ArrayList<Parameter>(); optParameters = new ArrayList<Parameter>(); currentParameterNum = 0; tracks = false; asynchronous = false; icon = ""; }
 
     public boolean loadObject(Object obj) {
         Parameter currentParameter = parameters.get(currentParameterNum);

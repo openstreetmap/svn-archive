@@ -42,6 +42,7 @@ import java.util.List;
 import javax.swing.JMenu;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -237,8 +238,13 @@ public class CommandLine extends Plugin {
         }
     }
 
-    protected void printHistory(String text) {
-        historyField.setText(text);
+    protected void printHistory(final String text) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                historyField.setText(text);
+            }
+        });
     }
 
     private void loadCommands() {
@@ -477,7 +483,6 @@ public class CommandLine extends Plugin {
 
         // redirect child process's stderr to JOSM stderr
         new Thread(new Runnable() {
-            @Override
             public void run() {
                 try {
                     byte[] buffer = new byte[1024];
@@ -496,7 +501,6 @@ public class CommandLine extends Plugin {
 
         // Write stdin stream
         Thread osmWriteThread = new Thread(new Runnable() {
-            @Override
             public void run() {
                 BBox bbox = null;
                 final OutputStream outputStream = tp.process.getOutputStream();
@@ -515,9 +519,17 @@ public class CommandLine extends Plugin {
                     else
                         bbox.addPrimitive(primitive, 0.0);
                 }
+                osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, OsmPrimitive.nodePredicate));
+                osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, OsmPrimitive.wayPredicate));
+                osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, OsmPrimitive.relationPredicate));
+                osmWriter.footer();
+                osmWriter.flush();
+
                 for (Parameter parameter : parameters) {
                     if (!parameter.isOsm())
                         continue;
+                    contents = new ArrayList<OsmPrimitive>();
+                    osmWriter.header();
                     pObjects = parameter.getParameterObjects();
                     for (OsmPrimitive primitive : pObjects) {
                         contents.add(primitive);
@@ -526,12 +538,13 @@ public class CommandLine extends Plugin {
                         else
                             bbox.addPrimitive(primitive, 0.0);
                     }
+                    osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, OsmPrimitive.nodePredicate));
+                    osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, OsmPrimitive.wayPredicate));
+                    osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, OsmPrimitive.relationPredicate));
+                    osmWriter.footer();
+                    osmWriter.flush();
                 }
-                osmWriter.writeNodes(new SubclassFilteredCollection<OsmPrimitive, Node>(contents, OsmPrimitive.nodePredicate));
-                osmWriter.writeWays(new SubclassFilteredCollection<OsmPrimitive, Way>(contents, OsmPrimitive.wayPredicate));
-                osmWriter.writeRelations(new SubclassFilteredCollection<OsmPrimitive, Relation>(contents, OsmPrimitive.relationPredicate));
-                osmWriter.footer();
-                osmWriter.flush();
+
                 if (tracks) {
                     final GpxWriter gpxWriter = new GpxWriter(printWriter);
                     GpxFilter gpxFilter = new GpxFilter();
@@ -544,27 +557,29 @@ public class CommandLine extends Plugin {
                     Utils.close(gpxWriter);
                 }
                 Utils.close(osmWriter);
-                synchronized (syncObj) {
-                    tp.running = false;
-                    syncObj.notifyAll();
-                }
             }
         });
 
         // Read stdout stream
-        final OsmToCmd osmToCmd = new OsmToCmd(this, Main.main.getCurrentDataSet());
+        final DataSet currentDataSet = Main.main.getCurrentDataSet();
+        final CommandLine that = this;
         Thread osmParseThread = new Thread(new Runnable() {
-            @Override
             public void run() {
                 try {
+                    final OsmToCmd osmToCmd = new OsmToCmd(that, currentDataSet);
                     String commandName = currentCommand.name;
                     //HashMap<Long, Long> inexiDMap = new HashMap<Long, Long>();
                     final InputStream inputStream = tp.process.getInputStream();
                     osmToCmd.parseStream(inputStream);
                     final List<org.openstreetmap.josm.command.Command> cmdlist = osmToCmd.getCommandList();
                     if (!cmdlist.isEmpty()) {
-                        SequenceCommand cmd = new SequenceCommand(commandName, cmdlist);
-                        Main.main.undoRedo.add(cmd);
+                        final SequenceCommand cmd = new SequenceCommand(commandName, cmdlist);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Main.main.undoRedo.add(cmd);
+                            }
+                        });
                     }
                 }
                 catch (Exception e) {}

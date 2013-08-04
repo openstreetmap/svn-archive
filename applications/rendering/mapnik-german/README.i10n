@@ -1,0 +1,20 @@
+To disable localisation just edit inc-de/i10n-settings.xml.inc
+
+The localisation functions here should be easily adaptable to other
+latin languages (e.g.  french)
+
+currently the localisation code does (roughly) the following:
+If exists Render name:de, otherwise check for int_name and name:en.
+
+Render int_name or name:en if they exist and differs from "name".
+
+If none of these conditions is met render "name" in case it contains
+latin characters and render transliterated name otherwise.
+
+localisation ist achieved by two functions:
+
+1. The get_germanified_name function (views/get_germanified_name.sql)
+   written in PL/pgSQL
+2. The transliterate function (directory utf8translit) written in C
+   using the ICU transliterator library which is called by the
+   get_germanified_name function if desired.

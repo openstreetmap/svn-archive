@@ -162,7 +162,8 @@ public class SeaMap {
 		public Obj type;
 		public AttMap atts;
 		public ObjMap objs;
-		public long area;
+		public double area;
+		public double length;
 		public Snode centre;
 
 		Feature() {
@@ -172,6 +173,7 @@ public class SeaMap {
 			atts = new AttMap();
 			objs = new ObjMap();
 			area = 0;
+			length = 0;
 			centre = new Snode();
 		}
 	}
@@ -376,19 +378,27 @@ public class SeaMap {
 			if (node.flg != Nflag.CONN) {
 				node.flg = Nflag.ISOL;
 			}
+			feature.length = 0;
+			feature.area = 0;
 			break;
 		case LINE:
 			edges.put(id, edge);
 			nodes.get(edge.first).flg = Nflag.CONN;
 			nodes.get(edge.last).flg = Nflag.CONN;
+			Bound ebound = (new Bound(new Side(edge, edge.forward), true));
+			feature.length = calcLength(ebound);
 			if (edge.first == edge.last) {
 				feature.flag = Fflag.AREA;
 				Area area = new Area();
-				area.add(new Bound(new Side(edge, edge.forward), true));
+				area.add(ebound);
+				feature.area = calcArea(ebound);
 				areas.put(id, area);
+			} else {
+				feature.area = 0;
 			}
 			break;
 		case AREA:
+			Bound bound = null;
 			Area area = new Area();
 			ArrayList<Long> role = outers;
 			while (role != null) {
@@ -396,7 +406,7 @@ public class SeaMap {
 					Edge edge = edges.get(role.remove(0));
 					long node1 = edge.first;
 					long node2 = edge.last;
-					Bound bound = new Bound(new Side(edge, edge.forward), (role == outers));
+					bound = new Bound(new Side(edge, edge.forward), (role == outers));
 					if (node1 != node2) {
 						for (ListIterator<Long> it = role.listIterator(0); it.hasNext();) {
 							Edge nedge = edges.get(it.next());
@@ -416,6 +426,8 @@ public class SeaMap {
 					area.add(bound);
 				}
 				if (role == outers) {
+					feature.length = calcLength(bound);
+					feature.area = calcArea(bound);
 					role = inners;
 				} else {
 					role = null;
@@ -434,7 +446,7 @@ public class SeaMap {
 		}
 	}
 
-	public double signedArea(Bound bound) {
+	double signedArea(Bound bound) {
 		Snode node;
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
@@ -448,7 +460,7 @@ public class SeaMap {
 			lon = node.lon;
 			sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
 		}
-		return sigma;
+		return sigma / 2.0;
 	}
 
 	public boolean handOfArea(Bound bound) {
@@ -456,7 +468,29 @@ public class SeaMap {
 	}
 
 	public double calcArea(Bound bound) {
-		return Math.abs(signedArea(bound)) * 3444 * 3444 / 2.0;
+		return Math.abs(signedArea(bound)) * 3444 * 3444;
+	}
+
+	public double calcLength(Bound bound) {
+		Snode node;
+		double lat, lon, llon, llat;
+		lat = lon = llon = llat = 0;
+		double sigma = 0;
+		BoundIterator it = new BoundIterator(bound);
+		if (it.hasNext()) {
+			node = it.next();
+			lat = node.lat;
+			lon = node.lon;
+			while (it.hasNext()) {
+				llon = lon;
+				llat = lat;
+				node = it.next();
+				lat = node.lat;
+				lon = node.lon;
+				sigma += Math.acos(Math.sin(lat) * Math.sin(llat) + Math.cos(lat) * Math.cos(llat) * Math.cos(llon - lon));
+			}
+		}
+		return sigma * 3444;
 	}
 
 	public Snode findCentroid(Feature feature) {

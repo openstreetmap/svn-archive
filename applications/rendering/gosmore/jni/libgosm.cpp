@@ -1503,10 +1503,15 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
     }
   }
   // Now adjust for track type.
-  if (k2v["tracktype"] && isdigit (k2v["tracktype"][5])) {
-    s.aveSpeed[motorcarR] *= ('6' - k2v["tracktype"][5]) / 5.0;
-    // Alternatively use ... (6 - atoi (k2v["tracktype"] + 5)) / 5.0;
-    // TODO: Mooaar
+  if ((k2v["tracktype"] && isdigit (k2v["tracktype"][5])) ||
+    strcmp (k2v["highway"], "track") == 0) {
+    // many tracks don't have a tracktype, assume them as rather slow
+    int tracktype = 2;
+    if (k2v["tracktype"] && isdigit (k2v["tracktype"][5]))
+      tracktype = atoi (k2v["tracktype"] + 5);
+    s.aveSpeed[motorcarR] *= (6 - tracktype) / 5.0;
+    if (tracktype >= 3) s.aveSpeed[bicycleR] *= (6 - tracktype) / 4.0;
+    if (tracktype == 5) s.aveSpeed[footR] *= 0.8;
   }
   if ((w.bits & (1 << onewayR)) && !(k2v["cycleway"] &&
     (strcmp (k2v["cycleway"], "opposite_lane") == 0 ||

@@ -443,6 +443,7 @@ inline void SetLocation (int nlon, int nlat)
   char lstr[50];
   int zl = 0;
   while (zl < 32 && (zoom >> zl)) zl++;
+  setlocale (LC_NUMERIC, "C");
   sprintf (lstr, "?lat=%.5lf&lon=%.5lf&zoom=%d", LatInverse (nlat),
     LonInverse (nlon), 33 - zl);
   setLocBusy = TRUE;
@@ -458,6 +459,7 @@ int ChangeLocation (void)
   char *lstr = (char *) gtk_entry_get_text (GTK_ENTRY (location));
   double lat, lon;
   while (*lstr != '?' && *lstr != '\0') lstr++;
+  setlocale (LC_NUMERIC, "C");
   if (sscanf (lstr, "?lat=%lf&lon=%lf&zoom=%d", &lat, &lon, &zoom) == 3) {
     clat = Latitude (lat);
     clon = Longitude (lon);
@@ -841,7 +843,7 @@ extern "C" jstring Java_org_osmu_gosmore_MapRenderer_navigate (
           x->shortest->shortest ? x->shortest->shortest->nd->lon : tlon;
         while (nd[-1].lon == nd->lon && nd[-1].lat == nd->lat) nd--;
         int segCnt = 0; // Count number of segments at x->shortest
-        int n2Left, fLeft = INT_MIN;
+        int n2Left = /* Keep compiler quiet*/ 0, fLeft = INT_MIN;
         do {
           // TODO : Only count segment traversable by 'Vehicle'
           // Except for the case where a cyclist crosses a motorway_link.
@@ -1337,7 +1339,6 @@ int UpdateProcessFunction(void */*userData*/, double t, double d,
 void *UpdateMapThread (void *n)
 {
   CURL *curl;
-  CURLcode res;
   FILE *outfile;
  
   curl = curl_easy_init();
@@ -1354,10 +1355,10 @@ void *UpdateMapThread (void *n)
     curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, UpdateProcessFunction);
     curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, ""); // Bar);
  
-    res = curl_easy_perform(curl);
+    curl_easy_perform(curl);
  
     fclose(outfile);
-    system ("unzip tmp.zip"); //cmd.c_str ());
+    if (system ("unzip tmp.zip") == -1) fprintf (stderr, "Error:system()\n");
     string dst ((string)(char*)n + ".pak");
     rename ("gosmore.pak", dst.c_str ());
     unlink ("tmp.zip");
@@ -1653,6 +1654,10 @@ void DisplaySearchResults (void)
 }
 
 
+#ifndef _WIN32_WCE
+int HandleKeyboard (int, int, int)
+{
+#else
 int HandleKeyboard (int event, int ex, int ey)
 { // Some WinCE devices, like the Mio Moov 200 does not have an input method
   // and any call to activate it or set the text on an EDIT or STATIC (label)
@@ -1662,7 +1667,6 @@ int HandleKeyboard (int event, int ex, int ey)
   // Draw our own keyboard (Expose Event) or handle the key (Click)
   if (Keyboard) return FALSE; // Using the Windows keyboard
   // DrawString (30, 5, searchStr.c_str ()); // For testing under GTK
-  #ifdef _WIN32_WCE
   if (!event) {
     RECT r;
     r.left = 0;
@@ -1783,6 +1787,7 @@ int MouseEv (int x, int y, int evTime, int button, int click)
         char lstr[200];
         int zl = 0;
         while (zl < 32 && (zoom >> zl)) zl++;
+        setlocale (LC_NUMERIC, "C");
         sprintf (lstr,
          option == ViewOSMNum ? "%sopenstreetmap.org/?lat=%.5lf&lon=%.5lf&zoom=%d%s" :
          option == EditInPotlatchNum ? "%sopenstreetmap.org/edit?lat=%.5lf&lon=%.5lf&zoom=%d%s" :
@@ -1913,12 +1918,6 @@ int MouseEv (int x, int y, int evTime, int button, int click)
 }
 #endif
 
-#if 0 //ifdef CHILDREN
-struct childStruct {
-  int minlon, minlat, maxlon, maxlat, z;
-  int pipe[2];
-} child[70];
-#endif
 #define STATEINFO OPTIONS o (clat, 0, 0) o (clon, 0, 0) \
  o (sinAzimuth, 0, 0) o (cosAzimuth, 0, 0) o (zoom, 0, 0) o (option, 0, 0) \
  o (width, 0, 0) o (height, 0, 0)
@@ -2145,6 +2144,7 @@ void LineTo (int x, int y, int width)
   //if (vol) glDrawArrays (GL_TRIANGLE_FAN, 0, i + 3);
   glDrawArrays (GL_LINE_LOOP, 0, i + 3);  
 #else
+  if (width) {} // Suppress warning from compiler
   gdk_draw_line (GDK_DRAWABLE (draw->window), mygc, casingx, casingy, x, y);
 #endif
   casingx = x;
@@ -2313,25 +2313,6 @@ gint DrawExpose (void)
               firstElemStyle + Background - (Background > 8 ? 8 : 0)][0]);
     oldBackground = Background;
   }
-  #if 0 //ifdef CHILDREN
-  if (1) {
-    vector<char> msg;
-    msg.resize (4 + 3 * sizeof (XID), 0); // Zero the header
-    *(XID*)&msg[4] = GDK_WINDOW_XID (draw->window);
-    *(XID*)&msg[4 + sizeof (XID)] = GDK_PIXMAP_XID (icons);
-    *(XID*)&msg[4 + sizeof (XID) * 2] = GDK_PIXMAP_XID (mask);
-    #define o(x,min,max) msg.resize (msg.size () + sizeof (x)); \
-                    memcpy (&msg[msg.size () - sizeof (x)], &x, sizeof (x));
-    STATEINFO
-    #undef o
-    write (child[0].pipe[1], &msg[0], msg.size ());
-    // Avoid flicker here : gtk_widget_set_double_buffered
-    //sleep (1);
-    read (child[0].pipe[0], &msg[0], 4);
-    /* Wait for finish to prevent queuing too many requests */
-    return FALSE;
-  }
-  #endif
   GdkRectangle r =
     { 0, 0, width, height };
   gdk_window_begin_paint_rect (draw->window, &r);
@@ -3087,11 +3068,13 @@ gint Drag (GtkWidget * /*widget*/, GdkEventMotion *event, void * /*w_cur*/)
 {
   if (event->state & GDK_BUTTON1_MASK) MouseEv
           (event->x, event->y, event->time, 1, FALSE);
+  return TRUE;
 }
 
 int Click (GtkWidget * /*widget*/, GdkEventButton *event, void * /*para*/)
 {
   MouseEv (event->x, event->y, event->time, event->button, TRUE);
+  return TRUE;
 }
 
 GtkWidget *searchW;
@@ -3120,6 +3103,7 @@ void HitGtkButton (GtkWidget * /*w*/, void *data)
 
 //------------------------------------------------------------------------
 // Callbacks that are called with the user drops an icon and then binds it
+#if 0
 static gboolean DropOnDraw (GtkWidget *w, GdkDragContext *c, gint /*x*/,
   gint /* y */, guint time, gpointer)
 {
@@ -3129,140 +3113,9 @@ static gboolean DropOnDraw (GtkWidget *w, GdkDragContext *c, gint /*x*/,
   }
   return c->targets ? TRUE : FALSE;
 }
-
-#if 0
-static void ReadTsList (void)
-{
-  FILE *fp = fopen ("main.ts", "r");
-  gsize siz;
-  for (; !tsList.empty (); tsList.pop_back()) g_object_unref (tsList.back().pix);
-  while (fp && fread (&siz, sizeof (siz), 1, fp) == 1) {
-    printf ("Reading %d\n", siz);
-    void *buf = malloc (siz);
-    fread (buf, siz, 1, fp);
-    tsList.push_back (tsItem ());
-    #ifndef NOGTK
-    GInputStream *gis = g_memory_input_stream_new_from_data (buf, siz, NULL);
-    GError *err = NULL;
-    tsList.back ().pix = gdk_pixbuf_new_from_stream (gis, NULL, &err);
-    #else
-    tsList.back ().pix = CreateIconFromResource (buf, siz, TRUE, 0x30000);
-    #endif
-    int c; 
-    while ((c = fgetc (fp)) != '\0') tsList.back ().cmd += c;
-  }
-  if (fp) fclose (fp);
-}
-
-static void DropReceived (GtkWidget */*draw*/, GdkDragContext *c, gint x,
-  gint y, GtkSelectionData *sdata, guint /*ttype*/, guint time, gpointer)
-{
-  //FILE *fp;
-  gchar **arr = sdata != NULL ? gtk_selection_data_get_uris (sdata) : NULL;
-  gchar *f = arr ? g_filename_from_uri (arr[0], NULL, NULL) : NULL;
-//  printf ("x%sx\n", f); //gtk_selection_data_get_text (sdata));
-//  printf ("%p\n", gtk_selection_data_get_pixbuf (sdata));
-//  if (sdata != NULL && sdata->length >= 7) printf ("%s\n----%s----\n", sdata->data,
-//    string ((char*) sdata->data + 7, strcspn ((char*) sdata->data + 7, "\n\r")).c_str());
-
-  GError *err = NULL;
-  tsList.push_back (tsItem ());
-  if ((f && (tsList.back ().pix = gdk_pixbuf_new_from_file (f, &err)))
-      || (tsList.back ().pix = gtk_selection_data_get_pixbuf (sdata))) {
-    //if (ttype == 0) printf ("Data=%s\n", sdata->data);
-    printf ("C %p\n", tsList.back().pix);
-    char a[40];
-    if (draw->allocation.width <= x * 2) x -= draw->allocation.width;
-    if (draw->allocation.height <= y * 2) y -= draw->allocation.height;
-    sprintf (a, "%s %+d; %s %+d; ;", x < 0 ? "1.0 w" : "0.0 w", x,
-                                     y < 0 ? "1.0 h" : "0.0 h", y);
-    tsList.back ().cmd = string (a);
-    
-    GtkWidget *dialog, *dedit;
-    dialog = gtk_dialog_new_with_buttons ("Set icon data", NULL, GTK_DIALOG_MODAL,
-      GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_DELETE, GTK_RESPONSE_NO,
-      GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
-    dedit = gtk_entry_new ();
-    gtk_entry_set_text (GTK_ENTRY (dedit), tsList.back ().cmd.c_str ());
-    gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), dedit);
-    gtk_widget_show_all (dialog);
-    int result = gtk_dialog_run (GTK_DIALOG (dialog));
-    if (result == GTK_RESPONSE_OK) {
-      printf ("OK\n");
-      tsList.back ().cmd = string (gtk_entry_get_text (GTK_ENTRY (dedit)));
-    }
-    else if (result == GTK_RESPONSE_NO) {
-      printf ("Delete\n");
-      tsList.pop_back ();
-    }
-    gtk_widget_destroy (dialog);
-
-    FILE *fp = fopen ("main.ts", "w");
-    for (deque<tsItem>::iterator i = tsList.begin (); i != tsList.end (); i++) {
-      gsize siz;
-      gchar *buf;
-      printf ("%p %p\n", err, i->pix);
-      gdk_pixbuf_save_to_buffer (i->pix, &buf, &siz, "ico", &err, NULL);
-      printf ("Saving %u\n", siz);
-  //    gdk_pixbuf_new_from_buffer (
-      fwrite (&siz, sizeof (siz), 1, fp);
-      fwrite (buf, siz, 1, fp);
-      fwrite (i->cmd.c_str (), i->cmd.length () + 1, 1, fp);
-    }
-    fclose (fp);
-    
-    #if 0
-      //(fp = fopen (string ((char*) sdata->data + 7, strcspn ((char*) sdata->data + 7, "\n\r")).c_str(), "r"))) {
-    png_structp pngp = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    printf ("%p\n", pngp);
-    if (pngp) {
-      png_infop infop = png_create_info_struct (pngp);
-      printf ("i %p\n", infop);
-      if (infop && !setjmp (png_jmpbuf (pngp))) {
-        png_init_io (pngp, fp);
-        png_read_png (pngp, infop, PNG_TRANSFORM_IDENTITY |
-          PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING |
-          PNG_TRANSFORM_PACKSWAP /*| PNG_TRANSFORM_GRAY_TO_RGB Missing ?*/, NULL);
-        png_bytep *row = png_get_rows(pngp, infop);
-        printf ("%d %d %d\n", png_get_image_width (pngp, infop), png_get_image_height (pngp, infop),
-          png_get_channels (pngp, infop));
-        for (int i = 0; i < png_get_image_height (pngp, infop); i++) {
-          for (int j = 0; j < png_get_image_width (pngp, infop); j++) {
-            putchar (row[i][j * 4] & 128 ? '*' : ' ');
-          }
-          putchar ('\n');
-        }
-      }
-      png_destroy_read_struct (&pngp, &infop, (png_infopp)NULL);
-    }
-    fclose (fp);
-    #endif
-  }
-  else tsList.pop_back ();
-  g_strfreev (arr);
-  free (f);
-  gtk_drag_finish (c, TRUE, FALSE, time);
-}
-
-void SeUpdate (GtkWidget *w, gpointer p)
-{
-  GdkColor c;
-  if (((intptr_t) p & 0xff) == 2) gtk_color_button_get_color (GTK_COLOR_BUTTON (w), &c);
-  if (((intptr_t) p & 0xff) == 3) printf ("%s ", gtk_font_button_get_font_name (GTK_FONT_BUTTON (w)));
-  if (((intptr_t) p & 0xff) == 4) printf ("%d ", gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (w)));
-  if (((intptr_t) p & 0xff) == 5) printf ("%d ", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
-  printf ("%p | %4x %4x %4x\n", p, c.red, c.green, c.blue);
-}
-#endif // Obsolete code
-
-#endif // HEADLESS
-
-#if 0
-void SelectName (GtkWidget * /*w*/, int row, int /*column*/,
-  GdkEventButton * /*ev*/, void * /*data*/)
-{
-}
 #endif
+
+#endif // NOGTK
 
 #endif // HEADLESS
 
@@ -3348,7 +3201,7 @@ int UserInterface (int argc, char *argv[],
   if (strcmp (pakfile, "nopak") == 0 && h) {
     string ddir (string (h) + "/.gosmore");
     mkdir (ddir.c_str (), 0755); // Usually already exists
-    chdir (ddir.c_str ());
+    if (chdir (ddir.c_str ())) perror ("chdir(\".gosmore\")");
     SerializeOptions (optFile, TRUE, NULL);
   }
   else SerializeOptions (optFile, TRUE, pakfile);
@@ -3528,26 +3381,6 @@ int UserInterface (int argc, char *argv[],
 #endif
   draw = gtk_drawing_area_new ();
   gtk_widget_set_double_buffered (draw, FALSE);
-  #if 0 // ndef CHILDREN
-    XID id[3];
-    char sString[50];
-    fread (sString, 4, 1, stdin);
-    fread (id, sizeof (id), 1, stdin);
-    draw->window = gdk_window_foreign_new (id[0]);
-    icons = gdk_pixmap_foreign_new (id[1]);
-    mask = gdk_pixmap_foreign_new (id[2]);
-    for (;;) {
-      #define o(x,min,max) if (fread (&x, sizeof (x), 1, stdin)) {};
-      STATEINFO
-      #undef o
-      //fprintf (stderr, "%d %p | %p %p | %d %d -- %d %d\n", id[0], draw->window,
-      //  icons, mask, id[1], id[2], clon, clat);
-      DrawExpose ();
-      if (write (STDOUT_FILENO, sString, 4) != 4) exit (0);
-      if (fread (sString, 4, 1, stdin) != 1) exit (0);
-      fread (id, sizeof (id), 1, stdin); // Discard
-    }
-  #endif
   gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
     (GtkSignalFunc) DrawExpose, NULL);
   gtk_signal_connect (GTK_OBJECT (draw), "button-release-event",
@@ -3724,30 +3557,13 @@ int UserInterface (int argc, char *argv[],
 }
 
 int main (int argc, char *argv[])
-{
-  #if 0 // ifdef CHILDREN
-  if (1) {
-    int cmd[2], result[2];
-    pipe (cmd);
-    pipe (result);
-    child[0].pipe[0] = result[0];
-    child[0].pipe[1] = cmd[1];
-    if (fork () == 0) {
-      dup2 (cmd[0], STDIN_FILENO);
-      dup2 (result[1], STDOUT_FILENO);
-      execl ("./gosmore16", "./gosmore16", NULL);
-      perror ("Starting slave process gosmore16");
-      _exit (1);
-    }
-  }
-  #endif
-  
+{  
   int nextarg = 1;
   bool rebuild = false;
   const char* master = "";
   int bbox[4] = { INT_MIN, INT_MIN, 0x7fffffff, 0x7fffffff };
   
-  setlocale (LC_ALL, "C"); /* Ensure decimal sign is "." for NMEA parsing. */
+  setlocale (LC_NUMERIC, "C"); /* Ensure decimal sign is "." for NMEA parsing. */
   
   if (argc > 1 && stricmp (argv[1], "sortRelations") == 0) {
     return SortRelations ();

@@ -161,7 +161,7 @@ void RebalanceAfterLeafAdd (struct PolygonEdge *n)
 void Delete (struct PolygonEdge *n)
 { // If n is not a leaf, we first swap it out with the leaf PolygonEdge that just
   // precedes it.
-  struct PolygonEdge *leaf = n, *tmp;
+  struct PolygonEdge *leaf = n;
   
   if (n->left) {
     for (leaf = n->left; leaf->right; leaf = leaf->right) {}
@@ -193,7 +193,9 @@ void Delete (struct PolygonEdge *n)
   else if (n->right) leaf = n->right;
   #endif
 
-  tmp = leaf->parent == n ? leaf : leaf->parent;
+  #ifndef AATREE_NOREBALANCE
+  struct PolygonEdge *tmp = leaf->parent == n ? leaf : leaf->parent;
+  #endif
   if (leaf->parent->left == leaf) leaf->parent->left = NULL;
   else leaf->parent->right = NULL;
   
@@ -241,7 +243,7 @@ void Check (struct PolygonEdge *n)
 //  assert (!Next (n) || n->data <= Next (n)->data);
   assert (!n->parent || n->parent->level >= n->level);
   assert (n->level == (n->left == NULL ? 1 : n->left->level + 1));
-  assert (n->level <= 1 || n->right && n->level - n->right->level <= 1);
+  assert (n->level <= 1 || (n->right && n->level - n->right->level <= 1));
   assert (!n->parent || !n->parent->parent ||
           n->parent->parent->level > n->level);
 }
@@ -310,7 +312,7 @@ void AddPolygon (vector<PolygonEdge> &d, FixedPoint *p, int cnt)
   calcType area = p[cnt-1].x * (calcType) p[0].y - p[0].x * (calcType) p[cnt-1].y;
   for (i = 0; i < cnt - 1; i++) area += p[i].x*(calcType)p[i+1].y-
     p[i+1].x * (calcType) p[i].y;
-  for (i = firstd; i < d.size(); i++) {
+  for (i = firstd; i < (int) d.size(); i++) {
     // This ll/lr inequality is a cross product that is true if the polygon
     // was clockwise. AddInnerPoly() will just negate isLeft.
     d[i].isLeft = (area < 0) == (d[i].delta == 1);
@@ -365,7 +367,7 @@ void Fill (vector<PolygonEdge> &d,int isSea, GdkWindow *w, GdkGC *gc)
     if (d[i].continues)                assert (d[i].pt[j*d[i].delta].y <= d[i+1].pt->y);
   } // Make sure AddPolygon() and variants are correct */
   dummy.opp = &dummy;
-  for (i = 0; i < d.size(); i++) {
+  for (i = 0; i < (int) d.size(); i++) {
     for (j = h++; j > 1 && heap[j / 2]->pt->y > d[i].pt->y; j /= 2) {
       heap[j] = heap[j/2];
     }

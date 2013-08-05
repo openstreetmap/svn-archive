@@ -923,6 +923,15 @@ The colours can only be in hex
 	</rule>
 
 	<rule>
+		<condition k="highway" v="tertiary_link"/>
+		<line width="3" realwidth="6" colour="#fdbf6f"/>
+		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
+		<scale_min>1</scale_min>
+		<scale_max>40000</scale_max>
+                <routing bicycle="12" foot="5" goods="50" hgv="50" motorcycle="50" motorcar="50" psv="50" moped="45" mofa="25"/>
+	</rule>
+
+	<rule>
 		<condition k="highway" v="unclassified"/>
 		<line width="2" realwidth="5" colour="#c0c0c0"/>
 		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
@@ -1200,7 +1209,7 @@ The colours can only be in hex
 		<condition k="highway" v="bus_stop" />
 		<icon annotate="true" src="transport/bus_small.png" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 	
 	<rule>
@@ -1434,7 +1443,7 @@ The colours can only be in hex
 		<icon annotate="true" src="nautical/weir.png" />
         <line width="2" colour="#D8D8D8" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -1791,14 +1800,14 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/landmark/power/tower.png" />
         <area width="1" colour="#eeeeee" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="power" v="pole"/>
 		<icon annotate="true" src="misc/landmark/power/pole.png"/>
 		<scale_min>1</scale_min>
-		<scale_max>50000</scale_max>
+		<scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -1806,7 +1815,7 @@ The colours can only be in hex
         <line width="1" colour="#eeeeee" />
 		<!-- <icon annotate="true" src="misc/deprecated.png" /> -->
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -1830,7 +1839,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/landmark/power.png" />
         <area width="1" colour="#eeeeee" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>10000</scale_max>
 	</rule>
 
 	<!--the power_source rules must be placed before the power=generator rule! -->
@@ -1839,7 +1848,7 @@ The colours can only be in hex
 		<icon annotate="true" src="misc/landmark/power/wind.png" />
         <area width="1" colour="#eeeeee" />
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>
@@ -1890,13 +1899,14 @@ The colours can only be in hex
         <scale_max>50000</scale_max>
 	</rule>
 
+<!-- Rather render according to power_source icons
 	<rule>
-		<condition k="power" v="generator" />
+	<condition k="power" v="generator" />
 		<icon annotate="true" src="misc/landmark/power.png" />
         <area width="1" colour="#eeeeee" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
-	</rule>
+	</rule> -->
 
 <!--man_made tags -->
 	<rule>
@@ -2057,7 +2067,7 @@ The colours can only be in hex
 		<icon annotate="true" src="leisure/water_park.png" />
         <area colour="#c7f1a3" />		
         <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
+        <scale_max>20000</scale_max>
 	</rule>
 
 	<rule>
@@ -3126,7 +3136,7 @@ The colours can only be in hex
 		<icon annotate="true" src="shop/toys.png" />
 		<area colour="#a0a0ff"/>
         <scale_min>1</scale_min>
-        <scale_max>65000</scale_max>
+        <scale_max>5000</scale_max>
 	</rule>
 
 	<rule>

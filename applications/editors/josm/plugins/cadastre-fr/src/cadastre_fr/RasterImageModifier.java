@@ -65,6 +65,8 @@ public class RasterImageModifier extends ImageModifier {
             int width = bufferedImage.getWidth();
             int height = bufferedImage.getHeight();
             BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            // converting grey scale colors to black/white is configurable (use less resources but is less readable)
+            boolean simplifyColors = Main.pref.getBoolean("cadastrewms.raster2bitsColors", false);
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     int rgb = bufferedImage.getRGB(x, y);
@@ -74,11 +76,12 @@ public class RasterImageModifier extends ImageModifier {
                     int b = c.getBlue();
                     Color maskedColor;
                     if (rgb == cadastreBackground) {
-                        maskedColor = new Color(r, g, b, 0x00); // transparent
+                        maskedColor = simplifyColors ? new Color(0xff, 0xff, 0xff, 0x00) : 
+                            new Color(r, g, b, 0x00); // transparent
                     } else {
-                        maskedColor = new Color(r, g, b, 0xFF); // opaque
+                        maskedColor = simplifyColors ? new Color(0, 0, 0, 0xFF) : 
+                            new Color(r, g, b, 0xFF); // opaque
                     }
-                    //maskedColor = new Color(r, g, b, alpha);
                     bi.setRGB(x, y, maskedColor.getRGB());
                 }
             }

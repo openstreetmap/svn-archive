@@ -41,6 +41,8 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
     private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
 
     private JCheckBox enableTableauAssemblage = new JCheckBox(tr("Use \"Tableau d''assemblage\""));
+    
+    private JCheckBox simplify2BitsColors = new JCheckBox(tr("Replace grey shades by white color only"));
 
     private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
 
@@ -124,7 +126,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         // option to reverse the grey colors (to see texts background)
         reversGrey.setSelected(Main.pref.getBoolean("cadastrewms.invertGrey", false));
         reversGrey.setToolTipText(tr("Invert the original black and white colors (and all intermediate greys). Useful for texts on dark backgrounds."));
-        cadastrewms.add(reversGrey, GBC.eop().insets(00, 0, 0, 0));
+        cadastrewms.add(reversGrey, GBC.eop().insets(0, 0, 0, 0));
 
         // option to enable transparency
         transparency.addActionListener(new ActionListener() {
@@ -289,6 +291,10 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         enableTableauAssemblage.setSelected(Main.pref.getBoolean("cadastrewms.useTA", false));
         enableTableauAssemblage.setToolTipText(tr("Add the \"Tableau(x) d''assemblage\" in the list of cadastre sheets to grab."));
         cadastrewms.add(enableTableauAssemblage, GBC.eop().insets(0, 0, 0, 0));
+        // option to use 2 bits colors only
+        simplify2BitsColors.setSelected(Main.pref.getBoolean("cadastrewms.raster2bitsColors", false));
+        simplify2BitsColors.setToolTipText(tr("Replace greyscale by white color (smaller files and memory usage)."));
+        cadastrewms.add(simplify2BitsColors, GBC.eop().insets(0, 0, 0, 0));
         // the crosspiece display
         JLabel jLabelCrosspieces = new JLabel(tr("Display crosspieces:"));
         cadastrewms.add(jLabelCrosspieces, GBC.std().insets(0, 0, 10, 0));
@@ -403,6 +409,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         }
         Main.pref.put("cadastrewms.noImageCropping", disableImageCropping.isSelected());
         Main.pref.put("cadastrewms.useTA", enableTableauAssemblage.isSelected());
+        Main.pref.put("cadastrewms.raster2bitsColors", simplify2BitsColors.isSelected());
         if (crosspiece1.isSelected()) Main.pref.put("cadastrewms.crosspieces", "0");
         else if (crosspiece2.isSelected()) Main.pref.put("cadastrewms.crosspieces", "1");
         else if (crosspiece3.isSelected()) Main.pref.put("cadastrewms.crosspieces", "2");

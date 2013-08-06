@@ -247,7 +247,9 @@ public class WMSLayer extends Layer implements ImageObserver {
         String str = tr("WMS layer ({0}), {1} tile(s) loaded", getName(), images.size());
         if (isRaster) {
             str += "\n"+tr("Is not vectorized.");
-            str += "\n"+tr("Raster size: {0}", communeBBox);
+            str += "\n"+tr("Bounding box: {0}", communeBBox);
+            if(images.size()>0)
+                str += "\n"+tr("Image size (px): {0}/{1}", images.get(0).image.getWidth(), images.get(0).image.getHeight());
         } else
             str += "\n"+tr("Is vectorized.");
             str += "\n"+tr("Commune bbox: {0}", communeBBox);

@@ -133,9 +133,11 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * 2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626.
  * 2.4 27-Jun-2013 - fix raster image georeferencing issues. Add new MenuActionRefineGeoRef for a new georeferencing
  *                   of already referenced plan image.
- * 2.5 01-Aug-2013 - Fix transparency issue on new raster images. Temporary disable georeferences parsing not
- *                   working on new cadastre WMS. Workaround on address help tool when switching to full
- *                   screen (and improvement when clicking on existing node address street in mode relation).                   
+ * 2.5 06-Aug-2013 - fix transparency issue on new raster images. Temporary disable georeferences parsing not
+ *                   working on new cadastre WMS.
+ *                 - workaround on address help tool when switching to full screen
+ *                 - improvement when clicking on existing node address street in mode relation
+ *                 - option to simplify raster images in 2 bits colors (like images served in the past).                   
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.5";

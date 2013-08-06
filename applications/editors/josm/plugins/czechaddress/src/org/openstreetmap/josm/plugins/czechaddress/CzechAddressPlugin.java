@@ -63,8 +63,6 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
     public void initLoggers() {
 
         String filename = getPluginDir() + "-log.xml";
-        /*final Logger[] loggers = new Logger[]
-            {logger, Reasoner.logger, ConflictResolver.logger};*/
 
         try {
             Handler fileHandler = new FileHandler(filename);
@@ -175,10 +173,10 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         }
     }
 
-    static private Set<StatusListener> listeners = new HashSet<StatusListener>();
-    static public void addStatusListener(StatusListener l)    {listeners.add(l);}
-    static public void removeStatusListener(StatusListener l) {listeners.remove(l);}
-    static public void broadcastStatusChange(int statusMessage) {
+    static private final Set<StatusListener> listeners = new HashSet<StatusListener>();
+    static public synchronized void addStatusListener(StatusListener l)    {listeners.add(l);}
+    static public synchronized void removeStatusListener(StatusListener l) {listeners.remove(l);}
+    static public synchronized void broadcastStatusChange(int statusMessage) {
         for (StatusListener listener : listeners)
             listener.pluginStatusChanged(statusMessage);
     }

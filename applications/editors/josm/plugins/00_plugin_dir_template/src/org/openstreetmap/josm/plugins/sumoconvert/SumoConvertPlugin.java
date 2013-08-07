@@ -25,6 +25,7 @@ public class SumoConvertPlugin extends Plugin{
         super(info);
         exportAction = new SumoExportAction();
         Main.main.menu.toolsMenu.add(exportAction);
+        System.out.println(getPluginDir());
     }
     
     /**

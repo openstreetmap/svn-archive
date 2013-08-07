@@ -58,9 +58,9 @@ public class ExportTask extends PleaseWaitRunnable {
 			Runtime.getRuntime().exec(sumoConvertProperties.getProperty("resources") +
 									  sumoConvertProperties.getProperty("netconvert") +
 									  sumoConvertProperties.getProperty("netconvert.osmfiles") +
-									  sumoConvertProperties.getProperty("plainoutput"),
+									  sumoConvertProperties.getProperty("netconvert.plainoutput"),
 									  null, 
-									  new File("E:\\Users\\ignacio_palermo\\Documents\\Facultad\\Tesis\\sumo-0.15.0\\bin")
+									  null//new File("C:\\Users\\ignacio_palermo\\AppData\\Roaming\\JOSM\\plugins\\sumoconvert")//resources
 			); 			
 		} catch (IOException e) {
 		     e.printStackTrace();

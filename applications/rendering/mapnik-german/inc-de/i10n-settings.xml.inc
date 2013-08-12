@@ -11,4 +11,4 @@ If you don't want german localization just uncomment the following:
 This will use a custom PL/pgSQL function for selecting the most
 appropriate placename (from the perspective of a native german speaker)
 -->
-<!ENTITY get_name   'get_germanified_name(name,"name:de",int_name,"name:en") as name'>
+<!ENTITY get_name   'get_localized_name(name,"name:de",int_name,"name:en") as name'>

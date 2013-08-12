@@ -113,7 +113,7 @@ Create the views (view_osmde_*) for the mapnik-german style:
     sudo -u postgres psql osm < ./mapnik-german/views/view-point.sql
     sudo -u postgres psql osm < ./mapnik-german/views/view-polygon.sql
     sudo -u postgres psql osm < ./mapnik-german/views/view-roads.sql
-    sudo -u postgres psql osm < ./mapnik-german/views/get_germanified_name.sql
+    sudo -u postgres psql osm < ./mapnik-german/views/get_localized_name.sql
    
     sudo -u postgres psql -d osm
     SELECT populate_geometry_columns();

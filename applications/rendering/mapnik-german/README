@@ -101,13 +101,14 @@ has full access. The associated password of the user "postgres" is "USERPWD".
 
 Once the database is set-up (which should already be the case if you have
 been using mapnik before), mport sachsen.osm using osm2pgsql with the
---hstore (-k) option:
+--hstore (-k) and --hstore-match-only options:
 
-    osm2pgsql -m -d osm --hstore -W \
+    osm2pgsql -m -d osm --hstore --hstore-match-only -W \
               -S ./mapnik-german/views/default.style \
               ./sachsen.osm
 
-Create the views (view_osmde_*) for the mapnik-german style:
+Create the views (view_osmde_*) for the mapnik-german style (also
+usable for standard osm style):
 
     sudo -u postgres psql osm < ./mapnik-german/views/view-line.sql
     sudo -u postgres psql osm < ./mapnik-german/views/view-point.sql

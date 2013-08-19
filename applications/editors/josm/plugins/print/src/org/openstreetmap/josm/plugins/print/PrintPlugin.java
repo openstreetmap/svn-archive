@@ -27,6 +27,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -52,12 +53,6 @@ public class PrintPlugin extends Plugin {
      * The default resolution
      */
     public static final int DEF_RESOLUTION_DPI = 100;
-
-    /**
-     * The default attribution text
-     */
-    public static final String DEF_ATTRIBUTION = 
-      "OSM Map data (c) OpenStreetMap contributors, CC-BY-SA";
 
     /**
      * Adds the PrintPlugin to the GUI
@@ -91,7 +86,7 @@ public class PrintPlugin extends Plugin {
         Main.pref.putDefault(
           "print.resolution.dpi", Integer.toString(DEF_RESOLUTION_DPI));
         Main.pref.putDefault(
-          "print.attribution", DEF_ATTRIBUTION);
+          "print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION);
         Main.pref.putDefault(
           "print.preview.enabled", new Boolean(false).toString());
 

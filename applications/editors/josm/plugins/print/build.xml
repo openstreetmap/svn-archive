@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Added a field to specify the map scale."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5670"/>
+    <property name="plugin.main.version" value="6154"/>
 
     <property name="plugin.author" value="Kai Pastor"/>
     <property name="plugin.class"  value="org.openstreetmap.josm.plugins.print.PrintPlugin"/>

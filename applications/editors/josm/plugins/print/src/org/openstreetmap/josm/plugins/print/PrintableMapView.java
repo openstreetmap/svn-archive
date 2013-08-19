@@ -47,6 +47,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.MapView;
@@ -324,7 +325,7 @@ public class PrintableMapView extends MapView implements Printable {
      * @param pageFormat the size and orientation of the page being drawn
      */
     public void paintMapAttribution(Graphics2D g2d, PageFormat pageFormat) {
-        String text = Main.pref.get("print.attribution", PrintPlugin.DEF_ATTRIBUTION);
+        String text = Main.pref.get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION);
         
         if (text == null) {
             return;

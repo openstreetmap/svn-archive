@@ -54,6 +54,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
@@ -62,6 +63,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.WindowGeometry;
@@ -274,7 +276,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, threeColumns.grid(2, row));
 
         row++;
-        final javax.swing.JTextArea attributionText = new javax.swing.JTextArea(Main.pref.get("print.attribution", PrintPlugin.DEF_ATTRIBUTION));
+        final JTextArea attributionText = new JTextArea(Main.pref.get("print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION));
         attributionText.setRows(10);
         attributionText.setLineWrap(true);
         attributionText.setWrapStyleWord(true);

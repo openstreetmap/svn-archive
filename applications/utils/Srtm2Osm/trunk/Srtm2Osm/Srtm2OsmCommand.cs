@@ -12,6 +12,7 @@ using System.Web;
 using System.Collections.Specialized;
 using System.Xml.Serialization;
 using Brejc.Geometry;
+using System.Text.RegularExpressions;
 
 namespace Srtm2Osm
 {
@@ -392,41 +393,63 @@ namespace Srtm2Osm
                     case Srtm2OsmCommandOption.Bounds3:
                         {
                             Uri slippyMapUrl = new Uri (option.Parameters[0]);
+                            double lat = 0;
+                            double lng = 0;
+                            int zoomLevel = 0;
 
-                            string queryPart = slippyMapUrl.Query;
-                            NameValueCollection queryParameters = HttpUtility.ParseQueryString (queryPart);
-
-                            if (queryParameters["lat"] != null
-                                && queryParameters["lon"] != null
-                                && queryParameters["zoom"] != null)
+                            if (slippyMapUrl.Fragment != String.Empty)
                             {
-                                double lat = 0;
-                                double lng = 0;
-                                int zoomLevel = 0;
+                                // map=18/50.07499/10.21574
+                                string pattern = @"map=(\d+)/([-\.\d]+)/([-\.\d]+)";
+                                Match match = Regex.Match(slippyMapUrl.Fragment, pattern);
 
-                                try
+                                if (match.Success)
                                 {
-                                    lat = Double.Parse(queryParameters["lat"], invariantCulture);
-                                    lng = Double.Parse(queryParameters["lon"], invariantCulture);
-                                    zoomLevel = Int32.Parse(queryParameters["zoom"], invariantCulture);
+                                    try
+                                    {
+                                        zoomLevel = Int32.Parse(match.Groups[1].Value, invariantCulture); 
+                                        lat = Double.Parse(match.Groups[2].Value, invariantCulture);
+                                        lng = Double.Parse(match.Groups[3].Value, invariantCulture);
+                                    }
+                                    catch (FormatException fex)
+                                    {
+                                        throw new ArgumentException("Invalid slippymap URL.", fex);
+                                    }
+
+                                    bounds = CalculateBounds(lat, lng, zoomLevel);
                                 }
-                                catch (FormatException fex)
-                                {
-                                    throw new ArgumentException ("Invalid slippymap URL.", fex);
-                                }
-
-                                if (zoomLevel < 2 || zoomLevel >= zoomLevels.Length)
-                                    throw new ArgumentException ("Zoom level is out of range.");
-
-                                // 30 is the width of the screen in centimeters
-                                double boxSizeInKilometers = zoomLevels[zoomLevel] * 30.0 / 100 / 1000;
-
-                                bounds = CalculateBounds (lat, lng, boxSizeInKilometers);
+                                else
+                                    throw new ArgumentException("Invalid slippymap URL.");
                             }
-                            else if (queryParameters["bbox"] != null)
-                                bounds = CalculateBounds (queryParameters["bbox"]);
+                            else if (slippyMapUrl.Query != String.Empty)
+                            {
+                                string queryPart = slippyMapUrl.Query;
+                                NameValueCollection queryParameters = HttpUtility.ParseQueryString(queryPart);
+
+                                if (queryParameters["lat"] != null
+                                    && queryParameters["lon"] != null
+                                    && queryParameters["zoom"] != null)
+                                {
+                                    try
+                                    {
+                                        lat = Double.Parse(queryParameters["lat"], invariantCulture);
+                                        lng = Double.Parse(queryParameters["lon"], invariantCulture);
+                                        zoomLevel = Int32.Parse(queryParameters["zoom"], invariantCulture);
+                                    }
+                                    catch (FormatException fex)
+                                    {
+                                        throw new ArgumentException("Invalid slippymap URL.", fex);
+                                    }
+
+                                    bounds = CalculateBounds(lat, lng, zoomLevel);
+                                }
+                                else if (queryParameters["bbox"] != null)
+                                    bounds = CalculateBounds(queryParameters["bbox"]);
+                                else
+                                    throw new ArgumentException("Invalid slippymap URL.");
+                            }
                             else
-                                throw new ArgumentException ("Invalid slippymap URL.");
+                                throw new ArgumentException("Invalid slippymap URL.");
 
                             continue;
                         }
@@ -481,6 +504,17 @@ namespace Srtm2Osm
         }
 
         #endregion
+
+        static private Bounds2 CalculateBounds (double lat, double lng, int zoomLevel)
+        {
+            if (zoomLevel < 2 || zoomLevel >= zoomLevels.Length)
+                throw new ArgumentException("Zoom level is out of range.");
+
+            // 30 is the width of the screen in centimeters
+            double boxSizeInKilometers = zoomLevels[zoomLevel] * 30.0 / 100 / 1000;
+
+            return CalculateBounds(lat, lng, boxSizeInKilometers);
+        }
 
         static private Bounds2 CalculateBounds (double lat, double lng, double boxSizeInKilometers)
         {
@@ -555,7 +589,7 @@ namespace Srtm2Osm
         private bool largeAreaMode;
         private string srtmSource = "";
 
-        private int[] zoomLevels = {0, 0, 111000000, 55000000, 28000000, 14000000, 7000000, 3000000, 2000000, 867000,
+        private static int[] zoomLevels = {0, 0, 111000000, 55000000, 28000000, 14000000, 7000000, 3000000, 2000000, 867000,
             433000, 217000, 108000, 54000, 27000, 14000, 6771, 3385, 1693};
     }
 }

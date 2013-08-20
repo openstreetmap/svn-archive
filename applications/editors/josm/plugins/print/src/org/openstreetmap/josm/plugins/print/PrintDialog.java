@@ -36,13 +36,26 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterAbortException;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.Attribute;
+import javax.print.attribute.EnumSyntax;
 import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.HashPrintServiceAttributeSet;
+import javax.print.attribute.IntegerSyntax;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.PrintServiceAttribute;
+import javax.print.attribute.TextSyntax;
 import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.OrientationRequested;
@@ -135,6 +148,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         job.setJobName("JOSM Map");
         job.setPrintable(mapView);
         build();
+        loadPrintSettings();
         updateFields();
         pack();
         //setMinimumSize(getPreferredSize());
@@ -165,7 +179,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                             p
                     )
             ).applySafe(this);
-        } else if (!visible && isShowing()){
+        } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
             Main.pref.put("print.preview.enabled",previewCheckBox.isSelected());
         }
@@ -401,10 +415,9 @@ public class PrintDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("printer-dialog")) {
-            /*PrintService[] services =*/ PrintServiceLookup.lookupPrintServices(null, null);
-            /*PrintService svc =*/ PrintServiceLookup.lookupDefaultPrintService();
             if (job.printDialog(attrs)) {
                 updateFields();
+                savePrintSettings();
             }
         }
         else if (cmd.equals("toggle-preview")) {
@@ -457,5 +470,97 @@ public class PrintDialog extends JDialog implements ActionListener {
         }
     }
     
+    protected void savePrintSettings() {
+        // Save only one printer service attribute: printer name 
+        PrintService service = job.getPrintService();
+        if (service != null) {
+            Collection<Collection<String>> serviceAttributes = new ArrayList<Collection<String>>();
+            for (Attribute a : service.getAttributes().toArray()) {
+                if ("printer-name".equals(a.getName()) && a instanceof TextSyntax) {
+                    serviceAttributes.add(marshallPrintSetting(a, TextSyntax.class, ((TextSyntax)a).getValue()));
+                }
+            }
+            Main.pref.putArray("print.settings.service-attributes", serviceAttributes);
+        }
+        
+        // Save all request attributes
+        Collection<String> ignoredAttributes = Arrays.asList("media-printable-area");
+        Collection<Collection<String>> requestAttributes = new ArrayList<Collection<String>>();
+        for (Attribute a : attrs.toArray()) {
+            Collection<String> setting = null;
+            if (a instanceof TextSyntax) {
+                setting = marshallPrintSetting(a, TextSyntax.class, ((TextSyntax)a).getValue());
+            } else if (a instanceof EnumSyntax) {
+                setting = marshallPrintSetting(a, EnumSyntax.class, Integer.toString(((EnumSyntax)a).getValue()));
+            } else if (a instanceof IntegerSyntax) {
+                setting = marshallPrintSetting(a, IntegerSyntax.class, Integer.toString(((IntegerSyntax)a).getValue()));
+            } else if (!ignoredAttributes.contains(a.getName())) {
+                // TODO: Add support for DateTimeSyntax, SetOfIntegerSyntax, ResolutionSyntax if needed
+                Main.warn("Print request attribute not supported: "+a.getName() +": "+a.getCategory()+" - "+a.toString());
+            }
+            if (setting != null) {
+                requestAttributes.add(setting);
+            }
+        }
+        Main.pref.putArray("print.settings.request-attributes", requestAttributes);
+    }
+    
+    protected Collection<String> marshallPrintSetting(Attribute a, Class<?> syntaxClass, String value) {
+        return new ArrayList<String>(Arrays.asList(a.getCategory().getName(), a.getClass().getName(), syntaxClass.getName(), value));
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected Attribute unmarshallPrintSetting(Collection<String> setting) throws 
+        IllegalArgumentException, ClassNotFoundException, SecurityException, NoSuchMethodException, 
+        InstantiationException, IllegalAccessException, InvocationTargetException {
+        
+        if (setting == null || setting.size() != 4) {
+            throw new IllegalArgumentException("Invalid setting: "+setting);
+        }
+        Iterator<String> it = setting.iterator();
+        Class<? extends Attribute> category = (Class<? extends Attribute>) Class.forName(it.next());
+        Class<? extends Attribute> realClass = (Class<? extends Attribute>) Class.forName(it.next());
+        Class<?> syntax = Class.forName(it.next());
+        String value = it.next();
+        if (syntax.equals(TextSyntax.class)) {
+            return realClass.getConstructor(String.class, Locale.class).newInstance(value, null);
+        } else if (syntax.equals(EnumSyntax.class)) {
+            int intValue = Integer.parseInt(value);
+            for (Field f : realClass.getFields()) {
+                if (Modifier.isStatic(f.getModifiers()) && category.isAssignableFrom(f.getType())) {
+                    EnumSyntax es = (EnumSyntax) f.get(null);
+                    if (es.getValue() == intValue) {
+                        return (Attribute) es;
+                    }
+                }
+            }
+            throw new IllegalArgumentException("Invalid enum: "+realClass+" - "+value);
+        } else if (syntax.equals(IntegerSyntax.class)) {
+            return realClass.getConstructor(int.class).newInstance(Integer.parseInt(value));
+        } else {
+            Main.warn("Attribute syntax not supported: "+syntax);
+        }
+        return null;
+    }
+
+    protected void loadPrintSettings() {
+        for (Collection<String> setting : Main.pref.getArray("print.settings.service-attributes")) {
+            try {
+                PrintServiceAttribute a = (PrintServiceAttribute) unmarshallPrintSetting(setting);
+                if ("printer-name".equals(a.getName())) {
+                    job.setPrintService(PrintServiceLookup.lookupPrintServices(null, new HashPrintServiceAttributeSet(a))[0]);
+                }
+            } catch (Exception e) {
+                Main.warn(e.getClass().getSimpleName()+": "+e.getMessage());
+            }
+        }
+        for (Collection<String> setting : Main.pref.getArray("print.settings.request-attributes")) {
+            try {
+                attrs.add(unmarshallPrintSetting(setting));
+            } catch (Exception e) {
+                Main.warn(e.getClass().getSimpleName()+": "+e.getMessage());
+            }
+        }
+    }
 }
 

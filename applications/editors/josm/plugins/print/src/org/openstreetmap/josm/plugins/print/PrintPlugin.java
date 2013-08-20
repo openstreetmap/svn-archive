@@ -90,7 +90,7 @@ public class PrintPlugin extends Plugin {
         Main.pref.putDefault(
           "print.preview.enabled", new Boolean(false).toString());
 
-        restorePrefs(); // Recover after crash if neccesseary
+        restorePrefs(); // Recover after crash if necessary
     }
 
     /**

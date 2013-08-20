@@ -301,7 +301,6 @@ class PrintPreview extends JPanel {
             g2d.fillRect(0, 0, (int)format.getWidth(), (int)format.getHeight());
         }
 
-
         g2d.setTransform(at);
     }
 

@@ -10,6 +10,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.*;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -79,28 +80,32 @@ class ChatPaneManager {
     public static int MESSAGE_TYPE_ATTENTION = 2;
     private static Color COLOR_ATTENTION = new Color(0, 0, 192);
 
-    private void addLineToChatPane( String userName, String line, int messageType ) {
+    private void addLineToChatPane( String userName, String line, final int messageType ) {
         if( line.length() == 0 )
             return;
         if( !chatPanes.containsKey(userName) )
             createChatPane(userName);
-        if( !line.startsWith("\n") )
-            line = "\n" + line;
-        Document doc = chatPanes.get(userName).pane.getDocument();
-        try {
-            SimpleAttributeSet attrs = null;
-            if( messageType != MESSAGE_TYPE_DEFAULT ) {
-                attrs = new SimpleAttributeSet();
-                if( messageType == MESSAGE_TYPE_INFORMATION )
-                    StyleConstants.setItalic(attrs, true);
-                else if( messageType == MESSAGE_TYPE_ATTENTION )
-                    StyleConstants.setForeground(attrs, COLOR_ATTENTION);
+        final String nline = line.startsWith("\n") ? line : "\n" + line;
+        final JTextPane thepane = chatPanes.get(userName).pane;
+        GuiHelper.runInEDT(new Runnable() {
+            public void run() {
+                Document doc = thepane.getDocument();
+                try {
+                    SimpleAttributeSet attrs = null;
+                    if( messageType != MESSAGE_TYPE_DEFAULT ) {
+                        attrs = new SimpleAttributeSet();
+                        if( messageType == MESSAGE_TYPE_INFORMATION )
+                            StyleConstants.setItalic(attrs, true);
+                        else if( messageType == MESSAGE_TYPE_ATTENTION )
+                            StyleConstants.setForeground(attrs, COLOR_ATTENTION);
+                    }
+                    doc.insertString(doc.getLength(), nline, attrs);
+                } catch( BadLocationException ex ) {
+                    // whatever
+                }
+                thepane.setCaretPosition(doc.getLength());
             }
-            doc.insertString(doc.getLength(), line, attrs);
-        } catch( BadLocationException ex ) {
-            // whatever
-        }
-        chatPanes.get(userName).pane.setCaretPosition(doc.getLength());
+        });
     }
 
     public void addLineToChatPane( String userName, String line ) {

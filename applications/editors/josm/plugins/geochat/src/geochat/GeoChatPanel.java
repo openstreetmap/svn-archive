@@ -14,6 +14,7 @@ import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.GBC;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
@@ -201,8 +202,12 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         String title = tr("GeoChat");
         if( comment != null )
             title = title + " (" + comment + ")";
-        String alarm = alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ";
-        setTitle(alarm + title);
+        final String alarm = (alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ") + title;
+        GuiHelper.runInEDT(new Runnable() {
+            public void run() {
+                setTitle(alarm);
+            }
+        });
     }
 
     /**

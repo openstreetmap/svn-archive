@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.logging.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -347,42 +348,44 @@ class ChatServerConnection {
             String query = "get&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&uid=" + userId + "&last=" + lastId;
-            JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                public void processJson( JSONObject json ) {
-                    if( json == null ) {
-                        // do nothing?
-//                        fireLoginFailed(tr("Could not get server response, check logs"));
-//                        logoutIntl(); // todo: uncomment?
-                    } else if( json.has("error") ) {
-                        fireLoginFailed(tr("Failed to get messages as {0}:", userName) + "\n" + json.getString("error"));
-                        logoutIntl();
-                    } else {
-                        if( json.has("users") ) {
-                            Map<String, LatLon> users = parseUsers(json.getJSONArray("users"));
-                            for( ChatServerConnectionListener listener : listeners )
-                                listener.updateUsers(users);
-                        }
-                        if( json.has("messages") ) {
-                            List<ChatMessage> messages = parseMessages(json.getJSONArray("messages"), false);
-                            for( ChatMessage m : messages )
-                                if( m.getId() > lastId )
-                                    lastId = m.getId();
-                            for( ChatServerConnectionListener listener : listeners )
-                                listener.receivedMessages(needReset, messages);
-                        }
-                        if( json.has("private") ) {
-                            List<ChatMessage> messages = parseMessages(json.getJSONArray("private"), true);
-                            for( ChatMessage m : messages )
-                                if( m.getId() > lastId )
-                                    lastId = m.getId();
-                            for( ChatServerConnectionListener listener : listeners )
-                                listener.receivedPrivateMessages(needFullReset, messages);
-                        }
-                    }
+            JSONObject json;
+            try {
+                json = JsonQueryUtil.query(query);
+            } catch( IOException ex ) {
+                json = null; // ?
+            }
+            if( json == null ) {
+                // do nothing?
+//              fireLoginFailed(tr("Could not get server response, check logs"));
+//              logoutIntl(); // todo: uncomment?
+            } else if( json.has("error") ) {
+                fireLoginFailed(tr("Failed to get messages as {0}:", userName) + "\n" + json.getString("error"));
+                logoutIntl();
+            } else {
+                if( json.has("users") ) {
+                    Map<String, LatLon> users = parseUsers(json.getJSONArray("users"));
+                    for( ChatServerConnectionListener listener : listeners )
+                        listener.updateUsers(users);
+                }
+                if( json.has("messages") ) {
+                    List<ChatMessage> messages = parseMessages(json.getJSONArray("messages"), false);
+                    for( ChatMessage m : messages )
+                        if( m.getId() > lastId )
+                            lastId = m.getId();
+                    for( ChatServerConnectionListener listener : listeners )
+                        listener.receivedMessages(needReset, messages);
+                }
+                if( json.has("private") ) {
+                    List<ChatMessage> messages = parseMessages(json.getJSONArray("private"), true);
+                    for( ChatMessage m : messages )
+                        if( m.getId() > lastId )
+                            lastId = m.getId();
+                    for( ChatServerConnectionListener listener : listeners )
+                        listener.receivedPrivateMessages(needFullReset, messages);
+                }
+            }
 //                    if( lastId > 0 && Main.pref.getBoolean("geochat.store.lastid", true) )
 //                        Main.pref.putLong("geochat.lastid", lastId);
-                }
-            });
         }
 
         private List<ChatMessage> parseMessages( JSONArray messages, boolean priv ) {

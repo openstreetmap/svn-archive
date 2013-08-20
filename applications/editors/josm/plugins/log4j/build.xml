@@ -1,32 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in you default plugin directory) run
-**
-**    > ant  install
-**
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the plugin and make it available to other
-** JOSM users:
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
--->
 <project name="log4j" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
@@ -41,7 +13,7 @@
     <property name="plugin.description" value="Provides the Log4j library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
     <!--<property name="plugin.icon" value="..."/>-->
     <!--<property name="plugin.link" value="..."/>-->
-    <!--<property name="plugin.early" value="..."/>-->
+    <property name="plugin.early" value="true"/>
     <!--<property name="plugin.requires" value="..."/>-->
     <property name="plugin.stage" value="5"/>
 

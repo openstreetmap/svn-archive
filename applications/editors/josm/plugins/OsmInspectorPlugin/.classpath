@@ -9,12 +9,12 @@
 	<classpathentry kind="lib" path="lib/gt-referencing3D-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/gt-render-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/jts-1.12.jar"/>
-	<classpathentry kind="lib" path="/JOSM/dist/josm-custom.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6 (MacOS X Default)"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="lib/gt-wfs-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/gt-epsg-extension-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/gt-epsg-hsql-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/gt-metadata-8.0.jar"/>
 	<classpathentry kind="lib" path="lib/gt-coverage-8.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

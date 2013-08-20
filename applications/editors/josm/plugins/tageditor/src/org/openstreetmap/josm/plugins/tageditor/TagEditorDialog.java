@@ -263,7 +263,7 @@ public class TagEditorDialog extends JDialog {
                             PREFERRED_SIZE
                     )
             ).applySafe(this);
-        } else if (!visible && isShowing()){
+        } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
         }
         super.setVisible(visible);

@@ -5,8 +5,7 @@
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/JOSM/dist/josm-custom.jar" sourcepath="/JOSM/src"/>
-	<classpathentry kind="lib" path="/JOSM/test/build" sourcepath="/JOSM/test/functional"/>
 	<classpathentry kind="lib" path="test/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

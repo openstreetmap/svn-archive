@@ -8,6 +8,12 @@
     <target name="build" depends="dist"/>
     <target name="dist" depends="compile">
         <mkdir dir="../dist"/>
+        <!-- order important ! -->
+        <ant antfile="build.xml" target="dist" dir="jts"/>
+        <ant antfile="build.xml" target="dist" dir="geotools"/>
+        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/> 
+        <ant antfile="build.xml" target="dist" dir="log4j"/>
+    	<!-- order not important -->
         <ant antfile="build.xml" target="dist" dir="addrinterpolation"/>
         <ant antfile="build.xml" target="dist" dir="alignways"/>
         <ant antfile="build.xml" target="dist" dir="buildings_tools"/>
@@ -28,7 +34,6 @@
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="FastDraw"/>
         <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
-        <ant antfile="build.xml" target="dist" dir="geotools"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpsblam"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
@@ -43,11 +48,9 @@
         <ant antfile="build.xml" target="dist" dir="importvec"/>
         <ant antfile="build.xml" target="dist" dir="infomode"/>
         <ant antfile="build.xml" target="dist" dir="irsrectify"/>
-        <ant antfile="build.xml" target="dist" dir="jts"/>
         <ant antfile="build.xml" target="dist" dir="junctionchecking"/>
         <ant antfile="build.xml" target="dist" dir="lakewalker"/>
         <ant antfile="build.xml" target="dist" dir="livegps"/>
-        <ant antfile="build.xml" target="dist" dir="log4j"/>
         <ant antfile="build.xml" target="dist" dir="mapdust"/>
         <ant antfile="build.xml" target="dist" dir="measurement"/>
         <ant antfile="build.xml" target="dist" dir="merge-overlap"/>
@@ -93,7 +96,6 @@
         <ant antfile="build.xml" target="dist" dir="turnlanes"/>
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="dist" dir="undelete"/>
-        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>	
         <ant antfile="build.xml" target="dist" dir="videomapping"/>
         <ant antfile="build.xml" target="dist" dir="walkingpapers"/>
         <ant antfile="build.xml" target="dist" dir="waydownloader"/>

@@ -28,11 +28,7 @@ public class TrackStoplistNameCommand extends Command {
 			oldName = node.get("name");
 			oldTime = trackref.stoplistTM.timeAt(workingLine);
 			oldShelter = node.get("shelter");
-			try {
-				oldLatLon = node.getCoor().clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
+			oldLatLon = node.getCoor();
 		}
 		this.time = (String) trackref.stoplistTM.getValueAt(workingLine, 0);
 		this.name = (String) trackref.stoplistTM.getValueAt(workingLine, 1);

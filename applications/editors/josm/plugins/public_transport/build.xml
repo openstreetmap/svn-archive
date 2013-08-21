@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6173"/>
+    <property name="plugin.main.version" value="6169"/>
 
     <property name="plugin.author" value="Roland M. Olbricht"/>
     <property name="plugin.class" value="public_transport.PublicTransportPlugin"/>

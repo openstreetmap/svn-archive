@@ -28,7 +28,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -76,8 +75,6 @@ public class StopImporterAction extends JosmAction
 
   public void actionPerformed(ActionEvent event)
   {
-    DataSet mainDataSet = Main.main.getCurrentDataSet();
-
     if (dialog == null)
       dialog = new StopImporterDialog(this);
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>editgpx_svn</name>
+	<name>JOSM-editgpx</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -18,7 +18,7 @@
 		<link>
 			<name>src-common</name>
 			<type>2</type>
-			<location>/Users/leo/dev/josm/core/src</location>
+			<location>C:/Users/leo/dev/josm/core/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

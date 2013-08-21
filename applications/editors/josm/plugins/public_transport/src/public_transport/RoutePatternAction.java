@@ -1701,7 +1701,6 @@ public class RoutePatternAction extends JosmAction {
     else if ("routePattern.stoplistReflect".equals(event.getActionCommand()))
     {
       Vector< RelationMember > itemsToReflect = new Vector< RelationMember >();
-      Vector< Double > distancesToReflect = new Vector< Double >();
       int insPos = stoplistTable.getSelectedRow();
 
       if (stoplistTable.getSelectedRowCount() > 0)

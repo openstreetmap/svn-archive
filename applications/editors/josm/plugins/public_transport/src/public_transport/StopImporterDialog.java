@@ -675,7 +675,6 @@ public class StopImporterDialog
 
   public static double parseTime(String s)
   {
-    double result = 0;
     if ((s.charAt(2) != ':') || (s.charAt(2) != ':')
      || (s.length() < 8))
       return -1;

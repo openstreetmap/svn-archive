@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>buildings_tools</name>
+	<name>JOSM-buildings_tools</name>
 	<comment></comment>
 	<projects>
 		<project>josm</project>

@@ -9,9 +9,9 @@ import javax.swing.AbstractAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler;
+import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.RelationMemberEditorModel;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionLegRole;
-import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets;
 
 /**
  * Issue if the type of a turn restriction leg is either an OSM node or an OSM relation.

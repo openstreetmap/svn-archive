@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trc;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -10,7 +11,6 @@ import java.awt.Insets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -30,7 +30,6 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.JMultilineLabel;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.ImageProvider;
-import static org.openstreetmap.josm.tools.I18n.trc;
 
 /**
  * This is a cell renderer for turn restrictions.
@@ -40,7 +39,7 @@ import static org.openstreetmap.josm.tools.I18n.trc;
  * 
  */
 public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer, TableCellRenderer{
-    static private final Logger logger = Logger.getLogger(TurnRestrictionCellRenderer.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionCellRenderer.class.getName());
     
     /** the names of restriction types */
     static private Set<String> RESTRICTION_TYPES = new HashSet<String>(

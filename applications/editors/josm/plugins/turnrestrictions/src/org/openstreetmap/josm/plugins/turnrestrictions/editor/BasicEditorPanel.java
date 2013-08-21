@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

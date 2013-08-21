@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;

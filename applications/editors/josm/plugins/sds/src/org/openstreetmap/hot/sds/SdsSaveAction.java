@@ -4,7 +4,6 @@ package org.openstreetmap.hot.sds;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,23 +14,17 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.SaveActionBase;
 import org.openstreetmap.josm.data.osm.IPrimitive;
-import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
 public class SdsSaveAction extends SdsDiskAccessAction {
 
-    @SuppressWarnings("deprecation")
-	public SdsSaveAction() {
+    public SdsSaveAction() {
         super(tr("Save..."), "sds_save", tr("Save the current separate data store information to a file."),
             null);
     }

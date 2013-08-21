@@ -1,12 +1,14 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 
+import static org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets.FROM;
+import static org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets.TO;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionLegRole;
-import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets.*;
 
 /**
  * A member with role 'from' or 'to' is missing. Can't be fixed automatically.

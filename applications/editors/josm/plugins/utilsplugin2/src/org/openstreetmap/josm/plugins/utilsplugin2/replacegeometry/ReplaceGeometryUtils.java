@@ -1,18 +1,41 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry;
 
-import edu.princeton.cs.algs4.AssignmentProblem;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.geom.Area;
-import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.MergeNodesAction;
-import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.command.ChangeNodesCommand;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.command.MoveCommand;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.RelationToChildReference;
+import org.openstreetmap.josm.data.osm.TagCollection;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil;
-import static org.openstreetmap.josm.tools.I18n.tr;
+
+import edu.princeton.cs.algs4.AssignmentProblem;
 
 /**
  *
@@ -399,7 +422,8 @@ public final class ReplaceGeometryUtils {
     }
 
     protected static boolean isInArea(Node node, Area area) {
-        if (node.isNewOrUndeleted() || area == null || area.contains(node.getCoor())) {
+        LatLon ll = node.getCoor();
+        if (node.isNewOrUndeleted() || area == null || area.contains(ll.getX(), ll.getY())) {
             return true;
         }
         return false;
@@ -480,7 +504,7 @@ public final class ReplaceGeometryUtils {
         Node nearest = null;
         // TODO: use meters instead of degrees, but do it fast
         double distance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
-        Point2D coor = node.getCoor();
+        LatLon coor = node.getCoor();
 
         for( Node n : nodes ) {
             double d = n.getCoor().distance(coor);

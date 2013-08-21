@@ -1,11 +1,12 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
@@ -15,14 +16,13 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * ViaListModel is a model for the list of 'via' objects of a turn restriction.
  * 
  */
 public class ViaListModel extends AbstractListModel implements PrimitiveIdListProvider, Observer{
-    static private final Logger logger = Logger.getLogger(ViaListModel.class.getName());
+    //static private final Logger logger = Logger.getLogger(ViaListModel.class.getName());
     
     private DefaultListSelectionModel selectionModel;
     private final ArrayList<OsmPrimitive> vias = new ArrayList<OsmPrimitive>();

@@ -27,12 +27,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.preferences.display.ColorPreference;
-import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
+import org.openstreetmap.josm.gui.preferences.display.ColorPreference;
 import org.openstreetmap.josm.tools.GBC;
 
 public class ColorSchemePreference implements SubPreferenceSetting {

@@ -32,7 +32,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         if (wpid == null || wpid.equals("")) return;
 
         // Grab id= from the URL if we need to, otherwise get an ID
-        String mungedWpId = this.getWalkingPapersId(wpid);
+        String mungedWpId = WalkingPapersAddLayerAction.getWalkingPapersId(wpid);
 
         if (mungedWpId == null || mungedWpId.equals("")) return;
 

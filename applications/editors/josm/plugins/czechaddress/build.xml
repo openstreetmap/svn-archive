@@ -5,7 +5,7 @@
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <property name="plugin.manifest" value="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
-    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="ant.build.javac.target" value="1.6"/>
     <target name="clean" description="Removes all build files and the plugins's jar">
         <delete dir="${plugin.build.dir}"/>
         <delete file="${plugin.jar}"/>
@@ -32,7 +32,7 @@
             <attribute name="Plugin-Description" value="Creating and handling address nodes and buildings within Czech Republic."/>
             <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/CS:JOSM/Plugins/CzechAddress"/>
             <attribute name="Plugin-Icon" value="images/preferences/czech_flag.png"/>
-            <attribute name="Plugin-Mainversion" value="6088"/>
+            <attribute name="Plugin-Mainversion" value="6162"/>
             <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
         </manifest>
     </target>

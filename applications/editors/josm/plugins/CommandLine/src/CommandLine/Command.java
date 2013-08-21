@@ -29,6 +29,7 @@ public class Command {
 
     public Command () {	parameters = new ArrayList<Parameter>(); optParameters = new ArrayList<Parameter>(); currentParameterNum = 0; tracks = false; asynchronous = false; icon = ""; }
 
+    @SuppressWarnings("unchecked")
     public boolean loadObject(Object obj) {
         Parameter currentParameter = parameters.get(currentParameterNum);
         //System.out.println("Parameter " + String.valueOf(currentParameterNum) + " (" + currentParameter.name + ")");

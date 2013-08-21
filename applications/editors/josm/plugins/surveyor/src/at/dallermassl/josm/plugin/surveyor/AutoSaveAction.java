@@ -7,20 +7,18 @@ package at.dallermassl.josm.plugin.surveyor;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import java.awt.event.KeyEvent;
-
-import at.dallermassl.josm.plugin.surveyor.action.SetWaypointAction;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.tools.Shortcut;
 
 import livegps.LiveGpsLayer;
+
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * @author cdaller

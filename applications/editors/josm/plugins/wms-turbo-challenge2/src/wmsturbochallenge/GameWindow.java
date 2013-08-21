@@ -61,7 +61,7 @@ public class GameWindow extends JFrame implements ActionListener {
         screen = screen_image.getGraphics();
 
         this.ground = ground;
-        ground_view = new fake_map_view(Main.map.mapView, 0.0000001);
+        ground_view = new FakeMapView(Main.map.mapView, 0.0000001);
 
         /* Retrieve start position */
         EastNorth start = ground_view.parent.getCenter();
@@ -473,7 +473,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     hx + hw, 66, this);
     }
 
-    protected class sprite_pos implements Comparable {
+    protected class sprite_pos implements Comparable<sprite_pos> {
         double dist;
 
         int x, y, sx, sy;
@@ -482,9 +482,8 @@ public class GameWindow extends JFrame implements ActionListener {
         public sprite_pos() {
         }
 
-        public int compareTo(Object x) {
-            sprite_pos other = (sprite_pos) x;
-            return (int) ((other.dist - this.dist) * 1000000.0);
+        public int compareTo(sprite_pos x) {
+            return (int) ((x.dist - this.dist) * 1000000.0);
         }
     }
 
@@ -699,5 +698,5 @@ public class GameWindow extends JFrame implements ActionListener {
                 key_down[3] = false;
         }
     }
-    protected fake_map_view ground_view;
+    protected FakeMapView ground_view;
 }

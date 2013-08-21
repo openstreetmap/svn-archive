@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.tageditor.preset;
 
-import java.awt.Image;
 import java.io.File;
 import java.util.Collection;
 

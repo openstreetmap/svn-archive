@@ -16,7 +16,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -49,7 +48,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  */
 public class TurnRestrictionSelectionPopupPanel extends JPanel{
-    static private final Logger logger = Logger.getLogger(TurnRestrictionSelectionPopupPanel.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionSelectionPopupPanel.class.getName());
 
     /** the parent popup */
     private Popup parentPopup;

@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
 <project name="wayselector" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="recompile due to core change"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6082"/>
+    <property name="plugin.main.version" value="6162"/>
 
     <property name="plugin.author" value="Marko Mäkelä"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.wayselector.WaySelectorPlugin"/>

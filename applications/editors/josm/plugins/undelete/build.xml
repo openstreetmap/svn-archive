@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="adapt to core changes (backwards compatible)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5211"/>
+    <property name="plugin.main.version" value="6162"/>
 
     <property name="plugin.author" value="Nakor"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.undelete.Undelete"/>

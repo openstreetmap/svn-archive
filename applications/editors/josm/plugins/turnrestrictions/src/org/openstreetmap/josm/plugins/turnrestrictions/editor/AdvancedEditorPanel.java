@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.BorderLayout;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +21,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * restriction data: a tag editor and a relation member editor.
  */
 public class AdvancedEditorPanel extends JPanel {
-    private static final Logger logger = Logger.getLogger(AdvancedEditorPanel.class.getName());
+    //private static final Logger logger = Logger.getLogger(AdvancedEditorPanel.class.getName());
 
     private TurnRestrictionEditorModel model;
     private TagEditorPanel pnlTagEditor;

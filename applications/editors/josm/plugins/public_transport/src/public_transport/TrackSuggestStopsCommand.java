@@ -3,10 +3,8 @@ package public_transport;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
-import javax.swing.DefaultListModel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;

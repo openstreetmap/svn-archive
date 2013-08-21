@@ -50,7 +50,7 @@ public class RoadSignsReader {
         public Map<Sign, List<String>> supplementIds;
 
         String characters = "";
-        List<Sign> folders = new ArrayList<Sign>();
+        //List<Sign> folders = new ArrayList<Sign>();
         Sign curSign;
         Tag curTag;
 

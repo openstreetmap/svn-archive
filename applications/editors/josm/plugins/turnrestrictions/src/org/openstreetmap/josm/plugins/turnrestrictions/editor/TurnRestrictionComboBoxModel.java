@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.event.EventListenerList;
@@ -20,7 +19,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  *
  */
 public class TurnRestrictionComboBoxModel implements ComboBoxModel, Observer{
-    static private final Logger logger = Logger.getLogger(TurnRestrictionComboBoxModel.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionComboBoxModel.class.getName());
     
     private TurnRestrictionEditorModel model;
     final private List<Object> values = new ArrayList<Object>();

@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.table.AbstractTableModel;
@@ -24,7 +23,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public class RelationMemberEditorModel extends AbstractTableModel{  
-    static private final Logger logger = Logger.getLogger(RelationMemberEditorModel.class.getName());
+    //static private final Logger logger = Logger.getLogger(RelationMemberEditorModel.class.getName());
     private final ArrayList<RelationMemberModel> members = new ArrayList<RelationMemberModel>();
     private OsmDataLayer layer;
     private DefaultListSelectionModel rowSelectionModel;

@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="applied JOSM Ticket 4498 (patch by ax) - oauth support for gpx upload (I accidentally committed parts of the path in [24236])"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6082"/>
+    <property name="plugin.main.version" value="6162"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

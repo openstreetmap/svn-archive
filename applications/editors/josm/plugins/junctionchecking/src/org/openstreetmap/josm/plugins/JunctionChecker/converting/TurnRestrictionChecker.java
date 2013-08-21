@@ -19,7 +19,6 @@ public class TurnRestrictionChecker {
 
 	private final ArrayList<OSMRelation> turnrestrictionsrelations = new ArrayList<OSMRelation>();
 	private final ChannelDiGraph channelDigraph;
-	private final boolean isInturnrestriction;
 	private int relationpointer;
 	private LeadsTo tempLeadsTo;
 
@@ -34,7 +33,6 @@ public class TurnRestrictionChecker {
 			}
 		}
 		this.channelDigraph = channelDigraph;
-		this.isInturnrestriction = false;
 	}
 
 	private boolean checkForRelations(Channel channel) {

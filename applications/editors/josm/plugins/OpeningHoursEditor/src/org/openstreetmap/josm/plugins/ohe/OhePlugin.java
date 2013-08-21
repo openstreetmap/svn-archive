@@ -107,6 +107,7 @@ public class OhePlugin extends Plugin {
             setEnabled(selection != null && !selection.isEmpty());
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void actionPerformed(ActionEvent evt) {
             // fetch active Layer

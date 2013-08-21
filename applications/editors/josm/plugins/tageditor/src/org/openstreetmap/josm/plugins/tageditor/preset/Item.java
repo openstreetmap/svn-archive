@@ -2,11 +2,10 @@ package org.openstreetmap.josm.plugins.tageditor.preset;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Item  extends AbstractNameIconProvider {
 
-    private final static Logger logger = Logger.getLogger(Item.class.getName());
+    //private final static Logger logger = Logger.getLogger(Item.class.getName());
 
     private String label;
     private List<Tag> tags;

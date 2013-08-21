@@ -2,13 +2,12 @@ package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
+import java.util.Collection;
+import java.util.Vector;
+
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-
-import java.util.Collection;
-import java.util.Vector;
 
 public class TrackStoplistDetachCommand extends Command
 {

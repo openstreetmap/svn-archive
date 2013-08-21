@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.ohe.ClockSystem;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;

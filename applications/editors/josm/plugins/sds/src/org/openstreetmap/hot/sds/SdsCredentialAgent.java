@@ -4,10 +4,10 @@ package org.openstreetmap.hot.sds;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
-import java.net.PasswordAuthentication;
 import java.net.Authenticator.RequestorType;
-import java.util.Map;
+import java.net.PasswordAuthentication;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -17,6 +17,7 @@ import org.openstreetmap.josm.gui.io.CredentialDialog;
 import org.openstreetmap.josm.gui.preferences.server.ProxyPreferencesPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.io.auth.AbstractCredentialsAgent;
+import org.openstreetmap.josm.io.auth.CredentialsAgent;
 import org.openstreetmap.josm.io.auth.CredentialsAgentException;
 import org.openstreetmap.josm.io.auth.CredentialsAgentResponse;
 

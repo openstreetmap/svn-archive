@@ -123,8 +123,6 @@ public class ConnectWays {
     private static void tryConnectNodeToAnyWay(Node node, Map<Way, Way> m)
             throws IllegalStateException, IndexOutOfBoundsException {
 
-        List<Command> cmds = new LinkedList<Command>();
-
         LatLon ll = node.getCoor();
         BBox bbox = new BBox(
                 ll.getX() - MIN_DISTANCE_TW,
@@ -190,7 +188,7 @@ public class ConnectWays {
             LatLon n2 = way.getNodes().get((i + 1) % way.getNodesCount()).getCoor();
             System.out.println(way.getNodes().get(i) + "-----" + way.getNodes().get((i + 1) % way.getNodesCount()));
             double minDistanceSq = MIN_DISTANCE_SQ;
-            double maxAngle = MAX_ANGLE;
+            //double maxAngle = MAX_ANGLE;
             List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
                 Math.min(n1.getX(), n2.getX()) - minDistanceSq,
                 Math.min(n1.getY(), n2.getY()) - minDistanceSq,
@@ -207,7 +205,7 @@ public class ConnectWays {
                 double angle = TracerGeometry.angleOfLines(n1, nn, nn, n2);
                 System.out.println("Angle: " + angle + " distance: " + dist + " Node: " + nod);
                 if (!n1.equalsEpsilon(nn) && !n2.equalsEpsilon(nn) && dist < minDistanceSq){ // && Math.abs(angle) < maxAngle) {
-                    maxAngle = angle;
+                    //maxAngle = angle;
                     nearestNode = nod;
                 }
             }

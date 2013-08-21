@@ -694,10 +694,10 @@ public class MergeOverlapAction extends JosmAction {
 			return c;
 		}
 	}
-
+/*
 	private Way getOld(Way r) {
 		return getOld(r, oldWays);
-	}
+	}*/
 
 	public static Way getOld(Way w, Map<Way, Way> oldWays) {
 		if (oldWays.containsKey(w)) {

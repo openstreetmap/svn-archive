@@ -154,8 +154,9 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         }
         // flip the image (svg using a reversed Y coordinate system)
         double pivot = viewBox.min.getY() + (viewBox.max.getY() - viewBox.min.getY()) / 2;
-        for (EastNorth en : eastNorth) {
-            en.setLocation(en.east(), 2 * pivot - en.north());
+        for (int i = 0; i < eastNorth.size(); i++) {
+            EastNorth en = eastNorth.get(i);
+            eastNorth.set(i, new EastNorth(en.east(), 2 * pivot - en.north()));
         }
         return Math.abs(minX - viewBox.min.getX())+Math.abs(maxX - viewBox.max.getX())
         +Math.abs(minY - viewBox.min.getY())+Math.abs(maxY - viewBox.max.getY());
@@ -207,6 +208,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                 bos.write(line.getBytes());
                 svg += line;
             }
+            br.close();
             bos.close();
         } catch (IOException e) {
             e.printStackTrace(System.out);

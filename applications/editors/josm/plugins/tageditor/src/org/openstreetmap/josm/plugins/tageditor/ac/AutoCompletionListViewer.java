@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -18,11 +17,12 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 
 public class AutoCompletionListViewer extends JPanel {
     
-    static private Logger logger = Logger.getLogger(AutoCompletionListViewer.class.getName());
+    //static private Logger logger = Logger.getLogger(AutoCompletionListViewer.class.getName());
 
     /** the table showing the auto completion list entries */
     private JTable table = null;

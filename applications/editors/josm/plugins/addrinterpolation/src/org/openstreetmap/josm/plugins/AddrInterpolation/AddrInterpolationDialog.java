@@ -58,14 +58,6 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.UrlLabel;
 
-/**
- * 
- */
-
-
-
-
-
 public class AddrInterpolationDialog extends JDialog implements ActionListener  {
 
     private Way selectedStreet = null;

@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,8 +26,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.SideButton;
+import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.graphview.core.access.AccessRulesetReader;
 import org.openstreetmap.josm.plugins.graphview.core.visualisation.ColorScheme;
 import org.openstreetmap.josm.plugins.graphview.core.visualisation.EndNodeColorScheme;

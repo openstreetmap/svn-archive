@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
 <project name="canvec_helper" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="JOSM/Canvec_helper: update to new menu structure"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6097"/>
+    <property name="plugin.main.version" value="6162"/>
     
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Michael Bishop"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.canvec_helper.canvec_helper"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.canvec_helper.CanvecHelper"/>
     <property name="plugin.description" value="Overlays the canvec tile grid on the map and prints URL''s to the .zip files. Future goals: allow auto-downloading and loading of canvec .osm files"/>
 
     <!-- ** include targets that all plugins have in common ** -->

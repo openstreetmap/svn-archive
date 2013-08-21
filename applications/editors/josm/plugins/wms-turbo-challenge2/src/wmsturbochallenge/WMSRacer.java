@@ -8,6 +8,7 @@ package wmsturbochallenge;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -94,13 +95,13 @@ public class WMSRacer extends Plugin implements LayerChangeListener {
 
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame != null)
-            oldFrame.mapView.removeLayerChangeListener(this);
+            MapView.removeLayerChangeListener(this);
 
         driveAction.frame = newFrame;
         driveAction.updateEnabledState();
 
         if (newFrame != null)
-            newFrame.mapView.addLayerChangeListener(this);
+            MapView.addLayerChangeListener(this);
     }
 
     /* LayerChangeListener methods */

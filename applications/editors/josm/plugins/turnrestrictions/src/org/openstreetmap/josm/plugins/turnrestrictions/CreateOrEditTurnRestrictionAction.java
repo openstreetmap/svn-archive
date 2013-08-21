@@ -10,11 +10,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditor;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEditorManager;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionSelectionPopupPanel;
-import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * This action is triggered by a global shortcut (default is Shift-Ctrl-T on windows).

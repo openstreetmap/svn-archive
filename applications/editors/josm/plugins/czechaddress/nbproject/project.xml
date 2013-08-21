@@ -86,12 +86,12 @@
                 <classpath mode="compile">../../core/build:../../core/src</classpath>
                 <built-to>build</built-to>
                 <javadoc-built-to>doc</javadoc-built-to>
-                <source-level>1.5</source-level>
+                <source-level>1.6</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>tests</package-root>
                 <unit-tests/>
-                <source-level>1.5</source-level>
+                <source-level>1.6</source-level>
             </compilation-unit>
         </java-data>
     </configuration>

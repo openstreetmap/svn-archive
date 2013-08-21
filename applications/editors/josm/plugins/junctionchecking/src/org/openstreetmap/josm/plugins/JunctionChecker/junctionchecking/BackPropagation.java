@@ -10,8 +10,6 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGra
  */
 public class BackPropagation {
 
-	private Channel y;
-	private Channel z;
 	private final ChannelDiGraph digraph;
 
 	public BackPropagation(ChannelDiGraph digraph) {
@@ -24,8 +22,6 @@ public class BackPropagation {
 	 * @param z toNode
 	 */
 	public void backPropagation(Channel y, Channel z, Channel zstrich) {
-		this.y = y;
-		this.z = z;
 		for (int i = 0; i < z.getReachableNodes().size(); i++) {
 			y.addReachableNode(z.getReachableNodeAt(i));
 			//z.appendChannelToPath(i, z);

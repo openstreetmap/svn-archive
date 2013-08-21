@@ -199,21 +199,20 @@ public class FilePlacement {
 
 	public LatLon tranformCoords(Point2D pt) {
 
-		if (this.projection == null){
+		if (this.projection == null) {
 			return new LatLon(pt.getY() / 1000, pt.getX() / 1000);
-		}
-		else{
-			this.transform.transform(pt, en);
+		} else {
+		    Point2D dest = new Point2D.Double();
+			this.transform.transform(pt, dest);
+			en = new EastNorth(dest.getX(), dest.getY());
 			return this.projection.eastNorth2latlon(en);
 		}
 	}
 
 	public EastNorth reverseTransform(LatLon coor) {
-		if (this.projection == null){
-
+		if (this.projection == null) {
 			return new EastNorth(coor.lon() * 1000, coor.lat() * 1000);
-		}
-		else{
+		} else {
 			return null;
 		}
 	}

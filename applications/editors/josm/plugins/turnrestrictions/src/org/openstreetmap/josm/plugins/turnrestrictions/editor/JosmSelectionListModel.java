@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListSelectionModel;
@@ -35,7 +34,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  */
 public class JosmSelectionListModel extends AbstractListModel implements EditLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
-    static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
+    //static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
     
     private final List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
     private final DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();

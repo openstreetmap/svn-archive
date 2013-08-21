@@ -1,7 +1,6 @@
 package org.openstreetmap.josm.plugins.tageditor.preset.ui;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -13,7 +12,7 @@ import org.openstreetmap.josm.plugins.tageditor.preset.Presets;
 
 public class PresetsTableModel extends AbstractTableModel  {
 
-    private static final Logger logger = Logger.getLogger(PresetsTableModel.class.getName());
+    //private static final Logger logger = Logger.getLogger(PresetsTableModel.class.getName());
 
     private final ArrayList<TableModelListener> listeners = new ArrayList<TableModelListener>();
     private final ArrayList<Item> items = new ArrayList<Item>();

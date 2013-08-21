@@ -4,7 +4,10 @@
  */
 package org.kaintoch.gps.globalsat.dg100;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Properties;
 

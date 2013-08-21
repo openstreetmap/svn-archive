@@ -12,10 +12,8 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
 public class PseudoChannelRemover {
 
 	private final ChannelDiGraph digraph;
-	private final ArrayList<Channel> pseudochannels = new ArrayList<Channel>();
-	private int c = 0;
+	//private final ArrayList<Channel> pseudochannels = new ArrayList<Channel>();
 	private Channel succChannel;
-	private String s;
 	private Channel tempToChannel;
 	private LeadsTo tempLeadsTo;
 
@@ -26,7 +24,6 @@ public class PseudoChannelRemover {
 	private void mergeChannel(Channel tempchannel) {
 		succChannel = tempchannel.getLeadsTo().get(0).getToChannel();
 		tempchannel.setToNode(succChannel.getToNode());
-		s = "";
 		//log.trace("---Folgender Channel ist überflüssig: " + succChannel.getNewid() + "---");
 		//log.trace("... und wird durch diesen ersetzt: " + tempchannel.getNewid());
 		//VorgängerChannel der nachfolgenden Channels des zu löschenden, überflüssigen Channels neu setzen
@@ -56,7 +53,6 @@ public class PseudoChannelRemover {
 		}
 		digraph.removeChannel(succChannel);
 		//pseudochannels.add(tempchannel.getSuccChannels().get(0));
-		c++;
 	}
 
 	public void removePseudoChannels() {

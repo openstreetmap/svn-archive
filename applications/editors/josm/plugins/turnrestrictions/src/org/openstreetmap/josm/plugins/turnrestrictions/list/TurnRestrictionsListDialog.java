@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -30,8 +29,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -52,7 +51,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  */
 public class TurnRestrictionsListDialog extends ToggleDialog{
-    private static final Logger logger = Logger.getLogger(TurnRestrictionsListDialog.class.getName());
+    //private static final Logger logger = Logger.getLogger(TurnRestrictionsListDialog.class.getName());
 
     /** checkbox for switching between the two list views */
     private JCheckBox cbInSelectionOnly;

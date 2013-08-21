@@ -1,9 +1,7 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -53,9 +51,6 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.ExtendedDialog;
-import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.Shortcut;
 
 public class RoutePatternAction extends JosmAction {
 

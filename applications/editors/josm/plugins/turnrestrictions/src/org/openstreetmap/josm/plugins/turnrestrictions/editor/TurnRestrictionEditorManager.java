@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -22,7 +21,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  *
  */
 public class TurnRestrictionEditorManager extends WindowAdapter implements MapView.LayerChangeListener{
-    static private final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
 
     /** keeps track of open relation editors */
     static TurnRestrictionEditorManager instance;

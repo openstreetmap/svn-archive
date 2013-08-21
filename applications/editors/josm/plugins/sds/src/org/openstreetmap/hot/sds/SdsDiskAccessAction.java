@@ -9,7 +9,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
-import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -95,7 +94,6 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
         }
 
         File file = fc.getSelectedFile();
-        String fn = file.getPath();
 
         if (!confirmOverwrite(file))
             return null;

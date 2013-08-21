@@ -22,7 +22,7 @@ import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 
 public class CanVecTile {
-	canvec_layer layer;
+	CanvecLayer layer;
 	public boolean can_download = false;
 	private ArrayList<String> sub_tile_ids = new ArrayList<String>();
 	private boolean zip_scanned = false;
@@ -38,7 +38,7 @@ public class CanVecTile {
 	String cordb,cordd;
 	private Bounds bounds;
 	public String tileid;
-	public CanVecTile(String tileid,canvec_layer layer) {
+	public CanVecTile(String tileid,CanvecLayer layer) {
 		String parta,partb,partc,partd;
 		parta = tileid.substring(0,3);
 		partb = tileid.substring(3, 4);
@@ -49,10 +49,10 @@ public class CanVecTile {
 		c = Integer.parseInt(partc);
 		real_init(a,partb,c,partd,layer,new ArrayList<String>());
 	}
-	public CanVecTile(int a,String b,int c,String d,canvec_layer layer,ArrayList<String> index) {
+	public CanVecTile(int a,String b,int c,String d,CanvecLayer layer,ArrayList<String> index) {
 		real_init(a,b,c,d,layer,index);
 	}
-	public void real_init(int a,String b,int c,String d,canvec_layer layer, ArrayList<String> index) {
+	public void real_init(int a,String b,int c,String d,CanvecLayer layer, ArrayList<String> index) {
 		this.index = index;
 		this.layer = layer;
 		corda = a;

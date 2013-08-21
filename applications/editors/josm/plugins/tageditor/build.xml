@@ -1,32 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is the build file for the tageditor plugin
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in your default plugin directory) run
-**
-**    > ant  install
-**
-** To build against the core in ../../core, create a correct manifest and deploy to
-** SVN, 
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
--->
 <project name="tageditor" default="dist" basedir=".">
     <property name="commit.message" value="Tageditor:  help shortcut parser, rebuild"/>
-    <property name="plugin.main.version" value="4980"/>
+    <property name="plugin.main.version" value="6162"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -36,7 +11,7 @@
     <property name="plugin.src.dir" value="src"/>
     <!-- this is the directory where the plugin jar is copied to -->
     <property name="plugin.dist.dir" value="../../dist"/>
-    <property name="ant.build.javac.target" value="1.5"/>
+    <property name="ant.build.javac.target" value="1.6"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
     <!--

@@ -88,6 +88,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             return properties.keySet();
         }
         public <V> V getPropertyValue(GraphEdgePropertyType<V> property) {
+            @SuppressWarnings("unchecked")
             V result = (V) properties.get(property);
             return result;
         }
@@ -428,12 +429,10 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
     private static <T> void createSetIfHasNone(T object, Map<T, Set<T>> objectSetMap) {
 
         if (!objectSetMap.containsKey(object)) {
-            @SuppressWarnings("unchecked") //no set with generic parameter can be created directly
-            Set<T> set = new HashSet();
+            Set<T> set = new HashSet<T>();
             set.add(object);
             objectSetMap.put(object, set);
         }
-
     }
 
     /**

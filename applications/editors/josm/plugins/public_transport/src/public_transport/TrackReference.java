@@ -3,15 +3,14 @@ package public_transport;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Iterator;
-import java.util.Vector;
+
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;

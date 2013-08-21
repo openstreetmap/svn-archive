@@ -371,11 +371,9 @@ public class LayerPropertiesDialog extends JFrame{
             searchField.addKeyListener(new java.awt.event.KeyAdapter() {
                 public void keyTyped(java.awt.event.KeyEvent e) {
                     
-                    for (Iterator iterator = supportedCRS.iterator(); iterator
-                            .hasNext();) {
+                    for (Iterator<String> iterator = supportedCRS.iterator(); iterator.hasNext();) {
                         String type = (String) iterator.next();
-                        if(type.contains(searchField.getText()))
-                        {
+                        if (type.contains(searchField.getText())) {
                             crsJList.setSelectedIndex(supportedCRS.indexOf(type));
                             crsJList.ensureIndexIsVisible(supportedCRS.indexOf(type));
                             break;

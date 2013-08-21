@@ -54,6 +54,8 @@ public class WritePostprocessor implements OsmServerWritePostprocessor {
 			api.updateSds(swriter.toString(), progress);
 		}
 		
+		sdsWriter.close();
+		
 		for (IPrimitive p : primitives) {
 			plugin.learn(p);
 		}

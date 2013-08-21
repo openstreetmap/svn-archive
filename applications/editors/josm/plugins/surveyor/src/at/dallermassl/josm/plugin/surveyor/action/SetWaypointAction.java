@@ -13,7 +13,6 @@ import javax.swing.JToggleButton;
 import livegps.LiveGpsLayer;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
@@ -52,7 +51,6 @@ public class SetWaypointAction extends AbstractSurveyorAction {
      * @see at.dallermassl.josm.plugin.surveyor.ButtonAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent, java.util.List)
      */
     public void actionPerformed(GpsActionEvent event) {
-        LatLon coordinates = event.getCoordinates();
         //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon());
         String markerTitle = getParameters().get(0);
         Object source = event.getSource();

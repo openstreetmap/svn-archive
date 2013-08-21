@@ -58,7 +58,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * This is an editor for one of the two legs of a turn restriction.
  */
 public class TurnRestrictionLegEditor extends JPanel implements Observer, PrimitiveIdListProvider {
-    static private final Logger logger = Logger.getLogger(TurnRestrictionLegEditor.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionLegEditor.class.getName());
  
     private JLabel lblOsmObject;
     private final Set<OsmPrimitive> legs = new HashSet<OsmPrimitive>();

@@ -1,7 +1,7 @@
 package org.openstreetmap.josm.plugins.JunctionChecker.connectedness;
 
-import java.util.ArrayList;
 import java.util.Vector;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
@@ -44,7 +44,6 @@ public class DiGraphSealer {
 				outgoingChannelIDs.add(i);
 			}
 		}
-		int counter = 0;
 		Channel tempChannel;
 		LeadsTo tempLeadsTo;
 		for (int i = 0; i < outgoingChannelIDs.size(); i++) {
@@ -72,7 +71,6 @@ public class DiGraphSealer {
 				tempChannel.setNewid(newID);
 				newID++;
 				digraph.addChannel(tempChannel);
-				counter++;
 			}
 		}
 
@@ -102,7 +100,6 @@ public class DiGraphSealer {
 				tempChannel.setNewid(newID);
 				newID++;
 				digraph.addChannel(tempChannel);
-				counter++;
 			}
 		}
 		this.deleteDuplicateChannels();
@@ -124,7 +121,6 @@ public class DiGraphSealer {
 	 *TODO: benutze ich die überhaupt noch?
 	 */
 	private void deleteDuplicateChannels() {
-		ArrayList<Integer> pointer = new ArrayList<Integer>();
 
 		for (int i = 0; i < digraph.getChannels().size(); i++) {
 			for (int j = i + 1; j < digraph.getChannels().size(); j++) {
@@ -135,7 +131,6 @@ public class DiGraphSealer {
 					digraph.removeChannel(digraph.getChannelAtPosition(j));
 				}
 			}
-
 		}
 	}
 

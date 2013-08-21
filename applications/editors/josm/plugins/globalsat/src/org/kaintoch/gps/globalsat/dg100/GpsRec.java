@@ -4,9 +4,10 @@
  */
 package org.kaintoch.gps.globalsat.dg100;
 
-import java.nio.*;
-import java.text.*;
-import java.util.*;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * @author skaintoch

@@ -6,7 +6,6 @@ package com.tilusnet.josm.plugins.alignways;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
@@ -250,17 +249,4 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         // In all other cases alignment is possible
         return AlignableStatus.ALGN_VALID;
     }
-
-
-
-
-    private boolean isReferredByNOtherWaySegments(Node node, int numWSeg) {
-
-        Collection<WaySegment> coll_ws = algnSeg.getAdjacentWaySegments(node);
-        if (coll_ws != null)
-            return coll_ws.size() >= numWSeg;
-            else
-                return false;
-    }
-
 }

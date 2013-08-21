@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.tageditor.tagspec.ui;
 
 import java.awt.Component;
 import java.awt.Font;
-import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -11,7 +10,7 @@ import javax.swing.table.TableCellRenderer;
 
 public class KeyValueCellRenderer extends JLabel implements TableCellRenderer  {
 
-    private static final Logger logger = Logger.getLogger(KeyValueCellRenderer.class.getName());
+    //private static final Logger logger = Logger.getLogger(KeyValueCellRenderer.class.getName());
 
     protected void init() {
         setFont(new Font("Courier",Font.PLAIN,getFont().getSize()));

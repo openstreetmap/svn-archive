@@ -3,6 +3,7 @@ package public_transport;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.Vector;
+
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;

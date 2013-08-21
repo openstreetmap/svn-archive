@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -18,7 +17,7 @@ import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 
 public class PresetManager extends JPanel {
 
-    static private final Logger logger = Logger.getLogger(PresetManager.class.getName());
+    //static private final Logger logger = Logger.getLogger(PresetManager.class.getName());
 
     private JComboBox presets;
     private JButton btnRemove;

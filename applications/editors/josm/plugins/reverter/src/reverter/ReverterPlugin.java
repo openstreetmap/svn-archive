@@ -1,10 +1,5 @@
 package reverter;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.marktr;
-
-import java.awt.event.KeyEvent;
-
 import javax.swing.JMenu;
 
 import org.openstreetmap.josm.Main;

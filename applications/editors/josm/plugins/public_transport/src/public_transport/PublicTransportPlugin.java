@@ -8,15 +8,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.ProjectionBounds;
-import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
-import org.openstreetmap.josm.io.CacheFiles;
-import org.openstreetmap.josm.io.MirroredInputStream;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 

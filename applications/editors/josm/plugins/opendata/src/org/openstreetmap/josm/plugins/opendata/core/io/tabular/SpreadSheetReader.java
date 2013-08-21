@@ -212,13 +212,13 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 				        EastNorth en = ens.get(c);
                         if (i == c.xCol) {
                             coordinate = true;
-                            en.setLocation(parseDouble(fields[i]), en.north());
+                            ens.put(c, new EastNorth(parseDouble(fields[i]), en.north()));
                             if (handler != null) {
                                 handler.setXCol(i);
                             }
                         } else if (i == c.yCol) {
                             coordinate = true;
-                            en.setLocation(en.east(), parseDouble(fields[i]));
+                            ens.put(c, new EastNorth(en.east(), parseDouble(fields[i])));
                             if (handler != null) {
                                 handler.setYCol(i);
                             }

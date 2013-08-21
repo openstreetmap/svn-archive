@@ -2,14 +2,12 @@ package public_transport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
+import java.util.Collection;
+
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-
-import java.util.Collection;
-import java.util.Vector;
 
 public class TrackStoplistNameCommand extends Command
 {
@@ -23,7 +21,6 @@ public class TrackStoplistNameCommand extends Command
   private TransText shelter = null;
   private LatLon oldLatLon = null;
 
-  @SuppressWarnings("unchecked")
   public TrackStoplistNameCommand(TrackReference trackref, int workingLine)
   {
     this.trackref = trackref;

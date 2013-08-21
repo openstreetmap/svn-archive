@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -47,7 +46,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class ViaList extends JList{
     
-    static private final Logger logger = Logger.getLogger(ViaList.class.getName());
+    //static private final Logger logger = Logger.getLogger(ViaList.class.getName());
 
     private ViaListModel model;
     private DeleteAction actDelete;

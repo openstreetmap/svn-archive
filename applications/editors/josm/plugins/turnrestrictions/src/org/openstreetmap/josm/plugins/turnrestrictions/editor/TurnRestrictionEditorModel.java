@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -20,13 +19,13 @@ import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
 import org.openstreetmap.josm.data.osm.event.DataSetListener;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
+import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
-import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.tagging.TagEditorModel;
 import org.openstreetmap.josm.gui.tagging.TagModel;
@@ -39,7 +38,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  */
 public class TurnRestrictionEditorModel extends Observable implements DataSetListener{
-    static private final Logger logger = Logger.getLogger(TurnRestrictionEditorModel.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionEditorModel.class.getName());
     
     /**
      * Replies true if {@code tp1} and {@code tp2} have the same tags and

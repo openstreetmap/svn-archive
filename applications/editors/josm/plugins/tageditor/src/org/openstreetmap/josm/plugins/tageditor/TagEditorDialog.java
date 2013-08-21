@@ -13,7 +13,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,8 +29,8 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListViewer;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditor;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
@@ -49,7 +48,7 @@ import org.openstreetmap.josm.tools.WindowGeometry;
  */
 @SuppressWarnings("serial")
 public class TagEditorDialog extends JDialog {
-    static private final Logger logger = Logger.getLogger(TagEditorDialog.class.getName());
+    //static private final Logger logger = Logger.getLogger(TagEditorDialog.class.getName());
 
     /** the unique instance */
     static private  TagEditorDialog instance = null;

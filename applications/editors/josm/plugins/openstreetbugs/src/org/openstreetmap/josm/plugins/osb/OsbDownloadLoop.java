@@ -29,10 +29,10 @@ package org.openstreetmap.josm.plugins.osb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.geom.Point2D;
 import java.util.concurrent.TimeUnit;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.EastNorth;
 
 public class OsbDownloadLoop extends Thread {
 
@@ -46,7 +46,7 @@ public class OsbDownloadLoop extends Thread {
 
     private OsbPlugin plugin;
 
-    private Point2D lastCenter;
+    private EastNorth lastCenter;
 
     public OsbDownloadLoop() {
         setName(tr("OpenStreetBugs download loop"));
@@ -69,7 +69,7 @@ public class OsbDownloadLoop extends Thread {
                 // if the center of the map has changed, the user has dragged or
                 // zoomed the map
                 if(Main.map != null && Main.map.mapView != null) {
-                    Point2D currentCenter = Main.map.mapView.getCenter();
+                    EastNorth currentCenter = Main.map.mapView.getCenter();
                     if(currentCenter != null && !currentCenter.equals(lastCenter)) {
                         resetCountdown();
                         lastCenter = currentCenter;

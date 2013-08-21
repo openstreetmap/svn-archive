@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.turnrestrictions.list;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultListSelectionModel;
 
@@ -18,7 +17,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  * objects in the current selection.
  */
 public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListModel implements EditLayerChangeListener, SelectionChangedListener {
-    private static final Logger logger = Logger.getLogger(TurnRestrictionsInSelectionListModel.class.getName());
+    //private static final Logger logger = Logger.getLogger(TurnRestrictionsInSelectionListModel.class.getName());
     
     public TurnRestrictionsInSelectionListModel(
             DefaultListSelectionModel selectionModel) {

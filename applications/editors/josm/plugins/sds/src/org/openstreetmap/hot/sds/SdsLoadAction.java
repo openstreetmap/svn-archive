@@ -4,7 +4,6 @@ package org.openstreetmap.hot.sds;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,16 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.DiskAccessAction;
-import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
-import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -33,10 +28,8 @@ public class SdsLoadAction extends SdsDiskAccessAction {
 	
 	private SeparateDataStorePlugin plugin;
 
-    @SuppressWarnings("deprecation")
-	public SdsLoadAction(SeparateDataStorePlugin p) {
-        super(tr("Load..."), "sds_load", tr("Load separate data store data from a file."),
-            null);
+    public SdsLoadAction(SeparateDataStorePlugin p) {
+        super(tr("Load..."), "sds_load", tr("Load separate data store data from a file."), null);
     	plugin = p;
     }
     

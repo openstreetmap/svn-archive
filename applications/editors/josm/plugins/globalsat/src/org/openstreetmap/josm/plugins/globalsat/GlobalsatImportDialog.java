@@ -2,39 +2,27 @@
 package org.openstreetmap.josm.plugins.globalsat;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import gnu.io.CommPortIdentifier;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LinkedList;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTabbedPane;
-import javax.swing.JComboBox;
 import javax.swing.ListCellRenderer;
-import javax.swing.JDialog;
-
-import gnu.io.*;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.DownloadAction;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadGpsTask;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.plugins.PluginProxy;
-import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
  * Main download dialog.

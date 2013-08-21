@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
 <project name="photo_geotagging" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="write elevation to EXIF (see josm #7710)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="4762"/>
+    <property name="plugin.main.version" value="6162"/>
 
     <property name="plugin.author" value="Paul Hartmann"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.photo_geotagging.GeotaggingPlugin"/>

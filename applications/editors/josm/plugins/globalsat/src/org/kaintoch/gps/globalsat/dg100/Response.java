@@ -55,7 +55,6 @@ public class Response
         else if (respType == typeGpsRec) // gps recs
         {
             int recType = 2;
-            int ii = 0;
             // read part 1
             while (buf.position() <= len)
             {
@@ -69,7 +68,6 @@ public class Response
                     break;
                 }
                 recType = gpsRec.getDg100TypeOfNextRec();
-                ++ii;
             }
             // read part 2
             buf.position(1042);
@@ -85,7 +83,6 @@ public class Response
                     break;
                 }
                 recType = gpsRec.getDg100TypeOfNextRec();
-                ++ii;
             }
         }
         else if (respType == typeConfig) // config

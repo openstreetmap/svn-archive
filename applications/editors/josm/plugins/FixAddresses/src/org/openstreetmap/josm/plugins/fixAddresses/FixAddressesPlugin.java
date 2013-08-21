@@ -13,7 +13,6 @@
  */
 package org.openstreetmap.josm.plugins.fixAddresses;
 
-import javax.swing.JMenu;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;

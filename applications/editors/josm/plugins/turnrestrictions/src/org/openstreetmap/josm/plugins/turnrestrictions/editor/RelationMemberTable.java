@@ -17,7 +17,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -133,6 +132,7 @@ public class RelationMemberTable extends JTable {
             setEnabled(PrimitiveIdListTransferHandler.isSupportedFlavor(flavors));
         }
 
+        @SuppressWarnings("unchecked")
         public void actionPerformed(ActionEvent evt) {
             // tried to delegate to 'paste' action in the action map of the
             // table, but didn't work. Now duplicating the logic of importData(...) in
@@ -246,6 +246,7 @@ public class RelationMemberTable extends JTable {
             return PrimitiveIdListTransferHandler.isSupportedFlavor(transferFlavors);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public boolean importData(JComponent comp, Transferable t) {
             try {
@@ -322,6 +323,7 @@ public class RelationMemberTable extends JTable {
             }
         }
 
+        @SuppressWarnings("unchecked")
         public synchronized void drop(DropTargetDropEvent dtde) {
             try {
                 if (!dropAccepted) return;

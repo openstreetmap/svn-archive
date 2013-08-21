@@ -44,17 +44,14 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
 		initializePlugin();
 	}
 	
-	
-	
-	
-	 /**
+	/**
      * Initialize the <code>OsmInspectorPlugin</code> object. Creates the
      * <code>OsmInspectorGUI</code> and initializes the following variables with
      *.
      */
     private void initializePlugin() {
     	System.out.println("Initialized Plugin...");
-        Shortcut shortcut = Shortcut.registerShortcut("OsmInspector", tr("Toggle: {0}", tr("Open OsmInspector")),
+        Shortcut.registerShortcut("OsmInspector", tr("Toggle: {0}", tr("Open OsmInspector")),
                 KeyEvent.VK_1, Shortcut.ALT_SHIFT);
         //String name = "Osm Inspector error reports";
         //String tooltip = "Activates the Osm Inspector reporter plugin";

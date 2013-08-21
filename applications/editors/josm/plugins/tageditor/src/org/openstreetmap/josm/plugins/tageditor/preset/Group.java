@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.tageditor.preset;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Group represents a named group of preset items. Groups can be nested.
@@ -10,7 +9,7 @@ import java.util.logging.Logger;
  */
 public class Group extends AbstractNameIconProvider {
     
-    static final private Logger logger = Logger.getLogger(Group.class.getName());
+    //static final private Logger logger = Logger.getLogger(Group.class.getName());
     
     private List<Item> items = null;
     

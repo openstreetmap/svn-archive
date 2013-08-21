@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.Image;
 import java.util.HashMap;
@@ -14,7 +16,6 @@ import javax.swing.UIManager;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.ImageProvider;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 
 public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer{

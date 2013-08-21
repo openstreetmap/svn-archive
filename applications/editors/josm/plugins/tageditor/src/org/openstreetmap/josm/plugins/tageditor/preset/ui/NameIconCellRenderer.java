@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.tageditor.preset.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -15,7 +14,7 @@ import org.openstreetmap.josm.plugins.tageditor.preset.INameIconProvider;
 
 public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
 
-    private static Logger logger = Logger.getLogger(NameIconCellRenderer.class.getName());
+    //private static Logger logger = Logger.getLogger(NameIconCellRenderer.class.getName());
     public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
 
 

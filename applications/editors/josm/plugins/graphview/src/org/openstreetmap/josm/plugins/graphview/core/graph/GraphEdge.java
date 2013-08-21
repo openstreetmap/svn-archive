@@ -1,10 +1,8 @@
 package org.openstreetmap.josm.plugins.graphview.core.graph;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.openstreetmap.josm.plugins.graphview.core.property.GraphEdgePropertyType;
-import org.openstreetmap.josm.plugins.graphview.core.transition.Segment;
 
 /**
  * directed connection between two nodes in a {@link WayGraph}

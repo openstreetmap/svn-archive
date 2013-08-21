@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;

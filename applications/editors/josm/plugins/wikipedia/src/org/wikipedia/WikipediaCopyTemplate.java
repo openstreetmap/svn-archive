@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 import javax.swing.JMenuItem;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences;

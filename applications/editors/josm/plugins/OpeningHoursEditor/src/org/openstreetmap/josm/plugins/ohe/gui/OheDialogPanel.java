@@ -61,6 +61,7 @@ public class OheDialogPanel extends JPanel {
         if (valuesToEdit instanceof String)
             value = (String) valuesToEdit;
         else if (valuesToEdit instanceof Map<?, ?>) {
+            @SuppressWarnings("unchecked")
             Map<String, Integer> valuesMap = (Map<String, Integer>) valuesToEdit;
             if (valuesMap.size() == 1)
                 value = valuesMap.keySet().iterator().next();

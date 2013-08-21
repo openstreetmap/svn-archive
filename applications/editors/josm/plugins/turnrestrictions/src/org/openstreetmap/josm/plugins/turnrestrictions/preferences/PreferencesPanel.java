@@ -6,8 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.logging.Logger;
-
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -29,7 +27,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  */
 public class PreferencesPanel extends VerticallyScrollablePanel {
-    private static final Logger logger = Logger.getLogger(PreferencesPanel.class.getName());
+    //private static final Logger logger = Logger.getLogger(PreferencesPanel.class.getName());
     private JRadioButton rbSetA;
     private JRadioButton rbSetB;
     private ButtonGroup bgIconSet;

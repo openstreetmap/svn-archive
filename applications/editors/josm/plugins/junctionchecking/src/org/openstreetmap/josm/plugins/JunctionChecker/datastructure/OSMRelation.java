@@ -63,7 +63,7 @@ public class OSMRelation extends OSMEntity {
 			this.setRole(role);
 		}
 		
-		public Class getType() {
+		public Class<? extends OSMEntity> getType() {
 			return member.getClass();
 		}
 

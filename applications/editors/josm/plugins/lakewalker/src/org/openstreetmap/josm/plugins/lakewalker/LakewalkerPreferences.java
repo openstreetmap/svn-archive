@@ -87,7 +87,7 @@ public class LakewalkerPreferences extends DefaultTabPreferenceSetting {
         maxCacheAgeConfig.setToolTipText(tr("Maximum age of each cached file in days. Default is 100"));
         sourceConfig.setToolTipText(tr("Data source text. Default is Landsat."));
 
-        String description = tr("A plugin to trace water bodies on Landsat imagery.");
+        /*String description =*/ tr("A plugin to trace water bodies on Landsat imagery.");
         JPanel prefPanel = gui.createPreferenceTab(this);
         buildPreferences(prefPanel);
 

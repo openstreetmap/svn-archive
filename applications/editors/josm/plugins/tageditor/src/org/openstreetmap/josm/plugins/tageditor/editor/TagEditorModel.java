@@ -1,10 +1,10 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
-import java.util.ArrayList;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
@@ -17,14 +17,13 @@ import org.openstreetmap.josm.gui.tagging.TagModel;
 import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 import org.openstreetmap.josm.plugins.tageditor.preset.Tag;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
-import static org.openstreetmap.josm.tools.I18n.trn;
 
 /**
  * 
  */
 @SuppressWarnings("serial")
 public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditorModel  {
-    static private final Logger logger = Logger.getLogger(TagEditorModel.class.getName());
+    //static private final Logger logger = Logger.getLogger(TagEditorModel.class.getName());
     
     private DefaultComboBoxModel appliedPresets = null;
 

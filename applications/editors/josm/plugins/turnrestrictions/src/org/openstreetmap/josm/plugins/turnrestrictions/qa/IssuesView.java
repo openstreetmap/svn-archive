@@ -4,7 +4,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
@@ -16,7 +15,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * IssuesView provides a view on a {@see IssuesModel}.
  */
 public class IssuesView extends VerticallyScrollablePanel implements Observer{
-    static private final Logger logger = Logger.getLogger(IssuesView.class.getName());
+    //static private final Logger logger = Logger.getLogger(IssuesView.class.getName());
     
     /** the issues model */
     private IssuesModel model;

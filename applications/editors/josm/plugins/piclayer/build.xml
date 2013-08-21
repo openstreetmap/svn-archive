@@ -2,7 +2,7 @@
 <project name="PicLayer" default="dist" basedir=".">
     <property name="commit.message" value="[josm/PicLayer] - disable menu items by default"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6097"/>
+    <property name="plugin.main.version" value="6162"/>
 	
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

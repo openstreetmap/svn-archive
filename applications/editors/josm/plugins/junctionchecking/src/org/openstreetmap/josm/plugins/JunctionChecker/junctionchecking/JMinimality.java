@@ -29,10 +29,8 @@ public class JMinimality {
 	private final List<List<Object>> L = new ArrayList<List<Object>>(); //The list of columns to be sorted
 	private long EEovern = 0;
 	private final HashSet<Channel> subgraph = new HashSet<Channel>();//The candidate subgraph to be tested
-	private double durchlauf = 1;
 	private ProgressMonitor pm;
 	private final boolean pmenabled;
-	private final ArrayList<Integer> anzahlchannels = new ArrayList<Integer>();
 	private final ArrayList<HashSet<Channel>> junctions = new ArrayList<HashSet<Channel>>();
 	private final boolean searchFirstJunction;
 	private final ArrayList<Channel> subJunction = new ArrayList<Channel>();
@@ -84,7 +82,7 @@ public class JMinimality {
 		}
 
 		Combination c = new Combination(Grid.length, n);
-		EEovern = (int) c.Choose(Grid.length*Grid.length, n*n);
+		EEovern = (int) Combination.Choose(Grid.length*Grid.length, n*n);
 		long ans = c.Choose(); //This is the number of subcolumns to be generated
 		int[][] v; // this is a column variable containing n y-index entries plus true false values (0/1)
 		List<Object> C; //The column is packed together with 2 indices into this variable
@@ -134,7 +132,6 @@ public class JMinimality {
 		List<Object> C;
 		ArrayList<int[]> CandidateK = new ArrayList<int[]>(n*n); //saves the candidate K_{n-1} in entry-exit pairs
 		long lindex= 0;
-		int countk = 0;
 		int h = 0;
 		int m = 0;
 		int[][] v;
@@ -187,9 +184,7 @@ public class JMinimality {
 						}//If a row has more than one missing value, break
 					}
 					if (missing <=1 && smallerjunction == true){//The k-subgrid is a different junction candidate satisfying total reachability
-						countk++;
 						CheckMinimal = CheckSmallJunction(CandidateK)==false;// If the candidate is a smaller junction, then minimality is false
-						durchlauf++;
 						//log.info("durchlauf: " + durchlauf + " Wert von CheckMinimal: " + CheckMinimal);
 						if (!CheckMinimal) {
 							break;

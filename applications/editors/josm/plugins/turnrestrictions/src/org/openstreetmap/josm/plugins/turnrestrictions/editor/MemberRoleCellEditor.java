@@ -2,7 +2,6 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import java.awt.Component;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
@@ -18,7 +17,7 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
  * 
  */
 public class MemberRoleCellEditor extends AbstractCellEditor implements TableCellEditor {
-    static private Logger logger = Logger.getLogger(MemberRoleCellEditor.class.getName());
+    //static private Logger logger = Logger.getLogger(MemberRoleCellEditor.class.getName());
 
     private AutoCompletingTextField editor = null;
 

@@ -1,11 +1,10 @@
 package org.openstreetmap.josm.plugins.graphview.plugin.dialogs;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_INCLINE_DOWN;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_INCLINE_UP;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.MAX_TRACKTYPE;
 import static org.openstreetmap.josm.plugins.graphview.core.property.VehiclePropertyTypes.SURFACE_BLACKLIST;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Frame;
 import java.awt.GridBagConstraints;

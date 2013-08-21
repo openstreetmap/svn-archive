@@ -9,7 +9,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
  * 
  * @author zverik
  */
-public class ChatMessage implements Comparable {
+public class ChatMessage implements Comparable<ChatMessage> {
     private LatLon pos;
     private Date time;
     private String author;
@@ -95,8 +95,8 @@ public class ChatMessage implements Comparable {
         return hash;
     }
 
-    public int compareTo(Object o) {
-        long otherId = ((ChatMessage)o).id;
+    public int compareTo(ChatMessage o) {
+        long otherId = o.id;
         return otherId < id ? 1 : otherId == id ? 0 : 1;
     }
 }

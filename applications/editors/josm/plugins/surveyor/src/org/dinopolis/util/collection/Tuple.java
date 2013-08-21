@@ -10,17 +10,11 @@ import java.util.Map;
  * Simple implementation of a tuple (two objects).
  *
  * @author cdaller
- *
+ * @deprecated Should be replaced by {@link org.openstreetmap.josm.tools.Pair}
  */
 public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1, T2>{
     T1 first;
     T2 second;
-
-    /**
-     * Default Constructor
-     */
-    public Tuple() {
-    }
 
     /**
      * Constructor filling the values.
@@ -101,7 +95,6 @@ public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -110,7 +103,7 @@ public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final Tuple other = (Tuple) obj;
+        final Tuple<?, ?> other = (Tuple<?, ?>) obj;
         if (this.first == null) {
             if (other.first != null)
                 return false;

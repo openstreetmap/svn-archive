@@ -219,5 +219,6 @@ public class OsmarenderPlugin extends Plugin {
         }
 
         writer.close();
+        reader.close();
     }
 }

@@ -172,7 +172,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
     protected void updateTitle() {
         if (targetPrimitive == null) {
-            setTitle(tr("Conflicts when combining primitives", null));
+            setTitle(tr("Conflicts when combining primitives"));
             return;
         }
         if (targetPrimitive instanceof Way) {

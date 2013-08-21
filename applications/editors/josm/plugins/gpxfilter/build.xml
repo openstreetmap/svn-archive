@@ -1,37 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** see README.template
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant  dist
-**
-** To install the generated plugin locally (in you default plugin directory) run
-**
-**    > ant  install
-**
-** The generated plugin jar is not automatically available in JOSMs plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the plugin and make it available to other
-** JOSM users:
-**    set the properties commit.message and plugin.main.version
-** and run
-**    > ant  publish
-**
-**
--->
 <project name="gpxfilter" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="GPXFilter: moved to Alt-Shift-X"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6082"/>
+    <property name="plugin.main.version" value="6162"/>
 
     <property name="plugin.author" value="Upliner"/>
     <property name="plugin.class" value="gpxfilter.GpxFilterPlugin"/>

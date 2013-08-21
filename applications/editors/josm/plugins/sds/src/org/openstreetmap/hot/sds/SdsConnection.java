@@ -1,8 +1,8 @@
 // License: GPL. Copyright 2007 by Immanuel Scholz and others
 package org.openstreetmap.hot.sds;
 
-import java.net.HttpURLConnection;
 import java.net.Authenticator.RequestorType;
+import java.net.HttpURLConnection;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;

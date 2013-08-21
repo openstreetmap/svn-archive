@@ -1,12 +1,6 @@
 package org.openstreetmap.josm.plugins.walkingpapers;
 
-import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.marktr;
-
-import java.awt.event.KeyEvent;
-
 import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;

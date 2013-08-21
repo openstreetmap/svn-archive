@@ -1,11 +1,15 @@
 package relcontext.actions;
 
 import java.awt.geom.Area;
+
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.*;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.tools.Geometry;
@@ -26,8 +30,9 @@ public class SplittingMultipolygons {
 	    if( way.isDeleted() )
 		return false;
 	    for( Node n : way.getNodes() ) {
-		if( n.isIncomplete() || (a != null && !a.contains(n.getCoor())) )
-		    return false;
+	        LatLon ll = n.getCoor();
+    		if( n.isIncomplete() || (a != null && !a.contains(ll.getX(), ll.getY())) )
+    		    return false;
 	    }
 	    if( way.isClosed() )
 		rings.add(way);

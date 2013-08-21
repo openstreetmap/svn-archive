@@ -798,9 +798,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		/**
 		 * @return the score of the street.
 		 */
-		protected int getScore() {
+		/*protected int getScore() {
 			return score;
-		}
+		}*/
 
 		@Override
 		public int compareTo(StreetScore arg0) {

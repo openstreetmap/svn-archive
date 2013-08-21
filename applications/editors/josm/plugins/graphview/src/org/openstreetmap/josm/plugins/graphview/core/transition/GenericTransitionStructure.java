@@ -65,9 +65,9 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
             return inboundSegments;
         }
 
-        public <P> void setProperty(RoadPropertyType<P> property, P value) {
+        /*public <P> void setProperty(RoadPropertyType<P> property, P value) {
             properties.put(property, value);
-        }
+        }*/
         public Collection<RoadPropertyType<?>> getAvailableProperties() {
             return properties.keySet();
         }
@@ -101,9 +101,9 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         public SegmentNode getNode2() {
             return node2;
         }
-        public <P> void setProperty(RoadPropertyType<P> property, P value) {
+        /*public <P> void setProperty(RoadPropertyType<P> property, P value) {
             properties.put(property, value);
-        }
+        }*/
         public Collection<RoadPropertyType<?>> getAvailableProperties() {
             return properties.keySet();
         }

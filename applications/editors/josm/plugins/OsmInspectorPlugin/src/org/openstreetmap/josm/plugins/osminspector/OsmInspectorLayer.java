@@ -56,6 +56,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.osminspector.gui.OsmInspectorDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
@@ -337,7 +338,6 @@ public class OsmInspectorLayer extends Layer {
 	 * @throws IndexOutOfBoundsException
 	 * @throws ParseException
 	 */
-	@SuppressWarnings("unchecked")
 	public OsmInspectorLayer(GeoFabrikWFSClient wfsClient,
 			ProgressMonitor monitor) throws NoSuchAuthorityCodeException,
 			FactoryException, IOException, IndexOutOfBoundsException,
@@ -402,7 +402,6 @@ public class OsmInspectorLayer extends Layer {
 	 * @throws NoSuchElementException
 	 * @throws IndexOutOfBoundsException
 	 */
-	@SuppressWarnings("unchecked")
 	public void loadFeatures(GeoFabrikWFSClient wfsClient)
 			throws NoSuchAuthorityCodeException, FactoryException, IOException,
 			IndexOutOfBoundsException, NoSuchElementException, ParseException {

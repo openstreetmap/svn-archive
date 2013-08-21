@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.turnrestrictions.preferences;
 
+import javax.swing.KeyStroke;
+
 
 /**
  * Defines the preference keys used for preferences of the turnrestrictions

@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="RelToolbox: make natural sort for relation and find relation lists"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="5613"/>
+    <property name="plugin.main.version" value="6162"/>
 
     <property name="plugin.author" value="Ilya Zverev"/>
     <property name="plugin.class" value="relcontext.RelContextPlugin"/>

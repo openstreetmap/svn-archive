@@ -4,47 +4,29 @@
 package org.openstreetmap.josm.plugins.globalsat;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import gnu.io.CommPortIdentifier;
 
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
-import java.util.Enumeration;
+import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JButton;
-import javax.swing.JTabbedPane;
-import javax.swing.JComboBox;
-import javax.swing.ListCellRenderer;
-import javax.swing.BoxLayout;
-
-
-import gnu.io.*;
+import javax.swing.JTextField;
 
 import org.kaintoch.gps.globalsat.dg100.Dg100Config;
-
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.DownloadAction;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadGpsTask;
-import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.plugins.PluginProxy;
-import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.data.gpx.GpxTrack;
-import org.openstreetmap.josm.data.gpx.WayPoint;
 
 
 /**

@@ -15,7 +15,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -35,7 +34,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *  
  */
 public class VehicleExceptionEditor extends JPanel implements Observer{
-    static private final Logger logger = Logger.getLogger(VehicleExceptionEditor.class.getName());
+    //static private final Logger logger = Logger.getLogger(VehicleExceptionEditor.class.getName());
     
     private TurnRestrictionEditorModel model;
     private JCheckBox cbPsv;

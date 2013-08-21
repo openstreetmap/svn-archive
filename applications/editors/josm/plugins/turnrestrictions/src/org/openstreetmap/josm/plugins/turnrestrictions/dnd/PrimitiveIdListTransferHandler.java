@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
+import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**

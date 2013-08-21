@@ -302,7 +302,7 @@ public class PluginOperations {
         {
             sb.append(content);
         }
-
+        br.close();
         try {
             refSys = CRS.parseWKT(sb.toString().trim());
         } catch (FactoryException e) {
@@ -310,9 +310,7 @@ public class PluginOperations {
         }
 
         return refSys;
-
     }
-
 
     /**
      * Method for external use.

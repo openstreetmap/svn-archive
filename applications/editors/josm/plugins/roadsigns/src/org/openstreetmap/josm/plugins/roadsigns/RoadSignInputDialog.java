@@ -876,7 +876,7 @@ class RoadSignInputDialog extends ExtendedDialog {
             this.add(new JLabel(tr("Country preset:")), GBC.std().insets(5, 5, 5, 5));
             this.add(selectionBox, GBC.eol().insets(0, 5, 5, 5));
             if (!standalone) {
-                String snd = "Hide signs that do not have an OSM tag assigned";
+                //String snd = "Hide signs that do not have an OSM tag assigned";
 
                 rbAll = new JRadioButton(tr("Show all signs"));
                 rbUseful = new JRadioButton(tr("Show a selection of the most useful signs"));

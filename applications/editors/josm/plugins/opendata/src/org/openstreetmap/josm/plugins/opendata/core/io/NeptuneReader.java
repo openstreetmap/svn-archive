@@ -170,7 +170,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 		n.put("name", stop.getName());
 		return n;
 	}
-	
+	/*
 	private Node createStopPosition(StopPointType stop) {
 		Node n = createNode(createLatLon(stop));
 		n.put(OSM_PUBLIC_TRANSPORT, OSM_STOP_POSITION);
@@ -178,7 +178,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 		n.put("name", stop.getName());
 		return n;
 	}
-
+*/
 	protected Relation createRelation(String type){
 		Relation r = new Relation();
 		r.put("type", type);

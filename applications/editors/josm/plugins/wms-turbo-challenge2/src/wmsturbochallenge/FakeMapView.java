@@ -24,7 +24,7 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MapView;
 
-class fake_map_view extends MapView {
+class FakeMapView extends MapView {
     public ProjectionBounds view_bounds;
     public MapView parent;
 
@@ -35,7 +35,7 @@ class fake_map_view extends MapView {
     public double scale;
     public double max_east_west;
 
-    public fake_map_view(MapView parent, double scale) {
+    public FakeMapView(MapView parent, double scale) {
         super(null, null); //TODO MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
         this.parent = parent;
         this.scale = scale;

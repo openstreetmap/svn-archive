@@ -30,15 +30,15 @@ import org.openstreetmap.josm.io.MirroredInputStream;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 // most of the layout was copied from the openstreetbugs plugin to get things started
-public class canvec_layer extends Layer implements MouseListener {
+public class CanvecLayer extends Layer implements MouseListener {
 	private Icon layerIcon = null;
 	private int max_zoom = 4;
-	public canvec_helper plugin_self;
+	public CanvecHelper plugin_self;
 	private ArrayList<CanVecTile> tiles = new ArrayList<CanVecTile>();
 	public ArrayList<CanVecTile> downloadable = new ArrayList<CanVecTile>();
 	public ArrayList<CanVecTile> openable = new ArrayList<CanVecTile>();
 
-	public canvec_layer(String name,canvec_helper self){
+	public CanvecLayer(String name,CanvecHelper self){
 		super(name);
 		plugin_self = self;
 		this.setBackgroundLayer(true);
@@ -70,6 +70,7 @@ public class canvec_layer extends Layer implements MouseListener {
 					last_cell = cell;
 				} else System.out.print("bad line '" + line + "'\n");
 			}
+			br.close();
 			CanVecTile tile = new CanVecTile(last_cell,"",0,"",this,list);
 			if (tile.isValid()) tiles.add(tile);
 
@@ -91,8 +92,8 @@ public class canvec_layer extends Layer implements MouseListener {
 			new OpenOsmAction(this)};
 	}
 	public class MaxZoomAction extends AbstractAction implements LayerAction {
-		private canvec_layer parent;
-		public MaxZoomAction(canvec_layer parent) {
+		private CanvecLayer parent;
+		public MaxZoomAction(CanvecLayer parent) {
 			this.parent = parent;
 		}
                 @Override
@@ -123,8 +124,8 @@ public class canvec_layer extends Layer implements MouseListener {
 		}
 	}
 	private class OpenOsmAction extends AbstractAction implements LayerAction {
-		private canvec_layer layer;
-		public OpenOsmAction(canvec_layer layer) {
+		private CanvecLayer layer;
+		public OpenOsmAction(CanvecLayer layer) {
 			this.layer = layer;
 		}
                 @Override
@@ -154,8 +155,8 @@ public class canvec_layer extends Layer implements MouseListener {
 		}
 	}
 	private class DownloadCanvecAction extends AbstractAction implements LayerAction {
-		private canvec_layer parent;
-		public DownloadCanvecAction(canvec_layer parent) {
+		private CanvecLayer parent;
+		public DownloadCanvecAction(CanvecLayer parent) {
 			this.parent = parent;
 		}
                 @Override
@@ -206,7 +207,7 @@ public class canvec_layer extends Layer implements MouseListener {
 			CanVecTile tile = tiles.get(i);
 			tile.paint(g,mv,bounds,max_zoom);
 		}
-		long end = System.currentTimeMillis();
+		//long end = System.currentTimeMillis();
 		//System.out.println((end-start)+"ms spent");
 	}
         @Override

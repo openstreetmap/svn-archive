@@ -15,10 +15,10 @@ public class OSMIFeatureTracker {
 
 	public OSMIFeatureTracker(
 			FeatureCollection<SimpleFeatureType, SimpleFeature> featuresIn) {
-		hashFeatures = new HashMap();
+		hashFeatures = new HashMap<Long, SimpleFeature>();
 		features = new MemoryFeatureCollection(featuresIn.getSchema());
 
-		for (Iterator it = features.iterator(); it.hasNext();) {
+		for (Iterator<?> it = features.iterator(); it.hasNext();) {
 			SimpleFeature element = (SimpleFeature) it.next();
 			try {
 				Long ID = (Long.parseLong((String) element
@@ -38,7 +38,7 @@ public class OSMIFeatureTracker {
 
 	public boolean mergeFeatures(
 			FeatureCollection<SimpleFeatureType, SimpleFeature> newFeatures) {
-		for (Iterator it = newFeatures.iterator(); it.hasNext();) {
+		for (Iterator<SimpleFeature> it = newFeatures.iterator(); it.hasNext();) {
 			SimpleFeature element = (SimpleFeature) it.next();
 			try {
 				Long ID = (Long.parseLong((String) element

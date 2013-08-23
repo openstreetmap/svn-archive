@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -28,7 +29,7 @@ public class UploadDataGuiPlugin extends Plugin {
     public UploadDataGuiPlugin(PluginInformation info) {
         super(info);
         openaction = new UploadAction();
-        Main.main.menu.gpsMenu.add(openaction);
+        MainMenu.add(Main.main.menu.gpsMenu, openaction);
     }
 
     class UploadAction extends JosmAction {

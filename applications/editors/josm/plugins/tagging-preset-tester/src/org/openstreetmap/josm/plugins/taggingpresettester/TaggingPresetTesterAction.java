@@ -27,7 +27,7 @@ public class TaggingPresetTesterAction extends JosmAction {
         Shortcut.registerShortcut("tools:taggingpresettester",
         tr("Tool: {0}", tr("Tagging Preset Tester")),
         KeyEvent.VK_T, Shortcut.ALT_CTRL_SHIFT), true);
-        MainMenu.addAfter(Main.main.menu.presetsMenu, this, false, Main.main.menu.presetSearchAction);
+        MainMenu.addAfter(Main.main.menu.windowMenu, this, false, Main.main.menu.changesetManager);
     }
 
     public TaggingPresetTesterAction(PluginInformation info) {

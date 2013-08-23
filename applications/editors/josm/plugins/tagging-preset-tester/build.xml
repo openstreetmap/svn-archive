@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="tagging-preset-tester" default="dist" basedir=".">
     <property name="commit.message" value="[josm_tagging_preset_tester] #josm8853: listen for list selection, support standalone mode (ant run)"/>
-    <property name="plugin.main.version" value="6162"/>
+    <property name="plugin.main.version" value="6180"/>
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>

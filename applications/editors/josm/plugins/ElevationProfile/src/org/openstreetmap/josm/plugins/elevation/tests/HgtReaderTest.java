@@ -37,7 +37,8 @@ public class HgtReaderTest extends TestCase {
 	
 	double d = hr.getElevationFromHgt(l);
 	System.out.println(d);
-	assert(!Double.isNaN(d));
+	assertFalse("Data missing or void for coor " + l, Double.isNaN(d));
+	
 	assertEquals((int)d, expHeight);
     }
 

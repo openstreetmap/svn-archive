@@ -19,11 +19,14 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  *  @author Oliver Wieland <oliver.wieland@online.de>
  */
 public class HgtReader {
+    private static final int SECONDS_PER_MINUTE = 60;
+
     public static final String HGT_EXT = ".hgt";
     
     // alter these values for different SRTM resolutions
     public static final int HGT_RES = 3; // resolution in arc seconds
     public static final int HGT_ROW_LENGTH = 1201; // number of elevation values per line
+    public static final int HGT_VOID = -32768; // magic number which indicates 'void data' in HGT file
     
     private HashMap<String, ShortBuffer> cache = new HashMap<String, ShortBuffer>(); 
     
@@ -37,11 +40,11 @@ public class HgtReader {
 		// we use it as a marker to indicate 'file has been searched
 		// but is not there'
 		cache.put(file, null);
-		 // Try all other resource directories
+		 // Try all resource directories
 	        for (String location : Main.pref.getAllPossiblePreferenceDirs()) {	            
 	    		String fullPath = new File(location + File.separator + "elevation", file).getPath();
 	    			  
-	    		System.out.println("Search in " + location);
+	    		System.out.println(fullPath);
     	    		File f = new File(fullPath);
     	    		if (f.exists()) {
     	    		    // nope: read HGT file...
@@ -107,17 +110,28 @@ public class HgtReader {
 	}
 	
 	// see http://gis.stackexchange.com/questions/43743/how-to-extract-elevation-from-hgt-file
-	double fLat = frac(coor.lat()) * 60;
-	double fLon = frac(coor.lon()) * 60;
+	double fLat = frac(coor.lat()) * SECONDS_PER_MINUTE;
+	double fLon = frac(coor.lon()) * SECONDS_PER_MINUTE;
 	
-	
-	int row = (int)Math.round(fLat * 60 / HGT_RES); 
-	int col = (int)Math.round(fLon * 60 / HGT_RES);
+	// compute offset within HGT file
+	int row = (int)Math.round(fLat * SECONDS_PER_MINUTE / HGT_RES); 
+	int col = (int)Math.round(fLon * SECONDS_PER_MINUTE / HGT_RES);
 	
 	row = HGT_ROW_LENGTH - row;
 	int cell = (HGT_ROW_LENGTH*  (row - 1)) + col;
 
-	return sb.get(cell);
+	// valid position in buffer?
+	if (cell < sb.limit()) {
+	    short ele = sb.get(cell);
+	    // check for data voids 
+	    if (ele == HGT_VOID) {
+		return Double.NaN;
+	    } else {
+		return ele;
+	    }
+	} else {
+	    return Double.NaN;
+	}
     }
     
     /**

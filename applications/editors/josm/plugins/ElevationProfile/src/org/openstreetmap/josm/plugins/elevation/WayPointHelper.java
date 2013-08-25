@@ -118,10 +118,49 @@ public class WayPointHelper {
 
 		if (getUnitMode() == UnitMode.Imperial) {
 				// translate to feet
-				return ele * METER_TO_FEET;
+		    return meter2Feet(ele);
 		}	
 		
 		return ele;
+	}
+	
+	/**
+	 * Computes the slope <b>in percent</b> between two way points. E. g. an elevation gain of 12m 
+	 * within a distance of 100m is equal to a slope of 12%. 
+	 *
+	 * @param w1 the first way point
+	 * @param w2 the second way point
+	 * @return the slope in percent
+	 */
+	public static double computeSlope(WayPoint w1, WayPoint w2) {
+	    	// same coordinates? -> return 0, if yes
+	    	if (w1.getCoor().equals(w2.getCoor())) return 0;
+	    
+		// get distance in meters and divide it by 100 in advance
+		double distInMeter = w1.getCoor().greatCircleDistance(w2.getCoor()) / 100.0;
+		
+		// convert to feet?
+		if (getUnitMode() == UnitMode.Imperial) {
+		    distInMeter = meter2Feet(distInMeter);
+		}
+				
+		// get elevation (difference) - is converted automatically to feet
+		int ele1 = (int) WayPointHelper.getElevation(w1);
+		int ele2 = (int) WayPointHelper.getElevation(w2);
+		int dH = ele2 - ele1;
+		
+		// Slope in percent is define as elevation gain/loss in meters related to a distance of 100m
+		return dH / distInMeter;
+	}
+	
+	/**
+	 * Converts meter into feet
+	 *
+	 * @param meter the meter
+	 * @return the double
+	 */
+	public static double meter2Feet(double meter) {
+	    return meter * METER_TO_FEET;
 	}
 	
 	/**

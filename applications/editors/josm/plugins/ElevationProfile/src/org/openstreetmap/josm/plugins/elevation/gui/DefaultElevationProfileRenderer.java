@@ -51,7 +51,7 @@ public class DefaultElevationProfileRenderer implements
 	/**
 	 * 
 	 */
-	private static final int BASIC_WPT_RADIUS = 2;
+	private static final int BASIC_WPT_RADIUS = 3;
 	private static final int REGULAR_WPT_RADIUS = BASIC_WPT_RADIUS * 4;
 	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 10;
 
@@ -91,6 +91,7 @@ public class DefaultElevationProfileRenderer implements
 
 		switch (kind) {
 		case Plain:
+		    return Color.LIGHT_GRAY;
 		case ElevationLevelLoss:
 		case ElevationLevelGain:
 			if (z > profile.getAverageHeight()) {
@@ -100,10 +101,14 @@ public class DefaultElevationProfileRenderer implements
 			}
 		case Highlighted:
 			return Color.ORANGE;
-		case ElevationGain:
-			return Color.GREEN;
-		case ElevationLoss:
-			return Color.RED;
+		case ElevationGainHigh:
+		    	return Color.getHSBColor(0.3f, 1.0f, 1.0f); // green
+		case ElevationLossHigh:
+			return Color.getHSBColor(0, 1.0f, 1.0f); // red
+		case ElevationGainLow:
+		    	return Color.getHSBColor(0.3f, 0.5f, 1.0f); // green with low sat
+		case ElevationLossLow:
+			return Color.getHSBColor(0, 0.5f, 1.0f); // red with low sat
 		case FullHour:
 			return MARKER_POINT;
 		case MaxElevation:
@@ -115,6 +120,8 @@ public class DefaultElevationProfileRenderer implements
 			return START_COLOR;
 		case EndPoint:
 			return END_POINT;
+		default:
+		    break;
 		}
 
 		throw new RuntimeException("Unknown way point kind: " + kind);
@@ -201,14 +208,14 @@ public class DefaultElevationProfileRenderer implements
 		if (kind == ElevationWayPointKind.ElevationLevelGain) {
 			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g, c, 8, 
-					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationGain),
+					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationGainHigh),
 					TriangleDir.Up);
 		}
 		
 		if (kind == ElevationWayPointKind.ElevationLevelLoss) {
 			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), 
 					pnt.x, pnt.y+ g.getFontMetrics().getHeight(), g, c, 8, 
-					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationLoss),
+					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationLossHigh),
 					TriangleDir.Down);
 		}
 
@@ -391,7 +398,7 @@ public class DefaultElevationProfileRenderer implements
 		Point2D focus = new Point2D.Float(x - (radius * 0.6f), y
 				- (radius * 0.6f));
 		float[] dist = { 0.1f, 0.2f, 1.0f };
-		Color[] colors = { firstCol, secondCol, Color.BLACK };
+		Color[] colors = { firstCol, secondCol, Color.DARK_GRAY };
 		RadialGradientPaint p = new RadialGradientPaint(center, radius, focus,
 				dist, colors, CycleMethod.NO_CYCLE);
 

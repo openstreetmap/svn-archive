@@ -3,6 +3,11 @@ Srtm2Osm tool by Igor Brejc and others
 VERSION HISTORY
 ---------------
 
+1.11
+----
+- added support for new slippymap URL syntax.
+- added support for splitting isohypse ways after a certain amount of nodes.
+
 1.10
 ----
 - using 64 bit integers for element IDs.

@@ -63,10 +63,8 @@ namespace Srtm2Osm
             System.Console.Out.WriteLine ("-corrxy <corrLng> <corrLat>: correction values to shift contours");
             System.Console.Out.WriteLine ("-source <url>: base URL used for download");
             System.Console.Out.WriteLine ("       (default 'http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/')");
+            System.Console.Out.WriteLine ("-maxwaynodes <count>: specifies the maximum number of nodes in a single way");
             System.Console.Out.WriteLine ();
-
-            // http://www.openstreetmap.org/?lat=46.523362283296755&lon=15.628250113735774&zoom=12&layers=0BF
-            // http://www.openstreetmap.org/?lat=46.79387319944362&lon=13.599213077626766&zoom=11&layers=0BF
         }
     }
 }

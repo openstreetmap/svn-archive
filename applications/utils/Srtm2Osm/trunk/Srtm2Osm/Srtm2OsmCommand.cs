@@ -31,6 +31,7 @@ namespace Srtm2Osm
         LargeAreaMode,
         CorrectionXY,
         SrtmSource,
+        MaxWayNodes
     }
 
     public class Srtm2OsmCommand : IConsoleApplicationCommand
@@ -172,6 +173,29 @@ namespace Srtm2Osm
                                     nodeSerializer.Serialize (writer, node, ns);
 
                                     way.Nd.Add (new osmWayND (node.Id, true));
+
+                                    // Split the way if the maximum node count per way is reached.
+                                    if (way.Nd.Count == maxWayNodes && polyline.VerticesCount > maxWayNodes)
+                                    {
+                                        // Don't create a new way if already at the end of the *unclosed* polyline
+                                        if (i == polyline.VerticesCount - 1 && !polyline.IsClosed)
+                                            continue;
+
+                                        // first, serialize old way
+                                        waySerializer.Serialize(writer, way, ns);
+
+                                        way = new osmWay();
+                                        way.Id = wayId--;
+                                        way.Nd = new List<osmWayND>();
+                                        way.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
+                                        way.Version = 1;
+                                        way.User = user;
+                                        way.Uid = uid;
+                                        way.Changeset = changeset;
+
+                                        contourMarker.MarkContour(way, isohypse);
+                                        way.Nd.Add(new osmWayND(node.Id, true));
+                                    }
                                 }
 
                                 // if the isohypse segment is closed, add the first node as the final node of the way
@@ -219,6 +243,22 @@ namespace Srtm2Osm
                             osmDb.AddNode(node);
 
                             isohypseWay.AddNode (node.ObjectId);
+
+                            // Split the polyline if the maximum node count per way is reached.
+                            if (isohypseWay.NodesList.Count == maxWayNodes && polyline.VerticesCount > maxWayNodes)
+                            {
+                                // Don't create a new way if already at the end of the *unclosed* polyline
+                                if (i == polyline.VerticesCount - 1 && !polyline.IsClosed)
+                                    continue;
+                                    
+                                isohypseWay = new OsmWay (wayId--);
+                                isohypseWay.Visible = true;
+                                isohypseWay.Timestamp = DateTime.UtcNow;
+
+                                contourMarker.MarkContour (isohypseWay, isohypse);
+                                osmDb.AddWay (isohypseWay);
+                                isohypseWay.AddNode (node.ObjectId);
+                            }
                         }
 
                         // if the isohypse segment is closed, add the first node as the final node of the way
@@ -302,6 +342,7 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.LargeAreaMode, "large", 0));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.CorrectionXY, "corrxy", 2));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SrtmSource, "source", 1));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.MaxWayNodes, "maxwaynodes", 1));
 
             startFrom = options.ParseArgs (args, startFrom);
             System.Globalization.CultureInfo invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
@@ -493,6 +534,14 @@ namespace Srtm2Osm
                     case Srtm2OsmCommandOption.LargeAreaMode:
                         largeAreaMode = true;
                         continue;
+
+                    case Srtm2OsmCommandOption.MaxWayNodes:
+                        maxWayNodes = Int32.Parse (option.Parameters[0], invariantCulture);
+
+                        if (maxWayNodes < 2)
+                            throw new ArgumentException ("The minimum number of nodes in a single way is 2.");
+
+                        continue;
                 }
             }
 
@@ -588,10 +637,9 @@ namespace Srtm2Osm
         private IContourMarker contourMarker = new DefaultContourMarker ();
         private bool largeAreaMode;
         private string srtmSource = "";
+        private int maxWayNodes = Int32.MaxValue;
 
         private static int[] zoomLevels = {0, 0, 111000000, 55000000, 28000000, 14000000, 7000000, 3000000, 2000000, 867000,
             433000, 217000, 108000, 54000, 27000, 14000, 6771, 3385, 1693};
     }
 }
-
-// http://www.openstreetmap.org/?lat=46.79387319944362&lon=13.599213077626766&zoom=11&layers=0BF

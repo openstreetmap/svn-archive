@@ -77,4 +77,6 @@ public interface IOSMEntity extends Comparable<IOSMEntity> {
 	 * @param visitor the problem visitor
 	 */
 	public void visit(IAllKnowingTrashHeap trashHeap, IProblemVisitor visitor);
+
+	int compareTo(IOSMEntity o);
 }

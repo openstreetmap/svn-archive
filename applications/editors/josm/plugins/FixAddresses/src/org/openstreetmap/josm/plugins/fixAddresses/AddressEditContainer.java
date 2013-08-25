@@ -108,7 +108,6 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		return workingSet;
 	}
 
-
 	/**
 	 * Adds a change listener.
 	 * @param listener
@@ -529,13 +528,13 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		synchronized (this) {
 			clearData();
 			clearProblems();
-
+			/*
 			for (OsmPrimitive osmPrimitive : osmData) {
 				if (osmPrimitive.isUsable()) {
 					osmPrimitive.accept(this);
 				}
 			}
-
+			 */
 			resolveAddresses();
 			// sort lists
 			Collections.sort(shadowIncompleteAddresses);
@@ -798,9 +797,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		/**
 		 * @return the score of the street.
 		 */
-		/*protected int getScore() {
+		@SuppressWarnings("unused")
+		// TODO: Implement properly
+		protected int getScore() {
 			return score;
-		}*/
+		}
 
 		@Override
 		public int compareTo(StreetScore arg0) {

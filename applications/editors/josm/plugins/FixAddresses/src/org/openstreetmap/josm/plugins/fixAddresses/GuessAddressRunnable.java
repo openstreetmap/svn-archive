@@ -176,7 +176,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 						if (canceled) {
 							break;
 						}
-						way.accept(guesser);						
+						way.visit(guesser);						
 					}
 					
 					String guessedVal = guesser.getCurrentValue();
@@ -196,7 +196,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
 						if (canceled) {
 							break;
 						}
-						node.accept(guesser);						
+						node.visit(guesser);						
 					}
 					
 					String guessedVal = guesser.getCurrentValue();

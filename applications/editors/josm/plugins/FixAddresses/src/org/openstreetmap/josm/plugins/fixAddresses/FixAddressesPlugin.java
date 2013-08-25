@@ -41,8 +41,8 @@ public class FixAddressesPlugin extends Plugin {
 		SelectIncompleteAddressesAction incAddrAction = new SelectIncompleteAddressesAction();
 
 		// ... and add them to the tools menu in main
-                MainMenu.add(Main.main.menu.dataMenu, action, false, 0);
-		MainMenu.add(Main.main.menu.selectionMenu, incAddrAction);
+                MainMenu.add(Main.main.menu.toolsMenu, action, false, 0);
+		MainMenu.add(Main.main.menu.toolsMenu, incAddrAction);
 
 		// create preferences instance
 		preferences = (FixAddressesPreferences) new FixAddressesPreferences.Factory().createPreferenceSetting();

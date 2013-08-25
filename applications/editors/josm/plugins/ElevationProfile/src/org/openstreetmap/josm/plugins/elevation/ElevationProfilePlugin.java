@@ -47,6 +47,8 @@ public class ElevationProfilePlugin extends Plugin {
 	    System.err.println("Init of ElevationProfilePlugin failed: " + e1);
 	    e1.printStackTrace();
 	}
+	
+	getPluginDir();
     }
 
     /**

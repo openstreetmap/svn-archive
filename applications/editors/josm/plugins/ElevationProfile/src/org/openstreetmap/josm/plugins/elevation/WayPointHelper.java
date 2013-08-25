@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
@@ -40,6 +41,8 @@ public class WayPointHelper {
 		"en_ZA"	/* South Africa */
 	};
 	
+	
+	
 	/**
 	 * The name of the elevation height of a way point.
 	 */
@@ -48,7 +51,10 @@ public class WayPointHelper {
 	private static UnitMode unitMode = UnitMode.NotSelected;
 		
 	private static GeoidCorrectionKind geoidKind = GeoidCorrectionKind.None;
-
+	
+	/** The HGT reader instance. */
+	private static HgtReader hgt = new HgtReader();
+	
 	/**
 	 * Gets the current mode of GEOID correction.
 	 * @return
@@ -216,6 +222,14 @@ public class WayPointHelper {
 	 */
 	private static double getInternalElevation(WayPoint wpt) {
 		if (wpt != null) {
+		    	// Try to read data from SRTM file
+		    	// TODO: Option to switch this off
+		    	double eleHgt = hgt.getElevationFromHgt(wpt.getCoor());
+		    	
+		    	if (!Double.isNaN(eleHgt)) {		    	    
+		    	    return eleHgt;
+		    	}
+		    
 			if (!wpt.attr.containsKey(HEIGHT_ATTRIBUTE)) {
 				return 0;
 			}

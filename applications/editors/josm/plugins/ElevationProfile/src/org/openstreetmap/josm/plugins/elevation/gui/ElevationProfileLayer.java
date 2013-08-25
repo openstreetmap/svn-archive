@@ -221,7 +221,6 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 
 	// plain way point by default
 	ElevationWayPointKind kind = ElevationWayPointKind.Plain;
-	System.out.println("Slope: " + slope + "%");
 	
 	// check, if we passed an elevation level
 	// We assume, that we cannot pass more than one levels between two way points ;-)

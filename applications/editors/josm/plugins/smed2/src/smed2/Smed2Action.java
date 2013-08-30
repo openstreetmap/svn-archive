@@ -117,7 +117,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setLocation(100, 200);
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
-//		editFrame.setVisible(true);
+		editFrame.setVisible(false);
 		panelMain = new PanelMain();
 		editFrame.add(panelMain);
 		panelS57 = new S57dat();

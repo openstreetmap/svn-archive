@@ -970,12 +970,23 @@ public class Notices {
 		NmkCevni.put(CatNMK.NMK_LBGP, NoticeE22);
   };
 
+	public static final Symbol NoticeBnank = new Symbol();
+	public static final Symbol NoticeBlmhr = new Symbol();
+	public static final Symbol NoticeBwral = new Symbol();
+	public static final Symbol NoticeBwrar = new Symbol();
+	public static final Symbol NoticeBktpm = new Symbol();
+	public static final Symbol NoticeBktsm = new Symbol();
+	public static final Symbol NoticeBktmr = new Symbol();
+	public static final Symbol NoticeBcrtp = new Symbol();
+	public static final Symbol NoticeBcrts = new Symbol();
+	public static final Symbol NoticeBtrbm = new Symbol();
+	public static final Symbol NoticeBrspd = new Symbol();
 	public static final EnumMap<CatNMK, Symbol> NmkBniwr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
 	static {
-		NmkBniwr.put(CatNMK.NMK_NANK, Notice); NmkBniwr.put(CatNMK.NMK_LMHR, Notice); NmkBniwr.put(CatNMK.NMK_OPTR, Notice); NmkBniwr.put(CatNMK.NMK_OPTL, Notice);
-		NmkBniwr.put(CatNMK.NMK_WRAL, Notice); NmkBniwr.put(CatNMK.NMK_WLAR, Notice); NmkBniwr.put(CatNMK.NMK_KTPM, Notice); NmkBniwr.put(CatNMK.NMK_KTSM, Notice);
-		NmkBniwr.put(CatNMK.NMK_KTMR, Notice); NmkBniwr.put(CatNMK.NMK_CRTP, Notice); NmkBniwr.put(CatNMK.NMK_CRTS, Notice); NmkBniwr.put(CatNMK.NMK_TRBM, Notice);
-		NmkBniwr.put(CatNMK.NMK_RSPD, Notice);
+		NmkBniwr.put(CatNMK.NMK_NANK, NoticeBnank); NmkBniwr.put(CatNMK.NMK_LMHR, NoticeBlmhr); NmkBniwr.put(CatNMK.NMK_OPTR, NoticeD2a); NmkBniwr.put(CatNMK.NMK_OPTL, NoticeD2b);
+		NmkBniwr.put(CatNMK.NMK_WRAL, NoticeBwral); NmkBniwr.put(CatNMK.NMK_WLAR, NoticeBwrar); NmkBniwr.put(CatNMK.NMK_KTPM, NoticeBktpm); NmkBniwr.put(CatNMK.NMK_KTSM, NoticeBktsm);
+		NmkBniwr.put(CatNMK.NMK_KTMR, NoticeBktmr); NmkBniwr.put(CatNMK.NMK_CRTP, NoticeBcrtp); NmkBniwr.put(CatNMK.NMK_CRTS, NoticeBcrts); NmkBniwr.put(CatNMK.NMK_TRBM, NoticeBtrbm);
+		NmkBniwr.put(CatNMK.NMK_RSPD, NoticeBrspd);
 	}
 
 	public static final EnumMap<CatNMK, Symbol> NmkPpwbc = new EnumMap<CatNMK, Symbol>(CatNMK.class);
@@ -984,7 +995,7 @@ public class Notices {
 		NmkPpwbc.put(CatNMK.NMK_KTMR, Notice); NmkPpwbc.put(CatNMK.NMK_CRTP, Notice); NmkPpwbc.put(CatNMK.NMK_CRTS, Notice);
 	}
 	
-	public static Symbol getNotice(CatNMK cat, MarSYS sys) {
+	public static Symbol getNotice(CatNMK cat, MarSYS sys, BnkWTW bank) {
 		Symbol symbol = null;
 		switch (sys) {
 		case SYS_CEVN:

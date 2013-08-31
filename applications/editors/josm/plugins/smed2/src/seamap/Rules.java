@@ -487,6 +487,7 @@ public class Rules {
 			}
 			Symbol s1 = null, s2 = null;
 			MarSYS sys = MarSYS.SYS_CEVN;
+			BnkWTW bnk = BnkWTW.BWW_UNKN;
 			AttItem att = feature.atts.get(Att.MARSYS);
 			if (att != null) sys = (MarSYS)att.val;
 			ObjTab objs = feature.objs.get(Obj.NOTMRK);
@@ -499,7 +500,7 @@ public class Rules {
 					if (atts.get(Att.MARSYS) != null) sys = (MarSYS)atts.get(Att.MARSYS).val;
 					CatNMK cat = CatNMK.NMK_UNKN;
 					if (atts.get(Att.CATNMK) != null) cat = (CatNMK)atts.get(Att.CATNMK).val;
-					s2 = Notices.getNotice(cat, sys);
+					s2 = Notices.getNotice(cat, sys, bnk);
 				}
 			}
 /*      Obj_t *obj = getObj(item, NOTMRK, i);

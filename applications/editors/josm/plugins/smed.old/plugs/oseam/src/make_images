@@ -1,0 +1,2 @@
+for i in ../../../../../../openseamap/renderer/SeaMapSymbols/*.svg; do \
+inkscape $i -d 45 -e `echo $i | sed -e 'sX^../../../../../../openseamap/renderer/SeaMapSymbolsXimagesX' -e 's/.svg$/.png/'`; done

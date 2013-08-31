@@ -254,6 +254,11 @@ public class PanelMain extends JPanel {
 		add(moreButton);
 		moreButton.addActionListener(alMore);
 
+	    messageBar = new JTextField();
+	    messageBar.setBounds(10, 355, 380, 20);
+	    messageBar.setEditable(false);
+	    messageBar.setBackground(Color.WHITE);
+	    add(messageBar);
 	}
 
 	public void syncPanel() {

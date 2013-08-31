@@ -12,21 +12,13 @@ package smed;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.Map.Entry;
 
 import javax.swing.*;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.layer.*;
 import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.osm.event.*;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.*;
 
 import messages.Messages;
 
@@ -69,15 +61,18 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
 				closeDialog();
 			}
 		});
-		editFrame.setSize(new Dimension(480, 480));
+		editFrame.setSize(new Dimension(400, 400));
 		editFrame.setLocation(100, 200);
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
-		editFrame.setVisible(false);
+		editFrame.setVisible(true);
 		panelMain = new PanelMain(this);
+		panelMain.setLayout(null);
+		panelMain.setSize(new Dimension(400, 400));
+		node = null;
+		panelMain.syncPanel();
 		editFrame.add(panelMain);
-		editFrame.add(panelMain);
-
+		DataSet.addSelectionListener(this);
 
 		// System.out.println("hello");
 	}

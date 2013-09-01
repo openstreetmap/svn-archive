@@ -61,7 +61,7 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
 				closeDialog();
 			}
 		});
-		editFrame.setSize(new Dimension(420, 420));
+		editFrame.setSize(new Dimension(420, 430));
 		editFrame.setLocation(100, 200);
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);

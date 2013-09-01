@@ -265,7 +265,7 @@ public class WayDownloaderPlugin extends Plugin {
      */
     private Node findDuplicateNode(Node referenceNode) {
         DataSet ds = Main.main.getCurrentDataSet();
-        List<Node> candidates = ds.searchNodes(new BBox(new Bounds(referenceNode.getCoor(), 0.0003, 0.0005)));
+        List<Node> candidates = ds.searchNodes(new Bounds(referenceNode.getCoor(), 0.0003, 0.0005).toBBox());
         for (Node candidate: candidates) {
             if (!candidate.equals(referenceNode)
                     && !candidate.isIncomplete()

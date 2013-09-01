@@ -47,25 +47,29 @@ public class HgtReader {
 	    		System.out.println(fullPath);
     	    		File f = new File(fullPath);
     	    		if (f.exists()) {
-    	    		    // nope: read HGT file...
+    	    		    // found something: read HGT file...
     	    		    ShortBuffer data = readHgtFile(fullPath);
+    	    		    System.out.println("Read SRTM data from " + fullPath + ", tag is '" + file + "'");
     	    		    // ... and store result in cache
     	    		    cache.put(file, data);
     	    		    break;
     	    		}
 	        }
-	    }
+	    } 
+	    
+	    System.out.println("Get elevation from HGT file " + file);
 	    
 	    // read elevation value
 	    return readElevation(coor);
 	} catch (FileNotFoundException e) {
+	    System.err.println("Get elevation from HGT " + coor + " failed: => " + e.getMessage());
 	    // no problem... file not there
-	    return Double.NaN;
+	    return ElevationHelper.NO_ELEVATION;
 	} catch (Exception ioe) {
 	    // oops...
-	    ioe.printStackTrace();	    
+	    ioe.printStackTrace(System.err);	    
 	    // fallback
-	    return Double.NaN;	    
+	    return ElevationHelper.NO_ELEVATION;	    
 	} 
     }
     
@@ -106,7 +110,8 @@ public class HgtReader {
 	ShortBuffer sb = cache.get(tag);
 	
 	if (sb == null) {
-	    return Double.NaN;
+	    System.out.println("readElevation: Buffer is null for tag '" + tag + "'");
+	    return ElevationHelper.NO_ELEVATION;
 	}
 	
 	// see http://gis.stackexchange.com/questions/43743/how-to-extract-elevation-from-hgt-file
@@ -119,18 +124,21 @@ public class HgtReader {
 	
 	row = HGT_ROW_LENGTH - row;
 	int cell = (HGT_ROW_LENGTH*  (row - 1)) + col;
+	
+	//System.out.println("Read SRTM elevation data from row/col/cell " + row + "," + col + ", " + cell + ", " + sb.limit());
 
 	// valid position in buffer?
 	if (cell < sb.limit()) {
 	    short ele = sb.get(cell);
+	    //System.out.println("==> Read SRTM elevation data from row/col/cell " + row + "," + col + ", " + cell + " = " + ele);
 	    // check for data voids 
 	    if (ele == HGT_VOID) {
-		return Double.NaN;
+		return ElevationHelper.NO_ELEVATION;
 	    } else {
 		return ele;
 	    }
 	} else {
-	    return Double.NaN;
+	    return ElevationHelper.NO_ELEVATION;
 	}
     }
     

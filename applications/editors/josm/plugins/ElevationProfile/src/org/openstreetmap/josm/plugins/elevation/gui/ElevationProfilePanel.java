@@ -36,9 +36,9 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
-import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 
 /**
  * Provides the panel showing the elevation profile.
@@ -288,7 +288,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
 			// check bounds
 			if (yLine <= getPlotBottom() && yLine >= getPlotTop()) {
-				String txt = WayPointHelper.getElevationText(i);
+				String txt = ElevationHelper.getElevationText(i);
 				
 				Rectangle r = drawAlignedString(txt, getPlotHCenter(), yLine - 2,
 						TextAlignment.Right, g);
@@ -398,13 +398,13 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
 		for (int i = 0; i < n; i++) {
 			WayPoint wpt = profile.getWayPoints().get(i);
-			int eleVal = (int) WayPointHelper.getElevation(wpt);
+			int eleVal = (int) ElevationHelper.getElevation(wpt);
 			Color c = renderer.getColorForWaypoint(profile, wpt,
 					ElevationWayPointKind.Plain);
 			
 			if (i == this.selectedIndex) {
 				g.setColor(Color.BLACK);
-				drawAlignedString(WayPointHelper.getElevationText(eleVal), 
+				drawAlignedString(ElevationHelper.getElevationText(eleVal), 
 						(getPlotRight() + getPlotLeft()) / 2, 
 						getPlotBottom() + 6, 
 						TextAlignment.Centered, 
@@ -419,8 +419,8 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 			g.drawLine(x, yBottom, x, yEle);	
 			
 			int geoidVal = 0;
-			switch(WayPointHelper.getGeoidKind()) {
-				case Auto: geoidVal = WayPointHelper.getGeoidCorrection(wpt); break;
+			switch(ElevationHelper.getGeoidKind()) {
+				case Auto: geoidVal = ElevationHelper.getGeoidCorrection(wpt); break;
 				case Fixed: // not impl
 			}
 			
@@ -531,7 +531,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	public String getToolTipText() {
 		WayPoint wpt = getSelectedWayPoint();
 		if (wpt != null) {
-			return  String.format("%s: %s", WayPointHelper.getTimeText(wpt), WayPointHelper.getElevationText(wpt));
+			return  String.format("%s: %s", ElevationHelper.getTimeText(wpt), ElevationHelper.getElevationText(wpt));
 		}
 		
 		return super.getToolTipText();

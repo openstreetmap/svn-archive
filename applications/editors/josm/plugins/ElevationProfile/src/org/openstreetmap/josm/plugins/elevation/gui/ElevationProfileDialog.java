@@ -39,10 +39,10 @@ import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.elevation.ElevationModel;
-import org.openstreetmap.josm.plugins.elevation.GeoidCorrectionKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
-import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
+import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
 import org.openstreetmap.josm.tools.Shortcut;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -169,7 +169,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		geoidNone.setSelected(true);
 		geoidNone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				WayPointHelper.setGeoidKind(GeoidCorrectionKind.None);
+				ElevationHelper.setGeoidKind(GeoidCorrectionKind.None);
 				geoidFixedValue.setEnabled(false);
 				getModel().updateElevationData();
 				updateView();
@@ -179,7 +179,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		geoidAuto = new JRadioButton(tr("Automatic"));
 		geoidAuto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				WayPointHelper.setGeoidKind(GeoidCorrectionKind.Auto);
+				ElevationHelper.setGeoidKind(GeoidCorrectionKind.Auto);
 				geoidFixedValue.setEnabled(false);
 				getModel().updateElevationData();
 				updateView();
@@ -190,7 +190,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		geoidFixed.setEnabled(false);
 		geoidFixed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				WayPointHelper.setGeoidKind(GeoidCorrectionKind.Fixed);
+				ElevationHelper.setGeoidKind(GeoidCorrectionKind.Fixed);
 				geoidFixedValue.setEnabled(true);
 				getModel().updateElevationData();
 				updateView();
@@ -219,10 +219,10 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		add(profPanel, BorderLayout.CENTER);
 		profPanel.addComponentListener(this);
 
-		if (WayPointHelper.getGeoidKind() == GeoidCorrectionKind.Auto) {
+		if (ElevationHelper.getGeoidKind() == GeoidCorrectionKind.Auto) {
 			geoidAuto.setSelected(true);
 		}
-		if (WayPointHelper.getGeoidKind() == GeoidCorrectionKind.Fixed) {
+		if (ElevationHelper.getGeoidKind() == GeoidCorrectionKind.Fixed) {
 			geoidFixed.setSelected(true);
 		}
 		
@@ -300,13 +300,13 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 			if (profile.hasElevationData()) {
 				// Show elevation data
 				minHeightLabel.setText(
-						WayPointHelper.getElevationText(profile.getMinHeight()));
+						ElevationHelper.getElevationText(profile.getMinHeight()));
 				maxHeightLabel.setText(
-						WayPointHelper.getElevationText(profile.getMaxHeight()));
+						ElevationHelper.getElevationText(profile.getMaxHeight()));
 				avrgHeightLabel.setText(
-						WayPointHelper.getElevationText(profile.getAverageHeight()));
+						ElevationHelper.getElevationText(profile.getAverageHeight()));
 				elevationGainLabel.setText(
-						WayPointHelper.getElevationText(profile.getGain()));
+						ElevationHelper.getElevationText(profile.getGain()));
 			}
 			
 			// compute values for time and distance

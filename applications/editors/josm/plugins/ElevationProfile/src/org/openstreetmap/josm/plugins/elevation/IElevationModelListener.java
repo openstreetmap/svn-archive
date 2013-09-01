@@ -14,6 +14,8 @@
 
 package org.openstreetmap.josm.plugins.elevation;
 
+import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
+
 /**
  * This interface is intended to allow clients reaction on changes in the elevation model changes (e. g. 
  * repaint UI widgets).

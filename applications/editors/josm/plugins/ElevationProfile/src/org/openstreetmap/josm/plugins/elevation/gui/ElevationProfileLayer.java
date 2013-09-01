@@ -28,9 +28,9 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
-import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -172,7 +172,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 		} // else first way point -> is paint later
 
 		// remember some things for next iteration
-		lastEle = (int) WayPointHelper.getElevation(wpt);
+		lastEle = (int) ElevationHelper.getElevation(wpt);
 		lastWpt = wpt;
 	    }
 
@@ -211,13 +211,13 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     private ElevationWayPointKind classifyWayPoint(WayPoint lastWpt, WayPoint actWpt) {
 	// get elevation values
-	int actEle = (int) WayPointHelper.getElevation(actWpt);
-	int lastEle = (int) WayPointHelper.getElevation(lastWpt);
+	int actEle = (int) ElevationHelper.getElevation(actWpt);
+	int lastEle = (int) ElevationHelper.getElevation(lastWpt);
 	
 	// normalize elevation to levels
 	int actLevel = (int)(actEle / Level_Factor);
 	int lastLevel = (int)(lastEle / Level_Factor);
-	double slope = Math.abs(WayPointHelper.computeSlope(lastWpt, actWpt));
+	double slope = Math.abs(ElevationHelper.computeSlope(lastWpt.getCoor(), actWpt.getCoor()));
 
 	// plain way point by default
 	ElevationWayPointKind kind = ElevationWayPointKind.Plain;

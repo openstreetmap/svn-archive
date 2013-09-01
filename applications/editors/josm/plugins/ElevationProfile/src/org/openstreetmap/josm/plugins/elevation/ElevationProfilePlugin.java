@@ -15,12 +15,16 @@
 package org.openstreetmap.josm.plugins.elevation;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.elevation.actions.AddElevationLayerAction;
 import org.openstreetmap.josm.plugins.elevation.gui.ElevationProfileDialog;
 import org.openstreetmap.josm.plugins.elevation.gui.ElevationProfileLayer;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Plugin class for displaying an elevation profile of the tracks.
@@ -43,12 +47,15 @@ public class ElevationProfilePlugin extends Plugin {
 	try {
 	    eleMode = new ElevationMapMode("Elevation profile", Main.map);
 	    eleModeButton = new IconToggleButton(eleMode);
+	    
+	    JosmAction action = new AddElevationLayerAction();
+	    
+	    MainMenu.add(Main.main.menu.viewMenu, action, false, 0);
+	    
 	} catch (Exception e1) {
 	    System.err.println("Init of ElevationProfilePlugin failed: " + e1);
 	    e1.printStackTrace();
 	}
-	
-	getPluginDir();
     }
 
     /**
@@ -76,7 +83,7 @@ public class ElevationProfilePlugin extends Plugin {
      */
     public static ElevationProfileLayer getCurrentLayer(){
 	if(currentLayer == null){
-	    currentLayer = new ElevationProfileLayer("Elevation profile");
+	    currentLayer = new ElevationProfileLayer(tr("Elevation Profile"));
 	    Main.main.addLayer(currentLayer);			
 	}
 	return currentLayer;

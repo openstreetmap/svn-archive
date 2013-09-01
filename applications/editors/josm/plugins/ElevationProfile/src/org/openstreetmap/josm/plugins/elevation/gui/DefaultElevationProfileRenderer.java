@@ -31,9 +31,9 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.plugins.elevation.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
-import org.openstreetmap.josm.plugins.elevation.WayPointHelper;
+import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -87,7 +87,7 @@ public class DefaultElevationProfileRenderer implements
 			return null;
 		}
 
-		int z = (int) WayPointHelper.getElevation(wpt);
+		int z = (int) ElevationHelper.getElevation(wpt);
 
 		switch (kind) {
 		case Plain:
@@ -191,7 +191,7 @@ public class DefaultElevationProfileRenderer implements
 		}
 
 		Point pnt = mv.getPoint(wpt.getEastNorth());
-		int ele = ((int) Math.rint(WayPointHelper.getElevation(wpt) / 100.0)) * 100;
+		int ele = ((int) Math.rint(ElevationHelper.getElevation(wpt) / 100.0)) * 100;
 		
 		int rad = REGULAR_WPT_RADIUS;
 		g.setColor(c);
@@ -199,21 +199,21 @@ public class DefaultElevationProfileRenderer implements
 
 		/* Paint full hour label */
 		if (kind == ElevationWayPointKind.FullHour) {
-			int hour = WayPointHelper.getHourOfWayPoint(wpt);
+			int hour = ElevationHelper.getHourOfWayPoint(wpt);
 			drawLabel(String.format("%02d:00", hour), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g);
 		}
 
 		/* Paint label for elevation levels */
 		if (kind == ElevationWayPointKind.ElevationLevelGain) {
-			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), pnt.x, pnt.y
+			drawLabelWithTriangle(ElevationHelper.getElevationText(ele), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g, c, 8, 
 					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationGainHigh),
 					TriangleDir.Up);
 		}
 		
 		if (kind == ElevationWayPointKind.ElevationLevelLoss) {
-			drawLabelWithTriangle(WayPointHelper.getElevationText(ele), 
+			drawLabelWithTriangle(ElevationHelper.getElevationText(ele), 
 					pnt.x, pnt.y+ g.getFontMetrics().getHeight(), g, c, 8, 
 					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationLossHigh),
 					TriangleDir.Down);
@@ -222,9 +222,9 @@ public class DefaultElevationProfileRenderer implements
 		/* Paint cursor labels */
 		if (kind == ElevationWayPointKind.Highlighted) {
 			drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, BIG_WPT_RADIUS);
-			drawLabel(WayPointHelper.getTimeText(wpt), pnt.x, pnt.y
+			drawLabel(ElevationHelper.getTimeText(wpt), pnt.x, pnt.y
 					- g.getFontMetrics().getHeight() - 5, g);
-			drawLabel(WayPointHelper.getElevationText(wpt), pnt.x, pnt.y
+			drawLabel(ElevationHelper.getElevationText(wpt), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight() + 5, g);
 		}
 	}
@@ -247,7 +247,7 @@ public class DefaultElevationProfileRenderer implements
 			MapView mv, WayPoint wpt, ElevationWayPointKind kind) {
 
 		Color c = getColorForWaypoint(profile, wpt, kind);
-		int eleH = (int) WayPointHelper.getElevation(wpt);
+		int eleH = (int) ElevationHelper.getElevation(wpt);
 		Point pnt = mv.getPoint(wpt.getEastNorth());
 
 		TriangleDir td = TriangleDir.Up;
@@ -272,7 +272,7 @@ public class DefaultElevationProfileRenderer implements
 		drawRegularTriangle(g, c, td, pnt.x, pnt.y,
 				DefaultElevationProfileRenderer.TRIANGLE_BASESIZE);
 
-		drawLabel(WayPointHelper.getElevationText(eleH), pnt.x, pnt.y
+		drawLabel(ElevationHelper.getElevationText(eleH), pnt.x, pnt.y
 				+ g.getFontMetrics().getHeight(), g, c);
 	}
 

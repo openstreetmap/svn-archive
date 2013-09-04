@@ -53,11 +53,6 @@ public class PathOptimizer {
 			return;
 		}
 
-		if (path.points.size() > 10){
-			int a = 10;
-			a++;
-		}
-
 		LayerContents layer = this.getLayer(info);
 		layer.paths.add(path);
 	}
@@ -703,7 +698,7 @@ public class PathOptimizer {
 				l.paths = list;
 				l.info = layer.info.copy();
 				l.info.isGroup = true;
-				l.multiPaths = Collections.EMPTY_LIST;
+				l.multiPaths = Collections.emptyList();
 				result.add(l);
 			}
 			else

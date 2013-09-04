@@ -29,7 +29,6 @@ import java.util.Map;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.PDGraphicsState;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceDictionary;
@@ -64,7 +63,7 @@ public class PageDrawer extends PDFStreamEngine
 	public PageDrawer() throws IOException
 	{
 		super( ResourceLoader.loadProperties(
-				"pdfimport/pdfbox/PageDrawer.properties", true ) );
+				"resources/pdfimport/pdfbox/PageDrawer.properties", true ) );
 	}
 
 	/**
@@ -88,11 +87,10 @@ public class PageDrawer extends PDFStreamEngine
 			processStream( page, resources, page.getContents().getStream() );
 		}
 
-		List annotations = page.getAnnotations();
+		List<?> annotations = page.getAnnotations();
 		for( int i=0; i<annotations.size(); i++ )
 		{
 			PDAnnotation annot = (PDAnnotation)annotations.get( i );
-			PDRectangle rect = annot.getRectangle();
 			String appearanceName = annot.getAppearanceStream();
 			PDAppearanceDictionary appearDictionary = annot.getAppearance();
 			if( appearDictionary != null )
@@ -101,7 +99,7 @@ public class PageDrawer extends PDFStreamEngine
 				{
 					appearanceName = "default";
 				}
-				Map appearanceMap = appearDictionary.getNormalAppearance();
+				Map<?, ?> appearanceMap = appearDictionary.getNormalAppearance();
 				if (appearanceMap != null) {
 					PDAppearanceStream appearance =
 						(PDAppearanceStream)appearanceMap.get( appearanceName );

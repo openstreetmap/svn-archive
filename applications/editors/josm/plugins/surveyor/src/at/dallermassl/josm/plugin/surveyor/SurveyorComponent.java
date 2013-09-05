@@ -121,7 +121,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
 
         // parse xml file and create component from it:
-        Reader in = new InputStreamReader(SurveyorComponent.class.getClassLoader().getResourceAsStream("surveyor.xml"));
+        Reader in = new InputStreamReader(SurveyorComponent.class.getClassLoader().getResourceAsStream("resources/surveyor.xml"));
         XmlObjectParser parser = new XmlObjectParser();
         parser.mapOnStart("surveyor", SurveyorComponent.class);
         parser.map("button", ButtonDescription.class);

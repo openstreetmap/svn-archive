@@ -7,13 +7,12 @@ package at.dallermassl.josm.plugin.surveyor.action;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map.Entry;
 
-import org.dinopolis.util.collection.Tuple;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.tools.Pair;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
@@ -27,7 +26,7 @@ import at.dallermassl.josm.plugin.surveyor.SurveyorLock;
  *
  */
 public class SetNodeAction implements SurveyorAction {
-    private Collection<Tuple<String, String>> keyValues;
+    private Collection<Pair<String, String>> keyValues;
 
     /**
      * Default Constructor
@@ -41,7 +40,7 @@ public class SetNodeAction implements SurveyorAction {
      */
     //@Override
     public void setParameters(List<String> parameters) {
-        keyValues = new ArrayList<Tuple<String, String>>();
+        keyValues = new ArrayList<Pair<String, String>>();
         int pos;
         String key;
         String value;
@@ -50,7 +49,7 @@ public class SetNodeAction implements SurveyorAction {
             if(pos > 0) {
                 key = keyValuePair.substring(0, pos);
                 value = keyValuePair.substring(pos + 1);
-                keyValues.add(new Tuple<String, String>(key, value));
+                keyValues.add(new Pair<String, String>(key, value));
             } else {
                 System.err.println("SetNodeAction: ignoring invalid key value pair: " + keyValuePair);
             }
@@ -64,8 +63,8 @@ public class SetNodeAction implements SurveyorAction {
         LatLon coordinates = event.getCoordinates();
         //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon() + " params: " + keyValues);
         Node node = new Node(coordinates);
-        for(Entry<String, String> entry : keyValues) {
-            node.put(entry.getKey(), entry.getValue());
+        for(Pair<String, String> entry : keyValues) {
+            node.put(entry.a, entry.b);
         }
         synchronized(SurveyorLock.class) {
             DataSet ds = Main.main.getCurrentDataSet();
@@ -77,6 +76,4 @@ public class SetNodeAction implements SurveyorAction {
         }
         Main.map.repaint();
     }
-
-
 }

@@ -38,7 +38,7 @@ import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
  */
 public class SurveyorShowAction extends JosmAction {
     private static final long serialVersionUID = 2184570223633094734L;
-    private static final String DEFAULT_SOURCE = "resource://surveyor.xml";
+    private static final String DEFAULT_SOURCE = "resource://resources/surveyor.xml";
     private JFrame surveyorFrame;
     private LiveGpsPlugin gpsPlugin;
 

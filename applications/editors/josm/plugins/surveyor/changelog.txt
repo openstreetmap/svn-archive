@@ -1,7 +1,0 @@
-2007-08-05: added BeepAction. Parameter is number of beeps
-
-2007-08-02: PlayAudioAction is able to read wav files from classpath and from urls
-
-            It also plays the audio file in the background, so the PlayAudioAction can
-            be set as the first action without delaying the setting of the waypoint/nodes
-            by a following SetWaypointAction.

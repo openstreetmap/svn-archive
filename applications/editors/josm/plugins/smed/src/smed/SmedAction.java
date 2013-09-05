@@ -31,7 +31,6 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
 	public static JFrame editFrame = null;
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
-	public DataSet data = null;
 
 	public OsmPrimitive node = null;
 	private Collection<? extends OsmPrimitive> selection = null;
@@ -81,7 +80,6 @@ public class SmedAction extends JosmAction implements SelectionChangedListener {
 		if (isOpen) {
 			editFrame.setVisible(false);
 			editFrame.dispose();
-			data = null;
 		}
 		isOpen = false;
 	}

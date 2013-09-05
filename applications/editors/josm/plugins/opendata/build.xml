@@ -11,8 +11,8 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 	
-    <property name="jts" location="../../dist/jts.jar"/>
-    <property name="geotools" location="../../dist/geotools.jar"/>
+    <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
+    <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
 	
     <!--
     **********************************************************

@@ -116,7 +116,7 @@ public class S57att {
 		AttStr.put(Att.CONRAD, "reflectivity"); AttStr.put(Att.CONVIS, "conspicuity"); AttStr.put(Att.CURVEL, "velocity"); AttStr.put(Att.DATEND, "end_date");
 		AttStr.put(Att.DATSTA, "start_date"); AttStr.put(Att.DRVAL1, "minimum_depth"); AttStr.put(Att.DRVAL2, "maximum_depth"); AttStr.put(Att.DUNITS, "depth_units");
 		AttStr.put(Att.ELEVAT, "elevation"); AttStr.put(Att.ESTRNG, "estimated_range"); AttStr.put(Att.EXCLIT, "exhibition"); AttStr.put(Att.EXPSOU, "exposition");
-		AttStr.put(Att.FUNCTN, "function"); AttStr.put(Att.HEIGHT, "height"); AttStr.put(Att.HUNITS, "height_units"); AttStr.put(Att.HORACC, "accuracy");
+		AttStr.put(Att.FUNCTN, "function"); AttStr.put(Att.HEIGHT, "height"); AttStr.put(Att.HUNITS, "units"); AttStr.put(Att.HORACC, "accuracy");
 		AttStr.put(Att.HORCLR, "clearance"); AttStr.put(Att.HORLEN, "length"); AttStr.put(Att.HORWID, "width"); AttStr.put(Att.ICEFAC, "factor");
 		AttStr.put(Att.INFORM, "information"); AttStr.put(Att.JRSDTN, "jurisdiction"); AttStr.put(Att.LIFCAP, "maximum_load"); AttStr.put(Att.LITCHR, "character");
 		AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system");	AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality");
@@ -135,7 +135,7 @@ public class S57att {
 		AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");	AttStr.put(Att.VALSOU, "sounding"); AttStr.put(Att.VERACC, "vertical_accuracy");
 		AttStr.put(Att.VERCLR, "clearance_height");	AttStr.put(Att.VERCCL, "clearance_height_closed"); AttStr.put(Att.VERCOP, "clearance_height_open");
 		AttStr.put(Att.VERCSA, "clearance_height_safe"); AttStr.put(Att.VERDAT, "vertical_datum"); AttStr.put(Att.VERLEN, "vertical_length"); AttStr.put(Att.WATLEV, "water_level");
-		AttStr.put(Att.CAT_TS, "category");	AttStr.put(Att.PUNITS, "units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name");
+		AttStr.put(Att.CAT_TS, "category");	AttStr.put(Att.PUNITS, "positional_units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name");
 		AttStr.put(Att.NPLDST, "national_pilot_district"); AttStr.put(Att.NTXTDS, "national_description"); AttStr.put(Att.HORDAT, "horizontal_datum");
 		AttStr.put(Att.POSACC, "positional_accuracy"); AttStr.put(Att.QUAPOS, "position_quality"); AttStr.put(Att.ADDMRK, "addition"); AttStr.put(Att.BNKWTW, "bank");
 		AttStr.put(Att.CATBNK, "category");	AttStr.put(Att.CATNMK, "category"); AttStr.put(Att.CLSDNG, "class"); AttStr.put(Att.DIRIMP, "impact");

@@ -57,8 +57,6 @@ public class HgtReader {
 	        }
 	    } 
 	    
-	    System.out.println("Get elevation from HGT file " + file);
-	    
 	    // read elevation value
 	    return readElevation(coor);
 	} catch (FileNotFoundException e) {

@@ -32,7 +32,7 @@ public class ElevationColors {
 	public static Color EPLightBeige = new Color(235, 235, 215);
 	public static Color EPMidBeige = new Color(227, 222, 215);
 	
-		
+	// TODO: Move to ColorMap.java or delete it	
 	static class ColorMapEntry {
 	    private int ele; // limit
 	    private Color color;
@@ -51,6 +51,8 @@ public class ElevationColors {
 	    }
 	}
 	
+	
+	
 	private static ColorMapEntry[] colors = new ColorMapEntry[]{
 		  new ColorMapEntry(new Color(0,128, 0), 0),  
 		  new ColorMapEntry(new Color(156,187, 105), 1),  
@@ -61,13 +63,7 @@ public class ElevationColors {
 		  new ColorMapEntry(new Color(207,169, 96), 2000),
 		};
 	
-	public static Color interpolate(java.awt.Color c1, java.awt.Color c2) {
-	    int r = (c1.getRed() + c2.getRed()) / 2;
-	    int g = (c1.getGreen() + c2.getGreen()) / 2;
-	    int b = (c1.getBlue() + c2.getBlue()) / 2;
-	    return new Color(r, g, b);
-	}
-	
+		
 	public static Color getElevationColor(double ele) {
 	    if (!ElevationHelper.isValidElevation(ele)) {
 		return Color.white;

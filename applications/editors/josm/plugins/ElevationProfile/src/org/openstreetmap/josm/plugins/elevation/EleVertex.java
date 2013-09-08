@@ -106,7 +106,7 @@ public class EleVertex {
 	}
 	
 	// TODO: Check for proper limit
-	return z < 75 || getArea() < (30 * 30); // = 3 * 25
+	return /*z < 75 || */getArea() < (30 * 30); // = 3 * 25
     }    
     
     /**

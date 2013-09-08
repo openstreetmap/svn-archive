@@ -16,7 +16,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
 
-public class ElevationRenderer extends PleaseWaitRunnable {
+public class GridRenderer extends PleaseWaitRunnable {
     private Bounds box;
     private IEleRenderingListener listener;
     
@@ -25,15 +25,15 @@ public class ElevationRenderer extends PleaseWaitRunnable {
     
     private volatile boolean stop = false;
     
-    public ElevationRenderer(String title, Bounds box, IEleRenderingListener listener) {
+    public GridRenderer(String title, Bounds box, IEleRenderingListener listener) {
 	this(title, NullProgressMonitor.INSTANCE, true, box, listener);
     }
 
-    public ElevationRenderer(String title, boolean ignoreException, Bounds box, IEleRenderingListener listener) {
+    public GridRenderer(String title, boolean ignoreException, Bounds box, IEleRenderingListener listener) {
 	this(title, NullProgressMonitor.INSTANCE, ignoreException, box, listener);
     }
 
-    public ElevationRenderer(Component parent, String title,
+    public GridRenderer(Component parent, String title,
 	    boolean ignoreException, Bounds box) throws IllegalArgumentException {
 	super(parent, title, ignoreException);
 	
@@ -41,7 +41,7 @@ public class ElevationRenderer extends PleaseWaitRunnable {
 	initQueue();
     }
 
-    public ElevationRenderer(String title, ProgressMonitor progressMonitor,
+    public GridRenderer(String title, ProgressMonitor progressMonitor,
 	    boolean ignoreException, Bounds box, IEleRenderingListener listener) {
 	super(title, progressMonitor, ignoreException);
 

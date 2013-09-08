@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.elevation.tests;
 
+import java.awt.Color;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -8,9 +9,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.plugins.elevation.ColorMap;
 import org.openstreetmap.josm.plugins.elevation.EleCoordinate;
 import org.openstreetmap.josm.plugins.elevation.EleVertex;
-import org.openstreetmap.josm.plugins.elevation.ElevationRenderer;
+import org.openstreetmap.josm.plugins.elevation.GridRenderer;
 
 public class EleVertexTest extends TestCase {
 
@@ -79,11 +81,32 @@ public class EleVertexTest extends TestCase {
 	
 	// Staufenberg, Hessen
 	// Ulrichstein, Hessen
-	ElevationRenderer er = new ElevationRenderer("Ele", new Bounds(
+	GridRenderer er = new GridRenderer("Ele", new Bounds(
 		new LatLon(50.6607106, 8.7337029), 
 		new LatLon(50.5767627, 9.1938483)), null);
 	
 	er.run();
+    }
+    
+    public void testColorMap() {
+	ColorMap testMap  = ColorMap.create("Test", new Color[]{Color.white, Color.black}, new int[]{0, 1000});
+	
+	// range test
+	Color c1 = testMap.getColor(-100);
+	assertEquals(Color.white, c1);
+	// range test
+	Color c2 = testMap.getColor(1100);
+	assertEquals(Color.black, c2);
+	// test mid (RGB 128, 128, 128)
+	Color c3 = testMap.getColor(500);
+	assertEquals(Color.gray, c3);
+	
+	// test 0.75 (RGB 192 x 3)
+	Color c4 = testMap.getColor(751);
+	assertEquals(Color.lightGray, c4);
+	// test 0.25 (RGB 64 x 3)
+	Color c5 = testMap.getColor(251);
+	assertEquals(Color.darkGray, c5);	
     }
 
     private void assertCoorEq(EleVertex v1, double x, double y, int n) {

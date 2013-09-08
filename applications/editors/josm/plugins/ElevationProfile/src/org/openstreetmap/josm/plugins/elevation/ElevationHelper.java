@@ -288,7 +288,7 @@ public class ElevationHelper {
 		    	// TODO: Option to switch this off
 		    	double eleHgt = hgt.getElevationFromHgt(ll);
 		    	
-		    	System.out.println("Get elevation from HGT " + ll + " => " + eleHgt);
+		    	//System.out.println("Get elevation from HGT " + ll + " => " + eleHgt);
 		    	if (isValidElevation(eleHgt)) {		    	    
 		    	    return eleHgt;
 		    	}

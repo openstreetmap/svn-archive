@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -130,7 +131,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     @Override
     public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
-        grabThread.cancel();
+        if(grabThread != null)
+        		grabThread.cancel();
         grabThread = null;
         super.destroy();
         images = null;
@@ -438,8 +440,9 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @param oos
      * @throws IOException
      */
-    public void write(ObjectOutputStream oos) throws IOException {
+    public void write(File associatedFile, ObjectOutputStream oos) throws IOException {
         currentFormat = this.serializeFormatVersion;
+        setAssociatedFile(associatedFile);
         oos.writeInt(this.serializeFormatVersion);
         oos.writeObject(this.location);    // String
         oos.writeObject(this.codeCommune); // String
@@ -466,7 +469,7 @@ public class WMSLayer extends Layer implements ImageObserver {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public boolean read(ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
+    public boolean read(File associatedFile, ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
         currentFormat = ois.readInt();;
         if (currentFormat < 2) {
             JOptionPane.showMessageDialog(Main.parent, tr("Unsupported cache file version; found {0}, expected {1}\nCreate a new one.",
@@ -477,6 +480,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         this.setCodeCommune((String) ois.readObject());
         this.lambertZone = ois.readInt();
         this.setRaster(ois.readBoolean());
+        setAssociatedFile(associatedFile);
         if (currentFormat >= 4)
             ois.readBoolean();
         if (this.isRaster) {

@@ -4,6 +4,8 @@ package cadastre_fr;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.io.session.SessionWriter.registerSessionLayerExporter;
+import static org.openstreetmap.josm.io.session.SessionReader.registerSessionLayerImporter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -137,7 +139,8 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  *                   working on new cadastre WMS.
  *                 - workaround on address help tool when switching to full screen
  *                 - improvement when clicking on existing node address street in mode relation
- *                 - option to simplify raster images in 2 bits colors (like images served in the past).                   
+ *                 - option to simplify raster images in 2 bits colors (like images served in the past).
+ * 2.6 10-Sep-2013 - add JOSM "sessions" feature support (list of layers stored in a file)                   
  */
 public class CadastrePlugin extends Plugin {
     static String VERSION = "2.5";
@@ -207,6 +210,9 @@ public class CadastrePlugin extends Plugin {
         refreshConfiguration();
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
+        
+        registerSessionLayerExporter(WMSLayer.class , CadastreSessionExporter.class);
+        registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
 
     }
 

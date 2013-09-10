@@ -145,7 +145,7 @@ public class CacheControl implements Runnable {
         try {
             fis = new FileInputStream(file);
             ois = new ObjectInputStream(fis);
-            successfulRead = wmsLayer.read(ois, currentLambertZone);
+            successfulRead = wmsLayer.read(file, ois, currentLambertZone);
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
             JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), tr("Error"), JOptionPane.ERROR_MESSAGE);
@@ -194,7 +194,7 @@ public class CacheControl implements Runnable {
                     } else {
                         ObjectOutputStream oos = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(file)));
-                        wmsLayer.write(oos);
+                        wmsLayer.write(file, oos);
                         for (int i=0; i < size; i++) {
                             oos.writeObject(imagesToSave.get(i));
                         }

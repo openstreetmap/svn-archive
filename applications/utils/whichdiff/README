@@ -1,0 +1,16 @@
+whichdiff.pl is a Perl script that finds the state.txt file to use
+for minutely replication based on the highest node ID in your database.
+
+Simply do a 
+
+select max(id) from planet_osm_nodes
+
+or if you're using flatnodes, osm2pgsql will report the highest node ID
+in the flat storage when run. 
+
+Then run whichdiff.pl with the node id as the only argument, and it will
+give you the contents for your state.txt (by default it will use that 
+state.txt file from the server which is two minutes before the one in 
+which your latest node was generated).
+
+Written by Frederik Ramm <frederik@remote.org>, public domain.

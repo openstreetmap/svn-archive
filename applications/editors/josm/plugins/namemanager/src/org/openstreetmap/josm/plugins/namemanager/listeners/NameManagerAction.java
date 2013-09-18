@@ -69,9 +69,12 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
      */
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        setEnabled(newSelection != null
-                && Main.main.getCurrentDataSet().getSelectedWays().size() == 1
-                && Main.main.getCurrentDataSet().getSelectedWays().iterator().next().firstNode() == Main.main.getCurrentDataSet()
-                        .getSelectedWays().iterator().next().lastNode());
+        boolean enabledState = false;
+        DataSet ds = Main.main.getCurrentDataSet();
+        if (newSelection != null && ds != null) {
+            Collection<Way> selectedWays = ds.getSelectedWays();
+            enabledState = selectedWays.size() == 1 && selectedWays.iterator().next().isClosed();
+        }
+        setEnabled(enabledState);
     }
 }

@@ -294,12 +294,13 @@ public class S57val {
 		Catpip.put(CatPIP.PIP_OFAL, new S57enum(2, "outfall")); Catpip.put(CatPIP.PIP_ITAK, new S57enum(3, "intake")); Catpip.put(CatPIP.PIP_SEWR, new S57enum(4, "sewer"));
 		Catpip.put(CatPIP.PIP_BBLR, new S57enum(5, "bubbler")); Catpip.put(CatPIP.PIP_SPPL, new S57enum(6, "supply"));
 	}
-	public enum CatPRA { PRA_UNKN, PRA_QRRY, PRA_MINE, PRA_STPL, PRA_PSTN, PRA_RFNY, PRA_TYRD, PRA_FACT, PRA_TFRM, PRA_WFRM, PRA_SLAG } 
+	public enum CatPRA { PRA_UNKN, PRA_QRRY, PRA_MINE, PRA_STPL, PRA_PSTN, PRA_RFNY, PRA_TYRD, PRA_FACT, PRA_TFRM, PRA_WFRM, PRA_SLAG, PRA_CURF, PRA_OILF, PRA_GASF, PRA_WAVE } 
 	private static final EnumMap<CatPRA, S57enum> Catpra = new EnumMap<CatPRA, S57enum>(CatPRA.class); static { Catpra.put(CatPRA.PRA_UNKN, new S57enum(0, ""));
 		Catpra.put(CatPRA.PRA_QRRY, new S57enum(1, "quarry")); Catpra.put(CatPRA.PRA_MINE, new S57enum(2, "mine")); Catpra.put(CatPRA.PRA_STPL, new S57enum(3, "stockpile"));
 		Catpra.put(CatPRA.PRA_PSTN, new S57enum(4, "power_station")); Catpra.put(CatPRA.PRA_RFNY, new S57enum(5, "refinery")); Catpra.put(CatPRA.PRA_TYRD, new S57enum(6, "timber_yard"));
 		Catpra.put(CatPRA.PRA_FACT, new S57enum(7, "factory")); Catpra.put(CatPRA.PRA_TFRM, new S57enum(8, "tank_farm")); Catpra.put(CatPRA.PRA_WFRM, new S57enum(9, "wind_farm"));
-		Catpra.put(CatPRA.PRA_SLAG, new S57enum(10, "slag"));
+		Catpra.put(CatPRA.PRA_SLAG, new S57enum(10, "slag_heap")); Catpra.put(CatPRA.PRA_CURF, new S57enum(11, "current_farm")); Catpra.put(CatPRA.PRA_OILF, new S57enum(12, "oil"));
+		Catpra.put(CatPRA.PRA_GASF, new S57enum(13, "gas")); Catpra.put(CatPRA.PRA_WAVE, new S57enum(14, "wave_energy"));
 	}
 	public enum CatPYL { PYL_UNKN, PYL_POWR, PYL_TELE, PYL_AERL, PYL_BRDG, PYL_PIER } 
 	private static final EnumMap<CatPYL, S57enum> Catpyl = new EnumMap<CatPYL, S57enum>(CatPYL.class); static { Catpyl.put(CatPYL.PYL_UNKN, new S57enum(0, ""));
@@ -334,11 +335,12 @@ public class S57val {
 	private static final EnumMap<CatTRK, S57enum> Cattrk = new EnumMap<CatTRK, S57enum>(CatTRK.class); static { Cattrk.put(CatTRK.TRK_UNKN, new S57enum(0, ""));
 		Cattrk.put(CatTRK.TRK_FIXM, new S57enum(1, "fixed_marks")); Cattrk.put(CatTRK.TRK_NFXM, new S57enum(2, "no_fixed_marks"));
 	}
-	public enum CatRSC { RSC_UNKN, RSC_LIFB, RSC_ROKT, RSC_LBRK, RSC_RFSW, RSC_RFIT, RSC_LBOM, RSC_RDIO, RSC_FSTA } 
+	public enum CatRSC { RSC_UNKN, RSC_LIFB, RSC_ROKT, RSC_LBRK, RSC_RFSW, RSC_RFIT, RSC_LBOM, RSC_RDIO, RSC_FSTA, RSC_SPLN, RSC_ACFT, RSC_STUG } 
 	private static final EnumMap<CatRSC, S57enum> Catrsc = new EnumMap<CatRSC, S57enum>(CatRSC.class); static { Catrsc.put(CatRSC.RSC_UNKN, new S57enum(0, ""));
 		Catrsc.put(CatRSC.RSC_LIFB, new S57enum(1, "lifeboat")); Catrsc.put(CatRSC.RSC_ROKT, new S57enum(2, "rocket")); Catrsc.put(CatRSC.RSC_LBRK, new S57enum(3, "lifeboat_rocket"));
 		Catrsc.put(CatRSC.RSC_RFSW, new S57enum(4, "refuge_shipwrecked")); Catrsc.put(CatRSC.RSC_RFIT, new S57enum(5, "refuge_intertidal")); Catrsc.put(CatRSC.RSC_LBOM, new S57enum(6, "lifeboat_on_mooring"));
-		Catrsc.put(CatRSC.RSC_RDIO, new S57enum(7, "radio")); Catrsc.put(CatRSC.RSC_FSTA, new S57enum(8, "first_aid"));
+		Catrsc.put(CatRSC.RSC_RDIO, new S57enum(7, "radio")); Catrsc.put(CatRSC.RSC_FSTA, new S57enum(8, "first_aid")); Catrsc.put(CatRSC.RSC_SPLN, new S57enum(9, "seaplane"));
+		Catrsc.put(CatRSC.RSC_ACFT, new S57enum(10, "aircraft")); Catrsc.put(CatRSC.RSC_STUG, new S57enum(12, "tug"));
 	}
 	public enum CatREA { REA_UNKN, REA_SFTY, REA_NANC, REA_NFSH, REA_NATR, REA_BRDS, REA_GRSV, REA_SEAL, REA_DEGR, REA_MILY, REA_HIST, REA_INST,
 		REA_NASF, REA_STRD, REA_MINE, REA_NDIV, REA_TBAV, REA_PROH, REA_SWIM, REA_WAIT, REA_RSCH, REA_DREG, REA_FSNC, REA_ERES, REA_NWAK, REA_SWNG, REA_WSKI, REA_ESSA, REA_PSSA } 
@@ -371,7 +373,7 @@ public class S57val {
 	private static final EnumMap<CatSEA, S57enum> Catsea = new EnumMap<CatSEA, S57enum>(CatSEA.class); static { Catsea.put(CatSEA.SEA_UNKN, new S57enum(0, ""));
 		Catsea.put(CatSEA.SEA_GENL, new S57enum(1, "general")); Catsea.put(CatSEA.SEA_GAT, new S57enum(2, "gat")); Catsea.put(CatSEA.SEA_BANK, new S57enum(3, "bank"));
 		Catsea.put(CatSEA.SEA_DEEP, new S57enum(4, "deep")); Catsea.put(CatSEA.SEA_BAY, new S57enum(5, "bay")); Catsea.put(CatSEA.SEA_TRCH, new S57enum(6, "trench"));
-		Catsea.put(CatSEA.SEA_BASN, new S57enum(7, "basin")); Catsea.put(CatSEA.SEA_MDFT, new S57enum(8, "mud_flats")); Catsea.put(CatSEA.SEA_REEF, new S57enum(9, "reef"));
+		Catsea.put(CatSEA.SEA_BASN, new S57enum(7, "basin")); Catsea.put(CatSEA.SEA_MDFT, new S57enum(8, "flat")); Catsea.put(CatSEA.SEA_REEF, new S57enum(9, "reef"));
 		Catsea.put(CatSEA.SEA_LEDG, new S57enum(10, "ledge")); Catsea.put(CatSEA.SEA_CNYN, new S57enum(11, "canyon")); Catsea.put(CatSEA.SEA_NRRW, new S57enum(12, "narrows"));
 		Catsea.put(CatSEA.SEA_SHOL, new S57enum(13, "shoal")); Catsea.put(CatSEA.SEA_KNOL, new S57enum(14, "knoll")); Catsea.put(CatSEA.SEA_RIDG, new S57enum(15, "ridge"));
 		Catsea.put(CatSEA.SEA_SMNT, new S57enum(16, "seamount")); Catsea.put(CatSEA.SEA_PNCL, new S57enum(17, "pinnacle")); Catsea.put(CatSEA.SEA_APLN, new S57enum(18, "abyssal_plain"));
@@ -381,15 +383,15 @@ public class S57val {
 		Catsea.put(CatSEA.SEA_CMGN, new S57enum(28, "continental_margin")); Catsea.put(CatSEA.SEA_CRIS, new S57enum(29, "continental_rise")); Catsea.put(CatSEA.SEA_ESCT, new S57enum(30, "escarpment"));
 		Catsea.put(CatSEA.SEA_FAN, new S57enum(31, "fan")); Catsea.put(CatSEA.SEA_FZON, new S57enum(32, "fracture_zone")); Catsea.put(CatSEA.SEA_GAP, new S57enum(33, "gap"));
 		Catsea.put(CatSEA.SEA_GUYT, new S57enum(34, "guyot")); Catsea.put(CatSEA.SEA_HILL, new S57enum(35, "hill")); Catsea.put(CatSEA.SEA_HOLE, new S57enum(36, "hole"));
-		Catsea.put(CatSEA.SEA_LEVE, new S57enum(37, "levee")); Catsea.put(CatSEA.SEA_MVLY, new S57enum(38, "median valley")); Catsea.put(CatSEA.SEA_MOAT, new S57enum(39, "moat"));
+		Catsea.put(CatSEA.SEA_LEVE, new S57enum(37, "levee")); Catsea.put(CatSEA.SEA_MVLY, new S57enum(38, "median_valley")); Catsea.put(CatSEA.SEA_MOAT, new S57enum(39, "moat"));
 		Catsea.put(CatSEA.SEA_MTNS, new S57enum(40, "mountains")); Catsea.put(CatSEA.SEA_PEAK, new S57enum(41, "peak")); Catsea.put(CatSEA.SEA_PVNC, new S57enum(42, "province"));
-		Catsea.put(CatSEA.SEA_RISE, new S57enum(43, "rise")); Catsea.put(CatSEA.SEA_SCNL, new S57enum(44, "sea channel")); Catsea.put(CatSEA.SEA_SCHN, new S57enum(45, "seamount_chain"));
+		Catsea.put(CatSEA.SEA_RISE, new S57enum(43, "rise")); Catsea.put(CatSEA.SEA_SCNL, new S57enum(44, "sea_channel")); Catsea.put(CatSEA.SEA_SCHN, new S57enum(45, "seamount_chain"));
 		Catsea.put(CatSEA.SEA_SEDG, new S57enum(46, "shelf-edge")); Catsea.put(CatSEA.SEA_SILL, new S57enum(47, "sill")); Catsea.put(CatSEA.SEA_SLOP, new S57enum(48, "slope"));
 		Catsea.put(CatSEA.SEA_TRRC, new S57enum(49, "terrace")); Catsea.put(CatSEA.SEA_VLLY, new S57enum(50, "valley")); Catsea.put(CatSEA.SEA_CANL, new S57enum(51, "canal")); 
 		Catsea.put(CatSEA.SEA_LAKE, new S57enum(52, "lake")); Catsea.put(CatSEA.SEA_RIVR, new S57enum(53, "river")); Catsea.put(CatSEA.SEA_RECH, new S57enum(54, "reach"));
 	}
 	public enum CatSLC { SLC_UNKN, SLC_BWTR, SLC_GRYN, SLC_MOLE, SLC_PIER, SLC_PPER, SLC_WHRF, SLC_TWAL, SLC_RPRP, SLC_RVMT, SLC_SWAL, SLC_LSTP,
-		SLC_RAMP, SLC_SWAY, SLC_FNDR, SLC_SFWF,  SLC_OFWF,  SLC_LRMP,  SLC_LWAL } 
+		SLC_RAMP, SLC_SWAY, SLC_FNDR, SLC_SFWF,  SLC_OFWF,  SLC_LRMP,  SLC_LWAL, SLC_ICEB } 
 	private static final EnumMap<CatSLC, S57enum> Catslc = new EnumMap<CatSLC, S57enum>(CatSLC.class); static { Catslc.put(CatSLC.SLC_UNKN, new S57enum(0, ""));
 		Catslc.put(CatSLC.SLC_BWTR, new S57enum(1, "breakwater")); Catslc.put(CatSLC.SLC_GRYN, new S57enum(2, "groyne")); Catslc.put(CatSLC.SLC_MOLE, new S57enum(3, "mole"));
 		Catslc.put(CatSLC.SLC_PIER, new S57enum(4, "pier")); Catslc.put(CatSLC.SLC_PPER, new S57enum(5, "promenade_pier")); Catslc.put(CatSLC.SLC_WHRF, new S57enum(6, "wharf"));
@@ -397,23 +399,26 @@ public class S57val {
 		Catslc.put(CatSLC.SLC_SWAL, new S57enum(10, "sea_wall")); Catslc.put(CatSLC.SLC_LSTP, new S57enum(11, "landing_steps")); Catslc.put(CatSLC.SLC_RAMP, new S57enum(12, "ramp"));
 		Catslc.put(CatSLC.SLC_SWAY, new S57enum(13, "slipway")); Catslc.put(CatSLC.SLC_FNDR, new S57enum(14, "fender")); Catslc.put(CatSLC.SLC_SFWF, new S57enum(15, "solid_face_wharf"));
 		Catslc.put(CatSLC.SLC_OFWF, new S57enum(16, "open_face_wharf")); Catslc.put(CatSLC.SLC_LRMP, new S57enum(17, "log_ramp")); Catslc.put(CatSLC.SLC_LWAL, new S57enum(18, "lock_wall"));
+		Catslc.put(CatSLC.SLC_ICEB, new S57enum(18, "ice_breaker"));
 	}
-	public enum CatSIT { SIT_UNKN, SIT_PRTC, SIT_PRTE, SIT_IPT, SIT_BRTH, SIT_DOCK, SIT_LOCK, SIT_FLDB, SIT_BRDG, SIT_DRDG, SIT_TCLT }
+	public enum CatSIT { SIT_UNKN, SIT_PRTC, SIT_PRTE, SIT_IPT, SIT_BRTH, SIT_DOCK, SIT_LOCK, SIT_FLDB, SIT_BRDG, SIT_DRDG, SIT_TCLT, SIT_SPCL, SIT_PLTG, SIT_ONCT }
 	private static final EnumMap<CatSIT, S57enum>  Catsit = new EnumMap<CatSIT, S57enum>(CatSIT.class); static {Catsit.put(CatSIT.SIT_UNKN, new S57enum(0, ""));
 		Catsit.put(CatSIT.SIT_PRTC, new S57enum(1, "port_control")); Catsit.put(CatSIT.SIT_PRTE, new S57enum(2, "port_entry_departure")); Catsit.put(CatSIT.SIT_IPT, new S57enum(3, "ipt"));
 		Catsit.put(CatSIT.SIT_BRTH, new S57enum(4, "berthing")); Catsit.put(CatSIT.SIT_DOCK, new S57enum(5, "dock")); Catsit.put(CatSIT.SIT_LOCK, new S57enum(6, "lock"));
 		Catsit.put(CatSIT.SIT_FLDB, new S57enum(7, "flood_barrage")); Catsit.put(CatSIT.SIT_BRDG, new S57enum(8, "bridge_passage")); Catsit.put(CatSIT.SIT_DRDG, new S57enum(9, "dredging"));
-		Catsit.put(CatSIT.SIT_TCLT, new S57enum(10, "traffic_control_light"));
+		Catsit.put(CatSIT.SIT_TCLT, new S57enum(10, "traffic_control")); Catsit.put(CatSIT.SIT_PLTG, new S57enum(11, "pilotage")); Catsit.put(CatSIT.SIT_SPCL, new S57enum(12, "special"));
+		Catsit.put(CatSIT.SIT_ONCT, new S57enum(13, "oncoming_traffic"));
 	}
 	public enum CatSIW { SIW_UNKN, SIW_DNGR, SIW_OBST, SIW_CABL, SIW_MILY, SIW_DSTR, SIW_WTHR, SIW_STRM, SIW_ICE, SIW_TIME, SIW_TIDE, SIW_TSTR,
-	  SIW_TIDG, SIW_TIDS, SIW_DIVE, SIW_WTLG, SIW_VRCL, SIW_DPTH }
+	  SIW_TIDG, SIW_TIDS, SIW_DIVE, SIW_WTLG, SIW_VRCL, SIW_HIWM, SIW_DPTH, SIW_CURR }
 	private static final EnumMap<CatSIW, S57enum>  Catsiw = new EnumMap<CatSIW, S57enum>(CatSIW.class); static {Catsiw.put(CatSIW.SIW_UNKN, new S57enum(0, ""));
 		Catsiw.put(CatSIW.SIW_DNGR, new S57enum(1, "danger")); Catsiw.put(CatSIW.SIW_OBST, new S57enum(2, "maritime_obstruction")); Catsiw.put(CatSIW.SIW_CABL, new S57enum(3, "cable"));
 		Catsiw.put(CatSIW.SIW_MILY, new S57enum(4, "military")); Catsiw.put(CatSIW.SIW_DSTR, new S57enum(5, "distress")); Catsiw.put(CatSIW.SIW_WTHR, new S57enum(6, "weather"));
 		Catsiw.put(CatSIW.SIW_STRM, new S57enum(7, "storm")); Catsiw.put(CatSIW.SIW_ICE, new S57enum(8, "ice")); Catsiw.put(CatSIW.SIW_TIME, new S57enum(9, "time"));
 		Catsiw.put(CatSIW.SIW_TIDE, new S57enum(10, "tide")); Catsiw.put(CatSIW.SIW_TSTR, new S57enum(11, "tidal_stream")); Catsiw.put(CatSIW.SIW_TIDG, new S57enum(12, "tide_gauge"));
 	  Catsiw.put(CatSIW.SIW_TIDS, new S57enum(13, "tide_scale")); Catsiw.put(CatSIW.SIW_DIVE, new S57enum(14, "diving")); Catsiw.put(CatSIW.SIW_WTLG, new S57enum(15, "water_level_gauge"));
-	  Catsiw.put(CatSIW.SIW_VRCL, new S57enum(16, "vertical_clearance")); Catsiw.put(CatSIW.SIW_DPTH, new S57enum(18, "depth"));
+	  Catsiw.put(CatSIW.SIW_VRCL, new S57enum(16, "vertical_clearance")); Catsiw.put(CatSIW.SIW_HIWM, new S57enum(17, "high_water")); Catsiw.put(CatSIW.SIW_DPTH, new S57enum(18, "depth"));
+	  Catsiw.put(CatSIW.SIW_CURR, new S57enum(19, "current"));
 	}
 	public enum CatSIL { SIL_UNKN, SIL_SILO, SIL_TANK, SIL_GRNE, SIL_WTRT } 
 	private static final EnumMap<CatSIL, S57enum> Catsil = new EnumMap<CatSIL, S57enum>(CatSIL.class); static { Catsil.put(CatSIL.SIL_UNKN, new S57enum(0, ""));
@@ -490,7 +495,7 @@ public class S57val {
 	public enum CatWED { WED_UNKN, WED_KELP, WED_SWED, WED_SGRS, WED_SGSO } 
 	private static final EnumMap<CatWED, S57enum> Catwed = new EnumMap<CatWED, S57enum>(CatWED.class); static { Catwed.put(CatWED.WED_UNKN, new S57enum(0, ""));
 		Catwed.put(CatWED.WED_KELP, new S57enum(1, "kelp")); Catwed.put(CatWED.WED_SWED, new S57enum(2, "sea_weed")); Catwed.put(CatWED.WED_SGRS, new S57enum(3, "sea_grass"));
-		Catwed.put(CatWED.WED_SGSO, new S57enum(4, "saragasso"));
+		Catwed.put(CatWED.WED_SGSO, new S57enum(4, "sargasso"));
 	}
 	public enum CatWRK { WRK_UNKN, WRK_NDGR, WRK_DNGR, WRK_DREM, WRK_MSTS, WRK_HULS } 
 	private static final EnumMap<CatWRK, S57enum> Catwrk = new EnumMap<CatWRK, S57enum>(CatWRK.class); static { Catwrk.put(CatWRK.WRK_UNKN, new S57enum(0, ""));

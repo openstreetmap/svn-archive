@@ -26,6 +26,41 @@ import symbols.Symbols.*;
 
 public class Renderer {
 
+	public static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static {
+		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
+		bodyColours.put(ColCOL.COL_WHT, new Color(0xffffff));
+		bodyColours.put(ColCOL.COL_BLK, new Color(0x000000));
+		bodyColours.put(ColCOL.COL_RED, new Color(0xd40000));
+		bodyColours.put(ColCOL.COL_GRN, new Color(0x00d400));
+		bodyColours.put(ColCOL.COL_BLU, Color.blue);
+		bodyColours.put(ColCOL.COL_YEL, new Color(0xffd400));
+		bodyColours.put(ColCOL.COL_GRY, Color.gray);
+		bodyColours.put(ColCOL.COL_BRN, new Color(0x8b4513));
+		bodyColours.put(ColCOL.COL_AMB, new Color(0xfbf00f));
+		bodyColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
+		bodyColours.put(ColCOL.COL_ORG, Color.orange);
+		bodyColours.put(ColCOL.COL_MAG, new Color(0xf000f0));
+		bodyColours.put(ColCOL.COL_PNK, Color.pink);
+	}
+
+	public static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<ColPAT, Patt>(ColPAT.class);
+	static {
+		pattMap.put(ColPAT.PAT_UNKN, Patt.Z);
+		pattMap.put(ColPAT.PAT_HORI, Patt.H);
+		pattMap.put(ColPAT.PAT_VERT, Patt.V);
+		pattMap.put(ColPAT.PAT_DIAG, Patt.D);
+		pattMap.put(ColPAT.PAT_BRDR, Patt.B);
+		pattMap.put(ColPAT.PAT_SQUR, Patt.S);
+		pattMap.put(ColPAT.PAT_CROS, Patt.C);
+		pattMap.put(ColPAT.PAT_SALT, Patt.X);
+		pattMap.put(ColPAT.PAT_STRP, Patt.H);
+	}
+
+	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
+
+	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953, 0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
+
 	static MapHelper helper;
 	static SeaMap map;
 	static double sScale;
@@ -38,8 +73,8 @@ public class Renderer {
 		zoom = z;
 		helper = h;
 		map = m;
-		sScale = Symbols.symbolScale[zoom] * factor;
-		tScale = Symbols.textScale[zoom] * factor;
+		sScale = symbolScale[zoom] * factor;
+		tScale = textScale[zoom] * factor;
 		if (map != null) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
@@ -72,9 +107,15 @@ public class Renderer {
 		if (obj == null) {
 			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, null);
 		} else {
-			ArrayList<ColCOL> colours = (ArrayList<ColCOL>) getAttVal(feature, obj, 0, Att.COLOUR);
-			ArrayList<ColPAT> pattern = (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT);
-			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(pattern, colours));
+			ArrayList<Color> colours = new ArrayList<Color>();
+			for (ColCOL col : (ArrayList<ColCOL>)getAttVal(feature, obj, 0, Att.COLOUR)) {
+				colours.add(bodyColours.get(col));
+			}
+			ArrayList<Patt> patterns = new ArrayList<Patt>();
+			for(ColPAT pat: (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT)) {
+				patterns.add(pattMap.get(pat));
+			}
+			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(patterns, colours));
 		}
 	}
 

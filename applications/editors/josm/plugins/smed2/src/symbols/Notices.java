@@ -971,6 +971,15 @@ public class Notices {
   };
 
 	public static final Symbol NoticeBnank = new Symbol();
+	static {
+		NoticeBnank.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-80.0); p.lineTo(-15.0,-47.0); p.lineTo(15.0,-47.0); p.closePath();
+		colours.add(new Instr(Prim.P1, p));
+		p = new Path2D.Double(); p.moveTo(0.0,-10.0); p.lineTo(-15.0,-43.0); p.lineTo(15.0,-43.0); p.closePath();
+		colours.add(new Instr(Prim.P2, p));
+		NoticeBnank.add(new Instr(Prim.COLR, colours));
+	}
 	public static final Symbol NoticeBlmhr = new Symbol();
 	public static final Symbol NoticeBwral = new Symbol();
 	public static final Symbol NoticeBwrar = new Symbol();

@@ -17,9 +17,6 @@ import java.awt.Rectangle;
 import java.awt.font.TextLayout;
 import java.awt.geom.*;
 import java.util.ArrayList;
-import java.util.EnumMap;
-
-import s57.S57val.*;
 
 public class Symbols {
 
@@ -27,32 +24,12 @@ public class Symbols {
 		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
-	public enum Handle {
-		CC, TL, TR, TC, LC, RC, BL, BR, BC
+	public enum Patt {
+		Z, H, V, D, B, S, C, X
 	}
 
-	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138,
-			0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
-
-	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953,
-			0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
-
-	private static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
-	static {
-		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
-		bodyColours.put(ColCOL.COL_WHT, new Color(0xffffff));
-		bodyColours.put(ColCOL.COL_BLK, new Color(0x000000));
-		bodyColours.put(ColCOL.COL_RED, new Color(0xd40000));
-		bodyColours.put(ColCOL.COL_GRN, new Color(0x00d400));
-		bodyColours.put(ColCOL.COL_BLU, Color.blue);
-		bodyColours.put(ColCOL.COL_YEL, new Color(0xffd400));
-		bodyColours.put(ColCOL.COL_GRY, Color.gray);
-		bodyColours.put(ColCOL.COL_BRN, new Color(0x8b4513));
-		bodyColours.put(ColCOL.COL_AMB, new Color(0xfbf00f));
-		bodyColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
-		bodyColours.put(ColCOL.COL_ORG, Color.orange);
-		bodyColours.put(ColCOL.COL_MAG, new Color(0xf000f0));
-		bodyColours.put(ColCOL.COL_PNK, Color.pink);
+	public enum Handle {
+		CC, TL, TR, TC, LC, RC, BL, BR, BC
 	}
 
 	public static class Instr {
@@ -76,10 +53,10 @@ public class Symbols {
 	}
 
 	public static class Scheme {
-		public ArrayList<ColPAT> pat;
-		public ArrayList<ColCOL> col;
+		public ArrayList<Patt> pat;
+		public ArrayList<Color> col;
 
-		public Scheme(ArrayList<ColPAT> ipat, ArrayList<ColCOL> icol) {
+		public Scheme(ArrayList<Patt> ipat, ArrayList<Color> icol) {
 			pat = ipat;
 			col = icol;
 		}
@@ -204,47 +181,47 @@ public class Symbols {
 							switch (patch.type) {
 							case P1:
 								if (cn > 0) {
-									g2.setPaint(bodyColours.get(cs.col.get(0)));
+									g2.setPaint(cs.col.get(0));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case P2:
 								if (cn > 0) {
 									if (cn > 1) {
-										g2.setPaint(bodyColours.get(cs.col.get(1)));
+										g2.setPaint(cs.col.get(1));
 									} else {
-										g2.setPaint(bodyColours.get(cs.col.get(0)));
+										g2.setPaint(cs.col.get(0));
 									}
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H2:
-								if ((cn > 1) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-									g2.setPaint(bodyColours.get(cs.col.get(cs.col.size() - pn)));
+								if ((cn > 1) && (cs.pat.get(0) == Patt.H)) {
+									g2.setPaint(cs.col.get(cs.col.size() - pn));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H3:
-								if ((cn == 3) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-									g2.setPaint(bodyColours.get(cs.col.get(1)));
+								if ((cn == 3) && (cs.pat.get(0) == Patt.H)) {
+									g2.setPaint(cs.col.get(1));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H4:
-								if ((cn == 4) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-									g2.setPaint(bodyColours.get(cs.col.get(1)));
+								if ((cn == 4) && (cs.pat.get(0) == Patt.H)) {
+									g2.setPaint(cs.col.get(1));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H5:
-								if ((cn == 4) && (cs.pat.get(0) == ColPAT.PAT_HORI)) {
-									g2.setPaint(bodyColours.get(cs.col.get(2)));
+								if ((cn == 4) && (cs.pat.get(0) == Patt.H)) {
+									g2.setPaint(cs.col.get(2));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case V2:
-								if ((cn > 1) && (cs.pat.get(0) == ColPAT.PAT_VERT)) {
-									g2.setPaint(bodyColours.get(cs.col.get(cs.col.size() - pn)));
+								if ((cn > 1) && (cs.pat.get(0) == Patt.V)) {
+									g2.setPaint(cs.col.get(cs.col.size() - pn));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;

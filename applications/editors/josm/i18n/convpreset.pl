@@ -27,8 +27,10 @@ sub fix($)
   return $val;
 }
 
+my $linenr = 0;
 while(my $line = <>)
 {
+  ++$linenr;
   chomp($line);
   if($line =~ /<item\s+name=(".*?")/)
   {
@@ -110,6 +112,18 @@ while(my $line = <>)
       print "/* item $item role $n */ tr($n);\n";
     }
   }
+  elsif($line =~ /<optional.*\s+text=(".*?")/)
+  {
+    my $n = fix($1);
+    if($line =~ /text_context=(".*?")/)
+    {
+      print "/* item $item optional $n */ trc($1,$n);\n";
+    }
+    else
+    {
+      print "/* item $item optional $n */ tr($n);\n";
+    }
+  }
   elsif($line =~ /<(combo|multiselect).*\s+text=(".*?")/)
   {
     my ($type,$n) = ($1,fix($2));
@@ -179,6 +193,8 @@ while(my $line = <>)
      || $line =~ /<\/?optional>/
      || $line =~ /<key/
      || $line =~ /<presets/
+     || $line =~ /<checkgroup/
+     || $line =~ /<\/checkgroup/
      || $line =~ /<\/presets/
      || $line =~ /roles/
      || $line =~ /href=/
@@ -192,7 +208,7 @@ while(my $line = <>)
   else
   {
     print "/* unparsed line $line */\n";
-    print STDERR "/* unparsed line $line */\n";
+    print STDERR "/* unparsed line $linenr $line */\n";
     $result = 20
   }
 

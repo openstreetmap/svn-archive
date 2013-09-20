@@ -1,27 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a module of the JOSM opendata plugin.
-**
-** Usage
-** =====
-** To build it run
-**
-**    > ant dist
-**
-** To install the generated module locally (in you default opendata modules directory) run
-**
-**    > ant install
-**
-** The generated module jar is not automatically available in JOSMs opendata plugin configuration
-** dialog. You have to check it in first.
-**
-** Use the ant target 'publish' to check in the module and make it available to other
-** JOSM users:
-**    set the property commit.message
-** and run
-**    > ant publish
-**
--->
 <project name="fr.datagouvfr" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>

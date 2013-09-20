@@ -44,6 +44,7 @@ import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.gui.preferences.SubPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.SelectAllOnFocusGainedDecorator;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleDownloadTask;
@@ -308,13 +309,18 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
         }
 
         protected void alertNothingToUpdate() {
-            HelpAwareOptionPane.showOptionDialog(
-                    pnlModulePreferences,
-                    tr("All installed modules are up to date. JOSM does not have to download newer versions."),
-                    tr("Modules up to date"),
-                    JOptionPane.INFORMATION_MESSAGE,
-                    null // FIXME: provide help context
-            );
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    HelpAwareOptionPane.showOptionDialog(
+                            pnlModulePreferences,
+                            tr("All installed modules are up to date. JOSM does not have to download newer versions."),
+                            tr("Modules up to date"),
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null // FIXME: provide help context
+                    );
+                }
+            });
         }
 
         public void actionPerformed(ActionEvent e) {

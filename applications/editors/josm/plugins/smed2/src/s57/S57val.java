@@ -997,13 +997,6 @@ public class S57val {
 		Shptyp.put(ShpTYP.TYP_BCAR, new S57enum(10, "bulk_carrier")); Shptyp.put(ShpTYP.TYP_SPLN, new S57enum(11, "seaplane")); Shptyp.put(ShpTYP.TYP_TUGB, new S57enum(12, "tugboat"));
 		Shptyp.put(ShpTYP.TYP_PSGR, new S57enum(13, "passenger")); Shptyp.put(ShpTYP.TYP_FERY, new S57enum(14, "ferry")); Shptyp.put(ShpTYP.TYP_BOAT, new S57enum(15, "boat"));
 	}
-	public enum AisCLS { AIS_UNKN, AIS_CAMN, AIS_CAMS, AIS_CAME, AIS_CAMW, AIS_LAMP, AIS_LAMS, AIS_SAWM, AIS_ISDM, AIS_SPPM, AIS_WRKM	}
-	private static final EnumMap<AisCLS, S57enum> Aiscls = new EnumMap<AisCLS, S57enum>(AisCLS.class); static { Aiscls.put(AisCLS.AIS_UNKN, new S57enum(0, ""));
-		Aiscls.put(AisCLS.AIS_CAMN, new S57enum(1, "cardinal_north")); Aiscls.put(AisCLS.AIS_CAMS, new S57enum(2, "cardinal_south")); Aiscls.put(AisCLS.AIS_CAME, new S57enum(3, "cardinal_east"));
-		Aiscls.put(AisCLS.AIS_CAMN, new S57enum(4, "cardinal_north")); Aiscls.put(AisCLS.AIS_LAMP, new S57enum(5, "lateral_port")); Aiscls.put(AisCLS.AIS_LAMS, new S57enum(6, "lateral_starboard"));
-		Aiscls.put(AisCLS.AIS_SAWM, new S57enum(7, "safe_water")); Aiscls.put(AisCLS.AIS_ISDM, new S57enum(8, "isolated_danger")); Aiscls.put(AisCLS.AIS_SPPM, new S57enum(9, "special_purpose"));
-		Aiscls.put(AisCLS.AIS_WRKM, new S57enum(10, "wreck"));
-	}
 
 	private static final EnumMap<Att, S57key> keys = new EnumMap<Att, S57key>(Att.class);
 	static {

@@ -2,7 +2,6 @@ package Geo::Gpsdrive::getstreet;
 #noch nicht alle variablen angepasst
 use LWP::UserAgent;
 use WWW::Mechanize;
-use Text::Query;
 use Getopt::Long; #maybe not needed any more
 use Pod::Usage;
 use DBI;

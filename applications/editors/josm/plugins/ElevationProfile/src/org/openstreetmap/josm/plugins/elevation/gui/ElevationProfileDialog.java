@@ -14,18 +14,17 @@
 
 package org.openstreetmap.josm.plugins.elevation.gui;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -33,19 +32,19 @@ import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
 import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
+import org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel;
+import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.Shortcut;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>
  * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the 
@@ -59,7 +58,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 */
 	private static final long serialVersionUID = -868463893732535577L;
 	/* Elevation profile instance */
-	private ElevationModel profile;
+	private IElevationModel model;
 	/* GPX data */
 	private GpxLayer activeLayer = null;
 	private HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<GpxLayer, ElevationModel>();
@@ -72,10 +71,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private JLabel elevationGainLabel;
 	private JLabel totalTimeLabel;
 	private JLabel distLabel;
-	private JRadioButton geoidNone;
-	private JRadioButton geoidAuto;
-	private JRadioButton geoidFixed;
-	private JTextField geoidFixedValue;
 	/* Listener to the elevation model */
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
 	
@@ -159,72 +154,12 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		totalTimeLabel = new JLabel("0");
 		dataPanel.add(totalTimeLabel);
 
-		// Geoid
-		JLabel geoidHead = new JLabel(tr("Geoid"));
-		geoidHead.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(geoidHead);
-
-		geoidNone = new JRadioButton(tr("None"));
-		// TODO: Obtain value from preferences
-		geoidNone.setSelected(true);
-		geoidNone.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ElevationHelper.setGeoidKind(GeoidCorrectionKind.None);
-				geoidFixedValue.setEnabled(false);
-				getModel().updateElevationData();
-				updateView();
-			}
-		});
-
-		geoidAuto = new JRadioButton(tr("Automatic"));
-		geoidAuto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ElevationHelper.setGeoidKind(GeoidCorrectionKind.Auto);
-				geoidFixedValue.setEnabled(false);
-				getModel().updateElevationData();
-				updateView();
-			}
-		});
-
-		geoidFixed = new JRadioButton(tr("Fixed value"));
-		geoidFixed.setEnabled(false);
-		geoidFixed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ElevationHelper.setGeoidKind(GeoidCorrectionKind.Fixed);
-				geoidFixedValue.setEnabled(true);
-				getModel().updateElevationData();
-				updateView();
-			}
-		});
-
-		// TODO: Obtain value from preferences
-		geoidFixedValue = new JTextField("0");
-		geoidFixedValue.setEnabled(false);
-		geoidFixedValue.setAlignmentX(RIGHT_ALIGNMENT);
-		ButtonGroup grp = new ButtonGroup();
-		grp.add(geoidAuto);
-		grp.add(geoidNone);
-		grp.add(geoidFixed);
-
-		dataPanel.add(geoidNone);
-		dataPanel.add(geoidAuto);
-		dataPanel.add(geoidFixed);
-		dataPanel.add(geoidFixedValue);
-		dataPanel.add(new JLabel(" m"));
-
 		add(dataPanel, BorderLayout.PAGE_END);
-		profile = new ElevationModel();
+		model = new ElevationModel();
 
 		profPanel = new ElevationProfilePanel(null);
 		add(profPanel, BorderLayout.CENTER);
 		profPanel.addComponentListener(this);
-
-		if (ElevationHelper.getGeoidKind() == GeoidCorrectionKind.Auto) {
-			geoidAuto.setSelected(true);
-		}
-		if (ElevationHelper.getGeoidKind() == GeoidCorrectionKind.Fixed) {
-			geoidFixed.setSelected(true);
-		}
 		
 		dock();
 	}
@@ -249,19 +184,18 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * Gets the elevation model instance.
 	 * @return
 	 */
-	public ElevationModel getModel() {
-		return profile;
+	public IElevationModel getModel() {
+		return model;
 	}
 
 	/**
 	 * Sets the elevation model instance.
 	 * @param model The new model.
 	 */
-	public void setModel(ElevationModel model) {
-		if (this.profile != model) {
-			this.profile = model;
+	public void setModel(IElevationModel model) {
+		if (this.model != model) {
+		    	this.model = model;
 			profPanel.setElevationModel(model);
-			
 			updateView();
 		}
 	}
@@ -293,45 +227,49 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * that the model has changed.
 	 */
 	private void updateView() {
+	    	if (model == null) return;
+
+		IElevationProfile profile = model.getCurrentProfile();
+
 		if (profile != null) {
-			// Show name of profile in title 
-			setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
+		    // Show name of profile in title 
+		    setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
 
-			if (profile.hasElevationData()) {
-				// Show elevation data
-				minHeightLabel.setText(
-						ElevationHelper.getElevationText(profile.getMinHeight()));
-				maxHeightLabel.setText(
-						ElevationHelper.getElevationText(profile.getMaxHeight()));
-				avrgHeightLabel.setText(
-						ElevationHelper.getElevationText(profile.getAverageHeight()));
-				elevationGainLabel.setText(
-						ElevationHelper.getElevationText(profile.getGain()));
-			}
-			
-			// compute values for time and distance
-			long diff = profile.getTimeDifference();
-			long minutes = diff / (1000 * 60);
-			long hours = minutes / 60;
-			minutes = minutes % 60;
-			
-			double dist = profile.getDistance();
+		    if (profile.hasElevationData()) {
+			// Show elevation data
+			minHeightLabel.setText(
+				ElevationHelper.getElevationText(profile.getMinHeight()));
+			maxHeightLabel.setText(
+				ElevationHelper.getElevationText(profile.getMaxHeight()));
+			avrgHeightLabel.setText(
+				ElevationHelper.getElevationText(profile.getAverageHeight()));
+			elevationGainLabel.setText(
+				ElevationHelper.getElevationText(profile.getGain()));
+		    }
 
-			totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
-			distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
+		    // compute values for time and distance
+		    long diff = profile.getTimeDifference();
+		    long minutes = diff / (1000 * 60);
+		    long hours = minutes / 60;
+		    minutes = minutes % 60;
+
+		    double dist = profile.getDistance();
+
+		    totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
+		    distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
 		} else { // no elevation data, -> switch back to empty view
-			setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
-			
-			minHeightLabel.setText(EMPTY_DATA_STRING);
-			maxHeightLabel.setText(EMPTY_DATA_STRING);
-			avrgHeightLabel.setText(EMPTY_DATA_STRING);
-			elevationGainLabel.setText(EMPTY_DATA_STRING);
-			totalTimeLabel.setText(EMPTY_DATA_STRING);
-			distLabel.setText(EMPTY_DATA_STRING);
+		    setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
+
+		    minHeightLabel.setText(EMPTY_DATA_STRING);
+		    maxHeightLabel.setText(EMPTY_DATA_STRING);
+		    avrgHeightLabel.setText(EMPTY_DATA_STRING);
+		    elevationGainLabel.setText(EMPTY_DATA_STRING);
+		    totalTimeLabel.setText(EMPTY_DATA_STRING);
+		    distLabel.setText(EMPTY_DATA_STRING);
 		}
-		
+
 		fireModelChanged();
-		repaint();
+		repaint();	    
 	}
 
 	/**
@@ -339,7 +277,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 */
 	protected void fireModelChanged() {
 		for (IElevationModelListener listener : listeners) {
-			listener.elevationProfileChanged(getModel());
+			listener.elevationProfileChanged(getModel().getCurrentProfile());
 		}
 	}
 
@@ -382,20 +320,16 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private void setActiveLayer(GpxLayer newLayer) {
 		if (activeLayer != newLayer) {
 			activeLayer = newLayer;
-			int slices = 250;
-			if (profPanel != null && profPanel.getPlotArea().width > 0) {
-				slices = profPanel.getPlotArea().width;
-			}
 
+			// layer does not exist -> create
 			if (!layerMap.containsKey(newLayer)) {
 				GpxData gpxData = newLayer.data;
-				ElevationModel em = new ElevationModel(newLayer.getName(),
-						gpxData, slices);
-				layerMap.put(newLayer, em);
+				ElevationModel newEM = new ElevationModel(newLayer.getName(),
+						gpxData);
+				layerMap.put(newLayer, newEM);
 			}
 			
 			ElevationModel em = layerMap.get(newLayer);
-			em.setSliceSize(slices);
 			setModel(em);			
 		}
 	}
@@ -417,6 +351,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		if (layerMap.containsKey(oldLayer)) {
 			layerMap.remove(oldLayer);
 		}
+		
 		if (layerMap.size() == 0) {
 			setModel(null);
 			if (profileLayer != null) {
@@ -432,8 +367,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * ComponentEvent)
 	 */
 	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/*
@@ -444,8 +377,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * )
 	 */
 	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/*
@@ -455,14 +386,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * ComponentEvent)
 	 */
 	public void componentResized(ComponentEvent e) {
-		int slices = 100;
-		if (profPanel != null) {
-			slices = profPanel.getPlotArea().width;
-		}
-
-		if (profile != null && profile.getSliceSize() != slices) {
-			profile.setSliceSize(slices);
-		}
 	}
 
 	/*
@@ -473,6 +396,5 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * )
 	 */
 	public void componentShown(ComponentEvent e) {
-
 	}
 }

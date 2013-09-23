@@ -28,9 +28,9 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
+import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -73,8 +73,10 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      *            The profile to show in the layer
      */
     public void setProfile(IElevationProfile profile) {
-	this.profile = profile;
-	Main.map.repaint();
+	if (this.profile != profile) {
+        	this.profile = profile;
+        	Main.map.repaint();
+	}
     }
 
     /*
@@ -155,7 +157,6 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds box) {
 	WayPoint lastWpt = null;
-	int lastEle = 0;
 
 	renderer.beginRendering();
 	if (profile != null) {			
@@ -172,7 +173,6 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 		} // else first way point -> is paint later
 
 		// remember some things for next iteration
-		lastEle = (int) ElevationHelper.getElevation(wpt);
 		lastWpt = wpt;
 	    }
 

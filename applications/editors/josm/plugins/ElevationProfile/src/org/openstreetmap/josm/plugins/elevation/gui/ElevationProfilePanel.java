@@ -36,9 +36,10 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
+import org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel;
+import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 
 /**
  * Provides the panel showing the elevation profile.
@@ -50,7 +51,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * Serial version UID
 	 */
 	private static final long serialVersionUID = -7343429725259575319L;
-	private IElevationProfile profile;
+	private IElevationModel model;
 	private Rectangle plotArea;
 	private IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();
 	private int selectedIndex = -1;
@@ -61,9 +62,9 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * Constructs a new ElevationProfilePanel with the given elevation profile.
 	 * @param profile The elevation profile to show in the panel.
 	 */
-	public ElevationProfilePanel(IElevationProfile profile) {
+	public ElevationProfilePanel(IElevationModel profile) {
 		super();
-		this.profile = profile;
+		this.model = profile;
 		setDoubleBuffered(true);
 		setBackground(Color.WHITE);
 		createOrUpdatePlotArea();
@@ -75,17 +76,17 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * Gets the elevation profile instance.
 	 * @return
 	 */
-	public IElevationProfile getProfile() {
-		return profile;
+	public IElevationModel getProfile() {
+		return model;
 	}
 
 	/**
 	 * Sets the new elevation profile instance.
-	 * @param profile
+	 * @param model
 	 */
-	public void setElevationModel(IElevationProfile profile) {
-		if (this.profile != profile) {
-			this.profile = profile;
+	public void setElevationModel(IElevationModel model) {
+		if (this.model != model) {
+			this.model = model;
 			invalidate();
 		}
 	}
@@ -120,6 +121,10 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 */
 	public void setSelectedIndex(int selectedIndex) {
 		this.selectedIndex = selectedIndex;
+		
+		if (model != null) {
+		    model.setCurrentProfile(selectedIndex);
+		}
 	}
 	
 	/**
@@ -127,7 +132,11 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * @return The selected way point or null, if no way point is selected.
 	 */
 	public WayPoint getSelectedWayPoint() {
-		if (this.selectedIndex != -1 && profile != null && profile.getWayPoints() != null && profile.getWayPoints().size() > this.selectedIndex) {
+	    	if (model == null) return null;
+	    	
+	    	IElevationProfile profile = model.getCurrentProfile();
+	    
+		if (profile != null && profile.getWayPoints() != null && profile.getWayPoints().size() > this.selectedIndex) {
 			return profile.getWayPoints().get(this.selectedIndex);
 		} else {
 			return null;			
@@ -189,19 +198,22 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 					+ plotArea.width, plotArea.y + plotArea.height);
 	
 			
-		
-			if (profile != null && profile.hasElevationData()) {
+			if (model != null) {
+			    IElevationProfile profile = model.getCurrentProfile();
+			    if (profile != null && profile.hasElevationData()) {
 				drawAlignedString(formatDate(profile.getStart()), 5, y1 + 5,
-						TextAlignment.Left, g);
+					TextAlignment.Left, g);
 				drawAlignedString(formatDate(profile.getEnd()),
-						getPlotRight(), y1 + 5, TextAlignment.Right, g);
-				
-				
+					getPlotRight(), y1 + 5, TextAlignment.Right, g);
+
+
 				drawProfile(g);
 				drawElevationLines(g);
-			} else {
+			    } else {
+				// No profile or profile supports no elevation data
 				drawAlignedString(tr("(No elevation data)"), getPlotHCenter(),
-						getPlotVCenter(), TextAlignment.Centered, g);
+					getPlotVCenter(), TextAlignment.Centered, g);
+			    }
 			}
 		} finally {
 			setFont(oldFont);
@@ -267,6 +279,8 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * @param g
 	 */
 	private void drawElevationLines(Graphics g) {
+	    	IElevationProfile profile = model.getCurrentProfile();
+	    
 		double diff = profile.getHeightDifference();
 
 		if (diff == 0.0) {
@@ -372,6 +386,8 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 */
 	private int getYForEelevation(int elevation) {
 		int y1 = getPlotBottom();
+		
+		IElevationProfile profile = model.getCurrentProfile();
 
 		if (!profile.hasElevationData()) {
 			return y1;
@@ -379,9 +395,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
 		double diff = profile.getHeightDifference();
 
-		return y1
-				- (int) Math
-						.round(((elevation - profile.getMinHeight()) / diff * plotArea.height));
+		return y1 - (int) Math.round(((elevation - profile.getMinHeight()) / diff * plotArea.height));
 	}
 
 	/**
@@ -390,13 +404,19 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	 * @param g
 	 */
 	private void drawProfile(Graphics g) {
+	    	IElevationProfile profile = model.getCurrentProfile();
+	    	
 		int n = Math.min(plotArea.width, profile.getNumberOfWayPoints());
+		
+		if (n == 0) return; // nothing to draw
+		// step size
+		int step = profile.getNumberOfWayPoints() / n;
 
 		// int y0 = plotArea.y + 1;
 		int yBottom = getPlotBottom();
 		Color oldC = g.getColor();
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i += step) {
 			WayPoint wpt = profile.getWayPoints().get(i);
 			int eleVal = (int) ElevationHelper.getElevation(wpt);
 			Color c = renderer.getColorForWaypoint(profile, wpt,
@@ -417,17 +437,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
 			g.setColor(c);
 			g.drawLine(x, yBottom, x, yEle);	
-			
-			int geoidVal = 0;
-			switch(ElevationHelper.getGeoidKind()) {
-				case Auto: geoidVal = ElevationHelper.getGeoidCorrection(wpt); break;
-				case Fixed: // not impl
-			}
-			
 			g.setColor(ElevationColors.EPLightBlue);
-			
-			int yGeoid = getYForEelevation(eleVal - geoidVal);
-			g.drawLine(x, Math.min(yGeoid, yBottom), x, yEle);
 		}
 		g.setColor(oldC);
 	}

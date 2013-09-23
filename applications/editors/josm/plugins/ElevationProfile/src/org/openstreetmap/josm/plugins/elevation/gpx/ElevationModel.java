@@ -23,52 +23,43 @@ import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
-import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
-import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * Represents the top-level part of the elevation model. The elevation model
- * breaks done into the tracks/routes of a GPX file (see
- * {@link ElevationProfileNode}). Each track is divided into 'slices' (see
- * {@link ElevationProfileLeaf}) - a set of fixed number of way points. This
- * structure allows as well an overview over a single track as a detailed
- * elevation view of a track part.
+ * breaks done into the tracks/routes of a GPX file.
  * 
- * @see ElevationProfileNode
- * @see ElevationProfileLeaf
  * @see IElevationModelTrackListener
- * @see IElevationModelSliceListener
  * @author Oliver Wieland <oliver.wieland@online.de>
  */
-public class ElevationModel extends ElevationProfileBase implements IGpxVisitor {
+public class ElevationModel implements IGpxVisitor, IElevationModel {
 	// private int sliceSize;
 	private int trackCounter;
 	private GpxData gpxData;
 
-	private List<IElevationProfile> tracks;
-	private List<WayPoint> buffer = new ArrayList<WayPoint>(1000);
-	private List<WayPoint> tmpWaypoints = new ArrayList<WayPoint>(1000);
-
+	private WayPointMap children = new WayPointMap(); 
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
+	private List<WayPoint> buffer = new ArrayList<WayPoint>();
+	private int currentProfileIndex = 0;
+	
 
+	/**
+	 * Instantiates a new elevation model.
+	 */
 	public ElevationModel() {
-		this("", null, 100);
+		this("", null);
 	}
 
-	public ElevationModel(String name, GpxData data, int sliceSize) {
-		super(name);
+	/**
+	 * Instantiates a new elevation model.
+	 *
+	 * @param name the name of the model
+	 * @param data the GPX data
+	 */
+	public ElevationModel(String name, GpxData data) {
 		gpxData = data;
-		setSliceSize(Math.max(sliceSize, 100));
-	}
-
-	@Override
-	public void setSliceSize(int sliceSize) {
-
-		super.setSliceSize(sliceSize);
-
-		// FIXME: Listener should go in base class
-		updateElevationData();
-		fireModelChanged();
+		
+		GpxIterator.visit(data, this);		
 	}
 
 	/**
@@ -83,89 +74,42 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	/**
 	 * @return the tracks
 	 */
-	protected List<IElevationProfile> getTracks() {
-		return tracks;
-	}
-
-	/**
-	 * Gets a flag indicating whether the associated way points contained
-	 * elevation data or not. This is the case if min and max height or both
-	 * zero.
-	 * 
-	 * @return
-	 */
-	public boolean hasElevationData() {
-		return getMaxHeight() != getMinHeight();
+	protected WayPointMap getTracks() {
+		return children;
 	}
 
 	/**
 	 * Fires the 'model changed' event to all listeners.
 	 */
-	protected void fireModelChanged() {
+	protected void fireModelChanged() {	    	
 		for (IElevationModelListener listener : listeners) {
-			listener.elevationProfileChanged(this);
+		    if (children != null && children.size() > 0)
+			listener.elevationProfileChanged(getCurrentProfile());
 		}
 	}
 
-	/**
-	 * Adds a model listener to this instance.
-	 * 
-	 * @param listener
-	 *            The listener to add.
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel#addModelListener(org.openstreetmap.josm.plugins.elevation.IElevationModelListener)
 	 */
+	@Override
 	public void addModelListener(IElevationModelListener listener) {
 		this.listeners.add(listener);
 	}
 
-	/**
-	 * Removes a model listener from this instance.
-	 * 
-	 * @param listener
-	 *            The listener to remove.
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel#removeModelListener(org.openstreetmap.josm.plugins.elevation.IElevationModelListener)
 	 */
+	@Override
 	public void removeModelListener(IElevationModelListener listener) {
 		this.listeners.remove(listener);
 	}
 
-	/**
-	 * Removes all listeners from this instance.
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel#removeAllListeners()
 	 */
+	@Override
 	public void removeAllListeners() {
 		this.listeners.clear();
-	}
-
-	/**
-	 * (Re)computes the elevation model.
-	 */
-	private void computeProfile() {
-		if (gpxData == null)
-			return; // nothing to do
-
-		trackCounter = 0;
-
-		super.updateValues();
-		if (tracks == null) {
-			tracks = new ArrayList<IElevationProfile>();
-		} else {
-			tmpWaypoints.clear();
-			buffer.clear();
-			tracks.clear();
-		}
-
-		setDistance(gpxData.length());	// get distance from GPX 
-		GpxIterator.visit(gpxData, this);
-
-		// reduce data
-		setWayPoints(ElevationHelper.downsampleWayPoints(tmpWaypoints,
-				getSliceSize()), false);
-	}
-
-	/**
-	 * Forces the model to refresh itself. Clients (e. g. UI widgets) may use
-	 * this method to notify the model on UI changes.
-	 */
-	public void updateElevationData() {
-		computeProfile();
 	}
 
 	/*
@@ -188,6 +132,7 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	 * org.openstreetmap.josm.data.gpx.WayPoint)
 	 */
 	public void visit(GpxTrack track, GpxTrackSegment segment, WayPoint wp) {
+	    	// we ignore the segment here 
 		processWayPoint(wp);
 	}
 	
@@ -196,12 +141,11 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	 */
 	@Override
 	public void visit(WayPoint wp) {
-		super.visit(wp);
 		processWayPoint(wp);
 	}
 
 	public void start() {
-		buffer.clear();
+		children.clear();		
 	}
 
 	public void end() {
@@ -210,13 +154,16 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 	}
 	
 	private void addTrackOrRoute(String trackName) {
-		if (getSliceSize() > 0) {
-			ElevationProfileNode emt = new ElevationProfileNode(trackName,
-					this, buffer, getSliceSize());
-			tracks.add(emt);
-		}
-		trackCounter++;
-		buffer.clear();
+	    	if (buffer.size() > 0) {
+	    	    
+	    	    	System.out.println("Add track " + trackName + ", n =  " + buffer.size()); // TODO: Remove
+	    	    	
+        	    	ElevationProfileBase ep = new ElevationProfileBase(trackName);
+        		ep.setWayPoints(buffer);
+        		ep.setName(trackName);
+        		children.add(ep);
+        		buffer.clear();
+	    	}
 	}
 
 	private void processWayPoint(WayPoint wp) {
@@ -225,18 +172,45 @@ public class ElevationModel extends ElevationProfileBase implements IGpxVisitor 
 		}
 		
 		buffer.add(wp);
-		tmpWaypoints.add(wp);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.openstreetmap.josm.plugins.elevation.ElevationProfileBase#getChildren
-	 * ()
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel#getProfiles()
 	 */
 	@Override
-	public List<IElevationProfile> getChildren() {
-		return tracks;
+	public List<IElevationProfile> getProfiles() {
+		return children;
+	}
+
+	@Override
+	public IElevationProfile getCurrentProfile() {
+	    if (currentProfileIndex < 0 || currentProfileIndex >= profileCount()) return null;
+	    
+	    return children.get(currentProfileIndex);
+	}
+
+	@Override
+	public void setCurrentProfile(IElevationProfile newProfile) {
+	    CheckParameterUtil.ensureParameterNotNull(newProfile);
+	    
+	    if (!children.contains(newProfile)) {
+		children.add(newProfile);
+	    }
+	    
+	    setCurrentProfile(children.indexOf(newProfile)); 
+	}
+
+	@Override
+	public void setCurrentProfile(int index) {
+	    if (index < 0 || index >= profileCount()) throw new RuntimeException("Invalid arg for setCurrentProfile: " + index + ", value must be 0.." + profileCount());
+	    
+	    currentProfileIndex = index;
+	    fireModelChanged();	    
+	}
+
+	@Override
+	public int profileCount() {
+	    return children != null ? children.size() : 0;
 	}
 }

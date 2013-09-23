@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 
 /**
@@ -42,7 +41,7 @@ import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
-public abstract class ElevationProfileBase implements IElevationProfile,
+public class ElevationProfileBase implements IElevationProfile,
 		IGpxWaypointVisitor {
 	public static final int WAYPOINT_START = 0;
 	public static final int WAYPOINT_END = 1;
@@ -61,7 +60,6 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	private int sumEle; // temp var for average height
 	private List<WayPoint> wayPoints;
 	private int numWayPoints; // cached value
-	private int sliceSize;
 	private int gain;
 	private int lastEle;
 	private static boolean ignoreZeroHeight = true;
@@ -92,8 +90,7 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		super();
 		this.name = name;
 		this.parent = parent;
-		this.sliceSize = sliceSize;
-		setWayPoints(wayPoints, true);
+		setWayPoints(wayPoints);
 	}
 
 	public static boolean isIgnoreZeroHeight() {
@@ -224,13 +221,12 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	 * 
 	 * @param wayPoints
 	 */
-	public void setWayPoints(List<WayPoint> wayPoints, boolean revisit) {
+	public void setWayPoints(List<WayPoint> wayPoints) {
 		if (this.wayPoints != wayPoints) {
 			this.wayPoints = new ArrayList<WayPoint>(wayPoints);
 			numWayPoints = wayPoints != null ? wayPoints.size() : 0;
-			if (revisit) {				
-				updateValues();
-			}
+			updateValues();
+			
 		}
 	}
 
@@ -262,24 +258,6 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 		}
 	}
 
-	/**
-	 * Gets the slice size for the detail view.
-	 * 
-	 * @return
-	 */
-	public int getSliceSize() {
-		return sliceSize;
-	}
-
-	/**
-	 * Sets the desired size of the elevation profile.
-	 */
-	public void setSliceSize(int sliceSize) {
-		if (this.sliceSize != sliceSize) {
-			this.sliceSize = sliceSize;
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -297,7 +275,9 @@ public abstract class ElevationProfileBase implements IElevationProfile,
 	 * @see
 	 * org.openstreetmap.josm.plugins.elevation.IElevationProfile#getChildren()
 	 */
-	public abstract List<IElevationProfile> getChildren();
+	public List<IElevationProfile> getChildren() {
+	    return null;
+	}
 
 	/*
 	 * (non-Javadoc)

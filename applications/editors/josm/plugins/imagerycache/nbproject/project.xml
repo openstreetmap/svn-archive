@@ -16,13 +16,9 @@
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>F:\Java\josm\core\src</label>
-                    <location>F:\Java\josm\core\src</location>
-                </source-folder>
-                <source-folder>
-                    <label>F:\Java\josm\core\src</label>
+                    <label>src</label>
                     <type>java</type>
-                    <location>F:\Java\josm\core\src</location>
+                    <location>src</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
             </folders>
@@ -47,8 +43,8 @@
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>F:\Java\josm\core\src</label>
-                        <location>F:\Java\josm\core\src</location>
+                        <label>src</label>
+                        <location>src</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -66,7 +62,7 @@
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
-                <package-root>F:\Java\josm\core\src</package-root>
+                <package-root>src</package-root>
                 <classpath mode="compile">../../core/src</classpath>
                 <source-level>1.6</source-level>
             </compilation-unit>

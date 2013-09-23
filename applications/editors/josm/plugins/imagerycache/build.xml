@@ -14,7 +14,7 @@
 <project name="ImageryCache" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="JOSM/ImageryCache: add optional imagerycache.randomAccessFile parameter for slower but less system-dependent storage"/>
+    <property name="commit.message" value="[JOSM_ImageryCache]: correct database cleaning, at last"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="5779"/>
 

@@ -188,16 +188,23 @@ public class TileDAOMapDB implements TileDAO {
 
     public void cleanStorage(String name) {
         Main.info("Cleaning storage: {0}", name);
-        dbs.get(name).close();
-        for (int t=0; t<20; t++) {
-            try {
+        Main.info("There were {0} tiles in it", storages.get(name).size());
+        try {
+            dbs.get(name).close();
+            dbs.remove(name);
+            storages.remove(name);
+            for (int t=0; t<20; t++) {
                 String fname = getDBFileName(name, t);
                 File f = new File(cacheFolder, fname);
                 if (!f.exists() || !f.canWrite()) continue;
                 f.delete();
-            } catch (Exception e) {
-                Main.warn("Can not delete file");
+                f = new File(cacheFolder, fname+".p");
+                if (!f.exists() || !f.canWrite()) continue;
+                f.delete();
+                f = new File(cacheFolder, fname+".lock");
+                if (!f.exists() || !f.canWrite()) continue;
+                f.delete();
             }
-        }
+        } catch (Exception e) { Main.warn("Can not delete file, maybe it is locvked by another JOSM instance. This is not a serious error then."); }
     }
 }

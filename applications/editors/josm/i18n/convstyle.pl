@@ -15,6 +15,7 @@ print "class trans_style { void tr(String s){} void f() {";
 while(my $line = <>)
 {
   chomp($line);
+  print "tr(\"\"); ";
   if($line =~ /<rules\s+name=(".*?")/)
   {
     print "/* mappaint style named $1 */ tr($1);\n";

@@ -32,6 +32,7 @@ while(my $line = <>)
 {
   ++$linenr;
   chomp($line);
+  print "tr(\"\"); ";
   if($line =~ /<item\s+name=(".*?")/)
   {
     my $val = fix($1);

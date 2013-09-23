@@ -33,6 +33,7 @@ for my $line (@lines)
 {
   $line =~ s/\r//g;
   chomp($line);
+  print "tr(\"\"); ";
   if($line =~ /<name>(.*)<\/name>/)
   {
     my $val = $1;

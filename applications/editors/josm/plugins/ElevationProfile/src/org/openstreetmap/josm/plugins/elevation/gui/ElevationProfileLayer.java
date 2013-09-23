@@ -26,7 +26,6 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -34,8 +33,6 @@ import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.ImageProvider;
-
-import sun.java2d.loops.FillRect;
 
 /**
  * Layer class to show additional information on the elevation map, e. g. show
@@ -162,8 +159,8 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
     public void paint(Graphics2D g, MapView mv, Bounds box) {
 	WayPoint lastWpt = null;
 
-
 	renderer.beginRendering();
+	
 	if (profile != null) {
 	    // choose smaller font
 	    Font oldFont = g.getFont();
@@ -171,23 +168,21 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	    g.setFont(lFont);
 
 	    try {
-		int npts = 0;
 		// paint way points one by one
 		for (WayPoint wpt : profile.getWayPoints()) {
 		    if (lastWpt != null) {
 			// determine way point
 			ElevationWayPointKind kind = classifyWayPoint(lastWpt, wpt);
-
-			// render way point
+			// render way point as line
+			renderer.renderLine(g, profile, mv, lastWpt, wpt, kind);
+			// render single way point
 			renderer.renderWayPoint(g, profile, mv, wpt, kind);
-			npts++;
 		    } // else first way point -> is paint later
 
-		    // remember some things for next iteration
+		    // remember last wpt for next iteration
 		    lastWpt = wpt;
 		}
 
-		System.out.println("Rendered " + npts + ", " + profile.getWayPoints().size());
 		// now we paint special way points in emphasized style 
 
 		// paint start/end
@@ -248,10 +243,10 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	} else { // check for elevation gain or loss
 	    if (actEle > lastEle) { // we went uphill?
 		// TODO: Provide parameters for high/low thresholds
-		if (slope > 3) kind =ElevationWayPointKind.ElevationGainLow;
+		if (slope > 2) kind =ElevationWayPointKind.ElevationGainLow;
 		if (slope > 10) kind =ElevationWayPointKind.ElevationGainHigh;
 	    } else {
-		if (slope > 3) kind =ElevationWayPointKind.ElevationLossLow;
+		if (slope > 2) kind =ElevationWayPointKind.ElevationLossLow;
 		if (slope > 10) kind =ElevationWayPointKind.ElevationLossHigh;
 	    }
 	}
@@ -267,7 +262,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
-	// TODO Auto-generated method stub
+	// What to do here?	
     }
 
     @Override

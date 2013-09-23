@@ -43,12 +43,25 @@ public interface IElevationProfileRenderer {
 	
 	/**
 	 * Renders the way point with the lowest elevation.
+	 *
 	 * @param g The graphics context.
 	 * @param profile The elevation profile that contains the way point.
+	 * @param mv the associated view
 	 * @param wpt The way point to render.
-	 * @param kind The way point kind (see {@link ElevationWayPointKind}).	 
+	 * @param kind The way point kind (see {@link ElevationWayPointKind}).
 	 */
 	void renderWayPoint(Graphics g, IElevationProfile profile, MapView mv, WayPoint wpt, ElevationWayPointKind kind);
+	
+	/**
+	 * Render line between two way points. This is intended to render speed or slope.
+	 *
+	 * @param g The graphics context.
+	 * @param profile The elevation profile that contains the way point.
+	 * @param mv the associated view
+	 * @param wpt1 the first way point
+	 * @param wpt2 the second way point
+	 */
+	void renderLine(Graphics g, IElevationProfile profile, MapView mv, WayPoint wpt1, WayPoint wpt2, ElevationWayPointKind kind);
 	
 	/**
 	 * Notifies the renderer that rendering starts.

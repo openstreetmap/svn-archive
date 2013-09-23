@@ -14,16 +14,18 @@
 
 package org.openstreetmap.josm.plugins.elevation.gui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.Point;
 import java.awt.RadialGradientPaint;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.MultipleGradientPaint.CycleMethod;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -52,8 +54,7 @@ public class DefaultElevationProfileRenderer implements
 	 * 
 	 */
 	private static final int BASIC_WPT_RADIUS = 1;
-	private static final int REGULAR_WPT_RADIUS = BASIC_WPT_RADIUS * 4;
-	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 8;
+	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 16;
 
 	// predefined colors
 	private static final Color HIGH_COLOR = ElevationColors.EPMidBlue;
@@ -106,21 +107,20 @@ public class DefaultElevationProfileRenderer implements
 		case ElevationLossHigh:
 			return Color.getHSBColor(0, 1.0f, 1.0f); // red
 		case ElevationGainLow:
-		    	return Color.getHSBColor(0.3f, 0.5f, 1.0f); // green with low sat
+		    	return Color.getHSBColor(0.3f, 0.7f, 1.0f); // green with low sat
 		case ElevationLossLow:
-			return Color.getHSBColor(0, 0.5f, 1.0f); // red with low sat
+			return Color.getHSBColor(0, 0.7f, 1.0f); // red with low sat
 		case FullHour:
 			return MARKER_POINT;
 		case MaxElevation:
 			return HIGH_COLOR;
 		case MinElevation:
 			return LOW_COLOR;
-
 		case StartPoint:
 			return START_COLOR;
 		case EndPoint:
 			return END_POINT;
-		default:
+		default:		    
 		    break;
 		}
 
@@ -164,6 +164,47 @@ public class DefaultElevationProfileRenderer implements
 			break;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openstreetmap.josm.plugins.elevation.gui.IElevationProfileRenderer#renderWayPoints(java.awt.Graphics, org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile, org.openstreetmap.josm.gui.MapView, org.openstreetmap.josm.data.gpx.WayPoint, org.openstreetmap.josm.data.gpx.WayPoint)
+	 */
+	@Override
+	public void renderLine(Graphics g, IElevationProfile profile,
+		MapView mv, WayPoint wpt1, WayPoint wpt2, ElevationWayPointKind kind) {
+	    
+	    	CheckParameterUtil.ensureParameterNotNull(g, "graphics");
+		CheckParameterUtil.ensureParameterNotNull(profile, "profile");
+		CheckParameterUtil.ensureParameterNotNull(mv, "map view");
+		
+		if (wpt1 == null || wpt2 == null) {
+			System.err.println(String.format(
+					"Cannot paint line: mv=%s, prof=%s, kind = %s", mv, profile, kind));			
+			return;
+		}
+		
+		// obtain and set color
+		g.setColor(getColorForWaypoint(profile, wpt2, kind));
+		
+		// transform to view
+		Point pnt1 = mv.getPoint(wpt1.getEastNorth());
+		Point pnt2 = mv.getPoint(wpt2.getEastNorth());
+		
+		// use thick line, if possible
+		if (g instanceof Graphics2D) {
+		    Graphics2D g2 = (Graphics2D) g;
+		    Stroke oldS = g2.getStroke();
+		    try {
+			g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+			g2.drawLine(pnt1.x, pnt1.y, pnt2.x, pnt2.y);
+		    } finally {
+			// must be restored; otherwise other layers may using this style, too 
+			g2.setStroke(oldS);
+		    }
+		} else {
+		    // only poor man's graphics
+		    g.drawLine(pnt1.x, pnt1.y, pnt2.x, pnt2.y);
+		}
+	}
 
 	/**
 	 * Renders a regular way point.
@@ -183,20 +224,8 @@ public class DefaultElevationProfileRenderer implements
 			MapView mv, WayPoint wpt, ElevationWayPointKind kind) {
 
 		Color c = getColorForWaypoint(profile, wpt, kind);
-
-		if (c == null) {
-			System.err.println(String.format(
-					"Cannot determine color: mv=%s, prof=%s, wpt=%s", mv,
-					profile, wpt));
-		}
-
 		Point pnt = mv.getPoint(wpt.getEastNorth());
-		int rad = REGULAR_WPT_RADIUS;
-		int r2 = REGULAR_WPT_RADIUS / 2;
 		
-		g.setColor(c);
-		g.fillOval(pnt.x - r2, pnt.y - r2, rad, rad);
-
 		/* Paint full hour label */
 		if (kind == ElevationWayPointKind.FullHour) {
 			int hour = ElevationHelper.getHourOfWayPoint(wpt);
@@ -546,4 +575,6 @@ public class DefaultElevationProfileRenderer implements
 	public void finishRendering() {
 		// nothing to do currently
 	}
+
+	
 }

@@ -117,7 +117,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		super(name, iconName, tooltip, shortcut, preferredHeight, defShow);
 				
 		JPanel dataPanel = new JPanel();
-		GridLayout gridLayout = new GridLayout(3, 6);
+		GridLayout gridLayout = new GridLayout(2, 6);
 		dataPanel.setLayout(gridLayout);
 
 		// first row: Headlines with bold font

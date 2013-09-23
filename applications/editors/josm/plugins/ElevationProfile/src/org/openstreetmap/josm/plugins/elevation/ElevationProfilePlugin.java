@@ -55,7 +55,8 @@ public class ElevationProfilePlugin extends Plugin {
 	    
 	    createColorMaps();
 	    
-	    MainMenu.add(Main.main.menu.viewMenu, action, false, 0);
+	    // TODO: Disable this view as long as it is not stable
+	    //MainMenu.add(Main.main.menu.viewMenu, action, false, 0);
 	} catch (Exception e1) {
 	    System.err.println("Init of ElevationProfilePlugin failed: " + e1);
 	    e1.printStackTrace();

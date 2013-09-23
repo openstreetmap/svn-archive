@@ -71,6 +71,9 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 		createOrUpdatePlotArea();
 		addComponentListener(this);
 		addMouseMotionListener(this);		
+		
+		Font lFont = getFont().deriveFont(9.0f);
+		setFont(lFont);
 	}
 
 	/**
@@ -185,9 +188,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	public void paint(Graphics g) {
 		isPainting = true;
 		
-		Font oldFont = getFont();
-		Font lFont = getFont().deriveFont(9.0f);
-		setFont(lFont);
 		try {
 			super.paint(g);
 	
@@ -218,7 +218,6 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 			    }
 			}
 		} finally {
-			setFont(oldFont);
 			isPainting = false;
 		}
 	}
@@ -547,7 +546,4 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 		
 		return super.getToolTipText();
 	}
-	
-	
-
 }

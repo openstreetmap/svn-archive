@@ -43,7 +43,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 public class DefaultElevationProfileRenderer implements
 		IElevationProfileRenderer {
 
-	private static final int ROUND_RECT_RADIUS = 8;
+	private static final int ROUND_RECT_RADIUS = 6;
 	/**
 	 * 
 	 */
@@ -51,9 +51,9 @@ public class DefaultElevationProfileRenderer implements
 	/**
 	 * 
 	 */
-	private static final int BASIC_WPT_RADIUS = 3;
+	private static final int BASIC_WPT_RADIUS = 1;
 	private static final int REGULAR_WPT_RADIUS = BASIC_WPT_RADIUS * 4;
-	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 10;
+	private static final int BIG_WPT_RADIUS = BASIC_WPT_RADIUS * 8;
 
 	// predefined colors
 	private static final Color HIGH_COLOR = ElevationColors.EPMidBlue;
@@ -191,11 +191,11 @@ public class DefaultElevationProfileRenderer implements
 		}
 
 		Point pnt = mv.getPoint(wpt.getEastNorth());
-		int ele = ((int) Math.rint(ElevationHelper.getElevation(wpt) / 100.0)) * 100;
-		
 		int rad = REGULAR_WPT_RADIUS;
+		int r2 = REGULAR_WPT_RADIUS / 2;
+		
 		g.setColor(c);
-		drawSphere(g, Color.WHITE, c, pnt.x, pnt.y, rad);
+		g.fillOval(pnt.x - r2, pnt.y - r2, rad, rad);
 
 		/* Paint full hour label */
 		if (kind == ElevationWayPointKind.FullHour) {
@@ -205,18 +205,12 @@ public class DefaultElevationProfileRenderer implements
 		}
 
 		/* Paint label for elevation levels */
-		if (kind == ElevationWayPointKind.ElevationLevelGain) {
+		if (kind == ElevationWayPointKind.ElevationLevelGain || kind == ElevationWayPointKind.ElevationLevelLoss) {
+		    	int ele = ((int) Math.rint(ElevationHelper.getElevation(wpt) / 100.0)) * 100;
 			drawLabelWithTriangle(ElevationHelper.getElevationText(ele), pnt.x, pnt.y
 					+ g.getFontMetrics().getHeight(), g, c, 8, 
-					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationGainHigh),
+					getColorForWaypoint(profile, wpt, kind),
 					TriangleDir.Up);
-		}
-		
-		if (kind == ElevationWayPointKind.ElevationLevelLoss) {
-			drawLabelWithTriangle(ElevationHelper.getElevationText(ele), 
-					pnt.x, pnt.y+ g.getFontMetrics().getHeight(), g, c, 8, 
-					getColorForWaypoint(profile, wpt, ElevationWayPointKind.ElevationLossHigh),
-					TriangleDir.Down);
 		}
 
 		/* Paint cursor labels */

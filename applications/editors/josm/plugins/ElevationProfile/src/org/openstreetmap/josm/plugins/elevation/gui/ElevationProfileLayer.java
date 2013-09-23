@@ -16,6 +16,7 @@ package org.openstreetmap.josm.plugins.elevation.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 
 import javax.swing.Action;
@@ -25,6 +26,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
+import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -32,6 +34,8 @@ import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.ImageProvider;
+
+import sun.java2d.loops.FillRect;
 
 /**
  * Layer class to show additional information on the elevation map, e. g. show
@@ -158,44 +162,55 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
     public void paint(Graphics2D g, MapView mv, Bounds box) {
 	WayPoint lastWpt = null;
 
+
 	renderer.beginRendering();
-	if (profile != null) {			
-	    // paint way points one by one
-	    for (WayPoint wpt : profile.getWayPoints()) {
-		
+	if (profile != null) {
+	    // choose smaller font
+	    Font oldFont = g.getFont();
+	    Font lFont = g.getFont().deriveFont(9.0f);
+	    g.setFont(lFont);
 
-		if (lastWpt != null) {
-		    // determine way point
-		    ElevationWayPointKind kind = classifyWayPoint(lastWpt, wpt);
+	    try {
+		int npts = 0;
+		// paint way points one by one
+		for (WayPoint wpt : profile.getWayPoints()) {
+		    if (lastWpt != null) {
+			// determine way point
+			ElevationWayPointKind kind = classifyWayPoint(lastWpt, wpt);
 
-		    // render way point
-		    renderer.renderWayPoint(g, profile, mv, wpt, kind);
-		} // else first way point -> is paint later
+			// render way point
+			renderer.renderWayPoint(g, profile, mv, wpt, kind);
+			npts++;
+		    } // else first way point -> is paint later
 
-		// remember some things for next iteration
-		lastWpt = wpt;
-	    }
+		    // remember some things for next iteration
+		    lastWpt = wpt;
+		}
 
-	    // now we paint special way points in emphasized style 
+		System.out.println("Rendered " + npts + ", " + profile.getWayPoints().size());
+		// now we paint special way points in emphasized style 
 
-	    // paint selected way point, if available
-	    if (selWayPoint != null) {
-		renderer.renderWayPoint(g, profile, mv, selWayPoint,
-			ElevationWayPointKind.Highlighted);
-	    }
+		// paint start/end
+		renderer.renderWayPoint(g, profile, mv, profile.getStartWayPoint(),
+			ElevationWayPointKind.StartPoint);
+		renderer.renderWayPoint(g, profile, mv, profile.getEndWayPoint(),
+			ElevationWayPointKind.EndPoint);
+		// paint min/max
+		renderer.renderWayPoint(g, profile, mv, profile.getMaxWayPoint(),
+			ElevationWayPointKind.MaxElevation);
+		renderer.renderWayPoint(g, profile, mv, profile.getMinWayPoint(),
+			ElevationWayPointKind.MinElevation);
 
-	    // paint start/end
-	    renderer.renderWayPoint(g, profile, mv, profile.getStartWayPoint(),
-		    ElevationWayPointKind.StartPoint);
-	    renderer.renderWayPoint(g, profile, mv, profile.getEndWayPoint(),
-		    ElevationWayPointKind.EndPoint);
-	    // paint min/max
-	    renderer.renderWayPoint(g, profile, mv, profile.getMaxWayPoint(),
-		    ElevationWayPointKind.MaxElevation);
-	    renderer.renderWayPoint(g, profile, mv, profile.getMinWayPoint(),
-		    ElevationWayPointKind.MinElevation);
-	} 
 
+		// paint selected way point, if available
+		if (selWayPoint != null) {
+		    renderer.renderWayPoint(g, profile, mv, selWayPoint,
+			    ElevationWayPointKind.Highlighted);
+		}
+	    } finally {
+		g.setFont(oldFont);
+	    } 
+	}
 	renderer.finishRendering();
     }
 
@@ -262,5 +277,4 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	    Main.map.repaint();
 	}
     }
-
 }

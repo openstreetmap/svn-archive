@@ -57,6 +57,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	private int selectedIndex = -1;
 	private List<IElevationProfileSelectionListener> selectionChangedListeners = new ArrayList<IElevationProfileSelectionListener>();
 	private boolean isPainting;
+	private int step = 0;
 
 	/**
 	 * Constructs a new ElevationProfilePanel with the given elevation profile.
@@ -136,8 +137,9 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	    	
 	    	IElevationProfile profile = model.getCurrentProfile();
 	    
-		if (profile != null && profile.getWayPoints() != null && profile.getWayPoints().size() > this.selectedIndex) {
-			return profile.getWayPoints().get(this.selectedIndex);
+	    	int selWp = this.selectedIndex * step;
+		if (profile != null && profile.getWayPoints() != null && profile.getWayPoints().size() > selWp) {
+			return profile.getWayPoints().get(selWp);
 		} else {
 			return null;			
 		}
@@ -409,15 +411,14 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 		int n = Math.min(plotArea.width, profile.getNumberOfWayPoints());
 		
 		if (n == 0) return; // nothing to draw
-		// step size
-		int step = profile.getNumberOfWayPoints() / n;
+		step = profile.getNumberOfWayPoints() / n;
 
 		// int y0 = plotArea.y + 1;
 		int yBottom = getPlotBottom();
 		Color oldC = g.getColor();
 
-		for (int i = 0; i < n; i += step) {
-			WayPoint wpt = profile.getWayPoints().get(i);
+		for (int i = 0, ip = 0; i < n; i++, ip += step) {
+			WayPoint wpt = profile.getWayPoints().get(ip);
 			int eleVal = (int) ElevationHelper.getElevation(wpt);
 			Color c = renderer.getColorForWaypoint(profile, wpt,
 					ElevationWayPointKind.Plain);

@@ -68,9 +68,9 @@ public class TileDAOMapDB implements TileDAO {
                 Map<Long, DBTile> m = db.getHashMap("tiles");
                 storages.put(source, m);
                 
-                System.out.println("Opened database file successfully: "+f.getAbsolutePath());
+                Main.info("Opened database file successfully: "+f.getAbsolutePath());
             } catch (Exception ex) {
-                System.out.println("Error: can not create database, file: "+f.getAbsolutePath());
+                Main.warn("Error: can not create database, file: "+f.getAbsolutePath());
                 //System.out.println(ex.getMessage());
                 ex.printStackTrace();
                 try {
@@ -170,13 +170,13 @@ public class TileDAOMapDB implements TileDAO {
                 Map<Long, DBTile> m = db.getHashMap("tiles");
                 
                 // Merging!
-                System.out.println("Moving records from "+f.getName()+" to open storage "+source);
+                Main.info("Moving records from "+f.getName()+" to open storage "+source);
                 myMap.putAll(m);
                 db.close();
                 new File(cacheFolder, fname+".p").delete();
                 f.delete();
                 
-                System.out.println("Moved database successfully from file "+f.getAbsolutePath());
+                Main.info("Moved database successfully from file "+f.getAbsolutePath());
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
                 try {
@@ -191,20 +191,25 @@ public class TileDAOMapDB implements TileDAO {
         Main.info("There were {0} tiles in it", storages.get(name).size());
         try {
             dbs.get(name).close();
-            dbs.remove(name);
-            storages.remove(name);
-            for (int t=0; t<20; t++) {
-                String fname = getDBFileName(name, t);
-                File f = new File(cacheFolder, fname);
-                if (!f.exists() || !f.canWrite()) continue;
+        } catch (Exception e) {
+            Main.warn("Something may be wrong, can not close the database.");
+        }
+
+        dbs.remove(name);
+        storages.remove(name);
+        for (int t=0; t<20; t++) {
+            String fname = getDBFileName(name, t);
+            File f = new File(cacheFolder, fname);
+            if (!f.exists() || !f.canWrite()) continue;
+            f.delete();
+            f = new File(cacheFolder, fname+".p");
+            if (!f.exists() || !f.canWrite()) continue;
+            f.delete();
+            f = new File(cacheFolder, fname+".lock");
+            if (!f.exists() || !f.canWrite()) continue;
+            try {
                 f.delete();
-                f = new File(cacheFolder, fname+".p");
-                if (!f.exists() || !f.canWrite()) continue;
-                f.delete();
-                f = new File(cacheFolder, fname+".lock");
-                if (!f.exists() || !f.canWrite()) continue;
-                f.delete();
-            }
-        } catch (Exception e) { Main.warn("Can not delete file, maybe it is locvked by another JOSM instance. This is not a serious error then."); }
+            } catch (Exception e) { Main.warn("Can not delete file, maybe it is locvked by another JOSM instance. This is not a serious error then."); }
+        }
     }
 }

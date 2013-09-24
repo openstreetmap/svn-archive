@@ -492,8 +492,8 @@ public class ElevationProfileBase implements IElevationProfile,
 	}
 	
 	public String toString() {
-		return "ElevationProfileBase [start=" + getStart() + ", end=" + getEnd()
+		return name; /*"ElevationProfileBase [start=" + getStart() + ", end=" + getEnd()
 				+ ", minHeight=" + getMinHeight() + ", maxHeight="
-				+ getMaxHeight() + "]";
+				+ getMaxHeight() + "]";*/
 	}
 }

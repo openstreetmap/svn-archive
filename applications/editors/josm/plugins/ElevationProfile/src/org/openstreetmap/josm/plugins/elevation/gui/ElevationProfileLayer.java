@@ -30,6 +30,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -41,8 +42,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
-public class ElevationProfileLayer extends
-org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionListener {
+public class ElevationProfileLayer extends Layer implements IElevationProfileSelectionListener {
+    
     private static final double Level_Factor = 100.0;
     private IElevationProfile profile;
     private IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();

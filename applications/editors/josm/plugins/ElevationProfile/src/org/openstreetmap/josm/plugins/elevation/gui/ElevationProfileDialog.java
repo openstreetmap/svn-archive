@@ -17,18 +17,22 @@ package org.openstreetmap.josm.plugins.elevation.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -43,7 +47,6 @@ import org.openstreetmap.josm.plugins.elevation.IElevationModel;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
-import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
 import org.openstreetmap.josm.tools.Shortcut;
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>
@@ -71,13 +74,16 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private JLabel elevationGainLabel;
 	private JLabel totalTimeLabel;
 	private JLabel distLabel;
+	private JComboBox<IElevationProfile> trackCombo;
+	
 	/* Listener to the elevation model */
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
 	
 	/**
 	 * Corresponding layer instance within map view.
 	 */
-	private ElevationProfileLayer profileLayer;	
+	private ElevationProfileLayer profileLayer;
+	
 
 	/**
 	 * Default constructor
@@ -115,48 +121,61 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	public ElevationProfileDialog(String name, String iconName, String tooltip,
 			Shortcut shortcut, int preferredHeight, boolean defShow) {
 		super(name, iconName, tooltip, shortcut, preferredHeight, defShow);
+		
+		// create model
+		model = new ElevationModel();
 				
-		JPanel dataPanel = new JPanel();
-		GridLayout gridLayout = new GridLayout(2, 6);
-		dataPanel.setLayout(gridLayout);
+		// top panel
+		JPanel rootPanel = new JPanel();
+		GridLayout gridLayout1 = new GridLayout(2, 1);
+		rootPanel.setLayout(gridLayout1);
+		
+		// statistics panel 
+		JPanel statPanel = new JPanel();
+		GridLayout gridLayoutStat = new GridLayout(2, 6);
+		statPanel.setLayout(gridLayoutStat);
 
 		// first row: Headlines with bold font
-		JLabel lbl = new JLabel(tr("Min"));
-		lbl.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(lbl);
-		lbl = new JLabel(tr("Avrg"));
-		lbl.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(lbl);
-		lbl = new JLabel(tr("Max"));
-		lbl.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(lbl);
-		lbl = new JLabel(tr("Dist"));
-		lbl.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(lbl);
-		lbl = new JLabel(tr("Gain"));
-		lbl.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(lbl);
-		lbl = new JLabel(tr("Time"));
-		lbl.setFont(getFont().deriveFont(Font.BOLD));
-		dataPanel.add(lbl);
-
+		String[] labels = new String[]{tr("Min"), tr("Avrg"), tr("Max"), tr("Dist"), tr("Gain"), tr("Time")};
+		for (int i = 0; i < labels.length; i++) {
+		    	JLabel lbl = new JLabel(labels[i]);
+		    	lbl.setFont(getFont().deriveFont(Font.BOLD));
+		    	statPanel.add(lbl);
+		}
+		
 		// second row
 		minHeightLabel = new JLabel("0 m");
-		dataPanel.add(minHeightLabel);
+		statPanel.add(minHeightLabel);
 		avrgHeightLabel = new JLabel("0 m");
-		dataPanel.add(avrgHeightLabel);
+		statPanel.add(avrgHeightLabel);
 		maxHeightLabel = new JLabel("0 m");
-		dataPanel.add(maxHeightLabel);
+		statPanel.add(maxHeightLabel);
 		distLabel = new JLabel("0 km");
-		dataPanel.add(distLabel);
+		statPanel.add(distLabel);
 		elevationGainLabel = new JLabel("0 m");
-		dataPanel.add(elevationGainLabel);
+		statPanel.add(elevationGainLabel);
 		totalTimeLabel = new JLabel("0");
-		dataPanel.add(totalTimeLabel);
+		statPanel.add(totalTimeLabel);
+		
+		// track selection panel
+		JPanel trackPanel = new JPanel();
+		FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+		trackPanel.setLayout(fl);
+				
+		JLabel lbTrack = new JLabel(tr("Tracks"));		
+		lbTrack.setFont(getFont().deriveFont(Font.BOLD));
+		trackPanel.add(lbTrack);
+		
+		trackCombo = new JComboBox<IElevationProfile>(new TrackModel());
+		trackPanel.add(trackCombo);
 
-		add(dataPanel, BorderLayout.PAGE_END);
-		model = new ElevationModel();
-
+		// assemble root panel
+		rootPanel.add(statPanel);
+		rootPanel.add(trackPanel);
+		
+		add(rootPanel, BorderLayout.PAGE_END);
+		
+		// add chart component
 		profPanel = new ElevationProfilePanel(null);
 		add(profPanel, BorderLayout.CENTER);
 		profPanel.addComponentListener(this);
@@ -257,6 +276,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
 		    totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
 		    distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
+		    trackCombo.setEnabled(model.profileCount() > 1);		    
 		} else { // no elevation data, -> switch back to empty view
 		    setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
 
@@ -266,8 +286,9 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		    elevationGainLabel.setText(EMPTY_DATA_STRING);
 		    totalTimeLabel.setText(EMPTY_DATA_STRING);
 		    distLabel.setText(EMPTY_DATA_STRING);
+		    trackCombo.setEnabled(false);
 		}
-
+		
 		fireModelChanged();
 		repaint();	    
 	}
@@ -396,5 +417,58 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * )
 	 */
 	public void componentShown(ComponentEvent e) {
+	}
+	
+	
+	class TrackModel implements ComboBoxModel<IElevationProfile> {
+	    private Collection<ListDataListener> listeners;
+
+	    @Override
+	    public void addListDataListener(ListDataListener arg0) {
+		if (listeners == null) {
+		    listeners = new ArrayList<ListDataListener>();
+		}
+		listeners.add(arg0);
+	    }
+
+	    @Override
+	    public IElevationProfile getElementAt(int index) {
+		if (model == null) return null;
+		
+		IElevationProfile ep = model.getProfiles().get(index);
+		return ep;
+	    }
+
+	    @Override
+	    public int getSize() {
+		if (model == null) return 0;
+		
+		return model.profileCount();
+	    }
+
+	    @Override
+	    public void removeListDataListener(ListDataListener listener) {
+		if (listeners == null) return;	
+		
+		listeners.remove(listener);
+	    }
+
+	    @Override
+	    public Object getSelectedItem() {
+		if (model == null) return null;
+		
+		return model.getCurrentProfile();
+	    }
+
+	    @Override
+	    public void setSelectedItem(Object selectedObject) {
+		if (model != null && selectedObject instanceof IElevationProfile) {
+		    model.setCurrentProfile((IElevationProfile) selectedObject);
+		    profileLayer.setProfile(model.getCurrentProfile());
+		    
+		    repaint();		    
+		}
+	    }
+	    
 	}
 }

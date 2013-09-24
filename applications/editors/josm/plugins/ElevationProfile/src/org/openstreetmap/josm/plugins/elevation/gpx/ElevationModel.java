@@ -39,7 +39,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	private int trackCounter;
 	private GpxData gpxData;
 	private String name;
-	private WayPointMap children = new WayPointMap(); 
+	private WayPointMap profiles = new WayPointMap(); 
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
 	private List<WayPoint> buffer = new ArrayList<WayPoint>();
 	private int currentProfileIndex = 0;
@@ -77,7 +77,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	 * @return the tracks
 	 */
 	protected WayPointMap getTracks() {
-		return children;
+		return profiles;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	 */
 	protected void fireModelChanged() {	    	
 		for (IElevationModelListener listener : listeners) {
-		    if (children != null && children.size() > 0)
+		    if (profiles != null && profiles.size() > 0)
 			listener.elevationProfileChanged(getCurrentProfile());
 		}
 	}
@@ -148,23 +148,29 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	}
 
 	public void start() {
-		curProfile = new ElevationProfileBase(name);		
+		curProfile = new ElevationProfileBase(name);
+		trackCounter++;
 	}
 
-	public void end() {
-		String trackName = name; //gpxData.getString(GpxData.META_NAME);// "Track#" + trackCounter;
-		
-		if (trackCounter > 0) {
-		    trackName += "." + trackCounter;
-		}
-		addTrackOrRoute(trackName);	
-		trackCounter++;
+	public void end() {		
+		commitTrack();
 	}
 	
 
 	@Override
 	public void start(GpxTrack track) {
-	    curProfile = new ElevationProfileBase(name);	    
+	    // check GPX data 
+	    String trackName = (String) track.get("name");
+	    
+	    // no name given, build artificial one
+	    if (trackName == null) {
+		trackName = (String) track.get(GpxData.META_NAME);
+		if (trackName == null) {
+		    trackName = name + "." + trackCounter;
+		}
+	    }
+	    
+	    curProfile = new ElevationProfileBase(trackName);
 	}
 
 	@Override
@@ -172,7 +178,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	    if (curProfile == null) throw new RuntimeException("Internal error: No elevation profile");
 	    
 	    curProfile.setDistance(track.length());
-	    addTrackOrRoute(name);	    
+	    commitTrack();
 	}
 	
 	@Override
@@ -191,11 +197,13 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	 *
 	 * @param trackName the track name
 	 */
-	private void addTrackOrRoute(String trackName) {
-	    	if (buffer.size() > 0) {        	    	
+	private void commitTrack() {
+	    	if (buffer.size() > 0) {    
+	    	    	// assign way points to profile...
         		curProfile.setWayPoints(buffer);
-        		curProfile.setName(trackName);
-        		children.add(curProfile);
+        		// ... and add to profile list
+        		profiles.add(curProfile);
+        		buffer.clear();
 	    	}
 	}
 
@@ -213,25 +221,25 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	 */
 	@Override
 	public List<IElevationProfile> getProfiles() {
-		return children;
+		return profiles;
 	}
 
 	@Override
 	public IElevationProfile getCurrentProfile() {
 	    if (currentProfileIndex < 0 || currentProfileIndex >= profileCount()) return null;
 	    
-	    return children.get(currentProfileIndex);
+	    return profiles.get(currentProfileIndex);
 	}
 
 	@Override
 	public void setCurrentProfile(IElevationProfile newProfile) {
 	    CheckParameterUtil.ensureParameterNotNull(newProfile);
 	    
-	    if (!children.contains(newProfile)) {
-		children.add(newProfile);
+	    if (!profiles.contains(newProfile)) {
+		profiles.add(newProfile);
 	    }
 	    
-	    setCurrentProfile(children.indexOf(newProfile)); 
+	    setCurrentProfile(profiles.indexOf(newProfile)); 
 	}
 
 	@Override
@@ -244,6 +252,6 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 
 	@Override
 	public int profileCount() {
-	    return children != null ? children.size() : 0;
+	    return profiles != null ? profiles.size() : 0;
 	}
 }

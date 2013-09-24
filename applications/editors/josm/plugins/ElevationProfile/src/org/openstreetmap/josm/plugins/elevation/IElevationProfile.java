@@ -12,7 +12,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation.gpx;
+package org.openstreetmap.josm.plugins.elevation;
 
 import java.util.Date;
 import java.util.List;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="ElevationProfile" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value=""/>
+    <property name="commit.message" value="[josm_elevationprofile]"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6162"/>
     

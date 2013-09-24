@@ -20,7 +20,6 @@ import java.awt.Cursor;
 
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>

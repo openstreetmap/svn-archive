@@ -37,9 +37,9 @@ import javax.swing.border.Border;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationModel;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 
 /**
  * Provides the panel showing the elevation profile.
@@ -141,7 +141,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	    	IElevationProfile profile = model.getCurrentProfile();
 	    
 	    	int selWp = this.selectedIndex * step;
-		if (profile != null && profile.getWayPoints() != null && profile.getWayPoints().size() > selWp) {
+		if (profile != null && profile.getWayPoints() != null && selWp > 0 && profile.getWayPoints().size() > selWp) {
 			return profile.getWayPoints().get(selWp);
 		} else {
 			return null;			

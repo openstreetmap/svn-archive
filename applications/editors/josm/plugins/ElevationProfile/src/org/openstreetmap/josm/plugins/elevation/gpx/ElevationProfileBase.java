@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 
 /**
  * Base class for an elevation profile. An elevation profile is constructed out

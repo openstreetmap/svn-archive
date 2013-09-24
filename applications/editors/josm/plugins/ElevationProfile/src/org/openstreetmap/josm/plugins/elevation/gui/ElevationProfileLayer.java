@@ -30,8 +30,8 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -87,7 +87,7 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
      */
     @Override
     public Icon getIcon() {
-	return ImageProvider.get("layer", "elevation_small");
+	return ImageProvider.get("layer", "elevation");
     }
 
     /*
@@ -244,10 +244,10 @@ org.openstreetmap.josm.gui.layer.Layer implements IElevationProfileSelectionList
 	    if (actEle > lastEle) { // we went uphill?
 		// TODO: Provide parameters for high/low thresholds
 		if (slope > 2) kind =ElevationWayPointKind.ElevationGainLow;
-		if (slope > 10) kind =ElevationWayPointKind.ElevationGainHigh;
+		if (slope > 15) kind =ElevationWayPointKind.ElevationGainHigh;
 	    } else {
 		if (slope > 2) kind =ElevationWayPointKind.ElevationLossLow;
-		if (slope > 10) kind =ElevationWayPointKind.ElevationLossHigh;
+		if (slope > 15) kind =ElevationWayPointKind.ElevationLossHigh;
 	    }
 	}
 	return kind;

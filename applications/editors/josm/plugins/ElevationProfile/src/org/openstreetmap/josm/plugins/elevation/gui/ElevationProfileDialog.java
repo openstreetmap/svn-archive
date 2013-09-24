@@ -39,11 +39,11 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationModel;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationModel;
 import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationModel;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.Shortcut;
 /**
  * @author Oliver Wieland <oliver.wieland@online.de>

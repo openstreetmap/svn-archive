@@ -19,8 +19,8 @@ import java.awt.Graphics;
 
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 
 /**
  * Basic interface for all elevation profile renderers. First, therenderer determines the color

@@ -1,8 +1,7 @@
-package org.openstreetmap.josm.plugins.elevation.gpx;
+package org.openstreetmap.josm.plugins.elevation;
 
 import java.util.List;
 
-import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 
 public interface IElevationModel {
 

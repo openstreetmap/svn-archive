@@ -45,6 +45,8 @@ public class GpxIterator {
 		if (data == null) return;
 		if (visitor == null) return;
 		
+		if (data.isEmpty()) return;
+		
 		visitor.start();
 		visitSingleWaypoints(data, visitor);
 		visitor.end();
@@ -93,21 +95,27 @@ public class GpxIterator {
 		if (visitor == null) return;
 		
 		Collection<GpxTrackSegment> segments = trk.getSegments();
-		visitor.start();
-
+		
 		if (segments != null) {
+		    	visitor.start(trk);
+		    	// visit all segments
 			for (GpxTrackSegment segment : segments) {
-				Collection<WayPoint> waypts = segment.getWayPoints();
-				// no visitor here...
+			    Collection<WayPoint> waypts = segment.getWayPoints();
+			    	// no visitor here...
 				if (waypts == null)
 					continue;
-
+				
+			        visitor.start(trk, segment);
+			        
 				for (WayPoint wayPoint : waypts) {
 					visitor.visit(wayPoint);
 				}
+				
+				visitor.end(trk, segment);
 			}
-		}
-		visitor.end();
+			visitor.end(trk);
+		}		
+		
 	}
 
 	/**

@@ -34,8 +34,8 @@ import java.util.List;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
-import org.openstreetmap.josm.plugins.elevation.gpx.IElevationProfile;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -61,6 +61,8 @@ public class DefaultElevationProfileRenderer implements
 	private static final Color LOW_COLOR = ElevationColors.EPMidBlue;
 	private static final Color START_COLOR = Color.GREEN;
 	private static final Color END_POINT = Color.RED;
+	private static final Color LEVEL_GAIN_COLOR = Color.GREEN;
+	private static final Color LEVEL_LOSS_COLOR = Color.RED;
 	private static final Color MARKER_POINT = Color.YELLOW;
 	// Predefined radians
 	private static final double RAD_180 = Math.PI;
@@ -92,14 +94,11 @@ public class DefaultElevationProfileRenderer implements
 
 		switch (kind) {
 		case Plain:
-		    return Color.LIGHT_GRAY;
+		    	return Color.LIGHT_GRAY;
 		case ElevationLevelLoss:
+		    	return LEVEL_LOSS_COLOR;
 		case ElevationLevelGain:
-			if (z > profile.getAverageHeight()) {
-				return HIGH_COLOR;
-			} else {
-				return LOW_COLOR;
-			}
+			return LEVEL_GAIN_COLOR;
 		case Highlighted:
 			return Color.ORANGE;
 		case ElevationGainHigh:
@@ -107,9 +106,9 @@ public class DefaultElevationProfileRenderer implements
 		case ElevationLossHigh:
 			return Color.getHSBColor(0, 1.0f, 1.0f); // red
 		case ElevationGainLow:
-		    	return Color.getHSBColor(0.3f, 0.7f, 1.0f); // green with low sat
+		    	return Color.getHSBColor(0.3f, 0.5f, 1.0f); // green with low sat
 		case ElevationLossLow:
-			return Color.getHSBColor(0, 0.7f, 1.0f); // red with low sat
+			return Color.getHSBColor(0, 0.5f, 1.0f); // red with low sat
 		case FullHour:
 			return MARKER_POINT;
 		case MaxElevation:
@@ -237,9 +236,9 @@ public class DefaultElevationProfileRenderer implements
 		if (kind == ElevationWayPointKind.ElevationLevelGain || kind == ElevationWayPointKind.ElevationLevelLoss) {
 		    	int ele = ((int) Math.rint(ElevationHelper.getElevation(wpt) / 100.0)) * 100;
 			drawLabelWithTriangle(ElevationHelper.getElevationText(ele), pnt.x, pnt.y
-					+ g.getFontMetrics().getHeight(), g, c, 8, 
+					+ g.getFontMetrics().getHeight(), g, Color.darkGray, 8, 
 					getColorForWaypoint(profile, wpt, kind),
-					TriangleDir.Up);
+					kind == ElevationWayPointKind.ElevationLevelGain ? TriangleDir.Up : TriangleDir.Down);
 		}
 
 		/* Paint cursor labels */

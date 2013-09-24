@@ -22,7 +22,9 @@ import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
+import org.openstreetmap.josm.plugins.elevation.IElevationModel;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
+import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
@@ -36,12 +38,12 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	// private int sliceSize;
 	private int trackCounter;
 	private GpxData gpxData;
-
+	private String name;
 	private WayPointMap children = new WayPointMap(); 
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
 	private List<WayPoint> buffer = new ArrayList<WayPoint>();
 	private int currentProfileIndex = 0;
-	
+	private ElevationProfileBase curProfile = null;
 
 	/**
 	 * Instantiates a new elevation model.
@@ -58,7 +60,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	 */
 	public ElevationModel(String name, GpxData data) {
 		gpxData = data;
-		
+		this.name = name;
 		GpxIterator.visit(data, this);		
 	}
 
@@ -134,6 +136,7 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	public void visit(GpxTrack track, GpxTrackSegment segment, WayPoint wp) {
 	    	// we ignore the segment here 
 		processWayPoint(wp);
+		
 	}
 	
 	/* (non-Javadoc)
@@ -145,24 +148,54 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	}
 
 	public void start() {
-		children.clear();		
+		curProfile = new ElevationProfileBase(name);		
 	}
 
 	public void end() {
-		String trackName = "Track#" + trackCounter;
-		addTrackOrRoute(trackName);		
+		String trackName = name; //gpxData.getString(GpxData.META_NAME);// "Track#" + trackCounter;
+		
+		if (trackCounter > 0) {
+		    trackName += "." + trackCounter;
+		}
+		addTrackOrRoute(trackName);	
+		trackCounter++;
 	}
 	
+
+	@Override
+	public void start(GpxTrack track) {
+	    curProfile = new ElevationProfileBase(name);	    
+	}
+
+	@Override
+	public void end(GpxTrack track) {
+	    if (curProfile == null) throw new RuntimeException("Internal error: No elevation profile");
+	    
+	    curProfile.setDistance(track.length());
+	    addTrackOrRoute(name);	    
+	}
+	
+	@Override
+	public void start(GpxTrack track, GpxTrackSegment segment) {
+	    // Nothing to do here for now
+	}
+
+	@Override
+	public void end(GpxTrack track, GpxTrackSegment segment) {
+	    // Nothing to do here for now
+	}
+
+	
+	/**
+	 * Adds a track or route to the internal track list.
+	 *
+	 * @param trackName the track name
+	 */
 	private void addTrackOrRoute(String trackName) {
-	    	if (buffer.size() > 0) {
-	    	    
-	    	    	System.out.println("Add track " + trackName + ", n =  " + buffer.size()); // TODO: Remove
-	    	    	
-        	    	ElevationProfileBase ep = new ElevationProfileBase(trackName);
-        		ep.setWayPoints(buffer);
-        		ep.setName(trackName);
-        		children.add(ep);
-        		buffer.clear();
+	    	if (buffer.size() > 0) {        	    	
+        		curProfile.setWayPoints(buffer);
+        		curProfile.setName(trackName);
+        		children.add(curProfile);
 	    	}
 	}
 

@@ -43,13 +43,10 @@ public class HgtReader {
 		 // Try all resource directories
 	        for (String location : Main.pref.getAllPossiblePreferenceDirs()) {	            
 	    		String fullPath = new File(location + File.separator + "elevation", file).getPath();
-	    			  
-	    		System.out.println(fullPath);
     	    		File f = new File(fullPath);
     	    		if (f.exists()) {
     	    		    // found something: read HGT file...
-    	    		    ShortBuffer data = readHgtFile(fullPath);
-    	    		    System.out.println("Read SRTM data from " + fullPath + ", tag is '" + file + "'");
+    	    		    ShortBuffer data = readHgtFile(fullPath);    	    		    
     	    		    // ... and store result in cache
     	    		    cache.put(file, data);
     	    		    break;
@@ -108,7 +105,6 @@ public class HgtReader {
 	ShortBuffer sb = cache.get(tag);
 	
 	if (sb == null) {
-	    System.out.println("readElevation: Buffer is null for tag '" + tag + "'");
 	    return ElevationHelper.NO_ELEVATION;
 	}
 	

@@ -31,7 +31,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import org.openstreetmap.josm.Main;
@@ -74,7 +73,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private JLabel elevationGainLabel;
 	private JLabel totalTimeLabel;
 	private JLabel distLabel;
-	private JComboBox<IElevationProfile> trackCombo;
+	private JComboBox trackCombo;
 	
 	/* Listener to the elevation model */
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
@@ -166,7 +165,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		lbTrack.setFont(getFont().deriveFont(Font.BOLD));
 		trackPanel.add(lbTrack);
 		
-		trackCombo = new JComboBox<IElevationProfile>(new TrackModel());
+		trackCombo = new JComboBox(new TrackModel());
 		trackPanel.add(trackCombo);
 
 		// assemble root panel
@@ -420,7 +419,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	}
 	
 	
-	class TrackModel implements ComboBoxModel<IElevationProfile> {
+	class TrackModel implements ComboBoxModel {
 	    private Collection<ListDataListener> listeners;
 
 	    @Override

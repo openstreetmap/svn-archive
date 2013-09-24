@@ -22,7 +22,10 @@ while(my $line = <>)
   }
   elsif($line =~ /colour="([^"]+)#/)
   {
-    print "/* color $1 */ tr(\"$1\");\n";
+    my $c = $1;
+    my $co = $1;
+    $c =~ s/[^a-z0-9]+/./g;
+    print "/* color $co */ tr(\"$c\");\n";
   }
   else
   {

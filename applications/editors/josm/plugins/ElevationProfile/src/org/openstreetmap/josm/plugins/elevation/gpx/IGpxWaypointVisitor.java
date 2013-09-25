@@ -26,5 +26,5 @@ public interface IGpxWaypointVisitor {
 	 * without an associated route or track. 
 	 * @param wp The way point to visit.
 	 */
-	void visit(WayPoint wp);
+	void visitWayPoint(WayPoint wp);
 }

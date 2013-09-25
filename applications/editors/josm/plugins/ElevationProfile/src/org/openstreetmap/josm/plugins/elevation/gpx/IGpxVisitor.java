@@ -14,6 +14,7 @@
 
 package org.openstreetmap.josm.plugins.elevation.gpx;
 
+import org.openstreetmap.josm.data.gpx.GpxRoute;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
@@ -24,40 +25,66 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
  */
 public interface IGpxVisitor extends IGpxWaypointVisitor {
 	/**
-	 * Starts a GPX route or way point collection.
+	 * Starts a GPX way point collection.
 	 */
-	void start();
+	void beginWayPoints();
 	
 	/**
-	 * Ends a GPX route or way point collection.
+	 * Ends a GPX way point collection.
 	 */
-	void end();
+	void endWayPoints();
 	
 	/**
 	 * Starts a GPX track.
 	 */
-	void start(GpxTrack track);
+	void beginTrack(GpxTrack track);
 	
 	/**
 	 * Ends a GPX track.
 	 */
-	void end(GpxTrack track);
+	void endTrack(GpxTrack track);
+	
+	/**
+	 * Starts a GPX route.
+	 */
+	void beginRoute(GpxRoute track);
+	
+	/**
+	 * Ends a GPX route.
+	 */
+	void endRoute(GpxRoute track);
 
 	
 	/**
 	 * Starts a segment within a GPX track.
 	 */
-	void start(GpxTrack track, GpxTrackSegment segment);
+	void beginTrackSegment(GpxTrack track, GpxTrackSegment segment);
 	
 	/**
 	 * Ends a segment within a GPX track.
 	 */
-	void end(GpxTrack track, GpxTrackSegment segment);
+	void endTrackSegment(GpxTrack track, GpxTrackSegment segment);
 	
 	/**
 	 * Visits a way point within a GPX route.
 	 * @param route The route containing the way point.
 	 * @param wp The way point to visit.
 	 */
-	void visit(WayPoint wp);
+	void visitWayPoint(WayPoint wp);
+	
+	/**
+	 * Visits a way point within a GPX track.
+	 *
+	 * @param wp The way point to visit.
+	 * @param track the track containing the way point.
+	 * @param segment the track segment
+	 */
+	void visitTrackPoint(WayPoint wp, GpxTrack track, GpxTrackSegment segment);
+	
+	/**
+	 * Visits a way point within a GPX route.
+	 * @param route the route containing the way point.
+	 * @param wp the way point to visit.
+	 */
+	void visitRoutePoint(WayPoint wp, GpxRoute route);
 }

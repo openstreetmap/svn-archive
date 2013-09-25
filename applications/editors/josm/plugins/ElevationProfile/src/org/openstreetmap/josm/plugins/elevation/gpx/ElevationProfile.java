@@ -30,9 +30,9 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
  * amount, if necessary.
  * 
  * The computation is done via implementing {@link IGpxWaypointVisitor},
- * subclasses may override the {@link ElevationProfileBase#visit(WayPoint)}
+ * subclasses may override the {@link ElevationProfile#visitWayPoint(WayPoint)}
  * method to compute own values or run specific actions. The computation is
- * triggered by calling {@link ElevationProfileBase#updateValues()}.
+ * triggered by calling {@link ElevationProfile#updateValues()}.
  * 
  * Elevation profiles can break down into further child profiles. This is
  * intended to show different levels of details, if the number of way points
@@ -43,7 +43,7 @@ import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
  * @author Oliver Wieland <oliver.wieland@online.de>
  * 
  */
-public class ElevationProfileBase implements IElevationProfile,
+public class ElevationProfile implements IElevationProfile,
 		IGpxWaypointVisitor {
 	public static final int WAYPOINT_START = 0;
 	public static final int WAYPOINT_END = 1;
@@ -73,7 +73,7 @@ public class ElevationProfileBase implements IElevationProfile,
 	 * 
 	 * @param name
 	 */
-	public ElevationProfileBase(String name) {
+	public ElevationProfile(String name) {
 		this(name, null, null, 0);
 	}
 
@@ -89,7 +89,7 @@ public class ElevationProfileBase implements IElevationProfile,
 	 * @param sliceSize
 	 *            The requested target size of the profile.
 	 */
-	public ElevationProfileBase(String name, IElevationProfile parent,
+	public ElevationProfile(String name, IElevationProfile parent,
 			List<WayPoint> wayPoints, int sliceSize) {
 		super();
 		this.name = name;
@@ -113,7 +113,7 @@ public class ElevationProfileBase implements IElevationProfile,
 	 * @param ignoreZeroHeight the new ignore zero height
 	 */
 	public static void setIgnoreZeroHeight(boolean ignoreZeroHeight) {
-		ElevationProfileBase.ignoreZeroHeight = ignoreZeroHeight;
+		ElevationProfile.ignoreZeroHeight = ignoreZeroHeight;
 	}
 
 	/*
@@ -148,7 +148,7 @@ public class ElevationProfileBase implements IElevationProfile,
 		lastEle = 0;
 		
 		for (WayPoint wayPoint : this.wayPoints) {
-			visit(wayPoint);
+			visitWayPoint(wayPoint);
 		}
 		
 		if (this.minHeight == Integer.MAX_VALUE && this.maxHeight == Integer.MIN_VALUE) {
@@ -486,7 +486,7 @@ public class ElevationProfileBase implements IElevationProfile,
 	 * Visits a way point in order to update statistical values about the given
 	 * way point list.
 	 */
-	public void visit(WayPoint wp) {
+	public void visitWayPoint(WayPoint wp) {
 		if (wp.getTime().after(end)) {
 			setEnd(wp);
 		}

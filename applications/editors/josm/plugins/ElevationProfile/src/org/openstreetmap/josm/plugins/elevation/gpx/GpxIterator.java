@@ -47,9 +47,9 @@ public class GpxIterator {
 		
 		if (data.isEmpty()) return;
 		
-		visitor.start();
+		visitor.beginWayPoints();
 		visitSingleWaypoints(data, visitor);
-		visitor.end();
+		visitor.endWayPoints();
 
 		// routes
 		if (data.hasRoutePoints()) {
@@ -97,7 +97,7 @@ public class GpxIterator {
 		Collection<GpxTrackSegment> segments = trk.getSegments();
 		
 		if (segments != null) {
-		    	visitor.start(trk);
+		    	visitor.beginTrack(trk);
 		    	// visit all segments
 			for (GpxTrackSegment segment : segments) {
 			    Collection<WayPoint> waypts = segment.getWayPoints();
@@ -105,15 +105,15 @@ public class GpxIterator {
 				if (waypts == null)
 					continue;
 				
-			        visitor.start(trk, segment);
+			        visitor.beginTrackSegment(trk, segment);
 			        
 				for (WayPoint wayPoint : waypts) {
-					visitor.visit(wayPoint);
+					visitor.visitTrackPoint(wayPoint, trk, segment);
 				}
 				
-				visitor.end(trk, segment);
+				visitor.endTrackSegment(trk, segment);
 			}
-			visitor.end(trk);
+			visitor.endTrack(trk);
 		}		
 		
 	}
@@ -126,11 +126,11 @@ public class GpxIterator {
 		if (route == null) return;
 		if (visitor == null) return;
 		
-		visitor.start();
+		visitor.beginWayPoints();
 		for (WayPoint wpt : route.routePoints) {
-			visitor.visit(wpt);
+			visitor.visitRoutePoint(wpt, route);
 		}
-		visitor.end();
+		visitor.endWayPoints();
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class GpxIterator {
 		// isolated way points
 		if (data.waypoints != null) { // better with an hasWaypoints method!?
 			for (WayPoint wpt : data.waypoints) {
-				visitor.visit(wpt);
+				visitor.visitWayPoint(wpt);
 			}
 		}
 	}

@@ -17,9 +17,12 @@ package org.openstreetmap.josm.plugins.elevation.gui;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -74,6 +78,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private JLabel totalTimeLabel;
 	private JLabel distLabel;
 	private JComboBox<IElevationProfile> trackCombo;
+	private JButton zoomButton;
 	
 	/* Listener to the elevation model */
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
@@ -82,7 +87,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * Corresponding layer instance within map view.
 	 */
 	private ElevationProfileLayer profileLayer;
-	
 
 	/**
 	 * Default constructor
@@ -165,8 +169,27 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		lbTrack.setFont(getFont().deriveFont(Font.BOLD));
 		trackPanel.add(lbTrack);
 		
-		trackCombo = new JComboBox<IElevationProfile>(new TrackModel());
+		zoomButton = new JButton(tr("Zoom"));
+		zoomButton.addActionListener(new ActionListener() {		    
+		    @Override
+		    public void actionPerformed(ActionEvent arg0) {
+			if (model != null) {
+				IElevationProfile profile = model.getCurrentProfile();
+				if (profile != null) {
+				    Main.map.mapView.zoomTo(profile.getBounds());
+				}
+		    	}
+
+		    }
+		});
+		zoomButton.setEnabled(false);
+		
+		trackCombo = new JComboBox<IElevationProfile>(new TrackModel());		
+		trackCombo.setPreferredSize(new Dimension(200, 24)); // HACK!
+		trackCombo.setEnabled(false); // we have no model on startup
+		
 		trackPanel.add(trackCombo);
+		trackPanel.add(zoomButton);
 
 		// assemble root panel
 		rootPanel.add(statPanel);
@@ -245,10 +268,12 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	 * that the model has changed.
 	 */
 	private void updateView() {
-	    	if (model == null) return;
+	    	if (model == null) {
+	    	    disableView();
+	    	    return;
+	    	}
 
 		IElevationProfile profile = model.getCurrentProfile();
-
 		if (profile != null) {
 		    // Show name of profile in title 
 		    setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
@@ -275,21 +300,28 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
 		    totalTimeLabel.setText(String.format("%d:%d h", hours, minutes));
 		    distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
-		    trackCombo.setEnabled(model.profileCount() > 1);		    
+		    trackCombo.setEnabled(model.profileCount() > 1);
+		    trackCombo.setModel(new TrackModel());
+		    zoomButton.setEnabled(true);
 		} else { // no elevation data, -> switch back to empty view
-		    setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
-
-		    minHeightLabel.setText(EMPTY_DATA_STRING);
-		    maxHeightLabel.setText(EMPTY_DATA_STRING);
-		    avrgHeightLabel.setText(EMPTY_DATA_STRING);
-		    elevationGainLabel.setText(EMPTY_DATA_STRING);
-		    totalTimeLabel.setText(EMPTY_DATA_STRING);
-		    distLabel.setText(EMPTY_DATA_STRING);
-		    trackCombo.setEnabled(false);
+		    disableView();
 		}
 		
 		fireModelChanged();
 		repaint();	    
+	}
+
+	private void disableView() {
+	    setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
+
+	    minHeightLabel.setText(EMPTY_DATA_STRING);
+	    maxHeightLabel.setText(EMPTY_DATA_STRING);
+	    avrgHeightLabel.setText(EMPTY_DATA_STRING);
+	    elevationGainLabel.setText(EMPTY_DATA_STRING);
+	    totalTimeLabel.setText(EMPTY_DATA_STRING);
+	    distLabel.setText(EMPTY_DATA_STRING);
+	    trackCombo.setEnabled(false);
+	    zoomButton.setEnabled(false);
 	}
 
 	/**

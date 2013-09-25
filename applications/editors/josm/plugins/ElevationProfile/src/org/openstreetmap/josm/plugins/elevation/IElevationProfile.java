@@ -17,6 +17,7 @@ package org.openstreetmap.josm.plugins.elevation;
 import java.util.Date;
 import java.util.List;
 
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 
 /**
@@ -132,6 +133,13 @@ public interface IElevationProfile {
 	 * Gets the elevation value for at the given data index point.
 	 */
 	public int elevationValueAt(int i);
+	
+	/**
+	 * Gets the coordinate bounds of the elevation profile.
+	 *
+	 * @return the bounds
+	 */
+	public Bounds getBounds();
 	
 	/**
 	 * Gets the children of the segment (maybe null).

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
@@ -63,6 +64,8 @@ public class ElevationProfileBase implements IElevationProfile,
 	private int numWayPoints; // cached value
 	private int gain;
 	private int lastEle;
+	private Bounds bounds;
+	
 	private static boolean ignoreZeroHeight = true;
 
 	/**
@@ -91,13 +94,24 @@ public class ElevationProfileBase implements IElevationProfile,
 		super();
 		this.name = name;
 		this.parent = parent;
+		
 		setWayPoints(wayPoints);
 	}
 
+	/**
+	 * Checks if zero elevation should be ignored or not.
+	 *
+	 * @return true, if is ignore zero height
+	 */
 	public static boolean isIgnoreZeroHeight() {
 		return ignoreZeroHeight;
 	}
 
+	/**
+	 * Sets the ignore zero height.
+	 *
+	 * @param ignoreZeroHeight the new ignore zero height
+	 */
 	public static void setIgnoreZeroHeight(boolean ignoreZeroHeight) {
 		ElevationProfileBase.ignoreZeroHeight = ignoreZeroHeight;
 	}
@@ -447,6 +461,15 @@ public class ElevationProfileBase implements IElevationProfile,
 	public int getNumberOfWayPoints() {
 		return numWayPoints;// wayPoints != null ? wayPoints.size() : 0;
 	}
+	
+	/**
+	 * Gets the coordinate bounds of this profile. See {@link Bounds} for details.
+	 *
+	 * @return the bounds of this elevation profile
+	 */
+	public Bounds getBounds() {
+	    return bounds;
+	}
 
 	/**
 	 * Gets a flag indicating whether the associated way points contained
@@ -472,6 +495,13 @@ public class ElevationProfileBase implements IElevationProfile,
 			setStart(wp);
 		}
 
+		// update boundaries
+		if (bounds == null) {
+		    bounds = new Bounds(wp.getCoor());
+		} else {
+		    bounds.extend(wp.getCoor());
+		}
+		
 		int ele = (int) ElevationHelper.getElevation(wp);
 
 		if (!isIgnoreZeroHeight() || ele > 0) {

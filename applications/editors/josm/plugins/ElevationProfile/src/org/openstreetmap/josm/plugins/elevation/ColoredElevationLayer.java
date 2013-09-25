@@ -53,7 +53,7 @@ public class ColoredElevationLayer extends Layer implements IEleRenderingListene
 
     @Override
     public Icon getIcon() {	
-	return ImageProvider.get("layer", "elevation_small");
+	return ImageProvider.get("layer", "elevation");
     }
 
     @Override

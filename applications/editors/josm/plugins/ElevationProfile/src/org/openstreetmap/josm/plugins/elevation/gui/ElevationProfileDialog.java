@@ -77,7 +77,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private JLabel elevationGainLabel;
 	private JLabel totalTimeLabel;
 	private JLabel distLabel;
-	private JComboBox<IElevationProfile> trackCombo;
+	private JComboBox trackCombo;
 	private JButton zoomButton;
 	
 	/* Listener to the elevation model */
@@ -184,7 +184,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		});
 		zoomButton.setEnabled(false);
 		
-		trackCombo = new JComboBox<IElevationProfile>(new TrackModel());		
+		trackCombo = new JComboBox(new TrackModel());		
 		trackCombo.setPreferredSize(new Dimension(200, 24)); // HACK!
 		trackCombo.setEnabled(false); // we have no model on startup
 		
@@ -451,7 +451,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	}
 	
 	
-	class TrackModel implements ComboBoxModel<IElevationProfile> {
+	class TrackModel implements ComboBoxModel {
 	    private Collection<ListDataListener> listeners;
 
 	    @Override

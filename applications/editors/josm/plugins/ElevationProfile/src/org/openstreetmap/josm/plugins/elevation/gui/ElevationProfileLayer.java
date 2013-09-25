@@ -30,7 +30,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
-import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
 import org.openstreetmap.josm.plugins.elevation.IElevationProfile;
 import org.openstreetmap.josm.plugins.elevation.gpx.ElevationWayPointKind;
 import org.openstreetmap.josm.tools.ImageProvider;

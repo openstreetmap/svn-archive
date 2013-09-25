@@ -73,7 +73,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	private JLabel elevationGainLabel;
 	private JLabel totalTimeLabel;
 	private JLabel distLabel;
-	private JComboBox trackCombo;
+	private JComboBox<IElevationProfile> trackCombo;
 	
 	/* Listener to the elevation model */
 	private List<IElevationModelListener> listeners = new ArrayList<IElevationModelListener>();
@@ -165,7 +165,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 		lbTrack.setFont(getFont().deriveFont(Font.BOLD));
 		trackPanel.add(lbTrack);
 		
-		trackCombo = new JComboBox(new TrackModel());
+		trackCombo = new JComboBox<IElevationProfile>(new TrackModel());
 		trackPanel.add(trackCombo);
 
 		// assemble root panel
@@ -419,7 +419,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 	}
 	
 	
-	class TrackModel implements ComboBoxModel {
+	class TrackModel implements ComboBoxModel<IElevationProfile> {
 	    private Collection<ListDataListener> listeners;
 
 	    @Override

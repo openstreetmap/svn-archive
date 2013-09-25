@@ -58,7 +58,6 @@ public class ColoredElevationLayer extends Layer implements IEleRenderingListene
 
     @Override
     public String getToolTipText() {
-	// TODO Auto-generated method stub
 	return null;
     }
 

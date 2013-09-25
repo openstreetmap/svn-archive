@@ -90,8 +90,6 @@ public class DefaultElevationProfileRenderer implements
 			return null;
 		}
 
-		int z = (int) ElevationHelper.getElevation(wpt);
-
 		switch (kind) {
 		case Plain:
 		    	return Color.LIGHT_GRAY;

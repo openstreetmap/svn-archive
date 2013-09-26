@@ -231,7 +231,7 @@ public class OsmUtils {
 	}
 
 	/**
-	 * Helper method to set an derived value of an address node.
+	 * Helper method to set a derived value of an address node.
 	 *
 	 * @param address The address to change
 	 * @param w the way containing the tag for the derived value.

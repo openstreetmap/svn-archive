@@ -63,7 +63,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	/** The street dictionary collecting all streets to a set of unique street names. */
 	private HashMap<String, OSMStreet> streetDict = new HashMap<String, OSMStreet>(100);
 
-	/** The unresolved addresses list. */
+	/** The unresolved (addresses without valid street name) addresses list. */
 	private List<OSMAddress> unresolvedAddresses = new ArrayList<OSMAddress>(100);
 
 	/** The incomplete addresses list. */
@@ -475,6 +475,11 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 	private boolean assignAddressToStreet(OSMAddress aNode) {
 		String streetName = aNode.getStreetName();
 
+		// street name via relation -> implicitly resolved (see TRAC #8336)
+		if (aNode.isPartOfRelation()) {
+		    return true;
+		}
+		
 		if (streetName != null && shadowStreetDict.containsKey(streetName)) {
 			OSMStreet sNode = shadowStreetDict.get(streetName);
 			sNode.addAddress(aNode);
@@ -528,15 +533,16 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 		synchronized (this) {
 			clearData();
 			clearProblems();
-			/*
+			// visit data set for problems...
 			for (OsmPrimitive osmPrimitive : osmData) {
 				if (osmPrimitive.isUsable()) {
 					osmPrimitive.accept(this);
 				}
 			}
-			 */
+			
+			// match streets with addresses...
 			resolveAddresses();
-			// sort lists
+			// sort problem lists
 			Collections.sort(shadowIncompleteAddresses);
 			Collections.sort(shadowUnresolvedAddresses);
 

@@ -162,9 +162,15 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
 	 */
 	protected void setOSMTag(String tag, String newValue) {
 		CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-		if (StringUtils.isNullOrEmpty(tag)) return;
+		
 
 		if (osmObject != null) {
+		    	String existingValue = osmObject.get(tag);
+		    	// Bugfix #9047: Keep existing values
+		    	if (!StringUtils.isNullOrEmpty(existingValue)) {
+		    	    return;
+		    	}
+		    	
 			if ((osmObject.hasKey(tag) && newValue == null) || newValue != null) {
 				fireCommandIssued(new ChangePropertyCommand(osmObject, tag, newValue));
 				fireEntityChanged(this);

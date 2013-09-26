@@ -190,7 +190,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 		
 		try {
 			super.paint(g);
-	
+			createOrUpdatePlotArea();
 			int y1 = getPlotBottom();
 	
 			g.setColor(Color.DARK_GRAY);

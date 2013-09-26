@@ -12,9 +12,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openstreetmap.josm.plugins.elevation;
+package org.openstreetmap.josm.plugins.elevation.grid;
 
 import java.awt.Color;
+
+import org.openstreetmap.josm.plugins.elevation.ColorMap;
+import org.openstreetmap.josm.plugins.elevation.IVertexRenderer;
 
 /**
  * @author Olli

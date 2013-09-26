@@ -273,10 +273,10 @@ public class ElevationModel implements IGpxVisitor, IElevationModel {
 	    // check GPX data 
 	    String trackName = (String) trackOrRoute.get("name");
 	    
-	    // no name given, build artificial one
 	    if (trackName == null) {
 		trackName = (String) trackOrRoute.get(GpxData.META_NAME);
 		if (trackName == null) {
+		    // no name given, build artificial one
 		    trackName = name + "." + trackCounter;
 		}
 	    }

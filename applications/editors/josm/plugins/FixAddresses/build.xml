@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="FixAddresses" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="fix compile error (core changes)"/>
+    <property name="commit.message" value="[josm_fixadresses]: Fixes #josm8336"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6162"/>
 	

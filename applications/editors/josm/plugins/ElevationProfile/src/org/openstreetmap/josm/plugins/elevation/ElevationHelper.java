@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.plugins.elevation.gpx.GeoidCorrectionKind;
@@ -284,6 +285,22 @@ public class ElevationHelper {
 	    }
 	}
 	return NO_ELEVATION;
+    }
+
+    /**
+     * Checks given area for SRTM data.
+     *
+     * @param bounds the bounds/area to check
+     * @return true, if SRTM data are present; otherwise false
+     */
+    public static boolean hasSrtmData(Bounds bounds) {
+	if (bounds == null) return false;
+
+	LatLon tl = bounds.getMin();
+	LatLon br = bounds.getMax();
+
+	return 	isValidElevation(getSrtmElevation(tl)) &&
+		isValidElevation(getSrtmElevation(br));
     }
 
     /*

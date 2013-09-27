@@ -51,6 +51,8 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
      * Serial version UID
      */
     private static final long serialVersionUID = -7343429725259575319L;
+    private static final int BOTTOM_TEXT_Y_OFFSET = 7;
+
     private IElevationModel model;
     private Rectangle plotArea;
     private final IElevationProfileRenderer renderer = new DefaultElevationProfileRenderer();
@@ -203,12 +205,17 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	    if (model != null) {
 		IElevationProfile profile = model.getCurrentProfile();
 		if (profile != null && profile.hasElevationData()) {
-		    drawAlignedString(formatDate(profile.getStart()), 5, y1 + 5,
+		    // Draw start and end date
+		    drawAlignedString(formatDate(profile.getStart()), 5, y1 + BOTTOM_TEXT_Y_OFFSET,
 			    TextAlignment.Left, g);
 		    drawAlignedString(formatDate(profile.getEnd()),
-			    getPlotRight(), y1 + 5, TextAlignment.Right, g);
+			    getPlotRight(), y1 + BOTTOM_TEXT_Y_OFFSET, TextAlignment.Right, g);
 
-
+		    // Show SRTM indicator
+		    if (ElevationHelper.hasSrtmData(profile.getBounds())) {
+			String txt = "SRTM";
+			drawAlignedString(txt, getPlotHCenter(), y1 + BOTTOM_TEXT_Y_OFFSET, TextAlignment.Centered, g);
+		    }
 		    drawProfile(g);
 		    drawElevationLines(g);
 		} else {
@@ -424,6 +431,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	    Color c = renderer.getColorForWaypoint(profile, wpt,
 		    ElevationWayPointKind.Plain);
 
+	    // draw cursor
 	    if (i == this.selectedIndex) {
 		g.setColor(Color.BLACK);
 		drawAlignedString(ElevationHelper.getElevationText(eleVal),
@@ -434,6 +442,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 
 		c = renderer.getColorForWaypoint(profile, wpt, ElevationWayPointKind.Highlighted);
 	    }
+
 	    int yEle = getYForEelevation(eleVal);
 	    int x = getPlotLeft() + i;
 
@@ -441,6 +450,7 @@ public class ElevationProfilePanel extends JPanel implements ComponentListener, 
 	    g.drawLine(x, yBottom, x, yEle);
 	    g.setColor(ElevationColors.EPLightBlue);
 	}
+
 	g.setColor(oldC);
     }
 

@@ -64,11 +64,15 @@ echo "##################################################################"
 echo "### Download and unzip the webkit stuff"
 if [ "x$WEBKIT_DOWNLOAD" == "xyes" ]; then
     wget --continue --timestamping http://josm.openstreetmap.de/download/windows/webkit-image.zip
+else
+    if ! [ -f webkit-image.zip ]; then
+      ln -s /home/josm/www/download/windows/webkit-image.zip .
+    fi
 fi
-mkdir -p webkit-image
-cd webkit-image
-unzip -o ../webkit-image.zip
-cd ..
+#mkdir -p webkit-image
+#cd webkit-image
+unzip -o webkit-image.zip
+#cd ..
 
 echo 
 echo "##################################################################"

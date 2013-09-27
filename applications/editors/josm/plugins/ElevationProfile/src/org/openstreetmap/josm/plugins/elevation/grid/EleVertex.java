@@ -1,14 +1,14 @@
 /**
- * This program is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License as published by the 
- * Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * See the GNU General Public License for more details. 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with this program. 
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.openstreetmap.josm.plugins.elevation.grid;
@@ -23,16 +23,16 @@ import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 public class EleVertex {
     private static final int NPOINTS = 3;
     private static final double MIN_DIST = 90;
-    
+
     private double avrgEle = Double.NaN;
     private double area = Double.NaN;
-    private EleCoordinate[] points = new EleCoordinate[NPOINTS];
-    
+    private final EleCoordinate[] points = new EleCoordinate[NPOINTS];
+
     public EleVertex(EleCoordinate p1, EleCoordinate p2, EleCoordinate p3) {
 	points[0] = p1;
 	points[1] = p2;
 	points[2] = p3;
-	
+
 	// compute elevation
 	double z = 0D;
 	boolean eleValid = true;
@@ -44,33 +44,33 @@ public class EleVertex {
 		break;
 	    }
 	}
-	
-	if (eleValid) {	
+
+	if (eleValid) {
 	    avrgEle = z / NPOINTS;
 	} else {
 	    avrgEle = ElevationHelper.NO_ELEVATION;
 	}
-	
+
 	// compute the (approx.!) area of the vertex using heron's formula
 	double a = p1.greatCircleDistance(p2);
 	double b = p2.greatCircleDistance(p3);
 	double c = p1.greatCircleDistance(p3);
-	
+
 	double s = (a + b + c) / 2D;
 	double sq = s * (s - a) * (s - b) * (s - c);
 	area = Math.sqrt(sq);
     }
-    
+
     public List<EleVertex> divide() {
 	TriangleEdge[] edges = new TriangleEdge[NPOINTS];
-	
+
 	int k = 0;
 	for (int i = 0; i < points.length; i++) {
 	    EleCoordinate c1 = points[i];
-	    
+
 	    for (int j = i + 1; j < points.length; j++) {
 		EleCoordinate c2 = points[j];
-		
+
 		edges[k++] = new TriangleEdge(i, j, c1.greatCircleDistance(c2));
 	    }
 	}
@@ -80,13 +80,13 @@ public class EleVertex {
 	    TriangleEdge triangleEdge = edges[i];
 	    System.out.println("#" + i + ": " +triangleEdge);
 	}*/
-	
+
 	// sort by distance
 	Arrays.sort(edges);
 	// pick the longest edge
 	TriangleEdge longest = edges[0];
-	
-	
+
+
 	//System.out.println("Longest " + longest);
 	EleCoordinate pI = points[longest.getI()];
 	EleCoordinate pJ = points[longest.getJ()];
@@ -97,39 +97,39 @@ public class EleVertex {
 	System.out.println(pJ);
 	System.out.println(pK);
 	System.out.println(newP);
-	*/
+	 */
 	List<EleVertex> res = new ArrayList<EleVertex>();
 	res.add(new EleVertex(pI, pK, newP));
 	res.add(new EleVertex(pJ, pK, newP));
-	
+
 	return res;
     }
-    
+
     /**
      * Checks if vertex requires further processing or is finished. Currently this
-     * method returns <code>true</code>, if the average deviation is < 5m 
+     * method returns <code>true</code>, if the average deviation is < 5m
      *
      * @return true, if is finished
      */
     public boolean isFinished() {
 	double z = 0D;
 	double avrgEle = getEle();
-	
+
 	for (EleCoordinate point : points) {
 	    z += (avrgEle - point.getEle()) * (avrgEle - point.getEle());
 	}
-	
+
 	// TODO: Check for proper limit
 	return /*z < 75 || */getArea() < (30 * 30); // = 3 * 25
-    }    
-    
+    }
+
     /**
      * Gets the approximate area of this vertex in square meters.
      *
      * @return the area
      */
     public double getArea() {
-        return area;
+	return area;
     }
 
     /**
@@ -142,42 +142,42 @@ public class EleVertex {
     public EleCoordinate getMid(EleCoordinate c1, EleCoordinate c2) {
 	double x = (c1.getX() + c2.getX()) / 2.0;
 	double y = (c1.getY() + c2.getY()) / 2.0;
-	
+
 	double z = (c1.getEle() + c2.getEle()) / 2.0;
 	if (c1.greatCircleDistance(c2) > MIN_DIST) {
-	    double hgtZ = ElevationHelper.getElevation(new LatLon(y, x));
-	    
+	    double hgtZ = ElevationHelper.getSrtmElevation(new LatLon(y, x));
+
 	    if (ElevationHelper.isValidElevation(hgtZ)) {
 		z = hgtZ;
-	    }	    
-    	}
-	
+	    }
+	}
+
 	return new EleCoordinate(y, x, z);
     }
-    
+
     /**
      * Gets the coordinate for the given index.
      *
-     * @param index the index between 0 and NPOINTS: 
+     * @param index the index between 0 and NPOINTS:
      * @return the elevation coordinate instance
      * @throws IllegalArgumentException, if index is invalid
      */
     public EleCoordinate get(int index) {
 	if (index < 0 || index >= NPOINTS) throw new IllegalArgumentException("Invalid index: " + index);
-	
+
 	return points[index];
     }
-    
+
     /**
      * Gets the average elevation of this vertex.
      *
      * @return the ele
      */
     public double getEle() {
-	
+
 	return avrgEle;
     }
-    
+
     @Override
     public String toString() {
 	return "EleVertex [avrgEle=" + avrgEle + ", area=" + area + ", points="
@@ -188,10 +188,10 @@ public class EleVertex {
 
 
     class TriangleEdge implements Comparable<TriangleEdge> {
-	private int i;
-	private int j;
-	private double dist;
-	
+	private final int i;
+	private final int j;
+	private final double dist;
+
 	public TriangleEdge(int i, int j, double dist) {
 	    super();
 	    this.i = i;
@@ -206,7 +206,7 @@ public class EleVertex {
 	public int getJ() {
 	    return j;
 	}
-	
+
 	public int getK() {
 	    if (i == 0) {
 		return j == 1 ? 2 : 1;

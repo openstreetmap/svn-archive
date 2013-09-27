@@ -31,7 +31,7 @@ public class AddElevationLayerAction extends JosmAction {
     private Layer currentLayer;
 
     public AddElevationLayerAction() {
-	super(tr("Elevation Grid Layer"), "elevation", tr("Shows elevation grid layer"), null, true);
+	super(tr("Elevation Grid Layer (experimental!)"), "elevation", tr("Shows elevation grid layer"), null, true);
     }
 
     @Override

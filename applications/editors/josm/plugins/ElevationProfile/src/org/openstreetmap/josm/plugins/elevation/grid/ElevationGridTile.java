@@ -91,6 +91,8 @@ public class ElevationGridTile extends Tile {
     public void loadImage(InputStream input) throws IOException {
 	if (isLoaded()) return;	
 	
+	// TODO: Save 
+	
 	// We abuse the loadImage method to render the vertices...
 	// 
 	while (toDo.size() > 0) {
@@ -112,6 +114,13 @@ public class ElevationGridTile extends Tile {
         return vertices;
     }
 
+    /**
+     * See also <a href="http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_bounding_box">OSM Wiki</a>
+     * @param x the x
+     * @param y the y
+     * @param zoom the zoom
+     * @return the bounds
+     */
     private Bounds tile2Bounds(final int x, final int y, final int zoom) {
 	Bounds bb = new Bounds(
 		new LatLon(source.tileYToLat(y, zoom), source.tileXToLon(x, zoom)),

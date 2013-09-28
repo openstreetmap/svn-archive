@@ -69,7 +69,7 @@
 			<zipfileset file="Readme.txt" prefix="jmapviewer-${svnReleaseVersion}"/>
 			<zipfileset file="build.xml" prefix="jmapviewer-${svnReleaseVersion}"/>
 			<zipfileset file="Gpl.txt" prefix="jmapviewer-${svnReleaseVersion}"/>
-			<zipfileset dir="src" includes="**/jmapviewer/**" prefix="jmapviewer-${svnReleaseVersion}"/>
+			<zipfileset dir="src" includes="**/jmapviewer/**" prefix="jmapviewer-${svnReleaseVersion}/src"/>
 		</zip>
 	</target>
 

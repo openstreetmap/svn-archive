@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="canvec_helper" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="JOSM/Canvec_helper: update to new menu structure"/>
+    <property name="commit.message" value="JOSM/Canvec_helper: fixed a crash caused by osm directory being renamed to OSM"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6162"/>
     

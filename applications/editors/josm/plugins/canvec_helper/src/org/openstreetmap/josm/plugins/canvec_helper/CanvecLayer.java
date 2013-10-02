@@ -50,7 +50,7 @@ public class CanvecLayer extends Layer implements MouseListener {
 		try {
 			long start = System.currentTimeMillis();
 			Pattern p = Pattern.compile("(\\d\\d\\d)([A-Z]\\d\\d).*");
-			MirroredInputStream index = new MirroredInputStream("http://ftp2.cits.rncan.gc.ca/osm/pub/ZippedOsm.txt");
+			MirroredInputStream index = new MirroredInputStream("http://ftp2.cits.rncan.gc.ca/OSM/pub/ZippedOsm.txt");
 			BufferedReader br = new BufferedReader(new InputStreamReader(index));
 			String line;
 			int last_cell = -1;
@@ -68,7 +68,10 @@ public class CanvecLayer extends Layer implements MouseListener {
 						list.add(m.group(0));
 					}
 					last_cell = cell;
-				} else System.out.print("bad line '" + line + "'\n");
+				} else if (line.contains("Metadata.txt")) {
+				} else {
+						System.out.print("bad line '" + line + "'\n");
+				}
 			}
 			br.close();
 			CanVecTile tile = new CanVecTile(last_cell,"",0,"",this,list);
@@ -78,6 +81,7 @@ public class CanvecLayer extends Layer implements MouseListener {
 			System.out.println((end-start)+"ms spent");
 		} catch (IOException e) {
 			System.out.println("exception getting index");
+			e.printStackTrace();
 		}
 	}
         @Override

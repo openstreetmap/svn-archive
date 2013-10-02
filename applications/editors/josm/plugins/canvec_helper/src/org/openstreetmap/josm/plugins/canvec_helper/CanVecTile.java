@@ -177,7 +177,7 @@ public class CanVecTile {
 			};
 	}
 	public String getDownloadUrl() {
-		return String.format("http://ftp2.cits.rncan.gc.ca/osm/pub/%1$03d/%2$s/%1$03d%2$s%3$02d.zip",corda,cordb,cordc);
+		return String.format("http://ftp2.cits.rncan.gc.ca/OSM/pub/%1$03d/%2$s/%1$03d%2$s%3$02d.zip",corda,cordb,cordc);
 	}
 	private ZipFile open_zip() throws IOException {
 		File download_path = new File(layer.plugin_self.getPluginDir() + File.separator);
@@ -198,6 +198,7 @@ public class CanVecTile {
 		Enumeration<? extends ZipEntry> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = entries.nextElement();
+			if (entry.getName().equals("Metadata.txt")) continue;
 			sub_tile_ids.add(entry.getName());
 			zip_scanned = true;
 			CanVecTile final_tile = new CanVecTile(entry.getName(),layer);
@@ -219,6 +220,7 @@ public class CanVecTile {
 					OsmImporterData temp = importer.loadLayer(rawtile, null, entry.getName(), null);
 					Main.worker.submit(temp.getPostLayerTask());
 					Main.main.addLayer(temp.getLayer());
+					temp.getLayer().data.setUploadDiscouraged(false);
 				}
 			}
 		} catch (IOException e) {

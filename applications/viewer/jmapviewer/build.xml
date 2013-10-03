@@ -35,17 +35,19 @@
 	
 	<target name="pack">
 		<!-- Create the JAR file containing the compiled class files -->
-		<jar destfile="JMapViewer_${svnReleaseVersion}.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="JMapViewer.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="bin" includes="**/jmapviewer/**" />
 		</jar>
 		<!-- Create the JAR file containing the source java files -->
-		<jar destfile="JMapViewer_${svnReleaseVersion}_src.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="JMapViewer_src.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="src" includes="**/jmapviewer/**" />
 		</jar>
 	</target>
 	
+	<!-- if you want to build outside of svn, use "ant clean build [pack]" -->
+	
 	<target name="create_run_jar" description="Create a JAR file that can be used to execute the JMapViewer demo app. Requires JMapViewer.jar to be present.">
-		<jar destfile="JMapViewer_${svnReleaseVersion}_Demo.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="JMapViewer_Demo.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="org.openstreetmap.gui.jmapviewer.Demo" />
 				<attribute name="Class-Path" value="JMapViewer_${svnReleaseVersion}.jar" />

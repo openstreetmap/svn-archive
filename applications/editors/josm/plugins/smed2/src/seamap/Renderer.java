@@ -102,10 +102,10 @@ public class Renderer {
 		}
 	}
 
-	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta) {
+	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta, Scheme scheme) {
 		Point2D point = helper.getPoint(feature.centre);
 		if (obj == null) {
-			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, null);
+			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, scheme);
 		} else {
 			ArrayList<Color> colours = new ArrayList<Color>();
 			for (ColCOL col : (ArrayList<ColCOL>)getAttVal(feature, obj, 0, Att.COLOUR)) {

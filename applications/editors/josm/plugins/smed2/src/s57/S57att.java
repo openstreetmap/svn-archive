@@ -130,7 +130,7 @@ public class S57att {
 		AttStr.put(Att.SOUACC, "accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");	AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "source_date");
 		AttStr.put(Att.SORIND, "source"); AttStr.put(Att.STATUS, "status");	AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "end_date");
 		AttStr.put(Att.SURSTA, "start_date"); AttStr.put(Att.SURTYP, "survey");	AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "description");
-		AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");	AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "flow");
+		AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");	AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "traffic_flow");
 		AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth"); AttStr.put(Att.VALLMA, "anomaly"); AttStr.put(Att.VALMAG, "variation");
 		AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");	AttStr.put(Att.VALSOU, "sounding"); AttStr.put(Att.VERACC, "vertical_accuracy");
 		AttStr.put(Att.VERCLR, "clearance_height");	AttStr.put(Att.VERCCL, "clearance_height_closed"); AttStr.put(Att.VERCOP, "clearance_height_open");

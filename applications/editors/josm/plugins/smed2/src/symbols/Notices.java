@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.geom.*;
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 import s57.S57val.*;
@@ -1004,7 +1005,45 @@ public class Notices {
 		NmkPpwbc.put(CatNMK.NMK_KTMR, Notice); NmkPpwbc.put(CatNMK.NMK_CRTP, Notice); NmkPpwbc.put(CatNMK.NMK_CRTS, Notice);
 	}
 	
-	public static Symbol getNotice(CatNMK cat, MarSYS sys, BnkWTW bank) {
+	public static Scheme getScheme(MarSYS sys, BnkWTW bank) {
+		ArrayList<Color> colours = new ArrayList<Color>();
+		Scheme scheme = new Scheme(null, colours);
+		switch (sys) {
+		case SYS_BNWR:
+			switch (bank) {
+			case BWW_LEFT:
+				colours.add(Color.white);
+				colours.add(new Color(0xf00000));
+				break;
+			case BWW_RGHT:
+				colours.add(Color.white);
+				colours.add(new Color(0x00a000));
+				break;
+			default:
+				colours.add(new Color(0xff8040));
+				colours.add(Color.black);
+				break;
+			}
+			break;
+		case SYS_PPWB:
+			switch (bank) {
+			case BWW_LEFT:
+				colours.add(Color.white);
+				colours.add(new Color(0xd40000));
+				break;
+			case BWW_RGHT:
+				colours.add(Color.white);
+				colours.add(new Color(0x00d400));
+				break;
+			default:
+				break;
+			}
+			break;
+		}
+		return scheme;
+	}
+	
+	public static Symbol getNotice(CatNMK cat, MarSYS sys) {
 		Symbol symbol = null;
 		switch (sys) {
 		case SYS_CEVN:

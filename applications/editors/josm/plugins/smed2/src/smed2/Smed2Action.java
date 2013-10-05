@@ -117,7 +117,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setLocation(100, 200);
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
-		editFrame.setVisible(false);
+		editFrame.setVisible(true);
 		panelMain = new PanelMain();
 		editFrame.add(panelMain);
 		panelS57 = new S57dat();
@@ -180,6 +180,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				if (selection.size() == 1) {
 					if (nextFeature.compareTo(feature) != 0) {
 						feature = nextFeature;
+						panelMain.parseMark(map.index.get(feature.getUniqueId()));
 //						showFrame.setVisible(true);
 						showFrame.showFeature(feature, map);
 					}

@@ -8,7 +8,7 @@ import s57.S57val.*;
 
 public class S57en {
 
-	private static final EnumMap<Obj, String> ObjEN = new EnumMap<Obj, String>(Obj.class);
+	public static final EnumMap<Obj, String> ObjEN = new EnumMap<Obj, String>(Obj.class);
 	static {
 		ObjEN.put(Obj.UNKOBJ, "Unkown object");	ObjEN.put(Obj.ADMARE, "Administrative area");	ObjEN.put(Obj.AIRARE, "Airfield");	ObjEN.put(Obj.ACHBRT, "Anchor berth");
 		ObjEN.put(Obj.ACHARE, "Anchorage"); ObjEN.put(Obj.BCNCAR, "Cardinal beacon");	ObjEN.put(Obj.BCNISD, "Isolated danger beacon	");
@@ -61,7 +61,7 @@ public class S57en {
 		ObjEN.put(Obj.LITMAJ, "Major light"); ObjEN.put(Obj.LITMIN, "Minor light");
 	}
 
-	private static final EnumMap<Att, String> AttEN = new EnumMap<Att, String>(Att.class);
+	public static final EnumMap<Att, String> AttEN = new EnumMap<Att, String>(Att.class);
 	static {
 		AttEN.put(Att.UNKATT, "Unknown attribute"); AttEN.put(Att.AGENCY, "Agency"); AttEN.put(Att.BCNSHP, "Beacon shape"); AttEN.put(Att.BUISHP, "Building shape");
 		AttEN.put(Att.BOYSHP, "Buoy shape"); AttEN.put(Att.BURDEP, "Buried depth"); AttEN.put(Att.CALSGN, "Callsign"); AttEN.put(Att.CATAIR, "Airfield category");
@@ -111,7 +111,7 @@ public class S57en {
 		AttEN.put(Att.POSACC, "Positional accuracy"); AttEN.put(Att.QUAPOS, "Quality of position"); AttEN.put(Att.ADDMRK, "Notice mark addition"); AttEN.put(Att.BNKWTW, "Side of Waterway");
 		AttEN.put(Att.CATBNK, "Waterway bank category");	AttEN.put(Att.CATNMK, "Notice mark category"); AttEN.put(Att.CLSDNG, "Dangerous cargo class"); AttEN.put(Att.DIRIMP, "Direction of impact");
 		AttEN.put(Att.DISBK1, "First distance from notice");	AttEN.put(Att.DISBK2, "Second distance from notice");AttEN.put(Att.DISIPU, "Upstream distance of impact");
-		AttEN.put(Att.DISIPD, "Dwonstream distance of impact"); AttEN.put(Att.ELEVA1, "Minimum elevation"); AttEN.put(Att.ELEVA2, "Maximum elevation"); AttEN.put(Att.FNCTNM, "Notice mark function");
+		AttEN.put(Att.DISIPD, "Downstream distance of impact"); AttEN.put(Att.ELEVA1, "Minimum elevation"); AttEN.put(Att.ELEVA2, "Maximum elevation"); AttEN.put(Att.FNCTNM, "Notice mark function");
 		AttEN.put(Att.WTWDIS, "Waterway distance"); AttEN.put(Att.BUNVES, "Bunker vessel availibility");	AttEN.put(Att.CATBRT, "Berth category"); AttEN.put(Att.CATBUN, "Bunker station category");
 		AttEN.put(Att.CATCCL, "CEMT class category"); AttEN.put(Att.CATHBR, "Harbour area category");	AttEN.put(Att.CATRFD, "Refuse dump category"); AttEN.put(Att.CATTML, "Terminal category");
 		AttEN.put(Att.COMCTN, "Communication"); AttEN.put(Att.HORCLL, "Horizontal clearance length");	AttEN.put(Att.HORCLW, "Horizontal clearance width");
@@ -124,6 +124,35 @@ public class S57en {
 		AttEN.put(Att.CURVLW, "low water current velocity"); AttEN.put(Att.CURVMW, "mean level current velocity"); AttEN.put(Att.CURVOW, "local level current velocity");
 		AttEN.put(Att.APTREF, "Average passing time reference"); AttEN.put(Att.CATEXS, "Exceptional structure category"); AttEN.put(Att.CATWWM, "Waterway mark category");
 		AttEN.put(Att.SHPTYP, "Ship type"); AttEN.put(Att.UPDMSG, "Update message"); AttEN.put(Att.LITRAD, "Light sector radius");
+	}
+	
+	private static final EnumMap<BcnSHP, String> Bcnshp = new EnumMap<BcnSHP, String>(BcnSHP.class); static { Bcnshp.put(BcnSHP.BCN_UNKN, "");
+	Bcnshp.put(BcnSHP.BCN_STAK, "Stake"); Bcnshp.put(BcnSHP.BCN_WTHY, "Withy"); Bcnshp.put(BcnSHP.BCN_TOWR, "Tower"); Bcnshp.put(BcnSHP.BCN_LATT, "Lattice"); Bcnshp.put(BcnSHP.BCN_PILE, "Pile");
+	Bcnshp.put(BcnSHP.BCN_CARN, "Cairn"); Bcnshp.put(BcnSHP.BCN_BUOY, "Buoyant"); Bcnshp.put(BcnSHP.BCN_POLE, "Pole"); Bcnshp.put(BcnSHP.BCN_PRCH, "Perch"); Bcnshp.put(BcnSHP.BCN_POST, "Post");
+}
+	private static final EnumMap<BuiSHP, String> Buishp = new EnumMap<BuiSHP, String>(BuiSHP.class); static { Buishp.put(BuiSHP.BUI_UNKN, "");
+	Buishp.put(BuiSHP.BUI_HIRS, "High-rise"); Buishp.put(BuiSHP.BUI_PYRD, "Pyramid"); Buishp.put(BuiSHP.BUI_CYLR, "Cylindrical"); Buishp.put(BuiSHP.BUI_SPHR, "Spherical"); Buishp.put(BuiSHP.BUI_CUBE, "Cubic");
+	}
+	private static final EnumMap<BoySHP, String> Boyshp = new EnumMap<BoySHP, String>(BoySHP.class); static { Boyshp.put(BoySHP.BOY_UNKN, "");
+	Boyshp.put(BoySHP.BOY_CONE, "Conical"); Boyshp.put(BoySHP.BOY_CAN, "Can"); Boyshp.put(BoySHP.BOY_SPHR, "Spherical"); Boyshp.put(BoySHP.BOY_PILR, "Pillar"); Boyshp.put(BoySHP.BOY_SPAR, "Spar");
+	Boyshp.put(BoySHP.BOY_BARL, "Barrel"); Boyshp.put(BoySHP.BOY_SUPR, "Super-buoy"); Boyshp.put(BoySHP.BOY_ICE, "Ice buoy");
+}
+	private static final EnumMap<CatCAM, String> Catcam = new EnumMap<CatCAM, String>(CatCAM.class); static { Catcam.put(CatCAM.CAM_UNKN, "");
+		Catcam.put(CatCAM.CAM_NORTH, "North"); Catcam.put(CatCAM.CAM_EAST, "East"); Catcam.put(CatCAM.CAM_SOUTH, "South"); Catcam.put(CatCAM.CAM_WEST, "West");
+	}
+	private static final EnumMap<ColCOL, String> Colour = new EnumMap<ColCOL, String>(ColCOL.class); static { Colour.put(ColCOL.COL_UNK, "");
+	Colour.put(ColCOL.COL_WHT, "White"); Colour.put(ColCOL.COL_BLK, "Black"); Colour.put(ColCOL.COL_RED, "Red"); Colour.put(ColCOL.COL_GRN, "Green"); Colour.put(ColCOL.COL_BLU, "Blue");
+	Colour.put(ColCOL.COL_YEL, "Yellow"); Colour.put(ColCOL.COL_GRY, "Grey"); Colour.put(ColCOL.COL_BRN, "Brown"); Colour.put(ColCOL.COL_AMB, "Amber"); Colour.put(ColCOL.COL_VIO, "Violet");
+	Colour.put(ColCOL.COL_ORG, "Orange"); Colour.put(ColCOL.COL_MAG, "Magenta"); Colour.put(ColCOL.COL_PNK, "Pink");
+}
+	private static final EnumMap<ColPAT, String> Colpat = new EnumMap<ColPAT, String>(ColPAT.class); static { Colpat.put(ColPAT.PAT_UNKN, ""); Colpat.put(ColPAT.PAT_HORI, "Horizontal");
+	Colpat.put(ColPAT.PAT_VERT, "Vertical"); Colpat.put(ColPAT.PAT_DIAG, "Diagonal"); Colpat.put(ColPAT.PAT_SQUR, "Squared"); Colpat.put(ColPAT.PAT_STRP, "Stripes");
+	Colpat.put(ColPAT.PAT_BRDR, "Border"); Colpat.put(ColPAT.PAT_CROS, "Cross"); Colpat.put(ColPAT.PAT_SALT, "Saltire");
+}
+	
+	public static final EnumMap<Att, EnumMap> enums = new EnumMap<Att, EnumMap>(Att.class);
+	static {
+		enums.put(Att.BCNSHP, Bcnshp); enums.put(Att.BUISHP, Buishp); enums.put(Att.BOYSHP, Boyshp); enums.put(Att.CATCAM, Catcam); enums.put(Att.COLOUR, Colour); enums.put(Att.COLPAT, Colpat);
 	}
 	
 }

@@ -95,8 +95,8 @@ public class SeaMap {
 	}
 
 	public class AttItem {
-		Conv conv;
-		Object val;
+		public Conv conv;
+		public Object val;
 
 		AttItem(Conv iconv, Object ival) {
 			conv = iconv;
@@ -359,6 +359,9 @@ public class SeaMap {
 			} else {
 				if (subkeys[1].equals("type")) {
 					feature.type = S57obj.enumType(val);
+					if (feature.objs.get(feature.type) == null) {
+						feature.objs.put(feature.type, new ObjTab());
+					}
 				} else {
 					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
 					if (att != Att.UNKATT) {

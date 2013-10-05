@@ -132,7 +132,7 @@ public class S57att {
 		AttStr.put(Att.SURSTA, "start_date"); AttStr.put(Att.SURTYP, "survey");	AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "description");
 		AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");	AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "traffic_flow");
 		AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth"); AttStr.put(Att.VALLMA, "anomaly"); AttStr.put(Att.VALMAG, "variation");
-		AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");	AttStr.put(Att.VALSOU, "sounding"); AttStr.put(Att.VERACC, "vertical_accuracy");
+		AttStr.put(Att.VALMXR, "maximum_range"); AttStr.put(Att.VALNMR, "range");	AttStr.put(Att.VALSOU, "depth"); AttStr.put(Att.VERACC, "vertical_accuracy");
 		AttStr.put(Att.VERCLR, "clearance_height");	AttStr.put(Att.VERCCL, "clearance_height_closed"); AttStr.put(Att.VERCOP, "clearance_height_open");
 		AttStr.put(Att.VERCSA, "clearance_height_safe"); AttStr.put(Att.VERDAT, "vertical_datum"); AttStr.put(Att.VERLEN, "vertical_length"); AttStr.put(Att.WATLEV, "water_level");
 		AttStr.put(Att.CAT_TS, "category");	AttStr.put(Att.PUNITS, "positional_units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name");
@@ -201,7 +201,8 @@ public class S57att {
 	  objatt.add(new ObjAtt(Obj.TSSLPT, Att.CATTSS)); objatt.add(new ObjAtt(Obj.TSSRON, Att.CATTSS)); objatt.add(new ObjAtt(Obj.TWRTPT, Att.CATTRK));
 	  objatt.add(new ObjAtt(Obj.VEGATN, Att.CATVEG)); objatt.add(new ObjAtt(Obj.VEHTRF, Att.CATVTR)); objatt.add(new ObjAtt(Obj.WATTUR, Att.CATWAT));
 	  objatt.add(new ObjAtt(Obj.WEDKLP, Att.CATWED)); objatt.add(new ObjAtt(Obj.WRECKS, Att.CATWRK)); objatt.add(new ObjAtt(Obj.TS_FEB, Att.CAT_TS));
-	  objatt.add(new ObjAtt(Obj.UNKOBJ, Att.RADIUS)); objatt.add(new ObjAtt(Obj.LIGHTS, Att.LITRAD)); objatt.add(new ObjAtt(Obj.NOTMRK, Att.BNKWTW));
+	  objatt.add(new ObjAtt(Obj.DEPCNT, Att.VALDCO)); objatt.add(new ObjAtt(Obj.SOUNDG, Att.VALSOU)); objatt.add(new ObjAtt(Obj.NOTMRK, Att.BNKWTW));
+	  objatt.add(new ObjAtt(Obj.UNKOBJ, Att.RADIUS)); objatt.add(new ObjAtt(Obj.LIGHTS, Att.LITRAD));
 	}
 	
 	private enum Ver {NON, NOT, YES}

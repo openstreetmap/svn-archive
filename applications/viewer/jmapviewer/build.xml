@@ -50,7 +50,7 @@
 		<jar destfile="JMapViewer_Demo.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="org.openstreetmap.gui.jmapviewer.Demo" />
-				<attribute name="Class-Path" value="JMapViewer_${svnReleaseVersion}.jar" />
+				<attribute name="Class-Path" value="JMapViewer.jar" />
 			</manifest>
 		</jar>
 	</target>

@@ -82,7 +82,6 @@ import org.openstreetmap.josm.plugins.osb.gui.action.AddCommentAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.CloseIssueAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbActionObserver;
-import org.openstreetmap.josm.plugins.osb.gui.action.PointToNewIssueAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.PopupFactory;
 import org.openstreetmap.josm.plugins.osb.gui.action.ToggleConnectionModeAction;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
@@ -102,7 +101,6 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
     private JButton addComment;
     private JButton closeIssue;
     private JButton processQueue = new JButton(tr("Process queue"));
-    private JToggleButton newIssue = new JToggleButton();
     private JToggleButton toggleConnectionMode;
     private JTabbedPane tabbedPane = new JTabbedPane();
     private boolean queuePanelVisible = false;
@@ -173,14 +171,9 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
         closeIssue.setEnabled(false);
         closeIssue.setToolTipText((String) closeIssue.getAction().getValue(Action.NAME));
         closeIssue.setIcon(OsbPlugin.loadIcon("icon_valid22.png"));
-        PointToNewIssueAction nia = new PointToNewIssueAction(newIssue, osbPlugin);
-        newIssue.setAction(nia);
-        newIssue.setToolTipText((String) newIssue.getAction().getValue(Action.NAME));
-        newIssue.setIcon(OsbPlugin.loadIcon("icon_error_add22.png"));
 
         buttonPanel.add(toggleConnectionMode);
         buttonPanel.add(refresh);
-        buttonPanel.add(newIssue);
         buttonPanel.add(addComment);
         buttonPanel.add(closeIssue);
 
@@ -214,19 +207,16 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
             refresh.setHorizontalAlignment(SwingConstants.LEFT);
             addComment.setHorizontalAlignment(SwingConstants.LEFT);
             closeIssue.setHorizontalAlignment(SwingConstants.LEFT);
-            newIssue.setHorizontalAlignment(SwingConstants.LEFT);
         } else {
             toggleConnectionMode.setText(null);
             refresh.setText(null);
             addComment.setText(null);
             closeIssue.setText(null);
-            newIssue.setText(null);
         }
 
         addCommentAction.addActionObserver(this);
         closeIssueAction.addActionObserver(this);
         setConnectionMode(offline);
-
 
         MapView.addLayerChangeListener(this);
     }

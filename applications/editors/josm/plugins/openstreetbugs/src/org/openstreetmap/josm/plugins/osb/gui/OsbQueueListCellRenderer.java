@@ -40,7 +40,6 @@ import javax.swing.UIManager;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 import org.openstreetmap.josm.plugins.osb.gui.action.AddCommentAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.CloseIssueAction;
-import org.openstreetmap.josm.plugins.osb.gui.action.NewIssueAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 
 public class OsbQueueListCellRenderer implements ListCellRenderer {
@@ -64,9 +63,7 @@ public class OsbQueueListCellRenderer implements ListCellRenderer {
 
         OsbAction action = (OsbAction) value;
         Icon icon = null;
-        if(action instanceof NewIssueAction) {
-            icon = OsbPlugin.loadIcon("icon_error_add16.png");
-        } else if(action instanceof AddCommentAction) {
+        if(action instanceof AddCommentAction) {
             icon = OsbPlugin.loadIcon("add_comment16.png");
         } else if(action instanceof CloseIssueAction) {
             icon = OsbPlugin.loadIcon("icon_valid16.png");
@@ -84,5 +81,4 @@ public class OsbQueueListCellRenderer implements ListCellRenderer {
 
         return label;
     }
-
 }

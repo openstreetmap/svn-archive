@@ -30,7 +30,8 @@ final class DataSetCommandMerger {
     private final DataSet sourceDataSet;
     private final DataSet targetDataSet;
 
-    private final LinkedList<Command> cmds = new LinkedList<Command>();
+    private final List<Command> cmds = new LinkedList<Command>();
+    private final List<OsmPrimitive> undeletedPrimitives = new LinkedList<OsmPrimitive>();
 
     /**
      * constructor
@@ -44,6 +45,7 @@ final class DataSetCommandMerger {
     private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget) {
         if (!target.hasEqualSemanticAttributes(newTarget)) {
             cmds.add(new ChangeCommand(target,newTarget));
+            undeletedPrimitives.add(target);
         }
     }
 
@@ -93,7 +95,7 @@ final class DataSetCommandMerger {
         List<Node> newNodes = new ArrayList<Node>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node)getMergeTarget(sourceNode);
-            if (!targetNode.isDeleted()) {
+            if (!targetNode.isDeleted() || undeletedPrimitives.contains(targetNode)) {
                 newNodes.add(targetNode);
             } else if (sourceNode.isIncomplete()
                     && !conflicts.hasConflictForMy(targetNode)) {
@@ -156,7 +158,7 @@ final class DataSetCommandMerger {
         }
     }
 
-    public LinkedList<Command> getCommandList() {
+    public List<Command> getCommandList() {
         return cmds;
     }
 

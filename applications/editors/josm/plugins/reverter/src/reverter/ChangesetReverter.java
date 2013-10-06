@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
@@ -203,6 +202,7 @@ public class ChangesetReverter {
      * @param progressMonitor
      * @throws OsmTransferException
      */
+    @SuppressWarnings("unchecked")
     public void downloadObjectsHistory(ProgressMonitor progressMonitor) throws OsmTransferException {
         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
 
@@ -333,7 +333,7 @@ public class ChangesetReverter {
         //////////////////////////////////////////////////////////////////////////
         // Create commands to restore/update all affected objects
         DataSetCommandMerger merger = new DataSetCommandMerger(nds,ds);
-        LinkedList<Command> cmds = merger.getCommandList();
+        List<Command> cmds = merger.getCommandList();
 
         //////////////////////////////////////////////////////////////////////////
         // Create a set of objects to be deleted

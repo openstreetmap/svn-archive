@@ -17,6 +17,8 @@ import java.util.Map.Entry;
 import javax.swing.*;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import messages.Messages;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
@@ -124,7 +126,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		panelS57.setVisible(false);
 		editFrame.add(panelS57);
 
-		showFrame = new ShowFrame("Seamark Inspector");
+		showFrame = new ShowFrame(tr("Seamark Inspector"));
 		showFrame.setSize(new Dimension(300, 300));
 		Rectangle rect = Main.map.mapView.getBounds();
 		showFrame.setLocation(50, (rect.y + rect.height - 200));
@@ -186,10 +188,13 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 					}
 				} else {
 					showFrame.setVisible(false);
+					PanelMain.messageBar.setText(tr("Select only one feature"));
 				}
 			}
 		if (nextFeature == null) {
 			feature = null;
+			panelMain.clearMark();
+			PanelMain.messageBar.setText(tr("Select a map feature"));
 		}
 	}
 

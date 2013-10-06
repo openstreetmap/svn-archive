@@ -18,7 +18,6 @@ import org.openstreetmap.josm.Main;
 import s57.S57att.Att;
 import s57.S57obj.Obj;
 import seamap.SeaMap.*;
-import smed2.S57en;
 import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
@@ -107,14 +106,14 @@ public class PanelMain extends JPanel {
 						AttItem item = atts.get(att);
 						switch (item.conv) {
 						case E:
-							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + S57en.enums.get(att).get(item.val) + "\n");
+							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + Messages.getString(((Enum)item.val).name()) + "\n");
 							break;
 						case L:
 							decode.append("\t\t\t" + Messages.getString(att.name()) + ": ");
 							Iterator it = ((ArrayList)item.val).iterator();
 							while (it.hasNext()) {
 								Object val = it.next();
-								decode.append((String)S57en.enums.get(att).get(val));
+								decode.append(Messages.getString(((Enum)val).name()));
 								if (it.hasNext()) {
 									decode.append(", ");
 								}

@@ -183,6 +183,7 @@ while(my $line = <>)
   elsif($line =~ /<\/combo/)
   {
     $combo_n = "";
+    print "\n";
   }
   elsif(!$line)
   {

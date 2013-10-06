@@ -429,10 +429,8 @@ public final class NodeWayUtils {
      * @return 0 =  not inside polygon, 1 = strictly inside, 2 = near edge, 3 = near vertex
      */
     public static int getRayIntersectionsCount(EastNorth point, List<EastNorth> polygonPoints) {
-        int n=polygonPoints.size();
         if (point==null) return 0;
         EastNorth oldPoint = null;
-                //polygonPoints.get(n-1);
         double n1,n2,n3,e1,e2,e3,d;
         int interCount=0;
         

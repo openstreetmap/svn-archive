@@ -40,7 +40,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
 
         // FIXME: get rid of hardcoded URLS
 
-        String addr =  URLList.getSelectedURL();
+        URLList.getSelectedURL();
         table=new JTable(new DefaultTableModel(null,new String[]{"Title","URL"}));
 
         List<String> items = URLList.getURLList();
@@ -106,7 +106,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
 
     private void fillRows(List<String> items) {
         if (items==null) return;
-        int p=0,row=0;
+        int p=0;
         String name, url;
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
@@ -114,21 +114,18 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
         while (true) {
             if (p>=n) break;
             name = items.get(p);
-            //System.out.println("name="+name);
             p++;
             if (p>=n) break;
             url = items.get(p);
-            //System.out.println("url="+url);
             p++;
             model.addRow(new String[]{name,url});
-            row++;
         }
         model.addRow(new String[]{"",""});
     }
 
     @Override
     public boolean ok() {
-        String addr=combo1.getText();
+        combo1.getText();
         List<String> lst = readItemsFromTable();
         URLList.updateURLList(lst);
 

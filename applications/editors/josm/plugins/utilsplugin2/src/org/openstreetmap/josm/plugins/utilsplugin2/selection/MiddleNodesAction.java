@@ -30,8 +30,6 @@ public class MiddleNodesAction extends JosmAction {
         putValue("help", ht("/Action/MiddleNodes"));
     }
 
-    private  Set<Way> activeWays = new HashSet<Way>();
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();

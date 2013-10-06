@@ -1,13 +1,14 @@
 // License: GPL v2 or later. See LICENSE file for details.
 package org.openstreetmap.josm.plugins.utilsplugin2;
 
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.PushbackTokenizer;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
@@ -24,15 +25,37 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.utilsplugin2.actions.*;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.AddIntersectionsAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.AlignWayNodesAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.ExtractPointAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.PasteRelationsAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.SplitObjectAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.SplitOnIntersectionsAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.SymmetryAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.TagBufferAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.TagSourceAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.UnGlueRelationAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.curves.CurveAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.customurl.ChooseURLAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.customurl.OpenPageAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.customurl.UtilsPluginPreferences;
 import org.openstreetmap.josm.plugins.utilsplugin2.latlon.LatLonAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryAction;
-import org.openstreetmap.josm.plugins.utilsplugin2.selection.*;
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.AdjacentNodesAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.AdjacentWaysAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.ConnectedWaysAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.IntersectedWaysAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.IntersectedWaysRecursiveAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.MiddleNodesAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectAllInsideAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectBoundaryAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectHighwayAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectModNodesAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectModWaysAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.SelectWayNodesAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.UndoSelectionAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.selection.UnselectNodesAction;
 
 public class UtilsPlugin2 extends Plugin {
     JMenuItem unglueRelation;

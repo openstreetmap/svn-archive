@@ -22,7 +22,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class SelectWayNodesAction extends JosmAction {
 
-    private Node selectedNode;
     private ArrayList<Node> selectedNodes;
 
     /**
@@ -43,7 +42,6 @@ public class SelectWayNodesAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
 
-        String errMsg = null;
         for (OsmPrimitive p : selection) {
             if (p instanceof Way) {
                 Way w = (Way) p;

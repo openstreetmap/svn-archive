@@ -51,7 +51,6 @@ public class LatLonDialog extends ExtendedDialog {
     private JRadioButton rbWay;
     private JRadioButton rbClosedWay;
     private ButtonGroup bgType;
-    private String geomType;
 
     private LatLon[] latLonCoordinates;
 

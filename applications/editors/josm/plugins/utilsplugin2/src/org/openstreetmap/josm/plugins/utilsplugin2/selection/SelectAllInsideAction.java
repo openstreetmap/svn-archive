@@ -29,7 +29,6 @@ public class SelectAllInsideAction extends JosmAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        long t=System.currentTimeMillis();
         Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(getCurrentDataSet().getSelected(), getCurrentDataSet());
         
         if (!insideSelected.isEmpty()) {
@@ -39,7 +38,6 @@ public class SelectAllInsideAction extends JosmAction {
                tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"),
                tr("Warning"), JOptionPane.WARNING_MESSAGE);
         }
-
     }
 
     @Override

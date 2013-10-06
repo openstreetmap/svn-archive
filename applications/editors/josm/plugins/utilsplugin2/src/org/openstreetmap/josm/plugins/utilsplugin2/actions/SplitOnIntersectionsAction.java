@@ -89,15 +89,6 @@ public class SplitOnIntersectionsAction extends JosmAction {
             getCurrentDataSet().clearSelection();
         }
     }
-    
-    private void filterInnerNodes( Node n, List<Way> ways ) {
-        Iterator<Way> it = ways.iterator();
-        while (it.hasNext()) {
-            Way w = it.next();
-            if(!w.isInnerNode(n))
-                it.remove();
-        }
-    }
 
     @Override
     protected void updateEnabledState() {

@@ -18,6 +18,9 @@ import seamap.SeaMap.*;
 
 public class ShowFrame extends JFrame {
 	
+	SeaMap showMap;
+	Picture picture;
+
 	class Picture extends JPanel implements MapHelper {
 		
 		public void drawPicture(OsmPrimitive osm, SeaMap map) {
@@ -51,9 +54,6 @@ public class ShowFrame extends JFrame {
 		}
 	}
 	
-	SeaMap showMap;
-	Picture picture;
-
 	public ShowFrame(String title) {
 		super(title);
 		picture = new Picture();

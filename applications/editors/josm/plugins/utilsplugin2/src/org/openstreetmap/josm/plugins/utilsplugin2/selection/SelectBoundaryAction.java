@@ -1,7 +1,6 @@
 // License: GPL. Copyright 2011 by Alexei Kasatkin
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
-import java.util.LinkedHashSet;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
@@ -40,10 +39,9 @@ public class SelectBoundaryAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //long t=System.currentTimeMillis();
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Node.class);
-        LinkedHashSet<Relation> selectedRelations = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
+        Set<Relation> selectedRelations = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
         
         Set<Way> newWays = new HashSet<Way>();
         
@@ -103,15 +101,11 @@ public class SelectBoundaryAction extends JosmAction {
                getCurrentDataSet().setSelected(Arrays.asList(rels.get(0)));
                return;
         }
-
-        
         
         // try going left at each turn
         if (! NodeWayUtils.addAreaBoundary(w, newWays, lastUsedLeft) ) {
             NodeWayUtils.addAreaBoundary(w, newWays, !lastUsedLeft); // try going right at each turn
         }
-        
-        
         
         if (!newWays.isEmpty() ) {
             getCurrentDataSet().setSelected(newWays);
@@ -120,7 +114,6 @@ public class SelectBoundaryAction extends JosmAction {
                tr("Nothing found. Please select way that is a part of some polygon formed by connected ways"),
                tr("Warning"), JOptionPane.WARNING_MESSAGE);
         }
-
     }
 
     @Override
@@ -140,6 +133,4 @@ public class SelectBoundaryAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
-
 }

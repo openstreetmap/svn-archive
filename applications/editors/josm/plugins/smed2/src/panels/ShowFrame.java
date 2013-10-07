@@ -7,6 +7,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
@@ -15,43 +16,55 @@ import seamap.Renderer;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
 
-public class ShowFrame extends JFrame implements MapHelper {
+public class ShowFrame extends JFrame {
 	
-	public SeaMap showMap;
+	class Picture extends JPanel implements MapHelper {
+		
+		public void drawPicture(OsmPrimitive osm, SeaMap map) {
+			long id;
+			Feature feature;
+			
+			id = osm.getUniqueId();
+			feature = map.index.get(id);
+			showMap = new SeaMap();
+			showMap.nodes = map.nodes;
+			showMap.edges = map.edges;
+			showMap.areas = map.areas;
+			showMap.index = map.index;
+			if (feature != null) {
+				showMap.features.put(feature.type, new ArrayList<Feature>());
+				showMap.features.get(feature.type).add(feature);
+			}
+			repaint();
+		}
+		
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setBackground(new Color(0xb5d0d0));
+			g2.clearRect(0, 0, 300, 300);
+			Renderer.reRender(g2, 16, 32, showMap, this);
+		}
+
+		@Override
+		public Point2D getPoint(Snode coord) {
+			return new Point2D.Double(150, 150);
+		}
+	}
+	
+	SeaMap showMap;
+	Picture picture;
 
 	public ShowFrame(String title) {
 		super(title);
+		picture = new Picture();
+    picture.setVisible(true);
+		add(picture);
+    pack();
 	}
 	
 	public void showFeature(OsmPrimitive osm, SeaMap map) {
-		long id;
-		Feature feature;
-		
-		id = osm.getUniqueId();
-		feature = map.index.get(id);
-		showMap = new SeaMap();
-		showMap.nodes = map.nodes;
-		showMap.edges = map.edges;
-		showMap.areas = map.areas;
-		showMap.index = map.index;
-		if (feature != null) {
-			showMap.features.put(feature.type, new ArrayList<Feature>());
-			showMap.features.get(feature.type).add(feature);
-		}
-		repaint();
+		picture.drawPicture(osm, map);
 	}
 	
-	@Override
-	public Point2D getPoint(Snode coord) {
-		return new Point2D.Double(150, 150);
-	}
 	
-	public void paint(Graphics g) {
-		super.paint(g);
-		Graphics2D g2 = (Graphics2D)g;
-		g2.setBackground(new Color(0xb5d0d0));
-		g2.clearRect(0, 0, 300, 300);
-		Renderer.reRender(g2, 16, 32, showMap, this);
-	}
-
 }

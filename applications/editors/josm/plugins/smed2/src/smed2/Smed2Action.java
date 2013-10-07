@@ -17,7 +17,6 @@ import java.util.Map.Entry;
 import javax.swing.*;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
-import messages.Messages;
 
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;

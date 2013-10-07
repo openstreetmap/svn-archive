@@ -4,7 +4,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +21,10 @@ import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static JTextArea decode = null;
 	public static JTextField messageBar = null;
 	public JButton saveButton = null;
@@ -106,14 +109,14 @@ public class PanelMain extends JPanel {
 						AttItem item = atts.get(att);
 						switch (item.conv) {
 						case E:
-							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + Messages.getString(((Enum)item.val).name()) + "\n");
+							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + Messages.getString(((Enum<?>)item.val).name()) + "\n");
 							break;
 						case L:
 							decode.append("\t\t\t" + Messages.getString(att.name()) + ": ");
-							Iterator it = ((ArrayList)item.val).iterator();
+							Iterator<?> it = ((ArrayList<?>)item.val).iterator();
 							while (it.hasNext()) {
 								Object val = it.next();
-								decode.append(Messages.getString(((Enum)val).name()));
+								decode.append(Messages.getString(((Enum<?>)val).name()));
 								if (it.hasNext()) {
 									decode.append(", ");
 								}
@@ -133,11 +136,4 @@ public class PanelMain extends JPanel {
 		decode.setText(tr("No feature selected"));
 	}
 	
-	private JRadioButton getButton(JRadioButton button, int x, int y, int w, int h, String title) {
-		button.setBounds(new Rectangle(x, y, w, h));
-		button.setBorder(BorderFactory.createLoweredBevelBorder());
-		button.setText(title);
-		return button;
-	}
-
 }

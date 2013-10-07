@@ -331,10 +331,6 @@ public class S57val {
 		Catros.put(CatROS.ROS_VAID, new S57enum(28, "v-ais_isolated_danger")); Catros.put(CatROS.ROS_VASW, new S57enum(29, "v-ais_safe_water"));
 		Catros.put(CatROS.ROS_VASP, new S57enum(30, "v-ais_special_purpose")); Catros.put(CatROS.ROS_VAWK, new S57enum(31, "v-ais_wreck")); 
 	}
-	public enum CatTRK { TRK_UNKN, TRK_FIXM, TRK_NFXM }
-	private static final EnumMap<CatTRK, S57enum> Cattrk = new EnumMap<CatTRK, S57enum>(CatTRK.class); static { Cattrk.put(CatTRK.TRK_UNKN, new S57enum(0, ""));
-		Cattrk.put(CatTRK.TRK_FIXM, new S57enum(1, "fixed_marks")); Cattrk.put(CatTRK.TRK_NFXM, new S57enum(2, "no_fixed_marks"));
-	}
 	public enum CatRSC { RSC_UNKN, RSC_LIFB, RSC_ROKT, RSC_LBRK, RSC_RFSW, RSC_RFIT, RSC_LBOM, RSC_RDIO, RSC_FSTA, RSC_SPLN, RSC_ACFT, RSC_STUG } 
 	private static final EnumMap<CatRSC, S57enum> Catrsc = new EnumMap<CatRSC, S57enum>(CatRSC.class); static { Catrsc.put(CatRSC.RSC_UNKN, new S57enum(0, ""));
 		Catrsc.put(CatRSC.RSC_LIFB, new S57enum(1, "lifeboat")); Catrsc.put(CatRSC.RSC_ROKT, new S57enum(2, "rocket")); Catrsc.put(CatRSC.RSC_LBRK, new S57enum(3, "lifeboat_rocket"));
@@ -470,6 +466,10 @@ public class S57val {
 	  Catspm.put(CatSPM.SPM_NENT, new S57enum(50, "no_entry")); Catspm.put(CatSPM.SPM_WRKP, new S57enum(51, "work_in_progress")); Catspm.put(CatSPM.SPM_UKPP, new S57enum(52, "unknown_purpose"));
 	  Catspm.put(CatSPM.SPM_WELH, new S57enum(53, "wellhead")); Catspm.put(CatSPM.SPM_CHSP, new S57enum(54, "channel_separation")); Catspm.put(CatSPM.SPM_MFRM, new S57enum(55, "marine_farm"));
 	  Catspm.put(CatSPM.SPM_AREF, new S57enum(56, "artificial_reef"));
+	}
+	public enum CatTRK { TRK_UNKN, TRK_FIXM, TRK_NFXM }
+	private static final EnumMap<CatTRK, S57enum> Cattrk = new EnumMap<CatTRK, S57enum>(CatTRK.class); static { Cattrk.put(CatTRK.TRK_UNKN, new S57enum(0, ""));
+		Cattrk.put(CatTRK.TRK_FIXM, new S57enum(1, "fixed_marks")); Cattrk.put(CatTRK.TRK_NFXM, new S57enum(2, "no_fixed_marks"));
 	}
 	public enum CatTSS { TSS_UNKN, TSS_IMOA, TSS_NIMO }
 	private static final EnumMap<CatTSS, S57enum> Cattss = new EnumMap<CatTSS, S57enum>(CatTSS.class); static { Cattss.put(CatTSS.TSS_UNKN, new S57enum(0, ""));

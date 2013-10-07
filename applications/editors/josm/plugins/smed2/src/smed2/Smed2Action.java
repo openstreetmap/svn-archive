@@ -132,7 +132,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		showFrame.setLocation(50, (rect.y + rect.height - 200));
 		showFrame.setResizable(false);
 		showFrame.setAlwaysOnTop(true);
-		showFrame.setEnabled(false);
+		showFrame.setEnabled(true);
 		showFrame.setVisible(false);
 
 		// System.out.println("hello");
@@ -183,7 +183,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 					if (nextFeature.compareTo(feature) != 0) {
 						feature = nextFeature;
 						panelMain.parseMark(map.index.get(feature.getUniqueId()));
-//						showFrame.setVisible(true);
+						showFrame.setVisible(true);
 						showFrame.showFeature(feature, map);
 					}
 				} else {
@@ -194,6 +194,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		if (nextFeature == null) {
 			feature = null;
 			panelMain.clearMark();
+			showFrame.setVisible(false);
 			PanelMain.messageBar.setText(tr("Select a map feature"));
 		}
 	}

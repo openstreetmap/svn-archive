@@ -3,9 +3,11 @@ package reverter;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.conflict.Conflict;
@@ -31,7 +33,7 @@ final class DataSetCommandMerger {
     private final DataSet targetDataSet;
 
     private final List<Command> cmds = new LinkedList<Command>();
-    private final List<OsmPrimitive> undeletedPrimitives = new LinkedList<OsmPrimitive>();
+    private final List<OsmPrimitive> nominalRevertedPrimitives = new LinkedList<OsmPrimitive>();
 
     /**
      * constructor
@@ -42,10 +44,13 @@ final class DataSetCommandMerger {
         merge();
     }
     
-    private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget) {
+    private void addChangeCommandIfNotEquals(OsmPrimitive target, OsmPrimitive newTarget, boolean nominal) {
         if (!target.hasEqualSemanticAttributes(newTarget)) {
             cmds.add(new ChangeCommand(target,newTarget));
-            undeletedPrimitives.add(target);
+            if (nominal) {
+                nominalRevertedPrimitives.add(target);
+            }
+            Main.debug("Reverting "+target+" to "+newTarget);
         }
     }
 
@@ -76,7 +81,7 @@ final class DataSetCommandMerger {
 
         Node newTarget = new Node(target);
         mergePrimitive(source, target, newTarget);
-        addChangeCommandIfNotEquals(target,newTarget);
+        addChangeCommandIfNotEquals(target,newTarget,true);
     }
 
     /**
@@ -91,24 +96,38 @@ final class DataSetCommandMerger {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Way target = (Way)getMergeTarget(source);
+        
+        Collection<Conflict<OsmPrimitive>> localConflicts = new ArrayList<Conflict<OsmPrimitive>>();
 
         List<Node> newNodes = new ArrayList<Node>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node)getMergeTarget(sourceNode);
-            if (!targetNode.isDeleted() || undeletedPrimitives.contains(targetNode)) {
+            // Target node is not deleted or it will be undeleted when running existing commands
+            if (!targetNode.isDeleted() || nominalRevertedPrimitives.contains(targetNode)) {
                 newNodes.add(targetNode);
-            } else if (sourceNode.isIncomplete()
-                    && !conflicts.hasConflictForMy(targetNode)) {
-                conflicts.add(new Conflict<OsmPrimitive>(targetNode, sourceNode, true));
-                Node undeletedTargetNode = new Node(targetNode);
-                undeletedTargetNode.setDeleted(false);
-                addChangeCommandIfNotEquals(targetNode,undeletedTargetNode);
+            // Target node has been deleted by a more recent changeset -> conflict
+            } else if (sourceNode.isIncomplete() && !conflicts.hasConflictForMy(targetNode)) {
+                localConflicts.add(new Conflict<OsmPrimitive>(targetNode, sourceNode, true));
+            } else {
+                Main.info("Skipping target node "+targetNode+" for source node "+sourceNode+" while reverting way "+source);
             }
         }
         Way newTarget = new Way(target);
         mergePrimitive(source, target, newTarget);
         newTarget.setNodes(newNodes);
-        addChangeCommandIfNotEquals(target,newTarget);
+        if (newNodes.isEmpty()) {
+            Main.error("Unable to revert "+source+" as it produces 0 nodes way "+newTarget);
+        } else {
+            for (Conflict<OsmPrimitive> c : localConflicts) {
+                Main.warn("New conflict: "+c);
+                conflicts.add(c);
+                Node targetNode = (Node)c.getTheir();
+                Node undeletedTargetNode = new Node(targetNode);
+                undeletedTargetNode.setDeleted(false);
+                addChangeCommandIfNotEquals(targetNode,undeletedTargetNode,false);
+            }
+            addChangeCommandIfNotEquals(target,newTarget,true);
+        }
     }
 
     /**
@@ -136,14 +155,14 @@ final class DataSetCommandMerger {
                 default: throw new AssertionError();
                 }
                 undeletedTargetMember.setDeleted(false);
-                addChangeCommandIfNotEquals(targetMember,undeletedTargetMember);
+                addChangeCommandIfNotEquals(targetMember,undeletedTargetMember,false);
             }
             newMembers.add(new RelationMember(sourceMember.getRole(), targetMember));
         }
         Relation newRelation = new Relation(target);
         mergePrimitive(source, target, newRelation);
         newRelation.setMembers(newMembers);
-        addChangeCommandIfNotEquals(target,newRelation);
+        addChangeCommandIfNotEquals(target,newRelation,true);
     }
     
     private void merge() {

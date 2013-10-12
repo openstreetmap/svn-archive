@@ -181,9 +181,9 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				if (selection.size() == 1) {
 					if (nextFeature.compareTo(feature) != 0) {
 						feature = nextFeature;
-						panelMain.parseMark(map.index.get(feature.getUniqueId()));
-						showFrame.setVisible(true);
-						showFrame.showFeature(feature, map);
+//						panelMain.parseMark(map.index.get(feature.getUniqueId()));
+//						showFrame.setVisible(true);
+//						showFrame.showFeature(feature, map);
 					}
 				} else {
 					showFrame.setVisible(false);

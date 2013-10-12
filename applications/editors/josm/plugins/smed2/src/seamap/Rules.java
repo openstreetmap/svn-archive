@@ -104,19 +104,13 @@ public class Rules {
 	private static void areas(Feature feature) {
 		AttItem name = feature.atts.get(Att.OBJNAM);
 		switch (feature.type) {
-		case SPLARE:
-			if (zoom >= 12) {
-				Renderer.symbol(feature, Areas.Plane, Obj.SPLARE, null, null);
-				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, 10);
-			}
-			if ((zoom >= 15) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
-			break;
-		case MARCUL:
-			if (zoom >= 14)
-				Renderer.symbol(feature, Areas.MarineFarm, Obj.MARCUL, null, null);
-			if (zoom >= 16)
-				Renderer.lineVector(feature, new LineStyle( Color.black, 4, new float[] { 10, 10 }, null));
+		case DRGARE:
+			if (zoom < 16)
+				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, new Color(0x40ffffff, true)));
+			else
+				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, null));
+			if ((zoom >= 12) && (name != null))
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), Color.black, null);
 			break;
 		case FAIRWY:
 			if (feature.area > 2.0) {
@@ -129,20 +123,11 @@ public class Rules {
 					Renderer.lineVector(feature, new LineStyle(new Color(0x40ffffff, true), 0, null, null));
 			}
 			break;
-		case DRGARE:
-			if (zoom < 16)
-				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, new Color(0x40ffffff, true)));
-			else
-				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, null));
-			if ((zoom >= 12) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.PLAIN, 100), Color.black, null);
-			break;
-		case RESARE:
-			if (zoom >= 12) {
-				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0);
-//				if ((CatREA)Renderer.getAttVal(feature, feature.type, 0, Att.CATREA) == CatREA.REA_NWAK)
-//					Renderer.symbol(feature, Areas.NoWake, Obj.RESARE, null);
-			}
+		case MARCUL:
+			if (zoom >= 14)
+				Renderer.symbol(feature, Areas.MarineFarm, Obj.MARCUL, null, null);
+			if (zoom >= 16)
+				Renderer.lineVector(feature, new LineStyle( Color.black, 4, new float[] { 10, 10 }, null));
 			break;
 		case OSPARE:
 			if ((CatPRA)Renderer.getAttVal(feature, feature.type, 0, Att.CATPRA) == CatPRA.PRA_WFRM) {
@@ -150,6 +135,13 @@ public class Rules {
 				Renderer.lineVector(feature, new LineStyle(Color.black, 20, new float[] { 40, 40 }, null));
 				if ((zoom >= 15) && (name != null))
 					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
+			}
+			break;
+		case RESARE:
+			if (zoom >= 12) {
+				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0);
+//				if ((CatREA)Renderer.getAttVal(feature, feature.type, 0, Att.CATREA) == CatREA.REA_NWAK)
+//					Renderer.symbol(feature, Areas.NoWake, Obj.RESARE, null);
 			}
 			break;
 		case SEAARE:
@@ -165,10 +157,6 @@ public class Rules {
 				break;
 			}
 			break;
-		case SNDWAV:
-//	  if (zoom>=12)) area("fill:url(#sandwaves)");
-			break;
-		}
 /*
   if (is_type("sea_area")) {
     if (has_attribute("category")) {
@@ -204,7 +192,20 @@ public class Rules {
     }
   }
  */
+		case SNDWAV:
+			if (zoom >= 12) Renderer.fillPattern(feature, Areas.Sandwaves);
+			break;
+		case SPLARE:
+			if (zoom >= 12) {
+				Renderer.symbol(feature, Areas.Plane, Obj.SPLARE, null, null);
+				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, 10);
+			}
+			if ((zoom >= 15) && (name != null))
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
+			break;
+		}
 	}
+	
 	private static void beacons(Feature feature) {
 		BcnSHP shape = (BcnSHP) Renderer.getAttVal(feature, feature.type, 0, Att.BCNSHP);
 		if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY)) && (feature.type == Obj.BCNLAT)) {

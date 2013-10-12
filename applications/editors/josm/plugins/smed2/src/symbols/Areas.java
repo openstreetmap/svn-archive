@@ -9,10 +9,9 @@
 
 package symbols;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.*;
+import java.awt.image.*;
 
 import symbols.Symbols.*;
 
@@ -126,7 +125,6 @@ public class Areas {
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(-10,17.3,10,-17.3)));
 		RockC.add(new Instr(Prim.LINE, new Line2D.Double(10,17.3,-10,-17.3)));
 	}
-	public static final Symbol Sandwaves = new Symbol();
 	public static final Symbol Seaplane = new Symbol();
 	static {
 		Seaplane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
@@ -177,5 +175,20 @@ public class Areas {
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-30,0); p.lineTo(-40,-25); p.lineTo(-0.3,-12.6); p.lineTo(13.7,-37.7); p.lineTo(16.3,-36.3);
 		p.lineTo(2.7,-11.6); p.lineTo(37.5,0); p.lineTo(6,0); p.curveTo(5.6,-8,-5.6,-8,-6,0); p.closePath();
 		WreckS.add(new Instr(Prim.PGON, p));
+	}
+	public static final BufferedImage Sandwaves = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+	static {
+		Graphics2D g2 = Sandwaves.createGraphics();
+		g2.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g2.setBackground(new Color(0, true));
+		g2.clearRect(0,  0, 100, 100);
+		g2.setPaint(new Color(0xffd400));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,34.5); p.lineTo(03.3,30.8); p.lineTo(09.9,19.3); p.lineTo(13.2,16.0); p.lineTo(16.5,16.1); p.lineTo(18.2,19.5);
+		p.lineTo(19.9,25.0); p.lineTo(21.6,30.3); p.lineTo(23.3,33.4); p.lineTo(25.0,33.3); p.lineTo(28.3,30.1); p.lineTo(31.6,25.0); p.lineTo(34.9,20.1); p.lineTo(38.2,17.2);
+		p.lineTo(41.5,17.3); p.lineTo(43.2,20.3); p.lineTo(44.9,25); p.lineTo(46.6,29.6); p.lineTo(48.3,32.2); p.lineTo(50.0,32.1);
+		p.moveTo(50.0,84.5); p.lineTo(53.3,80.8); p.lineTo(56.6,75.0); p.lineTo(59.9,69.3); p.lineTo(63.2,66.0); p.lineTo(66.5,66.1); p.lineTo(68.2,69.5); p.lineTo(69.9,75.0);
+		p.lineTo(71.6,80.3); p.lineTo(73.3,83.4); p.lineTo(75.0,83.3); p.lineTo(78.3,80.1); p.lineTo(81.6,75.0); p.lineTo(84.9,70.1); p.lineTo(88.2,67.2); p.lineTo(91.5,67.3);
+		p.lineTo(93.2,70.3); p.lineTo(94.9,75.0); p.lineTo(96.6,79.6); p.lineTo(98.3,82.2); p.lineTo(100.0,82.1);
+		g2.draw(p);
 	}
 }

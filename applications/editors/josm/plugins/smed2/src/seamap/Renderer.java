@@ -12,6 +12,7 @@ package seamap;
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
+import java.awt.image.*;
 import java.util.*;
 
 import s57.S57att.*;
@@ -267,6 +268,32 @@ public class Renderer {
 		if (style.fill != null) {
 			g2.setPaint(style.fill);
 			g2.fill(p);
+		}
+	}
+	
+	public static void fillPattern(Feature feature, BufferedImage image) {
+		Path2D.Double p = new Path2D.Double();
+		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		Point2D point;
+		switch (feature.flag) {
+		case POINT:
+			point = helper.getPoint(feature.centre);
+			g2.drawImage(image, new AffineTransformOp(AffineTransform.getScaleInstance(sScale, sScale), AffineTransformOp.TYPE_NEAREST_NEIGHBOR),
+					(int)(point.getX() - (50 * sScale)), (int)(point.getY() - (50 * sScale)));
+			break;
+		case AREA:
+			for (Bound bound : map.areas.get(feature.refs)) {
+				BoundIterator bit = map.new BoundIterator(bound);
+				point = helper.getPoint(bit.next());
+				p.moveTo(point.getX(), point.getY());
+				while (bit.hasNext()) {
+					point = helper.getPoint(bit.next());
+					p.lineTo(point.getX(), point.getY());
+				}
+			}
+	    g2.setPaint(new TexturePaint(image, new Rectangle(0, 0, 1 + (int)(100 * sScale), 1 + (int)(100 * sScale))));
+	    g2.fill(p);
+	    break;
 		}
 	}
 

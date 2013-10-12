@@ -30,12 +30,14 @@ import org.openstreetmap.josm.Main;
 
 import s57.S57dat;
 import seamap.SeaMap;
+import seamap.SeaMap.*;
 
 import panels.PanelMain;
 import panels.ShowFrame;
 
 public class Smed2Action extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
 
+	private static final long serialVersionUID = 1L;
 	private static String editor = tr("SeaMap Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;
@@ -175,21 +177,25 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		OsmPrimitive nextFeature = null;
 		OsmPrimitive feature = null;
 
-		if (selection.size() == 0) showFrame.setVisible(false);
+		showFrame.setVisible(false);
+		panelMain.clearMark();
 		for (OsmPrimitive osm : selection) {
-				nextFeature = osm;
-				if (selection.size() == 1) {
-					if (nextFeature.compareTo(feature) != 0) {
-						feature = nextFeature;
-//						panelMain.parseMark(map.index.get(feature.getUniqueId()));
-//						showFrame.setVisible(true);
-//						showFrame.showFeature(feature, map);
+			nextFeature = osm;
+			if (selection.size() == 1) {
+				if (nextFeature.compareTo(feature) != 0) {
+					feature = nextFeature;
+					Feature id = map.index.get(feature.getUniqueId());
+					if (id != null) {
+						panelMain.parseMark(id);
+						showFrame.setVisible(true);
+						showFrame.showFeature(feature, map);
 					}
-				} else {
-					showFrame.setVisible(false);
-					PanelMain.messageBar.setText(tr("Select only one feature"));
 				}
+			} else {
+				showFrame.setVisible(false);
+				PanelMain.messageBar.setText(tr("Select only one feature"));
 			}
+		}
 		if (nextFeature == null) {
 			feature = null;
 			panelMain.clearMark();

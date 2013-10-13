@@ -317,19 +317,47 @@ public class Rules {
 					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10, new Color(0xc480ff));
 				}
 				if ((zoom >= 15) && ((name) != null)) {
-					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Color(0xc480ff), new Delta(Handle.BC, AffineTransform.getTranslateInstance(160, 0)));
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 60), new Color(0xc480ff), new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
+				}
+				ArrayList<StsSTS> sts = (ArrayList<StsSTS>)Renderer.getAttVal(feature, Obj.ACHARE, 0, Att.STATUS);
+				if ((zoom >= 15) && (sts != null) && (sts.contains(StsSTS.STS_RESV))) {
+					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.BOLD, 50), new Color(0xc480ff), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
+				}
+			}
+			ArrayList<CatACH> cats = (ArrayList<CatACH>)Renderer.getAttVal(feature, Obj.ACHARE, 0, Att.CATACH);
+			int dy = (cats.size() - 1) * -30;
+			for (CatACH cat : cats) {
+				switch (cat) {
+				case ACH_DEEP:
+					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), new Color(0xc480ff), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					dy += 60;
+					break;
+				case ACH_TANK:
+					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), new Color(0xc480ff), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					dy += 60;
+					break;
+				case ACH_H24P:
+					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), new Color(0xc480ff), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					dy += 60;
+					break;
+				case ACH_EXPL:
+					Renderer.symbol(feature, Harbours.Explosives, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(new Color(0xc480ff)));
+					dy += 60;
+					break;
+				case ACH_QUAR:
+					Renderer.symbol(feature, Harbours.Hospital, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(new Color(0xc480ff)));
+					dy += 60;
+					break;
+				case ACH_SEAP:
+					Renderer.symbol(feature, Areas.Seaplane, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(new Color(0xc480ff)));
+					dy += 60;
+					break;
 				}
 			}
 			break;
 		}
 	}
 /*
-	 *   if ((zoom >= 12) && is_type("anchorage")) {
-    symbol("anchorage");
-    if ((zoom >= 15) && (has_item_attribute("name")))
-      text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -90);
-    if ((zoom >= 12) && (is_area)) line_symbols("restricted_line", 0.5, "line_anchor", 10);
-  }
   if ((zoom >= 16) && is_type("anchor_berth")) symbol("anchor_berth");
   if ((zoom >= 12) && is_type("harbour")) {
     if (has_attribute("category")) {

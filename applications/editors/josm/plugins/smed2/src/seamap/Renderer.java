@@ -303,7 +303,7 @@ public class Renderer {
 		Symbol label = new Symbol();
 		label.add(new Instr(Prim.TEXT, new Caption(str, font, colour, (delta == null) ? new Delta(Handle.CC, null) : delta)));
 		Point2D point = helper.getPoint(feature.centre);
-		Symbols.drawSymbol(g2, label, tScale, point.getX(), point.getY(), null, null);
+		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
 	}
 
 	public static void lineText(Feature feature, String str, Font font, Color colour, double offset, double dy) {

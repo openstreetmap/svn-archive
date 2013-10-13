@@ -183,28 +183,30 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 
 		showFrame.setVisible(false);
 		panelMain.clearMark();
-		for (OsmPrimitive osm : selection) {
-			nextFeature = osm;
-			if (selection.size() == 1) {
-				if (nextFeature.compareTo(feature) != 0) {
-					feature = nextFeature;
-					Feature id = map.index.get(feature.getUniqueId());
-					if (id != null) {
-						panelMain.parseMark(id);
-						showFrame.setVisible(true);
-						showFrame.showFeature(feature, map);
+		if (map != null) {
+			for (OsmPrimitive osm : selection) {
+				nextFeature = osm;
+				if (selection.size() == 1) {
+					if (nextFeature.compareTo(feature) != 0) {
+						feature = nextFeature;
+						Feature id = map.index.get(feature.getUniqueId());
+						if (id != null) {
+							panelMain.parseMark(id);
+							showFrame.setVisible(true);
+							showFrame.showFeature(feature, map);
+						}
 					}
+				} else {
+					showFrame.setVisible(false);
+					PanelMain.messageBar.setText(tr("Select only one feature"));
 				}
-			} else {
-				showFrame.setVisible(false);
-				PanelMain.messageBar.setText(tr("Select only one feature"));
 			}
-		}
-		if (nextFeature == null) {
-			feature = null;
-			panelMain.clearMark();
-			showFrame.setVisible(false);
-			PanelMain.messageBar.setText(tr("Select a map feature"));
+			if (nextFeature == null) {
+				feature = null;
+				panelMain.clearMark();
+				showFrame.setVisible(false);
+				PanelMain.messageBar.setText(tr("Select a map feature"));
+			}
 		}
 	}
 

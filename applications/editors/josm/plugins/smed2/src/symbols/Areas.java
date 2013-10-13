@@ -19,7 +19,6 @@ public class Areas {
 	public static final Symbol Plane = new Symbol();
 	static {
 		Plane.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
-		Plane.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(40,20); p.lineTo(50,10); p.lineTo(27.0,13.3); p.lineTo(23.7,6.8); p.lineTo(40.0,5.0); p.curveTo(55,4,55,-9,40,-10);
 		p.quadTo(31,-11,30,-15); p.lineTo(-30,2); p.quadTo(-35,-12,-45,-15); p.quadTo(-56,-3,-50,15); p.lineTo(18.4,7.3); p.lineTo(21.7,14); p.lineTo(-20,20); p.closePath();
 		Plane.add(new Instr(Prim.PGON, p));
@@ -125,9 +124,9 @@ public class Areas {
 	}
 	public static final Symbol Seaplane = new Symbol();
 	static {
+		Seaplane.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
 		Seaplane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		Seaplane.add(new Instr(Prim.FILL, new Color(0xa30075)));
-		Seaplane.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-60,-60,120,120)));
+		Seaplane.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-58,-58,116,116)));
 		Seaplane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 1.0, 0, 0, null, null)));
 	}
 	public static final Symbol WindFarm = new Symbol();

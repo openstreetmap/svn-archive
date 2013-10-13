@@ -107,7 +107,6 @@ public class Harbours {
 	public static final Symbol Explosives = new Symbol();
 	static {
 		Explosives.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
-		Explosives.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Explosives.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-5,25,10,10)));
 		Explosives.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-10,20); p.lineTo(-13,17); p.lineTo(-13,8);

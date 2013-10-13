@@ -142,7 +142,7 @@ public class Renderer {
 		return Math.pow(2, zoom) * 256 / (21600 * Math.abs(Math.cos(feature.centre.lat)));
 	}
 	
-	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio) {
+	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio, Color col) {
 		Area area;
 		switch (feature.flag) {
 		case LINE:
@@ -206,7 +206,9 @@ public class Renderer {
 								succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
 							}
 							if (!gap) {
-								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))), null);
+								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(),
+										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))),
+										new Scheme(col));
 							}
 							if (space > 0)
 								gap = !gap;

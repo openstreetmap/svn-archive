@@ -4,32 +4,41 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import messages.Messages;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.search.SearchCompiler.Parent;
 
 import s57.S57att.Att;
 import s57.S57obj.Obj;
+import seamap.Renderer;
 import seamap.SeaMap.*;
 import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	Smed2Action dlg;
+	BufferedImage img;
+	int w, h, z, f;
+	JTextField wt, ht, zt, ft;
 	public static JTextArea decode = null;
 	public static JTextField messageBar = null;
 	public JButton saveButton = null;
 	private ActionListener alSave = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			dumpMap();
 		}
 	};
 	private JButton importButton = null;
@@ -64,11 +73,25 @@ public class PanelMain extends JPanel {
 		}
 	};
 
-	public PanelMain() {
-
+	public PanelMain(Smed2Action dia) {
+		dlg = dia;
 		setLayout(null);
 		setSize(new Dimension(480, 480));
 		
+		w = h = z = f = 0;
+		wt = new JTextField("0");
+		wt.setBounds(10, 400, 40, 20);
+    add(wt);
+		ht = new JTextField("0");
+		ht.setBounds(60, 400, 40, 20);
+    add(ht);
+		zt = new JTextField("0");
+		zt.setBounds(110, 400, 40, 20);
+    add(zt);
+		ft = new JTextField("0");
+		ft.setBounds(160, 400, 40, 20);
+    add(ft);
+
     messageBar = new JTextField();
     messageBar.setBounds(70, 430, 290, 20);
     messageBar.setEditable(false);
@@ -91,7 +114,27 @@ public class PanelMain extends JPanel {
 		decode = new JTextArea();
 		decode.setBounds(0, 0, 480, 420);
 		decode.setTabSize(1);
-		add(decode);
+//		add(decode);
+	}
+	
+	public void dumpMap() {
+		img = new BufferedImage(Integer.parseInt(wt.getText()), Integer.parseInt(ht.getText()), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = img.createGraphics();
+		Renderer.reRender(g2, Integer.parseInt(zt.getText()), Integer.parseInt(ft.getText()), dlg.map, dlg.rendering);
+		try {
+			ImageIO.write(img, "png", new File("/Users/mherring/Desktop/export.png"));
+		} catch (Exception x) {
+			System.out.println("Exception");
+		}
+		repaint();
+	}
+	
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setBackground(new Color(0xb5d0d0));
+		if (img != null) g2.clearRect(0, 0, img.getWidth(), img.getHeight());
+		g2.drawImage(img, 0, 0, null);;
 	}
 	
 	public void parseMark(Feature feature) {

@@ -139,7 +139,7 @@ public class Rules {
 			break;
 		case RESARE:
 			if (zoom >= 12) {
-				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0);
+				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0, new Color(0x80c480));
 //				if ((CatREA)Renderer.getAttVal(feature, feature.type, 0, Att.CATREA) == CatREA.REA_NWAK)
 //					Renderer.symbol(feature, Areas.NoWake, Obj.RESARE, null);
 			}
@@ -198,7 +198,7 @@ public class Rules {
 		case SPLARE:
 			if (zoom >= 12) {
 				Renderer.symbol(feature, Areas.Plane, Obj.SPLARE, null, null);
-				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, 10);
+				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, 10, new Color(0x80c480));
 			}
 			if ((zoom >= 15) && (name != null))
 				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
@@ -267,7 +267,7 @@ public class Rules {
 	private static void cables(Feature feature) {
 		if (zoom >= 14) {
 			if (feature.type == Obj.CBLSUB) {
-				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, 0);
+				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, 0, new Color(0x80c480));
 			} else if (feature.type == Obj.CBLOHD) {
 
 			}
@@ -310,11 +310,14 @@ public class Rules {
 		switch (feature.type) {
 		case ACHARE:
 			if (zoom >= 12) {
-				if (feature.flag != Fflag.LINE)
-					Renderer.symbol(feature, Harbours.Anchorage, null, null, null);
-				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10);
+				if (feature.flag != Fflag.AREA) {
+					Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(Color.black));
+				} else {
+					Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(new Color(0xc480ff)));
+					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10, new Color(0xc480ff));
+				}
 				if ((zoom >= 15) && ((name) != null)) {
-					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Color(0x80c480ff), null);
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 80), new Color(0xc480ff), new Delta(Handle.BC, AffineTransform.getTranslateInstance(160, 0)));
 				}
 			}
 			break;
@@ -704,7 +707,7 @@ public class Rules {
 	private static void pipelines(Feature feature) {
 		if (zoom >= 14) {
 			if (feature.type == Obj.PIPSOL) {
-				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, 0);
+				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, 0, new Color(0x80c480));
 			} else if (feature.type == Obj.PIPOHD) {
 
 			}
@@ -747,24 +750,24 @@ public class Rules {
 		case TSSCRS:
 		case TSSRON:
 			if (zoom <= 15)
-				Renderer.lineVector(feature, new LineStyle(null, 0, null, new Color(0x80c480ff, true)));
+				Renderer.lineVector(feature, new LineStyle(null, 0, null, new Color(0x80c48080, true)));
 			else
-				Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
+				Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
 			AttItem name = feature.atts.get(Att.OBJNAM);
 			if ((zoom >= 10) && (name != null))
-				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), new Color(0x80c480ff), null);
+				Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 150), new Color(0x80c48080), null);
 			break;
 		case TSELNE:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, null, null));
+			Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
 			break;
 		case TSSLPT:
-			Renderer.lineSymbols(feature, Areas.LaneArrow, 0.5, null, 0);
+			Renderer.lineSymbols(feature, Areas.LaneArrow, 0.5, null, 0, new Color(0x80c48080, true));
 			break;
 		case TSSBND:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x80c480ff, true), 20, new float[] { 40, 40 }, null));
+			Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, new float[] { 40, 40 }, null));
 			break;
 		case ISTZNE:
-			Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0);
+			Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, 0, new Color(0x80c48080, true));
 			break;
 		}
 	}

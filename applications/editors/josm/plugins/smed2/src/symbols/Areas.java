@@ -19,6 +19,7 @@ public class Areas {
 	public static final Symbol Plane = new Symbol();
 	static {
 		Plane.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
+		Plane.add(new Instr(Prim.FILL, new Color(0xa30075)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(40,20); p.lineTo(50,10); p.lineTo(27.0,13.3); p.lineTo(23.7,6.8); p.lineTo(40.0,5.0); p.curveTo(55,4,55,-9,40,-10);
 		p.quadTo(31,-11,30,-15); p.lineTo(-30,2); p.quadTo(-35,-12,-45,-15); p.quadTo(-56,-3,-50,15); p.lineTo(18.4,7.3); p.lineTo(21.7,14); p.lineTo(-20,20); p.closePath();
 		Plane.add(new Instr(Prim.PGON, p));
@@ -43,7 +44,6 @@ public class Areas {
 	public static final Symbol LineAnchor = new Symbol();
 	static {
 		LineAnchor.add(new Instr(Prim.BBOX, new Rectangle(-30,-60,60,90)));
-		LineAnchor.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
 	}
 	public static final Symbol LinePlane = new Symbol();
@@ -54,7 +54,6 @@ public class Areas {
 	public static final Symbol MarineFarm = new Symbol();
 	static {
 		MarineFarm.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
-		MarineFarm.add(new Instr(Prim.FILL, Color.black));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-23,12); p.lineTo(-23,23); p.lineTo(23,23); p.lineTo(23,12); p.moveTo(-8,15); p.lineTo(-8,23); p.moveTo(8,15); p.lineTo(8,23);
 		p.moveTo(-23,-12); p.lineTo(-23,-23); p.lineTo(23,-23); p.lineTo(23,-12); p.moveTo(-8,-15); p.lineTo(-8,-23); p.moveTo(8,-15); p.lineTo(8,-23);
 		p.moveTo(-21,8); p.quadTo(-1,-14,21,0); p.quadTo(-1,14,-21,-8); p.moveTo(7,6); p.quadTo(2,0,7,-6);
@@ -83,7 +82,6 @@ public class Areas {
 	static {
 		Restricted.add(new Instr(Prim.BBOX, new Rectangle(-15,-30,30,30)));
 		Restricted.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
-		Restricted.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-30)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,-15,17,-15)));
 	}
@@ -135,7 +133,6 @@ public class Areas {
 	public static final Symbol WindFarm = new Symbol();
 	static {
 		WindFarm.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		WindFarm.add(new Instr(Prim.FILL, Color.black));
 		WindFarm.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-100,-100,200,200)));
 		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(-35,50,35,50)));
 		WindFarm.add(new Instr(Prim.LINE, new Line2D.Double(0,50,0,-27.5)));
@@ -159,7 +156,6 @@ public class Areas {
 	public static final Symbol WreckND = new Symbol();
 	static {
 		WreckND.add(new Instr(Prim.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		WreckND.add(new Instr(Prim.FILL, Color.black));
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,40,0)));
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(0,-30,0,30)));
 		WreckND.add(new Instr(Prim.LINE, new Line2D.Double(-20,-15,-20,15)));
@@ -168,7 +164,6 @@ public class Areas {
 	public static final Symbol WreckS = new Symbol();
 	static {
 		WreckS.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		WreckS.add(new Instr(Prim.FILL, Color.black));
 		WreckS.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-6,-6,12,12)));
 		WreckS.add(new Instr(Prim.LINE, new Line2D.Double(-40,0,-6,0)));
 		WreckS.add(new Instr(Prim.LINE, new Line2D.Double(40,0,6,0)));

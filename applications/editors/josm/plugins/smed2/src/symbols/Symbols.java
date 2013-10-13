@@ -60,6 +60,11 @@ public class Symbols {
 			pat = ipat;
 			col = icol;
 		}
+		public Scheme(Color icol) {
+			pat = new ArrayList<Patt>();
+			col = new ArrayList<Color>();
+			col.add(icol);
+		}
 	}
 
 	public static class Caption {
@@ -118,9 +123,13 @@ public class Symbols {
 	public static void drawSymbol(Graphics2D g2, Symbol symbol, double scale, double x, double y, Delta dd, Scheme cs) {
 		int pn = 0;
 		int cn = 0;
+		g2.setPaint(Color.black);
 		if (cs != null) {
 			pn = cs.pat.size();
 			cn = cs.col.size() - ((pn != 0) ? pn - 1 : 0);
+			if ((pn == 0) && (cs.col.size() == 1)) {
+				g2.setPaint(cs.col.get(0));
+			}
 		}
 		AffineTransform savetr = g2.getTransform();
 		g2.translate(x, y);
@@ -261,7 +270,7 @@ public class Symbols {
 					break;
 				case SYMB:
 					SubSymbol s = (SubSymbol) item.params;
-					drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, s.scheme);
+					drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, (s.scheme != null ? s.scheme : cs));
 					break;
 				case TEXT:
 					Caption c = (Caption) item.params;

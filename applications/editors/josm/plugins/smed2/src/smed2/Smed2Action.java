@@ -11,9 +11,12 @@ package smed2;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -29,6 +32,7 @@ import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
 import s57.S57dat;
+import seamap.Renderer;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
 
@@ -36,8 +40,8 @@ import panels.PanelMain;
 import panels.ShowFrame;
 
 public class Smed2Action extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
-
 	private static final long serialVersionUID = 1L;
+	
 	private static String editor = tr("SeaMap Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;
@@ -121,7 +125,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
 		editFrame.setVisible(true);
-		panelMain = new PanelMain();
+		panelMain = new PanelMain(this);
 		editFrame.add(panelMain);
 		panelS57 = new S57dat();
 		panelS57.setVisible(false);

@@ -32,16 +32,6 @@ public class Harbours {
 	static {
 		Anchorage.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, null, null)));
 	}
-	public static final Symbol AnchorBerth = new Symbol();
-	static {
-		AnchorBerth.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchorage, 1.0, 0, 0, null, null)));
-		AnchorBerth.add(new Instr(Prim.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		AnchorBerth.add(new Instr(Prim.FILL, Color.white));
-		Ellipse2D.Double s = new Ellipse2D.Double(-25,-25,50,50);
-		AnchorBerth.add(new Instr(Prim.RSHP, s));
-		AnchorBerth.add(new Instr(Prim.FILL, new Color(0xa30075)));
-		AnchorBerth.add(new Instr(Prim.ELPS, s));
-	}
 	public static final Symbol Bollard = new Symbol();
 	static {
 		Bollard.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));

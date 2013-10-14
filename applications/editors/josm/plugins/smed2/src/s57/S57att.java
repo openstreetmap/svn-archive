@@ -202,7 +202,7 @@ public class S57att {
 	  objatt.add(new ObjAtt(Obj.VEGATN, Att.CATVEG)); objatt.add(new ObjAtt(Obj.VEHTRF, Att.CATVTR)); objatt.add(new ObjAtt(Obj.WATTUR, Att.CATWAT));
 	  objatt.add(new ObjAtt(Obj.WEDKLP, Att.CATWED)); objatt.add(new ObjAtt(Obj.WRECKS, Att.CATWRK)); objatt.add(new ObjAtt(Obj.TS_FEB, Att.CAT_TS));
 	  objatt.add(new ObjAtt(Obj.DEPCNT, Att.VALDCO)); objatt.add(new ObjAtt(Obj.SOUNDG, Att.VALSOU)); objatt.add(new ObjAtt(Obj.NOTMRK, Att.BNKWTW));
-	  objatt.add(new ObjAtt(Obj.UNKOBJ, Att.RADIUS)); objatt.add(new ObjAtt(Obj.LIGHTS, Att.LITRAD));
+	  objatt.add(new ObjAtt(Obj.ACHBRT, Att.RADIUS)); objatt.add(new ObjAtt(Obj.LIGHTS, Att.LITRAD));
 	}
 	
 	private enum Ver {NON, NOT, YES}

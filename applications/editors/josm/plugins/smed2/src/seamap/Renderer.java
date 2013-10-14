@@ -60,12 +60,14 @@ public class Renderer {
 
 	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
-	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953, 0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
+//	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953, 0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
+	
+	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC }
 
 	static MapHelper helper;
 	static SeaMap map;
 	static double sScale;
-	static double tScale;
+//	static double tScale;
 	static Graphics2D g2;
 	static int zoom;
 
@@ -75,7 +77,7 @@ public class Renderer {
 		helper = h;
 		map = m;
 		sScale = symbolScale[zoom] * factor;
-		tScale = textScale[zoom] * factor;
+//		tScale = textScale[zoom] * factor;
 		if (map != null) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
@@ -138,10 +140,6 @@ public class Renderer {
 		return null;
 	}
 
-	private double mile(Feature feature) {
-		return Math.pow(2, zoom) * 256 / (21600 * Math.abs(Math.cos(feature.centre.lat)));
-	}
-	
 	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio, Color col) {
 		Area area;
 		switch (feature.flag) {
@@ -273,6 +271,40 @@ public class Renderer {
 		}
 	}
 	
+	public static void lineCircle(Feature feature, LineStyle style, double radius, UniHLU units) {
+		switch (units) {
+		case HLU_FEET:
+			radius /= 6076;
+			break;
+		case HLU_KMTR:
+			radius /= 1.852;
+			break;
+		case HLU_HMTR:
+			radius /= 18.52;
+			break;
+		case HLU_SMIL:
+			radius /= 1.15078;
+			break;
+		case HLU_NMIL:
+			break;
+		default:
+			radius /= 1852;
+			break;
+		}
+		radius *= helper.mile(feature);
+		Symbol circle = new Symbol();
+		if (style.fill != null) {
+			circle.add(new Instr(Prim.FILL, style.fill));
+			circle.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
+		}
+		circle.add(new Instr(Prim.FILL, style.line));
+		circle.add(new Instr(Prim.STRK, new BasicStroke(style.width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, style.dash, 0)));
+		circle.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
+		Point2D point = helper.getPoint(feature.centre);
+		Symbols.drawSymbol(g2, circle, sScale, point.getX(), point.getY(), null, null);
+	}
+
+	
 	public static void fillPattern(Feature feature, BufferedImage image) {
 		Path2D.Double p = new Path2D.Double();
 		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
@@ -299,9 +331,68 @@ public class Renderer {
 		}
 	}
 
-	public static void labelText(Feature feature, String str, Font font, Color colour, Delta delta) {
+	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg, Delta delta) {
+		if (delta == null) delta = new Delta(Handle.CC, null);
+		if (bg == null) bg = new Color(0x00000000, true);
+		if (str == null) str = " ";
+		if (str.isEmpty()) str = " ";
+    FontRenderContext frc = g2.getFontRenderContext();
+    GlyphVector gv = font.deriveFont((float)(font.getSize())).createGlyphVector(frc, str.equals(" ") ? "M" : str);
+    Rectangle2D bounds = gv.getVisualBounds();
+    double width = bounds.getWidth() * 1.5;
+    double height = bounds.getHeight() * 1.5;
+    double dx = 0;
+    double dy = 0;
+		switch (delta.h) {
+		case CC:
+			dx = width / 2.0;
+			dy = height / 2.0;
+			break;
+		case TL:
+			dx = 0;
+			dy = 0;
+			break;
+		case TR:
+			dx = width;
+			dy = 0;
+			break;
+		case TC:
+			dx = width / 2.0;
+			dy = 0;
+			break;
+		case LC:
+			dx = 0;
+			dy = height / 2.0;
+			break;
+		case RC:
+			dx = width;
+			dy = height / 2.0;
+			break;
+		case BL:
+			dx = 0;
+			dy = height;
+			break;
+		case BR:
+			dx = width;
+			dy = height;
+			break;
+		case BC:
+			dx = width / 2.0;
+			dy = height;
+			break;
+		}
 		Symbol label = new Symbol();
-		label.add(new Instr(Prim.TEXT, new Caption(str, font, colour, (delta == null) ? new Delta(Handle.CC, null) : delta)));
+		switch (style) {
+		case RRCT:
+			if (width < height) width = height;
+			label.add(new Instr(Prim.FILL, bg));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy/1.25,width,height,height,height)));
+			label.add(new Instr(Prim.FILL, fg));
+			label.add(new Instr(Prim.STRK, new BasicStroke(1 + (int)(height/10), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-dx,-dy/1.25,width,height,height,height)));
+			break;
+		}
+		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, delta)));
 		Point2D point = helper.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
 	}
@@ -324,7 +415,7 @@ public class Renderer {
 		if (!str.isEmpty()) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    FontRenderContext frc = g2.getFontRenderContext();
-	    GlyphVector gv = font.deriveFont((float)(font.getSize()*tScale)).createGlyphVector(frc, str);
+	    GlyphVector gv = font.deriveFont((float)(font.getSize()*sScale)).createGlyphVector(frc, str);
 //			double psize = Math.abs(prect.getX());
 			Point2D prev = new Point2D.Double();
 			Point2D next = new Point2D.Double();

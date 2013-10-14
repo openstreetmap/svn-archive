@@ -6,4 +6,5 @@ import seamap.SeaMap.*;
 
 public interface MapHelper {
 	Point2D getPoint(Snode coord);
+	double mile(Feature feature);
 }

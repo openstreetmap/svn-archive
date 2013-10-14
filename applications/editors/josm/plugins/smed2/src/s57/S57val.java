@@ -1106,9 +1106,9 @@ public class S57val {
 				return list;
 			}
 		case I:
-			return null;
+			return 0;
 		case F:
-			return null;
+			return 0.0;
 		}
 		return null;
 	}

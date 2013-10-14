@@ -52,8 +52,12 @@ public class ShowFrame extends JFrame {
 		public Point2D getPoint(Snode coord) {
 			return new Point2D.Double(150, 150);
 		}
+
+		public double mile(Feature feature) {
+			return 1000;
+		}
 	}
-	
+
 	public ShowFrame(String title) {
 		super(title);
 		picture = new Picture();

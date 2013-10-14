@@ -9,6 +9,7 @@
 
 package smed2;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -73,8 +74,8 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 	@Override
 	public void paint(Graphics2D g2, MapView mv, Bounds bb) {
 		Rectangle rect = Main.map.mapView.getBounds();
-//		g2.setBackground(new Color(0xb5d0d0));
-//		g2.clearRect(rect.x, rect.y, rect.width, rect.height);
+//	g2.setBackground(new Color(0xb5d0d0));
+//	g2.clearRect(rect.x, rect.y, rect.width, rect.height);
 		g2.setPaint(Color.black);
 		g2.setFont(new Font("Arial", Font.BOLD, 20));
 		g2.drawString(("Z" + zoom), (rect.x + rect.width - 40), (rect.y + rect.height - 10));
@@ -97,5 +98,9 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 
 	public Point2D.Double getPoint(Snode coord) {
 		return (Double) Main.map.mapView.getPoint2D(new LatLon(Math.toDegrees(coord.lat), Math.toDegrees(coord.lon)));
+	}
+
+	public double mile(Feature feature) {
+		return Math.pow(2, zoom) * 256 / (21600 * Math.abs(Math.cos(feature.centre.lat)));
 	}
 }

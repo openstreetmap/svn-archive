@@ -209,6 +209,7 @@ public class Landmarks {
 		Funcs.put(FncFNC.FNC_PGDA, Landmarks.Temple); Funcs.put(FncFNC.FNC_SHSH, Landmarks.Temple); Funcs.put(FncFNC.FNC_BTMP, Landmarks.Temple);
 		Funcs.put(FncFNC.FNC_MOSQ, Landmarks.Minaret); Funcs.put(FncFNC.FNC_MRBT, Landmarks.Spire); Funcs.put(FncFNC.FNC_COMM, Landmarks.RadioTV);
 		Funcs.put(FncFNC.FNC_TV, Landmarks.RadioTV); Funcs.put(FncFNC.FNC_RADO, Landmarks.RadioTV); Funcs.put(FncFNC.FNC_RADR, Landmarks.RadioTV);
-		Funcs.put(FncFNC.FNC_LGHT, Beacons.LightMajor); Funcs.put(FncFNC.FNC_MCWV, Landmarks.RadioTV);
+		Funcs.put(FncFNC.FNC_LGHT, Beacons.LightMajor); Funcs.put(FncFNC.FNC_MCWV, Landmarks.RadioTV); Funcs.put(FncFNC.FNC_HBRM, Harbours.HarbourMaster);
+		Funcs.put(FncFNC.FNC_CSTM, Harbours.Customs); Funcs.put(FncFNC.FNC_HLTH, Harbours.Hospital); Funcs.put(FncFNC.FNC_HOSP, Harbours.Hospital);
 	}
 }

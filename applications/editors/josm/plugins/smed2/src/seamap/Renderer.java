@@ -62,7 +62,7 @@ public class Renderer {
 
 //	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953, 0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
 	
-	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC }
+	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, HCLR }
 
 	static MapContext context;
 	static SeaMap map;
@@ -341,27 +341,21 @@ public class Renderer {
     Rectangle2D bounds = gv.getVisualBounds();
     double width = bounds.getWidth();
     double height = bounds.getHeight();
-    double dx = 0.25 * width;
-    double dy = 0.25 * height;
+		if (width < height) width = height;
+    double dx = 0;
+    double dy = 0;
 		switch (delta.h) {
 		case CC:
 			dx += width / 2.0;
 			dy += height / 2.0;
 			break;
-		case TL:
-			dx += 0;
-			dy += 0;
-			break;
 		case TR:
 			dx += width;
-			dy += 0;
 			break;
 		case TC:
 			dx += width / 2.0;
-			dy += 0;
 			break;
 		case LC:
-			dx += 0;
 			dy += height / 2.0;
 			break;
 		case RC:
@@ -369,7 +363,6 @@ public class Renderer {
 			dy += height / 2.0;
 			break;
 		case BL:
-			dx += 0;
 			dy += height;
 			break;
 		case BR:
@@ -381,17 +374,31 @@ public class Renderer {
 			dy += height;
 			break;
 		}
+		width += (height * 0.8);
+		dx += (height * 0.4);
+		height *= 1.5;
+		dy += (height * 0.15);
 		Symbol label = new Symbol();
 		switch (style) {
 		case RRCT:
-			if (width < height) width = height;
-			width *= 1.5;
-			height *= 1.5;
 			label.add(new Instr(Prim.FILL, bg));
 			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
 			label.add(new Instr(Prim.FILL, fg));
 			label.add(new Instr(Prim.STRK, new BasicStroke(1 + (int)(height/10), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
+			break;
+		case VCLR:
+			height += 20;
+			dy += 10;
+			label.add(new Instr(Prim.FILL, bg));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
+			label.add(new Instr(Prim.FILL, fg));
+			int sw = 1 + (int)(height/10);
+			double po = dy - (sw / 2);
+			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			Path2D.Double p = new Path2D.Double(); p.moveTo(-(height*0.2),po); p.lineTo((height*0.2),po); p.moveTo(0,po); p.lineTo(0,po-10);
+			p.moveTo(-(height*0.2),-po); p.lineTo((height*0.2),-po); p.moveTo(0,-po); p.lineTo(0,-po+10);
+			label.add(new Instr(Prim.PLIN, p));
 			break;
 		}
 		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, delta)));

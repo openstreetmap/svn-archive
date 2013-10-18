@@ -18,6 +18,9 @@ import s57.S57val.*;
 import s57.S57att.*;
 import s57.S57obj.*;
 
+import seamap.SeaMap.AttItem;
+import seamap.SeaMap.AttMap;
+import seamap.SeaMap.ObjTab;
 import seamap.Renderer.*;
 import seamap.SeaMap.*;
 import symbols.*;
@@ -68,6 +71,7 @@ public class Rules {
 		if ((objects = map.features.get(Obj.HULKES)) != null) for (Feature feature : objects) ports(feature);
 		if ((objects = map.features.get(Obj.CRANES)) != null) for (Feature feature : objects) ports(feature);
 		if ((objects = map.features.get(Obj.LNDMRK)) != null) for (Feature feature : objects) landmarks(feature);
+		if ((objects = map.features.get(Obj.BUISGL)) != null) for (Feature feature : objects) harbours(feature);
 		if ((objects = map.features.get(Obj.MORFAC)) != null) for (Feature feature : objects) moorings(feature);
 		if ((objects = map.features.get(Obj.NOTMRK)) != null) for (Feature feature : objects) notices(feature);
 		if ((objects = map.features.get(Obj.SMCFAC)) != null) for (Feature feature : objects) marinas(feature);
@@ -246,35 +250,30 @@ public class Rules {
 	
 	private static void bridges(Feature feature) {
 		if (zoom >= 16) {
-			
+			double verclr, verccl, vercop;
+			AttMap atts = feature.objs.get(Obj.BRIDGE).get(0);
+			String str = "";
+			if (atts.containsKey(Att.VERCLR)) {
+				verclr = (Double)atts.get(Att.VERCLR).val;
+			} else {
+				verclr = atts.containsKey(Att.VERCSA) ? (Double)atts.get(Att.VERCSA).val : 0;
+			}
+			verccl = atts.containsKey(Att.VERCCL) ? (Double)atts.get(Att.VERCCL).val : 0;
+			vercop = atts.containsKey(Att.VERCOP) ? (Double)atts.get(Att.VERCOP).val : 0;
+			if (verclr > 0) {
+				str += String.valueOf(verclr);
+			} else if (verccl > 0) {
+				if (vercop == 0) {
+					str += String.valueOf(verccl) + "/-";
+				} else {
+					str += String.valueOf(verccl) + "/" + String.valueOf(vercop);
+				}
+			}
+			if (!str.isEmpty())
+				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 30), LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0)));
 		}
-/*    case BRIDGE: {
-      Att_t *attv = getAtt(getObj(item, BRIDGE, 0), VERCLR);
-      if (attv == NULL) attv = getAtt(getObj(item, BRIDGE, 0), VERCSA);
-      Att_t *attc = getAtt(getObj(item, BRIDGE, 0), VERCCL);
-      Att_t *atto = getAtt(getObj(item, BRIDGE, 0), VERCOP);
-      if (attv != NULL) {
-        renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
-        drawText(item, stringValue(attv->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
-      }
-      else if ((attc != NULL) && (atto == NULL)) {
-        char *string=strdup(stringValue(attc->val));
-        string = realloc(string, strlen(string) + 3); strcat(string, "/-");
-        renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
-        drawText(item, string, "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
-        free(string);
-      }
-      else if ((attc != NULL) && (atto != NULL)) {
-        char *string=strdup(stringValue(attc->val));
-        string = realloc(string, strlen(string) + 2); strcat(string, "/");
-        string = realloc(string, strlen(string) + strlen(stringValue(atto->val)) + 1); strcat(string, stringValue(atto->val));
-        renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
-        drawText(item, string, "font-family:Arial; font-weight:normal; font-size:60; text-anchor:middle", 0, 10);
-        free(string);
-      }
-    }
-*/
 	}
+	
 	private static void cables(Feature feature) {
 		if (zoom >= 14) {
 			if (feature.type == Obj.CBLSUB) {
@@ -388,6 +387,12 @@ public class Rules {
 				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 40), LabelStyle.RRCT, new Color(0xc480ff), Color.white, null);
 			}
 			break;
+		case BUISGL:
+		  if (zoom >= 16) {
+		  	ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) Renderer.getAttVal(feature, Obj.BUISGL, 0, Att.FUNCTN);
+		  	Renderer.symbol(feature, Landmarks.Funcs.get(fncs.get(0)), null, null, null);
+		  }
+			break;
 		}
 	}
 /*
@@ -429,6 +434,9 @@ public class Rules {
 }
 */
 		Signals.addSignals(feature);
+	}
+	
+	private static void buildings(Feature feature) {
 	}
 	
 	private static void lights(Feature feature) {

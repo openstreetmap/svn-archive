@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-import seamap.MapHelper;
+import seamap.MapContext;
 import seamap.Renderer;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
@@ -21,7 +21,7 @@ public class ShowFrame extends JFrame {
 	SeaMap showMap;
 	Picture picture;
 
-	class Picture extends JPanel implements MapHelper {
+	class Picture extends JPanel implements MapContext {
 		
 		public void drawPicture(OsmPrimitive osm, SeaMap map) {
 			long id;

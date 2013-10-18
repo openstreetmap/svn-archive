@@ -64,17 +64,17 @@ public class Renderer {
 	
 	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC }
 
-	static MapHelper helper;
+	static MapContext context;
 	static SeaMap map;
 	static double sScale;
 //	static double tScale;
 	static Graphics2D g2;
 	static int zoom;
 
-	public static void reRender(Graphics2D g, int z, double factor, SeaMap m, MapHelper h) {
+	public static void reRender(Graphics2D g, int z, double factor, SeaMap m, MapContext c) {
 		g2 = g;
 		zoom = z;
-		helper = h;
+		context = c;
 		map = m;
 		sScale = symbolScale[zoom] * factor;
 //		tScale = textScale[zoom] * factor;
@@ -106,7 +106,7 @@ public class Renderer {
 	}
 
 	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta, Scheme scheme) {
-		Point2D point = helper.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.centre);
 		if (obj == null) {
 			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, scheme);
 		} else {
@@ -176,7 +176,7 @@ public class Renderer {
 				boolean first = true;
 				while (bit.hasNext()) {
 					prev = next;
-					next = helper.getPoint(bit.next());
+					next = context.getPoint(bit.next());
 					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 					piv = true;
 					if (first) {
@@ -232,20 +232,20 @@ public class Renderer {
 		switch (feature.flag) {
 		case LINE:
 			EdgeIterator eit = map.new EdgeIterator(map.edges.get(feature.refs), true);
-			point = helper.getPoint(eit.next());
+			point = context.getPoint(eit.next());
 			p.moveTo(point.getX(), point.getY());
 			while (eit.hasNext()) {
-				point = helper.getPoint(eit.next());
+				point = context.getPoint(eit.next());
 				p.lineTo(point.getX(), point.getY());
 			}
 			break;
 		case AREA:
 			for (Bound bound : map.areas.get(feature.refs)) {
 				BoundIterator bit = map.new BoundIterator(bound);
-				point = helper.getPoint(bit.next());
+				point = context.getPoint(bit.next());
 				p.moveTo(point.getX(), point.getY());
 				while (bit.hasNext()) {
-					point = helper.getPoint(bit.next());
+					point = context.getPoint(bit.next());
 					p.lineTo(point.getX(), point.getY());
 				}
 			}
@@ -291,7 +291,7 @@ public class Renderer {
 			radius /= 1852;
 			break;
 		}
-		radius *= helper.mile(feature);
+		radius *= context.mile(feature);
 		Symbol circle = new Symbol();
 		if (style.fill != null) {
 			circle.add(new Instr(Prim.FILL, style.fill));
@@ -300,8 +300,8 @@ public class Renderer {
 		circle.add(new Instr(Prim.FILL, style.line));
 		circle.add(new Instr(Prim.STRK, new BasicStroke(style.width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, style.dash, 0)));
 		circle.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
-		Point2D point = helper.getPoint(feature.centre);
-		Symbols.drawSymbol(g2, circle, sScale, point.getX(), point.getY(), null, null);
+		Point2D point = context.getPoint(feature.centre);
+		Symbols.drawSymbol(g2, circle, 1, point.getX(), point.getY(), null, null);
 	}
 
 	
@@ -311,17 +311,17 @@ public class Renderer {
 		Point2D point;
 		switch (feature.flag) {
 		case POINT:
-			point = helper.getPoint(feature.centre);
+			point = context.getPoint(feature.centre);
 			g2.drawImage(image, new AffineTransformOp(AffineTransform.getScaleInstance(sScale, sScale), AffineTransformOp.TYPE_NEAREST_NEIGHBOR),
 					(int)(point.getX() - (50 * sScale)), (int)(point.getY() - (50 * sScale)));
 			break;
 		case AREA:
 			for (Bound bound : map.areas.get(feature.refs)) {
 				BoundIterator bit = map.new BoundIterator(bound);
-				point = helper.getPoint(bit.next());
+				point = context.getPoint(bit.next());
 				p.moveTo(point.getX(), point.getY());
 				while (bit.hasNext()) {
-					point = helper.getPoint(bit.next());
+					point = context.getPoint(bit.next());
 					p.lineTo(point.getX(), point.getY());
 				}
 			}
@@ -339,61 +339,63 @@ public class Renderer {
     FontRenderContext frc = g2.getFontRenderContext();
     GlyphVector gv = font.deriveFont((float)(font.getSize())).createGlyphVector(frc, str.equals(" ") ? "M" : str);
     Rectangle2D bounds = gv.getVisualBounds();
-    double width = bounds.getWidth() * 1.5;
-    double height = bounds.getHeight() * 1.5;
-    double dx = 0;
-    double dy = 0;
+    double width = bounds.getWidth();
+    double height = bounds.getHeight();
+    double dx = 0.25 * width;
+    double dy = 0.25 * height;
 		switch (delta.h) {
 		case CC:
-			dx = width / 2.0;
-			dy = height / 2.0;
+			dx += width / 2.0;
+			dy += height / 2.0;
 			break;
 		case TL:
-			dx = 0;
-			dy = 0;
+			dx += 0;
+			dy += 0;
 			break;
 		case TR:
-			dx = width;
-			dy = 0;
+			dx += width;
+			dy += 0;
 			break;
 		case TC:
-			dx = width / 2.0;
-			dy = 0;
+			dx += width / 2.0;
+			dy += 0;
 			break;
 		case LC:
-			dx = 0;
-			dy = height / 2.0;
+			dx += 0;
+			dy += height / 2.0;
 			break;
 		case RC:
-			dx = width;
-			dy = height / 2.0;
+			dx += width;
+			dy += height / 2.0;
 			break;
 		case BL:
-			dx = 0;
-			dy = height;
+			dx += 0;
+			dy += height;
 			break;
 		case BR:
-			dx = width;
-			dy = height;
+			dx += width;
+			dy += height;
 			break;
 		case BC:
-			dx = width / 2.0;
-			dy = height;
+			dx += width / 2.0;
+			dy += height;
 			break;
 		}
 		Symbol label = new Symbol();
 		switch (style) {
 		case RRCT:
 			if (width < height) width = height;
+			width *= 1.5;
+			height *= 1.5;
 			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy/1.25,width,height,height,height)));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
 			label.add(new Instr(Prim.FILL, fg));
 			label.add(new Instr(Prim.STRK, new BasicStroke(1 + (int)(height/10), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-dx,-dy/1.25,width,height,height,height)));
+			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
 			break;
 		}
 		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, delta)));
-		Point2D point = helper.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
 	}
 
@@ -430,7 +432,7 @@ public class Renderer {
 				boolean first = true;
 				while (bit.hasNext()) {
 					prev = next;
-					next = helper.getPoint(bit.next());
+					next = context.getPoint(bit.next());
 					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 					piv = true;
 					if (first) {

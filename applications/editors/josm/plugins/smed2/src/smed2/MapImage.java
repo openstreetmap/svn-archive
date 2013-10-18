@@ -28,11 +28,11 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
-import seamap.MapHelper;
+import seamap.MapContext;
 import seamap.Renderer;
 import seamap.SeaMap.*;
 
-public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHelper {
+public class MapImage extends ImageryLayer implements ZoomChangeListener, MapContext {
 
 	private Smed2Action dlg;
 
@@ -101,6 +101,6 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapHel
 	}
 
 	public double mile(Feature feature) {
-		return Math.pow(2, zoom) * 256 / (21600 * Math.abs(Math.cos(feature.centre.lat)));
+		return 185000 / Main.map.mapView.getDist100Pixel();
 	}
 }

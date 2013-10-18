@@ -11,12 +11,9 @@ package smed2;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

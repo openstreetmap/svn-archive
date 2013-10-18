@@ -33,7 +33,6 @@ public class Rules {
 		zoom = z;
 		ArrayList<Feature> objects;
 		if ((objects = map.features.get(Obj.SLCONS)) != null) for (Feature feature : objects) shoreline(feature);
-		if ((objects = map.features.get(Obj.SLCONS)) != null) for (Feature feature : objects) shoreline(feature);;
 		if ((objects = map.features.get(Obj.PIPSOL)) != null) for (Feature feature : objects) pipelines(feature);
 		if ((objects = map.features.get(Obj.CBLSUB)) != null) for (Feature feature : objects) cables(feature);
 		if ((objects = map.features.get(Obj.PIPOHD)) != null) for (Feature feature : objects) pipelines(feature);
@@ -61,6 +60,7 @@ public class Rules {
 		if ((objects = map.features.get(Obj.HRBFAC)) != null) for (Feature feature : objects) harbours(feature);
 		if ((objects = map.features.get(Obj.ACHARE)) != null) for (Feature feature : objects) harbours(feature);
 		if ((objects = map.features.get(Obj.ACHBRT)) != null) for (Feature feature : objects) harbours(feature);
+		if ((objects = map.features.get(Obj.BERTHS)) != null) for (Feature feature : objects) harbours(feature);
 		if ((objects = map.features.get(Obj.LOKBSN)) != null) for (Feature feature : objects) locks(feature);
 		if ((objects = map.features.get(Obj.LKBSPT)) != null) for (Feature feature : objects) locks(feature);
 		if ((objects = map.features.get(Obj.GATCON)) != null) for (Feature feature : objects) locks(feature);
@@ -244,7 +244,8 @@ public class Rules {
 		if (zoom >= 16) {
 			
 		}
-/*      Att_t *attv = getAtt(getObj(item, BRIDGE, 0), VERCLR);
+/*    case BRIDGE: {
+      Att_t *attv = getAtt(getObj(item, BRIDGE, 0), VERCLR);
       if (attv == NULL) attv = getAtt(getObj(item, BRIDGE, 0), VERCSA);
       Att_t *attc = getAtt(getObj(item, BRIDGE, 0), VERCCL);
       Att_t *atto = getAtt(getObj(item, BRIDGE, 0), VERCOP);
@@ -253,14 +254,19 @@ public class Rules {
         drawText(item, stringValue(attv->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
       }
       else if ((attc != NULL) && (atto == NULL)) {
+        char *string=strdup(stringValue(attc->val));
+        string = realloc(string, strlen(string) + 3); strcat(string, "/-");
         renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
-        drawText(item, stringValue(attc->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
+        drawText(item, string, "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 0, 12);
+        free(string);
       }
       else if ((attc != NULL) && (atto != NULL)) {
-        renderSymbol(item, obja, "clear_v", "", "", RC, 5, 0, 0);
-        drawText(item, stringValue(attc->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", -35, 12);
-        renderSymbol(item, obja, "clear_v", "", "", LC, -5, 0, 0);
-        drawText(item, stringValue(atto->val), "font-family:Arial; font-weight:normal; font-size:70; text-anchor:middle", 35, 12);
+        char *string=strdup(stringValue(attc->val));
+        string = realloc(string, strlen(string) + 2); strcat(string, "/");
+        string = realloc(string, strlen(string) + strlen(stringValue(atto->val)) + 1); strcat(string, stringValue(atto->val));
+        renderSymbol(item, obja, "clear_v", "", "", CC, 0, 0, 0);
+        drawText(item, string, "font-family:Arial; font-weight:normal; font-size:60; text-anchor:middle", 0, 10);
+        free(string);
       }
     }
 */
@@ -317,7 +323,7 @@ public class Rules {
 			double radius = (Double)Renderer.getAttVal(feature, Obj.ACHBRT, 0, Att.RADIUS);
 			if (radius != 0) {
 				UniHLU units = (UniHLU)Renderer.getAttVal(feature, Obj.ACHBRT, 0, Att.HUNITS);
-				Renderer.lineCircle (feature, new LineStyle(new Color(0xc480ff), 10, new float[] { 25, 25 }, null), radius, units);
+				Renderer.lineCircle (feature, new LineStyle(new Color(0xc480ff), 4, new float[] { 10, 10 }, null), radius, units);
 			}
 			break;
 		case ACHARE:
@@ -365,6 +371,11 @@ public class Rules {
 					dy += 60;
 					break;
 				}
+			}
+			break;
+		case BERTHS:
+			if (zoom >= 14) {
+				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 40), LabelStyle.RRCT, new Color(0xc480ff), Color.white, null);
 			}
 			break;
 		}
@@ -894,51 +905,51 @@ public class Rules {
 						str += " AIS";
 						break;
 					case ROS_VAIS:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						break;
 					case ROS_VANC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopNorth, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VASC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopSouth, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VAEC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopEast, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VAWC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopWest, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VAPL:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopCan, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VASL:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopCone, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VAID:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopIsol, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VASW:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopSphere, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VASP:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopX, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					case ROS_VAWK:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 80)));
+						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 						Renderer.symbol(feature, Topmarks.TopCross, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
 						break;
 					}
 				}
-				if (!str.isEmpty()) Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -80)));
+				if (!str.isEmpty()) Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
 				break;
 			case RADSTA:
 				Renderer.symbol(feature, Harbours.SignalStation, null, null, null);

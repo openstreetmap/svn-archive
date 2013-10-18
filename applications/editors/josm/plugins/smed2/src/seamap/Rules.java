@@ -232,14 +232,18 @@ public class Rules {
 			if (feature.objs.get(Obj.TOPMAR) != null)
 				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Beacons, null);
 		}
+		Signals.addSignals(feature);
 	}
+	
 	private static void buoys(Feature feature) {
 		BoySHP shape = (BoySHP) Renderer.getAttVal(feature, feature.type, 0, Att.BOYSHP);
 		Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null, null);
 		if (feature.objs.get(Obj.TOPMAR) != null) {
 			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Buoys.get(shape), null);
 		}
+		Signals.addSignals(feature);
 	}
+	
 	private static void bridges(Feature feature) {
 		if (zoom >= 16) {
 			
@@ -280,6 +284,7 @@ public class Rules {
 			}
 		}
 	}
+	
 	private static void distances(Feature feature) {
 /*object_rules(distances) {
   if ((zoom>=16) && (has_attribute("category"))) {
@@ -291,6 +296,7 @@ public class Rules {
 }
 */
 	}
+	
 	private static void floats(Feature feature) {
 		switch (feature.type) {
 		case LITVES:
@@ -305,13 +311,17 @@ public class Rules {
 		}
 		if (feature.objs.get(Obj.TOPMAR) != null)
 			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), Obj.TOPMAR, Topmarks.Floats, null);
+		Signals.addSignals(feature);
 	}
+	
 	private static void gauges(Feature feature) {
 /*object_rules(gauge) {
   if (zoom >= 14) symbol("tide_gauge");
 }
 */
+		Signals.addSignals(feature);
 	}
+	
 	private static void harbours(Feature feature) {
 		AttItem name = feature.atts.get(Att.OBJNAM);
 		switch (feature.type) {
@@ -394,6 +404,7 @@ public class Rules {
       text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -90);
   }
 */
+	
 	private static void landmarks(Feature feature) {
 		ArrayList<CatLMK> cats = (ArrayList<CatLMK>) Renderer.getAttVal(feature, feature.type, 0, Att.CATLMK);
 		Symbol catSym = Landmarks.Shapes.get(cats.get(0));
@@ -415,13 +426,11 @@ public class Rules {
     if ((zoom >= 15) && has_item_attribute("name"))
       text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:start", 60, -50);
   }
-  if (has_object("fog_signal")) object(fogs);
-  if (has_object("radar_transponder")) object(rtbs);
-  if (has_object("radar_station") && (zoom >= 12)) symbol("radar_station");
-  if (has_object("light")) object(lights);
 }
 */
+		Signals.addSignals(feature);
 	}
+	
 	private static void lights(Feature feature) {
 		switch (feature.type) {
 		case LITMAJ:
@@ -432,7 +441,9 @@ public class Rules {
 			Renderer.symbol(feature, Beacons.LightMinor, null, null, null);
 			break;
 		}
+		Signals.addSignals(feature);
 	}
+	
 	private static void locks(Feature feature) {
 /*object_rules(locks) {
   if ((zoom>=13) && is_type("lock_basin|lock_basin_part")) symbol("lock");
@@ -495,6 +506,7 @@ public class Rules {
       }
 */
 	}
+	
 	private static void moorings(Feature feature) {
 		CatMOR cat = (CatMOR) Renderer.getAttVal(feature, feature.type, 0, Att.CATMOR);
 		switch (cat) {
@@ -515,11 +527,7 @@ public class Rules {
 			Renderer.symbol(feature, Buoys.Shapes.get(shape), feature.type, null, null);
 			break;
 		}
-/*  if (has_object("fog_signal")) object(fogs);
-  if (has_object("radar_transponder")) object(rtbs);
-  if (has_object("light")) object(lights);
-}
-*/
+		Signals.addSignals(feature);
 	}
 
 	private static void notices(Feature feature) {
@@ -839,6 +847,7 @@ public class Rules {
 			}
 		}
 	}
+	
 	private static void signals(Feature feature) {
 		if (zoom >= 14) {
 			switch (feature.type) {
@@ -849,107 +858,6 @@ public class Rules {
 			case RDOSTA:
 				Renderer.symbol(feature, Harbours.SignalStation, null, null, null);
 				Renderer.symbol(feature, Beacons.RadarStation, null, null, null);
-				ArrayList<CatROS> cats = (ArrayList<CatROS>)Renderer.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
-				String str = "";
-				for (CatROS ros : cats) {
-					switch (ros) {
-					case ROS_OMNI:
-						str += " RC";
-						break;
-					case ROS_DIRL:
-						str += " RD";
-						break;
-					case ROS_ROTP:
-						str += " RW";
-						break;
-					case ROS_CNSL:
-						str += " Consol";
-						break;
-					case ROS_RDF:
-						str += " RG";
-						break;
-					case ROS_QTA:
-						str += " R";
-						break;
-					case ROS_AERO:
-						str += " AeroRC";
-						break;
-					case ROS_DECA:
-						str += " Decca";
-						break;
-					case ROS_LORN:
-						str += " Loran";
-						break;
-					case ROS_DGPS:
-						str += " DGPS";
-						break;
-					case ROS_TORN:
-						str += " Toran";
-						break;
-					case ROS_OMGA:
-						str += " Omega";
-						break;
-					case ROS_SYLD:
-						str += " Syledis";
-						break;
-					case ROS_CHKA:
-						str += " Chiaka";
-						break;
-					case ROS_PCOM:
-					case ROS_COMB:
-					case ROS_FACS:
-					case ROS_TIME:
-						break;
-					case ROS_PAIS:
-					case ROS_SAIS:
-						str += " AIS";
-						break;
-					case ROS_VAIS:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						break;
-					case ROS_VANC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopNorth, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VASC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopSouth, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VAEC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopEast, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VAWC:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopWest, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VAPL:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopCan, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VASL:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopCone, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VAID:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopIsol, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VASW:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopSphere, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VASP:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopX, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					case ROS_VAWK:
-						Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-						Renderer.symbol(feature, Topmarks.TopCross, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
-						break;
-					}
-				}
-				if (!str.isEmpty()) Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
 				break;
 			case RADSTA:
 				Renderer.symbol(feature, Harbours.SignalStation, null, null, null);
@@ -966,12 +874,9 @@ public class Rules {
 				break;
 			}
 		}
-		/*  if (has_object("fog_signal")) object(fogs);
-  if (has_object("radar_transponder")) object(rtbs);
-  if (has_object("light")) object(lights);
-}
-*/
+		Signals.addSignals(feature);
 	}
+	
 	private static void transits(Feature feature) {
 	  if (zoom >= 12) {
 	  	if (feature.type == Obj.RECTRC) Renderer.lineVector (feature, new LineStyle(Color.black, 10, null, null));
@@ -988,6 +893,7 @@ public class Rules {
 	}
 	private static void waterways(Feature feature) {
 	}
+	
 	private static void wrecks(Feature feature) {
 		if (zoom >= 14) {
 			CatWRK cat = (CatWRK) Renderer.getAttVal(feature, feature.type, 0, Att.CATWRK);

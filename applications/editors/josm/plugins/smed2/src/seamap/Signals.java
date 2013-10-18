@@ -9,12 +9,148 @@
 
 package seamap;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.geom.*;
+import java.util.ArrayList;
 
+import s57.S57att.Att;
+import s57.S57obj.Obj;
+import s57.S57val.CatROS;
+import seamap.Renderer.LabelStyle;
 import seamap.SeaMap.*;
+import symbols.Beacons;
+import symbols.Topmarks;
+import symbols.Symbols.Delta;
+import symbols.Symbols.Handle;
 
-public class Lights {
+public class Signals {
 
+	public static void addSignals(Feature feature) {
+	  if (feature.objs.containsKey(Obj.FOGSIG)) Signals.fogSignals(feature);
+	  if (feature.objs.containsKey(Obj.RTPBCN)) Signals.radarStations(feature);
+	  if (feature.objs.containsKey(Obj.RADSTA)) Signals.radarStations(feature);
+	  if (feature.objs.containsKey(Obj.RDOSTA)) Signals.radioStations(feature);
+	  if (feature.objs.containsKey(Obj.LIGHTS)) Signals.lights(feature);
+	}
+	
+	public static void fogSignals(Feature feature) {
+		
+	}
+
+	public static void radarStations(Feature feature) {
+		Renderer.symbol(feature, Beacons.RadarStation, null, null, null);
+		ArrayList<CatROS> cats = (ArrayList<CatROS>)Renderer.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
+		String str = "";
+		for (CatROS ros : cats) {
+			switch (ros) {
+			case ROS_OMNI:
+				str += " RC";
+				break;
+			case ROS_DIRL:
+				str += " RD";
+				break;
+			case ROS_ROTP:
+				str += " RW";
+				break;
+			case ROS_CNSL:
+				str += " Consol";
+				break;
+			case ROS_RDF:
+				str += " RG";
+				break;
+			case ROS_QTA:
+				str += " R";
+				break;
+			case ROS_AERO:
+				str += " AeroRC";
+				break;
+			case ROS_DECA:
+				str += " Decca";
+				break;
+			case ROS_LORN:
+				str += " Loran";
+				break;
+			case ROS_DGPS:
+				str += " DGPS";
+				break;
+			case ROS_TORN:
+				str += " Toran";
+				break;
+			case ROS_OMGA:
+				str += " Omega";
+				break;
+			case ROS_SYLD:
+				str += " Syledis";
+				break;
+			case ROS_CHKA:
+				str += " Chiaka";
+				break;
+			case ROS_PCOM:
+			case ROS_COMB:
+			case ROS_FACS:
+			case ROS_TIME:
+				break;
+			case ROS_PAIS:
+			case ROS_SAIS:
+				str += " AIS";
+				break;
+			case ROS_VAIS:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				break;
+			case ROS_VANC:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopNorth, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VASC:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopSouth, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VAEC:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopEast, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VAWC:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopWest, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VAPL:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopCan, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VASL:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopCone, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VAID:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopIsol, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VASW:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopSphere, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VASP:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopX, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			case ROS_VAWK:
+				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.symbol(feature, Topmarks.TopCross, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)), null);
+				break;
+			}
+		}
+		if (!str.isEmpty()) Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
+	}
+
+	public static void radioStations(Feature feature) {
+		
+	}
+
+	public static void lights(Feature feature) {
+		
+	}
+	
 	private static Point2D.Double radial(Snode centre, double radius, double angle) {
 		Point2D origin = Renderer.context.getPoint(centre);
 		double mile = Renderer.context.getPoint(Renderer.map.new Snode((centre.lat + Math.toRadians(1/60)), centre.lon)).getY() - origin.getY();

@@ -57,17 +57,14 @@ public class Renderer {
 		pattMap.put(ColPAT.PAT_SALT, Patt.X);
 		pattMap.put(ColPAT.PAT_STRP, Patt.H);
 	}
-
+	
 	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
-//	public static final double textScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5556, 0.3086, 0.1714, 0.0953, 0.0529, 0.0294, 0.0163, 0.0091, 0.0050, 0.0028, 0.0163 };
-	
 	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, HCLR }
 
 	static MapContext context;
 	static SeaMap map;
 	static double sScale;
-//	static double tScale;
 	static Graphics2D g2;
 	static int zoom;
 
@@ -77,10 +74,10 @@ public class Renderer {
 		context = c;
 		map = m;
 		sScale = symbolScale[zoom] * factor;
-//		tScale = textScale[zoom] * factor;
 		if (map != null) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+			g2.setStroke(new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
 			Rules.rules(map, zoom);
 		}
 	}

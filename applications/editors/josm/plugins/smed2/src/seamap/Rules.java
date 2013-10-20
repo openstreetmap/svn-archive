@@ -31,6 +31,10 @@ public class Rules {
 	static SeaMap map;
 	static int zoom;
 	
+	public static final Color Yland = new Color(0x50b0ff);
+	public static final Color Mline = new Color(0xc480ff);
+	public static final Color Msymb = new Color(0xa30075);
+	
 	public static void rules (SeaMap m, int z) {
 		map = m;
 		zoom = z;
@@ -120,9 +124,9 @@ public class Rules {
 		case FAIRWY:
 			if (feature.area > 2.0) {
 				if (zoom < 16)
-					Renderer.lineVector(feature, new LineStyle(new Color(0xc480ff), 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
+					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
 				else
-					Renderer.lineVector(feature, new LineStyle(new Color(0xc480ff), 8, new float[] { 50, 50 }, null));
+					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }, null));
 			} else {
 				if (zoom >= 14)
 					Renderer.lineVector(feature, new LineStyle(new Color(0x40ffffff, true), 0, null, null));
@@ -275,7 +279,7 @@ public class Rules {
 	}
 	
 	private static void cables(Feature feature) {
-		if (zoom >= 14) {
+		if ((zoom >= 16) && (feature.length < 2)) {
 			if (feature.type == Obj.CBLSUB) {
 				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, 0, new Color(0x80c480));
 			} else if (feature.type == Obj.CBLOHD) {
@@ -326,13 +330,13 @@ public class Rules {
 		switch (feature.type) {
 		case ACHBRT:
 			if (zoom >= 14) {
-				Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(new Color(0xc480ff)));
-				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 30), LabelStyle.RRCT, new Color(0xc480ff), Color.white, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
+				Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(Mline));
+				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 30), LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
 			}
 			double radius = (Double)Renderer.getAttVal(feature, Obj.ACHBRT, 0, Att.RADIUS);
 			if (radius != 0) {
 				UniHLU units = (UniHLU)Renderer.getAttVal(feature, Obj.ACHBRT, 0, Att.HUNITS);
-				Renderer.lineCircle (feature, new LineStyle(new Color(0xc480ff), 4, new float[] { 10, 10 }, null), radius, units);
+				Renderer.lineCircle (feature, new LineStyle(Mline, 4, new float[] { 10, 10 }, null), radius, units);
 			}
 			break;
 		case ACHARE:
@@ -340,15 +344,15 @@ public class Rules {
 				if (feature.flag != Fflag.AREA) {
 					Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(Color.black));
 				} else {
-					Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(new Color(0xc480ff)));
-					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10, new Color(0xc480ff));
+					Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(Mline));
+					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, 10, Mline);
 				}
 				if ((zoom >= 15) && ((name) != null)) {
-					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 60), LabelStyle.NONE, new Color(0xc480ff), null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
+					Renderer.labelText(feature, (String) name.val, new Font("Arial", Font.BOLD, 60), LabelStyle.NONE, Mline, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
 				}
 				ArrayList<StsSTS> sts = (ArrayList<StsSTS>)Renderer.getAttVal(feature, Obj.ACHARE, 0, Att.STATUS);
 				if ((zoom >= 15) && (sts != null) && (sts.contains(StsSTS.STS_RESV))) {
-					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.PLAIN, 50), LabelStyle.NONE, new Color(0xc480ff), null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
+					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.PLAIN, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
 				}
 			}
 			ArrayList<CatACH> cats = (ArrayList<CatACH>)Renderer.getAttVal(feature, Obj.ACHARE, 0, Att.CATACH);
@@ -356,27 +360,27 @@ public class Rules {
 			for (CatACH cat : cats) {
 				switch (cat) {
 				case ACH_DEEP:
-					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, new Color(0xc480ff), null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_TANK:
-					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, new Color(0xc480ff), null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_H24P:
-					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, new Color(0xc480ff), null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_EXPL:
-					Renderer.symbol(feature, Harbours.Explosives, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(new Color(0xc480ff)));
+					Renderer.symbol(feature, Harbours.Explosives, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(Mline));
 					dy += 60;
 					break;
 				case ACH_QUAR:
-					Renderer.symbol(feature, Harbours.Hospital, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(new Color(0xc480ff)));
+					Renderer.symbol(feature, Harbours.Hospital, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(Mline));
 					dy += 60;
 					break;
 				case ACH_SEAP:
-					Renderer.symbol(feature, Areas.Seaplane, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(new Color(0xc480ff)));
+					Renderer.symbol(feature, Areas.Seaplane, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)), new Scheme(Mline));
 					dy += 60;
 					break;
 				}
@@ -384,7 +388,7 @@ public class Rules {
 			break;
 		case BERTHS:
 			if (zoom >= 14) {
-				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 40), LabelStyle.RRCT, new Color(0xc480ff), Color.white, null);
+				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 40), LabelStyle.RRCT, Mline, Color.white, null);
 			}
 			break;
 		case BUISGL:

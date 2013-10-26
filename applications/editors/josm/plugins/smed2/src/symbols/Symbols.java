@@ -13,7 +13,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.font.TextLayout;
 import java.awt.geom.*;
 import java.util.ArrayList;
@@ -138,7 +137,7 @@ public class Symbols {
 			for (Instr item : symbol) {
 				switch (item.type) {
 				case BBOX:
-					Rectangle bbox = (Rectangle) item.params;
+					Rectangle2D.Double bbox = (Rectangle2D.Double) item.params;
 					double dx = 0.0;
 					double dy = 0.0;
 					if (dd != null) {

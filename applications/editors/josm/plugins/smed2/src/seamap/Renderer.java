@@ -329,78 +329,58 @@ public class Renderer {
 	}
 
 	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg, Delta delta) {
-		if (delta == null) delta = new Delta(Handle.CC, null);
+		if (delta == null) delta = new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0));
 		if (bg == null) bg = new Color(0x00000000, true);
-		if (str == null) str = " ";
-		if (str.isEmpty()) str = " ";
+		if ((str == null) || (str.isEmpty())) str = " ";
     FontRenderContext frc = g2.getFontRenderContext();
-    GlyphVector gv = font.deriveFont((float)(font.getSize())).createGlyphVector(frc, str.equals(" ") ? "M" : str);
+    GlyphVector gv = font.deriveFont((float)(font.getSize())).createGlyphVector(frc, str.equals(" ") ? "!" : str);
     Rectangle2D bounds = gv.getVisualBounds();
     double width = bounds.getWidth();
     double height = bounds.getHeight();
-		if (width < height) width = height;
-    double dx = 0;
-    double dy = 0;
-		switch (delta.h) {
-		case CC:
-			dx += width / 2.0;
-			dy += height / 2.0;
-			break;
-		case TR:
-			dx += width;
-			break;
-		case TC:
-			dx += width / 2.0;
-			break;
-		case LC:
-			dy += height / 2.0;
-			break;
-		case RC:
-			dx += width;
-			dy += height / 2.0;
-			break;
-		case BL:
-			dy += height;
-			break;
-		case BR:
-			dx += width;
-			dy += height;
-			break;
-		case BC:
-			dx += width / 2.0;
-			dy += height;
-			break;
-		}
-		width += (height * 0.8);
-		dx += (height * 0.4);
-		height *= 1.5;
-		dy += (height * 0.15);
 		Symbol label = new Symbol();
+		double lx = 0;
+		double ly = 0;
+		double tx = 0;
+		double ty = 0;
 		switch (style) {
 		case RRCT:
+			width += height * 1.0;
+			height *= 1.5;
+	    if (width < height) width = height;
+	    lx = -width / 2;
+	    ly = -height / 2;
+	    tx = lx + (height * 0.34);
+	    ty = ly + (height * 0.17);
+			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
 			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
 			label.add(new Instr(Prim.FILL, fg));
 			label.add(new Instr(Prim.STRK, new BasicStroke(1 + (int)(height/10), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
+			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
 			break;
 		case VCLR:
-			height += 20;
-			dy += 10;
+			width += height * 1.0;
+			height *= 2.0;
+	    if (width < height) width = height;
+	    lx = -width / 2;
+	    ly = -height / 2;
+	    tx = lx + (height * 0.27);
+	    ty = ly + (height * 0.25);
+			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
 			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(-dx,-dy,width,height,height,height)));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
 			label.add(new Instr(Prim.FILL, fg));
 			int sw = 1 + (int)(height/10);
-			double po = dy - (sw / 2);
+			double po = sw / 2;
 			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-			Path2D.Double p = new Path2D.Double(); p.moveTo(-(height*0.2),po); p.lineTo((height*0.2),po); p.moveTo(0,po); p.lineTo(0,po-10);
-			p.moveTo(-(height*0.2),-po); p.lineTo((height*0.2),-po); p.moveTo(0,-po); p.lineTo(0,-po+10);
+			Path2D.Double p = new Path2D.Double(); p.moveTo(-height*0.2,-ly-po); p.lineTo(height*0.2,-ly-po); p.moveTo(0,-ly-po); p.lineTo(0,-ly-po-(height*0.15));
+			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
 			label.add(new Instr(Prim.PLIN, p));
 			break;
 		}
-		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, delta)));
+		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
 		Point2D point = context.getPoint(feature.centre);
-		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, null);
+		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), delta, null);
 	}
 
 	public static void lineText(Feature feature, String str, Font font, Color colour, double offset, double dy) {

@@ -11,7 +11,6 @@ package symbols;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.geom.*;
 
 import symbols.Symbols.*;
@@ -19,7 +18,7 @@ import symbols.Symbols.*;
 public class Harbours {
 	public static final Symbol Anchor = new Symbol();
 	static {
-		Anchor.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
+		Anchor.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-60,-60,120,120)));
 		Anchor.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Anchor.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-10,-59,20,20)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(23.0,-40.0); p.lineTo(23.0,-30.0); p.lineTo(6.0,-30.0); p.lineTo(7.0,31.0); p.quadTo(21.0,29.0,31.0,22.0);
@@ -60,7 +59,7 @@ public class Harbours {
 	}
 	public static final Symbol Customs = new Symbol();
 	static {
-		Customs.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		Customs.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		Customs.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Customs.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-28,-28,56,56)));
 		Customs.add(new Instr(Prim.LINE, new Line2D.Double(-25,5,25,5)));
@@ -96,7 +95,7 @@ public class Harbours {
 	}
 	public static final Symbol Explosives = new Symbol();
 	static {
-		Explosives.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		Explosives.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		Explosives.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-5,25,10,10)));
 		Explosives.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-10,20); p.lineTo(-13,17); p.lineTo(-13,8);
@@ -119,7 +118,7 @@ public class Harbours {
 	}
 	public static final Symbol Hospital = new Symbol();
 	static {
-		Hospital.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		Hospital.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		Hospital.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		Hospital.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-28,-28,56,56)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-26,-5); p.lineTo(-5,-5); p.lineTo(-5,-25); p.moveTo(5,-25); p.lineTo(5,-5); p.lineTo(25,-5);

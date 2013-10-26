@@ -18,14 +18,14 @@ import symbols.Symbols.*;
 public class Areas {
 	public static final Symbol Plane = new Symbol();
 	static {
-		Plane.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
+		Plane.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-60,-60,120,120)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(40,20); p.lineTo(50,10); p.lineTo(27.0,13.3); p.lineTo(23.7,6.8); p.lineTo(40.0,5.0); p.curveTo(55,4,55,-9,40,-10);
 		p.quadTo(31,-11,30,-15); p.lineTo(-30,2); p.quadTo(-35,-12,-45,-15); p.quadTo(-56,-3,-50,15); p.lineTo(18.4,7.3); p.lineTo(21.7,14); p.lineTo(-20,20); p.closePath();
 		Plane.add(new Instr(Prim.PGON, p));
 	}
 	public static final Symbol Cable = new Symbol();
 	static {
-		Cable.add(new Instr(Prim.BBOX, new Rectangle(-30,-60,60,60)));
+		Cable.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,60)));
 		Cable.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
 		Cable.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,0); p.curveTo(-13,-13,-13,-17,0,-30); p.curveTo(13,-43,13,-47,0,-60);
@@ -33,7 +33,7 @@ public class Areas {
 	}
 	public static final Symbol LaneArrow = new Symbol();
 	static {
-		LaneArrow.add(new Instr(Prim.BBOX, new Rectangle(-20,-240,40,240)));
+		LaneArrow.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-20,-240,40,240)));
 		LaneArrow.add(new Instr(Prim.STRK, new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
 		LaneArrow.add(new Instr(Prim.FILL, new Color(0x80c480ff, true)));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(15,0); p.lineTo(15,-195); p.lineTo(40,-195);
@@ -42,7 +42,7 @@ public class Areas {
 	}
 	public static final Symbol LineAnchor = new Symbol();
 	static {
-		LineAnchor.add(new Instr(Prim.BBOX, new Rectangle(-30,-60,60,90)));
+		LineAnchor.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,90)));
 		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
 	}
 	public static final Symbol LinePlane = new Symbol();
@@ -71,7 +71,7 @@ public class Areas {
 	}
 	public static final Symbol Pipeline = new Symbol();
 	static {
-		Pipeline.add(new Instr(Prim.BBOX, new Rectangle(-15,-60,30,60)));
+		Pipeline.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-15,-60,30,60)));
 		Pipeline.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Pipeline.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		Pipeline.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-50)));
@@ -79,7 +79,7 @@ public class Areas {
 	}
 	public static final Symbol Restricted = new Symbol();
 	static {
-		Restricted.add(new Instr(Prim.BBOX, new Rectangle(-15,-30,30,30)));
+		Restricted.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-15,-30,30,30)));
 		Restricted.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,0,0,-30)));
 		Restricted.add(new Instr(Prim.LINE, new Line2D.Double(0,-15,17,-15)));
@@ -124,7 +124,7 @@ public class Areas {
 	}
 	public static final Symbol Seaplane = new Symbol();
 	static {
-		Seaplane.add(new Instr(Prim.BBOX, new Rectangle(-60,-60,120,120)));
+		Seaplane.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-60,-60,120,120)));
 		Seaplane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Seaplane.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-58,-58,116,116)));
 		Seaplane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 1.0, 0, 0, null, null)));

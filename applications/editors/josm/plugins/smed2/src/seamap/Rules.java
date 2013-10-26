@@ -331,7 +331,7 @@ public class Rules {
 		case ACHBRT:
 			if (zoom >= 14) {
 				Renderer.symbol(feature, Harbours.Anchorage, null, null, new Scheme(Mline));
-				Renderer.labelText(feature, name == null ? " " : (String) name.val, new Font("Arial", Font.PLAIN, 30), LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
+			Renderer.labelText(feature, name == null ? "" : (String) name.val, new Font("Arial", Font.PLAIN, 30), LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 0)));
 			}
 			double radius = (Double)Renderer.getAttVal(feature, Obj.ACHBRT, 0, Att.RADIUS);
 			if (radius != 0) {

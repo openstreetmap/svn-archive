@@ -12,7 +12,6 @@ package symbols;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
 import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -263,7 +262,7 @@ public class Notices {
 	}
 	public static final Symbol NoticeA10a = new Symbol();
 	static {
-		NoticeA10a.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		NoticeA10a.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		NoticeA10a.add(new Instr(Prim.FILL, Color.white));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(30,0); p.lineTo(0,30); p.closePath();
 		NoticeA10a.add(new Instr(Prim.PGON, p));
@@ -478,7 +477,7 @@ public class Notices {
 	}
 	public static final Symbol NoticeD1a = new Symbol();
 	static {
-		NoticeD1a.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		NoticeD1a.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		NoticeD1a.add(new Instr(Prim.FILL, Color.yellow));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(-30,0); p.lineTo(0,30); p.lineTo(30,0); p.closePath();
 		NoticeD1a.add(new Instr(Prim.PGON, p));
@@ -488,7 +487,7 @@ public class Notices {
 	}
 	public static final Symbol NoticeD1b = new Symbol();
 	static {
-		NoticeD1b.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		NoticeD1b.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		NoticeD1b.add(new Instr(Prim.FILL, Color.yellow));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-30,0); p.lineTo(-15,15); p.lineTo(15,-15); p.lineTo(30,0);	p.lineTo(15,15); p.lineTo(-15,-15); p.closePath();
 		NoticeD1b.add(new Instr(Prim.PGON, p));
@@ -498,7 +497,7 @@ public class Notices {
 	}
 	public static final Symbol NoticeD2a = new Symbol();
 	static {
-		NoticeD2a.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		NoticeD2a.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		NoticeD2a.add(new Instr(Prim.FILL, Color.white));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(30,0); p.lineTo(0,30); p.closePath();
 		NoticeD2a.add(new Instr(Prim.PGON, p));
@@ -973,7 +972,7 @@ public class Notices {
 
 	public static final Symbol NoticeBnank = new Symbol();
 	static {
-		NoticeBnank.add(new Instr(Prim.BBOX, new Rectangle(-30,-30,60,60)));
+		NoticeBnank.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		Symbol colours = new Symbol();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-80.0); p.lineTo(-15.0,-47.0); p.lineTo(15.0,-47.0); p.closePath();
 		colours.add(new Instr(Prim.P1, p));

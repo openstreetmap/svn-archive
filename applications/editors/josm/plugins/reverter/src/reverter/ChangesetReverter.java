@@ -54,6 +54,11 @@ public class ChangesetReverter {
         SELECTION,
         SELECTION_WITH_UNDELETE
     }
+    
+    public static final Collection<Long> MODERATOR_REDACTION_ACCOUNTS = Collections.unmodifiableCollection(Arrays.asList(
+            722137L, // OSMF Redaction Account
+            760215L  // pnorman redaction revert
+            ));
 
     public final int changesetId;
     public final Changeset changeset;
@@ -121,9 +126,10 @@ public class ChangesetReverter {
      * @param changesetId
      * @param monitor
      * @throws OsmTransferException
+     * @throws RevertRedactedChangesetException 
      */
     public ChangesetReverter(int changesetId, RevertType revertType, boolean newLayer, ProgressMonitor monitor)
-            throws OsmTransferException {
+            throws OsmTransferException, RevertRedactedChangesetException {
         this.changesetId = changesetId;
         if (newLayer) {
             this.ds = new DataSet();
@@ -136,8 +142,11 @@ public class ChangesetReverter {
 
         OsmServerChangesetReader csr = new OsmServerChangesetReader();
         monitor.beginTask("", 2);
+        changeset = csr.readChangeset(changesetId, monitor.createSubTaskMonitor(1, false));
+        if (MODERATOR_REDACTION_ACCOUNTS.contains(changeset.getUser().getId())) {
+            throw new RevertRedactedChangesetException(tr("It is not allowed to revert changeset from {0}", changeset.getUser().getName()));
+        }
         try {
-            changeset = csr.readChangeset(changesetId, monitor.createSubTaskMonitor(1, false));
             cds = csr.downloadChangeset(changesetId, monitor.createSubTaskMonitor(1, false));
         } finally {
             monitor.finishTask();

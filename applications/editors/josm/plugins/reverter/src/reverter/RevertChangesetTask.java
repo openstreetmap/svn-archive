@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.ConflictAddCommand;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -63,8 +64,23 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     @Override
     protected void realRun() throws OsmTransferException {
         progressMonitor.indeterminateSubTask(tr("Downloading changeset"));
-        rev = new ChangesetReverter(changesetId, revertType, newLayer,
-                progressMonitor.createSubTaskMonitor(0, true));
+        try {
+            rev = new ChangesetReverter(changesetId, revertType, newLayer,
+                    progressMonitor.createSubTaskMonitor(0, true));
+        } catch (final RevertRedactedChangesetException e) {
+            GuiHelper.runInEDT(new Runnable() {
+                @Override
+                public void run() {
+                    new Notification(
+                            e.getMessage()+"<br>"+
+                            tr("See {0}", "<a href=\"http://www.openstreetmap.org/redactions\">http://www.openstreetmap.org/redactions</a>"))
+                    .setIcon(JOptionPane.ERROR_MESSAGE)
+                    .setDuration(Notification.TIME_LONG)
+                    .show();
+                }
+            });
+            progressMonitor.cancel();
+        }
         if (progressMonitor.isCanceled()) return;
 
         // Check missing objects

@@ -40,17 +40,6 @@ public class Harbours {
 		Bollard.add(new Instr(Prim.FILL, Color.black));
 		Bollard.add(new Instr(Prim.ELPS, s));
 	}
-	public static final Symbol ClearV = new Symbol();
-	static {
-		ClearV.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		ClearV.add(new Instr(Prim.FILL, Color.white));
-		ClearV.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-30,-30,60,60)));
-		ClearV.add(new Instr(Prim.FILL, Color.black));
-		ClearV.add(new Instr(Prim.LINE, new Line2D.Double(-10,-25,10,-25)));
-		ClearV.add(new Instr(Prim.LINE, new Line2D.Double(0,-25,0,-15)));
-		ClearV.add(new Instr(Prim.LINE, new Line2D.Double(-10,25,10,25)));
-		ClearV.add(new Instr(Prim.LINE, new Line2D.Double(0,25,0,15)));
-	}
 	public static final Symbol ContainerCrane = new Symbol();
 	static {
 		ContainerCrane.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
@@ -112,9 +101,10 @@ public class Harbours {
 	}
 	public static final Symbol HarbourMaster = new Symbol();
 	static {
+		HarbourMaster.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		HarbourMaster.add(new Instr(Prim.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		HarbourMaster.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-35,-50,70,100)));
-		HarbourMaster.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.6, 0, 0, null, null)));
+		HarbourMaster.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-24,-28,48,56)));
+		HarbourMaster.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.4, 0, 0, null, null)));
 	}
 	public static final Symbol Hospital = new Symbol();
 	static {

@@ -102,10 +102,10 @@ public class Renderer {
 		}
 	}
 
-	public static void symbol(Feature feature, Symbol symbol, Obj obj, Delta delta, Scheme scheme) {
+	public static void symbol(Feature feature, Symbol symbol, Obj obj, Scheme scheme, Delta delta) {
 		Point2D point = context.getPoint(feature.centre);
 		if (obj == null) {
-			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, scheme);
+			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, delta);
 		} else {
 			ArrayList<Color> colours = new ArrayList<Color>();
 			for (ColCOL col : (ArrayList<ColCOL>)getAttVal(feature, obj, 0, Att.COLOUR)) {
@@ -115,16 +115,94 @@ public class Renderer {
 			for(ColPAT pat: (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT)) {
 				patterns.add(pattMap.get(pat));
 			}
-			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), delta, new Scheme(patterns, colours));
+			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), new Scheme(patterns, colours), delta);
+		}
+	}
+	
+	public static void cluster(Feature feature, ArrayList<Symbol> symbols) {
+		Rectangle2D.Double bbox = null;
+		if (symbols.size() > 4) {
+			for (Instr instr : symbols.get(0)) {
+				if (instr.type == Prim.BBOX) {
+					bbox = (Rectangle2D.Double) instr.params;
+					break;
+				}
+			}
+			if (bbox == null) return;
+		}
+		switch (symbols.size()) {
+		case 1:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.CC, new AffineTransform()));
+			break;
+		case 2:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.RC, new AffineTransform()));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.LC, new AffineTransform()));
+			break;
+		case 3:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BC, new AffineTransform()));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.TR, new AffineTransform()));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.TL, new AffineTransform()));
+			break;
+		case 4:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, new AffineTransform()));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BL, new AffineTransform()));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.TR, new AffineTransform()));
+			symbol(feature, symbols.get(3), null, null, new Delta(Handle.TL, new AffineTransform()));
+			break;
+		case 5:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, new AffineTransform()));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BL, new AffineTransform()));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(3), null, null, new Delta(Handle.TC, new AffineTransform()));
+			symbol(feature, symbols.get(4), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			break;
+		case 6:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BC, new AffineTransform()));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(3), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(4), null, null, new Delta(Handle.TC, new AffineTransform()));
+			symbol(feature, symbols.get(5), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			break;
+		case 7:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(3), null, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(4), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(5), null, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
+			symbol(feature, symbols.get(6), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
+			break;
+		case 8:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(3), null, null, new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(4), null, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(5), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(6), null, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
+			symbol(feature, symbols.get(7), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
+			break;
+		case 9:
+			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-bbox.width/2, -bbox.height/2)));
+			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(2), null, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(bbox.width/2, -bbox.height/2)));
+			symbol(feature, symbols.get(3), null, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(4), null, null, new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(5), null, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(6), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(7), null, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
+			symbol(feature, symbols.get(8), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
+			break;
 		}
 	}
 
-	private static Rectangle symbolSize(Symbol symbol) {
+	private static Rectangle2D.Double symbolSize(Symbol symbol) {
 		Symbol ssymb = symbol;
 		while (ssymb != null) {
 			for (Instr item : symbol) {
 				if (item.type == Prim.BBOX) {
-					return (Rectangle) item.params;
+					return (Rectangle2D.Double) item.params;
 				}
 				if (item.type == Prim.SYMB) {
 					ssymb = ((SubSymbol) item.params).instr;
@@ -137,7 +215,7 @@ public class Renderer {
 		return null;
 	}
 
-	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, int ratio, Color col) {
+	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, Symbol tersymb, int ratio, Color col) {
 		Area area;
 		switch (feature.flag) {
 		case LINE:
@@ -151,13 +229,15 @@ public class Renderer {
 		default:
 			return;
 		}
-		Rectangle prect = symbolSize(prisymb);
-		Rectangle srect = symbolSize(secsymb);
+		Rectangle2D.Double prect = symbolSize(prisymb);
+		Rectangle2D.Double srect = symbolSize(secsymb);
+		Rectangle2D.Double trect = symbolSize(tersymb);
 		if (srect == null)
 			ratio = 0;
 		if (prect != null) {
 			double psize = Math.abs(prect.getY()) * sScale;
 			double ssize = (srect != null) ? Math.abs(srect.getY()) * sScale : 0;
+			double tsize = (trect != null) ? Math.abs(srect.getY()) * sScale : 0;
 			Point2D prev = new Point2D.Double();
 			Point2D next = new Point2D.Double();
 			Point2D curr = new Point2D.Double();
@@ -166,7 +246,8 @@ public class Renderer {
 			boolean piv = false;
 			double len = 0;
 			double angle = 0;
-			int scount = ratio;
+			int stcount = ratio;
+			boolean stflag = false;
 			Symbol symbol = prisymb;
 			for (Bound bound : area) {
 				BoundIterator bit = map.new BoundIterator(bound);
@@ -179,7 +260,7 @@ public class Renderer {
 					if (first) {
 						curr = succ = next;
 						gap = (space > 0);
-						scount = ratio;
+						stcount = ratio - 1;
 						symbol = prisymb;
 						len = gap ? psize * space * 0.5 : psize;
 						first = false;
@@ -201,17 +282,17 @@ public class Renderer {
 								succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
 							}
 							if (!gap) {
-								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(),
-										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))),
-										new Scheme(col));
+								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Scheme(col),
+										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))));
 							}
 							if (space > 0)
 								gap = !gap;
 							curr = succ;
-							len = gap ? (psize * space) : (--scount == 0) ? ssize : psize;
-							if (scount == 0) {
-								symbol = secsymb;
-								scount = ratio;
+							len = gap ? (psize * space) : (--stcount == 0) ? (stflag ? tsize : ssize) : psize;
+							if (stcount == 0) {
+								symbol = stflag ? tersymb : secsymb;
+								if (trect != null) stflag = !stflag;
+								stcount = ratio;
 							} else {
 								symbol = prisymb;
 							}
@@ -329,7 +410,7 @@ public class Renderer {
 	}
 
 	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg, Delta delta) {
-		if (delta == null) delta = new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 0));
+		if (delta == null) delta = new Delta(Handle.CC);
 		if (bg == null) bg = new Color(0x00000000, true);
 		if ((str == null) || (str.isEmpty())) str = " ";
     FontRenderContext frc = g2.getFontRenderContext();
@@ -338,10 +419,7 @@ public class Renderer {
     double width = bounds.getWidth();
     double height = bounds.getHeight();
 		Symbol label = new Symbol();
-		double lx = 0;
-		double ly = 0;
-		double tx = 0;
-		double ty = 0;
+		double lx, ly, tx, ty;
 		switch (style) {
 		case RRCT:
 			width += height * 1.0;
@@ -377,10 +455,17 @@ public class Renderer {
 			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
 			label.add(new Instr(Prim.PLIN, p));
 			break;
+		default:
+			lx = -width / 2;
+			ly = -height / 2;
+			tx = lx;
+			ty = ly;
+			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			break;
 		}
 		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
 		Point2D point = context.getPoint(feature.centre);
-		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), delta, null);
+		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, delta);
 	}
 
 	public static void lineText(Feature feature, String str, Font font, Color colour, double offset, double dy) {

@@ -18,7 +18,6 @@ import javax.swing.*;
 import messages.Messages;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.search.SearchCompiler.Parent;
 
 import s57.S57att.Att;
 import s57.S57obj.Obj;
@@ -27,8 +26,7 @@ import seamap.SeaMap.*;
 import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
-	private static final long serialVersionUID = 1L;
-	
+
 	Smed2Action dlg;
 	BufferedImage img;
 	int w, h, z, f;

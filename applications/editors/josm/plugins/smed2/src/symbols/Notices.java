@@ -239,7 +239,7 @@ public class Notices {
 	public static final Symbol NoticeA6 = new Symbol();
 	static {
 		NoticeA6.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeA, 1.0, 0, 0, null, null)));
-		NoticeA6.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.4, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))), null)));
+		NoticeA6.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.4, 0, 0, null, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))))));
 	}
 	public static final Symbol NoticeA7 = new Symbol();
 	static {
@@ -276,7 +276,7 @@ public class Notices {
 	}
 	public static final Symbol NoticeA10b = new Symbol();
 	static {
-		NoticeA10b.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeA10a, 1.0, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))), null)));
+		NoticeA10b.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeA10a, 1.0, 0, 0, null, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))))));
 	}
 	public static final Symbol NoticeA12 = new Symbol();
 	static {
@@ -511,7 +511,7 @@ public class Notices {
 	}
 	public static final Symbol NoticeD2b = new Symbol();
 	static {
-		NoticeD2b.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeD2a, 1.0, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))), null)));
+		NoticeD2b.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Notices.NoticeD2a, 1.0, 0, 0, null, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(180.0))))));
 	}
 	public static final Symbol NoticeD3a = new Symbol();
 	static {
@@ -1038,6 +1038,8 @@ public class Notices {
 				break;
 			}
 			break;
+		default:
+			break;
 		}
 		return scheme;
 	}
@@ -1053,6 +1055,8 @@ public class Notices {
 			break;
 		case SYS_PPWB:
 			symbol = NmkPpwbc.get(cat);
+			break;
+		default:
 			break;
 		}
 		return symbol;

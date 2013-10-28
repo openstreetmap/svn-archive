@@ -31,6 +31,23 @@ public class Areas {
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,0); p.curveTo(-13,-13,-13,-17,0,-30); p.curveTo(13,-43,13,-47,0,-60);
 		Cable.add(new Instr(Prim.PLIN, p));
 	}
+	public static final Symbol CableDot = new Symbol();
+	static {
+		CableDot.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,60)));
+		CableDot.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-10,-40,20,20)));
+	}
+	public static final Symbol CableDash = new Symbol();
+	static {
+		CableDash.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,60)));
+		CableDash.add(new Instr(Prim.STRK, new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)));
+		CableDash.add(new Instr(Prim.LINE, new Line2D.Double(0,-15,0,-45)));
+	}
+	public static final Symbol CableFlash = new Symbol();
+	static {
+		CableFlash.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,60)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-30,-25); p.lineTo(-10,-40); p.lineTo(10,-26); p.lineTo(30,-35); p.lineTo(10,-20); p.lineTo(-10,-34); p.closePath();
+		CableFlash.add(new Instr(Prim.PGON, p));
+	}
 	public static final Symbol LaneArrow = new Symbol();
 	static {
 		LaneArrow.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-20,-240,40,240)));
@@ -43,12 +60,12 @@ public class Areas {
 	public static final Symbol LineAnchor = new Symbol();
 	static {
 		LineAnchor.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,90)));
-		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
+		LineAnchor.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.5, 0, 0, null, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))))));
 	}
 	public static final Symbol LinePlane = new Symbol();
 	static {
 		LinePlane.add(new Instr(Prim.FILL, new Color(0xc480ff)));
-		LinePlane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 0.5, 0, 0, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))), null)));
+		LinePlane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 0.5, 0, 0, null, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))))));
 	}
 	public static final Symbol MarineFarm = new Symbol();
 	static {

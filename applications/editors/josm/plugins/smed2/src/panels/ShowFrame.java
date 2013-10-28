@@ -22,7 +22,7 @@ public class ShowFrame extends JFrame {
 	Picture picture;
 
 	class Picture extends JPanel implements MapContext {
-		
+
 		public void drawPicture(OsmPrimitive osm, SeaMap map) {
 			long id;
 			Feature feature;

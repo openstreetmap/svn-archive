@@ -29,7 +29,6 @@ import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
 import s57.S57dat;
-import seamap.Renderer;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
 
@@ -37,8 +36,6 @@ import panels.PanelMain;
 import panels.ShowFrame;
 
 public class Smed2Action extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
-	private static final long serialVersionUID = 1L;
-	
 	private static String editor = tr("SeaMap Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;

@@ -49,6 +49,10 @@ public class Symbols {
 			h = ih;
 			t = it;
 		}
+		public Delta(Handle ih) {
+			h = ih;
+			t = new AffineTransform();
+		}
 	}
 
 	public static class Scheme {
@@ -109,7 +113,7 @@ public class Symbols {
 		public Delta delta;
 		public Scheme scheme;
 
-		public SubSymbol(Symbol iinstr, double iscale, double ix, double iy, Delta idelta, Scheme ischeme) {
+		public SubSymbol(Symbol iinstr, double iscale, double ix, double iy, Scheme ischeme, Delta idelta) {
 			instr = iinstr;
 			scale = iscale;
 			x = ix;
@@ -119,7 +123,7 @@ public class Symbols {
 		}
 	}
 
-	public static void drawSymbol(Graphics2D g2, Symbol symbol, double scale, double x, double y, Delta dd, Scheme cs) {
+	public static void drawSymbol(Graphics2D g2, Symbol symbol, double scale, double x, double y, Scheme cs, Delta dd) {
 		int pn = 0;
 		int cn = 0;
 		g2.setPaint(Color.black);
@@ -233,6 +237,8 @@ public class Symbols {
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
+							default:
+								break;
 							}
 						}
 					}
@@ -269,7 +275,7 @@ public class Symbols {
 					break;
 				case SYMB:
 					SubSymbol s = (SubSymbol) item.params;
-					drawSymbol(g2, s.instr, s.scale, s.x, s.y, s.delta, (s.scheme != null ? s.scheme : cs));
+					drawSymbol(g2, s.instr, s.scale, s.x, s.y, (s.scheme != null ? s.scheme : cs), s.delta);
 					break;
 				case TEXT:
 					Caption c = (Caption) item.params;
@@ -320,6 +326,8 @@ public class Symbols {
 						}
 					}
 					layout.draw(g2, (float)dx, (float)dy);
+					break;
+				default:
 					break;
 				}
 			}

@@ -315,7 +315,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
 
         public void updateEnabledState() {
-            setEnabled(Main.main != null && Main.main.getEditLayer() != null);
+            setEnabled(Main.main != null && Main.main.hasEditLayer());
         }
 
         public void editLayerChanged(OsmDataLayer oldLayer,

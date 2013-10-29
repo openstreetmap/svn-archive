@@ -55,8 +55,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.UrlLabel;
 
 public class AddrInterpolationDialog extends JDialog implements ActionListener  {
 

@@ -48,7 +48,6 @@ public class ShowFrame extends JFrame {
 			Renderer.reRender(g2, 16, 32, showMap, this);
 		}
 
-		@Override
 		public Point2D getPoint(Snode coord) {
 			return new Point2D.Double(150, 150);
 		}

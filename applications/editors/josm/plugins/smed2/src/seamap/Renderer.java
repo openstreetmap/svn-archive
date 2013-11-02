@@ -27,37 +27,6 @@ import symbols.Symbols.*;
 
 public class Renderer {
 
-	public static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
-	static {
-		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
-		bodyColours.put(ColCOL.COL_WHT, new Color(0xffffff));
-		bodyColours.put(ColCOL.COL_BLK, new Color(0x000000));
-		bodyColours.put(ColCOL.COL_RED, new Color(0xd40000));
-		bodyColours.put(ColCOL.COL_GRN, new Color(0x00d400));
-		bodyColours.put(ColCOL.COL_BLU, Color.blue);
-		bodyColours.put(ColCOL.COL_YEL, new Color(0xffd400));
-		bodyColours.put(ColCOL.COL_GRY, Color.gray);
-		bodyColours.put(ColCOL.COL_BRN, new Color(0x8b4513));
-		bodyColours.put(ColCOL.COL_AMB, new Color(0xfbf00f));
-		bodyColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
-		bodyColours.put(ColCOL.COL_ORG, Color.orange);
-		bodyColours.put(ColCOL.COL_MAG, new Color(0xf000f0));
-		bodyColours.put(ColCOL.COL_PNK, Color.pink);
-	}
-
-	public static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<ColPAT, Patt>(ColPAT.class);
-	static {
-		pattMap.put(ColPAT.PAT_UNKN, Patt.Z);
-		pattMap.put(ColPAT.PAT_HORI, Patt.H);
-		pattMap.put(ColPAT.PAT_VERT, Patt.V);
-		pattMap.put(ColPAT.PAT_DIAG, Patt.D);
-		pattMap.put(ColPAT.PAT_BRDR, Patt.B);
-		pattMap.put(ColPAT.PAT_SQUR, Patt.S);
-		pattMap.put(ColPAT.PAT_CROS, Patt.C);
-		pattMap.put(ColPAT.PAT_SALT, Patt.X);
-		pattMap.put(ColPAT.PAT_STRP, Patt.H);
-	}
-	
 	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
 	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, HCLR }
@@ -82,41 +51,24 @@ public class Renderer {
 		}
 	}
 
-	public static AttMap getAtts(Feature feature, Obj obj, int idx) {
-		HashMap<Integer, AttMap> objs = feature.objs.get(obj);
-		if (objs == null)
-			return null;
-		else
-			return objs.get(idx);
-	}
-
-	public static Object getAttVal(Feature feature, Obj obj, int idx, Att att) {
-		AttMap atts = getAtts(feature, obj, idx);
-		if (atts == null)
-			return S57val.nullVal(att);
-		else {
-			AttItem item = atts.get(att);
-			if (item == null)
-				return S57val.nullVal(att);
-			return item.val;
-		}
-	}
-
-	public static void symbol(Feature feature, Symbol symbol, Obj obj, Scheme scheme, Delta delta) {
+	public static void symbol(Feature feature, Symbol symbol) {
 		Point2D point = context.getPoint(feature.centre);
-		if (obj == null) {
-			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, delta);
-		} else {
-			ArrayList<Color> colours = new ArrayList<Color>();
-			for (ColCOL col : (ArrayList<ColCOL>)getAttVal(feature, obj, 0, Att.COLOUR)) {
-				colours.add(bodyColours.get(col));
-			}
-			ArrayList<Patt> patterns = new ArrayList<Patt>();
-			for(ColPAT pat: (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT)) {
-				patterns.add(pattMap.get(pat));
-			}
-			Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), new Scheme(patterns, colours), delta);
-		}
+		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, null);
+	}
+	
+	public static void symbol(Feature feature, Symbol symbol, Scheme scheme) {
+		Point2D point = context.getPoint(feature.centre);
+		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, null);
+	}
+	
+	public static void symbol(Feature feature, Symbol symbol, Delta delta) {
+		Point2D point = context.getPoint(feature.centre);
+		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, delta);
+	}
+	
+	public static void symbol(Feature feature, Symbol symbol, Scheme scheme, Delta delta) {
+		Point2D point = context.getPoint(feature.centre);
+		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, delta);
 	}
 	
 	public static void cluster(Feature feature, ArrayList<Symbol> symbols) {
@@ -132,67 +84,67 @@ public class Renderer {
 		}
 		switch (symbols.size()) {
 		case 1:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(0), new Delta(Handle.CC, new AffineTransform()));
 			break;
 		case 2:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.RC, new AffineTransform()));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.LC, new AffineTransform()));
+			symbol(feature, symbols.get(0), new Delta(Handle.RC, new AffineTransform()));
+			symbol(feature, symbols.get(1), new Delta(Handle.LC, new AffineTransform()));
 			break;
 		case 3:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BC, new AffineTransform()));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.TR, new AffineTransform()));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.TL, new AffineTransform()));
+			symbol(feature, symbols.get(0), new Delta(Handle.BC, new AffineTransform()));
+			symbol(feature, symbols.get(1), new Delta(Handle.TR, new AffineTransform()));
+			symbol(feature, symbols.get(2), new Delta(Handle.TL, new AffineTransform()));
 			break;
 		case 4:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, new AffineTransform()));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BL, new AffineTransform()));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.TR, new AffineTransform()));
-			symbol(feature, symbols.get(3), null, null, new Delta(Handle.TL, new AffineTransform()));
+			symbol(feature, symbols.get(0), new Delta(Handle.BR, new AffineTransform()));
+			symbol(feature, symbols.get(1), new Delta(Handle.BL, new AffineTransform()));
+			symbol(feature, symbols.get(2), new Delta(Handle.TR, new AffineTransform()));
+			symbol(feature, symbols.get(3), new Delta(Handle.TL, new AffineTransform()));
 			break;
 		case 5:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, new AffineTransform()));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BL, new AffineTransform()));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
-			symbol(feature, symbols.get(3), null, null, new Delta(Handle.TC, new AffineTransform()));
-			symbol(feature, symbols.get(4), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(0), new Delta(Handle.BR, new AffineTransform()));
+			symbol(feature, symbols.get(1), new Delta(Handle.BL, new AffineTransform()));
+			symbol(feature, symbols.get(2), new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(3), new Delta(Handle.TC, new AffineTransform()));
+			symbol(feature, symbols.get(4), new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
 			break;
 		case 6:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BC, new AffineTransform()));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
-			symbol(feature, symbols.get(3), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
-			symbol(feature, symbols.get(4), null, null, new Delta(Handle.TC, new AffineTransform()));
-			symbol(feature, symbols.get(5), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(0), new Delta(Handle.BR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(1), new Delta(Handle.BC, new AffineTransform()));
+			symbol(feature, symbols.get(2), new Delta(Handle.BL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(3), new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(4), new Delta(Handle.TC, new AffineTransform()));
+			symbol(feature, symbols.get(5), new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
 			break;
 		case 7:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.CC, new AffineTransform()));
-			symbol(feature, symbols.get(3), null, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
-			symbol(feature, symbols.get(4), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
-			symbol(feature, symbols.get(5), null, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
-			symbol(feature, symbols.get(6), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(0), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(1), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(2), new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(3), new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(4), new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(5), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
+			symbol(feature, symbols.get(6), new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
 			break;
 		case 8:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
-			symbol(feature, symbols.get(3), null, null, new Delta(Handle.CC, new AffineTransform()));
-			symbol(feature, symbols.get(4), null, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
-			symbol(feature, symbols.get(5), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
-			symbol(feature, symbols.get(6), null, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
-			symbol(feature, symbols.get(7), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(0), new Delta(Handle.BR, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(1), new Delta(Handle.BL, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(2), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(3), new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(4), new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(5), new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(6), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
+			symbol(feature, symbols.get(7), new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
 			break;
 		case 9:
-			symbol(feature, symbols.get(0), null, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-bbox.width/2, -bbox.height/2)));
-			symbol(feature, symbols.get(1), null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
-			symbol(feature, symbols.get(2), null, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(bbox.width/2, -bbox.height/2)));
-			symbol(feature, symbols.get(3), null, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
-			symbol(feature, symbols.get(4), null, null, new Delta(Handle.CC, new AffineTransform()));
-			symbol(feature, symbols.get(5), null, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
-			symbol(feature, symbols.get(6), null, null, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
-			symbol(feature, symbols.get(7), null, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
-			symbol(feature, symbols.get(8), null, null, new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(0), new Delta(Handle.BR, AffineTransform.getTranslateInstance(-bbox.width/2, -bbox.height/2)));
+			symbol(feature, symbols.get(1), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -bbox.height/2)));
+			symbol(feature, symbols.get(2), new Delta(Handle.BL, AffineTransform.getTranslateInstance(bbox.width/2, -bbox.height/2)));
+			symbol(feature, symbols.get(3), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-bbox.width/2, 0)));
+			symbol(feature, symbols.get(4), new Delta(Handle.CC, new AffineTransform()));
+			symbol(feature, symbols.get(5), new Delta(Handle.LC, AffineTransform.getTranslateInstance(bbox.width/2, 0)));
+			symbol(feature, symbols.get(6), new Delta(Handle.TR, AffineTransform.getTranslateInstance(-bbox.width/2, bbox.height/2)));
+			symbol(feature, symbols.get(7), new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, bbox.height/2)));
+			symbol(feature, symbols.get(8), new Delta(Handle.TL, AffineTransform.getTranslateInstance(bbox.width/2, bbox.height/2)));
 			break;
 		}
 	}

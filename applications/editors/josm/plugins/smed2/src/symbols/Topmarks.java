@@ -227,18 +227,18 @@ public class Topmarks {
 		 Shapes.put(TopSHP.TOP_SPHR, TopSphere); Shapes.put(TopSHP.TOP_SQUR, TopSquare); Shapes.put(TopSHP.TOP_TRI, TopTriangle); Shapes.put(TopSHP.TOP_WEST, TopWest);
 		 Shapes.put(TopSHP.TOP_SALT, TopX);
 	}
-	public static final EnumMap<BoySHP, Delta> Buoys = new EnumMap<BoySHP, Delta>(BoySHP.class);
+	public static final EnumMap<BoySHP, Delta> BuoyDeltas = new EnumMap<BoySHP, Delta>(BoySHP.class);
 	static {
-		Buoys.put(BoySHP.BOY_PILR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
-		Buoys.put(BoySHP.BOY_SPAR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
-		Buoys.put(BoySHP.BOY_CAN, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
-		Buoys.put(BoySHP.BOY_CONE, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
-		Buoys.put(BoySHP.BOY_SPHR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
-		Buoys.put(BoySHP.BOY_BARL, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
-		Buoys.put(BoySHP.BOY_SUPR, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0))); 
-		Buoys.put(BoySHP.BOY_ICE, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -25.0))); 
+		BuoyDeltas.put(BoySHP.BOY_PILR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
+		BuoyDeltas.put(BoySHP.BOY_SPAR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
+		BuoyDeltas.put(BoySHP.BOY_CAN, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		BuoyDeltas.put(BoySHP.BOY_CONE, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		BuoyDeltas.put(BoySHP.BOY_SPHR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		BuoyDeltas.put(BoySHP.BOY_BARL, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		BuoyDeltas.put(BoySHP.BOY_SUPR, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0))); 
+		BuoyDeltas.put(BoySHP.BOY_ICE, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -25.0))); 
 	}
-	public static final Delta Floats = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0));
-	public static final Delta Beacons = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -70.0));
+	public static final Delta FloatDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0));
+	public static final Delta BeaconDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -70.0));
 
 }

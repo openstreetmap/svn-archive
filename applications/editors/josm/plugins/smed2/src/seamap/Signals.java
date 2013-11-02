@@ -39,8 +39,8 @@ public class Signals {
 	}
 
 	public static void radarStations(Feature feature) {
-		Renderer.symbol(feature, Beacons.RadarStation, null, null, null);
-		ArrayList<CatROS> cats = (ArrayList<CatROS>)Renderer.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
+		Renderer.symbol(feature, Beacons.RadarStation);
+		ArrayList<CatROS> cats = (ArrayList<CatROS>)Util.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
 		String str = "";
 		for (CatROS ros : cats) {
 			switch (ros) {
@@ -100,43 +100,43 @@ public class Signals {
 				break;
 			case ROS_VANC:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopNorth, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopNorth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASC:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopSouth, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopSouth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAEC:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopEast, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopEast, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAWC:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopWest, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopWest, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAPL:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopCan, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopCan, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASL:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopCone, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopCone, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAID:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopIsol, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopIsol, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASW:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopSphere, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopSphere, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASP:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopX, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopX, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAWK:
 				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
-				Renderer.symbol(feature, Topmarks.TopCross, null, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+				Renderer.symbol(feature, Topmarks.TopCross, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			default:
 				break;

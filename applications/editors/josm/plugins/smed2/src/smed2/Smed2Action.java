@@ -192,14 +192,14 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 					}
 				} else {
 					showFrame.setVisible(false);
-					PanelMain.messageBar.setText(tr("Select only one feature"));
+					PanelMain.messageBar.setText(tr("Select only one object"));
 				}
 			}
 			if (nextFeature == null) {
 				feature = null;
 				panelMain.clearMark();
 				showFrame.setVisible(false);
-				PanelMain.messageBar.setText(tr("Select a map feature"));
+				PanelMain.messageBar.setText(tr("Select a map object"));
 			}
 		}
 	}

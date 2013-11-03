@@ -136,7 +136,7 @@ public class PanelMain extends JPanel {
 	}
 	
 	public void parseMark(Feature feature) {
-		decode.setText("Selected feature:\n");
+		decode.setText("Selected object:\n");
 		decode.append("\t" + tr("Type") + ": " + Messages.getString(feature.type.name()) + "\n");
 		if (feature.atts.get(Att.OBJNAM) != null) {
 			decode.append("\t" + tr("Name") + ": " + feature.atts.get(Att.OBJNAM).val + "\n");
@@ -174,7 +174,7 @@ public class PanelMain extends JPanel {
 	}
 	
 	public void clearMark() {
-		decode.setText(tr("No feature selected"));
+		decode.setText(tr("No object selected"));
 	}
 	
 }

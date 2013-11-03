@@ -90,6 +90,24 @@ public class Symbols {
 		public float[] dash;
 		public Color fill;
 
+		public LineStyle(Color iline, float iwidth) {
+			line = iline;
+			width = iwidth;
+			dash = null;
+			fill = null;
+		}
+		public LineStyle(Color iline, float iwidth, float[] idash) {
+			line = iline;
+			width = iwidth;
+			dash = idash;
+			fill = null;
+		}
+		public LineStyle(Color iline, float iwidth, Color ifill) {
+			line = iline;
+			width = iwidth;
+			dash = null;
+			fill = ifill;
+		}
 		public LineStyle(Color iline, float iwidth, float[] idash, Color ifill) {
 			line = iline;
 			width = iwidth;

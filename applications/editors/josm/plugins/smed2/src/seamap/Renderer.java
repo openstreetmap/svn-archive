@@ -55,17 +55,14 @@ public class Renderer {
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, null);
 	}
-	
 	public static void symbol(Feature feature, Symbol symbol, Scheme scheme) {
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, null);
 	}
-	
 	public static void symbol(Feature feature, Symbol symbol, Delta delta) {
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, delta);
 	}
-	
 	public static void symbol(Feature feature, Symbol symbol, Scheme scheme, Delta delta) {
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, delta);
@@ -361,6 +358,15 @@ public class Renderer {
 		}
 	}
 
+	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg) {
+		labelText(feature, str, font, style, fg, null, null);
+	}
+	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg) {
+		labelText(feature, str, font, style, fg, bg, null);
+	}
+	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Delta delta) {
+		labelText(feature, str, font, style, fg, null, delta);
+	}
 	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg, Delta delta) {
 		if (delta == null) delta = new Delta(Handle.CC);
 		if (bg == null) bg = new Color(0x00000000, true);

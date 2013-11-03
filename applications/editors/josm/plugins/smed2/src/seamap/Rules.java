@@ -79,13 +79,13 @@ public class Rules {
 		if ((objects = map.features.get(Obj.LITMAJ)) != null) for (Feature feature : objects) lights(feature);
 		if ((objects = map.features.get(Obj.LITMIN)) != null) for (Feature feature : objects) lights(feature);
 		if ((objects = map.features.get(Obj.LIGHTS)) != null) for (Feature feature : objects) lights(feature);
-		if ((objects = map.features.get(Obj.SISTAT)) != null) for (Feature feature : objects) signals(feature);
-		if ((objects = map.features.get(Obj.SISTAW)) != null) for (Feature feature : objects) signals(feature);
-		if ((objects = map.features.get(Obj.CGUSTA)) != null) for (Feature feature : objects) signals(feature);
-		if ((objects = map.features.get(Obj.RDOSTA)) != null) for (Feature feature : objects) signals(feature);
-		if ((objects = map.features.get(Obj.RADSTA)) != null) for (Feature feature : objects) signals(feature);
-		if ((objects = map.features.get(Obj.RSCSTA)) != null) for (Feature feature : objects) signals(feature);
-		if ((objects = map.features.get(Obj.PILBOP)) != null) for (Feature feature : objects) signals(feature);
+		if ((objects = map.features.get(Obj.SISTAT)) != null) for (Feature feature : objects) stations(feature);
+		if ((objects = map.features.get(Obj.SISTAW)) != null) for (Feature feature : objects) stations(feature);
+		if ((objects = map.features.get(Obj.CGUSTA)) != null) for (Feature feature : objects) stations(feature);
+		if ((objects = map.features.get(Obj.RDOSTA)) != null) for (Feature feature : objects) stations(feature);
+		if ((objects = map.features.get(Obj.RADSTA)) != null) for (Feature feature : objects) stations(feature);
+		if ((objects = map.features.get(Obj.RSCSTA)) != null) for (Feature feature : objects) stations(feature);
+		if ((objects = map.features.get(Obj.PILBOP)) != null) for (Feature feature : objects) stations(feature);
 		if ((objects = map.features.get(Obj.WTWGAG)) != null) for (Feature feature : objects) gauges(feature);
 		if ((objects = map.features.get(Obj.OFSPLF)) != null) for (Feature feature : objects) platforms(feature);
 		if ((objects = map.features.get(Obj.WRECKS)) != null) for (Feature feature : objects) wrecks(feature);
@@ -113,33 +113,33 @@ public class Rules {
 			if (zoom < 16)
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, new Color(0x40ffffff, true)));
 			else
-				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }, null));
+				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }));
 			if ((zoom >= 12) && (name != null))
-				Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), LabelStyle.NONE, Color.black, null, null);
+				Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), LabelStyle.NONE, Color.black);
 			break;
 		case FAIRWY:
 			if (feature.area > 2.0) {
 				if (zoom < 16)
 					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
 				else
-					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }, null));
+					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }));
 			} else {
 				if (zoom >= 14)
-					Renderer.lineVector(feature, new LineStyle(new Color(0x40ffffff, true), 0, null, null));
+					Renderer.lineVector(feature, new LineStyle(null, 0, new Color(0x40ffffff, true)));
 			}
 			break;
 		case MARCUL:
 			if (zoom >= 14)
 				Renderer.symbol(feature, Areas.MarineFarm);
 			if (zoom >= 16)
-				Renderer.lineVector(feature, new LineStyle( Color.black, 4, new float[] { 10, 10 }, null));
+				Renderer.lineVector(feature, new LineStyle(Color.black, 4, new float[] { 10, 10 }));
 			break;
 		case OSPARE:
 			if (Util.testAttribute(feature, feature.type, Att.CATPRA, CatPRA.PRA_WFRM)) {
 				Renderer.symbol(feature, Areas.WindFarm);
-				Renderer.lineVector(feature, new LineStyle(Color.black, 20, new float[] { 40, 40 }, null));
+				Renderer.lineVector(feature, new LineStyle(Color.black, 20, new float[] { 40, 40 }));
 				if ((zoom >= 15) && (name != null))
-					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
+					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
 			}
 			break;
 		case RESARE:
@@ -209,7 +209,7 @@ public class Rules {
 				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, null, 10, Mline);
 			}
 			if ((zoom >= 15) && (name != null))
-				Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
+				Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 			break;
 		default:
 			break;
@@ -855,7 +855,7 @@ public class Rules {
 		}
 	}
 	
-	private static void signals(Feature feature) {
+	private static void stations(Feature feature) {
 		if (zoom >= 14) {
 			switch (feature.type) {
 			case SISTAT:

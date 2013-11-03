@@ -135,11 +135,11 @@ while(my $line = <>)
     my $tctx = ($line =~ /text_context=(".*?")/) ? $1 : undef;
     print "/* item $item $type $n */" . ($tctx ? " trc($tctx, $n);" : " tr($n);");
     # display_values / values
-    my $sp = ($type eq "combo" ? ",":";");
+    my $sp = ($line =~ /delimiter="(.*?)"/) ? $1 : ($type eq "combo" ? ",":";");
     my $vals = ($line =~ /display_values="(.*?)"/) ? $1 : ($line =~ /values="(.*?)"/) ? $1 : undef;
     if($vals)
     {
-      my @combo_values = split $sp,$vals;
+      my @combo_values = split "\Q$sp\E" ,$vals;
       foreach my $val (@combo_values)
       {
         next if $val =~ /^[0-9-]+$/; # search for non-numbers

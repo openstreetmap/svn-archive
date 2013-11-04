@@ -857,7 +857,7 @@ public class S57val {
 		Catcom.put(CatCOM.COM_MID, new S57enum(4, "mid")); Catcom.put(CatCOM.COM_LOCK, new S57enum(5, "lock")); Catcom.put(CatCOM.COM_BRDG, new S57enum(6, "bridge"));
 		Catcom.put(CatCOM.COM_CSTM, new S57enum(7, "custom")); Catcom.put(CatCOM.COM_HRBR, new S57enum(8, "harbour"));
 	}
-	public enum CatHBR { HBR_UNKN, HBR_CSTM, HBR_REFG, HBR_MRNA, HBR_FISH, HBR_PRIV }
+	public enum CatHBR { HBR_UNKN, HBR_CSTM, HBR_REFG, HBR_MRNA, HBR_FISH, HBR_PRIV, HBR_ }
 	private static final EnumMap<CatHBR, S57enum> Cathbr = new EnumMap<CatHBR, S57enum>(CatHBR.class); static { Cathbr.put(CatHBR.HBR_UNKN, new S57enum(0, ""));
 		Cathbr.put(CatHBR.HBR_CSTM, new S57enum(1, "custom")); Cathbr.put(CatHBR.HBR_REFG, new S57enum(2, "refuge")); Cathbr.put(CatHBR.HBR_MRNA, new S57enum(3, "marina"));
 		Cathbr.put(CatHBR.HBR_FISH, new S57enum(4, "fishing")); Cathbr.put(CatHBR.HBR_PRIV, new S57enum(5, "private"));

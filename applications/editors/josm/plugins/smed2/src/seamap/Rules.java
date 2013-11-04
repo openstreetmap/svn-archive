@@ -153,53 +153,51 @@ public class Rules {
 		case SEAARE:
 			switch ((CatSEA) Util.getAttVal(feature, feature.type, 0, Att.CATSEA)) {
 			case SEA_RECH:
+				if ((zoom >= 10) && (name != null))
+					if (feature.flag == Fflag.LINE) {
+						Renderer.lineText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
+					} else {
+						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+					}
 				break;
 			case SEA_BAY:
+				if ((zoom >= 12) && (name != null))
+					if (feature.flag == Fflag.LINE) {
+						Renderer.lineText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
+					} else {
+						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+					}
 				break;
 			case SEA_SHOL:
+				if (zoom >= 14) {
+					if (feature.flag == Fflag.AREA) {
+						Renderer.lineVector(feature, new LineStyle(new Color(0xc480ff), 4, new float[] { 25, 25 }));
+						if (name != null) {
+							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), LabelStyle.NONE, Color.black, new Delta(Handle.BC));
+						}
+					} else if (feature.flag == Fflag.LINE) {
+						if (name != null) {
+							Renderer.lineText(feature, name, new Font("Arial", Font.ITALIC, 75), Color.black, 0.5, -40);
+							Renderer.lineText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, 0);
+						}
+					} else {
+						if (name != null) {
+							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), LabelStyle.NONE, Color.black, new Delta(Handle.BC));
+						}
+					}
+				}
 				break;
 			case SEA_GAT:
 			case SEA_NRRW:
+				if ((zoom >= 12) && (name != null))
+					Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), LabelStyle.NONE, Color.black);
 				break;
 			default:
 				break;
 			}
 			break;
-/*
-  if (is_type("sea_area")) {
-    if (has_attribute("category")) {
-      make_string("");
-      attribute_switch("category")
-      attribute_case("reach") { if (zoom >= 10) add_string("font-family:Arial;font-weight:normal;font-style:italic;font-size:150;text-anchor:middle") }
-      attribute_case("bay") { if (zoom >= 12) add_string("font-family:Arial;font-weight:normal;font-style:italic;font-size:150;text-anchor:middle") }
-      attribute_case("shoal") { if (zoom >= 14) {
-        if (is_area) {
-          area("stroke:#c480ff;stroke-width:4;stroke-dasharray:25,25;fill:none");
-          if (has_item_attribute("name")) text(item_attribute("name"), "font-family:Arial;font-weight:normal;font-style:italic;font-size:75;text-anchor:middle", 0, -40);
-          text("(Shoal)", "font-family:Arial;font-weight:normal;font-size:60;text-anchor:middle", 0, 0);
-        } else if (is_line) {
-          if (has_item_attribute("name")) way_text(item_attribute("name"), "font-family:Arial;font-weight:normal;font-style:italic;font-size:75;text-anchor:middle", 0.5, -40, line("stroke:none;fill:none"));
-          way_text("(Shoal)", "font-family:Arial;font-weight:normal;font-size:60;text-anchor:middle", 0.5, 0, line("stroke:none;fill:none"));
-        } else {
-          if (has_item_attribute("name")) text(item_attribute("name"), "font-family:Arial;font-weight:normal;font-style:italic;font-size:75;text-anchor:middle", 0, -40);
-          text("(Shoal)", "font-family:Arial;font-weight:normal;font-size:60;text-anchor:middle", 0, 0);
-        }
-      }
-      }
-      attribute_case("gat|narrows") { if (zoom >= 12) add_string("font-family:Arial;font-weight:normal;font-style:italic;font-size:100;text-anchor:middle") }
-      end_switch
-      if ((strlen(string) > 0) && !attribute_test("category", "shoal")) {
-        int ref = line("stroke:none;fill:none");
-        if (ref != 0) {
-          if (has_item_attribute("name")) way_text(item_attribute("name"), string, 0.5, 0, ref);
-        } else {
-          if (has_item_attribute("name")) text(item_attribute("name"), string, 0, 0);
-        }
-      }
-      free_string
-    }
-  }
- */
 		case SNDWAV:
 			if (zoom >= 12) Renderer.fillPattern(feature, Areas.Sandwaves);
 			break;
@@ -357,11 +355,10 @@ public class Rules {
 	}
 	
 	private static void gauges(Feature feature) {
-/*object_rules(gauge) {
-  if (zoom >= 14) symbol("tide_gauge");
-}
-*/
-		Signals.addSignals(feature);
+		if (zoom >= 14) {
+			Renderer.symbol(feature, Harbours.TideGauge);
+			Signals.addSignals(feature);
+		}
 	}
 	
 	private static void harbours(Feature feature) {
@@ -432,7 +429,7 @@ public class Rules {
 			break;
 		case BUISGL:
 		  if (zoom >= 16) {
-		  	ArrayList<Symbol> symbols = new ArrayList();
+		  	ArrayList<Symbol> symbols = new ArrayList<Symbol>();
 		  	ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) Util.getAttVal(feature, Obj.BUISGL, 0, Att.FUNCTN);
 		  	for (FncFNC fnc : fncs) {
 		  		symbols.add(Landmarks.Funcs.get(fnc));
@@ -446,23 +443,24 @@ public class Rules {
 			  Renderer.cluster(feature, symbols);
 		  }
 			break;
+		case HRBFAC:
+			if (zoom >= 12) {
+				switch ((CatHAF) Util.getAttVal(feature, feature.type, 0, Att.CATHAF)) {
+				case HAF_MRNA:
+					Renderer.symbol(feature, Harbours.Marina);
+					break;
+				case HAF_MANF:
+					Renderer.symbol(feature, Harbours.MarinaNF);
+					break;
+				default:
+					Renderer.symbol(feature, Harbours.Harbour);
+					break;
+				}
+			}
 		default:
 			break;
 		}
 	}
-/*
-  if ((zoom >= 12) && is_type("harbour")) {
-    if (has_attribute("category")) {
-      attribute_switch("category")
-      attribute_case("marina|yacht") symbol("marina");
-      attribute_case("marina_no_facilities") symbol("marina_nf");
-      attribute_default symbol("harbour");
-      end_switch
-    } else symbol("harbour");
-    if ((zoom >= 15) && (has_item_attribute("name")))
-      text(item_attribute("name"), "font-family:Arial; font-weight:bold; font-size:80; text-anchor:middle", 0, -90);
-  }
-*/
 	
 	private static void landmarks(Feature feature) {
 		ArrayList<CatLMK> cats = (ArrayList<CatLMK>) Util.getAttVal(feature, feature.type, 0, Att.CATLMK);
@@ -515,8 +513,7 @@ public class Rules {
 	}
 	
 	private static void moorings(Feature feature) {
-		CatMOR cat = (CatMOR) Util.getAttVal(feature, feature.type, 0, Att.CATMOR);
-		switch (cat) {
+		switch ((CatMOR) Util.getAttVal(feature, feature.type, 0, Att.CATMOR)) {
 		case MOR_DLPN:
 			Renderer.symbol(feature, Harbours.Dolphin);
 			break;

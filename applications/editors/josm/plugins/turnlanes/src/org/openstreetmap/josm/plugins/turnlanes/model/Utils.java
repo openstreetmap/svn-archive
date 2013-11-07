@@ -21,7 +21,7 @@ import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 public class Utils {
     private static final Set<String> ROAD_HIGHWAY_VALUES = Collections.unmodifiableSet(new HashSet<String>(Arrays
             .asList("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
-                    "secondary_link", "tertiary", "residential", "unclassified", "road", "living_street", "service",
+                    "secondary_link", "tertiary", "tertiary_link", "residential", "unclassified", "road", "living_street", "service",
                     "track", "pedestrian", "raceway", "services")));
     
     public static boolean isRoad(Way w) {

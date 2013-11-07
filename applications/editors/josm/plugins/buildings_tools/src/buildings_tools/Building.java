@@ -1,9 +1,9 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 import static buildings_tools.BuildingsToolsPlugin.eastNorth2latlon;
 import static buildings_tools.BuildingsToolsPlugin.latlon2eastNorth;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -21,7 +21,8 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.coor.*;
+import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -102,7 +103,8 @@ class Building {
     }
 
     /**
-     * @returns Projection of the point to the heading vector in metres
+     * @return Projection of the point to the heading vector in metres
+     * @param p The point to project
      */
     private double projection1(EastNorth p) {
         final EastNorth vec = en[0].sub(p);
@@ -110,8 +112,9 @@ class Building {
     }
 
     /**
-     * @returns Projection of the point to the perpendicular of the heading
+     * @return Projection of the point to the perpendicular of the heading
      *          vector in metres
+     * @param p The point to project
      */
     private double projection2(EastNorth p) {
         final EastNorth vec = en[0].sub(p);
@@ -202,9 +205,9 @@ class Building {
         g.draw(b);
     }
 
-    private Node findNode(EastNorth en) {
+    private Node findNode(EastNorth pos) {
         DataSet ds = Main.main.getCurrentDataSet();
-        LatLon l = eastNorth2latlon(en);
+        LatLon l = eastNorth2latlon(pos);
         List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
                 l.lon() + 0.0000001, l.lat() + 0.0000001));
         Node bestnode = null;
@@ -220,9 +223,9 @@ class Building {
     }
 
     /**
-     * Returns a node with address tags under the building
+     * Returns a node with address tags under the building.
      *
-     * @return
+     * @return A node with address tags under the building.
      */
     private Node getAddressNode() {
         BBox bbox = new BBox(eastNorth2latlon(en[0]), eastNorth2latlon(en[1]));
@@ -298,24 +301,27 @@ class Building {
         }
         w.setKeys(ToolSettings.getTags());
         cmds.add(new AddCommand(w));
-        Node addrNode;
-        if (ToolSettings.PROP_USE_ADDR_NODE.get() && (addrNode = getAddressNode()) != null) {
-            for (Entry<String, String> entry : addrNode.getKeys().entrySet()) {
-                w.put(entry.getKey(), entry.getValue());
-            }
-            for (OsmPrimitive p : addrNode.getReferrers()) {
-                Relation r = (Relation) p;
-                Relation rnew = new Relation(r);
-                for (int i = 0; i < r.getMembersCount(); i++) {
-                    RelationMember member = r.getMember(i);
-                    if (member.getMember() == addrNode) {
-                        rnew.removeMember(i);
-                        rnew.addMember(i, new RelationMember(member.getRole(), w));
-                    }
+
+        if (ToolSettings.PROP_USE_ADDR_NODE.get()) {
+            Node addrNode = getAddressNode();
+            if (addrNode != null) {
+                for (Entry<String, String> entry : addrNode.getKeys().entrySet()) {
+                    w.put(entry.getKey(), entry.getValue());
                 }
-                cmds.add(new ChangeCommand(r, rnew));
+                for (OsmPrimitive p : addrNode.getReferrers()) {
+                    Relation r = (Relation) p;
+                    Relation rnew = new Relation(r);
+                    for (int i = 0; i < r.getMembersCount(); i++) {
+                        RelationMember member = r.getMember(i);
+                        if (member.getMember() == addrNode) {
+                            rnew.removeMember(i);
+                            rnew.addMember(i, new RelationMember(member.getRole(), w));
+                        }
+                    }
+                    cmds.add(new ChangeCommand(r, rnew));
+                }
+                cmds.add(new DeleteCommand(addrNode));
             }
-            cmds.add(new DeleteCommand(addrNode));
         }
         Command c = new SequenceCommand(tr("Create building"), cmds);
         Main.main.undoRedo.add(c);

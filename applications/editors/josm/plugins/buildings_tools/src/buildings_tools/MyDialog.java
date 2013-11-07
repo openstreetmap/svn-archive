@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -13,13 +14,13 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.GBC;
 
-public class MyDialog extends ExtendedDialog {
-    private static final String[] buttonTexts = new String[] { tr("OK"), tr("Cancel") };
-    private static final String[] buttonIcons = new String[] { "ok.png", "cancel.png" };
+public abstract class MyDialog extends ExtendedDialog {
+    private static final String[] BUTTON_TEXTS = new String[] {tr("OK"), tr("Cancel")};
+    private static final String[] BUTTON_ICONS = new String[] {"ok.png", "cancel.png"};
 
-    protected JPanel panel = new JPanel(new GridBagLayout());
+    protected final JPanel panel = new JPanel(new GridBagLayout());
 
-    protected void addLabelled(String str, Component c) {
+    protected final void addLabelled(String str, Component c) {
         JLabel label = new JLabel(str);
         panel.add(label, GBC.std());
         label.setLabelFor(c);
@@ -27,9 +28,9 @@ public class MyDialog extends ExtendedDialog {
     }
 
     public MyDialog(String title) {
-        super(Main.parent, title, buttonTexts, true);
+        super(Main.parent, title, BUTTON_TEXTS, true);
         contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(buttonIcons);
+        setButtonIcons(BUTTON_ICONS);
 
         setContent(panel);
         setDefaultButton(1);

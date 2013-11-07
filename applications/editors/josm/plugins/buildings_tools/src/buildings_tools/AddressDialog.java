@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -48,17 +49,17 @@ public class AddressDialog extends MyDialog {
         }
     }
 
-    public void saveValues() {
+    public final void saveValues() {
         lhousenum = housenum.getText();
         lstreetname = streetname.getText();
         inc = cincdec.getSelectedIndex() == 0;
     }
 
-    public String getHouseNum() {
+    public final String getHouseNum() {
         return housenum.getText();
     }
 
-    public String getStreetName() {
+    public final String getStreetName() {
         return streetname.getText();
     }
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
 import static buildings_tools.BuildingsToolsPlugin.latlon2eastNorth;
@@ -11,21 +12,21 @@ import org.openstreetmap.josm.tools.Pair;
 
 public class AngleSnap {
     private static final double PI_2 = Math.PI / 2;
-    TreeSet<Double> snapSet = new TreeSet<Double>();
+    final TreeSet<Double> snapSet = new TreeSet<Double>();
 
-    public void clear() {
+    public final void clear() {
         snapSet.clear();
     }
 
-    public void addSnap(double snap) {
+    public final void addSnap(double snap) {
         snapSet.add(snap % PI_2);
     }
 
-    public Double addSnap(Node[] nodes) {
+    public final Double addSnap(Node[] nodes) {
         if (nodes.length == 2) {
             EastNorth p1, p2;
-            p1 = latlon2eastNorth(((Node) nodes[0]).getCoor());
-            p2 = latlon2eastNorth(((Node) nodes[1]).getCoor());
+            p1 = latlon2eastNorth(nodes[0].getCoor());
+            p2 = latlon2eastNorth(nodes[1].getCoor());
             double heading = p1.heading(p2);
             addSnap(heading);
             addSnap(heading + Math.PI / 4);
@@ -35,7 +36,7 @@ public class AngleSnap {
         }
     }
 
-    public void addSnap(Way way) {
+    public final void addSnap(Way way) {
         for (Pair<Node, Node> pair : way.getNodePairs(false)) {
             EastNorth a, b;
             a = latlon2eastNorth(pair.a.getCoor());
@@ -45,7 +46,7 @@ public class AngleSnap {
         }
     }
 
-    public Double getAngle() {
+    public final Double getAngle() {
         if (snapSet.isEmpty()) {
             return null;
         }
@@ -64,7 +65,7 @@ public class AngleSnap {
         }
     }
 
-    public double snapAngle(double angle) {
+    public final double snapAngle(double angle) {
         if (snapSet.isEmpty()) {
             return angle;
         }

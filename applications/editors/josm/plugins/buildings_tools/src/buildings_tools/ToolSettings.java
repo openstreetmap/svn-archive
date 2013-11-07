@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
 import java.util.ArrayList;
@@ -12,12 +13,17 @@ import java.util.NoSuchElementException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
-public class ToolSettings {
-    public static BooleanProperty PROP_USE_ADDR_NODE = new BooleanProperty("buildings_tools.addrNode", false);
+public final class ToolSettings {
+
+    private ToolSettings() {
+        // Hide default constructor for utils classes
+    }
+
+    public static final BooleanProperty PROP_USE_ADDR_NODE = new BooleanProperty("buildings_tools.addrNode", false);
     private static double width = 0;
     private static double lenstep = 0;
     private static boolean useAddr;
-    private static final Map<String, String> tags = new HashMap<String, String>();
+    private static final Map<String, String> TAGS = new HashMap<String, String>();
     private static boolean autoSelect;
 
     public static void setAddrDialog(boolean _useAddr) {
@@ -43,12 +49,12 @@ public class ToolSettings {
 
     public static Map<String, String> getTags() {
         loadTags();
-        return tags;
+        return TAGS;
     }
 
     public static void saveTags() {
-        ArrayList<String> values = new ArrayList<String>(tags.size() * 2);
-        for (Entry<String, String> entry : tags.entrySet()) {
+        ArrayList<String> values = new ArrayList<String>(TAGS.size() * 2);
+        for (Entry<String, String> entry : TAGS.entrySet()) {
             values.add(entry.getKey());
             values.add(entry.getValue());
         }
@@ -56,16 +62,16 @@ public class ToolSettings {
     }
 
     private static void loadTags() {
-        tags.clear();
+        TAGS.clear();
         Collection<String> values = Main.pref.getCollection("buildings_tools.tags",
-                Arrays.asList(new String[] { "building", "yes" }));
+                Arrays.asList(new String[] {"building", "yes"}));
         try {
             for (Iterator<String> iterator = values.iterator(); iterator.hasNext();) {
-                tags.put(iterator.next(), iterator.next());
+                TAGS.put(iterator.next(), iterator.next());
             }
         } catch (NoSuchElementException e) {
+            Main.warn(e);
         }
-
     }
 
     public static void setBBMode(boolean bbmode) {

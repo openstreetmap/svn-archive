@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -8,8 +9,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 
 import org.openstreetmap.josm.tools.GBC;
 
@@ -52,7 +53,7 @@ public class BuildingSizeDialog extends MyDialog {
         showDialog();
     }
 
-    public double width() {
+    public final double width() {
         try {
             return NumberFormat.getInstance().parse(twidth.getText()).doubleValue();
         } catch (ParseException e) {
@@ -68,11 +69,11 @@ public class BuildingSizeDialog extends MyDialog {
         }
     }
 
-    public boolean useAddr() {
+    public final boolean useAddr() {
         return caddr.isSelected();
     }
 
-    public void saveSettings() {
+    public final void saveSettings() {
         ToolSettings.setSizes(width(), lenstep());
         ToolSettings.setAddrDialog(useAddr());
         ToolSettings.setAutoSelect(cAutoSelect.isSelected());

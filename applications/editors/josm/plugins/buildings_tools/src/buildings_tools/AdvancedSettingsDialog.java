@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -37,7 +38,7 @@ public class AdvancedSettingsDialog extends MyDialog {
         showDialog();
     }
 
-    public void saveSettings() {
+    public final void saveSettings() {
         tagsModel.applyToTags(ToolSettings.getTags(), false);
         ToolSettings.saveTags();
         ToolSettings.setBBMode(cBigMode.isSelected());

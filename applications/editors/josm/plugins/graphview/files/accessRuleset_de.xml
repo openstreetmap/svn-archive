@@ -38,6 +38,7 @@
 		<tag k="highway" v="secondary"/>
 		<tag k="highway" v="secondary_link"/>
 		<tag k="highway" v="tertiary"/>
+        <tag k="highway" v="tertiary_link"/>
 		<tag k="highway" v="unclassified"/>
 		<tag k="highway" v="road"/>
 		<tag k="highway" v="residential"/>

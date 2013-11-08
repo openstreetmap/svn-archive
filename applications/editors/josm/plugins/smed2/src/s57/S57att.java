@@ -138,10 +138,10 @@ public class S57att {
 		AttStr.put(Att.CAT_TS, "category");	AttStr.put(Att.PUNITS, "positional_units"); AttStr.put(Att.NINFOM, "national_information"); AttStr.put(Att.NOBJNM, "national_name");
 		AttStr.put(Att.NPLDST, "national_pilot_district"); AttStr.put(Att.NTXTDS, "national_description"); AttStr.put(Att.HORDAT, "horizontal_datum");
 		AttStr.put(Att.POSACC, "positional_accuracy"); AttStr.put(Att.QUAPOS, "position_quality"); AttStr.put(Att.ADDMRK, "addition"); AttStr.put(Att.BNKWTW, "bank");
-		AttStr.put(Att.CATBNK, "category");	AttStr.put(Att.CATNMK, "category"); AttStr.put(Att.CLSDNG, "class"); AttStr.put(Att.DIRIMP, "impact");
+		AttStr.put(Att.CATBNK, "category");	AttStr.put(Att.CATNMK, "category"); AttStr.put(Att.CLSDNG, "danger_class"); AttStr.put(Att.DIRIMP, "impact");
 		AttStr.put(Att.DISBK1, "distance_start");	AttStr.put(Att.DISBK2, "distance_end");AttStr.put(Att.DISIPU, "distance_up"); AttStr.put(Att.DISIPD, "distance_down");
 		AttStr.put(Att.ELEVA1, "minimum_elevation"); AttStr.put(Att.ELEVA2, "maximum_elevation"); AttStr.put(Att.FNCTNM, "function"); AttStr.put(Att.WTWDIS, "distance");
-		AttStr.put(Att.BUNVES, "availibility");	AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category");
+		AttStr.put(Att.BUNVES, "availability");	AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category");
 		AttStr.put(Att.CATHBR, "category");	AttStr.put(Att.CATRFD, "category"); AttStr.put(Att.CATTML, "category"); AttStr.put(Att.COMCTN, "communication");
 		AttStr.put(Att.HORCLL, "clearance_length");	AttStr.put(Att.HORCLW, "clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode");
 		AttStr.put(Att.CATGAG, "category");	AttStr.put(Att.HIGWAT, "high_value"); AttStr.put(Att.HIGNAM, "high_name"); AttStr.put(Att.LOWWAT, "low_value");
@@ -149,6 +149,7 @@ public class S57att {
 		AttStr.put(Att.OTHNAM, "local_name");	AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name");
 		AttStr.put(Att.CATVTR, "category");	AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
 		AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
+		AttStr.put(Att.CATCOM, "category");
 		AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.CATWWM, "category"); AttStr.put(Att.SHPTYP, "ship"); AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
 	}
 	
@@ -202,6 +203,8 @@ public class S57att {
 	  objatt.add(new ObjAtt(Obj.VEGATN, Att.CATVEG)); objatt.add(new ObjAtt(Obj.VEHTRF, Att.CATVTR)); objatt.add(new ObjAtt(Obj.WATTUR, Att.CATWAT));
 	  objatt.add(new ObjAtt(Obj.WEDKLP, Att.CATWED)); objatt.add(new ObjAtt(Obj.WRECKS, Att.CATWRK)); objatt.add(new ObjAtt(Obj.TS_FEB, Att.CAT_TS));
 	  objatt.add(new ObjAtt(Obj.DEPCNT, Att.VALDCO)); objatt.add(new ObjAtt(Obj.SOUNDG, Att.VALSOU)); objatt.add(new ObjAtt(Obj.NOTMRK, Att.BNKWTW));
+	  objatt.add(new ObjAtt(Obj.WTWAXS, Att.CATCCL)); objatt.add(new ObjAtt(Obj.WTWARE, Att.CATCCL)); objatt.add(new ObjAtt(Obj.COMARE, Att.CATCOM));
+	  objatt.add(new ObjAtt(Obj.RDOCAL, Att.CATCOM)); objatt.add(new ObjAtt(Obj.WTWGAG, Att.CATGAG));
 	  objatt.add(new ObjAtt(Obj.ACHBRT, Att.RADIUS)); objatt.add(new ObjAtt(Obj.LIGHTS, Att.LITRAD));
 	}
 	

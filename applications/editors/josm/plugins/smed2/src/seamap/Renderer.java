@@ -15,10 +15,7 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import java.util.*;
 
-import s57.S57att.*;
-import s57.S57obj.*;
 import s57.S57val.*;
-import s57.S57val;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
 import seamap.SeaMap.Area;
@@ -29,6 +26,41 @@ public class Renderer {
 
 	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
+	public static final Color Yland = new Color(0x50b0ff);
+	public static final Color Mline = new Color(0x80c480);
+	public static final Color Msymb = new Color(0xa30075);
+	
+	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static {
+		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
+		bodyColours.put(ColCOL.COL_WHT, new Color(0xffffff));
+		bodyColours.put(ColCOL.COL_BLK, new Color(0x000000));
+		bodyColours.put(ColCOL.COL_RED, new Color(0xd40000));
+		bodyColours.put(ColCOL.COL_GRN, new Color(0x00d400));
+		bodyColours.put(ColCOL.COL_BLU, Color.blue);
+		bodyColours.put(ColCOL.COL_YEL, new Color(0xffd400));
+		bodyColours.put(ColCOL.COL_GRY, Color.gray);
+		bodyColours.put(ColCOL.COL_BRN, new Color(0x8b4513));
+		bodyColours.put(ColCOL.COL_AMB, new Color(0xfbf00f));
+		bodyColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
+		bodyColours.put(ColCOL.COL_ORG, Color.orange);
+		bodyColours.put(ColCOL.COL_MAG, new Color(0xf000f0));
+		bodyColours.put(ColCOL.COL_PNK, Color.pink);
+	}
+
+	static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<ColPAT, Patt>(ColPAT.class);
+	static {
+		pattMap.put(ColPAT.PAT_UNKN, Patt.Z);
+		pattMap.put(ColPAT.PAT_HORI, Patt.H);
+		pattMap.put(ColPAT.PAT_VERT, Patt.V);
+		pattMap.put(ColPAT.PAT_DIAG, Patt.D);
+		pattMap.put(ColPAT.PAT_BRDR, Patt.B);
+		pattMap.put(ColPAT.PAT_SQUR, Patt.S);
+		pattMap.put(ColPAT.PAT_CROS, Patt.C);
+		pattMap.put(ColPAT.PAT_SALT, Patt.X);
+		pattMap.put(ColPAT.PAT_STRP, Patt.H);
+	}
+	
 	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, HCLR }
 
 	static MapContext context;

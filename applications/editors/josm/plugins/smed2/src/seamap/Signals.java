@@ -40,7 +40,7 @@ public class Signals {
 
 	public static void radarStations(Feature feature) {
 		Renderer.symbol(feature, Beacons.RadarStation);
-		ArrayList<CatROS> cats = (ArrayList<CatROS>)Util.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
+		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
 		String str = "";
 		for (CatROS ros : cats) {
 			switch (ros) {

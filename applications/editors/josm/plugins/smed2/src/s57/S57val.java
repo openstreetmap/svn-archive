@@ -95,7 +95,7 @@ public class S57val {
 	}
 	public enum CatCHP { CHP_UNKN, CHP_CSTM, CHP_BRDR }
 	private static final EnumMap<CatCHP, S57enum> Catchp = new EnumMap<CatCHP, S57enum>(CatCHP.class); static { Catchp.put(CatCHP.CHP_UNKN, new S57enum(0, ""));
-		Catchp.put(CatCHP.CHP_CSTM, new S57enum(1, "custom")); Catchp.put(CatCHP.CHP_BRDR, new S57enum(2, "border"));
+		Catchp.put(CatCHP.CHP_CSTM, new S57enum(1, "customs")); Catchp.put(CatCHP.CHP_BRDR, new S57enum(2, "border"));
 	}
 	public enum CatCOA { COA_UNKN, COA_STEP, COA_FLAT, COA_SAND, COA_STON, COA_SHNG, COA_GLCR, COA_MNGV, COA_MRSH, COA_CRRF, COA_ICE, COA_SHEL } 
 	private static final EnumMap<CatCOA, S57enum> Catcoa = new EnumMap<CatCOA, S57enum>(CatCOA.class); static { Catcoa.put(CatCOA.COA_UNKN, new S57enum(0, ""));
@@ -854,12 +854,12 @@ public class S57val {
 	public enum CatCOM { COM_UNKN, COM_VTSC, COM_VTSS, COM_IVSP, COM_MID, COM_LOCK, COM_BRDG, COM_CSTM, COM_HRBR } 
 	private static final EnumMap<CatCOM, S57enum> Catcom = new EnumMap<CatCOM, S57enum>(CatCOM.class); static { Catcom.put(CatCOM.COM_UNKN, new S57enum(0, ""));
 		Catcom.put(CatCOM.COM_VTSC, new S57enum(1, "vts_centre")); Catcom.put(CatCOM.COM_VTSS, new S57enum(2, "vts_sector")); Catcom.put(CatCOM.COM_IVSP, new S57enum(3, "ivs_point"));
-		Catcom.put(CatCOM.COM_MID, new S57enum(4, "mid")); Catcom.put(CatCOM.COM_LOCK, new S57enum(5, "lock")); Catcom.put(CatCOM.COM_BRDG, new S57enum(6, "bridge"));
-		Catcom.put(CatCOM.COM_CSTM, new S57enum(7, "custom")); Catcom.put(CatCOM.COM_HRBR, new S57enum(8, "harbour"));
+		Catcom.put(CatCOM.COM_MID, new S57enum(4, "mib")); Catcom.put(CatCOM.COM_LOCK, new S57enum(5, "lock")); Catcom.put(CatCOM.COM_BRDG, new S57enum(6, "bridge"));
+		Catcom.put(CatCOM.COM_CSTM, new S57enum(7, "customs")); Catcom.put(CatCOM.COM_HRBR, new S57enum(8, "harbour"));
 	}
 	public enum CatHBR { HBR_UNKN, HBR_CSTM, HBR_REFG, HBR_MRNA, HBR_FISH, HBR_PRIV, HBR_ }
 	private static final EnumMap<CatHBR, S57enum> Cathbr = new EnumMap<CatHBR, S57enum>(CatHBR.class); static { Cathbr.put(CatHBR.HBR_UNKN, new S57enum(0, ""));
-		Cathbr.put(CatHBR.HBR_CSTM, new S57enum(1, "custom")); Cathbr.put(CatHBR.HBR_REFG, new S57enum(2, "refuge")); Cathbr.put(CatHBR.HBR_MRNA, new S57enum(3, "marina"));
+		Cathbr.put(CatHBR.HBR_CSTM, new S57enum(1, "customs")); Cathbr.put(CatHBR.HBR_REFG, new S57enum(2, "refuge")); Cathbr.put(CatHBR.HBR_MRNA, new S57enum(3, "marina"));
 		Cathbr.put(CatHBR.HBR_FISH, new S57enum(4, "fishing")); Cathbr.put(CatHBR.HBR_PRIV, new S57enum(5, "private"));
 	}
 	public enum CatRFD { RFD_UNKN, RFD_CRSD, RFD_WOIL, RFD_GBWT, RFD_DREF } 

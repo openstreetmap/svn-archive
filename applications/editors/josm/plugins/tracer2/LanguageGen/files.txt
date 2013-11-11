@@ -1,0 +1,17 @@
+..\src\org\openstreetmap\josm\plugins\tracer2\ConnectWays.java
+..\src\org\openstreetmap\josm\plugins\tracer2\StraightLine.java
+..\src\org\openstreetmap\josm\plugins\tracer2\TagValues.java
+..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java
+..\src\org\openstreetmap\josm\plugins\tracer2\TracerDebug.java
+..\src\org\openstreetmap\josm\plugins\tracer2\TracerException.java
+..\src\org\openstreetmap\josm\plugins\tracer2\TracerGeometry.java
+..\src\org\openstreetmap\josm\plugins\tracer2\TracerPlugin.java
+..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParam.java
+..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java
+..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamList.java
+..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java
+..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPreference.java
+..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamSelectDialog.java
+..\src\org\openstreetmap\josm\plugins\tracer2\server\GetTrace.java
+..\src\org\openstreetmap\josm\plugins\tracer2\server\GetVersion.java
+..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java

@@ -55,12 +55,12 @@ public class ServerParamDialog extends ExtendedDialog {
     private JTextField m_oName = new JTextField();
     private JTextField m_oDescription = new JTextField();
     private JTextArea m_oUrl = new JTextArea(5,5);
-    private JComboBox<String> m_oTileSize;
-    private JComboBox<String> m_oResolution;
+    private JComboBox m_oTileSize;
+    private JComboBox m_oResolution;
     //private JTextField m_oSkipBottom = new JTextField();
-    private JComboBox<String> m_oMode;
+    private JComboBox m_oMode;
     private JTextField m_oThreshold = new JTextField();
-    private JComboBox<String> m_oPointsPerCircle;
+    private JComboBox m_oPointsPerCircle;
     private JTextField m_oTag = new JTextField();
     private JTextField m_oPreferredValues = new JTextField();
     
@@ -111,7 +111,7 @@ public class ServerParamDialog extends ExtendedDialog {
     	m_oParam.setPreferredValues(m_oPreferredValues.getText());
     }
     
-    private void loadComboBox( JComboBox<String> c, String strValue, String[] astrValues ) {
+    private void loadComboBox( JComboBox c, String strValue, String[] astrValues ) {
         int pos = 0;
         for ( String str: astrValues ) {
         	if (strValue.equals(str)) {
@@ -122,7 +122,7 @@ public class ServerParamDialog extends ExtendedDialog {
         }
     }
     
-    private String saveComboBox( JComboBox<String> c, String[] astrValues ) {
+    private String saveComboBox( JComboBox c, String[] astrValues ) {
         return astrValues[c.getSelectedIndex()];
     }
     
@@ -139,10 +139,10 @@ public class ServerParamDialog extends ExtendedDialog {
         contentInsets = new Insets(15, 15, 5, 15);
         setButtonIcons(new String[] { "ok.png", "cancel.png" });
         
-        m_oTileSize = new JComboBox<String>(m_astrTileSize);
-        m_oResolution = new JComboBox<String>(m_astrResolution);
-        m_oMode = new JComboBox<String>(m_astrMode);
-        m_oPointsPerCircle = new JComboBox<String>(m_astrPointsPerCircle);
+        m_oTileSize = new JComboBox(m_astrTileSize);
+        m_oResolution = new JComboBox(m_astrResolution);
+        m_oMode = new JComboBox(m_astrMode);
+        m_oPointsPerCircle = new JComboBox(m_astrPointsPerCircle);
         
         load();
         

@@ -88,7 +88,7 @@ public class TagDialog extends ExtendedDialog
    private JCheckBox streetEnabled;
    private JCheckBox housenumberEnabled;
    private JSlider housenumberChangeSequence;
-   private JComboBox<String[]> building;
+   private JComboBox building;
    private JRadioButton streetRadio;
    private JRadioButton placeRadio;
 

@@ -222,12 +222,12 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             	return false;
             }
             if (oGetVersion.m_nVersionMajor != nMajor) {
-                JOptionPane.showMessageDialog(Main.parent, tr("The Tracer2Server version isn''t compatible with this plugin. Please download version {0} from",nMajor + ".x" )
-                		+ "\nhttp://sourceforge.net/projects/tracer2server/." , tr("Error"),  JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent, tr("The Tracer2Server version isn''t compatible with this plugin. Please download version {0} from\n{1}.", nMajor + ".x",
+                		+ "http://sourceforge.net/projects/tracer2server/"), tr("Error"),  JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             if (oGetVersion.m_nVersionMinor < nMinor) {
-                JOptionPane.showMessageDialog(Main.parent, tr("New version of Tracer2Server is avalibel. For best results please upgrade to version {0}.",nMajor + "." + nMinor ), tr("Information"),  JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent, tr("New version of Tracer2Server is available. For best results please upgrade to version {0}.",nMajor + "." + nMinor ), tr("Information"),  JOptionPane.INFORMATION_MESSAGE);
             }
             s_bServerVersionOK = true;
     	}
@@ -245,7 +245,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
     		
             if (listEnableParam == null || listEnableParam.size() == 0) {
             	listParam.setActivParam(null);
-                JOptionPane.showMessageDialog(Main.parent, tr("No set of parameter is activ!"), tr("Error"),  JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(Main.parent, tr("No set of parameter is active!"), tr("Error"),  JOptionPane.ERROR_MESSAGE);
             	return false;
             }
             if ( listEnableParam.size() == 1 ) {
@@ -330,9 +330,9 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             if (!commands.isEmpty()) {
             	String strCommand;
             	if (ConnectWays.s_bAddNewWay == true) {
-            		strCommand = tr("Tracer2 add a Way with {0} points", coordList.size());
+            		strCommand = tr("Tracer2: add a way with {0} points", coordList.size());
             	} else {
-            		strCommand = tr("Tracer2 modified Way to {0} points", coordList.size());
+            		strCommand = tr("Tracer2: modify way to {0} points", coordList.size());
             	}
             	Main.main.undoRedo.add(new SequenceCommand(strCommand, commands));
             	

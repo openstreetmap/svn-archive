@@ -52,11 +52,11 @@ public class Request extends Thread {
             }
             return oBuilder.toString();
         } catch (ConnectException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server isn''t running. Pleas start the Server.\nIf you don''t have the Server please download it at"
-            		+ "\nhttp://sourceforge.net/projects/tracer2server/.") , tr("Error"),  JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server isn''t running. Please start the Server.\nIf you don''t have the server, please download it from\n{1}.",
+            		+ "http://sourceforge.net/projects/tracer2server/") , tr("Error"),  JOptionPane.ERROR_MESSAGE);
             return "";
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server has nothing found.") + "\n", tr("Error"),  JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server hasn''t found anything.") + "\n", tr("Error"),  JOptionPane.ERROR_MESSAGE);
     		return "";
     	}
     }
@@ -70,7 +70,7 @@ public class Request extends Thread {
         String strIdentifier = "&traceError=";
         if (strResponse.contains(strIdentifier)) {
         	String strError = strResponse.replaceFirst(strIdentifier, "").trim();
-            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server has an Error detected.") + "\n" + strError, tr("Error"),  JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server has detected an error.") + "\n" + strError, tr("Error"),  JOptionPane.ERROR_MESSAGE);
         	return true;
         }
         return false;

@@ -3,19 +3,20 @@ package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Choice;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 @SuppressWarnings("serial")
 public class AddressDialog extends MyDialog {
     private static String lhousenum, lstreetname;
-    private static boolean inc = true;
+    private static int inc = 0;
     private JTextField housenum = new JTextField();
     private JTextField streetname = new JTextField();
-    private Choice cincdec = new Choice();
+    private JSpinner incSpinner;
 
     public AddressDialog() {
         super(tr("Building address"));
@@ -25,10 +26,10 @@ public class AddressDialog extends MyDialog {
         housenum.setText(nextHouseNum());
         streetname.setText(lstreetname);
 
-        cincdec.add(tr("Increment"));
-        cincdec.add(tr("Decrement"));
-        cincdec.select(inc ? 0 : 1);
-        addLabelled(tr("Numbers:"), cincdec);
+        SpinnerNumberModel inc_model = new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
+        incSpinner = new JSpinner(inc_model);
+        incSpinner.setValue(inc);
+        addLabelled(tr("Number increment:"), incSpinner);
 
         setContent(panel);
         setupDialog();
@@ -38,11 +39,7 @@ public class AddressDialog extends MyDialog {
         if (lhousenum == null)
             return "";
         try {
-            Integer num = NumberFormat.getInstance().parse(lhousenum).intValue();
-            if (inc)
-                num = num + 2;
-            else
-                num = num - 2;
+            Integer num = NumberFormat.getInstance().parse(lhousenum).intValue() + inc;
             return num.toString();
         } catch (ParseException e) {
             return lhousenum;
@@ -52,7 +49,7 @@ public class AddressDialog extends MyDialog {
     public final void saveValues() {
         lhousenum = housenum.getText();
         lstreetname = streetname.getText();
-        inc = cincdec.getSelectedIndex() == 0;
+        inc = (Integer) incSpinner.getValue();
     }
 
     public final String getHouseNum() {

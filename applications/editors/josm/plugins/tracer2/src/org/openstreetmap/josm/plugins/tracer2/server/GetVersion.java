@@ -22,6 +22,8 @@ public class GetVersion extends Request {
 	
     public int m_nVersionMajor = -1;
     public int m_nVersionMinor = -1;
+    public int m_nVersionBuild = -1;
+    public int m_nVersionRevision = -1;
     
     /**
      * Get version from server.
@@ -45,13 +47,13 @@ public class GetVersion extends Request {
             }
             
             String[] astrParts = strResponse.split(":");
-            if (astrParts.length != 2) {
+            if (astrParts.length < 2) {
             	return;
             }
-            int nMajor = Integer.parseInt(astrParts[0]);
-            int nMinor = Integer.parseInt(astrParts[1]);
-            m_nVersionMajor = nMajor;
-            m_nVersionMinor = nMinor;
+            if (astrParts.length > 0) m_nVersionMajor = Integer.parseInt(astrParts[0]);
+            if (astrParts.length > 1) m_nVersionMinor = Integer.parseInt(astrParts[1]);
+            if (astrParts.length > 2) m_nVersionBuild = Integer.parseInt(astrParts[2]);
+            if (astrParts.length > 3) m_nVersionMinor = Integer.parseInt(astrParts[3]);
         } catch (Exception e) {
         }
     }

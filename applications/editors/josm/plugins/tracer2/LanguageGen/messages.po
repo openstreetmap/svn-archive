@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-13 21:53+0100\n"
+"POT-Creation-Date: 2013-11-17 10:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,8 @@ msgstr ""
 #, java-format
 msgid ""
 "The Tracer2Server version isn''t compatible with this plugin. Please "
-"download version {0} from"
+"download version {0} from\n"
+"{1}."
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:226
@@ -64,8 +65,8 @@ msgstr ""
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:230
 #, java-format
 msgid ""
-"New version of Tracer2Server is avalibel. For best results please upgrade to "
-"version {0}."
+"New version of Tracer2Server is available. For best results please upgrade "
+"to version {0}."
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:230
@@ -73,7 +74,7 @@ msgid "Information"
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:248
-msgid "No set of parameter is activ!"
+msgid "No set of parameter is active!"
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:260
@@ -82,12 +83,12 @@ msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:333
 #, java-format
-msgid "Tracer2 add a Way with {0} points"
+msgid "Tracer2: add a way with {0} points"
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:335
 #, java-format
-msgid "Tracer2 modified Way to {0} points"
+msgid "Tracer2: modify way to {0} points"
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerException.java:31
@@ -193,16 +194,17 @@ msgid "Parameter:"
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:55
+#, java-format
 msgid ""
-"Tracer2Server isn''t running. Pleas start the Server.\n"
-"If you don''t have the Server please download it at\n"
-"http://sourceforge.net/projects/tracer2server/."
+"Tracer2Server isn''t running. Please start the Server.\n"
+"If you don''t have the server, please download it from\n"
+"{1}."
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:59
-msgid "Tracer2Server has nothing found."
+msgid "Tracer2Server hasn''t found anything."
 msgstr ""
 
 #: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:73
-msgid "Tracer2Server has an Error detected."
+msgid "Tracer2Server has detected an error."
 msgstr ""

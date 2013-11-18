@@ -53,7 +53,7 @@ public class Request extends Thread {
             return oBuilder.toString();
         } catch (ConnectException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server isn''t running. Please start the Server.\nIf you don''t have the server, please download it from\n{1}.",
-            		+ "http://sourceforge.net/projects/tracer2server/") , tr("Error"),  JOptionPane.ERROR_MESSAGE);
+            		"http://sourceforge.net/projects/tracer2server/") , tr("Error"),  JOptionPane.ERROR_MESSAGE);
             return "";
         } catch (Exception e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Tracer2Server hasn''t found anything.") + "\n", tr("Error"),  JOptionPane.ERROR_MESSAGE);

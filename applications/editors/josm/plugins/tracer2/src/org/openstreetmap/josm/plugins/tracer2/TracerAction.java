@@ -223,7 +223,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             }
             if (oGetVersion.m_nVersionMajor != nMajor) {
                 JOptionPane.showMessageDialog(Main.parent, tr("The Tracer2Server version isn''t compatible with this plugin. Please download version {0} from\n{1}.", nMajor + ".x",
-                		+ "http://sourceforge.net/projects/tracer2server/"), tr("Error"),  JOptionPane.ERROR_MESSAGE);
+                		"http://sourceforge.net/projects/tracer2server/"), tr("Error"),  JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             if (oGetVersion.m_nVersionMinor < nMinor) {

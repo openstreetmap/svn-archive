@@ -140,6 +140,7 @@
     	
     	document.getElementById('Route').innerHTML = '<button class="btn dropdown-toggle" data-toggle="dropdown">Route<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="http://open.mapquest.de/'+posMapquest+'" target="_blank">Mapquest <span class="descRoute">Auto, Fahrrad, Fußgänger | Weltweit</span></a></li><li><a href="http://www.openrouteservice.org/'+posORS+'" target="_blank">OpenRouteService <span class="descRouteORS">Auto, Fahrrad, Fußgänger | Europa</span></a></li><li><a href="http://map.project-osrm.org/'+posOSRM+'" target="_blank">OSRM <span class="descRoute">Auto | Weltweit</span></a></li></ul>';
 	    document.getElementById('editMap').innerHTML = '<a class="btn success" href="http://www.openstreetmap.org/edit'+pos+'" target="_blank">Karte bearbeiten</a>';
+		// disabled "Fehler melden" ("Report Error") since OpenStreetBugs is readonly 
 	    //~ document.getElementById('errorMap').innerHTML = '<a class="btn danger" href="http://www.openstreetbugs.org'+pos+'" target="_blank">Fehler melden</a>';
 	}
 	

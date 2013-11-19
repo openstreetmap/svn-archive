@@ -91,7 +91,7 @@ public class UploadDataGui extends ExtendedDialog {
     // Do not remove the space in JMultilineLabel. Otherwise the label will be empty
     // as we don't know its contents yet and therefore have a height of 0. This will
     // lead to unnecessary scrollbars.
-    private JMultilineLabel OutputDisplay = new JMultilineLabel(" ");
+    private JMultilineLabel outputDisplay = new JMultilineLabel(" ");
     private HistoryComboBox descriptionField;
     private HistoryComboBox tagsField;
     private JComboBox visibilityCombo;
@@ -161,8 +161,8 @@ public class UploadDataGui extends ExtendedDialog {
 
         JPanel p = new JPanel(new GridBagLayout());
 
-        OutputDisplay.setMaxWidth(findMaxDialogSize().width-10);
-        p.add(OutputDisplay, GBC.eol());
+        outputDisplay.setMaxWidth(findMaxDialogSize().width-10);
+        p.add(outputDisplay, GBC.eol());
 
         p.add(tagsLabel, GBC.eol().insets(0,10,0,0));
         p.add(tagsField, GBC.eol().fill(GBC.HORIZONTAL));
@@ -178,7 +178,7 @@ public class UploadDataGui extends ExtendedDialog {
     }
 
     private void initTitleAndDescriptionFromGpxData(GpxData gpxData) {
-      String description, title, tags = "";
+      String description = "", title = "", tags = "";
       if (gpxData != null) {
           GpxTrack firstTrack = gpxData.tracks.iterator().next();
           Object meta_desc = gpxData.attr.get(GpxConstants.META_DESC);
@@ -186,10 +186,12 @@ public class UploadDataGui extends ExtendedDialog {
               description = meta_desc.toString();
           } else if (firstTrack != null && gpxData.tracks.size() == 1 && firstTrack.get("desc") != null) {
               description = firstTrack.getString("desc");
-          } else {
+          } else if (gpxData.storageFile != null) {
               description = gpxData.storageFile.getName().replaceAll("[&?/\\\\]"," ").replaceAll("(\\.[^.]*)$","");
           }
-          title = tr("Selected track: {0}", gpxData.storageFile.getName());
+          if (gpxData.storageFile != null) {
+              title = tr("Selected track: {0}", gpxData.storageFile.getName());
+          }
           Object meta_tags = gpxData.attr.get(GpxConstants.META_KEYWORDS);
           if (meta_tags != null) {
               tags = meta_tags.toString();
@@ -199,7 +201,7 @@ public class UploadDataGui extends ExtendedDialog {
           description = new SimpleDateFormat("yyMMddHHmmss").format(new Date()); 
           title = tr("No GPX layer selected. Cannot upload a trace.");
       }
-      OutputDisplay.setText(title);
+      outputDisplay.setText(title);
       descriptionField.setText(description);
       tagsField.setText(tags);
     }
@@ -245,7 +247,7 @@ public class UploadDataGui extends ExtendedDialog {
                 conn.disconnect();
                 GuiHelper.runInEDT(new Runnable() {
                     @Override public void run() {
-                        OutputDisplay.setText(tr("Upload canceled"));
+                        outputDisplay.setText(tr("Upload canceled"));
                         buttons.get(0).setEnabled(true);
                     }
                 });
@@ -266,7 +268,7 @@ public class UploadDataGui extends ExtendedDialog {
         catch (Exception e) {
             GuiHelper.runInEDT(new Runnable() {
                 @Override public void run() {
-                    OutputDisplay.setText(tr("Error while uploading"));
+                    outputDisplay.setText(tr("Error while uploading"));
                 }
             });
             e.printStackTrace();
@@ -324,7 +326,7 @@ public class UploadDataGui extends ExtendedDialog {
 
         GuiHelper.runInEDT(new Runnable() {
             @Override public void run() {
-                OutputDisplay.setText(success
+                outputDisplay.setText(success
                         ? tr("GPX upload was successful")
                         : tr("Upload failed. Server returned the following message: ") + returnMsgEDT);
             }
@@ -408,7 +410,7 @@ public class UploadDataGui extends ExtendedDialog {
         
         GuiHelper.runInEDT(new Runnable() {
             @Override public void run() {
-                OutputDisplay.setText(errorsEDT);
+                outputDisplay.setText(errorsEDT);
             }
         });
         

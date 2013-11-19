@@ -29,7 +29,7 @@ public class AddressDialog extends MyDialog {
         SpinnerNumberModel inc_model = new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
         incSpinner = new JSpinner(inc_model);
         incSpinner.setValue(inc);
-        addLabelled(tr("Number increment:"), incSpinner);
+        addLabelled(tr("House number increment:"), incSpinner);
 
         setContent(panel);
         setupDialog();

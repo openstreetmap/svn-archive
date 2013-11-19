@@ -335,7 +335,7 @@ public class TagDialog extends ExtendedDialog
       c.gridwidth = 1;
       editPanel.add(housnumber, c);
       
-      JLabel seqLabel = new JLabel(tr("Housenumber increment:"));
+      JLabel seqLabel = new JLabel(tr("House number increment:"));
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
       c.gridy = 7;

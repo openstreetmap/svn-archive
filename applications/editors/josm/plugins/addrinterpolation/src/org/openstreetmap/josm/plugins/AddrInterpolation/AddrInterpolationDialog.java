@@ -1089,7 +1089,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             }else if (selectedMethod.equals("Numeric")) {
 
                 if (!ValidNumericIncrementString(incrementString, startAddr, endAddr)) {
-                    errorMessage = tr("Expected valid number for address increment");
+                    errorMessage = tr("Expected valid number for increment");
                 }
 
             }

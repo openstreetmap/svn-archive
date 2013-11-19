@@ -201,7 +201,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
     
     private boolean checkServerVersion() {
     	int nMajor = 1;
-    	int nMinor = 0;
+    	int nMinor = 1;
     	
     	if (s_bServerVersionOK == false) {
             GetVersion  oGetVersion = new GetVersion();

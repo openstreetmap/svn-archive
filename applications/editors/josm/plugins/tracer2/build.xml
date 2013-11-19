@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 ** This is a template build file for a JOSM  plugin.
 **
@@ -14,7 +14,7 @@
 <project name="Tracer2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="First version"/>
+    <property name="commit.message" value="Add link to wiki"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6340"/>
 
@@ -28,7 +28,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tracer2.TracerPlugin"/>
     <property name="plugin.description" value="Traces buildings and other shapes from a map. Needs Tracer2Server to be running."/>
     <property name="plugin.icon" value="images/mapmode/tracer2-sml.png"/>
-    <!-- <property name="plugin.link" value="..."/>-->
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer2"/>
     <!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->

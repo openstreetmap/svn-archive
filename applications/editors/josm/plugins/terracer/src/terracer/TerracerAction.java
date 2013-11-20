@@ -69,6 +69,9 @@ public final class TerracerAction extends JosmAction {
     // private static String lastSelectedValue = "";
 
     Collection<Command> commands;
+    
+    private Collection<OsmPrimitive> primitives;
+    private TagCollection tagsInConflict;
 
     public TerracerAction() {
         super(tr("Terrace a building"), "terrace",
@@ -314,7 +317,7 @@ public final class TerracerAction extends JosmAction {
      * @param buildingValue The value for {@code building} key to add
      * @throws UserCancelException 
      */
-    public void terraceBuilding(Way outline,
+    public void terraceBuilding(final Way outline,
                 Node init,
                 Way street,
                 Relation associatedStreet,
@@ -456,7 +459,36 @@ public final class TerracerAction extends JosmAction {
             }
         }
 
-        Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands));
+        Main.main.undoRedo.add(new SequenceCommand(tr("Terrace"), commands) {
+            @Override
+            public boolean executeCommand() {
+                boolean result = super.executeCommand();
+                if (result) {
+                    try {
+                        // Build conflicts commands only after all primitives have been added to dataset to fix #8942
+                        List<Command> conflictCommands = CombinePrimitiveResolverDialog.launchIfNecessary(
+                                tagsInConflict, primitives, Collections.singleton(outline));
+                        if (!conflictCommands.isEmpty()) {
+                            List<Command> newCommands = new ArrayList<Command>(commands);
+                            newCommands.addAll(conflictCommands);
+                            setSequence(newCommands.toArray(new Command[0]));
+                            // Run conflicts commands
+                            for (int i = 0; i < conflictCommands.size(); i++) {
+                                result = conflictCommands.get(i).executeCommand();
+                                if (!result && !continueOnError) {
+                                    setSequenceComplete(false);
+                                    undoCommands(commands.size()+i-1);
+                                    return false;
+                                }
+                            }
+                        }
+                    } catch (UserCancelException e) {
+                        // Ignore
+                    }
+                }
+                return result;
+            }
+        });
         if (nb <= 1 && street != null) {
             // Select the way (for quick selection of a new house (with the same way))
             Main.main.getCurrentDataSet().setSelected(street);
@@ -482,18 +514,15 @@ public final class TerracerAction extends JosmAction {
         boolean buildingAdded = false;
         boolean numberAdded = false;
         if (houseNum != null) {
-            Collection<OsmPrimitive> primitives = Arrays.asList(new OsmPrimitive[]{houseNum, outline});
+            primitives = Arrays.asList(new OsmPrimitive[]{houseNum, outline});
             
             TagCollection tagsToCopy = TagCollection.unionOfAllPrimitives(primitives).getTagsFor(houseNum.keySet());
-            TagCollection tagsInConflict = tagsToCopy.getTagsFor(tagsToCopy.getKeysWithMultipleValues());
+            tagsInConflict = tagsToCopy.getTagsFor(tagsToCopy.getKeysWithMultipleValues());
             tagsToCopy = tagsToCopy.minus(tagsInConflict).minus(TagCollection.from(outline));
             
             for (Tag tag : tagsToCopy) {
                 this.commands.add(new ChangePropertyCommand(outline, tag.getKey(), tag.getValue()));
             }
-            
-            this.commands.addAll(CombinePrimitiveResolverDialog.launchIfNecessary(
-                    tagsInConflict, primitives, Collections.singleton(outline)));
             
             buildingAdded = houseNum.hasKey("building");
             numberAdded = houseNum.hasKey("addr:housenumber");

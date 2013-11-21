@@ -72,7 +72,7 @@ public final class WikipediaApp {
 
     static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
         try {
-            final String url = "http://toolserver.org/~simon04/cats.php"
+            final String url = "http://tools.wmflabs.org/cats-php/"
                     + "?lang=" + wikipediaLang
                     + "&depth=" + depth
                     + "&cat=" + encodeURL(category);

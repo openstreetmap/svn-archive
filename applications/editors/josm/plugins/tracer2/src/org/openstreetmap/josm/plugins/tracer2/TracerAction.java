@@ -249,7 +249,9 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             	return false;
             }
             if ( listEnableParam.size() == 1 ) {
-            	listParam.setActivParam(listEnableParam.get(0));
+            	ServerParam param = listEnableParam.get(0);
+            	listParam.setActivParam(param);
+            	m_oTagValues.readBuildingTags(param);
             	return true;
             }
             

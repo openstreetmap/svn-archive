@@ -53,7 +53,7 @@ public class GetVersion extends Request {
             if (astrParts.length > 0) m_nVersionMajor = Integer.parseInt(astrParts[0]);
             if (astrParts.length > 1) m_nVersionMinor = Integer.parseInt(astrParts[1]);
             if (astrParts.length > 2) m_nVersionBuild = Integer.parseInt(astrParts[2]);
-            if (astrParts.length > 3) m_nVersionMinor = Integer.parseInt(astrParts[3]);
+            if (astrParts.length > 3) m_nVersionRevision = Integer.parseInt(astrParts[3]);
         } catch (Exception e) {
         }
     }

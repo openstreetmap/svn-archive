@@ -62,7 +62,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "presets/ruins.png");
     public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "styles/standard/vehicle/services.png");
     public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "presets/soccer.png");
-    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "presets/peak.png");
+    public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "presets/peak.svg");
     public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "presets/bus.png");
     public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "presets/places.png");
 

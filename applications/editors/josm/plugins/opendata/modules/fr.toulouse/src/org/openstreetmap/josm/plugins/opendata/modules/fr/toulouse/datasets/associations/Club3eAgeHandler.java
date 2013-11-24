@@ -37,6 +37,7 @@ public class Club3eAgeHandler extends ToulouseDataSetHandler {
     public void updateDataSet(DataSet ds) {
         for (Node n : ds.getNodes()) {
             replace(n, "Nom", "name");
+            replace(n, "Telephone", "contact:phone");
             n.put("name", WordUtils.capitalizeFully(n.get("name")));
             n.put("social_facility", "outreach");
             n.put("social_facility:for", "senior");

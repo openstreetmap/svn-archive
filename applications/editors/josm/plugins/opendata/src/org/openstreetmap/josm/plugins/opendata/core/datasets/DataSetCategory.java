@@ -30,7 +30,7 @@ public class DataSetCategory {
 	}
 	
 	public DataSetCategory(String name, String iconName) {
-		this(name, iconName != null && !iconName.isEmpty() ? OdUtils.getImageIcon(iconName) : null);
+		this(name, iconName != null && !iconName.isEmpty() ? OdUtils.getImageIcon(iconName, true) : null);
 	}
 
 	public final String getName() {

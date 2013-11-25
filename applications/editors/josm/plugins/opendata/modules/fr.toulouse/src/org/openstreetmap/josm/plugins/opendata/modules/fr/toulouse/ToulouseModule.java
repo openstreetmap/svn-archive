@@ -29,6 +29,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.AbstractModule;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.associations.Club3eAgeHandler;
+import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete.BureauxVoteDecoupageHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete.BureauxVoteHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete.MairieAnnexeHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.citoyennete.MairieHandler;
@@ -89,6 +90,7 @@ public class ToulouseModule extends AbstractModule {
         handlers.add(Parcelles1830Handler.class);
         handlers.add(PMRHandler.class);
         handlers.add(PistesCyclablesHandler.class);
+        handlers.add(BureauxVoteDecoupageHandler.class);
         handlers.add(BureauxVoteHandler.class);
         handlers.add(Club3eAgeHandler.class);
         handlers.add(CrechesHandler.class);

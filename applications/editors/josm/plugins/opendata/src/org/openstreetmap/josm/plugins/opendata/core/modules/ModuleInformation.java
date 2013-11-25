@@ -231,7 +231,7 @@ public class ModuleInformation implements OdConstants {
         if (link != null) {
             sb.append(" <a href=\"").append(link).append("\">").append(tr("More info...")).append("</a>");
         }
-        if (downloadlink != null && !downloadlink.startsWith(OSM_SITE+"dist/") && !downloadlink.startsWith(GOOGLE_SITE+"dist/")) {
+        if (downloadlink != null && !downloadlink.startsWith(OSM_SITE+"dist/")) {
             sb.append("<p>&nbsp;</p><p>"+tr("<b>Module provided by an external source:</b> {0}", downloadlink)+"</p>");
         }
         sb.append("</body></html>");

@@ -38,7 +38,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
@@ -92,7 +91,6 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
         super(tr("Download module list..."), monitor == null ? NullProgressMonitor.INSTANCE: monitor, false /* don't ignore exceptions */);
         init(sites);
     }
-
 
     @Override
     protected void cancel() {
@@ -161,19 +159,13 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
         BufferedReader in = null;
         StringBuilder sb = new StringBuilder();
         try {
-            /* replace %<x> with empty string or x=modules (separated with comma) */
-            String pl = Utils.join(",", Main.pref.getCollection(PREF_MODULES));
+            // replace %<x> with empty string */
             String printsite = site.replaceAll("%<(.*)>", "");
-            if(pl != null && pl.length() != 0) {
-                site = site.replaceAll("%<(.*)>", "$1"+pl);
-            } else {
-                site = printsite;
-            }
 
             monitor.beginTask("");
             monitor.indeterminateSubTask(tr("Downloading module list from ''{0}''", printsite));
 
-            URL url = new URL(site);
+            URL url = new URL(printsite);
             synchronized(this) {
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestProperty("Cache-Control", "no-cache");
@@ -377,7 +369,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
      *
      * @return  the list of modules
      */
-    public List<ModuleInformation> getAvailabeModules() {
+    public List<ModuleInformation> getAvailableModules() {
         return availableModules;
     }
 }

@@ -65,7 +65,6 @@ public interface OdConstants {
 
     public static final String PREF_MODULES = "opendata.modules";
     public static final String PREF_MODULES_SITES = "opendata.modules.sites";
-    public final static String GOOGLE_SITE = "http://josm-toulouse-data.googlecode.com/svn/trunk/";
     public final static String OSM_SITE = "http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/";
     public final static String[] DEFAULT_MODULE_SITES = {OSM_SITE + "modules.txt%<?modules=>"};
 

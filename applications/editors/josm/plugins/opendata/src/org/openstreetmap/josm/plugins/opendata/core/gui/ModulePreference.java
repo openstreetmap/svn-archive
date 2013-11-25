@@ -267,7 +267,7 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
                     if (task.isCanceled()) return;
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            model.updateAvailableModules(task.getAvailabeModules());
+                            model.updateAvailableModules(task.getAvailableModules());
                             pnlModulePreferences.refreshView();
                         }
                     });
@@ -353,7 +353,7 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
                 public void run() {
                     if (moduleInfoDownloadTask.isCanceled())
                         return;
-                    model.updateAvailableModules(moduleInfoDownloadTask.getAvailabeModules());
+                    model.updateAvailableModules(moduleInfoDownloadTask.getAvailableModules());
                     // select modules which actually have to be updated
                     //
                     Iterator<ModuleInformation> it = toUpdate.iterator();

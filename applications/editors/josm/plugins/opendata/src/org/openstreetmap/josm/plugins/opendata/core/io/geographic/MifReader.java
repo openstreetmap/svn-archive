@@ -457,7 +457,7 @@ public class MifReader extends AbstractMapInfoReader {
 		if (midReader != null) { 
 			String midLine = midReader.readLine();
 			if (midLine != null) {
-				String[] fields = OdUtils.stripQuotes(midLine.split(delimiter.toString()), delimiter.toString());
+				String[] fields = OdUtils.stripQuotesAndExtraChars(midLine.split(delimiter.toString()), delimiter.toString());
 				if (columns.size() != fields.length) {
 					System.err.println("Error: Incoherence between MID and MIF files ("+columns.size()+" columns vs "+fields.length+" fields)");
 				}

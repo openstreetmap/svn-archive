@@ -79,7 +79,7 @@ public class CsvReader extends SpreadSheetReader {
 	
 	private final String[] splitLine() {
 		if (line != null) {
-			return OdUtils.stripQuotes(line.split(sep), sep);
+			return OdUtils.stripQuotesAndExtraChars(line.split(sep), sep);
 		} else {
 			return null;
 		}

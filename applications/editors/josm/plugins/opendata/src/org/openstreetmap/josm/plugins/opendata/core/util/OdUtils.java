@@ -20,6 +20,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -30,6 +31,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Utils;
 
 public abstract class OdUtils {
 	
@@ -39,7 +41,7 @@ public abstract class OdUtils {
         return p instanceof Relation && ((Relation) p).isMultipolygon();
     }
     
-	public static final String[] stripQuotes(String[] split, String sep) {
+	public static final String[] stripQuotesAndExtraChars(String[] split, String sep) {
 		List<String> result = new ArrayList<String>();
 		boolean append = false;
 		for (int i = 0; i<split.length; i++) {
@@ -57,6 +59,10 @@ public abstract class OdUtils {
 			} else {
 				result.add(split[i]);
 			}
+		}
+		// Remove exotic characters such as U+FEFF found in some CSV files
+		for (ListIterator<String> it = result.listIterator(); it.hasNext();) {
+		    it.set(Utils.strip(it.next()));
 		}
 		return result.toArray(new String[0]);
 	}

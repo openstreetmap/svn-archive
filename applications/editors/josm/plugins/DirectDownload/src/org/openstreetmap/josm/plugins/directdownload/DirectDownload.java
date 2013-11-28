@@ -17,6 +17,7 @@ import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
 
 public class DirectDownload extends Plugin {
@@ -51,7 +52,7 @@ public class DirectDownload extends Plugin {
 
                 try {
                     URL trackDataUrl = new URL(urlString);
-                    InputStream is = trackDataUrl.openStream();
+                    InputStream is = Utils.openURLAndDecompress(trackDataUrl, true);
 
                     GpxReader r = new GpxReader(is);
                     boolean parsedProperly = r.parse(true);
@@ -76,9 +77,11 @@ public class DirectDownload extends Plugin {
                     JOptionPane.showMessageDialog(Main.parent,
                             tr("Invalid URL {0}", urlString));
                 } catch (java.io.IOException e) {
+                    e.printStackTrace();
                     JOptionPane.showMessageDialog(Main.parent,
                             tr("Error fetching URL {0}", urlString));
                 } catch (SAXException e) {
+                    e.printStackTrace();
                     JOptionPane.showMessageDialog(Main.parent,
                             tr("Error parsing data from URL {0}", urlString));
                 }

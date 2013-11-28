@@ -250,19 +250,18 @@ public final class WikipediaApp {
 
     static class WikipediaEntry implements Comparable<WikipediaEntry> {
 
-        final String name, description;
+        final String name;
         final String wikipediaLang, wikipediaArticle;
         final LatLon coordinate;
         private Boolean wiwosmStatus;
 
         public WikipediaEntry(String name, String description, LatLon coordinate) {
             this.name = name;
-            this.description = description;
             this.coordinate = coordinate;
 
-            final WikipediaLangArticle wp = WikipediaLangArticle.parseFromUrl(getHrefFromDescription());
+            final WikipediaLangArticle wp = WikipediaLangArticle.parseFromUrl(getHrefFromDescription(description));
             if (wp == null) {
-                System.err.println("Could not extract Wikipedia tag from: " + getHrefFromDescription());
+                System.err.println("Could not extract Wikipedia tag from: " + getHrefFromDescription(description));
             }
             this.wikipediaLang = wp == null ? null : wp.lang;
             this.wikipediaArticle = wp == null ? null : wp.article;
@@ -270,13 +269,12 @@ public final class WikipediaApp {
 
         public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle) {
             this.name = name;
-            this.description = null;
             this.wikipediaLang = wikipediaLang;
             this.wikipediaArticle = wikipediaArticle;
             this.coordinate = null;
         }
 
-        protected final String getHrefFromDescription() {
+        protected final String getHrefFromDescription(final String description) {
             if (description == null) {
                 return null;
             }
@@ -315,12 +313,8 @@ public final class WikipediaApp {
         }
 
         public String getBrowserUrl() {
-            if (getHrefFromDescription() != null) {
-                return getHrefFromDescription().replace(" ", "_");
-            } else {
-                return "http://" + wikipediaLang + ".wikipedia.org/wiki/"
-                        + encodeURL(wikipediaArticle.replace(" ", "_"));
-            }
+            return "http://" + wikipediaLang + ".wikipedia.org/wiki/"
+                    + encodeURL(wikipediaArticle.replace(" ", "_"));
         }
 
         @Override

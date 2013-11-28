@@ -95,9 +95,6 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                     } else {
                         label.setToolTipText(tr("Not linked yet"));
                     }
-                    if (entry.description != null) {
-                        label.setToolTipText("<html>" + entry.description + "</html>");
-                    }
                     return label;
                 }
             });

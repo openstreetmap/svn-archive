@@ -104,17 +104,17 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
 
         valuePanel.add(new JLabel(tr("Path Length")));
 
-        pathLengthLabel = new JLabel(NavigatableComponent.getDistText(0));
+        pathLengthLabel = new JLabel(getDistText(0));
         valuePanel.add(pathLengthLabel);
 
         valuePanel.add(new JLabel(tr("Selection Length")));
 
-        selectLengthLabel = new JLabel(NavigatableComponent.getDistText(0));
+        selectLengthLabel = new JLabel(getDistText(0));
         valuePanel.add(selectLengthLabel);
 
         valuePanel.add(new JLabel(tr("Selection Area")));
 
-        selectAreaLabel = new JLabel(NavigatableComponent.getAreaText(0));
+        selectAreaLabel = new JLabel(getAreaText(0));
         valuePanel.add(selectAreaLabel);
 
         JLabel angle = new JLabel(tr("Angle"));
@@ -134,6 +134,18 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         NavigatableComponent.addSoMChangeListener(this);
     }
 
+    protected String getDistText(double v) {
+        return NavigatableComponent.getSystemOfMeasurement().getDistText(v, new DecimalFormat("#0.000"), 1e-3);
+    }
+
+    protected String getAreaText(double v) {
+        return NavigatableComponent.getSystemOfMeasurement().getAreaText(v, new DecimalFormat("#0.000"), 1e-3);
+    }
+
+    protected String getAngleText(double v) {
+        return new DecimalFormat("#0.0").format(v) + " \u00b0";
+    }
+
     /**
      * Cleans the active Measurement Layer
      */
@@ -141,8 +153,8 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         MeasurementPlugin.getCurrentLayer().reset();
     }
 
-	@Override
-	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    @Override
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         double length = 0.0;
         double segAngle = 0.0;
         double area = 0.0;
@@ -185,9 +197,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
             }
         }
         
-        final String lengthLabel = NavigatableComponent.getDistText(length);
-        final String angleLabel = new DecimalFormat("#0.0").format(segAngle) + " \u00b0";
-        final String areaLabel = NavigatableComponent.getAreaText(area);
+        final String lengthLabel = getDistText(length);
+        final String angleLabel = getAngleText(segAngle);
+        final String areaLabel = getAreaText(area);
         
         GuiHelper.runInEDT(new Runnable() {
             @Override

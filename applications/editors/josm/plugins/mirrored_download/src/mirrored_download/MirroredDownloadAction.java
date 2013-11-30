@@ -167,8 +167,10 @@ public class MirroredDownloadAction extends JosmAction {
                 if (MirroredDownloadPlugin.getAddMeta())
                 {
                     // Overpass compatibility layer
-                    String url = overpassType + "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "]"
-                        + "[@meta]" + overpassQuery;
+                    String url = overpassType
+                        + (overpassQuery.contains("[bbox=") ? "" : "[bbox=" + lon1 + "," + lat1 + "," + lon2 + "," + lat2 + "]")
+                        + (overpassQuery.contains("[@meta]") ? "" : "[@meta]")
+                        + overpassQuery;
                     try
                     {
                         url = URLEncoder.encode(url, "UTF-8");

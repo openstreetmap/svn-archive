@@ -296,15 +296,6 @@ SectionEnd
 
 SectionGroup $(JOSM_SEC_PLUGINS_GROUP) SecPluginsGroup
 
-Section $(JOSM_SEC_OPENSTREETBUGS_PLUGIN) SecOpenStreetBugsPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext current
-SetOutPath $APPDATA\JOSM\plugins
-File "..\dist\openstreetbugs.jar"
-StrCpy $plugins "$plugins<entry value='openstreetbugs'/>"
-SectionEnd
-
 Section $(JOSM_SEC_TURNRESTRICTIONS_PLUGIN) SecTurnrestrictionsPlugin
 ;-------------------------------------------
 SectionIn 1 2
@@ -482,7 +473,6 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} $(JOSM_SECDESC_JOSM)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} $(JOSM_SECDESC_PLUGINS_GROUP)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecOpenStreetBugsPlugin} $(JOSM_SECDESC_OPENSTREETBUGS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecTurnrestrictionsPlugin} $(JOSM_SECDESC_TURNRESTRICTIONS_PLUGIN)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMS} $(JOSM_SECDESC_WMS)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} $(JOSM_SECDESC_STARTMENU)

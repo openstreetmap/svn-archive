@@ -119,7 +119,10 @@ public class OheDialogPanel extends JPanel {
         return new String[] { oldkey, keyField.getText(), valueField.getText() };
     }
 
-    // returns the compiled Time from the valueField
+    /**
+     * Returns the compiled Time from the valueField.
+     * @return the compiled Time from the valueField
+     */
     public ArrayList<int[]> getTime() throws Exception {
         String value = valueField.getText();
         ArrayList<int[]> time = null;
@@ -137,8 +140,9 @@ public class OheDialogPanel extends JPanel {
                 } else if (t instanceof SyntaxException) {
                     SyntaxException syntaxError = (SyntaxException) t;
                     tColumns = new int[] { syntaxError.getStartColumn(), syntaxError.getEndColumn() };
-                    info = syntaxError.getInfo();
+                    info = syntaxError.getMessage();
                 } else {
+                    info = t.getMessage();
                     Main.warn(t);
                 }
 
@@ -161,14 +165,16 @@ public class OheDialogPanel extends JPanel {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
 
-                throw new Exception("Error in the TimeValue");
+                throw new Exception("Error in the TimeValue", t);
             }
         }
 
         return time;
     }
 
-    // updates the valueField with the given timeRects
+    /**
+     * Updates the valueField with the given timeRects.
+     */
     public void updateValueField(ArrayList<TimeRect> timeRects) {
         if (valueField != null && timeRects != null)
             valueField.setText(OpeningTimeUtils.makeStringFromRects(timeRects));
@@ -179,7 +185,8 @@ public class OheDialogPanel extends JPanel {
     }
 
     /**
-     * @return the hourMode
+     * Returns the clock system (12 or 24 hours).
+     * @return the clock system
      */
     public ClockSystem getHourMode() {
         return clockSystem;

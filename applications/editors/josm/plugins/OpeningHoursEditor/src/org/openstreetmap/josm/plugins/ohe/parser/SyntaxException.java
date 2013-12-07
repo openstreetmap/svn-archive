@@ -14,11 +14,8 @@ public class SyntaxException extends Exception {
         return endColumn;
     }
 
-    public String getInfo() {
-        return info;
-    }
-
     public SyntaxException(String info, int startColumn, int endColumn) {
+        super(info);
         this.startColumn = startColumn;
         this.endColumn = endColumn;
         this.info = info;

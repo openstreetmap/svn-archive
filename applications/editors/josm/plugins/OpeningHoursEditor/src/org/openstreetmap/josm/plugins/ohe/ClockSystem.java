@@ -4,9 +4,21 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+/**
+ * Clock system (12 or 24 hours).
+ */
 public enum ClockSystem {
-    TWELVE_HOURS, TWENTYFOUR_HOURS;
+    
+    /** 12-hour clock system */
+    TWELVE_HOURS, 
+    /** 24-hour clock system */
+    TWENTYFOUR_HOURS;
 
+    /**
+     * Returns the clock system for the given locale.
+     * @param locale The locale
+     * @return the clock system for the given locale
+     */
     public static ClockSystem getClockSystem(Locale locale) {
         DateFormat stdFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.US);
         DateFormat localeFormat = DateFormat.getTimeInstance(DateFormat.LONG, locale);

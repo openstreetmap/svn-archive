@@ -18,8 +18,8 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-public class TimeRect extends JPanel implements MouseListener,
-        MouseMotionListener {
+public class TimeRect extends JPanel implements MouseListener, MouseMotionListener {
+    
     public static final int[] transformCursorTypes = new int[] {
             Cursor.MOVE_CURSOR, Cursor.N_RESIZE_CURSOR,
             Cursor.NE_RESIZE_CURSOR, Cursor.E_RESIZE_CURSOR,
@@ -52,8 +52,7 @@ public class TimeRect extends JPanel implements MouseListener,
     private int minuteStart;
     private int minuteEnd;
 
-    public TimeRect(OheEditor editor, int dayStart, int dayEnd,
-            int minutesStart, int minutesEnd) {
+    public TimeRect(OheEditor editor, int dayStart, int dayEnd, int minutesStart, int minutesEnd) {
         this.editor = editor;
 
         this.dayStart = dayStart;
@@ -116,8 +115,7 @@ public class TimeRect extends JPanel implements MouseListener,
                 getHeight()), isZeroMinuteInterval(), isOpenEndInterval());
     }
 
-    public static void drawTimeRect(Graphics2D g2D, Rectangle bounds,
-            boolean isZeroMinuteInterval, boolean isOpenEndInterval) {
+    public static void drawTimeRect(Graphics2D g2D, Rectangle bounds, boolean isZeroMinuteInterval, boolean isOpenEndInterval) {
 
         Color innerColor = new Color(135, 135, 234);
         if (isOpenEndInterval)
@@ -155,8 +153,7 @@ public class TimeRect extends JPanel implements MouseListener,
     private int dragY;
     private int transformType;
 
-    // Calculate where the Component was clicked and returns the
-    // transformtype
+    // Calculate where the Component was clicked and returns the transformtype
     private int getTransformType(MouseEvent evt) {
         int tmpClickAreaWidth = Math.min(clickAreaSize, getWidth() / 3);
         int tmpClickAreaHeight = Math.min(clickAreaSize, getHeight() / 3);

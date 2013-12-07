@@ -243,7 +243,9 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         return (int) (minute * getMinuteHeight());
     }
 
-    // removes the given timerect from the panel and from the arraylist
+    /**
+     * Removes the given timerect from the panel and from the arraylist
+     */
     public void removeTimeRect(TimeRect timeRectToRemove) {
         timeRects.remove(timeRectToRemove);
         contentPanel.remove(timeRectToRemove);

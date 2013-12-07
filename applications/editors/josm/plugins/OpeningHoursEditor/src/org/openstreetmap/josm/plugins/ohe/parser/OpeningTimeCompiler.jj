@@ -23,7 +23,14 @@ import java.util.ArrayList;
 import java.util.Vector;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DaySpan;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DaytimeSpan;
-import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DateTime;public class OpeningTimeCompiler{  public static final String[] WEEKDAYS = new String[] {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};  public OpeningTimeCompiler(String time)  {    this(new ByteArrayInputStream(time.getBytes()), null);  }}PARSER_END(OpeningTimeCompiler)TOKEN : { < DIGIT : [ "0"-"9" ] > }
+import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils.DateTime;public class OpeningTimeCompiler {
+
+  /**
+   * Abbreviated week days.
+   */  public static final String[] WEEKDAYS = new String[] {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
+  /**
+   * Constructs a new OpeningTimeCompiler.
+   */  public OpeningTimeCompiler(String time) {    this(new ByteArrayInputStream(time.getBytes()), null);  }}PARSER_END(OpeningTimeCompiler)TOKEN : { < DIGIT : [ "0"-"9" ] > }
 TOKEN : { < WEEKDAY : "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa" | "Su" > }
 TOKEN : { < PLUS : "+" > }
 TOKEN : { < OFF : "off" > }

@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import org.openstreetmap.josm.plugins.ohe.gui.TimeRect;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
 
+/**
+ * Collection of utility methods.
+ */
 public class OpeningTimeUtils {
-    // implements the subtraction of daytimes in spans of days when a day in
-    // the list occurs direct afterwards
+    
+    /**
+     * Implements the subtraction of daytimes in spans of days when a day in the list occurs direct afterwards 
+     */
     public static ArrayList<int[]> convert(ArrayList<DateTime> dateTimes) {
         ArrayList<int[]> ret = new ArrayList<int[]>(); // the list which is
         // returned
@@ -103,8 +108,9 @@ public class OpeningTimeUtils {
         }
     }
 
-    // returns a String (e.g "Mo-Sa 10:00-20:00; Tu off") representing the
-    // TimeRects
+    /**
+     * Returns a String (e.g "Mo-Sa 10:00-20:00; Tu off") representing the TimeRects
+     */
     public static String makeStringFromRects(ArrayList<TimeRect> givenTimeRects) {
         // create an array of booleans representing every minute on all the days
         // in a week
@@ -177,8 +183,9 @@ public class OpeningTimeUtils {
         return ret;
     }
 
-    // returns a String representing the openinghours on one special day (e.g.
-    // "10:00-20:00")
+    /**
+     * Returns a String representing the openinghours on one special day (e.g. "10:00-20:00")
+     */
     private static String makeStringFromMinuteArray(boolean[] minutes) {
         String ret = "";
         for (int i = 0; i < minutes.length; ++i) {
@@ -211,6 +218,7 @@ public class OpeningTimeUtils {
     }
 
     /**
+     * 
      * @param minutes integer in range from 0 and 24*60 inclusive
      * @param hourMode 12 or 24 hour clock
      * @param showPeriod if 12 hour clock is chosen, the "AM"/"PM" will be shown

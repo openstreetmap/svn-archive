@@ -16,13 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.ohe.ClockSystem;
 import org.openstreetmap.josm.plugins.ohe.OhePlugin;
 import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
 import org.openstreetmap.josm.plugins.ohe.parser.ParseException;
 import org.openstreetmap.josm.plugins.ohe.parser.SyntaxException;
-import org.openstreetmap.josm.plugins.ohe.parser.TokenMgrError;
 import org.openstreetmap.josm.tools.GBC;
 
 public class OheDialogPanel extends JPanel {
@@ -66,8 +66,7 @@ public class OheDialogPanel extends JPanel {
             if (valuesMap.size() == 1)
                 value = valuesMap.keySet().iterator().next();
             else if (valuesMap.size() > 1) {
-                // TODO let the user choose which value he wants to edit (e.g.
-                // with a combobox)
+                // TODO let the user choose which value he wants to edit (e.g. with a combobox)
                 int mostOccurences = 0;
                 for (String v : valuesMap.keySet())
                     if (valuesMap.get(v) > mostOccurences) {
@@ -139,11 +138,8 @@ public class OheDialogPanel extends JPanel {
                     SyntaxException syntaxError = (SyntaxException) t;
                     tColumns = new int[] { syntaxError.getStartColumn(), syntaxError.getEndColumn() };
                     info = syntaxError.getInfo();
-                } else if (t instanceof TokenMgrError) {
-                    TokenMgrError tokenMgrError = (TokenMgrError) t;
-                    tColumns = new int[] { tokenMgrError.errorColumn - 1, tokenMgrError.errorColumn + 1 };
                 } else {
-                    t.printStackTrace();
+                    Main.warn(t);
                 }
 
                 // shows a Information Dialog, where the Error occurred

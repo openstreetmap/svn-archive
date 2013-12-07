@@ -47,7 +47,11 @@ import org.openstreetmap.josm.plugins.ohe.gui.OheDialogPanel;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 
+/**
+ * Opening hours editor plugin.
+ */
 public class OhePlugin extends Plugin {
+    
     /**
      * Strings for choosing which key of an object with given tags should be
      * edited, the order is referencing the preference of the keys, String[] ->
@@ -67,8 +71,7 @@ public class OhePlugin extends Plugin {
     /**
      * Will be invoked by JOSM to bootstrap the plugin
      * 
-     * @param info
-     *            information about the plugin and its local installation
+     * @param info information about the plugin and its local installation
      */
     public OhePlugin(PluginInformation info) {
         super(info);
@@ -78,8 +81,6 @@ public class OhePlugin extends Plugin {
     /**
      * this Action is used for calling the OpeningsHourEditor, the selected
      * objects in the active datalayer are edited
-     * 
-     * @author boman
      */
     class OheMenuAction extends JosmAction {
         private static final long serialVersionUID = 1456257438391417756L;

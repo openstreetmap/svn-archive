@@ -17,7 +17,7 @@ off ::= OFF
 dayspanlist ::= dayspan [ "," dayspanlist ]
 dayspan ::= WEEKDAY [ "-" WEEKDAY ]
 */
-options{  LOOKAHEAD= 1;  CHOICE_AMBIGUITY_CHECK = 2;  OTHER_AMBIGUITY_CHECK = 1;  STATIC = false;  DEBUG_PARSER = false;  DEBUG_LOOKAHEAD = false;  DEBUG_TOKEN_MANAGER = false;  ERROR_REPORTING = true;  JAVA_UNICODE_ESCAPE = false;  UNICODE_INPUT = false;  IGNORE_CASE = false;  USER_TOKEN_MANAGER = false;  USER_CHAR_STREAM = false;  BUILD_PARSER = true;  BUILD_TOKEN_MANAGER = true;  SANITY_CHECK = true;  FORCE_LA_CHECK = false;}PARSER_BEGIN(OpeningTimeCompiler)package org.openstreetmap.josm.plugins.ohe.parser;
+options{  LOOKAHEAD= 1;  CHOICE_AMBIGUITY_CHECK = 2;  OTHER_AMBIGUITY_CHECK = 1;  STATIC = false;  DEBUG_PARSER = false;  DEBUG_LOOKAHEAD = false;  DEBUG_TOKEN_MANAGER = false;  ERROR_REPORTING = true;  JAVA_UNICODE_ESCAPE = false;  UNICODE_INPUT = true;  IGNORE_CASE = false;  USER_TOKEN_MANAGER = false;  USER_CHAR_STREAM = false;  BUILD_PARSER = true;  BUILD_TOKEN_MANAGER = true;  SANITY_CHECK = true;  FORCE_LA_CHECK = false;}PARSER_BEGIN(OpeningTimeCompiler)package org.openstreetmap.josm.plugins.ohe.parser;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Vector;

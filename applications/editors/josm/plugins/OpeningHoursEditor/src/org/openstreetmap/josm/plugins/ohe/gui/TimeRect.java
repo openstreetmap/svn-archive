@@ -18,6 +18,8 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
+
 public class TimeRect extends JPanel implements MouseListener, MouseMotionListener {
     
     public static final int[] transformCursorTypes = new int[] {
@@ -53,8 +55,12 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
     private int minuteEnd;
 
     public TimeRect(OheEditor editor, int dayStart, int dayEnd, int minutesStart, int minutesEnd) {
+        OpeningTimeUtils.ensureValidDay(dayStart, "dayStart");
+        OpeningTimeUtils.ensureValidDay(dayEnd, "dayEnd");
+        OpeningTimeUtils.ensureValidMinute(minutesStart, "minutesStart");
+        OpeningTimeUtils.ensureValidMinute(minutesEnd, "minutesEnd");
+        
         this.editor = editor;
-
         this.dayStart = dayStart;
         this.dayEnd = dayEnd;
         this.minuteStart = minutesStart;
@@ -68,10 +74,18 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
         addMouseMotionListener(this);
     }
 
+    /**
+     * Returns the starting day, as an index between 0 and 6.
+     * @return the starting day index
+     */
     public int getDayStart() {
         return dayStart;
     }
 
+    /**
+     * Returns the ending day, as an index between 0 and 6.
+     * @return the ending day index
+     */
     public int getDayEnd() {
         return dayEnd;
     }
@@ -85,8 +99,7 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
     }
 
     public void reposition() {
-        setBounds(editor.getPanelBoundsForTimeinterval(dayStart, dayEnd + 1,
-                minuteStart, minuteEnd));
+        setBounds(editor.getPanelBoundsForTimeinterval(dayStart, dayEnd + 1, minuteStart, minuteEnd));
         editor.contentPanel.repaint();
     }
 
@@ -98,8 +111,12 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
         return minuteEnd == 24 * 60 + 1;
     }
 
-    private void updateTimeInterval(int newDayStart, int newDayEnd,
-            int newMinuteStart, int newMinuteEnd) {
+    private void updateTimeInterval(int newDayStart, int newDayEnd, int newMinuteStart, int newMinuteEnd) {
+        OpeningTimeUtils.ensureValidDay(newDayStart, "newDayStart");
+        OpeningTimeUtils.ensureValidDay(newDayEnd, "newDayEnd");
+        OpeningTimeUtils.ensureValidMinute(newMinuteStart, "newMinuteStart");
+        OpeningTimeUtils.ensureValidMinute(newMinuteEnd, "newMinuteEnd");
+
         dayStart = newDayStart;
         dayEnd = newDayEnd;
         minuteStart = newMinuteStart;
@@ -184,15 +201,13 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
 
     public void showMenu(MouseEvent evt) {
         JPopupMenu menu = new JPopupMenu();
-        final JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(
-                tr("open end"), isOpenEndInterval());
+        final JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(tr("open end"), isOpenEndInterval());
         menu.add(cbMenuItem);
         cbMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (cbMenuItem.isSelected())
-                    updateTimeInterval(dayStart, dayEnd, minuteStart,
-                            24 * 60 + 1);
+                    updateTimeInterval(dayStart, dayEnd, minuteStart, 24 * 60 + 1);
                 else
                     updateTimeInterval(dayStart, dayEnd, minuteStart, 24 * 60);
             }
@@ -264,8 +279,7 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
                     setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 } else if (newDayStart >= 0 && newDayEnd <= 6) {
                     actualDayDrag += xDiff;
-                    updateTimeInterval(newDayStart, newDayEnd, minuteStart,
-                            minuteEnd);
+                    updateTimeInterval(newDayStart, newDayEnd, minuteStart, minuteEnd);
                 }
             }
             if (yDiff != 0 && transformType >= 0) {
@@ -281,8 +295,7 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
                 if (newMinutesStart >= 0
                         && (newMinutesEnd <= 24 * 60 || isOpenEndInterval())) {
                     actualMinuteDrag += yDiff;
-                    updateTimeInterval(dayStart, dayEnd, newMinutesStart,
-                            newMinutesEnd);
+                    updateTimeInterval(dayStart, dayEnd, newMinutesStart, newMinutesEnd);
                 }
             }
         }

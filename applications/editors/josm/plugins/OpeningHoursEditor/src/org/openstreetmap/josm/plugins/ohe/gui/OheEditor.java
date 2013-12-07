@@ -175,7 +175,9 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // update all the TimeRects with new Data
+    /**
+     * Updates all the TimeRects with new data.
+     */
     public void initTimeRects() {
         contentPanel.removeAll();
 

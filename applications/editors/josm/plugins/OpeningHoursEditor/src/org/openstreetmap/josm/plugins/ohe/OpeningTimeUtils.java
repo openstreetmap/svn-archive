@@ -112,8 +112,7 @@ public class OpeningTimeUtils {
      * Returns a String (e.g "Mo-Sa 10:00-20:00; Tu off") representing the TimeRects
      */
     public static String makeStringFromRects(ArrayList<TimeRect> givenTimeRects) {
-        // create an array of booleans representing every minute on all the days
-        // in a week
+        // create an array of booleans representing every minute on all the days in a week
         boolean[][] minuteArray = new boolean[7][24 * 60 + 2];
         for (int day = 0; day < 7; ++day) {
             for (int minute = 0; minute < 24 * 60 + 2; ++minute) {
@@ -257,5 +256,29 @@ public class OpeningTimeUtils {
             ret &= bs[i] == bs2[i];
         }
         return ret;
+    }
+    
+    /**
+     * Ensures the given day is comprised between 0 and 6.
+     * @param day The day to check
+     * @param paramName The parameter name, used in error message
+     * @throws IllegalArgumentException if the day is invalid
+     */
+    public static final void ensureValidDay(int day, String paramName) throws IllegalArgumentException {
+        if (day < 0 || day > 6) {
+            throw new IllegalArgumentException(paramName + " is not a valid day (0-6). Given value is " + day);
+        }
+    }
+
+    /**
+     * Ensures the given minute is comprised between 0 and 24*60+1.
+     * @param minute The minute to check
+     * @param paramName The parameter name, used in error message
+     * @throws IllegalArgumentException if the minute is invalid
+     */
+    public static final void ensureValidMinute(int minute, String paramName) throws IllegalArgumentException {
+        if (minute < 0 || minute > 24*60+1) {
+            throw new IllegalArgumentException(paramName + " is not a valid minute (0-1441). Given value is " + minute);
+        }
     }
 }

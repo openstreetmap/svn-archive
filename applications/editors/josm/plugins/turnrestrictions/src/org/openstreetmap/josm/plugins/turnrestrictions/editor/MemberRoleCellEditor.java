@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
@@ -31,10 +31,10 @@ public class MemberRoleCellEditor extends AbstractCellEditor implements TableCel
         editor = new AutoCompletingTextField();
         autoCompletionList = new AutoCompletionList();
         editor.setAutoCompletionList(autoCompletionList);
-        autoCompletionList.add(new AutoCompletionListItem("from", AutoCompletionItemPritority.IS_IN_STANDARD));
-        autoCompletionList.add(new AutoCompletionListItem("to", AutoCompletionItemPritority.IS_IN_STANDARD));
-        autoCompletionList.add(new AutoCompletionListItem("via", AutoCompletionItemPritority.IS_IN_STANDARD));
-        autoCompletionList.add(new AutoCompletionListItem("location_hint", AutoCompletionItemPritority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionListItem("from", AutoCompletionItemPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionListItem("to", AutoCompletionItemPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionListItem("via", AutoCompletionItemPriority.IS_IN_STANDARD));
+        autoCompletionList.add(new AutoCompletionListItem("location_hint", AutoCompletionItemPriority.IS_IN_STANDARD));
     }
 
     /**

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.openstreetmap.josm.gui.tagging.TagCellEditor;
 import org.openstreetmap.josm.gui.tagging.TagModel;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 
@@ -93,7 +93,7 @@ public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
             for (String value : currentTag.getValues()) {
                 //logger.info("adding ac item " + value + " with priority IN_SELECTION");;
                 autoCompletionList.add(
-                        new AutoCompletionListItem(value, AutoCompletionItemPritority.IS_IN_SELECTION)
+                        new AutoCompletionListItem(value, AutoCompletionItemPriority.IS_IN_SELECTION)
                 );
             }
         }

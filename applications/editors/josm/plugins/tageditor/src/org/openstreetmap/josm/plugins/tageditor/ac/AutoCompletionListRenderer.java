@@ -11,7 +11,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -24,12 +24,12 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
     static public final String RES_SELECTION_ICON = "/resources/selection.gif";
 
     /** the icon used to decorate items of priority
-     *  {@link AutoCompletionItemPritority#IS_IN_STANDARD}
+     *  {@link AutoCompletionItemPriority#IS_IN_STANDARD}
      */
     private Icon iconStandard;
 
     /** the icon used to decorate items of priority
-     *  {@link AutoCompletionItemPritority#IS_IN_SELECTION}
+     *  {@link AutoCompletionItemPriority#IS_IN_SELECTION}
      */
     private Icon iconSelection;
 
@@ -68,11 +68,11 @@ public class AutoCompletionListRenderer extends JLabel implements TableCellRende
      * @param item the item to be rendered
      */
     protected void prepareRendererIcon(AutoCompletionListItem item) {
-        if (item.getPriority().equals(AutoCompletionItemPritority.IS_IN_STANDARD)) {
+        if (item.getPriority().equals(AutoCompletionItemPriority.IS_IN_STANDARD)) {
             if (iconStandard != null) {
                 setIcon(iconStandard);
             }
-        } else if (item.getPriority().equals(AutoCompletionItemPritority.IS_IN_SELECTION)) {
+        } else if (item.getPriority().equals(AutoCompletionItemPriority.IS_IN_SELECTION)) {
             if (iconSelection != null) {
                 setIcon(iconSelection);
             }

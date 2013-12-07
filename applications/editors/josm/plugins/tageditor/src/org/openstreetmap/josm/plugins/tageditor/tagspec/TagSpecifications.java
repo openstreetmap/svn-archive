@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPritority;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 import org.xml.sax.Attributes;
@@ -130,7 +130,7 @@ public class TagSpecifications {
             }
             AutoCompletionListItem item = new AutoCompletionListItem();
             item.setValue(spec.getKey());
-            item.setPriority(AutoCompletionItemPritority.IS_IN_STANDARD);
+            item.setPriority(AutoCompletionItemPriority.IS_IN_STANDARD);
             keys.add(item);
         }
         return keys;
@@ -147,7 +147,7 @@ public class TagSpecifications {
                     }
                     AutoCompletionListItem item = new AutoCompletionListItem();
                     item.setValue(l.getValue());
-                    item.setPriority(AutoCompletionItemPritority.IS_IN_STANDARD);
+                    item.setPriority(AutoCompletionItemPriority.IS_IN_STANDARD);
                     items.add(item);
                 }
             }

@@ -65,7 +65,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         for (ImageEntry e : layer.getImages()) {
              /* Only write lat/lon to the file, if the position is known and
                 we have a time from the correlation to the gpx track. */
-            if (e.getPos() != null && e.getGpsTime() != null) {
+            if (e.getPos() != null && e.hasGpsTime()) {
                 images.add(e);
             }
         }
@@ -371,7 +371,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
      */
     private boolean enabled(GeoImageLayer layer) {
         for (ImageEntry e : layer.getImages()) {
-            if (e.getPos() != null && e.getGpsTime() != null)
+            if (e.getPos() != null && e.hasGpsTime())
                 return true;
         }
         return false;

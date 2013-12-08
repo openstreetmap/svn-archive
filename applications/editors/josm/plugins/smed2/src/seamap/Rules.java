@@ -535,18 +535,27 @@ public class Rules {
 			break;
 		case HRBFAC:
 			if (zoom >= 12) {
-				switch ((CatHAF) getAttVal(feature, feature.type, 0, Att.CATHAF)) {
-				case HAF_MRNA:
-					Renderer.symbol(feature, Harbours.Marina);
-					break;
-				case HAF_MANF:
-					Renderer.symbol(feature, Harbours.MarinaNF);
-					break;
-				default:
+				ArrayList<CatHAF> cathaf = (ArrayList<CatHAF>) getAttVal(feature, Obj.HRBFAC, 0, Att.CATHAF);
+				if (cathaf.size() == 1) {
+					switch (cathaf.get(0)) {
+					case HAF_MRNA:
+						Renderer.symbol(feature, Harbours.Marina);
+						break;
+					case HAF_MANF:
+						Renderer.symbol(feature, Harbours.MarinaNF);
+						break;
+					case HAF_FISH:
+						Renderer.symbol(feature, Harbours.Fishing);
+						break;
+					default:
+						Renderer.symbol(feature, Harbours.Harbour);
+						break;
+					}
+				} else {
 					Renderer.symbol(feature, Harbours.Harbour);
-					break;
 				}
 			}
+			break;
 		default:
 			break;
 		}

@@ -117,7 +117,7 @@ public class S57att {
 		AttStr.put(Att.DATSTA, "start_date"); AttStr.put(Att.DRVAL1, "minimum_depth"); AttStr.put(Att.DRVAL2, "maximum_depth"); AttStr.put(Att.DUNITS, "depth_units");
 		AttStr.put(Att.ELEVAT, "elevation"); AttStr.put(Att.ESTRNG, "estimated_range"); AttStr.put(Att.EXCLIT, "exhibition"); AttStr.put(Att.EXPSOU, "exposition");
 		AttStr.put(Att.FUNCTN, "function"); AttStr.put(Att.HEIGHT, "height"); AttStr.put(Att.HUNITS, "units"); AttStr.put(Att.HORACC, "accuracy");
-		AttStr.put(Att.HORCLR, "clearance"); AttStr.put(Att.HORLEN, "length"); AttStr.put(Att.HORWID, "width"); AttStr.put(Att.ICEFAC, "factor");
+		AttStr.put(Att.HORCLR, "clearance_width"); AttStr.put(Att.HORLEN, "length"); AttStr.put(Att.HORWID, "width"); AttStr.put(Att.ICEFAC, "factor");
 		AttStr.put(Att.INFORM, "information"); AttStr.put(Att.JRSDTN, "jurisdiction"); AttStr.put(Att.LIFCAP, "maximum_load"); AttStr.put(Att.LITCHR, "character");
 		AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system");	AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality");
 		AttStr.put(Att.NATCON, "construction"); AttStr.put(Att.NATSUR, "surface"); AttStr.put(Att.NATQUA, "surface_qualification"); AttStr.put(Att.NMDATE, "nm_date");
@@ -143,7 +143,7 @@ public class S57att {
 		AttStr.put(Att.ELEVA1, "minimum_elevation"); AttStr.put(Att.ELEVA2, "maximum_elevation"); AttStr.put(Att.FNCTNM, "function"); AttStr.put(Att.WTWDIS, "distance");
 		AttStr.put(Att.BUNVES, "availability");	AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category");
 		AttStr.put(Att.CATHBR, "category");	AttStr.put(Att.CATRFD, "category"); AttStr.put(Att.CATTML, "category"); AttStr.put(Att.COMCTN, "communication");
-		AttStr.put(Att.HORCLL, "clearance_length");	AttStr.put(Att.HORCLW, "clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode");
+		AttStr.put(Att.HORCLL, "horizontal_clearance_length");	AttStr.put(Att.HORCLW, "horizontal_clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode");
 		AttStr.put(Att.CATGAG, "category");	AttStr.put(Att.HIGWAT, "high_value"); AttStr.put(Att.HIGNAM, "high_name"); AttStr.put(Att.LOWWAT, "low_value");
 		AttStr.put(Att.LOWNAM, "low_name");	AttStr.put(Att.MEAWAT, "mean_value"); AttStr.put(Att.MEANAM, "mean_name"); AttStr.put(Att.OTHWAT, "local_value");
 		AttStr.put(Att.OTHNAM, "local_name");	AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name");

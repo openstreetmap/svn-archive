@@ -27,7 +27,7 @@ public class Renderer {
 	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
 	public static final Color Yland = new Color(0x50b0ff);
-	public static final Color Mline = new Color(0x80c480);
+	public static final Color Mline = new Color(0xc480ff);
 	public static final Color Msymb = new Color(0xa30075);
 	
 	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
@@ -443,6 +443,25 @@ public class Renderer {
 			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 			Path2D.Double p = new Path2D.Double(); p.moveTo(-height*0.2,-ly-po); p.lineTo(height*0.2,-ly-po); p.moveTo(0,-ly-po); p.lineTo(0,-ly-po-(height*0.15));
 			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
+			label.add(new Instr(Prim.PLIN, p));
+			break;
+		case HCLR:
+			width += height * 1.5;
+			height *= 1.5;
+	    if (width < height) width = height;
+	    lx = -width / 2;
+	    ly = -height / 2;
+	    tx = lx + (height * 0.5);
+	    ty = ly + (height * 0.17);
+			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Prim.FILL, bg));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Prim.FILL, fg));
+			sw = 1 + (int)(height/10);
+			double vo = height / 4;
+			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			p = new Path2D.Double(); p.moveTo(-width*0.4-sw,-ly-vo); p.lineTo(-width*0.4-sw,ly+vo); p.moveTo(-width*0.4-sw,0); p.lineTo(-width*0.4+sw,0);
+			p.moveTo(width*0.4+sw,-ly-vo); p.lineTo(width*0.4+sw,ly+vo); p.moveTo(width*0.4-sw,0); p.lineTo(width*0.4+sw,0);
 			label.add(new Instr(Prim.PLIN, p));
 			break;
 		default:

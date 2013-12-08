@@ -32,10 +32,12 @@ public class Rules {
 	static String getName(Feature feature) {
 		AttItem name = feature.atts.get(Att.OBJNAM);
 		if (name == null) {
-			name = feature.objs.get(feature.type).get(0).get(Att.OBJNAM);
+			AttMap atts = feature.objs.get(feature.type).get(0);
+			if (atts != null) {
+				name = atts.get(Att.OBJNAM);
+			}
 		}
-		if (name != null) return (String)name.val;
-		return null;
+		return (name != null) ? (String)name.val: null;
 	}
 
 	static AttMap getAtts(Feature feature, Obj obj, int idx) {
@@ -202,10 +204,14 @@ public class Rules {
 			}
 			break;
 		case MARCUL:
-			if (zoom >= 14)
-				Renderer.symbol(feature, Areas.MarineFarm);
-			if (zoom >= 16)
-				Renderer.lineVector(feature, new LineStyle(Color.black, 4, new float[] { 10, 10 }));
+			if (zoom >= 12) {
+				if (zoom >= 14) {
+					Renderer.symbol(feature, Areas.MarineFarm);
+				}
+				if ((feature.area > 0.2) || ((feature.area > 0.05) && (zoom >= 14)) || ((feature.area > 0.005) && (zoom >= 16))) {
+					Renderer.lineVector(feature, new LineStyle(Color.black, 4, new float[] { 10, 10 }));
+				}
+			}
 			break;
 		case OSPARE:
 			if (testAttribute(feature, feature.type, Att.CATPRA, CatPRA.PRA_WFRM)) {
@@ -218,7 +224,7 @@ public class Rules {
 		case RESARE:
 			if (zoom >= 12) {
 				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, null, 0, Renderer.Mline);
-				if (testAttribute(feature, feature.type, Att.CATPRA, CatREA.REA_NWAK)) {
+				if (testAttribute(feature, feature.type, Att.CATREA, CatREA.REA_NWAK)) {
 					Renderer.symbol(feature, Areas.NoWake);
 				}
 			}
@@ -276,7 +282,7 @@ public class Rules {
 			break;
 		case SPLARE:
 			if (zoom >= 12) {
-				Renderer.symbol(feature, Areas.Plane);
+				Renderer.symbol(feature, Areas.Plane, new Scheme(Renderer.Msymb));
 				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, null, 10, Renderer.Mline);
 			}
 			if ((zoom >= 15) && (name != null))
@@ -326,28 +332,39 @@ public class Rules {
 	
 	private static void bridges(Feature feature) {
 		if (zoom >= 16) {
-			double verclr, verccl, vercop;
+			double verclr, verccl, vercop, horclr;
 			AttMap atts = feature.objs.get(Obj.BRIDGE).get(0);
-			String str = "";
+			String vstr = "";
+			String hstr = "";
 			if (atts != null) {
-				if (atts.containsKey(Att.VERCLR)) {
-					verclr = (Double) atts.get(Att.VERCLR).val;
+				if (atts.containsKey(Att.HORCLR)) {
+					horclr = (Double) atts.get(Att.HORCLR).val;
+					hstr = String.valueOf(horclr);
+				}
+					if (atts.containsKey(Att.VERCLR)) {
+						verclr = (Double) atts.get(Att.VERCLR).val;
 				} else {
 					verclr = atts.containsKey(Att.VERCSA) ? (Double) atts.get(Att.VERCSA).val : 0;
 				}
 				verccl = atts.containsKey(Att.VERCCL) ? (Double) atts.get(Att.VERCCL).val : 0;
 				vercop = atts.containsKey(Att.VERCOP) ? (Double) atts.get(Att.VERCOP).val : 0;
 				if (verclr > 0) {
-					str += String.valueOf(verclr);
+					vstr += String.valueOf(verclr);
 				} else if (verccl > 0) {
 					if (vercop == 0) {
-						str += String.valueOf(verccl) + "/-";
+						vstr += String.valueOf(verccl) + "/-";
 					} else {
-						str += String.valueOf(verccl) + "/" + String.valueOf(vercop);
+						vstr += String.valueOf(verccl) + "/" + String.valueOf(vercop);
 					}
 				}
-				if (!str.isEmpty())
-					Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 30), LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.CC));
+				if (hstr.isEmpty() && !vstr.isEmpty()) {
+					Renderer.labelText(feature, vstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.CC));
+				} else if (!hstr.isEmpty() && !vstr.isEmpty()) {
+					Renderer.labelText(feature, vstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.BC));
+					Renderer.labelText(feature, hstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.TC));
+				} else if (!hstr.isEmpty() && vstr.isEmpty()) {
+					Renderer.labelText(feature, hstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.CC));
+				}
 			}
 		}
 	}

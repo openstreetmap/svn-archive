@@ -21,26 +21,26 @@ import s57.S57val.*;
 public class SeaMap {
 
 	public enum Nflag {
-		ANON, ISOL, CONN
+		ANON,	// Edge inner nodes
+		ISOL,	// Node not part of Edge
+		CONN	// Edge first and last nodes
 	}
 
-	public class Snode {
-		public double lat;
-		public double lon;
-		public Nflag flg;
+	public class Snode {	// All coordinates in map
+		public double lat;	// Latitude
+		public double lon;	// Longitude
+		public Nflag flg;		// Role of node
 
 		public Snode() {
 			flg = Nflag.ANON;
 			lat = 0;
 			lon = 0;
 		}
-
 		public Snode(double ilat, double ilon) {
 			flg = Nflag.ANON;
 			lat = ilat;
 			lon = ilon;
 		}
-
 		public Snode(double ilat, double ilon, Nflag iflg) {
 			lat = ilat;
 			lon = ilon;
@@ -48,23 +48,21 @@ public class SeaMap {
 		}
 	}
 
-	public class Edge {
-		public boolean forward;
-		public long first;
-		public long last;
-		public ArrayList<Long> nodes;
+	public class Edge {		// A polyline segment
+		public long first;	// First CONN node
+		public long last;		// Last CONN node
+		public ArrayList<Long> nodes; // Inner ANON nodes
 
 		public Edge() {
-			forward = true;
 			first = 0;
 			last = 0;
 			nodes = new ArrayList<Long>();
 		}
 	}
 
-	public class Side {
-		Edge edge;
-		boolean forward;
+	public class Side {	// An edge as used in a line or area feature
+		Edge edge;				// Side is formed by this Edge...
+		boolean forward;	// ... in this direction
 
 		public Side(Edge iedge, boolean ifwd) {
 			edge = iedge;
@@ -72,15 +70,14 @@ public class SeaMap {
 		}
 	}
 
-	public class Bound {
-		public boolean outer;
-		ArrayList<Side> sides;
+	public class Bound { // A single closed area
+		public boolean outer;		// Role
+		ArrayList<Side> sides;	// Sides that make up this area
 
 		public Bound() {
 			outer = true;
 			sides = new ArrayList<Side>();
 		}
-
 		public Bound(Side iside, boolean irole) {
 			outer = irole;
 			sides = new ArrayList<Side>();
@@ -88,7 +85,7 @@ public class SeaMap {
 		}
 	}
 
-	public class Area extends ArrayList<Bound> {
+	public class Area extends ArrayList<Bound> {	// The collection of bounds for an area.
 		public Area() {
 			super();
 		}
@@ -388,7 +385,7 @@ public class SeaMap {
 			edges.put(id, edge);
 			nodes.get(edge.first).flg = Nflag.CONN;
 			nodes.get(edge.last).flg = Nflag.CONN;
-			Bound ebound = (new Bound(new Side(edge, edge.forward), true));
+			Bound ebound = (new Bound(new Side(edge, true), true));
 			feature.length = calcLength(ebound);
 			if (edge.first == edge.last) {
 				feature.flag = Fflag.AREA;
@@ -409,7 +406,7 @@ public class SeaMap {
 					Edge edge = edges.get(role.remove(0));
 					long node1 = edge.first;
 					long node2 = edge.last;
-					bound = new Bound(new Side(edge, edge.forward), (role == outers));
+					bound = new Bound(new Side(edge, true), (role == outers));
 					if (node1 != node2) {
 						for (ListIterator<Long> it = role.listIterator(0); it.hasNext();) {
 							Edge nedge = edges.get(it.next());
@@ -550,8 +547,8 @@ public class SeaMap {
 					first = false;
 				} else {
 					double arc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
-					slat += (lat * arc);
-					slon += (lon * arc);
+					slat += ((lat + llat) / 2 * arc);
+					slon += ((lon + llon) / 2 * arc);
 					sarc += arc;
 				}
 				llon = lon;

@@ -64,6 +64,7 @@ public class Areas {
 	}
 	public static final Symbol LinePlane = new Symbol();
 	static {
+		LinePlane.add(new Instr(Prim.BBOX, new Rectangle2D.Double(-30,-60,60,90)));
 		LinePlane.add(new Instr(Prim.FILL, new Color(0xc480ff)));
 		LinePlane.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.Plane, 0.5, 0, 0, null, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(-90.0))))));
 	}

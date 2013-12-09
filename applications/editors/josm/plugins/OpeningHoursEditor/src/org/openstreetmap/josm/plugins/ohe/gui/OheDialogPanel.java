@@ -23,6 +23,7 @@ import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
 import org.openstreetmap.josm.plugins.ohe.parser.ParseException;
 import org.openstreetmap.josm.plugins.ohe.parser.SyntaxException;
+import org.openstreetmap.josm.plugins.ohe.parser.TokenMgrError;
 import org.openstreetmap.josm.tools.GBC;
 
 public class OheDialogPanel extends JPanel {
@@ -98,7 +99,7 @@ public class OheDialogPanel extends JPanel {
         toolsPanel.add(twentyfourSevenButton, GBC.std());
         toolsPanel.add(Box.createGlue(), GBC.std().fill(GBC.HORIZONTAL));
         toolsPanel.add(actualPostionLabel, GBC.eop());
-
+        
         editorPanel = new OheEditor(this);
 
         // adding all Components in a Gridbaglayout
@@ -131,8 +132,10 @@ public class OheDialogPanel extends JPanel {
             try {
                 time = OpeningTimeUtils.convert(compiler.startCompile());
             } catch (Throwable t) {
+                Main.warn(t);
+                
                 int tColumns[] = null;
-                String info = null;
+                String info = t.getMessage();
 
                 if (t instanceof ParseException) {
                     ParseException parserExc = (ParseException) t;
@@ -140,29 +143,43 @@ public class OheDialogPanel extends JPanel {
                 } else if (t instanceof SyntaxException) {
                     SyntaxException syntaxError = (SyntaxException) t;
                     tColumns = new int[] { syntaxError.getStartColumn(), syntaxError.getEndColumn() };
-                    info = syntaxError.getMessage();
-                } else {
-                    info = t.getMessage();
-                    Main.warn(t);
+                } else if (t instanceof TokenMgrError) {
+                    try {
+                        // With JavaCC 6 Message is: "Lexical error at line 1, column 20.  Encountered: "P" (80), after : ""
+                        int idx = info.indexOf("column ");
+                        if (idx > -1) {
+                            int col = Integer.parseInt(info.substring(idx+"column ".length(), info.indexOf('.', idx)));
+                            tColumns = new int[] { col - 1, col + 1 };
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        Main.warn(e);
+                    } catch (NumberFormatException e) {
+                        Main.warn(e);
+                    }
                 }
 
                 // shows a Information Dialog, where the Error occurred
-                if (tColumns != null) {
-                    int first = Math.max(0, tColumns[0]);
-                    int last = Math.min(value.length(), tColumns[1]);
-                    String begin = value.substring(0, first);
-                    String middle = value.substring(first, last);
-                    String end = value.substring(last);
-                    valueField.setCaretPosition(first);
-                    // TODO focus on the valueField
-                    String message = "<html>" + tr("There is something wrong in the value near:") + "<br>" + begin
-                            + "<span style='background-color:red;'>" + middle + "</span>" + end;
-                    if (info != null)
-                        message += "<br>" + tr("Info: {0}", tr(info));
-                    message += "<br>" + tr("Correct the value manually and than press Enter.");
-                    message += "</html>";
-                    JOptionPane.showMessageDialog(this, message, tr("Error in timeformat"),
-                            JOptionPane.INFORMATION_MESSAGE);
+                if (tColumns != null || info != null) {
+                    String message = "<html>";
+                    if (tColumns != null) {
+                        int first = Math.max(0, tColumns[0]);
+                        int last = Math.min(value.length(), tColumns[1]);
+                        String begin = value.substring(0, first);
+                        String middle = value.substring(first, last);
+                        String end = value.substring(last);
+                        valueField.setCaretPosition(first);
+                        // TODO focus on the valueField
+                        message += tr("There is something wrong in the value near:") + "<br>" + begin
+                                + "<span style='background-color:red;'>" + middle + "</span>" + end;
+                    }
+                    if (info != null) {
+                        if (tColumns != null) {
+                            message += "<br>";
+                        }
+                        message += tr("Info: {0}", tr(info));
+                    }
+                    message += "<br>" + tr("Correct the value manually and than press Enter.") + "</html>";
+                    JOptionPane.showMessageDialog(this, message, tr("Error in timeformat"), JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 throw new Exception("Error in the TimeValue", t);

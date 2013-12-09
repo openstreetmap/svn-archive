@@ -14,7 +14,7 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 	
-    <property name="javacc.home" location="../../core/tools"/>
+    <property name="javacc.home" location="../00_core_tools"/>
 	<property name="parser.dir" location="${plugin.src.dir}/org/openstreetmap/josm/plugins/ohe/parser"/>
 	
     <target name="javacc" depends="init" unless="javacc.notRequired">

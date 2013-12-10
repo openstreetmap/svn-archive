@@ -380,6 +380,13 @@ public class Rules {
 				} else {
 					Renderer.lineSymbols(feature, Areas.CableDash, 0, Areas.CableDot, null, 2, Color.black);
 				}
+				if (atts != null) {
+					if (atts.containsKey(Att.VERCLR)) {
+						Renderer.labelText(feature, String.valueOf((Double) atts.get(Att.VERCLR).val), new Font("Arial", Font.PLAIN, 50), LabelStyle.VCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
+					} else if (atts.containsKey(Att.VERCSA)) {
+						Renderer.labelText(feature, String.valueOf((Double) atts.get(Att.VERCSA).val), new Font("Arial", Font.PLAIN, 50), LabelStyle.PCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
+					}
+				}
 			}
 		}
 	}
@@ -875,11 +882,23 @@ public class Rules {
 	}
 
 	private static void pipelines(Feature feature) {
-		if (zoom >= 14) {
+		if ((zoom >= 16) && (feature.length < 2)) {
 			if (feature.type == Obj.PIPSOL) {
 				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, null, 0, Renderer.Mline);
 			} else if (feature.type == Obj.PIPOHD) {
-
+				Renderer.lineVector(feature, new LineStyle(Color.black, 8));
+				AttMap atts = feature.objs.get(Obj.PIPOHD).get(0);
+				double verclr = 0;
+				if (atts != null) {
+					if (atts.containsKey(Att.VERCLR)) {
+						verclr = (Double) atts.get(Att.VERCLR).val;
+					} else {
+						verclr = atts.containsKey(Att.VERCSA) ? (Double) atts.get(Att.VERCSA).val : 0;
+					}
+					if (verclr > 0) {
+						Renderer.labelText(feature, String.valueOf(verclr), new Font("Arial", Font.PLAIN, 50), LabelStyle.VCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
+					}
+				}
 			}
 		}
 	}
@@ -960,13 +979,13 @@ public class Rules {
 
 	private static void stations(Feature feature) {
 		if (zoom >= 14) {
+			String str = "";
 			switch (feature.type) {
 			case SISTAT:
 			case SISTAW:
 				Renderer.symbol(feature, Harbours.SignalStation);
-				String str = "SS";
+				str = "SS";
 				//  Append (cat) to str
-				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(30, 0)));
 				break;
 			case RDOSTA:
 				Renderer.symbol(feature, Harbours.SignalStation);
@@ -981,11 +1000,14 @@ public class Rules {
 				break;
 			case CGUSTA:
 				Renderer.symbol(feature, Harbours.SignalStation);
-				Renderer.labelText(feature, "CG", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(30, 0)));
+				str = "CG";
 				break;
 			case RSCSTA:
 				Renderer.symbol(feature, Harbours.Rescue);
 				break;
+			}
+			if ((zoom >= 15) && !str.isEmpty()) {
+				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(30, 0)));
 			}
 		}
 		Signals.addSignals(feature);

@@ -19,6 +19,8 @@ import s57.S57val.*;
 import seamap.SeaMap;
 import seamap.SeaMap.*;
 import seamap.SeaMap.Area;
+import symbols.Areas;
+import symbols.Harbours;
 import symbols.Symbols;
 import symbols.Symbols.*;
 
@@ -61,7 +63,7 @@ public class Renderer {
 		pattMap.put(ColPAT.PAT_STRP, Patt.H);
 	}
 	
-	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, HCLR }
+	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, PCLR, HCLR }
 
 	static MapContext context;
 	static SeaMap map;
@@ -444,6 +446,27 @@ public class Renderer {
 			Path2D.Double p = new Path2D.Double(); p.moveTo(-height*0.2,-ly-po); p.lineTo(height*0.2,-ly-po); p.moveTo(0,-ly-po); p.lineTo(0,-ly-po-(height*0.15));
 			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
 			label.add(new Instr(Prim.PLIN, p));
+			break;
+		case PCLR:
+			width += height * 1.0;
+			height *= 2.0;
+	    if (width < height) width = height;
+	    lx = -width / 2;
+	    ly = -height / 2;
+	    tx = lx + (height * 0.27);
+	    ty = ly + (height * 0.25);
+			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Prim.FILL, bg));
+			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Prim.FILL, fg));
+			sw = 1 + (int)(height/10);
+			po = sw / 2;
+			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			p = new Path2D.Double(); p.moveTo(-height*0.2,-ly-po); p.lineTo(height*0.2,-ly-po); p.moveTo(0,-ly-po); p.lineTo(0,-ly-po-(height*0.15));
+			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
+			label.add(new Instr(Prim.PLIN, p));
+			label.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0,-1,1,0,-width/2,0)))));
+			label.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0,-1,1,0,width/2,0)))));
 			break;
 		case HCLR:
 			width += height * 1.5;

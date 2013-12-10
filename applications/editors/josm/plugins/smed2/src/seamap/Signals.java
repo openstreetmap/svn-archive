@@ -14,24 +14,23 @@ import java.awt.Font;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
-import s57.S57att.Att;
-import s57.S57obj.Obj;
-import s57.S57val.CatROS;
-import seamap.Renderer.LabelStyle;
+import s57.S57att.*;
+import s57.S57obj.*;
+import s57.S57val.*;
+import seamap.Renderer.*;
 import seamap.SeaMap.*;
 import symbols.Beacons;
 import symbols.Topmarks;
-import symbols.Symbols.Delta;
-import symbols.Symbols.Handle;
+import symbols.Symbols.*;
 
 public class Signals {
 
 	public static void addSignals(Feature feature) {
-	  if (feature.objs.containsKey(Obj.FOGSIG)) Signals.fogSignals(feature);
-	  if (feature.objs.containsKey(Obj.RTPBCN)) Signals.radarStations(feature);
-	  if (feature.objs.containsKey(Obj.RADSTA)) Signals.radarStations(feature);
-	  if (feature.objs.containsKey(Obj.RDOSTA)) Signals.radioStations(feature);
-	  if (feature.objs.containsKey(Obj.LIGHTS)) Signals.lights(feature);
+	  if (feature.objs.containsKey(Obj.FOGSIG)) fogSignals(feature);
+	  if (feature.objs.containsKey(Obj.RTPBCN)) radarStations(feature);
+	  if (feature.objs.containsKey(Obj.RADSTA)) radarStations(feature);
+	  if (feature.objs.containsKey(Obj.RDOSTA)) radioStations(feature);
+	  if (feature.objs.containsKey(Obj.LIGHTS)) lights(feature);
 	}
 	
 	public static void fogSignals(Feature feature) {
@@ -40,51 +39,82 @@ public class Signals {
 
 	public static void radarStations(Feature feature) {
 		Renderer.symbol(feature, Beacons.RadarStation);
+		String bstr = "";
+		CatRTB cat = (CatRTB) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.CATRTB);
+		switch (cat) {
+		case RTB_RAMK:
+			bstr += " Ramark";
+			break;
+		case RTB_RACN:
+			bstr += " Racon";
+			String astr = (String) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.SIGGRP);
+			if (!astr.isEmpty()) {
+				bstr += "(" + astr + ")";
+			}
+			Double per = (Double) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.SIGPER);
+			Double mxr = (Double) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.VALMXR);
+			if ((per != 0) || (mxr != 0)) {
+				bstr += (astr.isEmpty() ? " " : "");
+				bstr += (per != 0) ? per.toString() + "s" : "";
+				bstr += (mxr != 0) ? mxr.toString() + "M" : "";
+			}
+			break;
+		default:
+			break;
+		}
+		if ((Renderer.zoom >= 15) && !bstr.isEmpty()) {
+			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -30)));
+		}
+	}
+
+	public static void radioStations(Feature feature) {
+		Renderer.symbol(feature, Beacons.RadarStation);
 		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
-		String str = "";
+		boolean vais = false;
+		String bstr = "";
 		for (CatROS ros : cats) {
 			switch (ros) {
 			case ROS_OMNI:
-				str += " RC";
+				bstr += " RC";
 				break;
 			case ROS_DIRL:
-				str += " RD";
+				bstr += " RD";
 				break;
 			case ROS_ROTP:
-				str += " RW";
+				bstr += " RW";
 				break;
 			case ROS_CNSL:
-				str += " Consol";
+				bstr += " Consol";
 				break;
 			case ROS_RDF:
-				str += " RG";
+				bstr += " RG";
 				break;
 			case ROS_QTA:
-				str += " R";
+				bstr += " R";
 				break;
 			case ROS_AERO:
-				str += " AeroRC";
+				bstr += " AeroRC";
 				break;
 			case ROS_DECA:
-				str += " Decca";
+				bstr += " Decca";
 				break;
 			case ROS_LORN:
-				str += " Loran";
+				bstr += " Loran";
 				break;
 			case ROS_DGPS:
-				str += " DGPS";
+				bstr += " DGPS";
 				break;
 			case ROS_TORN:
-				str += " Toran";
+				bstr += " Toran";
 				break;
 			case ROS_OMGA:
-				str += " Omega";
+				bstr += " Omega";
 				break;
 			case ROS_SYLD:
-				str += " Syledis";
+				bstr += " Syledis";
 				break;
 			case ROS_CHKA:
-				str += " Chiaka";
+				bstr += " Chiaka";
 				break;
 			case ROS_PCOM:
 			case ROS_COMB:
@@ -93,60 +123,63 @@ public class Signals {
 				break;
 			case ROS_PAIS:
 			case ROS_SAIS:
-				str += " AIS";
+				bstr += " AIS";
 				break;
 			case ROS_VAIS:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				break;
 			case ROS_VANC:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopNorth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASC:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopSouth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAEC:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopEast, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAWC:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopWest, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAPL:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopCan, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASL:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopCone, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAID:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopIsol, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASW:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopSphere, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VASP:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopX, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			case ROS_VAWK:
-				Renderer.labelText(feature, " V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				vais = true;
 				Renderer.symbol(feature, Topmarks.TopCross, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
 				break;
 			default:
 				break;
 			}
 		}
-		if (!str.isEmpty()) Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
-	}
-
-	public static void radioStations(Feature feature) {
-		
+		if (Renderer.zoom >= 15) {
+			if (vais) {
+				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+			}
+			if (!bstr.isEmpty()) {
+				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
+			}
+		}
 	}
 
 	public static void lights(Feature feature) {
@@ -333,20 +366,6 @@ char *charString(Item_t *item, char *type, int idx) {
       if (obj != NULL) {
         if ((att = getAtt(obj, CATFOG)) != NULL)
           strcat(string1, fog_signals[att->val.val.e]);
-        if ((att = getAtt(obj, SIGGRP)) != NULL)
-          sprintf(strchr(string1, 0), "(%s)", stringValue(att->val));
-        else 
-          strcat(string1, " ");
-        if ((att = getAtt(obj, SIGPER)) != NULL)
-          sprintf(strchr(string1, 0), "%ss ", stringValue(att->val));
-        if ((att = getAtt(obj, VALMXR)) != NULL)
-          sprintf(strchr(string1, 0), "%sM", stringValue(att->val));
-      }
-      break;
-    case RTPBCN:
-      if (obj != NULL) {
-        if ((att = getAtt(obj, CATRTB)) != NULL)
-          strcat(string1, rtb_map[att->val.val.e]);
         if ((att = getAtt(obj, SIGGRP)) != NULL)
           sprintf(strchr(string1, 0), "(%s)", stringValue(att->val));
         else 

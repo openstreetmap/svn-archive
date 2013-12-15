@@ -1,0 +1,46 @@
+README 
+======
+
+Photo Adjust Plugin
+
+Author: holgermappt
+License: GPL v2 or later (see below for resource licenses)
+
+
+The photo adjust plugin allows to move geotagged photos on the map and
+to place photos that don't have GPS coordinates associated with them
+on the map, thus to geotag them.
+
+
+Resources:
+  images/untaglayer.png:
+    combination of:
+      JOSM plugin photo_geotagging, images/geotagging.png
+        Author: Paul Hartmann
+        License: GPL v2 or any later version
+      self made text (CC0)
+    License: GPL v2 or later
+  images/togglegit.png:
+    combination of:
+      JOSM images/dialogs/geoimage/gpx2img.png
+           images/dialogs/geoimage/photo-marker.png
+        Author: JOSM contributors and others, see JOSM CONTRIBUTION
+        License: GNU General Public License v2 or later
+      self made arrows (CC0)
+    License: GPL v2 or later
+  images/photoadjust.png:
+    combination of:
+      JOSM images/dialogs/geoimage/gpx2img.png
+        Author: JOSM contributors and others, see JOSM CONTRIBUTION
+        License: GNU General Public License v2 or later
+      self made arrows (CC0)
+    License: GPL v2 or later
+  src/org/openstreetmap/josm/plugins/photoadjust/
+    self written code
+    License: CC0
+  data:
+    translations (*.lang):
+      Author: many, see https://translations.launchpad.net/josm/trunk/
+      License: BSD license (revised, without advertising clause) and
+               licence applicable to JOSM (GPL v2 or any later version),
+        see https://help.launchpad.net/TermsofUse#Translations_copyright

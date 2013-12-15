@@ -1,15 +1,20 @@
 package org.wikipedia;
 
 import org.junit.Test;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.tools.Predicate;
+import org.openstreetmap.josm.tools.Utils;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 import org.wikipedia.WikipediaApp.WikipediaLangArticle;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 public class WikipediaAppTest {
@@ -45,6 +50,13 @@ public class WikipediaAppTest {
     public void testParseFromUrl3() {
         final WikipediaLangArticle actual = WikipediaLangArticle.parseFromUrl("http://de.wikipedia.org/wiki/Sternheim_%26_Emanuel");
         assertThat(actual.article, is("Sternheim_&_Emanuel"));
+        assertThat(actual.lang, is("de"));
+    }
+
+    @Test
+    public void testParseFromUrl4() {
+        final WikipediaLangArticle actual = WikipediaLangArticle.parseFromUrl("//de.wikipedia.org/wiki/Reichstagsgeb%C3%A4ude");
+        assertThat(actual.article, is("Reichstagsgebäude"));
         assertThat(actual.lang, is("de"));
     }
 
@@ -102,4 +114,15 @@ public class WikipediaAppTest {
         assertThat(entry.getBrowserUrl(), is("http://de.wikipedia.org/wiki/Sternheim_%26_Emanuel"));
     }
 
+    @Test
+    public void testFromCoordinates() throws Exception {
+        final List<WikipediaEntry> entries = WikipediaApp.getEntriesFromCoordinates("de",
+                new LatLon(52.5179786, 13.3753321), new LatLon(52.5192215, 13.3768705));
+        assertTrue(Utils.exists(entries, new Predicate<WikipediaEntry>() {
+            @Override
+            public boolean evaluate(WikipediaEntry entry) {
+                return "Deutscher Bundestag".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang);
+            }
+        }));
+    }
 }

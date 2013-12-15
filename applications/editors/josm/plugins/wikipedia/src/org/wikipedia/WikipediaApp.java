@@ -198,11 +198,11 @@ public final class WikipediaApp {
             // decode URL for nicer value
             url = decodeURL(url);
             // extract Wikipedia language and
-            final Matcher m = Pattern.compile("https?://(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
+            final Matcher m = Pattern.compile("(https?:)?//(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
             if (!m.matches()) {
                 return null;
             }
-            return new WikipediaLangArticle(m.group(1), m.group(2));
+            return new WikipediaLangArticle(m.group(2), m.group(3));
         }
 
         public static WikipediaLangArticle parseTag(String key, String value) {

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,13 +29,11 @@ import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSource;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -51,16 +48,8 @@ public class SimplifyAreaAction extends JosmAction {
     }
 
 
-
     private List<Bounds> getCurrentEditBounds() {
-        final LinkedList<Bounds> bounds = new LinkedList<Bounds>();
-        final OsmDataLayer dataLayer = Main.map.mapView.getEditLayer();
-        for (final DataSource ds : dataLayer.data.dataSources) {
-            if (ds.bounds != null) {
-                bounds.add(ds.bounds);
-            }
-        }
-        return bounds;
+        return Main.map.mapView.getEditLayer().data.getDataSourceBounds();
     }
 
 

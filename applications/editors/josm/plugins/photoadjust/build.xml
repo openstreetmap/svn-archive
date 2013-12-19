@@ -58,20 +58,27 @@
     -->
     <target name="gettext-init" description="Loads the Ant gettext and contrib tasks.">
         <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
-        <taskdef name="gettext-merge" classname="org.xnap.commons.ant.gettext.GettextMergeKeysTask" classpath="${gettexttasks.jar}"/>
     </target>
     <target name="pot" description="Extract translatable strings from source." depends="gettext-init">
         <mkdir dir="po"/>
-        <gettext-extract keysFile="photoadjust.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+        <gettext-extract keysFile="${ant.project.name}.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="src" includes="**/*.java"/>
         </gettext-extract>
+        <echo file="po/${ant.project.name}.pot" append="true">
+#. Plugin ${ant.project.name}
+#: build.xml:1
+msgid "${plugin.description}"
+msgstr ""
+</echo>
     </target>
-    <target name="pomerge" description="Merge extracted strings into language files." depends="gettext-init">
-        <gettext-merge keysFile="photoadjust.pot" poDirectory="po"/>
+    <target name="pomerge" description="Merge extracted strings into language files.">
+        <exec executable="perl">
+            <arg line="pomerge.pl"/>
+        </exec>
     </target>
     <target name="poimport" description="Import the PO files from the tarball launchpad-export.tar.gz exported from Launchpad.">
         <exec executable="perl">
-            <arg line="importpo.pl"/>
+            <arg line="poimport.pl"/>
         </exec>
     </target>
     <target name="lang" description="Prepare *.lang files in data directory.">

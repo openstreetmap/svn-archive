@@ -60,7 +60,9 @@
         </foreach>
     </target>
     <target name="singleplugintrans" depends="po/josm.pot,init">
-        <antcall target="plugintrans" path="${plugin}"/>
+        <antcall target="plugintrans">
+            <param name="path" value="${plugin}"/>
+        </antcall>
     </target>
     <target name="buildcore" depends="po/josm.pot,init">
         <gettext-merge keysFile="josm.pot" poDirectory="po"/>

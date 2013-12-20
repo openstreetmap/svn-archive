@@ -86,8 +86,12 @@
     <target name="plugintrans" depends="init">
         <basename file="${path}" property="dir"/>
         <mkdir dir="${po.build.dir}/plugin_${dir}"/>
+        <exec executable="perl" output="${po.build.dir}/plugin_${dir}/trans_plugin.java">
+            <arg line="convplugins.pl ${plugin.dir}/${dir}/build.xml"/>
+        </exec>
         <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
+            <fileset dir="${po.build.dir}/plugin_${dir}" includes="trans_*.java"/>
         </gettext-extract>
         <if>
             <available file="${po.build.dir}/plugin_${dir}/josm.pot"/>

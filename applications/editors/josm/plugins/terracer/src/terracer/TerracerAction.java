@@ -703,7 +703,7 @@ public final class TerracerAction extends JosmAction {
             @Override
             public int compareTo(SortWithIndex o) {
                 return Double.compare(x, o.x);
-            };
+            }
         }
 
         final int length = a.length;

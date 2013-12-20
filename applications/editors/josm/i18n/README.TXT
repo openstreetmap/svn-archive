@@ -31,6 +31,9 @@ Call "./launchpad.pl download". You need to set login information (see file how 
 Can also be issued by hand on the Launchpad web page.
 After some time a mail is sent with a URL. With this URL step (3) can be done.
 
+7) Build a single plugin:
+Call "ant -Dplugin=name singleplugintrans"
+
 NOTE:
 a) Your repositories should not have any local modifications which modify string elements!
 b) Always do an "svn up" for core and plugins before starting!

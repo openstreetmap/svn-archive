@@ -45,6 +45,7 @@
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
         <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
+            <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
             <fileset dir="${plugin.dir}" includes="**/*.java"/>

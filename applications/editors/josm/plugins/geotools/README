@@ -2,3 +2,13 @@ README
 ======
 This plugin provides parts of the GeoTools library for JOSM plugins.
     * Licensed under GPL v3 (see LICENSE)
+
+The current embedded version of GeoTools is 10.3.
+
+However, due to major breaking changes in shapefile implementation in 10.x branch,
+gt-shapefile-old-10.3.jar is bundled instead of gt-shapefile-10.3.jar to avoid
+compilation issues in opendata plugin.
+
+The switch shapefile -> shapefile-ng must be made in the same time as opendata.
+
+See http://docs.codehaus.org/display/GEOTOOLS/Migrate+shapefile+to+shapefile-ng

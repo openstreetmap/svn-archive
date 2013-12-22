@@ -21,7 +21,7 @@ public class SelectMembersAction extends AbstractAction implements ChosenRelatio
     }
 
     public void actionPerformed( ActionEvent e ) {
-        Main.map.mapView.getEditLayer().data.setSelected(rel.get() == null ? null : rel.get().getMemberPrimitives());
+        Main.main.getEditLayer().data.setSelected(rel.get() == null ? null : rel.get().getMemberPrimitives());
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {

@@ -49,7 +49,7 @@ public class SimplifyAreaAction extends JosmAction {
 
 
     private List<Bounds> getCurrentEditBounds() {
-        return Main.map.mapView.getEditLayer().data.getDataSourceBounds();
+        return Main.main.getEditLayer().data.getDataSourceBounds();
     }
 
 

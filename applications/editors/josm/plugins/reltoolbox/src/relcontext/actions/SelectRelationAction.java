@@ -22,7 +22,7 @@ public class SelectRelationAction extends AbstractAction implements ChosenRelati
     }
 
     public void actionPerformed( ActionEvent e ) {
-        Main.map.mapView.getEditLayer().data.setSelected(rel.get() == null ? null : rel.get());
+        Main.main.getEditLayer().data.setSelected(rel.get() == null ? null : rel.get());
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {

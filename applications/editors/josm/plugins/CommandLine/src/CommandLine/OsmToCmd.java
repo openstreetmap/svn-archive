@@ -249,7 +249,7 @@ final class OsmToCmd {
                 }
                 else if (currentPrimitive.isModified()) {
                     //System.out.println(String.valueOf(currentPrimitive.getUniqueId()) + " IS MODIFIED BY SCRIPT");
-                    cmds.add(new ChangeCommand(Main.map.mapView.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                    cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
@@ -261,7 +261,7 @@ final class OsmToCmd {
                     cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
                 }
                 else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.map.mapView.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                    cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
@@ -273,7 +273,7 @@ final class OsmToCmd {
                     cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
                 }
                 else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.map.mapView.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                    cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));

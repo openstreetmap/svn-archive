@@ -36,7 +36,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         putValue(SHORT_DESCRIPTION, tr("Download referrers for the chosen relation and its members."));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(rel.get() != null && Main.map.mapView.getEditLayer() != null);
+        setEnabled(rel.get() != null && Main.main.getEditLayer() != null);
     }
 
     public void actionPerformed( ActionEvent e ) {
@@ -45,16 +45,16 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         List<OsmPrimitive> objects = new ArrayList<OsmPrimitive>();
         objects.add(relation);
         objects.addAll(relation.getMemberPrimitives());
-        Main.worker.submit(new DownloadReferrersTask(Main.map.mapView.getEditLayer(), objects));
+        Main.worker.submit(new DownloadReferrersTask(Main.main.getEditLayer(), objects));
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
-        setEnabled(newRelation != null && Main.map.mapView.getEditLayer() != null);
+        setEnabled(newRelation != null && Main.main.getEditLayer() != null);
     }
 
     protected void downloadMembers( Relation rel ) {
         if( !rel.isNew() ) {
-            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.map.mapView.getEditLayer()));
+            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.main.getEditLayer()));
         }
     }
 
@@ -63,6 +63,6 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         Set<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
         ret.addAll(rel.getIncompleteMembers());
         if( ret.isEmpty() ) return;
-        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.map.mapView.getEditLayer()));
+        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));
     }
 }

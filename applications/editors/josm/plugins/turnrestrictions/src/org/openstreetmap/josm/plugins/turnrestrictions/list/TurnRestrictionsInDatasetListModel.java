@@ -76,7 +76,7 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
     /* interface DataSetListener                                                   */
     /* --------------------------------------------------------------------------- */   
     public void dataChanged(DataChangedEvent event) {       
-        OsmDataLayer layer = Main.map.mapView.getEditLayer();
+        OsmDataLayer layer = Main.main.getEditLayer();
         if (layer == null) {
             setTurnRestrictions(null);
         } else {

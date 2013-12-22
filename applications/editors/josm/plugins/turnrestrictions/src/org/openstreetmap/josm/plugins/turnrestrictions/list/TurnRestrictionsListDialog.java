@@ -204,7 +204,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
         }
         protected Collection<RelationMember> getMembersForCurrentSelection(Relation r) {
             Collection<RelationMember> members = new HashSet<RelationMember>();
-            Collection<OsmPrimitive> selection = Main.map.mapView.getEditLayer().data.getSelected();
+            Collection<OsmPrimitive> selection = Main.main.getEditLayer().data.getSelected();
             for (RelationMember member: r.getMembers()) {
                 if (selection.contains(member.getMember())) {
                     members.add(member);

@@ -31,7 +31,7 @@ public class EditChosenRelationAction extends AbstractAction implements ChosenRe
     public void actionPerformed( ActionEvent e ) {
         Relation relation = rel.get();
         if( relation == null ) return;
-        RelationEditor.getEditor(Main.map.mapView.getEditLayer(), relation, null).setVisible(true);
+        RelationEditor.getEditor(Main.main.getEditLayer(), relation, null).setVisible(true);
     }
 
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {

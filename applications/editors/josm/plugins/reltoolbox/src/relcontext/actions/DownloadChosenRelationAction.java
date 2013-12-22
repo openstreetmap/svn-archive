@@ -61,7 +61,7 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
 
     protected void downloadMembers( Relation rel ) {
         if( !rel.isNew() ) {
-            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.map.mapView.getEditLayer()));
+            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.main.getEditLayer()));
         }
     }
 
@@ -70,6 +70,6 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
         Set<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
         ret.addAll(rel.getIncompleteMembers());
         if( ret.isEmpty() ) return;
-        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.map.mapView.getEditLayer()));
+        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));
     }
 }

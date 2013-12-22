@@ -31,22 +31,14 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
         file = new File(filename);
     }
 
-    /* (non-Javadoc)
-     * @see java.util.TimerTask#run()
-     */
     @Override
     public void run() {
-        if(Main.map == null || Main.map.mapView == null || Main.map.mapView.getEditLayer() == null) {
+        OsmDataLayer layer = Main.main.getEditLayer();
+        if (layer == null) {
             return;
         }
-        OsmDataLayer layer = Main.map.mapView.getEditLayer();
         try {
             DataSet dataset = layer.data;
-
-//            File outFile = layer.associatedFile;
-//            if(outFile == null) {
-//                outFile = file;
-//            }
 
             // write to temporary file, on success, rename tmp file to target file:
             File tmpFile = new File(file.getAbsoluteFile()+".tmp");
@@ -68,6 +60,4 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
                 JOptionPane.ERROR_MESSAGE);
         }
     }
-
-
 }

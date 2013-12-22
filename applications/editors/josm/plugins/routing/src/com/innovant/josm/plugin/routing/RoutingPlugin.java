@@ -173,7 +173,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
 	}
 
 	public void addLayer() {
-		OsmDataLayer osmLayer = Main.map.mapView.getEditLayer();
+		OsmDataLayer osmLayer = Main.main.getEditLayer();
 		if (osmLayer != null) {
 			RoutingLayer layer = new RoutingLayer(tr("Routing") + " [" + osmLayer.getName() + "]", osmLayer);
 			layers.add(layer);

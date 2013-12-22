@@ -242,7 +242,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 if( SwingUtilities.isLeftMouseButton(e) && row >= 0 ) {
                     Relation relation = (Relation)relationsData.getValueAt(row, 0);
                     if( e.getClickCount() > 1 ) {
-                        Main.map.mapView.getEditLayer().data.setSelected(relation);
+                        Main.main.getEditLayer().data.setSelected(relation);
                     }
                 }
             }
@@ -486,8 +486,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         @Override
         public void mouseClicked( MouseEvent e ) {
             if( e.isControlDown() || !(e.getComponent() instanceof JComboBox ) ) // do not use left click handler on combo box
-            if( SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null && Main.map.mapView.getEditLayer() != null ) {
-                Main.map.mapView.getEditLayer().data.setSelected(chosenRelation.get());
+            if( SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null && Main.main.getEditLayer() != null ) {
+                Main.main.getEditLayer().data.setSelected(chosenRelation.get());
             }
         }
 

@@ -27,9 +27,9 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
-import seamap.MapContext;
-import seamap.Renderer;
-import seamap.SeaMap.*;
+import render.MapContext;
+import render.Renderer;
+import s57.S57map.*;
 
 public class MapImage extends ImageryLayer implements ZoomChangeListener, MapContext {
 

@@ -11,25 +11,25 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-import seamap.MapContext;
-import seamap.Renderer;
-import seamap.SeaMap;
-import seamap.SeaMap.*;
+import render.MapContext;
+import render.Renderer;
+import s57.S57map;
+import s57.S57map.*;
 
 public class ShowFrame extends JFrame {
 	
-	SeaMap showMap;
+	S57map showMap;
 	Picture picture;
 
 	class Picture extends JPanel implements MapContext {
 
-		public void drawPicture(OsmPrimitive osm, SeaMap map) {
+		public void drawPicture(OsmPrimitive osm, S57map map) {
 			long id;
 			Feature feature;
 			
 			id = osm.getUniqueId();
 			feature = map.index.get(id);
-			showMap = new SeaMap();
+			showMap = new S57map();
 			showMap.nodes = map.nodes;
 			showMap.edges = map.edges;
 			showMap.areas = map.areas;
@@ -65,7 +65,7 @@ public class ShowFrame extends JFrame {
     pack();
 	}
 	
-	public void showFeature(OsmPrimitive osm, SeaMap map) {
+	public void showFeature(OsmPrimitive osm, S57map map) {
 		picture.drawPicture(osm, map);
 	}
 	

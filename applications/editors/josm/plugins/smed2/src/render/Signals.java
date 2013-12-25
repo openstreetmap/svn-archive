@@ -7,7 +7,7 @@
  * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
  */
 
-package seamap;
+package render;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import s57.S57att.*;
 import s57.S57obj.*;
 import s57.S57val.*;
-import seamap.Renderer.*;
-import seamap.SeaMap.*;
+import s57.S57map.*;
+import render.Renderer.*;
 import symbols.Beacons;
 import symbols.Topmarks;
 import symbols.Symbols.*;

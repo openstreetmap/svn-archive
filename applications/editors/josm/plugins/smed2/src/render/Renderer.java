@@ -7,7 +7,7 @@
  * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
  */
 
-package seamap;
+package render;
 
 import java.awt.*;
 import java.awt.font.*;
@@ -16,11 +16,10 @@ import java.awt.image.*;
 import java.util.*;
 
 import s57.S57val.*;
-import seamap.SeaMap;
-import seamap.SeaMap.*;
-import seamap.SeaMap.Area;
+import s57.S57map;
+import s57.S57map.*;
+import s57.S57map.Area;
 import symbols.Areas;
-import symbols.Harbours;
 import symbols.Symbols;
 import symbols.Symbols.*;
 
@@ -28,10 +27,6 @@ public class Renderer {
 
 	public static final double symbolScale[] = { 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.61, 0.372, 0.227, 0.138, 0.0843, 0.0514, 0.0313, 0.0191, 0.0117, 0.007, 0.138 };
 
-	public static final Color Yland = new Color(0x50b0ff);
-	public static final Color Mline = new Color(0xc480ff);
-	public static final Color Msymb = new Color(0xa30075);
-	
 	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
 	static {
 		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
@@ -66,12 +61,12 @@ public class Renderer {
 	public enum LabelStyle { NONE, RRCT, RECT, ELPS, CIRC, VCLR, PCLR, HCLR }
 
 	static MapContext context;
-	static SeaMap map;
+	static S57map map;
 	static double sScale;
 	static Graphics2D g2;
 	static int zoom;
 
-	public static void reRender(Graphics2D g, int z, double factor, SeaMap m, MapContext c) {
+	public static void reRender(Graphics2D g, int z, double factor, S57map m, MapContext c) {
 		g2 = g;
 		zoom = z;
 		context = c;
@@ -81,7 +76,7 @@ public class Renderer {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 			g2.setStroke(new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-			Rules.rules(map, zoom);
+			Rules.rules();
 		}
 	}
 
@@ -524,7 +519,6 @@ public class Renderer {
 			Point2D next = new Point2D.Double();
 			Point2D curr = new Point2D.Double();
 			Point2D succ = new Point2D.Double();
-			boolean gap = true;
 			boolean piv = false;
 			double len = 0;
 			double angle = 0;
@@ -538,8 +532,7 @@ public class Renderer {
 					piv = true;
 					if (first) {
 						curr = succ = next;
-//						gap = (space > 0);
-//						len = gap ? psize * space * 0.5 : psize;
+//						len = psize;
 						first = false;
 					} else {
 						while (curr.distance(next) >= len) {
@@ -558,10 +551,7 @@ public class Renderer {
 							} else {
 								succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
 							}
-							if (!gap) {
 //								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))), null);
-							}
-							gap = false;
 							curr = succ;
 //							len = psize;
 						}

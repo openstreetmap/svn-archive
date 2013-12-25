@@ -29,8 +29,8 @@ import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
 import s57.S57dat;
-import seamap.SeaMap;
-import seamap.SeaMap.*;
+import s57.S57map;
+import s57.S57map.*;
 
 import panels.PanelMain;
 import panels.ShowFrame;
@@ -39,11 +39,10 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	private static String editor = tr("SeaMap Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;
-	public static S57dat panelS57;
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
 	public MapImage rendering;
-	public SeaMap map = null;
+	public S57map map = null;
 	public DataSet data = null;
 
 	private final DataSetListener dataSetListener = new DataSetListener() {
@@ -121,9 +120,6 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setVisible(true);
 		panelMain = new PanelMain(this);
 		editFrame.add(panelMain);
-		panelS57 = new S57dat();
-		panelS57.setVisible(false);
-		editFrame.add(panelS57);
 
 		showFrame = new ShowFrame(tr("Seamark Inspector"));
 		showFrame.setSize(new Dimension(300, 300));
@@ -205,7 +201,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	}
 
 	void makeMap() {
-		map = new SeaMap();
+		map = new S57map();
 		if (data != null) {
 			for (Node node : data.getNodes()) {
 				map.addNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());

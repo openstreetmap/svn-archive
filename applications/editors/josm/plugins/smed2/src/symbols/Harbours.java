@@ -13,7 +13,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.geom.*;
 
-import seamap.Renderer;
+import render.Rules;
 import symbols.Symbols.*;
 
 public class Harbours {
@@ -38,7 +38,7 @@ public class Harbours {
 	}
 	public static final Symbol Anchorage = new Symbol();
 	static {
-		Anchorage.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, new Scheme(Renderer.Msymb), null)));
+		Anchorage.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
 	}
 	public static final Symbol Bollard = new Symbol();
 	static {
@@ -78,7 +78,7 @@ public class Harbours {
 	public static final Symbol DistanceU = new Symbol();
 	static {
 		DistanceU.add(new Instr(Prim.STRK, new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		DistanceU.add(new Instr(Prim.FILL, Renderer.Msymb));
+		DistanceU.add(new Instr(Prim.FILL, Rules.Msymb));
 		DistanceU.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-11,-11,22,22)));
 	}
 	public static final Symbol Dolphin = new Symbol();
@@ -104,7 +104,7 @@ public class Harbours {
 	public static final Symbol Fishing = new Symbol();
 	static {
 		Fishing.add(new Instr(Prim.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		Fishing.add(new Instr(Prim.FILL, Renderer.Msymb));
+		Fishing.add(new Instr(Prim.FILL, Rules.Msymb));
 		Fishing.add(new Instr(Prim.EARC, new Arc2D.Double(-75,-75,150,150,15,140,Arc2D.OPEN)));
 		Fishing.add(new Instr(Prim.EARC, new Arc2D.Double(-75,-75,150,150,-15,-140,Arc2D.OPEN)));
 		Path2D.Double p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
@@ -116,9 +116,9 @@ public class Harbours {
 	public static final Symbol Harbour = new Symbol();
 	static {
 		Harbour.add(new Instr(Prim.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		Harbour.add(new Instr(Prim.FILL, Renderer.Msymb));
+		Harbour.add(new Instr(Prim.FILL, Rules.Msymb));
 		Harbour.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-75,-75,150,150)));
-		Harbour.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, new Scheme(Renderer.Msymb), null)));
+		Harbour.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
 	}
 	public static final Symbol HarbourMaster = new Symbol();
 	static {
@@ -138,7 +138,7 @@ public class Harbours {
 	}
 	public static final Symbol LandingSteps = new Symbol();
 	static {
-		LandingSteps.add(new Instr(Prim.FILL, Renderer.Msymb));
+		LandingSteps.add(new Instr(Prim.FILL, Rules.Msymb));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-20,-10); p.lineTo(10,20); p.lineTo(20,20); p.lineTo(20,10);
 		p.lineTo(10,10); p.lineTo(10,0); p.lineTo(0,0); p.lineTo(0,-10); p.lineTo(-10,-10); p.lineTo(-10,-20); p.lineTo(-20,-20); p.closePath();
 		LandingSteps.add(new Instr(Prim.PGON, p));
@@ -148,14 +148,14 @@ public class Harbours {
 	public static final Symbol Marina = new Symbol();
 	static {
 		Marina.add(new Instr(Prim.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		Marina.add(new Instr(Prim.FILL, Renderer.Msymb));
-		Marina.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, new Scheme(Renderer.Msymb), null)));
+		Marina.add(new Instr(Prim.FILL, Rules.Msymb));
+		Marina.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
 		Marina.add(new Instr(Prim.EARC, new Arc2D.Double(-80.0,-80.0,160.0,160.0,215.0,-250.0,Arc2D.OPEN)));
 	}
 	public static final Symbol MarinaNF = new Symbol();
 	static {
 		MarinaNF.add(new Instr(Prim.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		MarinaNF.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, new Scheme(Renderer.Msymb), null)));
+		MarinaNF.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
 	}
 	public static final Symbol Pilot = new Symbol();
 	static{

@@ -21,8 +21,8 @@ import org.openstreetmap.josm.Main;
 
 import s57.S57att.Att;
 import s57.S57obj.Obj;
-import seamap.Renderer;
-import seamap.SeaMap.*;
+import s57.S57map.*;
+import render.Renderer;
 import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
@@ -47,7 +47,7 @@ public class PanelMain extends JPanel {
         messageBar.setText("Select file");
         int returnVal = ifc.showOpenDialog(Main.parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-          Smed2Action.panelS57.startImport(ifc.getSelectedFile());
+//          xxx.startImport(ifc.getSelectedFile());
          } else {
            messageBar.setText("");
          }
@@ -63,7 +63,7 @@ public class PanelMain extends JPanel {
         messageBar.setText("Select file");
         int returnVal = efc.showOpenDialog(Main.parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-          Smed2Action.panelS57.startExport(efc.getSelectedFile());
+//          xxx.startExport(efc.getSelectedFile());
          } else {
            messageBar.setText("");
          }
@@ -112,7 +112,7 @@ public class PanelMain extends JPanel {
 		decode = new JTextArea();
 		decode.setBounds(0, 0, 480, 420);
 		decode.setTabSize(1);
-//		add(decode);
+		add(decode);
 	}
 	
 	public void dumpMap() {

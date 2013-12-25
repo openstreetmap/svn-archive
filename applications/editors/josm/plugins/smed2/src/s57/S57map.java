@@ -7,18 +7,18 @@
  * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
  */
 
-package seamap;
+package s57;
 
 import java.util.*;
 
 import s57.S57att;
-import s57.S57att.Att;
+import s57.S57att.*;
 import s57.S57obj;
 import s57.S57obj.*;
 import s57.S57val;
 import s57.S57val.*;
 
-public class SeaMap {
+public class S57map {
 
 	public enum Nflag {
 		ANON,	// Edge inner nodes
@@ -273,7 +273,7 @@ public class SeaMap {
 		}
 	}
 	
-	public SeaMap() {
+	public S57map() {
 		nodes = new NodeTab();
 		edges = new EdgeTab();
 		areas = new AreaTab();

@@ -1,5 +1,7 @@
 package s57;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 
 public class S57dat {
@@ -15,50 +17,11 @@ public class S57dat {
 		}
 	}
 	
-	public enum S57field { DSID, DSSI, DSPM, DSPR, DSRC, DSHT, DSAC, CATD, CATX, DDDF, DDDR, DDDI, DDOM, DDRF, DDSI, DDSC,
-		FRID, FOID, ATTF, NATF, FFPC, FFPT, FSPC, FSPT, VRID, ATTV, VRPC, VRPT, SGCC, SG2D, SG3D, ARCC, AR2D, EL2D, CT2D }
-	public enum S57dsid { RCNM, RCID, EXPP, INTU, DSNM, EDTN, UPDN, UADT, ISDT, STED, PRSP, PSDN, PRED, PROF, AGEN, COMT }
-	public enum S57dssi { DSTR, AALL, NALL, NOMR, NOCR, NOGR, NOLR, NOIN, NOCN, NOED, NOFA }
-	public enum S57dspm { RCNM, RCID, HDAT, VDAT, SDAT, CSCL, DUNO, HUNI, PUNI, COUN, COMF, SOMF, COMT }
-	public enum S57dspr { PROJ, PRP1, PRP2, PRP3, PRP4, FEAS, FNOR, FPMF, COMT }
-	public enum S57dsrc { RPID, RYCO, RXCO, CURP, FPMF, RXVL, RYVL, COMT }
-	public enum S57dsht { RCNM, RCID, PRCO, ESDT, LSDT, DCRT, CODT, COMT }
-	public enum S57dsac { RCNM, RCID, PACC, HACC, SACC, FPMF, COMT }
-	public enum S57catd { RCNM, RCID, FILE, LFIL, VOLM, IMPL, SLAT, WLON, NLAT, ELON, CRCS, COMT }
-	public enum S57catx { RCNM, RCID, NAM1, NAM2, COMT }
-	public enum S57dddf { RCNM, RCID, OORA, OAAC, OACO, OALL, OATY, DEFN, AUTH, COMT }
-	public enum S57dddr { RFTP, RFVL }
-	public enum S57dddi { RCNM, RCID, ATLB, ATDO, ADMU, ADFT, AUTH, COMT }
-	public enum S57ddom { RAVA, DVAL, DVSD, DEFN, AUTH }
-	public enum S57ddrf { RFTP, RFVL }
-	public enum S57ddsi { RCNM, RCID, OBLB }
-	public enum S57ddsc { ATLB, ASET, AUTH }
-	public enum S57frid { RCNM, RCID, PRIM, GRUP, OBJL, RVER, RUIN }
-	public enum S57foid { AGEN, FIDN, FIDS }
-	public enum S57attf { ATTL, ATVL }
-	public enum S57natf { ATTL, ATVL }
-	public enum S57ffpc { FFUI, FFIX, NFPT }
-	public enum S57ffpt { LNAM, RIND, COMT }
-	public enum S57fspc { FSUI, FSIX, NSPT }
-	public enum S57fspt { NAME, ORNT, USAG, MASK }
-	public enum S57vrid { RCNM, RCID, RVER, RUIN }
-	public enum S57attv { ATTL, ATVL }
-	public enum S57vrpc { VPUI, VPIX, NVPT }
-	public enum S57vrpt { NAME, ORNT, USAG, TOPI, MASK }
-	public enum S57sgcc { CCUI, CCIX, CCNC }
-	public enum S57sg2d { YCOO, XCOO }
-	public enum S57sg3d { YCOO, XCOO, VE3D }
-	public enum S57arcc { ATYP, SURF, ORDR, RESO, FPMF }
-	public enum S57ar2d { STPT, CTPT, ENPT, YCOO, XCOO }
-	public enum S57el2d { STPT, CTPT, ENPT, CDPM, CDPR, YCOO, XCOO }
-	public enum S57ct2d { YCOO, XCOO }
-	
-	public enum S57subf { RCNM, RCID, EXPP, INTU, DSNM, EDTN, UPDN, UADT, ISDT, STED, PRSP, PSDN, PRED, PROF, AGEN, COMT, DSTR, AALL, NALL,
-		NOMR, NOCR, NOGR, NOLR, NOIN, NOCN, NOED, NOFA, HDAT, VDAT, SDAT, CSCL, DUNI, HUNI, PUNI, COUN, COMF, SOMF, PROJ, PRP1, PRP2, PRP3, PRP4,
-		FEAS, FNOR, FPMF, RPID, RYCO, RXCO, CURP, RXVL, RYVL, PRCO, ESDT, LSDT, DCRT, CODT, PACC, HACC, SACC, FILE, LFIL, VOLM, IMPL, SLAT, WLON, NLAT, ELON,
-		CRCS, NAM1, NAM2, OORA, OAAC, OACO, OALL, OATY, DEFN, AUTH, RFTP, RFVL, ATLB, ATDO, ADMU, ADFT, RAVA, DVAL, DVSD, OBLB, ASET, PRIM, GRUP, RVER, RUIN,
-		FIDN, FIDS, ATTL, ATVL, FFUI, FFIX, NFPT, LNAM, RIND, FSUI, FSIX, NSPT, NAME, ORNT, USAG, MASK, VPUI, VPIX, NVPT, TOPI, CCUI, CCIX, CCNC, YCOO, XCOO,
-		VE3D, ATYP, SURF, ORDR, RESO, STPT, CTPT, ENPT, CDPM, CDPR }
+	private enum S57subf { RCNM, RCID, EXPP, INTU, DSNM, EDTN, UPDN, UADT, ISDT, STED, PRSP, PSDN, PRED, PROF, AGEN, COMT, DSTR, AALL, NALL, NOMR, NOCR, NOGR, NOLR, NOIN, NOCN,
+		NOED, NOFA, HDAT, VDAT, SDAT, CSCL, DUNI, HUNI, PUNI, COUN, COMF, SOMF, PROJ, PRP1, PRP2, PRP3, PRP4, FEAS, FNOR, FPMF, RPID, RYCO, RXCO, CURP, RXVL, RYVL, PRCO, ESDT,
+		LSDT, DCRT, CODT, PACC, HACC, SACC, FILE, LFIL, VOLM, IMPL, SLAT, WLON, NLAT, ELON, CRCS, NAM1, NAM2, OORA, OAAC, OACO, OALL, OATY, DEFN, AUTH, RFTP, RFVL, ATLB, ATDO,
+		ADMU, ADFT, RAVA, DVAL, DVSD, OBLB, ASET, PRIM, GRUP, OBJL, RVER, RUIN, FIDN, FIDS, ATTL, ATVL, FFUI, FFIX, NFPT, LNAM, RIND, FSUI, FSIX, NSPT, NAME, ORNT, USAG, MASK,
+		VPUI, VPIX, NVPT, TOPI, CCUI, CCIX, CCNC, YCOO, XCOO, VE3D, ATYP, SURF, ORDR, RESO, STPT, CTPT, ENPT, CDPM, CDPR }
 
 	private static final EnumMap<S57subf, S57conv> convs = new EnumMap<S57subf, S57conv>(S57subf.class);
 	static {
@@ -92,19 +55,78 @@ public class S57dat {
 		convs.put(S57subf.ADMU, new S57conv(0,0,Dom.BT)); convs.put(S57subf.ADFT, new S57conv(0,0,Dom.BT)); convs.put(S57subf.RAVA, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.DVAL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.DVSD, new S57conv(0,0,Dom.BT)); convs.put(S57subf.OBLB, new S57conv(5,2,Dom.INT));
 		convs.put(S57subf.ASET, new S57conv(1,1,Dom.AN)); convs.put(S57subf.PRIM, new S57conv(1,1,Dom.AN)); convs.put(S57subf.GRUP, new S57conv(3,1,Dom.INT));
-		convs.put(S57subf.RVER, new S57conv(3,2,Dom.INT)); convs.put(S57subf.RUIN, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FIDN, new S57conv(10,4,Dom.INT));
-		convs.put(S57subf.FIDS, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATTL, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATVL, new S57conv(0,0,Dom.GT));
-		convs.put(S57subf.FFUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FFIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NFPT, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.LNAM, new S57conv(17,8,Dom.AN)); convs.put(S57subf.RIND, new S57conv(0,1,Dom.AN)); convs.put(S57subf.FSUI, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.FSIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NSPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NAME, new S57conv(12,5,Dom.AN));
-		convs.put(S57subf.ORNT, new S57conv(1,1,Dom.AN)); convs.put(S57subf.USAG, new S57conv(1,1,Dom.AN)); convs.put(S57subf.MASK, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.VPUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NVPT, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.TOPI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.CCUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.CCIX, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.CCNC, new S57conv(0,2,Dom.INT)); convs.put(S57subf.YCOO, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.XCOO, new S57conv(0,-4,Dom.REAL));
-		convs.put(S57subf.VE3D, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.ATYP, new S57conv(1,1,Dom.AN)); convs.put(S57subf.SURF, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.ORDR, new S57conv(1,1,Dom.INT)); convs.put(S57subf.RESO, new S57conv(0,4,Dom.REAL)); convs.put(S57subf.STPT, new S57conv(0,0,Dom.CL));
-		convs.put(S57subf.CTPT, new S57conv(0,0,Dom.CL)); convs.put(S57subf.ENPT, new S57conv(0,0,Dom.CL)); convs.put(S57subf.CDPM, new S57conv(0,0,Dom.CL));
-		convs.put(S57subf.CDPR, new S57conv(0,0,Dom.CL));
+		convs.put(S57subf.OBJL, new S57conv(5,2,Dom.INT)); convs.put(S57subf.RVER, new S57conv(3,2,Dom.INT)); convs.put(S57subf.RUIN, new S57conv(1,1,Dom.AN));
+		convs.put(S57subf.FIDN, new S57conv(10,4,Dom.INT)); convs.put(S57subf.FIDS, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATTL, new S57conv(5,2,Dom.INT));
+		convs.put(S57subf.ATVL, new S57conv(0,0,Dom.GT)); convs.put(S57subf.FFUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FFIX, new S57conv(0,2,Dom.INT));
+		convs.put(S57subf.NFPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.LNAM, new S57conv(17,8,Dom.AN)); convs.put(S57subf.RIND, new S57conv(0,1,Dom.AN));
+		convs.put(S57subf.FSUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FSIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NSPT, new S57conv(0,2,Dom.INT));
+		convs.put(S57subf.NAME, new S57conv(12,5,Dom.AN)); convs.put(S57subf.ORNT, new S57conv(1,1,Dom.AN)); convs.put(S57subf.USAG, new S57conv(1,1,Dom.AN));
+		convs.put(S57subf.MASK, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPIX, new S57conv(0,2,Dom.INT));
+		convs.put(S57subf.NVPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.TOPI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.CCUI, new S57conv(1,1,Dom.AN));
+		convs.put(S57subf.CCIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.CCNC, new S57conv(0,2,Dom.INT)); convs.put(S57subf.YCOO, new S57conv(0,-4,Dom.REAL));
+		convs.put(S57subf.XCOO, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.VE3D, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.ATYP, new S57conv(1,1,Dom.AN));
+		convs.put(S57subf.SURF, new S57conv(1,1,Dom.AN)); convs.put(S57subf.ORDR, new S57conv(1,1,Dom.INT)); convs.put(S57subf.RESO, new S57conv(0,4,Dom.REAL));
+		convs.put(S57subf.STPT, new S57conv(0,0,Dom.CL)); convs.put(S57subf.CTPT, new S57conv(0,0,Dom.CL)); convs.put(S57subf.ENPT, new S57conv(0,0,Dom.CL));
+		convs.put(S57subf.CDPM, new S57conv(0,0,Dom.CL)); convs.put(S57subf.CDPR, new S57conv(0,0,Dom.CL));
+	}
+	
+	public enum S57field { DSID, DSSI, DSPM, DSPR, DSRC, DSHT, DSAC, CATD, CATX, DDDF, DDDR, DDDI, DDOM, DDRF, DDSI, DDSC,
+		FRID, FOID, ATTF, NATF, FFPC, FFPT, FSPC, FSPT, VRID, ATTV, VRPC, VRPT, SGCC, SG2D, SG3D, ARCC, AR2D, EL2D, CT2D }
+	
+	private static ArrayList<S57subf> S57dsid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.EXPP, S57subf.INTU, S57subf.DSNM, S57subf.EDTN, S57subf.UPDN,
+			S57subf.UADT, S57subf.ISDT, S57subf.STED, S57subf.PRSP, S57subf.PSDN, S57subf.PRED, S57subf.PROF, S57subf.AGEN, S57subf.COMT));
+	private static ArrayList<S57subf> S57dssi = new ArrayList<S57subf>(Arrays.asList(S57subf.DSTR, S57subf.AALL, S57subf.NALL, S57subf.NOMR, S57subf.NOCR, S57subf.NOGR, S57subf.NOLR,
+			S57subf.NOIN, S57subf.NOCN, S57subf.NOED, S57subf.NOFA ));
+	private static ArrayList<S57subf> S57dspm = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.HDAT, S57subf.VDAT, S57subf.SDAT, S57subf.CSCL, S57subf.DUNI,
+			S57subf.HUNI, S57subf.PUNI, S57subf.COUN, S57subf.COMF, S57subf.SOMF, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dspr = new ArrayList<S57subf>(Arrays.asList(S57subf.PROJ, S57subf.PRP1, S57subf.PRP2, S57subf.PRP3, S57subf.PRP4, S57subf.FEAS, S57subf.FNOR,
+			S57subf.FPMF, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dsrc = new ArrayList<S57subf>(Arrays.asList(S57subf.RPID, S57subf.RYCO, S57subf.RXCO, S57subf.CURP, S57subf.FPMF, S57subf.RXVL, S57subf.RYVL,
+			S57subf.COMT ));
+	private static ArrayList<S57subf> S57dsht = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRCO, S57subf.ESDT, S57subf.LSDT, S57subf.DCRT, S57subf.CODT, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dsac = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PACC, S57subf.HACC, S57subf.SACC, S57subf.FPMF, S57subf.COMT ));
+	private static ArrayList<S57subf> S57catd = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.FILE, S57subf.LFIL, S57subf.VOLM, S57subf.IMPL, S57subf.SLAT,
+			S57subf.WLON, S57subf.NLAT, S57subf.ELON, S57subf.CRCS, S57subf.COMT ));
+	private static ArrayList<S57subf> S57catx = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.NAM1, S57subf.NAM2, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dddf = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OORA, S57subf.OAAC, S57subf.OACO, S57subf.OALL, S57subf.OATY,
+			S57subf.DEFN, S57subf.AUTH, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dddr = new ArrayList<S57subf>(Arrays.asList(S57subf.RFTP, S57subf.RFVL ));
+	private static ArrayList<S57subf> S57dddi = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.ATLB, S57subf.ATDO, S57subf.ADMU, S57subf.ADFT, S57subf.AUTH, S57subf.COMT ));
+	private static ArrayList<S57subf> S57ddom = new ArrayList<S57subf>(Arrays.asList(S57subf.RAVA, S57subf.DVAL, S57subf.DVSD, S57subf.DEFN, S57subf.AUTH ));
+	private static ArrayList<S57subf> S57ddrf = new ArrayList<S57subf>(Arrays.asList(S57subf.RFTP, S57subf.RFVL ));
+	private static ArrayList<S57subf> S57ddsi = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OBLB ));
+	private static ArrayList<S57subf> S57ddsc = new ArrayList<S57subf>(Arrays.asList(S57subf.ATLB, S57subf.ASET, S57subf.AUTH ));
+	private static ArrayList<S57subf> S57frid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRIM, S57subf.GRUP, S57subf.OBJL, S57subf.RVER, S57subf.RUIN ));
+	private static ArrayList<S57subf> S57foid = new ArrayList<S57subf>(Arrays.asList(S57subf.AGEN, S57subf.FIDN, S57subf.FIDS ));
+	private static ArrayList<S57subf> S57attf = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
+	private static ArrayList<S57subf> S57natf = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
+	private static ArrayList<S57subf> S57ffpc = new ArrayList<S57subf>(Arrays.asList(S57subf.FFUI, S57subf.FFIX, S57subf.NFPT ));
+	private static ArrayList<S57subf> S57ffpt = new ArrayList<S57subf>(Arrays.asList(S57subf.LNAM, S57subf.RIND, S57subf.COMT ));
+	private static ArrayList<S57subf> S57fspc = new ArrayList<S57subf>(Arrays.asList(S57subf.FSUI, S57subf.FSIX, S57subf.NSPT ));
+	private static ArrayList<S57subf> S57fspt = new ArrayList<S57subf>(Arrays.asList(S57subf.NAME, S57subf.ORNT, S57subf.USAG, S57subf.MASK ));
+	private static ArrayList<S57subf> S57vrid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.RVER, S57subf.RUIN ));
+	private static ArrayList<S57subf> S57attv = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
+	private static ArrayList<S57subf> S57vrpc = new ArrayList<S57subf>(Arrays.asList(S57subf.VPUI, S57subf.VPIX, S57subf.NVPT ));
+	private static ArrayList<S57subf> S57vrpt = new ArrayList<S57subf>(Arrays.asList(S57subf.NAME, S57subf.ORNT, S57subf.USAG, S57subf.TOPI, S57subf.MASK ));
+	private static ArrayList<S57subf> S57sgcc = new ArrayList<S57subf>(Arrays.asList(S57subf.CCUI, S57subf.CCIX, S57subf.CCNC ));
+	private static ArrayList<S57subf> S57sg2d = new ArrayList<S57subf>(Arrays.asList(S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57sg3d = new ArrayList<S57subf>(Arrays.asList(S57subf.YCOO, S57subf.XCOO, S57subf.VE3D ));
+	private static ArrayList<S57subf> S57arcc = new ArrayList<S57subf>(Arrays.asList(S57subf.ATYP, S57subf.SURF, S57subf.ORDR, S57subf.RESO, S57subf.FPMF ));
+	private static ArrayList<S57subf> S57ar2d = new ArrayList<S57subf>(Arrays.asList(S57subf.STPT, S57subf.CTPT, S57subf.ENPT, S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57el2d = new ArrayList<S57subf>(Arrays.asList(S57subf.STPT, S57subf.CTPT, S57subf.ENPT, S57subf.CDPM, S57subf.CDPR, S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57ct2d = new ArrayList<S57subf>(Arrays.asList(S57subf.YCOO, S57subf.XCOO ));
+	
+	private static final EnumMap<S57field, ArrayList<S57subf>> fields = new EnumMap<S57field, ArrayList<S57subf>>(S57field.class);
+	static {
+		fields.put(S57field.DSID, S57dsid); fields.put(S57field.DSSI, S57dssi); fields.put(S57field.DSID, S57dspm); fields.put(S57field.DSID, S57dspr);
+		fields.put(S57field.DSID, S57dsrc); fields.put(S57field.DSID, S57dsht); fields.put(S57field.DSID, S57dsac); fields.put(S57field.DSID, S57catd);
+		fields.put(S57field.DSID, S57catx); fields.put(S57field.DSID, S57dddf); fields.put(S57field.DSID, S57dddr); fields.put(S57field.DSID, S57dddi);
+		fields.put(S57field.DSID, S57ddom); fields.put(S57field.DSID, S57ddrf); fields.put(S57field.DSID, S57ddsi); fields.put(S57field.DSID, S57ddsc);
+		fields.put(S57field.DSID, S57frid); fields.put(S57field.DSID, S57foid); fields.put(S57field.DSID, S57attf); fields.put(S57field.DSID, S57natf);
+		fields.put(S57field.DSID, S57ffpc); fields.put(S57field.DSID, S57ffpt); fields.put(S57field.DSID, S57fspc); fields.put(S57field.DSID, S57fspt);
+		fields.put(S57field.DSID, S57vrid); fields.put(S57field.DSID, S57attv); fields.put(S57field.DSID, S57vrpc); fields.put(S57field.DSID, S57vrpt);
+		fields.put(S57field.DSID, S57sgcc); fields.put(S57field.DSID, S57sg2d); fields.put(S57field.DSID, S57sg3d); fields.put(S57field.DSID, S57arcc);
+		fields.put(S57field.DSID, S57ar2d); fields.put(S57field.DSID, S57el2d); fields.put(S57field.DSID, S57ct2d); 
 	}
 
 }

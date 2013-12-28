@@ -18,7 +18,7 @@
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-    <property name="plugin.author" value="Holger Mappt"/>
+    <property name="plugin.author" value="holgermappt"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.photoadjust.PhotoAdjustPlugin"/>
     <property name="plugin.description" value="Make photos movable and position them on the map."/>
     <property name="plugin.icon" value="images/photoadjust.png"/>
@@ -30,10 +30,11 @@
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.javadoc.dir" location="javadoc"/>
-    <property name="gettexttasks.jar" value="../../i18n/lib/gettext-ant-tasks-0.9.7.jar"/>
 	
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
+    <!-- ** internationalization ** -->
+    <import file="i18n/build-i18n.xml"/>
 
     <!--
     **********************************************************
@@ -51,39 +52,7 @@
         </javadoc>
     </target>
 
-    <!--
-    **********************************************************
-    ** gettext - string extraction and merge
-    **********************************************************
-    -->
-    <target name="gettext-init" description="Loads the Ant gettext and contrib tasks.">
-        <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
-    </target>
-    <target name="pot" description="Extract translatable strings from source." depends="gettext-init">
-        <mkdir dir="po"/>
-        <gettext-extract keysFile="${ant.project.name}.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <fileset dir="src" includes="**/*.java"/>
-        </gettext-extract>
-        <echo file="po/${ant.project.name}.pot" append="true">
-#. Plugin ${ant.project.name}
-#: build.xml:1
-msgid "${plugin.description}"
-msgstr ""
-</echo>
-    </target>
-    <target name="pomerge" description="Merge extracted strings into language files.">
-        <exec executable="perl">
-            <arg line="pomerge.pl"/>
-        </exec>
-    </target>
-    <target name="poimport" description="Import the PO files from the tarball launchpad-export.tar.gz exported from Launchpad.">
-        <exec executable="perl">
-            <arg line="poimport.pl"/>
-        </exec>
-    </target>
-    <target name="lang" description="Prepare *.lang files in data directory.">
-        <exec executable="perl">
-            <arg line="../../i18n/i18n.pl data po/*.po"/>
-        </exec>
+    <target name="additional-manifest">
+        <antcall target="mftrans"/>
     </target>
 </project>

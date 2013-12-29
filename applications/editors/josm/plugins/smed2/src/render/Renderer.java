@@ -387,16 +387,22 @@ public class Renderer {
 		}
 	}
 
-	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg) {
-		labelText(feature, str, font, style, fg, null, null);
+	public static void labelText(Feature feature, String str, Font font, Color tc) {
+		labelText(feature, str, font, tc, LabelStyle.NONE, null, null, null);
 	}
-	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg) {
-		labelText(feature, str, font, style, fg, bg, null);
+	public static void labelText(Feature feature, String str, Font font, Color tc, Delta delta) {
+		labelText(feature, str, font, tc, LabelStyle.NONE, null, null, delta);
 	}
-	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Delta delta) {
-		labelText(feature, str, font, style, fg, null, delta);
+	public static void labelText(Feature feature, String str, Font font, Color tc, LabelStyle style, Color fg) {
+		labelText(feature, str, font, tc, style, fg, null, null);
 	}
-	public static void labelText(Feature feature, String str, Font font, LabelStyle style, Color fg, Color bg, Delta delta) {
+	public static void labelText(Feature feature, String str, Font font, Color tc, LabelStyle style, Color fg, Color bg) {
+		labelText(feature, str, font, tc, style, fg, bg, null);
+	}
+	public static void labelText(Feature feature, String str, Font font, Color tc, LabelStyle style, Color fg, Delta delta) {
+		labelText(feature, str, font, tc, style, fg, null, delta);
+	}
+	public static void labelText(Feature feature, String str, Font font, Color tc, LabelStyle style, Color fg, Color bg, Delta delta) {
 		if (delta == null) delta = new Delta(Handle.CC);
 		if (bg == null) bg = new Color(0x00000000, true);
 		if ((str == null) || (str.isEmpty())) str = " ";
@@ -490,7 +496,7 @@ public class Renderer {
 			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
 			break;
 		}
-		label.add(new Instr(Prim.TEXT, new Caption(str, font, fg, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
+		label.add(new Instr(Prim.TEXT, new Caption(str, font, tc, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, delta);
 	}

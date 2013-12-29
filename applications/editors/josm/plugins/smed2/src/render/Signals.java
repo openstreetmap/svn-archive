@@ -63,7 +63,7 @@ public class Signals {
 			break;
 		}
 		if ((Renderer.zoom >= 15) && !bstr.isEmpty()) {
-			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -30)));
+			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40),Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -30)));
 		}
 	}
 
@@ -174,10 +174,10 @@ public class Signals {
 		}
 		if (Renderer.zoom >= 15) {
 			if (vais) {
-				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 			}
 			if (!bstr.isEmpty()) {
-				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
+				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
 			}
 		}
 	}

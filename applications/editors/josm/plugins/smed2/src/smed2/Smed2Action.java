@@ -28,7 +28,6 @@ import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
-import s57.S57dat;
 import s57.S57map;
 import s57.S57map.*;
 

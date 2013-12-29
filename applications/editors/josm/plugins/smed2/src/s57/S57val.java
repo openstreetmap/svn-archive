@@ -25,11 +25,11 @@ public class S57val {
 		}
 	}
 	
-	public static class AttVal {
+	public static class AttVal<V> {
 		public Att att;
 		public Conv conv;
-		public Object val;
-		AttVal(Att a, Conv c, Object v) {
+		public V val;
+		AttVal(Att a, Conv c, V v) {
 			att = a; conv = c; val = v;
 		}
 	}
@@ -1140,7 +1140,7 @@ public class S57val {
 	}
 
 	
-	public static String stringValue(AttVal attval) {                  // Convert OSeaM value object to OSeaM attribute value string
+	public static String stringValue(AttVal<?> attval) {                  // Convert OSeaM value object to OSeaM attribute value string
 		switch (attval.conv) {
 		case A:
 		case S:
@@ -1176,35 +1176,35 @@ public class S57val {
 		return unkn;
 	}
 
-	public static AttVal convertValue(String val, Att att) { 				// Convert OSeaM attribute value string to OSeaM value object
+	public static AttVal<?> convertValue(String val, Att att) { 				// Convert OSeaM attribute value string to OSeaM value object
 		switch (keys.get(att).conv) {
 		case A:
 		case S:
-			return new AttVal(att, Conv.S, val);
+			return new AttVal<String>(att, Conv.S, val);
 		case E:
-			return new AttVal(att, Conv.E, enumValue(val, att));
+			return new AttVal<Enum<?>>(att, Conv.E, enumValue(val, att));
 		case L:
 			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
 			for (String item : val.split(";")) {
 				list.add(enumValue(item, att));
 			}
-			return new AttVal(att, Conv.L, list);
+			return new AttVal<ArrayList<?>>(att, Conv.L, list);
 		case I:
 			try {
 				long i = Long.parseLong(val);
-				return new AttVal(att, Conv.I, i);
+				return new AttVal<Long>(att, Conv.I, i);
 			} catch (Exception e) {
 				break;
 			}
 		case F:
 			try {
 				double f = Double.parseDouble(val);
-				return new AttVal(att, Conv.F, f);
+				return new AttVal<Double>(att, Conv.F, f);
 			} catch (Exception e) {
 				break;
 			}
 		}
-		return new AttVal(att, keys.get(att).conv, null);
+		return new AttVal<>(att, keys.get(att).conv, null);
 	}
 
 }

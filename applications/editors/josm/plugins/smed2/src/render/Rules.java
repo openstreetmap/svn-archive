@@ -189,7 +189,7 @@ public class Rules {
 			else
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8, new float[] { 25, 25 }));
 			if ((Renderer.zoom >= 12) && (name != null))
-				Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), LabelStyle.NONE, Color.black);
+				Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), Color.black);
 			break;
 		case FAIRWY:
 			if (feature.area > 2.0) {
@@ -217,7 +217,7 @@ public class Rules {
 				Renderer.symbol(feature, Areas.WindFarm);
 				Renderer.lineVector(feature, new LineStyle(Color.black, 20, new float[] { 40, 40 }));
 				if ((Renderer.zoom >= 15) && (name != null))
-					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
+					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 10)));
 			}
 			break;
 		case RESARE:
@@ -235,7 +235,7 @@ public class Rules {
 					if (feature.flag == Fflag.LINE) {
 						Renderer.lineText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
 					} else {
-						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
 					}
 				break;
 			case SEA_BAY:
@@ -243,7 +243,7 @@ public class Rules {
 					if (feature.flag == Fflag.LINE) {
 						Renderer.lineText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
 					} else {
-						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
 					}
 				break;
 			case SEA_SHOL:
@@ -251,8 +251,8 @@ public class Rules {
 					if (feature.flag == Fflag.AREA) {
 						Renderer.lineVector(feature, new LineStyle(new Color(0xc480ff), 4, new float[] { 25, 25 }));
 						if (name != null) {
-							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
-							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), LabelStyle.NONE, Color.black, new Delta(Handle.BC));
+							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC));
 						}
 					} else if (feature.flag == Fflag.LINE) {
 						if (name != null) {
@@ -261,8 +261,8 @@ public class Rules {
 						}
 					} else {
 						if (name != null) {
-							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
-							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), LabelStyle.NONE, Color.black, new Delta(Handle.BC));
+							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
+							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC));
 						}
 					}
 				}
@@ -270,7 +270,7 @@ public class Rules {
 			case SEA_GAT:
 			case SEA_NRRW:
 				if ((Renderer.zoom >= 12) && (name != null))
-					Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), LabelStyle.NONE, Color.black);
+					Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), Color.black);
 				break;
 			default:
 				break;
@@ -285,7 +285,7 @@ public class Rules {
 				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, null, 10, Mline);
 			}
 			if ((Renderer.zoom >= 15) && (name != null))
-				Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
+				Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 			break;
 		default:
 			break;
@@ -293,40 +293,55 @@ public class Rules {
 	}
 	
 	private static void beacons(Feature feature) {
-		BcnSHP shape = (BcnSHP) getAttVal(feature, feature.type, 0, Att.BCNSHP);
-		if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY)) && (feature.type == Obj.BCNLAT)) {
-			CatLAM cat = (CatLAM) getAttVal(feature, feature.type, 0, Att.CATLAM);
-			switch (cat) {
-			case LAM_PORT:
-				if (shape == BcnSHP.BCN_PRCH)
-					Renderer.symbol(feature, Beacons.PerchPort);
-				else
-					Renderer.symbol(feature, Beacons.WithyPort);
-				break;
-			case LAM_STBD:
-				if (shape == BcnSHP.BCN_PRCH)
-					Renderer.symbol(feature, Beacons.PerchStarboard);
-				else
-					Renderer.symbol(feature, Beacons.WithyStarboard);
-				break;
-			default:
-				Renderer.symbol(feature, Beacons.Stake, getScheme(feature, feature.type));
+		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR)))) {
+			BcnSHP shape = (BcnSHP) getAttVal(feature, feature.type, 0,
+					Att.BCNSHP);
+			if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY))
+					&& (feature.type == Obj.BCNLAT)) {
+				CatLAM cat = (CatLAM) getAttVal(feature, feature.type, 0,
+						Att.CATLAM);
+				switch (cat) {
+				case LAM_PORT:
+					if (shape == BcnSHP.BCN_PRCH)
+						Renderer.symbol(feature, Beacons.PerchPort);
+					else
+						Renderer.symbol(feature, Beacons.WithyPort);
+					break;
+				case LAM_STBD:
+					if (shape == BcnSHP.BCN_PRCH)
+						Renderer.symbol(feature, Beacons.PerchStarboard);
+					else
+						Renderer.symbol(feature, Beacons.WithyStarboard);
+					break;
+				default:
+					Renderer.symbol(feature, Beacons.Stake,
+							getScheme(feature, feature.type));
+				}
+			} else {
+				Renderer.symbol(feature, Beacons.Shapes.get(shape),
+						getScheme(feature, feature.type));
+				if (feature.objs.get(Obj.TOPMAR) != null)
+					Renderer.symbol(
+							feature,
+							Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR)
+									.get(0).get(Att.TOPSHP).val),
+							getScheme(feature, Obj.TOPMAR),
+							Topmarks.BeaconDelta);
 			}
-		} else {
-			Renderer.symbol(feature, Beacons.Shapes.get(shape), getScheme(feature, feature.type));
-			if (feature.objs.get(Obj.TOPMAR) != null)
-				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.TOPMAR), Topmarks.BeaconDelta);
+			Signals.addSignals(feature);
 		}
-		Signals.addSignals(feature);
 	}
 	
 	private static void buoys(Feature feature) {
-		BoySHP shape = (BoySHP) getAttVal(feature, feature.type, 0, Att.BOYSHP);
-		Renderer.symbol(feature, Buoys.Shapes.get(shape), getScheme(feature, feature.type));
-		if (hasObject(feature, Obj.TOPMAR)) {
-			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
+		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BOYLAT) || (feature.type == Obj.BOYCAR)))) {
+			BoySHP shape = (BoySHP) getAttVal(feature, feature.type, 0, Att.BOYSHP);
+			Renderer.symbol(feature, Buoys.Shapes.get(shape), getScheme(feature, feature.type));
+			if (hasObject(feature, Obj.TOPMAR)) {
+				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val),
+						getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
+			}
+			Signals.addSignals(feature);
 		}
-		Signals.addSignals(feature);
 	}
 	
 	private static void bridges(Feature feature) {
@@ -357,12 +372,12 @@ public class Rules {
 					}
 				}
 				if (hstr.isEmpty() && !vstr.isEmpty()) {
-					Renderer.labelText(feature, vstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.CC));
+					Renderer.labelText(feature, vstr, new Font("Arial", Font.PLAIN, 30), Color.black, LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.CC));
 				} else if (!hstr.isEmpty() && !vstr.isEmpty()) {
-					Renderer.labelText(feature, vstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.BC));
-					Renderer.labelText(feature, hstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.TC));
+					Renderer.labelText(feature, vstr, new Font("Arial", Font.PLAIN, 30), Color.black, LabelStyle.VCLR, Color.black, Color.white, new Delta(Handle.BC));
+					Renderer.labelText(feature, hstr, new Font("Arial", Font.PLAIN, 30), Color.black, LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.TC));
 				} else if (!hstr.isEmpty() && vstr.isEmpty()) {
-					Renderer.labelText(feature, hstr, new Font("Arial", Font.PLAIN, 30), LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.CC));
+					Renderer.labelText(feature, hstr, new Font("Arial", Font.PLAIN, 30), Color.black, LabelStyle.HCLR, Color.black, Color.white, new Delta(Handle.CC));
 				}
 			}
 		}
@@ -381,9 +396,9 @@ public class Rules {
 				}
 				if (atts != null) {
 					if (atts.containsKey(Att.VERCLR)) {
-						Renderer.labelText(feature, String.valueOf((Double) atts.get(Att.VERCLR).val), new Font("Arial", Font.PLAIN, 50), LabelStyle.VCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
+						Renderer.labelText(feature, String.valueOf((Double) atts.get(Att.VERCLR).val), new Font("Arial", Font.PLAIN, 50), Color.black, LabelStyle.VCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
 					} else if (atts.containsKey(Att.VERCSA)) {
-						Renderer.labelText(feature, String.valueOf((Double) atts.get(Att.VERCSA).val), new Font("Arial", Font.PLAIN, 50), LabelStyle.PCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
+						Renderer.labelText(feature, String.valueOf((Double) atts.get(Att.VERCSA).val), new Font("Arial", Font.PLAIN, 50), Color.black, LabelStyle.PCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
 					}
 				}
 			}
@@ -426,7 +441,7 @@ public class Rules {
 					}
 				}
 				str += String.format("%1.0f", dist);
-				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 45)));
+				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.CC, AffineTransform.getTranslateInstance(0, 45)));
 			}
 		}
 	}
@@ -463,7 +478,7 @@ public class Rules {
 		case ACHBRT:
 			if (Renderer.zoom >= 14) {
 				Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Mline));
-			Renderer.labelText(feature, name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC));
+			Renderer.labelText(feature, name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Msymb, LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC));
 			}
 			double radius = (Double)getAttVal(feature, Obj.ACHBRT, 0, Att.RADIUS);
 			if (radius != 0) {
@@ -480,11 +495,11 @@ public class Rules {
 					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, null, 10, Mline);
 				}
 				if ((Renderer.zoom >= 15) && ((name) != null)) {
-					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 60), LabelStyle.NONE, Mline, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
+					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 60), Mline, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
 				}
 				ArrayList<StsSTS> sts = (ArrayList<StsSTS>)getAttVal(feature, Obj.ACHARE, 0, Att.STATUS);
 				if ((Renderer.zoom >= 15) && (sts != null) && (sts.contains(StsSTS.STS_RESV))) {
-					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.PLAIN, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
+					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.PLAIN, 50), Mline, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
 				}
 			}
 			ArrayList<CatACH> cats = (ArrayList<CatACH>)getAttVal(feature, Obj.ACHARE, 0, Att.CATACH);
@@ -492,35 +507,36 @@ public class Rules {
 			for (CatACH cat : cats) {
 				switch (cat) {
 				case ACH_DEEP:
-					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_TANK:
-					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_H24P:
-					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), LabelStyle.NONE, Mline, null, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_EXPL:
-					Renderer.symbol(feature, Harbours.Explosives, new Scheme(Mline), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.symbol(feature, Harbours.Explosives, new Scheme(Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_QUAR:
-					Renderer.symbol(feature, Harbours.Hospital, new Scheme(Mline), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.symbol(feature, Harbours.Hospital, new Scheme(Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_SEAP:
-					Renderer.symbol(feature, Areas.Seaplane, new Scheme(Mline), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.symbol(feature, Areas.Seaplane, new Scheme(Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
+				default:
 				}
 			}
 			break;
 		case BERTHS:
 			if (Renderer.zoom >= 14) {
-				Renderer.labelText(feature, name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), LabelStyle.RRCT, Mline, Color.white, null);
+				Renderer.labelText(feature, name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), Msymb, LabelStyle.RRCT, Mline, Color.white, null);
 			}
 			break;
 		case BUISGL:
@@ -895,7 +911,7 @@ public class Rules {
 						verclr = atts.containsKey(Att.VERCSA) ? (Double) atts.get(Att.VERCSA).val : 0;
 					}
 					if (verclr > 0) {
-						Renderer.labelText(feature, String.valueOf(verclr), new Font("Arial", Font.PLAIN, 50), LabelStyle.VCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
+						Renderer.labelText(feature, String.valueOf(verclr), new Font("Arial", Font.PLAIN, 50), Color.black, LabelStyle.VCLR, Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,25)));
 					}
 				}
 			}
@@ -910,7 +926,7 @@ public class Rules {
 			Renderer.symbol(feature, Landmarks.Platform);
 		String name = getName(feature);
 		if ((Renderer.zoom >= 15) && (name != null))
-			Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
+			Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 40), Color.black, new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
 		Signals.addSignals(feature);
 	}
 
@@ -925,7 +941,7 @@ public class Rules {
 				Renderer.lineVector(feature, new LineStyle(Color.black, 4, null, new Color(0xffe000)));
 				String name = getName(feature);
 				if ((Renderer.zoom >= 15) && (name != null))
-					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), LabelStyle.NONE, Color.black, null, null);
+					Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 80), Color.black);
 			}
 		}
 	}
@@ -941,7 +957,7 @@ public class Rules {
 				Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
 			String name = getName(feature);
 			if ((Renderer.zoom >= 10) && (name != null))
-				Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 150), LabelStyle.NONE, new Color(0x80c48080, true), null, null);
+				Renderer.labelText(feature, name, new Font("Arial", Font.BOLD, 150), new Color(0x80c48080, true));
 			break;
 		case TSELNE:
 			Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
@@ -1006,10 +1022,10 @@ public class Rules {
 				break;
 			}
 			if ((Renderer.zoom >= 15) && !str.isEmpty()) {
-				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), LabelStyle.NONE, Color.black, null, new Delta(Handle.LC, AffineTransform.getTranslateInstance(30, 0)));
+				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.LC, AffineTransform.getTranslateInstance(30, 0)));
 			}
+			Signals.addSignals(feature);
 		}
-		Signals.addSignals(feature);
 	}
 
 	private static void transits(Feature feature) {

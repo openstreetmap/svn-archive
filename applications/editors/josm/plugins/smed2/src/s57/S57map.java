@@ -12,6 +12,7 @@ package s57;
 import java.util.*;
 
 import s57.S57att;
+import s57.S57val.AttVal;
 import s57.S57att.*;
 import s57.S57obj;
 import s57.S57obj.*;
@@ -350,7 +351,7 @@ public class S57map {
 					atts = new AttMap();
 					items.put(idx, atts);
 				}
-				AttVal attval = S57val.convertValue(val, att);
+				AttVal<?> attval = S57val.convertValue(val, att);
 				if (attval.val != null)
 					atts.put(att, new AttItem(attval.conv, attval.val));
 			} else {
@@ -362,7 +363,7 @@ public class S57map {
 				} else {
 					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
 					if (att != Att.UNKATT) {
-						AttVal attval = S57val.convertValue(val, att);
+						AttVal<?> attval = S57val.convertValue(val, att);
 						if (attval.val != null)
 							feature.atts.put(att, new AttItem(attval.conv, attval.val));
 					}
@@ -434,6 +435,9 @@ public class S57map {
 				}
 			}
 			areas.put(id, area);
+			break;
+		case UNKN:
+		default:
 			break;
 		}
 		if ((feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {
@@ -555,6 +559,7 @@ public class S57map {
 				llat = lat;
 			}
 			return new Snode((sarc > 0.0 ? slat / sarc : 0.0), (sarc > 0.0 ? slon / sarc : 0.0));
+		default:
 		}
 		return null;
 	}

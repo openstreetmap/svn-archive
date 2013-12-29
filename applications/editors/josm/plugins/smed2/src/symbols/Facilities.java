@@ -14,8 +14,7 @@ import java.awt.Color;
 import java.awt.geom.*;
 import java.util.EnumMap;
 
-import s57.S57val.CatLMK;
-import s57.S57val.CatSCF;
+import s57.S57val.*;
 import symbols.Symbols.*;
 
 public class Facilities {

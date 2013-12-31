@@ -203,6 +203,9 @@ while(my $line = <>)
      || $line =~ /<!--/
      || $line =~ /<\?xml/
      || $line =~ /-->/
+     || $line =~ /<\/?chunk/
+     || $line =~ /<reference/
+     || $line =~ /<preset_link/
      || $comment)
   {
     print "// $line\n";

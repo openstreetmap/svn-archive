@@ -1,8 +1,7 @@
 #! /usr/bin/perl -w
 
 use utf8;
-use encoding "utf8";
-binmode STDERR, ":encoding(utf8)";
+use open qw/:std :encoding(utf8)/;
 use Term::ReadKey;
 use Encode;
 
@@ -216,7 +215,7 @@ sub checkstring
   $v =~ s/'[{}]'//g; # replace all bracketquoting single quotes
   if($v =~ /'/)#&& $la ne "en")
   {
-    warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: $tr\nOriginal text: $en\n";
+    warn "JAVA translation issue for language $la: Mismatching single quotes:\nTranslated text: ".decode("utf8",$tr)."\nOriginal text: ".decode("utf8",$en)."\n";
     $error = 1;
   }
   # Test two - check if there are {..} which should not be
@@ -237,7 +236,7 @@ sub checkstring
   {
     if(!($fmte eq '0' && $fmt eq "" && $cnt == 1)) # Don't warn when a single value is left for first multi-translation
     {
-      warn "JAVA translation issue for language $la ($cnt): Mismatching format entries:\nTranslated text: $tr\nOriginal text: $en\n";
+      warn "JAVA translation issue for language $la ($cnt): Mismatching format entries:\nTranslated text: ".decode("utf8",$tr)."\nOriginal text: ".decode("utf8",$en)."\n";
       $error = 1;
     }
   }

@@ -23,28 +23,47 @@ public class SeaMap {
 	public enum Nflag {
 		ANON,	// Edge inner nodes
 		ISOL,	// Node not part of Edge
-		CONN	// Edge first and last nodes
+		CONN,	// Edge first and last nodes
+		DPTH	// Member of sounding array
 	}
 
 	public class Snode {	// All coordinates in map
 		public double lat;	// Latitude
 		public double lon;	// Longitude
 		public Nflag flg;		// Role of node
+		public double val;	// Sounding value
 
 		public Snode() {
 			flg = Nflag.ANON;
 			lat = 0;
 			lon = 0;
+			val = 0;
 		}
 		public Snode(double ilat, double ilon) {
 			flg = Nflag.ANON;
 			lat = ilat;
 			lon = ilon;
+			val = 0;
 		}
 		public Snode(double ilat, double ilon, Nflag iflg) {
 			lat = ilat;
 			lon = ilon;
 			flg = iflg;
+			val = 0;
+		}
+		public Snode(double ilat, double ilon, Nflag iflg, double ival) {
+			lat = ilat;
+			lon = ilon;
+			flg = iflg;
+			val = ival;
+		}
+	}
+
+	public class Sarray {	// A sounding array
+		public ArrayList<Long> nodes; // Sounding nodes
+
+		public Sarray() {
+			nodes = new ArrayList<Long>();
 		}
 	}
 
@@ -125,6 +144,12 @@ public class SeaMap {
 		}
 	}
 
+	public class DpthTab extends HashMap<Long, Snode> {
+		public DpthTab() {
+			super();
+		}
+	}
+
 	public class EdgeTab extends HashMap<Long, Edge> {
 		public EdgeTab() {
 			super();
@@ -176,6 +201,7 @@ public class SeaMap {
 	}
 
 	public NodeTab nodes;
+	public DpthTab depths;
 	public EdgeTab edges;
 	public AreaTab areas;
 

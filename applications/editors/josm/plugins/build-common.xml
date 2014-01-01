@@ -154,16 +154,43 @@
     **    version.*
     **********************************************************
     -->
-    <target name="revision">
-        <exec append="false" outputproperty="svn.revision.output" executable="svn" failifexecutionfails="false">
+    <!--
+      ** Initializes the REVISION.XML file from SVN information
+    -->
+    <target name="init-svn-revision-xml">
+        <exec append="false" output="REVISION.XML" executable="svn" failifexecutionfails="false" resultproperty="svn.info.result">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
-        <xmlproperty prefix="version" keepRoot="false" collapseAttributes="true">
-            <propertyresource name="svn.revision.output"/>
-        </xmlproperty>
+        <condition property="svn.info.success">
+            <equals arg1="${svn.info.result}" arg2="0" />
+        </condition>
+    </target>
+    <!--
+      ** Initializes the REVISION.XML file from git information
+    -->
+    <target name="init-git-revision-xml" unless="svn.info.success">
+        <exec append="false" output="REVISION.XML" executable="git" failifexecutionfails="false">
+            <arg value="log"/>
+            <arg value="-1"/>
+            <arg value="--grep=git-svn-id"/>
+            <!--
+            %B:  raw body (unwrapped subject and body)
+            %n:  new line
+            %ai: author date, ISO 8601 format
+            -->
+            <arg value="--pretty=format:%B%n%ai"/>
+            <arg value="HEAD"/>
+        </exec>
+        <replaceregexp file="REVISION.XML" flags="s"
+                       match=".*git-svn-id: [^@]*@([0-9]+).*(\d{4}-\d{2}-\d{2}.\d{2}\:\d{2}\:\d{2}\s*[+-]\d{2}:?\d{2})\s*$"
+                       replace="&lt;info&gt;&lt;entry&gt;&lt;commit revision=&quot;\1&quot;&gt;&lt;date&gt;\2&lt;/date&gt;&lt;/commit&gt;&lt;/entry&gt;&lt;/info&gt;"/>
+    </target>
+    <target name="revision" depends="init-svn-revision-xml, init-git-revision-xml">
+      <xmlproperty file="REVISION.XML" prefix="version" keepRoot="false" collapseAttributes="true"/>
+      <delete file="REVISION.XML"/>
     </target>
     <!--
     **********************************************************

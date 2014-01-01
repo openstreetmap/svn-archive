@@ -55,7 +55,35 @@ public class MirroredDownloadAction extends JosmAction {
         if (!dialog.isCanceled()) {
             dialog.rememberSettings();
             Bounds area = dialog.getSelectedDownloadArea();
-            DownloadOsmTask task = new DownloadOsmTask();
+            DownloadOsmTask task = new DownloadOsmTask() {
+
+                protected final String encodePartialUrl(String url, String safePart) {
+                    if (url != null && safePart != null) {
+                        int pos = url.indexOf(safePart);
+                        if (pos > -1) {
+                            pos += safePart.length();
+                            try {
+                                return url.substring(0, pos) + URLEncoder.encode(url.substring(pos), "UTF-8").replaceAll("\\+", "%20");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    return url;
+                }
+
+                @Override
+                protected String modifyUrlBeforeLoad(String url) {
+                    if (url.matches(PATTERN_OVERPASS_API_URL)) {
+                        return encodePartialUrl(url, "/interpreter?data="); // encode only the part after the = sign
+                    } else if (url.matches(PATTERN_OVERPASS_API_XAPI_URL)) {
+                        return encodePartialUrl(url, "/xapi?"); // encode only the part after the ? sign
+                    } else {
+                        return url;
+                    }
+                }
+
+            };
             Future<?> future = task.download(
                     new MirroredDownloadReader(area, dialog.getOverpassType(), dialog.getOverpassQuery()),
                     dialog.isNewLayerRequired(), area, null);

@@ -48,7 +48,7 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 public class TagDialog extends ExtendedDialog
 {
    private static final String APPLY_CHANGES = tr("Apply Changes");
-   private static final String TAG_STREET_OR_PLACE = tr("Use tag 'addr:street' or 'addr:place'");
+   private static final String TAG_STREET_OR_PLACE = tr("Use tag ''addr:street'' or ''addr:place''");
    
    public static final String TAG_BUILDING = "building";
    public static final String TAG_ADDR_COUNTRY = "addr:country";

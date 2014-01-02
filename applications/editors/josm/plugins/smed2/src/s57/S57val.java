@@ -1204,7 +1204,7 @@ public class S57val {
 				break;
 			}
 		}
-		return new AttVal<>(att, keys.get(att).conv, null);
+		return new AttVal<Object>(att, keys.get(att).conv, null);
 	}
 
 }

@@ -27,7 +27,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.gui.jmapviewer.tilesources.AbstractOsmTileSource;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -79,16 +78,6 @@ public class PrintPlugin extends Plugin {
         }
 
         fileMenu.insertSeparator(pos);
-
-        /* Make this plugin's preferences known */
-        Main.pref.putDefault(
-          "print.map-scale", Integer.toString(DEF_MAP_SCALE));
-        Main.pref.putDefault(
-          "print.resolution.dpi", Integer.toString(DEF_RESOLUTION_DPI));
-        Main.pref.putDefault(
-          "print.attribution", AbstractOsmTileSource.DEFAULT_OSM_ATTRIBUTION);
-        Main.pref.putDefault(
-          "print.preview.enabled", new Boolean(false).toString());
 
         restorePrefs(); // Recover after crash if necessary
     }
@@ -174,8 +163,7 @@ public class PrintPlugin extends Plugin {
     }
     
     /**
-     * Undo temporary adjustments to the preferences made by 
-     * adjustPrefs().
+     * Undo temporary adjustments to the preferences made by adjustPrefs().
      */
     public static void restorePrefs() {
         if (Main.pref.getBoolean("print.saved-prefs", false)) {
@@ -200,6 +188,4 @@ public class PrintPlugin extends Plugin {
         Main.pref.put(key, Main.pref.get(savedKey));
         Main.pref.put(savedKey, null);
     }
-    
 }
-

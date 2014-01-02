@@ -235,7 +235,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, std.grid(2, row));
         caption = new JLabel(" 1 :");
         add(caption, std.grid(GBC.RELATIVE, row));
-        int mapScale = (int)Main.pref.getInteger("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
+        int mapScale = Main.pref.getInteger("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
         mapView.setFixedMapScale(mapScale);
         scaleModel = new SpinnerNumberModel(mapScale, 500, 5000000, 500);
         final JSpinner scaleField = new JSpinner(scaleModel);
@@ -264,7 +264,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         caption = new JLabel("ppi");
         add(caption, std.grid(GBC.RELATIVE, row));
         resolutionModel = new SpinnerNumberModel(
-          (int)Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
+          Main.pref.getInteger("print.resolution.dpi", PrintPlugin.DEF_RESOLUTION_DPI),
           30, 1200, 10 );
         final JSpinner resolutionField = new JSpinner(resolutionModel);
         resolutionField.addChangeListener(new ChangeListener() {

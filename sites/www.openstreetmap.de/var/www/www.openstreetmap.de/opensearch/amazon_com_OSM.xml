@@ -1,0 +1,20 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<ShortName>
+Amazon COM with OSM affiliate
+</ShortName>
+<Description>
+Amazon Search Suggestions for Amazon.com with affiliate tag for OpenStreetMap. Using this search will generate some money for the OSM project.
+</Description>
+<InputEncoding>
+UTF-8
+</InputEncoding>
+<Image height="16" width="16" type="image/x-icon">
+http://g-ecx.images-amazon.com/images/G/01/Associates/Apps/Search/favicon._V230744766_.ico
+</Image>
+<Url type="text/html" 
+	rel="results" 
+	template="http://www.amazon.com/s/?tag=osm.org-20&amp;field-keywords={searchTerms}"/>
+<Url type="application/opensearchdescription+xml" 
+	rel="self" 
+	template="http://d2lo25i6d3q8zm.cloudfront.net/browser-plugins/AmazonSearchSuggestionsOSD.MOZUK.xml"/>
+</OpenSearchDescription>

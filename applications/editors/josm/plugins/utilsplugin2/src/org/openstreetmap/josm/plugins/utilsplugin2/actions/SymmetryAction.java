@@ -21,6 +21,8 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.Notification;
+
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -59,12 +61,9 @@ public final class SymmetryAction extends JosmAction {
         }
         
         if (p1==null || p2==null || nodes.size() < 1) {
-            JOptionPane.showMessageDialog(
-                    Main.parent,
-                    tr("Please select at least two nodes for symmetry axis and something else to mirror."),
-                    tr("Information"),
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            new Notification(
+                    tr("Please select at least two nodes for symmetry axis and something else to mirror.")
+                ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
             return;
         }
 

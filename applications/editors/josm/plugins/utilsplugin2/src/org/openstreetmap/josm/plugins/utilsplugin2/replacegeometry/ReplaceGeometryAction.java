@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.Notification;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -35,9 +36,9 @@ public class ReplaceGeometryAction extends JosmAction {
         // There must be two ways selected: one with id > 0 and one new.
         List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
         if (selection.size() != 2) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("This tool replaces geometry of one object with another, and so requires exactly two objects to be selected."),
-                    TITLE, JOptionPane.INFORMATION_MESSAGE);
+            new Notification(
+                    tr("This tool replaces geometry of one object with another, and so requires exactly two objects to be selected.")
+                ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
             return;
         }
 
@@ -54,11 +55,13 @@ public class ReplaceGeometryAction extends JosmAction {
             
             Main.main.undoRedo.add(replaceCommand);
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    ex.getMessage(), TITLE, JOptionPane.INFORMATION_MESSAGE);
+            new Notification(
+                ex.getMessage()
+            ).setIcon(JOptionPane.WARNING_MESSAGE).show(); 
         } catch (ReplaceGeometryException ex) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    ex.getMessage(), TITLE, JOptionPane.INFORMATION_MESSAGE);
+            new Notification(
+                ex.getMessage()
+            ).setIcon(JOptionPane.WARNING_MESSAGE).show(); 
         }
     }
 

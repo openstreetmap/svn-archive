@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.gui.Notification;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -41,9 +43,9 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
                     selectedWays, newWays);
             getCurrentDataSet().addSelected(newWays);
         } else {
-             JOptionPane.showMessageDialog(Main.parent,
-               tr("Please select some ways to find all connected and intersecting ways!"),
-               tr("Warning"), JOptionPane.WARNING_MESSAGE);
+              new Notification(
+                tr("Please select some ways to find all connected and intersecting ways!")
+                ).setIcon(JOptionPane.WARNING_MESSAGE).show();
         }
 
     }

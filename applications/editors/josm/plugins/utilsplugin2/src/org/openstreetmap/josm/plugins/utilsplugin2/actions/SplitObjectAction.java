@@ -24,6 +24,8 @@ import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.Notification;
+
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -62,12 +64,7 @@ public class SplitObjectAction extends JosmAction {
         List<Way> selectedWays = OsmPrimitive.getFilteredList(selection, Way.class);
 
         if (!checkSelection(selection)) {
-            JOptionPane.showMessageDialog(
-                    Main.parent,
-                    tr("The current selection cannot be used for splitting."),
-                    tr("Warning"),
-                    JOptionPane.WARNING_MESSAGE
-            );
+            showWarningNotification(tr("The current selection cannot be used for splitting."));
             return;
         }
 
@@ -117,24 +114,21 @@ public class SplitObjectAction extends JosmAction {
                 }
             }
             if (wayOccurenceCounter.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        trn("The selected node is not in the middle of any way.",
-                                "The selected nodes are not in the middle of any way.",
-                                selectedNodes.size()),
-                                tr("Warning"),
-                                JOptionPane.WARNING_MESSAGE);
+                showWarningNotification(
+                   trn("The selected node is not in the middle of any way.",
+                       "The selected nodes are not in the middle of any way.",
+                        selectedNodes.size()));
                 return;
             }
 
             for (Entry<Way, Integer> entry : wayOccurenceCounter.entrySet()) {
                 if (entry.getValue().equals(selectedNodes.size())) {
                     if (selectedWay != null) {
-                        JOptionPane.showMessageDialog(Main.parent,
-                                trn("There is more than one way using the node you selected. Please select the way also.",
-                                        "There is more than one way using the nodes you selected. Please select the way also.",
-                                        selectedNodes.size()),
-                                        tr("Warning"),
-                                        JOptionPane.WARNING_MESSAGE);
+                        showWarningNotification(
+                            trn("There is more than one way using the node you selected. Please select the way also.",
+                                    "There is more than one way using the nodes you selected. Please select the way also.",
+                                    selectedNodes.size())
+                            );
                         return;
                     }
                     selectedWay = entry.getKey();
@@ -142,10 +136,7 @@ public class SplitObjectAction extends JosmAction {
             }
 
             if (selectedWay == null) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("The selected nodes do not share the same way."),
-                        tr("Warning"),
-                        JOptionPane.WARNING_MESSAGE);
+                showWarningNotification(tr("The selected nodes do not share the same way."));
                 return;
             }
 
@@ -153,28 +144,21 @@ public class SplitObjectAction extends JosmAction {
             // are part of the way and that the way is closed.
         } else if (selectedWay != null && !selectedNodes.isEmpty()) {
             if (!selectedWay.isClosed()) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("The selected way is not closed."),
-                        tr("Warning"),
-                        JOptionPane.WARNING_MESSAGE);
+                showWarningNotification(tr("The selected way is not closed."));
                 return;
             }
             HashSet<Node> nds = new HashSet<Node>(selectedNodes);
             nds.removeAll(selectedWay.getNodes());
             if (!nds.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        trn("The selected way does not contain the selected node.",
-                                "The selected way does not contain all the selected nodes.",
-                                selectedNodes.size()),
-                                tr("Warning"),
-                                JOptionPane.WARNING_MESSAGE);
+                showWarningNotification(
+                    trn("The selected way does not contain the selected node.",
+                            "The selected way does not contain all the selected nodes.",
+                            selectedNodes.size()));
                 return;
             }
         } else if (selectedWay != null && selectedNodes.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("The selected way is not a split way, please select split points or split way too."),
-                    tr("Warning"),
-                    JOptionPane.WARNING_MESSAGE);
+            showWarningNotification(
+                tr("The selected way is not a split way, please select split points or split way too."));
             return;
         }
 
@@ -199,10 +183,8 @@ public class SplitObjectAction extends JosmAction {
                 // the penultimate node is the last unique one
                 (nodeIndex1 == 0 && nodeIndex2 == selectedWay.getNodesCount() - 2) ||
                 (nodeIndex2 == 0 && nodeIndex1 == selectedWay.getNodesCount() - 2)) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("The selected nodes can not be consecutive nodes in the object."),
-                    tr("Warning"),
-                    JOptionPane.WARNING_MESSAGE);
+            showWarningNotification(
+                tr("The selected nodes can not be consecutive nodes in the object."));
             return;
         }
 
@@ -276,5 +258,10 @@ public class SplitObjectAction extends JosmAction {
             return;
         }
         setEnabled(checkSelection(selection));
+    }
+    
+    void showWarningNotification(String msg) {
+        new Notification(msg)
+            .setIcon(JOptionPane.WARNING_MESSAGE).show();
     }
 }

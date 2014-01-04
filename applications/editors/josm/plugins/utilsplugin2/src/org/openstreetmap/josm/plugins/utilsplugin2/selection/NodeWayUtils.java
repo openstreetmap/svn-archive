@@ -17,10 +17,11 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Geometry;
+import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Pair;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 
 /**
@@ -198,10 +199,9 @@ public final class NodeWayUtils {
                  level++;
 //                 System.out.printf("%d: %d ways added to selection intersectiong\n",level,c);
                  if (c>maxWays1) {
-                       JOptionPane.showMessageDialog(Main.parent,
-                                tr("Too many ways are added: {0}!",c),
-                                        tr("Warning"),
-                                        JOptionPane.WARNING_MESSAGE);
+                        new Notification(
+                            tr("Too many ways are added: {0}!",c)
+                            ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
                        return;
                  }
             } while ( c >0 && level < maxLevel );
@@ -223,10 +223,9 @@ public final class NodeWayUtils {
                  level++;
 //                 System.out.printf("%d: %d ways added to selection\n",level,c);
                  if (c>maxWays) {
-                       JOptionPane.showMessageDialog(Main.parent,
-                                tr("Too many ways are added: {0}!",c),
-                                        tr("Warning"),
-                                        JOptionPane.WARNING_MESSAGE);
+                        new Notification(
+                            tr("Too many ways are added: {0}!",c)
+                            ).setIcon(JOptionPane.WARNING_MESSAGE).show();                       
                        return;
                  }
             } while ( c >0 && level < maxLevel );
@@ -266,10 +265,9 @@ public final class NodeWayUtils {
             }
         }
         if (newNodes.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.parent,
-                    tr("Please select two nodes connected by way!"),
-                    tr("Warning"),
-                    JOptionPane.WARNING_MESSAGE);
+                new Notification(
+                    tr("Please select two nodes connected by way!")
+                ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
             }
     }
     

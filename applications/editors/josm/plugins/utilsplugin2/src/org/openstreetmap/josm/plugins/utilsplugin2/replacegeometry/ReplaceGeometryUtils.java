@@ -36,6 +36,8 @@ import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil;
 
 import edu.princeton.cs.algs4.AssignmentProblem;
+import org.openstreetmap.josm.gui.Notification;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  *
@@ -316,9 +318,9 @@ public final class ReplaceGeometryUtils {
                 }
                 catch (Exception e) {
                     useRobust = false;
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr("Exceeded iteration limit for robust method, using simpler method."),
-                            TITLE, JOptionPane.WARNING_MESSAGE);
+                    new Notification(
+                        tr("Exceeded iteration limit for robust method, using simpler method.")
+                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();     
                     nodeAssoc = new HashMap<Node, Node>();
                 }
             }

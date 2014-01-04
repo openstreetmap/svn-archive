@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.gui.Notification;
+
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -34,9 +36,10 @@ public class SelectAllInsideAction extends JosmAction {
         if (!insideSelected.isEmpty()) {
             getCurrentDataSet().addSelected(insideSelected);
         } else{
-        JOptionPane.showMessageDialog(Main.parent,
-               tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"),
-               tr("Warning"), JOptionPane.WARNING_MESSAGE);
+            new Notification(
+                tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"))
+                .setIcon(JOptionPane.WARNING_MESSAGE)
+                .show();  
         }
     }
 

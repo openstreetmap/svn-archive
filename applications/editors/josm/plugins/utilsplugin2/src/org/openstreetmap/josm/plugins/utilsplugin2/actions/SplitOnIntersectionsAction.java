@@ -12,6 +12,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 import java.awt.event.ActionEvent;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.Notification;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -64,11 +65,9 @@ public class SplitOnIntersectionsAction extends JosmAction {
                         splitWays.put(refs.get(0), nodes);
                     }
                 } else if( refs.size() > 1 ) {
-                    JOptionPane.showMessageDialog(
-                            Main.parent,
-                            tr("There are several ways containing one of the splitting nodes. Select ways participating in this operation."),
-                            tr("Warning"),
-                            JOptionPane.WARNING_MESSAGE);
+                    new Notification(
+                        tr("There are several ways containing one of the splitting nodes. Select ways participating in this operation.")
+                        ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
                     return;
                 }
             }

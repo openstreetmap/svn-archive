@@ -21,6 +21,8 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.Notification;
+
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -41,20 +43,12 @@ public class SelectBoundaryAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Node.class);
-        Set<Relation> selectedRelations = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Relation.class);
         
         Set<Way> newWays = new HashSet<Way>();
         
         Way w=null;
-        Relation selectedRelation=null;
         
-        if (selectedRelations.size()==1) {
-            selectedRelation = selectedRelations.iterator().next();
-            if (selectedRelation.getMemberPrimitives().contains(lastUsedStartingWay)) {
-                w=lastUsedStartingWay; 
-                // repeated call for selected relation
-            }
-        } else if (selectedWays.isEmpty()) {
+        if (selectedWays.isEmpty()) {
             if (selectedNodes.size()==1 ) {
                 for (OsmPrimitive p : selectedNodes.iterator().next().getReferrers()) {
                     if (p instanceof Way && p.isSelectable()) {
@@ -80,28 +74,7 @@ public class SelectBoundaryAction extends JosmAction {
         newWays.add(w);
         lastUsedStartingWay = w;
         
-        List<Relation> rels=new ArrayList<Relation>();
-        for (OsmPrimitive p : w.getReferrers()) {
-            if (p instanceof Relation && p.isSelectable()) {
-                rels.add((Relation) p);
-            }
-        }
-        if (selectedRelation!=null) {
-            int idx = rels.indexOf(selectedRelation); 
-            // selectedRelation has number idx in active relation list
-            if (idx>=0) {
-               // select next relation
-               if (idx+1<rels.size())
-                   getCurrentDataSet().setSelected(Arrays.asList(rels.get(idx+1)));
-               else 
-                   getCurrentDataSet().setSelected(Arrays.asList(rels.get(0))); 
-               return;
-            }
-        } else if (rels.size()>0) {
-               getCurrentDataSet().setSelected(Arrays.asList(rels.get(0)));
-               return;
-        }
-        
+                       
         // try going left at each turn
         if (! NodeWayUtils.addAreaBoundary(w, newWays, lastUsedLeft) ) {
             NodeWayUtils.addAreaBoundary(w, newWays, !lastUsedLeft); // try going right at each turn
@@ -110,10 +83,10 @@ public class SelectBoundaryAction extends JosmAction {
         if (!newWays.isEmpty() ) {
             getCurrentDataSet().setSelected(newWays);
         } else{
-        JOptionPane.showMessageDialog(Main.parent,
-               tr("Nothing found. Please select way that is a part of some polygon formed by connected ways"),
-               tr("Warning"), JOptionPane.WARNING_MESSAGE);
-        }
+        new Notification(
+            tr("Nothing found. Please select way that is a part of some polygon formed by connected ways")
+            ).setIcon(JOptionPane.WARNING_MESSAGE).show();            
+    }
     }
 
     @Override

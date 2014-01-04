@@ -9,6 +9,7 @@ import java.util.*;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.gui.Notification;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -35,7 +36,8 @@ public class AlignWayNodesAction extends JosmAction {
             return;
         Way way = ways.iterator().next();
         if( way.getNodesCount() < (way.isClosed() ? 4 : 3) ) {
-            JOptionPane.showMessageDialog(Main.parent, tr("The way with selected nodes can not be straightened."), TITLE, JOptionPane.ERROR_MESSAGE);
+            new Notification(tr("The way with selected nodes can not be straightened."))
+                    .setIcon(JOptionPane.ERROR_MESSAGE).show();
             return;
         }
 
@@ -65,8 +67,8 @@ public class AlignWayNodesAction extends JosmAction {
         }
 
         if( nodes.size() < 3 ) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Internal error: number of nodes is {0}.", nodes.size()),
-                    TITLE, JOptionPane.ERROR_MESSAGE);
+            new Notification(tr("Internal error: number of nodes is {0}.", nodes.size()))
+                .setIcon(JOptionPane.ERROR_MESSAGE).show();
             return;
         }
 

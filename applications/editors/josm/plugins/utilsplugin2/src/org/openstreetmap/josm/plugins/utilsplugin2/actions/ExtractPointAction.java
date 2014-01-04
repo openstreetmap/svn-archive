@@ -19,6 +19,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.gui.Notification;
 
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -36,13 +37,13 @@ public class ExtractPointAction extends JosmAction {
         putValue("help", ht("/Action/ExtractNode"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
         List<Node> selectedNodes = OsmPrimitive.getFilteredList(selection, Node.class);
         if (selectedNodes.size()!=1) {
-             JOptionPane.showMessageDialog(Main.parent,
-                    tr("This tool extracts node from its ways and requires single node to be selected."),
-                    tr("Extract node"), JOptionPane.INFORMATION_MESSAGE);
+            new Notification(tr("This tool extracts node from its ways and requires single node to be selected."))
+                .setIcon(JOptionPane.WARNING_MESSAGE).show();
             return;
         }
         Node nd = selectedNodes.get(0);

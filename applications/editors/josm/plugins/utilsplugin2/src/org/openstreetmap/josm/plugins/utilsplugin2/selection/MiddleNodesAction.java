@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.gui.Notification;
 
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -37,10 +38,9 @@ public class MiddleNodesAction extends JosmAction {
 
         // if no 2 nodes and no ways are selected, do nothing
         if (selectedNodes.size() != 2) {
-            JOptionPane.showMessageDialog(Main.parent,
-                    tr("Please select two nodes connected by way!"),
-                    tr("Warning"),
-                    JOptionPane.WARNING_MESSAGE);
+            new Notification(
+                tr("Please select two nodes connected by way!")
+            ).setIcon(JOptionPane.WARNING_MESSAGE).show();
             return;
         }
 

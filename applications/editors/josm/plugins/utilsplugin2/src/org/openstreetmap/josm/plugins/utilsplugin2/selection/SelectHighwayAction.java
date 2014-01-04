@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.gui.Notification;
+import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -35,7 +37,9 @@ public class SelectHighwayAction extends JosmAction {
         } else if( selectedWays.size() == 2 ) {
             getCurrentDataSet().setSelected(selectHighwayBetween(selectedWays.get(0), selectedWays.get(1)));
         } else {
-            JOptionPane.showMessageDialog(Main.parent, tr("Please select one or two ways for this action"), "Select Highway", JOptionPane.ERROR_MESSAGE);
+            new Notification(
+                tr("Please select one or two ways for this action")
+            ).setIcon(JOptionPane.WARNING_MESSAGE).show();
         }
     }
 

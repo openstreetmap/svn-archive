@@ -22,6 +22,7 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -38,12 +39,10 @@ public class AddIntersectionsAction extends JosmAction {
             return;
         List<Way> ways = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
         if (ways.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    Main.parent,
-                    tr("Please select one or more ways with intersections of segments."),
-                    tr("Information"),
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            new Notification(
+               tr("Please select one or more ways with intersections of segments."))
+               .setIcon(JOptionPane.INFORMATION_MESSAGE) 
+               .show();
             return;
         }
 

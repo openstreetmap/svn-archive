@@ -12,6 +12,9 @@ to place photos that don't have GPS coordinates associated with them
 on the map, thus to geotag them.
 
 
+See i18n/README for plugin translation.
+
+
 Resources:
   images/untaglayer.png:
     combination of:
@@ -44,3 +47,11 @@ Resources:
       License: BSD license (revised, without advertising clause) and
                licence applicable to JOSM (GPL v2 or any later version),
         see https://help.launchpad.net/TermsofUse#Translations_copyright
+  i18n:
+    i18nlib.pm:
+      extract of
+        http://svn.openstreetmap.org/applications/editors/josm/i18n/i18n.pl
+      License: nothing specified, assuming JOSM license: GPL v2 or later
+    other files:
+      self written code
+      License: CC0

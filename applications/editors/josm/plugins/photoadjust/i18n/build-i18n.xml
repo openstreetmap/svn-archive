@@ -6,6 +6,7 @@
 <project name="plugin_i18n" basedir=".">
     <property name="gettexttasks.jar" value="../../i18n/lib/gettext-ant-tasks-0.9.7.jar"/>
     <property name="plugin.po.dir" location="po"/>
+    <property name="poimport.tarball" value="latest"/>
     <property name="plugin.manifest" location="MANIFEST"/>
 
     <target name="gettext-init" description="Loads the Ant gettext and contrib tasks.">
@@ -32,11 +33,12 @@ msgstr ""
             <arg value="${ant.project.name}"/>
         </exec>
     </target>
-    <target name="poimport" description="Import the PO files from the tarball launchpad-export.tar.gz exported from Launchpad.">
+    <target name="poimport" description="Import the PO files from Launchpad tarball.">
         <exec executable="perl">
             <arg value="i18n/poimport.pl"/>
             <arg value="--podir"/>
             <arg value="${plugin.po.dir}"/>
+            <arg value="${poimport.tarball}"/>
         </exec>
     </target>
     <target name="lang" description="Prepare *.lang files in data directory.">
@@ -44,7 +46,8 @@ msgstr ""
             <arg line="../../i18n/i18n.pl data ${plugin.po.dir}/*.po"/>
         </exec>
     </target>
-    <target name="mftrans" description="Add translations of plugin description to manifest.">
+
+    <target name="mftrans" description="Add translations of plugin description to manifest.  Not to be called directly.">
         <echo message="Adding translations to ${plugin.manifest} ..."/>
         <exec executable="perl">
             <arg value="i18n/mftrans.pl"/>

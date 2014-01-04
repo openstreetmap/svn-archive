@@ -25,7 +25,10 @@ my $revision = '$Revision$';
 $revision =~ s/^.*?(\d+).*$/$1/;
 my $agent = "JOSM_Launchpad/1.$revision";
 
+my $debugfile = 0;#1;
 my $cleanall = 0;#1;
+
+open TXTFILE,">","launchpad_debug.log" or die if $debugfile;
 
 if($#ARGV != 0)
 {
@@ -215,30 +218,52 @@ sub potupload
     $mech->get("https://translations.launchpad.net/josm/trunk/+translations-upload");
     chdir("po");
     $mech->submit_form(with_fields => {"file" => "josm.pot"});
-    sleep(10);
-    print "Trying to approve upload.\n";
-    $mech->get("https://translations.launchpad.net/josm/trunk/+imports?field.filter_status=NEEDS_REVIEW&field.filter_extension=pot");
-    my @links;
-    foreach my $line (split("\n", $mech->content()))
+    print "Start approving of upload.\n";
+    for(1..10)
     {
-      push (@links, $1) if $line =~ /href="(\/\+imports\/\d+)"/;
-    }
-    if(!@links)
-    {
-      warn "Upload not found in import list, upload possibly failed.";
-    }
-    elsif(@links > 1)
-    {
-      warn "More than one upload found in import list, cannot approve.";
-    }
-    else
-    {
-      $mech->get("https://translations.launchpad.net$links[0]");
-      $mech->submit_form(form_name => "launchpadform", button => "field.actions.approve");
-      if(!($mech->content() =~ /There are no entries that match this filtering/))
+      eval
       {
-        warn "Approving possibly failed.";
-      }
+        sleep(10);
+        print "Trying to approve upload.\n";
+        $mech->get("https://translations.launchpad.net/josm/trunk/+imports?field.filter_status=NEEDS_REVIEW&field.filter_extension=pot");
+        my @links;
+        foreach my $line (split("\n", $mech->content()))
+        {
+          if($line =~ /href="(\/\+imports\/\d+)"/)
+          {
+            push (@links, $1);
+            print TXTFILE $line if $debugfile;
+          }
+        }
+        if(!@links)
+        {
+          print TXTFILE $mech->content() if $debugfile;
+          die "Upload not found in import list, upload possibly failed.";
+        }
+        elsif(@links > 1)
+        {
+          die "More than one upload found in import list, cannot approve.";
+        }
+        else
+        {
+          $mech->get("https://translations.launchpad.net$links[0]");
+          if($debugfile)
+          {
+            print TXTFILE "LINK: $links[0]\n";
+            $mech->dump_headers(\*TXTFILE);
+            print TXTFILE $mech->content();
+            print TXTFILE $mech->status() ." - ". $mech->uri()."\n"; 
+            $mech->dump_forms(\*TXTFILE);
+          }
+          $mech->submit_form(form_name => "launchpadform", button => "field.actions.approve");
+          if(!($mech->content() =~ /There are no entries that match this filtering/))
+          {
+            die "Approving possibly failed.";
+          }
+        }
+      };
+      print $@ if $@;
+      last if !$@;
     }
 
     chdir("..");

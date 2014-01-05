@@ -17,7 +17,7 @@ public class S57dat {
 		}
 	}
 	
-	private enum S57subf { RCNM, RCID, EXPP, INTU, DSNM, EDTN, UPDN, UADT, ISDT, STED, PRSP, PSDN, PRED, PROF, AGEN, COMT, DSTR, AALL, NALL, NOMR, NOCR, NOGR, NOLR, NOIN, NOCN,
+	public enum S57subf { I8RN, RCNM, RCID, EXPP, INTU, DSNM, EDTN, UPDN, UADT, ISDT, STED, PRSP, PSDN, PRED, PROF, AGEN, COMT, DSTR, AALL, NALL, NOMR, NOCR, NOGR, NOLR, NOIN, NOCN,
 		NOED, NOFA, HDAT, VDAT, SDAT, CSCL, DUNI, HUNI, PUNI, COUN, COMF, SOMF, PROJ, PRP1, PRP2, PRP3, PRP4, FEAS, FNOR, FPMF, RPID, RYCO, RXCO, CURP, RXVL, RYVL, PRCO, ESDT,
 		LSDT, DCRT, CODT, PACC, HACC, SACC, FILE, LFIL, VOLM, IMPL, SLAT, WLON, NLAT, ELON, CRCS, NAM1, NAM2, OORA, OAAC, OACO, OALL, OATY, DEFN, AUTH, RFTP, RFVL, ATLB, ATDO,
 		ADMU, ADFT, RAVA, DVAL, DVSD, OBLB, ASET, PRIM, GRUP, OBJL, RVER, RUIN, FIDN, FIDS, ATTL, ATVL, FFUI, FFIX, NFPT, LNAM, RIND, FSUI, FSIX, NSPT, NAME, ORNT, USAG, MASK,
@@ -25,6 +25,7 @@ public class S57dat {
 
 	private static final EnumMap<S57subf, S57conv> convs = new EnumMap<S57subf, S57conv>(S57subf.class);
 	static {
+		convs.put(S57subf.I8RN, new S57conv(5,2,Dom.INT));
 		convs.put(S57subf.RCNM, new S57conv(2,1,Dom.AN)); convs.put(S57subf.RCID, new S57conv(10,4,Dom.INT)); convs.put(S57subf.EXPP, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.INTU, new S57conv(1,1,Dom.INT)); convs.put(S57subf.DSNM, new S57conv(0,0,Dom.BT)); convs.put(S57subf.EDTN, new S57conv(0,0,Dom.BT));
 		convs.put(S57subf.UPDN, new S57conv(0,0,Dom.BT)); convs.put(S57subf.UADT, new S57conv(8,0,Dom.DATE)); convs.put(S57subf.ISDT, new S57conv(8,0,Dom.DATE));
@@ -70,9 +71,10 @@ public class S57dat {
 		convs.put(S57subf.CDPM, new S57conv(0,0,Dom.CL)); convs.put(S57subf.CDPR, new S57conv(0,0,Dom.CL));
 	}
 	
-	public enum S57field { DSID, DSSI, DSPM, DSPR, DSRC, DSHT, DSAC, CATD, CATX, DDDF, DDDR, DDDI, DDOM, DDRF, DDSI, DDSC,
+	public enum S57field { I8RI, DSID, DSSI, DSPM, DSPR, DSRC, DSHT, DSAC, CATD, CATX, DDDF, DDDR, DDDI, DDOM, DDRF, DDSI, DDSC,
 		FRID, FOID, ATTF, NATF, FFPC, FFPT, FSPC, FSPT, VRID, ATTV, VRPC, VRPT, SGCC, SG2D, SG3D, ARCC, AR2D, EL2D, CT2D }
 	
+	private static ArrayList<S57subf> S57i8ri = new ArrayList<S57subf>(Arrays.asList(S57subf.I8RN));
 	private static ArrayList<S57subf> S57dsid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.EXPP, S57subf.INTU, S57subf.DSNM, S57subf.EDTN, S57subf.UPDN,
 			S57subf.UADT, S57subf.ISDT, S57subf.STED, S57subf.PRSP, S57subf.PSDN, S57subf.PRED, S57subf.PROF, S57subf.AGEN, S57subf.COMT));
 	private static ArrayList<S57subf> S57dssi = new ArrayList<S57subf>(Arrays.asList(S57subf.DSTR, S57subf.AALL, S57subf.NALL, S57subf.NOMR, S57subf.NOCR, S57subf.NOGR, S57subf.NOLR,
@@ -118,15 +120,83 @@ public class S57dat {
 	
 	private static final EnumMap<S57field, ArrayList<S57subf>> fields = new EnumMap<S57field, ArrayList<S57subf>>(S57field.class);
 	static {
-		fields.put(S57field.DSID, S57dsid); fields.put(S57field.DSSI, S57dssi); fields.put(S57field.DSID, S57dspm); fields.put(S57field.DSID, S57dspr);
-		fields.put(S57field.DSID, S57dsrc); fields.put(S57field.DSID, S57dsht); fields.put(S57field.DSID, S57dsac); fields.put(S57field.DSID, S57catd);
-		fields.put(S57field.DSID, S57catx); fields.put(S57field.DSID, S57dddf); fields.put(S57field.DSID, S57dddr); fields.put(S57field.DSID, S57dddi);
-		fields.put(S57field.DSID, S57ddom); fields.put(S57field.DSID, S57ddrf); fields.put(S57field.DSID, S57ddsi); fields.put(S57field.DSID, S57ddsc);
-		fields.put(S57field.DSID, S57frid); fields.put(S57field.DSID, S57foid); fields.put(S57field.DSID, S57attf); fields.put(S57field.DSID, S57natf);
-		fields.put(S57field.DSID, S57ffpc); fields.put(S57field.DSID, S57ffpt); fields.put(S57field.DSID, S57fspc); fields.put(S57field.DSID, S57fspt);
-		fields.put(S57field.DSID, S57vrid); fields.put(S57field.DSID, S57attv); fields.put(S57field.DSID, S57vrpc); fields.put(S57field.DSID, S57vrpt);
-		fields.put(S57field.DSID, S57sgcc); fields.put(S57field.DSID, S57sg2d); fields.put(S57field.DSID, S57sg3d); fields.put(S57field.DSID, S57arcc);
-		fields.put(S57field.DSID, S57ar2d); fields.put(S57field.DSID, S57el2d); fields.put(S57field.DSID, S57ct2d); 
+		fields.put(S57field.I8RI, S57i8ri);
+		fields.put(S57field.DSID, S57dsid); fields.put(S57field.DSSI, S57dssi); fields.put(S57field.DSPM, S57dspm); fields.put(S57field.DSPR, S57dspr);
+		fields.put(S57field.DSRC, S57dsrc); fields.put(S57field.DSHT, S57dsht); fields.put(S57field.DSAC, S57dsac); fields.put(S57field.CATD, S57catd);
+		fields.put(S57field.CATX, S57catx); fields.put(S57field.DDDF, S57dddf); fields.put(S57field.DDDR, S57dddr); fields.put(S57field.DDDI, S57dddi);
+		fields.put(S57field.DDOM, S57ddom); fields.put(S57field.DDRF, S57ddrf); fields.put(S57field.DDSI, S57ddsi); fields.put(S57field.DDSC, S57ddsc);
+		fields.put(S57field.FRID, S57frid); fields.put(S57field.FOID, S57foid); fields.put(S57field.ATTF, S57attf); fields.put(S57field.NATF, S57natf);
+		fields.put(S57field.FFPC, S57ffpc); fields.put(S57field.FFPT, S57ffpt); fields.put(S57field.FFPC, S57fspc); fields.put(S57field.FSPT, S57fspt);
+		fields.put(S57field.VRID, S57vrid); fields.put(S57field.ATTV, S57attv); fields.put(S57field.VRPC, S57vrpc); fields.put(S57field.VRPT, S57vrpt);
+		fields.put(S57field.SGCC, S57sgcc); fields.put(S57field.SG2D, S57sg2d); fields.put(S57field.SG3D, S57sg3d); fields.put(S57field.ARCC, S57arcc);
+		fields.put(S57field.AR2D, S57ar2d); fields.put(S57field.EL2D, S57el2d); fields.put(S57field.CT2D, S57ct2d); 
+	}
+
+	private static byte[] buffer;
+	private static int offset;
+	private static int maxoff;
+	private static int index;
+	private static S57field field;
+	
+	public static void setField(byte[] buf, int off, S57field fld, int len) {
+		buffer = buf;
+		offset = off;
+		maxoff = off + len - 1;
+		field = fld;
+		index = 0;
+	}
+	
+	public static boolean more() {
+		return (offset < maxoff);
+	}
+	
+	public static Object getSubf(byte[] buf, int off, S57field fld, S57subf subf) {
+		buffer = buf;
+		offset = off;
+		index = 0;
+		return getSubf(fld, subf);
+	}
+	
+	public static Object getSubf(S57field fld, S57subf subf) {
+		field = fld;
+		index = 0;
+		return getSubf(subf);
+	}
+
+	public static Object getSubf(S57subf subf) {
+		ArrayList<S57subf> subs = fields.get(field);
+		if (index == subs.size())
+			index = 0;
+		while (index < subs.size()) {
+			S57subf sub = subs.get(index++);
+			S57conv conv = convs.get(sub);
+			if (sub == subf) {
+				if (conv.bin == 0) {
+					if (conv.asc == 0) {
+						String str = "";
+						while (buffer[offset] != 0x1f) {
+							str += buffer[offset++];
+						}
+						offset += (conv.bin != 0) ? Math.abs(conv.bin) : conv.asc;
+						return str;
+					} else
+						return new String(buffer, offset, conv.asc);
+				} else {
+					int i = Math.abs(conv.bin);
+					long val = buffer[offset + --i];
+					if (conv.bin > 0)
+						val &= 0xff;
+					while (i > 0) {
+						val = (val << 8) + (buffer[offset + --i] & 0xff);
+					}
+					offset += (conv.bin != 0) ? Math.abs(conv.bin) : conv.asc;
+					return val;
+				}
+			} else {
+				offset += (conv.bin != 0) ? Math.abs(conv.bin) : conv.asc;
+			}
+		}
+		return null;
 	}
 
 }

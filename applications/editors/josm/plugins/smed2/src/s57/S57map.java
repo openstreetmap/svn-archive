@@ -12,7 +12,6 @@ package s57;
 import java.util.*;
 
 import s57.S57att;
-import s57.S57val.AttVal;
 import s57.S57att.*;
 import s57.S57obj;
 import s57.S57obj.*;
@@ -24,7 +23,8 @@ public class S57map {
 	public enum Nflag {
 		ANON,	// Edge inner nodes
 		ISOL,	// Node not part of Edge
-		CONN	// Edge first and last nodes
+		CONN,	// Edge first and last nodes
+		DPTH	// Sounding nodes
 	}
 
 	public class Snode {	// All coordinates in map
@@ -49,6 +49,23 @@ public class S57map {
 		}
 	}
 
+	public class Dnode extends Snode {	// All depth soundings
+		public double val;	// Sounding value
+
+		public Dnode() {
+			flg = Nflag.DPTH;
+			lat = 0;
+			lon = 0;
+			val = 0;
+		}
+		public Dnode(double ilat, double ilon, double ival) {
+			flg = Nflag.DPTH;
+			lat = ilat;
+			lon = ilon;
+			val = ival;
+		}
+	}
+	
 	public class Edge {		// A polyline segment
 		public long first;	// First CONN node
 		public long last;		// Last CONN node
@@ -156,7 +173,7 @@ public class S57map {
 
 	public class Feature {
 		public Fflag flag;
-		public long refs;
+		public long id;
 		public Obj type;
 		public AttMap atts;
 		public ObjMap objs;
@@ -166,7 +183,7 @@ public class S57map {
 
 		Feature() {
 			flag = Fflag.UNKN;
-			refs = 0;
+			id = 0;
 			type = Obj.UNKOBJ;
 			atts = new AttMap();
 			objs = new ObjMap();
@@ -286,14 +303,22 @@ public class S57map {
 	public void addNode(long id, double lat, double lon) {
 		nodes.put(id, new Snode(Math.toRadians(lat), Math.toRadians(lon)));
 		feature = new Feature();
-		feature.refs = id;
+		feature.id = id;
+		feature.flag = Fflag.POINT;
+		edge = null;
+	}
+
+	public void addNode(long id, double lat, double lon, double depth) {
+		nodes.put(id, new Dnode(Math.toRadians(lat), Math.toRadians(lon), depth));
+		feature = new Feature();
+		feature.id = id;
 		feature.flag = Fflag.POINT;
 		edge = null;
 	}
 
 	public void addEdge(long id) {
 		feature = new Feature();
-		feature.refs = id;
+		feature.id = id;
 		feature.flag = Fflag.LINE;
 		edge = new Edge();
 	}
@@ -311,7 +336,7 @@ public class S57map {
 
 	public void addArea(long id) {
 		feature = new Feature();
-		feature.refs = id;
+		feature.id = id;
 		feature.flag = Fflag.AREA;
 		outers = new ArrayList<Long>();
 		inners = new ArrayList<Long>();
@@ -504,9 +529,9 @@ public class S57map {
 		boolean first = true;
 		switch (feature.flag) {
 		case POINT:
-			return nodes.get(feature.refs);
+			return nodes.get(feature.id);
 		case LINE:
-			Edge edge = edges.get(feature.refs);
+			Edge edge = edges.get(feature.id);
 			EdgeIterator eit = new EdgeIterator(edge, true);
 			while (eit.hasNext()) {
 				Snode node = eit.next();
@@ -541,7 +566,7 @@ public class S57map {
 			}
 			return new Snode(llat + ((lat - llat) * harc / sarc), llon + ((lon - llon) * harc / sarc));
 		case AREA:
-			Bound bound = areas.get(feature.refs).get(0);
+			Bound bound = areas.get(feature.id).get(0);
 			BoundIterator bit = new BoundIterator(bound);
 			while (bit.hasNext()) {
 				Snode node = bit.next();

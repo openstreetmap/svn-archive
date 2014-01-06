@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 
+import js57toosm.Js57toosm;
+
 public class S57dat {
 	
 	public enum Dom { BT, GT, DG, DATE, INT, REAL, AN, HEX, CL }
@@ -26,7 +28,7 @@ public class S57dat {
 	private static final EnumMap<S57subf, S57conv> convs = new EnumMap<S57subf, S57conv>(S57subf.class);
 	static {
 		convs.put(S57subf.I8RN, new S57conv(5,2,Dom.INT));
-		convs.put(S57subf.RCNM, new S57conv(2,1,Dom.AN)); convs.put(S57subf.RCID, new S57conv(10,4,Dom.INT)); convs.put(S57subf.EXPP, new S57conv(1,1,Dom.AN));
+		convs.put(S57subf.RCNM, new S57conv(2,1,Dom.AN)); convs.put(S57subf.RCID, new S57conv(10,32,Dom.INT)); convs.put(S57subf.EXPP, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.INTU, new S57conv(1,1,Dom.INT)); convs.put(S57subf.DSNM, new S57conv(0,0,Dom.BT)); convs.put(S57subf.EDTN, new S57conv(0,0,Dom.BT));
 		convs.put(S57subf.UPDN, new S57conv(0,0,Dom.BT)); convs.put(S57subf.UADT, new S57conv(8,0,Dom.DATE)); convs.put(S57subf.ISDT, new S57conv(8,0,Dom.DATE));
 		convs.put(S57subf.STED, new S57conv(4,0,Dom.REAL)); convs.put(S57subf.PRSP, new S57conv(3,1,Dom.AN)); convs.put(S57subf.PSDN, new S57conv(0,0,Dom.BT));
@@ -48,8 +50,8 @@ public class S57dat {
 		convs.put(S57subf.HACC, new S57conv(0,4,Dom.REAL)); convs.put(S57subf.SACC, new S57conv(0,4,Dom.REAL)); convs.put(S57subf.FILE, new S57conv(0,0,Dom.BT));
 		convs.put(S57subf.LFIL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.VOLM, new S57conv(0,0,Dom.BT)); convs.put(S57subf.IMPL, new S57conv(3,0,Dom.AN));
 		convs.put(S57subf.SLAT, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.WLON, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.NLAT, new S57conv(0,0,Dom.REAL));
-		convs.put(S57subf.ELON, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.CRCS, new S57conv(0,0,Dom.HEX)); convs.put(S57subf.NAM1, new S57conv(12,5,Dom.AN));
-		convs.put(S57subf.NAM2, new S57conv(12,5,Dom.AN)); convs.put(S57subf.OORA, new S57conv(1,1,Dom.AN)); convs.put(S57subf.OAAC, new S57conv(6,0,Dom.BT));
+		convs.put(S57subf.ELON, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.CRCS, new S57conv(0,0,Dom.HEX)); convs.put(S57subf.NAM1, new S57conv(12,40,Dom.AN));
+		convs.put(S57subf.NAM2, new S57conv(12,40,Dom.AN)); convs.put(S57subf.OORA, new S57conv(1,1,Dom.AN)); convs.put(S57subf.OAAC, new S57conv(6,0,Dom.BT));
 		convs.put(S57subf.OACO, new S57conv(5,2,Dom.INT)); convs.put(S57subf.OALL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.OATY, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.DEFN, new S57conv(0,0,Dom.BT)); convs.put(S57subf.AUTH, new S57conv(2,2,Dom.AN)); convs.put(S57subf.RFTP, new S57conv(2,1,Dom.AN));
 		convs.put(S57subf.RFVL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.ATLB, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATDO, new S57conv(1,1,Dom.AN));
@@ -59,9 +61,9 @@ public class S57dat {
 		convs.put(S57subf.OBJL, new S57conv(5,2,Dom.INT)); convs.put(S57subf.RVER, new S57conv(3,2,Dom.INT)); convs.put(S57subf.RUIN, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.FIDN, new S57conv(10,4,Dom.INT)); convs.put(S57subf.FIDS, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATTL, new S57conv(5,2,Dom.INT));
 		convs.put(S57subf.ATVL, new S57conv(0,0,Dom.GT)); convs.put(S57subf.FFUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FFIX, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.NFPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.LNAM, new S57conv(17,8,Dom.AN)); convs.put(S57subf.RIND, new S57conv(0,1,Dom.AN));
+		convs.put(S57subf.NFPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.LNAM, new S57conv(17,64,Dom.AN)); convs.put(S57subf.RIND, new S57conv(0,1,Dom.AN));
 		convs.put(S57subf.FSUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FSIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NSPT, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.NAME, new S57conv(12,5,Dom.AN)); convs.put(S57subf.ORNT, new S57conv(1,1,Dom.AN)); convs.put(S57subf.USAG, new S57conv(1,1,Dom.AN));
+		convs.put(S57subf.NAME, new S57conv(12,40,Dom.AN)); convs.put(S57subf.ORNT, new S57conv(1,1,Dom.AN)); convs.put(S57subf.USAG, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.MASK, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPIX, new S57conv(0,2,Dom.INT));
 		convs.put(S57subf.NVPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.TOPI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.CCUI, new S57conv(1,1,Dom.AN));
 		convs.put(S57subf.CCIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.CCNC, new S57conv(0,2,Dom.INT)); convs.put(S57subf.YCOO, new S57conv(0,-4,Dom.REAL));
@@ -165,38 +167,55 @@ public class S57dat {
 
 	public static Object getSubf(S57subf subf) {
 		ArrayList<S57subf> subs = fields.get(field);
-		if (index == subs.size())
-			index = 0;
-		while (index < subs.size()) {
+		boolean wrap = false;
+		while (true) {
+			if (index == subs.size()) {
+				if (!wrap) {
+					index = 0;
+					wrap = true;
+				} else {
+					System.out.println("ERROR: Subfield not found " + subf.name() + " in " + field.name() + " in record " + Js57toosm.rnum);
+					System.exit(-1);
+				}
+			}
 			S57subf sub = subs.get(index++);
 			S57conv conv = convs.get(sub);
 			if (sub == subf) {
 				if (conv.bin == 0) {
+					String str = "";
 					if (conv.asc == 0) {
-						String str = "";
 						while (buffer[offset] != 0x1f) {
 							str += buffer[offset++];
 						}
-						offset += (conv.bin != 0) ? Math.abs(conv.bin) : conv.asc;
-						return str;
-					} else
-						return new String(buffer, offset, conv.asc);
-				} else {
-					int i = Math.abs(conv.bin);
-					long val = buffer[offset + --i];
-					if (conv.bin > 0)
-						val &= 0xff;
-					while (i > 0) {
-						val = (val << 8) + (buffer[offset + --i] & 0xff);
+					} else {
+						str = new String(buffer, offset, conv.asc);
+						offset += conv.asc;
 					}
-					offset += (conv.bin != 0) ? Math.abs(conv.bin) : conv.asc;
-					return val;
+					return str;
+				} else {
+					int f = Math.abs(conv.bin);
+					if (f < 8) {
+						long val = buffer[offset + --f];
+						if (conv.bin > 0)
+							val &= 0xff;
+						while (f > 0) {
+							val = (val << 8) + (buffer[offset + --f] & 0xff);
+						}
+						offset += Math.abs(conv.bin);
+						return val;
+					} else {
+						f /= 8;
+						long val = 0;
+						for (int i = 0; i < f; i++) {
+							val = (val << 8) + (buffer[offset++] & 0xff);
+						}
+						return val;
+					}
 				}
 			} else {
-				offset += (conv.bin != 0) ? Math.abs(conv.bin) : conv.asc;
+				offset += (conv.bin != 0) ? ((conv.bin < 8) ? Math.abs(conv.bin) : conv.bin / 8) : conv.asc;
 			}
 		}
-		return null;
 	}
 
 }

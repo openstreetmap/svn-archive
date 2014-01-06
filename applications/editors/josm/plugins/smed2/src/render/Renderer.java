@@ -197,12 +197,12 @@ public class Renderer {
 		Area area;
 		switch (feature.flag) {
 		case LINE:
-			Edge edge = map.edges.get(feature.id);
+			Edge edge = map.edges.get(feature.refs);
 			area = map.new Area();
 			area.add(map.new Bound(map.new Side(edge, true), true));
 			break;
 		case AREA:
-			area = map.areas.get(feature.id);
+			area = map.areas.get(feature.refs);
 			break;
 		default:
 			return;
@@ -287,7 +287,7 @@ public class Renderer {
 		Point2D point;
 		switch (feature.flag) {
 		case LINE:
-			EdgeIterator eit = map.new EdgeIterator(map.edges.get(feature.id), true);
+			EdgeIterator eit = map.new EdgeIterator(map.edges.get(feature.refs), true);
 			point = context.getPoint(eit.next());
 			p.moveTo(point.getX(), point.getY());
 			while (eit.hasNext()) {
@@ -296,7 +296,7 @@ public class Renderer {
 			}
 			break;
 		case AREA:
-			for (Bound bound : map.areas.get(feature.id)) {
+			for (Bound bound : map.areas.get(feature.refs)) {
 				BoundIterator bit = map.new BoundIterator(bound);
 				point = context.getPoint(bit.next());
 				p.moveTo(point.getX(), point.getY());
@@ -372,7 +372,7 @@ public class Renderer {
 					(int)(point.getX() - (50 * sScale)), (int)(point.getY() - (50 * sScale)));
 			break;
 		case AREA:
-			for (Bound bound : map.areas.get(feature.id)) {
+			for (Bound bound : map.areas.get(feature.refs)) {
 				BoundIterator bit = map.new BoundIterator(bound);
 				point = context.getPoint(bit.next());
 				p.moveTo(point.getX(), point.getY());
@@ -505,12 +505,12 @@ public class Renderer {
 		Area area;
 		switch (feature.flag) {
 		case LINE:
-			Edge edge = map.edges.get(feature.id);
+			Edge edge = map.edges.get(feature.refs);
 			area = map.new Area();
 			area.add(map.new Bound(map.new Side(edge, true), true));
 			break;
 		case AREA:
-			area = map.areas.get(feature.id);
+			area = map.areas.get(feature.refs);
 			break;
 		default:
 			return;

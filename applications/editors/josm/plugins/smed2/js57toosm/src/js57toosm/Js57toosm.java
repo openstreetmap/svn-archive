@@ -18,9 +18,11 @@ import s57.S57dat.*;
 
 public class Js57toosm {
 	
+	public static int rnum = 0;
+
 	public static void main(String[] args) throws IOException {
 
-		FileInputStream in = new FileInputStream("/Users/mherring/boatsw/oseam/openseamap/renderer/js57toosm/tst.000");
+		FileInputStream in = new FileInputStream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/js57toosm/tst.000");
 		PrintStream out = System.out;
 
 		byte[] leader = new byte[24];
@@ -35,7 +37,9 @@ public class Js57toosm {
 		double comf = 1;
 		double somf = 1;
 		long name = 0;
-		S57map map = new S57map();;
+		S57map.Nflag nflag = Nflag.ANON;
+		S57map map = new S57map();
+		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
 
 		while (in.read(leader) == 24) {
 			length = Integer.parseInt(new String(leader, 0, 5)) - 24;
@@ -54,7 +58,12 @@ public class Js57toosm {
 				pos = Integer.parseInt(new String(record, idx+mapts+mapfl, mapfp));
 				if (!ddr) switch (tag) {
 				case "0001":
-					out.println("Record: " + (long)S57dat.getSubf(record, fields+pos, S57field.I8RI, S57subf.I8RN));
+					int i8rn = (int)(long)S57dat.getSubf(record, fields+pos, S57field.I8RI, S57subf.I8RN);
+					if (i8rn != ++rnum) {
+						out.println("Out of order record ID");
+						in.close();
+						System.exit(-1);
+					}
 					break;
 				case "DSID":
 					break;
@@ -81,15 +90,36 @@ public class Js57toosm {
 				case "FSPT":
 					break;
 				case "VRID":
-					name = (long)S57dat.getSubf(record, fields+pos, S57field.VRID, S57subf.RCNM) << 32;
+					name = (long)S57dat.getSubf(record, fields+pos, S57field.VRID, S57subf.RCNM);
+					switch ((int)name) {
+					case 110:
+						nflag = Nflag.ISOL;
+						break;
+					case 120:
+						nflag = Nflag.CONN;
+						break;
+					default:
+						nflag = Nflag.ANON;
+						break;
+					}
+					name <<= 32;
 					name += (long)S57dat.getSubf(record, fields+pos, S57field.VRID, S57subf.RCID);
 					name <<= 16;
+					if (nflag == Nflag.ANON) {
+						map.newEdge(name);
+					}
 					break;
 				case "ATTV":
 					break;
 				case "VRPC":
 					break;
 				case "VRPT":
+					name = (long)S57dat.getSubf(record, fields+pos, S57field.VRPT, S57subf.NAME) << 16;
+					int topi = (int)((long)S57dat.getSubf(S57subf.TOPI));
+					map.addConn(name, topi);
+					name = (long)S57dat.getSubf(S57subf.NAME) << 16;
+					topi = (int)((long)S57dat.getSubf(S57subf.TOPI));
+					map.addConn(name, topi);
 					break;
 				case "SGCC":
 					break;
@@ -98,7 +128,15 @@ public class Js57toosm {
 					while (S57dat.more()) {
 						double lat = (double) ((long) S57dat.getSubf(S57subf.YCOO)) / comf;
 						double lon = (double) ((long) S57dat.getSubf(S57subf.XCOO)) / comf;
-						map.addNode(name++, lat, lon);
+						if (nflag == Nflag.ANON) {
+							map.newNode(++name, lat, lon, nflag);
+						} else {
+							map.newNode(name, lat, lon, nflag);
+						}
+						if (lat < minlat) minlat = lat;
+						if (lat > maxlat) maxlat = lat;
+						if (lon < minlon) minlon = lon;
+						if (lon > maxlon) maxlon = lon;
 					}
 					break;
 				case "SG3D":
@@ -107,26 +145,46 @@ public class Js57toosm {
 						double lat = (double) ((long) S57dat.getSubf(S57subf.YCOO)) / comf;
 						double lon = (double) ((long) S57dat.getSubf(S57subf.XCOO)) / comf;
 						double depth = (double) ((long) S57dat.getSubf(S57subf.VE3D)) / somf;
-						map.addNode(name++, lat, lon, depth);
+						map.newNode(name++, lat, lon, depth);
+						if (lat < minlat) minlat = lat;
+						if (lat > maxlat) maxlat = lat;
+						if (lon < minlon) minlon = lon;
+						if (lon > maxlon) maxlon = lon;
 					}
 					break;
 				}
 			}
 		}
-		int a = 0; int i = 0; int c = 0; int d = 0;
-		for (Snode node : map.nodes.values()) {
-			switch (node.flg) {
-			case ANON: a++; break;
-			case ISOL: i++; break;
-			case CONN: c++; break;
-			case DPTH: d++; break;
+		in.close();
+		
+		out.println("<?xml version='1.0' encoding='UTF-8'?>");
+		out.println("<osm version='0.6' generator='js57toosm'>");
+		out.println("<bounds minlat='" + minlat +"' minlon='" + minlon + "' maxlat='" + maxlat + "' maxlon='" + maxlon + "'/>");
+		
+		for (long id : map.nodes.keySet()) {
+			Snode node = map.nodes.get(id);
+			if (node.flg == S57map.Nflag.DPTH) {
+				out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -id, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+				out.format("    <tag k='seamark:type' v='sounding'/>%n");
+				out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode)node).val);
+				out.format("  </node>%n");
+			} else {
+				out.format("  <node id='%d' lat='%f' lon='%f' version='1'/>%n",-id,  Math.toDegrees(node.lat), Math.toDegrees(node.lon));
 			}
 		}
-		out.println("Anon " + a);
-		out.println("Isol " + i);
-		out.println("Conn " + c);
-		out.println("Dpth " + d);
-		in.close();
+		
+		for (long id : map.edges.keySet()) {
+			Edge edge = map.edges.get(id);
+			out.format("  <way id='%d' version='1'>%n", -id);
+			out.format("    <nd ref='%d'/>%n", -edge.first);
+			for (long anon : edge.nodes) {
+				out.format("    <nd ref='%d'/>%n", -anon);
+			}
+			out.format("    <nd ref='%d'/>%n", -edge.last);
+			out.format("  </way>%n");
+		}
+		
+		out.println("</osm>\n");
 	}
 
 }

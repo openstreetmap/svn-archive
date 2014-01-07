@@ -7,12 +7,14 @@
  * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
  */
 
-package s57;
+package js57toosm;
 
 import java.io.*;
 
-import s57.S57map.*;
+import s57.S57dat;
 import s57.S57dat.*;
+import s57.S57map;
+import s57.S57map.*;
 
 public class Js57toosm {
 	

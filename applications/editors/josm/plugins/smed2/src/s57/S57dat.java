@@ -137,6 +137,7 @@ public class S57dat {
 	private static int maxoff;
 	private static int index;
 	private static S57field field;
+	public static int rnum;
 	
 	public static void setField(byte[] buf, int off, S57field fld, int len) {
 		buffer = buf;
@@ -172,7 +173,7 @@ public class S57dat {
 					index = 0;
 					wrap = true;
 				} else {
-					System.out.println("ERROR: Subfield not found " + subf.name() + " in " + field.name() + " in record " + Js57toosm.rnum);
+					System.out.println("ERROR: Subfield not found " + subf.name() + " in " + field.name() + " in record " + rnum);
 					System.exit(-1);
 				}
 			}

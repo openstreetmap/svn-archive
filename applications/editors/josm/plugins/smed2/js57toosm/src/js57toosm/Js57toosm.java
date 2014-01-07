@@ -18,12 +18,12 @@ import s57.S57map.*;
 
 public class Js57toosm {
 	
-	public static int rnum = 0;
-
 	public static void main(String[] args) throws IOException {
 
 		FileInputStream in = new FileInputStream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/js57toosm/tst.000");
 		PrintStream out = System.out;
+
+		S57dat.rnum = 0;
 
 		byte[] leader = new byte[24];
 		boolean ddr = false;
@@ -57,83 +57,111 @@ public class Js57toosm {
 				len = Integer.parseInt(new String(record, idx+mapts, mapfl));
 				pos = Integer.parseInt(new String(record, idx+mapts+mapfl, mapfp));
 				if (!ddr) {
-    				if ("0001".equals(tag)) {
-    					int i8rn = ((Long)S57dat.getSubf(record, fields+pos, S57field.I8RI, S57subf.I8RN)).intValue();
-    					if (i8rn != ++rnum) {
-    						out.println("Out of order record ID");
-    						in.close();
-    						System.exit(-1);
-    					}
-    				} else if ("DSID".equals(tag)) {
-    				} else if ("DSSI".equals(tag)) {
-    				} else if ("DSPM".equals(tag)) {
-    					comf = (double)(Long)S57dat.getSubf(record, fields+pos, S57field.DSPM, S57subf.COMF);
-    					somf = (double)(Long)S57dat.getSubf(S57subf.SOMF);
-    				} else if ("FRID".equals(tag)) {
-    				} else if ("FOID".equals(tag)) {
-    				} else if ("ATTF".equals(tag)) {
-    				} else if ("NATF".equals(tag)) {
-    				} else if ("FFPC".equals(tag)) {
-    				} else if ("FFPT".equals(tag)) {
-    				} else if ("FSPC".equals(tag)) {
-    				} else if ("FSPT".equals(tag)) {
-    				} else if ("VRID".equals(tag)) {
-    					name = (Long)S57dat.getSubf(record, fields+pos, S57field.VRID, S57subf.RCNM);
-    					switch ((int)name) {
-    					case 110:
-    						nflag = Nflag.ISOL;
-    						break;
-    					case 120:
-    						nflag = Nflag.CONN;
-    						break;
-    					default:
-    						nflag = Nflag.ANON;
-    						break;
-    					}
-    					name <<= 32;
-    					name += (Long)S57dat.getSubf(record, fields+pos, S57field.VRID, S57subf.RCID);
-    					name <<= 16;
-    					if (nflag == Nflag.ANON) {
-    						map.newEdge(name);
-    					}
-    				} else if ("ATTV".equals(tag)) {
-    				} else if ("VRPC".equals(tag)) {
-    				} else if ("VRPT".equals(tag)) {
-    					name = (Long)S57dat.getSubf(record, fields+pos, S57field.VRPT, S57subf.NAME) << 16;
-    					int topi = ((Long)S57dat.getSubf(S57subf.TOPI)).intValue();
-    					map.addConn(name, topi);
-    					name = (Long)S57dat.getSubf(S57subf.NAME) << 16;
-    					topi = ((Long)S57dat.getSubf(S57subf.TOPI)).intValue();
-    					map.addConn(name, topi);
-    				} else if ("SGCC".equals(tag)) {
-    				} else if ("SG2D".equals(tag)) {
-    					S57dat.setField(record, fields + pos, S57field.SG2D, len);
-    					while (S57dat.more()) {
-    						double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
-    						double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
-    						if (nflag == Nflag.ANON) {
-    							map.newNode(++name, lat, lon, nflag);
-    						} else {
-    							map.newNode(name, lat, lon, nflag);
-    						}
-    						if (lat < minlat) minlat = lat;
-    						if (lat > maxlat) maxlat = lat;
-    						if (lon < minlon) minlon = lon;
-    						if (lon > maxlon) maxlon = lon;
-    					}
-    				} else if ("SG3D".equals(tag)) {
-    					S57dat.setField(record, fields + pos, S57field.SG3D, len);
-    					while (S57dat.more()) {
-    						double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
-    						double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
-    						double depth = (double) ((Long) S57dat.getSubf(S57subf.VE3D)) / somf;
-    						map.newNode(name++, lat, lon, depth);
-    						if (lat < minlat) minlat = lat;
-    						if (lat > maxlat) maxlat = lat;
-    						if (lon < minlon) minlon = lon;
-    						if (lon > maxlon) maxlon = lon;
-    					}
-    				}
+					switch (tag) {
+					case "0001":
+						int i8rn = ((Long) S57dat.getSubf(record, fields + pos, S57field.I8RI, S57subf.I8RN)).intValue();
+						if (i8rn != ++S57dat.rnum) {
+							out.println("Out of order record ID");
+							in.close();
+							System.exit(-1);
+						}
+						break;
+					case "DSID":
+						break;
+					case "DSSI":
+						break;
+					case "DSPM":
+						comf = (double) (Long) S57dat.getSubf(record, fields + pos, S57field.DSPM, S57subf.COMF);
+						somf = (double) (Long) S57dat.getSubf(S57subf.SOMF);
+						break;
+					case "FRID":
+						break;
+					case "FOID":
+						break;
+					case "ATTF":
+						break;
+					case "NATF":
+						break;
+					case "FFPC":
+						break;
+					case "FFPT":
+						break;
+					case "FSPC":
+						break;
+					case "FSPT":
+						break;
+					case "VRID":
+						name = (Long) S57dat.getSubf(record, fields + pos, S57field.VRID, S57subf.RCNM);
+						switch ((int) name) {
+						case 110:
+							nflag = Nflag.ISOL;
+							break;
+						case 120:
+							nflag = Nflag.CONN;
+							break;
+						default:
+							nflag = Nflag.ANON;
+							break;
+						}
+						name <<= 32;
+						name += (Long) S57dat.getSubf(record, fields + pos, S57field.VRID, S57subf.RCID);
+						name <<= 16;
+						if (nflag == Nflag.ANON) {
+							map.newEdge(name);
+						}
+						break;
+					case "ATTV":
+						break;
+					case "VRPC":
+						break;
+					case "VRPT":
+						name = (Long) S57dat.getSubf(record, fields + pos, S57field.VRPT, S57subf.NAME) << 16;
+						int topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
+						map.addConn(name, topi);
+						name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
+						topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
+						map.addConn(name, topi);
+						break;
+					case "SGCC":
+						break;
+					case "SG2D":
+						S57dat.setField(record, fields + pos, S57field.SG2D, len);
+						while (S57dat.more()) {
+							double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
+							double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
+							if (nflag == Nflag.ANON) {
+								map.newNode(++name, lat, lon, nflag);
+							} else {
+								map.newNode(name, lat, lon, nflag);
+							}
+							if (lat < minlat)
+								minlat = lat;
+							if (lat > maxlat)
+								maxlat = lat;
+							if (lon < minlon)
+								minlon = lon;
+							if (lon > maxlon)
+								maxlon = lon;
+						}
+						break;
+					case "SG3D":
+						S57dat.setField(record, fields + pos, S57field.SG3D, len);
+						while (S57dat.more()) {
+							double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
+							double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
+							double depth = (double) ((Long) S57dat.getSubf(S57subf.VE3D)) / somf;
+							map.newNode(name++, lat, lon, depth);
+							if (lat < minlat)
+								minlat = lat;
+							if (lat > maxlat)
+								maxlat = lat;
+							if (lon < minlon)
+								minlon = lon;
+							if (lon > maxlon)
+								maxlon = lon;
+						}
+						break;
+					}
 				}
 			}
 		}

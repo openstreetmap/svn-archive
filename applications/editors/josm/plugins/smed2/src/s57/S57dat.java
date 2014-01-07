@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 
-import js57toosm.Js57toosm;
-
 public class S57dat {
 	
 	public enum Dom { BT, GT, DG, DATE, INT, REAL, AN, HEX, CL }

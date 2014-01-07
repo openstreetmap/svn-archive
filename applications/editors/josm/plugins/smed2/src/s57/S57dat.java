@@ -164,7 +164,7 @@ public class S57dat {
 		return getSubf(subf);
 	}
 
-	public static Object getSubf(S57subf subf) {
+	private static S57conv findSubf(S57subf subf) {
 		ArrayList<S57subf> subs = fields.get(field);
 		boolean wrap = false;
 		while (true) {
@@ -180,41 +180,65 @@ public class S57dat {
 			S57subf sub = subs.get(index++);
 			S57conv conv = convs.get(sub);
 			if (sub == subf) {
-				if (conv.bin == 0) {
-					String str = "";
-					if (conv.asc == 0) {
-						while (buffer[offset] != 0x1f) {
-							str += buffer[offset++];
-						}
-					} else {
-						str = new String(buffer, offset, conv.asc);
-						offset += conv.asc;
-					}
-					return str;
-				} else {
-					int f = Math.abs(conv.bin);
-					if (f < 8) {
-						long val = buffer[offset + --f];
-						if (conv.bin > 0)
-							val &= 0xff;
-						while (f > 0) {
-							val = (val << 8) + (buffer[offset + --f] & 0xff);
-						}
-						offset += Math.abs(conv.bin);
-						return val;
-					} else {
-						f /= 8;
-						long val = 0;
-						for (int i = 0; i < f; i++) {
-							val = (val << 8) + (buffer[offset++] & 0xff);
-						}
-						return val;
-					}
-				}
+				return conv;
 			} else {
 				offset += (conv.bin != 0) ? ((conv.bin < 8) ? Math.abs(conv.bin) : conv.bin / 8) : conv.asc;
 			}
 		}
 	}
+	
+	public static Object getSubf(S57subf subf) {
+		S57conv conv = findSubf(subf);
+		if (conv.bin == 0) {
+			String str = "";
+			if (conv.asc == 0) {
+				while (buffer[offset] != 0x1f) {
+					str += buffer[offset++];
+				}
+			} else {
+				str = new String(buffer, offset, conv.asc);
+				offset += conv.asc;
+			}
+			return str;
+		} else {
+			int f = Math.abs(conv.bin);
+			if (f < 8) {
+				long val = buffer[offset + --f];
+				if (conv.bin > 0)
+					val &= 0xff;
+				while (f > 0) {
+					val = (val << 8) + (buffer[offset + --f] & 0xff);
+				}
+				offset += Math.abs(conv.bin);
+				return val;
+			} else {
+				f /= 8;
+				long val = 0;
+				for (int i = 0; i < f; i++) {
+					val = (val << 8) + (buffer[offset++] & 0xff);
+				}
+				return val;
+			}
+		}
+	}
 
+	public static void putSubf(byte[] buf, int off, S57field fld, S57subf subf, Object val) {
+		buffer = buf;
+		offset = off;
+		index = 0;
+		putSubf(fld, subf, val);
+	}
+	
+	public static void putSubf(S57field fld, S57subf subf, Object val) {
+		field = fld;
+		index = 0;
+		putSubf(subf, val);
+	}
+
+	public static void putSubf(S57subf subf, Object val) {
+		S57conv conv = findSubf(subf);
+		if (conv.bin == 0) {
+		} else {
+		}
+	}
 }

@@ -18,7 +18,6 @@ import s57.S57att.*;
 import s57.S57obj.*;
 import s57.S57val.*;
 import s57.S57map.*;
-import render.Renderer.*;
 import symbols.Beacons;
 import symbols.Topmarks;
 import symbols.Symbols.*;

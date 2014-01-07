@@ -306,6 +306,8 @@ public class Renderer {
 				}
 			}
 			break;
+		default:
+			break;
 		}
 		if (style.line != null) {
 			if (style.dash != null) {
@@ -384,6 +386,8 @@ public class Renderer {
 	    g2.setPaint(new TexturePaint(image, new Rectangle(0, 0, 1 + (int)(100 * sScale), 1 + (int)(100 * sScale))));
 	    g2.fill(p);
 	    break;
+		default:
+			break;
 		}
 	}
 

@@ -54,6 +54,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     final static String MAX_NUMBER = "plugin.terracer.highest_number";
     final static String INTERPOLATION = "plugin.terracer.interpolation_mode";
     */
+    final static String DEFAULT_SEGMENTS = "plugins.terracer.segments";
     final static String HANDLE_RELATION = "plugins.terracer.handle_relation";
     final static String DELETE_OUTLINE = "plugins.terracer.delete_outline";
     final static String INTERPOLATION = "plugins.terracer.interpolation";
@@ -340,7 +341,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private JTextField getSegments() {
         if (segments == null) {
             segments = new JTextField();
-            segments.setText("1");
+            segments.setText(Main.pref.get(DEFAULT_SEGMENTS, "1"));
         }
         return segments;
     }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Create_grid_of_ways" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Changed constructor signature, updated build.xml"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Jorge Luis Chamorro"/>
+    <property name="plugin.class" value="CreateGridOfWaysPlugin.CreateGridOfWaysPlugin"/>
+    <property name="plugin.description" value="Create a grid of ways."/>
+    <property name="plugin.icon" value="images/creategridofways.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/Create_grid_of_ways"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

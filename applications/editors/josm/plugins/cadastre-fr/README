@@ -1,0 +1,26 @@
+cadastre-fr is a plugin for JOSM that is able to handle the
+french land registry WMS. This WMS is not a complete standard WMS
+since it is not providing most of the standard services. It is also
+just delivering data for one municipality at a time. A special request
+is required at the beginning to specify which municipality is desired.
+
+The plugin is today only requesting PNG images on user request only. The
+images can be stored in a cache file and reloaded later. The grabed images
+can be done at any zoom level and the drawing method will always select the
+best images (highest scale) to be displayed in front of worst images
+(lowest scale).
+
+Also the plugin is able to transform original images to add the transparency
+or replace the default background by the JOSM background color. Enabling
+transparency gives the possibility to use several layers, each layer with a
+different municipality, making contrbutor's work much easier.
+
+Access to the french land registry WMS has been granted by the autorithies (DFFiP).
+It's opened not only for OSM but for all GIS applications. A new version of the
+WMS will take place mid 2009.
+
+Announce here (english):
+http://lists.openstreetmap.org/pipermail/talk/2009-January/033289.html
+First announcement here (french):
+http://lists.openstreetmap.org/pipermail/talk-fr/2009-January/005790.html
+

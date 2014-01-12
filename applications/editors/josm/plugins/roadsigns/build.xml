@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="RoadSigns" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="preset maintenance (Fahrradstraße)"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6340"/>
+
+    <!--
+    **********************************************************
+    ** include targets that all plugins have in common
+    **********************************************************
+    -->
+    <import file="../build-common.xml"/>
+
+    <!--
+    **********************************************************
+    ** dist - creates the plugin jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
+        <copy todir="${plugin.build.dir}">
+            <fileset dir=".">
+                <include name="README"/>
+                <include name="LICENSE"/>
+            </fileset>
+        </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+            <!--
+            ************************************************
+            ** configure these properties. Most of them will be copied to the plugins
+            ** manifest file. Property values will also show up in the list available
+            ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
+            **
+            ************************************************
+            -->
+            <manifest>
+                <attribute name="Author" value="Paul Hartmann"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Plugin for tagging of objects based on a selection of road signs. The dialog can be opened by clicking a small icon in the upper right corner of the properties window. Available country presets: Germany."/>
+                <attribute name="Plugin-Icon" value="images/pref/roadsigns.png"/>
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/RoadSigns"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

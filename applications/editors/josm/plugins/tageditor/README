@@ -1,0 +1,36 @@
+README 
+======
+
+The TagEditor plugin provides an alternative to the built-in dialogs
+for editing tags in JOSM.
+
+Its main features are:
+- can be launched from the "Edit" menu or using the shortcut 'T' 
+  (mouseless operation)
+
+- provides a spreadsheet-like editor for tag keys and tag values  
+
+- improved auto completion for tag keys and tag values. Distinguishes
+  between "official" OSM values and "non-official" values from the currently
+  edited OSM data set. Also considers whether the current selection includes
+  nodes or ways.
+
+- displays a list of reasonable values for a tag key or a tag value in the
+  current context
+  
+- mouseless operation. A typical editor scenario:
+   * press 'T' to launch the editor
+   * enter a tag key and press 'TAB' or 'ENTER' to navigate to the next cell
+   * enter a tag value and press 'TAB' or 'ENTER' to navigate to the next cell
+     (which creates a new tag)
+     ...
+   * press 'Ctrl ENTER' to apply the tags to the currently selected OSM
+     primitives and close the editor 
+     
+- provides a searchable, tabular list of JOSM presets 
+- provides a searchable, tabular list of "official" OSM features (key/value-pairs) 
+
+ 
+     
+
+ 

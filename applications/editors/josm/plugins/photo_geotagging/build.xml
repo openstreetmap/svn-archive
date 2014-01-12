@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="photo_geotagging" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="write elevation to EXIF (see josm #7710)"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6450"/>
+
+    <property name="plugin.author" value="Paul Hartmann"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.photo_geotagging.GeotaggingPlugin"/>
+    <property name="plugin.description" value="Write gps position info to the image file header. Run this feature from the right click menu of the image layer."/>
+    <property name="plugin.icon" value="images/geotagging.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Photo_Geotagging"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+    <!--
+    **********************************************************
+    ** compile - complies the source tree
+    ** Overrides the target from build-common.xml
+    **********************************************************
+    -->
+    <target name="compile" depends="init">
+        <echo message="compiling sanselan sources ... "/>
+        <javac srcdir="${plugin.src.dir}" excludes="org/openstreetmap/**" debug="true" destdir="${plugin.build.dir}" encoding="iso-8859-1" includeantruntime="false">
+            <compilerarg value="-Xlint:deprecation"/>
+        </javac>
+        <echo message="compiling sources for ${plugin.jar} ..."/>
+        <javac srcdir="${plugin.src.dir}" excludes="org/apache/sanselan/**" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+</project>

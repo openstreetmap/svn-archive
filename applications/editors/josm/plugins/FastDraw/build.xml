@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="FastDraw" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="JOSM/FastDraw: line stroke and point size customization"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+    
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Alexei Kasatkin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.fastdraw.FastDrawingPlugin"/>
+    <property name="plugin.description" value="Fast drawing ways by mouse"/>
+    <property name="plugin.icon" value="images/favicon.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FastDraw"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

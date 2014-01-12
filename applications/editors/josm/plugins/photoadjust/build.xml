@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** This is the build file for a JOSM photoadjust plugin.
+** Based on template revision 29839.
+**
+** Usage
+** =====
+** Call "ant help" to get possible build targets.
+**
+-->
+<project name="photoadjust" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6392"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="holgermappt"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.photoadjust.PhotoAdjustPlugin"/>
+    <property name="plugin.description" value="Make photos movable and position them on the map."/>
+    <property name="plugin.icon" value="images/photoadjust.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PhotoAdjust"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+    
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir" value="../../dist"/>
+    <property name="plugin.javadoc.dir" location="javadoc"/>
+	
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+    <!-- ** internationalization ** -->
+    <import file="i18n/build-i18n.xml"/>
+
+    <!--
+    **********************************************************
+    ** javadoc - create the plugin documentation
+    **********************************************************
+    -->
+    <target name="javadoc" description="generate documentation">
+        <javadoc destdir="${plugin.javadoc.dir}"
+                sourcepath="${plugin.src.dir}"
+                windowtitle="${ant.project.name}"
+                linksource="true">
+            <link href="../../../core/javadoc"/>
+            <link href="http://josm.openstreetmap.de/doc/"/>
+            <link href="http://docs.oracle.com/javase/6/docs/api"/>
+        </javadoc>
+    </target>
+
+    <target name="additional-manifest">
+        <antcall target="mftrans"/>
+    </target>
+</project>

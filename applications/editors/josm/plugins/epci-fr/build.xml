@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="epci-fr" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+	
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.fr.epci.EpciPlugin"/>
+    <property name="plugin.description" value="Handling of French EPCIs (boundary=local_authority)"/>
+    <!--<property name="plugin.icon" value="..."/>-->
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/EPCI-fr"/>
+    <property name="plugin.early" value="true"/>
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

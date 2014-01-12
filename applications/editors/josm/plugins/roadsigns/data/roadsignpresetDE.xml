@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+roadsigns plugin preset file for Germany
+-->
+<roadsignpreset country="DE">
+    <sign ref="DE:108/DE:110" icon="DE_110" traffic_sign_tag="" name="Incline" de.name="Steigung"
+            help="Applies for the road section with steep incline. (Split the way at the ends of the steep section.) 
+Positive values indicate movement upward in the direction of the (osm) way and negative values indicate movement downwards in the direction of the way."
+            de.help="Gilt für das Streckenstück mit hoher Steigung. (Weg am Anfang und Ende des steilen Abschnittes auftrennen.) 
+Positive Werte stehen für einen Anstieg in Richtung des ways und negative Werte für einen Abfall in Richtung des ways."
+            wiki="Key:incline"
+            de.wiki="DE:Key:incline">
+        <!--Suppress the traffic_sign tag, because it would be incorrect to add
+            traffic_sign=DE:110, when in reality it is DE:108.
+            Both are essentially equal, so in this tool only the incline symbol
+            should be present.-->
+        <tag key="incline" value="$val%"/>
+        <parameter input="textfield" name="max. incline" de.name="Maximale Steigung" type="int" ident="val" default="12" suffix="%" field_width="3"/>
+    </sign>
+
+    <sign ref="DE:215" name="Roundabout" de.name="Kreisverkehr"
+        wiki="Tag:junction=roundabout"
+        de.wiki="DE:Tag:junction=roundabout">
+        <tag key="junction" value="roundabout"/>
+    </sign>
+
+    <sign id="oneway" ref="DE:220&amp;DE:267" traffic_sign_tag="" icon="DE_220;DE_267" name="One-way road" de.name="Einbahnstraße"
+            wiki="Key:oneway"
+            de.wiki="DE:Key:oneway">
+        <tag key="oneway" value="yes"/>
+<!--        <supplementary id="DE:1022-10;DE:1000-33"/>-->
+<!--        FIXME: lane->-->
+    </sign>
+
+    <sign ref="DE:237" name="Bicycle path" de.name="Radweg">
+        <tag key="highway" value="path"/>
+        <tag key="bicycle" value="official"/>
+        <tag key="access" value="" ident="mode"/>
+        <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+    </sign>
+
+    <sign ref="DE:238" name="Bridle path" de.name="Reitweg">
+        <tag key="highway" value="path"/>
+        <tag key="horse" value="official"/>
+        <tag key="access" value="" ident="mode"/>
+        <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
+        <supplementary id="DE:1026-36"/> <!-- Landwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
+    </sign>
+
+    <sign ref="DE:239" name="Pedestrian path" de.name="Gehweg">
+        <tag key="highway" value="path"/>
+        <tag key="foot" value="official"/>
+        <tag key="access" value="" ident="mode"/>
+        <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
+        <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+    </sign>
+
+    <sign ref="DE:240" name="Pedestrian &amp; bicycle path" de.name="Gemeinsamer Geh- und Radweg">
+        <tag key="highway" value="path"/>
+        <tag key="foot" value="official"/>
+        <tag key="bicycle" value="official"/>
+        <tag key="access" value="" ident="mode"/>
+        <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+    </sign>
+
+    <sign ref="DE:241" name="Split pedestrian &amp; bicycle path" de.name="Getrennter Rad- und Gehweg">
+        <tag key="highway" value="path"/>
+        <tag key="foot" value="official"/>
+        <tag key="bicycle" value="official"/>
+        <tag key="segregated" value="yes"/>
+        <tag key="access" value="" ident="mode"/>
+        <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+    </sign>
+
+    <sign ref="DE:242" name="Pedestrian zone" de.name="Fußgängerbereich"
+            wiki="Tag:highway%3Dpedestrian"
+            de.wiki="DE:Tag:highway%3Dpedestrian">
+        <tag key="highway" value="pedestrian"/>
+        <tag key="access" value="" ident="mode"/>
+        <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+    </sign>
+
+    <sign ref="DE:244" name="Bicycle road" de.name="Fahrradstraße">
+        <!-- highway=* -->
+        <tag key="bicycle_road" value="yes"/>
+        <tag key="bicycle" value="official"/>
+        <tag key="vehicle" value="no" ident="mode"/>
+        <tag key="maxspeed" value="30"/> <!-- FIXME: no override but min. value -->
+        <tag key="source:maxspeed" value="DE:bicycle_road"/>
+        <supplementary id="DE:1020-13"/> <!-- Inlineskaten frei -->
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1022-12"/> <!-- Krafträder frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
+        <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
+        <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+        <supplementary id="DE:Kraftfahrzeuge-frei"/> <!-- Kraftfahrzeuge frei -->
+    </sign>
+
+    <sign ref="DE:250" name="All vehicles prohibited" de.name="Verbot für Fahrzeuge aller Art">
+        <tag key="vehicle" value="no" ident="mode"/>
+        <supplementary id="DE:1020-12"/> <!-- Radfahrer und Anlieger frei -->
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1022-10"/> <!-- Radfahrer frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1022-12"/> <!-- Krafträder frei -->
+        <supplementary id="DE:1024-12"/> <!-- LKW frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
+        <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
+        <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+        <supplementary id="DE:1026-36"/> <!-- Landwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
+    </sign>
+
+    <sign ref="DE:251" name="Motorcars prohibited" de.name="Verbot für Kraftwagen"
+            long_name="Motorcars and other multi-track motorized vehicles prohibited"
+            de.long_name="Verbot für Kraftwagen und sonstige mehrspurige Kraftfahrzeuge"
+            wiki="Key:motorcar"
+            de.wiki="DE:Key:access">
+        <tag key="motorcar" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1024-12"/> <!-- LKW frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
+        <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
+        <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+        <supplementary id="DE:1026-36"/> <!-- Landwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
+    </sign>
+
+    <sign ref="DE:253" name="Heavy goods vehicles prohibited" de.name="Verbot für LKW"
+            long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers prohibited, except passenger cars and busses prohibited"
+            de.long_name="Verbot für Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse"
+            wiki="Key:hgv"
+            de.wiki="DE:Key:access">
+        <tag key="hgv" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
+        <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
+        <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+        <supplementary id="DE:1026-36"/> <!-- Landwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
+    </sign>
+
+    <sign ref="DE:254" name="Bicycles prohibited" de.name="Verbot für Fahrräder"
+            wiki="Key:bicycle"
+            de.wiki="DE:Key:access">
+        <tag key="bicycle" value="no" ident="mode"/>
+    </sign>
+
+    <sign ref="DE:255" name="Motorcycles prohibited" de.name="Verbot für Krafträder">
+        <tag key="motorcycle" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+    </sign>
+
+    <sign ref="DE:256" deprecated="yes" name="Mopeds prohibited" de.name="Verbot für Mofas">
+        <tag key="mofa" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+    </sign>
+
+    <sign ref="DE:258" deprecated="yes" name="Horses prohibited" de.name="Verbot für Reiter">
+        <tag key="horse" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+    </sign>
+
+    <sign ref="DE:259" name="Pedestrians prohibited" de.name="Verbot für Fußgänger">
+        <tag key="foot" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+    </sign>
+
+    <sign ref="DE:260" name="Motor vehicles prohibited" de.name="Verbot für Kraftfahrzeuge"
+        long_name="Motorcycles, also with sidecar, mopeds, mofas as well as motorcars and other multi-track motorized vehicles prohibited"
+        de.long_name="Verbot für Krafträder, auch mit Beiwagen, Kleinkrafträder und Mofas sowie für Kraftwagen und sonstige mehrspurige Kraftfahrzeuge">
+        <tag key="motor_vehicle" value="no" ident="mode"/>
+        <supplementary id="DE:1020-30"/> <!-- Anlieger frei -->
+        <supplementary id="DE:1022-11"/> <!-- Mofas frei -->
+        <supplementary id="DE:1024-12"/> <!-- LKW frei -->
+        <supplementary id="DE:1024-14"/> <!-- Bus frei -->
+        <supplementary id="DE:1026-30"/> <!-- Taxi frei -->
+        <supplementary id="DE:1026-32"/> <!-- Linienverkehr frei -->
+        <supplementary id="DE:1026-35"/> <!-- Lieferverkehr frei -->
+        <supplementary id="DE:1026-36"/> <!-- Landwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-37"/> <!-- Forstwirtschaftlicher Verkehr frei -->
+        <supplementary id="DE:1026-38"/> <!-- Land- und forstwirtschaftlicher Verkehr frei -->
+    </sign>
+
+    <sign ref="DE:261" name="Hazardous cargo prohibited" de.name="Verbot für kennzeichnungspflichtige Kraftfahrzeuge mit gefährlichen Gütern"
+            wiki="Key:hazmat" 
+            de.wiki="DE:Key:hazmat">
+        <tag key="hazmat" value="no" ident="mode"/>
+    </sign>
+
+    <sign ref="DE:262[$val]" icon="DE_262" name="Weight limit" de.name="Tatsächliches Gewicht"
+            wiki="Key:maxweight">
+        <tag key="maxweight" value="$val"/>
+        <parameter ident="val" input="textfield" default="5.5" suffix="t" field_width="3"/>
+    </sign>
+
+    <sign ref="DE:263[$val]" icon="DE_263" name="Axle weight limit" de.name="Tatsächliche Achslast"
+            wiki="Key:maxaxleload">
+        <tag key="maxaxleload" value="$val"/>
+        <parameter ident="val" input="textfield" default="8" suffix="t" field_width="3"/>
+    </sign>
+
+    <sign ref="DE:264[$val]" icon="DE_264" name="Width limit" de.name="Tatsächliche Breite"
+            wiki="Key:maxwidth">
+        <tag key="maxwidth" value="$val"/>
+        <parameter ident="val" input="textfield" default="2" suffix="m" field_width="3"/>
+    </sign>
+
+    <sign ref="DE:265[$val]" icon="DE_265" name="Height limit" de.name="Tatsächliche Höhe"
+            wiki="Key:maxheight"
+            de.wiki="DE:Key:maxheight">
+        <tag key="maxheight" value="$val"/>
+        <parameter ident="val" input="textfield" default="3.8" suffix="m" field_width="3"/>
+    </sign>
+
+    <sign ref="DE:266[$val]" icon="DE_266" name="Length limit" de.name="Tatsächliche Länge"
+            wiki="Key:maxlength">
+        <tag key="maxlength" value="$val"/>
+        <parameter ident="val" input="textfield" default="10" suffix="m" field_width="3"/>
+    </sign>
+
+    <sign ref="DE:269" name="Water polluting cargo prohibited" de.name="Verbot für Fahrzeuge mit wassergefährdender Ladung"
+            wiki="Key:hazmat"
+            de.wiki="DE:Key:hazmat">
+        <tag key="hazmat:water" value="no" ident="mode"/>
+    </sign>
+
+    <sign ref="DE:274[$val]" icon="DE_274" name="Speed limit" de.name="Zulässige Höchstgeschwindigkeit"
+            wiki="Key:maxspeed"
+            de.wiki="DE:Key:maxspeed">
+        <tag key="maxspeed" value="$val" ident="restriction"/>
+        <parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" de.text="Höchstgeschwindigkeit" suffix="km/h" values="5,10,20,30,40,50,60,70,80,90,100,110,120,130" default="60" field_width="3"/>
+        <supplementary id="DE:1052-36"/> <!-- Bei nasser Fahrbahn -->
+        <supplementary id="DE:1048-12"/> <!-- nur LKW -->
+    </sign>
+
+    <sign ref="DE:274.1[$val]" icon="DE_274_1" name="Speed limit zone" de.name="Zone mit zulässiger Höchstgeschwindigkeit">
+        <tag key="maxspeed" value="$val"/>
+        <tag key="zone:maxspeed" value="DE:$val"/>
+        <parameter ident="val" type="int" input="combo" editable="yes" text="speed-limit" de.text="Höchstgeschwindigkeit" suffix="km/h" values="20,30" default="30" field_width="2"/>
+    </sign>
+
+    <sign ref="DE:275[$val]" icon="DE_275" name="Minimum speed limit" de.name="Vorgeschriebene Mindestgeschwindigkeit"
+            wiki="Key:minspeed">
+        <tag key="minspeed" value="$val"/>
+        <parameter ident="val" input="textfield" suffix="km/h" default="30" field_width="2"/>
+    </sign>
+
+    <sign ref="DE:325" name="Traffic calming zone" de.name="Verkehrsberuhigter Bereich"
+            wiki="Tag:highway%3Dliving_street"
+            de.wiki="DE:Tag:highway%3Dliving_street">
+        <tag key="highway" value="living_street"/>
+    </sign>
+
+    <sign ref="DE:327" name="Tunnel" de.name="Tunnel"
+            wiki="Key:tunnel"
+            de.wiki="DE:Key:tunnel">
+        <tag key="tunnel" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1020-12" supplementary="yes" name="Bicyle and residents allowed" de.name="Radfahrer und Anlieger frei"> <!-- FIXME: bad translation into English -->
+        <tag key="bicycle" value="yes"/>
+        <tag tag_ref="mode" append_value="destination"/>
+    </sign>
+
+    <sign ref="DE:1020-13" supplementary="yes" name="Inline skating allowed" de.name="Inlineskaten frei">
+        <tag key="inline_skates" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1020-30" supplementary="yes" name="Residents allowed" de.name="Anlieger frei"> <!-- FIXME: bad translation into English -->
+        <tag tag_ref="mode" append_value="destination"/>
+    </sign>
+
+    <sign ref="DE:1022-10" supplementary="yes" name="Bicycles allowed" de.name="Radfahrer frei">
+        <tag key="bicycle" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1022-11" supplementary="yes" name="Mofas allowed" de.name="Mofas frei">
+        <tag key="mofa" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1022-12" supplementary="yes" name="Motorcycles allowed" de.name="Krafträder frei"
+        long_name="Motorcycles, also with sidecar, mopeds and mofas allowed"
+        de.long_name="Krafträder auch mit Beiwagen, Kleinkrafträder und Mofas frei">
+        <tag key="motorcycle" value="yes"/>
+    </sign>
+
+<!--FIXME: motorcar does not fit, since 1024-10 refers to passenger vehicles -->
+<!--    <sign ref="DE:1024-10" supplementary="yes" name="passenger car allowed" de.name="Personenkraftwagen frei"> -->
+<!--        <tag key="motorcar" value="yes"/>-->
+<!--    </sign>-->
+
+    <sign ref="DE:1024-12" supplementary="yes" name="Heavy goods vehicles allowed" de.name="LKW frei"
+        long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers, except passenger cars and busses, allowed"
+        de.long_name="Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschließlich ihrer Anhänger und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse frei">
+        <tag key="hgv" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1024-14" supplementary="yes" name="Bus allowed" de.name="Kraftomnibus frei">
+        <tag key="bus" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1026-30" supplementary="yes" name="Taxi allowed" de.name="Taxi frei">
+        <tag key="taxi" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1026-32" supplementary="yes" name="Public service vehicles allowed" de.name="Linienverkehr frei"
+            wiki="Key:psv">
+        <tag key="psv" value="yes"/>
+    </sign>
+
+    <sign ref="DE:1026-35" supplementary="yes" name="Delivery vehicles allowed" de.name="Lieferverkehr frei">
+        <tag tag_ref="mode" append_value="delivery"/>
+    </sign>
+
+    <sign ref="DE:1026-36" supplementary="yes" name="Agricultural vehicles allowed" de.name="Landwirtschaftlicher Verkehr frei">
+        <tag tag_ref="mode" append_value="agricultural"/>
+    </sign>
+
+    <sign ref="DE:1026-37" supplementary="yes" name="Forestry vehicles allowed" de.name="Forstwirtschaftlicher Verkehr frei">
+        <tag tag_ref="mode" append_value="forestry"/>
+    </sign>
+
+    <sign ref="DE:1026-38" supplementary="yes" name="Agricultural and forestry vehicles allowed" de.name="Land- und forstwirtschaftlicher Verkehr frei">
+        <tag tag_ref="mode" append_value="agricultural"/>
+        <tag tag_ref="mode" append_value="forestry"/>
+    </sign>
+
+    <sign ref="DE:1048-12" supplementary="yes" name="Heavy goods vehicles only" de.name="nur LKW"
+            long_name="Vehicles with a permitted gross weight over 3.5 t including their trailers prohibited, except passenger cars and busses, only"
+            de.long_name="Nur Kraftfahrzeuge mit einem zulässigen Gesamtgewicht über 3,5 t, einschl. ihrer Anhänger, und Zugmaschinen, ausgenommen Personenkraftwagen und Kraftomnibusse">
+        <tag tag_ref="restriction" condition="hgv"/>
+    </sign>
+
+    <sign ref="DE:1052-36" supplementary="yes" name="When the road is wet" de.name="Bei nasser Fahrbahn">
+        <tag tag_ref="restriction" condition="wet"/>
+    </sign>
+
+    <sign ref="DE:Kraftfahrzeuge-frei" supplementary="yes" name="Motor vehicles allowed" de.name="Kraftfahrzeuge frei">
+        <tag key="motor_vehicle" value="yes"/>
+    </sign>
+</roadsignpreset>

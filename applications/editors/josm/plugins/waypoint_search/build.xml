@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="waypoint_search" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="bugfix of search when layer is added"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+
+    <property name="plugin.author" value="Åsmund Realfsen - realfsen at gmx.net"/>
+    <property name="plugin.class"  value="org.openstreetmap.josm.plugins.waypointSearch.WaypointSearchPlugin"/>
+    <property name="plugin.description" value="Enables searching for waypoint imported from gpx file."/>
+    <property name="plugin.icon" value="images/WaypointSearch.png"/>
+        
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

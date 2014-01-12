@@ -1,0 +1,113 @@
+//License: GPL (v2 or later)
+
+/*
+
+ This is a source file for javacc. It generates a parser for strings 
+ with parameters (in perl style). It returns a list of
+ tokens of type String (Str) or Parameter (Prm). Sub-strings of the
+ form "$ident" or "${ident}" are identified as a parameter.
+ '$' or '\' signs have to be quoted.
+ 
+ There can be multiple consecutive string tokens in the output list.
+ The client most likely wants the merge these, but it is not done
+ here to keep the parser as simple as possible.
+ 
+ Examples:
+ "up to $x%"            --> "up to ", <x>, "%"
+ "$int_val2 \$ and \\ or"    --> <int_val2>, " ", "$", " and ", "\", " or"
+ "In ${num}th row"      --> "In ", <num>, "th row"
+ 
+*/
+
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(ParamStringScanner)
+package org.openstreetmap.josm.plugins.roadsigns.javacc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openstreetmap.josm.plugins.roadsigns.ParametrizedString.Prm;
+import org.openstreetmap.josm.plugins.roadsigns.ParametrizedString.Str;
+import org.openstreetmap.josm.plugins.roadsigns.ParametrizedString.StringOrParameter;
+
+public class ParamStringScanner {
+	public static List<StringOrParameter> parseIt(String s) throws ParseException {
+		ParamStringScanner parser = new ParamStringScanner(new java.io.StringReader(s));
+		return parser.parse();
+	}
+}
+PARSER_END(ParamStringScanner)
+
+TOKEN :
+{
+  < ID: "$" ( ( ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* ) | ( "{" ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* "}" ) ) >
+|
+  < ESC : "\\\\" | "\\$" >
+|
+  < REST: ( ~["\\","$"] )+ >
+}
+
+
+List<StringOrParameter> parse() : 
+{
+    String val;
+    Token t;
+    List<StringOrParameter> lst = new ArrayList<StringOrParameter>();
+}
+{
+    (
+    val=id()
+        {
+            lst.add(new Prm(val));
+        }
+| 
+    val=esc()
+        {
+            lst.add(new Str(val));
+        }
+| 
+    t=<REST>
+        {
+            lst.add(new Str(t.image));
+        }
+    )*
+        {
+            return lst;
+        }
+}
+
+String id() :
+{
+    Token t;
+    String ret;
+}
+{
+    t=<ID>
+    {
+        ret = t.image;
+        ret = ret.substring(1);
+        if (ret.startsWith("{")) {
+            ret = ret.substring(1, ret.length()-1);
+        }
+        return ret;
+    }
+}
+
+String esc() :
+{
+    Token t;
+}
+{
+    t=<ESC>
+    {
+        if (t.image.equals("\\\\")) {
+            return "\\";
+        } else if (t.image.equals("\\$")) {
+            return "$";
+        } else
+            throw new AssertionError();
+    }
+}

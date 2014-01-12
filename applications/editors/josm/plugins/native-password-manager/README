@@ -1,0 +1,27 @@
+
+Native Password Manager Plugin
+==============================
+
+Prevents JOSM from saving passwords as plain text to the JOSM preferences file. Instead, uses a password manager to store the data in encrypted form.
+Supported password managers are gnome-keyring and KWallet. Apple Keychain and Windows data encryption may work, but are untested so far.
+
+The following preference keys are managed:
+    osm-server.username         // API login username
+    osm-server.password         // API login password
+    proxy.user                  // Proxy username
+    proxy.pass                  // Proxy password
+    oauth.access-token.key      // OAuth key
+    oauth.access-token.secret   // OAuth secret
+
+The keyring code from the Netbeans project is used to access the individual Password Managers. It is slightly patched, to remove Netbeans
+specific dependencies. 
+
+Original code:
+    http://hg.netbeans.org/main/file/524f40b94a30/keyring.impl  and
+    http://hg.netbeans.org/main/file/524f40b94a30/keyring
+Patch:
+    netbeans-keyring-patches.diff
+
+We use the GPL-v2-"classpath exception" License of Netbeans, which allows linking against code of other licenses.
+
+Author: Paul Hartmann <phaaurlt@googlemail.com>

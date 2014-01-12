@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="gpxfilter" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="GPXFilter: moved to Alt-Shift-X"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+
+    <property name="plugin.author" value="Upliner"/>
+    <property name="plugin.class" value="gpxfilter.GpxFilterPlugin"/>
+    <property name="plugin.description" value="Allows to filter out unnecessary GPS tracks"/>
+<!--    <property name="plugin.icon" value="images/preferences/walkingpapers.png"/>-->
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/GPXFilter"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

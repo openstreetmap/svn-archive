@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="PicLayer" default="dist" basedir=".">
+    <property name="commit.message" value="[josm/PicLayer] - disable menu items by default"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+	
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Tomasz Stelmach"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.piclayer.PicLayerPlugin"/>
+    <property name="plugin.description" value="This plugin allows to display any picture as a background in the editor and align it with the map."/>
+    <property name="plugin.icon" value="images/layericon.png"/>
+    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/PicLayer"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

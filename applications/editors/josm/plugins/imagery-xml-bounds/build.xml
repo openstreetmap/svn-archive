@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="imagery-xml-bounds" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+	
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.imageryxmlbounds.ImageryXmlBoundsPlugin"/>
+    <property name="plugin.description" value="Generate Imagery XML bounds from a multipolygon"/>
+    <property name="plugin.icon" value="images/xml_24.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Imagery-XML-Bounds"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

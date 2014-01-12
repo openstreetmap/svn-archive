@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="terracer" default="dist" basedir=".">
+    <property name="commit.message" value="applied #j5760 (patch by robome) - Order of housenumbers not correct"/>
+    <property name="plugin.main.version" value="6397"/>
+    <property name="plugin.author" value="Matt Amos"/>
+    <property name="plugin.class" value="terracer.TerracerPlugin"/>
+    <property name="plugin.description" value="Make terraced houses out of single blocks."/>
+    <property name="plugin.icon" value="images/terrace.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Terracer"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

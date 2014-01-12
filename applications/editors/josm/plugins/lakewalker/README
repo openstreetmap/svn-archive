@@ -1,0 +1,23 @@
+README FOR Lakewalker
+=======================
+
+The Lakewalker plugin can be used to generate traces of lakes, rivers or shoreline from
+LANDSAT imagery (or theoretically any imagery that is provided on a WMS server).
+
+Currently the plugin features 2 modes of operation: Native and Classic. The classic mode 
+requires the Python lakewalker.py script to be downloaded into the lakewalker directory
+within the JOSM plugin directory.
+
+Common Features:
+ - On-screen feedback to Lakewalker progress with cancel
+ - Tag ways appropriately
+ - limit ways to length
+ - Manage Landsat image cache from Prefs screen
+
+Native Features:
+ - Doesn't require Python
+
+Classic Features:
+ - Access all lakewalker options via preferences
+ - Read data in thread
+ - ...

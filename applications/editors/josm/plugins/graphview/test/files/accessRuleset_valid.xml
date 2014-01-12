@@ -1,0 +1,54 @@
+<accessRuleset>
+	<unknown></unknown>
+	<classes>
+		<class name="vehicle">
+			<class name="motor_vehicle">
+				<class name="bus"></class>
+			</class>
+			<class name="bicycle" />
+		</class>
+	</classes>
+	<unknown />
+	
+	<basetags>
+		<tag k="highway" v="residential"/>
+		<tag k="highway" v="cycleway"/>		
+	</basetags>
+	
+	<implications>
+		<implication>
+			<condition>
+				<tag k="highway" v="cycleway"/>
+			</condition>
+			<implies>
+				<tag k="bicycle" v="designated"/>
+			</implies>
+		</implication>
+		<implication>
+			<condition>
+				<and>
+					<tag k="highway" v="steps"/>
+					<not>
+						<key k="escalator"/>
+					</not>
+				</and>
+			</condition>
+			<implies>
+				<tag k="normal_steps" v="yes"/>
+			</implies>
+		</implication>
+		<implication>
+			<condition>
+				<or>
+					<tag k="construction" v="yes"/>
+					<tag k="disused" v="yes"/>
+					<tag k="abandoned" v="yes"/>
+				</or>
+			</condition>
+			<implies>
+				<tag k="usable" v="no"/>
+			</implies>
+		</implication>
+	</implications>
+	
+</accessRuleset>

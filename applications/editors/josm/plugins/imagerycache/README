@@ -1,0 +1,13 @@
+README 
+======
+
+Readme for JOSM ImageryCache plugin
+
+    * Author of the plugin: Alexei Kasatkin
+    * License: GPL v3 (see GPL-3.0.txt) (all sources, except ones under crosby.binary package)
+    * License of MapDB  is Apache License Version 2.0, http://www.apache.org/licenses/
+    
+The source code in package org.mapdb has been copied from https://github.com/jankotek/MapDB. all rights 
+
+This plugin replace default tile loader  for TMSLayer and SlippyMap with the new one based on database. 
+This results in storing all tile cahe in a few files, not thouzands of them.

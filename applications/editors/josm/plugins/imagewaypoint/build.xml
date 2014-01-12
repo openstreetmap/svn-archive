@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ImageWayPoint" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="[josm/ImageWayPoint] move opening to File/Open"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+    
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Flint"/>
+    <property name="plugin.class" value="org.insignificant.josm.plugins.imagewaypoint.ImageWayPointPlugin"/>
+    <property name="plugin.description" value="Another plugin to match images to the waypoints in a GPX file. A match is made when the ''name'', ''cmt'' or ''desc'' attribute of a waypoint tag matches the filename of an image."/>
+    <property name="plugin.icon" value="images/dialogs/imagewaypoint.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImageWayPoint"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

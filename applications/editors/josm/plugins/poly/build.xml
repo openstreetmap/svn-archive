@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="poly" default="dist" basedir=".">
+    
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Zverik"/>
+    <property name="plugin.class" value="poly.PolyPlugin"/>
+    <property name="plugin.description" value="Read and write osmosis poly filter files"/>
+    <!--<property name="plugin.icon" value="images/..."/>-->
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

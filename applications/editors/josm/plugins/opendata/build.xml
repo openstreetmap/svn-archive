@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="opendata" default="dist" basedir=".">
+    <property name="plugin.main.version" value="6412"/>
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.opendata.OdPlugin"/>
+    <property name="plugin.description" value="Convert data from Open Data portals to OSM layer"/>
+    <property name="plugin.icon" value="images/dialogs/o24.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
+    <property name="plugin.requires" value="jts;geotools;utilsplugin2"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+	
+    <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
+    <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
+	
+    <!--
+    **********************************************************
+    ** compile_lang3 - compiles Apache Commons Lang 3 needed classes
+    **********************************************************
+    -->
+    <target name="compile_lang3" depends="init">
+        <echo message="compiling Apache Commons Lang 3 ... "/>
+        <javac srcdir="includes/org/apache/commons/lang3" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
+    </target>
+    <!--
+    **********************************************************
+    ** compile_poi - compiles Apache POI needed classes
+    **********************************************************
+    -->
+    <target name="compile_poi" depends="init">
+        <echo message="compiling Apache POI ... "/>
+        <javac srcdir="includes/org/apache/poi" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
+    </target>
+    <!--
+    **********************************************************
+    ** compile_collections - compiles Apache Collections needed classes
+    **********************************************************
+    -->
+    <target name="compile_collections" depends="init">
+        <echo message="compiling Apache Collections ... "/>
+        <javac srcdir="includes/org/apache/commons/collections" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
+    </target>
+    <!--
+    **********************************************************
+    ** compile_jopendoc - compiles JOpenDocument needed classes
+    **********************************************************
+    -->
+    <target name="compile_jopendoc" depends="init, compile_collections">
+        <echo message="compiling JOpenDocument ... "/>
+        <javac srcdir="includes/org/jopendocument" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" >
+        	<classpath>
+        		<!-- JDOM is required and embededd in geotools jar -->
+        		<pathelement location="${geotools}"/>
+        	</classpath>
+        </javac>
+    </target>
+    <!--
+    **********************************************************
+    ** compile_j7zip - compiles J7zip classes
+    **********************************************************
+    -->
+    <target name="compile_j7zip" depends="init">
+        <echo message="compiling J7Zip ... "/>
+        <javac srcdir="includes/org/j7zip" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8" />
+    </target>
+    <!--
+    **********************************************************
+    ** compile_neptune - compiles Neptune classes
+    **********************************************************
+    -->
+    <target name="compile_neptune" depends="init">
+        <echo message="compiling Neptune ... "/>
+        <javac srcdir="includes/neptune" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8" />
+    </target>
+    <!--
+    **********************************************************
+    ** compile - compiles the source tree
+    **********************************************************
+    -->
+    <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
+        <echo message="compiling sources for  ${plugin.jar} ... "/>
+        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
+            <classpath>
+        	    <pathelement path="${plugin.build.dir}"/>
+                <pathelement location="${josm}"/>
+                <pathelement location="${jts}"/>
+                <pathelement location="${geotools}"/>
+            </classpath>
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+    
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+          <classpath>
+            <fileset dir="lib/jaxb" includes="*.jar" />
+          </classpath>
+    </taskdef>
+	
+    <target name="xjc_neptune">
+        <xjc schema="resources/neptune/neptune.xsd" destdir="includes" package="neptune" target="2.1" />
+    </target>
+</project>

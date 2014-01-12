@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<surveyor columns="4" width="1300" height="0">
+  <!-- icons can either be absolute paths or relative paths to the .josm directory -->
+  <!-- action class: either fully qualified classnames or if not found,
+       package at.dallermassl.josm.plugin.surveyor.action is assumed -->
+  <button label="Tunnel Start" hotkey="T" icon="styles/standard/vehicle/tunnel.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="tunnel start"/>
+    <!--action class="ConsolePrinterAction" params="tunnel start,tunnel"/-->
+    <!--action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/-->
+  </button>
+  <button label="Bridge" hotkey="B" type="toggle">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="bridge"/>
+  </button>
+  <button label="Village/City" hotkey="V" icon="styles/standard/place.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="village"/>
+    <!--
+    <action class="SetNodeAction" params=""/>
+    <action class="AnnotationPresetAction" params="Places"/>
+    -->
+  </button>
+  <button label="Parking" hotkey="P" icon="styles/standard/vehicle/parking.png">
+    <!--action class="SetNodeAction" params="amenity=parking"/-->
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Parking"/>
+  </button>
+  <button label="One Way" hotkey="O" icon="presets/oneway.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="oneway=yes"/>
+  </button>
+  <button label="Church" hotkey="C" icon="styles/standard/religion/church.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetNodeAction" params="amenity=place_of_worship,denomination=christian"/>
+    <action class="SetWaypointAction" params="Church"/>
+  </button>
+  <button label="Fuel Station" hotkey="F" icon="styles/standard/vehicle/fuel.png">
+    <!--action class="SetNodeAction" params="amenity=fuel"/-->
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Fuel"/>
+  </button>
+  <button label="Hotel" hotkey="H" icon="styles/standard/accommodation/hotel.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Hotel"/>
+  </button>
+  <button label="Restaurant" hotkey="R" icon="styles/standard/food/restaurant.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetNodeAction" params="amenity=restaurant"/>
+    <action class="SetWaypointAction" params="Restaurant"/>
+  </button>
+  <button label="Shopping" hotkey="S" icon="styles/standard/shop.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Info"/>
+  </button>
+  <button label="WC" hotkey="W" icon="styles/standard/vehicle/parking/restarea_toilets.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Info"/>
+  </button>
+  <button label="Camping" hotkey="Z" icon="styles/standard/accommodation/camping/caravan.png">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Camping"/>
+  </button>
+  <button label="Info" hotkey="I">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Info"/>
+  </button>
+  <button label="Exit" hotkey="E">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Exit"/>
+  </button>
+  <button label="Motorway" hotkey="1">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Motorway"/>
+  </button>
+  <button label="Primary" hotkey="2">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Primary"/>
+  </button>
+  <button label="Secondary" hotkey="3">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Secondary"/>
+  </button>
+  <button label="Unclassified" hotkey="4">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Unclassified"/>
+  </button>
+  <button label="Residential" hotkey="5">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Residential"/>
+  </button>
+  <!--
+  <button label="Test" hotkey="shift X">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Test X"/>
+  </button>
+  <button label="Test" hotkey="F12">
+    <action class="PlayAudioAction" params="resource://audio/KDE_Window_Iconify.wav"/>
+    <action class="SetWaypointAction" params="Test"/>
+  </button>
+   -->
+</surveyor>

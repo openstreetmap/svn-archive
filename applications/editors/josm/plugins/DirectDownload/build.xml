@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DirectDownload" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6421"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Hartmut Holzgraefe"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.directdownload.DirectDownload"/>
+    <property name="plugin.description" value="Download your GPX tracks from openstreetmap.org"/>
+    <property name="plugin.icon" value="images/DownloadAction.png"/>
+    <!-- <property name="plugin.link" value="..."/>-->
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

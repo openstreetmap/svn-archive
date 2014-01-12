@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="utilsplugin2" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="[josm_utilsplugin2]: Use notifications instead of MessageBoxes"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6317"/>
+
+    <property name="plugin.author" value="Kalle Lampila, Upliner, Zverik, akks, joshdoe and others"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.utilsplugin2.UtilsPlugin2"/>
+    <property name="plugin.description" value="Several utilities that make your life easier."/>
+    <property name="plugin.icon" value="images/utils.png"/>
+    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/UtilsPlugin2"/>
+    <property name="plugin.stage" value="40"/>
+    
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+</project>

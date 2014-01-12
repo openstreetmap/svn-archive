@@ -1,0 +1,1035 @@
+<?xml version="1.0"?>
+<!DOCTYPE osm-tag-definitions SYSTEM "osm-tag-definitions.dtd">
+<osm-tag-definitions version="0.9"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-datatypes">
+
+		
+	<tag key="highway" type="xs:string" for-way="yes" for-node="yes">
+		<label value="motorway" for-way="yes"/>
+		<label value="motorway_link" for-way="yes"/>
+		<label value="trunk" for-way="yes"/>
+		<label value="trunk_link" for-way="yes"/>
+		<label value="primary" for-way="yes"/>
+		<label value="primary_link" for-way="yes"/>
+		<label value="secondary" for-way="yes"/>
+		<label value="tertiary" for-way="yes"/>
+		<label value="unclassified" for-way="yes"/>
+		<label value="road" for-way="yes"/>
+		<label value="residential" for-way="yes"/>
+		<label value="living_street" for-way="yes"/>
+		<label value="service" for-way="yes"/>
+		<label value="track" for-way="yes"/>
+		<label value="pedestrian" for-way="yes" for-relation="yes"/>
+		<label value="services" for-way="yes"/>
+		<label value="bus_guideway" for-way="yes"/>	
+		<label value="path" for-way="yes"/>
+		<label value="cycleway" for-way="yes"/>
+		<label value="footway" for-way="yes"/>
+		<label value="bridleway" for-way="yes"/>
+		<label value="byway" for-way="yes"/>
+		<label value="steps" for-way="yes"/>
+		<label value="mini_roundabout" for-node="yes"/>
+		<label value="stop" for-node="yes"/>
+		<label value="traffic_signals" for-node="yes"/>
+		<label value="incline" for-node="yes"/>
+		<label value="incline_steep" for-node="yes"/>
+		<label value="ford" for-node="yes"/>
+		<label value="bus_stop" for-node="yes"/>
+		<label value="turning_circle" for-node="yes"/>
+		<label value="construction" for-way="yes"/>
+		<label value="emergency_access_point" for-node="yes"/>
+		<label value="motorway_junction" for-node="yes"/>
+		<label value="speed_camera" for-node="yes"/>
+		<label value="passing_place" for-node="yes"/>
+	</tag>	
+	
+	
+	
+		
+	<tag key="junction" type="xs:string" for-way="yes" for-node="yes" >
+		<label value="roundabout" for-way="yes"/>		
+	</tag>
+
+	<tag key="traffic_calming" type="xs:string" for-way="yes" for-node="yes" >
+		<label value="yes" for-way="yes" for-node="yes"/>
+		<label value="bump" for-way="yes" for-node="yes"/>
+		<label value="chicane" for-way="yes" for-node="yes"/>
+		<label value="cushion" for-way="yes" for-node="yes"/>
+		<label value="hump" for-way="yes" for-node="yes"/>
+		<label value="rumble_strip" for-way="yes" for-node="yes"/>
+		<label value="table" for-way="yes" for-node="yes"/>
+		<label value="choker" for-way="yes" for-node="yes"/>
+	</tag>
+
+	<tag key="service" type="xs:string" for-way="yes">
+		<label value="parking_aisle" for-way="yes"/>
+		<label value="driveway" for-way="yes"/>
+		<label value="alley" for-way="yes"/>
+	</tag>
+	
+	<tag key="smoothness" type="xs:string" for-way="yes">
+		<label value="excellent" for-way="yes"/>
+		<label value="good" for-way="yes"/>
+		<label value="intermediate" for-way="yes"/>
+		<label value="bad" for-way="yes"/>
+		<label value="very_bad" for-way="yes"/>
+		<label value="horrible" for-way="yes"/>
+		<label value="very_horrible" for-way="yes"/>
+		<label value="impassable" for-way="yes"/>
+	</tag>
+	
+	<tag key="barrier" type="xs:string" for-way="yes" for-node="yes">
+		<label value="hedge" for-way="yes"/>
+		<label value="fence" for-way="yes"/>
+		<label value="wall" for-way="yes"/>
+		<label value="ditch" for-way="yes"/>
+		<label value="retaining_wall" for-way="yes"/>
+		<label value="city_wall" for-way="yes"/>
+		
+		<label value="entrance" for-node="yes"/>
+		<label value="bollard" for-node="yes"/>
+		<label value="gate" for-node="yes"/>
+		<label value="stile" for-node="yes"/>
+		<label value="cattle_grid" for-node="yes"/>
+		<label value="cycle_barrier" for-node="yes"/>
+		<label value="toll_booth" for-node="yes"/>
+		<label value="sally_port" for-node="yes"/>
+	</tag>
+	
+	
+	
+	<tag key="cycleway" type="xs:string" for-way="yes">
+		<label value="lane" for-way="yes"/>
+		<label value="track" for-way="yes"/>
+		<label value="opposite_lane" for-way="yes"/>
+		<label value="opposite_track" for-way="yes"/>
+		<label value="opposite" for-way="yes"/>
+	</tag>
+	
+	<tag key="smoothness" type="xs:string" for-way="yes">
+		<label value="excellent" for-way="yes"/>
+		<label value="good" for-way="yes"/>
+		<label value="intermediate" for-way="yes"/>
+		<label value="bad" for-way="yes"/>
+		<label value="very_bad" for-way="yes"/>
+		<label value="horrible" for-way="yes"/>
+		<label value="very_horrible" for-way="yes"/>
+		<label value="impassable" for-way="yes"/>
+	</tag>
+	
+	<tag key="tracktype" type="xs:string" for-way="yes">
+		<label value="grade1" for-way="yes"/>
+		<label value="grade2" for-way="yes"/>
+		<label value="grade3" for-way="yes"/>
+		<label value="grade4" for-way="yes"/>
+		<label value="grade5" for-way="yes"/>
+	</tag>
+
+	<tag key="waterway" type="xs:string" for-way="yes">
+		<label value="stream" for-way="yes"/>
+		<label value="river" for-way="yes"/>
+		<label value="riverbank" for-way="yes"/>
+		<label value="canal" for-way="yes"/>		
+		<label value="drain" for-way="yes"/>
+		<label value="dock" for-way="yes" for-node="yes"/>
+		<label value="lock_gate" for-node="yes"/>
+		<label value="turning_point" for-node="yes"/>
+		<label value="boatyard" for-node="yes"/>
+		<label value="weir" for-way="yes" for-node="yes"/>
+		<label value="dam" for-way="yes"/>
+	</tag>
+	
+	<tag key="lock" type="xs:string" for-way="yes" for-node="yes">
+		<label value="yes" for-way="yes"/>
+		<label value="no" for-way="yes"/>
+	</tag>
+
+	<tag key="mooring" type="xs:string" for-way="yes">
+		<label value="yes" for-way="yes"/>
+		<label value="no" for-way="yes"/>
+		<label value="private" for-way="yes"/>
+	</tag>
+	
+	<tag key="railway" type="xs:string" for-way="yes" for-node="yes">
+		<label value="rail" for-way="yes"/>
+		<label value="tram" for-way="yes"/>
+		<label value="light_rail" for-way="yes"/>
+		<label value="subway" for-way="yes"/>
+		<label value="preserved" for-way="yes"/>
+		<label value="disused" for-way="yes"/>
+		<label value="abandoned" for-way="yes"/>
+		<label value="narrow_gauge" for-way="yes"/>
+		<label value="monorail" for-way="yes"/>
+		<label value="station" for-node="yes"/>
+		<label value="halt" for-node="yes"/>
+		<label value="tram_stop" for-node="yes"/>
+		<label value="crossing" for-node="yes"/>
+		<label value="level_crossing" for-node="yes"/>
+		<label value="subway_entrance" for-node="yes"/>
+		<label value="turntable" for-node="yes" for-way="yes"/>
+		<label value="platform" for-way="yes"/>
+	</tag>
+	
+	<tag key="electrified" type="xs:string" for-way="yes">
+		<label value="contact_line" for-way="yes"/>
+		<label value="rail" for-way="yes"/>
+		<label value="yes" for-way="yes"/>
+		<label value="no" for-way="yes"/>
+	</tag>
+
+	<tag key="frequency" type="xs:string" for-way="yes">
+	</tag>
+
+	<tag key="voltage" type="xs:string" for-way="yes">
+	</tag>
+	
+	<tag key="service" type="xs:string" for-way="yes">
+		<label value="yard" for-way="yes"/>
+		<label value="siding" for-way="yes"/>
+		<label value="spur" for-way="yes"/>
+	</tag>
+	
+	
+	<tag key="aeroway" type="xs:string" for-way="yes" for-node="yes">
+		<label value="aerodrome" for-node="yes"/>
+		<label value="terminal" for-node="yes"/>
+		<label value="helipad" for-node="yes"/>
+		<label value="runway" for-way="yes"/>
+		<label value="taxiway" for-way="yes"/>
+		<label value="apron" for-way="yes"/>
+		<label value="gate" for-node="yes"/>
+	</tag>
+	
+	<tag key="aerialway" type="xs:string" for-way="yes" for-node="yes">
+		<label value="cable_car" for-way="yes"/>
+		<label value="chair_lift" for-way="yes"/>
+		<label value="drag_lift" for-way="yes"/>
+		<label value="station" for-node="yes"/>		
+	</tag>
+
+	<tag key="power" type="xs:string" for-way="yes" for-node="yes">
+		<label value="tower" for-node="yes"/>
+		<label value="line" for-way="yes"/>
+		<label value="station" for-node="yes" for-way="yes" /> <!--  area  -->
+		<label value="sub_station" for-node="yes" for-way="yes"/> <!--  area  -->
+		<label value="generator" for-node="yes" for-way="yes"/> <!--  area  -->
+	</tag>
+	
+	<tag key="wires" type="xs:string" for-way="yes">
+		<label value="single" for-way="yes"/>
+		<label value="double" for-way="yes"/>
+		<label value="tripple" for-way="yes"/>
+		<label value="quad" for-way="yes"/>		
+	</tag>	
+
+	<tag key="cables" type="xs:string" for-way="yes">
+	</tag>	
+
+	<tag key="man_made" type="xs:string" for-way="yes" for-node="yes">
+		<label value="beacon" for-node="yes"/>
+		<label value="crane" for-node="yes"/>
+		<label value="gasometer" for-node="yes"/>
+		<label value="lighthouse" for-node="yes"/>		
+		<label value="pier" for-way="yes"/> <!--  area  -->		
+		<label value="pipeline" for-way="yes"/>		
+		<label value="reservoir_covered" for-node="yes" for-way="yes"/>	<!--  area  -->			
+		<label value="surveillance" for-node="yes" for-way="yes"/>	<!--  area  -->
+		<label value="survey_point" for-node="yes" />	
+		<label value="tower" for-node="yes" />
+		<label value="wastewater_plant" for-node="yes" for-way="yes"/>	<!--  area  -->
+		<label value="watermill" for-node="yes" for-way="yes"/>	<!--  area  -->
+		<label value="water_tower" for-node="yes" />
+		<label value="water_works" for-node="yes" />
+		<label value="windmill" for-node="yes" />
+		<label value="works" for-node="yes" />
+	</tag>	
+	
+	<tag key="building" type="xs:string" for-way="yes" >
+		<label value="yes" for-way="yes" /> <!--  area -->
+	</tag>	
+
+	<tag key="leisure" type="xs:string" for-way="yes" for-node="yes">
+		<label value="sports_centre" for-way="yes" for-node="yes"/>
+		<label value="golf_course" for-way="yes" for-node="yes"/>
+		<label value="stadium" for-way="yes" for-node="yes"/>
+		<label value="track" for-way="yes" for-node="yes"/>
+		<label value="pitch" for-way="yes" for-node="yes"/>
+		<label value="water_park" for-way="yes" for-node="yes"/>	
+		<label value="marina" for-way="yes" for-node="yes"/>
+		<label value="slipway" for-node="yes"/>
+		<label value="fishing" for-way="yes" for-node="yes"/>
+		<label value="nature_reserve" for-way="yes" for-node="yes"/>
+		<label value="park" for-way="yes" for-node="yes"/>
+		<label value="playground" for-way="yes" for-node="yes"/>
+		<label value="garden" for-way="yes" for-node="yes"/>
+		<label value="common" for-way="yes" for-node="yes"/>
+		<label value="ice_rink" for-way="yes" for-node="yes"/>
+	</tag>	
+	
+	
+	<tag key="amenity" type="xs:string" for-way="yes" for-node="yes">
+		<label value="arts_centre"  for-node="yes"/>
+		<label value="atm" for-node="yes"/>
+		<label value="baby_hatch" for-way="yes" for-node="yes"/>
+		<label value="bank" for-node="yes"/>
+		<label value="bench" for-node="yes"/>
+		<label value="biergarten" for-node="yes"/>	
+		<label value="bicycle_parking" for-way="yes" for-node="yes"/>
+		<label value="bicycle_rental" for-node="yes"/>
+		<label value="bureau_de_change" for-node="yes"/>
+		<label value="bus_station" for-way="yes" for-node="yes"/>
+		<label value="brothel" for-way="yes" for-node="yes"/>
+		<label value="cafe"  for-node="yes"/>
+		<label value="car_rental" for-way="yes" for-node="yes"/>
+		<label value="car_sharing" for-way="yes" for-node="yes"/>
+		<label value="cinema" for-node="yes"/>		
+		<label value="college" for-way="yes" for-node="yes"/>
+		<label value="courthouse" for-node="yes"/>
+		<label value="crematorium" for-way="yes" for-node="yes"/>
+		<label value="dentist" for-way="yes" for-node="yes"/>
+		<label value="doctors" for-way="yes" for-node="yes"/>
+		<label value="drinking_water"  for-node="yes"/>
+		<label value="embassy"  for-node="yes"/>
+		<label value="emergency_phone"  for-node="yes"/>
+		<label value="fast_food"  for-node="yes"/>
+		<label value="ferry_terminal" for-way="yes" for-node="yes"/>
+		<label value="fire_station"  for-node="yes"/>
+		<label value="fountain" for-node="yes" for-way="yes"/>
+		<label value="fuel"  for-node="yes"/>
+		<label value="grave_yard"  for-node="yes"/>
+		<label value="grit_bin"  for-node="yes"/>
+		<label value="hospital" for-way="yes" for-node="yes"/>
+		<label value="hunting_stand" for-way="yes" for-node="yes"/>
+		<label value="kindergarten"  for-way="yes" for-node="yes"/>
+		<label value="library" for-node="yes" />
+		<label value="nightclub"  for-node="yes"/>
+		<label value="parking"  for-node="yes" for-way="yes"/>
+		<label value="pharmacy"  for-node="yes"/>
+		<label value="place_of_worship" for-node="yes"/>
+		<label value="police" for-node="yes"/>		
+		<label value="post_box"  for-node="yes"/>
+		<label value="post_office" for-node="yes" />
+		<label value="prison"  for-node="yes"/>
+		<label value="pub"  for-node="yes" />
+		<label value="public_building"  for-node="yes" for-way="yes"/> <!--  areas -->
+		<label value="recycling" for-node="yes"/>
+		<label value="restaurant" for-node="yes"/>		
+		<label value="school" for-way="yes" for-node="yes"/>
+		<label value="studio"   for-node="yes"/>
+		<label value="shelter" for-node="yes" />
+		<label value="signpost" for-node="yes" />
+		<label value="taxi"  for-node="yes" for-way="yes"/>  <!--  areas -->
+		<label value="telephone"  for-node="yes"/>
+		<label value="theatre"  for-node="yes"/>
+		<label value="toilets" for-node="yes"/>
+		<label value="townhall" for-node="yes" for-way="yes"/>  <!--  areas -->		
+		<label value="university" for-way="yes" for-node="yes"/>
+		<label value="vending_machine"   for-node="yes"/>
+		<label value="veterinary" for-node="yes" for-way="yes"/>
+		<label value="bbq" for-node="yes" for-way="yes"/>
+		<label value="waste_disposal"  for-node="yes"/>
+	</tag>	
+	
+	
+	<tag key="shop" type="xs:string" for-way="yes" for-node="yes">
+		<label value="alcohol"  for-node="yes" for-way="yes"/>
+		<label value="bakery"  for-node="yes" for-way="yes"/>
+		<label value="butcher" for-node="yes" for-way="yes"/>
+		<label value="bicycle"  for-node="yes" for-way="yes"/>
+		<label value="beverages" for-node="yes" for-way="yes"/>
+		<label value="books" for-node="yes" for-way="yes"/>
+		<label value="car" for-node="yes" for-way="yes"/>	
+		<label value="car_repair" for-node="yes" for-way="yes"/>
+		<label value="clothes" for-node="yes" for-way="yes"/>
+		<label value="computer" for-node="yes" for-way="yes"/>
+		<label value="convenience" for-node="yes" for-way="yes"/>	
+		<label value="department_store" for-node="yes" for-way="yes"/>	
+		<label value="doityourself" for-node="yes" for-way="yes"/>
+		<label value="dry_cleaning" for-node="yes" for-way="yes"/>	
+		<label value="electronics" for-node="yes" for-way="yes"/>
+		<label value="florist" for-node="yes" for-way="yes"/>
+		<label value="furniture" for-node="yes" for-way="yes"/>
+		<label value="garden_center" for-node="yes" for-way="yes"/>
+		<label value="hairdresser" for-node="yes" for-way="yes"/>
+		<label value="hardware" for-node="yes" for-way="yes"/>
+
+		<label value="hifi" for-node="yes" for-way="yes"/>
+		<label value="kiosk" for-node="yes" for-way="yes"/>	
+		<label value="laundry" for-node="yes" for-way="yes"/>
+		<label value="mall" for-node="yes" for-way="yes"/>
+		<label value="motorcycle" for-node="yes" for-way="yes"/>
+		<label value="optician" for-node="yes" for-way="yes"/>
+		<label value="organic" for-node="yes" for-way="yes"/>
+		<label value="outdoor" for-node="yes" for-way="yes"/>
+		<label value="shoes" for-node="yes" for-way="yes"/>
+		<label value="sports" for-node="yes" for-way="yes"/>		
+		<label value="stationery" for-node="yes" for-way="yes"/>				
+		<label value="supermarket" for-node="yes" for-way="yes" />
+		<label value="toys" for-node="yes" for-way="yes"/>	
+		<label value="video" for-node="yes" for-way="yes"/>
+	</tag>
+	
+	
+	<tag key="tourism" type="xs:string" for-way="yes" for-node="yes">
+		<label value="alpin_hut"  for-node="yes"/>
+		<label value="aquarium"  for-node="yes"/>
+		<label value="attraction" for-node="yes" for-way="yes"/>
+		<label value="artwork" for-node="yes" for-way="yes"/>
+		<label value="camp_site" for-node="yes" for-way="yes"/>
+		<label value="chalet" for-node="yes" for-way="yes"/>	
+		<label value="caravan_site" for-node="yes" for-way="yes"/>
+		<label value="guest_house" for-node="yes"/>
+		<label value="hostel" for-node="yes"/>		
+		<label value="hotel" for-node="yes"/>
+		<label value="information"  for-node="yes"/>
+		<label value="motel"  for-node="yes"/>
+		<label value="museum" for-node="yes" for-way="yes"/>
+		<label value="picnic_site" for-node="yes" for-way="yes"/>
+		<label value="theme_park" for-node="yes" for-way="yes"/>			
+		<label value="viewpoint" for-node="yes"/>
+		<label value="zoo" for-node="yes" for-way="yes"/>
+		<label value="yes" for-node="yes" for-way="yes"/>
+	</tag>
+	
+	<tag key="historic" type="xs:string" for-way="yes" for-node="yes">
+		<label value="castle"  for-node="yes"/>
+		<label value="monument" for-node="yes"/>
+		<label value="memorial"  for-node="yes"/>
+		<label value="archaeological_site" for-way="yes" for-node="yes"/>
+		<label value="ruins" for-node="yes" for-way="yes" />
+		<label value="battlefield" for-node="yes" for-way="yes"/>	
+		<label value="wreck" for-node="yes" for-way="yes"/>
+		<label value="yes" for-node="yes" for-way="yes"/>
+	</tag>
+	
+	<tag key="landuse" type="xs:string" for-way="yes" for-node="yes">
+		<label value="farm"  for-way="yes"/>
+		<label value="farmyard" for-way="yes"/>
+		<label value="quarry"  for-node="yes" for-way="yes"/>
+		<label value="landfill"  for-node="yes" for-way="yes"/>
+		<label value="basin" for-way="yes" for-node="yes"/>
+		<label value="reservoir" for-node="yes" for-way="yes" />
+		<label value="forest" for-node="yes" for-way="yes"/>	
+		<label value="allotments" for-node="yes" for-way="yes"/>
+		<label value="vineyard"  for-way="yes" for-node="yes"/>
+		<label value="residential"  for-way="yes" for-node="yes"/>
+		<label value="retail" for-way="yes" for-node="yes"/>
+		<label value="commercial "  for-node="yes" for-way="yes"/>
+		<label value="industrial" for-way="yes" for-node="yes"/>
+		<label value="brownfield" for-node="yes" for-way="yes" />
+		<label value="greenfield" for-node="yes" for-way="yes"/>	
+		<label value="railway"  for-way="yes"/>
+		<label value="construction" for-node="yes" for-way="yes" />
+		<label value="military" for-node="yes" for-way="yes"/>	
+		<label value="cemetery"  for-way="yes"/>
+		<label value="meadow"  for-way="yes"/>
+		<label value="village_green" for-node="yes" for-way="yes" />
+		<label value="recreation_ground" for-node="yes" for-way="yes"/>	
+	</tag>
+	
+	
+	<tag key="military" type="xs:string" for-way="yes" for-node="yes">
+		<label value="airfield"  for-node="yes" for-way="yes"/>
+		<label value="bunker" for-node="yes"/>
+		<label value="barracks"  for-node="yes" for-way="yes"/>
+		<label value="danger_area" for-way="yes" for-node="yes"/>
+		<label value="range" for-node="yes" for-way="yes" />
+		<label value="naval_base" for-node="yes" for-way="yes"/>	
+	</tag>
+	
+	
+	<tag key="natural" type="xs:string" for-way="yes" for-node="yes">
+		<label value="spring"  for-node="yes" />
+		<label value="peak" for-node="yes"/>
+		<label value="glacier"  for-node="yes" for-way="yes"/>
+		<label value="volcano" for-node="yes"/>
+		<label value="cliff" for-node="yes" for-way="yes" />
+		<label value="scree" for-node="yes" for-way="yes"/>	
+		<label value="scrub"  for-node="yes" for-way="yes"/>
+		<label value="fell" for-node="yes" for-way="yes"/>
+		<label value="heath"  for-node="yes" for-way="yes"/>
+		<label value="wood" for-node="yes" for-way="yes"/>
+		<label value="marsh" for-node="yes" for-way="yes" />
+		<label value="wetland" for-node="yes" for-way="yes"/>	
+
+		<label value="water"  for-node="yes" for-way="yes"/>
+		<label value="coastline" for-node="yes" for-way="yes"/>
+		<label value="mud"  for-node="yes" for-way="yes"/>
+		<label value="beach" for-node="yes" for-way="yes"/>
+		<label value="bay" for-node="yes" for-way="yes" />
+		<label value="land" for-node="yes" for-way="yes"/>	
+		<label value="cave_entrance"  for-node="yes" for-way="yes"/>
+		<label value="tree" for-node="yes" />
+	</tag>
+	
+	<tag key="route" type="xs:string" for-way="yes" for-node="yes">
+		<label value="bus"  for-way="yes" />
+		<label value="detour"  for-way="yes" />
+		<label value="ferry"  for-way="yes" />
+		<label value="flight"  for-way="yes" />
+		<label value="hiking"  for-way="yes" />
+		<label value="bicycle"  for-way="yes" />
+		<label value="mtb"  for-way="yes" />
+		<label value="road"  for-way="yes" />
+		<label value="subsea"  for-way="yes" />
+		<label value="ski"  for-way="yes" />
+		<label value="tour"  for-way="yes" />
+		<label value="tram"  for-way="yes" />
+		<label value="pub_crawl"  for-way="yes" />
+	</tag>
+	
+	<tag key="boundary" type="xs:string" for-way="yes" >
+		<label value="administrative"  for-way="yes" />
+		<label value="civil"  for-way="yes" />
+		<label value="political"  for-way="yes" />
+		<label value="national_park"  for-way="yes" />
+	</tag>
+	
+	
+	
+
+	<tag key="sport" type="xs:string" for-way="yes" for-node="yes">
+		<label value="9pin"  for-node="yes" for-way="yes"/>
+		<label value="10pin" for-node="yes" for-way="yes"/>
+		<label value="archery"  for-node="yes" for-way="yes"/>
+		<label value="athletics"  for-node="yes" for-way="yes"/>
+		<label value="australian_football" for-node="yes" for-way="yes"/>
+		<label value="baseball" for-node="yes" for-way="yes"/>	
+		<label value="basketball"  for-node="yes" for-way="yes"/>
+		<label value="beachvolleyball" for-node="yes" for-way="yes"/>
+		<label value="boules"  for-node="yes" for-way="yes"/>
+		<label value="bowls" for-node="yes" for-way="yes"/>
+		<label value="canoe" for-node="yes" for-way="yes" />
+		<label value="chess" for-node="yes" for-way="yes"/>	
+
+		<label value="climbing"  for-node="yes" for-way="yes"/>
+		<label value="cricket" for-node="yes" for-way="yes"/>
+		<label value="cricket_nets"  for-node="yes" for-way="yes"/>
+		<label value="croquet" for-node="yes" for-way="yes"/>
+		<label value="cycling" for-node="yes" for-way="yes" />
+		<label value="dog_racing" for-node="yes" for-way="yes"/>	
+		<label value="equestrian"  for-node="yes" for-way="yes"/>
+		<label value="football" for-node="yes" for-way="yes"/>
+		
+		
+		<label value="golf"  for-node="yes" for-way="yes"/>
+		<label value="gymnastics" for-node="yes" for-way="yes"/>
+		<label value="hockey"  for-node="yes" for-way="yes"/>
+		<label value="horse_racing" for-node="yes" for-way="yes"/>
+		<label value="motor" for-node="yes" for-way="yes" />
+		<label value="multi" for-node="yes" for-way="yes"/>	
+		<label value="orienteering" for-node="yes" for-way="yes"/>
+		<label value="paddle_tennis" for-node="yes" for-way="yes"/>
+		<label value="pelota"  for-node="yes" for-way="yes"/>
+		<label value="racquet" for-node="yes" for-way="yes"/>
+		
+		<label value="rowing"  for-node="yes" for-way="yes"/>
+		<label value="rugby" for-node="yes" for-way="yes"/>
+		<label value="shooting"  for-node="yes" for-way="yes"/>
+		<label value="skating" for-node="yes" for-way="yes"/>
+		<label value="skateboard" for-node="yes" for-way="yes" />
+		<label value="soccer" for-node="yes" for-way="yes"/>	
+		<label value="swimming"  for-node="yes" for-way="yes"/>
+		<label value="skiing" for-node="yes" for-way="yes"/>
+		
+		<label value="table_tennis"  for-node="yes" for-way="yes"/>
+		<label value="team_handball" for-node="yes" for-way="yes"/>
+		<label value="tennis"  for-node="yes" for-way="yes"/>
+		<label value="volleyball" for-node="yes" for-way="yes"/>
+	</tag>
+	
+	<tag key="abutters" type="xs:string" for-way="yes" >
+		<label value="residential"  for-way="yes" />
+		<label value="retail"  for-way="yes" />
+		<label value="industrial"  for-way="yes" />
+		<label value="commercial"  for-way="yes" />
+		<label value="mixed"  for-way="yes" />
+	</tag>
+	
+	
+	<tag key="fenced" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+
+	<tag key="internet_access" type="xs:string" for-node="yes" >
+		<label value="terminal"  for-node="yes" />
+		<label value="wlan"  for-node="yes" />
+		<label value="wired"  for-node="yes" />
+		<label value="public"  for-node="yes" />
+		<label value="service"  for-node="yes" />
+	</tag>
+
+	<tag key="lit" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="area" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+	
+	<tag key="bridge" type="xs:string" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+		<label value="aqueduct"  for-way="yes" />
+		<label value="viaduct"  for-way="yes" />
+		<label value="swing"  for-way="yes" />		
+	</tag>
+	
+	<tag key="crossing" type="xs:string" for-node="yes" >
+		<label value="traffic_signals"  for-node="yes" />
+		<label value="uncontrolled"  for-node="yes" />
+		<label value="island"  for-node="yes" />
+		<label value="no"  for-node="yes" />		
+		<label value="unmarked"  for-node="yes" />
+		<label value="unknown"  for-node="yes" />
+	</tag>
+	
+	<tag key="tunnel" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="mountain_pass" type="xs:boolean" for-node="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+	
+	<tag key="cutting" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+	
+	<tag key="embankment" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+
+	<tag key="lanes" type="xs:integer" for-way="yes" >
+	</tag>
+
+	<tag key="layer" type="xs:integer" for-way="yes" >
+		<label value="-5"  for-way="yes" />
+		<label value="-4"  for-way="yes" />
+		<label value="-3"  for-way="yes" />
+		<label value="-2"  for-way="yes" />
+		<label value="-1"  for-way="yes" />
+		<label value="0"  for-way="yes" />
+		<label value="1"  for-way="yes" />
+		<label value="2"  for-way="yes" />
+		<label value="3"  for-way="yes" />
+		<label value="4"  for-way="yes" />
+		<label value="5"  for-way="yes" />		
+	</tag>
+	
+	<tag key="surface" type="xs:string" for-way="yes" >
+		<label value="paved"  for-way="yes" />
+		<label value="unpaved"  for-way="yes" />
+		<label value="gravel"  for-way="yes" />
+		<label value="cobblestone"  for-way="yes" />
+		<label value="paving_stones"  for-way="yes" />
+		<label value="ground"  for-way="yes" />
+		<label value="earth"  for-way="yes" />
+		<label value="mud"  for-way="yes" />
+		<label value="grass"  for-way="yes" />
+		<label value="sand"  for-way="yes" />
+		<label value="asphalt"  for-way="yes" />
+		<label value="concrete"  for-way="yes" />
+		<label value="dirt"  for-way="yes" />
+		<label value="ice_road"  for-way="yes" />
+	</tag>
+	
+	<tag key="ele" type="xs:integer" for-node="yes" >
+	</tag>
+	
+	<tag key="width" type="xs:integer" for-way="yes" >
+	</tag>
+
+	<tag key="est_width" type="xs:integer" for-way="yes" >
+	</tag>
+
+	<tag key="depth" type="xs:integer" for-way="yes" >
+	</tag>
+
+	<tag key="est_depth" type="xs:integer" for-way="yes" >
+	</tag>
+
+	<tag key="incline" type="xs:integer" for-way="yes" for-node="yes" >
+	</tag>
+
+	<tag key="start_date" type="xs:date" for-way="yes" >
+	</tag>
+
+	<tag key="end_date" type="xs:date" for-way="yes" >
+	</tag>
+
+	<tag key="operator" type="xs:string" for-way="yes" for-node="yes">
+	</tag>
+
+	<tag key="opening_hours" type="xs:string" for-way="yes" for-node="yes">
+	</tag>
+	
+	<tag key="disused" type="xs:boolean" for-way="yes" for-node="yes">
+		<label value="yes"  for-way="yes" />
+	</tag>
+	
+	<tag key="wheelchair" type="xs:string" for-way="yes" for-node="yes">
+		<label value="yes"  for-way="yes" for-node="yes"/>
+		<label value="no"  for-way="yes" for-node="yes"/>
+		<label value="limited"  for-way="yes" for-node="yes"/>
+	</tag>
+	
+	<tag key="narrow" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+
+	<tag key="sac_scale" type="xs:string" for-way="yes" >
+		<label value="hiking"  for-way="yes" />
+		<label value="mountain_hiking"  for-way="yes" />
+		<label value="demanding_mountain_hiking"  for-way="yes" />
+		<label value="alpine_hiking"  for-way="yes" />
+		<label value="demanding_alpine_hiking"  for-way="yes" />
+		<label value="difficult_alpine_hiking"  for-way="yes" />
+	</tag>
+	
+	<tag key="trail_visibility" type="xs:string" for-way="yes" >
+		<label value="excellent"  for-way="yes" />
+		<label value="good"  for-way="yes" />
+		<label value="intermediate"  for-way="yes" />
+		<label value="bad"  for-way="yes" />
+		<label value="horrible"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="mtb:scale" type="xs:string" for-way="yes" >
+		<label value="0"  for-way="yes" />
+		<label value="1"  for-way="yes" />
+		<label value="2"  for-way="yes" />
+		<label value="3"  for-way="yes" />
+		<label value="4"  for-way="yes" />
+		<label value="5"  for-way="yes" />
+	</tag>
+	
+	
+	<tag key="mtb:scale:uphill" type="xs:string" for-way="yes" >
+		<label value="0"  for-way="yes" />
+		<label value="1"  for-way="yes" />
+		<label value="2"  for-way="yes" />
+		<label value="3"  for-way="yes" />
+		<label value="4"  for-way="yes" />
+		<label value="5"  for-way="yes" />
+	</tag>
+	
+	<tag key="mtb:scale:imba" type="xs:string" for-way="yes" >
+		<label value="0"  for-way="yes" />
+		<label value="1"  for-way="yes" />
+		<label value="2"  for-way="yes" />
+		<label value="3"  for-way="yes" />
+		<label value="4"  for-way="yes" />
+	</tag>
+	
+	<tag key="access" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="agricultural"  for-way="yes" />
+		<label value="forestry"  for-way="yes" />
+		<label value="delivery"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="bicycle" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="agricultural"  for-way="yes" />
+		<label value="forestry"  for-way="yes" />
+		<label value="delivery"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="vehicle" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="agricultural"  for-way="yes" />
+		<label value="forestry"  for-way="yes" />
+		<label value="delivery"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="foot" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="goods" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="hgv" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="hazmat" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="agricultural" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="horse" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="motorcycle" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	
+	<tag key="motorcar" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	
+	<tag key="psv" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="motorboat" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="boat" type="xs:string" for-way="yes" >
+		<label value="unknown"  for-way="yes" />
+		<label value="yes"  for-way="yes" />
+		<label value="designated"  for-way="yes" />
+		<label value="destination"  for-way="yes" />
+		<label value="permissive"  for-way="yes" />
+		<label value="private"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+	</tag>
+	
+	<tag key="oneway" type="xs:string" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+		<label value="no"  for-way="yes" />
+		<label value="-1"  for-way="yes" />
+	</tag>
+	
+	<tag key="noexit" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+	
+	<tag key="date_on" type="xs:date" for-way="yes" >
+	</tag>
+	<tag key="date_off" type="xs:date" for-way="yes" >
+	</tag>
+
+	
+	<tag key="day_on" type="xs:string" for-way="yes" >
+		<label value="monday"  for-way="yes" />
+		<label value="thuesday"  for-way="yes" />
+		<label value="wednesday"  for-way="yes" />
+		<label value="thursday"  for-way="yes" />
+		<label value="friday"  for-way="yes" />
+		<label value="saturday"  for-way="yes" />
+		<label value="sunday"  for-way="yes" />
+	</tag>
+	
+	<tag key="day_off" type="xs:string" for-way="yes" >
+		<label value="monday"  for-way="yes" />
+		<label value="thuesday"  for-way="yes" />
+		<label value="wednesday"  for-way="yes" />
+		<label value="thursday"  for-way="yes" />
+		<label value="friday"  for-way="yes" />
+		<label value="saturday"  for-way="yes" />
+		<label value="sunday"  for-way="yes" />
+	</tag>
+	
+	<tag key="hour_on" type="xs:time" for-way="yes" >
+	</tag>
+	
+	<tag key="hour_off" type="xs:time" for-way="yes" >
+	</tag>
+	
+	<tag key="maxweight" type="xs:integer" for-way="yes" >
+	</tag>
+	<tag key="maxheight" type="xs:integer" for-way="yes" >
+	</tag>
+	<tag key="maxwidth" type="xs:integer" for-way="yes" >
+	</tag>
+	<tag key="maxlength" type="xs:integer" for-way="yes" >
+	</tag>
+	<tag key="maxspeed" type="xs:integer" for-way="yes" >
+	</tag>
+	<tag key="minspeed" type="xs:integer" for-way="yes" >
+	</tag>
+	<tag key="maxstay" type="xs:string" for-way="yes" >
+	</tag>
+	
+	<tag key="disused" type="xs:boolean" for-way="yes" for-node="yes">
+		<label value="yes"  for-way="yes" for-node="yes"/>
+	</tag>
+	
+	<tag key="toll" type="xs:boolean" for-way="yes" >
+		<label value="yes"  for-way="yes" />
+	</tag>
+	
+	<tag key="charge" type="xs:string" for-way="yes" >
+	</tag>
+	
+	
+	
+	<tag key="name" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="alt_name" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="int_name" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="nat_name" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="reg_name" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="loc_name" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="old_name" type="xs:string" for-way="yes" for-node="yes" />
+
+
+	<tag key="ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="int_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="nat_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="reg_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="loc_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="old_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="ncn_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="rcn_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="lcn_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="source_ref" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="icao" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="iata" type="xs:string" for-way="yes" for-node="yes" />
+	
+	
+	
+	<tag key="place" type="xs:string" for-way="yes" for-node="yes">
+		<label value="continent"  for-way="yes" for-node="yes"/>
+		<label value="country"   for-node="yes"/>
+		<label value="state"  for-way="yes" for-node="yes"/>
+		<label value="region"  for-way="yes" for-node="yes"/>
+		<label value="county"  for-way="yes" for-node="yes"/>
+		<label value="city"  for-way="yes" for-node="yes"/>
+		<label value="town"  for-way="yes" for-node="yes"/>
+		<label value="municipality"  for-way="yes" for-node="yes"/>
+		<label value="village"  for-way="yes" for-node="yes"/>
+		<label value="hamlet"  for-way="yes" for-node="yes"/>
+		<label value="suburb"  for-way="yes" for-node="yes"/>
+		<label value="locality"  for-way="yes" for-node="yes"/>
+		<label value="farm"  for-way="yes" for-node="yes"/>
+		<label value="island"  for-way="yes" for-node="yes"/>		
+		<label value="islet"  for-way="yes" for-node="yes"/>		
+	</tag>
+	
+	<tag key="place_name" type="xs:string" for-way="yes"  />
+	<tag key="place_numbers" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="postal_code" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="is_in" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="is_in:continent" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:country" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:country_code" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:state" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:state_code" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:region" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:county" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:city" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:town" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:municipality" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:village" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:hamlet" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:suburb" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:locality" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:farm" type="xs:string" for-way="yes" for-node="yes"/>
+	<tag key="is_in:island" type="xs:string" for-way="yes" for-node="yes"/>		
+	<tag key="is_in:islet" type="xs:string" for-way="yes" for-node="yes"/>		
+	<tag key="population" type="xs:integer" for-way="yes" for-node="yes" />
+
+	<tag key="note" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="description" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="image" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="source_ref" type="xs:string" for-way="yes" for-node="yes" />
+	
+	<tag key="addr:housenumber" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="addr:street" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="addr:postcode" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="addr:city" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="addr:country" type="xs:string" for-way="yes" for-node="yes" />
+	<tag key="addr:interpolation" type="xs:string" for-way="yes" for-node="yes" />
+	
+	<tag key="source" type="xs:string" for-way="yes" for-node="yes">
+		<label value="extrapolation"  for-way="yes" for-node="yes"/>
+		<label value="knowledge"   for-node="yes"/>
+		<label value="historical"  for-way="yes" for-node="yes"/>
+		<label value="image"  for-way="yes" for-node="yes"/>
+		<label value="survey"  for-way="yes" for-node="yes"/>
+		<label value="voice"  for-way="yes" for-node="yes"/>
+	</tag>
+	
+</osm-tag-definitions> 

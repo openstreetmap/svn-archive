@@ -1,0 +1,16 @@
+Tracer2 plugin
+==============
+
+Traces buildings and other shapes from a map.
+The plugin requires the Tracer2Server.
+It can be downloaded at http://sourceforge.net/projects/tracer2server.
+
+Author:
+    Dirk Bruenig <dirk@bruenig.de>
+
+License:
+    GPL-v2.0 or later.
+
+Acknowledgements:
+    This plugin based on the plugin "Tracer" by Jan Bilak and Petr Dlouhý.
+    Includes parts from the plugin "ext_tools" by Upliner.

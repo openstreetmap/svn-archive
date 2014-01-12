@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ColorScheme>
+	<ToNode color="0,255,0" />
+	<FromNode color="0,255,0" />
+	<TwoWayChannel color="255,255,0" />
+	<OneWayChannel color="0,0,255" />
+	<NotConnectedChannel color="148,0,210" />
+	<selectedChannel color="255,0,0" />
+	<partOfJunction color="255,255,255" />
+</ColorScheme>	

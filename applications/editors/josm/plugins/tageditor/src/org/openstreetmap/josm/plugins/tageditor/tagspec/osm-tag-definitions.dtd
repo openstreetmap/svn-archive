@@ -1,0 +1,20 @@
+<!ELEMENT osm-tag-definitions (tag*)>
+<!ATTLIST osm-tag-definitions
+     version CDATA #FIXED '0.9'
+     xmlns:xs CDATA #FIXED 'http://www.w3.org/2001/XMLSchema-datatypes'
+>
+<!ELEMENT tag (label*) >
+<!ATTLIST tag
+     key CDATA #REQUIRED
+     type CDATA #REQUIRED
+     for-way (yes|no) 'no' 
+     for-node (yes|no) 'no' 
+     for-relation (yes|no) 'no'
+>
+<!ELEMENT label EMPTY>
+<!ATTLIST label
+     value CDATA #REQUIRED 
+     for-way (yes|no) 'no' 
+     for-node (yes|no) 'no' 
+     for-relation (yes|no) 'no'
+>

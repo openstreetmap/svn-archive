@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="turnlanes" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="fix toolbar warnings - toolbar still does not work"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+
+    <!--
+    **********************************************************
+    ** include targets that all plugins have in common
+    **********************************************************
+    -->
+    <import file="../build-common.xml"/>
+
+    <!--
+    **********************************************************
+    ** dist - creates the plugin jar
+    **********************************************************
+    -->
+    <target name="dist" depends="compile,revision">
+        <echo message="creating ${ant.project.name}.jar ... "/>
+        <copy todir="${plugin.build.dir}/resources">
+            <fileset dir="resources"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/images">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data">
+            <fileset dir="data"/>
+        </copy>
+        <copy todir="${plugin.build.dir}">
+            <fileset dir=".">
+                <include name="README"/>
+                <include name="LICENSE"/>
+            </fileset>
+        </copy>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+        <!--
+        ************************************************
+        ** configure these properties. Most of them will be copied to the plugins
+        ** manifest file. Property values will also show up in the list available
+        ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
+        **
+        ************************************************
+        -->
+            <manifest>
+                <attribute name="Author" value="Benjamin Schulz"/>
+                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.turnlanes.TurnLanesPlugin"/>
+                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+                <attribute name="Plugin-Description" value="Provides a straightforward GUI for adding, editing and deleting turn lanes."/>
+                <attribute name="Plugin-Icon" value="images/dialogs/turnlanes.png" />
+                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/Relations/Proposed/turn_lanes#Plugin" />
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

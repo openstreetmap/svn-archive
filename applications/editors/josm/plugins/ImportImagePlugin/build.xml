@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ImportImagePlugin" default="dist" basedir=".">
+
+	<!-- enter the SVN commit message -->
+	<property name="commit.message" value="use consistent plugin name (don't mix up the words)" />
+	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+	<property name="plugin.main.version" value="6162" />
+
+    <property name="plugin.author" value="Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.ImportImagePlugin.ImportImagePlugin"/>
+    <property name="plugin.description" value="Plugin for importing spatial referenced images"/>
+    <property name="plugin.icon" value="images/layericon.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
+    <property name="plugin.requires" value="log4j;jts;geotools"/>
+	
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+	<!--
+    **********************************************************
+    ** compile - complies the source tree
+    **********************************************************
+    -->
+	<target name="compile" depends="init">
+		<echo message="compiling sources for  ${plugin.jar} ... "/>
+		<javac srcdir="src" classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
+            <classpath>
+                <pathelement location="${josm}"/>
+                <fileset dir="../log4j/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="../jts/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+                <fileset dir="../geotools/lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+			<compilerarg value="-Xlint:deprecation"/>
+			<compilerarg value="-Xlint:unchecked"/>
+		</javac>
+	</target>
+	
+</project>

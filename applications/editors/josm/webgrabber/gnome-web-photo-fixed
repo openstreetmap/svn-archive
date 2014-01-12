@@ -1,0 +1,3 @@
+#! /bin/bash
+
+gnome-web-photo --mode=photo --format=ppm "$1" /dev/stdout |pnmcrop -white |pnmtopng

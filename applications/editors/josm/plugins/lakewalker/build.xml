@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="lakewalker" default="dist" basedir=".">
+
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Changed the constructor signature of the plugin main class"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Brent Easton, Jason Reid"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerPlugin"/>
+    <property name="plugin.description" value="Helps vectorizing WMS images."/>
+    <property name="plugin.icon" value="images/lakewalker-sml.png"/>
+    <property name="plugin.link" value=""/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+    
+</project>

@@ -1,0 +1,210 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-11-17 10:17+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\ConnectWays.java:204
+msgid "Merge objects nodes"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:77
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:260
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:130
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:142
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPreference.java:38
+msgid "Tracer2"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:77
+msgid "Tracer2."
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:77
+#, java-format
+msgid "Tool: {0}"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:118
+#, java-format
+msgid "Change tag {0} to {1}"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:171
+msgid "Tracing"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:225
+#, java-format
+msgid ""
+"The Tracer2Server version isn''t compatible with this plugin. Please "
+"download version {0} from\n"
+"{1}."
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:226
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:248
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:56
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:59
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:73
+msgid "Error"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:230
+#, java-format
+msgid ""
+"New version of Tracer2Server is available. For best results please upgrade "
+"to version {0}."
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:230
+msgid "Information"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:248
+msgid "No set of parameter is active!"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:260
+msgid "Select parameter"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:333
+#, java-format
+msgid "Tracer2: add a way with {0} points"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerAction.java:335
+#, java-format
+msgid "Tracer2: modify way to {0} points"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\TracerException.java:31
+msgid "An unknown error has occurred"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParam.java:210
+msgid "Tracer2 error"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:130
+msgid "Parameter for server request"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:131
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:176
+msgid "OK"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:131
+msgid "Cancel"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:149
+msgid "Name:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:150
+msgid "Description:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:154
+msgid "URL:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:156
+msgid "Tile size:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:157
+msgid "Resolution:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:160
+msgid "Mode:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:161
+msgid "Threshold:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:163
+msgid "Points per circle:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:165
+msgid "Tag:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamDialog.java:166
+msgid "Preferred values:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:75
+msgid "Edit"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:88
+msgid "Delete"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:93
+#, java-format
+msgid "Delete parameter \"{0}\"?"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:94
+msgid "Are you sure?"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:113
+msgid "Add new"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:130
+msgid "Add predefined"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPanel.java:142
+msgid "Select predefined parameter"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPreference.java:38
+msgid "Preferences"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamPreference.java:38
+msgid "Modify list of parameter for server request."
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\preferences\ServerParamSelectDialog.java:87
+msgid "Parameter:"
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:55
+#, java-format
+msgid ""
+"Tracer2Server isn''t running. Please start the Server.\n"
+"If you don''t have the server, please download it from\n"
+"{1}."
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:59
+msgid "Tracer2Server hasn''t found anything."
+msgstr ""
+
+#: ..\src\org\openstreetmap\josm\plugins\tracer2\server\Request.java:73
+msgid "Tracer2Server has detected an error."
+msgstr ""

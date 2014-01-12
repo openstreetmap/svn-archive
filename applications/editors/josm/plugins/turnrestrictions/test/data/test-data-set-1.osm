@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' generator='JOSM'>
+  <bounds minlat='46.9185552' minlon='7.3901081' maxlat='46.9271138' maxlon='7.4086475' origin='OpenStreetMap server' />
+  <node id='-56' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.920401695281015' lon='7.392672484176534' />
+  <node id='-54' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.91947481836078' lon='7.394608244994619' />
+  <node id='-52' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.91947481836078' lon='7.392692440473628' />
+  <node id='-50' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.9194611876982' lon='7.391036067814855' />
+  <node id='-48' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.920906018634135' lon='7.399118368137783' />
+  <node id='-46' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.921737460284035' lon='7.40135347341227' />
+  <node id='-44' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.921737460284035' lon='7.39909841184069' />
+  <node id='-42' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.921737460284035' lon='7.3971426947255114' />
+  <node id='-40' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.92280059638277' lon='7.392991784930033' />
+  <node id='-38' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.92175109036751' lon='7.394767895371367' />
+  <node id='-36' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.92175109036752' lon='7.393011741227126' />
+  <node id='-34' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.921737460284014' lon='7.390916330032293' />
+  <node id='-32' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.92375467491946' lon='7.391245608934339' />
+  <node id='-30' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.92378193405656' lon='7.394298922389664' />
+  <node id='-28' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.92450429613562' lon='7.394298922389665' />
+  <node id='-26' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.924517925515175' lon='7.391285521528527' />
+  <node id='-24' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.925969434589156' lon='7.404077507965554' />
+  <node id='-22' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.925955805578894' lon='7.401802490096877' />
+  <node id='-20' timestamp='2010-03-15T09:31:53Z' visible='true' lat='46.925955805578894' lon='7.39940773444564' />
+  <node id='-18' timestamp='2010-03-09T09:06:53Z' visible='true' lat='46.92569685372496' lon='7.3913653467169' />
+  <node id='-16' timestamp='2010-03-09T09:06:53Z' visible='true' lat='46.92566959556225' lon='7.393261194940797' />
+  <node id='-14' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true' lat='46.92654852689992' lon='7.393198680597321' />
+  <node id='-12' timestamp='2010-03-09T09:06:53Z' visible='true' lat='46.9265827364623' lon='7.395296737244347' />
+  <node id='-10' timestamp='2010-03-09T09:06:53Z' visible='true' lat='46.9265827364623' lon='7.397511886221743' />
+  <node id='-8' timestamp='2010-03-09T09:06:53Z' visible='true' lat='46.925560562772716' lon='7.397471973627557' />
+  <node id='-6' action='modify' timestamp='2010-03-15T22:32:09Z' visible='true' lat='46.91930201488541' lon='7.399142698913044' />
+  <node id='-4' action='modify' timestamp='2010-03-15T22:32:09Z' visible='true' lat='46.919302014885396' lon='7.401068288768116'>
+    <tag k='name' v='node 8.3' />
+  </node>
+  <node id='-2' action='modify' timestamp='2010-03-15T22:32:09Z' visible='true' lat='46.92028078273882' lon='7.401045898188405' />
+  <way id='-96' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-52' />
+    <nd ref='-54' />
+    <tag k='name' v='way 7.2' />
+  </way>
+  <way id='-94' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-52' />
+    <nd ref='-56' />
+  </way>
+  <way id='-92' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-50' />
+    <nd ref='-52' />
+    <tag k='name' v='way 7.1' />
+  </way>
+  <way id='-90' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-44' />
+    <nd ref='-46' />
+  </way>
+  <way id='-88' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-44' />
+    <nd ref='-48' />
+    <tag k='name' v='way 6.2' />
+  </way>
+  <way id='-86' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-42' />
+    <nd ref='-44' />
+    <tag k='name' v='way 6.1' />
+  </way>
+  <way id='-84' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-36' />
+    <nd ref='-38' />
+  </way>
+  <way id='-82' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-36' />
+    <nd ref='-40' />
+    <tag k='name' v='way 5.2' />
+  </way>
+  <way id='-80' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-34' />
+    <nd ref='-36' />
+    <tag k='name' v='way 5.1' />
+  </way>
+  <way id='-78' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-28' />
+    <nd ref='-30' />
+  </way>
+  <way id='-76' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-30' />
+    <nd ref='-32' />
+    <tag k='name' v='way 4.2' />
+  </way>
+  <way id='-74' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-26' />
+    <nd ref='-28' />
+    <tag k='name' v='way 4.1' />
+  </way>
+  <way id='-72' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-22' />
+    <nd ref='-24' />
+    <tag k='name' v='Weg 3.2' />
+  </way>
+  <way id='-70' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <nd ref='-20' />
+    <nd ref='-22' />
+    <tag k='name' v='Weg 3.1' />
+  </way>
+  <way id='-68' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true'>
+    <nd ref='-18' />
+    <nd ref='-16' />
+    <tag k='name' v='Weg 1.1' />
+  </way>
+  <way id='-66' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true'>
+    <nd ref='-16' />
+    <nd ref='-14' />
+    <tag k='name' v='Weg 1.2' />
+  </way>
+  <way id='-64' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true'>
+    <nd ref='-12' />
+    <nd ref='-10' />
+    <tag k='name' v='Weg 2.1' />
+  </way>
+  <way id='-62' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true'>
+    <nd ref='-10' />
+    <nd ref='-8' />
+    <tag k='name' v='Weg 2.2' />
+  </way>
+  <way id='-60' action='modify' timestamp='2010-03-15T22:32:09Z' visible='true'>
+    <nd ref='-6' />
+    <nd ref='-4' />
+    <tag k='name' v='way.8.1' />
+  </way>
+  <way id='-58' action='modify' timestamp='2010-03-15T22:32:09Z' visible='true'>
+    <nd ref='-4' />
+    <nd ref='-2' />
+    <tag k='name' v='way.8.2' />
+  </way>
+  <relation id='-114' visible='true'>
+    <member type='way' ref='-60' role='from' />
+    <member type='way' ref='-58' role='to' />
+    <member type='node' ref='-4' role='via' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-110' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <member type='way' ref='-92' role='from' />
+    <member type='way' ref='-96' role='to' />
+    <member type='node' ref='-52' role='via' />
+    <tag k='restriction' v='only_straight_on' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-108' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <member type='way' ref='-86' role='from' />
+    <member type='way' ref='-88' role='to' />
+    <member type='node' ref='-44' role='via' />
+    <tag k='restriction' v='only_right_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-106' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <member type='way' ref='-80' role='from' />
+    <member type='way' ref='-82' role='to' />
+    <member type='node' ref='-36' role='via' />
+    <tag k='restriction' v='only_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-104' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <member type='way' ref='-74' role='from' />
+    <member type='way' ref='-76' role='to' />
+    <member type='way' ref='-78' role='via' />
+    <tag k='restriction' v='no_u_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-102' action='modify' timestamp='2010-03-15T09:31:53Z' visible='true'>
+    <member type='way' ref='-70' role='from' />
+    <member type='way' ref='-72' role='to' />
+    <member type='node' ref='-22' role='via' />
+    <tag k='restriction' v='no_straight_on' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-100' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true'>
+    <member type='way' ref='-68' role='from' />
+    <member type='way' ref='-66' role='to' />
+    <member type='node' ref='-16' role='via' />
+    <tag k='restriction' v='no_left_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+  <relation id='-98' action='modify' timestamp='2010-03-09T09:06:53Z' visible='true'>
+    <member type='way' ref='-64' role='from' />
+    <member type='way' ref='-62' role='to' />
+    <member type='node' ref='-10' role='via' />
+    <tag k='restriction' v='no_right_turn' />
+    <tag k='type' v='restriction' />
+  </relation>
+</osm>

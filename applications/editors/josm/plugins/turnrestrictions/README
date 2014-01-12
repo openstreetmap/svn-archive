@@ -1,0 +1,23 @@
+----------------------------------------------------------------------
+                        turnrestrictions plugin
+----------------------------------------------------------------------                        
+
+turnrestrictions plugin is a plugin for the open source map editor 
+JOSM. It allows to maintain information about turn restrictions
+in the OpenStreetMap database.                           
+                         
+SEE ALSO
+========
+* <http://josm.openstreetmap.de/wiki/Plugins/turnrestrictions>
+  Information about the plugin in the OSM wiki.
+   
+* <http://wiki.openstreetmap.org/wiki/JOSM/Plugins/turnrestrictions>
+  Online help for the plugin, maintained on the JOSM wiki.
+                         
+CREDIT
+======
+Initial development of this plugin was sponsored by skobbler GmbH, see
+<http://www.skobbler.de/>.
+
+ 
+                         

@@ -1,0 +1,19 @@
+PICLAYER
+========
+
+A plugin for JOSM editor. Use it wisely - do not copy from copyrighted maps. Use "help" option to get a short tutorial.
+
+Author: Tomasz Stelmach
+Email: tomasz.stelmach@poczta.onet.pl
+WWW: http://www.stelmach-online.net/
+
+HISTORY:
+========
+
+2009.08.28:
+- added support for scaling in one axis only
+- added support for saving / loading image calibration
+- added new icons
+
+2009.04.27:
+- initial version

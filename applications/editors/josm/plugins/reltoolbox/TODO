@@ -1,0 +1,25 @@
+== BETA ==
+
+- Draw icons for multipoly settings menu
+- Solve width problem for narrows buttons when "fix" and "download" appear simultaneously
+- "Reverse multipolygon": create a closed area out of outer members, move tags, delete relation and empty ways
+? иконка в панели слева не работает, а чекбокс (если на >> нажать) включает панель со второго раза
+? когда создаётся мультиполигон и включено "переместить теги", но теги только на одной линии, то fail
+
+== NEW ALGORITHM ==
+
+- Implement algorithm to construct rings from selection
+- Classify those rings (inner/outer) based on node tracing
+- Break touching rings of multipolygons
+- Analyze chosen relation and display corresponding symbol next to its name
+- Make chosen relation name pretty (or analyze all relations in relation list)
+- Sort relation members button (now it's just role fixer)
+- "Add members" should search for connecting nodes among already present members
+- Automatic role setting for new multipolygon ways (construct rings, see where a way goes)
+- Split multipolygon: arrange holes accordingly.
+
+== RELEASE ==
+
+- Construct rings using middle points of ways and break those ways
+- Convert adjacing rings that need to be broken to multipolygons
+- Option to autodownload all ways that are being broken

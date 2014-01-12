@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="SimplifyArea" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Initial commit"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6317"/>
+   	
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Martin Ždila &lt;m.zdila@gmail.com&gt;"/>
+    <property name="plugin.class" value="sk.zdila.josm.plugin.simplify.SimplifyAreaPlugin"/>
+    <property name="plugin.description" value="Simplify area by removing nodes on very obtuse angles. This can be constrained by maximum removed area size. Also average nearby nodes."/>
+    <property name="plugin.icon" value="images/preferences/simplifyArea.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/SimplifyArea"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>                
+                
+</project>

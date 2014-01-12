@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="OpeningHoursEditor" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="fixed main version"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+	
+    <property name="plugin.author" value="Falko Thomale"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.ohe.OhePlugin"/>
+    <property name="plugin.description" value="extended options for editing opening_hours"/>
+    <property name="plugin.icon" value="images/opening_hours.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpeningHoursEditor"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+	
+    <property name="javacc.home" location="../00_core_tools"/>
+	<property name="parser.dir" location="${plugin.src.dir}/org/openstreetmap/josm/plugins/ohe/parser"/>
+	
+    <target name="javacc" depends="init" unless="javacc.notRequired">
+        <exec append="false" executable="java" failifexecutionfails="true">
+            <arg value="-cp"/>
+            <arg value="${javacc.home}/javacc.jar"/>
+            <arg value="javacc"/>
+            <arg value="-JDK_VERSION=1.6"/>
+            <arg value="-GRAMMAR_ENCODING=UTF-8"/>
+            <arg value="-UNICODE_INPUT"/>
+            <arg value="-OUTPUT_DIRECTORY=${parser.dir}"/>
+            <arg value="${parser.dir}/OpeningTimeCompiler.jj"/>
+        </exec>
+    </target>
+
+	<!--
+    **********************************************************
+    ** compile - compiles the source tree
+    **********************************************************
+    -->
+    <target name="compile" depends="init, javacc">
+        <echo message="compiling sources for ${plugin.jar} ... "/>
+        <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
+            <classpath>
+                <pathelement path="${plugin.build.dir}"/>
+                <pathelement location="${josm}"/>
+            </classpath>
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+</project>

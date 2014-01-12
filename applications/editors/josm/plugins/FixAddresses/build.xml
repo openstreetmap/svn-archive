@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="FixAddresses" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="[josm_fixadresses]: Fixes #josm8336"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="6162"/>
+	
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Oliver Wieland"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.fixAddresses.FixAddressesPlugin"/>
+    <property name="plugin.description" value="Finds and fixes invalid street addresses in a comfortable way."/>
+    <property name="plugin.icon" value="images/fixaddresses.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FixAddresses"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Plugin-Class: org.openstreetmap.josm.plugins.routes.RoutesPlugin
+Plugin-Description: Routes plug-in (Manifest for debugging in Eclipse, not to be used in deployement)

@@ -1,0 +1,21 @@
+README 
+======
+
+This plugin is for simplyfying areas by performing following operations:
+- average nodes closer than simplify-area.distance parameter. Default is 0.2 (m).
+- remove every node for which is true:
+  - node lies on obtuse angle configured with parameter simplify-area.angle. Default 10.0 (degrees).
+  - node removal would cause area size change greater than specified by simplify-area.area parameter. Default is 5.0 (m^2).
+
+Operation works not only on the areas but also on the paths. Tagged nodes and nodes that are referenced are not removed. If the path is not closed, then first and last node is also not removed.
+Plugin can also remove node that is defined as the connecting node of the closed path. If such a node is removed then another node is used for this purpose.
+
+After selecting one or more areas and/or paths you can use shortcut Shift+A or select the action from the menu Tools -> Simplify Area.
+
+The original purpose of this tool is to simplify impored buildings from the Slovak Cadastre Portal "KaPor" where buildings contain many redundant nodes.
+Built-in Simplify Way operation has been shown as inappropriate for this.
+
+Enjoy!
+
+Author: Martin Zdila <m.zdila@gmail.com>
+

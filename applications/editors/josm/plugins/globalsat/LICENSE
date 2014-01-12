@@ -1,0 +1,9 @@
+
+Plugin globalsat
+
+This plugins is copyrighted 2007-2009 by Stafan Kaintoch and Raphael Mack <ramack@raphael-mack.de>.
+
+It is distributed under a GPL-3 license or later.
+
+In this distribution the rxtx library is included, which is GPL v2, see libs/COPYING_RXTX
+

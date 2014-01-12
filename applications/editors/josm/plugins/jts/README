@@ -1,6 +1,0 @@
-README 
-======
-This plugin provides the Java Topology Suite (JTS) library and utility
-functions for converting between JTS geometry objects and JOSM primitives.
-    * Josh Doe <josh@joshdoe.com>
-    * Licensed under "GPL v2 or later"

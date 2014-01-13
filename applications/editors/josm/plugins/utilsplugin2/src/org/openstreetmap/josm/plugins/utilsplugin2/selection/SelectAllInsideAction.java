@@ -31,7 +31,7 @@ public class SelectAllInsideAction extends JosmAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(getCurrentDataSet().getSelected(), getCurrentDataSet());
+        Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(getCurrentDataSet().getSelected(), getCurrentDataSet(), true);
         
         if (!insideSelected.isEmpty()) {
             getCurrentDataSet().addSelected(insideSelected);

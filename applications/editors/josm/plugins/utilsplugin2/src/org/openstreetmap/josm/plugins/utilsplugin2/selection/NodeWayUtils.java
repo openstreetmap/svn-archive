@@ -408,10 +408,6 @@ public final class NodeWayUtils {
                 newestWays.add(w);
             }
         }
-        for (Way w : newestWays) {
-            newestNodes.removeAll(w.getNodes());
-            // do not select nodes of already selected ways
-        }
         
         newNodes.addAll(newestNodes);
         newWays.addAll(newestWays);
@@ -473,6 +469,10 @@ public final class NodeWayUtils {
     }
     
     public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset) {
+        return selectAllInside(selected, dataset, true);
+    }
+    
+    public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset, boolean ignoreNodesOfFoundWays) {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(selected, Way.class);
         Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(selected, Relation.class);
 
@@ -485,7 +485,7 @@ public final class NodeWayUtils {
 
         Set<Way> newWays = new HashSet<Way>();
         Set<Node> newNodes = new HashSet<Node>();
-        // select ways attached to already selected ways
+        // select nodes and ways inside slexcted ways and multipolygons
         if (!selectedWays.isEmpty()) {
             for (Way w: selectedWays) {
                 addAllInsideWay(dataset,w,newWays,newNodes);
@@ -495,6 +495,12 @@ public final class NodeWayUtils {
             for (Relation r: selectedRels) {
                 addAllInsideMultipolygon(dataset,r,newWays,newNodes);
             }
+        }
+        if (ignoreNodesOfFoundWays) {
+            for (Way w : newWays) {
+                newNodes.removeAll(w.getNodes());
+                // do not select nodes of already selected ways
+            }            
         }
         
         Set<OsmPrimitive> insideSelection = new HashSet<OsmPrimitive>();

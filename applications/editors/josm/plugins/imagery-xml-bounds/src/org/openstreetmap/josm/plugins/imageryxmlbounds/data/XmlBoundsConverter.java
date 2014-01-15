@@ -127,7 +127,7 @@ public class XmlBoundsConverter implements XmlBoundsConstants {
 		}
 		
 		safePut(osmImagery, KEY_NAME, imagery.getName());
-		safePut(osmImagery, KEY_TYPE, imagery.getImageryType().getUrlString());
+		safePut(osmImagery, KEY_TYPE, imagery.getImageryType().getTypeString());
 		safePut(osmImagery, KEY_DEFAULT, imagery.isDefaultEntry());
 		safePut(osmImagery, KEY_URL, imagery.getUrl());
 		safePut(osmImagery, KEY_PROJECTIONS, imagery.getServerProjections());

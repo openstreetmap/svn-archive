@@ -334,7 +334,7 @@ public class CommandLine extends Plugin {
                 }
                 ImageryInfo info = ((ImageryLayer)layer).getInfo();
                 String url = info.getUrl();
-                String itype = info.getImageryType().getUrlString();
+                String itype = info.getImageryType().getTypeString();
                 loadParameter((url.equals("") ? itype : url), true);
                 action = new DummyAction(currentMapFrame, this);
                 break;
@@ -483,6 +483,7 @@ public class CommandLine extends Plugin {
 
         // redirect child process's stderr to JOSM stderr
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     byte[] buffer = new byte[1024];
@@ -501,6 +502,7 @@ public class CommandLine extends Plugin {
 
         // Write stdin stream
         Thread osmWriteThread = new Thread(new Runnable() {
+            @Override
             public void run() {
                 BBox bbox = null;
                 final OutputStream outputStream = tp.process.getOutputStream();
@@ -570,6 +572,7 @@ public class CommandLine extends Plugin {
         final DataSet currentDataSet = Main.main.getCurrentDataSet();
         final CommandLine that = this;
         Thread osmParseThread = new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     final OsmToCmd osmToCmd = new OsmToCmd(that, currentDataSet);

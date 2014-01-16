@@ -23,6 +23,7 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -149,10 +150,15 @@ public class JunctionCheckDialog extends ToggleDialog implements SelectionChange
 	 * (de)aktiviert Buttons zur Channel Digraph Erstellung
 	 * @param activate
 	 */
-	public void setActivateCreateDigraph(boolean activate) {
-		createDigraphButton.setEnabled(activate);
-		digraphsealcb.setEnabled(activate);
-		sccCB.setEnabled(activate);
+	public void setActivateCreateDigraph(final boolean activate) {
+		GuiHelper.runInEDTAndWait(new Runnable() {
+            @Override
+            public void run() {
+                createDigraphButton.setEnabled(activate);
+                digraphsealcb.setEnabled(activate);
+                sccCB.setEnabled(activate);
+            }
+        });
 	}
 
 	@Override

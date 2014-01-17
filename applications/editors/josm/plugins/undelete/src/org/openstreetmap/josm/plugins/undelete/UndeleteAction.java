@@ -167,15 +167,12 @@ public class UndeleteAction extends JosmAction {
                                 primitive.setUser(hPrimitive1.getUser());
                                 primitive.setVisible(hPrimitive1.isVisible());
                                 primitive.setKeys(hPrimitive2.getTags());
-                                primitive.put("history", "retrieved using undelete JOSM plugin");
                                 primitive.setModified(true);
         
                                 layer.data.addPrimitive(primitive);
                             }
-
-                            // HistoryBrowserDialogManager.getInstance().show(h);
                         } catch (Throwable t) {
-                            t.printStackTrace();
+                            Main.error(t);
                         }
                     }
                     if (parent != null && primitive instanceof Node) {
@@ -189,9 +186,5 @@ public class UndeleteAction extends JosmAction {
             }
         };
         Main.worker.submit(r);
-
-        // if (downloadReferrers) {
-        // Main.worker.submit(new DownloadReferrersTask(layer, id, type));
-        // }
     }
 }

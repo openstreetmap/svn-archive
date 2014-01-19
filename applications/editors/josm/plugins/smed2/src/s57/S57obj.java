@@ -18,59 +18,61 @@ public class S57obj {
 		SLOGRD, SMCFAC, SOUNDG, SPRING, SQUARE, STSLNE, SUBTLN, SWPARE, TESARE, TS_PRH, TS_PNH, TS_PAD, TS_TIS, T_HMON, T_NHMN, T_TIMS,
 		TIDEWY, TOPMAR, TSELNE, TSSBND, TSSCRS, TSSLPT, TSSRON, TSEZNE, TUNNEL, TWRTPT, UWTROC, UNSARE, VEGATN, WATTUR, WATFAL, WEDKLP,
 		WRECKS, TS_FEB, NOTMRK, WTWAXS, WTWPRF, BRGARE, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, BCNWTW, BOYWTW, REFDMP, RTPLPT,
-		TERMNL, TRNBSN, WTWARE, WTWGAG, TISDGE, VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ
+		TERMNL, TRNBSN, WTWARE, WTWGAG, TISDGE, VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ, C_AGGR, M_COVR
 	}
 
 	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<Obj, Integer>(Obj.class);
 	static {
-		ObjS57.put(Obj.UNKOBJ,0); ObjS57.put(Obj.ADMARE,1); ObjS57.put(Obj.AIRARE,2); ObjS57.put(Obj.ACHBRT,3); ObjS57.put(Obj.ACHARE,4);
-		ObjS57.put(Obj.BCNCAR,5); ObjS57.put(Obj.BCNISD,6); ObjS57.put(Obj.BCNLAT,7); ObjS57.put(Obj.BCNSAW,8); ObjS57.put(Obj.BCNSPP,9);
-		ObjS57.put(Obj.BERTHS,10); ObjS57.put(Obj.BRIDGE,11); ObjS57.put(Obj.BUISGL,12); ObjS57.put(Obj.BUAARE,13); ObjS57.put(Obj.BOYCAR,14);
-		ObjS57.put(Obj.BOYINB,15); ObjS57.put(Obj.BOYISD,16); ObjS57.put(Obj.BOYLAT,17); ObjS57.put(Obj.BOYSAW,18); ObjS57.put(Obj.BOYSPP,19);
-		ObjS57.put(Obj.CBLARE,20); ObjS57.put(Obj.CBLOHD,21); ObjS57.put(Obj.CBLSUB,22); ObjS57.put(Obj.CANALS,23);	ObjS57.put(Obj.CANBNK,24);
-		ObjS57.put(Obj.CTSARE,25); ObjS57.put(Obj.CAUSWY,26);	ObjS57.put(Obj.CTNARE,27); ObjS57.put(Obj.CHKPNT,28); ObjS57.put(Obj.CGUSTA,29);
-		ObjS57.put(Obj.COALNE,30); ObjS57.put(Obj.CONZNE,31); ObjS57.put(Obj.COSARE,32); ObjS57.put(Obj.CTRPNT,33); ObjS57.put(Obj.CONVYR,34);
-		ObjS57.put(Obj.CRANES,35); ObjS57.put(Obj.CURENT,36); ObjS57.put(Obj.CUSZNE,37); ObjS57.put(Obj.DAMCON,38);	ObjS57.put(Obj.DAYMAR,39);
-		ObjS57.put(Obj.DWRTCL,40); ObjS57.put(Obj.DWRTPT,41); ObjS57.put(Obj.DEPARE,42); ObjS57.put(Obj.DEPCNT,43);	ObjS57.put(Obj.DISMAR,44);
-		ObjS57.put(Obj.DOCARE,45); ObjS57.put(Obj.DRGARE,46); ObjS57.put(Obj.DRYDOC,47); ObjS57.put(Obj.DMPGRD,48); ObjS57.put(Obj.DYKCON,49);
-		ObjS57.put(Obj.EXEZNE,50); ObjS57.put(Obj.FAIRWY,51); ObjS57.put(Obj.FNCLNE,52); ObjS57.put(Obj.FERYRT,53); ObjS57.put(Obj.FSHZNE,54);
-		ObjS57.put(Obj.FSHFAC,55); ObjS57.put(Obj.FSHGRD,56); ObjS57.put(Obj.FLODOC,57); ObjS57.put(Obj.FOGSIG,58); ObjS57.put(Obj.FORSTC,59);
-		ObjS57.put(Obj.FRPARE,60); ObjS57.put(Obj.GATCON,61); ObjS57.put(Obj.GRIDRN,62); ObjS57.put(Obj.HRBARE,63); ObjS57.put(Obj.HRBFAC,64);
-		ObjS57.put(Obj.HULKES,65); ObjS57.put(Obj.ICEARE,66); ObjS57.put(Obj.ICNARE,67); ObjS57.put(Obj.ISTZNE,68); ObjS57.put(Obj.LAKARE,69);
-		ObjS57.put(Obj.LAKSHR,70); ObjS57.put(Obj.LNDARE,71);	ObjS57.put(Obj.LNDELV,72); ObjS57.put(Obj.LNDRGN,73); ObjS57.put(Obj.LNDMRK,74);
-		ObjS57.put(Obj.LIGHTS,75); ObjS57.put(Obj.LITFLT,76); ObjS57.put(Obj.LITVES,77); ObjS57.put(Obj.LOCMAG,78); ObjS57.put(Obj.LOKBSN,79);
-		ObjS57.put(Obj.LOGPON,80); ObjS57.put(Obj.MAGVAR,81); ObjS57.put(Obj.MARCUL,82); ObjS57.put(Obj.MIPARE,83); ObjS57.put(Obj.MORFAC,84);
-		ObjS57.put(Obj.NAVLNE,85); ObjS57.put(Obj.OBSTRN,86); ObjS57.put(Obj.OFSPLF,87); ObjS57.put(Obj.OSPARE,88); ObjS57.put(Obj.OILBAR,89);
-		ObjS57.put(Obj.PILPNT,90); ObjS57.put(Obj.PILBOP,91);	ObjS57.put(Obj.PIPARE,92); ObjS57.put(Obj.PIPOHD,93); ObjS57.put(Obj.PIPSOL,94);
-		ObjS57.put(Obj.PONTON,95); ObjS57.put(Obj.PRCARE,96); ObjS57.put(Obj.PRDARE,97); ObjS57.put(Obj.PYLONS,98); ObjS57.put(Obj.RADLNE,99);
-		ObjS57.put(Obj.RADRNG,100); ObjS57.put(Obj.RADRFL,101); ObjS57.put(Obj.RADSTA,102); ObjS57.put(Obj.RTPBCN,103);	ObjS57.put(Obj.RDOCAL,104);
-		ObjS57.put(Obj.RDOSTA,105);	ObjS57.put(Obj.RAILWY,106);	ObjS57.put(Obj.RAPIDS,107);	ObjS57.put(Obj.RCRTCL,108);	ObjS57.put(Obj.RECTRC,109);
-		ObjS57.put(Obj.RCTLPT,110);	ObjS57.put(Obj.RSCSTA,111);	ObjS57.put(Obj.RESARE,112);	ObjS57.put(Obj.RETRFL,113);	ObjS57.put(Obj.RIVERS,114);
-		ObjS57.put(Obj.RIVBNK,115);	ObjS57.put(Obj.ROADWY,116);	ObjS57.put(Obj.RUNWAY,117);	ObjS57.put(Obj.SNDWAV,118);	ObjS57.put(Obj.SEAARE,119);
-		ObjS57.put(Obj.SPLARE,120);	ObjS57.put(Obj.SBDARE,121);	ObjS57.put(Obj.SLCONS,122);	ObjS57.put(Obj.SISTAT,123);	ObjS57.put(Obj.SISTAW,124);
-		ObjS57.put(Obj.SILTNK,125);	ObjS57.put(Obj.SLOTOP,126);	ObjS57.put(Obj.SLOGRD,127);	ObjS57.put(Obj.SMCFAC,128);	ObjS57.put(Obj.SOUNDG,129);
-		ObjS57.put(Obj.SPRING,130);	ObjS57.put(Obj.SQUARE,131);	ObjS57.put(Obj.STSLNE,132);	ObjS57.put(Obj.SUBTLN,133);	ObjS57.put(Obj.SWPARE,134);
-		ObjS57.put(Obj.TESARE,135); ObjS57.put(Obj.TS_PRH,136);	ObjS57.put(Obj.TS_PNH,137); ObjS57.put(Obj.TS_PAD,138);	ObjS57.put(Obj.TS_TIS,139);
-		ObjS57.put(Obj.T_HMON,140);	ObjS57.put(Obj.T_NHMN,141);	ObjS57.put(Obj.T_TIMS,142);	ObjS57.put(Obj.TIDEWY,143);	ObjS57.put(Obj.TOPMAR,144);
-		ObjS57.put(Obj.TSELNE,145);	ObjS57.put(Obj.TSSBND,146);	ObjS57.put(Obj.TSSCRS,147);	ObjS57.put(Obj.TSSLPT,148);	ObjS57.put(Obj.TSSRON,149);
-		ObjS57.put(Obj.TSEZNE,150);	ObjS57.put(Obj.TUNNEL,151);	ObjS57.put(Obj.TWRTPT,152);	ObjS57.put(Obj.UWTROC,153);	ObjS57.put(Obj.UNSARE,154);
-		ObjS57.put(Obj.VEGATN,155);	ObjS57.put(Obj.WATTUR,156);	ObjS57.put(Obj.WATFAL,157);	ObjS57.put(Obj.WEDKLP,158);	ObjS57.put(Obj.WRECKS,159);
-		ObjS57.put(Obj.TS_FEB,160); ObjS57.put(Obj.MPAARE,199);
+		ObjS57.put(Obj.UNKOBJ,0);
+		ObjS57.put(Obj.ADMARE,1); ObjS57.put(Obj.AIRARE,2); ObjS57.put(Obj.ACHBRT,3); ObjS57.put(Obj.ACHARE,4); ObjS57.put(Obj.BCNCAR,5);
+		ObjS57.put(Obj.BCNISD,6); ObjS57.put(Obj.BCNLAT,7); ObjS57.put(Obj.BCNSAW,8); ObjS57.put(Obj.BCNSPP,9); ObjS57.put(Obj.BERTHS,10);
+		ObjS57.put(Obj.BRIDGE,11); ObjS57.put(Obj.BUISGL,12); ObjS57.put(Obj.BUAARE,13); ObjS57.put(Obj.BOYCAR,14); ObjS57.put(Obj.BOYINB,15);
+		ObjS57.put(Obj.BOYISD,16); ObjS57.put(Obj.BOYLAT,17); ObjS57.put(Obj.BOYSAW,18); ObjS57.put(Obj.BOYSPP,19); ObjS57.put(Obj.CBLARE,20);
+		ObjS57.put(Obj.CBLOHD,21); ObjS57.put(Obj.CBLSUB,22); ObjS57.put(Obj.CANALS,23); ObjS57.put(Obj.CANBNK,24); ObjS57.put(Obj.CTSARE,25);
+		ObjS57.put(Obj.CAUSWY,26); ObjS57.put(Obj.CTNARE,27); ObjS57.put(Obj.CHKPNT,28); ObjS57.put(Obj.CGUSTA,29); ObjS57.put(Obj.COALNE,30);
+		ObjS57.put(Obj.CONZNE,31); ObjS57.put(Obj.COSARE,32); ObjS57.put(Obj.CTRPNT,33); ObjS57.put(Obj.CONVYR,34); ObjS57.put(Obj.CRANES,35);
+		ObjS57.put(Obj.CURENT,36); ObjS57.put(Obj.CUSZNE,37); ObjS57.put(Obj.DAMCON,38); ObjS57.put(Obj.DAYMAR,39); ObjS57.put(Obj.DWRTCL,40);
+		ObjS57.put(Obj.DWRTPT,41); ObjS57.put(Obj.DEPARE,42); ObjS57.put(Obj.DEPCNT,43); ObjS57.put(Obj.DISMAR,44); ObjS57.put(Obj.DOCARE,45);
+		ObjS57.put(Obj.DRGARE,46); ObjS57.put(Obj.DRYDOC,47); ObjS57.put(Obj.DMPGRD,48); ObjS57.put(Obj.DYKCON,49); ObjS57.put(Obj.EXEZNE,50);
+		ObjS57.put(Obj.FAIRWY,51); ObjS57.put(Obj.FNCLNE,52); ObjS57.put(Obj.FERYRT,53); ObjS57.put(Obj.FSHZNE,54); ObjS57.put(Obj.FSHFAC,55);
+		ObjS57.put(Obj.FSHGRD,56); ObjS57.put(Obj.FLODOC,57); ObjS57.put(Obj.FOGSIG,58); ObjS57.put(Obj.FORSTC,59); ObjS57.put(Obj.FRPARE,60);
+		ObjS57.put(Obj.GATCON,61); ObjS57.put(Obj.GRIDRN,62); ObjS57.put(Obj.HRBARE,63); ObjS57.put(Obj.HRBFAC,64); ObjS57.put(Obj.HULKES,65);
+		ObjS57.put(Obj.ICEARE,66); ObjS57.put(Obj.ICNARE,67); ObjS57.put(Obj.ISTZNE,68); ObjS57.put(Obj.LAKARE,69); ObjS57.put(Obj.LAKSHR,70);
+		ObjS57.put(Obj.LNDARE,71); ObjS57.put(Obj.LNDELV,72); ObjS57.put(Obj.LNDRGN,73); ObjS57.put(Obj.LNDMRK,74); ObjS57.put(Obj.LIGHTS,75);
+		ObjS57.put(Obj.LITFLT,76); ObjS57.put(Obj.LITVES,77); ObjS57.put(Obj.LOCMAG,78); ObjS57.put(Obj.LOKBSN,79); ObjS57.put(Obj.LOGPON,80);
+		ObjS57.put(Obj.MAGVAR,81); ObjS57.put(Obj.MARCUL,82); ObjS57.put(Obj.MIPARE,83); ObjS57.put(Obj.MORFAC,84); ObjS57.put(Obj.NAVLNE,85);
+		ObjS57.put(Obj.OBSTRN,86); ObjS57.put(Obj.OFSPLF,87); ObjS57.put(Obj.OSPARE,88); ObjS57.put(Obj.OILBAR,89); ObjS57.put(Obj.PILPNT,90);
+		ObjS57.put(Obj.PILBOP,91); ObjS57.put(Obj.PIPARE,92); ObjS57.put(Obj.PIPOHD,93); ObjS57.put(Obj.PIPSOL,94); ObjS57.put(Obj.PONTON,95);
+		ObjS57.put(Obj.PRCARE,96); ObjS57.put(Obj.PRDARE,97); ObjS57.put(Obj.PYLONS,98); ObjS57.put(Obj.RADLNE,99); ObjS57.put(Obj.RADRNG,100);
+		ObjS57.put(Obj.RADRFL,101); ObjS57.put(Obj.RADSTA,102); ObjS57.put(Obj.RTPBCN,103);	ObjS57.put(Obj.RDOCAL,104); ObjS57.put(Obj.RDOSTA,105);
+		ObjS57.put(Obj.RAILWY,106);	ObjS57.put(Obj.RAPIDS,107);	ObjS57.put(Obj.RCRTCL,108);	ObjS57.put(Obj.RECTRC,109); ObjS57.put(Obj.RCTLPT,110);
+		ObjS57.put(Obj.RSCSTA,111);	ObjS57.put(Obj.RESARE,112);	ObjS57.put(Obj.RETRFL,113);	ObjS57.put(Obj.RIVERS,114); ObjS57.put(Obj.RIVBNK,115);
+		ObjS57.put(Obj.ROADWY,116);	ObjS57.put(Obj.RUNWAY,117);	ObjS57.put(Obj.SNDWAV,118);	ObjS57.put(Obj.SEAARE,119); ObjS57.put(Obj.SPLARE,120);
+		ObjS57.put(Obj.SBDARE,121);	ObjS57.put(Obj.SLCONS,122);	ObjS57.put(Obj.SISTAT,123);	ObjS57.put(Obj.SISTAW,124); ObjS57.put(Obj.SILTNK,125);
+		ObjS57.put(Obj.SLOTOP,126);	ObjS57.put(Obj.SLOGRD,127);	ObjS57.put(Obj.SMCFAC,128);	ObjS57.put(Obj.SOUNDG,129); ObjS57.put(Obj.SPRING,130);
+		ObjS57.put(Obj.SQUARE,131);	ObjS57.put(Obj.STSLNE,132);	ObjS57.put(Obj.SUBTLN,133);	ObjS57.put(Obj.SWPARE,134); ObjS57.put(Obj.TESARE,135);
+		ObjS57.put(Obj.TS_PRH,136);	ObjS57.put(Obj.TS_PNH,137); ObjS57.put(Obj.TS_PAD,138);	ObjS57.put(Obj.TS_TIS,139); ObjS57.put(Obj.T_HMON,140);
+		ObjS57.put(Obj.T_NHMN,141);	ObjS57.put(Obj.T_TIMS,142);	ObjS57.put(Obj.TIDEWY,143);	ObjS57.put(Obj.TOPMAR,144); ObjS57.put(Obj.TSELNE,145);
+		ObjS57.put(Obj.TSSBND,146);	ObjS57.put(Obj.TSSCRS,147);	ObjS57.put(Obj.TSSLPT,148);	ObjS57.put(Obj.TSSRON,149); ObjS57.put(Obj.TSEZNE,150);
+		ObjS57.put(Obj.TUNNEL,151);	ObjS57.put(Obj.TWRTPT,152);	ObjS57.put(Obj.UWTROC,153);	ObjS57.put(Obj.UNSARE,154); ObjS57.put(Obj.VEGATN,155);
+		ObjS57.put(Obj.WATTUR,156);	ObjS57.put(Obj.WATFAL,157);	ObjS57.put(Obj.WEDKLP,158);	ObjS57.put(Obj.WRECKS,159); ObjS57.put(Obj.TS_FEB,160);
+		ObjS57.put(Obj.MPAARE,199); ObjS57.put(Obj.C_AGGR,400); ObjS57.put(Obj.M_COVR,302);
 	}
 
 	private static final EnumMap<Obj, Integer> ObjIENC = new EnumMap<Obj, Integer>(Obj.class);
 	static {
-		ObjIENC.put(Obj.UNKOBJ, 0);	ObjIENC.put(Obj.ACHBRT, 17000);	ObjIENC.put(Obj.ACHARE, 17001);	ObjIENC.put(Obj.CANBNK, 17002);	ObjIENC.put(Obj.DEPARE, 17003);
-		ObjIENC.put(Obj.DISMAR, 17004);	ObjIENC.put(Obj.RESARE, 17005);	ObjIENC.put(Obj.RIVBNK, 17006);	ObjIENC.put(Obj.SISTAT, 17007);	ObjIENC.put(Obj.SISTAW, 17008);
-		ObjIENC.put(Obj.TOPMAR, 17009);	ObjIENC.put(Obj.BERTHS, 17010);	ObjIENC.put(Obj.BRIDGE, 17011);	ObjIENC.put(Obj.CBLOHD, 17012);	ObjIENC.put(Obj.FERYRT, 17013);
-		ObjIENC.put(Obj.HRBARE, 17014);	ObjIENC.put(Obj.HRBFAC, 17015);	ObjIENC.put(Obj.LOKBSN, 17016);	ObjIENC.put(Obj.RDOCAL, 17017); ObjIENC.put(Obj.CURENT, 17019);
-		ObjIENC.put(Obj.HULKES, 17020);	ObjIENC.put(Obj.PONTON, 17021);	ObjIENC.put(Obj.PIPOHD, 17024);	ObjIENC.put(Obj.FLODOC, 17025);	ObjIENC.put(Obj.CHKPNT, 17027);
-		ObjIENC.put(Obj.BCNLAT, 17028);	ObjIENC.put(Obj.BOYLAT, 17029);	ObjIENC.put(Obj.CRANES, 17030);	ObjIENC.put(Obj.GATCON, 17031);	ObjIENC.put(Obj.SLCONS, 17032);
-		ObjIENC.put(Obj.UWTROC, 17033);	ObjIENC.put(Obj.CONVYR, 17034);	ObjIENC.put(Obj.NOTMRK, 17050);	ObjIENC.put(Obj.WTWAXS, 17051);	ObjIENC.put(Obj.WTWPRF, 17052);
-		ObjIENC.put(Obj.BRGARE, 17053);	ObjIENC.put(Obj.BUNSTA, 17054);	ObjIENC.put(Obj.COMARE, 17055);	ObjIENC.put(Obj.HRBBSN, 17056);	ObjIENC.put(Obj.LOKARE, 17057);
-		ObjIENC.put(Obj.LKBSPT, 17058);	ObjIENC.put(Obj.PRTARE, 17059);	ObjIENC.put(Obj.BCNWTW, 17060);	ObjIENC.put(Obj.BOYWTW, 17061);	ObjIENC.put(Obj.REFDMP, 17062);
-		ObjIENC.put(Obj.RTPLPT, 17063);	ObjIENC.put(Obj.TERMNL, 17064);	ObjIENC.put(Obj.TRNBSN, 17065);	ObjIENC.put(Obj.WTWARE, 17066);	ObjIENC.put(Obj.WTWGAG, 17067);
-		ObjIENC.put(Obj.TISDGE, 17068);	ObjIENC.put(Obj.VEHTRF, 17069);	ObjIENC.put(Obj.EXCNST, 17070);	ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
+		ObjIENC.put(Obj.UNKOBJ, 0);
+		ObjIENC.put(Obj.ACHBRT, 17000);	ObjIENC.put(Obj.ACHARE, 17001);	ObjIENC.put(Obj.CANBNK, 17002);	ObjIENC.put(Obj.DEPARE, 17003); ObjIENC.put(Obj.DISMAR, 17004);
+		ObjIENC.put(Obj.RESARE, 17005);	ObjIENC.put(Obj.RIVBNK, 17006);	ObjIENC.put(Obj.SISTAT, 17007);	ObjIENC.put(Obj.SISTAW, 17008); ObjIENC.put(Obj.TOPMAR, 17009);
+		ObjIENC.put(Obj.BERTHS, 17010);	ObjIENC.put(Obj.BRIDGE, 17011);	ObjIENC.put(Obj.CBLOHD, 17012);	ObjIENC.put(Obj.FERYRT, 17013); ObjIENC.put(Obj.HRBARE, 17014);
+		ObjIENC.put(Obj.HRBFAC, 17015);	ObjIENC.put(Obj.LOKBSN, 17016);	ObjIENC.put(Obj.RDOCAL, 17017); ObjIENC.put(Obj.CURENT, 17019); ObjIENC.put(Obj.HULKES, 17020);
+		ObjIENC.put(Obj.PONTON, 17021);	ObjIENC.put(Obj.PIPOHD, 17024);	ObjIENC.put(Obj.FLODOC, 17025);	ObjIENC.put(Obj.CHKPNT, 17027); ObjIENC.put(Obj.BCNLAT, 17028);
+		ObjIENC.put(Obj.BOYLAT, 17029);	ObjIENC.put(Obj.CRANES, 17030);	ObjIENC.put(Obj.GATCON, 17031);	ObjIENC.put(Obj.SLCONS, 17032); ObjIENC.put(Obj.UWTROC, 17033);
+		ObjIENC.put(Obj.CONVYR, 17034);	ObjIENC.put(Obj.NOTMRK, 17050);	ObjIENC.put(Obj.WTWAXS, 17051);	ObjIENC.put(Obj.WTWPRF, 17052); ObjIENC.put(Obj.BRGARE, 17053);
+		ObjIENC.put(Obj.BUNSTA, 17054);	ObjIENC.put(Obj.COMARE, 17055);	ObjIENC.put(Obj.HRBBSN, 17056);	ObjIENC.put(Obj.LOKARE, 17057); ObjIENC.put(Obj.LKBSPT, 17058);
+		ObjIENC.put(Obj.PRTARE, 17059);	ObjIENC.put(Obj.BCNWTW, 17060);	ObjIENC.put(Obj.BOYWTW, 17061);	ObjIENC.put(Obj.REFDMP, 17062); ObjIENC.put(Obj.RTPLPT, 17063);
+		ObjIENC.put(Obj.TERMNL, 17064);	ObjIENC.put(Obj.TRNBSN, 17065);	ObjIENC.put(Obj.WTWARE, 17066);	ObjIENC.put(Obj.WTWGAG, 17067); ObjIENC.put(Obj.TISDGE, 17068);
+		ObjIENC.put(Obj.VEHTRF, 17069);	ObjIENC.put(Obj.EXCNST, 17070);	ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
 	}
 
 	private static final HashMap<Integer, Obj> S57Obj = new HashMap<Integer, Obj>();
@@ -133,7 +135,7 @@ public class S57obj {
 		ObjStr.put(Obj.BOYWTW, "buoy_waterway"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
 		ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");
 		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.LG_SDM, ""); ObjStr.put(Obj.LG_VSP, "");
-		ObjStr.put(Obj.MPAARE, "protected_area"); ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor");
+		ObjStr.put(Obj.MPAARE, "protected_area"); ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage");
 	}
 	
 	private static final HashMap<String, Obj> StrObj = new HashMap<String, Obj>();
@@ -144,12 +146,12 @@ public class S57obj {
 		}
 	}
 	
-	public static Obj decodeType(Integer objl) { // Convert S57 feature code to OSeaM object enumeration
-		Obj obj = S57Obj.get(objl);
+	public static Obj decodeType(long objl) { // Convert S57 feature code to OSeaM object enumeration
+		Obj obj = S57Obj.get((int)objl);
 		return (obj != null) ? obj : Obj.UNKOBJ;
 	}
 
-	public static Integer encodeType(Obj type) { // Convert OSM object enumeration to S57 feature code
+	public static long encodeType(Obj type) { // Convert OSM object enumeration to S57 feature code
 		if (ObjS57.containsKey(type))
 			return ObjS57.get(type);
 		else if (ObjIENC.containsKey(type))

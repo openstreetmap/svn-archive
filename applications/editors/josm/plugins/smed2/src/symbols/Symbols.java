@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class Symbols {
 
-	public enum Prim {
+	public enum Form {
 		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
@@ -32,10 +32,10 @@ public class Symbols {
 	}
 
 	public static class Instr {
-		public Prim type;
+		public Form type;
 		public Object params;
 
-		public Instr(Prim itype, Object iparams) {
+		public Instr(Form itype, Object iparams) {
 			type = itype;
 			params = iparams;
 		}

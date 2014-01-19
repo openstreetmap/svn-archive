@@ -99,7 +99,8 @@ public class S57dat {
 	private static ArrayList<S57subf> S57ddsi = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OBLB ));
 	private static ArrayList<S57subf> S57ddsc = new ArrayList<S57subf>(Arrays.asList(S57subf.ATLB, S57subf.ASET, S57subf.AUTH ));
 	private static ArrayList<S57subf> S57frid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRIM, S57subf.GRUP, S57subf.OBJL, S57subf.RVER, S57subf.RUIN ));
-	private static ArrayList<S57subf> S57foid = new ArrayList<S57subf>(Arrays.asList(S57subf.AGEN, S57subf.FIDN, S57subf.FIDS ));
+//	private static ArrayList<S57subf> S57foid = new ArrayList<S57subf>(Arrays.asList(S57subf.AGEN, S57subf.FIDN, S57subf.FIDS ));
+	private static ArrayList<S57subf> S57foid = new ArrayList<S57subf>(Arrays.asList(S57subf.LNAM));
 	private static ArrayList<S57subf> S57attf = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
 	private static ArrayList<S57subf> S57natf = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
 	private static ArrayList<S57subf> S57ffpc = new ArrayList<S57subf>(Arrays.asList(S57subf.FFUI, S57subf.FFIX, S57subf.NFPT ));
@@ -139,31 +140,6 @@ public class S57dat {
 	private static S57field field;
 	public static int rnum;
 	
-	public static void setField(byte[] buf, int off, S57field fld, int len) {
-		buffer = buf;
-		offset = off;
-		maxoff = off + len - 1;
-		field = fld;
-		index = 0;
-	}
-	
-	public static boolean more() {
-		return (offset < maxoff);
-	}
-	
-	public static Object getSubf(byte[] buf, int off, S57field fld, S57subf subf) {
-		buffer = buf;
-		offset = off;
-		index = 0;
-		return getSubf(fld, subf);
-	}
-	
-	public static Object getSubf(S57field fld, S57subf subf) {
-		field = fld;
-		index = 0;
-		return getSubf(subf);
-	}
-
 	private static S57conv findSubf(S57subf subf) {
 		ArrayList<S57subf> subs = fields.get(field);
 		boolean wrap = false;
@@ -187,14 +163,40 @@ public class S57dat {
 		}
 	}
 	
+	public static void setField(byte[] buf, int off, S57field fld, int len) {
+		buffer = buf;
+		offset = off;
+		maxoff = off + len - 1;
+		field = fld;
+		index = 0;
+	}
+	
+	public static boolean more() {
+		return ((offset < maxoff) && (buffer[offset+1] != 0x1e));
+	}
+	
+	public static Object getSubf(byte[] buf, int off, S57field fld, S57subf subf) {
+		buffer = buf;
+		offset = off;
+		index = 0;
+		return getSubf(fld, subf);
+	}
+	
+	public static Object getSubf(S57field fld, S57subf subf) {
+		field = fld;
+		index = 0;
+		return getSubf(subf);
+	}
+
 	public static Object getSubf(S57subf subf) {
 		S57conv conv = findSubf(subf);
 		if (conv.bin == 0) {
 			String str = "";
 			if (conv.asc == 0) {
 				while (buffer[offset] != 0x1f) {
-					str += buffer[offset++];
+					str += (char)(buffer[offset++]);
 				}
+				offset++;
 			} else {
 				str = new String(buffer, offset, conv.asc);
 				offset += conv.asc;

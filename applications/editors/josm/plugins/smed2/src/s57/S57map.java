@@ -11,10 +11,10 @@ package s57;
 
 import java.util.*;
 
-import s57.S57att;
-import s57.S57att.*;
 import s57.S57obj;
 import s57.S57obj.*;
+import s57.S57att;
+import s57.S57att.*;
 import s57.S57val;
 import s57.S57val.*;
 
@@ -77,51 +77,29 @@ public class S57map {
 			nodes = new ArrayList<Long>();
 		}
 	}
-
-	public class Side {	// An edge as used in a line or area feature
-		Edge edge;				// Side is formed by this Edge...
-		boolean forward;	// ... in this direction
-
-		public Side(Edge iedge, boolean ifwd) {
-			edge = iedge;
-			forward = ifwd;
+	
+	public enum Rflag {
+		UNKN, AGGR, MASTER, SLAVE, PEER
+	}
+	
+	public class Reln {
+		public long id;
+		public Rflag reln;
+		public Reln(long i, Rflag r) {
+			id = i;
+			reln = r;
 		}
 	}
 
-	public class Bound { // A single closed area
-		public boolean outer;		// Role
-		ArrayList<Side> sides;	// Sides that make up this area
-
-		public Bound() {
-			outer = true;
-			sides = new ArrayList<Side>();
-		}
-		public Bound(Side iside, boolean irole) {
-			outer = irole;
-			sides = new ArrayList<Side>();
-			sides.add(iside);
-		}
-	}
-
-	public class Area extends ArrayList<Bound> {	// The collection of bounds for an area.
-		public Area() {
+	public class AttMap extends HashMap<Att, AttVal<?>> {
+		public AttMap() {
 			super();
 		}
 	}
 
-	public class AttItem {
-		public Conv conv;
-		public Object val;
-
-		AttItem(Conv iconv, Object ival) {
-			conv = iconv;
-			val = ival;
-		}
-	}
-
-	public class AttMap extends EnumMap<Att, AttItem> {
-		public AttMap() {
-			super(Att.class);
+	public class RelTab extends ArrayList<Reln> {
+		public RelTab() {
+			super();
 		}
 	}
 
@@ -149,12 +127,6 @@ public class S57map {
 		}
 	}
 
-	public class AreaTab extends HashMap<Long, Area> {
-		public AreaTab() {
-			super();
-		}
-	}
-
 	public class FtrMap extends EnumMap<Obj, ArrayList<Feature>> {
 		public FtrMap() {
 			super(Obj.class);
@@ -167,25 +139,54 @@ public class S57map {
 		}
 	}
 
-	public enum Fflag {
-		UNKN, POINT, LINE, AREA
+	public class Prim {				// Spatial element
+		public long id;					// ID
+		public boolean forward;	// Direction of vector used (LINEs & AREAs)
+		public boolean outer;		// Exterior/Interior boundary (AREAs)
+		public Prim() {
+			id = 0; forward = true; outer = true;
+		}
+		public Prim(long i) {
+			id = i; forward = true; outer = true;
+		}
+		public Prim(long i, boolean o) {
+			id = i; forward = true; outer = o;
+		}
+		public Prim(long i, boolean f, boolean o) {
+			id = i; forward = f; outer = o;
+		}
 	}
-
+	
+	public enum Pflag {
+		NOSP, POINT, LINE, AREA
+	}
+	
+	public class Geom {							// Geometric structure of feature
+		public Pflag prim;						// Geometry type
+		public ArrayList<Prim> elems;	// Ordered list of elements
+		public Geom(Pflag p) {
+			prim = p;
+			elems = new ArrayList<Prim>();
+		}
+	}
+	
 	public class Feature {
-		public Fflag flag;
-		public long refs;
-		public Obj type;
-		public AttMap atts;
-		public ObjMap objs;
-		public double area;
-		public double length;
-		public Snode centre;
+		public Rflag reln;		// Relationship status
+		public Geom geom;			// Geometry data
+		public Obj type;			// Feature type
+		public AttMap atts;		// Feature attributes
+		public RelTab rels;		// Related objects
+		public ObjMap objs;		// Slave objects
+		public double area;		// Area of feature
+		public double length;	// Length of feature
+		public Snode centre;	// Centre of feature
 
 		Feature() {
-			flag = Fflag.UNKN;
-			refs = 0;
-			type = Obj.UNKOBJ;
+			reln = Rflag.UNKN;
+			geom = new Geom(Pflag.NOSP);
+			type = Obj.C_AGGR;
 			atts = new AttMap();
+			rels = new RelTab();
 			objs = new ObjMap();
 			area = 0;
 			length = 0;
@@ -195,23 +196,266 @@ public class S57map {
 
 	public NodeTab nodes;
 	public EdgeTab edges;
-	public AreaTab areas;
 
 	public FtrMap features;
 	public FtrTab index;
 
 	private Feature feature;
 	private Edge edge;
-	private ArrayList<Long> outers;
-	private ArrayList<Long> inners;
 
+	public S57map() {
+		nodes = new NodeTab();		// All nodes in map
+		edges = new EdgeTab();		// All edges in map
+		feature = new Feature();	// Current feature being built
+		features = new FtrMap();	// All features in map, grouped by type
+		index = new FtrTab();			// Feature look-up table
+	}
+
+	// S57 map building methods
+	
+	public void newNode(long id, double lat, double lon, Nflag flag) {
+		nodes.put(id, new Snode(Math.toRadians(lat), Math.toRadians(lon), flag));
+		if (flag == Nflag.ANON) {
+			edge.nodes.add(id);
+		}
+	}
+
+	public void newNode(long id, double lat, double lon, double depth) {
+		nodes.put(id, new Dnode(Math.toRadians(lat), Math.toRadians(lon), depth));
+	}
+
+	public void newFeature(long id, Pflag p, long objl) {
+		feature = new Feature();
+		Obj obj = S57obj.decodeType(objl);
+		if (obj == Obj.C_AGGR) {
+			feature.reln = Rflag.AGGR;
+		}
+		feature.geom = new Geom(p);
+		feature.type = obj;
+		index.put(id, feature);
+	}
+	
+	public void newObj(long id, int rind) {
+		Rflag r = Rflag.AGGR;
+		switch (rind) {
+		case 1:
+			r = Rflag.MASTER;
+			break;
+		case 2:
+			r = Rflag.SLAVE;
+			break;
+		case 3:
+			r = Rflag.PEER;
+			break;
+		}
+		feature.rels.add(new Reln(id, r));
+	}
+	
+	public void endFeature() {
+		
+	}
+	
+	public void newAtt(long attl, String atvl) {
+		Att att = S57att.decodeAttribute(attl);
+		AttVal<?> val = S57val.decodeValue(atvl, att);
+		feature.atts.put(att, val);
+	}
+
+	public void newPrim(long id, long ornt, long usag) {
+		feature.geom.elems.add(new Prim(id, (ornt != 2), (usag != 2)));
+	}
+
+	public void addConn(long id, int topi) {
+		if (topi == 1) {
+			edge.first = id;
+		} else {
+			edge.last = id;
+		}
+	}
+
+	public void newEdge(long id) {
+		edge = new Edge();
+		edges.put(id, edge);
+	}
+
+	public void endFile() {
+		for (long id : index.keySet()) {
+			Feature feature = index.get(id);
+			for (Reln rel : feature.rels) {
+				Feature reln = index.get(rel.id);
+				reln.reln = rel.reln;
+				if (feature.reln == Rflag.UNKN) {
+					switch (rel.reln) {
+					case MASTER:
+						feature.reln = Rflag.AGGR;
+						break;
+					case SLAVE:
+						feature.reln = Rflag.MASTER;
+					case PEER:
+						feature.reln = Rflag.PEER;
+						break;
+					default:
+						break;
+					}
+				}
+				ObjTab tab = feature.objs.get(reln.type);
+				if (tab == null) {
+					tab = new ObjTab();
+					feature.objs.put(reln.type, tab);
+				}
+				tab.put(tab.size(), reln.atts);
+			}
+		}
+		for (long id : index.keySet()) {
+			Feature feature = index.get(id);
+			if (feature.reln == Rflag.UNKN) {
+				feature.reln = Rflag.MASTER;
+			}
+			if ((feature.type != Obj.UNKOBJ) && ((feature.reln == Rflag.MASTER) || (feature.reln == Rflag.PEER))) {
+				if (features.get(feature.type) == null) {
+					features.put(feature.type, new ArrayList<Feature>());
+				}
+				features.get(feature.type).add(feature);
+			}
+		}
+	}
+
+	// OSM map building methods
+	
+	public void addNode(long id, double lat, double lon) {
+		Snode node = new Snode(Math.toRadians(lat), Math.toRadians(lon));
+		nodes.put(id, node);
+		feature = new Feature();
+		feature.reln = Rflag.AGGR;
+		feature.geom.prim = Pflag.POINT;
+		feature.geom.elems.add(new Prim(id));
+		edge = null;
+	}
+
+	public void addEdge(long id) {
+		feature = new Feature();
+		feature.reln = Rflag.AGGR;
+		feature.geom.prim = Pflag.LINE;
+		feature.geom.elems.add(new Prim(id));
+		edge = new Edge();
+	}
+
+	public void addToEdge(long node) {
+		if (edge.first == 0) {
+			edge.first = node;
+			nodes.get(node).flg = Nflag.CONN;
+		} else {
+			if (edge.last != 0) {
+				edge.nodes.add(edge.last);
+			}
+			edge.last = node;
+		}
+	}
+
+	public void addArea(long id) {
+		feature = new Feature();
+		feature.reln = Rflag.AGGR;
+		feature.geom.prim = Pflag.AREA;
+		feature.geom.elems.add(new Prim(id));
+		edge = null;
+	}
+
+	public void addToArea(long id, boolean outer) {
+		feature.geom.elems.add(new Prim(id, outer));
+	}
+
+	public void addTag(String key, String val) {
+		String subkeys[] = key.split(":");
+		if ((subkeys.length > 1) && subkeys[0].equals("seamark")) {
+			Obj obj = S57obj.enumType(subkeys[1]);
+			if ((subkeys.length > 2) && (obj != Obj.UNKOBJ)) {
+				int idx = 0;
+				Att att = Att.UNKATT;
+				try {
+					idx = Integer.parseInt(subkeys[2]);
+					if (subkeys.length == 4) {
+						att = s57.S57att.enumAttribute(subkeys[3], obj);
+					}
+				} catch (Exception e) {
+					att = S57att.enumAttribute(subkeys[2], obj);
+				}
+				ObjTab items = feature.objs.get(obj);
+				if (items == null) {
+					items = new ObjTab();
+					feature.objs.put(obj, items);
+				}
+				AttMap atts = items.get(idx);
+				if (atts == null) {
+					atts = new AttMap();
+					items.put(idx, atts);
+				}
+				AttVal<?> attval = S57val.convertValue(val, att);
+				if (attval.val != null)
+					atts.put(att, attval);
+			} else {
+				if (subkeys[1].equals("type")) {
+					feature.type = S57obj.enumType(val);
+					if (feature.objs.get(feature.type) == null) {
+						feature.objs.put(feature.type, new ObjTab());
+					}
+				} else {
+					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
+					if (att != Att.UNKATT) {
+						AttVal<?> attval = S57val.convertValue(val, att);
+						if (attval.val != null)
+							feature.atts.put(att, attval);
+					}
+				}
+			}
+		}
+	}
+
+	public void tagsDone(long id) {
+		switch (feature.geom.prim) {
+		case POINT:
+			Snode node = nodes.get(id);
+			if (node.flg != Nflag.CONN) {
+				node.flg = Nflag.ISOL;
+			}
+			feature.length = 0;
+			feature.area = 0;
+			break;
+		case LINE:
+			edges.put(id, edge);
+			nodes.get(edge.first).flg = Nflag.CONN;
+			nodes.get(edge.last).flg = Nflag.CONN;
+			feature.length = calcLength(feature.geom);
+			if (edge.first == edge.last) {
+				feature.geom.prim = Pflag.AREA;
+				feature.area = calcArea(feature.geom);
+			} else {
+				feature.area = 0;
+			}
+			break;
+		case AREA:
+			break;
+		default:
+			break;
+		}
+		if ((feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {
+			index.put(id, feature);
+			if (features.get(feature.type) == null) {
+				features.put(feature.type, new ArrayList<Feature>());
+			}
+			feature.centre = findCentroid(feature);
+			features.get(feature.type).add(feature);
+		}
+	}
+
+	// Utility methods
+	
 	public class EdgeIterator {
 		Edge edge;
 		boolean forward;
 		ListIterator<Long> it;
 
-		public EdgeIterator(Edge iedge, boolean dir) {
-			edge = iedge;
+		public EdgeIterator(Edge e, boolean dir) {
+			edge = e;
 			forward = dir;
 			it = null;
 		}
@@ -251,252 +495,61 @@ public class S57map {
 		}
 	}
 
-	public class BoundIterator {
-		Bound bound;
-		Side side;
-		ListIterator<Side> sit;
+	public class GeomIterator {
+		Geom geom;
+		Prim prim;
 		EdgeIterator eit;
-
-		public BoundIterator(Bound ibound) {
-			bound = ibound;
-			sit = bound.sides.listIterator();
-			if (sit.hasNext()) {
-				side = sit.next();
-				eit = new EdgeIterator(side.edge, side.forward);
+		ListIterator<S57map.Prim> it;
+		Snode first;
+		Snode last;
+		
+		public GeomIterator(Geom g) {
+			geom = g;
+			eit = null;
+			first = last = null;
+			if ((geom.prim != Pflag.NOSP) && (geom.prim != Pflag.POINT)) {
+				it = geom.elems.listIterator();
 			} else {
-				side = null;
+				it = null;
 			}
 		}
-
-		public boolean hasNext() {
-			return (side != null) && ((sit.hasNext()) || (eit.hasNext()));
+		
+		public boolean hasMore() {
+			return (it != null) && it.hasNext();
 		}
-
+		
+		public boolean more() {
+			if ((it != null) && it.hasNext()) {
+				prim = it.next();
+				return prim.outer;
+			}
+			return false;
+		}
+		
+		public boolean hasNext() {
+			return (first != last) && (eit.hasNext() || it.hasNext());
+		}
+		
 		public Snode next() {
-			Snode node = null;
-			if (side != null) {
-				if (eit.hasNext()) {
-					node = eit.next();
+			if (!eit.hasNext()) {
+				if (it.hasNext()) {
+					prim = it.next();
+					eit = new EdgeIterator(edges.get(prim.id), prim.forward);
 				} else {
-					if (sit.hasNext()) {
-						side = sit.next();
-						eit = new EdgeIterator(side.edge, side.forward);
-						node = eit.next();
-					} else {
-						side = null;
-					}
+					return null;
 				}
 			}
-			return node;
+			last = eit.next();
+			return last;
 		}
 	}
 	
-	public S57map() {
-		nodes = new NodeTab();
-		edges = new EdgeTab();
-		areas = new AreaTab();
-		feature = new Feature();
-		features = new FtrMap();
-		index = new FtrTab();
-	}
-
-	public void addNode(long id, double lat, double lon) {
-		nodes.put(id, new Snode(Math.toRadians(lat), Math.toRadians(lon)));
-		feature = new Feature();
-		feature.refs = id;
-		feature.flag = Fflag.POINT;
-		edge = null;
-	}
-
-	public void newNode(long id, double lat, double lon, Nflag flag) {
-		nodes.put(id, new Snode(Math.toRadians(lat), Math.toRadians(lon), flag));
-		if (flag == Nflag.ANON) {
-			edge.nodes.add(id);
-		}
-	}
-
-	public void newNode(long id, double lat, double lon, double depth) {
-		nodes.put(id, new Dnode(Math.toRadians(lat), Math.toRadians(lon), depth));
-	}
-
-	public void newEdge(long id) {
-		edge = new Edge();
-		edges.put(id, edge);
-	}
-
-	public void addConn(long id, int topi) {
-		if (topi == 1) {
-			edge.first = id;
-		} else {
-			edge.last = id;
-		}
-	}
-
-	public void addEdge(long id) {
-		feature = new Feature();
-		feature.refs = id;
-		feature.flag = Fflag.LINE;
-		edge = new Edge();
-	}
-
-	public void addToEdge(long node) {
-		if (edge.first == 0) {
-			edge.first = node;
-		} else {
-			if (edge.last != 0) {
-				edge.nodes.add(edge.last);
-			}
-			edge.last = node;
-		}
-	}
-
-	public void addArea(long id) {
-		feature = new Feature();
-		feature.refs = id;
-		feature.flag = Fflag.AREA;
-		outers = new ArrayList<Long>();
-		inners = new ArrayList<Long>();
-		edge = null;
-	}
-
-	public void addToArea(long id, boolean outer) {
-		if (outer) {
-			outers.add(id);
-		} else {
-			inners.add(id);
-		}
-	}
-
-	public void addTag(String key, String val) {
-		String subkeys[] = key.split(":");
-		if ((subkeys.length > 1) && subkeys[0].equals("seamark")) {
-			Obj obj = S57obj.enumType(subkeys[1]);
-			if ((subkeys.length > 2) && (obj != Obj.UNKOBJ)) {
-				int idx = 0;
-				Att att = Att.UNKATT;
-				try {
-					idx = Integer.parseInt(subkeys[2]);
-					if (subkeys.length == 4) {
-						att = s57.S57att.enumAttribute(subkeys[3], obj);
-					}
-				} catch (Exception e) {
-					att = S57att.enumAttribute(subkeys[2], obj);
-				}
-				ObjTab items = feature.objs.get(obj);
-				if (items == null) {
-					items = new ObjTab();
-					feature.objs.put(obj, items);
-				}
-				AttMap atts = items.get(idx);
-				if (atts == null) {
-					atts = new AttMap();
-					items.put(idx, atts);
-				}
-				AttVal<?> attval = S57val.convertValue(val, att);
-				if (attval.val != null)
-					atts.put(att, new AttItem(attval.conv, attval.val));
-			} else {
-				if (subkeys[1].equals("type")) {
-					feature.type = S57obj.enumType(val);
-					if (feature.objs.get(feature.type) == null) {
-						feature.objs.put(feature.type, new ObjTab());
-					}
-				} else {
-					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
-					if (att != Att.UNKATT) {
-						AttVal<?> attval = S57val.convertValue(val, att);
-						if (attval.val != null)
-							feature.atts.put(att, new AttItem(attval.conv, attval.val));
-					}
-				}
-			}
-		}
-	}
-
-	public void tagsDone(long id) {
-		switch (feature.flag) {
-		case POINT:
-			Snode node = nodes.get(id);
-			if (node.flg != Nflag.CONN) {
-				node.flg = Nflag.ISOL;
-			}
-			feature.length = 0;
-			feature.area = 0;
-			break;
-		case LINE:
-			edges.put(id, edge);
-			nodes.get(edge.first).flg = Nflag.CONN;
-			nodes.get(edge.last).flg = Nflag.CONN;
-			Bound ebound = (new Bound(new Side(edge, true), true));
-			feature.length = calcLength(ebound);
-			if (edge.first == edge.last) {
-				feature.flag = Fflag.AREA;
-				Area area = new Area();
-				area.add(ebound);
-				feature.area = calcArea(ebound);
-				areas.put(id, area);
-			} else {
-				feature.area = 0;
-			}
-			break;
-		case AREA:
-			Bound bound = null;
-			Area area = new Area();
-			ArrayList<Long> role = outers;
-			while (role != null) {
-				while (!role.isEmpty()) {
-					Edge edge = edges.get(role.remove(0));
-					long node1 = edge.first;
-					long node2 = edge.last;
-					bound = new Bound(new Side(edge, true), (role == outers));
-					if (node1 != node2) {
-						for (ListIterator<Long> it = role.listIterator(0); it.hasNext();) {
-							Edge nedge = edges.get(it.next());
-							if (nedge.first == node2) {
-								bound.sides.add(new Side(nedge, true));
-								it.remove();
-								if (nedge.last == node2)
-									break;
-							} else if (nedge.last == node2) {
-								bound.sides.add(new Side(nedge, false));
-								it.remove();
-								if (nedge.first == node2)
-									break;
-							}
-						}
-					}
-					area.add(bound);
-				}
-				if (role == outers) {
-					feature.length = calcLength(bound);
-					feature.area = calcArea(bound);
-					role = inners;
-				} else {
-					role = null;
-				}
-			}
-			areas.put(id, area);
-			break;
-		case UNKN:
-		default:
-			break;
-		}
-		if ((feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {
-			index.put(id, feature);
-			if (features.get(feature.type) == null) {
-				features.put(feature.type, new ArrayList<Feature>());
-			}
-			feature.centre = findCentroid(feature);
-			features.get(feature.type).add(feature);
-		}
-	}
-
-	double signedArea(Bound bound) {
+	double signedArea(Geom geom) {
 		Snode node;
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
-		BoundIterator it = new BoundIterator(bound);
+/*		BoundIterator it = new BoundIterator(bound);
 		while (it.hasNext()) {
 			llon = lon;
 			llat = lat;
@@ -505,19 +558,19 @@ public class S57map {
 			lon = node.lon;
 			sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
 		}
-		return sigma / 2.0;
+*/		return sigma / 2.0;
 	}
 
-	public boolean handOfArea(Bound bound) {
-		return (signedArea(bound) < 0);
+	public boolean handOfArea(Geom geom) {
+		return (signedArea(geom) < 0);
 	}
 
-	public double calcArea(Bound bound) {
-		return Math.abs(signedArea(bound)) * 3444 * 3444;
+	public double calcArea(Geom geom) {
+		return Math.abs(signedArea(geom)) * 3444 * 3444;
 	}
 
-	public double calcLength(Bound bound) {
-		Snode node;
+	public double calcLength(Geom geom) {
+/*		Snode node;
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
@@ -536,18 +589,19 @@ public class S57map {
 			}
 		}
 		return sigma * 3444;
+*/		return 0;
 	}
 
 	public Snode findCentroid(Feature feature) {
-		double lat, lon, slat, slon, llat, llon;
+/*		double lat, lon, slat, slon, llat, llon;
 		llat = llon = lat = lon = slat = slon = 0;
 		double sarc = 0;
 		boolean first = true;
-		switch (feature.flag) {
+		switch (feature.geom.prim) {
 		case POINT:
-			return nodes.get(feature.refs);
+			return nodes.get(feature.geom);
 		case LINE:
-			Edge edge = edges.get(feature.refs);
+			Edge edge = edges.get(feature.geom);
 			EdgeIterator eit = new EdgeIterator(edge, true);
 			while (eit.hasNext()) {
 				Snode node = eit.next();
@@ -582,7 +636,7 @@ public class S57map {
 			}
 			return new Snode(llat + ((lat - llat) * harc / sarc), llon + ((lon - llon) * harc / sarc));
 		case AREA:
-			Bound bound = areas.get(feature.refs).get(0);
+			Bound bound = areas.get(feature.geom).get(0);
 			BoundIterator bit = new BoundIterator(bound);
 			while (bit.hasNext()) {
 				Snode node = bit.next();
@@ -602,7 +656,7 @@ public class S57map {
 			return new Snode((sarc > 0.0 ? slat / sarc : 0.0), (sarc > 0.0 ? slon / sarc : 0.0));
 		default:
 		}
-		return null;
+*/		return null;
 	}
 
 }

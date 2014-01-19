@@ -10,7 +10,13 @@
 package js57toosm;
 
 import java.io.*;
+import java.util.Map;
 
+import s57.S57obj;
+import s57.S57att;
+import s57.S57att.*;
+import s57.S57val;
+import s57.S57val.*;
 import s57.S57dat;
 import s57.S57dat.*;
 import s57.S57map;
@@ -33,11 +39,14 @@ public class Js57toosm {
 		String tag;
 		int len;
 		int pos;
+		boolean inFeature = false;
 		
 		double comf = 1;
 		double somf = 1;
 		long name = 0;
 		S57map.Nflag nflag = Nflag.ANON;
+		S57map.Pflag prim = S57map.Pflag.NOSP;
+		long objl = 0;
 		S57map map = new S57map();
 		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
 
@@ -66,32 +75,54 @@ public class Js57toosm {
 							System.exit(-1);
 						}
 						break;
-					case "DSID":
-						break;
-					case "DSSI":
-						break;
 					case "DSPM":
 						comf = (double) (Long) S57dat.getSubf(record, fields + pos, S57field.DSPM, S57subf.COMF);
 						somf = (double) (Long) S57dat.getSubf(S57subf.SOMF);
 						break;
 					case "FRID":
+						inFeature = true;
+						switch ((int)((long)S57dat.getSubf(record, fields + pos, S57field.FRID, S57subf.PRIM))) {
+						case 1:
+							prim = S57map.Pflag.POINT;
+							break;
+						case 2:
+							prim = S57map.Pflag.LINE;
+							break;
+						case 3:
+							prim = S57map.Pflag.AREA;
+							break;
+						default:
+							prim = S57map.Pflag.NOSP;
+						}
+						objl = (long)S57dat.getSubf(S57subf.OBJL);
 						break;
 					case "FOID":
+						name = (long) S57dat.getSubf(record, fields + pos, S57field.FOID, S57subf.LNAM);
+						map.newFeature(name, prim, objl);
 						break;
 					case "ATTF":
-						break;
-					case "NATF":
-						break;
-					case "FFPC":
+						S57dat.setField(record, fields + pos, S57field.ATTF, len);
+						do {
+							long attl = (long) S57dat.getSubf(S57subf.ATTL);
+							String atvl = (String) S57dat.getSubf(S57subf.ATVL);
+							map.newAtt(attl, atvl);
+						} while (S57dat.more());
 						break;
 					case "FFPT":
-						break;
-					case "FSPC":
+						name = (long) S57dat.getSubf(record, fields + pos, S57field.FFPT, S57subf.LNAM);
+						int rind = ((Long) S57dat.getSubf(S57subf.RIND)).intValue();
+						map.newObj(name, rind);
 						break;
 					case "FSPT":
+						S57dat.setField(record, fields + pos, S57field.FSPT, len);
+						do {
+							name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
+							map.newPrim(name, (long) S57dat.getSubf(S57subf.ORNT), (long) S57dat.getSubf(S57subf.USAG));
+						} while (S57dat.more());
 						break;
 					case "VRID":
-						name = (Long) S57dat.getSubf(record, fields + pos, S57field.VRID, S57subf.RCNM);
+						inFeature = false;
+						name = (long) S57dat.getSubf(record, fields + pos, S57field.VRID, S57subf.RCNM);
 						switch ((int) name) {
 						case 110:
 							nflag = Nflag.ISOL;
@@ -104,29 +135,23 @@ public class Js57toosm {
 							break;
 						}
 						name <<= 32;
-						name += (Long) S57dat.getSubf(record, fields + pos, S57field.VRID, S57subf.RCID);
+						name += (Long) S57dat.getSubf(S57subf.RCID);
 						name <<= 16;
 						if (nflag == Nflag.ANON) {
 							map.newEdge(name);
 						}
 						break;
-					case "ATTV":
-						break;
-					case "VRPC":
-						break;
 					case "VRPT":
-						name = (Long) S57dat.getSubf(record, fields + pos, S57field.VRPT, S57subf.NAME) << 16;
-						int topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
-						map.addConn(name, topi);
-						name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
-						topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
-						map.addConn(name, topi);
-						break;
-					case "SGCC":
+						S57dat.setField(record, fields + pos, S57field.VRPT, len);
+						do {
+							name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
+							int topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
+							map.addConn(name, topi);
+						} while (S57dat.more());
 						break;
 					case "SG2D":
 						S57dat.setField(record, fields + pos, S57field.SG2D, len);
-						while (S57dat.more()) {
+						do {
 							double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
 							double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
 							if (nflag == Nflag.ANON) {
@@ -142,11 +167,11 @@ public class Js57toosm {
 								minlon = lon;
 							if (lon > maxlon)
 								maxlon = lon;
-						}
+						} while (S57dat.more());
 						break;
 					case "SG3D":
 						S57dat.setField(record, fields + pos, S57field.SG3D, len);
-						while (S57dat.more()) {
+						do {
 							double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
 							double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
 							double depth = (double) ((Long) S57dat.getSubf(S57subf.VE3D)) / somf;
@@ -159,18 +184,48 @@ public class Js57toosm {
 								minlon = lon;
 							if (lon > maxlon)
 								maxlon = lon;
-						}
+						} while (S57dat.more());
 						break;
 					}
 				}
+				if (inFeature) {
+					map.endFeature();
+					inFeature = false;
+				}
 			}
 		}
+		map.endFile();
 		in.close();
 		
 		out.println("<?xml version='1.0' encoding='UTF-8'?>");
 		out.println("<osm version='0.6' generator='js57toosm'>");
 		out.println("<bounds minlat='" + minlat +"' minlon='" + minlon + "' maxlat='" + maxlat + "' maxlon='" + maxlon + "'/>");
 		
+		for (long id : map.index.keySet()) {
+			Feature feature = map.index.get(id);
+			if (feature.reln != Rflag.SLAVE) {
+				if (feature.geom.prim == Pflag.POINT) {
+					Snode node = map.nodes.get(feature.geom.elems.get(0).id);
+					String type = S57obj.stringType(feature.type);
+					out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n",-id,  Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+					out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+					for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
+						out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, S57att.stringAttribute(item.getKey()), S57val.stringValue(item.getValue()));
+					}
+					for (Reln rel : feature.rels) {
+						if (rel.reln == Rflag.SLAVE) {
+							Feature slave = map.index.get(rel.id);
+							type = S57obj.stringType(slave.type);
+							for (Map.Entry<Att, AttVal<?>> item : slave.atts.entrySet()) {
+								out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, S57att.stringAttribute(item.getKey()), S57val.stringValue(item.getValue()));
+							}
+						}
+					}
+					out.format("  </node>%n");
+				}
+			}
+		}
+/*		
 		for (long id : map.nodes.keySet()) {
 			Snode node = map.nodes.get(id);
 			if (node.flg == S57map.Nflag.DPTH) {
@@ -193,7 +248,7 @@ public class Js57toosm {
 			out.format("    <nd ref='%d'/>%n", -edge.last);
 			out.format("  </way>%n");
 		}
-		
+*/		
 		out.println("</osm>\n");
 	}
 

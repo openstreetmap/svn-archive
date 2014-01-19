@@ -20,7 +20,7 @@ public class S57val {
 	static class S57key {
 		Conv conv;
 		EnumMap<?, ?> map;
-		S57key(Conv c, EnumMap<?, ?> m) {
+		S57key(Conv c, EnumMap<?, S57enum> m) {
 			conv = c; map = m;
 		}
 	}
@@ -224,8 +224,8 @@ public class S57val {
 		LAM_DRLT, LAM_DRRT, LAM_TOLT, LAM_TPRT, LAM_JBRT, LAM_JNLT, LAM_HBRT, LAM_HBLT, LAM_BRGP } 
 	private static final EnumMap<CatLAM, S57enum> Catlam = new EnumMap<CatLAM, S57enum>(CatLAM.class); static { Catlam.put(CatLAM.LAM_UNKN, new S57enum(0, ""));
 		Catlam.put(CatLAM.LAM_PORT, new S57enum(1, "port")); Catlam.put(CatLAM.LAM_STBD, new S57enum(2, "starboard")); Catlam.put(CatLAM.LAM_PCST, new S57enum(3, "preferred_channel_starboard"));
-		Catlam.put(CatLAM.LAM_PCPT, new S57enum(4, "preferred_channel_port")); Catlam.put(CatLAM.LAM_WWLT, new S57enum(5, "waterway_left")); Catlam.put(CatLAM.LAM_WWRT, new S57enum(6, "waterway_right"));
-		Catlam.put(CatLAM.LAM_CHLT, new S57enum(7, "channel_left")); Catlam.put(CatLAM.LAM_CHRT, new S57enum(8, "channel_right")); Catlam.put(CatLAM.LAM_WWSN, new S57enum(9, "waterway_separation"));
+		Catlam.put(CatLAM.LAM_PCPT, new S57enum(4, "preferred_channel_port")); Catlam.put(CatLAM.LAM_WWRT, new S57enum(5, "waterway_right")); Catlam.put(CatLAM.LAM_WWLT, new S57enum(6, "waterway_left"));
+		Catlam.put(CatLAM.LAM_CHRT, new S57enum(7, "channel_right")); Catlam.put(CatLAM.LAM_CHLT, new S57enum(8, "channel_left")); Catlam.put(CatLAM.LAM_WWSN, new S57enum(9, "waterway_separation"));
 		Catlam.put(CatLAM.LAM_CHSN, new S57enum(10, "channel_separation")); Catlam.put(CatLAM.LAM_CHRB, new S57enum(11, "channel_right_bank")); Catlam.put(CatLAM.LAM_CHLB, new S57enum(12, "channel_left_bank"));
 		Catlam.put(CatLAM.LAM_CRRT, new S57enum(13, "crossover_right")); Catlam.put(CatLAM.LAM_CRLT, new S57enum(14, "crossover_left")); Catlam.put(CatLAM.LAM_DRLT, new S57enum(15, "danger_right"));
 		Catlam.put(CatLAM.LAM_DRRT, new S57enum(16, "danger_left")); Catlam.put(CatLAM.LAM_TOLT, new S57enum(17, "turnoff_right")); Catlam.put(CatLAM.LAM_TPRT, new S57enum(18, "turnoff_left"));
@@ -998,6 +998,11 @@ public class S57val {
 		Shptyp.put(ShpTYP.TYP_PSGR, new S57enum(13, "passenger")); Shptyp.put(ShpTYP.TYP_FERY, new S57enum(14, "ferry")); Shptyp.put(ShpTYP.TYP_BOAT, new S57enum(15, "boat"));
 	}
 
+	public enum CatCVR { CVR_UNKN, CVR_COVR, CVR_NCVR }
+	private static final EnumMap<CatCVR, S57enum> Catcvr = new EnumMap<CatCVR, S57enum>(CatCVR.class); static { Catcvr.put(CatCVR.CVR_UNKN, new S57enum(0, ""));
+	Catcvr.put(CatCVR.CVR_COVR, new S57enum(1, "coverage")); Catcvr.put(CatCVR.CVR_NCVR, new S57enum(2, "no_coverage"));
+	}
+
 	private static final EnumMap<Att, S57key> keys = new EnumMap<Att, S57key>(Att.class);
 	static {
 		keys.put(Att.UNKATT, new S57key(Conv.A, null)); keys.put(Att.AGENCY, new S57key(Conv.A, null)); keys.put(Att.BCNSHP, new S57key(Conv.E, Bcnshp));
@@ -1088,7 +1093,7 @@ public class S57val {
 		keys.put(Att.LC_BM1, new S57key(Conv.F, null));	keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null));
 		keys.put(Att.LC_LG2, new S57key(Conv.F, null));	keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null));
 		keys.put(Att.LC_SP1, new S57key(Conv.F, null));	keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null));
-		keys.put(Att.LC_WD2, new S57key(Conv.F, null));	keys.put(Att.LITRAD, new S57key(Conv.A, null));
+		keys.put(Att.LC_WD2, new S57key(Conv.F, null));	keys.put(Att.LITRAD, new S57key(Conv.A, null));	keys.put(Att.CATCVR, new S57key(Conv.E, Catcvr));
 	}
 	
 	public static Object nullVal(Att att) {
@@ -1113,21 +1118,54 @@ public class S57val {
 		return null;
 	}
 	
-	public static String decodeValue(String val, Integer attl) {          // Convert S57 attribute value string to OSeaM attribute value string
-		Att att = S57att.decodeAttribute(attl);
-		switch (keys.get(att).conv) {
+	public static Enum<?> s57Enum(String val, Att att) { // Convert S57 attribute value string to OSeaM enumeration
+		EnumMap<?, ?> map = keys.get(att).map;
+		Enum<?> unkn = null;
+		int i = 0;
+		try {
+			i = Integer.parseInt(val);
+		} catch (Exception e) {
+			return unkn;
+		}
+		if (map != null) {
+			for (Object item : map.keySet()) {
+				if (unkn == null)
+					unkn = (Enum<?>) item;
+				if (((S57enum) map.get(item)).atvl.equals(i))
+					return (Enum<?>) item;
+			}
+		}
+		return unkn;
+	}
+
+	public static AttVal<?> decodeValue(String val, Att att) {          // Convert S57 attribute value string to OSeaM attribute value
+		Conv conv = keys.get(att).conv;
+		switch (conv) {
 		case A:
 		case S:
-			return val;
+			return new AttVal<String>(att, conv, val);
 		case E:
+			return new AttVal<Enum<?>>(att, Conv.E, s57Enum(val, att));
 		case L:
-			return (String)(keys.get(att).map).get(val);
+			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
+			for (String item : val.split(",")) {
+				list.add(s57Enum(item, att));
+			}
+			return new AttVal<ArrayList<?>>(att, Conv.L, list);
 		case I:
-			return (Integer.valueOf(val.trim())).toString();
+			try {
+				return new AttVal<Long>(att, Conv.I, Long.parseLong(val));
+			} catch (Exception e) {
+				break;
+			}
 		case F:
-			return (Float.valueOf(val.trim())).toString();
+			try {
+				return new AttVal<Double>(att, Conv.F, Double.parseDouble(val));
+			} catch (Exception e) {
+				break;
+			}
 		}
-		return "";
+		return null;
 	}
 
 	public static Integer encodeValue(String val, Att att) {        // Convert OSeaM attribute value string to S57 attribute value
@@ -1146,23 +1184,25 @@ public class S57val {
 		case S:
 			return (String)attval.val;
 		case E:
-			return (String)((EnumMap<?, ?>)attval.val).get(attval.att);
+			EnumMap<?,?> map = keys.get(attval.att).map;
+			return ((S57enum)map.get(attval.val)).val;
 		case L:
 			String str = "";
+			map = keys.get(attval.att).map;
 			for (Object item : (ArrayList<?>)attval.val) {
 				if (!str.isEmpty()) str += ";";
-				str += keys.get(attval.att).map.get(item);
+				str += ((S57enum)map.get(item)).val;
 			}
 			return str;
 		case I:
-			return ((Integer)attval.val).toString();
+			return ((Long)attval.val).toString();
 		case F:
-			return ((Float)attval.val).toString();
+			return ((Double)attval.val).toString();
 		}
 		return "";
 	}
 
-	public static Enum<?> enumValue(String val, Att att) { // Convert OSeaM attribute value string to OSeaM enumeration
+	public static Enum<?> osmEnum(String val, Att att) { // Convert OSeaM attribute value string to OSeaM enumeration
 		EnumMap<?, ?> map = keys.get(att).map;
 		Enum<?> unkn = null;
 		if (map != null) {
@@ -1182,24 +1222,22 @@ public class S57val {
 		case S:
 			return new AttVal<String>(att, Conv.S, val);
 		case E:
-			return new AttVal<Enum<?>>(att, Conv.E, enumValue(val, att));
+			return new AttVal<Enum<?>>(att, Conv.E, osmEnum(val, att));
 		case L:
 			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
 			for (String item : val.split(";")) {
-				list.add(enumValue(item, att));
+				list.add(osmEnum(item, att));
 			}
 			return new AttVal<ArrayList<?>>(att, Conv.L, list);
 		case I:
 			try {
-				long i = Long.parseLong(val);
-				return new AttVal<Long>(att, Conv.I, i);
+				return new AttVal<Long>(att, Conv.I, Long.parseLong(val));
 			} catch (Exception e) {
 				break;
 			}
 		case F:
 			try {
-				double f = Double.parseDouble(val);
-				return new AttVal<Double>(att, Conv.F, f);
+				return new AttVal<Double>(att, Conv.F, Double.parseDouble(val));
 			} catch (Exception e) {
 				break;
 			}

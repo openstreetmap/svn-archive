@@ -18,7 +18,6 @@ import java.util.*;
 import s57.S57val.*;
 import s57.S57map;
 import s57.S57map.*;
-import s57.S57map.Area;
 import symbols.Areas;
 import symbols.Symbols;
 import symbols.Symbols.*;
@@ -101,7 +100,7 @@ public class Renderer {
 		Rectangle2D.Double bbox = null;
 		if (symbols.size() > 4) {
 			for (Instr instr : symbols.get(0)) {
-				if (instr.type == Prim.BBOX) {
+				if (instr.type == Form.BBOX) {
 					bbox = (Rectangle2D.Double) instr.params;
 					break;
 				}
@@ -179,10 +178,10 @@ public class Renderer {
 		Symbol ssymb = symbol;
 		while (ssymb != null) {
 			for (Instr item : symbol) {
-				if (item.type == Prim.BBOX) {
+				if (item.type == Form.BBOX) {
 					return (Rectangle2D.Double) item.params;
 				}
-				if (item.type == Prim.SYMB) {
+				if (item.type == Form.SYMB) {
 					ssymb = ((SubSymbol) item.params).instr;
 					break;
 				}
@@ -194,19 +193,8 @@ public class Renderer {
 	}
 
 	public static void lineSymbols(Feature feature, Symbol prisymb, double space, Symbol secsymb, Symbol tersymb, int ratio, Color col) {
-		Area area;
-		switch (feature.flag) {
-		case LINE:
-			Edge edge = map.edges.get(feature.refs);
-			area = map.new Area();
-			area.add(map.new Bound(map.new Side(edge, true), true));
-			break;
-		case AREA:
-			area = map.areas.get(feature.refs);
-			break;
-		default:
+		if ((feature.geom.prim == Pflag.NOSP) || (feature.geom.prim == Pflag.POINT))
 			return;
-		}
 		Rectangle2D.Double prect = symbolSize(prisymb);
 		Rectangle2D.Double srect = symbolSize(secsymb);
 		Rectangle2D.Double trect = symbolSize(tersymb);
@@ -227,12 +215,13 @@ public class Renderer {
 			int stcount = ratio;
 			boolean stflag = false;
 			Symbol symbol = prisymb;
-			for (Bound bound : area) {
-				BoundIterator bit = map.new BoundIterator(bound);
+			GeomIterator git = map.new GeomIterator(feature.geom);
+			while (git.hasMore()) {
+				git.more();
 				boolean first = true;
-				while (bit.hasNext()) {
+				while (git.hasNext()) {
 					prev = next;
-					next = context.getPoint(bit.next());
+					next = context.getPoint(git.next());
 					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 					piv = true;
 					if (first) {
@@ -285,29 +274,15 @@ public class Renderer {
 		Path2D.Double p = new Path2D.Double();
 		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
 		Point2D point;
-		switch (feature.flag) {
-		case LINE:
-			EdgeIterator eit = map.new EdgeIterator(map.edges.get(feature.refs), true);
-			point = context.getPoint(eit.next());
+		GeomIterator git = map.new GeomIterator(feature.geom);
+		while (git.hasMore()) {
+			git.more();
+			point = context.getPoint(git.next());
 			p.moveTo(point.getX(), point.getY());
-			while (eit.hasNext()) {
-				point = context.getPoint(eit.next());
+			while (git.hasNext()) {
+				point = context.getPoint(git.next());
 				p.lineTo(point.getX(), point.getY());
 			}
-			break;
-		case AREA:
-			for (Bound bound : map.areas.get(feature.refs)) {
-				BoundIterator bit = map.new BoundIterator(bound);
-				point = context.getPoint(bit.next());
-				p.moveTo(point.getX(), point.getY());
-				while (bit.hasNext()) {
-					point = context.getPoint(bit.next());
-					p.lineTo(point.getX(), point.getY());
-				}
-			}
-			break;
-		default:
-			break;
 		}
 		if (style.line != null) {
 			if (style.dash != null) {
@@ -352,12 +327,12 @@ public class Renderer {
 		radius *= context.mile(feature);
 		Symbol circle = new Symbol();
 		if (style.fill != null) {
-			circle.add(new Instr(Prim.FILL, style.fill));
-			circle.add(new Instr(Prim.RSHP, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
+			circle.add(new Instr(Form.FILL, style.fill));
+			circle.add(new Instr(Form.RSHP, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
 		}
-		circle.add(new Instr(Prim.FILL, style.line));
-		circle.add(new Instr(Prim.STRK, new BasicStroke(style.width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, style.dash, 0)));
-		circle.add(new Instr(Prim.ELPS, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
+		circle.add(new Instr(Form.FILL, style.line));
+		circle.add(new Instr(Form.STRK, new BasicStroke(style.width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, style.dash, 0)));
+		circle.add(new Instr(Form.ELPS, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, circle, 1, point.getX(), point.getY(), null, null);
 	}
@@ -367,19 +342,20 @@ public class Renderer {
 		Path2D.Double p = new Path2D.Double();
 		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
 		Point2D point;
-		switch (feature.flag) {
+		switch (feature.geom.prim) {
 		case POINT:
 			point = context.getPoint(feature.centre);
 			g2.drawImage(image, new AffineTransformOp(AffineTransform.getScaleInstance(sScale, sScale), AffineTransformOp.TYPE_NEAREST_NEIGHBOR),
 					(int)(point.getX() - (50 * sScale)), (int)(point.getY() - (50 * sScale)));
 			break;
 		case AREA:
-			for (Bound bound : map.areas.get(feature.refs)) {
-				BoundIterator bit = map.new BoundIterator(bound);
-				point = context.getPoint(bit.next());
+			GeomIterator git = map.new GeomIterator(feature.geom);
+			while (git.hasMore()) {
+				git.more();
+				point = context.getPoint(git.next());
 				p.moveTo(point.getX(), point.getY());
-				while (bit.hasNext()) {
-					point = context.getPoint(bit.next());
+				while (git.hasNext()) {
+					point = context.getPoint(git.next());
 					p.lineTo(point.getX(), point.getY());
 				}
 			}
@@ -426,12 +402,12 @@ public class Renderer {
 	    ly = -height / 2;
 	    tx = lx + (height * 0.34);
 	    ty = ly + (height * 0.17);
-			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
-			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
-			label.add(new Instr(Prim.FILL, fg));
-			label.add(new Instr(Prim.STRK, new BasicStroke(1 + (int)(height/10), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-			label.add(new Instr(Prim.RRCT, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Form.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Form.FILL, bg));
+			label.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Form.FILL, fg));
+			label.add(new Instr(Form.STRK, new BasicStroke(1 + (int)(height/10), BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			label.add(new Instr(Form.RRCT, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
 			break;
 		case VCLR:
 			width += height * 1.0;
@@ -441,16 +417,16 @@ public class Renderer {
 	    ly = -height / 2;
 	    tx = lx + (height * 0.27);
 	    ty = ly + (height * 0.25);
-			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
-			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
-			label.add(new Instr(Prim.FILL, fg));
+			label.add(new Instr(Form.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Form.FILL, bg));
+			label.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Form.FILL, fg));
 			int sw = 1 + (int)(height/10);
 			double po = sw / 2;
-			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			label.add(new Instr(Form.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 			Path2D.Double p = new Path2D.Double(); p.moveTo(-height*0.2,-ly-po); p.lineTo(height*0.2,-ly-po); p.moveTo(0,-ly-po); p.lineTo(0,-ly-po-(height*0.15));
 			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
-			label.add(new Instr(Prim.PLIN, p));
+			label.add(new Instr(Form.PLIN, p));
 			break;
 		case PCLR:
 			width += height * 1.0;
@@ -460,18 +436,18 @@ public class Renderer {
 	    ly = -height / 2;
 	    tx = lx + (height * 0.27);
 	    ty = ly + (height * 0.25);
-			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
-			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
-			label.add(new Instr(Prim.FILL, fg));
+			label.add(new Instr(Form.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Form.FILL, bg));
+			label.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Form.FILL, fg));
 			sw = 1 + (int)(height/10);
 			po = sw / 2;
-			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			label.add(new Instr(Form.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 			p = new Path2D.Double(); p.moveTo(-height*0.2,-ly-po); p.lineTo(height*0.2,-ly-po); p.moveTo(0,-ly-po); p.lineTo(0,-ly-po-(height*0.15));
 			p.moveTo(-height*0.2,ly+po); p.lineTo((height*0.2),ly+po); p.moveTo(0,ly+po); p.lineTo(0,ly+po+(height*0.15));
-			label.add(new Instr(Prim.PLIN, p));
-			label.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0,-1,1,0,-width/2,0)))));
-			label.add(new Instr(Prim.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0,-1,1,0,width/2,0)))));
+			label.add(new Instr(Form.PLIN, p));
+			label.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0,-1,1,0,-width/2,0)))));
+			label.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Areas.CableFlash, 1, 0, 0, null, new Delta(Handle.CC, new AffineTransform(0,-1,1,0,width/2,0)))));
 			break;
 		case HCLR:
 			width += height * 1.5;
@@ -481,44 +457,31 @@ public class Renderer {
 	    ly = -height / 2;
 	    tx = lx + (height * 0.5);
 	    ty = ly + (height * 0.17);
-			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
-			label.add(new Instr(Prim.FILL, bg));
-			label.add(new Instr(Prim.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
-			label.add(new Instr(Prim.FILL, fg));
+			label.add(new Instr(Form.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Form.FILL, bg));
+			label.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(lx,ly,width,height,height,height)));
+			label.add(new Instr(Form.FILL, fg));
 			sw = 1 + (int)(height/10);
 			double vo = height / 4;
-			label.add(new Instr(Prim.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+			label.add(new Instr(Form.STRK, new BasicStroke(sw, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 			p = new Path2D.Double(); p.moveTo(-width*0.4-sw,-ly-vo); p.lineTo(-width*0.4-sw,ly+vo); p.moveTo(-width*0.4-sw,0); p.lineTo(-width*0.4+sw,0);
 			p.moveTo(width*0.4+sw,-ly-vo); p.lineTo(width*0.4+sw,ly+vo); p.moveTo(width*0.4-sw,0); p.lineTo(width*0.4+sw,0);
-			label.add(new Instr(Prim.PLIN, p));
+			label.add(new Instr(Form.PLIN, p));
 			break;
 		default:
 			lx = -width / 2;
 			ly = -height / 2;
 			tx = lx;
 			ty = ly;
-			label.add(new Instr(Prim.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
+			label.add(new Instr(Form.BBOX, new Rectangle2D.Double(lx,ly,width,height)));
 			break;
 		}
-		label.add(new Instr(Prim.TEXT, new Caption(str, font, tc, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
+		label.add(new Instr(Form.TEXT, new Caption(str, font, tc, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
 		Point2D point = context.getPoint(feature.centre);
 		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, delta);
 	}
 
 	public static void lineText(Feature feature, String str, Font font, Color colour, double offset, double dy) {
-		Area area;
-		switch (feature.flag) {
-		case LINE:
-			Edge edge = map.edges.get(feature.refs);
-			area = map.new Area();
-			area.add(map.new Bound(map.new Side(edge, true), true));
-			break;
-		case AREA:
-			area = map.areas.get(feature.refs);
-			break;
-		default:
-			return;
-		}
 //		Rectangle prect = symbolSize(prisymb);
 		if (!str.isEmpty()) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -532,12 +495,13 @@ public class Renderer {
 			boolean piv = false;
 			double len = 0;
 			double angle = 0;
-			for (Bound bound : area) {
-				BoundIterator bit = map.new BoundIterator(bound);
+			GeomIterator git = map.new GeomIterator(feature.geom);
+			while (git.hasMore()) {
+				git.more();
 				boolean first = true;
-				while (bit.hasNext()) {
+				while (git.hasNext()) {
 					prev = next;
-					next = context.getPoint(bit.next());
+					next = context.getPoint(git.next());
 					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 					piv = true;
 					if (first) {

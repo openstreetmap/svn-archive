@@ -32,7 +32,6 @@ public class ShowFrame extends JFrame {
 			showMap = new S57map();
 			showMap.nodes = map.nodes;
 			showMap.edges = map.edges;
-			showMap.areas = map.areas;
 			showMap.index = map.index;
 			if (feature != null) {
 				showMap.features.put(feature.type, new ArrayList<Feature>());

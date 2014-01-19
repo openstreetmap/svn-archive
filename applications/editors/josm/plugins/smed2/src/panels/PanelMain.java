@@ -21,6 +21,7 @@ import org.openstreetmap.josm.Main;
 
 import s57.S57att.Att;
 import s57.S57obj.Obj;
+import s57.S57val.*;
 import s57.S57map.*;
 import render.Renderer;
 import smed2.Smed2Action;
@@ -147,7 +148,7 @@ public class PanelMain extends JPanel {
 			if (feature.objs.get(obj).size() != 0) {
 				for (AttMap atts : feature.objs.get(obj).values()) {
 					for (Att att : atts.keySet()) {
-						AttItem item = atts.get(att);
+						AttVal<?> item = atts.get(att);
 						switch (item.conv) {
 						case E:
 							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + Messages.getString(((Enum<?>)item.val).name()) + "\n");

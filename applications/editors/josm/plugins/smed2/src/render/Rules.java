@@ -31,7 +31,7 @@ public class Rules {
 	public static final Color Msymb = new Color(0xa30075);
 	
 	static String getName(Feature feature) {
-		AttItem name = feature.atts.get(Att.OBJNAM);
+		AttVal<?> name = feature.atts.get(Att.OBJNAM);
 		if (name == null) {
 			AttMap atts = feature.objs.get(feature.type).get(0);
 			if (atts != null) {
@@ -57,7 +57,7 @@ public class Rules {
 		if (atts == null)
 			return S57val.nullVal(att);
 		else {
-			AttItem item = atts.get(att);
+			AttVal<?> item = atts.get(att);
 			if (item == null)
 				return S57val.nullVal(att);
 			return item.val;
@@ -88,7 +88,7 @@ public class Rules {
 	static boolean testAttribute(Feature feature, Obj obj, Att att, Object val) {
 		AttMap atts = getAtts(feature, obj, 0);
 		if (atts != null) {
-			AttItem item = atts.get(att);
+			AttVal item = atts.get(att);
 			if (item != null) {
 				switch (item.conv) {
 				case S:
@@ -232,7 +232,7 @@ public class Rules {
 			switch ((CatSEA) getAttVal(feature, feature.type, 0, Att.CATSEA)) {
 			case SEA_RECH:
 				if ((Renderer.zoom >= 10) && (name != null))
-					if (feature.flag == Fflag.LINE) {
+					if (feature.geom.prim == Pflag.LINE) {
 						Renderer.lineText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
 					} else {
 						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
@@ -240,7 +240,7 @@ public class Rules {
 				break;
 			case SEA_BAY:
 				if ((Renderer.zoom >= 12) && (name != null))
-					if (feature.flag == Fflag.LINE) {
+					if (feature.geom.prim == Pflag.LINE) {
 						Renderer.lineText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
 					} else {
 						Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
@@ -248,13 +248,13 @@ public class Rules {
 				break;
 			case SEA_SHOL:
 				if (Renderer.zoom >= 14) {
-					if (feature.flag == Fflag.AREA) {
+					if (feature.geom.prim == Pflag.AREA) {
 						Renderer.lineVector(feature, new LineStyle(new Color(0xc480ff), 4, new float[] { 25, 25 }));
 						if (name != null) {
 							Renderer.labelText(feature, name, new Font("Arial", Font.ITALIC, 75), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
 							Renderer.labelText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, new Delta(Handle.BC));
 						}
-					} else if (feature.flag == Fflag.LINE) {
+					} else if (feature.geom.prim == Pflag.LINE) {
 						if (name != null) {
 							Renderer.lineText(feature, name, new Font("Arial", Font.ITALIC, 75), Color.black, 0.5, -40);
 							Renderer.lineText(feature, "(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, 0);
@@ -488,7 +488,7 @@ public class Rules {
 			break;
 		case ACHARE:
 			if (Renderer.zoom >= 12) {
-				if (feature.flag != Fflag.AREA) {
+				if (feature.geom.prim != Pflag.AREA) {
 					Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Color.black));
 				} else {
 					Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Mline));
@@ -682,7 +682,7 @@ public class Rules {
 			Symbol s1 = null, s2 = null;
 			MarSYS sys = MarSYS.SYS_CEVN;
 			BnkWTW bnk = BnkWTW.BWW_UNKN;
-			AttItem att = feature.atts.get(Att.MARSYS);
+			AttVal att = feature.atts.get(Att.MARSYS);
 			if (att != null) sys = (MarSYS)att.val;
 			ObjTab objs = feature.objs.get(Obj.NOTMRK);
 			int n = objs.size();

@@ -34,19 +34,19 @@ fr.datagouvfr.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins
 	Ant-Version: Apache Ant 1.8.4
 	Module-Description: data.gouv.fr
 	Manifest-Version: 1.0
-	Module-Version: 29935
+	Module-Version: 30211
 	Created-By: 1.6.0_45-b06 (Sun Microsystems Inc.)
 	Module-Link: http://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr
-	Module-Date: 2013-09-20T19:12:44.614850Z
+	Module-Date: 2014-01-19T00:17:29.993764Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.DataGouvFrModule
 fr.lemans.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.lemans.jar
 	Author: Don-vip
 	Ant-Version: Apache Ant 1.8.4
 	Module-Description: Informations publiques du Mans Métropole.
 	Manifest-Version: 1.0
-	Module-Version: 29935
+	Module-Version: 30211
 	Created-By: 1.6.0_45-b06 (Sun Microsystems Inc.)
-	Module-Date: 2013-09-20T19:12:44.614850Z
+	Module-Date: 2014-01-19T00:17:29.993764Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.LeMansModule
 fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.paris.jar
 	Module-Icon: images/data.fr.paris_24.png

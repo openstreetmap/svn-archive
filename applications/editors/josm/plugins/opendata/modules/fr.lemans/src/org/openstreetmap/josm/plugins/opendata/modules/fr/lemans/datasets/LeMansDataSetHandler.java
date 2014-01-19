@@ -71,17 +71,11 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 		this.shpUuid = shpUuid;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getSource()
-	 */
 	@Override
 	public String getSource() {
 		return SOURCE_LE_MANS;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLicenseURL()
-	 */
 	/*@Override
 	public URL getLicenseURL() {
 		try {
@@ -92,15 +86,12 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 		return null;
 	}*/
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURLs()
-	 */
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
 		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
 		try {
-			if (kmzUuid != null && !kmzUuid.isEmpty()) result.add(new Pair<String, URL>("KMZ", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
-			if (shpUuid != null && !shpUuid.isEmpty()) result.add(new Pair<String, URL>("SHP", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
+			if (kmzUuid != null && !kmzUuid.isEmpty()) result.add(new Pair<String, URL>(getName() + " (KMZ)", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
+			if (shpUuid != null && !shpUuid.isEmpty()) result.add(new Pair<String, URL>(getName() + " (SHP)", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

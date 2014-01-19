@@ -120,9 +120,6 @@ public class ForetsPubliquesHandler extends DataGouvDataSetHandler {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataURLs()
-	 */
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
 		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
@@ -138,7 +135,7 @@ public class ForetsPubliquesHandler extends DataGouvDataSetHandler {
 		return result;
 	}
 
-	private Pair<String, URL> getForetURL(String code, String name) throws MalformedURLException {
-		return new Pair<String, URL>(name, new URL(FRENCH_PORTAL+"var/download/"+"for_publ_v2011_reg"+code+".zip"));
+	private Pair<String, URL> getForetURL(String code, String regionName) throws MalformedURLException {
+		return new Pair<String, URL>("PublicForests_"+regionName, new URL(FRENCH_PORTAL+"var/download/"+"for_publ_v2011_reg"+code+".zip"));
 	}
 }

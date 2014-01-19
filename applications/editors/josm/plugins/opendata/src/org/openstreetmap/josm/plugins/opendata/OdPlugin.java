@@ -120,7 +120,9 @@ public final class OdPlugin extends Plugin implements OdConstants {
         	Map<DataSetCategory, JMenu> catMenus = new HashMap<DataSetCategory, JMenu>();
         	JMenu moduleMenu = null;
         	for (AbstractDataSetHandler handler: module.getNewlyInstanciatedHandlers()) {
-        		if (handler.getDataURL() != null || (handler.getDataURLs() != null && !handler.getDataURLs().isEmpty())) {
+        	    URL dataURL = handler.getDataURL();
+        	    List<Pair<String, URL>> dataURLs = handler.getDataURLs();
+        		if (dataURL != null || (dataURLs != null && !dataURLs.isEmpty())) {
         			if (moduleMenu == null) {
         				moduleMenu = getModuleMenu(module);
         			}
@@ -141,12 +143,12 @@ public final class OdPlugin extends Plugin implements OdConstants {
         				handlerName = handler.getClass().getName();
         			}
         			JMenuItem handlerItem = null;
-        			if (handler.getDataURL() != null) {
-        			    handlerItem = endMenu.add(new DownloadDataAction(handlerName, handler.getDataURL()));
-        			} else if (handler.getDataURLs() != null) {
+        			if (dataURL != null) {
+        			    handlerItem = endMenu.add(new DownloadDataAction(module.getDisplayedName()+"_"+handlerName, dataURL));
+        			} else if (dataURLs != null) {
         				JMenu handlerMenu = new JMenu(handlerName);
         				JMenuItem item = null;
-        				for (Pair<String, URL> pair : handler.getDataURLs()) {
+        				for (Pair<String, URL> pair : dataURLs) {
         					if (pair != null && pair.a != null && pair.b != null) {
         						item = handlerMenu.add(new DownloadDataAction(pair.a, pair.b));
         					}

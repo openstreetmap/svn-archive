@@ -426,11 +426,13 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	}
 	
 	public boolean acceptsUrl(String url) {
-		if (getDataURL() != null && url.equals(getDataURL().toString())) {
+	    URL dataURL = getDataURL();
+		if (dataURL != null && url.equals(dataURL.toString())) {
 			return true;
 		}
-		if (getDataURLs() != null) {
-			for (Pair<String, URL> pair : getDataURLs()) {
+		List<Pair<String, URL>> dataURLs = getDataURLs();
+		if (dataURLs != null) {
+			for (Pair<String, URL> pair : dataURLs) {
 				if (pair.b != null && url.equals(pair.b.toString())) {
 					return true;
 				}

@@ -67,7 +67,7 @@ public class TaggingPresetTester extends JFrame {
     public TaggingPresetTester(String[] args) {
         super(tr("Tagging Preset Tester"));
         this.args = args;
-        taggingPresets = new TaggingPresetSelector();
+        taggingPresets = new TaggingPresetSelector(true, true);
         taggingPresetPanel.setPreferredSize(new Dimension(300,500));
         reload();
 

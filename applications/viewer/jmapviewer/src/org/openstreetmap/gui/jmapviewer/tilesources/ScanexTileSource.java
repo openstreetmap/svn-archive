@@ -4,7 +4,9 @@ import java.util.Random;
 
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 
-public class ScanexTileSource extends AbstractTMSTileSource {
+public class ScanexTileSource extends TMSTileSource {
+    private static final String DEFAULT_URL = "http://maps.kosmosnimki.ru";
+    private static final int DEFAULT_MAXZOOM = 14;
     private static String API_KEY = "4018C5A9AECAD8868ED5DEB2E41D09F7";
 
     private enum ScanexLayer {
@@ -29,20 +31,21 @@ public class ScanexTileSource extends AbstractTMSTileSource {
     /* IRS by default */
     private ScanexLayer Layer = ScanexLayer.IRS;
 
-    public ScanexTileSource(String url) {
-        super("Scanex " + url, "http://maps.kosmosnimki.ru");
+    public ScanexTileSource(String name, String url, int maxZoom) {
+	super(name, url, maxZoom);
 
         for (ScanexLayer layer : ScanexLayer.values()) {
             if (url.equalsIgnoreCase(layer.getName())) {
                 this.Layer = layer;
+                /*
+                 * Override baseUrl and maxZoom in base class.
+                 */
+                this.baseUrl = DEFAULT_URL;
+                if (maxZoom == 0)
+                    this.maxZoom = DEFAULT_MAXZOOM;
                 break;
             }
         }
-    }
-
-    @Override
-    public int getMaxZoom() {
-        return 14;
     }
 
     @Override

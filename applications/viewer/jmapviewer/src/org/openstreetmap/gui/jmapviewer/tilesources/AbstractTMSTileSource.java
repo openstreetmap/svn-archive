@@ -1,14 +1,7 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
-//License: GPL.
-
-import java.awt.Image;
 import java.io.IOException;
-
-import javax.swing.ImageIcon;
-
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 public abstract class AbstractTMSTileSource extends AbstractTileSource {
 

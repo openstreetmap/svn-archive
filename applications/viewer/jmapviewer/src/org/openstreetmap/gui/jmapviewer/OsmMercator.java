@@ -1,18 +1,13 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
 
-// License: GPL. Copyright 2007 by Tim Haussmann
-
 /**
- * This class implements the Mercator Projection as it is used by Openstreetmap
+ * This class implements the Mercator Projection as it is used by OpenStreetMap
  * (and google). It provides methods to translate coordinates from 'map space'
  * into latitude and longitude (on the WGS84 ellipsoid) and vice versa. Map
  * space is measured in pixels. The origin of the map space is the top left
- * corner. The map space origin (0,0) has latitude ~85 and longitude -180
- *
- * @author Tim Haussmann
- *
+ * corner. The map space origin (0,0) has latitude ~85 and longitude -180.
  */
-
 public class OsmMercator {
 
     private static int TILE_SIZE = 256;

@@ -1,6 +1,5 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
-
-//License: GPL. Copyright 2008 by Jan Peter Stotz
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -277,10 +276,13 @@ public class OsmFileCacheTileLoader extends OsmTileLoader implements CachedTileL
                     tileFile = getTagsFile();
                 } else {
                     fin = new FileInputStream(tileFile);
-                    if (fin.available() == 0)
-                        throw new IOException("File empty");
-                    tile.loadImage(fin);
-                    fin.close();
+                    try {
+                        if (fin.available() == 0)
+                            throw new IOException("File empty");
+                        tile.loadImage(fin);
+                    } finally {
+                        fin.close();
+                    }
                 }
 
                 fileAge = tileFile.lastModified();

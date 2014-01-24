@@ -95,6 +95,7 @@ public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICry
                     default:
                         PrintString("Unknown Error");
                 }
+                PrintNewLine();
             }
         }
             /*
@@ -106,7 +107,6 @@ public class ArchiveExtractCallback implements IArchiveExtractCallback // , ICry
             if (_extractMode && _processedFileInfo.AttributesAreDefined)
                 NFile::NDirectory::MySetFileAttributes(_diskFilePath, _processedFileInfo.Attributes);
              */
-        PrintNewLine();
         return HRESULT.S_OK;
     }
     

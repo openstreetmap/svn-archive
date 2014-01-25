@@ -10,7 +10,13 @@
 package jrender;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Panel;
@@ -20,12 +26,17 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.svggen.SVGGraphics2DIOException;
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMImplementation;
+
 import symbols.*;
-import symbols.Symbols.Scheme;
+import symbols.Symbols.*;
 import render.*;
 
 public class Jrender extends Panel {
-	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
 		BufferedImage img;
@@ -37,24 +48,9 @@ public class Jrender extends Panel {
     frame.getContentPane().add("Center", panel);
 		frame.setSize(256, 256);
 		frame.setVisible(true);
-/*		
-		for (int x = 0; x < 4; x++) {
-			for (int y = 0; y < 4; y++) {
-				img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-				g2 = img.createGraphics();
-				g2.translate(-(x*256), -(y*256));
-				drawRendering(g2);
-				try {
-					ImageIO.write(img, "png", new File("tst" + x + "_" + y + ".png"));
-				} catch (IOException e) {
-					System.out.println("IO Exception");
-				}
-			}
-		}*/
 		
-		img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 		g2 = img.createGraphics();
-		g2.translate(-32, -32);
 		drawRendering(g2);
 		try {
 			ImageIO.write(img, "png", new File("/Users/mherring/Desktop/export.png"));
@@ -62,15 +58,32 @@ public class Jrender extends Panel {
 			System.out.println("Exception");
 		}
 		
+    DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
+    String svgNS = "http://www.w3.org/2000/svg";
+    Document document = domImpl.createDocument(svgNS, "svg", null);
+    SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+    svgGenerator.setSVGCanvasSize(new Dimension(256, 256));
+		drawRendering(svgGenerator);
+    boolean useCSS = true;
+    Writer out = null;
+			try {
+				out = new OutputStreamWriter(new FileOutputStream("/Users/mherring/Desktop/export.svg"), "UTF-8");
+			} catch (IOException e1) {
+				System.out.println("Exception");
+			}
+    try {
+			svgGenerator.stream(out, useCSS);
+		} catch (SVGGraphics2DIOException e) {
+			System.out.println("Exception");
+		}
 	}
 	
 	public static void drawRendering(Graphics2D g2) {
-		double scale = Renderer.symbolScale[7];
+		double scale = Renderer.symbolScale[8];
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-//		System.out.println("hello");
-   
-		Symbols.drawSymbol(g2, Areas.Seaplane, scale/2, 64.0, 64.0, new Scheme(Color.green), null);
+		Scheme scheme = new Scheme(); scheme.pat.add(Patt.H); scheme.col.add(Color.red); scheme.col.add(Color.yellow); scheme.col.add(Color.green);
+		Symbols.drawSymbol(g2, Buoys.Pillar, scale, 128.0, 128.0, scheme, null);
 	}
 	
 	public void paint(Graphics g) {

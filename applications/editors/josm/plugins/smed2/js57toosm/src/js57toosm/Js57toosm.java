@@ -24,10 +24,15 @@ import s57.S57map.*;
 
 public class Js57toosm {
 	
+	static FileInputStream in;
+	static PrintStream out;
+	static S57map map;
+	
 	public static void main(String[] args) throws IOException {
 
-		FileInputStream in = new FileInputStream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/js57toosm/tst.000");
-		PrintStream out = System.out;
+		in = new FileInputStream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/js57toosm/tst.000");
+		out = System.out;
+		map = new S57map();
 
 		S57dat.rnum = 0;
 
@@ -47,7 +52,6 @@ public class Js57toosm {
 		S57map.Nflag nflag = Nflag.ANON;
 		S57map.Pflag prim = S57map.Pflag.NOSP;
 		long objl = 0;
-		S57map map = new S57map();
 		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
 
 		while (in.read(leader) == 24) {
@@ -205,36 +209,58 @@ public class Js57toosm {
 			Feature feature = map.index.get(id);
 			if (feature.reln != Rflag.SLAVE) {
 				if (feature.geom.prim == Pflag.POINT) {
-					Snode node = map.nodes.get(feature.geom.elems.get(0).id);
+					long ref = feature.geom.elems.get(0).id;
+					Snode node = map.nodes.get(ref);
 					String type = S57obj.stringType(feature.type);
-					out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n",-id,  Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+					out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -ref,  Math.toDegrees(node.lat), Math.toDegrees(node.lon));
 					out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-					for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
-						out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, S57att.stringAttribute(item.getKey()), S57val.stringValue(item.getValue()));
-					}
-					for (Reln rel : feature.rels) {
-						if (rel.reln == Rflag.SLAVE) {
-							Feature slave = map.index.get(rel.id);
-							type = S57obj.stringType(slave.type);
-							for (Map.Entry<Att, AttVal<?>> item : slave.atts.entrySet()) {
-								out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, S57att.stringAttribute(item.getKey()), S57val.stringValue(item.getValue()));
-							}
-						}
-					}
+					writeAtts(feature, type);
 					out.format("  </node>%n");
+					map.nodes.remove(ref);
 				}
 			}
 		}
-/*		
-		for (long id : map.nodes.keySet()) {
+		
+		for (long id : map.index.keySet()) {
+			Feature feature = map.index.get(id);
+			if (feature.reln != Rflag.SLAVE) {
+				if (feature.geom.prim == Pflag.LINE) {
+					GeomIterator git = map.new GeomIterator(feature.geom);
+					while (git.hasMore()) {
+						git.more();
+						while (git.hasNext()) {
+							long ref = git.nextRef();
+							Snode node = map.nodes.get(ref);
+							if (node != null) {
+								out.format("  <node id='%d' lat='%f' lon='%f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+								map.nodes.remove(ref);
+							}
+						}
+					}
+					out.format("  <way id='%d' version='1'>%n", -id);
+					git = map.new GeomIterator(feature.geom);
+					while (git.hasMore()) {
+						git.more();
+						while (git.hasNext()) {
+							long ref = git.nextRef();
+							out.format("    <nd ref='%d'/>%n", -ref);
+						}
+					}
+					String type = S57obj.stringType(feature.type);
+					out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+					writeAtts(feature, type);
+					out.format("  </way>%n");
+				}
+			}
+		}
+/*		for (long id : map.nodes.keySet()) {
 			Snode node = map.nodes.get(id);
 			if (node.flg == S57map.Nflag.DPTH) {
 				out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -id, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
 				out.format("    <tag k='seamark:type' v='sounding'/>%n");
 				out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode)node).val);
 				out.format("  </node>%n");
-			} else {
-				out.format("  <node id='%d' lat='%f' lon='%f' version='1'/>%n",-id,  Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+				map.nodes.remove(id);
 			}
 		}
 		
@@ -250,6 +276,28 @@ public class Js57toosm {
 		}
 */		
 		out.println("</osm>\n");
+	}
+	
+	static void writeAtts(Feature feature, String type) {
+		for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
+			String attstr = S57att.stringAttribute(item.getKey());
+			String valstr = S57val.stringValue(item.getValue());
+			if (!attstr.isEmpty() && !valstr.isEmpty())
+				out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, attstr, valstr);
+		}
+		for (Reln rel : feature.rels) {
+			if (rel.reln == Rflag.SLAVE) {
+				Feature slave = map.index.get(rel.id);
+				type = S57obj.stringType(slave.type);
+				for (Map.Entry<Att, AttVal<?>> item : slave.atts.entrySet()) {
+					String attstr = S57att.stringAttribute(item.getKey());
+					String valstr = S57val.stringValue(item.getValue());
+					if (!attstr.isEmpty() && !valstr.isEmpty())
+						out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, attstr, valstr);
+				}
+			}
+		}
+
 	}
 
 }

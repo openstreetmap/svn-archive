@@ -68,6 +68,10 @@ public class Symbols {
 			col = new ArrayList<Color>();
 			col.add(icol);
 		}
+		public Scheme() {
+			pat = new ArrayList<Patt>();
+			col = new ArrayList<Color>();
+		}
 	}
 
 	public static class Caption {

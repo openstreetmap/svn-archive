@@ -49,8 +49,8 @@ public class S57att {
 		AttS57.put(Att.NATION, 111); AttS57.put(Att.NATCON, 112); AttS57.put(Att.NATSUR, 113); AttS57.put(Att.NATQUA, 114);	AttS57.put(Att.NMDATE, 115); AttS57.put(Att.OBJNAM, 116);
 		AttS57.put(Att.ORIENT, 117); AttS57.put(Att.PEREND, 118);	AttS57.put(Att.PERSTA, 119); AttS57.put(Att.PICREP, 120);	AttS57.put(Att.PILDST, 121); AttS57.put(Att.PRCTRY, 122);
 		AttS57.put(Att.PRODCT, 123); AttS57.put(Att.PUBREF, 124);	AttS57.put(Att.QUASOU, 125); AttS57.put(Att.RADWAL, 126);	AttS57.put(Att.RADIUS, 127); AttS57.put(Att.RECDAT, 128);
-		AttS57.put(Att.RECIND, 129); AttS57.put(Att.RYRMGV, 130);	AttS57.put(Att.RESTRN, 131);	AttS57.put(Att.SCAMIN, 133);
-		AttS57.put(Att.SECTR1, 136);	AttS57.put(Att.SECTR2, 137); AttS57.put(Att.SHIPAM, 138);
+		AttS57.put(Att.RECIND, 129); AttS57.put(Att.RYRMGV, 130);	AttS57.put(Att.RESTRN, 131); AttS57.put(Att.SCAMAX, 132); AttS57.put(Att.SCAMIN, 133); AttS57.put(Att.SCVAL1, 134);
+		AttS57.put(Att.SCVAL2, 135); AttS57.put(Att.SECTR1, 136);	AttS57.put(Att.SECTR2, 137); AttS57.put(Att.SHIPAM, 138);
 		AttS57.put(Att.SIGFRQ, 139); AttS57.put(Att.SIGGEN, 140);	AttS57.put(Att.SIGGRP, 141); AttS57.put(Att.SIGPER, 142);	AttS57.put(Att.SIGSEQ, 143); AttS57.put(Att.SOUACC, 144);
 		AttS57.put(Att.SDISMX, 145); AttS57.put(Att.SDISMN, 146);	AttS57.put(Att.SORDAT, 147); AttS57.put(Att.SORIND, 148);	AttS57.put(Att.STATUS, 149); AttS57.put(Att.SURATH, 150);
 		AttS57.put(Att.SUREND, 151); AttS57.put(Att.SURSTA, 152);	AttS57.put(Att.SURTYP, 153); AttS57.put(Att.TECSOU, 156);	AttS57.put(Att.TXTDSC, 158); AttS57.put(Att.TIMEND, 168);
@@ -151,7 +151,7 @@ public class S57att {
 		AttStr.put(Att.OTHNAM, "local_name");	AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name");
 		AttStr.put(Att.CATVTR, "category");	AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
 		AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
-		AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category"); AttStr.put(Att.SCAMIN, "scale_minimum");
+		AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category");
 		AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.CATWWM, "category"); AttStr.put(Att.SHPTYP, "ship"); AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
 	}
 	

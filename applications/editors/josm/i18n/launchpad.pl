@@ -426,8 +426,9 @@ sub getstats
       }
     }
   }
-  for my $code (sort {$results{$b}{TOTAL} <=> $results{$a}{TOTAL}} keys %results)
+  for my $code (sort {($results{$b}{TOTAL}||0) <=> ($results{$a}{TOTAL}||0)} keys %results)
   {
+    next if !$results{$code}{TOTAL};
     print FILE "$results{$code}{NAME}:$results{$code}{TOTAL}";
     printf "%5d - %-50s",$results{$code}{TOTAL}, $results{$code}{NAME};
     for my $lang (sort keys %{$results{$code}})

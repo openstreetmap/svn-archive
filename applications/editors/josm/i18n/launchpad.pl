@@ -372,7 +372,7 @@ sub getstats
     while($cont =~ /<a href="https?:\/\/launchpad.net\/~(.*?)" class="sprite person(-inactive)?">(.*?)<\/a>/g)
     {
       my ($code, $inactive, $name) = ($1, $2, $3);
-      if(exists($results{$code}{$lang}))
+      if(exists($results{$code}{$lang}{count}) && exists($results{$code}{$lang}{time}) && time()-$results{$code}{$lang}{time} < 5*24*60*60)
       {
         printf "%-5s - %-30s - Found - %s\n", $lang,$code,$name;
         next;
@@ -384,16 +384,41 @@ sub getstats
       my ($count) = $cont =~ /of[\r\n\t ]+?(\d+)[\r\n\t ]+?result/;
       if($count && $mech->status == 200)
       {
+        my $t = time();
+        my $old = "";
+        if(exists($results{$code}{$lang}{count}))
+        {
+          if($results{$code}{$lang}{count} != $count)
+          {
+            $old .= sprintf " %d %s",abs($count-$results{$code}{$lang}{count}),$count-$results{$code}{$lang}{count} > 0 ? "more" : "less";
+          }
+          else
+          {
+            $old .= " unchanged";
+          }
+        }
+        if(exists($results{$code}{$lang}{time}))
+        {
+          $old .= sprintf " %.2f days later",($t-$results{$code}{$lang}{time})/86400.0;
+        }
         $results{$code}{NAME} = $name;
-        $results{$code}{$lang} = $count;
-        $results{$code}{TOTAL} += $count;
+        $results{$code}{TOTAL} += $count-($results{$code}{$lang}{count}||0);
+        $results{$code}{$lang}{count} = $count;
+        $results{$code}{$lang}{time} = $t;
+        $results{$code}{$lang}{$t} = $count;
         if(open DFILE,">:utf8","launchpadtrans.data")
         {
           print DFILE Data::Dumper->Dump([\%results],['*results']);
           close DFILE;
         }
-        printf "%-5s - %-30s - %5d - %s\n", $lang,$code,$count,$name;
-        
+        if($old)
+        {
+          printf "%-5s - %-30s - %5d - %-70s%s\n", $lang,$code,$count,$name,$old;
+        }
+        else
+        {
+          printf "%-5s - %-30s - %5d - %s\n", $lang,$code,$count,$name;
+        }
       }
       else
       {
@@ -408,8 +433,9 @@ sub getstats
     for my $lang (sort keys %{$results{$code}})
     {
       next if $lang eq "NAME" or $lang eq "TOTAL";
-      print FILE ";$lang=$results{$code}{$lang}";
-      printf " - %-5s=%5d",$lang, $results{$code}{$lang};
+      next if !exists($results{$code}{$lang}{time}) || time()-$results{$code}{$lang}{time} > 6*24*60*60;
+      print FILE ";$lang=$results{$code}{$lang}{count}";
+      printf " - %-5s=%5d",$lang, $results{$code}{$lang}{count};
     }
     print FILE "\n";
     print "\n";

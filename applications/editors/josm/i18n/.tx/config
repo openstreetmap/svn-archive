@@ -1,0 +1,20 @@
+[main]
+host = https://www.transifex.com
+
+[josm.core]
+file_filter = po/<lang>.po
+source_file = po/core.pot
+source_lang = en
+type = PO
+
+[josm.data]
+file_filter = po/<lang>.po
+source_file = po/data.pot
+source_lang = en
+type = PO
+
+[josm.plugins]
+file_filter = po/<lang>.po
+source_file = po/plugins.pot
+source_lang = en
+type = PO

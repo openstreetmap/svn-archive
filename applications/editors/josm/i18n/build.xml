@@ -20,8 +20,10 @@
         <taskdef name="gettext-dist" classname="org.xnap.commons.ant.gettext.GettextDistTask" classpath="${gettexttasks.jar}"/>
         <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${antcontrib.jar}"/>
     </target>
-    <target name="trans_.java">
+    <target name="builddir">
         <mkdir dir="${i18n.build.dir}"/>
+    </target>
+    <target name="trans_.java" depends="builddir">
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
             <arg line="convpreset.pl ${josm.presets}"/>
         </exec>
@@ -50,6 +52,31 @@
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
         </gettext-extract>
+    </target>
+    <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="builddir,init">
+        <gettext-extract keysFile="core.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
+            <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
+        </gettext-extract>
+    </target>
+    <target name="${i18n.build.dir}/core.2.pot" depends="builddir,po/core.pot" description="Duplicates core.pot for de-duplication in data.pot and plugins.pot">
+        <copy file="po/core.pot" tofile="${i18n.build.dir}/core.2.pot"/>
+    </target>
+    <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,${i18n.build.dir}/core.2.pot,init">
+        <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
+        </gettext-extract>
+        <exec executable="msgcomm" output="po/data.pot">
+            <arg line="--unique po/core.pot ${i18n.build.dir}/core.2.pot ${i18n.build.dir}/data.raw.pot"/>
+        </exec>
+    </target>
+    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core strings)" depends="po/core.pot,${i18n.build.dir}/core.2.pot,init">
+        <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${plugin.dir}" includes="**/*.java"/>
+        </gettext-extract>
+        <exec executable="msgcomm" output="po/plugins.pot">
+            <arg line="--unique po/core.pot ${i18n.build.dir}/core.2.pot ${i18n.build.dir}/plugins.raw.pot"/>
+        </exec>
     </target>
     <target name="build" depends="po/josm.pot,init">
         <gettext-merge keysFile="josm.pot" poDirectory="po"/>
@@ -125,6 +152,7 @@
         </exec>
     </target>
     <target name="pot" depends="po/josm.pot" />
+    <target name="transifex" depends="po/core.pot,po/plugins.pot,po/data.pot" />
     <target name="update">
         <exec executable="perl">
             <arg line="launchpad.pl bzronly"/>

@@ -140,7 +140,7 @@ public class S57map {
 	}
 
 	public class Prim {				// Spatial element
-		public long id;					// ID
+		public long id;					// Snode ID for POINTs, Edge ID for LINEs & AREAs)
 		public boolean forward;	// Direction of vector used (LINEs & AREAs)
 		public boolean outer;		// Exterior/Interior boundary (AREAs)
 		public Prim() {
@@ -157,6 +157,15 @@ public class S57map {
 		}
 	}
 	
+	public class Comp {
+		public long ref;
+		public int size;
+		public Comp(long r, int s) {
+			ref = r;
+			size = s;
+		}
+	}
+	
 	public enum Pflag {
 		NOSP, POINT, LINE, AREA
 	}
@@ -164,9 +173,14 @@ public class S57map {
 	public class Geom {							// Geometric structure of feature
 		public Pflag prim;						// Geometry type
 		public ArrayList<Prim> elems;	// Ordered list of elements
+		public int outers;						// Number of outers
+		public int inners;						// Number of inners
+		public ArrayList<Comp> refs;	// Ordered list of compounds
 		public Geom(Pflag p) {
 			prim = p;
 			elems = new ArrayList<Prim>();
+			outers = inners = 0;
+			refs = new ArrayList<Comp>();
 		}
 	}
 	
@@ -202,6 +216,7 @@ public class S57map {
 
 	private Feature feature;
 	private Edge edge;
+	private long ref;
 
 	public S57map() {
 		nodes = new NodeTab();		// All nodes in map
@@ -209,6 +224,7 @@ public class S57map {
 		feature = new Feature();	// Current feature being built
 		features = new FtrMap();	// All features in map, grouped by type
 		index = new FtrTab();			// Feature look-up table
+		ref = 0x0000ffffffff0000L;// Compound reference generator
 	}
 
 	// S57 map building methods
@@ -457,6 +473,7 @@ public class S57map {
 			Geom sort = new Geom(geom.prim);
 			long first = 0;
 			long last = 0;
+			Comp comp = null;
 			boolean next = true;
 			if ((geom.prim == Pflag.LINE) || (geom.prim == Pflag.AREA)) {
 				int sweep = geom.elems.size();
@@ -473,14 +490,23 @@ public class S57map {
 							last = edge.first;
 						}
 						sort.elems.add(prim);
+						if (prim.outer) {
+							sort.outers++;
+						} else {
+							sort.inners++;
+						}
+						comp = new Comp(ref++, 1);
+						sort.refs.add(comp);
 					} else {
 						if (prim.forward) {
 							if (edge.first == last) {
 								sort.elems.add(prim);
 								last = edge.last;
+								comp.size++;
 							} else if (edge.last == first) {
 								sort.elems.add(0, prim);
 								first = edge.first;
+								comp.size++;
 							} else {
 								geom.elems.add(prim);
 							}
@@ -488,9 +514,11 @@ public class S57map {
 							if (edge.last == last) {
 								sort.elems.add(prim);
 								last = edge.first;
+								comp.size++;
 							} else if (edge.first == first) {
 								sort.elems.add(0, prim);
 								first = edge.last;
+								comp.size++;
 							} else {
 								geom.elems.add(prim);
 							}
@@ -516,6 +544,9 @@ public class S57map {
 				ArrayList<Prim> sorting = outers;
 				ArrayList<Prim> closed = null;
 				sort = new Geom(geom.prim);
+				sort.outers = feature.geom.outers;
+				sort.inners = feature.geom.inners;
+				sort.refs = feature.geom.refs;
 				next = true;
 				while (!sorting.isEmpty()) {
 					Prim prim = sorting.remove(0);
@@ -619,14 +650,14 @@ public class S57map {
 		Prim prim;
 		EdgeIterator eit;
 		ListIterator<S57map.Prim> it;
-		long first;
-		long last;
+		int cc, ec;
+		Comp comp;
 		
 		public GeomIterator(Geom g) {
 			geom = g;
 			eit = null;
-			first = 0;
-			last = -1;
+			cc = ec = 0;
+			comp = null;
 			if ((geom.prim != Pflag.NOSP) && (geom.prim != Pflag.POINT)) {
 				it = geom.elems.listIterator();
 			} else {
@@ -635,39 +666,31 @@ public class S57map {
 		}
 		
 		public boolean hasMore() {
-			return (it != null) && it.hasNext();
+			return (cc < geom.refs.size());
 		}
 		
-		public boolean more() {
-			if ((it != null) && it.hasNext()) {
-				prim = it.next();
-				eit = new EdgeIterator(edges.get(prim.id), prim.forward);
-				return prim.outer;
-			}
-			return false;
+		public long getMore() {
+			comp = geom.refs.get(cc++);
+			ec = 0;
+			return comp.ref;
 		}
 		
 		public boolean hasNext() {
-			return (first != last) && (it.hasNext() || eit.hasNext());
+			if (eit == null) {
+				return (ec < comp.size);
+			} else {
+				return (eit.hasNext());
+			}
 		}
 		
 		public long nextRef() {
-			if ((eit == null) || !eit.hasNext()) {
-				if (it.hasNext()) {
-					prim = it.next();
-					eit = new EdgeIterator(edges.get(prim.id), prim.forward);
-				} else {
-					return 0;
-				}
+			if ((eit == null) && (ec < comp.size)) {
+				prim = geom.elems.get(ec++);
+				eit = new EdgeIterator(edges.get(prim.id), prim.forward);
 			}
 			long ref = eit.nextRef();
-			if (ref == last)
-				ref = eit.nextRef();
-			if (first == 0) {
-				first = ref;
-				last = 0;
-			} else {
-				last = ref;
+			if (!eit.hasNext()) {
+				eit = null;
 			}
 			return ref;
 		}
@@ -682,7 +705,8 @@ public class S57map {
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
-/*		BoundIterator it = new BoundIterator(bound);
+		GeomIterator it = new GeomIterator(geom);
+		it.getMore();
 		while (it.hasNext()) {
 			llon = lon;
 			llat = lat;
@@ -691,7 +715,7 @@ public class S57map {
 			lon = node.lon;
 			sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
 		}
-*/		return sigma / 2.0;
+		return sigma / 2.0;
 	}
 
 	public boolean handOfArea(Geom geom) {
@@ -703,11 +727,12 @@ public class S57map {
 	}
 
 	public double calcLength(Geom geom) {
-/*		Snode node;
+		Snode node;
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
-		BoundIterator it = new BoundIterator(bound);
+		GeomIterator it = new GeomIterator(geom);
+		it.getMore();
 		if (it.hasNext()) {
 			node = it.next();
 			lat = node.lat;
@@ -722,22 +747,21 @@ public class S57map {
 			}
 		}
 		return sigma * 3444;
-*/		return 0;
 	}
 
 	public Snode findCentroid(Feature feature) {
-/*		double lat, lon, slat, slon, llat, llon;
+		double lat, lon, slat, slon, llat, llon;
 		llat = llon = lat = lon = slat = slon = 0;
 		double sarc = 0;
 		boolean first = true;
 		switch (feature.geom.prim) {
 		case POINT:
-			return nodes.get(feature.geom);
+			return nodes.get(feature.geom.elems.get(0).id);
 		case LINE:
-			Edge edge = edges.get(feature.geom);
-			EdgeIterator eit = new EdgeIterator(edge, true);
-			while (eit.hasNext()) {
-				Snode node = eit.next();
+			GeomIterator it = new GeomIterator(feature.geom);
+			it.getMore();
+			while (it.hasNext()) {
+				Snode node = it.next();
 				lat = node.lat;
 				lon = node.lon;
 				if (first) {
@@ -751,9 +775,10 @@ public class S57map {
 			double harc = sarc / 2;
 			sarc = 0;
 			first = true;
-			eit = new EdgeIterator(edge, true);
-			while (eit.hasNext()) {
-				Snode node = eit.next();
+			it = new GeomIterator(feature.geom);
+			while (it.hasNext()) {
+				it.getMore();
+				Snode node = it.next();
 				lat = node.lat;
 				lon = node.lon;
 				if (first) {
@@ -769,8 +794,8 @@ public class S57map {
 			}
 			return new Snode(llat + ((lat - llat) * harc / sarc), llon + ((lon - llon) * harc / sarc));
 		case AREA:
-			Bound bound = areas.get(feature.geom).get(0);
-			BoundIterator bit = new BoundIterator(bound);
+			GeomIterator bit = new GeomIterator(feature.geom);
+			bit.getMore();
 			while (bit.hasNext()) {
 				Snode node = bit.next();
 				lat = node.lat;
@@ -789,7 +814,7 @@ public class S57map {
 			return new Snode((sarc > 0.0 ? slat / sarc : 0.0), (sarc > 0.0 ? slon / sarc : 0.0));
 		default:
 		}
-*/		return null;
+		return null;
 	}
 
 }

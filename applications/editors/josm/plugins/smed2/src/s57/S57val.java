@@ -1179,25 +1179,28 @@ public class S57val {
 
 	
 	public static String stringValue(AttVal<?> attval) {                  // Convert OSeaM value object to OSeaM attribute value string
-		switch (attval.conv) {
-		case A:
-		case S:
-			return (String)attval.val;
-		case E:
-			EnumMap<?,?> map = keys.get(attval.att).map;
-			return ((S57enum)map.get(attval.val)).val;
-		case L:
-			String str = "";
-			map = keys.get(attval.att).map;
-			for (Object item : (ArrayList<?>)attval.val) {
-				if (!str.isEmpty()) str += ";";
-				str += ((S57enum)map.get(item)).val;
+		if (attval != null) {
+			switch (attval.conv) {
+			case A:
+			case S:
+				return (String) attval.val;
+			case E:
+				EnumMap<?, ?> map = keys.get(attval.att).map;
+				return ((S57enum) map.get(attval.val)).val;
+			case L:
+				String str = "";
+				map = keys.get(attval.att).map;
+				for (Object item : (ArrayList<?>) attval.val) {
+					if (!str.isEmpty())
+						str += ";";
+					str += ((S57enum) map.get(item)).val;
+				}
+				return str;
+			case I:
+				return ((Long) attval.val).toString();
+			case F:
+				return ((Double) attval.val).toString();
 			}
-			return str;
-		case I:
-			return ((Long)attval.val).toString();
-		case F:
-			return ((Double)attval.val).toString();
 		}
 		return "";
 	}

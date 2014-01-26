@@ -14,6 +14,7 @@ import java.util.Map;
 
 import s57.S57obj;
 import s57.S57att;
+import s57.S57obj.Obj;
 import s57.S57att.*;
 import s57.S57val;
 import s57.S57val.*;
@@ -50,7 +51,7 @@ public class Js57toosm {
 		double somf = 1;
 		long name = 0;
 		S57map.Nflag nflag = Nflag.ANON;
-		S57map.Pflag prim = S57map.Pflag.NOSP;
+		S57map.Pflag pflag = S57map.Pflag.NOSP;
 		long objl = 0;
 		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
 
@@ -87,22 +88,22 @@ public class Js57toosm {
 						inFeature = true;
 						switch ((int)((long)S57dat.getSubf(record, fields + pos, S57field.FRID, S57subf.PRIM))) {
 						case 1:
-							prim = S57map.Pflag.POINT;
+							pflag = S57map.Pflag.POINT;
 							break;
 						case 2:
-							prim = S57map.Pflag.LINE;
+							pflag = S57map.Pflag.LINE;
 							break;
 						case 3:
-							prim = S57map.Pflag.AREA;
+							pflag = S57map.Pflag.AREA;
 							break;
 						default:
-							prim = S57map.Pflag.NOSP;
+							pflag = S57map.Pflag.NOSP;
 						}
 						objl = (long)S57dat.getSubf(S57subf.OBJL);
 						break;
 					case "FOID":
 						name = (long) S57dat.getSubf(record, fields + pos, S57field.FOID, S57subf.LNAM);
-						map.newFeature(name, prim, objl);
+						map.newFeature(name, pflag, objl);
 						break;
 					case "ATTF":
 						S57dat.setField(record, fields + pos, S57field.ATTF, len);
@@ -209,14 +210,18 @@ public class Js57toosm {
 			Feature feature = map.index.get(id);
 			if (feature.reln != Rflag.SLAVE) {
 				if (feature.geom.prim == Pflag.POINT) {
-					long ref = feature.geom.elems.get(0).id;
-					Snode node = map.nodes.get(ref);
-					String type = S57obj.stringType(feature.type);
-					out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -ref,  Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-					out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-					writeAtts(feature, type);
-					out.format("  </node>%n");
-					map.nodes.remove(ref);
+					for (Prim prim : feature.geom.elems) {
+						long ref = prim.id;
+						Snode node = map.nodes.get(ref);
+						out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+						String type = S57obj.stringType(feature.type);
+						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+						if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
+							out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode)node).val);
+						writeAtts(feature, type);
+						out.format("  </node>%n");
+						map.nodes.remove(ref);
+					}
 				}
 			}
 		}
@@ -224,10 +229,10 @@ public class Js57toosm {
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);
 			if (feature.reln != Rflag.SLAVE) {
-				if (feature.geom.prim == Pflag.LINE) {
+				if ((feature.geom.prim == Pflag.LINE) || ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
 					GeomIterator git = map.new GeomIterator(feature.geom);
 					while (git.hasMore()) {
-						git.more();
+						git.getMore();
 						while (git.hasNext()) {
 							long ref = git.nextRef();
 							Snode node = map.nodes.get(ref);
@@ -237,44 +242,24 @@ public class Js57toosm {
 							}
 						}
 					}
-					out.format("  <way id='%d' version='1'>%n", -id);
 					git = map.new GeomIterator(feature.geom);
 					while (git.hasMore()) {
-						git.more();
+						long way = git.getMore();
+						out.format("  <way id='%d' version='1'>%n", -way);
 						while (git.hasNext()) {
 							long ref = git.nextRef();
 							out.format("    <nd ref='%d'/>%n", -ref);
 						}
+						String type = S57obj.stringType(feature.type);
+						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+						writeAtts(feature, type);
+						out.format("  </way>%n");
 					}
-					String type = S57obj.stringType(feature.type);
-					out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-					writeAtts(feature, type);
-					out.format("  </way>%n");
+				} else if (feature.geom.prim == Pflag.AREA) {
+					
 				}
 			}
 		}
-/*		for (long id : map.nodes.keySet()) {
-			Snode node = map.nodes.get(id);
-			if (node.flg == S57map.Nflag.DPTH) {
-				out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -id, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-				out.format("    <tag k='seamark:type' v='sounding'/>%n");
-				out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode)node).val);
-				out.format("  </node>%n");
-				map.nodes.remove(id);
-			}
-		}
-		
-		for (long id : map.edges.keySet()) {
-			Edge edge = map.edges.get(id);
-			out.format("  <way id='%d' version='1'>%n", -id);
-			out.format("    <nd ref='%d'/>%n", -edge.first);
-			for (long anon : edge.nodes) {
-				out.format("    <nd ref='%d'/>%n", -anon);
-			}
-			out.format("    <nd ref='%d'/>%n", -edge.last);
-			out.format("  </way>%n");
-		}
-*/		
 		out.println("</osm>\n");
 	}
 	

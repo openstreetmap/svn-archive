@@ -1,7 +1,7 @@
 // License: WTFPL
 package geochat;
 
-import org.json.JSONObject;
+import javax.json.JsonObject;
 
 /**
  * A callback for {@link JsonQueryUtil}.
@@ -16,5 +16,5 @@ public interface JsonQueryCallback {
      *
      * @param json JSON parsed response or null if the query was unsuccessful.
      */
-    void processJson( JSONObject json );
+    void processJson( JsonObject json );
 }

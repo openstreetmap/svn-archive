@@ -2,21 +2,23 @@ package livegps;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.Main;
+import javax.json.Json;
+import javax.json.JsonException;
+import javax.json.JsonNumber;
+import javax.json.JsonObject;
 
-import org.json.JSONObject;
-import org.json.JSONException;
+import org.openstreetmap.josm.Main;
 
 public class LiveGpsAcquirer implements Runnable {
     private static final String DEFAULT_HOST = "localhost";
@@ -40,7 +42,6 @@ public class LiveGpsAcquirer implements Runnable {
      * Constructor, initializes the configurable settings.
      */
     public LiveGpsAcquirer() {
-        super();
 
         gpsdHost = Main.pref.get(C_HOST, DEFAULT_HOST);
         gpsdPort = Main.pref.getInteger(C_PORT, DEFAULT_PORT);
@@ -76,8 +77,7 @@ public class LiveGpsAcquirer implements Runnable {
      * @param status the status.
      * @param statusMessage the status message.
      */
-    public void fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus status,
-            String statusMessage) {
+    public void fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus status, String statusMessage) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsstatus",
                 null, new LiveGpsStatus(status, statusMessage));
 
@@ -96,8 +96,7 @@ public class LiveGpsAcquirer implements Runnable {
      * @param newData the new gps data.
      */
     public void fireGpsDataChangeEvent(LiveGpsData oldData, LiveGpsData newData) {
-        PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsdata",
-                oldData, newData);
+        PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsdata", oldData, newData);
 
         if (!event.equals(lastDataEvent)) {
             firePropertyChangeEvent(event);
@@ -123,46 +122,48 @@ public class LiveGpsAcquirer implements Runnable {
         shutdownFlag = false;
         while (!shutdownFlag) {
 
-	    while (!connected) {
-		try {
+            while (!connected) {
+                try {
                     connect();
-		} catch (IOException iox) {
-		    fireGpsStatusChangeEvent( LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignore) {}
-		}
-	    }
+                } catch (IOException iox) {
+                    fireGpsStatusChangeEvent( LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
+	                try {
+	                    Thread.sleep(1000);
+	                } catch (InterruptedException ignore) {
+	                	
+	                }
+	            }
+            }
 
-	    assert (connected);
+            assert (connected);
 
-	    try {
-                    String line;
+            try {
+                String line;
 
-                    // <FIXXME date="23.06.2007" author="cdaller">
-                    // TODO this read is blocking if gps is connected but has no
-                    // fix, so gpsd does not send positions
-                    line = gpsdReader.readLine();
-                    // </FIXXME>
-                    if (line == null)
-                        throw new IOException();
+                // <FIXXME date="23.06.2007" author="cdaller">
+                // TODO this read is blocking if gps is connected but has no
+                // fix, so gpsd does not send positions
+                line = gpsdReader.readLine();
+                // </FIXXME>
+                if (line == null)
+                    throw new IOException();
 
-                    if (JSONProtocol == true)
-                        gpsData = ParseJSON(line);
-                    else
-                        gpsData = ParseOld(line);
+                if (JSONProtocol == true)
+                    gpsData = ParseJSON(line);
+                else
+                    gpsData = ParseOld(line);
 
-                    if (gpsData == null)
-                        continue;
+                if (gpsData == null)
+                    continue;
 
-                    fireGpsDataChangeEvent(oldGpsData, gpsData);
-                    oldGpsData = gpsData;
+                fireGpsDataChangeEvent(oldGpsData, gpsData);
+                oldGpsData = gpsData;
             } catch (IOException iox) {
-                System.out.println("LiveGps: lost connection to gpsd");
+                Main.warn("LiveGps: lost connection to gpsd");
                 fireGpsStatusChangeEvent(
                         LiveGpsStatus.GpsStatus.CONNECTION_FAILED,
                         tr("Connection Failed"));
-		disconnect();
+                disconnect();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignore) {} 
@@ -170,10 +171,10 @@ public class LiveGpsAcquirer implements Runnable {
             }
         }
 
-	System.out.println("LiveGps: Disconnected from gpsd");
+        Main.info("LiveGps: Disconnected from gpsd");
         fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED,
                 tr("Not connected"));
-	disconnect();
+        disconnect();
     }
 
     public void shutdown() {
@@ -181,10 +182,10 @@ public class LiveGpsAcquirer implements Runnable {
     }
 
     private void connect() throws IOException {
-        JSONObject greeting;
+        JsonObject greeting;
         String line, type, release;
 
-        System.out.println("LiveGps: trying to connect to gpsd at " + gpsdHost + ":" + gpsdPort);
+        Main.info("LiveGps: trying to connect to gpsd at " + gpsdHost + ":" + gpsdPort);
         fireGpsStatusChangeEvent( LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
 
         InetAddress[] addrs = InetAddress.getAllByName(gpsdHost);
@@ -193,7 +194,7 @@ public class LiveGpsAcquirer implements Runnable {
                 gpsdSocket = new Socket(addrs[i], gpsdPort);
                 break;
             } catch (IOException e) {
-                System.out.println("LiveGps: Could not open connection to gpsd: " + e);
+            	Main.warn("LiveGps: Could not open connection to gpsd: " + e);
                 gpsdSocket = null;
             }
         }
@@ -212,28 +213,27 @@ public class LiveGpsAcquirer implements Runnable {
             return;
 
         try {
-            greeting = new JSONObject(line);
+            greeting = Json.createReader(new StringReader(line)).readObject();
             type = greeting.getString("class");
             if (type.equals("VERSION")) {
                 release = greeting.getString("release");
-                System.out.println("LiveGps: Connected to gpsd " + release);
+                Main.info("LiveGps: Connected to gpsd " + release);
             } else
-                System.out.println("LiveGps: Unexpected JSON in gpsd greeting: " + line);
-        } catch (JSONException jex) {
+            	Main.info("LiveGps: Unexpected JSON in gpsd greeting: " + line);
+        } catch (JsonException jex) {
             if (line.startsWith("GPSD,")) {
                 connected = true;
                 JSONProtocol = false;
-                System.out.println("LiveGps: Connected to old gpsd protocol version.");
+                Main.info("LiveGps: Connected to old gpsd protocol version.");
                 fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTED, tr("Connected"));
             }
         }
 
         if (JSONProtocol == true) {
-            JSONObject Watch = new JSONObject();
-            try {
-                Watch.put("enable", true);
-                Watch.put("json", true);
-            } catch (JSONException je) {}
+        	JsonObject Watch = Json.createObjectBuilder()
+        			.add("enable", true)
+        			.add("json", true)
+        			.build();
 
             String Request = "?WATCH=" + Watch.toString() + ";\n";
             gpsdSocket.getOutputStream().write(Request.getBytes());
@@ -244,20 +244,20 @@ public class LiveGpsAcquirer implements Runnable {
     }
 
     private void disconnect() {
-	assert(gpsdSocket != null);
+        assert(gpsdSocket != null);
 
-	connected = false;
+        connected = false;
 
         try {
-		gpsdSocket.close();
-		gpsdSocket = null;
-	} catch (Exception e) {
-		System.out.println("LiveGps: Unable to close socket; reconnection may not be possible");
-	}
+            gpsdSocket.close();
+            gpsdSocket = null;
+        } catch (Exception e) {
+        	Main.warn("LiveGps: Unable to close socket; reconnection may not be possible");
+        }
     }
 
     private LiveGpsData ParseJSON(String line) {
-        JSONObject report;
+        JsonObject report;
         String type;
         double lat = 0;
         double lon = 0;
@@ -267,27 +267,31 @@ public class LiveGpsAcquirer implements Runnable {
         float epy = 0;
 
         try {
-            report = new JSONObject(line);
+            report = Json.createReader(new StringReader(line)).readObject();
             type = report.getString("class");
-        } catch (JSONException jex) {
-            System.out.println("LiveGps: line read from gpsd is not a JSON object:" + line);
+        } catch (JsonException jex) {
+        	Main.warn("LiveGps: line read from gpsd is not a JSON object:" + line);
             return null;
         }
         if (!type.equals("TPV"))
             return null;
 
         try {
-            lat = report.getDouble("lat");
-            lon = report.getDouble("lon");
-            speed = (new Float(report.getDouble("speed"))).floatValue();
-            course = (new Float(report.getDouble("track"))).floatValue();
-	    if (report.has("epx"))
-		epx = (new Float(report.getDouble("epx"))).floatValue();
-	    if (report.has("epy"))
-		epy = (new Float(report.getDouble("epy"))).floatValue();
+            lat = report.getJsonNumber("lat").doubleValue();
+            lon = report.getJsonNumber("lon").doubleValue();
+            speed = (new Float(report.getJsonNumber("speed").doubleValue())).floatValue();
+            course = (new Float(report.getJsonNumber("track").doubleValue())).floatValue();
+            JsonNumber epxJson = report.getJsonNumber("epx");
+            if (epxJson != null)
+                epx = (new Float(epxJson.doubleValue())).floatValue();
+            JsonNumber epyJson = report.getJsonNumber("epy");
+            if (epyJson != null)
+                epy = (new Float(epyJson.doubleValue())).floatValue();
 
             return new LiveGpsData(lat, lon, course, speed, epx, epy);
-        } catch (JSONException je) {}
+        } catch (JsonException je) {
+        	Main.debug(je.getMessage());
+        }
 
         return null;
     }

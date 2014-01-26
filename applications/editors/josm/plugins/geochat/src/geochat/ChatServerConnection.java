@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import javax.json.JsonArray;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
@@ -91,8 +92,8 @@ class ChatServerConnection {
         } else {
             String query = "whoami&uid=" + uid;
             JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                public void processJson( JSONObject json ) {
-                    if( json != null && json.has("name") )
+                public void processJson( JsonObject json ) {
+                    if( json != null && json.get("name") != null )
                         login(uid, json.getString("name"));
                     else if( userName != null && userName.length() > 1 )
                         login(userName);
@@ -142,15 +143,15 @@ class ChatServerConnection {
                     + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
                     + nameAttr;
             JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                public void processJson( JSONObject json ) {
+                public void processJson( JsonObject json ) {
                     if( json == null )
                         fireLoginFailed(tr("Could not get server response, check logs"));
-                    else if( json.has("error") )
+                    else if( json.get("error") != null )
                         fireLoginFailed(tr("Failed to login as {0}:", userName) + "\n" + json.getString("error"));
-                    else if( !json.has("uid") )
+                    else if( json.get("uid") == null)
                         fireLoginFailed(tr("The server did not return user ID"));
                     else {
-                        String name = json.has("name") ? json.getString("name") : userName;
+                        String name = json.get("name") != null ? json.getString("name") : userName;
                         login(json.getInt("uid"), name);
                     }
                 }
@@ -189,8 +190,8 @@ class ChatServerConnection {
             return;
         String query = "logout&uid=" + userId;
         JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-            public void processJson( JSONObject json ) {
-                if( json != null && json.has("message") ) {
+            public void processJson( JsonObject json ) {
+                if( json != null && json.get("message") != null) {
                     logoutIntl();
                 }
             }
@@ -244,10 +245,10 @@ class ChatServerConnection {
             if( targetUser != null && targetUser.length() > 0)
                     query += "&to=" + URLEncoder.encode(targetUser, "UTF8");
             JsonQueryUtil.queryAsync(query, new JsonQueryCallback() {
-                public void processJson( JSONObject json ) {
+                public void processJson( JsonObject json ) {
                     if( json == null )
                         fireMessageFailed(tr("Could not get server response, check logs"));
-                    else if( json.has("error") )
+                    else if( json.get("error") != null )
                         fireMessageFailed(tr("Failed to send message:") + "\n" + json.getString("error"));
                 }
             });
@@ -355,7 +356,7 @@ class ChatServerConnection {
             String query = "get&lat=" + pos.latToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&lon=" + pos.lonToString(CoordinateFormat.DECIMAL_DEGREES)
                     + "&uid=" + userId + "&last=" + lastId;
-            JSONObject json;
+            JsonObject json;
             try {
                 json = JsonQueryUtil.query(query);
             } catch( IOException ex ) {
@@ -365,25 +366,25 @@ class ChatServerConnection {
                 // do nothing?
 //              fireLoginFailed(tr("Could not get server response, check logs"));
 //              logoutIntl(); // todo: uncomment?
-            } else if( json.has("error") ) {
+            } else if( json.get("error") != null) {
                 fireLoginFailed(tr("Failed to get messages as {0}:", userName) + "\n" + json.getString("error"));
                 logoutIntl();
             } else {
-                if( json.has("users") ) {
-                    Map<String, LatLon> users = parseUsers(json.getJSONArray("users"));
+                if( json.get("users") != null) {
+                    Map<String, LatLon> users = parseUsers(json.getJsonArray("users"));
                     for( ChatServerConnectionListener listener : listeners )
                         listener.updateUsers(users);
                 }
-                if( json.has("messages") ) {
-                    List<ChatMessage> messages = parseMessages(json.getJSONArray("messages"), false);
+                if( json.get("messages") != null) {
+                    List<ChatMessage> messages = parseMessages(json.getJsonArray("messages"), false);
                     for( ChatMessage m : messages )
                         if( m.getId() > lastId )
                             lastId = m.getId();
                     for( ChatServerConnectionListener listener : listeners )
                         listener.receivedMessages(needReset, messages);
                 }
-                if( json.has("private") ) {
-                    List<ChatMessage> messages = parseMessages(json.getJSONArray("private"), true);
+                if( json.get("private") != null) {
+                    List<ChatMessage> messages = parseMessages(json.getJsonArray("private"), true);
                     for( ChatMessage m : messages )
                         if( m.getId() > lastId )
                             lastId = m.getId();
@@ -395,41 +396,41 @@ class ChatServerConnection {
 //                        Main.pref.putLong("geochat.lastid", lastId);
         }
 
-        private List<ChatMessage> parseMessages( JSONArray messages, boolean priv ) {
+        private List<ChatMessage> parseMessages( JsonArray messages, boolean priv ) {
             List<ChatMessage> result = new ArrayList<ChatMessage>();
-            for( int i = 0; i < messages.length(); i++ ) {
+            for( int i = 0; i < messages.size(); i++ ) {
                 try {
-                    JSONObject msg = messages.getJSONObject(i);
-                    long id = msg.getLong("id");
-                    double lat = msg.getDouble("lat");
-                    double lon = msg.getDouble("lon");
-                    long timeStamp = msg.getLong("timestamp");
+                	JsonObject msg = messages.getJsonObject(i);
+                    long id = msg.getJsonNumber("id").longValue();
+                    double lat = msg.getJsonNumber("lat").doubleValue();
+                    double lon = msg.getJsonNumber("lon").doubleValue();
+                    long timeStamp = msg.getJsonNumber("timestamp").longValue();
                     String author = msg.getString("author");
                     String message = msg.getString("message");
                     boolean incoming = msg.getBoolean("incoming");
                     ChatMessage cm = new ChatMessage(id, new LatLon(lat, lon), author,
                             incoming, message, new Date(timeStamp * 1000));
                     cm.setPrivate(priv);
-                    if( msg.has("recipient") && !incoming )
+                    if( msg.get("recipient") != null && !incoming )
                         cm.setRecipient(msg.getString("recipient"));
                     result.add(cm);
-                } catch( JSONException e ) {
+                } catch( JsonException e ) {
                     // do nothing, just skip this message
                 }
             }
             return result;
         }
 
-        private Map<String, LatLon> parseUsers( JSONArray users ) {
+        private Map<String, LatLon> parseUsers( JsonArray users ) {
             Map<String, LatLon> result = new HashMap<String, LatLon>();
-            for( int i = 0; i < users.length(); i++ ) {
+            for( int i = 0; i < users.size(); i++ ) {
                 try {
-                    JSONObject user = users.getJSONObject(i);
+                	JsonObject user = users.getJsonObject(i);
                     String name = user.getString("user");
-                    double lat = user.getDouble("lat");
-                    double lon = user.getDouble("lon");
+                    double lat = user.getJsonNumber("lat").doubleValue();
+                    double lon = user.getJsonNumber("lon").doubleValue();
                     result.put(name, new LatLon(lat, lon));
-                } catch( JSONException e ) {
+                } catch( JsonException e ) {
                     // do nothing, just skip this user
                 }
             }

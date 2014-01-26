@@ -7,9 +7,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+
+import javax.json.Json;
+import javax.json.JsonException;
+import javax.json.JsonObject;
+
 import org.openstreetmap.josm.Main;
 
 /**
@@ -22,10 +24,10 @@ public class JsonQueryUtil implements Runnable {
     /**
      * Query the server synchronously.
      * @param query Query string, starting with action. Example: <tt>get&lat=1.0&lon=-2.0&uid=12345</tt>
-     * @return Parsed JSONObject if the query was successful, <tt>null</tt> otherwise.
+     * @return Parsed JsonObject if the query was successful, <tt>null</tt> otherwise.
      * @throws IOException There was a problem connecting to the server or parsing JSON.
      */
-    public static JSONObject query( String query ) throws IOException {
+    public static JsonObject query( String query ) throws IOException {
         try {
             String serverURL = Main.pref.get("geochat.server", "http://zverik.dev.openstreetmap.org/osmochat.php?action=");
             URL url = new URL(serverURL + query);
@@ -39,10 +41,8 @@ public class JsonQueryUtil implements Runnable {
             if( inp == null )
                 throw new IOException("Empty response");
             try {
-                JSONTokener tokener = new JSONTokener(inp);
-                JSONObject result = new JSONObject(tokener);
-                return result;
-            } catch( JSONException e ) {
+                return Json.createReader(inp).readObject();
+            } catch( JsonException e ) {
                 throw new IOException("Failed to parse JSON: " + e.getMessage());
             } finally {
                 connection.disconnect();
@@ -74,7 +74,7 @@ public class JsonQueryUtil implements Runnable {
     }
 
     private void doRealRun() {
-        JSONObject obj;
+    	JsonObject obj;
         try {
             obj = query(query);
         } catch( IOException e ) {

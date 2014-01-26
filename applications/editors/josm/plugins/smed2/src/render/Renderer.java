@@ -217,7 +217,7 @@ public class Renderer {
 			Symbol symbol = prisymb;
 			GeomIterator git = map.new GeomIterator(feature.geom);
 			while (git.hasMore()) {
-				git.more();
+				git.getMore();
 				boolean first = true;
 				while (git.hasNext()) {
 					prev = next;
@@ -276,7 +276,7 @@ public class Renderer {
 		Point2D point;
 		GeomIterator git = map.new GeomIterator(feature.geom);
 		while (git.hasMore()) {
-			git.more();
+			git.getMore();
 			point = context.getPoint(git.next());
 			p.moveTo(point.getX(), point.getY());
 			while (git.hasNext()) {
@@ -351,7 +351,7 @@ public class Renderer {
 		case AREA:
 			GeomIterator git = map.new GeomIterator(feature.geom);
 			while (git.hasMore()) {
-				git.more();
+				git.getMore();
 				point = context.getPoint(git.next());
 				p.moveTo(point.getX(), point.getY());
 				while (git.hasNext()) {
@@ -497,7 +497,7 @@ public class Renderer {
 			double angle = 0;
 			GeomIterator git = map.new GeomIterator(feature.geom);
 			while (git.hasMore()) {
-				git.more();
+				git.getMore();
 				boolean first = true;
 				while (git.hasNext()) {
 					prev = next;

@@ -266,7 +266,6 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             throw new IllegalArgumentException(MessageFormat.format("turnRestriction must belong to layer ''{0}''", getLayer().getName()));
         }
         setTurnRestrictionSnapshot(turnRestriction == null ? null : new Relation(turnRestriction));
-        Relation oldValue = this.turnRestriction;
         this.turnRestriction = turnRestriction;
         support.firePropertyChange(TURN_RESTRICION_PROP, null, this.turnRestriction);
         updateTitle();
@@ -500,7 +499,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             ButtonSpec[] options = new ButtonSpec[] {
                     new ButtonSpec(
                         tr("Remove deleted members and save"),
-                        ImageProvider.get("OK"),
+                        ImageProvider.get("ok"),
                         tr("Remove deleted members and save"),
                         null
                      ),

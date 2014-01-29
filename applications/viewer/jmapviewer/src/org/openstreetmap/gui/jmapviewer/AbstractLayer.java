@@ -11,7 +11,7 @@ public class AbstractLayer {
     private Style style;
     private Boolean visible;
     private Boolean visibleTexts=true;
-    
+
     public AbstractLayer(String name){
         this(name, (String)null);
     }

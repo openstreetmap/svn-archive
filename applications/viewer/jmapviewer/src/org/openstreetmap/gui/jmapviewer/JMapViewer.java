@@ -118,7 +118,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         initializeZoomSlider();
         setMinimumSize(new Dimension(tileSource.getTileSize(), tileSource.getTileSize()));
         setPreferredSize(new Dimension(400, 400));
-        setDisplayPositionByLatLon(50, 9, 3);
+        setDisplayPosition(new Coordinate(50, 9), 3);
         //setToolTipText("");
     }
 
@@ -189,8 +189,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * @param zoom
      *            {@link #MIN_ZOOM} <= zoom level <= {@link #MAX_ZOOM}
      */
-    public void setDisplayPositionByLatLon(double lat, double lon, int zoom) {
-        setDisplayPositionByLatLon(new Point(getWidth() / 2, getHeight() / 2), lat, lon, zoom);
+    public void setDisplayPosition(Coordinate to, int zoom) {
+        setDisplayPosition(new Point(getWidth() / 2, getHeight() / 2), to, zoom);
     }
 
     /**
@@ -209,9 +209,9 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      *            {@link #MIN_ZOOM} <= zoom level <=
      *            {@link TileSource#getMaxZoom()}
      */
-    public void setDisplayPositionByLatLon(Point mapPoint, double lat, double lon, int zoom) {
-        int x = OsmMercator.LonToX(lon, zoom);
-        int y = OsmMercator.LatToY(lat, zoom);
+    public void setDisplayPosition(Point mapPoint, Coordinate to, int zoom) {
+        int x = OsmMercator.LonToX(to.getLon(), zoom);
+        int y = OsmMercator.LatToY(to.getLat(), zoom);
         setDisplayPosition(mapPoint, x, y, zoom);
     }
 
@@ -817,7 +817,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         Coordinate zoomPos = getPosition(mapPoint);
         tileController.cancelOutstandingJobs(); // Clearing outstanding load
         // requests
-        setDisplayPositionByLatLon(mapPoint, zoomPos.getLat(), zoomPos.getLon(), zoom);
+        setDisplayPosition(mapPoint, zoomPos, zoom);
 
         this.fireJMVEvent(new JMVCommandEvent(COMMAND.ZOOM, this));
     }

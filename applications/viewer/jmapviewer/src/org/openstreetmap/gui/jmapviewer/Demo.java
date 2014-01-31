@@ -204,7 +204,7 @@ public class Demo extends JFrame implements JMapViewerEventListener  {
         Layer wales = treeMap.addLayer("UK");
         map().addMapRectangle(new MapRectangleImpl(wales, "Wales", c(53.35,-4.57), c(51.64,-2.63)));
 
-        // map.setDisplayPositionByLatLon(49.807, 8.6, 11);
+        // map.setDisplayPosition(new Coordinate(49.807, 8.6), 11);
         // map.setTileGridVisible(true);
 
         map().addMouseListener(new MouseAdapter() {

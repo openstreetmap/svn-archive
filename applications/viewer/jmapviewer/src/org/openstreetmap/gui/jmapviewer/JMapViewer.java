@@ -959,6 +959,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
             throw new RuntimeException("Maximum zoom level too high");
         if (tileSource.getMinZoom() < MIN_ZOOM)
             throw new RuntimeException("Minumim zoom level too low");
+        Coordinate position = getPosition();
         this.tileSource = tileSource;
         tileController.setTileSource(tileSource);
         zoomSlider.setMinimum(tileSource.getMinZoom());
@@ -967,8 +968,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         if (zoom > tileSource.getMaxZoom()) {
             setZoom(tileSource.getMaxZoom());
         }
-
         attribution.initialize(tileSource);
+        setDisplayPosition(position, zoom);
         repaint();
     }
 

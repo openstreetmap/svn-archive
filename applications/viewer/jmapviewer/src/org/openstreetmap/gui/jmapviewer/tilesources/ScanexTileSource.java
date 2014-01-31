@@ -5,6 +5,19 @@ import java.util.Random;
 
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 
+/*
+ * This tilesource uses different to OsmMercator projection.
+ *
+ * Earth is assumed an ellipsoid in this projection, unlike
+ * sphere in OsmMercator, so latitude calculation differs
+ * a lot.
+ *
+ * The longitude calculation is the same as in OsmMercator,
+ * we inherit it from AbstractTMSTileSource.
+ *
+ * TODO: correct getDistance() method.
+ */
+
 public class ScanexTileSource extends TMSTileSource {
     private static final String DEFAULT_URL = "http://maps.kosmosnimki.ru";
     private static final int DEFAULT_MAXZOOM = 14;
@@ -68,9 +81,23 @@ public class ScanexTileSource extends TMSTileSource {
         return TileUpdate.IfNoneMatch;
     }
 
+
+    /*
+     * Latitude to Y and back calculations.
+     */
     private static double RADIUS_E = 6378137;   /* radius of Earth at equator, m */
     private static double EQUATOR = 40075016.68557849; /* equator length, m */
     private static double E = 0.0818191908426;  /* eccentricity of Earth's ellipsoid */
+
+    @Override
+    public int LatToY(double lat, int zoom) {
+        return (int )(latToTileY(lat, zoom) * OsmMercator.TILE_SIZE);
+    }
+ 
+    @Override
+    public double YToLat(int y, int zoom) {
+        return tileYToLat((double )y / OsmMercator.TILE_SIZE, zoom);
+    }
 
     @Override
     public double latToTileY(double lat, int zoom) {
@@ -81,8 +108,8 @@ public class ScanexTileSource extends TMSTileSource {
     }
 
     @Override
-    public double lonToTileX(double lon, int zoom) {
-        return (RADIUS_E * lon * Math.PI / (90*EQUATOR) + 1) * Math.pow(2.0, zoom - 1);
+    public double tileYToLat(int y, int zoom) {
+        return tileYToLat((double )y, zoom);
     }
 
     /*
@@ -93,9 +120,7 @@ public class ScanexTileSource extends TMSTileSource {
      * value.
      */
     private double cached_lat = 0;
-
-    @Override
-    public double tileYToLat(int y, int zoom) {
+    private double tileYToLat(double y, int zoom) {
         double lat0, lat;
 
         lat = cached_lat;
@@ -129,10 +154,5 @@ public class ScanexTileSource extends TMSTileSource {
             (Math.sqrt (1 - E * E * sinl * sinl)));
 
         return (f/df);
-    }
-
-    @Override
-    public double tileXToLon(int x, int zoom) {
-        return (x / Math.pow(2.0, zoom - 1) - 1) * (90*EQUATOR) / RADIUS_E / Math.PI;
     }
 }

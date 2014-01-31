@@ -33,7 +33,7 @@ public class ScanexTileSource extends TMSTileSource {
     private ScanexLayer Layer = ScanexLayer.IRS;
 
     public ScanexTileSource(String name, String url, int maxZoom) {
-	super(name, url, maxZoom);
+        super(name, url, maxZoom);
 
         for (ScanexLayer layer : ScanexLayer.values()) {
             if (url.equalsIgnoreCase(layer.getName())) {

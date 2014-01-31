@@ -96,7 +96,6 @@ public class ScanexTileSource extends TMSTileSource {
 
     @Override
     public double tileYToLat(int y, int zoom) {
-        Random r= new Random();
         double lat0, lat;
 
         lat = cached_lat;
@@ -104,9 +103,9 @@ public class ScanexTileSource extends TMSTileSource {
             lat0 = lat;
             lat = lat - Math.toDegrees(NextTerm(Math.toRadians(lat), y, zoom));
             if (lat > OsmMercator.MAX_LAT || lat < OsmMercator.MIN_LAT) {
+                Random r = new Random();
                 lat = OsmMercator.MIN_LAT +
-                    (double )r.nextInt((int )(OsmMercator.MAX_LAT -
-                    OsmMercator.MIN_LAT));
+                  r.nextInt((int )(OsmMercator.MAX_LAT - OsmMercator.MIN_LAT));
             }
         } while ((Math.abs(lat0 - lat) > 0.000001));
 

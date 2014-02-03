@@ -22,7 +22,7 @@ public class RevertChangesetHandler extends RequestHandler {
         } catch (Exception ex) {
             System.out.println("RemoteControl: Error parsing revert_changeset remote control request:");
             ex.printStackTrace();
-            throw new RequestHandlerErrorException();
+            throw new RequestHandlerErrorException(ex);
         }
 
     }

@@ -478,9 +478,15 @@ public class UploadDataGui extends ExtendedDialog {
      * @param GpxData The GPX data to upload
      */
     private void writeGpxFile(ByteArrayOutputStream baos, String name, GpxData gpxData) throws IOException {
+        String filename;
+
         writeBoundary(baos);
         writeString(baos, "Content-Disposition: form-data; name=\"" + name + "\"; ");
-        writeString(baos, "filename=\"" + gpxData.storageFile.getName() + "\"");
+        if (gpxData.storageFile != null)
+            filename = gpxData.storageFile.getName();
+        else
+            filename = "not saved";
+        writeString(baos, "filename=\"" + filename + "\"");
         writeLineEnd(baos);
         writeString(baos, "Content-Type: application/octet-stream");
         writeLineEnd(baos);

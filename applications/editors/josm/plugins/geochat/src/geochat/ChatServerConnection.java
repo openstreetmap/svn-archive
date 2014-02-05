@@ -401,10 +401,10 @@ class ChatServerConnection {
             for( int i = 0; i < messages.size(); i++ ) {
                 try {
                 	JsonObject msg = messages.getJsonObject(i);
-                    long id = msg.getJsonNumber("id").longValue();
-                    double lat = msg.getJsonNumber("lat").doubleValue();
-                    double lon = msg.getJsonNumber("lon").doubleValue();
-                    long timeStamp = msg.getJsonNumber("timestamp").longValue();
+                    long id = Long.parseLong(msg.getString("id"));
+                    double lat = Double.parseDouble(msg.getString("lat"));
+                    double lon = Double.parseDouble(msg.getString("lon"));
+                    long timeStamp = Long.parseLong(msg.getString("timestamp"));
                     String author = msg.getString("author");
                     String message = msg.getString("message");
                     boolean incoming = msg.getBoolean("incoming");
@@ -427,8 +427,8 @@ class ChatServerConnection {
                 try {
                 	JsonObject user = users.getJsonObject(i);
                     String name = user.getString("user");
-                    double lat = user.getJsonNumber("lat").doubleValue();
-                    double lon = user.getJsonNumber("lon").doubleValue();
+                    double lat = Double.parseDouble(user.getString("lat"));
+                    double lon = Double.parseDouble(user.getString("lon"));
                     result.put(name, new LatLon(lat, lon));
                 } catch( JsonException e ) {
                     // do nothing, just skip this user

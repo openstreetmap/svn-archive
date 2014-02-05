@@ -225,9 +225,14 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     public void loggedIn( String userName ) {
         Main.pref.put("geochat.username", userName);
         if( gcPanel.getComponentCount() == 1 ) {
-            gcPanel.remove(0);
-            gcPanel.add(tabs, BorderLayout.CENTER);
-            gcPanel.add(input, BorderLayout.SOUTH);
+        	GuiHelper.runInEDTAndWait(new Runnable() {
+				@Override
+				public void run() {
+		            gcPanel.remove(0);
+		            gcPanel.add(tabs, BorderLayout.CENTER);
+		            gcPanel.add(input, BorderLayout.SOUTH);
+				}
+			});
         }
         updateTitleAlarm();
     }

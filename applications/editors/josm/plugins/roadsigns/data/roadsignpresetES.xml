@@ -4,10 +4,10 @@
 <!--
 roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 -->
-<sign ref="ES:com:traffic:sign:dir2"  traffic_sign_tag="" name="" es.name="Especificar en qué sentido de la vía de doble sentido está la señal de tráfico: forward (sentido de la vía)   / backward (sentido contrario contraria de la vía)" ca.name="">
+<sign ref="ES:traffic:sign:dir"  traffic_sign_tag="" name="" es.name="Especificar en qué sentido de la vía de doble sentido está la señal de tráfico: forward (sentido de la vía)   / backward (sentido contrario contraria de la vía)" ca.name="">
         <tag key="direction"  value="$val10"/>
         <parameter ident="val10" input="textfield" prefix="" default="forward" suffix="" field_width="10"/>
-		        <tag key="side"  value="$val11"/>
+		<tag key="side"  value="$val11"/>
         <parameter ident="val11" input="textfield" prefix="" default="right" suffix="" field_width="10"/>
     </sign> 
 
@@ -21,32 +21,95 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 
 <sign ref="ES:motorway" name="" es.name="Autopista o Autovía" ca.name="Autopista o autovia">
         <tag key="highway" value="motorway" />
-		<tag key="ref" value="$val"/>
-        <parameter ident="val" input="textfield" prefix="" default="AP-6" suffix="" field_width="5"/>
+			<tag key="ref" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="AP-6" suffix="Referencia de la carretera" field_width="5"/>
+		<tag key="lanes:forward" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="2" suffix="Carriles sentido vía" field_width="5"/>
+		<tag key="oneway" value="yes"/>
+        <tag key="turn:lanes:forward" value="$val6"/>
+        <parameter ident="val6" input="textfield" prefix="" default="through|through" suffix="direcciones carriles sentido vía.Separadas por |" field_width="5"/>
+		<tag key="width" value="$val8"/>
+        <parameter ident="val8" input="textfield" prefix="" default="8" suffix="4 por carril en anchura normal.Sentido de 2 carriles=8" field_width="5"/>
 		    </sign>
 
 <sign ref="ES:trunk" name="" es.name="Carretera Nacional o Carretera autonómica de primer nivel en buen estado" ca.name="Carretera de primer nivell en bon estat">
         <tag key="highway" value="trunk" />
 	<tag key="ref" value="$val"/>
-        <parameter ident="val" input="textfield" prefix="" default="N-432" suffix="" field_width="5"/>
+        <parameter ident="val" input="textfield" prefix="" default="N-432" suffix="Referencia de la carretera" field_width="5"/>
+		<tag key="lanes" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="2" suffix="Carriles totales (o se especifica totales o se marcan por sentido" field_width="5"/>
+		<tag key="lanes:forward" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="1" suffix="Carriles sentido vía" field_width="5"/>
+		<tag key="lanes:backward" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="1" suffix="Carriles contra sentido de la vía" field_width="5"/>
+		<tag key="oneway" value="$val5"/>
+        <parameter ident="val5" input="textfield" prefix="" default="" suffix="Via de sentido único (yes/no)" field_width="5"/>
+		<tag key="turn:lanes:forward" value="$val6"/>
+        <parameter ident="val6" input="textfield" prefix="" default="" suffix="direcciones carriles sentido vía.Separadas por |" field_width="5"/>
+		<tag key="turn:lanes:backward" value="$val7"/>
+        <parameter ident="val7" input="textfield" prefix="" default="" suffix="direcciones carriles contra sentido vía.Separadas por |" field_width="5"/>
+		<tag key="width" value="$val8"/>
+        <parameter ident="val8" input="textfield" prefix="" default="8" suffix="4 por carril en anchura normal.Vía de 2 carriles=8" field_width="5"/>
 		    </sign>
 
 <sign ref="ES:primary" name="" es.name="Carretera Nacional o Carretera autonómica de primer nivel en mal estado" ca.name="Carretera de primer nivell en mal estat">
         <tag key="highway" value="primary" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="CL-517" suffix="" field_width="5"/>
+				<tag key="lanes" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="2" suffix="Carriles totales (o se especifica totales o se marcan por sentido" field_width="5"/>
+		<tag key="lanes:forward" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="1" suffix="Carriles sentido vía" field_width="5"/>
+		<tag key="lanes:backward" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="1" suffix="Carriles contra sentido de la vía" field_width="5"/>
+		<tag key="oneway" value="$val5"/>
+        <parameter ident="val5" input="textfield" prefix="" default="" suffix="Via de sentido único (yes/no)" field_width="5"/>
+		<tag key="turn:lanes:forward" value="$val6"/>
+        <parameter ident="val6" input="textfield" prefix="" default="" suffix="direcciones carriles sentido vía.Separadas por |" field_width="5"/>
+		<tag key="turn:lanes:backward" value="$val7"/>
+        <parameter ident="val7" input="textfield" prefix="" default="" suffix="direcciones carriles contra sentido vía.Separadas por |" field_width="5"/>
+		<tag key="width" value="$val8"/>
+        <parameter ident="val8" input="textfield" prefix="" default="8" suffix="4 por carril en anchura normal.Vía de 2 carriles=8" field_width="5"/>
 		    </sign>
 
 <sign ref="ES:secondary" name="" es.name="Carretera Secundaria o autonómica de segundo nivel" ca.name="Carretera comarcal o secundària">
         <tag key="highway" value="secondary" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="A-450" suffix="" field_width="5"/>
+				<tag key="lanes" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="2" suffix="Carriles totales (o se especifica totales o se marcan por sentido" field_width="5"/>
+		<tag key="lanes:forward" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="1" suffix="Carriles sentido vía" field_width="5"/>
+		<tag key="lanes:backward" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="1" suffix="Carriles contra sentido de la vía" field_width="5"/>
+		<tag key="oneway" value="$val5"/>
+        <parameter ident="val5" input="textfield" prefix="" default="" suffix="Via de sentido único (yes/no)" field_width="5"/>
+		<tag key="turn:lanes:forward" value="$val6"/>
+        <parameter ident="val6" input="textfield" prefix="" default="" suffix="direcciones carriles sentido vía.Separadas por |" field_width="5"/>
+		<tag key="turn:lanes:backward" value="$val7"/>
+        <parameter ident="val7" input="textfield" prefix="" default="" suffix="direcciones carriles contra sentido vía.Separadas por |" field_width="5"/>
+		<tag key="width" value="$val8"/>
+        <parameter ident="val8" input="textfield" prefix="" default="8" suffix="4 por carril en anchura normal.Vía de 2 carriles=8" field_width="5"/>
 		    </sign>
 
 <sign ref="ES:tertiary" name="" es.name="Carretera Local o de Tercer nivel" ca.name="Carretera local o terciària">
         <tag key="highway" value="tertiary" />
 	<tag key="ref" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="CA-408" suffix="" field_width="5"/>
+				<tag key="lanes" value="$val2"/>
+        <parameter ident="val2" input="textfield" prefix="" default="2" suffix="Carriles totales (o se especifica totales o se marcan por sentido" field_width="5"/>
+		<tag key="lanes:forward" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="1" suffix="Carriles sentido vía" field_width="5"/>
+		<tag key="lanes:backward" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="1" suffix="Carriles contra sentido de la vía" field_width="5"/>
+		<tag key="oneway" value="$val5"/>
+        <parameter ident="val5" input="textfield" prefix="" default="" suffix="Via de sentido único (yes/no)" field_width="5"/>
+		<tag key="turn:lanes:forward" value="$val6"/>
+        <parameter ident="val6" input="textfield" prefix="" default="" suffix="direcciones carriles sentido vía.Separadas por |" field_width="5"/>
+		<tag key="turn:lanes:backward" value="$val7"/>
+        <parameter ident="val7" input="textfield" prefix="" default="" suffix="direcciones carriles contra sentido vía.Separadas por |" field_width="5"/>
+		<tag key="width" value="$val8"/>
+        <parameter ident="val8" input="textfield" prefix="" default="8" suffix="4 por carril en anchura normal.Vía de 2 carriles=8" field_width="5"/>
 		    </sign> 
 			
 			<sign ref="ES:p1" name="" es.name="Peligro cruce con prioridad" ca.name="Perill, encreuament amb prioritat">
@@ -219,10 +282,6 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		<supplementary id="ES:com:s800"/><!-- Complementaria:A X m. -->
 		    </sign>
 
-<sign ref="ES:p18" name="" es.name="" ca.name="">
-        <tag key="" value="" />
-		    </sign>
-
 <sign ref="ES:p19" name="" es.name="Peligro calzada deslizante" ca.name="">
         <tag key="" value="" />
 		    </sign>
@@ -332,18 +391,6 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <tag key="" value="" />
 		    </sign>
 
-<sign ref="ES:r7" name="" es.name="" ca.name="">
-        <tag key="" value="" />
-		    </sign>
-
-<sign ref="ES:r8" name="" es.name="" ca.name="">
-        <tag key="" value="" />
-		    </sign>
-
-<sign ref="ES:r9" name="" es.name="" ca.name="">
-        <tag key="" value="" />
-		    </sign>
-
 <sign ref="ES:r100" name="" es.name="Circulación prohibida a todo tipo de vehículos" ca.name="">
         <tag key="access" value="no" ident="mode"/>
 		    </sign>
@@ -381,12 +428,12 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		    </sign>
 
-<sign ref="ES:r109" name="" es.name="Prohibido mercancias inflamables" ca.name="">
+<sign ref="ES:r109" name="" es.name="Prohibido contaminantes del agua" ca.name="">
         <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		    </sign>
 
-<sign ref="ES:r110" name="" es.name="" ca.name="">
+<sign ref="ES:r110" name="" es.name="Prohibido mercancías inflamables o explosivas" ca.name="">
         <tag key="" value="" />
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		    </sign>
@@ -413,7 +460,7 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
 		    </sign>
 
-<sign ref="ES:r115" name="" es.name="" ca.name="">
+<sign ref="ES:r115" name="" es.name="Prohibido carros a mano" ca.name="">
         <tag key="" value="" />
 		    </sign>
 
@@ -641,11 +688,11 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		    </sign>
 
 
-<sign ref="ES:r415" name="" es.name="" ca.name="">
+<sign ref="ES:r415" name="" es.name="Obligatorio mercancías contaminantes del agua" ca.name="">
         <tag key="" value="" />
 		    </sign>
 
-<sign ref="ES:r416" name="" es.name="" ca.name="">
+<sign ref="ES:r416" name="" es.name="Obligatorio mercancías explosivas o inflamables" ca.name="">
         <tag key="" value="" />
 		    </sign>
 
@@ -802,6 +849,14 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 
 <sign ref="ES:s21" name="" es.name="Condiciones para pasar el puerto" ca.name="">
         <tag key="" value="" />
+		    </sign>
+			
+<sign ref="ES:s22" name="" es.name="Cambio de sentido" ca.name="Canvi de sentit">
+<tag key="distance" value="$val" ident="mode"/>
+<parameter ident="val" input="textfield" prefix="Distancia que marca la señal" default="300" suffix="" field_width="3"/>
+        <tag key="" value="" />
+		<supplementary id="ES:com:s870"/><!-- Complementaria:En la salida -->
+						<supplementary id="ES:com:s800"/><!-- Complementaria:A x. m. -->
 		    </sign>
 
 <sign ref="ES:s23" name="" es.name="Hospital" ca.name="">
@@ -1303,7 +1358,7 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
 		    </sign>
 	
-<sign ref="ES:s242a" name="" es.name="Salidas en autopista desde autopista muy próximas entre ellas " ca.name="">
+<sign ref="ES:s242a" name="" es.name="Salidas en autopista desde autopista muy próximas entre ellas " ca.name="Sortides en autopista des d'autopistes molt properes">
 		<tag key="destination" value="$val"/>
         <parameter ident="val" input="textfield" prefix="" default="Tordesillas;A Coruña|Ávila;Segovia" suffix="" field_width="40"/>
 		<tag key="destination:sign" value="$val2"/>
@@ -1319,18 +1374,18 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		    </sign>
 	
 
-<sign ref="ES:s250" name="" es.name="Girar a la izquierda por la primera calle de la derecha" ca.name="">
+<sign ref="ES:s250" name="" es.name="Girar a la izquierda por la primera calle de la derecha" ca.name="Girar a l'esquerra pel primer carrer de la dreta">
         <tag key="" value="" />
 		    </sign>
 			
-<sign ref="ES:s260" name="" es.name="Carril derecho se va a la derecha, izquierdo para continuar o girar" ca.name="">
+<sign ref="ES:s260" name="" es.name="Carril derecho se va a la derecha, izquierdo para continuar o girar" ca.name="Carril dret marxa a la dreta, esquerre per continuar recte o girar a l'esquerra">
  <tag key="lanes" value="2" ident="mode"/>
 <tag key="lanes:forward" value="2" />
 <tag key="oneway" value="yes" />
 <tag key="turn:lanes:forward" value="through;left|slight_right"/>
 			</sign> 
 
-	<sign ref="ES:s261" name="" es.name="Salida hacia zona de servicios en carretera" ca.name="">
+	<sign ref="ES:s261" name="" es.name="Salida hacia zona de servicios en carretera" ca.name="Sortida cap a zona de serveis en carretera">
 		<tag key="destination:sign" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="fuel;mechanic;hotel;restaurant" suffix="Símbolo(s)" field_width="50"/>
 		<tag key="junction:distance" value="$val5 m"/>
@@ -1339,7 +1394,7 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="15"/>
 		    </sign>
 
-	<sign ref="ES:s263" name="" es.name="Salida hacia zona de servicios con salida compartida" ca.name="">
+	<sign ref="ES:s263" name="" es.name="Salida hacia zona de servicios con salida compartida" ca.name="Sortida cap a zona de serveis amb sortida compartida">
         <tag key="destination:sign" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="fuel;mechanic;hotel;restaurant" suffix="Símbolo(s)" field_width="50"/>
 		<tag key="junction:ref" value="$val3"/>
@@ -1350,7 +1405,7 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" dirección flecha" field_width="20"/>
 		    </sign>
 
-				<sign ref="ES:s263a" name="" es.name="Salida hacia zona de servicios con salida en exclusiva" ca.name="">
+				<sign ref="ES:s263a" name="" es.name="Salida hacia zona de servicios con salida en exclusiva" ca.name="Sortida cap a zona de serveis amb sortida en exclusiva">
 <tag key="destination:sign" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="fuel;mechanic;hotel;restaurant" suffix="Símbolo(s)" field_width="50"/>
 		<tag key="junction:distance" value="$val5 m"/>
@@ -1399,12 +1454,24 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 <sign ref="ES:s500" traffic_sign_tag="city_limit" name="" es.name="Límite de población" ca.name="Entrada a la població">
         <tag key="traffic_sign" value="city_limit"/>
 		<tag key="name" value="$val"/>
-        <parameter input="textfield" name="" es.name="nombre_población" ca.name="Maximale Steigung" type="int" ident="val" default="Vilanova i la Geltrú" suffix="" field_width="12"/>
+        <parameter input="textfield" name="" es.name="nombre_población" ca.name="Maximale Steigung" type="int" ident="val" default="Los Corrales de Buelna" suffix="" field_width="12"/>
 		    </sign>
 
 <sign ref="ES:s510" name="" es.name="Fin de límite de población" ca.name="Fi de població">        <tag key="name" value="$val"/>
-        <parameter input="textfield" name="" es.name="nombre_población" ca.name="Maximale Steigung" type="int" ident="val" default="Vilanova i la Geltrú" suffix="" field_width="12"/>
+        <parameter input="textfield" name="" es.name="nombre_población" ca.name="Maximale Steigung" type="int" ident="val" default="Los Corrales de Buelna" suffix="" field_width="12"/>
 		    </sign>
+			
+<sign ref="ES:s520" name="" es.name="Punto importante en la vía" ca.name="Punt important a la via">        
+<tag key="name" value="$val"/>
+        <parameter input="textfield" name="" es.name="punto_via" ca.name="punt_via" type="int" ident="val" default="puerto de Navacerrada 1700 m" suffix="" field_width="12"/>
+		    </sign>
+			
+<sign ref="ES:s540" name="" es.name="Límite administrativo" ca.name="Límit administratiu">        
+<tag key="boundary" value="administrative"/>
+<tag key="name" value="$val"/>
+        <parameter input="textfield" name="" es.name="nombre_límite" ca.name="Maximale Steigung" type="int" ident="val" default="PROVINCIA DE HUESCA" suffix="" field_width="12"/>
+		    </sign>
+
 
 <sign ref="ES:s570" name="" es.name="Punto kilométrico autovía" ca.name="Fita quilomètrica autovia">
          <tag key="highway" value="milestone" ident="mode"/>
@@ -1490,7 +1557,32 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		<tag key="pk" value="$val2"/>
         <parameter ident="val2" input="textfield" prefix="" default="510" suffix=" km" field_width="3"/>
 		    </sign>
-
+			
+<sign ref="ES:s600" name="" es.name="Confirmación de dirección vía y distancia" ca.name="Confirmació de direcció , via i distància">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Aranda de Duero;Soria" suffix="" field_width="40"/>
+		<tag key="destination:ref" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="N-122" suffix="Referencia (si está especificada)" field_width="7"/>
+		<tag key="distance" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="33;155" suffix=" distancia" field_width="20"/>
+		    </sign>
+			
+<sign ref="ES:s602" name="" es.name="Confirmación de dirección vía y distancia en autopista" ca.name="Confirmació de direcció , via i distància en autopista">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Torija;Zaragoza" suffix="" field_width="40"/>
+		<tag key="destination:ref" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="E-90;A-2" suffix="Referencia (si está especificada)" field_width="7"/>
+		<tag key="distance" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="5;256" suffix=" distancia" field_width="20"/>
+		    </sign>
+			
+<sign ref="ES:s610" name="" es.name="Confirmación de dirección  y distancia" ca.name="Confirmació de direcció i distància">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="albergue nacional de Aranda de Duero" suffix="" field_width="40"/>
+		<tag key="distance" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="56" suffix=" distancia" field_width="20"/>
+		    </sign>
+			
 
 	<sign ref="ES:s700" name="" es.name="Indicación urbana Calle" ca.name="Indicación urbana Carrer">
         <tag key="destination" value="$val"/>
@@ -1498,9 +1590,6 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="right" suffix=" dirección flecha" field_width="7"/>
 		    </sign>
-			
-			
-
 
 <sign ref="ES:s710" name="" es.name="Indicación urbana estación de transportes" ca.name="Indicació urbana estació de transports">
         <tag key="destination" value="$val"/>
@@ -1509,8 +1598,7 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val2" input="textfield" prefix="" default="station" suffix="Símbolo (si lo hay)" field_width="10"/>
 		<tag key="turn:destination" value="$val4"/>
         <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
-		    </sign>
-
+		</sign>
 
 <sign ref="ES:s720" name="" es.name="Indicación urbana recinto deportivo" ca.name="Indicació urbana recinte esportiu">
         <tag key="destination" value="$val"/>
@@ -1571,14 +1659,20 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" dirección flecha" field_width="7"/>
 		    </sign>
 			
-			<!-- Aquí comencen les catalanes -->
-	<sign ref="CAT:s700" name="" es.name="Indicación urbana elementos internos (Catalunya)" ca.name="Indicació urbana elements interns (Catalunya)">
-        <tag key="destination" value="$val"/>
-        <parameter ident="val" input="textfield" prefix="" default="Mercat" suffix="" field_width="20"/>
-		<tag key="turn:destination" value="$val4"/>
-        <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" direcció fletxa" field_width="7"/>
+<sign ref="ES:s900" name="" es.name="Incendios" ca.name="">
+        <tag key="" value="" ident="mode"/>
 		    </sign>
 			
+<sign ref="ES:s920" name="" es.name="España" ca.name="">
+        <tag key="" value="" ident="mode"/>
+		    </sign>
+
+<sign ref="ES:s940" name="" es.name="Velocidades" ca.name="">
+        <tag key="" value="" ident="mode"/>
+		    </sign>
+						
+			<!-- Aquí comencen les catalanes -->
+		
 				<sign ref="CAT:radar" name="Speed camera" es.name="Radar" ca.name="Radar">
         <tag key="highway" value="speed_camera"/>
         <tag key="maxspeed" value="$val4"/>
@@ -1620,6 +1714,21 @@ roadsigns plugin preset file for Spain yopaseopor http://yopaseopor.blogspot.com
         <parameter ident="val4" input="textfield" prefix="" default="slight_right" suffix=" direcció fletxa" field_width="20"/>
 		    </sign>
 			
+<sign ref="CAT:s600" name="" es.name="Confirmación de dirección vía y distancia (CAT)" ca.name="Confirmació de direcció , via i distància (Catalunya)">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Tàrrega" suffix="" field_width="40"/>
+		<tag key="destination:ref" value="$val3"/>
+        <parameter ident="val3" input="textfield" prefix="" default="C-14" suffix="Referencia (si está especificada)" field_width="7"/>
+		<tag key="distance" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="24" suffix=" distancia" field_width="20"/>
+		    </sign>
+
+	<sign ref="CAT:s700" name="" es.name="Indicación urbana elementos internos (Catalunya)" ca.name="Indicació urbana elements interns (Catalunya)">
+        <tag key="destination" value="$val"/>
+        <parameter ident="val" input="textfield" prefix="" default="Mercat" suffix="" field_width="20"/>
+		<tag key="turn:destination" value="$val4"/>
+        <parameter ident="val4" input="textfield" prefix="" default="left" suffix=" direcció fletxa" field_width="7"/>
+		    </sign>			
 
 <!-- Aquí comencen les suplementàries -->
 

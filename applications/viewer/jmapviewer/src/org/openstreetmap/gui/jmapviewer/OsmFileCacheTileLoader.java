@@ -339,8 +339,8 @@ public class OsmFileCacheTileLoader extends OsmTileLoader implements CachedTileL
          * Note: This does only work with servers providing the
          * <code>LastModified</code> header:
          * <ul>
-         * <li>{@link tilesources.OsmTileSource.CycleMap} - supported</li>
-         * <li>{@link tilesources.OsmTileSource.Mapnik} - not supported</li>
+         * <li>{@link org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource.CycleMap} - supported</li>
+         * <li>{@link org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource.Mapnik} - not supported</li>
          * </ul>
          *
          * @param fileAge time of the

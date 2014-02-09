@@ -182,12 +182,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * Changes the map pane so that it is centered on the specified coordinate
      * at the given zoom level.
      *
-     * @param lat
-     *            latitude of the specified coordinate
-     * @param lon
-     *            longitude of the specified coordinate
+     * @param to
+     *            specified coordinate
      * @param zoom
-     *            {@link #MIN_ZOOM} <= zoom level <= {@link #MAX_ZOOM}
+     *            {@link #MIN_ZOOM} &lt;= zoom level &lt;= {@link #MAX_ZOOM}
      */
     public void setDisplayPosition(Coordinate to, int zoom) {
         setDisplayPosition(new Point(getWidth() / 2, getHeight() / 2), to, zoom);
@@ -201,12 +199,10 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * @param mapPoint
      *            point on the map denoted in pixels where the coordinate should
      *            be set
-     * @param lat
-     *            latitude of the specified coordinate
-     * @param lon
-     *            longitude of the specified coordinate
+     * @param to
+     *            specified coordinate
      * @param zoom
-     *            {@link #MIN_ZOOM} <= zoom level <=
+     *            {@link #MIN_ZOOM} &lt;= zoom level &lt;=
      *            {@link TileSource#getMaxZoom()}
      */
     public void setDisplayPosition(Point mapPoint, Coordinate to, int zoom) {

@@ -114,15 +114,20 @@ public class Js57toosm {
 						} while (S57dat.more());
 						break;
 					case "FFPT":
-						name = (long) S57dat.getSubf(record, fields + pos, S57field.FFPT, S57subf.LNAM);
-						int rind = ((Long) S57dat.getSubf(S57subf.RIND)).intValue();
-						map.newObj(name, rind);
+						S57dat.setField(record, fields + pos, S57field.FFPT, len);
+						do {
+							name = (long) S57dat.getSubf(S57subf.LNAM);
+							int rind = ((Long) S57dat.getSubf(S57subf.RIND)).intValue();
+							S57dat.getSubf(S57subf.COMT);
+							map.newObj(name, rind);
+						} while (S57dat.more());
 						break;
 					case "FSPT":
 						S57dat.setField(record, fields + pos, S57field.FSPT, len);
 						do {
 							name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
 							map.newPrim(name, (long) S57dat.getSubf(S57subf.ORNT), (long) S57dat.getSubf(S57subf.USAG));
+							S57dat.getSubf(S57subf.MASK);
 						} while (S57dat.more());
 						break;
 					case "VRID":
@@ -152,6 +157,7 @@ public class Js57toosm {
 							name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
 							int topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
 							map.addConn(name, topi);
+							S57dat.getSubf(S57subf.MASK);
 						} while (S57dat.more());
 						break;
 					case "SG2D":
@@ -208,55 +214,63 @@ public class Js57toosm {
 		
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);
-			if (feature.reln != Rflag.SLAVE) {
-				if (feature.geom.prim == Pflag.POINT) {
-					for (Prim prim : feature.geom.elems) {
-						long ref = prim.id;
-						Snode node = map.nodes.get(ref);
-						out.format("  <node id='%d' lat='%f' lon='%f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-						String type = S57obj.stringType(feature.type);
-						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-						if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
-							out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode)node).val);
-						writeAtts(feature, type);
-						out.format("  </node>%n");
-						map.nodes.remove(ref);
+			String type = S57obj.stringType(feature.type);
+			if (!type.isEmpty()) {
+				if (feature.reln == Rflag.MASTER) {
+					if (feature.geom.prim == Pflag.POINT) {
+						for (Prim prim : feature.geom.elems) {
+							long ref = prim.id;
+							Snode node;
+							while ((node = map.nodes.get(ref)) != null) {
+								out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+								out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+								if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
+									out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
+								writeAtts(feature, type);
+								out.format("  </node>%n");
+								map.nodes.remove(ref++);
+							}
+						}
 					}
 				}
 			}
 		}
 		
+//int i = 256;
 		for (long id : map.index.keySet()) {
+//if (i-- == 0) break;
 			Feature feature = map.index.get(id);
-			if (feature.reln != Rflag.SLAVE) {
-				if ((feature.geom.prim == Pflag.LINE) || ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
-					GeomIterator git = map.new GeomIterator(feature.geom);
-					while (git.hasMore()) {
-						git.getMore();
-						while (git.hasNext()) {
-							long ref = git.nextRef();
-							Snode node = map.nodes.get(ref);
-							if (node != null) {
-								out.format("  <node id='%d' lat='%f' lon='%f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-								map.nodes.remove(ref);
+			String type = S57obj.stringType(feature.type);
+			if (!type.isEmpty()) {
+				if (feature.reln == Rflag.MASTER) {
+					if ((feature.geom.prim == Pflag.LINE) || ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
+						GeomIterator git = map.new GeomIterator(feature.geom);
+						while (git.hasMore()) {
+							git.getMore();
+							while (git.hasNext()) {
+								long ref = git.nextRef();
+								Snode node = map.nodes.get(ref);
+								if (node != null) {
+									out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+									map.nodes.remove(ref);
+								}
 							}
 						}
-					}
-					git = map.new GeomIterator(feature.geom);
-					while (git.hasMore()) {
-						long way = git.getMore();
-						out.format("  <way id='%d' version='1'>%n", -way);
-						while (git.hasNext()) {
-							long ref = git.nextRef();
-							out.format("    <nd ref='%d'/>%n", -ref);
+						git = map.new GeomIterator(feature.geom);
+						while (git.hasMore()) {
+							long way = git.getMore();
+							out.format("  <way id='%d' version='1'>%n", -way);
+							while (git.hasNext()) {
+								long ref = git.nextRef();
+								out.format("    <nd ref='%d'/>%n", -ref);
+							}
+							out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+							writeAtts(feature, type);
+							out.format("  </way>%n");
 						}
-						String type = S57obj.stringType(feature.type);
-						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-						writeAtts(feature, type);
-						out.format("  </way>%n");
+					} else if (feature.geom.prim == Pflag.AREA) {
+
 					}
-				} else if (feature.geom.prim == Pflag.AREA) {
-					
 				}
 			}
 		}
@@ -270,19 +284,24 @@ public class Js57toosm {
 			if (!attstr.isEmpty() && !valstr.isEmpty())
 				out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, attstr, valstr);
 		}
-		for (Reln rel : feature.rels) {
-			if (rel.reln == Rflag.SLAVE) {
-				Feature slave = map.index.get(rel.id);
-				type = S57obj.stringType(slave.type);
-				for (Map.Entry<Att, AttVal<?>> item : slave.atts.entrySet()) {
+		for (Obj obj : feature.objs.keySet()) {
+			ObjTab tab = feature.objs.get(obj);
+			for (int ix : tab.keySet()) {
+				type = S57obj.stringType(obj);
+				AttMap atts = tab.get(ix);
+				for (Map.Entry<Att, AttVal<?>> item : atts.entrySet()) {
 					String attstr = S57att.stringAttribute(item.getKey());
 					String valstr = S57val.stringValue(item.getValue());
-					if (!attstr.isEmpty() && !valstr.isEmpty())
-						out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, attstr, valstr);
+					if (!attstr.isEmpty() && !valstr.isEmpty()) {
+						if ((ix == 0) && (tab.size() == 1)) {
+							out.format("    <tag k='seamark:%s:%s' v=\"%s\"/>%n", type, attstr, valstr);
+						} else {
+							out.format("    <tag k='seamark:%s:%d:%s' v=\"%s\"/>%n", type, ix + 1, attstr, valstr);
+						}
+					}
 				}
 			}
 		}
-
 	}
 
 }

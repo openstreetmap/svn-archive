@@ -145,7 +145,7 @@ public class PanelMain extends JPanel {
 		decode.append("\tObjects:\n");
 		for (Obj obj : feature.objs.keySet()) {
 			decode.append("\t\t" + Messages.getString(obj.name()) + "\n");
-			if (feature.objs.get(obj).size() != 0) {
+/*			if (feature.aggr.objs.get(obj).size() != 0) {
 				for (AttMap atts : feature.objs.get(obj).values()) {
 					for (Att att : atts.keySet()) {
 						AttVal<?> item = atts.get(att);
@@ -171,7 +171,7 @@ public class PanelMain extends JPanel {
 					}
 				}
 			}
-		}
+*/		}
 	}
 	
 	public void clearMark() {

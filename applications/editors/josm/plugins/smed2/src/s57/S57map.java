@@ -79,7 +79,7 @@ public class S57map {
 	}
 	
 	public enum Rflag {
-		UNKN, AGGR, MASTER, SLAVE, PEER
+		UNKN, AGGR, MASTER, SLAVE
 	}
 	
 	public class Reln {
@@ -88,12 +88,6 @@ public class S57map {
 		public Reln(long i, Rflag r) {
 			id = i;
 			reln = r;
-		}
-	}
-
-	public class AttMap extends HashMap<Att, AttVal<?>> {
-		public AttMap() {
-			super();
 		}
 	}
 
@@ -112,6 +106,21 @@ public class S57map {
 	public class ObjMap extends EnumMap<Obj, ObjTab> {
 		public ObjMap() {
 			super(Obj.class);
+		}
+	}
+
+	public class Aggr {
+		public RelTab rels;
+		public long par;
+		public Aggr() {
+			rels = new RelTab();
+			par = 0;
+		}
+	}
+
+	public class AttMap extends HashMap<Att, AttVal<?>> {
+		public AttMap() {
+			super();
 		}
 	}
 
@@ -176,11 +185,17 @@ public class S57map {
 		public int outers;						// Number of outers
 		public int inners;						// Number of inners
 		public ArrayList<Comp> refs;	// Ordered list of compounds
+		public double area;						// Area of feature
+		public double length;					// Length of feature
+		public Snode centre;					// Centre of feature
 		public Geom(Pflag p) {
 			prim = p;
 			elems = new ArrayList<Prim>();
 			outers = inners = 0;
 			refs = new ArrayList<Comp>();
+			area = 0;
+			length = 0;
+			centre = new Snode();
 		}
 	}
 	
@@ -189,22 +204,16 @@ public class S57map {
 		public Geom geom;			// Geometry data
 		public Obj type;			// Feature type
 		public AttMap atts;		// Feature attributes
-		public RelTab rels;		// Related objects
-		public ObjMap objs;		// Slave objects
-		public double area;		// Area of feature
-		public double length;	// Length of feature
-		public Snode centre;	// Centre of feature
+		public Aggr aggr;			// Related objects
+		public ObjMap objs;		// Slave object attributes
 
 		Feature() {
 			reln = Rflag.UNKN;
 			geom = new Geom(Pflag.NOSP);
 			type = Obj.C_AGGR;
 			atts = new AttMap();
-			rels = new RelTab();
+			aggr = new Aggr();
 			objs = new ObjMap();
-			area = 0;
-			length = 0;
-			centre = new Snode();
 		}
 	}
 
@@ -248,7 +257,9 @@ public class S57map {
 		}
 		feature.geom = new Geom(p);
 		feature.type = obj;
-		index.put(id, feature);
+		if (obj != Obj.UNKOBJ) {
+			index.put(id, feature);
+		}
 	}
 	
 	public void newObj(long id, int rind) {
@@ -261,10 +272,10 @@ public class S57map {
 			r = Rflag.SLAVE;
 			break;
 		case 3:
-			r = Rflag.PEER;
+			r = Rflag.UNKN;
 			break;
 		}
-		feature.rels.add(new Reln(id, r));
+		feature.aggr.rels.add(new Reln(id, r));
 	}
 	
 	public void endFeature() {
@@ -295,31 +306,27 @@ public class S57map {
 	}
 
 	public void endFile() {
+		sortGeom();
 		for (long id : index.keySet()) {
 			Feature feature = index.get(id);
-			for (Reln rel : feature.rels) {
-				Feature reln = index.get(rel.id);
-				reln.reln = rel.reln;
-				if (feature.reln == Rflag.UNKN) {
-					switch (rel.reln) {
+			for (Reln reln : feature.aggr.rels) {
+				Feature rel = index.get(reln.id);
+				if (cmpGeoms(feature.geom, rel.geom)) {
+					switch (reln.reln) {
 					case MASTER:
 						feature.reln = Rflag.AGGR;
 						break;
 					case SLAVE:
 						feature.reln = Rflag.MASTER;
-					case PEER:
-						feature.reln = Rflag.PEER;
 						break;
 					default:
+						feature.reln = Rflag.UNKN;
 						break;
 					}
+					rel.reln = reln.reln; 
+				} else {
+					reln.reln = Rflag.UNKN;
 				}
-				ObjTab tab = feature.objs.get(reln.type);
-				if (tab == null) {
-					tab = new ObjTab();
-					feature.objs.put(reln.type, tab);
-				}
-				tab.put(tab.size(), reln.atts);
 			}
 		}
 		for (long id : index.keySet()) {
@@ -327,14 +334,27 @@ public class S57map {
 			if (feature.reln == Rflag.UNKN) {
 				feature.reln = Rflag.MASTER;
 			}
-			if ((feature.type != Obj.UNKOBJ) && ((feature.reln == Rflag.MASTER) || (feature.reln == Rflag.PEER))) {
+			if ((feature.type != Obj.UNKOBJ) && (feature.reln == Rflag.MASTER)) {
 				if (features.get(feature.type) == null) {
 					features.put(feature.type, new ArrayList<Feature>());
 				}
 				features.get(feature.type).add(feature);
 			}
 		}
-		sortGeom();
+		for (long id : index.keySet()) {
+			Feature feature = index.get(id);
+			for (Reln reln : feature.aggr.rels) {
+				Feature rel = index.get(reln.id);
+				if (rel.reln == Rflag.SLAVE) {
+					if (feature.objs.get(rel.type) == null) {
+						feature.objs.put(rel.type, new ObjTab());
+					}
+					ObjTab tab = feature.objs.get(rel.type);
+					int ix = tab.size();
+					tab.put(ix, rel.atts);
+				}
+			}
+		}
 	}
 
 	// OSM map building methods
@@ -400,20 +420,28 @@ public class S57map {
 				if (items == null) {
 					items = new ObjTab();
 					feature.objs.put(obj, items);
+					Feature type = new Feature();
+					type.reln = Rflag.SLAVE;
+					type.type = obj;
+					type.geom = feature.geom;
 				}
-				AttMap atts = items.get(idx);
-				if (atts == null) {
-					atts = new AttMap();
-					items.put(idx, atts);
-				}
-				AttVal<?> attval = S57val.convertValue(val, att);
-				if (attval.val != null)
-					atts.put(att, attval);
+//				AttMap atts = items.get(idx);
+//				if (atts == null) {
+//					atts = new AttMap();
+//					items.put(idx, atts);
+//				}
+//				AttVal<?> attval = S57val.convertValue(val, att);
+//				if (attval.val != null)
+//					atts.put(att, attval);
 			} else {
 				if (subkeys[1].equals("type")) {
-					feature.type = S57obj.enumType(val);
+					obj = S57obj.enumType(val);
 					if (feature.objs.get(feature.type) == null) {
 						feature.objs.put(feature.type, new ObjTab());
+						Feature type = new Feature();
+						type.reln = Rflag.MASTER;
+						type.type = obj;
+						type.geom = feature.geom;
 					}
 				} else {
 					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
@@ -434,19 +462,19 @@ public class S57map {
 			if (node.flg != Nflag.CONN) {
 				node.flg = Nflag.ISOL;
 			}
-			feature.length = 0;
-			feature.area = 0;
+			feature.geom.length = 0;
+			feature.geom.area = 0;
 			break;
 		case LINE:
 			edges.put(id, edge);
 			nodes.get(edge.first).flg = Nflag.CONN;
 			nodes.get(edge.last).flg = Nflag.CONN;
-			feature.length = calcLength(feature.geom);
+			feature.geom.length = calcLength(feature.geom);
 			if (edge.first == edge.last) {
 				feature.geom.prim = Pflag.AREA;
-				feature.area = calcArea(feature.geom);
+				feature.geom.area = calcArea(feature.geom);
 			} else {
-				feature.area = 0;
+				feature.geom.area = 0;
 			}
 			break;
 		case AREA:
@@ -459,8 +487,8 @@ public class S57map {
 			if (features.get(feature.type) == null) {
 				features.put(feature.type, new ArrayList<Feature>());
 			}
-			feature.centre = findCentroid(feature);
 			features.get(feature.type).add(feature);
+			feature.geom.centre = findCentroid(feature);
 		}
 	}
 
@@ -469,16 +497,15 @@ public class S57map {
 	public void sortGeom() {
 		for (long id : index.keySet()) {
 			feature = index.get(id);
-			Geom geom = feature.geom;
-			Geom sort = new Geom(geom.prim);
+			Geom sort = new Geom(feature.geom.prim);
 			long first = 0;
 			long last = 0;
 			Comp comp = null;
 			boolean next = true;
-			if ((geom.prim == Pflag.LINE) || (geom.prim == Pflag.AREA)) {
-				int sweep = geom.elems.size();
-				while (!geom.elems.isEmpty()) {
-					Prim prim = geom.elems.remove(0);
+			if ((feature.geom.prim == Pflag.LINE) || (feature.geom.prim == Pflag.AREA)) {
+				int sweep = feature.geom.elems.size();
+				while (!feature.geom.elems.isEmpty()) {
+					Prim prim = feature.geom.elems.remove(0);
 					Edge edge = edges.get(prim.id);
 					if (next == true) {
 						next = false;
@@ -508,7 +535,7 @@ public class S57map {
 								first = edge.first;
 								comp.size++;
 							} else {
-								geom.elems.add(prim);
+								feature.geom.elems.add(prim);
 							}
 						} else {
 							if (edge.last == last) {
@@ -520,18 +547,21 @@ public class S57map {
 								first = edge.last;
 								comp.size++;
 							} else {
-								geom.elems.add(prim);
+								feature.geom.elems.add(prim);
 							}
 						}
 					}
 					if (--sweep == 0) {
 						next = true;
-						sweep = geom.elems.size();
+						sweep = feature.geom.elems.size();
 					}
+				}
+				if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
+					sort.prim = Pflag.AREA;
 				}
 				feature.geom = sort;
 			} 
-			if (geom.prim == Pflag.AREA) {
+			if (feature.geom.prim == Pflag.AREA) {
 				ArrayList<Prim> outers = new ArrayList<Prim>();
 				ArrayList<Prim> inners = new ArrayList<Prim>();
 				for (Prim prim : feature.geom.elems) {
@@ -543,7 +573,7 @@ public class S57map {
 				}
 				ArrayList<Prim> sorting = outers;
 				ArrayList<Prim> closed = null;
-				sort = new Geom(geom.prim);
+				sort = new Geom(feature.geom.prim);
 				sort.outers = feature.geom.outers;
 				sort.inners = feature.geom.inners;
 				sort.refs = feature.geom.refs;
@@ -593,6 +623,10 @@ public class S57map {
 				feature.geom = sort;
 			}
 		}
+	}
+	
+	public boolean cmpGeoms (Geom g1, Geom g2) {
+		return ((g1.prim == g2.prim) && (g1.outers == g2.outers) && (g1.inners == g2.inners) && (g1.elems.size() == g2.elems.size()));
 	}
 	
 	public class EdgeIterator {
@@ -652,12 +686,14 @@ public class S57map {
 		ListIterator<S57map.Prim> it;
 		int cc, ec;
 		Comp comp;
+		long lastref;
 		
 		public GeomIterator(Geom g) {
 			geom = g;
 			eit = null;
 			cc = ec = 0;
 			comp = null;
+			lastref = 0;
 			if ((geom.prim != Pflag.NOSP) && (geom.prim != Pflag.POINT)) {
 				it = geom.elems.listIterator();
 			} else {
@@ -689,6 +725,10 @@ public class S57map {
 				eit = new EdgeIterator(edges.get(prim.id), prim.forward);
 			}
 			long ref = eit.nextRef();
+			if (ref == lastref) {
+				ref = eit.nextRef();
+			}
+			lastref = ref;
 			if (!eit.hasNext()) {
 				eit = null;
 			}

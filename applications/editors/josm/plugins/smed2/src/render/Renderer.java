@@ -80,19 +80,19 @@ public class Renderer {
 	}
 
 	public static void symbol(Feature feature, Symbol symbol) {
-		Point2D point = context.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.geom.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, null);
 	}
 	public static void symbol(Feature feature, Symbol symbol, Scheme scheme) {
-		Point2D point = context.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.geom.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, null);
 	}
 	public static void symbol(Feature feature, Symbol symbol, Delta delta) {
-		Point2D point = context.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.geom.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), null, delta);
 	}
 	public static void symbol(Feature feature, Symbol symbol, Scheme scheme, Delta delta) {
-		Point2D point = context.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.geom.centre);
 		Symbols.drawSymbol(g2, symbol, sScale, point.getX(), point.getY(), scheme, delta);
 	}
 	
@@ -333,7 +333,7 @@ public class Renderer {
 		circle.add(new Instr(Form.FILL, style.line));
 		circle.add(new Instr(Form.STRK, new BasicStroke(style.width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1, style.dash, 0)));
 		circle.add(new Instr(Form.ELPS, new Ellipse2D.Double(-radius,-radius,radius*2,radius*2)));
-		Point2D point = context.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.geom.centre);
 		Symbols.drawSymbol(g2, circle, 1, point.getX(), point.getY(), null, null);
 	}
 
@@ -344,7 +344,7 @@ public class Renderer {
 		Point2D point;
 		switch (feature.geom.prim) {
 		case POINT:
-			point = context.getPoint(feature.centre);
+			point = context.getPoint(feature.geom.centre);
 			g2.drawImage(image, new AffineTransformOp(AffineTransform.getScaleInstance(sScale, sScale), AffineTransformOp.TYPE_NEAREST_NEIGHBOR),
 					(int)(point.getX() - (50 * sScale)), (int)(point.getY() - (50 * sScale)));
 			break;
@@ -477,7 +477,7 @@ public class Renderer {
 			break;
 		}
 		label.add(new Instr(Form.TEXT, new Caption(str, font, tc, new Delta(Handle.TL, AffineTransform.getTranslateInstance(tx, ty)))));
-		Point2D point = context.getPoint(feature.centre);
+		Point2D point = context.getPoint(feature.geom.centre);
 		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, delta);
 	}
 

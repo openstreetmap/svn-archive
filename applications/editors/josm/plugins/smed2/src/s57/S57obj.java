@@ -7,7 +7,7 @@ import java.util.Map;
 public class S57obj {
 	
 	public enum Obj {
-		UNKOBJ, ADMARE, AIRARE, ACHBRT, ACHARE, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BERTHS, BRIDGE, BUISGL, BUAARE, BOYCAR, BOYINB,
+		UNKOBJ, AIRARE, ACHBRT, ACHARE, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BERTHS, BRIDGE, BUISGL, BUAARE, BOYCAR, BOYINB,
 		BOYISD, BOYLAT, BOYSAW, BOYSPP, CBLARE, CBLOHD, CBLSUB, CANALS, CANBNK, CTSARE, CAUSWY, CTNARE, CHKPNT, CGUSTA, COALNE, CONZNE,
 		COSARE, CTRPNT, CONVYR, CRANES, CURENT, CUSZNE, DAMCON, DAYMAR, DWRTCL, DWRTPT, DEPARE, DEPCNT, DISMAR, DOCARE, DRGARE, DRYDOC,
 		DMPGRD, DYKCON, EXEZNE, FAIRWY, FNCLNE, FERYRT, FSHZNE, FSHFAC, FSHGRD, FLODOC, FOGSIG, FORSTC, FRPARE, GATCON, GRIDRN, HRBARE,
@@ -24,7 +24,7 @@ public class S57obj {
 	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<Obj, Integer>(Obj.class);
 	static {
 		ObjS57.put(Obj.UNKOBJ,0);
-		ObjS57.put(Obj.ADMARE,1); ObjS57.put(Obj.AIRARE,2); ObjS57.put(Obj.ACHBRT,3); ObjS57.put(Obj.ACHARE,4); ObjS57.put(Obj.BCNCAR,5);
+		ObjS57.put(Obj.AIRARE,2); ObjS57.put(Obj.ACHBRT,3); ObjS57.put(Obj.ACHARE,4); ObjS57.put(Obj.BCNCAR,5);
 		ObjS57.put(Obj.BCNISD,6); ObjS57.put(Obj.BCNLAT,7); ObjS57.put(Obj.BCNSAW,8); ObjS57.put(Obj.BCNSPP,9); ObjS57.put(Obj.BERTHS,10);
 		ObjS57.put(Obj.BRIDGE,11); ObjS57.put(Obj.BUISGL,12); ObjS57.put(Obj.BUAARE,13); ObjS57.put(Obj.BOYCAR,14); ObjS57.put(Obj.BOYINB,15);
 		ObjS57.put(Obj.BOYISD,16); ObjS57.put(Obj.BOYLAT,17); ObjS57.put(Obj.BOYSAW,18); ObjS57.put(Obj.BOYSPP,19); ObjS57.put(Obj.CBLARE,20);
@@ -87,7 +87,7 @@ public class S57obj {
 	
 	private static final EnumMap<Obj, String> ObjStr = new EnumMap<Obj, String>(Obj.class);
 	static {
-		ObjStr.put(Obj.UNKOBJ, "");	ObjStr.put(Obj.ADMARE, "administrative_area");	ObjStr.put(Obj.AIRARE, "airfield");	ObjStr.put(Obj.ACHBRT, "anchor_berth");
+		ObjStr.put(Obj.UNKOBJ, "");	ObjStr.put(Obj.AIRARE, "airfield");	ObjStr.put(Obj.ACHBRT, "anchor_berth");
 		ObjStr.put(Obj.ACHARE, "anchorage"); ObjStr.put(Obj.BCNCAR, "beacon_cardinal");	ObjStr.put(Obj.BCNISD, "beacon_isolated_danger");
 		ObjStr.put(Obj.BCNLAT, "beacon_lateral");	ObjStr.put(Obj.BCNSAW, "beacon_safe_water"); ObjStr.put(Obj.BCNSPP, "beacon_special_purpose");
 		ObjStr.put(Obj.BERTHS, "berth"); ObjStr.put(Obj.BRIDGE, "bridge"); ObjStr.put(Obj.BUISGL, "building"); ObjStr.put(Obj.BUAARE, "built-up_area");
@@ -123,8 +123,7 @@ public class S57obj {
 		ObjStr.put(Obj.SISTAW, "signal_station_warning");	ObjStr.put(Obj.SILTNK, "tank");	ObjStr.put(Obj.SLOTOP, "slope_topline"); ObjStr.put(Obj.SLOGRD, "sloping_ground");
 		ObjStr.put(Obj.SMCFAC, "small_craft_facility");	ObjStr.put(Obj.SOUNDG, "sounding");	ObjStr.put(Obj.SPRING, "spring");	ObjStr.put(Obj.SQUARE, "square");
 		ObjStr.put(Obj.STSLNE, "territorial_baseline");	ObjStr.put(Obj.SUBTLN, "submarine_transit_lane");	ObjStr.put(Obj.SWPARE, "swept_area");
-		ObjStr.put(Obj.TESARE, "territorial_area");	ObjStr.put(Obj.TS_PRH, "");	ObjStr.put(Obj.TS_PNH, "");	ObjStr.put(Obj.TS_PAD, "");	ObjStr.put(Obj.TS_TIS, "");
-		ObjStr.put(Obj.T_HMON, "");	ObjStr.put(Obj.T_NHMN, "");	ObjStr.put(Obj.T_TIMS, "");	ObjStr.put(Obj.TIDEWY, "tideway"); ObjStr.put(Obj.TOPMAR, "topmark");
+		ObjStr.put(Obj.TESARE, "territorial_area");	ObjStr.put(Obj.TIDEWY, "tideway"); ObjStr.put(Obj.TOPMAR, "topmark");
 		ObjStr.put(Obj.TSELNE, "separation_line"); ObjStr.put(Obj.TSSBND, "separation_boundary");	ObjStr.put(Obj.TSSCRS, "separation_crossing");
 		ObjStr.put(Obj.TSSLPT, "separation_lane"); ObjStr.put(Obj.TSSRON, "separation_roundabout");	ObjStr.put(Obj.TSEZNE, "separation_zone"); ObjStr.put(Obj.TUNNEL, "tunnel");
 		ObjStr.put(Obj.TWRTPT, "two-way_route"); ObjStr.put(Obj.UWTROC, "rock"); ObjStr.put(Obj.UNSARE, "unsurveyed_area");	ObjStr.put(Obj.VEGATN, "vegetation");
@@ -134,7 +133,7 @@ public class S57obj {
 		ObjStr.put(Obj.LOKARE, "lock_area"); ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area");	ObjStr.put(Obj.BCNWTW, "beacon_waterway");
 		ObjStr.put(Obj.BOYWTW, "buoy_waterway"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
 		ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");
-		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.LG_SDM, ""); ObjStr.put(Obj.LG_VSP, "");
+		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure");
 		ObjStr.put(Obj.MPAARE, "protected_area"); ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage");
 	}
 	

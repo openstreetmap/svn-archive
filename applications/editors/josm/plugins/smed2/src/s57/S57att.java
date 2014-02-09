@@ -145,7 +145,7 @@ public class S57att {
 		AttStr.put(Att.ELEVA1, "minimum_elevation"); AttStr.put(Att.ELEVA2, "maximum_elevation"); AttStr.put(Att.FNCTNM, "function"); AttStr.put(Att.WTWDIS, "distance");
 		AttStr.put(Att.BUNVES, "availability");	AttStr.put(Att.CATBRT, "category"); AttStr.put(Att.CATBUN, "category"); AttStr.put(Att.CATCCL, "category");
 		AttStr.put(Att.CATHBR, "category");	AttStr.put(Att.CATRFD, "category"); AttStr.put(Att.CATTML, "category"); AttStr.put(Att.COMCTN, "communication");
-		AttStr.put(Att.HORCLL, "horizontal_clearance_length");	AttStr.put(Att.HORCLW, "horizontal_clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "locode");
+		AttStr.put(Att.HORCLL, "horizontal_clearance_length");	AttStr.put(Att.HORCLW, "horizontal_clearance_width"); AttStr.put(Att.TRSHGD, "goods"); AttStr.put(Att.UNLOCD, "");
 		AttStr.put(Att.CATGAG, "category");	AttStr.put(Att.HIGWAT, "high_value"); AttStr.put(Att.HIGNAM, "high_name"); AttStr.put(Att.LOWWAT, "low_value");
 		AttStr.put(Att.LOWNAM, "low_name");	AttStr.put(Att.MEAWAT, "mean_value"); AttStr.put(Att.MEANAM, "mean_name"); AttStr.put(Att.OTHWAT, "local_value");
 		AttStr.put(Att.OTHNAM, "local_name");	AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name");

@@ -192,7 +192,7 @@ public class Rules {
 				Renderer.labelText(feature, name, new Font("Arial", Font.PLAIN, 100), Color.black);
 			break;
 		case FAIRWY:
-			if (feature.area > 2.0) {
+			if (feature.geom.area > 2.0) {
 				if (Renderer.zoom < 16)
 					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
 				else
@@ -207,7 +207,7 @@ public class Rules {
 				if (Renderer.zoom >= 14) {
 					Renderer.symbol(feature, Areas.MarineFarm);
 				}
-				if ((feature.area > 0.2) || ((feature.area > 0.05) && (Renderer.zoom >= 14)) || ((feature.area > 0.005) && (Renderer.zoom >= 16))) {
+				if ((feature.geom.area > 0.2) || ((feature.geom.area > 0.05) && (Renderer.zoom >= 14)) || ((feature.geom.area > 0.005) && (Renderer.zoom >= 16))) {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 4, new float[] { 10, 10 }));
 				}
 			}
@@ -384,7 +384,7 @@ public class Rules {
 	}
 	
 	private static void cables(Feature feature) {
-		if ((Renderer.zoom >= 16) && (feature.length < 2)) {
+		if ((Renderer.zoom >= 16) && (feature.geom.length < 2)) {
 			if (feature.type == Obj.CBLSUB) {
 				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, null, 0, Mline);
 			} else if (feature.type == Obj.CBLOHD) {
@@ -897,12 +897,12 @@ public class Rules {
 	}
 
 	private static void pipelines(Feature feature) {
-		if ((Renderer.zoom >= 16) && (feature.length < 2)) {
+		if ((Renderer.zoom >= 16) && (feature.geom.length < 2)) {
 			if (feature.type == Obj.PIPSOL) {
 				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, null, 0, Mline);
 			} else if (feature.type == Obj.PIPOHD) {
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8));
-				AttMap atts = feature.objs.get(Obj.PIPOHD).get(0);
+				AttMap atts = feature.atts;
 				double verclr = 0;
 				if (atts != null) {
 					if (atts.containsKey(Att.VERCLR)) {

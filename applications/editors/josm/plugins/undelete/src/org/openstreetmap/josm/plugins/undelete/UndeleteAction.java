@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -204,6 +205,12 @@ public class UndeleteAction extends JosmAction {
                     ((Way) parent).setNodes(nodes);
                     Main.map.repaint();
                 }
+            	GuiHelper.runInEDT(new Runnable() {
+					@Override
+					public void run() {
+						AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives());
+					}
+				});
             }
         };
         Main.worker.submit(r);

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -27,9 +29,11 @@ import org.openstreetmap.josm.data.osm.history.HistoryNode;
 import org.openstreetmap.josm.data.osm.history.HistoryOsmPrimitive;
 import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.history.HistoryLoadTask;
 import org.openstreetmap.josm.gui.io.DownloadPrimitivesTask;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class UndeleteAction extends JosmAction {
@@ -104,7 +108,9 @@ public class UndeleteAction extends JosmAction {
                                     Node node = new Node(id, (int) hPrimitive1.getVersion());
         
                                     HistoryNode hNode = (HistoryNode) hPrimitive2;
-                                    node.setCoor(hNode.getCoords());
+                                    if (hNode != null) {
+                                    	node.setCoor(hNode.getCoords());
+                                    }
         
                                     primitive = node;
                                 } else if (type.equals(OsmPrimitiveType.WAY)) {
@@ -120,8 +126,10 @@ public class UndeleteAction extends JosmAction {
                                     // hPrimitive2.getId(), hPrimitive2.getVersion(),
                                     // hWay.getNumNodes()));
                                     List<PrimitiveId> nodeIds = new ArrayList<PrimitiveId>();
-                                    for (Long i : hWay.getNodes()) {
-                                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
+                                    if (hWay != null) {
+	                                    for (Long i : hWay.getNodes()) {
+	                                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
+	                                    }
                                     }
                                     undelete(false, nodeIds, way);
         
@@ -135,41 +143,54 @@ public class UndeleteAction extends JosmAction {
         
                                     HistoryRelation hRel = (HistoryRelation) hPrimitive2;
         
-                                    List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
-                                    for (RelationMemberData m : hRel.getMembers()) {
-                                        OsmPrimitive p = layer.data.getPrimitiveById(m.getMemberId(), m.getMemberType());
-                                        if (p == null) {
-                                            switch (m.getMemberType()) {
-                                            case NODE:
-                                                p = new Node(m.getMemberId());
-                                                break;
-                                            case CLOSEDWAY:
-                                            case WAY:
-                                                p = new Way(m.getMemberId());
-                                                break;
-                                            case MULTIPOLYGON:
-                                            case RELATION:
-                                                p = new Relation(m.getMemberId());
-                                                break;
-                                            }
-                                            layer.data.addPrimitive(p);
-                                        }
-                                        members.add(new RelationMember(m.getRole(), p));
+                                    if (hRel != null) {
+	                                    List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
+	                                    for (RelationMemberData m : hRel.getMembers()) {
+	                                        OsmPrimitive p = layer.data.getPrimitiveById(m.getMemberId(), m.getMemberType());
+	                                        if (p == null) {
+	                                            switch (m.getMemberType()) {
+	                                            case NODE:
+	                                                p = new Node(m.getMemberId());
+	                                                break;
+	                                            case CLOSEDWAY:
+	                                            case WAY:
+	                                                p = new Way(m.getMemberId());
+	                                                break;
+	                                            case MULTIPOLYGON:
+	                                            case RELATION:
+	                                                p = new Relation(m.getMemberId());
+	                                                break;
+	                                            }
+	                                            layer.data.addPrimitive(p);
+	                                        }
+	                                        members.add(new RelationMember(m.getRole(), p));
+	                                    }
+	        
+	                                    rel.setMembers(members);
                                     }
-        
-                                    rel.setMembers(members);
         
                                     primitive = rel;
                                 }
         
-                                primitive.setChangesetId((int) hPrimitive1.getChangesetId());
-                                primitive.setTimestamp(hPrimitive1.getTimestamp());
-                                primitive.setUser(hPrimitive1.getUser());
-                                primitive.setVisible(hPrimitive1.isVisible());
-                                primitive.setKeys(hPrimitive2.getTags());
-                                primitive.setModified(true);
-        
-                                layer.data.addPrimitive(primitive);
+                                if (hPrimitive2 != null) {
+                                    primitive.setChangesetId((int) hPrimitive1.getChangesetId());
+                                    primitive.setTimestamp(hPrimitive1.getTimestamp());
+                                    primitive.setUser(hPrimitive1.getUser());
+                                    primitive.setVisible(hPrimitive1.isVisible());
+                                    primitive.setKeys(hPrimitive2.getTags());
+                                    primitive.setModified(true);
+            
+                                    layer.data.addPrimitive(primitive);
+                                } else {
+                                	final String msg = tr("Unable to undelete {0} {1}. Object has likely been redacted", type, id);
+                                	GuiHelper.runInEDT(new Runnable() {
+										@Override
+										public void run() {
+		                                	new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show();
+										}
+									});
+                                	Main.warn(msg);
+                                }
                             }
                         } catch (Throwable t) {
                             Main.error(t);

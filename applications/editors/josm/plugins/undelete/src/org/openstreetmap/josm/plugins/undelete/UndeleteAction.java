@@ -183,7 +183,13 @@ public class UndeleteAction extends JosmAction {
             
                                     layer.data.addPrimitive(primitive);
                                 } else {
-                                	final String msg = tr("Unable to undelete {0} {1}. Object has likely been redacted", type, id);
+                                  final String msg = OsmPrimitiveType.NODE.equals(type)
+                                      ? tr("Unable to undelete node {0}. Object has likely been redacted", id)
+                                      : OsmPrimitiveType.WAY.equals(type)
+                                      ? tr("Unable to undelete way {0}. Object has likely been redacted", id)
+                                      : OsmPrimitiveType.RELATION.equals(type)
+                                      ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
+                                      : null;
                                 	GuiHelper.runInEDT(new Runnable() {
 										@Override
 										public void run() {

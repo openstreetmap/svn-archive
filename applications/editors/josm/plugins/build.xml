@@ -34,6 +34,7 @@
         <ant antfile="build.xml" target="dist" dir="ext_tools"/>
         <ant antfile="build.xml" target="dist" dir="FastDraw"/>
         <ant antfile="build.xml" target="dist" dir="FixAddresses"/>
+        <ant antfile="build.xml" target="dist" dir="geochat"/>
         <ant antfile="build.xml" target="dist" dir="globalsat"/>
         <ant antfile="build.xml" target="dist" dir="gpsblam"/>
         <ant antfile="build.xml" target="dist" dir="gpxfilter"/>
@@ -69,6 +70,7 @@
         <ant antfile="build.xml" target="dist" dir="OsmInspectorPlugin"/>
         <ant antfile="build.xml" target="dist" dir="pbf"/>
         <ant antfile="build.xml" target="dist" dir="pdfimport"/>
+        <ant antfile="build.xml" target="dist" dir="photoadjust"/>
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
@@ -93,6 +95,7 @@
         <ant antfile="build.xml" target="dist" dir="terracer"/>
         <ant antfile="build.xml" target="dist" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="dist" dir="tracer"/>
+        <ant antfile="build.xml" target="dist" dir="tracer2"/>
         <ant antfile="build.xml" target="dist" dir="turnlanes"/>
         <ant antfile="build.xml" target="dist" dir="turnrestrictions"/>
         <ant antfile="build.xml" target="dist" dir="undelete"/>
@@ -129,6 +132,7 @@
         <ant antfile="build.xml" target="clean" dir="ext_tools"/>
         <ant antfile="build.xml" target="clean" dir="FastDraw"/>
         <ant antfile="build.xml" target="clean" dir="FixAddresses"/>
+        <ant antfile="build.xml" target="clean" dir="geochat"/>
         <ant antfile="build.xml" target="clean" dir="geotools"/>
         <ant antfile="build.xml" target="clean" dir="globalsat"/>
         <ant antfile="build.xml" target="clean" dir="gpsblam"/>
@@ -167,6 +171,7 @@
         <ant antfile="build.xml" target="clean" dir="OsmInspectorPlugin"/>
         <ant antfile="build.xml" target="clean" dir="pbf"/>
         <ant antfile="build.xml" target="clean" dir="pdfimport"/>
+        <ant antfile="build.xml" target="clean" dir="photoadjust"/>
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
@@ -191,6 +196,7 @@
         <ant antfile="build.xml" target="clean" dir="terracer"/>
         <ant antfile="build.xml" target="clean" dir="touchscreenhelper"/>
         <ant antfile="build.xml" target="clean" dir="tracer"/>
+        <ant antfile="build.xml" target="clean" dir="tracer2"/>
         <ant antfile="build.xml" target="clean" dir="turnlanes"/>
         <ant antfile="build.xml" target="clean" dir="trustosm"/>
         <ant antfile="build.xml" target="clean" dir="turnrestrictions"/>

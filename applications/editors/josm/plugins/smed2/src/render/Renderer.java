@@ -216,10 +216,10 @@ public class Renderer {
 			boolean stflag = false;
 			Symbol symbol = prisymb;
 			GeomIterator git = map.new GeomIterator(feature.geom);
-			while (git.hasMore()) {
-				git.getMore();
+			while (git.hasComp()) {
+				git.nextComp();
 				boolean first = true;
-				while (git.hasNext()) {
+				while (git.hasNode()) {
 					prev = next;
 					next = context.getPoint(git.next());
 					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
@@ -275,11 +275,11 @@ public class Renderer {
 		p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
 		Point2D point;
 		GeomIterator git = map.new GeomIterator(feature.geom);
-		while (git.hasMore()) {
-			git.getMore();
+		while (git.hasComp()) {
+			git.nextComp();
 			point = context.getPoint(git.next());
 			p.moveTo(point.getX(), point.getY());
-			while (git.hasNext()) {
+			while (git.hasNode()) {
 				point = context.getPoint(git.next());
 				p.lineTo(point.getX(), point.getY());
 			}
@@ -350,11 +350,11 @@ public class Renderer {
 			break;
 		case AREA:
 			GeomIterator git = map.new GeomIterator(feature.geom);
-			while (git.hasMore()) {
-				git.getMore();
+			while (git.hasComp()) {
+				git.nextComp();
 				point = context.getPoint(git.next());
 				p.moveTo(point.getX(), point.getY());
-				while (git.hasNext()) {
+				while (git.hasNode()) {
 					point = context.getPoint(git.next());
 					p.lineTo(point.getX(), point.getY());
 				}
@@ -496,10 +496,10 @@ public class Renderer {
 			double len = 0;
 			double angle = 0;
 			GeomIterator git = map.new GeomIterator(feature.geom);
-			while (git.hasMore()) {
-				git.getMore();
+			while (git.hasComp()) {
+				git.nextComp();
 				boolean first = true;
-				while (git.hasNext()) {
+				while (git.hasNode()) {
 					prev = next;
 					next = context.getPoint(git.next());
 					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());

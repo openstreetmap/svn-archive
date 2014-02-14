@@ -172,7 +172,7 @@ public class S57dat {
 	}
 	
 	public static boolean more() {
-		return ((offset < maxoff) && (buffer[offset] != 0x1e));
+		return (offset < maxoff);
 	}
 	
 	public static Object getSubf(byte[] buf, int off, S57field fld, S57subf subf) {

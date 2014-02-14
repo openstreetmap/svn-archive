@@ -10,8 +10,10 @@
 package js57toosm;
 
 import java.io.*;
+import java.util.Iterator;
 import java.util.Map;
 
+import s57.S57map.Prim;
 import s57.S57obj;
 import s57.S57att;
 import s57.S57obj.Obj;
@@ -46,7 +48,7 @@ public class Js57toosm {
 		int len;
 		int pos;
 		boolean inFeature = false;
-		
+
 		double comf = 1;
 		double somf = 1;
 		long name = 0;
@@ -154,9 +156,9 @@ public class Js57toosm {
 					case "VRPT":
 						S57dat.setField(record, fields + pos, S57field.VRPT, len);
 						do {
-							name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
+							long conn = (Long) S57dat.getSubf(S57subf.NAME) << 16;
 							int topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
-							map.addConn(name, topi);
+							map.addConn(conn, topi);
 							S57dat.getSubf(S57subf.MASK);
 						} while (S57dat.more());
 						break;
@@ -207,11 +209,11 @@ public class Js57toosm {
 		}
 		map.endFile();
 		in.close();
-		
+
 		out.println("<?xml version='1.0' encoding='UTF-8'?>");
 		out.println("<osm version='0.6' generator='js57toosm'>");
-		out.println("<bounds minlat='" + minlat +"' minlon='" + minlon + "' maxlat='" + maxlat + "' maxlon='" + maxlon + "'/>");
-		
+		out.println("<bounds minlat='" + minlat + "' minlon='" + minlon + "' maxlat='" + maxlat + "' maxlon='" + maxlon + "'/>");
+
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);
 			String type = S57obj.stringType(feature.type);
@@ -235,41 +237,84 @@ public class Js57toosm {
 				}
 			}
 		}
-		
-//int i = 256;
 		for (long id : map.index.keySet()) {
-//if (i-- == 0) break;
 			Feature feature = map.index.get(id);
 			String type = S57obj.stringType(feature.type);
 			if (!type.isEmpty()) {
 				if (feature.reln == Rflag.MASTER) {
-					if ((feature.geom.prim == Pflag.LINE) || ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
+					if (feature.geom.prim == Pflag.LINE) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
-						while (git.hasMore()) {
-							git.getMore();
-							while (git.hasNext()) {
-								long ref = git.nextRef();
-								Snode node = map.nodes.get(ref);
-								if (node != null) {
-									out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-									map.nodes.remove(ref);
+						while (git.hasComp()) {
+							git.nextComp();
+							while (git.hasEdge()) {
+								git.nextEdge();
+								while (git.hasNode()) {
+									long ref = git.nextRef();
+									Snode node = map.nodes.get(ref);
+									if (node != null) {
+										out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+										map.nodes.remove(ref);
+									}
 								}
 							}
 						}
 						git = map.new GeomIterator(feature.geom);
-						while (git.hasMore()) {
-							long way = git.getMore();
+						while (git.hasComp()) {
+							long way = git.nextComp();
 							out.format("  <way id='%d' version='1'>%n", -way);
-							while (git.hasNext()) {
-								long ref = git.nextRef();
-								out.format("    <nd ref='%d'/>%n", -ref);
+							while (git.hasEdge()) {
+								git.nextEdge();
+								while (git.hasNode()) {
+									long ref = git.nextRef();
+									out.format("    <nd ref='%d'/>%n", -ref);
+								}
+								out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+								writeAtts(feature, type);
 							}
-							out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-							writeAtts(feature, type);
 							out.format("  </way>%n");
 						}
 					} else if (feature.geom.prim == Pflag.AREA) {
-
+						GeomIterator git = map.new GeomIterator(feature.geom);
+						while (git.hasComp()) {
+							git.nextComp();
+							while (git.hasEdge()) {
+								git.nextEdge();
+								while (git.hasNode()) {
+									long ref = git.nextRef();
+									Snode node = map.nodes.get(ref);
+									if (node != null) {
+										out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+										map.nodes.remove(ref);
+									}
+								}
+							}
+						}
+						git = map.new GeomIterator(feature.geom);
+						while (git.hasComp()) {
+							long way = git.nextComp();
+							out.format("  <way id='%d' version='1'>%n", -way);
+							while (git.hasEdge()) {
+								git.nextEdge();
+								while (git.hasNode()) {
+									long ref = git.nextRef();
+									out.format("    <nd ref='%d'/>%n", -ref);
+								}
+							}
+							out.format("  </way>%n");
+						}
+						out.format("  <relation id='%d' version='1'>%n", -map.ref++);
+						out.format("    <tag k='type' v='multipolygon'/>%n");
+						int i = 0;
+						for (Comp comp : feature.geom.refs) {
+							if (i++ < feature.geom.outers) {
+								out.format("    <member type='way' ref='%d' role='outer'/>%n", -comp.ref);
+							} else {
+								out.format("    <member type='way' ref='%d' role='inner'/>%n", -comp.ref);
+							}
+						}
+						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+						writeAtts(feature, type);
+						out.format("  </relation>%n");
 					}
 				}
 			}

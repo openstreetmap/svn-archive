@@ -252,9 +252,12 @@ public class S57map {
 	public void newFeature(long id, Pflag p, long objl) {
 		feature = new Feature();
 		Obj obj = S57obj.decodeType(objl);
-		if (obj == Obj.C_AGGR) {
+		if (obj == Obj.BCNWTW)
+			obj = Obj.BCNLAT;
+		if (obj == Obj.BOYWTW)
+			obj = Obj.BOYLAT;
+		if (obj == Obj.C_AGGR)
 			feature.reln = Rflag.AGGR;
-		}
 		feature.geom = new Geom(p);
 		feature.type = obj;
 		if (obj != Obj.UNKOBJ) {

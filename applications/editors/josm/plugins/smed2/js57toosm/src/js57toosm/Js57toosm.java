@@ -32,10 +32,22 @@ public class Js57toosm {
 	
 	public static void main(String[] args) throws IOException {
 
-		in = new FileInputStream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/js57toosm/tst.000");
+		if (args.length < 1) {
+			System.err.println("Usage: java -jar js57toosm.jar S57_filename [types_filename]");
+			System.exit(-1);
+		}
+		in = new FileInputStream(args[0]);
 		out = System.out;
+		ArrayList<Obj> types = new ArrayList<Obj>();
+		if (args.length == 2) {
+			Scanner tin = new Scanner(new FileInputStream(args[1]));
+			while (tin.hasNext()) {
+				types.add(S57obj.enumType(tin.next()));
+			}
+			tin.close();
+		}
+		
 		map = new S57map();
-
 		S57dat.rnum = 0;
 
 		byte[] leader = new byte[24];
@@ -56,7 +68,7 @@ public class Js57toosm {
 		long objl = 0;
 		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
 		
-		HashMap<Long, Boolean> done = new HashMap<Long, Boolean>();
+		ArrayList<Long> done = new ArrayList<Long>();
 
 		while (in.read(leader) == 24) {
 			length = Integer.parseInt(new String(leader, 0, 5)) - 24;
@@ -220,21 +232,21 @@ public class Js57toosm {
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);
 			String type = S57obj.stringType(feature.type);
-			if (!type.isEmpty()) {
+			if (!type.isEmpty() && (types.isEmpty() || types.contains(feature.type))) {
 				if (feature.reln == Rflag.MASTER) {
 					if (feature.geom.prim == Pflag.POINT) {
 						for (Prim prim : feature.geom.elems) {
 							long ref = prim.id;
 							Snode node;
 							while ((node = map.nodes.get(ref)) != null) {
-								if (!done.containsKey(ref)) {
+								if (!done.contains(ref)) {
 									out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
 									out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
 									if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
 										out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
 									writeAtts(feature, type);
 									out.format("  </node>%n");
-									done.put(ref, true);
+									done.add(ref);
 								}
 								ref++;
 							}
@@ -246,7 +258,7 @@ public class Js57toosm {
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);
 			String type = S57obj.stringType(feature.type);
-			if (!type.isEmpty()) {
+			if (!type.isEmpty() && (types.isEmpty() || types.contains(feature.type))) {
 				if (feature.reln == Rflag.MASTER) {
 					if (feature.geom.prim == Pflag.LINE) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
@@ -257,9 +269,9 @@ public class Js57toosm {
 								while (git.hasNode()) {
 									long ref = git.nextRef();
 									Snode node = map.nodes.get(ref);
-									if (!done.containsKey(ref)) {
+									if (!done.contains(ref)) {
 										out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-										done.put(ref, true);
+										done.add(ref);
 									}
 								}
 							}
@@ -278,7 +290,7 @@ public class Js57toosm {
 								writeAtts(feature, type);
 							}
 							out.format("  </way>%n");
-							done.put(way, true);
+							done.add(way);
 						}
 					} else if (feature.geom.prim == Pflag.AREA) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
@@ -289,9 +301,9 @@ public class Js57toosm {
 								while (git.hasNode()) {
 									long ref = git.nextRef();
 									Snode node = map.nodes.get(ref);
-									if (!done.containsKey(ref)) {
+									if (!done.contains(ref)) {
 										out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-										done.put(ref, true);
+										done.add(ref);
 									}
 								}
 							}
@@ -301,14 +313,14 @@ public class Js57toosm {
 							git.nextComp();
 							while (git.hasEdge()) {
 								long way = git.nextEdge();
-								if (!done.containsKey(way)) {
+								if (!done.contains(way)) {
 									out.format("  <way id='%d' version='1'>%n", -way);
 									while (git.hasNode()) {
 										long ref = git.nextRef(true);
 										out.format("    <nd ref='%d'/>%n", -ref);
 									}
 									out.format("  </way>%n");
-									done.put(way, true);
+									done.add(way);
 								}
 							}
 						}
@@ -316,9 +328,6 @@ public class Js57toosm {
 						out.format("    <tag k='type' v='multipolygon'/>%n");
 						git = map.new GeomIterator(feature.geom);
 						int outers = feature.geom.refs.get(0).size;
-if (feature.geom.inners != 0){
-	int x=0;
-}
 						while (git.hasComp()) {
 							git.nextComp();
 							while (git.hasEdge()) {

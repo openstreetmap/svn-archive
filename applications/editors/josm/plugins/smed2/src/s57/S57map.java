@@ -315,12 +315,23 @@ public class S57map {
 				Comp comp = new Comp(ref++, 0);
 				feature.geom.refs.add(comp);
 				ListIterator<S57map.Prim> ite = feature.geom.elems.listIterator();
+				long first = 0;
 				while (ite.hasNext()) {
 					Prim prim = ite.next();
-					if (prim.outer) {
-						comp.size++;
-						
+					Edge edge = edges.get(prim.id);
+					if (!prim.outer) {
+						if (first == 0) {
+							feature.geom.inners++;
+							comp = new Comp(ref++, 0);
+							feature.geom.refs.add(comp);
+							first = edge.first;
+						} else {
+							if (edge.last == first) {
+								first = 0;
+							}
+						}
 					}
+					comp.size++;
 				}
 			}
 		}
@@ -608,13 +619,17 @@ public class S57map {
 			return (eit.hasNext());
 		}
 		
-		public long nextRef() {
+		public long nextRef(boolean all) {
 			long ref = eit.nextRef();
-			if (ref == lastref) {
+			if (!all && (ref == lastref)) {
 				ref = eit.nextRef();
 			}
 			lastref = ref;
 			return ref;
+		}
+		
+		public long nextRef() {
+			return nextRef(false);
 		}
 		
 		public Snode next() {

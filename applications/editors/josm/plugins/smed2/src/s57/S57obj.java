@@ -130,8 +130,8 @@ public class S57obj {
 		ObjStr.put(Obj.WATTUR, "water_turbulence");	ObjStr.put(Obj.WATFAL, "waterfall"); ObjStr.put(Obj.WEDKLP, "weed"); ObjStr.put(Obj.WRECKS, "wreck");
 		ObjStr.put(Obj.TS_FEB, "tidal_stream");	ObjStr.put(Obj.NOTMRK, "notice");	ObjStr.put(Obj.WTWAXS, "waterway_axis"); ObjStr.put(Obj.WTWPRF, "waterway_profile");
 		ObjStr.put(Obj.BRGARE, "bridge_area"); ObjStr.put(Obj.BUNSTA, "bunker_station");	ObjStr.put(Obj.COMARE, "communication_area");	ObjStr.put(Obj.HRBBSN, "harbour_basin");
-		ObjStr.put(Obj.LOKARE, "lock_area"); ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area");	ObjStr.put(Obj.BCNWTW, "beacon_waterway");
-		ObjStr.put(Obj.BOYWTW, "buoy_waterway"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
+		ObjStr.put(Obj.LOKARE, "lock_area"); ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area");	ObjStr.put(Obj.BCNWTW, "beacon_lateral");
+		ObjStr.put(Obj.BOYWTW, "buoy_lateral"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
 		ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");
 		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure");
 		ObjStr.put(Obj.MPAARE, "protected_area"); ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage");

@@ -10,13 +10,12 @@
 package js57toosm;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import s57.S57map.Prim;
 import s57.S57obj;
+import s57.S57obj.*;
 import s57.S57att;
-import s57.S57obj.Obj;
 import s57.S57att.*;
 import s57.S57val;
 import s57.S57val.*;
@@ -56,6 +55,8 @@ public class Js57toosm {
 		S57map.Pflag pflag = S57map.Pflag.NOSP;
 		long objl = 0;
 		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
+		
+		HashMap<Long, Boolean> done = new HashMap<Long, Boolean>();
 
 		while (in.read(leader) == 24) {
 			length = Integer.parseInt(new String(leader, 0, 5)) - 24;
@@ -112,7 +113,9 @@ public class Js57toosm {
 						do {
 							long attl = (long) S57dat.getSubf(S57subf.ATTL);
 							String atvl = (String) S57dat.getSubf(S57subf.ATVL);
-							map.newAtt(attl, atvl);
+							if (!atvl.isEmpty()) {
+								map.newAtt(attl, atvl);
+							}
 						} while (S57dat.more());
 						break;
 					case "FFPT":
@@ -224,13 +227,16 @@ public class Js57toosm {
 							long ref = prim.id;
 							Snode node;
 							while ((node = map.nodes.get(ref)) != null) {
-								out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-								out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-								if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
-									out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
-								writeAtts(feature, type);
-								out.format("  </node>%n");
-								map.nodes.remove(ref++);
+								if (!done.containsKey(ref)) {
+									out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
+									out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+									if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
+										out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
+									writeAtts(feature, type);
+									out.format("  </node>%n");
+									done.put(ref, true);
+								}
+								ref++;
 							}
 						}
 					}
@@ -251,9 +257,9 @@ public class Js57toosm {
 								while (git.hasNode()) {
 									long ref = git.nextRef();
 									Snode node = map.nodes.get(ref);
-									if (node != null) {
+									if (!done.containsKey(ref)) {
 										out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-										map.nodes.remove(ref);
+										done.put(ref, true);
 									}
 								}
 							}
@@ -272,6 +278,7 @@ public class Js57toosm {
 								writeAtts(feature, type);
 							}
 							out.format("  </way>%n");
+							done.put(way, true);
 						}
 					} else if (feature.geom.prim == Pflag.AREA) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
@@ -282,34 +289,45 @@ public class Js57toosm {
 								while (git.hasNode()) {
 									long ref = git.nextRef();
 									Snode node = map.nodes.get(ref);
-									if (node != null) {
+									if (!done.containsKey(ref)) {
 										out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'/>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-										map.nodes.remove(ref);
+										done.put(ref, true);
 									}
 								}
 							}
 						}
 						git = map.new GeomIterator(feature.geom);
 						while (git.hasComp()) {
-							long way = git.nextComp();
-							out.format("  <way id='%d' version='1'>%n", -way);
+							git.nextComp();
 							while (git.hasEdge()) {
-								git.nextEdge();
-								while (git.hasNode()) {
-									long ref = git.nextRef();
-									out.format("    <nd ref='%d'/>%n", -ref);
+								long way = git.nextEdge();
+								if (!done.containsKey(way)) {
+									out.format("  <way id='%d' version='1'>%n", -way);
+									while (git.hasNode()) {
+										long ref = git.nextRef(true);
+										out.format("    <nd ref='%d'/>%n", -ref);
+									}
+									out.format("  </way>%n");
+									done.put(way, true);
 								}
 							}
-							out.format("  </way>%n");
 						}
 						out.format("  <relation id='%d' version='1'>%n", -map.ref++);
 						out.format("    <tag k='type' v='multipolygon'/>%n");
-						int i = 0;
-						for (Comp comp : feature.geom.refs) {
-							if (i++ < feature.geom.outers) {
-								out.format("    <member type='way' ref='%d' role='outer'/>%n", -comp.ref);
-							} else {
-								out.format("    <member type='way' ref='%d' role='inner'/>%n", -comp.ref);
+						git = map.new GeomIterator(feature.geom);
+						int outers = feature.geom.refs.get(0).size;
+if (feature.geom.inners != 0){
+	int x=0;
+}
+						while (git.hasComp()) {
+							git.nextComp();
+							while (git.hasEdge()) {
+								long way = git.nextEdge();
+								if (outers-- > 0) {
+									out.format("    <member type='way' ref='%d' role='outer'/>%n", -way);
+								} else {
+									out.format("    <member type='way' ref='%d' role='inner'/>%n", -way);
+								}
 							}
 						}
 						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);

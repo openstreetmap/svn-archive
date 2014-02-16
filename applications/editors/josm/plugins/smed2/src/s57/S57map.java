@@ -19,6 +19,19 @@ import s57.S57val;
 import s57.S57val.*;
 
 public class S57map {
+	
+	public class MapBounds {
+		public double minlat;
+		public double minlon;
+		public double maxlat;
+		public double maxlon;
+		public MapBounds() {
+			minlat = 90;
+			minlon = 180;
+			maxlat = -90;
+			maxlon = -180;
+		}
+	}
 
 	public enum Nflag {
 		ANON,	// Edge inner nodes
@@ -524,6 +537,137 @@ public class S57map {
 	}
 
 	// Utility methods
+	
+	public void sortGeom() {
+		for (long id : index.keySet()) {
+			feature = index.get(id);
+			Geom sort = new Geom(feature.geom.prim);
+			long first = 0;
+			long last = 0;
+			Comp comp = null;
+			boolean next = true;
+			if ((feature.geom.prim == Pflag.LINE) || (feature.geom.prim == Pflag.AREA)) {
+				int sweep = feature.geom.elems.size();
+				while (!feature.geom.elems.isEmpty()) {
+					Prim prim = feature.geom.elems.remove(0);
+					Edge edge = edges.get(prim.id);
+					if (next == true) {
+						next = false;
+						if (prim.forward) {
+							first = edge.first;
+							last = edge.last;
+						} else {
+							first = edge.last;
+							last = edge.first;
+						}
+						sort.elems.add(prim);
+						if (prim.outer) {
+							sort.outers++;
+						} else {
+							sort.inners++;
+						}
+						comp = new Comp(ref++, 1);
+						sort.refs.add(comp);
+					} else {
+						if (prim.forward) {
+							if (edge.first == last) {
+								sort.elems.add(prim);
+								last = edge.last;
+								comp.size++;
+							} else if (edge.last == first) {
+								sort.elems.add(0, prim);
+								first = edge.first;
+								comp.size++;
+							} else {
+								feature.geom.elems.add(prim);
+							}
+						} else {
+							if (edge.last == last) {
+								sort.elems.add(prim);
+								last = edge.first;
+								comp.size++;
+							} else if (edge.first == first) {
+								sort.elems.add(0, prim);
+								first = edge.last;
+								comp.size++;
+							} else {
+								feature.geom.elems.add(prim);
+							}
+						}
+					}
+					if (--sweep == 0) {
+						next = true;
+						sweep = feature.geom.elems.size();
+					}
+				}
+				if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
+					sort.prim = Pflag.AREA;
+				}
+				feature.geom = sort;
+			} 
+			if (feature.geom.prim == Pflag.AREA) {
+				ArrayList<Prim> outers = new ArrayList<Prim>();
+				ArrayList<Prim> inners = new ArrayList<Prim>();
+				for (Prim prim : feature.geom.elems) {
+					if (prim.outer) {
+						outers.add(prim);
+					} else {
+						inners.add(prim);
+					}
+				}
+				ArrayList<Prim> sorting = outers;
+				ArrayList<Prim> closed = null;
+				sort = new Geom(feature.geom.prim);
+				sort.outers = feature.geom.outers;
+				sort.inners = feature.geom.inners;
+				sort.refs = feature.geom.refs;
+				next = true;
+				while (!sorting.isEmpty()) {
+					Prim prim = sorting.remove(0);
+					Edge edge = edges.get(prim.id);
+					if (next == true) {
+						next = false;
+						closed = new ArrayList<Prim>();
+						closed.add(prim);
+						if (prim.forward) {
+							first = edge.first;
+							last = edge.last;
+						} else {
+							first = edge.last;
+							last = edge.first;
+						}
+					} else {
+						if (prim.forward) {
+							if (edge.first == last) {
+								last = edge.last;
+								closed.add(prim);
+							} else {
+								sorting.add(0, prim);
+								next = true;
+							}
+						} else {
+							if (edge.last == last) {
+								last = edge.first;
+								closed.add(prim);
+							} else {
+								sorting.add(0, prim);
+								next = true;
+							}
+						}
+					}
+					if (first == last) {
+						sort.elems.addAll(closed);
+						next = true;
+					}
+					if (sorting.isEmpty() && sorting == outers) {
+						sorting = inners;
+						next = true;
+					}
+				}
+				feature.geom = sort;
+			}
+		}
+	}
 	
 	public boolean cmpGeoms (Geom g1, Geom g2) {
 		return ((g1.prim == g2.prim) && (g1.outers == g2.outers) && (g1.inners == g2.inners) && (g1.elems.size() == g2.elems.size()));

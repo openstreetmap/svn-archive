@@ -12,17 +12,15 @@ package js57toosm;
 import java.io.*;
 import java.util.*;
 
-import s57.S57map.Prim;
 import s57.S57obj;
 import s57.S57obj.*;
 import s57.S57att;
 import s57.S57att.*;
 import s57.S57val;
 import s57.S57val.*;
-import s57.S57dat;
-import s57.S57dat.*;
 import s57.S57map;
 import s57.S57map.*;
+import s57.S57dec;
 
 public class Js57toosm {
 	
@@ -31,6 +29,8 @@ public class Js57toosm {
 	static S57map map;
 	
 	public static void main(String[] args) throws IOException {
+
+		ArrayList<Long> done = new ArrayList<Long>();
 
 		if (args.length < 1) {
 			System.err.println("Usage: java -jar js57toosm.jar S57_filename [types_filename]");
@@ -48,186 +48,11 @@ public class Js57toosm {
 		}
 		
 		map = new S57map();
-		S57dat.rnum = 0;
+		MapBounds bounds = S57dec.decodeFile(in, types, map);
 
-		byte[] leader = new byte[24];
-		boolean ddr = false;
-		int length;
-		int fields;
-		int mapfl, mapfp, mapts, entry;
-		String tag;
-		int len;
-		int pos;
-		boolean inFeature = false;
-
-		double comf = 1;
-		double somf = 1;
-		long name = 0;
-		S57map.Nflag nflag = Nflag.ANON;
-		S57map.Pflag pflag = S57map.Pflag.NOSP;
-		long objl = 0;
-		double minlat = 90, minlon = 180, maxlat = -90, maxlon = -180;
-		
-		ArrayList<Long> done = new ArrayList<Long>();
-
-		while (in.read(leader) == 24) {
-			length = Integer.parseInt(new String(leader, 0, 5)) - 24;
-			ddr = (leader[6] == 'L');
-			fields = Integer.parseInt(new String(leader, 12, 5)) - 24;
-			mapfl = leader[20] - '0';
-			mapfp = leader[21] - '0';
-			mapts = leader[23] - '0';
-			entry = mapfl + mapfp + mapts;
-			byte[] record = new byte[length];
-			if (in.read(record) != length)
-				break;
-			for (int idx = 0; idx < fields-1; idx += entry) {
-				tag = new String(record, idx, mapts);
-				len = Integer.parseInt(new String(record, idx+mapts, mapfl));
-				pos = Integer.parseInt(new String(record, idx+mapts+mapfl, mapfp));
-				if (!ddr) {
-					switch (tag) {
-					case "0001":
-						int i8rn = ((Long) S57dat.getSubf(record, fields + pos, S57field.I8RI, S57subf.I8RN)).intValue();
-						if (i8rn != ++S57dat.rnum) {
-							out.println("Out of order record ID");
-							in.close();
-							System.exit(-1);
-						}
-						break;
-					case "DSPM":
-						comf = (double) (Long) S57dat.getSubf(record, fields + pos, S57field.DSPM, S57subf.COMF);
-						somf = (double) (Long) S57dat.getSubf(S57subf.SOMF);
-						break;
-					case "FRID":
-						inFeature = true;
-						switch ((int)((long)S57dat.getSubf(record, fields + pos, S57field.FRID, S57subf.PRIM))) {
-						case 1:
-							pflag = S57map.Pflag.POINT;
-							break;
-						case 2:
-							pflag = S57map.Pflag.LINE;
-							break;
-						case 3:
-							pflag = S57map.Pflag.AREA;
-							break;
-						default:
-							pflag = S57map.Pflag.NOSP;
-						}
-						objl = (long)S57dat.getSubf(S57subf.OBJL);
-						break;
-					case "FOID":
-						name = (long) S57dat.getSubf(record, fields + pos, S57field.FOID, S57subf.LNAM);
-						map.newFeature(name, pflag, objl);
-						break;
-					case "ATTF":
-						S57dat.setField(record, fields + pos, S57field.ATTF, len);
-						do {
-							long attl = (long) S57dat.getSubf(S57subf.ATTL);
-							String atvl = (String) S57dat.getSubf(S57subf.ATVL);
-							if (!atvl.isEmpty()) {
-								map.newAtt(attl, atvl);
-							}
-						} while (S57dat.more());
-						break;
-					case "FFPT":
-						S57dat.setField(record, fields + pos, S57field.FFPT, len);
-						do {
-							name = (long) S57dat.getSubf(S57subf.LNAM);
-							int rind = ((Long) S57dat.getSubf(S57subf.RIND)).intValue();
-							S57dat.getSubf(S57subf.COMT);
-							map.newObj(name, rind);
-						} while (S57dat.more());
-						break;
-					case "FSPT":
-						S57dat.setField(record, fields + pos, S57field.FSPT, len);
-						do {
-							name = (Long) S57dat.getSubf(S57subf.NAME) << 16;
-							map.newPrim(name, (long) S57dat.getSubf(S57subf.ORNT), (long) S57dat.getSubf(S57subf.USAG));
-							S57dat.getSubf(S57subf.MASK);
-						} while (S57dat.more());
-						break;
-					case "VRID":
-						inFeature = false;
-						name = (long) S57dat.getSubf(record, fields + pos, S57field.VRID, S57subf.RCNM);
-						switch ((int) name) {
-						case 110:
-							nflag = Nflag.ISOL;
-							break;
-						case 120:
-							nflag = Nflag.CONN;
-							break;
-						default:
-							nflag = Nflag.ANON;
-							break;
-						}
-						name <<= 32;
-						name += (Long) S57dat.getSubf(S57subf.RCID);
-						name <<= 16;
-						if (nflag == Nflag.ANON) {
-							map.newEdge(name);
-						}
-						break;
-					case "VRPT":
-						S57dat.setField(record, fields + pos, S57field.VRPT, len);
-						do {
-							long conn = (Long) S57dat.getSubf(S57subf.NAME) << 16;
-							int topi = ((Long) S57dat.getSubf(S57subf.TOPI)).intValue();
-							map.addConn(conn, topi);
-							S57dat.getSubf(S57subf.MASK);
-						} while (S57dat.more());
-						break;
-					case "SG2D":
-						S57dat.setField(record, fields + pos, S57field.SG2D, len);
-						do {
-							double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
-							double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
-							if (nflag == Nflag.ANON) {
-								map.newNode(++name, lat, lon, nflag);
-							} else {
-								map.newNode(name, lat, lon, nflag);
-							}
-							if (lat < minlat)
-								minlat = lat;
-							if (lat > maxlat)
-								maxlat = lat;
-							if (lon < minlon)
-								minlon = lon;
-							if (lon > maxlon)
-								maxlon = lon;
-						} while (S57dat.more());
-						break;
-					case "SG3D":
-						S57dat.setField(record, fields + pos, S57field.SG3D, len);
-						do {
-							double lat = (double) ((Long) S57dat.getSubf(S57subf.YCOO)) / comf;
-							double lon = (double) ((Long) S57dat.getSubf(S57subf.XCOO)) / comf;
-							double depth = (double) ((Long) S57dat.getSubf(S57subf.VE3D)) / somf;
-							map.newNode(name++, lat, lon, depth);
-							if (lat < minlat)
-								minlat = lat;
-							if (lat > maxlat)
-								maxlat = lat;
-							if (lon < minlon)
-								minlon = lon;
-							if (lon > maxlon)
-								maxlon = lon;
-						} while (S57dat.more());
-						break;
-					}
-				}
-				if (inFeature) {
-					map.endFeature();
-					inFeature = false;
-				}
-			}
-		}
-		map.endFile();
-		in.close();
-
-		out.println("<?xml version='1.0' encoding='UTF-8'?>");
-		out.println("<osm version='0.6' generator='js57toosm'>");
-		out.println("<bounds minlat='" + minlat + "' minlon='" + minlon + "' maxlat='" + maxlat + "' maxlon='" + maxlon + "'/>");
+		out.format("<?xml version='1.0' encoding='UTF-8'?>");
+		out.format("<osm version='0.6' generator='js57toosm'>");
+		out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>", bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon);
 
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);
@@ -260,7 +85,7 @@ public class Js57toosm {
 			String type = S57obj.stringType(feature.type);
 			if (!type.isEmpty() && (types.isEmpty() || types.contains(feature.type))) {
 				if (feature.reln == Rflag.MASTER) {
-					if (feature.geom.prim == Pflag.LINE) {
+					if ((feature.geom.prim == Pflag.LINE) || ((feature.geom.prim == Pflag.AREA) && (feature.geom.outers == 1) && (feature.geom.inners == 0))) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
 						while (git.hasComp()) {
 							git.nextComp();

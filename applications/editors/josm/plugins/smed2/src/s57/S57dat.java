@@ -133,6 +133,32 @@ public class S57dat {
 		fields.put(S57field.AR2D, S57ar2d); fields.put(S57field.EL2D, S57el2d); fields.put(S57field.CT2D, S57ct2d); 
 	}
 
+	private static final EnumMap<S57field, String> FldStr = new EnumMap<S57field, String>(S57field.class);
+	static {
+		FldStr.put(S57field.I8RI, "0001");
+		FldStr.put(S57field.DSID, "DSID"); FldStr.put(S57field.DSSI, "DSSI"); FldStr.put(S57field.DSPM, "DSPM"); FldStr.put(S57field.DSPR, "DSPR");
+		FldStr.put(S57field.DSRC, "DSRC"); FldStr.put(S57field.DSHT, "DSHT"); FldStr.put(S57field.DSAC, "DSAC"); FldStr.put(S57field.CATD, "CATD");
+		FldStr.put(S57field.CATX, "CATX"); FldStr.put(S57field.DDDF, "DDDF"); FldStr.put(S57field.DDDR, "DDDR"); FldStr.put(S57field.DDDI, "DDDI");
+		FldStr.put(S57field.DDOM, "DDOM"); FldStr.put(S57field.DDRF, "DDRF"); FldStr.put(S57field.DDSI, "DDSI"); FldStr.put(S57field.DDSC, "DDSC");
+		FldStr.put(S57field.FRID, "FRID"); FldStr.put(S57field.FOID, "FOID"); FldStr.put(S57field.ATTF, "ATTF"); FldStr.put(S57field.NATF, "NATF");
+		FldStr.put(S57field.FFPC, "FFPC"); FldStr.put(S57field.FFPT, "FFPT"); FldStr.put(S57field.FFPC, "FFPC"); FldStr.put(S57field.FSPT, "FSPT");
+		FldStr.put(S57field.VRID, "VRID"); FldStr.put(S57field.ATTV, "ATTV"); FldStr.put(S57field.VRPC, "VRPC"); FldStr.put(S57field.VRPT, "VRPT");
+		FldStr.put(S57field.SGCC, "SGCC"); FldStr.put(S57field.SG2D, "SG2D"); FldStr.put(S57field.SG3D, "SG3D"); FldStr.put(S57field.ARCC, "ARCC");
+		FldStr.put(S57field.AR2D, "AR2D"); FldStr.put(S57field.EL2D, "EL2D"); FldStr.put(S57field.CT2D, "CT2D"); 
+	}
+	
+	public static String stringField (S57field field) {
+		return FldStr.get(field);
+	}
+	
+	public static S57field enumField (String field) {
+		for (S57field fld : FldStr.keySet()) {
+			if (FldStr.get(fld).equals(field))
+				return fld;
+		}
+		return null;
+	}
+
 	private static byte[] buffer;
 	private static int offset;
 	private static int maxoff;

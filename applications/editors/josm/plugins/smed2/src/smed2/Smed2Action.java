@@ -1,4 +1,4 @@
-/* Copyright 2013 Malcolm Herring
+/* Copyright 2014 Malcolm Herring
  *
  * This is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import org.openstreetmap.josm.Main;
 
 import s57.S57map;
 import s57.S57map.*;
-
+import panels.PanelS57;
 import panels.PanelMain;
 import panels.ShowFrame;
 
@@ -40,8 +40,9 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 	public static ShowFrame showFrame = null;
 	private boolean isOpen = false;
 	public static PanelMain panelMain = null;
-	public MapImage rendering;
-	public S57map map = null;
+	public static PanelS57 panelS57 = null;
+	public static MapImage rendering;
+	public static S57map map = null;
 	public DataSet data = null;
 
 	private final DataSetListener dataSetListener = new DataSetListener() {
@@ -117,13 +118,15 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		editFrame.setResizable(true);
 		editFrame.setAlwaysOnTop(true);
 		editFrame.setVisible(true);
-		panelMain = new PanelMain(this);
+		panelMain = new PanelMain();
 		editFrame.add(panelMain);
+
+		panelS57 = new PanelS57();
+		editFrame.add(panelS57);
 
 		showFrame = new ShowFrame(tr("Seamark Inspector"));
 		showFrame.setSize(new Dimension(300, 300));
-		Rectangle rect = Main.map.mapView.getBounds();
-		showFrame.setLocation(50, (rect.y + rect.height - 200));
+		showFrame.setLocation(50, 400);
 		showFrame.setResizable(false);
 		showFrame.setAlwaysOnTop(true);
 		showFrame.setEnabled(true);
@@ -158,7 +161,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data;
-			makeMap();
+//			makeMap();
 		} else {
 			data = null;
 			map = null;
@@ -180,7 +183,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 						feature = nextFeature;
 						Feature id = map.index.get(feature.getUniqueId());
 						if (id != null) {
-							panelMain.parseMark(id);
+//							panelMain.parseMark(id);
 							showFrame.setVisible(true);
 							showFrame.showFeature(feature, map);
 						}

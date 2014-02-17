@@ -1,3 +1,12 @@
+/* Copyright 2014 Malcolm Herring
+ *
+ * This is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
+ */
+
 package panels;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -8,9 +17,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,16 +26,14 @@ import messages.Messages;
 
 import org.openstreetmap.josm.Main;
 
-import s57.S57att.Att;
-import s57.S57obj.Obj;
-import s57.S57val.*;
+import s57.S57att.*;
+import s57.S57obj.*;
 import s57.S57map.*;
 import render.Renderer;
 import smed2.Smed2Action;
 
 public class PanelMain extends JPanel {
 
-	Smed2Action dlg;
 	BufferedImage img;
 	int w, h, z, f;
 	JTextField wt, ht, zt, ft;
@@ -41,18 +46,26 @@ public class PanelMain extends JPanel {
 		}
 	};
 	private JButton importButton = null;
-	final JFileChooser ifc = new JFileChooser();
+	JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.file"));
 	private ActionListener alImport = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (e.getSource() == importButton) {
-        messageBar.setText("Select file");
-        int returnVal = ifc.showOpenDialog(Main.parent);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-//          xxx.startImport(ifc.getSelectedFile());
-         } else {
-           messageBar.setText("");
-         }
-      }
+				Smed2Action.panelS57.setVisible(true);
+        messageBar.setText("Select S-57 ENC file for import");
+				int returnVal = ifc.showOpenDialog(Main.parent);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					try {
+						Main.pref.put("smed2plugin.file", ifc.getSelectedFile().getPath());
+						Smed2Action.panelS57.startImport(ifc.getSelectedFile());
+					} catch (IOException e1) {
+						Smed2Action.panelS57.setVisible(false);
+						messageBar.setText("IO Exception");
+					}
+				} else {
+					Smed2Action.panelS57.setVisible(false);
+					messageBar.setText("");
+				}
+			}
 		}
 	};
 
@@ -61,19 +74,25 @@ public class PanelMain extends JPanel {
 	private ActionListener alExport = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (e.getSource() == exportButton) {
-        messageBar.setText("Select file");
+				Smed2Action.panelS57.setVisible(true);
+        messageBar.setText("Select S-57 ENC file for export");
         int returnVal = efc.showOpenDialog(Main.parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-//          xxx.startExport(efc.getSelectedFile());
+        	try {
+						Smed2Action.panelS57.startExport(efc.getSelectedFile());
+					} catch (IOException e1) {
+						Smed2Action.panelS57.setVisible(false);
+						messageBar.setText("IO Exception");
+					}
          } else {
-           messageBar.setText("");
+ 					Smed2Action.panelS57.setVisible(false);
+ 					messageBar.setText("");
          }
       }
 		}
 	};
 
-	public PanelMain(Smed2Action dia) {
-		dlg = dia;
+	public PanelMain() {
 		setLayout(null);
 		setSize(new Dimension(480, 480));
 		
@@ -119,7 +138,7 @@ public class PanelMain extends JPanel {
 	public void dumpMap() {
 		img = new BufferedImage(Integer.parseInt(wt.getText()), Integer.parseInt(ht.getText()), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = img.createGraphics();
-		Renderer.reRender(g2, Integer.parseInt(zt.getText()), Integer.parseInt(ft.getText()), dlg.map, dlg.rendering);
+		Renderer.reRender(g2, Integer.parseInt(zt.getText()), Integer.parseInt(ft.getText()), Smed2Action.map, Smed2Action.rendering);
 		try {
 			ImageIO.write(img, "png", new File("/Users/mherring/Desktop/export.png"));
 		} catch (Exception x) {

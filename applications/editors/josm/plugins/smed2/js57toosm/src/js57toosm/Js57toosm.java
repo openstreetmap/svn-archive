@@ -1,4 +1,4 @@
-/* Copyright 2013 Malcolm Herring
+/* Copyright 2014 Malcolm Herring
  *
  * This is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,9 @@ public class Js57toosm {
 		map = new S57map();
 		MapBounds bounds = S57dec.decodeFile(in, types, map);
 
-		out.format("<?xml version='1.0' encoding='UTF-8'?>");
-		out.format("<osm version='0.6' generator='js57toosm'>");
-		out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>", bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon);
+		out.format("<?xml version='1.0' encoding='UTF-8'?>%n");
+		out.format("<osm version='0.6' generator='js57toosm'>%n");
+		out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>%n", bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon);
 
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);

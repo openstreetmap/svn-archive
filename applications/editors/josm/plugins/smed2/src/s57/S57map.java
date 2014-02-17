@@ -1,4 +1,4 @@
-/* Copyright 2013 Malcolm Herring
+/* Copyright 2014 Malcolm Herring
  *
  * This is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ public class S57map {
 	}
 	
 	public enum Rflag {
-		UNKN, AGGR, MASTER, SLAVE
+		UNKN, MASTER, SLAVE
 	}
 	
 	public class Reln {
@@ -119,15 +119,6 @@ public class S57map {
 	public class ObjMap extends EnumMap<Obj, ObjTab> {
 		public ObjMap() {
 			super(Obj.class);
-		}
-	}
-
-	public class Aggr {
-		public RelTab rels;
-		public long par;
-		public Aggr() {
-			rels = new RelTab();
-			par = 0;
 		}
 	}
 
@@ -217,15 +208,15 @@ public class S57map {
 		public Geom geom;			// Geometry data
 		public Obj type;			// Feature type
 		public AttMap atts;		// Feature attributes
-		public Aggr aggr;			// Related objects
+		public RelTab rels;		// Related objects
 		public ObjMap objs;		// Slave object attributes
 
 		Feature() {
 			reln = Rflag.UNKN;
 			geom = new Geom(Pflag.NOSP);
-			type = Obj.C_AGGR;
+			type = Obj.UNKOBJ;
 			atts = new AttMap();
-			aggr = new Aggr();
+			rels = new RelTab();
 			objs = new ObjMap();
 		}
 	}
@@ -270,7 +261,7 @@ public class S57map {
 		if (obj == Obj.BOYWTW)
 			obj = Obj.BOYLAT;
 		if (obj == Obj.C_AGGR)
-			feature.reln = Rflag.AGGR;
+			feature.reln = Rflag.UNKN;
 		feature.geom = new Geom(p);
 		feature.type = obj;
 		if (obj != Obj.UNKOBJ) {
@@ -279,7 +270,7 @@ public class S57map {
 	}
 	
 	public void newObj(long id, int rind) {
-		Rflag r = Rflag.AGGR;
+		Rflag r = Rflag.UNKN;
 		switch (rind) {
 		case 1:
 			r = Rflag.MASTER;
@@ -291,7 +282,7 @@ public class S57map {
 			r = Rflag.UNKN;
 			break;
 		}
-		feature.aggr.rels.add(new Reln(id, r));
+		feature.rels.add(new Reln(id, r));
 	}
 	
 	public void endFeature() {
@@ -353,13 +344,10 @@ public class S57map {
 		}
 		for (long id : index.keySet()) {
 			Feature feature = index.get(id);
-			for (Reln reln : feature.aggr.rels) {
+			for (Reln reln : feature.rels) {
 				Feature rel = index.get(reln.id);
 				if (cmpGeoms(feature.geom, rel.geom)) {
 					switch (reln.reln) {
-					case MASTER:
-						feature.reln = Rflag.AGGR;
-						break;
 					case SLAVE:
 						feature.reln = Rflag.MASTER;
 						break;
@@ -387,7 +375,7 @@ public class S57map {
 		}
 		for (long id : index.keySet()) {
 			Feature feature = index.get(id);
-			for (Reln reln : feature.aggr.rels) {
+			for (Reln reln : feature.rels) {
 				Feature rel = index.get(reln.id);
 				if (rel.reln == Rflag.SLAVE) {
 					if (feature.objs.get(rel.type) == null) {
@@ -407,7 +395,7 @@ public class S57map {
 		Snode node = new Snode(Math.toRadians(lat), Math.toRadians(lon));
 		nodes.put(id, node);
 		feature = new Feature();
-		feature.reln = Rflag.AGGR;
+		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.POINT;
 		feature.geom.elems.add(new Prim(id));
 		edge = null;
@@ -415,7 +403,7 @@ public class S57map {
 
 	public void addEdge(long id) {
 		feature = new Feature();
-		feature.reln = Rflag.AGGR;
+		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.LINE;
 		feature.geom.elems.add(new Prim(id));
 		edge = new Edge();
@@ -435,7 +423,7 @@ public class S57map {
 
 	public void addArea(long id) {
 		feature = new Feature();
-		feature.reln = Rflag.AGGR;
+		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.AREA;
 		feature.geom.elems.add(new Prim(id));
 		edge = null;
@@ -446,6 +434,7 @@ public class S57map {
 	}
 
 	public void addTag(String key, String val) {
+		feature.reln = Rflag.MASTER;
 		String subkeys[] = key.split(":");
 		if ((subkeys.length > 1) && subkeys[0].equals("seamark")) {
 			Obj obj = S57obj.enumType(subkeys[1]);
@@ -460,32 +449,32 @@ public class S57map {
 				} catch (Exception e) {
 					att = S57att.enumAttribute(subkeys[2], obj);
 				}
-				ObjTab items = feature.objs.get(obj);
-				if (items == null) {
-					items = new ObjTab();
-					feature.objs.put(obj, items);
-					Feature type = new Feature();
-					type.reln = Rflag.SLAVE;
-					type.type = obj;
-					type.geom = feature.geom;
+				ObjTab objs = feature.objs.get(obj);
+				if (objs == null) {
+					objs = new ObjTab();
+					feature.objs.put(obj, objs);
 				}
-//				AttMap atts = items.get(idx);
-//				if (atts == null) {
-//					atts = new AttMap();
-//					items.put(idx, atts);
-//				}
-//				AttVal<?> attval = S57val.convertValue(val, att);
-//				if (attval.val != null)
-//					atts.put(att, attval);
+				AttMap atts = objs.get(idx);
+				if (atts == null) {
+					atts = new AttMap();
+					objs.put(idx, atts);
+				}
+				AttVal<?> attval = S57val.convertValue(val, att);
+				if (attval.val != null)
+					atts.put(att, attval);
 			} else {
 				if (subkeys[1].equals("type")) {
 					obj = S57obj.enumType(val);
-					if (feature.objs.get(feature.type) == null) {
-						feature.objs.put(feature.type, new ObjTab());
-						Feature type = new Feature();
-						type.reln = Rflag.MASTER;
-						type.type = obj;
-						type.geom = feature.geom;
+					feature.type = obj;
+					ObjTab objs = feature.objs.get(obj);
+					if (objs == null) {
+						objs = new ObjTab();
+						feature.objs.put(obj, objs);
+					}
+					AttMap atts = objs.get(0);
+					if (atts == null) {
+						atts = new AttMap();
+						objs.put(0, atts);
 					}
 				} else {
 					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);

@@ -1,5 +1,15 @@
+/* Copyright 2014 Malcolm Herring
+ *
+ * This is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * For a copy of the GNU General Public License, see <http://www.gnu.org/licenses/>.
+ */
+
 package s57;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -164,6 +174,8 @@ public class S57dat {
 	private static int maxoff;
 	private static int index;
 	private static S57field field;
+	private static String aall = "US-ASCII";
+	private static String nall = "US-ASCII";
 	public static int rnum;
 	
 	private static S57conv findSubf(S57subf subf) {
@@ -218,11 +230,19 @@ public class S57dat {
 		S57conv conv = findSubf(subf);
 		if (conv.bin == 0) {
 			String str = "";
+			int i = 0;
 			if (conv.asc == 0) {
-				while (buffer[offset] != 0x1f) {
-					str += (char)(buffer[offset++]);
+				for (i=0; buffer[offset+i] != 0x1f; i++) {}
+				try {
+					String charset = "";
+					if (field == S57field.ATTF) charset = aall;
+					else if (field == S57field.NATF) charset = nall;
+					else charset = "US-ASCII";
+					str = new String(buffer, offset, i, charset);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
 				}
-				offset++;
+				offset += i + 1;
 			} else {
 				str = new String(buffer, offset, conv.asc);
 				offset += conv.asc;
@@ -238,6 +258,25 @@ public class S57dat {
 					val = (val << 8) + (buffer[offset + --f] & 0xff);
 				}
 				offset += Math.abs(conv.bin);
+				if ((subf == S57subf.AALL) || (subf == S57subf.NALL)) {
+					String charset = "";
+					switch ((int)val) {
+					case 0:
+						charset = "US-ASCII";
+						break;
+					case 1:
+						charset = "ISO-8859-1";
+						break;
+					case 2:
+						charset = "UTF-16LE";
+						break;
+					}
+					if (subf == S57subf.NALL) {
+						nall = charset;
+					} else {
+						aall = charset;
+					}
+				}
 				return val;
 			} else {
 				f /= 8;

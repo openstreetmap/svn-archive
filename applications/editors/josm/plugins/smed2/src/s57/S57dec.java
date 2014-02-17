@@ -1,4 +1,4 @@
-/* Copyright 2013 Malcolm Herring
+/* Copyright 2014 Malcolm Herring
  *
  * This is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,6 +63,10 @@ public class S57dec {
 							in.close();
 							System.exit(-1);
 						}
+						break;
+					case DSSI:
+						S57dat.getSubf(record, fields + pos, S57field.DSSI, S57subf.AALL);
+						S57dat.getSubf(S57subf.NALL);
 						break;
 					case DSPM:
 						comf = (double) (Long) S57dat.getSubf(record, fields + pos, S57field.DSPM, S57subf.COMF);

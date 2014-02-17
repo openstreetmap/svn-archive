@@ -1,4 +1,4 @@
-/* Copyright 2013 Malcolm Herring
+/* Copyright 2014 Malcolm Herring
  *
  * This is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -77,9 +77,6 @@
         <copy todir="${plugin.build.dir}/data">
             <fileset dir="data"/>
         </copy>
-        <copy todir="${plugin.build.dir}/smed/msg">
-            <fileset dir="${plugin.src.dir}/smed/msg"/>
-        </copy>
         <copy todir="${plugin.build.dir}">
             <fileset dir="${smed.dist.dir}"/>
         </copy>

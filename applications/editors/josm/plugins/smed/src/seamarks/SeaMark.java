@@ -245,15 +245,15 @@ public class SeaMark extends JPanel {
 		CatSTR.put(Cat.SPM_CABL, "cable");
 		CatSTR.put(Cat.SPM_OFAL, "outfall");
 		CatSTR.put(Cat.SPM_ODAS, "odas");
-		CatSTR.put(Cat.SPM_RECN, "recreational");
+		CatSTR.put(Cat.SPM_RECN, "recreation_zone");
 		CatSTR.put(Cat.SPM_MOOR, "mooring");
 		CatSTR.put(Cat.SPM_LNBY, "lanby");
 		CatSTR.put(Cat.SPM_LDNG, "leading");
 		CatSTR.put(Cat.SPM_NOTC, "notice");
 		CatSTR.put(Cat.SPM_TSS, "tss");
-		CatSTR.put(Cat.SPM_FOUL, "foul");
+		CatSTR.put(Cat.SPM_FOUL, "foul_ground");
 		CatSTR.put(Cat.SPM_DIVE, "diving");
-		CatSTR.put(Cat.SPM_FRRY, "ferry");
+		CatSTR.put(Cat.SPM_FRRY, "ferry_crossing");
 		CatSTR.put(Cat.SPM_ANCH, "anchorage");
 		CatSTR.put(Cat.MOR_DLPN, "dolphin");
 		CatSTR.put(Cat.MOR_DDPN, "deviation_dolphin");

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="SeaMapEditor2" default="dist" basedir=".">
+<project name="SeaMapEditor" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="New release"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->

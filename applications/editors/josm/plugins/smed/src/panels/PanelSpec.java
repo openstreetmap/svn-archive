@@ -219,7 +219,6 @@ public class PanelSpec extends JPanel {
 		topmarkButton.addActionListener(alTop);
 		add(topmarkButton);
 
-		
 //		noticeButton.setBounds(new Rectangle(136, 32, 34, 32));
 //		noticeButton.setToolTipText(Messages.getString("Notice"));
 //		noticeButton.setBorder(BorderFactory.createLoweredBevelBorder());

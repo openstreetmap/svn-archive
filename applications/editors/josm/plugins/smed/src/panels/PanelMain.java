@@ -158,7 +158,7 @@ public class PanelMain extends JPanel {
 			}
 		}
 	};
-
+	
 	public PanelMain(SmedAction dia) {
 
 		dlg = dia;

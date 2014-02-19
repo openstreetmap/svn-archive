@@ -9,6 +9,7 @@
 
 package panels;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.*;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class PanelS57 extends JPanel {
 	public void startImport(File inf) throws IOException {
 		JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.file"));
 		FileInputStream in = new FileInputStream(inf);
-		PanelMain.messageBar.setText("Select OSM types file");
+		PanelMain.setStatus("Select OSM types file", Color.yellow);
 		ifc.setCurrentDirectory(inf);
 		int returnVal = ifc.showOpenDialog(Main.parent);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -64,7 +65,6 @@ public class PanelS57 extends JPanel {
 		map = new S57map();
 		MapBounds bounds = S57dec.decodeFile(in, types, map);
 
-		PanelMain.messageBar.setText("Import done");
 		in.close();
 		
 		DataSet data = new DataSet();
@@ -84,10 +84,6 @@ public class PanelS57 extends JPanel {
 									Node node = new Node(new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon)));
 									node.setOsmId(ref, 1);
 									data.addPrimitive(node);
-//									out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
-//									out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-//									if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
-//										out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
 									addKeys(node, feature, type);
 									done.add(ref);
 								}
@@ -194,6 +190,7 @@ public class PanelS57 extends JPanel {
 		OsmDataLayer layer = new OsmDataLayer(data, "S-57 Import", null);
 		Main.map.mapView.addLayer(layer);
 		Main.map.mapView.zoomTo(new Bounds(bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon));
+		PanelMain.setStatus("Import done", Color.green);
 	}
 
 	void addKeys(OsmPrimitive prim, Feature feature, String type) {
@@ -202,6 +199,12 @@ public class PanelS57 extends JPanel {
 			keys.put("type", "multipolygon");
 		}
 		keys.put("seamark:type", type);
+		if (feature.type == Obj.SOUNDG) {
+			Snode snode = map.nodes.get(feature.geom.elems.get(0).id);
+			if (snode.flg == S57map.Nflag.DPTH) {
+				keys.put("seamark:sounding:depth", ((Double)((Dnode)snode).val).toString());
+			}
+		}
 		for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
 			String attstr = S57att.stringAttribute(item.getKey());
 			String valstr = S57val.stringValue(item.getValue());

@@ -51,7 +51,7 @@ public class PanelMain extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (e.getSource() == importButton) {
 				Smed2Action.panelS57.setVisible(true);
-        messageBar.setText("Select S-57 ENC file for import");
+        setStatus("Select S-57 ENC file for import", Color.yellow);
 				int returnVal = ifc.showOpenDialog(Main.parent);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					try {
@@ -59,11 +59,11 @@ public class PanelMain extends JPanel {
 						Smed2Action.panelS57.startImport(ifc.getSelectedFile());
 					} catch (IOException e1) {
 						Smed2Action.panelS57.setVisible(false);
-						messageBar.setText("IO Exception");
+						setStatus("IO Exception", Color.red);
 					}
 				} else {
 					Smed2Action.panelS57.setVisible(false);
-					messageBar.setText("");
+					clrStatus();
 				}
 			}
 		}
@@ -75,18 +75,18 @@ public class PanelMain extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (e.getSource() == exportButton) {
 				Smed2Action.panelS57.setVisible(true);
-        messageBar.setText("Select S-57 ENC file for export");
+        setStatus("Select S-57 ENC file for export", Color.yellow);
         int returnVal = efc.showOpenDialog(Main.parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
         	try {
 						Smed2Action.panelS57.startExport(efc.getSelectedFile());
 					} catch (IOException e1) {
 						Smed2Action.panelS57.setVisible(false);
-						messageBar.setText("IO Exception");
+						setStatus("IO Exception", Color.red);
 					}
          } else {
  					Smed2Action.panelS57.setVisible(false);
- 					messageBar.setText("");
+					clrStatus();
          }
       }
 		}
@@ -152,7 +152,17 @@ public class PanelMain extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setBackground(new Color(0xb5d0d0));
 		if (img != null) g2.clearRect(0, 0, img.getWidth(), img.getHeight());
-		g2.drawImage(img, 0, 0, null);;
+		g2.drawImage(img, 0, 0, null);
+	}
+	
+	public static void setStatus(String text, Color bg) {
+		messageBar.setBackground(bg);
+		messageBar.setText(text);
+	}
+	
+	public static void clrStatus() {
+		messageBar.setBackground(Color.white);
+		messageBar.setText("");
 	}
 	
 	public void parseMark(Feature feature) {

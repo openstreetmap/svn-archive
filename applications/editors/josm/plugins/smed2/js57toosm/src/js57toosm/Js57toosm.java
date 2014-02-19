@@ -51,7 +51,7 @@ public class Js57toosm {
 		MapBounds bounds = S57dec.decodeFile(in, types, map);
 
 		out.format("<?xml version='1.0' encoding='UTF-8'?>%n");
-		out.format("<osm version='0.6' generator='js57toosm'>%n");
+		out.format("<osm version='0.6' upload='false' generator='js57toosm'>%n");
 		out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>%n", bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon);
 
 		for (long id : map.index.keySet()) {

@@ -137,10 +137,12 @@
 	    var posMapquest = '?q1=' + lonlat.lat.toFixed(5) + ',' + lonlat.lon.toFixed(5) + '&vs=directions';
 	    var posORS = '?end=' + lonlat.lon.toFixed(5) + ',' + lonlat.lat.toFixed(5) + '&lon=' + lonlat.lon.toFixed(5) + '&lat=' + lonlat.lat.toFixed(5) + '&zoom=' + map.getZoom();
 	    var posOSRM = '?hl=de&dest=' + lonlat.lat.toFixed(5) + ',' + lonlat.lon.toFixed(5) + '&z=' + map.getZoom() + '&center=' + lonlat.lat.toFixed(5) + ',' + lonlat.lon.toFixed(5);
+	    var posNote = '#map=' + map.getZoom() + '/' + lonlat.lat.toFixed(5) + '/' + lonlat.lon.toFixed(5);
     	
     	document.getElementById('Route').innerHTML = '<button class="btn dropdown-toggle" data-toggle="dropdown">Route<span class="caret"></span></button><ul class="dropdown-menu"><li><a href="http://open.mapquest.de/'+posMapquest+'" target="_blank">Mapquest <span class="descRoute">Auto, Fahrrad, Fußgänger | Weltweit</span></a></li><li><a href="http://www.openrouteservice.org/'+posORS+'" target="_blank">OpenRouteService <span class="descRouteORS">Auto, Fahrrad, Fußgänger | Europa</span></a></li><li><a href="http://map.project-osrm.org/'+posOSRM+'" target="_blank">OSRM <span class="descRoute">Auto | Weltweit</span></a></li></ul>';
 	    document.getElementById('editMap').innerHTML = '<a class="btn success" href="http://www.openstreetmap.org/edit'+pos+'" target="_blank">Karte bearbeiten</a>';
-		// disabled "Fehler melden" ("Report Error") since OpenStreetBugs is readonly 
-	    //~ document.getElementById('errorMap').innerHTML = '<a class="btn danger" href="http://www.openstreetbugs.org'+pos+'" target="_blank">Fehler melden</a>';
+		// updated "Fehler melen" to use the notes feature instead of OpenStreetBugs: 
+	    document.getElementById('errorMap').innerHTML = '<a class="btn danger" href="http://www.openstreetmap.org/note/new'+posNote+'" target="_blank">Fehler melden</a>';
+	    																			 
 	}
 	

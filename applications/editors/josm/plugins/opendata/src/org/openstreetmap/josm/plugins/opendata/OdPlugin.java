@@ -144,13 +144,13 @@ public final class OdPlugin extends Plugin implements OdConstants {
         			}
         			JMenuItem handlerItem = null;
         			if (dataURL != null) {
-        			    handlerItem = endMenu.add(new DownloadDataAction(module.getDisplayedName()+"_"+handlerName, dataURL));
+        			    handlerItem = endMenu.add(new DownloadDataAction(module, handlerName, dataURL));
         			} else if (dataURLs != null) {
         				JMenu handlerMenu = new JMenu(handlerName);
         				JMenuItem item = null;
         				for (Pair<String, URL> pair : dataURLs) {
         					if (pair != null && pair.a != null && pair.b != null) {
-        						item = handlerMenu.add(new DownloadDataAction(pair.a, pair.b));
+        						item = handlerMenu.add(new DownloadDataAction(module, pair.a, pair.b));
         					}
         				}
         				if (item != null) {

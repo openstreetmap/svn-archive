@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.enfance;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
@@ -39,9 +40,18 @@ public class EcoleElementaireHandler extends ToulouseDataSetHandler {
     public void updateDataSet(DataSet ds) {
         for (Node n : ds.getNodes()) {
             n.put("amenity", "school");
-            n.put("school:FR", "elementaire");
-            n.put("operator", "public");
+            n.put("school:FR", "élémentaire");
+            n.put("operator:type", "public");
             replace(n, "Ecole", "name");
+            n.put("name", WordUtils.capitalizeFully(n.get("name")));
+            n.remove("Codpos");
+            n.remove("Codsti");
+            n.remove("color");
+            n.remove("Index");
+            n.remove("Libelle");
+            n.remove("Num");
+            replace(n, "RNE", "ref:UAI");
+            replace(n, "Tel", "phone");
         }
     }
 }

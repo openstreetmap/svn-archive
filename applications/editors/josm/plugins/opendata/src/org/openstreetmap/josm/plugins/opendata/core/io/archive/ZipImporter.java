@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package org.openstreetmap.josm.plugins.opendata.core.io.archive;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -37,4 +38,9 @@ public class ZipImporter extends AbstractImporter {
 			throw new IllegalDataException(e);
 		}
 	}
+
+    @Override
+    public boolean acceptFile(File pathname) {
+        return super.acceptFile(pathname) && !pathname.getName().endsWith(".osm.zip");
+    }
 }

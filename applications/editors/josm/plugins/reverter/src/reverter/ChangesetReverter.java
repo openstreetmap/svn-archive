@@ -12,8 +12,8 @@ import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.ConflictAddCommand;
 import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.data.conflict.Conflict;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Changeset;

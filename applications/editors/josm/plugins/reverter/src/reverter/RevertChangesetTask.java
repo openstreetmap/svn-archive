@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.ConflictAddCommand;
+import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;

@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Adapt to JOSM core change (DefaultNameFormatter)"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6437"/>
+    <property name="plugin.main.version" value="6887"/>
 
     <property name="test.build.dir" value="test/build"/>
     <property name="eclipse.plugin.dir" value="C:\software\eclipse-3.6.1\plugins"/>

@@ -36,7 +36,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
-import org.openstreetmap.josm.command.ConflictAddCommand;
+import org.openstreetmap.josm.command.conflict.ConflictAddCommand;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.data.conflict.Conflict;

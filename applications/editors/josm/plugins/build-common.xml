@@ -169,10 +169,11 @@
         </condition>
     </target>
     <!--
-      ** Initializes the REVISION.XML file from git information
+      ** Initializes the REVISION.XML file from git-svn information.
+         Obtains the revision from the git-svn-id field.
     -->
-    <target name="init-git-revision-xml" unless="svn.info.success">
-        <exec append="false" output="REVISION.XML" executable="git" failifexecutionfails="false">
+    <target name="init-git-svn-revision-xml" unless="svn.info.success">
+        <exec append="false" output="REVISION.XML" executable="git" failifexecutionfails="false" resultproperty="git.svn.info.result">
             <arg value="log"/>
             <arg value="-1"/>
             <arg value="--grep=git-svn-id"/>
@@ -187,8 +188,31 @@
         <replaceregexp file="REVISION.XML" flags="s"
                        match=".*git-svn-id: [^@]*@([0-9]+).*(\d{4}-\d{2}-\d{2}.\d{2}\:\d{2}\:\d{2}\s*[+-]\d{2}:?\d{2})\s*$"
                        replace="&lt;info&gt;&lt;entry&gt;&lt;commit revision=&quot;\1&quot;&gt;&lt;date&gt;\2&lt;/date&gt;&lt;/commit&gt;&lt;/entry&gt;&lt;/info&gt;"/>
+       <condition property="git.svn.fail">
+           <not>
+               <and>
+                   <equals arg1="${git.svn.info.result}" arg2="0" />
+                   <length file="REVISION.XML" when="greater" length="1" />
+               </and>
+           </not>
+       </condition>
+   </target>
+    <!--
+      ** Initializes the REVISION.XML file from git (w/o svn) information.
+         Uses Unix date as revision number.
+    -->
+    <target name="init-git-revision-xml" if="git.svn.fail">
+        <exec append="false" output="REVISION.XML" executable="git" failifexecutionfails="false">
+            <arg value="log"/>
+            <arg value="-1"/>
+            <arg value="--pretty=format:%at%n%ai"/>
+            <arg value="HEAD"/>
+        </exec>
+        <replaceregexp file="REVISION.XML" flags="s"
+                       match="\s*(\d*)\s+(\d{4}-\d{2}-\d{2}.\d{2}\:\d{2}\:\d{2}\s*[+-]\d{2}:?\d{2})\s*$"
+                       replace="&lt;info&gt;&lt;entry&gt;&lt;commit revision=&quot;\1&quot;&gt;&lt;date&gt;\2&lt;/date&gt;&lt;/commit&gt;&lt;/entry&gt;&lt;/info&gt;"/>
     </target>
-    <target name="revision" depends="init-svn-revision-xml, init-git-revision-xml">
+    <target name="revision" depends="init-svn-revision-xml, init-git-svn-revision-xml, init-git-revision-xml">
       <xmlproperty file="REVISION.XML" prefix="version" keepRoot="false" collapseAttributes="true"/>
       <delete file="REVISION.XML"/>
     </target>

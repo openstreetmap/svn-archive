@@ -13,9 +13,9 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package org.geotools.data.shapefile;
+package org.geotools.data.shapefile.files;
 
-import static org.geotools.data.shapefile.ShpFileType.SHP;
+import static org.geotools.data.shapefile.files.ShpFileType.SHP;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -174,7 +174,7 @@ public class TabFiles extends ShpFiles {
             try {
                 return files[0].toURI().toURL();
             } catch (MalformedURLException e) {
-                ShapefileDataStoreFactory.LOGGER.log(Level.SEVERE, "", e);
+                //ShapefileDataStoreFactory.LOGGER().log(Level.SEVERE, "", e);
             }
         }
         return null;
@@ -208,7 +208,7 @@ public class TabFiles extends ShpFiles {
             for (ShpFilesLocker locker : lockerList) {
                 StringBuilder sb = new StringBuilder("The following locker still has a lock: ");
                 sb.append(locker);
-                ShapefileDataStoreFactory.LOGGER.log(logLevel, sb.toString(), locker.getTrace());
+                //ShapefileDataStoreFactory.LOGGER().log(logLevel, sb.toString(), locker.getTrace());
             }
         }
     }

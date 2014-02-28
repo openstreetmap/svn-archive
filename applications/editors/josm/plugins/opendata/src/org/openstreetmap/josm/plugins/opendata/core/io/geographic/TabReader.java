@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.shapefile.TabFiles;
+import org.geotools.data.shapefile.files.TabFiles;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.openstreetmap.josm.data.osm.DataSet;

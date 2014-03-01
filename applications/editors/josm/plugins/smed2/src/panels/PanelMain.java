@@ -46,7 +46,7 @@ public class PanelMain extends JPanel {
 		}
 	};
 	private JButton importButton = null;
-	JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.file"));
+	JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.encinpfile"));
 	private ActionListener alImport = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (e.getSource() == importButton) {
@@ -55,7 +55,7 @@ public class PanelMain extends JPanel {
 				int returnVal = ifc.showOpenDialog(Main.parent);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					try {
-						Main.pref.put("smed2plugin.file", ifc.getSelectedFile().getPath());
+						Main.pref.put("smed2plugin.encinpfile", ifc.getSelectedFile().getPath());
 						Smed2Action.panelS57.startImport(ifc.getSelectedFile());
 					} catch (IOException e1) {
 						Smed2Action.panelS57.setVisible(false);

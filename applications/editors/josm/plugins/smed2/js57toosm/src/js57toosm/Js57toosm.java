@@ -103,19 +103,18 @@ public class Js57toosm {
 						}
 						git = map.new GeomIterator(feature.geom);
 						while (git.hasComp()) {
-							long way = git.nextComp();
-							out.format("  <way id='%d' version='1'>%n", -way);
+							long edge = git.nextComp();
+							out.format("  <way id='%d' version='1'>%n", -edge);
 							while (git.hasEdge()) {
 								git.nextEdge();
 								while (git.hasNode()) {
 									long ref = git.nextRef();
 									out.format("    <nd ref='%d'/>%n", -ref);
 								}
-								out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
-								writeAtts(feature, type);
 							}
+							out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
+							writeAtts(feature, type);
 							out.format("  </way>%n");
-							done.add(way);
 						}
 					} else if (feature.geom.prim == Pflag.AREA) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
@@ -135,33 +134,27 @@ public class Js57toosm {
 						}
 						git = map.new GeomIterator(feature.geom);
 						while (git.hasComp()) {
-							git.nextComp();
+							long ref = git.nextComp();
+							out.format("  <way id='%d' version='1'>%n", -ref);
 							while (git.hasEdge()) {
-								long way = git.nextEdge();
-								if (!done.contains(way)) {
-									out.format("  <way id='%d' version='1'>%n", -way);
-									while (git.hasNode()) {
-										long ref = git.nextRef(true);
-										out.format("    <nd ref='%d'/>%n", -ref);
-									}
-									out.format("  </way>%n");
-									done.add(way);
+								git.nextEdge();
+								while (git.hasNode()) {
+									ref = git.nextRef();
+									out.format("    <nd ref='%d'/>%n", -ref);
 								}
 							}
+							out.format("  </way>%n");
 						}
 						out.format("  <relation id='%d' version='1'>%n", -map.ref++);
 						out.format("    <tag k='type' v='multipolygon'/>%n");
 						git = map.new GeomIterator(feature.geom);
-						int outers = feature.geom.refs.get(0).size;
+						int outers = feature.geom.outers;
 						while (git.hasComp()) {
-							git.nextComp();
-							while (git.hasEdge()) {
-								long way = git.nextEdge();
-								if (outers-- > 0) {
-									out.format("    <member type='way' ref='%d' role='outer'/>%n", -way);
-								} else {
-									out.format("    <member type='way' ref='%d' role='inner'/>%n", -way);
-								}
+							long ref = git.nextComp();
+							if (outers-- > 0) {
+								out.format("    <member type='way' ref='%d' role='outer'/>%n", -ref);
+							} else {
+								out.format("    <member type='way' ref='%d' role='inner'/>%n", -ref);
 							}
 						}
 						out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);

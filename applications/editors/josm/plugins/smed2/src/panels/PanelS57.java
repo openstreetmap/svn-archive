@@ -49,13 +49,12 @@ public class PanelS57 extends JPanel {
 	}
 
 	public void startImport(File inf) throws IOException {
-		JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.file"));
 		FileInputStream in = new FileInputStream(inf);
 		PanelMain.setStatus("Select OSM types file", Color.yellow);
-		ifc.setCurrentDirectory(inf);
+		JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.typesfile"));
 		int returnVal = ifc.showOpenDialog(Main.parent);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			Main.pref.put("smed2plugin.file", ifc.getSelectedFile().getPath());
+			Main.pref.put("smed2plugin.typesfile", ifc.getSelectedFile().getPath());
 			Scanner tin = new Scanner(new FileInputStream(ifc.getSelectedFile()));
 			while (tin.hasNext()) {
 				types.add(S57obj.enumType(tin.next()));
@@ -81,8 +80,8 @@ public class PanelS57 extends JPanel {
 							Snode snode;
 							while ((snode = map.nodes.get(ref)) != null) {
 								if (!done.contains(ref)) {
-									Node node = new Node(new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon)));
-									node.setOsmId(ref, 1);
+									Node node = new Node(ref, 1);
+									node.setCoor((new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon))));
 									data.addPrimitive(node);
 									addKeys(node, feature, type);
 									done.add(ref);
@@ -109,8 +108,8 @@ public class PanelS57 extends JPanel {
 									long ref = git.nextRef();
 									Snode snode = map.nodes.get(ref);
 									if (!done.contains(ref)) {
-										Node node = new Node(new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon)));
-										node.setOsmId(ref, 1);
+										Node node = new Node(ref, 1);
+										node.setCoor((new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon))));
 										data.addPrimitive(node);
 										done.add(ref);
 									}
@@ -128,9 +127,8 @@ public class PanelS57 extends JPanel {
 									long ref = git.nextRef();
 									way.addNode((Node)data.getPrimitiveById(ref, OsmPrimitiveType.NODE));
 								}
-								addKeys(way, feature, type);
 							}
-							done.add(edge);
+							addKeys(way, feature, type);
 						}
 					} else if (feature.geom.prim == Pflag.AREA) {
 						GeomIterator git = map.new GeomIterator(feature.geom);
@@ -142,8 +140,8 @@ public class PanelS57 extends JPanel {
 									long ref = git.nextRef();
 									Snode snode = map.nodes.get(ref);
 									if (!done.contains(ref)) {
-										Node node = new Node(new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon)));
-										node.setOsmId(ref, 1);
+										Node node = new Node(ref, 1);
+										node.setCoor((new LatLon(Math.toDegrees(snode.lat), Math.toDegrees(snode.lon))));
 										data.addPrimitive(node);
 										done.add(ref);
 									}
@@ -152,33 +150,27 @@ public class PanelS57 extends JPanel {
 						}
 						git = map.new GeomIterator(feature.geom);
 						while (git.hasComp()) {
-							git.nextComp();
+							long ref = git.nextComp();
+							Way way = new Way(ref, 1);
+							data.addPrimitive(way);
 							while (git.hasEdge()) {
-								long edge = git.nextEdge();
-								if (!done.contains(edge)) {
-									Way way = new Way(edge, 1);
-									data.addPrimitive(way);
-									while (git.hasNode()) {
-										long ref = git.nextRef(true);
-										way.addNode((Node)data.getPrimitiveById(ref, OsmPrimitiveType.NODE));
-									}
-									done.add(edge);
+								git.nextEdge();
+								while (git.hasNode()) {
+									ref = git.nextRef();
+									way.addNode((Node) data.getPrimitiveById(ref, OsmPrimitiveType.NODE));
 								}
 							}
 						}
 						Relation rel = new Relation(map.ref++, 1);
 						data.addPrimitive(rel);
 						git = map.new GeomIterator(feature.geom);
-						int outers = feature.geom.refs.get(0).size;
+						int outers = feature.geom.outers;
 						while (git.hasComp()) {
-							git.nextComp();
-							while (git.hasEdge()) {
-								long way = git.nextEdge();
-								if (outers-- > 0) {
-									rel.addMember(new RelationMember("outer", (Way)data.getPrimitiveById(way, OsmPrimitiveType.WAY)));
-								} else {
-									rel.addMember(new RelationMember("inner", (Way)data.getPrimitiveById(way, OsmPrimitiveType.WAY)));
-								}
+							long ref = git.nextComp();
+							if (outers-- > 0) {
+								rel.addMember(new RelationMember("outer", (Way) data.getPrimitiveById(ref, OsmPrimitiveType.WAY)));
+							} else {
+								rel.addMember(new RelationMember("inner", (Way) data.getPrimitiveById(ref, OsmPrimitiveType.WAY)));
 							}
 						}
 						addKeys(rel, feature, type);

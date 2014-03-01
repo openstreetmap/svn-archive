@@ -219,49 +219,52 @@ public class Renderer {
 			while (git.hasComp()) {
 				git.nextComp();
 				boolean first = true;
-				while (git.hasNode()) {
-					prev = next;
-					next = context.getPoint(git.next());
-					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
-					piv = true;
-					if (first) {
-						curr = succ = next;
-						gap = (space > 0);
-						stcount = ratio - 1;
-						symbol = prisymb;
-						len = gap ? psize * space * 0.5 : psize;
-						first = false;
-					} else {
-						while (curr.distance(next) >= len) {
-							if (piv) {
-								double rem = len;
-								double s = prev.distance(next);
-								double p = curr.distance(prev);
-								if ((s > 0) && (p > 0)) {
-									double n = curr.distance(next);
-									double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
-									double phi = Math.asin(p / len * Math.sin(theta));
-									rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						prev = next;
+						next = context.getPoint(git.next());
+						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
+						piv = true;
+						if (first) {
+							curr = succ = next;
+							gap = (space > 0);
+							stcount = ratio - 1;
+							symbol = prisymb;
+							len = gap ? psize * space * 0.5 : psize;
+							first = false;
+						} else {
+							while (curr.distance(next) >= len) {
+								if (piv) {
+									double rem = len;
+									double s = prev.distance(next);
+									double p = curr.distance(prev);
+									if ((s > 0) && (p > 0)) {
+										double n = curr.distance(next);
+										double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
+										double phi = Math.asin(p / len * Math.sin(theta));
+										rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
+									}
+									succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
+									piv = false;
+								} else {
+									succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
 								}
-								succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
-								piv = false;
-							} else {
-								succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
-							}
-							if (!gap) {
-								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Scheme(col),
-										new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))));
-							}
-							if (space > 0)
-								gap = !gap;
-							curr = succ;
-							len = gap ? (psize * space) : (--stcount == 0) ? (stflag ? tsize : ssize) : psize;
-							if (stcount == 0) {
-								symbol = stflag ? tersymb : secsymb;
-								if (trect != null) stflag = !stflag;
-								stcount = ratio;
-							} else {
-								symbol = prisymb;
+								if (!gap) {
+									Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Scheme(col), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))));
+								}
+								if (space > 0)
+									gap = !gap;
+								curr = succ;
+								len = gap ? (psize * space) : (--stcount == 0) ? (stflag ? tsize : ssize) : psize;
+								if (stcount == 0) {
+									symbol = stflag ? tersymb : secsymb;
+									if (trect != null)
+										stflag = !stflag;
+									stcount = ratio;
+								} else {
+									symbol = prisymb;
+								}
 							}
 						}
 					}
@@ -277,11 +280,14 @@ public class Renderer {
 		GeomIterator git = map.new GeomIterator(feature.geom);
 		while (git.hasComp()) {
 			git.nextComp();
-			point = context.getPoint(git.next());
-			p.moveTo(point.getX(), point.getY());
-			while (git.hasNode()) {
+			while (git.hasEdge()) {
+				git.nextEdge();
 				point = context.getPoint(git.next());
-				p.lineTo(point.getX(), point.getY());
+				p.moveTo(point.getX(), point.getY());
+				while (git.hasNode()) {
+					point = context.getPoint(git.next());
+					p.lineTo(point.getX(), point.getY());
+				}
 			}
 		}
 		if (style.line != null) {
@@ -352,11 +358,14 @@ public class Renderer {
 			GeomIterator git = map.new GeomIterator(feature.geom);
 			while (git.hasComp()) {
 				git.nextComp();
-				point = context.getPoint(git.next());
-				p.moveTo(point.getX(), point.getY());
-				while (git.hasNode()) {
+				while (git.hasEdge()) {
+					git.nextEdge();
 					point = context.getPoint(git.next());
-					p.lineTo(point.getX(), point.getY());
+					p.moveTo(point.getX(), point.getY());
+					while (git.hasNode()) {
+						point = context.getPoint(git.next());
+						p.lineTo(point.getX(), point.getY());
+					}
 				}
 			}
 	    g2.setPaint(new TexturePaint(image, new Rectangle(0, 0, 1 + (int)(100 * sScale), 1 + (int)(100 * sScale))));
@@ -499,35 +508,42 @@ public class Renderer {
 			while (git.hasComp()) {
 				git.nextComp();
 				boolean first = true;
-				while (git.hasNode()) {
-					prev = next;
-					next = context.getPoint(git.next());
-					angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
-					piv = true;
-					if (first) {
-						curr = succ = next;
-//						len = psize;
-						first = false;
-					} else {
-						while (curr.distance(next) >= len) {
-							if (piv) {
-								double rem = len;
-								double s = prev.distance(next);
-								double p = curr.distance(prev);
-								if ((s > 0) && (p > 0)) {
-									double n = curr.distance(next);
-									double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
-									double phi = Math.asin(p / len * Math.sin(theta));
-									rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						prev = next;
+						next = context.getPoint(git.next());
+						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
+						piv = true;
+						if (first) {
+							curr = succ = next;
+							// len = psize;
+							first = false;
+						} else {
+							while (curr.distance(next) >= len) {
+								if (piv) {
+									double rem = len;
+									double s = prev.distance(next);
+									double p = curr.distance(prev);
+									if ((s > 0) && (p > 0)) {
+										double n = curr.distance(next);
+										double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
+										double phi = Math.asin(p / len * Math.sin(theta));
+										rem = len * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
+									}
+									succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
+									piv = false;
+								} else {
+									succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
 								}
-								succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
-								piv = false;
-							} else {
-								succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
+								// Symbols.drawSymbol(g2, symbol, sScale, curr.getX(),
+								// curr.getY(), new Delta(Handle.BC,
+								// AffineTransform.getRotateInstance(Math.atan2((succ.getY() -
+								// curr.getY()), (succ.getX() - curr.getX())) +
+								// Math.toRadians(90))), null);
+								curr = succ;
+								// len = psize;
 							}
-//								Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))), null);
-							curr = succ;
-//							len = psize;
 						}
 					}
 				}

@@ -33,8 +33,6 @@ import s57.S57map.*;
 
 public class MapImage extends ImageryLayer implements ZoomChangeListener, MapContext {
 
-	private Smed2Action dlg;
-
 	double top;
 	double bottom;
 	double left;
@@ -43,9 +41,8 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapCon
 	double height;
 	int zoom;
 	
-	public MapImage(ImageryInfo info, Smed2Action d) {
+	public MapImage(ImageryInfo info) {
 		super(info);
-		dlg = d;
 		MapView.addZoomChangeListener(this);
 		zoomChanged();
 	}
@@ -78,7 +75,7 @@ public class MapImage extends ImageryLayer implements ZoomChangeListener, MapCon
 		g2.setPaint(Color.black);
 		g2.setFont(new Font("Arial", Font.BOLD, 20));
 		g2.drawString(("Z" + zoom), (rect.x + rect.width - 40), (rect.y + rect.height - 10));
-		Renderer.reRender(g2, zoom, Math.pow(2, (zoom-12)), dlg.map, this);
+		Renderer.reRender(g2, zoom, Math.pow(2, (zoom-12)), Smed2Action.map, this);
 	}
 
 	@Override

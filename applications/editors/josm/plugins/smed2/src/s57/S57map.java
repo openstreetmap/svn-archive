@@ -170,9 +170,9 @@ public class S57map {
 		}
 	}
 	
-	public class Comp {
-		public long ref;
-		public int size;
+	public class Comp {			// Composite spatial element
+		public long ref;			// ID of Comp
+		public int size;			// Number of Prims in this Comp
 		public Comp(long r, int s) {
 			ref = r;
 			size = s;
@@ -315,35 +315,7 @@ public class S57map {
 	public void endFile() {
 		for (long id : index.keySet()) {
 			Feature feature = index.get(id);
-			if ((feature.geom.prim == Pflag.LINE) || (feature.geom.prim == Pflag.AREA)) {
-				feature.geom.outers = 1;
-				feature.geom.inners = 0;
-				feature.geom.refs = new ArrayList<Comp>();
-				Comp comp = new Comp(ref++, 0);
-				feature.geom.refs.add(comp);
-				ListIterator<S57map.Prim> ite = feature.geom.elems.listIterator();
-				long first = 0;
-				while (ite.hasNext()) {
-					Prim prim = ite.next();
-					Edge edge = edges.get(prim.id);
-					if (!prim.outer) {
-						if (first == 0) {
-							feature.geom.inners++;
-							comp = new Comp(ref++, 0);
-							feature.geom.refs.add(comp);
-							first = edge.first;
-						} else {
-							if (edge.last == first) {
-								first = 0;
-							}
-						}
-					}
-					comp.size++;
-				}
-			}
-		}
-		for (long id : index.keySet()) {
-			Feature feature = index.get(id);
+			sortGeom(feature);
 			for (Reln reln : feature.rels) {
 				Feature rel = index.get(reln.id);
 				if (cmpGeoms(feature.geom, rel.geom)) {
@@ -425,7 +397,6 @@ public class S57map {
 		feature = new Feature();
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.AREA;
-		feature.geom.elems.add(new Prim(id));
 		edge = null;
 	}
 
@@ -502,15 +473,21 @@ public class S57map {
 			edges.put(id, edge);
 			nodes.get(edge.first).flg = Nflag.CONN;
 			nodes.get(edge.last).flg = Nflag.CONN;
-			feature.geom.length = calcLength(feature.geom);
 			if (edge.first == edge.last) {
 				feature.geom.prim = Pflag.AREA;
+			}
+			sortGeom(feature);
+			feature.geom.length = calcLength(feature.geom);
+			if (feature.geom.prim == Pflag.AREA) {
 				feature.geom.area = calcArea(feature.geom);
 			} else {
 				feature.geom.area = 0;
 			}
 			break;
 		case AREA:
+			sortGeom(feature);
+			feature.geom.length = calcLength(feature.geom);
+			feature.geom.area = calcArea(feature.geom);
 			break;
 		default:
 			break;
@@ -527,134 +504,131 @@ public class S57map {
 
 	// Utility methods
 	
-	public void sortGeom() {
-		for (long id : index.keySet()) {
-			feature = index.get(id);
-			Geom sort = new Geom(feature.geom.prim);
-			long first = 0;
-			long last = 0;
-			Comp comp = null;
-			boolean next = true;
-			if ((feature.geom.prim == Pflag.LINE) || (feature.geom.prim == Pflag.AREA)) {
-				int sweep = feature.geom.elems.size();
-				while (!feature.geom.elems.isEmpty()) {
-					Prim prim = feature.geom.elems.remove(0);
-					Edge edge = edges.get(prim.id);
-					if (next == true) {
-						next = false;
-						if (prim.forward) {
-							first = edge.first;
-							last = edge.last;
-						} else {
-							first = edge.last;
-							last = edge.first;
-						}
-						sort.elems.add(prim);
-						if (prim.outer) {
-							sort.outers++;
-						} else {
-							sort.inners++;
-						}
-						comp = new Comp(ref++, 1);
-						sort.refs.add(comp);
+	public void sortGeom(Feature feature) {
+		Geom sort = new Geom(feature.geom.prim);
+		long first = 0;
+		long last = 0;
+		Comp comp = null;
+		boolean next = true;
+		if ((feature.geom.prim == Pflag.LINE) || (feature.geom.prim == Pflag.AREA)) {
+			int sweep = feature.geom.elems.size();
+			while (!feature.geom.elems.isEmpty()) {
+				Prim prim = feature.geom.elems.remove(0);
+				Edge edge = edges.get(prim.id);
+				if (next == true) {
+					next = false;
+					if (prim.forward) {
+						first = edge.first;
+						last = edge.last;
 					} else {
-						if (prim.forward) {
-							if (edge.first == last) {
-								sort.elems.add(prim);
-								last = edge.last;
-								comp.size++;
-							} else if (edge.last == first) {
-								sort.elems.add(0, prim);
-								first = edge.first;
-								comp.size++;
-							} else {
-								feature.geom.elems.add(prim);
-							}
-						} else {
-							if (edge.last == last) {
-								sort.elems.add(prim);
-								last = edge.first;
-								comp.size++;
-							} else if (edge.first == first) {
-								sort.elems.add(0, prim);
-								first = edge.last;
-								comp.size++;
-							} else {
-								feature.geom.elems.add(prim);
-							}
-						}
+						first = edge.last;
+						last = edge.first;
 					}
-					if (--sweep == 0) {
-						next = true;
-						sweep = feature.geom.elems.size();
-					}
-				}
-				if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
-					sort.prim = Pflag.AREA;
-				}
-				feature.geom = sort;
-			} 
-			if (feature.geom.prim == Pflag.AREA) {
-				ArrayList<Prim> outers = new ArrayList<Prim>();
-				ArrayList<Prim> inners = new ArrayList<Prim>();
-				for (Prim prim : feature.geom.elems) {
+					sort.elems.add(prim);
 					if (prim.outer) {
-						outers.add(prim);
+						sort.outers++;
 					} else {
-						inners.add(prim);
+						sort.inners++;
 					}
-				}
-				ArrayList<Prim> sorting = outers;
-				ArrayList<Prim> closed = null;
-				sort = new Geom(feature.geom.prim);
-				sort.outers = feature.geom.outers;
-				sort.inners = feature.geom.inners;
-				sort.refs = feature.geom.refs;
-				next = true;
-				while (!sorting.isEmpty()) {
-					Prim prim = sorting.remove(0);
-					Edge edge = edges.get(prim.id);
-					if (next == true) {
-						next = false;
-						closed = new ArrayList<Prim>();
-						closed.add(prim);
-						if (prim.forward) {
-							first = edge.first;
+					comp = new Comp(ref++, 1);
+					sort.refs.add(comp);
+				} else {
+					if (prim.forward) {
+						if (edge.first == last) {
+							sort.elems.add(prim);
 							last = edge.last;
+							comp.size++;
+						} else if (edge.last == first) {
+							sort.elems.add(0, prim);
+							first = edge.first;
+							comp.size++;
 						} else {
-							first = edge.last;
-							last = edge.first;
+							feature.geom.elems.add(prim);
 						}
 					} else {
-						if (prim.forward) {
-							if (edge.first == last) {
-								last = edge.last;
-								closed.add(prim);
-							} else {
-								sorting.add(0, prim);
-								next = true;
-							}
+						if (edge.last == last) {
+							sort.elems.add(prim);
+							last = edge.first;
+							comp.size++;
+						} else if (edge.first == first) {
+							sort.elems.add(0, prim);
+							first = edge.last;
+							comp.size++;
 						} else {
-							if (edge.last == last) {
-								last = edge.first;
-								closed.add(prim);
-							} else {
-								sorting.add(0, prim);
-								next = true;
-							}
+							feature.geom.elems.add(prim);
 						}
 					}
-					if (first == last) {
-						sort.elems.addAll(closed);
-						next = true;
+				}
+				if (--sweep == 0) {
+					next = true;
+					sweep = feature.geom.elems.size();
+				}
+			}
+			if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
+				sort.prim = Pflag.AREA;
+			}
+			feature.geom = sort;
+		}
+		if (feature.geom.prim == Pflag.AREA) {
+			ArrayList<Prim> outers = new ArrayList<Prim>();
+			ArrayList<Prim> inners = new ArrayList<Prim>();
+			for (Prim prim : feature.geom.elems) {
+				if (prim.outer) {
+					outers.add(prim);
+				} else {
+					inners.add(prim);
+				}
+			}
+			ArrayList<Prim> sorting = outers.size() > 0 ? outers : inners;
+			ArrayList<Prim> closed = null;
+			sort = new Geom(feature.geom.prim);
+			sort.outers = feature.geom.outers;
+			sort.inners = feature.geom.inners;
+			sort.refs = feature.geom.refs;
+			next = true;
+			while (!sorting.isEmpty()) {
+				Prim prim = sorting.remove(0);
+				Edge edge = edges.get(prim.id);
+				if (next == true) {
+					next = false;
+					closed = new ArrayList<Prim>();
+					closed.add(prim);
+					if (prim.forward) {
+						first = edge.first;
+						last = edge.last;
+					} else {
+						first = edge.last;
+						last = edge.first;
 					}
-					if (sorting.isEmpty() && sorting == outers) {
-						sorting = inners;
-						next = true;
+				} else {
+					if (prim.forward) {
+						if (edge.first == last) {
+							last = edge.last;
+							closed.add(prim);
+						} else {
+							sorting.add(0, prim);
+							next = true;
+						}
+					} else {
+						if (edge.last == last) {
+							last = edge.first;
+							closed.add(prim);
+						} else {
+							sorting.add(0, prim);
+							next = true;
+						}
 					}
 				}
-				feature.geom = sort;
+				if (first == last) {
+					sort.elems.addAll(closed);
+					next = true;
+				}
+				if (sorting.isEmpty() && sorting == outers) {
+					sorting = inners;
+					next = true;
+				}
 			}
+			feature.geom = sort;
 		}
 	}
 	
@@ -778,15 +752,20 @@ public class S57map {
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
-		GeomIterator it = new GeomIterator(geom);
-		it.nextComp();
-		while (it.hasNode()) {
-			llon = lon;
-			llat = lat;
-			node = it.next();
-			lat = node.lat;
-			lon = node.lon;
-			sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+		GeomIterator git = new GeomIterator(geom);
+		if (git.hasComp()) {
+			git.nextComp();
+			while (git.hasEdge()) {
+				git.nextEdge();
+				while (git.hasNode()) {
+					llon = lon;
+					llat = lat;
+					node = git.next();
+					lat = node.lat;
+					lon = node.lon;
+					sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+				}
+			}
 		}
 		return sigma / 2.0;
 	}
@@ -804,19 +783,26 @@ public class S57map {
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
-		GeomIterator it = new GeomIterator(geom);
-		it.nextComp();
-		if (it.hasNode()) {
-			node = it.next();
-			lat = node.lat;
-			lon = node.lon;
-			while (it.hasNode()) {
-				llon = lon;
-				llat = lat;
-				node = it.next();
-				lat = node.lat;
-				lon = node.lon;
-				sigma += Math.acos(Math.sin(lat) * Math.sin(llat) + Math.cos(lat) * Math.cos(llat) * Math.cos(llon - lon));
+		boolean first = true;
+		GeomIterator git = new GeomIterator(geom);
+		while (git.hasComp()) {
+			git.nextComp();
+			while (git.hasEdge()) {
+				git.nextEdge();
+				while (git.hasNode()) {
+					node = git.next();
+					if (first) {
+						first = false;
+						lat = node.lat;
+						lon = node.lon;
+					} else {
+						llat = lat;
+						llon = lon;
+						lat = node.lat;
+						lon = node.lon;
+						sigma += Math.acos(Math.sin(lat) * Math.sin(llat) + Math.cos(lat) * Math.cos(llat) * Math.cos(llon - lon));
+					}
+				}
 			}
 		}
 		return sigma * 3444;
@@ -831,58 +817,74 @@ public class S57map {
 		case POINT:
 			return nodes.get(feature.geom.elems.get(0).id);
 		case LINE:
-			GeomIterator it = new GeomIterator(feature.geom);
-			it.nextComp();
-			while (it.hasNode()) {
-				Snode node = it.next();
-				lat = node.lat;
-				lon = node.lon;
-				if (first) {
-					first = false;
-				} else {
-					sarc += (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+			GeomIterator git = new GeomIterator(feature.geom);
+			while (git.hasComp()) {
+				git.nextComp();
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						Snode node = git.next();
+						lat = node.lat;
+						lon = node.lon;
+						if (first) {
+							first = false;
+						} else {
+							sarc += (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+						}
+						llat = lat;
+						llon = lon;
+					}
 				}
-				llat = lat;
-				llon = lon;
 			}
 			double harc = sarc / 2;
 			sarc = 0;
 			first = true;
-			it = new GeomIterator(feature.geom);
-			while (it.hasNode()) {
-				it.nextComp();
-				Snode node = it.next();
-				lat = node.lat;
-				lon = node.lon;
-				if (first) {
-					first = false;
-				} else {
-					sarc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
-					if (sarc > harc)
-						break;
+			git = new GeomIterator(feature.geom);
+			while (git.hasComp()) {
+				git.nextComp();
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						git.nextComp();
+						Snode node = git.next();
+						lat = node.lat;
+						lon = node.lon;
+						if (first) {
+							first = false;
+						} else {
+							sarc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+							if (sarc > harc)
+								break;
+						}
+						harc -= sarc;
+						llat = lat;
+						llon = lon;
+					}
 				}
-				harc -= sarc;
-				llat = lat;
-				llon = lon;
 			}
 			return new Snode(llat + ((lat - llat) * harc / sarc), llon + ((lon - llon) * harc / sarc));
 		case AREA:
-			GeomIterator bit = new GeomIterator(feature.geom);
-			bit.nextComp();
-			while (bit.hasNode()) {
-				Snode node = bit.next();
-				lat = node.lat;
-				lon = node.lon;
-				if (first) {
-					first = false;
-				} else {
-					double arc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
-					slat += ((lat + llat) / 2 * arc);
-					slon += ((lon + llon) / 2 * arc);
-					sarc += arc;
+			git = new GeomIterator(feature.geom);
+			while (git.hasComp()) {
+				git.nextComp();
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						Snode node = git.next();
+						lat = node.lat;
+						lon = node.lon;
+						if (first) {
+							first = false;
+						} else {
+							double arc = (Math.acos(Math.cos(lon - llon) * Math.cos(lat - llat)));
+							slat += ((lat + llat) / 2 * arc);
+							slon += ((lon + llon) / 2 * arc);
+							sarc += arc;
+						}
+						llon = lon;
+						llat = lat;
+					}
 				}
-				llon = lon;
-				llat = lat;
 			}
 			return new Snode((sarc > 0.0 ? slat / sarc : 0.0), (sarc > 0.0 ? slon / sarc : 0.0));
 		default:

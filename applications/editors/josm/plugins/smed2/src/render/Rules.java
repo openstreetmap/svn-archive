@@ -627,6 +627,8 @@ public class Rules {
 			else
 				Renderer.symbol(feature, Harbours.Post);
 			break;
+		default:
+			break;
 		}
 		Signals.addSignals(feature);
 	}

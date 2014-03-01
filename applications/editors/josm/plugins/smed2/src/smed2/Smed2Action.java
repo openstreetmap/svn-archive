@@ -133,7 +133,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		showFrame.setVisible(false);
 
 		// System.out.println("hello");
-		rendering = new MapImage(new ImageryInfo("OpenSeaMap"), this);
+		rendering = new MapImage(new ImageryInfo("OpenSeaMap"));
 		rendering.setBackgroundLayer(true);
 		Main.main.addLayer(rendering);
 		MapView.addEditLayerChangeListener(this);
@@ -161,7 +161,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data;
-//			makeMap();
+			makeMap();
 		} else {
 			data = null;
 			map = null;
@@ -183,7 +183,7 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 						feature = nextFeature;
 						Feature id = map.index.get(feature.getUniqueId());
 						if (id != null) {
-//							panelMain.parseMark(id);
+							panelMain.parseMark(id);
 							showFrame.setVisible(true);
 							showFrame.showFeature(feature, map);
 						}
@@ -213,27 +213,29 @@ public class Smed2Action extends JosmAction implements EditLayerChangeListener, 
 				map.tagsDone(node.getUniqueId());
 			}
 			for (Way way : data.getWays()) {
-				map.addEdge(way.getUniqueId());
-				for (Node node : way.getNodes()) {
-					map.addToEdge((node.getUniqueId()));
+				if (way.getNodesCount() > 0) {
+					map.addEdge(way.getUniqueId());
+					for (Node node : way.getNodes()) {
+						map.addToEdge((node.getUniqueId()));
+					}
+					for (Entry<String, String> entry : way.getKeys().entrySet()) {
+						map.addTag(entry.getKey(), entry.getValue());
+					}
+					map.tagsDone(way.getUniqueId());
 				}
-				for (Entry<String, String> entry : way.getKeys().entrySet()) {
-					map.addTag(entry.getKey(), entry.getValue());
-				}
-				map.tagsDone(way.getUniqueId());
 			}
 			for (Relation rel : data.getRelations()) {
-				if (rel.isMultipolygon()) {
+				if (rel.isMultipolygon() && (rel.getMembersCount() > 0)) {
 					map.addArea(rel.getUniqueId());
 					for (RelationMember mem : rel.getMembers()) {
 						if (mem.getType() == OsmPrimitiveType.WAY)
 							map.addToArea(mem.getUniqueId(), (mem.getRole().equals("outer")));
 					}
+					for (Entry<String, String> entry : rel.getKeys().entrySet()) {
+						map.addTag(entry.getKey(), entry.getValue());
+					}
+					map.tagsDone(rel.getUniqueId());
 				}
-				for (Entry<String, String> entry : rel.getKeys().entrySet()) {
-					map.addTag(entry.getKey(), entry.getValue());
-				}
-				map.tagsDone(rel.getUniqueId());
 			}
 			if (rendering != null) rendering.zoomChanged();
 		}

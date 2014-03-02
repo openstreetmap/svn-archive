@@ -57,7 +57,9 @@ public class PanelS57 extends JPanel {
 			Main.pref.put("smed2plugin.typesfile", ifc.getSelectedFile().getPath());
 			Scanner tin = new Scanner(new FileInputStream(ifc.getSelectedFile()));
 			while (tin.hasNext()) {
-				types.add(S57obj.enumType(tin.next()));
+				Obj type = S57obj.enumType(tin.next());
+				if (type != Obj.UNKOBJ)
+					types.add(type);
 			}
 			tin.close();
 		}

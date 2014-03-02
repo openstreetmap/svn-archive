@@ -42,7 +42,9 @@ public class Js57toosm {
 		if (args.length == 2) {
 			Scanner tin = new Scanner(new FileInputStream(args[1]));
 			while (tin.hasNext()) {
-				types.add(S57obj.enumType(tin.next()));
+				Obj type = S57obj.enumType(tin.next());
+				if (type != Obj.UNKOBJ)
+					types.add(type);
 			}
 			tin.close();
 		}

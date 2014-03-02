@@ -845,7 +845,6 @@ public class S57map {
 				while (git.hasEdge()) {
 					git.nextEdge();
 					while (git.hasNode()) {
-						git.nextComp();
 						Snode node = git.next();
 						lat = node.lat;
 						lon = node.lon;

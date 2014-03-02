@@ -18,6 +18,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,6 +27,7 @@ import messages.Messages;
 
 import org.openstreetmap.josm.Main;
 
+import s57.S57val.AttVal;
 import s57.S57att.*;
 import s57.S57obj.*;
 import s57.S57map.*;
@@ -174,7 +176,7 @@ public class PanelMain extends JPanel {
 		decode.append("\tObjects:\n");
 		for (Obj obj : feature.objs.keySet()) {
 			decode.append("\t\t" + Messages.getString(obj.name()) + "\n");
-/*			if (feature.aggr.objs.get(obj).size() != 0) {
+			if (feature.objs.get(obj).size() != 0) {
 				for (AttMap atts : feature.objs.get(obj).values()) {
 					for (Att att : atts.keySet()) {
 						AttVal<?> item = atts.get(att);
@@ -184,13 +186,14 @@ public class PanelMain extends JPanel {
 							break;
 						case L:
 							decode.append("\t\t\t" + Messages.getString(att.name()) + ": ");
-							Iterator<?> it = ((ArrayList<?>)item.val).iterator();
-							while (it.hasNext()) {
-								Object val = it.next();
-								decode.append(Messages.getString(((Enum<?>)val).name()));
-								if (it.hasNext()) {
+							boolean first = true;
+							for (Object val : (ArrayList<?>)item.val) {
+								if (!first) {
 									decode.append(", ");
+								} else {
+									first = false;
 								}
+								decode.append(Messages.getString(((Enum<?>)val).name()));
 							}
 							decode.append("\n");
 							break;
@@ -200,7 +203,7 @@ public class PanelMain extends JPanel {
 					}
 				}
 			}
-*/		}
+		}
 	}
 	
 	public void clearMark() {

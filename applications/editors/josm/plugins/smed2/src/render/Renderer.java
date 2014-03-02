@@ -536,11 +536,7 @@ public class Renderer {
 								} else {
 									succ = new Point2D.Double(curr.getX() + (len * Math.cos(angle)), curr.getY() + (len * Math.sin(angle)));
 								}
-								// Symbols.drawSymbol(g2, symbol, sScale, curr.getX(),
-								// curr.getY(), new Delta(Handle.BC,
-								// AffineTransform.getRotateInstance(Math.atan2((succ.getY() -
-								// curr.getY()), (succ.getX() - curr.getX())) +
-								// Math.toRadians(90))), null);
+								// Symbols.drawSymbol(g2, symbol, sScale, curr.getX(), curr.getY(), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())) + Math.toRadians(90))), null);
 								curr = succ;
 								// len = psize;
 							}

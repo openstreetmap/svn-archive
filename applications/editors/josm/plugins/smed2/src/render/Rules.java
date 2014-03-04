@@ -984,12 +984,12 @@ public class Rules {
 				if (lev == WatLEV.LEV_CVRS) {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
 					if (Renderer.zoom >= 15)
-						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, 20);
+						Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, 80);
 				} else {
 					Renderer.lineVector(feature, new LineStyle(Color.black, 10, null, null));
 				}
 				if (Renderer.zoom >= 15)
-					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -20);
+					Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -30);
 			}
 		}
 	}

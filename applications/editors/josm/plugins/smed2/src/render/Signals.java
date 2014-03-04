@@ -184,12 +184,11 @@ public class Signals {
 	public static void lights(Feature feature) {
 		
 	}
-	
-	private static Point2D.Double radial(Snode centre, double radius, double angle) {
-		Point2D origin = Renderer.context.getPoint(centre);
-		double mile = Renderer.context.getPoint(Renderer.map.new Snode((centre.lat + Math.toRadians(1/60)), centre.lon)).getY() - origin.getY();
-		return new Point2D.Double(origin.getX() - (radius * mile * Math.sin(angle)), origin.getY() - (radius * mile * Math.cos(angle)));
-	}
+
+//	private static Point2D.Double radial(Feature feature, Snode centre, double radius, double angle) {
+//		Point2D origin = Renderer.context.getPoint(centre);
+//		return new Point2D.Double(origin.getX() - (radius * Renderer.context.mile(feature) * Math.sin(angle)), origin.getY() - (radius * Renderer.context.mile(feature) * Math.cos(angle)));
+//	}
 /*
 void renderFlare(Item_t *item) {
   char *col = light_colours[COL_MAG];

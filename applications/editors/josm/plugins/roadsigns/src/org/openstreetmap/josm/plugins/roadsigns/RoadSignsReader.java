@@ -20,14 +20,13 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.io.OsmDataParsingException;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.ParseException;
 import org.openstreetmap.josm.plugins.roadsigns.javacc.TokenMgrError;
 import org.openstreetmap.josm.tools.LanguageInfo;
+import org.openstreetmap.josm.tools.XmlParsingException;
 
 /**
  * Parses a road sign preset file.
@@ -201,7 +200,7 @@ public class RoadSignsReader {
             return result;
         }
 
-        private String getMandatoryAttribute(Attributes atts, String ident) throws OsmDataParsingException {
+        private String getMandatoryAttribute(Attributes atts, String ident) throws XmlParsingException {
             String result = atts.getValue(ident);
             if (result == null) {
                 throwException("missing attribute: "+ident);
@@ -222,18 +221,18 @@ public class RoadSignsReader {
         protected void throwException(Exception e) throws ExtendedParsingException {
             throw new ExtendedParsingException(e).rememberLocation(locator);
         }
-        protected void throwException(String msg) throws OsmDataParsingException {
-            throw new OsmDataParsingException(msg).rememberLocation(locator);
+        protected void throwException(String msg) throws XmlParsingException {
+            throw new XmlParsingException(msg).rememberLocation(locator);
         }
 
         private void warning(String s) {
             try {
                 throwException(s);
-            } catch (OsmDataParsingException ex) {
+            } catch (XmlParsingException ex) {
                 System.err.println("Warning: "+ex.getMessage());
             }
         }
-        public void wireSupplements() throws OsmDataParsingException {
+        public void wireSupplements() throws XmlParsingException {
             Map<String, Sign> map = new HashMap<String, Sign>();
             for (Sign sign : allSigns) {
                 if (map.get(sign.id) != null)

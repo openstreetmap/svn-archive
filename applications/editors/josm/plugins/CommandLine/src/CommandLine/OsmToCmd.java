@@ -40,9 +40,9 @@ import org.openstreetmap.josm.data.osm.User;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WayData;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.OsmDataParsingException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.tools.DateUtils;
+import org.openstreetmap.josm.tools.XmlParsingException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -93,8 +93,8 @@ final class OsmToCmd {
             this.locator = locator;
         }
 
-        protected void throwException(String msg) throws OsmDataParsingException {
-            throw new OsmDataParsingException(msg).rememberLocation(locator);
+        protected void throwException(String msg) throws XmlParsingException {
+            throw new XmlParsingException(msg).rememberLocation(locator);
         }
 
         private OsmPrimitive currentPrimitive;

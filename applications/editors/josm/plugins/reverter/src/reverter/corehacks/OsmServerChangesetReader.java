@@ -20,10 +20,10 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.ChangesetQuery;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmChangesetParser;
-import org.openstreetmap.josm.io.OsmDataParsingException;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
+import org.openstreetmap.josm.tools.XmlParsingException;
 
 /**
  * Reads the history of an {@see OsmPrimitive} from the OSM API server.
@@ -193,7 +193,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
             return ds;
         } catch(UnsupportedEncodingException e) {
             throw new OsmTransferException(e);
-        } catch(OsmDataParsingException e) {
+        } catch(XmlParsingException e) {
             throw new OsmTransferException(e);
         } finally {
             monitor.finishTask();

@@ -23,9 +23,9 @@ import org.openstreetmap.josm.data.osm.history.HistoryRelation;
 import org.openstreetmap.josm.data.osm.history.HistoryWay;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.OsmDataParsingException;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.DateUtils;
+import org.openstreetmap.josm.tools.XmlParsingException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -58,19 +58,19 @@ public class OsmChangesetContentParser {
             this.locator = locator;
         }
 
-        protected void throwException(String message) throws OsmDataParsingException {
-            throw new OsmDataParsingException(
+        protected void throwException(String message) throws XmlParsingException {
+            throw new XmlParsingException(
                     message
             ).rememberLocation(locator);
         }
 
-        protected void throwException(Exception e) throws OsmDataParsingException {
-            throw new OsmDataParsingException(
+        protected void throwException(Exception e) throws XmlParsingException {
+            throw new XmlParsingException(
                     e
             ).rememberLocation(locator);
         }
 
-        protected long getMandatoryAttributeLong(Attributes attr, String name) throws SAXException{
+        protected long getMandatoryAttributeLong(Attributes attr, String name) throws SAXException {
             String v = attr.getValue(name);
             if (v == null) {
                 throwException(tr("Missing mandatory attribute ''{0}''.", name));
@@ -299,10 +299,9 @@ public class OsmChangesetContentParser {
      * @param progressMonitor the progress monitor. Set to {@see NullProgressMonitor#INSTANCE}
      * if null
      * @return the parsed data
-     * @throws OsmDataParsingException thrown if something went wrong. Check for chained
-     * exceptions.
+     * @throws XmlParsingException if something went wrong. Check for chained exceptions.
      */
-    public ChangesetDataSet parse(ProgressMonitor progressMonitor) throws OsmDataParsingException {
+    public ChangesetDataSet parse(ProgressMonitor progressMonitor) throws XmlParsingException {
         if (progressMonitor == null) {
             progressMonitor = NullProgressMonitor.INSTANCE;
         }
@@ -310,14 +309,14 @@ public class OsmChangesetContentParser {
             progressMonitor.beginTask("");
             progressMonitor.indeterminateSubTask(tr("Parsing changeset content ..."));
             SAXParserFactory.newInstance().newSAXParser().parse(source, new Parser());
-        } catch(OsmDataParsingException e){
+        } catch(XmlParsingException e){
             throw e;
         } catch (ParserConfigurationException e) {
-            throw new OsmDataParsingException(e);
+            throw new XmlParsingException(e);
         } catch(SAXException e) {
-            throw new OsmDataParsingException(e);
+            throw new XmlParsingException(e);
         } catch(IOException e) {
-            throw new OsmDataParsingException(e);
+            throw new XmlParsingException(e);
         } finally {
             progressMonitor.finishTask();
         }
@@ -328,10 +327,9 @@ public class OsmChangesetContentParser {
      * Parses the content from the input source
      *
      * @return the parsed data
-     * @throws OsmDataParsingException thrown if something went wrong. Check for chained
-     * exceptions.
+     * @throws XmlParsingException if something went wrong. Check for chained exceptions.
      */
-    public ChangesetDataSet parse() throws OsmDataParsingException {
+    public ChangesetDataSet parse() throws XmlParsingException {
         return parse(null);
     }
 }

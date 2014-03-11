@@ -122,6 +122,18 @@
 </Style>
 <Style name="town">
     <Rule>
+     <Filter>([place] = 'town' or [place] = 'large_town') and [population] &gt;= 50000</Filter>
+     &maxscale_zoom7;
+     &minscale_zoom7;
+     <TextSymbolizer size="8" fill="#000" fontset-name="book-fonts" halo-radius="1" wrap-width="20" minimum-distance="6">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+     <Filter>([place] = 'town' or [place] = 'large_town') and [population] &gt;= 25000</Filter>
+     &maxscale_zoom8;
+     &minscale_zoom8;
+     <TextSymbolizer size="8" fill="#000" fontset-name="book-fonts" halo-radius="1" wrap-width="20" minimum-distance="6">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
       <Filter>[place] = 'town' or [place]='large_town'</Filter>
       &maxscale_zoom9;
       &minscale_zoom9;
@@ -208,6 +220,7 @@
       (select way,place,&get_name;,ref
        from &prefix;_point
        where place in ('country','state','continent')
+       order by population desc
       ) as placenames</Parameter>
       &datasource-settings;
     </Datasource>
@@ -219,6 +232,7 @@
       (select way,place,&get_name;,ref
        from &prefix;_point
        where place in ('city','metropolis','town') and capital='yes'
+       order by population desc
       ) as placenames</Parameter>
       &datasource-settings;
     </Datasource>
@@ -231,6 +245,7 @@
       from &prefix;_point
       where place in ('city','metropolis')
         and (capital is null or capital != 'yes')
+        order by population desc
       ) as placenames</Parameter>
       &datasource-settings;
     </Datasource>
@@ -241,10 +256,11 @@
     <StyleName>town2</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select way,place,&get_name;
+      (select way,place,&get_name;,population
       from &prefix;_point
       where place in ('city','metropolis','town','large_town','small_town')
         and (capital is null or capital != 'yes')
+      order by population desc
       ) as placenames</Parameter>
       &datasource-settings;
     </Datasource>
@@ -258,6 +274,7 @@
       (select way,place,&get_name;
       from &prefix;_point
       where place in ('suburb','village','large_village','hamlet','locality','isolated_dwelling','farm')
+      order by population desc
       ) as placenames</Parameter>
       &datasource-settings;
     </Datasource>

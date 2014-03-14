@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.*;
 import java.util.ArrayList;
+import java.util.EnumMap;
 
 import s57.S57att.*;
 import s57.S57obj.*;
@@ -24,6 +25,60 @@ import symbols.Symbols.*;
 
 public class Signals {
 
+	static final EnumMap<ColCOL, Color> lightColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static {
+		lightColours.put(ColCOL.COL_WHT, new Color(0xffff00));
+		lightColours.put(ColCOL.COL_RED, new Color(0xff0000));
+		lightColours.put(ColCOL.COL_GRN, new Color(0x00ff00));
+		lightColours.put(ColCOL.COL_BLU, new Color(0x0000ff));
+		lightColours.put(ColCOL.COL_YEL, new Color(0xffff00));
+		lightColours.put(ColCOL.COL_AMB, new Color(0xfbf00f));
+		lightColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
+		lightColours.put(ColCOL.COL_ORG, Color.orange);
+		lightColours.put(ColCOL.COL_MAG, Color.magenta);
+	}
+
+	static final EnumMap<ColCOL, String> lightLetters = new EnumMap<ColCOL, String>(ColCOL.class);
+	static {
+		lightLetters.put(ColCOL.COL_WHT, "W");
+		lightLetters.put(ColCOL.COL_RED, "R");
+		lightLetters.put(ColCOL.COL_GRN, "G");
+		lightLetters.put(ColCOL.COL_BLU, "Bu");
+		lightLetters.put(ColCOL.COL_YEL, "Y");
+		lightLetters.put(ColCOL.COL_AMB, "Am");
+		lightLetters.put(ColCOL.COL_VIO, "Vi");
+		lightLetters.put(ColCOL.COL_ORG, "Or");
+	}
+
+	static final EnumMap<LitCHR, String> lightCharacters = new EnumMap<LitCHR, String>(LitCHR.class);
+	static {
+		lightCharacters.put(LitCHR.CHR_F, "W");
+		lightCharacters.put(LitCHR.CHR_FL, "Fl");
+		lightCharacters.put(LitCHR.CHR_LFL, "LFl");
+		lightCharacters.put(LitCHR.CHR_Q, "Q");
+		lightCharacters.put(LitCHR.CHR_VQ, "VQ");
+		lightCharacters.put(LitCHR.CHR_UQ, "UQ");
+		lightCharacters.put(LitCHR.CHR_ISO, "Iso");
+		lightCharacters.put(LitCHR.CHR_OC, "Oc");
+		lightCharacters.put(LitCHR.CHR_IQ, "IQ");
+		lightCharacters.put(LitCHR.CHR_IVQ, "IVQ");
+		lightCharacters.put(LitCHR.CHR_IUQ, "IUQ");
+		lightCharacters.put(LitCHR.CHR_MO, "Mo");
+		lightCharacters.put(LitCHR.CHR_FFL, "FFl");
+		lightCharacters.put(LitCHR.CHR_FLLFL, "FlLFl");
+		lightCharacters.put(LitCHR.CHR_OCFL, "OcFl");
+		lightCharacters.put(LitCHR.CHR_FLFL, "FLFl");
+		lightCharacters.put(LitCHR.CHR_ALOC, "Al.Oc");
+		lightCharacters.put(LitCHR.CHR_ALLFL, "Al.LFl");
+		lightCharacters.put(LitCHR.CHR_ALFL, "Al.Fl");
+		lightCharacters.put(LitCHR.CHR_ALGR, "Al.Gr");
+		lightCharacters.put(LitCHR.CHR_QLFL, "Q+LFl");
+		lightCharacters.put(LitCHR.CHR_VQLFL, "VQ+LFl");
+		lightCharacters.put(LitCHR.CHR_UQLFL, "UQ+LFl");
+		lightCharacters.put(LitCHR.CHR_AL, "Al");
+		lightCharacters.put(LitCHR.CHR_ALFFL, "Al.FFl");
+	}
+	
 	public static void addSignals(Feature feature) {
 	  if (feature.objs.containsKey(Obj.FOGSIG)) fogSignals(feature);
 	  if (feature.objs.containsKey(Obj.RTPBCN)) radarStations(feature);
@@ -32,8 +87,41 @@ public class Signals {
 	  if (feature.objs.containsKey(Obj.LIGHTS)) lights(feature);
 	}
 	
+	static final EnumMap<CatFOG, String> fogSignals = new EnumMap<CatFOG, String>(CatFOG.class);
+	static {
+		fogSignals.put(CatFOG.FOG_EXPL, "Explos");
+		fogSignals.put(CatFOG.FOG_DIA, "Dia");
+		fogSignals.put(CatFOG.FOG_SIRN, "Siren");
+		fogSignals.put(CatFOG.FOG_NAUT, "Horn");
+		fogSignals.put(CatFOG.FOG_REED, "Horn");
+		fogSignals.put(CatFOG.FOG_TYPH, "Horn");
+		fogSignals.put(CatFOG.FOG_BELL, "Bell");
+		fogSignals.put(CatFOG.FOG_WHIS, "Whis");
+		fogSignals.put(CatFOG.FOG_GONG, "Gong");
+		fogSignals.put(CatFOG.FOG_HORN, "Horn");
+	}
+
 	public static void fogSignals(Feature feature) {
-		
+		Renderer.symbol(feature, Beacons.FogSignal);
+		AttMap atts = feature.objs.get(Obj.FOGSIG).get(0);
+		String str = "";
+		if (atts.containsKey(Att.CATFOG)) {
+			str += fogSignals.get(atts.get(Att.CATFOG).val);
+		}
+		if (atts.containsKey(Att.SIGGRP)) {
+			str += "(" + atts.get(Att.SIGGRP).val + ")";
+		} else {
+			str += " ";
+		}
+		if (atts.containsKey(Att.SIGPER)) {
+			str += atts.get(Att.SIGPER).val + "s";
+		}
+		if (atts.containsKey(Att.VALMXR)) {
+			str += atts.get(Att.VALMXR).val + "M";
+		}
+		if ((Renderer.zoom >= 15) && !str.isEmpty()) {
+			Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40),Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -30)));
+		}
 	}
 
 	public static void radarStations(Feature feature) {
@@ -62,7 +150,7 @@ public class Signals {
 			break;
 		}
 		if ((Renderer.zoom >= 15) && !bstr.isEmpty()) {
-			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40),Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -30)));
+			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40),Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
 		}
 	}
 
@@ -176,30 +264,73 @@ public class Signals {
 				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 			}
 			if (!bstr.isEmpty()) {
-				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.BR, AffineTransform.getTranslateInstance(-30, -70)));
+				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -110)));
 			}
 		}
 	}
 
 	public static void lights(Feature feature) {
-		
+		Enum<ColCOL> col = null;
+		Enum<ColCOL> tcol = null;
+		ObjTab objs = feature.objs.get(Obj.LIGHTS);
+		for (AttMap atts : objs.values()) {
+			if (atts.containsKey(Att.COLOUR)) {
+				ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
+				if (cols.size() == 1) {
+					tcol = cols.get(0);
+					if (col == null) {
+						col = tcol;
+					} else if (tcol != col) {
+						col = ColCOL.COL_MAG;
+						break;
+					}
+				} else {
+					col = ColCOL.COL_MAG;
+					break;
+				}
+			}
+		}
+		Renderer.symbol(feature, Beacons.LightFlare, new Scheme(lightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
+		if (objs.get(1) != null) {
+			for (AttMap atts : objs.values()) {
+				Enum<ColCOL> col1 = null;
+				Enum<ColCOL> col2 = null;
+				double radius = 0.2;
+				double s1 = 0;
+				double s2 = 0;
+				boolean dir = false;
+				if (atts.containsKey(Att.COLOUR)) {
+					ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
+					col1 = cols.get(0);
+					if (cols.size() > 1) col2 = cols.get(1);
+				} else {
+					continue;
+				}
+				if (atts.containsKey(Att.RADIUS)) {
+					radius = (Double) atts.get(Att.RADIUS).val;
+				}
+				if (atts.containsKey(Att.SECTR1)) {
+					s1 = (Double) atts.get(Att.SECTR1).val;
+				} else {
+					continue;
+				}
+				if (atts.containsKey(Att.SECTR2)) {
+					s1 = (Double) atts.get(Att.SECTR2).val;
+				} else {
+					continue;
+				}
+				if (atts.containsKey(Att.CATLIT)) {
+					ArrayList<CatLIT> cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
+					if (cats.contains(CatLIT.LIT_DIR)) {
+						dir = true;
+					}
+				}
+				Renderer.lightSector(feature, lightColours.get(col1), lightColours.get(col2), radius, s1, s2, dir, "");
+			}
+		}
 	}
 
-//	private static Point2D.Double radial(Feature feature, Snode centre, double radius, double angle) {
-//		Point2D origin = Renderer.context.getPoint(centre);
-//		return new Point2D.Double(origin.getX() - (radius * Renderer.context.mile(feature) * Math.sin(angle)), origin.getY() - (radius * Renderer.context.mile(feature) * Math.cos(angle)));
-//	}
-/*
-void renderFlare(Item_t *item) {
-  char *col = light_colours[COL_MAG];
-  Obj_t *obj = getObj(item, LIGHTS, 0);
-  Att_t *att;
-  if (((att = getAtt(obj, COLOUR)) != NULL) && (att->val.val.l->next == NULL)) {
-    col = light_colours[att->val.val.l->val];
-  }
-  renderSymbol(item, LIGHTS, "light", "", col, CC, 0, 0, 120);
-}
-
+	/*
 void renderSector(Item_t *item, int s, char *text, char *style, double offset, int dy) {
   Obj_t *sector;
   double start, end;
@@ -355,43 +486,6 @@ char *charString(Item_t *item, char *type, int idx) {
   Att_t *att = NULL;
   Obj_t *obj = getObj(item, enumType(type), idx);
   switch (enumType(type)) {
-    case CGUSTA:
-      strcpy(string1, "CG");
-      if ((obj != NULL) && (att = getAtt(obj, COMCHA)) != NULL)
-        sprintf(strchr(string1, 0), " Ch.%s", stringValue(att->val));
-      break;
-    case FOGSIG:
-      if (obj != NULL) {
-        if ((att = getAtt(obj, CATFOG)) != NULL)
-          strcat(string1, fog_signals[att->val.val.e]);
-        if ((att = getAtt(obj, SIGGRP)) != NULL)
-          sprintf(strchr(string1, 0), "(%s)", stringValue(att->val));
-        else 
-          strcat(string1, " ");
-        if ((att = getAtt(obj, SIGPER)) != NULL)
-          sprintf(strchr(string1, 0), "%ss ", stringValue(att->val));
-        if ((att = getAtt(obj, VALMXR)) != NULL)
-          sprintf(strchr(string1, 0), "%sM", stringValue(att->val));
-      }
-      break;
-    case SISTAT:
-      strcpy(string1, "SS");
-      if (obj != NULL) {
-        if ((att = getAtt(obj, CATSIT)) != NULL)
-          strcat(string1, sit_map[att->val.val.l->val]);
-        if ((att = getAtt(obj, COMCHA)) != NULL)
-          sprintf(strchr(string1, 0), "\nCh.%s", stringValue(att->val));
-      }
-      break;
-    case SISTAW:
-      strcpy(string1, "SS");
-      if (obj != NULL) {
-        if ((att = getAtt(obj, CATSIW)) != NULL)
-          strcat(string1, siw_map[att->val.val.l->val]);
-        if ((att = getAtt(obj, COMCHA)) != NULL)
-          sprintf(strchr(string1, 0), "\nCh.%s", stringValue(att->val));
-      }
-      break;
     case LIGHTS:
     {
       int secmax = countObjects(item, "light");

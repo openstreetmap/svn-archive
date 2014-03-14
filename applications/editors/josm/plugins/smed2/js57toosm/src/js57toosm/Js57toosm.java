@@ -32,14 +32,13 @@ public class Js57toosm {
 
 		ArrayList<Long> done = new ArrayList<Long>();
 
-		if (args.length < 1) {
-			System.err.println("Usage: java -jar js57toosm.jar S57_filename [types_filename]");
+		if (args.length < 3) {
+			System.err.println("Usage: java -jar js57toosm.jar S57_filename types_filename OSM_filename");
 			System.exit(-1);
 		}
 		in = new FileInputStream(args[0]);
-		out = System.out;
+		out = new PrintStream(args[2]);
 		ArrayList<Obj> types = new ArrayList<Obj>();
-		if (args.length == 2) {
 			Scanner tin = new Scanner(new FileInputStream(args[1]));
 			while (tin.hasNext()) {
 				Obj type = S57obj.enumType(tin.next());
@@ -47,10 +46,9 @@ public class Js57toosm {
 					types.add(type);
 			}
 			tin.close();
-		}
 		
 		map = new S57map();
-		MapBounds bounds = S57dec.decodeFile(in, types, map);
+		MapBounds bounds = S57dec.decodeFile(in, map);
 
 		out.format("<?xml version='1.0' encoding='UTF-8'?>%n");
 		out.format("<osm version='0.6' upload='false' generator='js57toosm'>%n");
@@ -167,6 +165,8 @@ public class Js57toosm {
 			}
 		}
 		out.println("</osm>\n");
+		out.close();
+		System.out.println("Finished");
 	}
 	
 	static void writeAtts(Feature feature, String type) {

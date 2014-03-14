@@ -64,7 +64,7 @@ public class PanelS57 extends JPanel {
 			tin.close();
 		}
 		map = new S57map();
-		MapBounds bounds = S57dec.decodeFile(in, types, map);
+		MapBounds bounds = S57dec.decodeFile(in, map);
 
 		in.close();
 		

@@ -11,15 +11,13 @@ package s57;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import s57.S57dat.*;
 import s57.S57map.*;
-import s57.S57obj.*;
 
 public class S57dec {
 
-	public static MapBounds decodeFile(FileInputStream in, ArrayList<Obj> types, S57map map) throws IOException {
+	public static MapBounds decodeFile(FileInputStream in, S57map map) throws IOException {
 		S57dat.rnum = 0;
 		byte[] leader = new byte[24];
 		boolean ddr = false;

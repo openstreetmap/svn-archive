@@ -15,7 +15,6 @@ import java.awt.geom.*;
 import java.util.EnumMap;
 
 import symbols.Symbols.*;
-
 import s57.S57val.*;
 
 public class Beacons {
@@ -68,6 +67,7 @@ public class Beacons {
 	}
 	public static final Symbol LightFlare = new Symbol();
 	static {
+		LightFlare.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-100,40,100)));
 		LightFlare.add(new Instr(Form.RSHP, new Ellipse2D.Double(-3,-3,6,6)));
 		Path2D.Double p = new Path2D.Double();
 		p.moveTo(0.0,-25.0); p.lineTo(15.0,-95.0); p.curveTo(20.0,-123.0,-20.0,-123.0,-15.0,-95.0);

@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 
 import s57.S57val;
@@ -29,6 +30,37 @@ public class Rules {
 	public static final Color Yland = new Color(0x50b0ff);
 	public static final Color Mline = new Color(0xc480ff);
 	public static final Color Msymb = new Color(0xa30075);
+	
+	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static {
+		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
+		bodyColours.put(ColCOL.COL_WHT, new Color(0xffffff));
+		bodyColours.put(ColCOL.COL_BLK, new Color(0x000000));
+		bodyColours.put(ColCOL.COL_RED, new Color(0xd40000));
+		bodyColours.put(ColCOL.COL_GRN, new Color(0x00d400));
+		bodyColours.put(ColCOL.COL_BLU, Color.blue);
+		bodyColours.put(ColCOL.COL_YEL, new Color(0xffd400));
+		bodyColours.put(ColCOL.COL_GRY, Color.gray);
+		bodyColours.put(ColCOL.COL_BRN, new Color(0x8b4513));
+		bodyColours.put(ColCOL.COL_AMB, new Color(0xfbf00f));
+		bodyColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
+		bodyColours.put(ColCOL.COL_ORG, Color.orange);
+		bodyColours.put(ColCOL.COL_MAG, new Color(0xf000f0));
+		bodyColours.put(ColCOL.COL_PNK, Color.pink);
+	}
+
+	static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<ColPAT, Patt>(ColPAT.class);
+	static {
+		pattMap.put(ColPAT.PAT_UNKN, Patt.Z);
+		pattMap.put(ColPAT.PAT_HORI, Patt.H);
+		pattMap.put(ColPAT.PAT_VERT, Patt.V);
+		pattMap.put(ColPAT.PAT_DIAG, Patt.D);
+		pattMap.put(ColPAT.PAT_BRDR, Patt.B);
+		pattMap.put(ColPAT.PAT_SQUR, Patt.S);
+		pattMap.put(ColPAT.PAT_CROS, Patt.C);
+		pattMap.put(ColPAT.PAT_SALT, Patt.X);
+		pattMap.put(ColPAT.PAT_STRP, Patt.H);
+	}
 	
 	static String getName(Feature feature) {
 		AttVal<?> name = feature.atts.get(Att.OBJNAM);
@@ -67,11 +99,11 @@ public class Rules {
 	static Scheme getScheme(Feature feature, Obj obj) {
 		ArrayList<Color> colours = new ArrayList<Color>();
 		for (ColCOL col : (ArrayList<ColCOL>)getAttVal(feature, obj, 0, Att.COLOUR)) {
-			colours.add(Renderer.bodyColours.get(col));
+			colours.add(bodyColours.get(col));
 		}
 		ArrayList<Patt> patterns = new ArrayList<Patt>();
 		for(ColPAT pat: (ArrayList<ColPAT>) getAttVal(feature, obj, 0, Att.COLPAT)) {
-			patterns.add(Renderer.pattMap.get(pat));
+			patterns.add(pattMap.get(pat));
 		}
 		return new Scheme(patterns, colours);
 	}
@@ -1028,6 +1060,29 @@ public class Rules {
 			}
 			Signals.addSignals(feature);
 		}
+/*  case CGUSTA:
+    strcpy(string1, "CG");
+    if ((obj != NULL) && (att = getAtt(obj, COMCHA)) != NULL)
+      sprintf(strchr(string1, 0), " Ch.%s", stringValue(att->val));
+    break;
+  case SISTAT:
+    strcpy(string1, "SS");
+    if (obj != NULL) {
+      if ((att = getAtt(obj, CATSIT)) != NULL)
+        strcat(string1, sit_map[att->val.val.l->val]);
+      if ((att = getAtt(obj, COMCHA)) != NULL)
+        sprintf(strchr(string1, 0), "\nCh.%s", stringValue(att->val));
+    }
+    break;
+  case SISTAW:
+    strcpy(string1, "SS");
+    if (obj != NULL) {
+      if ((att = getAtt(obj, CATSIW)) != NULL)
+        strcat(string1, siw_map[att->val.val.l->val]);
+      if ((att = getAtt(obj, COMCHA)) != NULL)
+        sprintf(strchr(string1, 0), "\nCh.%s", stringValue(att->val));
+    }
+    break;*/
 	}
 
 	private static void transits(Feature feature) {

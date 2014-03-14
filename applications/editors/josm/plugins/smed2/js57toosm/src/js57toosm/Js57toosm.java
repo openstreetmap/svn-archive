@@ -166,7 +166,7 @@ public class Js57toosm {
 		}
 		out.println("</osm>\n");
 		out.close();
-		System.out.println("Finished");
+		System.err.println("Finished");
 	}
 	
 	static void writeAtts(Feature feature, String type) {

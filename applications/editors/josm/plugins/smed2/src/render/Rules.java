@@ -350,15 +350,16 @@ public class Rules {
 							getScheme(feature, feature.type));
 				}
 			} else {
-				Renderer.symbol(feature, Beacons.Shapes.get(shape),
-						getScheme(feature, feature.type));
-				if (feature.objs.get(Obj.TOPMAR) != null)
-					Renderer.symbol(
-							feature,
-							Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR)
-									.get(0).get(Att.TOPSHP).val),
-							getScheme(feature, Obj.TOPMAR),
-							Topmarks.BeaconDelta);
+				Renderer.symbol(feature, Beacons.Shapes.get(shape), getScheme(feature, feature.type));
+				if (hasObject(feature, Obj.TOPMAR)) {
+					Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val);
+					if (topmark != null)
+						Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.TOPMAR), Topmarks.BeaconDelta);
+				} else	if (hasObject(feature, Obj.DAYMAR)) {
+					Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val);
+					if (topmark != null)
+						Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.DAYMAR), Topmarks.BeaconDelta);
+				}
 			}
 			Signals.addSignals(feature);
 		}
@@ -369,8 +370,13 @@ public class Rules {
 			BoySHP shape = (BoySHP) getAttVal(feature, feature.type, 0, Att.BOYSHP);
 			Renderer.symbol(feature, Buoys.Shapes.get(shape), getScheme(feature, feature.type));
 			if (hasObject(feature, Obj.TOPMAR)) {
-				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val),
-						getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
+				Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val);
+				if (topmark != null)
+					Renderer.symbol(feature, topmark, getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
+			} else if (hasObject(feature, Obj.DAYMAR)) {
+				Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val);
+				if (topmark != null)
+					Renderer.symbol(feature, topmark, getScheme(feature, Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
 			}
 			Signals.addSignals(feature);
 		}
@@ -510,7 +516,9 @@ public class Rules {
 		case ACHBRT:
 			if (Renderer.zoom >= 14) {
 				Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Mline));
-			Renderer.labelText(feature, name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Msymb, LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC));
+				if (Renderer.zoom >= 15) {
+					Renderer.labelText(feature, name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Msymb, LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC));
+				}
 			}
 			double radius = (Double)getAttVal(feature, Obj.ACHBRT, 0, Att.RADIUS);
 			if (radius != 0) {

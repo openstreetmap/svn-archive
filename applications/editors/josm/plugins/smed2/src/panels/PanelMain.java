@@ -142,7 +142,7 @@ public class PanelMain extends JPanel {
 		Graphics2D g2 = img.createGraphics();
 		Renderer.reRender(g2, Integer.parseInt(zt.getText()), Integer.parseInt(ft.getText()), Smed2Action.map, Smed2Action.rendering);
 		try {
-			ImageIO.write(img, "png", new File("/Users/mherring/Desktop/export.png"));
+			ImageIO.write(img, "png", new File(System.getProperty("user.home") + "/Desktop/export.png"));
 		} catch (Exception x) {
 			System.out.println("Exception");
 		}

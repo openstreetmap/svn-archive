@@ -91,6 +91,19 @@ public class Topmarks {
 		p.moveTo(0.0,-80.0); p.lineTo(-15.0,-47.0);  p.lineTo(15.0,-47.0); p.closePath();
 		TopEast.add(new Instr(Form.PLIN, p));
 	}
+	public static final Symbol TopIcone = new Symbol();
+	static {
+		TopIcone.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));
+		Symbol colours = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-45.0); p.lineTo(0.0,-15.0); p.lineTo(15.0,-45.0); p.closePath();
+		colours.add(new Instr(Form.P1, p));
+		TopIcone.add(new Instr(Form.COLR, colours));
+		TopIcone.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		TopIcone.add(new Instr(Form.FILL, Color.black));
+		TopIcone.add(new Instr(Form.LINE, new Line2D.Double(0,0,0,-15)));
+		p = new Path2D.Double(); p.moveTo(-15.0,-45.0); p.lineTo(0.0,-15.0); p.lineTo(15.0,-45.0); p.closePath();
+		TopIcone.add(new Instr(Form.PLIN, p));
+	}
 	public static final Symbol TopIsol = new Symbol();
 	static {
 		TopIsol.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-80,60,80)));
@@ -168,11 +181,35 @@ public class Topmarks {
 		Symbol colours = new Symbol();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-13.0,-1.0); p.lineTo(-13.0,-27.0); p.lineTo(13.0,-27.0); p.lineTo(13.0,-1.0); p.closePath();
 		colours.add(new Instr(Form.P1, p));
+		p = new Path2D.Double(); p.moveTo(-13.0,-15.0); p.lineTo(-13.0,-1.0); p.lineTo(13.0,-1.0); p.lineTo(13.0,-15.0); p.closePath();
+		colours.add(new Instr(Form.H2, p));
+		p = new Path2D.Double(); p.moveTo(-13.0,-19.3); p.lineTo(-13.0,-10.7); p.lineTo(13.0,-10.7); p.lineTo(13.0,-19.3); p.closePath();
+		colours.add(new Instr(Form.H3, p));
+		p = new Path2D.Double(); p.moveTo(0.0,-1.0); p.lineTo(0.0,-27.0); p.lineTo(13.0,-27.0); p.lineTo(13.0,-1.0); p.closePath();
+		colours.add(new Instr(Form.V2, p));
+		p = new Path2D.Double(); p.moveTo(-4.3,-1.0); p.lineTo(-4.3,-27.0); p.lineTo(4.3,-27.0); p.lineTo(4.3,-1.0); p.closePath();
+		colours.add(new Instr(Form.V3, p));
 		TopSquare.add(new Instr(Form.COLR, colours));
 		TopSquare.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		TopSquare.add(new Instr(Form.FILL, Color.black));
 		p = new Path2D.Double(); p.moveTo(-13.0,-1.0); p.lineTo(-13.0,-27.0); p.lineTo(13.0,-27.0); p.lineTo(13.0,-1.0); p.closePath();
 		TopSquare.add(new Instr(Form.PLIN, p));
+	}
+	public static final Symbol TopRhombus = new Symbol();
+	static {
+		TopRhombus.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));
+		Symbol colours = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-29.0); p.lineTo(-15.0,-15.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-15.0); p.closePath();
+		colours.add(new Instr(Form.P1, p));
+		p = new Path2D.Double(); p.moveTo(-15.0,-15.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-15.0); p.closePath();
+		colours.add(new Instr(Form.H2, p));
+		p = new Path2D.Double(); p.moveTo(-10.0,-19.7); p.lineTo(-15.0,-15.0); p.lineTo(-10.0,-10.3); p.lineTo(10.0,-10.3); p.lineTo(15.0,-15.0); p.lineTo(10.0,-19.7); p.closePath();
+		colours.add(new Instr(Form.H3, p));
+		TopRhombus.add(new Instr(Form.COLR, colours));
+		TopRhombus.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		TopRhombus.add(new Instr(Form.FILL, Color.black));
+		p = new Path2D.Double(); p.moveTo(0.0,-29.0); p.lineTo(-15.0,-15.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-15.0); p.closePath();
+		TopRhombus.add(new Instr(Form.PLIN, p));
 	}
 	public static final Symbol TopTriangle = new Symbol();
 	static {
@@ -185,6 +222,18 @@ public class Topmarks {
 		TopTriangle.add(new Instr(Form.FILL, Color.black));
 		p = new Path2D.Double(); p.moveTo(-15.0,-1.0); p.lineTo(0.0,-29.0); p.lineTo(15.0,-1.0); p.closePath();
 		TopTriangle.add(new Instr(Form.PLIN, p));
+	}
+	public static final Symbol TopItriangle = new Symbol();
+	static {
+		TopItriangle.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));
+		Symbol colours = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-29.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-29.0); p.closePath();
+		colours.add(new Instr(Form.P1, p));
+		TopItriangle.add(new Instr(Form.COLR, colours));
+		TopItriangle.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		TopItriangle.add(new Instr(Form.FILL, Color.black));
+		p = new Path2D.Double(); p.moveTo(-15.0,-29.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-29.0); p.closePath();
+		TopItriangle.add(new Instr(Form.PLIN, p));
 	}
 	public static final Symbol TopWest = new Symbol();
 	static {
@@ -223,15 +272,15 @@ public class Topmarks {
 	public static final EnumMap<TopSHP, Symbol> Shapes = new EnumMap<TopSHP, Symbol>(TopSHP.class);
 	static {
 		Shapes.put(TopSHP.TOP_BORD, TopBoard); Shapes.put(TopSHP.TOP_CAN, TopCan); Shapes.put(TopSHP.TOP_CONE, TopCone); Shapes.put(TopSHP.TOP_CROS, TopCross);
-		 Shapes.put(TopSHP.TOP_EAST, TopEast); Shapes.put(TopSHP.TOP_ISD, TopIsol); Shapes.put(TopSHP.TOP_NORTH, TopNorth); Shapes.put(TopSHP.TOP_SOUTH, TopSouth);
-		 Shapes.put(TopSHP.TOP_SPHR, TopSphere); Shapes.put(TopSHP.TOP_SQUR, TopSquare); Shapes.put(TopSHP.TOP_TRI, TopTriangle); Shapes.put(TopSHP.TOP_WEST, TopWest);
-		 Shapes.put(TopSHP.TOP_SALT, TopX);
+		Shapes.put(TopSHP.TOP_EAST, TopEast); Shapes.put(TopSHP.TOP_ICONE, TopIcone); Shapes.put(TopSHP.TOP_ISD, TopIsol); Shapes.put(TopSHP.TOP_NORTH, TopNorth);
+		Shapes.put(TopSHP.TOP_SOUTH, TopSouth); Shapes.put(TopSHP.TOP_SPHR, TopSphere); Shapes.put(TopSHP.TOP_SQUR, TopSquare); Shapes.put(TopSHP.TOP_TRI, TopTriangle);
+		Shapes.put(TopSHP.TOP_ITRI, TopItriangle); Shapes.put(TopSHP.TOP_WEST, TopWest); Shapes.put(TopSHP.TOP_SALT, TopX); Shapes.put(TopSHP.TOP_RHOM, TopRhombus);
 	}
 	public static final EnumMap<BoySHP, Delta> BuoyDeltas = new EnumMap<BoySHP, Delta>(BoySHP.class);
 	static {
 		BuoyDeltas.put(BoySHP.BOY_PILR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
 		BuoyDeltas.put(BoySHP.BOY_SPAR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
-		BuoyDeltas.put(BoySHP.BOY_CAN, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
+		BuoyDeltas.put(BoySHP.BOY_CAN, new Delta(Handle.BC,  new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
 		BuoyDeltas.put(BoySHP.BOY_CONE, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
 		BuoyDeltas.put(BoySHP.BOY_SPHR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 
 		BuoyDeltas.put(BoySHP.BOY_BARL, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 12.7, -37.9))); 

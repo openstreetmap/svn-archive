@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class Symbols {
 
 	public enum Form {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, D2, D3, D4, B2, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, V3, D2, D3, D4, B2, S2, S3, S4, C2, X2
 	}
 
 	public enum Patt {
@@ -256,6 +256,12 @@ public class Symbols {
 							case V2:
 								if ((cn > 1) && (cs.pat.get(0) == Patt.V)) {
 									g2.setPaint(cs.col.get(cs.col.size() - pn));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case V3:
+								if ((cn == 3) && (cs.pat.get(0) == Patt.V)) {
+									g2.setPaint(cs.col.get(1));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;

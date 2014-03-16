@@ -103,22 +103,22 @@ public class Harbours {
 	}
 	public static final Symbol Fishing = new Symbol();
 	static {
-		Fishing.add(new Instr(Form.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Fishing.add(new Instr(Form.STRK, new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Fishing.add(new Instr(Form.FILL, Rules.Msymb));
-		Fishing.add(new Instr(Form.EARC, new Arc2D.Double(-75,-75,150,150,15,140,Arc2D.OPEN)));
-		Fishing.add(new Instr(Form.EARC, new Arc2D.Double(-75,-75,150,150,-15,-140,Arc2D.OPEN)));
+		Fishing.add(new Instr(Form.EARC, new Arc2D.Double(-50,-50,100,100,15,140,Arc2D.OPEN)));
+		Fishing.add(new Instr(Form.EARC, new Arc2D.Double(-50,-50,100,100,-15,-140,Arc2D.OPEN)));
 		Path2D.Double p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
-		p.moveTo(-40,5); p.curveTo(20,40,50,25,80,0); p.curveTo(50,-25,20,-40,-40,-5);
-		p.lineTo(-75,-25); p.quadTo(-80, 0, -75, 25); p.closePath();
-		p.moveTo(42, 0); p.curveTo(42, 10, 56, 10, 56, 0); p.curveTo(56, -10, 42, -10, 42, 0); p.closePath();
+		p.moveTo(-24,3); p.curveTo(12,24,30,15,48,0); p.curveTo(30,-15,12,-24,-24,-3);
+		p.lineTo(-45,-15); p.quadTo(-48, 0, -45, 15); p.closePath();
+		p.moveTo(25, 0); p.curveTo(25, 6, 34, 6, 34, 0); p.curveTo(34, -6, 25, -6, 25, 0); p.closePath();
 		Fishing.add(new Instr(Form.PGON, p));
 	}
 	public static final Symbol Harbour = new Symbol();
 	static {
-		Harbour.add(new Instr(Form.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Harbour.add(new Instr(Form.STRK, new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Harbour.add(new Instr(Form.FILL, Rules.Msymb));
-		Harbour.add(new Instr(Form.ELPS, new Ellipse2D.Double(-75,-75,150,150)));
-		Harbour.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
+		Harbour.add(new Instr(Form.ELPS, new Ellipse2D.Double(-50,-50,100,100)));
+		Harbour.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.6, 0, 0, new Scheme(Rules.Msymb), null)));
 	}
 	public static final Symbol HarbourMaster = new Symbol();
 	static {
@@ -147,15 +147,14 @@ public class Harbours {
 	public static final Symbol Lock = new Symbol();
 	public static final Symbol Marina = new Symbol();
 	static {
-		Marina.add(new Instr(Form.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Marina.add(new Instr(Form.STRK, new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		Marina.add(new Instr(Form.FILL, Rules.Msymb));
-		Marina.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
-		Marina.add(new Instr(Form.EARC, new Arc2D.Double(-80.0,-80.0,160.0,160.0,215.0,-250.0,Arc2D.OPEN)));
+		Marina.add(new Instr(Form.EARC, new Arc2D.Double(-50.0,-50.0,100.0,100.0,215.0,-250.0,Arc2D.OPEN)));
+		Marina.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 0.6, 0, 0, new Scheme(Rules.Msymb), null)));
 	}
 	public static final Symbol MarinaNF = new Symbol();
 	static {
-		MarinaNF.add(new Instr(Form.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
-		MarinaNF.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 1.0, 0, 0, new Scheme(Rules.Msymb), null)));
+		MarinaNF.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Yacht, 0.6, 0, 0, new Scheme(Rules.Msymb), null)));
 	}
 	public static final Symbol Pilot = new Symbol();
 	static{

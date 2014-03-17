@@ -675,9 +675,9 @@ int RouteLoop (void)
             wayType *w  = Way (restrictItr);
             if (StyleNr (w) >= restriction_no_right_turn &&
                 StyleNr (w) <= restriction_only_straight_on &&
-                atoi ((char*)(w + 1) + 1) == nd->wayPtr &&
+                atol ((char*)(w + 1) + 1) == nd->wayPtr &&
             (StyleNr (w) <= restriction_no_straight_on) ==
-            (atoi (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr)) {
+            (atol (strchr ((char*)(w + 1) + 1, ' ')) == root->nd->wayPtr)) {
               break;
             }
           }
@@ -801,7 +801,7 @@ int GosmInit (void *d, long size)
 {
   if (!d) return FALSE;
   gosmData = (char*) d;
-  ndBase = (ndType *)(gosmData + ((int*)(gosmData + size))[-1]);
+  ndBase = (ndType *)(gosmData + ((unsigned*)(gosmData + size))[-1]);
   bucketsMin1 = ((int *) (gosmData + size))[-2];
   stylecount = ((int *) (gosmData + size))[-3];
   style = (struct styleStruct *)
@@ -909,11 +909,13 @@ long munmap (void *ptr, long size)
 #define TO_HALFSEG -1 // Rebuild only
 
 struct halfSegType { // Rebuild only
-  int lon, lat, other, wayPtr;
+  int lon, lat, other;
+  unsigned wayPtr;
 };
 
 struct wayPartType { // Rebuild only
-  int other, wayPtr;
+  int other;
+  unsigned wayPtr;
   long long id;
 };
 
@@ -1504,7 +1506,7 @@ deque<string> Osm2Gosmore (int /*id*/, k2vType &k2v, wayType &w,
   }
   // Now adjust for track type.
   if ((k2v["tracktype"] && isdigit (k2v["tracktype"][5])) ||
-    strcmp (k2v["highway"], "track") == 0) {
+    (k2v["highway"] && strcmp (k2v["highway"], "track") == 0)) {
     // many tracks don't have a tracktype, assume them as rather slow
     int tracktype = 2;
     if (k2v["tracktype"] && isdigit (k2v["tracktype"][5]))
@@ -1569,7 +1571,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
 
   int rebuildCnt = 0;
   FILE *pak, *masterf;
-  int ndStart;
+  unsigned ndStart;
   wayType *master = NULL;
   if (strcmp(masterpakfile,"")) {
     if (!(masterf = fopen64 (masterpakfile, "rb")) ||
@@ -2009,6 +2011,7 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
     xmlFree (name);
   } // While reading xml
   wayId.clear ();
+  fprintf (stderr, "nOther=%d FIRST_LOWZ_OTHER=%d\n", nOther, FIRST_LOWZ_OTHER);
   assert (nOther * 2 < FIRST_LOWZ_OTHER);
   bucketsMin1 = (nOther >> 5) | (nOther >> 4);
   bucketsMin1 |= bucketsMin1 >> 2;
@@ -2096,6 +2099,8 @@ int RebuildPak(const char* pakfile, const char* elemstylefile,
   ndWrite.other[0] = ndWrite.other[1] = 0;
   FWRITE (&ndWrite, sizeof (ndWrite), 1, pak); // Insert 'stopper' record
 
+  assert (ftell (pak) < (1LL<<32));
+  // If this assert fails, wayPtr no longer fits in 32 bits
   ndStart = ftell (pak);
   
   int *pairing = (int *) malloc (sizeof (*pairing) * PAIRS);

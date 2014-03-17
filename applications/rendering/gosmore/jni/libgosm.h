@@ -324,7 +324,8 @@ struct styleStruct {
 };
 
 struct ndType {
-  int wayPtr, lat, lon, other[2];
+  unsigned wayPtr;
+  int lat, lon, other[2];
 };
 /* This struct takes up a lot of space, but compressing is possible: If
 other is encoded as byte offset from the current position, it should typically

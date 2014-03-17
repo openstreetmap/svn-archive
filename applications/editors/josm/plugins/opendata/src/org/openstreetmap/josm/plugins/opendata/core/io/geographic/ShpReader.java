@@ -33,6 +33,7 @@ import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.geometry.jts.JTS;
 import org.opengis.feature.Feature;
 import org.opengis.feature.GeometryAttribute;
 import org.opengis.feature.Property;
@@ -119,7 +120,7 @@ public class ShpReader extends GeographicReader {
 			OsmPrimitive primitive = null;
 			
 			if (geometry.getValue() instanceof Point) {
-				primitive = createOrGetNode((Point) geometry.getValue());
+				primitive = createOrGetEmptyNode((Point) geometry.getValue());
 				
 			} else if (geometry.getValue() instanceof GeometryCollection) { // Deals with both MultiLineString and MultiPolygon
 				GeometryCollection mp = (GeometryCollection) geometry.getValue();
@@ -215,6 +216,7 @@ public class ShpReader extends GeographicReader {
 								handler.notifyFeatureParsed(feature, ds, featurePrimitives);
 							}
 						} catch (UserCancelException e) {
+                                                        e.printStackTrace();
 							return ds;
 						}
 						if (instance != null) {
@@ -222,6 +224,8 @@ public class ShpReader extends GeographicReader {
 							instance.setCustomText(n+"/"+collection.size());
 						}
 					}
+				} catch (Throwable e) {
+                                        e.printStackTrace();
 				} finally {
 					iterator.close();
 					nodes.clear();
@@ -231,14 +235,17 @@ public class ShpReader extends GeographicReader {
 				}
 			}
 		} catch (IOException e) {
+                        e.printStackTrace();
 			throw e;
 		} catch (Throwable t) {
+                        t.printStackTrace();
 			throw new IOException(t);
 		}
 		return ds;
 	}
 	
 	private static final void readNonGeometricAttributes(Feature feature, OsmPrimitive primitive) {
+            try {
 		for (Property prop : feature.getProperties()) {
 			if (!(prop instanceof GeometryAttribute)) {
 				Name name = prop.getName();
@@ -247,11 +254,14 @@ public class ShpReader extends GeographicReader {
 					String sName = name.toString();
 					String sValue = value.toString();
 					if (!sName.isEmpty() && !sValue.isEmpty()) {
-						primitive.put(sName, sValue);
+                                               primitive.put(sName, sValue);
 					}
 				}
 			}
 		}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 	}
 
 	@Override

@@ -127,6 +127,26 @@ public abstract class GeographicReader extends AbstractReader implements OdConst
 		return n;
 	}
 	
+        protected Node createOrGetEmptyNode(Point p) throws MismatchedDimensionException, TransformException {
+                Point p2 = (Point) JTS.transform(p, transform);
+                LatLon key = new LatLon(p2.getY(), p2.getX());
+                Node n = getNode(p2, key);
+                if(n != null && n.hasKeys()) {
+                        n = null;
+                }
+                if (n == null) {
+                        n = new Node(key);
+                        if (handler == null || handler.useNodeMap()) {
+                                nodes.put(key, n);
+                        }
+                        ds.addPrimitive(n);
+                } else if (n.getDataSet() == null) {
+                    // handler may have removed the node from DataSet (see Paris public light handler for example)
+                    ds.addPrimitive(n);
+                }
+                return n;
+        }
+        
 	protected <T extends OsmPrimitive> T addOsmPrimitive(T p) {
 		ds.addPrimitive(p);
 		return p;

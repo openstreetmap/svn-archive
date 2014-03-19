@@ -175,6 +175,7 @@
         <ant antfile="build.xml" target="clean" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="clean" dir="piclayer"/>
         <ant antfile="build.xml" target="clean" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="clean" dir="pointInfo"/>
         <ant antfile="build.xml" target="clean" dir="poly"/>
         <ant antfile="build.xml" target="clean" dir="print"/>
         <ant antfile="build.xml" target="clean" dir="proj4j"/>

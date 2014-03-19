@@ -1,0 +1,5 @@
+../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java
+../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoPlugin.java
+../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoServer.java
+../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoUtils.java
+../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java

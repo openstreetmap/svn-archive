@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-03-19 20:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+msgid "Point info"
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+msgid "Point info."
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#, java-format
+msgid "Tool: {0}"
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:118
+msgid "Connecting server"
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:156
+msgid "PointInfo"
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:185
+msgid "Data not available."
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:835
+msgid "Add new address point"
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:857
+msgid "Tags copied to clipboard."
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:865
+msgid "New address point added."
+msgstr ""

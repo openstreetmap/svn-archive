@@ -11,7 +11,7 @@
         <!-- order important ! -->
         <ant antfile="build.xml" target="dist" dir="jts"/>
         <ant antfile="build.xml" target="dist" dir="geotools"/>
-        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/> 
+        <ant antfile="build.xml" target="dist" dir="utilsplugin2"/>
         <ant antfile="build.xml" target="dist" dir="log4j"/>
     	<!-- order not important -->
         <ant antfile="build.xml" target="dist" dir="addrinterpolation"/>
@@ -74,6 +74,7 @@
         <ant antfile="build.xml" target="dist" dir="photo_geotagging"/>
         <ant antfile="build.xml" target="dist" dir="piclayer"/>
         <ant antfile="build.xml" target="dist" dir="plastic_laf"/>
+        <ant antfile="build.xml" target="dist" dir="pointInfo"/>
         <ant antfile="build.xml" target="dist" dir="poly"/>
         <ant antfile="build.xml" target="dist" dir="print"/>
         <ant antfile="build.xml" target="dist" dir="proj4j"/>

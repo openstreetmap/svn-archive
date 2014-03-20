@@ -14,8 +14,8 @@ $data["source"] = "cuzk:ruian";
 // building
 $query="
   select s.kod,
-        s.pocet_podlazi, a.nazev, s.plati_od, s.pocet_bytu, s.dokonceni,
-        a.osmtag_k, a.osmtag_v
+        s.pocet_podlazi, a.nazev zpusob_vyuziti, s.plati_od, s.pocet_bytu, s.dokonceni,
+        s.zpusob_vyuziti_kod, a.osmtag_k, a.osmtag_v
   from rn_stavebni_objekt s
       left outer join osmtables.zpusob_vyuziti_objektu a on s.zpusob_vyuziti_kod = a.kod
   where st_contains(s.hranice,st_transform(st_geomfromtext('POINT(".$lon." ".$lat.")',4326),900913))
@@ -32,7 +32,8 @@ if (pg_num_rows($result) > 0)
   $data["stavebni_objekt"] =
     array( "ruian_id" => $row["kod"],
            "pocet_podlazi" => $row["pocet_podlazi"],
-           "zpusob_vyuziti" => $row["nazev"],
+           "zpusob_vyuziti" => $row["zpusob_vyuziti"],
+           "zpusob_vyuziti_kod" => $row["zpusob_vyuziti_kod"],
            "zpusob_vyuziti_key" => $row["osmtag_k"],
            "zpusob_vyuziti_val" => $row["osmtag_v"],
            "pocet_bytu" => $row["pocet_bytu"],

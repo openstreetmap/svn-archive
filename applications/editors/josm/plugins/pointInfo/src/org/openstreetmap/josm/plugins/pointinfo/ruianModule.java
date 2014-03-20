@@ -200,6 +200,7 @@ class ruianRecord {
     private int      m_objekt_podlazi;
     private int      m_objekt_byty;
     private String   m_objekt_zpusob_vyuziti;
+    private String   m_objekt_zpusob_vyuziti_kod;
     private String   m_objekt_zpusob_vyuziti_key;
     private String   m_objekt_zpusob_vyuziti_val;
     private String   m_objekt_dokonceni;
@@ -244,6 +245,7 @@ class ruianRecord {
       m_objekt_podlazi = 0;
       m_objekt_byty = 0;
       m_objekt_zpusob_vyuziti = "";
+      m_objekt_zpusob_vyuziti_kod = "";
       m_objekt_zpusob_vyuziti_key = "";
       m_objekt_zpusob_vyuziti_val = "";
       m_objekt_dokonceni = "";
@@ -316,6 +318,11 @@ class ruianRecord {
 
         try {
           m_objekt_zpusob_vyuziti = stavebniObjekt.getString("zpusob_vyuziti");
+        } catch (Exception e) {
+        }
+
+        try {
+          m_objekt_zpusob_vyuziti_kod = stavebniObjekt.getString("zpusob_vyuziti_kod");
         } catch (Exception e) {
         }
 
@@ -522,7 +529,7 @@ class ruianRecord {
       r.append("<html>");
       r.append("<br/>");
       if (m_objekt_ruian_id > 0) {
-        r.append("<i><u>Informace o objektu</u></i>");
+        r.append("<i><u>Informace o budově</u></i>");
         r.append("&nbsp;&nbsp;<a href=file://tags.copy/building><img src="+getClass().getResource("/images/dialogs/copy-tags.png")+" border=0 alt=\"Vložit tagy do schránky\" ></a><br/>");
         r.append("<b>RUIAN id: </b><a href=http://vdp.cuzk.cz/vdp/ruian/stavebniobjekty/" + m_objekt_ruian_id +">" + m_objekt_ruian_id + "</a><br/>");
         if (m_adresni_mista.size() == 0 ) r.append("<b>Budova: </b> bez č.p./č.e<br/>");
@@ -677,6 +684,25 @@ class ruianRecord {
     }
 
     /**
+     * Convert date from Czech to OSM format
+     * @param ruianDate Date in RUIAN (Czech) format DD.MM.YYYY
+     * @return String with date converted to OSM data format YYYY-MM-DD
+     */
+    String convertDate (String ruianDate) {
+      String r = new String();
+      String[] parts = ruianDate.split("\\.");
+      try {
+        int day =   Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int year =  Integer.parseInt(parts[2]);
+        r = new Integer(year).toString() + "-" + String.format("%02d", month) + "-" + String.format("%02d", day);
+      } catch (Exception e) {
+      }
+
+      return r;
+    }
+
+    /**
      * Construct tag string for clipboard
      * @param k OSM Key
      * @param v OSM Value
@@ -709,8 +735,11 @@ class ruianRecord {
         if (m_objekt_byty > 0) {
           c.append(tagToString("building:flats", Integer.toString(m_objekt_byty)));
         }
-        if (m_objekt_dokonceni.length() > 0) {
-          c.append(tagToString("start_date", m_objekt_dokonceni));
+        if (m_objekt_dokonceni.length() > 0 && convertDate(m_objekt_dokonceni).length() > 0) {
+          c.append(tagToString("start_date", convertDate(m_objekt_dokonceni)));
+        }
+        if (m_objekt_zpusob_vyuziti_kod.length() > 0) {
+          c.append(tagToString("building:ruian:type", m_objekt_zpusob_vyuziti_kod));
         }
         c.append(tagToString("source", "cuzk:ruian"));
       }

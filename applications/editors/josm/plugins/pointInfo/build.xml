@@ -14,7 +14,7 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Initial version"/>
+    <property name="commit.message" value="PointInfo: Fix format of start_date key"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6238"/>
 
@@ -26,7 +26,7 @@
     -->
     <property name="plugin.author" value="Marian Kyral"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.pointinfo.PointInfoPlugin"/>
-    <property name="plugin.description" value="Shows an additional information about point on map. Currently only Czech Ruian module available."/>
+    <property name="plugin.description" value="Shows an additional information about point on map. There is only a Czech RUIAN module available at this moment."/>
     <property name="plugin.icon" value="images/mapmode/info-sml.png"/>
     <property name="plugin.link" value="https://github.com/mkyral/josm-pointInfo"/>
     <!--<property name="plugin.early" value="..."/>-->

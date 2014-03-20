@@ -73,23 +73,19 @@ class PointInfoAction extends MapMode implements MouseListener {
 
     @Override
     public void enterMode() {
-      System.out.println("enterMode() - start");
         if (!isEnabled()) {
             return;
         }
         super.enterMode();
         Main.map.mapView.setCursor(getCursor());
         Main.map.mapView.addMouseListener(this);
-      System.out.println("enterMode() - end");
 
     }
 
     @Override
     public void exitMode() {
-      System.out.println("exitMode() - start");
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
-      System.out.println("exitMode() - end");
     }
 
     private static Cursor getCursor() {

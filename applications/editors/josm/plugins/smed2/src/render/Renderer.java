@@ -528,10 +528,87 @@ public class Renderer {
 	}
 	
 	public static void lightSector(Feature feature, Color col1, Color col2, double radius, double s1, double s2, boolean dir, String str) {
-//	private static Point2D.Double radial(Feature feature, Snode centre, double radius, double angle) {
-//	Point2D origin = Renderer.context.getPoint(centre);
-//	return new Point2D.Double(origin.getX() - (radius * Renderer.context.mile(feature) * Math.sin(angle)), origin.getY() - (radius * Renderer.context.mile(feature) * Math.cos(angle)));
-//}
-
+		if ((zoom >= 16) && (radius > 0.2)) {
+			radius = 0.2 / (Math.pow(2, zoom-16));
+		}
+		double mid = (((s1 + s2)  / 2) + (s1 > s2 ? 180 : 0)) % 360;
+		g2.setStroke(new BasicStroke((float) (3.0 * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, new float[] {20 * (float)sScale, 20 * (float)sScale}, 0));
+		g2.setPaint(Color.black);
+		Point2D.Double centre = (Point2D.Double) context.getPoint(feature.geom.centre);
+		double radial = radius * context.mile(feature);
+		if (dir) {
+			g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(mid)), centre.y + radial * Math.cos(Math.toRadians(mid))));
+		} else {
+			g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s1)), centre.y + radial * Math.cos(Math.toRadians(s1))));
+			g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s2)), centre.y + radial * Math.cos(Math.toRadians(s2))));
+		}
+		double arcWidth =  10.0 * sScale;
+		g2.setStroke(new BasicStroke((float)arcWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1));
+		g2.setPaint(col1);
+		g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90), (s1 - s2 - 360) % 360, Arc2D.OPEN));
+		if (col2 != null) {
+			g2.setPaint(col2);
+			g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), (s1 - s2 - 360) % 360, Arc2D.OPEN));
+		}
+		if ((str != null) && (!str.isEmpty())) {
+			g2.setPaint(Color.black);
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	    FontRenderContext frc = g2.getFontRenderContext();
+	    Font font = new Font("Arial", Font.PLAIN, 40);
+	    GeneralPath path = new GeneralPath();
+	    GlyphVector gv = font.deriveFont((float)(font.getSize()*sScale)).createGlyphVector(frc, (" " + str));
+			double gwidth = gv.getLogicalBounds().getWidth();
+			boolean hand = false;
+	    double offset = 0;
+	    Point2D origin;
+			double arc = (s2 - s1 + 360) % 360;
+			if (dir) {
+				radial += 10 * sScale;
+				if (mid < 180) {
+					radial += gwidth;
+					hand = true;
+				}
+				origin = new Point2D.Double(centre.x - radial * Math.sin(Math.toRadians(mid)), centre.y + radial * Math.cos(Math.toRadians(mid)));
+		    int length = gv.getNumGlyphs();
+		    for (int i = 0; i < length; i++) {
+					Shape shape = gv.getGlyphOutline(i);
+					Point2D point = gv.getGlyphPosition(i);
+					AffineTransform at = AffineTransform.getTranslateInstance(origin.getX(), origin.getY());
+					at.rotate(Math.toRadians(mid + (hand ? -90 : 90)));
+					at.translate(-point.getX() + offset, -point.getY() + (15 * sScale));
+					path.append(at.createTransformedShape(shape), false);
+					offset += gv.getGlyphMetrics(i).getAdvance();
+					g2.fill(path);
+		    }
+			} else {
+				double awidth = (Math.toRadians(arc) * radial);
+				if (gwidth < awidth) {
+					offset = 0;
+					double phi = 0;
+					if ((mid > 270) || (mid < 90)) {
+						hand = true;
+						phi = Math.toRadians(s2) - ((awidth - gwidth) / 2) /radial;
+						radial -= 20 * sScale;
+					} else {
+						phi = Math.toRadians(s1) + (((awidth - gwidth) / 2)) /radial;
+						radial += 20 * sScale;
+					}
+					origin = new Point2D.Double(centre.x - radial * Math.sin(phi), centre.y + radial * Math.cos(phi));
+			    int length = gv.getNumGlyphs();
+			    for (int i = 0; i < length; i++) {
+						Shape shape = gv.getGlyphOutline(i);
+						Point2D point = gv.getGlyphPosition(i);
+						AffineTransform at = AffineTransform.getTranslateInstance(origin.getX(), origin.getY());
+						at.rotate(phi + (hand ? 0 : Math.toRadians(180)));
+						at.translate(-point.getX() + offset, -point.getY());
+						path.append(at.createTransformedShape(shape), false);
+						double advance = gv.getGlyphMetrics(i).getAdvance();
+						offset += advance;
+						phi += (hand ? -0.5 : +0.5) * advance / radial;
+						g2.fill(path);
+			    }
+				}
+			}
+		}
 	}
 }

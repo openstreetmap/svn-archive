@@ -52,6 +52,7 @@ public class PanelS57 extends JPanel {
 		FileInputStream in = new FileInputStream(inf);
 		PanelMain.setStatus("Select OSM types file", Color.yellow);
 		JFileChooser ifc = new JFileChooser(Main.pref.get("smed2plugin.typesfile"));
+		ifc.setSelectedFile(new File(Main.pref.get("smed2plugin.typesfile")));
 		int returnVal = ifc.showOpenDialog(Main.parent);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Main.pref.put("smed2plugin.typesfile", ifc.getSelectedFile().getPath());

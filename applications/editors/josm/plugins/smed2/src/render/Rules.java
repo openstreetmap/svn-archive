@@ -576,7 +576,8 @@ public class Rules {
 			break;
 		case BERTHS:
 			if (Renderer.zoom >= 14) {
-				Renderer.labelText(feature, name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), Msymb, LabelStyle.RRCT, Mline, Color.white, null);
+				Renderer.lineVector(feature, new LineStyle(Mline, 6, new float[] { 20, 20 }));
+				Renderer.labelText(feature, name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), Msymb, LabelStyle.RRCT, Mline, Color.white);
 			}
 			break;
 		case BUISGL:

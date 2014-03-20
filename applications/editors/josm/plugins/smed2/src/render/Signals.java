@@ -315,7 +315,7 @@ public class Signals {
 					continue;
 				}
 				if (atts.containsKey(Att.SECTR2)) {
-					s1 = (Double) atts.get(Att.SECTR2).val;
+					s2 = (Double) atts.get(Att.SECTR2).val;
 				} else {
 					continue;
 				}
@@ -325,7 +325,35 @@ public class Signals {
 						dir = true;
 					}
 				}
-				Renderer.lightSector(feature, lightColours.get(col1), lightColours.get(col2), radius, s1, s2, dir, "");
+				String str = "";
+				if (atts.containsKey(Att.LITCHR)) {
+					str += lightCharacters.get(atts.get(Att.LITCHR).val);
+				}
+				if (atts.containsKey(Att.SIGGRP)) {
+					str += "(" + atts.get(Att.SIGGRP).val + ")";
+				} else if (!str.isEmpty()) {
+					str += ".";
+				}
+				if (atts.containsKey(Att.COLOUR)) {
+					ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
+					str += lightLetters.get(cols.get(0));
+					if (cols.size() > 1)
+						str += lightLetters.get(cols.get(1));
+				}
+				if (dir && atts.containsKey(Att.ORIENT)) {
+					double orient = (Double)atts.get(Att.ORIENT).val;
+					str += " " + orient + "°";
+					s1 = (orient - 4 + 360) % 360;
+					s2 = (orient + 4) % 360;
+					double n1 = 360;
+					double n2 = 360;
+					for (AttMap sect : objs.values()) {
+						if (sect != atts) {
+							
+						}
+					}
+				}
+				Renderer.lightSector(feature, lightColours.get(col1), lightColours.get(col2), radius, s1, s2, dir, str);
 			}
 		}
 	}

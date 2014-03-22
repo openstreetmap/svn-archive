@@ -2,7 +2,7 @@
 <project name="utilsplugin2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="[josm_utilsplugin2]: move search classes to separate package, inside now finds both node and ways"/>
+    <property name="commit.message" value="[josm_utilsplugin2]: alpha version of multitagger ctrl-t"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6317"/>
 

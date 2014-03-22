@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.utilsplugin2;
 
 
+import com.sun.org.apache.xpath.internal.operations.Mult;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -27,6 +28,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.customurl.ChooseURLAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.customurl.OpenPageAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.customurl.UtilsPluginPreferences;
 import org.openstreetmap.josm.plugins.utilsplugin2.latlon.LatLonAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.multitagger.MultiTagAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.search.UtilsUnaryMatchFactory;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.AdjacentNodesAction;
@@ -62,6 +64,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem extractPoint;
     JMenuItem wiki;
     JMenuItem latlon;
+    JMenuItem multiTag;
     
     JMenuItem replaceGeometry;
     JMenuItem tagBuffer;
@@ -118,7 +121,8 @@ public class UtilsPlugin2 extends Plugin {
         selectAreaBoundary = MainMenu.add(selectionMenu, new SelectBoundaryAction());
         
         selectURL = MainMenu.add(dataMenu, new ChooseURLAction());
-	
+        multiTag = MainMenu.add(dataMenu, new MultiTagAction());
+        
         // register search operators
         SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
     }
@@ -154,6 +158,7 @@ public class UtilsPlugin2 extends Plugin {
         allInside.setEnabled(enabled);
 
         drawArc.setEnabled(enabled);
+        multiTag.setEnabled(enabled);
     }
     
     @Override

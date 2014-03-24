@@ -61,7 +61,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         GpxTrack trackBeingWritten = new SingleSegmentGpxTrack(trackSegment, attr);
         data.tracks.add(trackBeingWritten);
 
-	initIntervals();
+        initIntervals();
     }
 
     void setCurrentPosition(double lat, double lon) {
@@ -76,8 +76,8 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         lastPoint.attr.put("time", dateFormat.format(new Date()));
         trackSegment.addWaypoint(lastPoint);
 
-	if (autocenter)
-		conditionalCenter(thisPos);
+        if (autocenter)
+            conditionalCenter(thisPos);
     }
 
     public void center() {
@@ -86,17 +86,17 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     }
 
     public void conditionalCenter(LatLon Pos) {
-	Point2D P = Main.map.mapView.getPoint2D(Pos);
-	Rectangle rv = Main.map.mapView.getBounds(null);
-	Date date = new Date();
-	long current = date.getTime();
+        Point2D P = Main.map.mapView.getPoint2D(Pos);
+        Rectangle rv = Main.map.mapView.getBounds(null);
+        Date date = new Date();
+        long current = date.getTime();
 
-	rv.grow(-(int)(rv.getHeight() * centerFactor), -(int)(rv.getWidth() * centerFactor));
+        rv.grow(-(int)(rv.getHeight() * centerFactor), -(int)(rv.getWidth() * centerFactor));
 
-	if (!rv.contains(P) || (centerInterval > 0 && current - lastCenter >= centerInterval)) {
-		Main.map.mapView.zoomTo(Pos);
-		lastCenter = current;
-	}
+        if (!rv.contains(P) || (centerInterval > 0 && current - lastCenter >= centerInterval)) {
+            Main.map.mapView.zoomTo(Pos);
+            lastCenter = current;
+        }
     }
 
     public void setAutoCenter(boolean ac) {
@@ -107,67 +107,64 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         super.paint(g, mv, bounds);
 
-	if (lastPoint == null)
-		return;
-
-	Point screen = mv.getPoint(lastPoint.getCoor());
-
-	int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
-	int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
-	int TriaThick = Main.pref.getInteger(C_CURSOR_T, 4);
-
-	/*
-	 * Draw a bold triangle.
-	 * In case of deep zoom draw also a thin DOP oval.
-	 */
-
-	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN));
-	int w, h;
-	double ppm = 100 / mv.getDist100Pixel();	/* pixels per metre */
-
-	w = (int )Math.round(lastData.getEpx() * ppm);
-	h = (int )Math.round(lastData.getEpy() * ppm);
-
-	if (w > TriaWidth || h > TriaWidth) {
-		int xo, yo;
-
-		yo = screen.y - Math.round(h/2);
-		xo = screen.x - Math.round(w/2);
-
-		g.drawOval(xo, yo, w, h);
-	}
-
-	int[] x = new int[4];
-	int[] y = new int[4];
-	float course = lastData.getCourse();
-	float csin = (float )Math.sin(Math.toRadians(course));
-	float ccos = (float )Math.cos(Math.toRadians(course));
-	float csin120 = (float )Math.sin(Math.toRadians(course + 120));
-	float ccos120 = (float )Math.cos(Math.toRadians(course + 120));
-	float csin240 = (float )Math.sin(Math.toRadians(course + 240));
-	float ccos240 = (float )Math.cos(Math.toRadians(course + 240));
-
-	g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
-
-	for (int i = 0; i < TriaThick; i++, TriaHeight--, TriaWidth--) {
-
-		x[0] = screen.x + Math.round(TriaHeight * csin);
-		y[0] = screen.y - Math.round(TriaHeight * ccos);
-		x[1] = screen.x + Math.round(TriaWidth * csin120);
-		y[1] = screen.y - Math.round(TriaWidth * ccos120);
-		x[2] = screen.x;
-		y[2] = screen.y;
-		x[3] = screen.x + Math.round(TriaWidth * csin240);
-		y[3] = screen.y - Math.round(TriaWidth * ccos240);
-
-		g.drawPolygon(x, y, 4);
-	}
+        if (lastPoint == null)
+            return;
+    
+        Point screen = mv.getPoint(lastPoint.getCoor());
+    
+        int TriaHeight = Main.pref.getInteger(C_CURSOR_H, 20);
+        int TriaWidth = Main.pref.getInteger(C_CURSOR_W, 10);
+        int TriaThick = Main.pref.getInteger(C_CURSOR_T, 4);
+    
+        /*
+         * Draw a bold triangle.
+         * In case of deep zoom draw also a thin DOP oval.
+         */
+    
+        g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION_ESTIMATE, Color.CYAN));
+        int w, h;
+        double ppm = 100 / mv.getDist100Pixel();    /* pixels per metre */
+    
+        w = (int )Math.round(lastData.getEpx() * ppm);
+        h = (int )Math.round(lastData.getEpy() * ppm);
+    
+        if (w > TriaWidth || h > TriaWidth) {
+            int xo, yo;
+    
+            yo = screen.y - Math.round(h/2);
+            xo = screen.x - Math.round(w/2);
+    
+            g.drawOval(xo, yo, w, h);
+        }
+    
+        int[] x = new int[4];
+        int[] y = new int[4];
+        float course = lastData.getCourse();
+        float csin = (float )Math.sin(Math.toRadians(course));
+        float ccos = (float )Math.cos(Math.toRadians(course));
+        float csin120 = (float )Math.sin(Math.toRadians(course + 120));
+        float ccos120 = (float )Math.cos(Math.toRadians(course + 120));
+        float csin240 = (float )Math.sin(Math.toRadians(course + 240));
+        float ccos240 = (float )Math.cos(Math.toRadians(course + 240));
+    
+        g.setColor(Main.pref.getColor(C_LIVEGPS_COLOR_POSITION, Color.RED));
+    
+        for (int i = 0; i < TriaThick; i++, TriaHeight--, TriaWidth--) {
+    
+            x[0] = screen.x + Math.round(TriaHeight * csin);
+            y[0] = screen.y - Math.round(TriaHeight * ccos);
+            x[1] = screen.x + Math.round(TriaWidth * csin120);
+            y[1] = screen.y - Math.round(TriaWidth * ccos120);
+            x[2] = screen.x;
+            y[2] = screen.y;
+            x[3] = screen.x + Math.round(TriaWidth * csin240);
+            y[3] = screen.y - Math.round(TriaWidth * ccos240);
+    
+            g.drawPolygon(x, y, 4);
+        }
 
     }
 
-    /* (non-Javadoc)
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-     */
     public void propertyChange(PropertyChangeEvent evt) {
         if (!isVisible()) {
             return;
@@ -189,14 +186,14 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
      * should be suppressed.
      */
     private boolean allowRedraw() {
-	Date date = new Date();
-	long current = date.getTime();
+        Date date = new Date();
+        long current = date.getTime();
 
-	if (current - lastRedraw >= refreshInterval) {
-		lastRedraw = current;
-		return true;
-	} else
-		return false;
+        if (current - lastRedraw >= refreshInterval) {
+            lastRedraw = current;
+            return true;
+        } else
+            return false;
     }
 
     /**
@@ -205,27 +202,27 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
      * exists, it will be initialized here.
      */
     private void initIntervals() {
-	if ((refreshInterval = Main.pref.getInteger(oldC_REFRESH_INTERVAL, 0)) != 0) {
-		refreshInterval *= 1000;
-		Main.pref.put(oldC_REFRESH_INTERVAL, null);
-	} else
-		refreshInterval = Main.pref.getInteger(C_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
+        if ((refreshInterval = Main.pref.getInteger(oldC_REFRESH_INTERVAL, 0)) != 0) {
+            refreshInterval *= 1000;
+            Main.pref.put(oldC_REFRESH_INTERVAL, null);
+        } else
+            refreshInterval = Main.pref.getInteger(C_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
 
-	centerInterval = Main.pref.getInteger(C_CENTER_INTERVAL, DEFAULT_CENTER_INTERVAL);
-	centerFactor = Main.pref.getInteger(C_CENTER_FACTOR, DEFAULT_CENTER_FACTOR);
-	if (centerFactor <= 1 || centerFactor >= 99)
-		centerFactor = DEFAULT_CENTER_FACTOR;
+        centerInterval = Main.pref.getInteger(C_CENTER_INTERVAL, DEFAULT_CENTER_INTERVAL);
+        centerFactor = Main.pref.getInteger(C_CENTER_FACTOR, DEFAULT_CENTER_FACTOR);
+        if (centerFactor <= 1 || centerFactor >= 99)
+            centerFactor = DEFAULT_CENTER_FACTOR;
 
-        Main.pref.putInteger(C_REFRESH_INTERVAL, refreshInterval);
-        Main.pref.putInteger(C_CENTER_INTERVAL, centerInterval);
-	Main.pref.putInteger(C_CENTER_FACTOR, (int )centerFactor);
+            Main.pref.putInteger(C_REFRESH_INTERVAL, refreshInterval);
+            Main.pref.putInteger(C_CENTER_INTERVAL, centerInterval);
+        Main.pref.putInteger(C_CENTER_FACTOR, (int )centerFactor);
 
-	/*
-	 * Do one time conversion of factor: user value means "how big is inner rectangle
-	 * comparing to screen in percent", machine value means "what is the shrink ratio
-	 * for each dimension on _both_ sides".
-	 */
+        /*
+         * Do one time conversion of factor: user value means "how big is inner rectangle
+         * comparing to screen in percent", machine value means "what is the shrink ratio
+         * for each dimension on _both_ sides".
+         */
 
-	centerFactor = (100 - centerFactor) / 2 / 100;
+        centerFactor = (100 - centerFactor) / 2 / 100;
     }
 }

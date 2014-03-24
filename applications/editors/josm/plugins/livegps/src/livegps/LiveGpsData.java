@@ -54,8 +54,8 @@ public class LiveGpsData {
         this.latLon = new LatLon(latitude, longitude);
         this.course = course;
         this.speed = speed;
-	this.epx = epx;
-	this.epy = epy;
+        this.epx = epx;
+        this.epy = epy;
     }
 
     /**
@@ -122,19 +122,19 @@ public class LiveGpsData {
     }
 
     public void setEpy(float epy) {
-	this.epy = epy;
+        this.epy = epy;
     }
 
     public void setEpx(float epx) {
-	this.epx = epx;
+        this.epx = epx;
     }
 
     public float getEpy() {
-	return this.epy;
+        return this.epy;
     }
 
     public float getEpx() {
-	return this.epx;
+        return this.epx;
     }
 
     public String toString() {
@@ -200,9 +200,6 @@ public class LiveGpsData {
         return way;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -212,9 +209,7 @@ public class LiveGpsData {
         result = prime * result + Float.floatToIntBits(this.speed);
         return result;
     }
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

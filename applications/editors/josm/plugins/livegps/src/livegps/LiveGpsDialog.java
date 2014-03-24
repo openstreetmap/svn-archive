@@ -60,9 +60,6 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
         createLayout(panel, true, null);
     }
 
-    /* (non-Javadoc)
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-     */
     public void propertyChange(PropertyChangeEvent evt) {
         if (!isVisible())
             return;

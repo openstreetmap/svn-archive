@@ -101,7 +101,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     @Override
     public void layerRemoved(Layer oldLayer) {
         if (oldLayer != lgpslayer)
-		return;
+        return;
 
         enableTracking(false);
         lgpscapture.setSelected(false);
@@ -158,7 +158,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
      * @param enable if <code>true</code> tracking is started.
      */
     public void enableTracking(boolean enable) {
-	
+    
         if (enable && !enabled) {
             assert (acquirer == null);
             assert (acquirerThread == null);
@@ -166,33 +166,33 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
             acquirer = new LiveGpsAcquirer();
             acquirerThread = new Thread(acquirer);
 
-	    if (lgpslayer == null) {
-		lgpslayer = new LiveGpsLayer(data);
-		Main.main.addLayer(lgpslayer);
-		MapView.addLayerChangeListener(this);
-		lgpslayer.setAutoCenter(isAutoCenter());
-	    }
+            if (lgpslayer == null) {
+                lgpslayer = new LiveGpsLayer(data);
+                Main.main.addLayer(lgpslayer);
+                MapView.addLayerChangeListener(this);
+                lgpslayer.setAutoCenter(isAutoCenter());
+            }
 
             acquirer.addPropertyChangeListener(lgpslayer);
             acquirer.addPropertyChangeListener(lgpsdialog);
             for (PropertyChangeListener listener : listenerQueue)
-	        acquirer.addPropertyChangeListener(listener);
+            acquirer.addPropertyChangeListener(listener);
 
             acquirerThread.start();
 
-	    enabled = true;
+            enabled = true;
 
         } else if (!enable && enabled) {
-	    assert (lgpslayer != null);
+            assert (lgpslayer != null);
             assert (acquirer != null);
             assert (acquirerThread != null);
 
-	    acquirer.shutdown();
-	    acquirer = null;
-	    acquirerThread = null;
+            acquirer.shutdown();
+            acquirer = null;
+            acquirerThread = null;
 
-	    enabled = false;
-	}
+            enabled = false;
+        }
     }
 
     /** 
@@ -219,9 +219,6 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
             acquirer.removePropertyChangeListener(listener); 
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
-     */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null)

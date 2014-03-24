@@ -24,7 +24,7 @@ public class URLList {
     public static List<String> resetURLList() {
         List<String> items=new ArrayList<String>();
         items.add("Wikipedia");
-        items.add("http://en.wikipedia.org/w/index.php?search={name}&fulltext=Search");
+        items.add("https://en.wikipedia.org/w/index.php?search={name}&fulltext=Search");
         items.add("Wikipedia RU");
         items.add(defaultURL);
         items.add("Who Dit It?");
@@ -32,9 +32,9 @@ public class URLList {
         items.add("Keep Right validator");
         items.add("http://keepright.ipax.at/report_map.php?zoom=14&lat={#lat}&lon={#lat}&layers=B0T");
         items.add("Element history [demo, =Ctrl-Shift-H]");
-        items.add("http://www.openstreetmap.org/browse/{#type}/{#id}/history");
+        items.add("https://www.openstreetmap.org/{#type}/{#id}/history");
         items.add("Browse element [demo, =Ctrl-Shift-I]");
-        items.add("http://www.openstreetmap.org/browse/{#type}/{#id}");
+        items.add("https://www.openstreetmap.org/{#type}/{#id}");
         Main.pref.putCollection("utilsplugin2.urlHistory",items);
         Main.pref.put("utilsplugin2.customurl",items.get(9));
         return items;

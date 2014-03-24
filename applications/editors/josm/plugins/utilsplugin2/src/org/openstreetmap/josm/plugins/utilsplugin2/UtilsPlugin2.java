@@ -1,8 +1,6 @@
 // License: GPL v2 or later. See LICENSE file for details.
 package org.openstreetmap.josm.plugins.utilsplugin2;
 
-
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 

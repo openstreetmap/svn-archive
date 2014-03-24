@@ -117,9 +117,9 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
     }
 
     private IconToggleButton picLayerActionButtonFactory(MapMode action) {
-    	IconToggleButton button = new IconToggleButton(action);
-    	button.setAutoHideDisabledButton(true);
-    	return button;
+        IconToggleButton button = new IconToggleButton(action);
+        button.setAutoHideDisabledButton(true);
+        return button;
     }
 
     /**
@@ -135,7 +135,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         }
 
         if (newPic) {
-        	((PicLayerAbstract)newLayer).setDrawPoints(true);
+            ((PicLayerAbstract)newLayer).setDrawPoints(true);
         }
     }
 

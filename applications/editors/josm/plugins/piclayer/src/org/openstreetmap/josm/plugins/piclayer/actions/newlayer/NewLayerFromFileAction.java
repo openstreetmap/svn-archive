@@ -133,19 +133,19 @@ public class NewLayerFromFileAction extends JosmAction {
                 if ("kml".equalsIgnoreCase(PicLayerFromFile.getFileExtension(file))) {
                     KMLReader kml = new KMLReader(file);
                     kml.process();
-                    JOptionPane.showMessageDialog(null, tr("KML calibration is in beta stage and may produce incorrectly calibrated layers!\nPlease use http://josm.openstreetmap.de/ticket/5451 to upload your KMLs that were calibrated incorrectly."));
+                    JOptionPane.showMessageDialog(null, tr("KML calibration is in beta stage and may produce incorrectly calibrated layers!\n"+
+                    "Please use {0} to upload your KMLs that were calibrated incorrectly.",
+                    "https://josm.openstreetmap.de/ticket/5451"));
                     for (KMLGroundOverlay overlay : kml.getGroundOverlays()) {
                         //TODO: zoom to whole picture, not only the last
                         addNewLayerFromKML(file, overlay, newLayerPos);
                     }
-
                 } else {
-                addNewLayerFromFile(file, newLayerPos, fc.getSelectedFiles().length == 1);
-
+                    addNewLayerFromFile(file, newLayerPos, fc.getSelectedFiles().length == 1);
+                }
             }
         }
     }
-}
 
     private void addNewLayerFromFile(File file, int newLayerPos, boolean isZoomToLayer) {
         try {

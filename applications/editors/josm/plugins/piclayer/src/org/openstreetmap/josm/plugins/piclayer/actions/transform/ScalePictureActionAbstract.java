@@ -34,7 +34,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 @SuppressWarnings("serial")
 public abstract class ScalePictureActionAbstract extends GenericPicTransformAction {
 
-	/**
+    /**
      * Constructor
      */
     public ScalePictureActionAbstract (String name, String actionName, String icon, String tooltip, MapFrame frame) {

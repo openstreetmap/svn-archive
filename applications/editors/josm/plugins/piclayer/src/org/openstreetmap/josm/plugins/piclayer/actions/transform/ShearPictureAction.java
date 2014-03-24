@@ -38,20 +38,20 @@ import org.openstreetmap.josm.tools.ImageProvider;
 @SuppressWarnings("serial")
 public class ShearPictureAction extends GenericPicTransformAction {
 
-	/**
+    /**
      * Constructor
      */
     public ShearPictureAction(MapFrame frame) {
         super(tr("PicLayer shear"), tr("Sheared"), "shear", tr("Drag to shear the picture"), frame, ImageProvider.getCursor("crosshair", null));
     }
 
-	@Override
-	protected void doAction(MouseEvent e) {
+    @Override
+    protected void doAction(MouseEvent e) {
         EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
         currentLayer.shearPictureBy(
             1000* (eastNorth.east() - prevEastNorth.east()),
             1000* (eastNorth.north() - prevEastNorth.north())
         );
-	}
+    }
 
 }

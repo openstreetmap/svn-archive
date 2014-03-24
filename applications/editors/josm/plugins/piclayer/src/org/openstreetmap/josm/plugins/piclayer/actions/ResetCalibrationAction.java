@@ -12,16 +12,16 @@ import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
 @SuppressWarnings("serial")
 public class ResetCalibrationAction extends JosmAction {
 
-	private PicLayerAbstract layer;
-	public ResetCalibrationAction(PicLayerAbstract layer, PictureTransform transformer) {
-		super(tr("Reset Calibration"), null, tr("Reset calibration"), null, false);
-		this.layer = layer;
-	}
+    private PicLayerAbstract layer;
+    public ResetCalibrationAction(PicLayerAbstract layer, PictureTransform transformer) {
+        super(tr("Reset Calibration"), null, tr("Reset calibration"), null, false);
+        this.layer = layer;
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-	    TransformCommand currentCommand = new TransformCommand(layer, tr("Calibration reset"));
-		layer.resetCalibration();
-		currentCommand.addIfChanged();
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        TransformCommand currentCommand = new TransformCommand(layer, tr("Calibration reset"));
+        layer.resetCalibration();
+        currentCommand.addIfChanged();
+    }
 }

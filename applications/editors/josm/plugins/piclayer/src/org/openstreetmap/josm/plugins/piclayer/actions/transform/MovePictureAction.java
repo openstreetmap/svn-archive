@@ -43,13 +43,13 @@ public class MovePictureAction extends GenericPicTransformAction {
         super(tr("PicLayer move"), tr("Moved"), "move", tr("Drag to move the picture"), frame, ImageProvider.getCursor("crosshair", null));
     }
 
-	@Override
-	protected void doAction(MouseEvent e) {
-		EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
+    @Override
+    protected void doAction(MouseEvent e) {
+        EastNorth eastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
         currentLayer.movePictureBy(
             eastNorth.east() - prevEastNorth.east(),
             eastNorth.north() - prevEastNorth.north()
         );
-	}
+    }
 
 }

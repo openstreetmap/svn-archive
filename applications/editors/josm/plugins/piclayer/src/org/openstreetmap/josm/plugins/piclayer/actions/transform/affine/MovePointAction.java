@@ -14,48 +14,48 @@ import org.openstreetmap.josm.tools.ImageProvider;
 @SuppressWarnings("serial")
 public class MovePointAction extends GenericPicTransformAction {
 
-	public MovePointAction(MapFrame frame) {
+    public MovePointAction(MapFrame frame) {
         super(tr("PicLayer Move point"), tr("Point added/moved"), "movepoint", tr("Drag or create point on the picture"), frame, ImageProvider.getCursor("crosshair", null));
-	}
+    }
 
-	@Override
-	protected void doAction(MouseEvent e) {
-		try {
-			Point2D pressed = currentLayer.transformPoint(e.getPoint());
-			if (selectedPoint != null) {
-				currentLayer.getTransformer().replaceOriginPoint(selectedPoint, pressed);
-				selectedPoint = pressed;
-			}
-		} catch (NoninvertibleTransformException e1) {
-			e1.printStackTrace();
-		}
-	}
+    @Override
+    protected void doAction(MouseEvent e) {
+        try {
+            Point2D pressed = currentLayer.transformPoint(e.getPoint());
+            if (selectedPoint != null) {
+                currentLayer.getTransformer().replaceOriginPoint(selectedPoint, pressed);
+                selectedPoint = pressed;
+            }
+        } catch (NoninvertibleTransformException e1) {
+            e1.printStackTrace();
+        }
+    }
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (currentLayer == null)
-			return;
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (currentLayer == null)
+            return;
 
-		try {
-			Point2D pressed = currentLayer.transformPoint(e.getPoint());
-			if (selectedPoint == null)
-				currentLayer.getTransformer().addOriginPoint(pressed);
+        try {
+            Point2D pressed = currentLayer.transformPoint(e.getPoint());
+            if (selectedPoint == null)
+                currentLayer.getTransformer().addOriginPoint(pressed);
 
-			currentCommand.addIfChanged();
-		} catch (NoninvertibleTransformException e1) {
-			e1.printStackTrace();
-		}
-	}
+            currentCommand.addIfChanged();
+        } catch (NoninvertibleTransformException e1) {
+            e1.printStackTrace();
+        }
+    }
 
-	@Override
-	public void enterMode() {
-	    super.enterMode();
-	    updateDrawPoints(true);
-	}
+    @Override
+    public void enterMode() {
+        super.enterMode();
+        updateDrawPoints(true);
+    }
 
-	@Override
-	public void exitMode() {
-	    super.exitMode();
-	    updateDrawPoints(false);
-	}
+    @Override
+    public void exitMode() {
+        super.exitMode();
+        updateDrawPoints(false);
+    }
 }

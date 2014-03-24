@@ -91,9 +91,9 @@ public class BasicEditorPanel extends VerticallyScrollablePanel {
         gc.weighty = 1.0;
         DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
         spVias = new JScrollPane(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel)) {
-        	// fixes #6016 : Scrollbar hides field entry
-        	public Dimension getPreferredSize() {
-        		return new Dimension(100, 80); // only height is relevant, 80 is just a heuristical value
+            // fixes #6016 : Scrollbar hides field entry
+            public Dimension getPreferredSize() {
+                return new Dimension(100, 80); // only height is relevant, 80 is just a heuristical value
              }
         };
         add(spVias,gc);

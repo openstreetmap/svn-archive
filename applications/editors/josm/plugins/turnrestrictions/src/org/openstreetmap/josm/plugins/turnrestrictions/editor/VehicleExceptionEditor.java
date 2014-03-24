@@ -231,17 +231,17 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     }
     
     protected void init() {
-    	try {
-    		// temporarily disable the checkbox listeners while initializing the
-    		// checkboxes with the input value
-    		this.svtChangeListener.setEnabled(false);
-	        cbPsv.setSelected(exceptValue.isVehicleException("psv"));
-	        cbBicyle.setSelected(exceptValue.isVehicleException("bicycle"));
-	        cbMotorcar.setSelected(exceptValue.isVehicleException("motorcar"));
-	        cbHgv.setSelected(exceptValue.isVehicleException("hgv"));
-    	} finally {
-    		this.svtChangeListener.setEnabled(true);
-    	}
+        try {
+            // temporarily disable the checkbox listeners while initializing the
+            // checkboxes with the input value
+            this.svtChangeListener.setEnabled(false);
+            cbPsv.setSelected(exceptValue.isVehicleException("psv"));
+            cbBicyle.setSelected(exceptValue.isVehicleException("bicycle"));
+            cbMotorcar.setSelected(exceptValue.isVehicleException("motorcar"));
+            cbHgv.setSelected(exceptValue.isVehicleException("hgv"));
+        } finally {
+            this.svtChangeListener.setEnabled(true);
+        }
         if (!exceptValue.isStandard()){
             rbNonStandardException.setSelected(true);
             tfNonStandardValue.setText(exceptValue.getValue());
@@ -308,14 +308,14 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     }
     
     class StandardVehicleTypeChangeListener implements ItemListener {
-    	private boolean enabled = true;
-    	
-    	public void setEnabled(boolean enabled){
-    		this.enabled = enabled;
-    	}
-    	
-        public void itemStateChanged(ItemEvent e) {        	
-        	if (!enabled) return;
+        private boolean enabled = true;
+        
+        public void setEnabled(boolean enabled){
+            this.enabled = enabled;
+        }
+        
+        public void itemStateChanged(ItemEvent e) {
+            if (!enabled) return;
             exceptValue.setVehicleException("bicycle", cbBicyle.isSelected());
             exceptValue.setVehicleException("hgv", cbHgv.isSelected());
             exceptValue.setVehicleException("psv", cbPsv.isSelected());

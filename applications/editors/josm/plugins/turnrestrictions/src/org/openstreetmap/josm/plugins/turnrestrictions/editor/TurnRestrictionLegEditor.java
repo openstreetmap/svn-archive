@@ -277,30 +277,30 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
      * if there is exactly one way selected 
      */
     class AcceptAction extends AbstractAction implements ListSelectionListener {
-    	
-    	public AcceptAction() {
-			 putValue(SHORT_DESCRIPTION, tr("Accept the currently selected way"));
-	         putValue(NAME, tr("Accept"));
-	         putValue(SMALL_ICON, ImageProvider.get("accept"));
-	         model.getJosmSelectionListModel().getListSelectionModel().addListSelectionListener(this);
-	         updateEnabledState();	         
-    	}
-    	
-    	 public void actionPerformed(ActionEvent e) {
-    		 List<Way> selWays = OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class);
-    		 if (selWays.size() != 1) return;
-    		 Way w = selWays.get(0);    		 
+        
+        public AcceptAction() {
+             putValue(SHORT_DESCRIPTION, tr("Accept the currently selected way"));
+             putValue(NAME, tr("Accept"));
+             putValue(SMALL_ICON, ImageProvider.get("accept"));
+             model.getJosmSelectionListModel().getListSelectionModel().addListSelectionListener(this);
+             updateEnabledState();
+        }
+        
+         public void actionPerformed(ActionEvent e) {
+             List<Way> selWays = OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class);
+             if (selWays.size() != 1) return;
+             Way w = selWays.get(0);
              model.setTurnRestrictionLeg(role, w);            
          }       
          
          public void updateEnabledState() {
-        	setEnabled(OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class).size() == 1);
+            setEnabled(OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class).size() == 1);
          }
 
-		@Override
-		public void valueChanged(ListSelectionEvent e) {
-			updateEnabledState();
-		}
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            updateEnabledState();
+        }
     }
     
     /**

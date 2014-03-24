@@ -118,7 +118,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
         // if the user selects exactly one primitive (i.e. a way), we automatically
         // select it in the list of selected JOSM objects too. 
         if (getSelected().isEmpty() && this.selection.size() == 1) {
-        	setSelected(this.selection);
+            setSelected(this.selection);
         }
     }
 
@@ -142,7 +142,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
     }
         
     public ListSelectionModel getListSelectionModel() {
-    	return selectionModel;
+        return selectionModel;
     }
 
     /* ------------------------------------------------------------------------ */

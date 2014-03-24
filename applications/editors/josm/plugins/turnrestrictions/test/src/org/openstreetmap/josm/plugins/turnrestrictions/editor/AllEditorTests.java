@@ -7,11 +7,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	JosmSelectionListModelTest.class,
-	TurnRestrictionEditorModelUnitTest.class,
-	TurnRestrictionLegEditorUnitTest.class,
-	TurnRestrictionTypeRendererTest.class,
-	TurnRestrictionTypeTest.class,
-	ExceptValueModelTest.class
+    JosmSelectionListModelTest.class,
+    TurnRestrictionEditorModelUnitTest.class,
+    TurnRestrictionLegEditorUnitTest.class,
+    TurnRestrictionTypeRendererTest.class,
+    TurnRestrictionTypeTest.class,
+    ExceptValueModelTest.class
 })
 public class AllEditorTests extends TestCase{}

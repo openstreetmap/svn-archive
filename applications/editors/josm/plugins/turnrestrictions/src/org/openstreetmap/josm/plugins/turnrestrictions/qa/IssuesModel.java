@@ -211,19 +211,19 @@ public class IssuesModel extends Observable implements Observer{
             if (!editorModel.getVias().contains(intersect)) {
                 issues.add(new IntersectionMissingAsViaError(this, from, to, intersect));
             }
-        	if (isInnerNode(from, intersect) && isInnerNode(to, intersect)) {
-        		issues.add(new TurnRestrictionLegSplitRequiredError(this, from, to));
-        	} else if (isInnerNode(from, intersect) && ! isInnerNode(to, intersect)) {
-        		issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
-        	} else if (!isInnerNode(from, intersect) && isInnerNode(to, intersect)) {
-        		issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
-        	}
+            if (isInnerNode(from, intersect) && isInnerNode(to, intersect)) {
+                issues.add(new TurnRestrictionLegSplitRequiredError(this, from, to));
+            } else if (isInnerNode(from, intersect) && ! isInnerNode(to, intersect)) {
+                issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.FROM, from, to, intersect));
+            } else if (!isInnerNode(from, intersect) && isInnerNode(to, intersect)) {
+                issues.add(new TurnRestrictionLegSplitRequiredError(this, TurnRestrictionLegRole.TO, from, to, intersect));
+            }
         } else {
-        	if (editorModel.getVias().isEmpty() && ! from.equals(to)){
-        		// the two turn restriction legs aren't connected and we don't have configured
-        		// via objects 
-        		issues.add(new MissingViaError(this));
-        	}        	
+            if (editorModel.getVias().isEmpty() && ! from.equals(to)){
+                // the two turn restriction legs aren't connected and we don't have configured
+                // via objects 
+                issues.add(new MissingViaError(this));
+            }
         }               
     }
     

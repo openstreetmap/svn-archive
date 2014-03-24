@@ -93,7 +93,7 @@ public class TurnRestrictionEditorModel extends Observable implements DataSetLis
      * Replies the model for the currently selected JOSM primitives
      */
     public JosmSelectionListModel getJosmSelectionListModel() {
-    	return selectionModel;
+        return selectionModel;
     }
     
     /**

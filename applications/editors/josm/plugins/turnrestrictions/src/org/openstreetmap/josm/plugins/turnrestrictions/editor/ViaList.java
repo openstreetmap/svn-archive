@@ -92,7 +92,7 @@ public class ViaList extends JList{
         addMouseListener(new ViaListPopupMenuLaucher());            
     }
    
-	/**
+    /**
      * The transfer handler for Drag-and-Drop. 
      */
     class ViaListTransferHandler extends PrimitiveIdListTransferHandler {

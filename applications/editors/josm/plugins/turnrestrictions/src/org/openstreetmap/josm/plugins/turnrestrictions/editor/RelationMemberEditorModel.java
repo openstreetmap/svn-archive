@@ -444,7 +444,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
 
     public int getRowCount() {
-    	return members.size();
+        return members.size();
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {

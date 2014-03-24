@@ -29,7 +29,7 @@ public class ResourceLoader {
      */
     public static InputStream getInputStream(String source) throws IOException {
         InputStream in = null;
-        if (source.startsWith("http://") || source.startsWith("ftp://") || source.startsWith("file:")) {
+        if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("ftp://") || source.startsWith("file:")) {
             in = new URL(source).openStream();
         } else if (source.startsWith("resource://")) {
             in = ResourceLoader.class.getResourceAsStream(source.substring("resource:/".length()));
@@ -39,5 +39,4 @@ public class ResourceLoader {
         System.out.println("stream for resource is " + in);
         return in;
     }
-
 }

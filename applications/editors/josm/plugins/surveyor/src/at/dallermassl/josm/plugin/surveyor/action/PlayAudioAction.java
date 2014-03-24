@@ -47,9 +47,6 @@ public class PlayAudioAction extends AbstractSurveyorAction {
                     InputStream in = new BufferedInputStream(ResourceLoader.getInputStream(audioSource));
                     AudioInputStream stream = AudioSystem.getAudioInputStream(in);
 
-                    // From URL
-//                  stream = AudioSystem.getAudioInputStream(new URL("http://hostname/audiofile"));
-
                     // At present, ALAW and ULAW encodings must be converted
                     // to PCM_SIGNED before it can be played
                     AudioFormat format = stream.getFormat();

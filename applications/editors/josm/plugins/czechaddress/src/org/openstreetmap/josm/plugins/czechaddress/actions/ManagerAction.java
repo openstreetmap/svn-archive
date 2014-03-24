@@ -23,7 +23,7 @@ public class ManagerAction extends JosmAction {
     }
 
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         new ManagerDialog().showDialog();
     }
 }

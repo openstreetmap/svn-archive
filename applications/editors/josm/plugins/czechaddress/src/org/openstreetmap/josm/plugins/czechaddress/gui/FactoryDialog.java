@@ -83,7 +83,7 @@ public class FactoryDialog extends ToggleDialog
     }
 
     @Override
-	public void pluginStatusChanged(int message) {
+    public void pluginStatusChanged(int message) {
 
         if (message == MESSAGE_DATABASE_LOADED) {
             GuiHelper.runInEDTAndWait(new Runnable() {
@@ -206,7 +206,7 @@ public class FactoryDialog extends ToggleDialog
 
     public boolean selectionListenerActivated = true;
     @Override
-	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 
         if (!selectionListenerActivated) return;
         if (newSelection.size() != 1) return;
@@ -271,16 +271,16 @@ public class FactoryDialog extends ToggleDialog
         houseList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { " " };
             @Override
-			public int getSize() { return strings.length; }
+            public int getSize() { return strings.length; }
             @Override
-			public Object getElementAt(int i) { return strings[i]; }
+            public Object getElementAt(int i) { return strings[i]; }
         });
         houseList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         houseList.setEnabled(false);
         houseList.setFocusable(false);
         houseList.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 houseListClicked(evt);
             }
         });
@@ -294,7 +294,7 @@ public class FactoryDialog extends ToggleDialog
         relocateButton.setEnabled(false);
         relocateButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 relocateButtonActionPerformed(evt);
             }
         });
@@ -357,13 +357,13 @@ public class FactoryDialog extends ToggleDialog
     // End of variables declaration//GEN-END:variables
 
     @Override
-	public void elementChanged(AddressElement elem) {
+    public void elementChanged(AddressElement elem) {
         houseModel.notifyAllListeners();
     }
     @Override
-	public void primitiveChanged(OsmPrimitive prim) {}
+    public void primitiveChanged(OsmPrimitive prim) {}
     @Override
-	public void resonerReseted() {}
+    public void resonerReseted() {}
 
 //==============================================================================
 
@@ -445,11 +445,11 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-		public void resonerReseted() { houses.clear(); }
+        public void resonerReseted() { houses.clear(); }
         @Override
-		public void primitiveChanged(OsmPrimitive prim) {}
+        public void primitiveChanged(OsmPrimitive prim) {}
         @Override
-		public void elementChanged(AddressElement elem) {
+        public void elementChanged(AddressElement elem) {
             if (!(elem instanceof House)) return;
             House house = (House) elem;
             int index = Collections.binarySearch(houses, house);
@@ -481,7 +481,7 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-		public int getSize() {
+        public int getSize() {
             if (parent == null) return 0;
             return parent.getStreets().size() + metaElem.size();
         }
@@ -498,7 +498,7 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-		public Object getElementAt(int index) {
+        public Object getElementAt(int index) {
             if (parent == null) return null;
 
             if (index < metaElem.size())
@@ -513,14 +513,14 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-		public void setSelectedItem(Object anItem) {
+        public void setSelectedItem(Object anItem) {
             assert anItem instanceof ElementWithHouses;
             selected = (ElementWithHouses) anItem;
             houseModel.notifyAllListeners();
         }
 
         @Override
-		public Object getSelectedItem() {
+        public Object getSelectedItem() {
             return selected;
         }
     }
@@ -535,7 +535,7 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-		public int getSize() {
+        public int getSize() {
             if (streetComboBox.getSelectedItem() == null) return 0;
             ElementWithHouses selected
                     = (ElementWithHouses) streetComboBox.getSelectedItem();
@@ -554,19 +554,19 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-		public Object getElementAt(int index) {
+        public Object getElementAt(int index) {
             return getHouseAt(index);
         }
 
         @Override
-		public void primitiveChanged(OsmPrimitive prim) {}
+        public void primitiveChanged(OsmPrimitive prim) {}
         @Override
-		public void elementChanged(AddressElement elem) {
+        public void elementChanged(AddressElement elem) {
             notifyAllListeners();
         }
 
         @Override
-		public void resonerReseted() {
+        public void resonerReseted() {
             notifyAllListeners();
         }
     }

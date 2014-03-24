@@ -211,16 +211,11 @@ public class MvcrParser extends XMLParser {
     static final String URL_PREFERENCES_KEY = "czechaddress.databaseurl";
 
     static final String[] OLD_URLS = {
-        "http://web.mvcr.cz/adresa/adresy.zip", // Remove around 10.02.2011
-	"http://aplikace.mvcr.cz/adresa/adresy.zip" // Removed around 12.01.2013
+        "http://aplikace.mvcr.cz/adresa/adresy.zip" // Removed around 12.01.2013
     };
 
     @Override
     protected String getDatabaseUrl() {
-
-        // No longer add the default URL into preferences.
-        //if (!Main.pref.hasKey(URL_PREFERENCES_KEY))
-        //    Main.pref.put(URL_PREFERENCES_KEY, URL_DEFAULT);
 
         /* If an outdated URL is found in the preferences, replace it by the
          * new one. However the urls from the list should be removed after

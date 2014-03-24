@@ -169,10 +169,8 @@ public abstract class StringUtils {
      * Remove diacritics from the string.
      *
      * <p>This method was posted on the
-     * <a href='http://forums.sun.com/thread.jspa?messageID=10190825#10190825'>
-     * SUN forum</a> by
-     * <a href='http://forums.sun.com/profile.jspa?userID=43408'>
-     * <i>Alan Moore</i></a>.</p>
+     * SUN forum by
+     * <i>Alan Moore</i>.</p>
      */
     public static String anglicize(String str) {
         String strNFD = Normalizer.normalize(str, Normalizer.Form.NFD);

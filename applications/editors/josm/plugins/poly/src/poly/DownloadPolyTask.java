@@ -30,7 +30,7 @@ public class DownloadPolyTask extends DownloadOsmTask {
 
     @Override
     public String[] getPatterns() {
-        return new String[]{"http://.*/.*\\.poly"};
+        return new String[]{"https?://.*/.*\\.poly"};
     }
 
     @Override

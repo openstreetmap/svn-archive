@@ -1,16 +1,4 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fixAddresses.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -84,94 +72,58 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
         createLayout(incompleteAddr, true, buttons);
      }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#hideNotify()
-     */
     @Override
     public void hideNotify() {
         super.hideNotify();
         DatasetEventManager.getInstance().removeDatasetListener(this);
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.dialogs.ToggleDialog#showNotify()
-     */
     @Override
     public void showNotify() {
         super.showNotify();
         DatasetEventManager.getInstance().addDatasetListener(this, FireMode.IN_EDT_CONSOLIDATED);
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#dataChanged(org.openstreetmap.josm.data.osm.event.DataChangedEvent)
-     */
     @Override
     public void dataChanged(DataChangedEvent event) {
         container.invalidate();
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#nodeMoved(org.openstreetmap.josm.data.osm.event.NodeMovedEvent)
-     */
     @Override
     public void nodeMoved(NodeMovedEvent event) {
 
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#otherDatasetChange(org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent)
-     */
     @Override
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {
         // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesAdded(org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent)
-     */
-        @Override
+    @Override
     public void primitivesAdded(PrimitivesAddedEvent event) {
         container.invalidate();
-
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#primitivesRemoved(org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent)
-     */
-        @Override
+    @Override
     public void primitivesRemoved(PrimitivesRemovedEvent event) {
         container.invalidate();
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#relationMembersChanged(org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent)
-     */
     @Override
     public void relationMembersChanged(RelationMembersChangedEvent event) {
         container.invalidate();
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#tagsChanged(org.openstreetmap.josm.data.osm.event.TagsChangedEvent)
-     */
     @Override
     public void tagsChanged(TagsChangedEvent event) {
         container.invalidate();
-
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.data.osm.event.DataSetListener#wayNodesChanged(org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent)
-     */
     @Override
     public void wayNodesChanged(WayNodesChangedEvent event) {
         container.invalidate();
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-     */
     @Override
     public void valueChanged(ListSelectionEvent e) {
         AddressEditSelectionEvent event = new AddressEditSelectionEvent(e, null, null, incompleteAddr, container);
@@ -183,9 +135,6 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
         OsmUtils.zoomAddresses(event.getSelectedIncompleteAddresses());
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#containerChanged(org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer)
-     */
     @Override
     public void containerChanged(AddressEditContainer container) {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -197,9 +146,6 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.fixAddresses.IAddressEditContainerListener#entityChanged(org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity)
-     */
     @Override
     public void entityChanged(IOSMEntity node) {
         if (SwingUtilities.isEventDispatchThread()) {

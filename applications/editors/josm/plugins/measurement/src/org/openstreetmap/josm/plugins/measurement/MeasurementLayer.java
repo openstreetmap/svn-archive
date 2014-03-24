@@ -143,13 +143,13 @@ public class MeasurementLayer extends Layer {
         }
     }
     
-	/*
+    /*
      * Use an equal area sinusoidal projection to improve accuracy and so we can still use normal polygon area calculation
-     * http://stackoverflow.com/questions/4681737/how-to-calculate-the-area-of-a-polygon-on-the-earths-surface-using-python
+     * https://stackoverflow.com/questions/4681737/how-to-calculate-the-area-of-a-polygon-on-the-earths-surface-using-python
      */
     public static double calcX(LatLon p1){
         return p1.lat() * Math.PI * 6367000 / 180;
-	}
+    }
 
     public static double calcY(LatLon p1){
         return p1.lon() * ( Math.PI * 6367000 / 180) * Math.cos(p1.lat() * Math.PI / 180);

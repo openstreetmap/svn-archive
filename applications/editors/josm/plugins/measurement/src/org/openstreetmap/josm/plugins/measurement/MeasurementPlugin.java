@@ -31,9 +31,9 @@ public class MeasurementPlugin extends Plugin {
             btn.setVisible(true);
             newFrame.addMapMode(btn);
         } else {
-        	btn = null;
-        	mode = null;
-        	measurementDialog = null;
+            btn = null;
+            mode = null;
+            measurementDialog = null;
         }
     }
 

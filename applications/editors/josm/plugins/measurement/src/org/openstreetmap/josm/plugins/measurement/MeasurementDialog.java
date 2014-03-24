@@ -87,16 +87,16 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         KeyEvent.VK_U, Shortcut.CTRL_SHIFT), 150);
 
         resetButton = new SideButton(new AbstractAction() {
-        	{
-        		putValue(NAME, tr("Reset"));
-        		putValue(SMALL_ICON,ImageProvider.get("dialogs", "select"));
-        		putValue(SHORT_DESCRIPTION, tr("Reset current measurement results and delete measurement path."));
-        		putValue("help", HelpUtil.ht("/Dialog/Measurement#Reset"));
-        	}
+            {
+                putValue(NAME, tr("Reset"));
+                putValue(SMALL_ICON,ImageProvider.get("dialogs", "select"));
+                putValue(SHORT_DESCRIPTION, tr("Reset current measurement results and delete measurement path."));
+                putValue("help", HelpUtil.ht("/Dialog/Measurement#Reset"));
+            }
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	resetValues();
+                resetValues();
             }
         });
 
@@ -221,30 +221,30 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
             }
             ds = currentDs;
         }
-	}
+    }
 
-	@Override
-	public void destroy() {
-		super.destroy();
-		NavigatableComponent.removeSoMChangeListener(this);
-		DataSet.removeSelectionListener(this);
-		if (ds != null) {
-		    ds.removeDataSetListener(this);
-		    ds = null;
-		}
-	}
+    @Override
+    public void destroy() {
+        super.destroy();
+        NavigatableComponent.removeSoMChangeListener(this);
+        DataSet.removeSelectionListener(this);
+        if (ds != null) {
+            ds.removeDataSetListener(this);
+            ds = null;
+        }
+    }
 
-	private boolean waysContain(Node n) {
-	    if (ways != null) {
-	        for (Way w : ways) {
-	            if (w.containsNode(n)) {
-	                return true;
-	            }
-	        }
-	    }
-	    return false;
-	}
-	
+    private boolean waysContain(Node n) {
+        if (ways != null) {
+            for (Way w : ways) {
+                if (w.containsNode(n)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     @Override public void nodeMoved(NodeMovedEvent event) {
         Node n = event.getNode();
         // Refresh selection if a node belonging to a selected member has moved (example: scale action)
@@ -261,9 +261,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     @Override public void otherDatasetChange(AbstractDatasetChangedEvent event) {}
     @Override public void dataChanged(DataChangedEvent event) {}
 
-	@Override
-	public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
-		// Refresh selection to take into account new system of measurement
-		selectionChanged(Main.main.getCurrentDataSet().getSelected());
-	}
+    @Override
+    public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
+        // Refresh selection to take into account new system of measurement
+        selectionChanged(Main.main.getCurrentDataSet().getSelected());
+    }
 }

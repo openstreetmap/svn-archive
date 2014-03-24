@@ -124,8 +124,8 @@ public class RoutingLayer extends Layer {
         logger.debug("Routing Layer created.");
         
 
-        this.routingModel.routingGraph.createGraph();	/* construct the graph right after we we create the layer */
-        Main.map.repaint();							/* update MapView */
+        this.routingModel.routingGraph.createGraph();    /* construct the graph right after we we create the layer */
+        Main.map.repaint();                            /* update MapView */
     }
 
     /**
@@ -171,20 +171,12 @@ public class RoutingLayer extends Layer {
         return nearest;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getIcon()
-     */
     @Override
     public Icon getIcon() {
         Icon icon = ImageProvider.get("layer", "routing_small");
         return icon;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getInfoComponent()
-     */
     @Override
     public Object getInfoComponent() {
         String info = "<html>"
@@ -196,10 +188,6 @@ public class RoutingLayer extends Layer {
         return info;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getMenuEntries()
-     */
     @Override
     public Action[] getMenuEntries() {
         Collection<Action> components = new ArrayList<Action>();
@@ -213,10 +201,6 @@ public class RoutingLayer extends Layer {
         return components.toArray(new Action[0]);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getToolTipText()
-     */
     @Override
     public String getToolTipText() {
         String tooltip = this.routingModel.routingGraph.getVertexCount() + " vertices, "
@@ -224,28 +208,16 @@ public class RoutingLayer extends Layer {
         return tooltip;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#isMergable(org.openstreetmap.josm.gui.layer.Layer)
-     */
     @Override
     public boolean isMergable(Layer other) {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#mergeFrom(org.openstreetmap.josm.gui.layer.Layer)
-     */
     @Override
     public void mergeFrom(Layer from) {
         // This layer is not mergable, so do nothing
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#paint(java.awt.Graphics, org.openstreetmap.josm.gui.MapView)
-     */
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
         boolean isActiveLayer = (mv.getActiveLayer().equals(this));
@@ -264,7 +236,7 @@ public class RoutingLayer extends Layer {
         // Get path stroke width from preferences
         String widthString = Main.pref.get(PreferencesKeys.KEY_ROUTE_WIDTH.key);
         if (widthString.length() == 0) {
-            widthString = "2";						/* I think 2 is better  */
+            widthString = "2";                        /* I think 2 is better  */
             // FIXME add after good width is found: Main.pref.put(KEY_ROUTE_WIDTH, widthString);
         }
         int width = Integer.parseInt(widthString);
@@ -272,22 +244,22 @@ public class RoutingLayer extends Layer {
         
         // draw our graph
         if (isActiveLayer) {
-        	if(routingModel != null) {
-        		if(routingModel.routingGraph != null && routingModel.routingGraph.getGraph() != null) {
-        	        Set<OsmEdge> graphEdges =  routingModel.routingGraph.getGraph().edgeSet();
-        	        if (!graphEdges.isEmpty()) {
-            	    	Color color2 = ColorHelper.html2color("#00ff00");		/* just green for now  */
-	        	        OsmEdge firstedge = (OsmEdge) graphEdges.toArray()[0];
-	        	        Point from = mv.getPoint(firstedge.fromEastNorth());
-	        	        g.drawRect(from.x-4, from.y+4, from.x+4, from.y-4);
-	        	        for(OsmEdge edge : graphEdges) {
-	        	        	drawGraph(g, mv, edge, color2, width);
-	        	        }
-        	        }
-        	     }
-        	 }
+            if(routingModel != null) {
+                if(routingModel.routingGraph != null && routingModel.routingGraph.getGraph() != null) {
+                    Set<OsmEdge> graphEdges =  routingModel.routingGraph.getGraph().edgeSet();
+                    if (!graphEdges.isEmpty()) {
+                        Color color2 = ColorHelper.html2color("#00ff00");        /* just green for now  */
+                        OsmEdge firstedge = (OsmEdge) graphEdges.toArray()[0];
+                        Point from = mv.getPoint(firstedge.fromEastNorth());
+                        g.drawRect(from.x-4, from.y+4, from.x+4, from.y-4);
+                        for(OsmEdge edge : graphEdges) {
+                            drawGraph(g, mv, edge, color2, width);
+                        }
+                    }
+                 }
+             }
         }
-        	        
+                    
         
         if(nodes == null || nodes.size() == 0) return;
         
@@ -321,10 +293,6 @@ public class RoutingLayer extends Layer {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#visitBoundingBox(org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor)
-     */
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
         for (Node node : routingModel.getSelectedNodes()) {
@@ -332,10 +300,6 @@ public class RoutingLayer extends Layer {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#destroy()
-     */
     @Override
     public void destroy() {
         routingModel.reset();
@@ -380,6 +344,6 @@ public class RoutingLayer extends Layer {
             g2d.drawRect(to.x- 4, to.y+4, 4, 4);
 
             g2d.setStroke(oldStroke);
-	 }
-		
+     }
+        
 }

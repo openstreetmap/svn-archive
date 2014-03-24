@@ -102,8 +102,8 @@ public class UrlSelectionDialog
   }
 
   private Collection<String> getURLs() {
-    // List can be edited at http://josm.openstreetmap.de/wiki/MirroredDownloadInfo
-    String src = Main.pref.get("plugin.mirrored_download.url-src", "http://josm.openstreetmap.de/mirrored_download_info");
+    // List can be edited at https://josm.openstreetmap.de/wiki/MirroredDownloadInfo
+    String src = Main.pref.get("plugin.mirrored_download.url-src", "https://josm.openstreetmap.de/mirrored_download_info");
     Collection<String> urls = new ArrayList<String>();
     InputStream in = null;
     try {

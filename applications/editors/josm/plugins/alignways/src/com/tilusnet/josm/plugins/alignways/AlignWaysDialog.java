@@ -73,10 +73,10 @@ public class AlignWaysDialog extends ToggleDialog implements ActionListener {
         modesPanel = new JPanel();
         modesPanel.setLayout(new BoxLayout(modesPanel, BoxLayout.PAGE_AXIS));
         /*
-		modesPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(10, 10, 10, 10),
-				BorderFactory.createTitledBorder(tr("Align with:")))
-				);
+        modesPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createTitledBorder(tr("Align with:")))
+                );
          */
         modesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         modesPanel.setAlignmentX(LEFT_ALIGNMENT);

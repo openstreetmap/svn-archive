@@ -46,14 +46,14 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         newItem2 = new javax.swing.JLabel();
 
         lblWhatsNew.setText("<html><div style=\"font-family: sans-serif; font-weight: bold; font-style: italic;\"><span style=\"font-size: large;\"><span style=\"font-size: x-large;\">" 
-        				    + tr("What''s new...") 
-        				    + "</span></div></html>");
+                            + tr("What''s new...") 
+                            + "</span></div></html>");
 
         icnLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/alignways64.png"))); // NOI18N
 
         newItem1.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>"
-        				 + tr("Added <b>angle preserving</b> aligning mode") 
-        				 + "</li></ul></div></html>");
+                         + tr("Added <b>angle preserving</b> aligning mode") 
+                         + "</li></ul></div></html>");
 
         btnHelpItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/wndialog/extlink10.png"))); // NOI18N
         btnHelpItem1.setText("More Info");
@@ -72,8 +72,8 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         });
 
         newItem2.setText("<html><div style=\"font-family: sans-serif;\"><ul style=\"margin-left: 20px;\"><li>"
-        				 + tr("Various improvements and bugfixes")
-        				 + "</li></ul></div></html>");
+                         + tr("Various improvements and bugfixes")
+                         + "</li></ul></div></html>");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -114,9 +114,9 @@ public class AlignWaysWhatsNewPanel extends JPanel {
         );
     }// </editor-fold>
 
-	private void btnHelpItem1ActionPerformed(java.awt.event.ActionEvent evt) {
-	   openURI();
-	}
+    private void btnHelpItem1ActionPerformed(java.awt.event.ActionEvent evt) {
+       openURI();
+    }
 
     // Variables declaration - do not modify
     private javax.swing.JButton btnHelpItem1;

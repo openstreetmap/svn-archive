@@ -63,9 +63,6 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
         setPivots();
     }
 
-    /* (non-Javadoc)
-     * @see com.tilusnet.josm.plugins.alignways.AlignWaysSegment#setSegmentEndpoints(org.openstreetmap.josm.data.osm.WaySegment)
-     */
     @Override
     void setSegmentEndpoints(WaySegment segment) {
         super.setSegmentEndpoints(segment);
@@ -74,7 +71,6 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
         for (Node nA : getSegmentEndPoints()) {
             adjWaySegs.put(nA, new ArrayList<WaySegment>(determineAdjacentWaysegments(nA)));
         }
-
     }
 
     /**
@@ -222,14 +218,6 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
         return adjWaySegs.get(node);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.tilusnet.josm.plugins.alignways.AlignWaysRefSegment#paint(java
-     * .awt.Graphics2D, org.openstreetmap.josm.gui.MapView,
-     * org.openstreetmap.josm.data.Bounds)
-     */
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
         // Note: segment should never be null here
@@ -247,7 +235,6 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
         // Highlight active pivot
         highlightPivot(g, mv, getPivotCoord(currPivot));
-
     }
 
     private void highlightPivot(Graphics2D g, MapView mv, EastNorth pivot) {

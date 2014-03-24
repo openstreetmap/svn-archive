@@ -7,7 +7,7 @@ package com.tilusnet.josm.plugins.alignways.geometry;
  */
 public class AlignWaysGeomLine {
 
-	double coef_a, coef_b, coef_c;
+    double coef_a, coef_b, coef_c;
 
     public enum IntersectionStatus {
         UNDEFINED,
@@ -75,10 +75,10 @@ public class AlignWaysGeomLine {
     }
 
     public AlignWaysGeomLine(AlignWaysGeomPoint awPt1, AlignWaysGeomPoint awPt2) {
-    	this(awPt1.getX(), awPt1.getY(), awPt2.getX(), awPt2.getY());
-	}
+        this(awPt1.getX(), awPt1.getY(), awPt2.getX(), awPt2.getY());
+    }
 
-	/**
+    /**
      * Returns the intersection point of the line with another line.
      * If the lines are parallel or overlap, returns null.
      * Use getIntersectionStatus() to determine the case.
@@ -94,7 +94,7 @@ public class AlignWaysGeomLine {
         // - if (det1 == 0) and any of det2 or det3 != 0, the lines are parallel
 
         // See: http://www.mathwizz.com/algebra/help/help21.htm
-        //  and http://en.wikipedia.org/wiki/Cramers_rule
+        //  and https://en.wikipedia.org/wiki/Cramer%27s_rule
 
 
         double det1 = (coef_a * other_line.coef_b) - (other_line.coef_a * coef_b);
@@ -183,24 +183,24 @@ public class AlignWaysGeomLine {
             return false;
     }
 
-	public boolean isPointOnLine(AlignWaysGeomPoint awPt) {
-		// Method:
-		// 1. create a new line from awPt and one point of 'this'
-		// 2. check getIntersectionStatus of the two lines
-		// 3. if status is LINES_OVERLAP, the point os one the line, otherwise not
-		
-		// Need an arbitrary point on this line; let it be (x, y)
-		Double x = 0.0;
-		Double y = getYonLine(x);
-		if (y.isNaN()) y = 0.0;
-		
-		AlignWaysGeomLine line2 = new AlignWaysGeomLine(awPt, new AlignWaysGeomPoint(x, y));
-		getIntersection(line2);
-		if (getIntersectionStatus() == IntersectionStatus.LINES_OVERLAP)
-			return true;
-		else
-			return false;
-		
-	}
+    public boolean isPointOnLine(AlignWaysGeomPoint awPt) {
+        // Method:
+        // 1. create a new line from awPt and one point of 'this'
+        // 2. check getIntersectionStatus of the two lines
+        // 3. if status is LINES_OVERLAP, the point os one the line, otherwise not
+        
+        // Need an arbitrary point on this line; let it be (x, y)
+        Double x = 0.0;
+        Double y = getYonLine(x);
+        if (y.isNaN()) y = 0.0;
+        
+        AlignWaysGeomLine line2 = new AlignWaysGeomLine(awPt, new AlignWaysGeomPoint(x, y));
+        getIntersection(line2);
+        if (getIntersectionStatus() == IntersectionStatus.LINES_OVERLAP)
+            return true;
+        else
+            return false;
+        
+    }
 
 }

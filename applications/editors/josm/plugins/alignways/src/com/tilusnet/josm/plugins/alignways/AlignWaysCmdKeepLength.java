@@ -196,13 +196,6 @@ public class AlignWaysCmdKeepLength extends Command {
         return ImageProvider.get("alignways");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.openstreetmap.josm.command.Command#fillModifiedData(java.util.Collection
-     * , java.util.Collection, java.util.Collection)
-     */
     @Override
     public void fillModifiedData(Collection<OsmPrimitive> modified,
             Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {
@@ -211,22 +204,12 @@ public class AlignWaysCmdKeepLength extends Command {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.openstreetmap.josm.command.Command#executeCommand()
-     */
     @Override
     public boolean executeCommand() {
         rotateNodes(true);
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.openstreetmap.josm.command.Command#undoCommand()
-     */
     @Override
     public void undoCommand() {
         for (Node n : displaceableNodes) {

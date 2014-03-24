@@ -227,9 +227,6 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
 
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.actions.mapmode.MapMode#layerIsSupported(org.openstreetmap.josm.gui.layer.Layer)
-     */
     @Override
     public boolean layerIsSupported(Layer l) {
         if (l == null)

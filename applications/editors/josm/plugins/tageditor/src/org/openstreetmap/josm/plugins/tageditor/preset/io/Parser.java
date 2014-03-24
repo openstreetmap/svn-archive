@@ -260,9 +260,6 @@ public class Parser {
             }           
         }
 
-        /* (non-Javadoc)
-         * @see org.xml.sax.helpers.DefaultHandler#warning(org.xml.sax.SAXParseException)
-         */
         @Override
         public void warning(SAXParseException e) throws SAXException {
             // TODO Auto-generated method stub

@@ -1,18 +1,4 @@
-//    JOSM Imagery XML Bounds plugin.
-//    Copyright (C) 2011 Don-vip
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.imageryxmlbounds.actions.downloadtask;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -66,18 +52,12 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
             super(newLayer, reader, progressMonitor);
         }
         
-        /* (non-Javadoc)
-         * @see org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask.DownloadTask#getEditLayer()
-         */
         @Override
         protected OsmDataLayer getEditLayer() {
             OsmDataLayer editLayer = super.getEditLayer();
             return editLayer instanceof XmlBoundsLayer ? editLayer : null;
         }
 
-        /* (non-Javadoc)
-         * @see org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask.DownloadTask#getNumDataLayers()
-         */
         @Override
         protected int getNumDataLayers() {
             int count = 0;
@@ -90,9 +70,6 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
             return count;
         }
 
-        /* (non-Javadoc)
-         * @see org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask.DownloadTask#getFirstDataLayer()
-         */
         @Override
         protected OsmDataLayer getFirstDataLayer() {
             if (!Main.isDisplayingMapView()) return null;
@@ -103,9 +80,6 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
             return null;
         }
 
-        /* (non-Javadoc)
-         * @see org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask.DownloadTask#createNewLayer()
-         */
         @Override
         protected OsmDataLayer createNewLayer() {
             return new XmlBoundsLayer(dataSet, XmlBoundsLayer.createNewName(), null);

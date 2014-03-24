@@ -1,6 +1,4 @@
-/**
- * 
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.imageryxmlbounds.io;
 
 import java.io.IOException;

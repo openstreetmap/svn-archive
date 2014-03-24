@@ -73,7 +73,7 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
                 public void run() {
                     new Notification(
                             e.getMessage()+"<br>"+
-                            tr("See {0}", "<a href=\"http://www.openstreetmap.org/redactions\">http://www.openstreetmap.org/redactions</a>"))
+                            tr("See {0}", "<a href=\"https://www.openstreetmap.org/redactions\">https://www.openstreetmap.org/redactions</a>"))
                     .setIcon(JOptionPane.ERROR_MESSAGE)
                     .setDuration(Notification.TIME_LONG)
                     .show();

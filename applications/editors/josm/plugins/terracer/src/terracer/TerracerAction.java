@@ -255,11 +255,6 @@ public final class TerracerAction extends JosmAction {
     class HousenumberNodeComparator implements Comparator<Node> {
         private final Pattern pat = Pattern.compile("^(\\d+)\\s*(.*)");
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-         */
         @Override
         public int compare(Node node1, Node node2) {
             // It's necessary to strip off trailing non-numbers so we can

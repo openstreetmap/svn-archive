@@ -283,22 +283,11 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-     * Called when the user selects from a pulldown selection
-     */
     @Override
     public void itemStateChanged(ItemEvent e) {
         validateInput();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     @Override
     public void actionPerformed(final ActionEvent e) {
         // OK or Cancel button-actions
@@ -457,21 +446,11 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         return dialog.deleteOutlineCheckBox.isSelected();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-     */
     @Override
     public void focusGained(FocusEvent e) {
         // Empty, but placeholder is required
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-     */
     @Override
     public void focusLost(FocusEvent e) {
         if (e.getOppositeComponent() == null)

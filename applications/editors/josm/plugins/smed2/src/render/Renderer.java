@@ -17,6 +17,7 @@ import java.util.*;
 
 import s57.S57val.*;
 import s57.S57map;
+import s57.S57att.Att;
 import s57.S57map.*;
 import symbols.Areas;
 import symbols.Symbols;
@@ -345,7 +346,7 @@ public class Renderer {
 			break;
 		}
 	}
-
+	
 	public static void labelText(Feature feature, String str, Font font, Color tc) {
 		labelText(feature, str, font, tc, LabelStyle.NONE, null, null, null);
 	}

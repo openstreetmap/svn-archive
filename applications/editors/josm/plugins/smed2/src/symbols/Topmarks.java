@@ -189,6 +189,10 @@ public class Topmarks {
 		colours.add(new Instr(Form.V2, p));
 		p = new Path2D.Double(); p.moveTo(-4.3,-1.0); p.lineTo(-4.3,-27.0); p.lineTo(4.3,-27.0); p.lineTo(4.3,-1.0); p.closePath();
 		colours.add(new Instr(Form.V3, p));
+		p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		p.moveTo(-13.0,-1.0); p.lineTo(-13.0,-27.0); p.lineTo(13.0,-27.0); p.lineTo(13.0,-1.0); p.closePath();
+		p.moveTo(-8.0,-6.0); p.lineTo(-8.0,-22.0); p.lineTo(8.0,-22.0); p.lineTo(8.0,-6.0); p.closePath();
+		colours.add(new Instr(Form.B1, p));
 		TopSquare.add(new Instr(Form.COLR, colours));
 		TopSquare.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		TopSquare.add(new Instr(Form.FILL, Color.black));
@@ -205,6 +209,14 @@ public class Topmarks {
 		colours.add(new Instr(Form.H2, p));
 		p = new Path2D.Double(); p.moveTo(-10.0,-19.7); p.lineTo(-15.0,-15.0); p.lineTo(-10.0,-10.3); p.lineTo(10.0,-10.3); p.lineTo(15.0,-15.0); p.lineTo(10.0,-19.7); p.closePath();
 		colours.add(new Instr(Form.H3, p));
+		p = new Path2D.Double();  p.moveTo(0.0,-29.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-15.0); p.closePath();
+		colours.add(new Instr(Form.V2, p));
+		p = new Path2D.Double(); p.moveTo(0.0,-29.0); p.lineTo(-5.0,-24.3); p.lineTo(-5.0,-5.7); p.lineTo(0.0,-1.0); p.lineTo(5.0,-5.7); p.lineTo(5.0,-24.3); p.closePath();
+		colours.add(new Instr(Form.V3, p));
+		p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		p.moveTo(0.0,-29.0); p.lineTo(-15.0,-15.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-15.0); p.closePath();
+		p.moveTo(0.0,-23.0); p.lineTo(-9.0,-15.0); p.lineTo(0.0,-7.0); p.lineTo(9.0,-15.0); p.closePath();
+		colours.add(new Instr(Form.B1, p));
 		TopRhombus.add(new Instr(Form.COLR, colours));
 		TopRhombus.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		TopRhombus.add(new Instr(Form.FILL, Color.black));

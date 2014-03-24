@@ -17,10 +17,12 @@ import java.awt.font.TextLayout;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
+import s57.S57val.ColPAT;
+
 public class Symbols {
 
 	public enum Form {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, V3, D2, D3, D4, B2, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, V3, D2, D3, D4, B1, S2, S3, S4, C2, X2
 	}
 
 	public enum Patt {
@@ -148,8 +150,14 @@ public class Symbols {
 	public static void drawSymbol(Graphics2D g2, Symbol symbol, double scale, double x, double y, Scheme cs, Delta dd) {
 		int pn = 0;
 		int cn = 0;
+		Patt bpat = Patt.Z;
+		Color bcol = null;
 		g2.setPaint(Color.black);
 		if (cs != null) {
+			if ((cs.pat.size() > 0) && (cs.col.size() > 0) && (cs.pat.get(0) == Patt.B)) {
+				bpat = (cs.pat.remove(0));
+				bcol = (cs.col.remove(0));
+			}
 			pn = cs.pat.size();
 			cn = cs.col.size() - ((pn != 0) ? pn - 1 : 0);
 			if ((pn == 0) && (cs.col.size() == 1)) {
@@ -230,38 +238,44 @@ public class Symbols {
 								}
 								break;
 							case H2:
-								if ((cn > 1) && (cs.pat.get(0) == Patt.H)) {
+								if ((cn > 1) && (pn > 0) && (cs.pat.get(0) == Patt.H)) {
 									g2.setPaint(cs.col.get(cs.col.size() - pn));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H3:
-								if ((cn == 3) && (cs.pat.get(0) == Patt.H)) {
+								if ((cn == 3) && (pn > 0) && (cs.pat.get(0) == Patt.H)) {
 									g2.setPaint(cs.col.get(1));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H4:
-								if ((cn == 4) && (cs.pat.get(0) == Patt.H)) {
+								if ((cn == 4) && (pn > 0) && (cs.pat.get(0) == Patt.H)) {
 									g2.setPaint(cs.col.get(1));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case H5:
-								if ((cn == 4) && (cs.pat.get(0) == Patt.H)) {
+								if ((cn == 4) && (pn > 0) && (cs.pat.get(0) == Patt.H)) {
 									g2.setPaint(cs.col.get(2));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case V2:
-								if ((cn > 1) && (cs.pat.get(0) == Patt.V)) {
+								if ((cn > 1) && (pn > 0) && (cs.pat.get(0) == Patt.V)) {
 									g2.setPaint(cs.col.get(cs.col.size() - pn));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;
 							case V3:
-								if ((cn == 3) && (cs.pat.get(0) == Patt.V)) {
+								if ((cn == 3) && (pn > 0) && (cs.pat.get(0) == Patt.V)) {
 									g2.setPaint(cs.col.get(1));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case B1:
+								if (bpat == Patt.B) {
+									g2.setPaint(bcol);
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;

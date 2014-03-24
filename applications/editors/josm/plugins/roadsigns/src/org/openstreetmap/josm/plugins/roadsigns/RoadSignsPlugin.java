@@ -242,7 +242,7 @@ public class RoadSignsPlugin extends Plugin {
      */
     public static InputStream getInputStream(String source) throws IOException {
         InputStream in = null;
-        if (source.startsWith("http://") || source.startsWith("ftp://")) {
+        if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("ftp://")) {
             in = new MirroredInputStream(source);
         } else if (source.startsWith("file:")) {
             in = new URL(source).openStream();

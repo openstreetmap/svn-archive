@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.datasets.culture;
 
 import org.openstreetmap.josm.data.osm.DataSet;

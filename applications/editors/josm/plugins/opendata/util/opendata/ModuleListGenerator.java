@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package opendata;
 
 import java.io.BufferedWriter;

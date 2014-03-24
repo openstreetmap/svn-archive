@@ -24,7 +24,6 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
 
-
 /**
  * Asynchronous task for downloading a collection of modules.
  *

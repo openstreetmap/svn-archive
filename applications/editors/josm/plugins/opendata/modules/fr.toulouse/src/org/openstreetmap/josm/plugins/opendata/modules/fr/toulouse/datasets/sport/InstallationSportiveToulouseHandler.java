@@ -1,22 +1,7 @@
-//    JOSM opendata plugin.
-//    Copyright (C) 2011-2012 Don-vip
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.sport;
 
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
 public class InstallationSportiveToulouseHandler extends ToulouseDataSetHandler {
@@ -34,8 +19,8 @@ public class InstallationSportiveToulouseHandler extends ToulouseDataSetHandler 
 
     @Override
     public void updateDataSet(DataSet ds) {
-        for (Node n : ds.getNodes()) {
-            /*if (n.get("name").startsWith("Gymnase")) {
+        /*for (Node n : ds.getNodes()) {
+            if (n.get("name").startsWith("Gymnase")) {
                 n.put("leisure", "sports_centre");
             } else if (n.get("name").startsWith("Piscine")) {
                 n.put("leisure", "swimming_pool");
@@ -52,7 +37,7 @@ public class InstallationSportiveToulouseHandler extends ToulouseDataSetHandler 
                 n.put("amenity", "dojo");
             } else if (n.get("name").startsWith("Boulodrome")) {
                 n.put("sport", "boules");
-            }*/
-        }
+            }
+        }*/
     }
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -20,9 +21,6 @@ public class LambertCC9ZonesProjectionPatterns extends ProjectionPatterns {
 		super(proj);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.io.CoordinatePatterns#getProjection(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public Projection getProjection(String xFieldName, String yFieldName) {
 

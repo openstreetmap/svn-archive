@@ -78,11 +78,6 @@ public class CollectionMap<K, V> extends MultiHashMap {
         new MultiValueMap(); // TODO: use this class instead of deprecated MultiHashMap
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.commons.collections.MultiHashMap#createCollection(java.util.Collection)
-     */
     public Collection<V> createCollection(Collection coll) {
         if (this.collectionClass != null)
             try {

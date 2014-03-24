@@ -1,18 +1,4 @@
-//    JOSM opendata plugin.
-//    Copyright (C) 2011-2012 Don-vip
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets;
 
 import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaQueryType.NODE;
@@ -124,9 +110,6 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fr.opendata.data.AbstractConverter#equals(org.openstreetmap.josm.data.osm.IPrimitive, org.openstreetmap.josm.data.osm.IPrimitive)
-	 */
 	@Override
 	public boolean equals(IPrimitive p1, IPrimitive p2) {
 		for (Tag tag : this.relevantTags) {
@@ -137,9 +120,6 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fr.opendata.data.AbstractConverter#isRelevant(org.openstreetmap.josm.data.osm.IPrimitive)
-	 */
 	@Override
 	public boolean isRelevant(IPrimitive p) {
 		for (Tag tag : this.relevantTags) {
@@ -154,9 +134,6 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 		return true;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fr.opendata.datasets.AbstractDataSetHandler#isForbidden(org.openstreetmap.josm.data.osm.IPrimitive)
-	 */
 	@Override
 	public boolean isForbidden(IPrimitive p) {
 		for (Tag tag : this.forbiddenTags) {
@@ -168,9 +145,6 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fr.opendata.datasets.AbstractDataSetHandler#hasForbiddenTags()
-	 */
 	@Override
 	public boolean hasForbiddenTags() {
 		return !this.forbiddenTags.isEmpty();
@@ -199,9 +173,6 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 			OverpassApi.recurse(RELATION_WAY, WAY_NODE);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fr.opendata.datasets.AbstractDataSetHandler#getOverpassApiRequest(java.lang.String)
-	 */
 	@Override
 	protected String getOverpassApiRequest(String bbox) {
 		String result = "";
@@ -216,9 +187,6 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 		return result + OverpassApi.print();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.fr.opendata.data.AbstractConverter#getOsmDataUrls(java.lang.String)
-	 */
 	@Override
 	protected Collection<String> getOsmXapiRequests(String bbox) {
 		String relevantTags = "";

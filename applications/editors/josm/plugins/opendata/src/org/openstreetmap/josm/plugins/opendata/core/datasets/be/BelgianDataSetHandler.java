@@ -1,18 +1,4 @@
-//    JOSM opendata plugin.
-//    Copyright (C) 2011-2012 Don-vip
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.be;
 
 import java.net.MalformedURLException;
@@ -99,9 +85,6 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
 		getCsvHandler().setHandlesProjection(singleProjection != null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getNationalPortalURL()
-	 */
 	@Override
 	public URL getNationalPortalURL() {
 		try {
@@ -127,17 +110,11 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLocalPortalIconName()
-	 */
 	@Override
 	public String getLocalPortalIconName() {
 		return ICON_BE_24;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getNationalPortalIconName()
-	 */
 	@Override
 	public String getNationalPortalIconName() {
 		return ICON_BE_24;

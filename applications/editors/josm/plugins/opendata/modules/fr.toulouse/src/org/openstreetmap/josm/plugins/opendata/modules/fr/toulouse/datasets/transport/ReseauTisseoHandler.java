@@ -1,18 +1,4 @@
-//    JOSM opendata plugin.
-//    Copyright (C) 2011-2012 Don-vip
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.transport;
 
 import java.io.File;
@@ -41,25 +27,16 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
         return acceptsZipFilename(filename, "14022-reseau-tisseo-metro-bus-tram-") || filename.toLowerCase().endsWith(XML_EXT);
     }
     
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#acceptsFile(java.io.File)
-     */
     @Override
     public boolean acceptsFile(File file) {
         return acceptsFilename(file.getName()) && (file.getName().toLowerCase().endsWith(ZIP_EXT) || NeptuneReader.acceptsXmlNeptuneFile(file, neptuneSchemaUrl));
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler#getSource()
-     */
     @Override
     public String getSource() {
         return SOURCE_TISSEO;
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler#getWikiURL()
-     */
     @Override
     public URL getWikiURL() {
         try {

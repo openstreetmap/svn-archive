@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.cg41.datasets;
 
 import java.net.MalformedURLException;
@@ -43,25 +44,16 @@ public abstract class Cg41DataSetHandler extends FrenchDataSetHandler implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getSource()
-	 */
 	@Override
 	public String getSource() {
 		return SOURCE_CG41;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getLocalPortalIconName()
-	 */
 	@Override
 	public String getLocalPortalIconName() {
 		return ICON_CG41_24;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler#getDataLayerIconName()
-	 */
 	@Override
 	public String getDataLayerIconName() {
 		return ICON_CG41_16;

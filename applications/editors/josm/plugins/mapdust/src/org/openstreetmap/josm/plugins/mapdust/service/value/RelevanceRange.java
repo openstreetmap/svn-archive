@@ -154,11 +154,6 @@ public class RelevanceRange implements Serializable, Comparable<RelevanceRange> 
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(RelevanceRange obj) {
         if (this.getLowerValue() < obj.getLowerValue()
@@ -171,5 +166,4 @@ public class RelevanceRange implements Serializable, Comparable<RelevanceRange> 
         }
         return 0;
     }
-
 }

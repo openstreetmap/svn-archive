@@ -144,7 +144,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (newMapFrame != null) {
             /* add MapDust dialog window */
             mapdustGUI = new MapdustGUI(tr("MapDust bug reports"), "mapdust_icon.png", 
-            		tr("Activates the MapDust bug reporter plugin"), shortcut, 150, this);
+                    tr("Activates the MapDust bug reporter plugin"), shortcut, 150, this);
             /* add MapdustGUI */
             mapdustGUI.setBounds(newMapFrame.getBounds());
             mapdustGUI.addObserver(this);

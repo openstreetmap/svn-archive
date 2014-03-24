@@ -147,22 +147,11 @@ public class BugType implements Serializable {
         return collection.toArray(new BugType[0]);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals()
-     */
     @Override
     public boolean equals(java.lang.Object obj) {
         return (obj == this);
     }
 
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return super.hashCode();

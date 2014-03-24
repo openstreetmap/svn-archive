@@ -135,12 +135,6 @@ public class MapdustRelevance implements Serializable,
         return range;
     }
 
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -150,11 +144,6 @@ public class MapdustRelevance implements Serializable,
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         MapdustRelevance other = (MapdustRelevance) obj;

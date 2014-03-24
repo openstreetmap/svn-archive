@@ -1,7 +1,7 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation;
 
 import java.util.List;
-
 
 public interface IElevationModel {
 
@@ -32,28 +32,28 @@ public interface IElevationModel {
      * @return the profiles
      */
     public abstract List<IElevationProfile> getProfiles();
-    
+
     /**
      * Gets the current profile.
      *
      * @return the current profile
      */
     public abstract IElevationProfile getCurrentProfile();
-    
+
     /**
      * Sets the current profile.
      *
      * @param newProfile the new current profile
      */
     public abstract void setCurrentProfile(IElevationProfile newProfile);
-    
+
     /**
      * Sets the current profile by index.
      *
      * @param index the new current profile. Valied numbers are 0 to (profileCount - 1)
      */
     public abstract void setCurrentProfile(int index);
-    
+
     /**
      * Gets the number of elevation profiles within the model.
      *

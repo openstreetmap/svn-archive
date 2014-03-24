@@ -1,17 +1,4 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
 import org.openstreetmap.gui.jmapviewer.Tile;
@@ -28,19 +15,17 @@ public class ElevationGridTileLoader implements TileLoader {
     protected TileLoaderListener listener;
 
     public ElevationGridTileLoader(TileLoaderListener listener) {
-	CheckParameterUtil.ensureParameterNotNull(listener);
+        CheckParameterUtil.ensureParameterNotNull(listener);
         this.listener = listener;
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.gui.jmapviewer.interfaces.TileLoader#createTileLoaderJob(org.openstreetmap.gui.jmapviewer.Tile)
-     */
     @Override
     public TileJob createTileLoaderJob(final Tile tile) {
-	CheckParameterUtil.ensureParameterNotNull(tile);
-	
-	return new TileJob() {
+        CheckParameterUtil.ensureParameterNotNull(tile);
 
+        return new TileJob() {
+
+            @Override
             public void run() {
                 synchronized (tile) {
                     if ((tile.isLoaded() && !tile.hasError()) || tile.isLoading())
@@ -53,16 +38,17 @@ public class ElevationGridTileLoader implements TileLoader {
                     listener.tileLoadingFinished(tile, true);
                 } catch (Exception e) {
                     tile.setError(e.getMessage());
-                    listener.tileLoadingFinished(tile, false);                                        
+                    listener.tileLoadingFinished(tile, false);
                 } finally {
                     tile.finishLoading();
                 }
             }
 
+            @Override
             public Tile getTile() {
                 return tile;
             }
         };
     }
-   
+
 }

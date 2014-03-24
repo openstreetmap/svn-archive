@@ -1,16 +1,4 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
 import java.util.ArrayList;
@@ -29,80 +17,80 @@ public class EleVertex {
     private final EleCoordinate[] points = new EleCoordinate[NPOINTS];
 
     public EleVertex(EleCoordinate p1, EleCoordinate p2, EleCoordinate p3) {
-	points[0] = p1;
-	points[1] = p2;
-	points[2] = p3;
+        points[0] = p1;
+        points[1] = p2;
+        points[2] = p3;
 
-	// compute elevation
-	double z = 0D;
-	boolean eleValid = true;
-	for (EleCoordinate point : points) {
-	    if (ElevationHelper.isValidElevation(p1.getEle())) {
-		z += point.getEle();
-	    } else {
-		eleValid = false;
-		break;
-	    }
-	}
+        // compute elevation
+        double z = 0D;
+        boolean eleValid = true;
+        for (EleCoordinate point : points) {
+            if (ElevationHelper.isValidElevation(p1.getEle())) {
+                z += point.getEle();
+            } else {
+                eleValid = false;
+                break;
+            }
+        }
 
-	if (eleValid) {
-	    avrgEle = z / NPOINTS;
-	} else {
-	    avrgEle = ElevationHelper.NO_ELEVATION;
-	}
+        if (eleValid) {
+            avrgEle = z / NPOINTS;
+        } else {
+            avrgEle = ElevationHelper.NO_ELEVATION;
+        }
 
-	// compute the (approx.!) area of the vertex using heron's formula
-	double a = p1.greatCircleDistance(p2);
-	double b = p2.greatCircleDistance(p3);
-	double c = p1.greatCircleDistance(p3);
+        // compute the (approx.!) area of the vertex using heron's formula
+        double a = p1.greatCircleDistance(p2);
+        double b = p2.greatCircleDistance(p3);
+        double c = p1.greatCircleDistance(p3);
 
-	double s = (a + b + c) / 2D;
-	double sq = s * (s - a) * (s - b) * (s - c);
-	area = Math.sqrt(sq);
+        double s = (a + b + c) / 2D;
+        double sq = s * (s - a) * (s - b) * (s - c);
+        area = Math.sqrt(sq);
     }
 
     public List<EleVertex> divide() {
-	TriangleEdge[] edges = new TriangleEdge[NPOINTS];
+        TriangleEdge[] edges = new TriangleEdge[NPOINTS];
 
-	int k = 0;
-	for (int i = 0; i < points.length; i++) {
-	    EleCoordinate c1 = points[i];
+        int k = 0;
+        for (int i = 0; i < points.length; i++) {
+            EleCoordinate c1 = points[i];
 
-	    for (int j = i + 1; j < points.length; j++) {
-		EleCoordinate c2 = points[j];
+            for (int j = i + 1; j < points.length; j++) {
+                EleCoordinate c2 = points[j];
 
-		edges[k++] = new TriangleEdge(i, j, c1.greatCircleDistance(c2));
-	    }
-	}
+                edges[k++] = new TriangleEdge(i, j, c1.greatCircleDistance(c2));
+            }
+        }
 
-	/*
-	for (int i = 0; i < edges.length; i++) {
-	    TriangleEdge triangleEdge = edges[i];
-	    System.out.println("#" + i + ": " +triangleEdge);
-	}*/
+        /*
+    for (int i = 0; i < edges.length; i++) {
+        TriangleEdge triangleEdge = edges[i];
+        System.out.println("#" + i + ": " +triangleEdge);
+    }*/
 
-	// sort by distance
-	Arrays.sort(edges);
-	// pick the longest edge
-	TriangleEdge longest = edges[0];
+        // sort by distance
+        Arrays.sort(edges);
+        // pick the longest edge
+        TriangleEdge longest = edges[0];
 
 
-	//System.out.println("Longest " + longest);
-	EleCoordinate pI = points[longest.getI()];
-	EleCoordinate pJ = points[longest.getJ()];
-	EleCoordinate pK = points[longest.getK()];
-	EleCoordinate newP = getMid(pI, pJ);
-	/*
-	System.out.println(pI);
-	System.out.println(pJ);
-	System.out.println(pK);
-	System.out.println(newP);
-	 */
-	List<EleVertex> res = new ArrayList<EleVertex>();
-	res.add(new EleVertex(pI, pK, newP));
-	res.add(new EleVertex(pJ, pK, newP));
+        //System.out.println("Longest " + longest);
+        EleCoordinate pI = points[longest.getI()];
+        EleCoordinate pJ = points[longest.getJ()];
+        EleCoordinate pK = points[longest.getK()];
+        EleCoordinate newP = getMid(pI, pJ);
+        /*
+    System.out.println(pI);
+    System.out.println(pJ);
+    System.out.println(pK);
+    System.out.println(newP);
+         */
+        List<EleVertex> res = new ArrayList<EleVertex>();
+        res.add(new EleVertex(pI, pK, newP));
+        res.add(new EleVertex(pJ, pK, newP));
 
-	return res;
+        return res;
     }
 
     /**
@@ -112,15 +100,15 @@ public class EleVertex {
      * @return true, if is finished
      */
     public boolean isFinished() {
-	double z = 0D;
-	double avrgEle = getEle();
+        double z = 0D;
+        double avrgEle = getEle();
 
-	for (EleCoordinate point : points) {
-	    z += (avrgEle - point.getEle()) * (avrgEle - point.getEle());
-	}
+        for (EleCoordinate point : points) {
+            z += (avrgEle - point.getEle()) * (avrgEle - point.getEle());
+        }
 
-	// TODO: Check for proper limit
-	return /*z < 75 || */getArea() < (30 * 30); // = 3 * 25
+        // TODO: Check for proper limit
+        return /*z < 75 || */getArea() < (30 * 30); // = 3 * 25
     }
 
     /**
@@ -129,7 +117,7 @@ public class EleVertex {
      * @return the area
      */
     public double getArea() {
-	return area;
+        return area;
     }
 
     /**
@@ -140,19 +128,19 @@ public class EleVertex {
      * @return the mid point
      */
     public EleCoordinate getMid(EleCoordinate c1, EleCoordinate c2) {
-	double x = (c1.getX() + c2.getX()) / 2.0;
-	double y = (c1.getY() + c2.getY()) / 2.0;
+        double x = (c1.getX() + c2.getX()) / 2.0;
+        double y = (c1.getY() + c2.getY()) / 2.0;
 
-	double z = (c1.getEle() + c2.getEle()) / 2.0;
-	if (c1.greatCircleDistance(c2) > MIN_DIST) {
-	    double hgtZ = ElevationHelper.getSrtmElevation(new LatLon(y, x));
+        double z = (c1.getEle() + c2.getEle()) / 2.0;
+        if (c1.greatCircleDistance(c2) > MIN_DIST) {
+            double hgtZ = ElevationHelper.getSrtmElevation(new LatLon(y, x));
 
-	    if (ElevationHelper.isValidElevation(hgtZ)) {
-		z = hgtZ;
-	    }
-	}
+            if (ElevationHelper.isValidElevation(hgtZ)) {
+                z = hgtZ;
+            }
+        }
 
-	return new EleCoordinate(y, x, z);
+        return new EleCoordinate(y, x, z);
     }
 
     /**
@@ -163,9 +151,9 @@ public class EleVertex {
      * @throws IllegalArgumentException, if index is invalid
      */
     public EleCoordinate get(int index) {
-	if (index < 0 || index >= NPOINTS) throw new IllegalArgumentException("Invalid index: " + index);
+        if (index < 0 || index >= NPOINTS) throw new IllegalArgumentException("Invalid index: " + index);
 
-	return points[index];
+        return points[index];
     }
 
     /**
@@ -175,60 +163,60 @@ public class EleVertex {
      */
     public double getEle() {
 
-	return avrgEle;
+        return avrgEle;
     }
 
     @Override
     public String toString() {
-	return "EleVertex [avrgEle=" + avrgEle + ", area=" + area + ", points="
-		+ Arrays.toString(points) + "]";
+        return "EleVertex [avrgEle=" + avrgEle + ", area=" + area + ", points="
+                + Arrays.toString(points) + "]";
     }
 
 
 
 
     class TriangleEdge implements Comparable<TriangleEdge> {
-	private final int i;
-	private final int j;
-	private final double dist;
+        private final int i;
+        private final int j;
+        private final double dist;
 
-	public TriangleEdge(int i, int j, double dist) {
-	    super();
-	    this.i = i;
-	    this.j = j;
-	    this.dist = dist;
-	}
+        public TriangleEdge(int i, int j, double dist) {
+            super();
+            this.i = i;
+            this.j = j;
+            this.dist = dist;
+        }
 
-	public int getI() {
-	    return i;
-	}
+        public int getI() {
+            return i;
+        }
 
-	public int getJ() {
-	    return j;
-	}
+        public int getJ() {
+            return j;
+        }
 
-	public int getK() {
-	    if (i == 0) {
-		return j == 1 ? 2 : 1;
-	    } else if (i == 1) {
-		return j == 0 ? 2 : 0;
-	    } else {
-		return j == 0 ? 1 : 0;
-	    }
-	}
+        public int getK() {
+            if (i == 0) {
+                return j == 1 ? 2 : 1;
+            } else if (i == 1) {
+                return j == 0 ? 2 : 0;
+            } else {
+                return j == 0 ? 1 : 0;
+            }
+        }
 
-	public double getDist() {
-	    return dist;
-	}
+        public double getDist() {
+            return dist;
+        }
 
-	@Override
-	public int compareTo(TriangleEdge o) {
-	    return (int) (o.getDist() - dist);
-	}
+        @Override
+        public int compareTo(TriangleEdge o) {
+            return (int) (o.getDist() - dist);
+        }
 
-	@Override
-	public String toString() {
-	    return "TriangleEdge [i=" + i + ", j=" + j + ", dist=" + dist + "]";
-	}
+        @Override
+        public String toString() {
+            return "TriangleEdge [i=" + i + ", j=" + j + ", dist=" + dist + "]";
+        }
     }
 }

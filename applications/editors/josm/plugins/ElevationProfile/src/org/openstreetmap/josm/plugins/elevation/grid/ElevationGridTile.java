@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -29,31 +30,31 @@ public class ElevationGridTile extends Tile {
     private Bounds box;
 
     public ElevationGridTile(TileSource source, int xtile, int ytile, int zoom) {
-	super(source, xtile, ytile, zoom);
+        super(source, xtile, ytile, zoom);
 
-	box = tile2Bounds(xtile, ytile, zoom);
-	initQueue();
+        box = tile2Bounds(xtile, ytile, zoom);
+        initQueue();
     }
 
     public ElevationGridTile(TileSource source, int xtile, int ytile, int zoom,
-	    BufferedImage image) {
-	super(source, xtile, ytile, zoom, image);
+            BufferedImage image) {
+        super(source, xtile, ytile, zoom, image);
 
 
     }
 
     @Override
     public void loadPlaceholderFromCache(TileCache cache) {
-	// TODO Auto-generated method stub
-	super.loadPlaceholderFromCache(cache);
+        // TODO Auto-generated method stub
+        super.loadPlaceholderFromCache(cache);
 
-	//System.out.println("loadPlaceholderFromCache");
+        //System.out.println("loadPlaceholderFromCache");
     }
 
     @Override
     public String getUrl() throws IOException {
-	// TODO Auto-generated method stub
-	return super.getUrl();
+        // TODO Auto-generated method stub
+        return super.getUrl();
     }
 
     /**
@@ -61,10 +62,10 @@ public class ElevationGridTile extends Tile {
      */
     @Override
     public void paint(Graphics g, int x, int y) {
-	super.paint(g, x, y);
+        super.paint(g, x, y);
 
-	//g.drawString(String.format("EGT %d/%d ", getXtile(), getYtile()), x, y);
-	g.drawString(getStatus(), x, y);
+        //g.drawString(String.format("EGT %d/%d ", getXtile(), getYtile()), x, y);
+        g.drawString(getStatus(), x, y);
     }
 
     /**
@@ -75,45 +76,45 @@ public class ElevationGridTile extends Tile {
      * @param vertexRenderer the vertex renderer
      */
     public void paintTile(Graphics2D g, MapView mv, IVertexRenderer vertexRenderer) {
-	BlockingDeque<EleVertex> list = getVertices();
-	for (EleVertex eleVertex : list) {
-	    Point p0 = mv.getPoint(eleVertex.get(0));
-	    Point p1 = mv.getPoint(eleVertex.get(1));
-	    Point p2 = mv.getPoint(eleVertex.get(2));
-	    Triangle shape = new Triangle(p0, p1, p2);
+        BlockingDeque<EleVertex> list = getVertices();
+        for (EleVertex eleVertex : list) {
+            Point p0 = mv.getPoint(eleVertex.get(0));
+            Point p1 = mv.getPoint(eleVertex.get(1));
+            Point p2 = mv.getPoint(eleVertex.get(2));
+            Triangle shape = new Triangle(p0, p1, p2);
 
-	    // obtain vertex color
-	    g.setColor(vertexRenderer.getElevationColor(eleVertex));
-	    // TODO: Move to renderer
-	    g.fill(shape);
-	}
+            // obtain vertex color
+            g.setColor(vertexRenderer.getElevationColor(eleVertex));
+            // TODO: Move to renderer
+            g.fill(shape);
+        }
     }
 
     @Override
     public void loadImage(InputStream input) throws IOException {
-	if (isLoaded()) return;
+        if (isLoaded()) return;
 
-	// TODO: Save
+        // TODO: Save
 
-	// We abuse the loadImage method to render the vertices...
-	//
-	while (toDo.size() > 0) {
-	    EleVertex vertex = toDo.poll();
+        // We abuse the loadImage method to render the vertices...
+        //
+        while (toDo.size() > 0) {
+            EleVertex vertex = toDo.poll();
 
-	    if (vertex.isFinished()) {
-		vertices.add(vertex);
-	    } else {
-		List<EleVertex> newV = vertex.divide();
-		for (EleVertex eleVertex : newV) {
-		    toDo.add(eleVertex);
-		}
-	    }
-	}
-	setLoaded(true);
+            if (vertex.isFinished()) {
+                vertices.add(vertex);
+            } else {
+                List<EleVertex> newV = vertex.divide();
+                for (EleVertex eleVertex : newV) {
+                    toDo.add(eleVertex);
+                }
+            }
+        }
+        setLoaded(true);
     }
 
     public BlockingDeque<EleVertex> getVertices() {
-	return vertices;
+        return vertices;
     }
 
     /**
@@ -124,51 +125,51 @@ public class ElevationGridTile extends Tile {
      * @return the bounds
      */
     private Bounds tile2Bounds(final int x, final int y, final int zoom) {
-	Bounds bb = new Bounds(
-		new LatLon(source.tileYToLat(y, zoom), source.tileXToLon(x, zoom)),
-		new LatLon(source.tileYToLat(y + 1, zoom), source.tileXToLon(x + 1, zoom)));
+        Bounds bb = new Bounds(
+                new LatLon(source.tileYToLat(y, zoom), source.tileXToLon(x, zoom)),
+                new LatLon(source.tileYToLat(y + 1, zoom), source.tileXToLon(x + 1, zoom)));
 
-	return bb;
+        return bb;
     }
 
     /**
      * Inits the 'todo' queue with the initial vertices.
      */
     private void initQueue() {
-	LatLon min = box.getMin();
-	LatLon max = box.getMax();
+        LatLon min = box.getMin();
+        LatLon max = box.getMax();
 
-	// compute missing coordinates
-	LatLon h1 = new LatLon(min.lat(), max.lon());
-	LatLon h2 = new LatLon(max.lat(), min.lon());
+        // compute missing coordinates
+        LatLon h1 = new LatLon(min.lat(), max.lon());
+        LatLon h2 = new LatLon(max.lat(), min.lon());
 
-	double eleMin = ElevationHelper.getSrtmElevation(min);
-	double eleMax = ElevationHelper.getSrtmElevation(max);
+        double eleMin = ElevationHelper.getSrtmElevation(min);
+        double eleMax = ElevationHelper.getSrtmElevation(max);
 
-	// SRTM files present?
-	if (!ElevationHelper.isValidElevation(eleMax) || !ElevationHelper.isValidElevation(eleMin)) {
-	    setError(tr("No SRTM data"));
-	    return;
-	}
+        // SRTM files present?
+        if (!ElevationHelper.isValidElevation(eleMax) || !ElevationHelper.isValidElevation(eleMin)) {
+            setError(tr("No SRTM data"));
+            return;
+        }
 
-	// compute elevation coords
-	EleCoordinate p0 = new EleCoordinate(min, eleMin);
-	EleCoordinate p1 = new EleCoordinate(h1, ElevationHelper.getSrtmElevation(h1));
-	EleCoordinate p2 = new EleCoordinate(max, eleMax);
-	EleCoordinate p3 = new EleCoordinate(h2, ElevationHelper.getSrtmElevation(h2));
+        // compute elevation coords
+        EleCoordinate p0 = new EleCoordinate(min, eleMin);
+        EleCoordinate p1 = new EleCoordinate(h1, ElevationHelper.getSrtmElevation(h1));
+        EleCoordinate p2 = new EleCoordinate(max, eleMax);
+        EleCoordinate p3 = new EleCoordinate(h2, ElevationHelper.getSrtmElevation(h2));
 
-	// compute initial vertices
-	EleVertex v1 = new EleVertex(p0, p1, p2);
-	EleVertex v2 = new EleVertex(p2, p3, p0);
-	// enqueue vertices
-	toDo.add(v1);
-	toDo.add(v2);
+        // compute initial vertices
+        EleVertex v1 = new EleVertex(p0, p1, p2);
+        EleVertex v2 = new EleVertex(p2, p3, p0);
+        // enqueue vertices
+        toDo.add(v1);
+        toDo.add(v2);
     }
 
     @Override
     public String toString() {
-	return "ElevationGridTile [box=" + box + ", xtile=" + xtile
-		+ ", ytile=" + ytile + "]";
+        return "ElevationGridTile [box=" + box + ", xtile=" + xtile
+                + ", ytile=" + ytile + "]";
     }
 
 

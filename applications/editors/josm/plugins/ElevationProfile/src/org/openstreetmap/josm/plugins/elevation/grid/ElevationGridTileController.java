@@ -1,17 +1,4 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
@@ -28,32 +15,30 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  *
  */
 public class ElevationGridTileController extends TileController {
-    private JobDispatcher jobDispatcher; // is private and no getter
-    
+    private final JobDispatcher jobDispatcher; // is private and no getter
+
     /**
      * @param source
      * @param tileCache
      * @param listener
      */
     public ElevationGridTileController(TileSource source, TileCache tileCache,
-	    TileLoaderListener listener, TileLoader loader) {
-	super(source, tileCache, listener);
-	
-	tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!   
-	tileLoader = loader; // FIXME: hard-coded in base class!
-	jobDispatcher = JobDispatcher.getInstance();
+            TileLoaderListener listener, TileLoader loader) {
+        super(source, tileCache, listener);
+
+        tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!
+        tileLoader = loader; // FIXME: hard-coded in base class!
+        jobDispatcher = JobDispatcher.getInstance();
     }
-    
-    /* (non-Javadoc)
-     * @see org.openstreetmap.gui.jmapviewer.TileController#getTile(int, int, int)
-     */
+
+    @Override
     public Tile getTile(int tilex, int tiley, int zoom) {
         int max = (1 << zoom);
         if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
             return null;
         Tile tile = tileCache.getTile(tileSource, tilex, tiley, zoom);
         if (tile == null) {
-            // FIXME: Provide/use a factory method here 
+            // FIXME: Provide/use a factory method here
             tile = new ElevationGridTile(tileSource, tilex, tiley, zoom);
             tileCache.addTile(tile);
             tile.loadPlaceholderFromCache(tileCache);
@@ -66,12 +51,13 @@ public class ElevationGridTileController extends TileController {
         }
         return tile;
     }
-    
+
     /**
-    *
-    */
-   public void cancelOutstandingJobs() {       
-       super.cancelOutstandingJobs(); // should not make a difference but you never know...
-       jobDispatcher.cancelOutstandingJobs();
-   }
+     *
+     */
+    @Override
+    public void cancelOutstandingJobs() {
+        super.cancelOutstandingJobs(); // should not make a difference but you never know...
+        jobDispatcher.cancelOutstandingJobs();
+    }
 }

@@ -1,17 +1,4 @@
-/**
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation;
 
 import java.util.ArrayList;
@@ -35,12 +22,12 @@ public class ElevationHelper {
 
     /* Countries which use the imperial system instead of the metric system. */
     private static String IMPERIAL_SYSTEM_COUNTRIES[] = {
-	"en_US", 	/* USA */
-	"en_CA",	/* Canada */
-	"en_AU",	/* Australia */
-	"en_NZ",	/* New Zealand */
-	//		"de_DE",	/* for testing only */
-	"en_ZA"	/* South Africa */
+        "en_US",     /* USA */
+        "en_CA",    /* Canada */
+        "en_AU",    /* Australia */
+        "en_NZ",    /* New Zealand */
+        //        "de_DE",    /* for testing only */
+        "en_ZA"    /* South Africa */
     };
 
     /** The 'no elevation' data magic. */
@@ -63,11 +50,11 @@ public class ElevationHelper {
      * @return
      */
     public static GeoidCorrectionKind getGeoidKind() {
-	return geoidKind;
+        return geoidKind;
     }
 
     public static void setGeoidKind(GeoidCorrectionKind geoidKind) {
-	ElevationHelper.geoidKind = geoidKind;
+        ElevationHelper.geoidKind = geoidKind;
     }
 
     /**
@@ -75,27 +62,27 @@ public class ElevationHelper {
      * @return
      */
     public static UnitMode getUnitMode() {
-	//TODO: Use this until /JOSM/src/org/openstreetmap/josm/gui/NavigatableComponent.java
-	// has a an appropriate method
+        //TODO: Use this until /JOSM/src/org/openstreetmap/josm/gui/NavigatableComponent.java
+        // has a an appropriate method
 
-	// unit mode already determined?
-	if (unitMode != UnitMode.NotSelected) {
-	    return unitMode;
-	}
+        // unit mode already determined?
+        if (unitMode != UnitMode.NotSelected) {
+            return unitMode;
+        }
 
-	// Set default
-	unitMode = UnitMode.Metric;
+        // Set default
+        unitMode = UnitMode.Metric;
 
-	// Check if user could prefer imperial system
-	Locale l = Locale.getDefault();
-	for (int i = 0; i < IMPERIAL_SYSTEM_COUNTRIES.length; i++) {
-	    String ctry = l.toString();
-	    if (IMPERIAL_SYSTEM_COUNTRIES[i].equals(ctry)) {
-		unitMode = UnitMode.Imperial;
-	    }
-	}
+        // Check if user could prefer imperial system
+        Locale l = Locale.getDefault();
+        for (int i = 0; i < IMPERIAL_SYSTEM_COUNTRIES.length; i++) {
+            String ctry = l.toString();
+            if (IMPERIAL_SYSTEM_COUNTRIES[i].equals(ctry)) {
+                unitMode = UnitMode.Imperial;
+            }
+        }
 
-	return unitMode;
+        return unitMode;
     }
 
     /**
@@ -103,14 +90,14 @@ public class ElevationHelper {
      * @return
      */
     public static String getUnit() {
-	switch (getUnitMode()) {
-	case Metric:
-	    return "m";
-	case Imperial:
-	    return "ft";
-	default:
-	    throw new RuntimeException("Invalid or unsupported unit mode: " + unitMode);
-	}
+        switch (getUnitMode()) {
+        case Metric:
+            return "m";
+        case Imperial:
+            return "ft";
+        default:
+            throw new RuntimeException("Invalid or unsupported unit mode: " + unitMode);
+        }
     }
 
     /**
@@ -120,7 +107,7 @@ public class ElevationHelper {
      * @return true, if is valid elevation
      */
     public static boolean isValidElevation(double ele) {
-	return !Double.isNaN(ele);
+        return !Double.isNaN(ele);
     }
 
     /**
@@ -133,39 +120,39 @@ public class ElevationHelper {
      *         not height attribute.
      */
     public static double getElevation(WayPoint wpt) {
-	if (wpt == null) return NO_ELEVATION;
+        if (wpt == null) return NO_ELEVATION;
 
-	// try to get elevation from HGT file
-	double eleInt = getSrtmElevation(wpt.getCoor());
-	if (isValidElevation(eleInt)) {
-	    return convert(eleInt);
-	}
+        // try to get elevation from HGT file
+        double eleInt = getSrtmElevation(wpt.getCoor());
+        if (isValidElevation(eleInt)) {
+            return convert(eleInt);
+        }
 
-	// no HGT, check for elevation data in GPX
-	if (!wpt.attr.containsKey(HEIGHT_ATTRIBUTE)) {
-	    // GPX has no elevation data :-(
-	    return NO_ELEVATION;
-	}
+        // no HGT, check for elevation data in GPX
+        if (!wpt.attr.containsKey(HEIGHT_ATTRIBUTE)) {
+            // GPX has no elevation data :-(
+            return NO_ELEVATION;
+        }
 
-	// Parse elevation from GPX data
-	String height = wpt.getString(ElevationHelper.HEIGHT_ATTRIBUTE);
-	try {
-	    double z = Double.parseDouble(height);
+        // Parse elevation from GPX data
+        String height = wpt.getString(ElevationHelper.HEIGHT_ATTRIBUTE);
+        try {
+            double z = Double.parseDouble(height);
 
-	    return convert(z);
-	} catch (NumberFormatException e) {
-	    System.err.println(String.format(
-		    "Cannot parse double from '%s': %s", height, e
-		    .getMessage()));
-	    return NO_ELEVATION;
-	}
+            return convert(z);
+        } catch (NumberFormatException e) {
+            System.err.println(String.format(
+                    "Cannot parse double from '%s': %s", height, e
+                    .getMessage()));
+            return NO_ELEVATION;
+        }
     }
 
 
     private static double getElevation(LatLon ll) {
-	double ele = getSrtmElevation(ll);
-	//System.out.println("Get elevation " + ll + " => " + ele);
-	return convert(ele);
+        double ele = getSrtmElevation(ll);
+        //System.out.println("Get elevation " + ll + " => " + ele);
+        return convert(ele);
     }
 
     /**
@@ -175,16 +162,16 @@ public class ElevationHelper {
      * @return the double
      */
     private static double convert(double ele) {
-	if (isValidElevation(ele)) {
-	    if (getUnitMode() == UnitMode.Imperial) {
-		// translate to feet
-		return meter2Feet(ele);
-	    } else {
-		// keep 'as is'
-		return ele;
-	    }
-	}
-	return NO_ELEVATION;
+        if (isValidElevation(ele)) {
+            if (getUnitMode() == UnitMode.Imperial) {
+                // translate to feet
+                return meter2Feet(ele);
+            } else {
+                // keep 'as is'
+                return ele;
+            }
+        }
+        return NO_ELEVATION;
     }
 
     /**
@@ -196,19 +183,19 @@ public class ElevationHelper {
      * @return the slope in percent
      */
     public static double computeSlope(LatLon w1, LatLon w2) {
-	// same coordinates? -> return 0, if yes
-	if (w1.equals(w2)) return 0;
+        // same coordinates? -> return 0, if yes
+        if (w1.equals(w2)) return 0;
 
-	// get distance in meters and divide it by 100 in advance
-	double distInMeter = convert(w1.greatCircleDistance(w2) / 100.0);
+        // get distance in meters and divide it by 100 in advance
+        double distInMeter = convert(w1.greatCircleDistance(w2) / 100.0);
 
-	// get elevation (difference) - is converted automatically to feet
-	int ele1 = (int) ElevationHelper.getElevation(w1);
-	int ele2 = (int) ElevationHelper.getElevation(w2);
-	int dH = ele2 - ele1;
+        // get elevation (difference) - is converted automatically to feet
+        int ele1 = (int) ElevationHelper.getElevation(w1);
+        int ele2 = (int) ElevationHelper.getElevation(w2);
+        int dH = ele2 - ele1;
 
-	// Slope in percent is define as elevation gain/loss in meters related to a distance of 100m
-	return dH / distInMeter;
+        // Slope in percent is define as elevation gain/loss in meters related to a distance of 100m
+        return dH / distInMeter;
     }
 
     /**
@@ -218,7 +205,7 @@ public class ElevationHelper {
      * @return the double
      */
     public static double meter2Feet(double meter) {
-	return meter * METER_TO_FEET;
+        return meter * METER_TO_FEET;
     }
 
     /**
@@ -227,7 +214,7 @@ public class ElevationHelper {
      * @return
      */
     public static String getElevationText(int elevation) {
-	return String.format("%d %s", elevation, getUnit());
+        return String.format("%d %s", elevation, getUnit());
     }
 
     /**
@@ -236,7 +223,7 @@ public class ElevationHelper {
      * @return
      */
     public static String getElevationText(double elevation) {
-	return String.format("%d %s", (int)Math.round(elevation), getUnit());
+        return String.format("%d %s", (int)Math.round(elevation), getUnit());
     }
 
     /**
@@ -246,10 +233,10 @@ public class ElevationHelper {
      * @return the elevation text
      */
     public static String getElevationText(WayPoint wpt) {
-	if (wpt == null) return "-";
+        if (wpt == null) return "-";
 
-	int elevation = (int)Math.round(ElevationHelper.getElevation(wpt));
-	return String.format("%d %s", elevation, getUnit());
+        int elevation = (int)Math.round(ElevationHelper.getElevation(wpt));
+        return String.format("%d %s", elevation, getUnit());
     }
 
     /**
@@ -258,11 +245,11 @@ public class ElevationHelper {
      * @return
      */
     public static String getTimeText(WayPoint wpt) {
-	if (wpt == null) return null;
+        if (wpt == null) return null;
 
-	int hour = ElevationHelper.getHourOfWayPoint(wpt);
-	int min = ElevationHelper.getMinuteOfWayPoint(wpt);
-	return String.format("%02d:%02d", hour, min);
+        int hour = ElevationHelper.getHourOfWayPoint(wpt);
+        int min = ElevationHelper.getMinuteOfWayPoint(wpt);
+        return String.format("%02d:%02d", hour, min);
     }
 
     /**
@@ -274,17 +261,17 @@ public class ElevationHelper {
      *         not height attribute.
      */
     public static double getSrtmElevation(LatLon ll) {
-	if (ll != null) {
-	    // Try to read data from SRTM file
-	    // TODO: Option to switch this off
-	    double eleHgt = hgt.getElevationFromHgt(ll);
+        if (ll != null) {
+            // Try to read data from SRTM file
+            // TODO: Option to switch this off
+            double eleHgt = hgt.getElevationFromHgt(ll);
 
-	    //System.out.println("Get elevation from HGT " + ll + " => " + eleHgt);
-	    if (isValidElevation(eleHgt)) {
-		return eleHgt;
-	    }
-	}
-	return NO_ELEVATION;
+            //System.out.println("Get elevation from HGT " + ll + " => " + eleHgt);
+            if (isValidElevation(eleHgt)) {
+                return eleHgt;
+            }
+        }
+        return NO_ELEVATION;
     }
 
     /**
@@ -294,13 +281,13 @@ public class ElevationHelper {
      * @return true, if SRTM data are present; otherwise false
      */
     public static boolean hasSrtmData(Bounds bounds) {
-	if (bounds == null) return false;
+        if (bounds == null) return false;
 
-	LatLon tl = bounds.getMin();
-	LatLon br = bounds.getMax();
+        LatLon tl = bounds.getMin();
+        LatLon br = bounds.getMax();
 
-	return 	isValidElevation(getSrtmElevation(tl)) &&
-		isValidElevation(getSrtmElevation(br));
+        return     isValidElevation(getSrtmElevation(tl)) &&
+                isValidElevation(getSrtmElevation(br));
     }
 
     /*
@@ -308,15 +295,15 @@ public class ElevationHelper {
      * GeoidData}.
      */
     public static byte getGeoidCorrection(WayPoint wpt) {
-	/*
-		int lat = (int)Math.round(wpt.getCoor().lat());
-		int lon = (int)Math.round(wpt.getCoor().lon());
-		byte geoid = GeoidData.getGeoid(lat, lon);
+        /*
+        int lat = (int)Math.round(wpt.getCoor().lat());
+        int lon = (int)Math.round(wpt.getCoor().lon());
+        byte geoid = GeoidData.getGeoid(lat, lon);
 
-		System.out.println(
-				String.format("Geoid(%d, %d) = %d", lat, lon, geoid));
-	 */
-	return 0;
+        System.out.println(
+                String.format("Geoid(%d, %d) = %d", lat, lon, geoid));
+         */
+        return 0;
     }
 
     /**
@@ -331,26 +318,26 @@ public class ElevationHelper {
      * @return A list containing the reduced list.
      */
     public static List<WayPoint> downsampleWayPoints(List<WayPoint> origList,
-	    int targetSize) {
-	if (origList == null)
-	    return null;
-	if (targetSize <= 0)
-	    throw new IllegalArgumentException(
-		    "targetSize must be greater than zero");
+            int targetSize) {
+        if (origList == null)
+            return null;
+        if (targetSize <= 0)
+            throw new IllegalArgumentException(
+                    "targetSize must be greater than zero");
 
-	int origSize = origList.size();
-	if (origSize <= targetSize) {
-	    return origList;
-	}
+        int origSize = origList.size();
+        if (origSize <= targetSize) {
+            return origList;
+        }
 
-	int delta = (int) Math.max(Math.ceil(origSize / targetSize), 2);
+        int delta = (int) Math.max(Math.ceil(origSize / targetSize), 2);
 
-	List<WayPoint> res = new ArrayList<WayPoint>(targetSize);
-	for (int i = 0; i < origSize; i += delta) {
-	    res.add(origList.get(i));
-	}
+        List<WayPoint> res = new ArrayList<WayPoint>(targetSize);
+        for (int i = 0; i < origSize; i += delta) {
+            res.add(origList.get(i));
+        }
 
-	return res;
+        return res;
     }
 
     /**
@@ -359,11 +346,11 @@ public class ElevationHelper {
      * @return
      */
     public static int getHourOfWayPoint(WayPoint wpt) {
-	if (wpt == null) return -1;
+        if (wpt == null) return -1;
 
-	Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-	calendar.setTime(wpt.getTime());   // assigns calendar to given date
-	return calendar.get(Calendar.HOUR_OF_DAY);
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(wpt.getTime());   // assigns calendar to given date
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
     /**
@@ -372,10 +359,10 @@ public class ElevationHelper {
      * @return
      */
     public static int getMinuteOfWayPoint(WayPoint wpt) {
-	if (wpt == null) return -1;
+        if (wpt == null) return -1;
 
-	Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-	calendar.setTime(wpt.getTime());   // assigns calendar to given date
-	return calendar.get(Calendar.MINUTE);
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(wpt.getTime());   // assigns calendar to given date
+        return calendar.get(Calendar.MINUTE);
     }
 }

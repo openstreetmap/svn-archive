@@ -1,17 +1,4 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- */
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -45,12 +32,12 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class ElevationGridLayer extends Layer implements TileLoaderListener {
     private static final int ELE_ZOOM_LEVEL = 13;
-    private IVertexRenderer vertexRenderer;    
-    private MemoryTileCache tileCache;
+    private final IVertexRenderer vertexRenderer;
+    private final MemoryTileCache tileCache;
     protected TileSource tileSource;
     protected ElevationGridTileLoader tileLoader;
     protected TileController tileController;
-    
+
     private Bounds lastBounds;
     private TileSet tileSet;
 
@@ -58,33 +45,30 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
      * @param info
      */
     public ElevationGridLayer(String name) {
-	super(name);
-	
-	setOpacity(0.8);
-	setBackgroundLayer(true);
-	vertexRenderer = new SimpleVertexRenderer();
-	
-	tileCache = new MemoryTileCache();
-	tileCache.setCacheSize(500);
-	tileSource = new ElevationGridTileSource(name);
-	tileLoader = new ElevationGridTileLoader(this);
-	tileController = new ElevationGridTileController(tileSource, tileCache, this, tileLoader);
+        super(name);
+
+        setOpacity(0.8);
+        setBackgroundLayer(true);
+        vertexRenderer = new SimpleVertexRenderer();
+
+        tileCache = new MemoryTileCache();
+        tileCache.setCacheSize(500);
+        tileSource = new ElevationGridTileSource(name);
+        tileLoader = new ElevationGridTileLoader(this);
+        tileController = new ElevationGridTileController(tileSource, tileCache, this, tileLoader);
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#paint(java.awt.Graphics2D, org.openstreetmap.josm.gui.MapView, org.openstreetmap.josm.data.Bounds)
-     */
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds box) {
-	boolean needsNewTileSet = tileSet == null || (lastBounds == null || !lastBounds.equals(box)); 
-	
-	if (needsNewTileSet) {
-	    tileSet = new TileSet(box.getMin(), box.getMax(), ELE_ZOOM_LEVEL); // we use a vector format with constant zoom level
-	    lastBounds = box;
-	    System.out.println("paint " + tileSet);
-	}
-	
-	if (tileSet.insane()) {
+        boolean needsNewTileSet = tileSet == null || (lastBounds == null || !lastBounds.equals(box));
+
+        if (needsNewTileSet) {
+            tileSet = new TileSet(box.getMin(), box.getMax(), ELE_ZOOM_LEVEL); // we use a vector format with constant zoom level
+            lastBounds = box;
+            System.out.println("paint " + tileSet);
+        }
+
+        if (tileSet.insane()) {
             myDrawString(g, tr("zoom in to load any tiles"), 120, 120);
             return;
         } else if (tileSet.tooLarge()) {
@@ -94,109 +78,84 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
             myDrawString(g, tr("increase zoom level to see more detail"), 120, 120);
             return;
         }
-	
-	for(int x = tileSet.x0; x <= tileSet.x1; x++) {
-	    for(int y = tileSet.y0; y <= tileSet.y1; y++) {	
-		Tile t = tileController.getTile(x, y, ELE_ZOOM_LEVEL);
-		
-		if (t != null && t.isLoaded() && t instanceof ElevationGridTile) {
-		    ((ElevationGridTile)t).paintTile(g, mv, vertexRenderer);        		
-		} else {
-		    // give some consolation...
-		    Point topLeft = mv.getPoint(
-			    new LatLon(tileSource.tileYToLat(y, ELE_ZOOM_LEVEL),
-				       tileSource.tileXToLon(x, ELE_ZOOM_LEVEL)));
-		    t.paint(g, topLeft.x, topLeft.y);		    
-		}
-	    }
-	}
+
+        for(int x = tileSet.x0; x <= tileSet.x1; x++) {
+            for(int y = tileSet.y0; y <= tileSet.y1; y++) {
+                Tile t = tileController.getTile(x, y, ELE_ZOOM_LEVEL);
+
+                if (t != null && t.isLoaded() && t instanceof ElevationGridTile) {
+                    ((ElevationGridTile)t).paintTile(g, mv, vertexRenderer);
+                } else {
+                    // give some consolation...
+                    Point topLeft = mv.getPoint(
+                            new LatLon(tileSource.tileYToLat(y, ELE_ZOOM_LEVEL),
+                                    tileSource.tileXToLon(x, ELE_ZOOM_LEVEL)));
+                    t.paint(g, topLeft.x, topLeft.y);
+                }
+            }
+        }
     }
-    
-    
-    
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getToolTipText()
-     */
+
     @Override
     public String getToolTipText() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#visitBoundingBox(org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor)
-     */
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getMenuEntries()
-     */
     @Override
     public Action[] getMenuEntries() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
-   
+
     @Override
     public void tileLoadingFinished(Tile tile, boolean success) {
-	try {
-	    //System.out.println("tileLoadingFinished " + tile + ", success = " + success);
-	    if (Main.map != null) {
-		Main.map.repaint(100);
-	    }
-	} catch(Exception ex) {
-	    System.err.println(ex);
-	    ex.printStackTrace(System.err);
-	}
+        try {
+            if (Main.map != null) {
+                Main.map.repaint(100);
+            }
+        } catch(Exception ex) {
+            System.err.println(ex);
+            ex.printStackTrace(System.err);
+        }
     }
 
     @Override
     public TileCache getTileCache() {
-	// TODO Auto-generated method stub
-	return tileCache;
+        // TODO Auto-generated method stub
+        return tileCache;
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getIcon()
-     */
     @Override
-    public Icon getIcon() {	
-	return ImageProvider.get("layer", "elevation");
+    public Icon getIcon() {
+        return ImageProvider.get("layer", "elevation");
     }
 
-
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#mergeFrom(org.openstreetmap.josm.gui.layer.Layer)
-     */
     @Override
     public void mergeFrom(Layer from) {
-	// TODO Auto-generated method stub
-	
+        // TODO Auto-generated method stub
+
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#isMergable(org.openstreetmap.josm.gui.layer.Layer)
-     */
     @Override
     public boolean isMergable(Layer other) {
-	// TODO Auto-generated method stub
-	return false;
+        // TODO Auto-generated method stub
+        return false;
     }
 
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.layer.Layer#getInfoComponent()
-     */
     @Override
     public Object getInfoComponent() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
-    
-    
+
+
     // Stolen from TMSLayer...
     void myDrawString(Graphics g, String text, int x, int y) {
         Color oldColor = g.getColor();
@@ -205,7 +164,7 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
         g.setColor(oldColor);
         g.drawString(text,x,y);
     }
-    
+
     private class TileSet {
         int x0, x1, y0, y1;
         int tileMax = -1;
@@ -245,34 +204,34 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
                 y1 = tileMax;
             }
         }
-        
+
         int size() {
             int x_span = x1 - x0 + 1;
             int y_span = y1 - y0 + 1;
             return x_span * y_span;
         }
 
-	@Override
-	public String toString() {
-	    return "TileSet [x0=" + x0 + ", x1=" + x1 + ", y0=" + y0 + ", y1="
-		    + y1 + ", size()=" + size() + ", tilesSpanned()="
-		    + tilesSpanned() + "]";
-	}
+        @Override
+        public String toString() {
+            return "TileSet [x0=" + x0 + ", x1=" + x1 + ", y0=" + y0 + ", y1="
+                    + y1 + ", size()=" + size() + ", tilesSpanned()="
+                    + tilesSpanned() + "]";
+        }
 
-	double tilesSpanned() {
-	    return Math.sqrt(1.0 * this.size());
-	}
+        double tilesSpanned() {
+            return Math.sqrt(1.0 * this.size());
+        }
 
-	boolean tooSmall() {
-	    return this.tilesSpanned() < 1;
-	}
+        boolean tooSmall() {
+            return this.tilesSpanned() < 1;
+        }
 
-	boolean tooLarge() {
-	    return this.tilesSpanned() > 50;
-	}
+        boolean tooLarge() {
+            return this.tilesSpanned() > 50;
+        }
 
-	boolean insane() {
-	    return this.tilesSpanned() > 200;
-	}
+        boolean insane() {
+            return this.tilesSpanned() > 200;
+        }
     }
 }

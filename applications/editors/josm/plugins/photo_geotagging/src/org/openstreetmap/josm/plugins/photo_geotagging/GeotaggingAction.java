@@ -57,7 +57,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
     }
 
     @Override
-	public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent arg0) {
 
         GeoImageLayer layer = getLayer();
 
@@ -112,7 +112,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
         setMTime.addActionListener(new ActionListener(){
             @Override
-			public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 if (setMTime.isSelected()) {
                     mTimeMode.setEnabled(true);
                 } else {
@@ -229,7 +229,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                     // need this so the dialogs don't block
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
-						public void run() {
+                        public void run() {
                             JOptionPane.showMessageDialog(Main.parent, ioe.getMessage(), tr("Error"), JOptionPane.ERROR_MESSAGE);
                         }
                     });
@@ -278,7 +278,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             File fileTmp;
             //fileTmp = File.createTempFile("img", ".jpg", file.getParentFile());
             // on win32, file.renameTo(fileTmp) does not work when the destination file exists
-            // see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4017593
+            // see https://bugs.openjdk.java.net/browse/JDK-4017593
             // so we cannot use createTempFile(), which would create that "existing destination file"
             // instead, let's use new File(), which doesn't actually create a file
             // for getting a unique file name, we use UUID.randomUUID()
@@ -300,7 +300,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
-					public void run() {
+                    public void run() {
                         JLabel l = new JLabel(tr("<html><h3>There are old backup files in the image directory!</h3>"));
                         l.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
                         int override = new ExtendedDialog(
@@ -378,14 +378,14 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
     }
 
     @Override
-	public Component createMenuComponent() {
+    public Component createMenuComponent() {
         JMenuItem geotaggingItem = new JMenuItem(this);
         geotaggingItem.setEnabled(enabled(getLayer()));
         return geotaggingItem;
     }
 
     @Override
-	public boolean supportLayers(List<Layer> layers) {
+    public boolean supportLayers(List<Layer> layers) {
         return layers.size() == 1 && layers.get(0) instanceof GeoImageLayer;
     }
 }

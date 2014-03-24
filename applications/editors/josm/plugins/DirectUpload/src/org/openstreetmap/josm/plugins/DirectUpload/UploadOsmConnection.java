@@ -21,21 +21,21 @@ import org.openstreetmap.josm.io.OsmTransferException;
  */
 public class UploadOsmConnection extends OsmConnection {
 
-	// singleton, see http://en.wikipedia.org/wiki/Singleton_pattern#Traditional_simple_way
-	private static final UploadOsmConnection INSTANCE = new UploadOsmConnection();
+    // singleton, see https://en.wikipedia.org/wiki/Singleton_pattern#Traditional_simple_way
+    private static final UploadOsmConnection INSTANCE = new UploadOsmConnection();
 
-	// Private constructor prevents instantiation from other classes
-	private UploadOsmConnection() {
-	}
+    // Private constructor prevents instantiation from other classes
+    private UploadOsmConnection() {
+    }
 
-	public static UploadOsmConnection getInstance() {
-		return UploadOsmConnection.INSTANCE;
-	}
+    public static UploadOsmConnection getInstance() {
+        return UploadOsmConnection.INSTANCE;
+    }
 
-	// make protected OsmConnection::addAuth() available to others
-	public void addAuthHack(HttpURLConnection connection) throws OsmTransferException {
-		addAuth(connection);
-	}
+    // make protected OsmConnection::addAuth() available to others
+    public void addAuthHack(HttpURLConnection connection) throws OsmTransferException {
+        addAuth(connection);
+    }
 
     /**
      * find which gpx layer holds the trace to upload. layers are tried in this order:

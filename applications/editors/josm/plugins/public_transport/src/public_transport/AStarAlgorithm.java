@@ -92,7 +92,7 @@ public abstract class AStarAlgorithm
 
                 if (knownDistance == null || distance < knownDistance.doubleValue())
                 {
-		    openList.put(edge.getEnd(), distance);
+            openList.put(edge.getEnd(), distance);
                     pathTail.put(edge.getEnd(), edge);
                 }
             }

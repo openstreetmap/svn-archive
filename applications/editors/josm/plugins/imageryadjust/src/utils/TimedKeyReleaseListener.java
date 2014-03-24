@@ -1,5 +1,3 @@
-// Thanks to http://www.arco.in-berlin.de/keyevent.html
-// (code simplified here)
 package utils;
 
 import java.awt.AWTEvent;
@@ -33,6 +31,7 @@ public class TimedKeyReleaseListener implements AWTEventListener {
         } catch (SecurityException ex) {
         }
     }
+
     @Override
     public void eventDispatched(AWTEvent event) {
         if (!(event instanceof KeyEvent)) return;
@@ -54,7 +53,6 @@ public class TimedKeyReleaseListener implements AWTEventListener {
             }
         }
     }
-    
 
     public void stop() {
         try {
@@ -62,7 +60,6 @@ public class TimedKeyReleaseListener implements AWTEventListener {
         } catch (SecurityException ex) {
         }
     }
-
     
     protected void doKeyReleaseEvent(KeyEvent evt) {
     }

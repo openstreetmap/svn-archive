@@ -24,19 +24,26 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.gui.Notification;
-// import org.openstreetmap.josm.actions.PasteTagsAction;
+import org.openstreetmap.josm.tools.Utils;
+
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.osm.Node;
 
-import org.openstreetmap.josm.data.osm.Tag;
-import org.openstreetmap.josm.data.osm.TagCollection;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
+import javax.json.Json;
+import javax.json.JsonException;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
+
 
 import java.util.*;
 import java.lang.StringBuilder;
@@ -278,237 +285,283 @@ class ruianRecord {
 
       init();
 
-
-    try {
-      JSONObject obj = new JSONObject(jsonStr);
-
-      try {
-        m_coor_lat = obj.getJSONObject("coordinates").getDouble("lat");
-      } catch (Exception e) {
-      }
+      JsonReader jsonReader = Json.createReader(new ByteArrayInputStream(jsonStr.getBytes()));
+      JsonObject obj = jsonReader.readObject();
+      jsonReader.close();
 
       try {
-        m_coor_lon = obj.getJSONObject("coordinates").getDouble("lon");
-      } catch (Exception e) {
-      }
+        JsonObject coorObjekt = obj.getJsonObject("coordinates");
 
-      try {
-        m_source = obj.getString("source");
+        try {
+          m_coor_lat = Double.parseDouble(coorObjekt.getString("lat"));
+        } catch (Exception e) {
+          System.out.println("coordinates.lat: " + e.getMessage());
+        }
+
+        try {
+          m_coor_lon = Double.parseDouble(coorObjekt.getString("lon"));
+        } catch (Exception e) {
+          System.out.println("coordinates.lon: " + e.getMessage());
+        }
+
+        try {
+          m_source = obj.getString("source");
+        } catch (Exception e) {
+          System.out.println("source: " + e.getMessage());
+        }
+
       } catch (Exception e) {
+        System.out.println("coordinates: " + e.getMessage());
       }
 
 // =========================================================================
       try {
-        JSONObject stavebniObjekt = obj.getJSONObject("stavebni_objekt");
+        JsonObject stavebniObjekt = obj.getJsonObject("stavebni_objekt");
 
         try {
-          m_objekt_ruian_id = stavebniObjekt.getLong("ruian_id");
+          m_objekt_ruian_id = Long.parseLong(stavebniObjekt.getString("ruian_id"));
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.ruian_id: " + e.getMessage());
         }
 
         try {
-          m_objekt_podlazi = stavebniObjekt.getInt("pocet_podlazi");
+          m_objekt_podlazi = Integer.parseInt(stavebniObjekt.getString("pocet_podlazi"));
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.pocet_podlazi: " + e.getMessage());
         }
 
         try {
-          m_objekt_byty = stavebniObjekt.getInt("pocet_bytu");
+          m_objekt_byty = Integer.parseInt(stavebniObjekt.getString("pocet_bytu"));
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.pocet_bytu: " + e.getMessage());
         }
 
         try {
           m_objekt_zpusob_vyuziti = stavebniObjekt.getString("zpusob_vyuziti");
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.zpusob_vyuziti: " + e.getMessage());
         }
 
         try {
           m_objekt_zpusob_vyuziti_kod = stavebniObjekt.getString("zpusob_vyuziti_kod");
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.m_objekt_zpusob_vyuziti_kod: " + e.getMessage());
         }
 
         try {
           m_objekt_zpusob_vyuziti_key = stavebniObjekt.getString("zpusob_vyuziti_key");
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.zpusob_vyuziti_key: " + e.getMessage());
         }
 
         try {
           m_objekt_zpusob_vyuziti_val = stavebniObjekt.getString("zpusob_vyuziti_val");
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.m_objekt_zpusob_vyuziti_val: " + e.getMessage());
         }
 
         try {
           m_objekt_plati_od = stavebniObjekt.getString("plati_od");
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.plati_od: " + e.getMessage());
         }
 
         try {
           m_objekt_dokonceni = stavebniObjekt.getString("dokonceni");
         } catch (Exception e) {
+          System.out.println("stavebni_objekt.dokonceni: " + e.getMessage());
         }
+
       } catch (Exception e) {
+        System.out.println("stavebni_objekt: " + e.getMessage());
       }
 
 // =========================================================================
       try {
-        JSONArray arr = obj.getJSONArray("adresni_mista");
+        JsonArray arr = obj.getJsonArray("adresni_mista");
 
-        for(int i = 0; i < arr.length(); i++)
+        for(int i = 0; i < arr.size(); i++)
         {
-          JSONObject adresniMisto = arr.getJSONObject(i);
+          JsonObject adresniMisto = arr.getJsonObject(i);
           addrPlaces am = new addrPlaces();
 
           try {
-            am.setRuianID(adresniMisto.getLong("ruian_id"));
+            am.setRuianID(Long.parseLong(adresniMisto.getString("ruian_id")));
           } catch (Exception e) {
+            System.out.println("adresni_mista.ruian_id: " + e.getMessage());
           }
 
           try {
-            JSONArray node = adresniMisto.getJSONArray("pozice");
+            JsonArray node = adresniMisto.getJsonArray("pozice");
             am.setPosition(new LatLon(
-                LatLon.roundToOsmPrecisionStrict(node.getDouble(1)),
-                LatLon.roundToOsmPrecisionStrict(node.getDouble(0)))
-              );
+              LatLon.roundToOsmPrecisionStrict(node.getJsonNumber(1).doubleValue()),
+              LatLon.roundToOsmPrecisionStrict(node.getJsonNumber(0).doubleValue()))
+            );
           } catch (Exception e) {
+            System.out.println("adresni_mista.pozice: " + e.getMessage());
           }
 
           try {
-            am.setBudovaID(adresniMisto.getLong("budova_kod"));
+            am.setBudovaID(Long.parseLong(adresniMisto.getString("budova_kod")));
           } catch (Exception e) {
+            System.out.println("adresni_mista.budova_kod: " + e.getMessage());
           }
 
           try {
             am.setCisloTyp(adresniMisto.getString("cislo_typ"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.cislo_typ: " + e.getMessage());
           }
 
           try {
             am.setCisloDomovni(adresniMisto.getString("cislo_domovni"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.cislo_domovni: " + e.getMessage());
           }
 
           try {
             am.setCisloOrientacni(adresniMisto.getString("cislo_orientacni"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.cislo_orientacni: " + e.getMessage());
           }
 
           try {
             am.setUlice(adresniMisto.getString("ulice"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.ulice: " + e.getMessage());
           }
 
           try {
             am.setCastObce(adresniMisto.getString("cast_obce"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.m_cast_obce: " + e.getMessage());
           }
 
           try {
             am.setMestskaCast(adresniMisto.getString("mestska_cast"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.mestska_cast: " + e.getMessage());
           }
 
           try {
             am.setObec(adresniMisto.getString("obec"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.obec: " + e.getMessage());
           }
 
           try {
             am.setOkres(adresniMisto.getString("okres"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.okres: " + e.getMessage());
           }
 
           try {
             am.setKraj(adresniMisto.getString("kraj"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.kraj: " + e.getMessage());
           }
 
           try {
             am.setPsc(adresniMisto.getString("psc"));
           } catch (Exception e) {
+            System.out.println("adresni_mista.psc: " + e.getMessage());
           }
 
           m_adresni_mista.add(am);
         }
       } catch (Exception e) {
+        System.out.println("adresni_mista: " + e.getMessage());
       }
 
 // =========================================================================
       try {
-        JSONObject parcela = obj.getJSONObject("parcela");
+        JsonObject parcela = obj.getJsonObject("parcela");
 
         try {
-          m_parcela_ruian_id = parcela.getLong("ruian_id");
+          m_parcela_ruian_id = Long.parseLong(parcela.getString("ruian_id"));
         } catch (Exception e) {
+          System.out.println("parcela.ruian_id: " + e.getMessage());
         }
-;
+
         try {
           m_parcela_druh_pozemku = parcela.getString("druh_pozemku");
         } catch (Exception e) {
+          System.out.println("parcela.druh_pozemku: " + e.getMessage());
         }
 
         try {
           m_parcela_zpusob_vyuziti = parcela.getString("zpusob_vyuziti");
         } catch (Exception e) {
+          System.out.println("parcela.zpusob_vyuziti: " + e.getMessage());
         }
 
         try {
           m_parcela_plati_od = parcela.getString("plati_od");
         } catch (Exception e) {
+          System.out.println("parcela.plati_od: " + e.getMessage());
         }
 
       } catch (Exception e) {
+        System.out.println("parcela: " + e.getMessage());
       }
 
 // =========================================================================
       try {
-        JSONObject ulice = obj.getJSONObject("ulice");
+        JsonObject ulice = obj.getJsonObject("ulice");
 
         try {
-          m_ulice_ruian_id = ulice.getLong("ruian_id");
+          m_ulice_ruian_id = Long.parseLong(ulice.getString("ruian_id"));
         } catch (Exception e) {
+          System.out.println("ulice.ruian_id: " + e.getMessage());
         }
 
         try {
           m_ulice_jmeno = ulice.getString("jmeno");
         } catch (Exception e) {
+          System.out.println("ulice.jmeno: " + e.getMessage());
         }
 
       } catch (Exception e) {
+        System.out.println("ulice: " + e.getMessage());
       }
 
 // =========================================================================
       try {
-        JSONObject katastr = obj.getJSONObject("katastr");
+        JsonObject katastr = obj.getJsonObject("katastr");
 
         try {
-          m_katastr_ruian_id = katastr.getLong("ruian_id");
+          m_katastr_ruian_id = Long.parseLong(katastr.getString("ruian_id"));
         } catch (Exception e) {
+          System.out.println("katastr.ruian_id: " + e.getMessage());
         }
 
         try {
           m_katastr_nazev = katastr.getString("nazev");
         } catch (Exception e) {
+          System.out.println("katastr.nazev: " + e.getMessage());
         }
 
         try {
           m_katastr_obec = katastr.getString("obec");
         } catch (Exception e) {
+          System.out.println("katastr.okres: " + e.getMessage());
         }
 
         try {
           m_katastr_okres = katastr.getString("okres");
         } catch (Exception e) {
+          System.out.println("katastr.okres: " + e.getMessage());
         }
 
         try {
           m_katastr_kraj = katastr.getString("kraj");
         } catch (Exception e) {
+          System.out.println("katastr.kraj: " + e.getMessage());
         }
 
       } catch (Exception e) {
+        System.out.println("katastr: " + e.getMessage());
       }
-    } catch (Exception e) {
-    }
-
     }
 
     /**

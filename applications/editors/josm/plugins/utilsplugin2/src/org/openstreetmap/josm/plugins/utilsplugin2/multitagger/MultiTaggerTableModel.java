@@ -2,13 +2,18 @@
 
 package org.openstreetmap.josm.plugins.utilsplugin2.multitagger;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -23,7 +28,13 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     ArrayList<OsmPrimitive> list = new ArrayList<OsmPrimitive>(50);
     String mainTags[] = new String[]{};
     boolean isSpecialTag[] = new boolean[]{};
+    Set<OsmPrimitiveType> shownTypes = new HashSet<OsmPrimitiveType>();
+    private boolean autoCommit = true;
+    List<Command> cmds = new ArrayList<Command>();
 
+    public MultiTaggerTableModel() {
+        Collections.addAll(shownTypes, OsmPrimitiveType.values());
+    }
     
     @Override
     public int getRowCount() {
@@ -32,25 +43,28 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
 
     @Override
     public int getColumnCount() {
-        return mainTags.length;
+        return mainTags.length+1;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (!isSpecialTag[columnIndex]) {
-            return list.get(rowIndex).get(mainTags[columnIndex]);
+        if (columnIndex==0) {
+            return list.get(rowIndex).getDisplayType();
         }
-        String var = mainTags[columnIndex];
+        if (!isSpecialTag[columnIndex-1]) {
+            return list.get(rowIndex).get(mainTags[columnIndex-1]);
+        }
+        String var = mainTags[columnIndex-1];
         OsmPrimitive p = list.get(rowIndex);
         if (var.equals("id")) {
             return String.valueOf(p.getUniqueId());
         } else if (var.equals("type")) {
-            return OsmPrimitiveType.from(p).toString().substring(0,1);
+            return OsmPrimitiveType.from(p).getAPIName().substring(0,1).toUpperCase();
         } else if (var.equals("area")) {
-            if (p.getType() == OsmPrimitiveType.CLOSEDWAY) {
+            if (p.getDisplayType() == OsmPrimitiveType.CLOSEDWAY) {
                 return String.format("%.1f", Geometry.closedWayArea((Way) p));
             } else {
-                return tr("not closed");
+                return "";
             }
         } else if (var.equals("length")) {
             if (p instanceof Way) {
@@ -62,40 +76,50 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return String.class;
+        if (columnIndex==0) {
+            return OsmPrimitiveType.class;
+        } else {
+            return String.class;
+        }
     }
    
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        Main.info("new selection: n="+newSelection.size());
-        list.clear();
-        list.addAll(newSelection);
-        fireTableDataChanged();
+        updateData(newSelection);
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return !isSpecialTag[columnIndex];
+        if (columnIndex==0) return false;
+        return !isSpecialTag[columnIndex-1];
     }
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        if (isSpecialTag[columnIndex]) return;
+        if (columnIndex==0 || isSpecialTag[columnIndex-1]) return;
         if (columnIndex >= getColumnCount() || rowIndex >= getRowCount()) return;
+        if (value==null) value="";
         String val = ((String) value).trim();
         OsmPrimitive sel = list.get(rowIndex);
-        String key = mainTags[columnIndex];
+        String key = mainTags[columnIndex-1];
         String newValue = sel.get(key);
         if (newValue == null) newValue="";
         if (!val.equals(newValue)) {
-            Main.main.undoRedo.add(new ChangePropertyCommand(sel, key, (String) value));
+            Command cmd = new ChangePropertyCommand(sel, key, (String) value);
+            if (autoCommit) {
+                Main.main.undoRedo.add(cmd);
+            } else {
+                cmds.add(cmd);
+            }
+            
         }
     }
     
 
     @Override
     public String getColumnName(int column) {
-        return mainTags[column];
+        if (column==0) return "";
+        return mainTags[column-1];
     }
     
     public OsmPrimitive getPrimitiveAt(int number) {
@@ -136,5 +160,24 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
             }
         };
         return sb.toString();
+    }
+
+    void updateData(Collection<? extends OsmPrimitive> sel) {
+        list.clear();
+        for (OsmPrimitive p : sel) {
+            if (shownTypes.contains(p.getDisplayType())) {
+                list.add(p);
+            }
+        }
+        fireTableDataChanged();
+    }
+
+    void setAutoCommit(boolean b) {
+        autoCommit = b;
+    }
+
+    void commit(String commandTitle) {
+        Main.main.undoRedo.add(new SequenceCommand(commandTitle, cmds));
+        cmds.clear();
     }
 }

@@ -21,7 +21,6 @@ package org.openstreetmap.josm.plugins.pointinfo;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Cursor;
 import java.awt.Point;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -38,8 +37,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -54,6 +51,7 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.OpenBrowser;
 import org.xml.sax.SAXException;
 
 class PointInfoAction extends MapMode implements MouseListener {
@@ -92,17 +90,6 @@ class PointInfoAction extends MapMode implements MouseListener {
         return ImageProvider.getCursor("crosshair", "info-sml");
     }
 
-    private static void openWebpage(URI uri) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(uri);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     protected void infoAsync(Point clickPoint) {
         cancel = false;
         /**
@@ -136,10 +123,9 @@ class PointInfoAction extends MapMode implements MouseListener {
                           if (! hle.getURL().toString().startsWith("http")) {
                             mRuian.performAction(hle.getURL().toString());
                           } else {
-                            try {
-                                openWebpage(hle.getURL().toURI());
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
+                            String ret = OpenBrowser.displayUrl(hle.getURL().toString());
+                            if (ret != null) {
+                              PointInfoUtils.showNotification(ret, "error");
                             }
                           }
                         }

@@ -13,7 +13,7 @@ There is only a Czech RUIAN module available at this moment.
 
 ##Websites
 
- * OSM wiki - not availavle yet
+ * OSM wiki - not available yet
  * [JOSM svn](https://trac.openstreetmap.org/browser/subversion/applications/editors/josm/plugins/pointInfo)
  * [Github](https://github.com/mkyral/josm-pointInfo)
 

@@ -1,4 +1,4 @@
-![](http://www.kyralovi.cz/tmp/josm/pointInfo_v1.png)
+![](http://www.kyralovi.cz/tmp/josm/pointInfo_20140327.png)
 
 ---
 
@@ -6,6 +6,8 @@
 
 This plugin shows all available information for clicked point from external database.
 There is only a Czech RUIAN module available at this moment.
+
+Plugin could be easy extend to show another data source.
 
 ##Author
 
@@ -21,25 +23,22 @@ There is only a Czech RUIAN module available at this moment.
 
  * GPL v2 or later
 
-
-##Notes:
-
-- Plugin could be easy extend to show another data source.
-- Input is position, output html string that is shown on message.
-- Optionally you can define special links (file://...) that will be sent back to the module to the performAction method
-
 ---
 ###The RUIAN module
 
  * Shows data about building, addresses, streets,  parcels and cadastral area from Czech RUIAN registry (http://wiki.openstreetmap.org/wiki/RUIAN)
 
  * Additional actions are available :
+    * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/open-external-link.png)] Open on external site
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/copy-tags.png)] Copy tags to clipboard
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr.png)] Create an address point on position where was clicked
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr-ruian.png)] Create an address point on position defined in RUIAN
 
 ---
 ###The interface:
+
+- Input is position, output html string that is shown on message.
+- Optionally you can define special links (file://...) that will be sent back to the module to the performAction method
 
 ```java
 

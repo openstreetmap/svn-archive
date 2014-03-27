@@ -58,9 +58,13 @@ if ($data["stavebni_objekt"]["ruian_id"] > 0)
          END cislo_typ,
          am.cislo_domovni,
          am.cislo_orientacni_hodnota || coalesce(am.cislo_orientacni_pismeno, '') cislo_orientacni,
-         am.adrp_psc psc, ul.nazev ulice, c.nazev cast_obce,
-         momc.nazev mestska_cast,
-         ob.nazev obec, ok.nazev okres, vu.nazev kraj
+         am.adrp_psc psc,
+         ul.kod ulice_kod, ul.nazev ulice,
+         c.kod cast_obce_kod, c.nazev cast_obce,
+         momc.kod mestska_cast_kod, momc.nazev mestska_cast,
+         ob.kod obec_kod, ob.nazev obec,
+         ok.kod okres_kod, ok.nazev okres,
+         vu.kod kraj_kod, vu.nazev kraj
    from ruian.rn_adresni_misto am
         left outer join rn_stavebni_objekt s on am.stavobj_kod = s.kod and not s.deleted
         left outer join osmtables.zpusob_vyuziti_objektu a on s.zpusob_vyuziti_kod = a.kod
@@ -93,11 +97,17 @@ if ($data["stavebni_objekt"]["ruian_id"] > 0)
                         "cislo_typ" => $row["cislo_typ"],
                         "cislo_domovni" => $row["cislo_domovni"],
                         "cislo_orientacni" => $row["cislo_orientacni"],
+                        "ulice_kod" => $row["ulice_kod"],
                         "ulice" => $row["ulice"],
+                        "cast_obce_kod" => $row["cast_obce_kod"],
                         "cast_obce" => $row["cast_obce"],
+                        "mestska_cast_kod" => $row["mestska_cast_kod"],
                         "mestska_cast" => $row["mestska_cast"],
+                        "obec_kod" => $row["obec_kod"],
                         "obec" => $row["obec"],
+                        "okres_kod" => $row["okres_kod"],
                         "okres" => $row["okres"],
+                        "kraj_kod" => $row["kraj_kod"],
                         "kraj" => $row["kraj"],
                         "psc" => $row["psc"]
                         ));
@@ -247,7 +257,9 @@ if (pg_num_rows($result) > 0)
 // cadastral area
 $query="
   select ku.kod, ku.nazev,
-         ob.nazev obec, ok.nazev okres, vu.nazev kraj
+         ob.kod obec_kod, ob.nazev obec,
+         ok.kod okres_kod, ok.nazev okres,
+         vu.kod kraj_kod, vu.nazev kraj
   from rn_katastralni_uzemi ku
       left outer join rn_obec ob on ku.obec_kod = ob.kod and not ob.deleted
       left outer join rn_okres ok on ob.okres_kod = ok.kod and not ok.deleted
@@ -266,39 +278,11 @@ if (pg_num_rows($result) > 0)
   $data["katastr"] =
     array( "ruian_id" => $row["kod"],
            "nazev" => $row["nazev"],
+           "obec_kod" => $row["obec_kod"],
            "obec" => $row["obec"],
+           "okres_kod" => $row["okres_kod"],
            "okres" => $row["okres"],
-           "kraj" => $row["kraj"],
-           );
-} else
-{
-  $data["katastr"] = array();
-}
-
-// cadastral area
-$query="
-  select ku.kod, ku.nazev,
-         ob.nazev obec, ok.nazev okres, vu.nazev kraj
-  from rn_katastralni_uzemi ku
-      left outer join rn_obec ob on ku.obec_kod = ob.kod and not ob.deleted
-      left outer join rn_okres ok on ob.okres_kod = ok.kod and not ok.deleted
-      left outer join rn_vusc vu on ok.vusc_kod = vu.kod and not vu.deleted
-  where st_contains(ku.hranice,st_transform(st_geomfromtext('POINT(".$lon." ".$lat.")',4326),900913))
-  and not ku.deleted
-  limit 1;
-";
-
-$result=pg_query($CONNECT,$query);
-$error= pg_last_error($CONNECT);
-if (pg_num_rows($result) > 0)
-{
-  $row = pg_fetch_array($result, 0);
-
-  $data["katastr"] =
-    array( "ruian_id" => $row["kod"],
-           "nazev" => $row["nazev"],
-           "obec" => $row["obec"],
-           "okres" => $row["okres"],
+           "kraj_kod" => $row["kraj_kod"],
            "kraj" => $row["kraj"],
            );
 } else

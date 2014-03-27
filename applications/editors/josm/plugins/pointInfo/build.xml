@@ -14,7 +14,7 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Replace openWebPage function by josm.tools.OpenBrowser."/>
+    <property name="commit.message" value="PointInfo: Add more external links, nicer icons."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="6238"/>
 

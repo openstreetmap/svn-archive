@@ -47,9 +47,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class ElevationProfileDialog extends ToggleDialog implements LayerChangeListener, ComponentListener {
 
     private static final String EMPTY_DATA_STRING = "-";
-    /**
-     * 
-     */
     private static final long serialVersionUID = -868463893732535577L;
     /* Elevation profile instance */
     private IElevationModel model;
@@ -183,14 +180,15 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
         rootPanel.add(statPanel);
         rootPanel.add(trackPanel);
 
-        add(rootPanel, BorderLayout.PAGE_END);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(rootPanel, BorderLayout.PAGE_END);
 
         // add chart component
         profPanel = new ElevationProfilePanel(null);
-        add(profPanel, BorderLayout.CENTER);
+        mainPanel.add(profPanel, BorderLayout.CENTER);
         profPanel.addComponentListener(this);
 
-        dock();
+        createLayout(mainPanel, true, null);
     }
 
     @Override

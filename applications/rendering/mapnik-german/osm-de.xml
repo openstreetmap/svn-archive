@@ -3760,7 +3760,7 @@
     </Rule>
     <Rule>
       &maxscale_zoom16;
-      <Filter>[barrier] != '' and not [barrier] = 'hedge'</Filter>
+      <Filter>[barrier] != '' and not [barrier] = 'hedge' and not [barrier] = 'line'</Filter>
       <LineSymbolizer stroke="#444" stroke-width="0.4"/>
     </Rule>
 </Style>

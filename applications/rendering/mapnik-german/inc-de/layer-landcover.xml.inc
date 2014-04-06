@@ -271,7 +271,7 @@
     <Rule>
       <Filter>[natural] = 'desert'</Filter>
       &maxscale_zoom8;
-      <PolygonSymbolizer fill="#e3b57a"/>
+      <PolygonSymbolizer fill="#f2efc0"/>
     </Rule>
     <Rule>
       <Filter>[natural] = 'sand'</Filter>

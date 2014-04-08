@@ -28,6 +28,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.customurl.UtilsPluginPreferen
 import org.openstreetmap.josm.plugins.utilsplugin2.latlon.LatLonAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.multitagger.MultiTagAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.search.UtilsSimpleMatchFactory;
 import org.openstreetmap.josm.plugins.utilsplugin2.search.UtilsUnaryMatchFactory;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.AdjacentNodesAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.AdjacentWaysAction;
@@ -123,6 +124,7 @@ public class UtilsPlugin2 extends Plugin {
         
         // register search operators
         SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
+        SearchCompiler.addMatchFactory(new UtilsSimpleMatchFactory());
     }
 
     @Override

@@ -23,7 +23,7 @@ public class UtilsUnaryMatchFactory implements SearchCompiler.UnaryMatchFactory 
             return new IntersectingMatch(matchOperand, false);
         } else if ("allintersecting".equals(keyword)) {
             return new IntersectingMatch(matchOperand, true);
-        }
+        } 
         return null;
     }
 

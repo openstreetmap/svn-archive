@@ -66,13 +66,12 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     //
     private final HighlightHelper highlightHelper = new HighlightHelper();
     private final HistoryComboBox cbTagSet = new HistoryComboBox();
+    private List<OsmPrimitive> currentSelection;
     
     private static final String HISTORY_KEY = "utilsplugin2.multitaghistory";
     String defaultHistory[] = {"addr:street, addr:housenumber, building, ${area}",
         "highway, name, ${id}, ${length}",
         "name name:en name:ru name:de"};
-    TagCellEditor cellEditor;
-    
     
     public MultiTagDialog() {
         super(Main.parent,  tr("Edit tags"), new String[]{tr("Ok"), tr("Cancel")}, false);
@@ -167,8 +166,8 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
    private final MouseAdapter tableMouseAdapter = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                AutoScaleAction.zoomTo(Collections.singletonList(getSelectedPrimitive()));
+            if (e.getClickCount()>1 && Main.isDisplayingMapView()) {
+                AutoScaleAction.zoomTo(currentSelection);
             }
         }
         
@@ -176,9 +175,9 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private final ListSelectionListener selectionListener = new ListSelectionListener() {
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            List<OsmPrimitive> prims = getSelectedPrimitives();
-            if (prims != null && Main.isDisplayingMapView() ) {
-                if (highlightHelper.highlightOnly(prims)) {
+            currentSelection = getSelectedPrimitives();
+            if (currentSelection != null && Main.isDisplayingMapView() ) {
+                if (highlightHelper.highlightOnly(currentSelection)) {
                     Main.map.mapView.repaint();
                 }
             }
@@ -210,6 +209,14 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     private JPopupMenu createPopupMenu() {
         JPopupMenu menu = new JPopupMenu();
+        menu.add(new AbstractAction(tr("Zoom to objects"), ImageProvider.get("dialogs/autoscale", "selection")) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Main.isDisplayingMapView()) {
+                    AutoScaleAction.zoomTo(currentSelection);
+                }
+            }
+        });
         menu.add(new AbstractAction(tr("Remove tag"), ImageProvider.get("dialogs", "delete")){
             @Override
             public void actionPerformed(ActionEvent e) {

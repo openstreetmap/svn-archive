@@ -187,7 +187,7 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 	    "    <entry>\n"+
         "        " + simpleTag(XML_NAME, name) + "\n"+
         "        " + simpleTag(XML_TYPE, type, "wms") + "\n"+
-        "        " + simpleTag(XML_URL, url != null ? encodeUrl(url) : "") + "\n"+
+        "        " + simpleTag(XML_URL, url != null ? encodeUrl(url) : "", false) + "\n"+
 	             bounds+"\n";
 		if (projections != null && !projections.isEmpty()) {
 			result += "        "+startTag(XML_PROJECTIONS)+"\n";
@@ -325,14 +325,17 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 
 	protected static final String getClosedWayShape(Way cw) {
 		String result = "            <shape>\n";
-		for (int i=0; i<cw.getNodesCount()-1; i++) {
+		for (int i=0; i<cw.getNodesCount(); i++) {
 			if (i%3 == 0) {
 				result += "                ";
 			}
+			int j = i;
+			if(j == cw.getNodesCount())
+			    j = 0;
 			result += "<point ";
 			result += "lat='" + df.format(cw.getNode(i).getCoor().lat()) + "' ";
 			result += "lon='" + df.format(cw.getNode(i).getCoor().lon()) + "'/>";
-			if (i%3 == 2 || i == cw.getNodesCount()-2 ) {
+			if (i%3 == 2 || i == cw.getNodesCount()-1 ) {
 				result += "\n";
 			}
 		}

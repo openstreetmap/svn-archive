@@ -12,12 +12,12 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
- * Matches objects with a version number in the given range.
+ * Matches nodes that are attached to given range of ways
  */
 public class UsedInWaysMatch extends RangeMatch {
     public UsedInWaysMatch(PushbackTokenizer.Range range) {super(range);}
     public UsedInWaysMatch(PushbackTokenizer tokenizer) throws SearchCompiler.ParseError {
-        this(tokenizer.readRange(tr("Range of attached way cuunt")));
+        this(tokenizer.readRange(tr("Range of attached ways count")));
     }
     private class WayCounter implements Visitor {
         int count;

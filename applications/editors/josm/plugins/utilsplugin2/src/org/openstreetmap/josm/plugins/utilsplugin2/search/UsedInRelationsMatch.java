@@ -29,12 +29,14 @@ public class UsedInRelationsMatch extends RangeMatch {
     }
     RelationCounter counter = new RelationCounter();
 
-    @Override protected Long getNumber(OsmPrimitive osm) {
+    @Override 
+    protected Long getNumber(OsmPrimitive osm) {
         counter.count=0;
         osm.visitReferrers(counter);
         return new Long(counter.count);
     }
-    @Override protected String getString() {
+    @Override 
+    protected String getString() {
         return "usedinrelations";
     }
 }

@@ -29,7 +29,6 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -39,14 +38,11 @@ import org.openstreetmap.josm.actions.search.SearchAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.tagging.TagCellEditor;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
-import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.util.HighlightHelper;
 import org.openstreetmap.josm.gui.util.TableHelper;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
@@ -87,7 +83,17 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         
         pnl.add(cbTagSet,GBC.std().fill(GBC.HORIZONTAL));
         pnl.add(new JButton(new DeleteFromHistoryAction()),GBC.std());
-        pnl.add(new JButton(new FindMatchingAction()),GBC.eol());
+        pnl.add(new JButton(new FindMatchingAction()),GBC.std());
+        final JToggleButton jt = new JToggleButton("", ImageProvider.get("restart"), true);
+        jt.setToolTipText(tr("Sync with JOSM selection"));
+        jt.addActionListener(new ActionListener(){
+            @Override public void actionPerformed(ActionEvent e) {
+                tableModel.setWatchSelection(jt.isSelected());
+            };
+        });
+        pnl.add(jt,GBC.eol());
+        
+
         pnl.add(createTypeFilterPanel(), GBC.eol().fill(GBC.HORIZONTAL));
         pnl.add(tbl.getTableHeader(),GBC.eop().fill(GBC.HORIZONTAL));
         
@@ -102,13 +108,13 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     private JTable createTable() {
         JTable t = new JTable(tableModel);
+        tableModel.setTable(t);
         t.setFillsViewportHeight(true);
-        t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        t.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         t.addMouseListener(tableMouseAdapter);
         t.setRowSelectionAllowed(true);
         t.setColumnSelectionAllowed(true);
         t.setDefaultRenderer(OsmPrimitiveType.class, new PrimitiveTypeIconRenderer());
-        t.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         t.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         t.getSelectionModel().addListSelectionListener(selectionListener);
         return t;
@@ -215,6 +221,12 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 if (Main.isDisplayingMapView()) {
                     AutoScaleAction.zoomTo(currentSelection);
                 }
+            }
+        });
+        menu.add(new AbstractAction(tr("Select"), ImageProvider.get("dialogs", "select")) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Main.main.getCurrentDataSet().setSelected(getSelectedPrimitives());
             }
         });
         menu.add(new AbstractAction(tr("Remove tag"), ImageProvider.get("dialogs", "delete")){

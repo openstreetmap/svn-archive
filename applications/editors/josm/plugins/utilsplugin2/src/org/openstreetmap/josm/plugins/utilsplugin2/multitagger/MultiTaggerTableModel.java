@@ -9,7 +9,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
@@ -31,6 +33,8 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     Set<OsmPrimitiveType> shownTypes = new HashSet<OsmPrimitiveType>();
     private boolean autoCommit = true;
     List<Command> cmds = new ArrayList<Command>();
+    private boolean watchSelection = true;
+    private JTable table;
 
     public MultiTaggerTableModel() {
         Collections.addAll(shownTypes, OsmPrimitiveType.values());
@@ -46,6 +50,11 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
         return mainTags.length+1;
     }
 
+    public void setWatchSelection(boolean watchSelection) {
+        this.watchSelection = watchSelection;
+        if (watchSelection && Main.main.hasEditLayer()) selectionChanged(Main.main.getCurrentDataSet().getSelected());
+    }
+    
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (columnIndex==0) {
@@ -85,7 +94,8 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
    
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        updateData(newSelection);
+        if (watchSelection)
+            updateData(newSelection);
     }
 
     @Override
@@ -163,7 +173,9 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     }
 
     void updateData(Collection<? extends OsmPrimitive> sel) {
-        list.clear();
+       if (table.isEditing()) table.getCellEditor().stopCellEditing();
+       
+       list.clear();
         for (OsmPrimitive p : sel) {
             if (shownTypes.contains(p.getDisplayType())) {
                 list.add(p);
@@ -179,5 +191,9 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
     void commit(String commandTitle) {
         Main.main.undoRedo.add(new SequenceCommand(commandTitle, cmds));
         cmds.clear();
+    }
+
+    void setTable(JTable t) {
+        table = t;
     }
 }

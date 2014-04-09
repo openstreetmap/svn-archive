@@ -8,7 +8,7 @@ import org.openstreetmap.josm.actions.search.SearchCompiler.SimpleMatchFactory;
 
 public class UtilsSimpleMatchFactory implements SimpleMatchFactory {
     
-    private static Collection<String> keywords = Arrays.asList("usedinways", "usedinrelations");
+    private static Collection<String> keywords = Arrays.asList("usedinways", "usedinrelations", "parents", "children");
 
     @Override
     public Collection<String> getKeywords() {
@@ -23,6 +23,12 @@ public class UtilsSimpleMatchFactory implements SimpleMatchFactory {
         if ("usedinrelations".equals(keyword)) {
             return new UsedInRelationsMatch(tokenizer);
         } else 
+        if ("parents".equals(keyword)) {
+            return new ParentsMatch(tokenizer);
+        } else
+        if ("children".equals(keyword)) {
+            return new ChildrenMatch(tokenizer);
+        } else
             return null; 
     };
     

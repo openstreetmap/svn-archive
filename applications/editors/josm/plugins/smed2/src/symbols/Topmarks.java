@@ -19,6 +19,22 @@ import symbols.Symbols.*;
 
 public class Topmarks {
 	
+	public static final Symbol TopBesom = new Symbol();
+	static {
+		TopBesom.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));
+		TopBesom.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		TopBesom.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,0.0); p.lineTo(0.0,-30.0); p.lineTo(15.0,0.0); p.moveTo(0.0,0.0); p.lineTo(0.0,-28.0);
+		TopBesom.add(new Instr(Form.PLIN, p));
+	}
+	public static final Symbol TopIBesom = new Symbol();
+	static {
+		TopIBesom.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));
+		TopIBesom.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		TopIBesom.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-30.0); p.lineTo(0.0,0.0); p.lineTo(15.0,-30.0);
+		TopIBesom.add(new Instr(Form.PLIN, p));
+	}
 	public static final Symbol TopBoard = new Symbol();
 	static {
 		TopBoard.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));
@@ -229,6 +245,10 @@ public class Topmarks {
 		Symbol colours = new Symbol();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-1.0); p.lineTo(0.0,-29.0); p.lineTo(15.0,-1.0); p.closePath();
 		colours.add(new Instr(Form.P1, p));
+		p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		p.moveTo(-15.0,-1.0); p.lineTo(0.0,-29.0); p.lineTo(15.0,-1.0); p.closePath();
+		p.moveTo(-10.0,-6.0); p.lineTo(0.0,-24.0); p.lineTo(10.0,-6.0); p.closePath();
+		colours.add(new Instr(Form.B1, p));
 		TopTriangle.add(new Instr(Form.COLR, colours));
 		TopTriangle.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		TopTriangle.add(new Instr(Form.FILL, Color.black));
@@ -241,6 +261,10 @@ public class Topmarks {
 		Symbol colours = new Symbol();
 		Path2D.Double p = new Path2D.Double(); p.moveTo(-15.0,-29.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-29.0); p.closePath();
 		colours.add(new Instr(Form.P1, p));
+		p = new Path2D.Double(); p.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		p.moveTo(-15.0,-29.0); p.lineTo(0.0,-1.0); p.lineTo(15.0,-29.0); p.closePath();
+		p.moveTo(-10.0,-24.0); p.lineTo(0.0,-6.0); p.lineTo(10.0,-24.0); p.closePath();
+		colours.add(new Instr(Form.B1, p));
 		TopItriangle.add(new Instr(Form.COLR, colours));
 		TopItriangle.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
 		TopItriangle.add(new Instr(Form.FILL, Color.black));
@@ -283,10 +307,11 @@ public class Topmarks {
 	
 	public static final EnumMap<TopSHP, Symbol> Shapes = new EnumMap<TopSHP, Symbol>(TopSHP.class);
 	static {
-		Shapes.put(TopSHP.TOP_BORD, TopBoard); Shapes.put(TopSHP.TOP_CAN, TopCan); Shapes.put(TopSHP.TOP_CONE, TopCone); Shapes.put(TopSHP.TOP_CROS, TopCross);
-		Shapes.put(TopSHP.TOP_EAST, TopEast); Shapes.put(TopSHP.TOP_ICONE, TopIcone); Shapes.put(TopSHP.TOP_ISD, TopIsol); Shapes.put(TopSHP.TOP_NORTH, TopNorth);
-		Shapes.put(TopSHP.TOP_SOUTH, TopSouth); Shapes.put(TopSHP.TOP_SPHR, TopSphere); Shapes.put(TopSHP.TOP_SQUR, TopSquare); Shapes.put(TopSHP.TOP_TRI, TopTriangle);
-		Shapes.put(TopSHP.TOP_ITRI, TopItriangle); Shapes.put(TopSHP.TOP_WEST, TopWest); Shapes.put(TopSHP.TOP_SALT, TopX); Shapes.put(TopSHP.TOP_RHOM, TopRhombus);
+		Shapes.put(TopSHP.TOP_BESM, TopBesom); Shapes.put(TopSHP.TOP_IBESM, TopIBesom); Shapes.put(TopSHP.TOP_BORD, TopBoard); Shapes.put(TopSHP.TOP_CAN, TopCan);
+		Shapes.put(TopSHP.TOP_CONE, TopCone); Shapes.put(TopSHP.TOP_CROS, TopCross); Shapes.put(TopSHP.TOP_EAST, TopEast); Shapes.put(TopSHP.TOP_ICONE, TopIcone);
+		Shapes.put(TopSHP.TOP_ISD, TopIsol); Shapes.put(TopSHP.TOP_NORTH, TopNorth); Shapes.put(TopSHP.TOP_SOUTH, TopSouth); Shapes.put(TopSHP.TOP_SPHR, TopSphere);
+		Shapes.put(TopSHP.TOP_SQUR, TopSquare); Shapes.put(TopSHP.TOP_TRI, TopTriangle); Shapes.put(TopSHP.TOP_ITRI, TopItriangle); Shapes.put(TopSHP.TOP_WEST, TopWest);
+		Shapes.put(TopSHP.TOP_SALT, TopX); Shapes.put(TopSHP.TOP_RHOM, TopRhombus);
 	}
 	public static final EnumMap<BoySHP, Delta> BuoyDeltas = new EnumMap<BoySHP, Delta>(BoySHP.class);
 	static {
@@ -301,5 +326,6 @@ public class Topmarks {
 	}
 	public static final Delta FloatDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -42.0));
 	public static final Delta BeaconDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -70.0));
+	public static final Delta LightDelta = new Delta(Handle.BC, AffineTransform.getTranslateInstance(0.0, -20.0));
 
 }

@@ -334,26 +334,29 @@ public class Rules {
 		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR)))) {
 			BcnSHP shape = (BcnSHP) getAttVal(feature, feature.type, 0,
 					Att.BCNSHP);
-			if (((shape == BcnSHP.BCN_PRCH) || (shape == BcnSHP.BCN_WTHY))
-					&& (feature.type == Obj.BCNLAT)) {
-				CatLAM cat = (CatLAM) getAttVal(feature, feature.type, 0,
-						Att.CATLAM);
+			if ((shape == BcnSHP.BCN_WTHY) && (feature.type == Obj.BCNLAT)) {
+				CatLAM cat = (CatLAM) getAttVal(feature, feature.type, 0, Att.CATLAM);
 				switch (cat) {
 				case LAM_PORT:
-					if (shape == BcnSHP.BCN_PRCH)
-						Renderer.symbol(feature, Beacons.PerchPort);
-					else
-						Renderer.symbol(feature, Beacons.WithyPort);
+					Renderer.symbol(feature, Beacons.WithyPort);
 					break;
 				case LAM_STBD:
-					if (shape == BcnSHP.BCN_PRCH)
-						Renderer.symbol(feature, Beacons.PerchStarboard);
-					else
-						Renderer.symbol(feature, Beacons.WithyStarboard);
+					Renderer.symbol(feature, Beacons.WithyStarboard);
 					break;
 				default:
-					Renderer.symbol(feature, Beacons.Stake,
-							getScheme(feature, feature.type));
+					Renderer.symbol(feature, Beacons.Stake, getScheme(feature, feature.type));
+				}
+			} else if ((shape == BcnSHP.BCN_PRCH) && (feature.type == Obj.BCNLAT) && !(feature.objs.containsKey(Obj.TOPMAR))) {
+				CatLAM cat = (CatLAM) getAttVal(feature, feature.type, 0, Att.CATLAM);
+				switch (cat) {
+				case LAM_PORT:
+					Renderer.symbol(feature, Beacons.PerchPort);
+					break;
+				case LAM_STBD:
+					Renderer.symbol(feature, Beacons.PerchStarboard);
+					break;
+				default:
+					Renderer.symbol(feature, Beacons.Stake, getScheme(feature, feature.type));
 				}
 			} else {
 				Renderer.symbol(feature, Beacons.Shapes.get(shape), getScheme(feature, feature.type));
@@ -664,6 +667,15 @@ public class Rules {
 			break;
 		default:
 			break;
+		}
+		if (feature.objs.containsKey(Obj.TOPMAR)) {
+			Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val);
+			if (topmark != null)
+				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.TOPMAR), Topmarks.LightDelta);
+		} else	if (feature.objs.containsKey(Obj.DAYMAR)) {
+			Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val);
+			if (topmark != null)
+				Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.DAYMAR), Topmarks.LightDelta);
 		}
 		Signals.addSignals(feature);
 	}

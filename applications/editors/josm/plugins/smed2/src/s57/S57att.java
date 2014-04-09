@@ -133,13 +133,13 @@ public class S57att {
 		AttStr.put(Att.LITVIS, "visibility"); AttStr.put(Att.MARSYS, "system");	AttStr.put(Att.MLTYLT, "multiple"); AttStr.put(Att.NATION, "nationality");
 		AttStr.put(Att.NATCON, "construction"); AttStr.put(Att.NATSUR, "surface"); AttStr.put(Att.NATQUA, "surface_qualification"); AttStr.put(Att.NMDATE, "nm_date");
 		AttStr.put(Att.OBJNAM, "name"); AttStr.put(Att.ORIENT, "orientation"); AttStr.put(Att.PEREND, "end_date"); AttStr.put(Att.PERSTA, "start_date");
-		AttStr.put(Att.PICREP, "representation"); AttStr.put(Att.PILDST, "pilot_district");	AttStr.put(Att.PRCTRY, "producing_country"); AttStr.put(Att.PRODCT, "product");
+		AttStr.put(Att.PICREP, ""); AttStr.put(Att.PILDST, "pilot_district");	AttStr.put(Att.PRCTRY, "producing_country"); AttStr.put(Att.PRODCT, "product");
 		AttStr.put(Att.PUBREF, "reference"); AttStr.put(Att.QUASOU, "quality");	AttStr.put(Att.RADWAL, "wavelength"); AttStr.put(Att.RADIUS, "radius");
 		AttStr.put(Att.RECDAT, "date"); AttStr.put(Att.RECIND, "indication");	AttStr.put(Att.RYRMGV, "year"); AttStr.put(Att.RESTRN, "restriction");
 		AttStr.put(Att.SECTR1, "sector_start"); AttStr.put(Att.SECTR2, "sector_end");	AttStr.put(Att.SHIPAM, "shift"); AttStr.put(Att.SIGFRQ, "frequency");
 		AttStr.put(Att.SIGGEN, "generation"); AttStr.put(Att.SIGGRP, "group"); AttStr.put(Att.SIGPER, "period"); AttStr.put(Att.SIGSEQ, "sequence");
-		AttStr.put(Att.SOUACC, "accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");	AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "source_date");
-		AttStr.put(Att.SORIND, "source"); AttStr.put(Att.STATUS, "status");	AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "end_date");
+		AttStr.put(Att.SOUACC, "accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");	AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "");
+		AttStr.put(Att.SORIND, ""); AttStr.put(Att.STATUS, "status");	AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "end_date");
 		AttStr.put(Att.SURSTA, "start_date"); AttStr.put(Att.SURTYP, "survey");	AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "description");
 		AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");	AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "traffic_flow");
 		AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth"); AttStr.put(Att.VALLMA, "anomaly"); AttStr.put(Att.VALMAG, "variation");

@@ -186,5 +186,6 @@ public class Beacons {
 		Shapes.put(BcnSHP.BCN_UNKN, Beacons.Beacon); Shapes.put(BcnSHP.BCN_STAK, Beacons.Stake); Shapes.put(BcnSHP.BCN_TOWR, Beacons.Tower);
 		Shapes.put(BcnSHP.BCN_LATT, Beacons.Beacon); Shapes.put(BcnSHP.BCN_PILE, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POLE, Beacons.Stake);
 		Shapes.put(BcnSHP.BCN_CARN, Beacons.Cairn); Shapes.put(BcnSHP.BCN_BUOY, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POST, Beacons.Stake);
+		Shapes.put(BcnSHP.BCN_PRCH, Beacons.Stake);
 	}
 }

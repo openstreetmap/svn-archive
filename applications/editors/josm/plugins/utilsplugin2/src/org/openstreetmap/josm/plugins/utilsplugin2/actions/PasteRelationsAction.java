@@ -55,7 +55,15 @@ public class PasteRelationsAction extends JosmAction {
             boolean changed = false;
             for( OsmPrimitive p : selection ) {
                 if( !r.getMemberPrimitives().contains(p) && !r.equals(p) ) {
-                    r.addMember(new RelationMember(relations.get(rel), p));
+                    String role = relations.get(rel);              
+                    if ("associatedStreet".equals(r.get("type"))) {
+                        if (p.get("highway") != null) {
+                            role="street";
+                        } else if (p.get("addr:housenumber") != null) {
+                            role="house";
+                        }
+                    }
+                    r.addMember(new RelationMember(role, p));
                     changed = true;
                 }
             }

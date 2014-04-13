@@ -23,7 +23,7 @@
         <attribute name="Main-Class" value="jrender.Jrender"/>
         <attribute name="Class-Path" value="$jarfile"/>
       </manifest>
-      <zipgroupfileset dir="${batik.dir}" includes="**/*.jar" />
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik*.jar" />
           
     </jar>
   </target>

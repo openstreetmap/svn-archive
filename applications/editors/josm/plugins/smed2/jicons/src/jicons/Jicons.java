@@ -9,22 +9,20 @@
 
 package jicons;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Panel;
 import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
@@ -32,62 +30,180 @@ import org.apache.batik.dom.GenericDOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMImplementation;
 
-import symbols.*;
-import symbols.Symbols.*;
+import s57.S57map;
+import s57.S57map.Feature;
+import s57.S57map.Snode;
 import render.*;
 
-public class Jicons extends Panel {
+public class Jicons {
+	
+	static S57map map = null;
+	static int x = 0;
+	static int y = 0;
+	static int w = 0;
+	static int h = 0;
+	static double s = 0;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		Render render;
+		BufferedReader in;
+		int line = 0;
+		String format = "";
+		String file = "";
+		String k = "";
+		String v = "";
+
 		BufferedImage img;
 		Graphics2D g2;
+		boolean inIcons = false;
+		boolean inIcon = false;
 		
-		JFrame frame = new JFrame("Jicons");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    Panel panel = new Jicons();
-    frame.getContentPane().add("Center", panel);
-		frame.setSize(256, 256);
-		frame.setVisible(true);
-		
-		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-		g2 = img.createGraphics();
-		drawRendering(g2);
-		try {
-			ImageIO.write(img, "png", new File("/Users/mherring/Desktop/export.png"));
-		} catch (Exception e) {
-			System.out.println("Exception");
+		if (args.length < 2) {
+			System.err.println("Usage: java -jar jicons.jar icon_definition_file icons_directory");
+			System.exit(-1);
 		}
+		in = new BufferedReader(new FileReader(args[0]));
 		
-    DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
-    String svgNS = "http://www.w3.org/2000/svg";
-    Document document = domImpl.createDocument(svgNS, "svg", null);
-    SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-    svgGenerator.setSVGCanvasSize(new Dimension(256, 256));
-		drawRendering(svgGenerator);
-    boolean useCSS = true;
-    Writer out = null;
-			try {
-				out = new OutputStreamWriter(new FileOutputStream("/Users/mherring/Desktop/export.svg"), "UTF-8");
-			} catch (IOException e1) {
-				System.out.println("Exception");
+		render = new Render();
+		String ln;
+		while ((ln = in.readLine()) != null) {
+			line++;
+			if (inIcons) {
+				if (inIcon) {
+					if (ln.contains("</icon")) {
+						inIcon = false;
+						map.tagsDone(0);
+						// generate icon file
+						switch (format) {
+						case "PNG":
+							img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+							g2 = img.createGraphics();
+							render.drawRendering(g2, s);
+							try {
+								ImageIO.write(img, "png", new File(args[1] + file + ".png"));
+							} catch (Exception e) {
+								System.err.println("Line " + line + ": PNG write Exception");
+							}
+							System.err.println(file + ".png");
+							break;
+						case "SVG":
+							DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
+							String svgNS = "http://www.w3.org/2000/svg";
+							Document document = domImpl.createDocument(svgNS, "svg", null);
+							SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+							svgGenerator.setSVGCanvasSize(new Dimension(w, h));
+							render.drawRendering(svgGenerator, s);
+							boolean useCSS = true;
+							Writer out = null;
+							try {
+								out = new OutputStreamWriter(new FileOutputStream(args[1] + file + ".svg"), "UTF-8");
+							} catch (IOException e1) {
+								System.err.println("Line " + line + ": SVG file Exception");
+							}
+							try {
+								svgGenerator.stream(out, useCSS);
+							} catch (SVGGraphics2DIOException e) {
+								System.err.println("Line " + line + ": SVG write Exception");
+							}
+							System.err.println(file + ".svg");
+							break;
+						}
+					} else if (ln.contains("<tag")) {
+						k = v = "";
+						String[] token = ln.split("k=");
+						k = token[1].split("[\"\']")[1];
+						token = token[1].split("v=");
+						v = token[1].split("[\"\']")[1];
+						if (k.isEmpty()) {
+							System.err.println("Line " + line + ": No key in tag");
+							System.exit(-1);
+						}
+						if (v.isEmpty()) {
+							System.err.println("Line " + line + ": No value in tag");
+							System.exit(-1);
+						}
+						map.addTag(k, v);
+					}
+				} else if (ln.contains("<icon")) {
+					inIcon = true;
+					h = w = x = y = -1;
+					s = 0;
+					file = format = "";
+					map = new S57map();
+					map.addNode(0, 0, 0);
+					for (String token : ln.split("[ ]+")) {
+						if (token.matches("^width=.+")) {
+							w = Integer.parseInt(token.split("[\"\']")[1]);
+						} else if (token.matches("^height=.+")) {
+							h = Integer.parseInt(token.split("[\"\']")[1]);
+						} else if (token.matches("^x=.+")) {
+							x = Integer.parseInt(token.split("[\"\']")[1]);
+						} else if (token.matches("^y=.+")) {
+							y = Integer.parseInt(token.split("[\"\']")[1]);
+						} else if (token.matches("^scale=.+")) {
+							s = Double.parseDouble(token.split("[\"\']")[1]);
+						} else if (token.matches("^file=.+")) {
+							file = (token.split("[\"\']")[1]);
+						} else if (token.matches("^format=.+")) {
+							format = (token.split("[\"\']")[1]);
+						}
+					}
+					if (file.isEmpty()) {
+						System.err.println("Line " + line + ": No filename");
+						System.exit(-1);
+					}
+					if (format.isEmpty()) {
+						System.err.println("Line " + line + ": No format");
+						System.exit(-1);
+					}
+					if ((h < 0) && (w < 0)) {
+						System.err.println("Line " + line + ": No icon size");
+						System.exit(-1);
+					}
+					if (w < 0) {
+						w = h;
+					}
+					if (h < 0) {
+						h = w;
+					}
+					if (x < 0) {
+						x = w / 2;
+					}
+					if (y < 0) {
+						y = h / 2;
+					}
+					if (s == 0) {
+						s = 1;
+					}
+				} else if (ln.contains("</icons")) {
+					inIcons = false;
+					break;
+				}
+			} else if (ln.contains("<icons")) {
+				inIcons = true;
 			}
-    try {
-			svgGenerator.stream(out, useCSS);
-		} catch (SVGGraphics2DIOException e) {
-			System.out.println("Exception");
 		}
+		in.close();
+		System.err.println("Finished");
+		System.exit(0);
 	}
 	
-	public static void drawRendering(Graphics2D g2) {
-		double scale = Renderer.symbolScale[8];
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-		Scheme scheme = new Scheme(); scheme.pat.add(Patt.H); scheme.col.add(Color.red); scheme.col.add(Color.yellow); scheme.col.add(Color.green);
-		Symbols.drawSymbol(g2, Buoys.Pillar, scale, 128.0, 128.0, scheme, null);
-	}
-	
-	public void paint(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
-		drawRendering(g2);
+	static class Render implements MapContext {
+		
+		public void drawRendering(Graphics2D g2, double scale) {
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+			Renderer.reRender(g2, 16, scale / Renderer.symbolScale[16], map, this);
+		}
+
+		@Override
+		public Point2D getPoint(Snode coord) {
+			return new Point2D.Double(x, y);
+		}
+
+		@Override
+		public double mile(Feature feature) {
+			return 1000;
+		}
 	}
 }

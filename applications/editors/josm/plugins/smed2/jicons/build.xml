@@ -1,27 +1,35 @@
 <project name="jicons" default="dist" basedir=".">
   <property name="src" location="src"/>
   <property name="build" location="build"/>
-  <property name="dist"  location="dist"/>
-
+  <property name="jarfile" location="./jicons.jar"/>
+  <property name="ant.build.javac.target" value="1.7"/>
+  <property name="ant.build.javac.source" value="1.7"/>
+  <property name="batik.dir" value="/usr/local/bin/batik-1.7/"/>
+  <path id="classpath">
+    <fileset dir="${batik.dir}" includes="**/*.jar"/>
+  </path>
+            
   <target name="init">
     <mkdir dir="${build}"/>
   </target>
 
   <target name="compile" depends="init" description="compile the source " >
-    <javac includeantruntime="false" srcdir="${src}" destdir="${build}"/>
+    <javac includeantruntime="false" srcdir="${src}" destdir="${build}" classpathref="classpath" encoding="UTF-8" />
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution" >
-    <jar jarfile="./jicons.jar" basedir="${build}" >
+    <jar jarfile="${jarfile}" basedir="${build}" >
       <manifest>
-        <attribute name="Main-Class" value="Jicons"/>
+        <attribute name="Main-Class" value="jicons.Jicons"/>
+        <attribute name="Class-Path" value="$jarfile"/>
       </manifest>
+      <zipgroupfileset dir="${batik.dir}" includes="**/*.jar" />
+          
     </jar>
   </target>
 
   <target name="clean" description="clean up" >
     <delete dir="${build}"/>
-    <delete dir="${dist}"/>
-    <delete file="./jicons.jar"/>
+    <delete file="${jarfile}"/>
   </target>
 </project>

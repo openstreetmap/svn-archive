@@ -6,7 +6,7 @@
   <property name="ant.build.javac.source" value="1.7"/>
   <property name="batik.dir" value="/usr/local/bin/batik-1.7/"/>
   <path id="classpath">
-    <fileset dir="${batik.dir}" includes="**/*.jar"/>
+    <fileset dir="${batik.dir}" includes="**/batik*.jar"/>
   </path>
             
   <target name="init">
@@ -23,8 +23,12 @@
         <attribute name="Main-Class" value="jrender.Jrender"/>
         <attribute name="Class-Path" value="$jarfile"/>
       </manifest>
-      <zipgroupfileset dir="${batik.dir}" includes="**/batik*.jar" />
-          
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik-svggen.jar" />
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik-dom.jar" />
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik-util.jar" />
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik-awt-util.jar" />
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik-ext.jar" />
+      <zipgroupfileset dir="${batik.dir}" includes="**/batik-xml.jar" />
     </jar>
   </target>
 

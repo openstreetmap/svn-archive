@@ -16,9 +16,9 @@ $pwd = '';
 # list of supported languages
 my %lang = map {$_ => 1} (
 "bg", "ca", "cs", "da", "de", "el", "en_AU", "en_GB",
-"es", "et", "eu", "fi", "fr", "gl", "hu", "id",
-"it", "ja", "nb", "nl", "pl", "pt", "pt_BR", "ru", "sk",
-"sv", "tr", "uk", "zh_CN", "zh_TW"
+"es", "et", "fi", "fr", "gl", "hu", "id",
+"it", "ja", "nl", "pl", "pt", "pt_BR", "ru", "sk",
+"sv", "uk", "zh_CN", "zh_TW"
 );
 
 my $revision = '$Revision$';

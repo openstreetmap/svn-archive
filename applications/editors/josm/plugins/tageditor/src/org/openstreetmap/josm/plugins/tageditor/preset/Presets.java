@@ -46,7 +46,7 @@ public class Presets {
         for (String source : sources) {
             try {
                 MirroredInputStream s = new MirroredInputStream(source);
-                InputStream zip = s.getZipEntry("xml","preset");
+                InputStream zip = s.findZipEntryInputStream("xml","preset");
                 if(zip != null) {
                     zipIconArchive = s.getFile();
                 }

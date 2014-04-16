@@ -27,13 +27,13 @@ public class Jrender {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		if (args.length < 5) {
-			System.err.println("Usage: java -jar jrender.jar osm_file minlat, minlon, maxlat, maxlon");
+		if (args.length < 6) {
+			System.err.println("Usage: java -jar jrender.jar osm_file tile_directory minlat, minlon, maxlat, maxlon");
 			System.exit(-1);
 		}
 		
-		MapBB bb = new MapBB(Double.parseDouble(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]));
-		Tilegen.tileMap(Extract.extractData(args[0], bb), bb);
+		MapBB bb = new MapBB(Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]));
+		Tilegen.tileMap(Extract.extractData(args[0], bb), bb, args[1]);
 
 		System.err.println("Finished");
 		System.exit(0);

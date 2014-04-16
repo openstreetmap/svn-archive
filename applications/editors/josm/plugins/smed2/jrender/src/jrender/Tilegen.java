@@ -20,23 +20,56 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import jrender.Jrender.MapBB;
-
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
+import jrender.Jrender.MapBB;
 import render.MapContext;
 import render.Renderer;
 import s57.S57map;
-import s57.S57map.Feature;
-import s57.S57map.Snode;
+import s57.S57map.*;
 
 public class Tilegen {
 
-	public static void tileMap(ArrayList<String> buf, MapBB bb) throws IOException {
-		Context context;
+	static class Context implements MapContext {
+		
+		static double minlat = 0;
+		static double minlon = 0;
+		static double maxlat = 0;
+		static double maxlon = 0;
+	  static double top = 0;
+	  static double mile = 0;
+	  
+	  public Context (double nt, double nn, double xt, double xn) {
+			minlat = nt;
+			minlon = nn;
+			maxlat = xt;
+			maxlon = xn;
+			top = (1.0 - Math.log(Math.tan(Math.toRadians(maxlat)) + 1.0 / Math.cos(Math.toRadians(maxlat))) / Math.PI) / 2.0 * 256.0 * 4096.0;
+			mile = 768 / ((maxlat - minlat) * 60);
+	  }
+	  
+		@Override
+		public Point2D getPoint(Snode coord) {
+			double x = (Math.toDegrees(coord.lon) - minlon) * 256.0 * 2048.0 / 180.0;
+			double y = ((1.0 - Math.log(Math.tan(coord.lat) + 1.0 / Math.cos(coord.lat)) / Math.PI) / 2.0 * 256.0 * 4096.0) - top;
+			return new Point2D.Double(x, y);
+		}
+
+		@Override
+		public double mile(Feature feature) {
+			return mile;
+		}
+	}
+	
+	static Context context;
+	static S57map map;
+	static int empty;
+	static String dir;
+	
+	public static void tileMap(ArrayList<String> buf, MapBB bb, String idir) throws IOException {
 		String k = "";
 		String v = "";
 		
@@ -45,14 +78,13 @@ public class Tilegen {
 		long id = 0;
 
 		BufferedImage img;
-		Graphics2D g2;
 		boolean inOsm = false;
 		boolean inNode = false;
 		boolean inWay = false;
 		boolean inRel = false;
 		
 		context = new Context(bb.minlat, bb.minlon, bb.maxlat, bb.maxlon);
-		S57map map = null;
+		dir = idir;
 
 		for (String ln : buf) {
 			if (inOsm) {
@@ -160,25 +192,8 @@ public class Tilegen {
 		Renderer.reRender(img.createGraphics(), 12, 1, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
-		int empty = bos.size();
-		for (int s = 1, z = 12; z <= 18; s *= 2, z++) {
-			for (int x = 0; x < s; x++) {
-				for (int y = 0; y < s; y++) {
-					img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-					g2 = img.createGraphics();
-					g2.scale(s, s);
-					g2.translate(-(256 + (x * 256 / s)), -(256 + (y * 256 / s)));
-					Renderer.reRender(g2, z, 1, map, context);
-					bos = new ByteArrayOutputStream();
-					ImageIO.write(img, "png", bos);
-					if (bos.size() > empty) {
-						FileOutputStream fos = new FileOutputStream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/jrender/tst/tst" + z + "_" + x + "_" + y + ".png");
-						bos.writeTo(fos);
-						fos.close();
-					}
-				}
-			}
-		}
+		empty = bos.size();
+		tile(12, 1, 0, 0);
 
 		for (int z = 12; z <= 18; z++) {
 			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
@@ -188,40 +203,30 @@ public class Tilegen {
 			svgGenerator.setClip(0, 0, 256, 256);
 			svgGenerator.translate(-256, -256);
 			Renderer.reRender(svgGenerator, z, 1, map, context);
-			svgGenerator.stream("/Users/mherring/boatsw/oseam/josm/plugins/smed2/jrender/tst/tst_" + z + ".svg");
+			svgGenerator.stream(dir + "tst_" + z + ".svg");
 		}
-
 	}
 	
-	static class Context implements MapContext {
-		
-		static double minlat = 0;
-		static double minlon = 0;
-		static double maxlat = 0;
-		static double maxlon = 0;
-	  static double top = 0;
-	  static double mile = 0;
-	  
-	  public Context (double nt, double nn, double xt, double xn) {
-			minlat = nt;
-			minlon = nn;
-			maxlat = xt;
-			maxlon = xn;
-			top = (1.0 - Math.log(Math.tan(Math.toRadians(maxlat)) + 1.0 / Math.cos(Math.toRadians(maxlat))) / Math.PI) / 2.0 * 256.0 * 4096.0;
-			mile = 768 / ((maxlat - minlat) * 60);
-	  }
-	  
-		@Override
-		public Point2D getPoint(Snode coord) {
-			double x = (Math.toDegrees(coord.lon) - minlon) * 256.0 * 2048.0 / 180.0;
-			double y = ((1.0 - Math.log(Math.tan(coord.lat) + 1.0 / Math.cos(coord.lat)) / Math.PI) / 2.0 * 256.0 * 4096.0) - top;
-			return new Point2D.Double(x, y);
+	static void tile(int zoom, int s, int xn, int yn) throws IOException {
+		BufferedImage img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = img.createGraphics();
+		g2.scale(s, s);
+		g2.translate(-(256 + (xn * 256 / s)), -(256 + (yn * 256 / s)));
+		Renderer.reRender(g2, zoom, 1, map, context);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ImageIO.write(img, "png", bos);
+		if (bos.size() > empty) {
+			FileOutputStream fos = new FileOutputStream(dir + "tst" + zoom + "_" + xn + "_" + yn + ".png");
+			bos.writeTo(fos);
+			fos.close();
 		}
-
-		@Override
-		public double mile(Feature feature) {
-			return mile;
+		if ((zoom < 18) && ((zoom < 16) || (bos.size() > empty))) {
+			for (int x = 0; x < 2; x++) {
+				for (int y = 0; y < 2; y++) {
+					tile((zoom + 1), (s * 2), (xn * 2 + x), (yn * 2 + y));
+				}
+			}
 		}
-		
 	}
+	
 }

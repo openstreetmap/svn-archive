@@ -36,7 +36,6 @@ import render.*;
 
 public class Jicons {
 	
-	static S57map map = null;
 	static int x = 0;
 	static int y = 0;
 	static int w = 0;
@@ -44,7 +43,8 @@ public class Jicons {
 	static double s = 0;
 
 	public static void main(String[] args) throws IOException {
-		Render render;
+		Context context;
+		S57map map = null;
 		BufferedReader in;
 		int line = 0;
 		String format = "";
@@ -63,7 +63,7 @@ public class Jicons {
 		}
 		in = new BufferedReader(new FileReader(args[0]));
 		
-		render = new Render();
+		context = new Context();
 		String ln;
 		while ((ln = in.readLine()) != null) {
 			line++;
@@ -77,7 +77,7 @@ public class Jicons {
 						case "PNG":
 							img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 							g2 = img.createGraphics();
-							render.drawRendering(g2, s);
+							Renderer.reRender(g2, 16, s / Renderer.symbolScale[16], map, context);
 							try {
 								ImageIO.write(img, "png", new File(args[1] + file + ".png"));
 							} catch (Exception e) {
@@ -91,7 +91,7 @@ public class Jicons {
 							Document document = domImpl.createDocument(svgNS, "svg", null);
 							SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 							svgGenerator.setSVGCanvasSize(new Dimension(w, h));
-							render.drawRendering(svgGenerator, s);
+							Renderer.reRender(svgGenerator, 16, s / Renderer.symbolScale[16], map, context);
 							boolean useCSS = true;
 							Writer out = null;
 							try {
@@ -187,12 +187,8 @@ public class Jicons {
 		System.exit(0);
 	}
 	
-	static class Render implements MapContext {
+	static class Context implements MapContext {
 		
-		public void drawRendering(Graphics2D g2, double scale) {
-			Renderer.reRender(g2, 16, scale / Renderer.symbolScale[16], map, this);
-		}
-
 		@Override
 		public Point2D getPoint(Snode coord) {
 			return new Point2D.Double(x, y);
@@ -200,7 +196,7 @@ public class Jicons {
 
 		@Override
 		public double mile(Feature feature) {
-			return 1000;
+			return Math.min(w, h);
 		}
 	}
 }

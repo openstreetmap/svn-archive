@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -29,8 +30,9 @@ public class Jtile {
 	static int xtile;
 	static int ytile;
 	static ArrayList<String> send;
+	static HashMap<String, Boolean> deletes;
 
-	public static void tile(int zoom, int dxy, int xn, int yn) throws Exception {
+	static void tile(int zoom, int dxy, int xn, int yn) throws Exception {
 
 		trans = new PNGTranscoder();
 		trans.addTranscodingHint(PNGTranscoder.KEY_WIDTH, new Float(256));
@@ -46,7 +48,9 @@ public class Jtile {
 			int scale = (int) Math.pow(2, zoom - 12);
 			int xdir = (scale * xtile) + xn;
 			int ynam = (scale * ytile) + yn;
-			send.add("put " + dstdir + zoom + "/" + xdir + "/" + ynam + ".png" + " cache/tiles-" + zoom + "-" + xdir + "-" + ynam + ".png");
+			String dstnam = dstdir + zoom + "/" + xdir + "/" + ynam + ".png";
+			deletes.remove(dstnam);
+			send.add("put " + dstnam + " cache/tiles-" + zoom + "-" + xdir + "-" + ynam + ".png");
 			File ofile = new File(dstdir + "/" + zoom + "/" + xdir + "/");
 			ofile.mkdirs();
 			OutputStream ostream = new FileOutputStream(dstdir + "/" + zoom + "/" + xdir + "/" + ynam + ".png");
@@ -71,17 +75,42 @@ public class Jtile {
 		}
 	}
 
+	static void clean(int zoom, int xn, int yn) throws Exception {
+		
+		int scale = (int) Math.pow(2, zoom - 12);
+		int xdir = (scale * xtile) + xn;
+		int ynam = (scale * ytile) + yn;
+		String delnam = dstdir + zoom + "/" + xdir + "/" + ynam + ".png";
+		File delfile = new File(delnam);
+		if (delfile.exists()) {
+			deletes.put(delnam, true);
+			delfile.delete();
+		}
+		if ((zoom < 18)) {
+			for (int x = 0; x < 2; x++) {
+				for (int y = 0; y < 2; y++) {
+					clean((zoom + 1), (xn * 2 + x), (yn * 2 + y));
+				}
+			}
+		}
+	}
+	
 	public static void main(String[] args) throws Exception {
 		srcdir = args[0];
 		dstdir = args[1];
 		xtile = Integer.parseInt(args[2]);
 		ytile = Integer.parseInt(args[3]);
 		send = new ArrayList<String>();
+		deletes = new HashMap<String, Boolean>();
+		clean(12, 0, 0);
 		tile(12, 256, 0, 0);
 		if (send.size() > 0) {
 			PrintWriter writer = new PrintWriter(srcdir + "12-" + xtile + "-" + ytile + ".send", "UTF-8");
 			for (String str : send) {
 				writer.println(str);
+			}
+			for (String del : deletes.keySet()) {
+				writer.println("rm " + del);
 			}
 			writer.close();
 		}

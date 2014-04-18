@@ -43,7 +43,10 @@ MouseWheelListener {
         if (!movementEnabled || !isMoving)
             return;
         // Is only the selected mouse button pressed?
-        if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == movementMouseButtonMask) {
+        if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == movementMouseButtonMask || isPlatformOsx() && e.getModifiersEx() == MAC_MOUSE_BUTTON3_MASK) {
+            if (JMapViewer.debug) {
+                System.err.println("(#9897)  moving");
+            }
             Point p = e.getPoint();
             if (lastDragPoint != null) {
                 int diffx = lastDragPoint.x - p.x;
@@ -63,7 +66,11 @@ MouseWheelListener {
 
     public void mousePressed(MouseEvent e) {
         debugMouseEvent("DefaultMapController.mousePressed", e);
+	
         if (e.getButton() == movementMouseButton || isPlatformOsx() && e.getModifiersEx() == MAC_MOUSE_BUTTON3_MASK) {
+            if (JMapViewer.debug) {
+                System.err.println("(#9897)  move start");
+            }
             lastDragPoint = null;
             isMoving = true;
         }
@@ -72,6 +79,9 @@ MouseWheelListener {
     public void mouseReleased(MouseEvent e) {
         debugMouseEvent("DefaultMapController.mouseReleased", e);
         if (e.getButton() == movementMouseButton || isPlatformOsx() && e.getButton() == MouseEvent.BUTTON1) {
+            if (JMapViewer.debug) {
+                System.err.println("(#9897)  move stop");
+            }
             lastDragPoint = null;
             isMoving = false;
         }

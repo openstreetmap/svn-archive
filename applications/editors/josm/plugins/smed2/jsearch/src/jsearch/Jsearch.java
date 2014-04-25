@@ -9,12 +9,8 @@
 
 package jsearch;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 
 public class Jsearch {
 	public static class MapBB {
@@ -222,10 +218,10 @@ public class Jsearch {
 			int x = (t / 512) * 8;
 			int y = (t % 512) * 8;
 			MapBB bb = new MapBB();
-			bb.minlon = tile2lon((x + 4095) % 4096, 12);
-			bb.maxlon = tile2lon((x + 9) % 4095, 12);
-			bb.minlat = tile2lat(Math.min((y + 9), 4095), 12);
-			bb.maxlat = tile2lat(Math.max((y - 1), 0), 12);
+			bb.minlon = tile2lon((x + 4094) % 4096, 12);
+			bb.maxlon = tile2lon((x + 10) % 4095, 12);
+			bb.minlat = tile2lat(Math.min((y + 10), 4095), 12);
+			bb.maxlat = tile2lat(Math.max((y - 2), 0), 12);
 			ArrayList<String> ext = Extract.extractData(dir + "next.osm", bb);
 			PrintStream out = new PrintStream(dir + "tmp/" + (t / 512) + "-" + (t % 512) + "-9.osm");
 			for (String line : ext) {
@@ -237,10 +233,10 @@ public class Jsearch {
 			int x = (t / 1024) * 4;
 			int y = (t % 1024) * 4;
 			MapBB bb = new MapBB();
-			bb.minlon = tile2lon((x + 4095) % 4096, 12);
-			bb.maxlon = tile2lon((x + 5) % 4095, 12);
-			bb.minlat = tile2lat(Math.min((y + 5), 4095), 12);
-			bb.maxlat = tile2lat(Math.max((y - 1), 0), 12);
+			bb.minlon = tile2lon((x + 4094) % 4096, 12);
+			bb.maxlon = tile2lon((x + 6) % 4095, 12);
+			bb.minlat = tile2lat(Math.min((y + 6), 4095), 12);
+			bb.maxlat = tile2lat(Math.max((y - 2), 0), 12);
 			ArrayList<String> ext = Extract.extractData(dir + "tmp/" + ((t / 1024) / 2) + "-" + ((t % 1024) / 2) + "-9.osm", bb);
 			PrintStream out = new PrintStream(dir + "tmp/" + (t / 1024) + "-" + (t % 1024) + "-10.osm");
 			for (String line : ext) {
@@ -252,16 +248,35 @@ public class Jsearch {
 			int x = (t / 2048) * 2;
 			int y = (t % 2048) * 2;
 			MapBB bb = new MapBB();
-			bb.minlon = tile2lon((x + 4095) % 4096, 12);
-			bb.maxlon = tile2lon((x + 3) % 4095, 12);
-			bb.minlat = tile2lat(Math.min((y + 3), 4095), 12);
-			bb.maxlat = tile2lat(Math.max((y - 1), 0), 12);
+			bb.minlon = tile2lon((x + 4094) % 4096, 12);
+			bb.maxlon = tile2lon((x + 4) % 4095, 12);
+			bb.minlat = tile2lat(Math.min((y + 4), 4095), 12);
+			bb.maxlat = tile2lat(Math.max((y - 2), 0), 12);
 			ArrayList<String> ext = Extract.extractData(dir + "tmp/" + ((t / 2048) / 2) + "-" + ((t % 2048) / 2) + "-10.osm", bb);
-			PrintStream out = new PrintStream(dir + "tmp/" + (t / 2048) + "-" + (t % 2048) + "-11.osm");
+			String z11nam = dir + "tmp/" + (t / 2048) + "-" + (t % 2048) + "-11.osm";
+			PrintStream out = new PrintStream(z11nam);
 			for (String line : ext) {
 				out.println(line);
 			}
 			out.close();
+			for (int i = (x+4095)%4096; i < x+3; i = (i+1)%4096) {
+				for (int j = Math.max(y-1, 0); j < y+3; j = Math.min(j+1, 4095)) {
+					if (z12s.containsKey(i*4096+j)) {
+						z12s.remove(i*4096+j);
+						bb = new MapBB();
+						bb.minlon = tile2lon((i + 4095) % 4096, 12);
+						bb.maxlon = tile2lon((i + 2) % 4095, 12);
+						bb.minlat = tile2lat(Math.min((j + 2), 4095), 12);
+						bb.maxlat = tile2lat(Math.max((j - 1), 0), 12);
+						ext = Extract.extractData(z11nam, bb);
+						out = new PrintStream(dir + "tmp/" + i + "-" + j + "-12.osm");
+						for (String line : ext) {
+							out.println(line);
+						}
+						out.close();
+					}
+				}
+			}
 		}
 		
 		System.exit(0);

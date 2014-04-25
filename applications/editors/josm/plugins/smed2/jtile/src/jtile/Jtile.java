@@ -29,36 +29,37 @@ public class Jtile {
 	static String dstdir;
 	static int xtile;
 	static int ytile;
+	static int zoom;
 	static ArrayList<String> send;
 	static HashMap<String, Boolean> deletes;
 
-	static void tile(int zoom, int dxy, int xn, int yn) throws Exception {
+	static void tile(int z, int dxy, int xn, int yn) throws Exception {
 
 		trans = new PNGTranscoder();
 		trans.addTranscodingHint(PNGTranscoder.KEY_WIDTH, new Float(256));
 		trans.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, new Float(256));
 		trans.addTranscodingHint(PNGTranscoder.KEY_AOI, new Rectangle(256+(xn*dxy), 256+(yn*dxy), dxy, dxy));
 
-		String svgURI = new File(srcdir + xtile + "-" + ytile + "-" + zoom + ".svg").toURI().toURL().toString();
+		String svgURI = new File(srcdir + xtile + "-" + ytile + "-" + z + ".svg").toURI().toURL().toString();
 		TranscoderInput input = new TranscoderInput(svgURI);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		TranscoderOutput output = new TranscoderOutput(bos);
 		trans.transcode(input, output);
 		if (bos.size() > 446) {
-			int scale = (int) Math.pow(2, zoom - 12);
+			int scale = (int) Math.pow(2, z - 12);
 			int xdir = (scale * xtile) + xn;
 			int ynam = (scale * ytile) + yn;
-			String dstnam = dstdir + zoom + "/" + xdir + "/" + ynam + ".png";
+			String dstnam = dstdir + z + "/" + xdir + "/" + ynam + ".png";
 			deletes.remove(dstnam);
-			send.add("put " + dstnam + " cache/tiles-" + zoom + "-" + xdir + "-" + ynam + ".png");
-			File ofile = new File(dstdir + "/" + zoom + "/" + xdir + "/");
+			send.add("put " + dstnam + " cache/tiles-" + z + "-" + xdir + "-" + ynam + ".png");
+			File ofile = new File(dstdir + "/" + z + "/" + xdir + "/");
 			ofile.mkdirs();
-			OutputStream ostream = new FileOutputStream(dstdir + "/" + zoom + "/" + xdir + "/" + ynam + ".png");
+			OutputStream ostream = new FileOutputStream(dstdir + "/" + z + "/" + xdir + "/" + ynam + ".png");
 			bos.writeTo(ostream);
 			ostream.flush();
 			ostream.close();
 			if (send.size() > 10) {
-				PrintWriter writer = new PrintWriter(srcdir + zoom  + "-" + xdir + "-" + ynam + ".send", "UTF-8");
+				PrintWriter writer = new PrintWriter(srcdir + z  + "-" + xdir + "-" + ynam + ".send", "UTF-8");
 				for (String str : send) {
 					writer.println(str);
 				}
@@ -66,30 +67,60 @@ public class Jtile {
 				send = new ArrayList<String>();
 			}
 		}
-		if ((zoom < 18) && ((zoom < 16) || (bos.size() > 446))) {
+		if ((z < 18) && ((z < 16) || (bos.size() > 446))) {
 			for (int x = 0; x < 2; x++) {
 				for (int y = 0; y < 2; y++) {
-					tile((zoom + 1), (dxy / 2), (xn * 2 + x), (yn * 2 + y));
+					tile((z + 1), (dxy / 2), (xn * 2 + x), (yn * 2 + y));
 				}
 			}
 		}
 	}
 
-	static void clean(int zoom, int xn, int yn) throws Exception {
+	static void tile91011() throws Exception {
+
+		trans = new PNGTranscoder();
+		trans.addTranscodingHint(PNGTranscoder.KEY_WIDTH, new Float(256));
+		trans.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, new Float(256));
+		trans.addTranscodingHint(PNGTranscoder.KEY_AOI, new Rectangle(512, 512, 256*(int)(Math.pow(2, 12-zoom)), 256*(int)(Math.pow(2, 12-zoom))));
+
+		String svgURI = new File(srcdir + xtile + "-" + ytile + "-" + zoom + ".svg").toURI().toURL().toString();
+		TranscoderInput input = new TranscoderInput(svgURI);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		TranscoderOutput output = new TranscoderOutput(bos);
+		trans.transcode(input, output);
+		String dstnam = dstdir + zoom + "/" + xtile + "/" + ytile + ".png";
+		if (bos.size() > 446) {
+			send.add("put " + dstnam + " cache/tiles-" + zoom + "-" + xtile + "-" + ytile + ".png");
+			File ofile = new File(dstdir + "/" + zoom + "/" + xtile + "/");
+			ofile.mkdirs();
+			OutputStream ostream = new FileOutputStream(dstdir + "/" + zoom + "/" + xtile + "/" + ytile + ".png");
+			bos.writeTo(ostream);
+			ostream.flush();
+			ostream.close();
+		} else {
+			File old = new File(dstnam);
+			if (old.exists()) {
+				old.delete();
+				deletes.put(dstnam, true);
+			}
+		}
+	}
+
+	static void clean(int z, int xn, int yn) throws Exception {
 		
-		int scale = (int) Math.pow(2, zoom - 12);
+		int scale = (int) Math.pow(2, z - 12);
 		int xdir = (scale * xtile) + xn;
 		int ynam = (scale * ytile) + yn;
-		String delnam = dstdir + zoom + "/" + xdir + "/" + ynam + ".png";
+		String delnam = dstdir + z + "/" + xdir + "/" + ynam + ".png";
 		File delfile = new File(delnam);
 		if (delfile.exists()) {
 			deletes.put(delnam, true);
 			delfile.delete();
 		}
-		if ((zoom < 18)) {
+		if ((z < 18)) {
 			for (int x = 0; x < 2; x++) {
 				for (int y = 0; y < 2; y++) {
-					clean((zoom + 1), (xn * 2 + x), (yn * 2 + y));
+					clean((z + 1), (xn * 2 + x), (yn * 2 + y));
 				}
 			}
 		}
@@ -98,14 +129,19 @@ public class Jtile {
 	public static void main(String[] args) throws Exception {
 		srcdir = args[0];
 		dstdir = args[1];
-		xtile = Integer.parseInt(args[2]);
-		ytile = Integer.parseInt(args[3]);
+		zoom = Integer.parseInt(args[2]);
+		xtile = Integer.parseInt(args[3]);
+		ytile = Integer.parseInt(args[4]);
 		send = new ArrayList<String>();
 		deletes = new HashMap<String, Boolean>();
-		clean(12, 0, 0);
-		tile(12, 256, 0, 0);
-		if (send.size() > 0) {
-			PrintWriter writer = new PrintWriter(srcdir + "12-" + xtile + "-" + ytile + ".send", "UTF-8");
+		if (zoom == 12) {
+			clean(12, 0, 0);
+			tile(12, 256, 0, 0);
+		} else {
+			tile91011();
+		}
+		if ((send.size() + deletes.size()) > 0) {
+			PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");
 			for (String str : send) {
 				writer.println(str);
 			}
@@ -114,8 +150,12 @@ public class Jtile {
 			}
 			writer.close();
 		}
-		for (int z = 12; z <= 18; z++) {
-			(new File(srcdir + xtile + "-" + ytile + "-" + z + ".svg")).delete();
+		if (zoom == 12) {
+			for (int zz = 12; zz <= 18; zz++) {
+				(new File(srcdir + xtile + "-" + ytile + "-" + zz + ".svg")).delete();
+			}
+		} else {
+			(new File(srcdir + xtile + "-" + ytile + "-" + zoom + ".svg")).delete();
 		}
 		System.exit(0);
 	}

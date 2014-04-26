@@ -2,7 +2,7 @@
 <project name="mapdust" default="dist" basedir=".">
     <!-- properties -->
     <property name="commit.message" value="MapDust bug reporter plugin"/>
-    <property name="plugin.main.version" value="6162"/>
+    <property name="plugin.main.version" value="7001"/>
 
     <property name="apidoc.dir" value="doc"/>
 
@@ -41,8 +41,8 @@
     <!-- creates the javadocs -->
     <target name="javadoc">
         <mkdir dir="${apidoc.dir}"/>
-        <javadoc destdir="${apidoc.dir}" source="1.6" classpathref="classpath" windowtitle="MapDust plugin API">
-            <link href="http://java.sun.com/javase/6/docs/api/"/>
+        <javadoc destdir="${apidoc.dir}" source="1.7" classpathref="classpath" windowtitle="MapDust plugin API">
+            <link href="http://java.sun.com/javase/7/docs/api/"/>
             <link href="http://docs.jboss.org/hibernate/stable/core/api/"/>
             <packageset dir="${plugin.src.dir}">
             </packageset>

@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Changed the constructor signature of the plugin main class; updated build.xml"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6162"/>
+    <property name="plugin.main.version" value="7001"/>
     <!--
       ************************************************
       ** should not be necessary to change the following properties
@@ -12,7 +12,7 @@
     <property name="plugin.dist.dir" value="../../dist"/>
     <property name="plugin.build.dir" value="build"/>
     <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <property name="ant.build.javac.target" value="1.6"/>
+    <property name="ant.build.javac.target" value="1.7"/>
     <target name="init">
         <mkdir dir="${plugin.build.dir}"/>
     </target>

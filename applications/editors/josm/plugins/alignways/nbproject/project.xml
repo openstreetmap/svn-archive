@@ -70,12 +70,12 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="compile">../../core/src;lib</classpath>
-                <source-level>1.6</source-level>
+                <source-level>1.7</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>test/unit</package-root>
                 <unit-tests/>
-                <source-level>1.6</source-level>
+                <source-level>1.7</source-level>
             </compilation-unit>
         </java-data>
     </configuration>

@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="GPXFilter: moved to Alt-Shift-X"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6162"/>
+    <property name="plugin.main.version" value="7001"/>
 
     <property name="plugin.author" value="Upliner"/>
     <property name="plugin.class" value="gpxfilter.GpxFilterPlugin"/>

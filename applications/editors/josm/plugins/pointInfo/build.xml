@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="PointInfo: Add more external links, nicer icons."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="6238"/>
+    <property name="plugin.main.version" value="7001"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-
-
-
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Marian Kyral"/>

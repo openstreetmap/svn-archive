@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
 import org.openstreetmap.josm.data.osm.Relation;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.BBox;
@@ -19,7 +21,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Geometry;
+
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import org.openstreetmap.josm.tools.Pair;
 
 
@@ -509,7 +513,9 @@ public final class NodeWayUtils {
     private static List<EastNorth> buildPointList(Iterable<Way> ways) {
         ArrayList<EastNorth> points = new ArrayList<EastNorth>(1000);
         for (Way way: ways) {
-            for (EastNorth en: getWayPoints(way)) points.add(en);
+            for (EastNorth en: getWayPoints(way)) {
+                points.add(en);
+            }
             points.add(null); // next segment indicator
         }
         return points;
@@ -527,9 +533,11 @@ public final class NodeWayUtils {
                     @Override public EastNorth next() {
                         return w.getNode(idx++).getEastNorth();
                     }
+                    @Override public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
                 };
             }
         };
     }
-    
 }

@@ -2,7 +2,7 @@
 <project name="utilsplugin2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="[josm_utilsplugin2]: search parents:/children:; multitagger: select, sync"/>
+    <property name="commit.message" value="[josm_utilsplugin2]: select boundary by double-click; multitagger table highlights"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
 

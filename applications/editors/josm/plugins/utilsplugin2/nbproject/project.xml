@@ -21,6 +21,9 @@
                     <location>src</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
+                <build-file>
+                    <location>../../dist/utilsplugin2.jar</location>
+                </build-file>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -41,6 +44,11 @@
                     <target>debug-nb</target>
                 </action>
             </ide-actions>
+            <export>
+                <type>jar</type>
+                <location>../../dist/utilsplugin2.jar</location>
+                <build-target>dist</build-target>
+            </export>
             <view>
                 <items>
                     <source-folder style="packages">
@@ -65,6 +73,7 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <classpath mode="compile">../../core/src;../../core/dist/josm-custom.jar</classpath>
+                <built-to>../../dist/utilsplugin2.jar</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>
         </java-data>

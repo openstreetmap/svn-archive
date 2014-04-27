@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.multitagger;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -19,6 +20,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -48,8 +50,10 @@ import org.openstreetmap.josm.gui.util.TableHelper;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.tools.GBC;
+import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
@@ -115,6 +119,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         t.setRowSelectionAllowed(true);
         t.setColumnSelectionAllowed(true);
         t.setDefaultRenderer(OsmPrimitiveType.class, new PrimitiveTypeIconRenderer());
+        t.setDefaultRenderer(String.class, new ColoredRenderer());
         t.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         t.getSelectionModel().addListSelectionListener(selectionListener);
         return t;
@@ -345,5 +350,28 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         }
         initAutocompletion();
         tableModel.fireTableDataChanged();
-    }    
+    }
+    
+    class ColoredRenderer extends DefaultTableCellRenderer {
+        private final Color highlightColor = 
+                Main.pref.getColor( marktr("Multitag Background: highlight"),
+                        new Color(255,255,200));
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean
+                isSelected, boolean hasFocus, int row, int column) {
+            int row1 = tbl.convertRowIndexToModel(row);
+            JLabel label = (JLabel) super.getTableCellRendererComponent(
+                table, value, isSelected, hasFocus, row, column);
+            if (tbl.isRowSelected(row1) && !tbl.isColumnSelected(column)) {
+                label.setBackground(highlightColor);
+            } else {
+                if (isSelected) {
+                    label.setBackground(Main.pref.getUIColor("Table.selectionBackground"));
+                } else {
+                    label.setBackground(Main.pref.getUIColor("Table.background"));
+                }
+            }
+            return label;
+        }
+    }
 }

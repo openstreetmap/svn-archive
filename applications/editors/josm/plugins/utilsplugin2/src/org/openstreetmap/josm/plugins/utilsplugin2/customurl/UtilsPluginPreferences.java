@@ -13,10 +13,12 @@ import javax.swing.event.TableModelEvent;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import java.awt.event.ActionListener;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
 import org.openstreetmap.josm.tools.GBC;
@@ -29,16 +31,16 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
     JButton resetButton;
     JButton loadButton;
     JButton saveButton;
+    JCheckBox dblClick = new JCheckBox(tr("Double click selects object by its internal point"));
+    public static final String PREF_DOUBLECLICK = "utilsplugin2.doubleclick";
 
     public UtilsPluginPreferences() {
-        super("utils", tr("Utilsplugin2 settings [TESTING]"), tr("Here you can change some preferences of Utilsplugin2 functions"));
+        super("utils", tr("Utilsplugin2 settings"), tr("Here you can change some preferences of Utilsplugin2 functions"));
     }
 
     @Override
     public void addGui(PreferenceTabbedPane gui) {
         JPanel all = new JPanel(new GridBagLayout());
-
-        // FIXME: get rid of hardcoded URLS
 
         URLList.getSelectedURL();
         table=new JTable(new DefaultTableModel(null,new String[]{"Title","URL"}));
@@ -78,6 +80,9 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
                 + " <b>&#123;#lat&#125; , &#123;#lon&#125;</b> is replaced with map center latitude/longitude <br/>"
                 + " Your can manually load settings from file <b>customurl.txt</b> in JOSM folder"));
 
+        dblClick.setSelected(Main.pref.getBoolean(PREF_DOUBLECLICK, true));
+        all.add(dblClick, GBC.std().insets(5,10,0,0));
+        
         all.add(new JLabel(tr("Custom URL configuration")),GBC.std().insets(5,10,0,0));
         all.add(resetButton,GBC.std().insets(25,10,0,0));
         all.add(loadButton,GBC.std().insets(25,10,0,0));
@@ -128,7 +133,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
         combo1.getText();
         List<String> lst = readItemsFromTable();
         URLList.updateURLList(lst);
-
+        Main.pref.put(PREF_DOUBLECLICK, dblClick.isSelected());
         return false;
     }
 

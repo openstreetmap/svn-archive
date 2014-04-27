@@ -175,61 +175,61 @@ public final class NodeWayUtils {
     public static int addNodesConnectedToWays(Set<Way> initWays, Set<Node> newNodes) {
         int s = newNodes.size();
         for (Way w: initWays) {
-                newNodes.addAll(w.getNodes());
+            newNodes.addAll(w.getNodes());
         }
         return newNodes.size()-s;
     }
 
     public static void addWaysIntersectingWaysRecursively
-            (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
-            Set<Way> foundWays = new HashSet<Way>();
-            foundWays.addAll(initWays);
-            newWays.addAll(initWays);
-            Set<Way> newFoundWays;
+        (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
+        Set<Way> foundWays = new HashSet<Way>();
+        foundWays.addAll(initWays);
+        newWays.addAll(initWays);
+        Set<Way> newFoundWays;
 
-            int level=0,c;
-            do {
-                 c=0;
-                 newFoundWays = new HashSet<Way>();
-                 for (Way w : foundWays){
-                      c+=addWaysIntersectingWay(allWays, w, newFoundWays,newWays);
-                 }
-                 foundWays = newFoundWays;
-                 newWays.addAll(newFoundWays);
-                 level++;
+        int level=0,c;
+        do {
+             c=0;
+             newFoundWays = new HashSet<Way>();
+             for (Way w : foundWays){
+                  c+=addWaysIntersectingWay(allWays, w, newFoundWays,newWays);
+             }
+             foundWays = newFoundWays;
+             newWays.addAll(newFoundWays);
+             level++;
 //                 System.out.printf("%d: %d ways added to selection intersectiong\n",level,c);
-                 if (c>maxWays1) {
-                        new Notification(
-                            tr("Too many ways are added: {0}!",c)
-                            ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
-                       return;
-                 }
-            } while ( c >0 && level < maxLevel );
+             if (c>maxWays1) {
+                    new Notification(
+                        tr("Too many ways are added: {0}!",c)
+                        ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
+                   return;
+             }
+        } while ( c >0 && level < maxLevel );
     }
 
     public static void addWaysConnectedToWaysRecursively
             (Collection<Way> initWays, Set<Way> newWays)
     {
-            //long t = System.currentTimeMillis();
-            int level=0,c;
-            newWays.addAll(initWays);
-            do {
-                 c=0;
-                 Set<Way> foundWays = new HashSet<Way>();
-                 foundWays.addAll(newWays);
-                 for (Way w : foundWays){
-                      c+=addWaysConnectedToWay(w, newWays);
-                 }
-                 level++;
+        //long t = System.currentTimeMillis();
+        int level=0,c;
+        newWays.addAll(initWays);
+        do {
+             c=0;
+             Set<Way> foundWays = new HashSet<Way>();
+             foundWays.addAll(newWays);
+             for (Way w : foundWays){
+                  c+=addWaysConnectedToWay(w, newWays);
+             }
+             level++;
 //                 System.out.printf("%d: %d ways added to selection\n",level,c);
-                 if (c>maxWays) {
-                        new Notification(
-                            tr("Too many ways are added: {0}!",c)
-                            ).setIcon(JOptionPane.WARNING_MESSAGE).show();                       
-                       return;
-                 }
-            } while ( c >0 && level < maxLevel );
-           // System.out.println("time = "+(System.currentTimeMillis()-t)+" ways = "+newWays.size());
+             if (c>maxWays) {
+                new Notification(
+                    tr("Too many ways are added: {0}!",c)
+                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();                       
+               return;
+             }
+        } while ( c >0 && level < maxLevel );
+       // System.out.println("time = "+(System.currentTimeMillis()-t)+" ways = "+newWays.size());
     }
 
     static void addMiddle(Set<Node> selectedNodes, Set<Node> newNodes) {
@@ -343,21 +343,18 @@ public final class NodeWayUtils {
             } 
         }
     }
-
+    
+    static boolean isPointInsideMultipolygon(EastNorth p, Relation rel) {
+        Set<Way> usedWays = OsmPrimitive.getFilteredSet(rel.getMemberPrimitives(), Way.class);
+        return isPointInsidePolygon(p, buildPointList(usedWays));
+    }
+            
     static void addAllInsideMultipolygon(DataSet data, Relation rel, Set<Way> newWays, Set<Node> newNodes) {
         if (!rel.isMultipolygon()) return;
         BBox box = rel.getBBox();
-        Set<Way> usedWays = OsmPrimitive.getFilteredSet(rel.getMemberPrimitives(), Way.class);
-        List<EastNorth> polyPoints = new ArrayList<EastNorth>(10000);
-        
-        for (Way way: usedWays) {
-            List<Node> polyNodes = way.getNodes();
-            // converts all points to EastNorth
-            for (Node n: polyNodes) polyPoints.add(n.getEastNorth());
-            polyPoints.add(null); // next segment indicator
-        }
-        
-        
+        Collection<Way> usedWays = rel.getMemberPrimitives(Way.class);
+        List<EastNorth> polyPoints = buildPointList(usedWays);
+       
         List<Node> searchNodes = data.searchNodes(box);
         Set<Node> newestNodes = new HashSet<Node>();
         Set<Way> newestWays = new HashSet<Way>();
@@ -386,11 +383,7 @@ public final class NodeWayUtils {
     static void addAllInsideWay(DataSet data, Way way, Set<Way> newWays, Set<Node> newNodes) {
         if (!way.isClosed()) return;
         BBox box = way.getBBox();
-        List<Node> polyNodes = way.getNodes();
-        List<EastNorth> polyPoints = new ArrayList<EastNorth>(polyNodes.size()+5);
-        
-        // converts all points to EastNorth
-        for (Node n: polyNodes) polyPoints.add(n.getEastNorth());  
+        Iterable<EastNorth> polyPoints = getWayPoints(way);
         
         List<Node> searchNodes = data.searchNodes(box);
         Set<Node> newestNodes = new HashSet<Node>();
@@ -413,16 +406,18 @@ public final class NodeWayUtils {
         newWays.addAll(newestWays);
     }
     
-    public static boolean isPointInsidePolygon(EastNorth point, List<EastNorth> polygonPoints) {
+    public static boolean isPointInsidePolygon(EastNorth point, Iterable<EastNorth> polygonPoints) {
         int n = getRayIntersectionsCount(point, polygonPoints);
         if (n<0) return true; // we are near node or near edge
         return (n%2==1);
     }
-    
+
     /**
+     * @param point - point to start an OX-parallel  ray
+     * @param polygonPoints - poits forming bundary, use null to split unconnected segmants
      * @return 0 =  not inside polygon, 1 = strictly inside, 2 = near edge, 3 = near vertex
      */
-    public static int getRayIntersectionsCount(EastNorth point, List<EastNorth> polygonPoints) {
+    public static int getRayIntersectionsCount(EastNorth point, Iterable<EastNorth> polygonPoints) {
         if (point==null) return 0;
         EastNorth oldPoint = null;
         double n1,n2,n3,e1,e2,e3,d;
@@ -511,6 +506,30 @@ public final class NodeWayUtils {
         return insideSelection;
     }
 
-
-
+    private static List<EastNorth> buildPointList(Iterable<Way> ways) {
+        ArrayList<EastNorth> points = new ArrayList<EastNorth>(1000);
+        for (Way way: ways) {
+            for (EastNorth en: getWayPoints(way)) points.add(en);
+            points.add(null); // next segment indicator
+        }
+        return points;
+    }
+    
+    public static Iterable<EastNorth> getWayPoints(final Way w) {
+        return new Iterable<EastNorth>() {
+            @Override
+            public Iterator<EastNorth> iterator() {
+                return new Iterator<EastNorth>() {
+                    int idx = 0;
+                    @Override public boolean hasNext() {
+                        return idx < w.getNodesCount();
+                    }
+                    @Override public EastNorth next() {
+                        return w.getNode(idx++).getEastNorth();
+                    }
+                };
+            }
+        };
+    }
+    
 }

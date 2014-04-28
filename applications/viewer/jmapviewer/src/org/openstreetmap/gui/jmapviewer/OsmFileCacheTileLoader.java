@@ -99,7 +99,7 @@ public class OsmFileCacheTileLoader extends OsmTileLoader implements CachedTileL
 
         log.finest("Tile cache directory: " + cacheDir);
         cacheDirBase = cacheDir.getAbsolutePath();
-        sourceCacheDirMap = new HashMap<TileSource, File>();
+        sourceCacheDirMap = new HashMap<>();
     }
 
     /**

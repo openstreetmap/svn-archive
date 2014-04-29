@@ -205,23 +205,6 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
         if (Main.map == null || Main.map.mapView == null) return false;
         return ! Main.map.mapView.getLayersOfType(GeoImageLayer.class).isEmpty();
     }
-    
-    /**
-     * Determine if there are photos that can be adjusted.  I.e. there
-     * is at least one GeoImageLayer that is visible (and contains
-     * photos).
-     *
-     * @return {@code true} if there are photos that can be ajusted
-     */
-    private boolean hasPhotosToAdjust() {
-        if (Main.map == null || Main.map.mapView == null) return false;
-        for (GeoImageLayer layer: new ArrayList<GeoImageLayer>(Main.map.mapView.getLayersOfType(GeoImageLayer.class))) {
-            if (layer.isVisible()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * Prepare list of visible GeoImageLayer's whose photos can be adjusted.

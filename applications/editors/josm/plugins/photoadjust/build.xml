@@ -39,7 +39,7 @@
                 linksource="true">
             <link href="../../../core/javadoc"/>
             <link href="http://josm.openstreetmap.de/doc/"/>
-            <link href="http://docs.oracle.com/javase/6/docs/api"/>
+            <link href="http://docs.oracle.com/javase/7/docs/api"/>
         </javadoc>
     </target>
 

@@ -26,9 +26,8 @@ public class UntaggedGeoImageLayerAction
 
     /** Define menu entry (text and image). */
     public UntaggedGeoImageLayerAction() {
-        super(tr("New layer for untagged images"),
-              ImageProvider.get("untaglayer"));
-    };
+        super(tr("New layer for untagged images"), ImageProvider.get("untaglayer"));
+    }
 
     /** Get the layer this menu entry belongs to. */
     private GeoImageLayer getSelectedLayer() {

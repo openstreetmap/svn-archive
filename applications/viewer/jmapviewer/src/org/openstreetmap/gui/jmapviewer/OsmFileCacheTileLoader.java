@@ -413,7 +413,6 @@ public class OsmFileCacheTileLoader extends OsmTileLoader implements CachedTileL
             try (FileInputStream f = new FileInputStream(etagFile)) {
                 byte[] buf = new byte[f.available()];
                 f.read(buf);
-                f.close();
                 String etag = new String(buf, TAGS_CHARSET.name());
                 tile.putValue("etag", etag);
                 if (etagFile.delete()) {

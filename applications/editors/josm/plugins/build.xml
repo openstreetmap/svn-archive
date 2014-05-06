@@ -188,7 +188,6 @@
         <ant antfile="build.xml" target="clean" dir="sds"/>
         <ant antfile="build.xml" target="clean" dir="simplifyarea"/>
         <ant antfile="build.xml" target="clean" dir="smed"/>
-        <ant antfile="build.xml" target="clean" dir="smed2"/>
         <ant antfile="build.xml" target="clean" dir="surveyor"/>
         <ant antfile="build.xml" target="clean" dir="surveyor2"/>
         <ant antfile="build.xml" target="clean" dir="tag2link"/>

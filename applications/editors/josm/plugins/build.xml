@@ -87,7 +87,6 @@
         <ant antfile="build.xml" target="dist" dir="sds"/>
         <ant antfile="build.xml" target="dist" dir="simplifyarea"/>
         <ant antfile="build.xml" target="dist" dir="smed"/>
-        <ant antfile="build.xml" target="dist" dir="smed2"/>
         <ant antfile="build.xml" target="dist" dir="surveyor"/>
         <ant antfile="build.xml" target="dist" dir="surveyor2"/>
         <ant antfile="build.xml" target="dist" dir="tag2link"/>

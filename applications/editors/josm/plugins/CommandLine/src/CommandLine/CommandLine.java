@@ -548,15 +548,17 @@ public class CommandLine extends Plugin {
                 }
 
                 if (tracks) {
-                    final GpxWriter gpxWriter = new GpxWriter(printWriter);
-                    GpxFilter gpxFilter = new GpxFilter();
-                    gpxFilter.initBboxFilter(bbox);
-                    List<GpxLayer> gpxLayers = Main.map.mapView.getLayersOfType(GpxLayer.class);
-                    for (GpxLayer gpxLayer : gpxLayers) {
-                        gpxFilter.addGpxData(gpxLayer.data);
+                    try (GpxWriter gpxWriter = new GpxWriter(printWriter)) {
+                        GpxFilter gpxFilter = new GpxFilter();
+                        gpxFilter.initBboxFilter(bbox);
+                        List<GpxLayer> gpxLayers = Main.map.mapView.getLayersOfType(GpxLayer.class);
+                        for (GpxLayer gpxLayer : gpxLayers) {
+                            gpxFilter.addGpxData(gpxLayer.data);
+                        }
+                        gpxWriter.write(gpxFilter.getGpxData());
+                    } catch (IOException e) {
+                        Main.warn(e);
                     }
-                    gpxWriter.write(gpxFilter.getGpxData());
-                    Utils.close(gpxWriter);
                 }
                 Utils.close(osmWriter);
                 synchronized (syncObj) {

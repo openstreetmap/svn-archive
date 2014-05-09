@@ -173,9 +173,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     }
 
     protected void processLocalModuleInformationFile(File file) throws ModuleListParseException{
-        FileInputStream fin = null;
-        try {
-            fin = new FileInputStream(file);
+        try (FileInputStream fin = new FileInputStream(file)) {
             List<ModuleInformation> pis = new ModuleListParser().parse(fin);
             for (ModuleInformation pi : pis) {
                 // we always keep module information from a module site because it
@@ -186,8 +184,6 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
             }
         } catch(IOException e) {
             throw new ModuleListParseException(e);
-        } finally {
-            Utils.close(fin);
         }
     }
 

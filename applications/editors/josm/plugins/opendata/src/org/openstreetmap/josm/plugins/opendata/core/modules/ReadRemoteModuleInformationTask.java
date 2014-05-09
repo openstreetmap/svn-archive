@@ -32,7 +32,6 @@ import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
 
 /**
@@ -141,7 +140,6 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
      * @return the downloaded list
      */
     protected String downloadModuleList(String site, ProgressMonitor monitor) {
-        BufferedReader in = null;
         StringBuilder sb = new StringBuilder();
         try {
             // replace %<x> with empty string */
@@ -158,12 +156,13 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
                 connection.setRequestProperty("Host", url.getHost());
                 connection.setRequestProperty("Accept-Charset", "utf-8");
             }
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-            String line;
-            while((line = in.readLine()) != null) {
-                sb.append(line).append("\n");
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
+                String line;
+                while((line = in.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                return sb.toString();
             }
-            return sb.toString();
         } catch(MalformedURLException e) {
             if (canceled) return null;
             e.printStackTrace();
@@ -179,7 +178,6 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
                 }
                 connection = null;
             }
-            Utils.close(in);
             monitor.finishTask();
         }
     }
@@ -191,8 +189,6 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
      * @param monitor a progress monitor
      */
     protected void downloadModuleIcons(String site, File destFile, ProgressMonitor monitor) {
-        InputStream in = null;
-        OutputStream out = null;
         try {
             site = site.replaceAll("%<(.*)>", "");
 
@@ -206,14 +202,15 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
                 connection.setRequestProperty("User-Agent",Version.getInstance().getAgentString());
                 connection.setRequestProperty("Host", url.getHost());
             }
-            in = connection.getInputStream();
-            out = new FileOutputStream(destFile);
-            byte[] buffer = new byte[8192];
-            for (int read = in.read(buffer); read != -1; read = in.read(buffer)) {
-                out.write(buffer, 0, read);
+            try (
+                InputStream in = connection.getInputStream();
+                OutputStream out = new FileOutputStream(destFile)
+            ) {
+                byte[] buffer = new byte[8192];
+                for (int read = in.read(buffer); read != -1; read = in.read(buffer)) {
+                    out.write(buffer, 0, read);
+                }
             }
-            out.close();
-            in.close();
         } catch(MalformedURLException e) {
             if (canceled) return;
             e.printStackTrace();
@@ -229,7 +226,6 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
                 }
                 connection = null;
             }
-            Utils.close(in);
             monitor.finishTask();
         }
         for (ModuleInformation pi : availableModules) {

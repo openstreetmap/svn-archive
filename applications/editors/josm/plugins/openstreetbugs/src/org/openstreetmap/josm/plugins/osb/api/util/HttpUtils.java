@@ -41,11 +41,11 @@ public class HttpUtils {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int length = -1;
         byte[] b = new byte[1024];
-        InputStream in = Utils.openURL(new URL(url));
-        while( (length = in.read(b)) > 0 ) {
-            bos.write(b, 0, length);
+        try (InputStream in = Utils.openURL(new URL(url))) {
+            while( (length = in.read(b)) > 0 ) {
+                bos.write(b, 0, length);
+            }
         }
-        Utils.close(in);
 
         return new String(bos.toByteArray(), charset);
     }
@@ -65,20 +65,20 @@ public class HttpUtils {
         con.setDoOutput(true);
 
         //send the post
-        OutputStream os = con.getOutputStream();
-        os.write(content.getBytes("UTF-8"));
-        os.flush();
+        try (OutputStream os = con.getOutputStream()) {
+            os.write(content.getBytes("UTF-8"));
+            os.flush();
+        }
 
         // read the response
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int length = -1;
         byte[] b = new byte[1024];
-        InputStream in = con.getInputStream();
-        while( (length = in.read(b)) > 0 ) {
-            bos.write(b, 0, length);
+        try (InputStream in = con.getInputStream()) {
+            while( (length = in.read(b)) > 0 ) {
+                bos.write(b, 0, length);
+            }
         }
-        Utils.close(in);
-        Utils.close(os);
 
         return new String(bos.toByteArray(), responseCharset);
     }

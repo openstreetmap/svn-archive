@@ -55,7 +55,6 @@ import org.openstreetmap.josm.plugins.piclayer.actions.LoadPictureCalibrationFro
 import org.openstreetmap.josm.plugins.piclayer.actions.ResetCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
 import org.openstreetmap.josm.plugins.piclayer.transform.PictureTransform;
-import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Base class for layers showing images. Actually it does all the showing. The
@@ -456,10 +455,11 @@ public abstract class PicLayerAbstract extends Layer {
     }
 
     public void loadWorldfile(InputStream is) throws IOException {
-        BufferedReader br = null;
-        try {
+        
+        try (
             Reader reader = new InputStreamReader(is);
-            br = new BufferedReader(reader);
+            BufferedReader br = new BufferedReader(reader)
+        ) {
             double e[] = new double[6];
             for (int i=0; i<6; ++i) {
                 String line = br.readLine();
@@ -487,8 +487,6 @@ public abstract class PicLayerAbstract extends Layer {
 
             initialImageScale = 1;
             Main.map.mapView.repaint();
-        } finally {
-            Utils.close(br);
         }
     }
 

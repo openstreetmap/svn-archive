@@ -69,8 +69,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
             if (in == null)
                 return null;
             monitor.indeterminateSubTask(tr("Downloading changesets ..."));
-            List<Changeset> changesets = OsmChangesetParser.parse(in, monitor.createSubTaskMonitor(1, true));
-            return changesets;
+            return OsmChangesetParser.parse(in, monitor.createSubTaskMonitor(1, true));
         } catch(OsmTransferException e) {
             throw e;
         } catch(IllegalDataException e) {

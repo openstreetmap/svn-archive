@@ -25,7 +25,6 @@ import javax.swing.JTabbedPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.MirroredInputStream;
-import org.openstreetmap.josm.tools.Utils;
 
 public class UrlSelectionDialog
 {
@@ -105,10 +104,10 @@ public class UrlSelectionDialog
     // List can be edited at https://josm.openstreetmap.de/wiki/MirroredDownloadInfo
     String src = Main.pref.get("plugin.mirrored_download.url-src", "https://josm.openstreetmap.de/mirrored_download_info");
     Collection<String> urls = new ArrayList<String>();
-    InputStream in = null;
-    try {
-      in = new MirroredInputStream(src, 24*60*60);
-      BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    try (
+      InputStream in = new MirroredInputStream(src, 24*60*60);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(in))
+    ) {
       String line = null;
       while ((line = reader.readLine()) != null) {
         line = line.trim();
@@ -116,11 +115,8 @@ public class UrlSelectionDialog
           urls.add(line);
         }
       }
-      Utils.close(reader);
     } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      Utils.close(in);
+      Main.error(e);
     }
     for (String url : Main.pref.getCollection("plugin.mirrored_download.custom-urls")) {
       urls.add(url);
@@ -135,7 +131,6 @@ public class UrlSelectionDialog
       Main.pref.put("plugin.mirrored_download.preferred-url",
           cbSelectUrl.getSelectedItem().toString());
     }
-
   }
 
   public class MetaFlagChangedAction implements ActionListener {

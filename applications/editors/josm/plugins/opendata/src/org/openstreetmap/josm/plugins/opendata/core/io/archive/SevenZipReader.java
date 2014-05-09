@@ -34,26 +34,20 @@ public class SevenZipReader extends ArchiveReader {
     
     public SevenZipReader(InputStream in, AbstractDataSetHandler handler, boolean promptUser) throws IOException {
         super(handler, handler != null ? handler.getArchiveHandler() : null, promptUser);
-        OutputStream out = null;
-        try {
-            // Write entire 7z file as a temp file on disk as we need random access later, and "in" can be a network stream
-            File tmpFile = File.createTempFile("7z_", ".7z", OdUtils.createTempDir());
-            out = new FileOutputStream(tmpFile);
+        // Write entire 7z file as a temp file on disk as we need random access later, and "in" can be a network stream
+        File tmpFile = File.createTempFile("7z_", ".7z", OdUtils.createTempDir());
+        try (OutputStream out = new FileOutputStream(tmpFile)) {
             Utils.copyStream(in, out);
-            Utils.close(out);
-            out = null;
-            IInStream random = new MyRandomAccessFile(tmpFile.getPath(), "r");
-            if (archive.Open(random) != 0) {
-                String message = "Unable to open 7z archive: "+tmpFile.getPath();
-                Main.warn(message);
-                random.close();
-                if (!tmpFile.delete()) {
-                    tmpFile.deleteOnExit();
-                }
-                throw new IOException(message);
+        }
+        IInStream random = new MyRandomAccessFile(tmpFile.getPath(), "r");
+        if (archive.Open(random) != 0) {
+            String message = "Unable to open 7z archive: "+tmpFile.getPath();
+            Main.warn(message);
+            random.close();
+            if (!tmpFile.delete()) {
+                tmpFile.deleteOnExit();
             }
-        } finally {
-            Utils.close(out);
+            throw new IOException(message);
         }
     }
     

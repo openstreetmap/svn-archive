@@ -22,8 +22,6 @@ package org.openstreetmap.josm.plugins.piclayer.layer;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import org.openstreetmap.josm.Main;
-
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +35,7 @@ import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.Main;
 /**
  * Layer displaying a picture loaded from a file.
  */
@@ -95,13 +93,8 @@ public class PicLayerFromFile extends PicLayerAbstract {
                 }
                 if (imgEntry != null) {
                     imgNameInZip = imgEntry.getName();
-                    InputStream is = null;
-                    try {
-                        is = zipFile.getInputStream(imgEntry);
-                        image = ImageIO.read(is);
-                        return image;
-                    } finally {
-                        Utils.close(is);
+                    try (InputStream is = zipFile.getInputStream(imgEntry)) {
+                        return ImageIO.read(is);
                     }
                 }
                 System.err.println("Warning: no image in zip file found");

@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import org.xml.sax.SAXException;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences.pref;
@@ -148,7 +148,7 @@ public class RoadSignsPlugin extends Plugin {
             // first check, if custom file preference has changed. If yes,
             // change the current preset selection to custom directly
             String lastCustomFile = Main.pref.get("plugin.roadsigns.sources.last", null);
-            if (!Utils.equal(customFile, lastCustomFile)) {
+            if (!Objects.equals(customFile, lastCustomFile)) {
                 Main.pref.put("plugin.roadsigns.sources.last", customFile);
                 Main.pref.put("plugin.roadsigns.preset.selection", "custom");
             }

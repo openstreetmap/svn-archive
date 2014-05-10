@@ -9,8 +9,8 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.preferences.map.TaggingPresetPreference;
 import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingPresets;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
@@ -23,11 +23,7 @@ public class TaggingPresetAction implements SurveyorAction {
     private String presetName;
     private TaggingPreset preset;
 
-
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
-     */
-    //@Override
+    @Override
     public void actionPerformed(GpsActionEvent event) {
         if(preset == null) {
             return;
@@ -48,18 +44,14 @@ public class TaggingPresetAction implements SurveyorAction {
 
     }
 
-
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
-     */
-    //@Override
+    @Override
     public void setParameters(List<String> parameters) {
         if(parameters.size() == 0) {
             throw new IllegalArgumentException("No annotation preset name given!");
         }
         presetName = parameters.get(0);
         preset = getAnnotationPreset(presetName);
-        if(preset == null) {
+        if (preset == null) {
             System.err.println("No valid preset '" + parameters.get(0) + "' found - disable action!");
             return;
         }
@@ -71,13 +63,11 @@ public class TaggingPresetAction implements SurveyorAction {
      * @return  the preset with the given name.
      */
     protected TaggingPreset getAnnotationPreset(String name) {
-        for(TaggingPreset preset : TaggingPresetPreference.taggingPresets) {
-            if(name.equals(preset.getValue(Action.NAME))) {
+        for (TaggingPreset preset : TaggingPresets.getTaggingPresets()) {
+            if (name.equals(preset.getValue(Action.NAME))) {
                 return preset;
             }
         }
         return null;
     }
-
-
 }

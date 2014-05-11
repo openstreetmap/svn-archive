@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.npm;
 
 import java.awt.Component;
 import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.tools.Utils.equal;
 
 import java.net.Authenticator.RequestorType;
 import java.net.PasswordAuthentication;
@@ -17,7 +16,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.oauth.OAuthToken;
-import org.openstreetmap.josm.gui.preferences.server.OsmApiUrlInputPanel;
 import org.openstreetmap.josm.gui.preferences.server.ProxyPreferencesPanel;
 import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.io.OsmApi;
@@ -195,7 +193,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
             secret = oat.getSecret();
         }
         String prolog = getOAuthDescriptor();
-        if (key == null || equal(key, "") || secret == null || equal(secret, "")) {
+        if (key == null || key.isEmpty() || secret == null || secret.isEmpty()) {
             getProvider().delete(prolog+".key");
             getProvider().delete(prolog+".secret");
             oauthCache = null;

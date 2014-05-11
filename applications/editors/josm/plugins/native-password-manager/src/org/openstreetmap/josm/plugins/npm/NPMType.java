@@ -1,12 +1,14 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.npm;
 
+import java.util.Objects;
+
 import org.netbeans.modules.keyring.gnome.GnomeProvider;
 import org.netbeans.modules.keyring.kde.KWalletProvider;
 import org.netbeans.modules.keyring.mac.MacProvider;
 import org.netbeans.spi.keyring.KeyringProvider;
+
 import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.tools.Utils.equal;
 
 public enum NPMType {
     PLAIN(
@@ -62,7 +64,7 @@ public enum NPMType {
 
     public static NPMType fromPrefString(String pref) {
         for (NPMType t : NPMType.values()) {
-            if (equal(pref, t.prefString)) {
+            if (Objects.equals(pref, t.prefString)) {
                 return t;
             }
         }

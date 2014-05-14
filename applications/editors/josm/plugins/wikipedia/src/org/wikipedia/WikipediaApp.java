@@ -42,7 +42,7 @@ public final class WikipediaApp {
         try {
             final String bbox = min.lon() + "," + min.lat() + "," + max.lon() + "," + max.lat();
             // construct url
-            final String url = "http://toolserver.org/~kolossos/geoworld/marks.php?"
+            final String url = "https://tools.wmflabs.org/wp-world/marks.php?"
                     + "bbox=" + bbox + "&LANG=" + wikipediaLang;
             System.out.println("Wikipedia: GET " + url);
             // parse XML document
@@ -72,7 +72,7 @@ public final class WikipediaApp {
 
     static List<WikipediaEntry> getEntriesFromCategory(String wikipediaLang, String category, int depth) {
         try {
-            final String url = "http://tools.wmflabs.org/cats-php/"
+            final String url = "https://tools.wmflabs.org/cats-php/"
                     + "?lang=" + wikipediaLang
                     + "&depth=" + depth
                     + "&cat=" + encodeURL(category);
@@ -107,7 +107,7 @@ public final class WikipediaApp {
         }
         Map<String, Boolean> status = new HashMap<String, Boolean>();
         if (!articleNames.isEmpty()) {
-            final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
+            final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
                     + "&lang=" + wikipediaLang;
             System.out.println("Wikipedia: POST " + url + " " + articleNames);
 
@@ -162,7 +162,7 @@ public final class WikipediaApp {
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
         try {
             Collection<WikipediaLangArticle> r = new ArrayList<WikipediaLangArticle>();
-            final String url = "http://" + wikipediaLang + ".wikipedia.org/w/api.php" +
+            final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php" +
                     "?action=query" +
                     "&prop=langlinks" +
                     "&titles=" + URLEncoder.encode(article, "UTF-8") +
@@ -293,7 +293,7 @@ public final class WikipediaApp {
 
         private void updateWiwosmStatus() {
             try {
-                final String url = "http://toolserver.org/~master/osmjson/getGeoJSON.php?action=check"
+                final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
                         + "&lang=" + wikipediaLang
                         + "&article=" + encodeURL(wikipediaArticle);
                 System.out.println("Wikipedia: GET " + url);
@@ -313,7 +313,7 @@ public final class WikipediaApp {
         }
 
         public String getBrowserUrl() {
-            return "http://" + wikipediaLang + ".wikipedia.org/wiki/"
+            return "https://" + wikipediaLang + ".wikipedia.org/wiki/"
                     + encodeURL(wikipediaArticle.replace(" ", "_"));
         }
 

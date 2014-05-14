@@ -111,7 +111,7 @@ public class WikipediaAppTest {
     @Test
     public void testGetBrowserUrl() {
         final WikipediaEntry entry = new WikipediaEntry("Sternheim & Emanuel", "de", "Sternheim & Emanuel");
-        assertThat(entry.getBrowserUrl(), is("http://de.wikipedia.org/wiki/Sternheim_%26_Emanuel"));
+        assertThat(entry.getBrowserUrl(), is("https://de.wikipedia.org/wiki/Sternheim_%26_Emanuel"));
     }
 
     @Test

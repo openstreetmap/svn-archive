@@ -25,7 +25,6 @@ public class AdvancedEditorPanel extends JPanel {
 
     private TurnRestrictionEditorModel model;
     private TagEditorPanel pnlTagEditor;
-    private JPanel pnlRelationMemberEditor;
     private JTable tblRelationMemberEditor;
     private JSplitPane spEditors;
 

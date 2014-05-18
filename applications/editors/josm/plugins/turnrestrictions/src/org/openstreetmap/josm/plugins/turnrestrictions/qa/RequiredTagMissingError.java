@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 
@@ -14,7 +13,7 @@ import org.openstreetmap.josm.gui.tagging.TagModel;
  * Issue if a required tag is missing in the current turn restriction.
  */
 public class RequiredTagMissingError extends Issue {
-    static private final Logger logger = Logger.getLogger(RequiredTagMissingError.class.getName());
+    //static private final Logger logger = Logger.getLogger(RequiredTagMissingError.class.getName());
     private String tagKey;
     private String tagValue;
     

@@ -28,6 +28,7 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
@@ -44,7 +45,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * {@link ViaListModel}.</p> 
  * 
  */
-public class ViaList extends JList{
+public class ViaList extends JList<OsmPrimitive> {
     
     //static private final Logger logger = Logger.getLogger(ViaList.class.getName());
 

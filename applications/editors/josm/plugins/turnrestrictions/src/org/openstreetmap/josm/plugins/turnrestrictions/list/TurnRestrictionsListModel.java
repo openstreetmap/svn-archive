@@ -20,7 +20,7 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
  * This is a list model for a list of turn restrictions.
  * 
  */
-public class TurnRestrictionsListModel extends AbstractListModel {
+public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
     private final ArrayList<Relation> turnrestrictions = new ArrayList<Relation>();
     private DefaultListSelectionModel selectionModel;
 
@@ -156,7 +156,7 @@ public class TurnRestrictionsListModel extends AbstractListModel {
         }
     }
 
-    public Object getElementAt(int index) {
+    public Relation getElementAt(int index) {
         return turnrestrictions.get(index);
     }
 

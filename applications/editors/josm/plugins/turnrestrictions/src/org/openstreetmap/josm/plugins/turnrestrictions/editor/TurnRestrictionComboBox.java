@@ -7,7 +7,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKey
 /**
  * A combo box for selecting a turn restriction type.
  */
-public class TurnRestrictionComboBox extends JComboBox{
+public class TurnRestrictionComboBox extends JComboBox<Object> {
     
     /**
      * Constructor 

@@ -29,7 +29,6 @@ public class IssueView extends JPanel{
     private JPanel pnlActions;
     private Issue issue;
     private JLabel lblIcon;
-    private StyleSheet styleSheet;
     
      /**
      * Builds the style sheet used in the internal help browser

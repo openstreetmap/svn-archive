@@ -18,7 +18,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * non-standard tag values in the OSM data. 
  *
  */
-public class TurnRestrictionComboBoxModel implements ComboBoxModel, Observer{
+public class TurnRestrictionComboBoxModel implements ComboBoxModel<Object>, Observer{
     //static private final Logger logger = Logger.getLogger(TurnRestrictionComboBoxModel.class.getName());
     
     private TurnRestrictionEditorModel model;

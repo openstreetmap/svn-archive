@@ -33,7 +33,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * objects in the current edit layer.
  * 
  */
-public class JosmSelectionListModel extends AbstractListModel implements EditLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
+public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> implements EditLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
     //static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
     
     private final List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
@@ -53,7 +53,7 @@ public class JosmSelectionListModel extends AbstractListModel implements EditLay
         setJOSMSelection(layer.data.getSelected());
     }
 
-    public Object getElementAt(int index) {
+    public OsmPrimitive getElementAt(int index) {
         return selection.get(index);
     }
 

@@ -21,7 +21,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * ViaListModel is a model for the list of 'via' objects of a turn restriction.
  * 
  */
-public class ViaListModel extends AbstractListModel implements PrimitiveIdListProvider, Observer{
+public class ViaListModel extends AbstractListModel<OsmPrimitive> implements PrimitiveIdListProvider, Observer{
     //static private final Logger logger = Logger.getLogger(ViaListModel.class.getName());
     
     private DefaultListSelectionModel selectionModel;
@@ -101,7 +101,7 @@ public class ViaListModel extends AbstractListModel implements PrimitiveIdListPr
         return ret;
     }
     
-    protected List<Integer>  moveDown(List<Integer> rows, int targetRow) {
+    protected List<Integer> moveDown(List<Integer> rows, int targetRow) {
         List<Integer> ret = new ArrayList<Integer>(rows.size());
         int delta = targetRow - rows.get(0);
         for(int i = rows.size()-1; i >=0; i--) {
@@ -217,7 +217,7 @@ public class ViaListModel extends AbstractListModel implements PrimitiveIdListPr
         setSelectedVias(sel);
     }
 
-    public Object getElementAt(int index) {
+    public OsmPrimitive getElementAt(int index) {
         return vias.get(index);
     }
 

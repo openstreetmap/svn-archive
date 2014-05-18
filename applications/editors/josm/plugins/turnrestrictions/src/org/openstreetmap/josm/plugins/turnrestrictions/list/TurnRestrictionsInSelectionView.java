@@ -26,7 +26,7 @@ public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsLis
     protected void build() {
         DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
         model = new TurnRestrictionsInSelectionListModel(selectionModel);
-        lstTurnRestrictions = new JList(model);
+        lstTurnRestrictions = new JList<>(model);
         lstTurnRestrictions.setSelectionModel(selectionModel);
         lstTurnRestrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         lstTurnRestrictions.setCellRenderer(new TurnRestrictionCellRenderer());

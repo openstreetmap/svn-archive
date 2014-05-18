@@ -18,7 +18,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKey
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
-public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer{
+public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer<Object> {
  
     final private Map<TurnRestrictionType, ImageIcon> icons = new HashMap<TurnRestrictionType, ImageIcon>();
     private String iconSet = "set-a";
@@ -68,7 +68,7 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
         loadImages();
     }
     
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<? extends Object> list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
         
         renderColors(isSelected);

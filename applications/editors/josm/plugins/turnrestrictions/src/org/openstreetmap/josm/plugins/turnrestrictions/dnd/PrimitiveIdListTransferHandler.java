@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.turnrestrictions.dnd;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -20,7 +19,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * 
  */
 public class PrimitiveIdListTransferHandler extends TransferHandler {
-    static private final Logger logger = Logger.getLogger(PrimitiveIdListTransferHandler.class.getName());
+    //static private final Logger logger = Logger.getLogger(PrimitiveIdListTransferHandler.class.getName());
     private PrimitiveIdListProvider provider;
     
     /**

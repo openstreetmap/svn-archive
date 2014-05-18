@@ -398,7 +398,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
     class TurnRestrictionsPopupLauncher extends PopupMenuLauncher {
         @Override
         public void launch(MouseEvent evt) {
-            JList lst = currentListView.getList();
+            JList<Relation> lst = currentListView.getList();
             if (lst.getSelectedIndices().length == 0) {
                 int idx = lst.locationToIndex(evt.getPoint());
                 if (idx >=0) {

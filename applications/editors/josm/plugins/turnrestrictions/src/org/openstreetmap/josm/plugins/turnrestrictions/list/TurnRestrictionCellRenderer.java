@@ -38,7 +38,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * {@link JTable}s displaying turn restrictions. 
  * 
  */
-public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer, TableCellRenderer{
+public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer<Relation>, TableCellRenderer{
     //static private final Logger logger = Logger.getLogger(TurnRestrictionCellRenderer.class.getName());
     
     /** the names of restriction types */
@@ -231,7 +231,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
     /* ---------------------------------------------------------------------------------- */
     /* interface ListCellRenderer                                                         */
     /* ---------------------------------------------------------------------------------- */
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<? extends Relation> list, Relation value,
             int index, boolean isSelected, boolean cellHasFocus) {
 
         renderColor(isSelected);

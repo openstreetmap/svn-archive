@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
@@ -40,7 +41,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class JosmSelectionPanel extends JPanel {
     /**  the list view */
-    private JList lstSelection;
+    private JList<OsmPrimitive> lstSelection;
     /** the model managing the selection */
     private JosmSelectionListModel model;
     
@@ -52,7 +53,7 @@ public class JosmSelectionPanel extends JPanel {
      */
     protected void build(OsmDataLayer layer) {
         setLayout(new BorderLayout());
-        lstSelection = new JList(model);
+        lstSelection = new JList<>(model);
         lstSelection.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         lstSelection.setSelectionModel(model.getListSelectionModel());
         lstSelection.setCellRenderer(new OsmPrimitivRenderer());
@@ -135,8 +136,7 @@ public class JosmSelectionPanel extends JPanel {
 
         @Override
         public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
-            // the JOSM selection list is read-only. Don't allow to drop or paste
-            // data on it
+            // the JOSM selection list is read-only. Don't allow to drop or paste data on it
             return false;
         }
     }

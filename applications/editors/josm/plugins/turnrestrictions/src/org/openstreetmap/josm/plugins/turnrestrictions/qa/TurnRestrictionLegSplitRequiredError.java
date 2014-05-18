@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 
@@ -27,7 +26,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  *
  */
 public class TurnRestrictionLegSplitRequiredError extends Issue{
-    static private final Logger logger = Logger.getLogger(TurnRestrictionLegSplitRequiredError.class.getName());
+    //static private final Logger logger = Logger.getLogger(TurnRestrictionLegSplitRequiredError.class.getName());
     
     private TurnRestrictionLegRole role;
     private Way from;

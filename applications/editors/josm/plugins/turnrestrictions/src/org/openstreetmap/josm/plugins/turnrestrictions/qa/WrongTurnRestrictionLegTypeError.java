@@ -53,6 +53,8 @@ public class WrongTurnRestrictionLegTypeError extends Issue {
                     role.toString()
                 );              
             break;          
+        default:
+            throw new AssertionError("Unexpected type for leg: "+leg.getType());
         }
         return msg + " " + tr("A way is required instead.");
     }

@@ -1,4 +1,4 @@
-//License: GPL (v2 or above)
+//License: GPL (v2 or later)
 package org.openstreetmap.josm.plugins.photo_geotagging;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -282,12 +282,14 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             // so we cannot use createTempFile(), which would create that "existing destination file"
             // instead, let's use new File(), which doesn't actually create a file
             // for getting a unique file name, we use UUID.randomUUID()
-            fileTmp = new File(file.getParentFile(), "img" + UUID.randomUUID() + ".jpg");
+            do {
+                fileTmp = new File(file.getParentFile(), "img" + UUID.randomUUID() + ".jpg");
+            } while (fileTmp.exists());
             if (debug) {
                 System.err.println("TMP: "+fileTmp.getAbsolutePath());
             }
             if (! file.renameTo(fileTmp))
-                throw new IOException(tr("Could not rename file!"));
+                throw new IOException(tr("Could not rename file {0} to {1}!", file, fileTmp));
 
             fileFrom = fileTmp;
             fileTo = file;

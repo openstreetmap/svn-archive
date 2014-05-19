@@ -1,16 +1,11 @@
 // License: GPL v2 or later. See LICENSE file for details.
 package org.openstreetmap.josm.plugins.utilsplugin2;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
-import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -131,24 +126,7 @@ public class UtilsPlugin2 extends Plugin {
         SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
         SearchCompiler.addMatchFactory(new UtilsSimpleMatchFactory());
     }
-    
-    MouseListener mouseListener = new MouseAdapter() {
-        @Override
-        public void mouseReleased(final MouseEvent e) {
-            if (e.getButton()==MouseEvent.BUTTON1 && 
-                    e.getClickCount() > 1 && Main.isDisplayingMapView() && Main.map.mapMode == Main.map.mapModeSelect &&
-                    (0 == (e.getModifiersEx() & (MouseEvent.ALT_DOWN_MASK + MouseEvent.CTRL_DOWN_MASK + MouseEvent.SHIFT_DOWN_MASK) ))) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        EastNorth en = Main.map.mapView.getEastNorth(e.getX(), e.getY());
-                        SelectBoundaryAction.selectByInternalPoint(en);
-                    }
-                });
-            }
-        }
-    };
-    
+
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         boolean enabled = newFrame != null;
@@ -181,9 +159,6 @@ public class UtilsPlugin2 extends Plugin {
 
         drawArc.setEnabled(enabled);
         multiTag.setEnabled(enabled);
-        if (oldFrame!=null && oldFrame.mapView!=null) oldFrame.mapView.removeMouseListener(mouseListener);
-        if (newFrame!=null && newFrame.mapView!=null && Main.pref.getBoolean(UtilsPluginPreferences.PREF_DOUBLECLICK, true))
-            newFrame.mapView.addMouseListener(mouseListener);
     }
     
     @Override

@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -288,9 +291,12 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
             if (debug) {
                 System.err.println("TMP: "+fileTmp.getAbsolutePath());
             }
-            if (! file.renameTo(fileTmp))
-                throw new IOException(tr("Could not rename file {0} to {1}!", file, fileTmp));
-
+            try {
+                Files.move(file.toPath(), fileTmp.toPath());
+            } catch (IOException e) {
+                Main.error(tr("Could not rename file {0} to {1}!", file, fileTmp));
+                throw e;
+            }
             fileFrom = fileTmp;
             fileTo = file;
             fileDelete = fileTmp;

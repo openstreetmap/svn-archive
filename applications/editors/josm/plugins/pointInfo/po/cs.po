@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-19 20:18+0100\n"
+"POT-Creation-Date: 2014-05-14 20:25+0200\n"
 "PO-Revision-Date: 2014-02-09 22:48+0100\n"
 "Last-Translator: Marian Kyral <mkyral@email.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -17,39 +17,39 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Lokalize 1.5\n"
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:74
 msgid "Point info"
 msgstr "Informace o bodu"
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:74
 msgid "Point info."
 msgstr "Informace o bodu."
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:74
 #, java-format
 msgid "Tool: {0}"
 msgstr "Nástroje: {0}"
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:118
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:107
 msgid "Connecting server"
 msgstr "Připojuji se na server"
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:156
-msgid "PointInfo"
-msgstr "Informace o bodu"
-
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:185
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:148
 msgid "Data not available."
 msgstr "Data nejsou dostupná."
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:835
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:249
+msgid "PointInfo"
+msgstr "Informace o bodu"
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:1088
 msgid "Add new address point"
 msgstr "Přidán nový adresní bod"
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:857
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:1110
 msgid "Tags copied to clipboard."
 msgstr "Tagy byly zkopírovány do schránky."
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:865
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:1118
 msgid "New address point added."
 msgstr "Adresní bod byl přidán."

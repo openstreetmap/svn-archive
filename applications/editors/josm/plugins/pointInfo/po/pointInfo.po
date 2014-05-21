@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-19 20:18+0100\n"
+"POT-Creation-Date: 2014-05-20 07:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,39 +17,39 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:74
 msgid "Point info"
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:74
 msgid "Point info."
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:71
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:74
 #, java-format
 msgid "Tool: {0}"
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:118
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:107
 msgid "Connecting server"
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:156
-msgid "PointInfo"
-msgstr ""
-
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:185
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:148
 msgid "Data not available."
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:835
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/PointInfoAction.java:249
+msgid "PointInfo"
+msgstr ""
+
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:1088
 msgid "Add new address point"
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:857
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:1110
 msgid "Tags copied to clipboard."
 msgstr ""
 
-#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:865
+#: ../src/org/openstreetmap/josm/plugins/pointinfo/ruianModule.java:1118
 msgid "New address point added."
 msgstr ""

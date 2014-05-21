@@ -3,6 +3,38 @@ require("config.php");
 $lat=$_REQUEST['lat'];
 $lon=$_REQUEST['lon'];
 if ( !is_numeric($lat) or !is_numeric($lon) ) die;
+
+
+// From:   http://www.sitepoint.com/forums/showthread.php?656315-Adding-Distance-To-GPS-Coordinates-To-Get-Bounding-Box&p=4519646&viewfull=1#post4519646
+function new_coords($lat, $lon, $bearing, $distance)
+{
+  // Radius of Earth in meters
+  $radius = 6371000;
+
+  //  New latitude in degrees.
+  $new_lat = rad2deg(asin(sin(deg2rad($lat)) * cos($distance / $radius) + cos(deg2rad($lat)) * sin($distance / $radius) * cos(deg2rad($bearing))));
+
+  //  New longitude in degrees.
+  $new_lon = rad2deg(deg2rad($lon) + atan2(sin(deg2rad($bearing)) * sin($distance / $radius) * cos(deg2rad($lat)), cos($distance / $radius) - sin(deg2rad($lat)) * sin(deg2rad($new_lat))));
+
+  //  Assign new latitude and longitude to an array to be returned to the caller.
+  $coord['lat'] = $new_lat;
+  $coord['lon'] = $new_lon;
+
+  return $coord;
+}
+
+// Boundary box 20x20 meters around the point
+$x1_coor = new_coords($lat, $lon, 315, 10); // Left upper point
+$x2_coor = new_coords($lat, $lon, 135, 10); // Right down point
+
+$x1_lon = $x1_coor['lon'];
+$x2_lon = $x2_coor['lon'];
+$x1_lat = $x1_coor['lat'];
+$x2_lat = $x2_coor['lat'];;
+
+$boundary_polygon=($x1_lon) . " " . ($x1_lat) . ", " . ($x1_lon) . " " . ($x2_lat) . ", " . ($x2_lon) . " " . ($x2_lat) . ", " . ($x2_lon) . " " . ($x1_lat) . ", " . ($x1_lon) . " " . ($x1_lat);
+
 header('Content-Type: application/json');
 
 $data = array();
@@ -42,6 +74,50 @@ if (pg_num_rows($result) > 0)
            );
 } else
     $data["stavebni_objekt"] = array();
+
+// Ghosts: Buildings without geometry in close neighbourhood
+$query="
+select * from (
+  select s.kod,
+        s.pocet_podlazi, a.nazev zpusob_vyuziti, s.plati_od, s.pocet_bytu, s.dokonceni,
+        s.zpusob_vyuziti_kod, a.osmtag_k, a.osmtag_v,
+        s.definicni_bod,
+        st_distance( (st_transform(s.definicni_bod,4326))::geography, (st_setsrid(st_makepoint(".$lon.",".$lat."),4326))::geography ) dist
+  from rn_stavebni_objekt s
+      left outer join osmtables.zpusob_vyuziti_objektu a on s.zpusob_vyuziti_kod = a.kod
+  where st_intersects(s.definicni_bod, st_transform(st_geometryfromtext(
+      'POLYGON (( $boundary_polygon ))' ,4326),900913))
+    and not s.deleted
+    and s.hranice is null
+    order by definicni_bod <->
+          st_transform(st_setsrid(st_makepoint(".$lon.",".$lat."),4326),900913)
+  limit 5) as x
+  order by dist;
+";
+$result=pg_query($CONNECT,$query);
+
+if (pg_num_rows($result) > 0)
+{
+    $so = array();
+    for ($i = 0; $i < pg_num_rows($result); $i++)
+    {
+      $row = pg_fetch_array($result, $i);
+      array_push($so,
+                  array( "ruian_id" => $row["kod"],
+                         "pocet_podlazi" => $row["pocet_podlazi"],
+                         "zpusob_vyuziti" => $row["zpusob_vyuziti"],
+                         "zpusob_vyuziti_kod" => $row["zpusob_vyuziti_kod"],
+                         "zpusob_vyuziti_key" => $row["osmtag_k"],
+                         "zpusob_vyuziti_val" => $row["osmtag_v"],
+                         "pocet_bytu" => $row["pocet_bytu"],
+                         "dokonceni" => $row["dokonceni"],
+                         "plati_od" => $row["plati_od"],
+                         "vzdalenost" => $row["dist"]
+                        ));
+    }
+      $data["so_bez_geometrie"] = $so;
+} else
+    $data["so_bez_geometrie"] = array();
 
 // Addresses
 if ($data["stavebni_objekt"]["ruian_id"] > 0)
@@ -135,7 +211,8 @@ else
          am.cislo_orientacni_hodnota || coalesce(am.cislo_orientacni_pismeno, '') cislo_orientacni,
          am.adrp_psc psc, ul.nazev ulice, c.nazev cast_obce,
          momc.nazev mestska_cast,
-         ob.nazev obec, ok.nazev okres, vu.nazev kraj
+         ob.nazev obec, ok.nazev okres, vu.nazev kraj,
+         st_distance( (st_transform(am.definicni_bod,4326))::geography, (st_setsrid(st_makepoint(".$lon.", ".$lat."),4326))::geography ) dist
   from ( select kod, stavobj_kod,
                 cislo_domovni, cislo_orientacni_hodnota, cislo_orientacni_pismeno,
                 ulice_kod, adrp_psc,
@@ -154,8 +231,7 @@ else
       left outer join rn_okres ok on ob.okres_kod = ok.kod and not ok.deleted
       left outer join rn_vusc vu on ok.vusc_kod = vu.kod and not vu.deleted
   where st_distance( (st_transform(am.definicni_bod,4326))::geography, (st_setsrid(st_makepoint(".$lon.", ".$lat."),4326))::geography ) < 100
-  order by st_distance( (st_transform(am.definicni_bod,4326))::geography,
-                        (st_setsrid(st_makepoint(".$lon.", ".$lat."),4326))::geography)
+  order by dist
   limit 5
   ;
   ";
@@ -182,7 +258,8 @@ else
                         "obec" => $row["obec"],
                         "okres" => $row["okres"],
                         "kraj" => $row["kraj"],
-                        "psc" => $row["psc"]
+                        "psc" => $row["psc"],
+                        "vzdalenost" => $row["dist"]
                         ));
     }
     $data["adresni_mista"] = $am;

@@ -37,6 +37,9 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonArray;
@@ -73,6 +76,7 @@ class addrPlaces {
     private long    m_kraj_kod;
     private String  m_kraj;
     private String  m_psc;
+    private float   m_vzdalenost;
 
     public addrPlaces () {
       init();
@@ -98,6 +102,7 @@ class addrPlaces {
       m_kraj_kod = 0;
       m_kraj = "";
       m_psc = "";
+      m_vzdalenost = 0;
     }
 
     public void setRuianID (long v) {
@@ -176,6 +181,10 @@ class addrPlaces {
       m_psc = v;
     }
 
+    public void setVzdalenost (float v) {
+      m_vzdalenost = v;
+    }
+
     public long getRuianID () {
       return m_ruian_id;
     }
@@ -252,6 +261,122 @@ class addrPlaces {
       return m_psc;
     }
 
+    public String getVzdalenost () {
+      DecimalFormat df = new DecimalFormat("0.00");
+      return df.format(m_vzdalenost) + "m";
+    }
+
+}
+
+class objectWithoutGeometry {
+    private long     m_ruian_id;
+    private int      m_podlazi;
+    private int      m_byty;
+    private String   m_zpusob_vyuziti;
+    private String   m_zpusob_vyuziti_kod;
+    private String   m_zpusob_vyuziti_key;
+    private String   m_zpusob_vyuziti_val;
+    private String   m_dokonceni;
+    private String   m_plati_od;
+    private float    m_vzdalenost;
+
+    public objectWithoutGeometry () {
+      init();
+    }
+
+    private void init () {
+      m_ruian_id = 0;
+      m_podlazi = 0;
+      m_byty = 0;
+      m_zpusob_vyuziti = "";
+      m_zpusob_vyuziti_kod = "";
+      m_zpusob_vyuziti_key = "";
+      m_zpusob_vyuziti_val = "";
+      m_dokonceni = "";
+      m_plati_od = "";
+      m_vzdalenost = 0;
+    }
+
+    public void setRuianID (long v) {
+      m_ruian_id = v;
+    }
+
+    public void setPodlazi (int v) {
+      m_podlazi = v;
+    }
+
+    public void setByty (int v) {
+      m_byty = v;
+    }
+
+    public void setZpusobVyuziti (String v) {
+      m_zpusob_vyuziti = v;
+    }
+
+    public void setZpusobVyuzitiKod (String v) {
+      m_zpusob_vyuziti_kod = v;
+    }
+
+    public void setZpusobVyuzitiKey (String v) {
+      m_zpusob_vyuziti_key = v;
+    }
+
+    public void setZpusobVyuzitiVal (String v) {
+      m_zpusob_vyuziti_val = v;
+    }
+
+    public void setDokonceni (String v) {
+      m_dokonceni = v;
+    }
+
+    public void setPlatiOd (String v) {
+      m_plati_od = v;
+    }
+
+    public void setVzdalenost (float v) {
+      m_vzdalenost = v;
+    }
+
+    public long getRuianID () {
+      return m_ruian_id;
+    }
+
+    public int getPodlazi () {
+      return m_podlazi;
+    }
+
+    public int getByty () {
+      return m_byty;
+    }
+
+    public String getZpusobVyuziti () {
+      return m_zpusob_vyuziti;
+    }
+
+    public String getZpusobVyuzitiKod () {
+      return m_zpusob_vyuziti_kod;
+    }
+
+    public String getZpusobVyuzitiKey () {
+      return m_zpusob_vyuziti_key;
+    }
+
+    public String getZpusobVyuzitiVal () {
+      return m_zpusob_vyuziti_val;
+    }
+
+    public String getDokonceni () {
+      return m_dokonceni;
+    }
+
+    public String getPlatiOd () {
+      return m_plati_od;
+    }
+
+    public String getVzdalenost () {
+      DecimalFormat df = new DecimalFormat("0.00");
+      return df.format(m_vzdalenost) + "m";
+    }
 }
 
 /**
@@ -273,6 +398,8 @@ class ruianRecord {
     private String   m_objekt_zpusob_vyuziti_val;
     private String   m_objekt_dokonceni;
     private String   m_objekt_plati_od;
+
+    private ArrayList <objectWithoutGeometry> m_so_bez_geometrie;
 
     private ArrayList <addrPlaces> m_adresni_mista;
 
@@ -322,6 +449,7 @@ class ruianRecord {
       m_objekt_dokonceni = "";
       m_objekt_plati_od = "";
 
+      m_so_bez_geometrie = new ArrayList<objectWithoutGeometry> ();
       m_adresni_mista = new ArrayList<addrPlaces> ();
 
       m_parcela_ruian_id = 0;
@@ -441,6 +569,81 @@ class ruianRecord {
 
       } catch (Exception e) {
         System.out.println("stavebni_objekt: " + e.getMessage());
+      }
+
+// =========================================================================
+      try {
+        JsonArray arr = obj.getJsonArray("so_bez_geometrie");
+
+        for(int i = 0; i < arr.size(); i++)
+        {
+          JsonObject soBezGeom = arr.getJsonObject(i);
+          objectWithoutGeometry so = new objectWithoutGeometry();
+
+          try {
+            so.setRuianID(Long.parseLong(soBezGeom.getString("ruian_id")));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.ruian_id: " + e.getMessage());
+          }
+
+          try {
+            so.setPodlazi(Integer.parseInt(soBezGeom.getString("pocet_podlazi")));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.pocet_podlazi: " + e.getMessage());
+          }
+
+          try {
+            so.setByty(Integer.parseInt(soBezGeom.getString("pocet_bytu")));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.pocet_bytu: " + e.getMessage());
+          }
+
+          try {
+            so.setZpusobVyuziti(soBezGeom.getString("zpusob_vyuziti"));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.zpusob_vyuziti: " + e.getMessage());
+          }
+
+          try {
+            so.setZpusobVyuzitiKod(soBezGeom.getString("zpusob_vyuziti_kod"));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.zpusob_vyuziti_kod: " + e.getMessage());
+          }
+
+          try {
+            so.setZpusobVyuzitiKey(soBezGeom.getString("zpusob_vyuziti_key"));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.zpusob_vyuziti_key: " + e.getMessage());
+          }
+
+          try {
+            so.setZpusobVyuzitiVal(soBezGeom.getString("zpusob_vyuziti_val"));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.zpusob_vyuziti_val: " + e.getMessage());
+          }
+
+          try {
+            so.setDokonceni(soBezGeom.getString("dokonceni"));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.dokonceni: " + e.getMessage());
+          }
+
+          try {
+            so.setPlatiOd(soBezGeom.getString("plati_od"));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.plati_od: " + e.getMessage());
+          }
+
+          try {
+            so.setVzdalenost(Float.parseFloat(soBezGeom.getString("vzdalenost")));
+          } catch (Exception e) {
+            System.out.println("so_bez_geometrie.vzdalenost: " + e.getMessage());
+          }
+
+          m_so_bez_geometrie.add(so);
+        }
+      } catch (Exception e) {
+        System.out.println("so_bez_geometrie: " + e.getMessage());
       }
 
 // =========================================================================
@@ -568,6 +771,12 @@ class ruianRecord {
             am.setPsc(adresniMisto.getString("psc"));
           } catch (Exception e) {
             System.out.println("adresni_mista.psc: " + e.getMessage());
+          }
+
+          try {
+            am.setVzdalenost(Float.parseFloat(adresniMisto.getString("vzdalenost")));
+          } catch (Exception e) {
+            System.out.println("adresni_mista.vzdalenost: " + e.getMessage());
           }
 
           m_adresni_mista.add(am);
@@ -878,6 +1087,8 @@ class ruianRecord {
           }
           r.append("<tr><td bgcolor=#e5e5ff>");
           if (!m_adresni_mista.get(i).getUlice().isEmpty()) {
+            r.append(m_adresni_mista.get(i).getVzdalenost());
+            r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
             r.append(m_adresni_mista.get(i).getUlice() + " " + x);
             r.append("<br/><u>" + m_adresni_mista.get(i).getObec() + "</u>");
             r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
@@ -886,6 +1097,8 @@ class ruianRecord {
             r.append("&nbsp;&nbsp;<a href=file://tags.create/address:"+i+">"+ icon_create_addr +"</a>");
             r.append("&nbsp;&nbsp;<a href=file://tags.create-on-place/address:"+i+">"+ icon_create_addr_ruian +"</a>");
           } else {
+            r.append(m_adresni_mista.get(i).getVzdalenost());
+            r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
             r.append(m_adresni_mista.get(i).getCastObce() + " " + x + "&nbsp;");
             if (!m_adresni_mista.get(i).getCastObce().equals(m_adresni_mista.get(i).getObec())) {
               r.append("<br/><u>" + m_adresni_mista.get(i).getObec() + "</u>");
@@ -900,6 +1113,27 @@ class ruianRecord {
         }
         r.append("</table><br/>");
       }
+
+      if (m_so_bez_geometrie.size() > 0) {
+        r.append("<i><u>Budovy bez geometrie v okolí</u></i><br/>");
+        r.append("<table>");
+        for (int i=0; i<m_so_bez_geometrie.size(); i++) {
+          r.append("<tr><td bgcolor=#e5e5ff>");
+          r.append(m_so_bez_geometrie.get(i).getVzdalenost());
+          r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
+          r.append(m_so_bez_geometrie.get(i).getRuianID());
+          if (m_so_bez_geometrie.get(i).getZpusobVyuziti().length() > 0) {
+            r.append(" - " + m_so_bez_geometrie.get(i).getZpusobVyuziti());
+          }
+          r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
+          r.append("&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_so_bez_geometrie.get(i).getRuianID() + ">"+ icon_ext_link +"</a> ");
+          r.append("&nbsp;&nbsp;<a href=file://tags.copy/building>"+ icon_copy_tags +"</a></br>");
+          r.append("</td></tr>");
+        }
+        r.append("</table><br/>");
+        r.append("<br/>");
+      }
+
       r.append("<hr/>");
       r.append("<center><i><small>Zdroj: <a href=\"http://www.ruian.cz/\">" + m_source + "</a></small></i></center>");
       r.append("</html>");
@@ -1129,7 +1363,7 @@ class ruianRecord {
 public class ruianModule {
 
     private String m_text = "";
-    private String URL = "http://josm.poloha.net/pointInfo/v2/index.php";
+    private String URL = "http://josm.poloha.net/pointInfo/v3/index.php";
     protected PointInfoServer server = new PointInfoServer();
 
     private ruianRecord m_record = new ruianRecord();

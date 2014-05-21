@@ -102,7 +102,7 @@ class PointInfoAction extends MapMode implements MouseListener {
 
                 @Override
                 protected void realRun() throws SAXException {
-                    infoSync(pos, progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
+                    infoSync(pos, progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, true));
                 }
 
                 @Override

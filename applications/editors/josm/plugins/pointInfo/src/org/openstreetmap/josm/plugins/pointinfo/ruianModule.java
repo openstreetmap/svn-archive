@@ -1127,7 +1127,7 @@ class ruianRecord {
           }
           r.append("</td><td valign=\"top\"  bgcolor=#e5e5ff>");
           r.append("&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_so_bez_geometrie.get(i).getRuianID() + ">"+ icon_ext_link +"</a> ");
-          r.append("&nbsp;&nbsp;<a href=file://tags.copy/building>"+ icon_copy_tags +"</a></br>");
+          r.append("&nbsp;&nbsp;<a href=file://tags.copy/ghost:"+i+">"+ icon_copy_tags +"</a></br>");
           r.append("</td></tr>");
         }
         r.append("</table><br/>");
@@ -1198,6 +1198,32 @@ class ruianRecord {
         }
         if (m_objekt_zpusob_vyuziti_kod.length() > 0) {
           c.append(tagToString("building:ruian:type", m_objekt_zpusob_vyuziti_kod));
+        }
+        c.append(tagToString("source", "cuzk:ruian"));
+      }
+
+      if (keyType.startsWith("ghost") && m_so_bez_geometrie.size() > 0) {
+        String[] key = keyType.split(":");
+        int i = new Integer(key[1]);
+        System.out.println("Ghost ID: " + i);
+
+        c.append(tagToString("ref:ruian:building", Long.toString(m_so_bez_geometrie.get(i).getRuianID())));
+        if (m_so_bez_geometrie.get(i).getZpusobVyuzitiKey().length() > 0 &&
+            m_so_bez_geometrie.get(i).getZpusobVyuzitiVal().length() > 0
+           ) {
+          c.append(tagToString(m_so_bez_geometrie.get(i).getZpusobVyuzitiKey(), m_so_bez_geometrie.get(i).getZpusobVyuzitiVal()));
+        }
+        if (m_so_bez_geometrie.get(i).getPodlazi() > 0) {
+          c.append(tagToString("building:levels", Integer.toString(m_so_bez_geometrie.get(i).getPodlazi())));
+        }
+        if (m_so_bez_geometrie.get(i).getByty() > 0) {
+          c.append(tagToString("building:flats", Integer.toString(m_so_bez_geometrie.get(i).getByty())));
+        }
+        if (m_so_bez_geometrie.get(i).getDokonceni().length() > 0 && convertDate(m_so_bez_geometrie.get(i).getDokonceni()).length() > 0) {
+          c.append(tagToString("start_date", convertDate(m_so_bez_geometrie.get(i).getDokonceni())));
+        }
+        if (m_so_bez_geometrie.get(i).getZpusobVyuzitiKod().length() > 0) {
+          c.append(tagToString("building:ruian:type", m_so_bez_geometrie.get(i).getZpusobVyuzitiKod()));
         }
         c.append(tagToString("source", "cuzk:ruian"));
       }

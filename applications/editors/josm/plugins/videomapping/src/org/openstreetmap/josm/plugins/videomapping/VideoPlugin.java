@@ -147,7 +147,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         };
         
         //now the options menu
-        VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), (String)null, tr("follows the video icon automaticly"),null, false,"vm_keepcentered",false) {            
+        VCenterIcon = new JCheckBoxMenuItem(new JosmAction(tr("Keep centered"), (String)null, tr("follows the video icon automatically"),null, false,"vm_keepcentered",false) {            
             @Override public void actionPerformed(ActionEvent e) {
                 if (videoPositionLayer != null) {
                     videoPositionLayer.setAutoCenter(VCenterIcon.isSelected());

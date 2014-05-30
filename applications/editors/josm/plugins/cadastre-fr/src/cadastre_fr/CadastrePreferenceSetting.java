@@ -246,7 +246,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         JLabel jLabelLayers = new JLabel(tr("Layers:"));
         cadastrewms.add(jLabelLayers, GBC.std().insets(0, 5, 10, 0));
         layerLS3.setSelected(Main.pref.getBoolean("cadastrewms.layerWater", true));
-        layerLS3.setToolTipText(tr("See, rivers, swimming pools."));
+        layerLS3.setToolTipText(tr("Sea, rivers, swimming pools."));
         cadastrewms.add(layerLS3, GBC.std().insets(5, 0, 5, 0));
         layerLS2.setSelected(Main.pref.getBoolean("cadastrewms.layerBuilding", true));
         layerLS2.setToolTipText(tr("Buildings, covers, underground constructions."));

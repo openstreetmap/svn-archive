@@ -8,7 +8,7 @@
 
     <property name="plugin.author" value="simon04"/>
     <property name="plugin.class" value="org.wikipedia.WikipediaPlugin"/>
-    <property name="plugin.description" value="Simplifys linking OSM objects to Wikipedia articles"/>
+    <property name="plugin.description" value="Simplifies linking OSM objects to Wikipedia articles"/>
     <property name="plugin.icon" value="images/dialogs/wikipedia.png"/>
     <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/Wikipedia"/>
 

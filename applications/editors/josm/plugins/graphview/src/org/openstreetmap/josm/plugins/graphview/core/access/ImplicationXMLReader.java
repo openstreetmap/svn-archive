@@ -211,7 +211,7 @@ public class ImplicationXMLReader {
             } else {
 
                 if ("tag".equals(openingName) || "key".equals(openingName)) {
-                    throw new SAXException(tr("Element must not have childs: {0}", openingName));
+                    throw new SAXException(tr("Element must not have children: {0}", openingName));
                 }
 
                 currentChildReader = new ConditionReader();

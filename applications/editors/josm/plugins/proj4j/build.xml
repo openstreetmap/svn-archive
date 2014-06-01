@@ -13,5 +13,27 @@
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
+	
+    <target name="setup-dist-default">
+        <copy todir="${plugin.build.dir}/resources" failonerror="no" includeemptydirs="no">
+            <fileset dir="resources" excludes="nad"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/nad"> 
+            <fileset dir="resources/nad"/> 
+        </copy> 
+        <copy todir="${plugin.build.dir}/images" failonerror="no" includeemptydirs="no">
+            <fileset dir="images"/>
+        </copy>
+        <copy todir="${plugin.build.dir}/data" failonerror="no" includeemptydirs="no">
+            <fileset dir="data"/>
+        </copy>
+        <copy todir="${plugin.build.dir}">
+            <fileset dir=".">
+                <include name="README"/>
+                <include name="LICENSE*"/>
+                <include name="*GPL*"/>
+            </fileset>
+        </copy>
+    </target>
 
 </project>

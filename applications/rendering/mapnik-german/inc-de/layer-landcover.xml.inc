@@ -381,1242 +381,1242 @@
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(2.4)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.2)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
     <PointSymbolizer file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(2.4)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.2)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 120) and ([d23] &lt; 200)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d12] &gt; 32) and ([d12] &lt; 65) and ([d23] &gt; 80) and ([d23] &lt; 130)</Filter>
     <PointSymbolizer file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(2.4)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.6)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.3)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.15)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
     <PointSymbolizer file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2.4)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.6)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.3)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.15)" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 120) and ([d12] &lt; 200)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([d23] &gt; 32) and ([d23] &lt; 65) and ([d12] &gt; 80) and ([d12] &lt; 130)</Filter>
     <PointSymbolizer file="symbols/sports/sports-foot-us.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom19;
-    &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom18;
-    &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom17;
-    &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom19;
-    &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom18;
-    &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom17;
-    &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d12] &gt; 75) and ([d12] &lt; 150) and ([d23] &gt; 150) and ([d23] &lt; 250)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom19;
-    &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom18;
-    &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom17;
-    &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom19;
-    &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom18;
-    &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom17;
-    &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
-    <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d12] &gt; 50) and ([d12] &lt; 100) and ([d23] &gt; 100) and ([d23] &lt; 170)</Filter>
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
-    <PointSymbolizer transform="rotate([angle]) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(4)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.5)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.25)" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([d23] &gt; 75) and ([d23] &lt; 150) and ([d12] &gt; 150) and ([d12] &lt; 250)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
     <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d23] &gt; 30) and ([d23] &lt; 40) and ([d12] &gt; 15) and ([d12] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d23] &gt; 30) and ([d23] &lt; 40) and ([d12] &gt; 15) and ([d12] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d23] &gt; 30) and ([d23] &lt; 40) and ([d12] &gt; 15) and ([d12] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d23] &gt; 30) and ([d23] &lt; 40) and ([d12] &gt; 15) and ([d12] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.075)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    &minscale_zoom16;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d23] &gt; 30) and ([d23] &lt; 40) and ([d12] &gt; 15) and ([d12] &lt; 25)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom19;
+    &minscale_zoom19;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom18;
+    &minscale_zoom18;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    &minscale_zoom17;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    &minscale_zoom16;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom21;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom19;
+    &minscale_zoom19;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom18;
+    &minscale_zoom18;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    &minscale_zoom17;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    &minscale_zoom16;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer transform="rotate([angle]) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom21;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170) and ([surface] = 'grass')</Filter>
+    <PolygonSymbolizer fill="#54a854" />
+    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(2.76*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom19;
+    &minscale_zoom19;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.38*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom18;
+    &minscale_zoom18;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.69*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    &minscale_zoom17;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.3450*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    &minscale_zoom16;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1725*[labelsizefactor])" file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom21;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([d23] &gt; 50) and ([d23] &lt; 100) and ([d12] &gt; 100) and ([d12] &lt; 170)</Filter>
+    <PointSymbolizer file="symbols/sports/sports-rugby.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d23] &gt; 20) and ([d23] &lt; 30) and ([d12] &gt; 10) and ([d12] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom19;
+    &minscale_zoom19;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d23] &gt; 20) and ([d23] &lt; 30) and ([d12] &gt; 10) and ([d12] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom18;
+    &minscale_zoom18;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d23] &gt; 20) and ([d23] &lt; 30) and ([d12] &gt; 10) and ([d12] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    &minscale_zoom17;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d23] &gt; 20) and ([d23] &lt; 30) and ([d12] &gt; 10) and ([d12] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom21;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d23] &gt; 20) and ([d23] &lt; 30) and ([d12] &gt; 10) and ([d12] &lt; 20)</Filter>
     <PointSymbolizer file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d12] &gt; 30) and ([d12] &lt; 40) and ([d23] &gt; 15) and ([d23] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.6)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d12] &gt; 20) and ([d12] &lt; 30) and ([d23] &gt; 10) and ([d23] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d12] &gt; 30) and ([d12] &lt; 40) and ([d23] &gt; 15) and ([d23] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.3)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d12] &gt; 20) and ([d12] &lt; 30) and ([d23] &gt; 10) and ([d23] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d12] &gt; 30) and ([d12] &lt; 40) and ([d23] &gt; 15) and ([d23] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.15)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d12] &gt; 20) and ([d12] &lt; 30) and ([d23] &gt; 10) and ([d23] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d12] &gt; 30) and ([d12] &lt; 40) and ([d23] &gt; 15) and ([d23] &lt; 25)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.075)" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d12] &gt; 20) and ([d12] &lt; 30) and ([d23] &gt; 10) and ([d23] &lt; 20)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([way_area] &lt; 1000) and ([d13] &gt; 30) and ([d13] &lt; 50) and ([d12] &gt; 30) and ([d12] &lt; 40) and ([d23] &gt; 15) and ([d23] &lt; 25)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'basketball') and ([pitch_area] &lt; 450) and ([d13] &gt; 20) and ([d13] &lt; 35) and ([d12] &gt; 20) and ([d12] &lt; 30) and ([d23] &gt; 10) and ([d23] &lt; 20)</Filter>
     <PointSymbolizer file="symbols/sports/sports-basketball.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(2.4)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.2)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.2)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2.4)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000) and ([d23] &lt; 160)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000) and ([d23] &lt; 110)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2.4)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.656*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.6)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.3)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.15)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 12000) and ([way_area] &lt; 17000)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 3500) and ([pitch_area] &lt; 10000)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(2.8)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.932*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.4)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.966*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.7)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.483*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.35)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.2415*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.175)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1207*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom19;
-    &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.4)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom18;
-    &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.7)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom17;
-    &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.35)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.175)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2.8)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.8)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom19;
-    &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.9)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom18;
-    &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.45)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom17;
-    &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.225)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom16;
-    &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.1125)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.9)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.966*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.45)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.483*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.225)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.2415*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.1125)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1207*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000) and ([d23] &lt; 160)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.8)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.932*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d12] &gt; 130) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000) and ([d23] &lt; 160)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000) and ([d23] &lt; 110)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(2.8)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(1.242*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.4)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.621*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.7)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3105*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.35)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.15525*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.175)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0776*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &gt;= 17000)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
-  </Rule>
-  <Rule>
-    &maxscale_zoom20;
-    &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.8)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.9)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.621*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.45)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.3105*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.225)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.15525*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.1125)" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0776*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500) and ([d23] &lt; 110)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.242*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([way_area] &lt; 12000)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d12] &gt; 80) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500) and ([d23] &lt; 110)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.2)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.932*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom19;
+    &minscale_zoom19;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.966*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom18;
+    &minscale_zoom18;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.483*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    &minscale_zoom17;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.2415*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    &minscale_zoom16;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1207*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom21;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &gt;= 10000)</Filter>
+    <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(1.242*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom19;
+    &minscale_zoom19;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.621*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom18;
+    &minscale_zoom18;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.3105*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom17;
+    &minscale_zoom17;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.15525*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom16;
+    &minscale_zoom16;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.0776*[labelsizefactor])" file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom21;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([pitch_area] &lt; 3500)</Filter>
+    <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
+  </Rule>
+  <Rule>
+    &maxscale_zoom20;
+    &minscale_zoom20;
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.075)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40) and ([access] = 'private')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30) and ([access] = 'private')</Filter>
     <PointSymbolizer file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(1.2)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.075)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d23] &lt; 70) and ([d12] &gt; 20) and ([d12] &lt; 40)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d23] &lt; 45) and ([d12] &gt; 8) and ([d12] &lt; 30)</Filter>
     <PointSymbolizer file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.075)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
     <PointSymbolizer file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.6)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.3)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.15)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]+90) scale(0.075)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]+90) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d23] &gt; 38) and ([d12] &lt; 40) and ([d12] &gt; 38) and ([d23] &lt; 40)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d23] &gt; 20) and ([d12] &lt; 30) and ([d12] &gt; 20) and ([d23] &lt; 30)</Filter>
     <PointSymbolizer file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.6)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.3)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.15)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.075)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40) and ([access] = 'private')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30) and ([access] = 'private')</Filter>
     <PointSymbolizer file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
     &maxscale_zoom20;
     &minscale_zoom20;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(1.2)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.828*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom19;
     &minscale_zoom19;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.6)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.414*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom18;
     &minscale_zoom18;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.3)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.207*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
     &minscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.15)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.1035*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
     &minscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40)</Filter>
-    <PointSymbolizer transform="rotate([angle]) scale(0.075)" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30)</Filter>
+    <PointSymbolizer transform="rotate([angle]) scale(0.0517*[labelsizefactor])" file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom21;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([d12] &gt; 38) and ([d12] &lt; 70) and ([d23] &gt; 20) and ([d23] &lt; 40)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([d12] &gt; 20) and ([d12] &lt; 45) and ([d23] &gt; 8) and ([d23] &lt; 30)</Filter>
     <PointSymbolizer file="symbols/sports/sports-tennis.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 130) and ([d23] &lt; 200) and ([d12] &gt; 68) and ([d12] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d23] &gt; 80) and ([d23] &lt; 130) and ([d12] &gt; 45) and ([d12] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 130) and ([d12] &lt; 200) and ([d23] &gt; 68) and ([d23] &lt; 160) and ([d13] &gt; 150) and ([d13] &lt; 250)</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'soccer') and ([d12] &gt; 80) and ([d12] &lt; 130) and ([d23] &gt; 45) and ([d23] &lt; 110) and ([d13] &gt; 100) and ([d13] &lt; 170)</Filter>
     <PointSymbolizer file="symbols/sports/sports-soccer.svg" ignore-placement="true" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([way_area] &gt; 8000) and ([way_area] &lt; 20000) and ([d13] &gt; 120) and ([d13] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'american_football') and ([pitch_area] &gt; 3500) and ([pitch_area] &lt; 8500) and ([d13] &gt; 80) and ([d13] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_league') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby_union') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
   </Rule>
   <Rule>
     &maxscale_zoom16;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([way_area] &gt; 15000) and ([way_area] &lt; 25000) and ([d13] &gt; 150) and ([d13] &lt; 250) and ([surface] = 'grass')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'rugby') and ([pitch_area] &gt; 6000) and ([pitch_area] &lt; 11000) and ([d13] &gt; 100) and ([d13] &lt; 170) and ([surface] = 'grass')</Filter>
     <PolygonSymbolizer fill="#54a854" />
   </Rule>
   <Rule>
     &maxscale_zoom17;
-    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([way_area] &lt; 2500) and ([d13] &gt; 37) and ([d13] &lt; 80) and ([access] = 'private')</Filter>
+    <Filter>([angle_diff] &gt; 85) and ([angle_diff] &lt; 95) and ([sport] = 'tennis') and ([pitch_area] &lt; 1100) and ([d13] &gt; 20) and ([d13] &lt; 52) and ([access] = 'private')</Filter>
     <LineSymbolizer stroke-width="4" stroke="#efa9a9" stroke-dasharray="6, 8" stroke-opacity="0.5" stroke-linejoin="round" stroke-linecap="round" />
   </Rule>
   <Rule>
@@ -1717,10 +1717,14 @@
     <StyleName>sports</StyleName>
     <Datasource>
       <Parameter name="table">
-      (select *, abs(a12-a23) as angle_diff, (a12+a23+90)/2 as angle
-      from (select *, st_npoints(way2) as nb,
-                   ST_Distance(st_pointn(way2,1),st_pointn(way2,2)) as d12, ST_Distance(st_pointn(way2,3),st_pointn(way2,2)) as d23,
-                   ST_Distance(st_pointn(way2,1),st_pointn(way2,3)) as d13, degrees(st_azimuth(st_pointn(way2,1),st_pointn(way2,2))) as a12,
+      (select *, cast(abs(a12-a23) as integer)%180 as angle_diff, (a12+a23+90)/2 as angle, 
+              1/coslat as labelsizefactor, d12*d23 as pitch_area
+        from (select *, st_npoints(way2) as nb,
+                   ST_Distance_sphere(st_transform(st_pointn(way2,1),4326),st_transform(st_pointn(way2,2),4326)) as d12, 
+                   ST_Distance_sphere(st_transform(st_pointn(way2,3),4326),st_transform(st_pointn(way2,2),4326)) as d23, 
+                   ST_Distance_sphere(st_transform(st_pointn(way2,1),4326),st_transform(st_pointn(way2,3),4326)) as d13, 
+                   cos(st_y(st_transform(st_pointn(way2,1),4326))/180*3.1415927) as coslat,
+                   degrees(st_azimuth(st_pointn(way2,1),st_pointn(way2,2))) as a12,
                    degrees(st_azimuth(st_pointn(way2,2),st_pointn(way2,3))) as a23 from (select *, st_area(way) as way_area,
                    ST_ExteriorRing(ST_SimplifyPreserveTopology(way,100)) as way2 from (select (st_dump(way)).geom as way, sport, surface, access
             from &prefix;_polygon

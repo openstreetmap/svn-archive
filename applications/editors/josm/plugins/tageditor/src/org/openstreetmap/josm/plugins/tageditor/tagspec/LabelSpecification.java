@@ -1,8 +1,9 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.tagspec;
 
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 
-public class LableSpecification {
+public class LabelSpecification {
 
     /** the key of the tag */
     private String value;
@@ -15,7 +16,7 @@ public class LableSpecification {
     /**
      * constructor 
      */
-    public LableSpecification() {
+    public LabelSpecification() {
     }
 
     public boolean isApplicable(AutoCompletionContext context) {
@@ -65,8 +66,4 @@ public class LableSpecification {
     public void setApplicableToRelation(boolean applicableToRelation) {
         this.applicableToRelation = applicableToRelation;
     }
-    
-
-    
-    
 }

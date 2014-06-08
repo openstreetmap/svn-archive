@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import java.awt.BorderLayout;
@@ -15,10 +16,9 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableCellEditor;
 
 import org.openstreetmap.josm.gui.tagging.TagTable;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.plugins.tageditor.ac.IAutoCompletionListListener;
-
 
 /**
  * TagEditor is a {@link JPanel} which consists of a two sub panels:
@@ -102,7 +102,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         //
         tblTagEditor = new TagTable(tagEditorModel);
         tblTagEditor.setTagCellEditor(new TagSpecificationAwareTagCellEditor());
-        TableCellRenderer renderer = new TableCellRenderer();
+        TagTableCellRenderer renderer = new TagTableCellRenderer();
         tblTagEditor.getColumnModel().getColumn(0).setCellRenderer(renderer);
         tblTagEditor.getColumnModel().getColumn(1).setCellRenderer(renderer);
 

@@ -14,25 +14,22 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.tagging.TagModel;
-import org.openstreetmap.josm.plugins.tageditor.preset.Item;
-import org.openstreetmap.josm.plugins.tageditor.preset.Tag;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 
-/**
- * 
- */
 @SuppressWarnings("serial")
 public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditorModel  {
     //static private final Logger logger = Logger.getLogger(TagEditorModel.class.getName());
     
-    private DefaultComboBoxModel appliedPresets = null;
+    private DefaultComboBoxModel<TaggingPreset> appliedPresets = null;
 
     /**
      * constructor
      */
     public TagEditorModel(DefaultListSelectionModel rowSelectionModel, DefaultListSelectionModel colSelectionModel){
         super(rowSelectionModel, colSelectionModel);
-        appliedPresets = new DefaultComboBoxModel();
+        appliedPresets = new DefaultComboBoxModel<>();
     }
 
     /**
@@ -46,7 +43,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
      * @exception IllegalArgumentException thrown, if item is null
      * 
      */
-    public void applyPreset(Item item) {
+    public void applyPreset(TaggingPreset item) {
         if (item == null)
             throw new IllegalArgumentException("argument 'item' must not be null");
         // check whether item is already applied
@@ -59,7 +56,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
 
         // apply the tags proposed by the preset
         //
-        for(Tag tag : item.getTags()) {
+        for(AdvancedTag tag : AdvancedTag.forTaggingPreset(item)) {
             if (!tag.isOptional()) {
                 if (!includesTag(tag.getKey())) {
                     TagModel tagModel = new TagModel(tag.getKey(),tag.getValue());
@@ -102,20 +99,20 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
     }
 
 
-    public DefaultComboBoxModel getAppliedPresetsModel() {
+    public DefaultComboBoxModel<TaggingPreset> getAppliedPresetsModel() {
         return appliedPresets;
     }
 
-    public void removeAppliedPreset(Item item) {
+    public void removeAppliedPreset(TaggingPreset item) {
         if (item == null)
             return;
-        for (Tag tag: item.getTags()) {
+        for (AdvancedTag tag: AdvancedTag.forTaggingPreset(item)) {
             if (tag.getValue() != null) {
                 // preset tag with explicit key and explicit value. Remove tag model
                 // from the current model if both the key and the value match
                 //
                 TagModel tagModel = get(tag.getKey());
-                if (tagModel !=null && tag.getValue().equals(tagModel.getValue())) {
+                if (tagModel != null && tag.getValue().equals(tagModel.getValue())) {
                     tags.remove(tagModel);
                     setDirty(true);
                 }

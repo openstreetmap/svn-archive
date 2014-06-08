@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import java.util.logging.Level;
@@ -5,8 +6,8 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.josm.gui.tagging.TagCellEditor;
 import org.openstreetmap.josm.gui.tagging.TagModel;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
+import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionContext;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 

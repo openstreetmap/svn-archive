@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.tagspec;
 
 import java.io.BufferedReader;
@@ -21,7 +22,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
 
 /**
  * This class manages a list of {@link TagSpecification}s.
@@ -109,13 +109,14 @@ public class TagSpecifications {
             parser.setContentHandler(handler);
             parser.setErrorHandler(handler);
             parser.setEntityResolver(new ResourceEntityResolver());
-            parser.setFeature( "http://xml.org/sax/features/validation", true);
+            parser.setFeature("http://xml.org/sax/features/validation", true);
             parser.setFeature("http://xml.org/sax/features/namespaces", true);
             parser.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
             parser.parse(new InputSource(in));
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "failed to load tag specificatoin file", e);
+            logger.log(Level.SEVERE, "failed to load tag specification file", e);
+            e.getCause().printStackTrace();
             throw e;
         } finally {
             parser = null;
@@ -140,8 +141,8 @@ public class TagSpecifications {
         ArrayList<AutoCompletionListItem> items = new ArrayList<AutoCompletionListItem>();
         for (TagSpecification spec : tagSpecifications) {
             if (spec.getKey().equals(forKey)) {
-                List<LableSpecification> lables = spec.getLables();
-                for (LableSpecification l : lables) {
+                List<LabelSpecification> lables = spec.getLables();
+                for (LabelSpecification l : lables) {
                     if (!l.isApplicable(context)) {
                         continue;
                     }
@@ -165,7 +166,7 @@ public class TagSpecifications {
         ArrayList<KeyValuePair> entries = new ArrayList<KeyValuePair>();
 
         for (TagSpecification s : tagSpecifications) {
-            for (LableSpecification l : s.getLables()) {
+            for (LabelSpecification l : s.getLables()) {
                 entries.add(new KeyValuePair(s.getKey(), l.getValue()));
             }
         }
@@ -187,13 +188,10 @@ public class TagSpecifications {
          */
         private TagSpecification currentTagSpecification  = null;
 
-
         @Override
         public void endDocument() throws SAXException {
             logger.log(Level.FINE,"END");
         }
-
-
 
         @Override
         public void error(SAXParseException e) throws SAXException {
@@ -209,7 +207,6 @@ public class TagSpecifications {
         public void startDocument() throws SAXException {
             logger.log(Level.FINE,"START");
         }
-
 
         /**
          * parses a string value consisting of 'yes' or 'no' (exactly, case
@@ -292,7 +289,7 @@ public class TagSpecifications {
          * @throws SAXException
          */
         protected void startElementLabel(Attributes atts) throws SAXException {
-            LableSpecification ls = new LableSpecification();
+            LabelSpecification ls = new LabelSpecification();
             for (int i=0; i< atts.getLength(); i++) {
                 String name = atts.getQName(i);
                 String value = atts.getValue(i);
@@ -348,27 +345,23 @@ public class TagSpecifications {
 
         @Override
         public void warning(SAXParseException e) throws SAXException {
-            // TODO Auto-generated method stub
             logger.log(Level.WARNING, "XML parsing warning", e);
         }
     }
 
-    /**
-     *
-     *
-     */
     class ResourceEntityResolver implements EntityResolver {
 
-        public InputSource resolveEntity(String publicId, String systemId)
-        throws SAXException, IOException {
-            if (systemId != null && systemId.endsWith(DTD))
-                return new InputSource(
-                        TagSpecifications.class.getResourceAsStream(DTD)
-                );
-            else
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+            if (systemId != null && systemId.endsWith(DTD)) {
+                InputStream stream = TagSpecifications.class.getResourceAsStream("/resources/"+DTD);
+                if (stream == null) {
+                    logger.log(Level.WARNING, "Unable to find DTD: "+DTD);
+                }
+                return stream != null ? new InputSource(stream) : null;
+            } else {
                 throw new SAXException("couldn't load external DTD '" + systemId + "'");
+            }
         }
-
     }
 
     static public void main(String args[]) throws Exception{

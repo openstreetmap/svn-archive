@@ -29,12 +29,12 @@ import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.plugins.tageditor.ac.AutoCompletionListViewer;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditor;
 import org.openstreetmap.josm.plugins.tageditor.editor.TagEditorModel;
-import org.openstreetmap.josm.plugins.tageditor.preset.Item;
 import org.openstreetmap.josm.plugins.tageditor.preset.ui.IPresetSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.preset.ui.TabularPresetSelector;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
@@ -42,6 +42,7 @@ import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.ITagSelectorListener;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.ui.TabularTagSelector;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.WindowGeometry;
+
 /**
  * The dialog for editing name/value-pairs (aka <em>tags</em>) associated with {@link OsmPrimitive}s.
  * 
@@ -154,7 +155,7 @@ public class TagEditorDialog extends JDialog {
         TabularPresetSelector presetSelector = new TabularPresetSelector();
         presetSelector.addPresetSelectorListener(
                 new IPresetSelectorListener() {
-                    public void itemSelected(Item item) {
+                    public void itemSelected(TaggingPreset item) {
                         tagEditor.stopEditing();
                         tagEditor.getModel().applyPreset(item);
                         tagEditor.requestFocusInTopLeftCell();

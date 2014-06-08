@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -9,15 +10,14 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import org.openstreetmap.josm.plugins.tageditor.preset.Item;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 
-public class PresetItemListCellRenderer extends JLabel implements ListCellRenderer {
+public class PresetItemListCellRenderer extends JLabel implements ListCellRenderer<TaggingPreset> {
     //private static final Logger logger = Logger.getLogger(PresetItemListCellRenderer.class.getName());
 
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<? extends TaggingPreset> list, TaggingPreset item,
             int index, boolean isSelected, boolean cellHasFocus) {
 
-        Item item = (Item)value;
         if (item == null) {
             setText(tr("(none)"));
             setIcon(null);
@@ -30,11 +30,7 @@ public class PresetItemListCellRenderer extends JLabel implements ListCellRender
                 setForeground(UIManager.getColor("Table.foreground"));
             }
             setIcon(item.getIcon());
-            StringBuilder sb = new StringBuilder();
-            sb.append(item.getParent().getName())
-            .append("/")
-            .append(item.getName());
-            setText(sb.toString());
+            setText(item.getName());
             setOpaque(true);
             setFont(UIManager.getFont("Table.font"));
         }

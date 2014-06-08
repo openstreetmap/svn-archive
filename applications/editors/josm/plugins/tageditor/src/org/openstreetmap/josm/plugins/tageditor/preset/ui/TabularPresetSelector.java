@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.preset.ui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -14,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,9 +32,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.openstreetmap.josm.plugins.tageditor.preset.Item;
-import org.openstreetmap.josm.plugins.tageditor.preset.Presets;
-
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingPresets;
 
 public class TabularPresetSelector extends JPanel {
 
@@ -42,7 +43,6 @@ public class TabularPresetSelector extends JPanel {
     private JScrollPane scrollPane;
     private JButton btnApply;
 
-
     protected JPanel buildFilterPanel() {
         JPanel pnl = new JPanel();
         JLabel lbl = new JLabel(tr("Search: "));
@@ -50,17 +50,7 @@ public class TabularPresetSelector extends JPanel {
         tfFilter = new JTextField(20);
         pnl.add(lbl);
         pnl.add(tfFilter,BorderLayout.CENTER);
-        JButton btn = new JButton(tr("Filter"));
-        pnl.add(btn);
-        btn.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        filter(tfFilter.getText());
-                    }
-
-                }
-        );
-        btn = new JButton(tr("Clear"));
+        JButton btn = new JButton(tr("Clear"));
         pnl.add(btn);
         btn.addActionListener(
                 new ActionListener() {
@@ -72,8 +62,6 @@ public class TabularPresetSelector extends JPanel {
         );
         return pnl;
     }
-
-
 
     protected JScrollPane buildPresetGrid() {
 
@@ -109,8 +97,7 @@ public class TabularPresetSelector extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int rowNum = presetsTable.getSelectedRow();
                 if (rowNum >= 0) {
-                    Item item = getModel().getVisibleItem(rowNum);
-                    fireItemSelected(item);
+                    fireItemSelected(getModel().getVisibleItem(rowNum));
                 }
             }
         };
@@ -135,8 +122,7 @@ public class TabularPresetSelector extends JPanel {
                     public void actionPerformed(ActionEvent arg0) {
                         int row = presetsTable.getSelectedRow();
                         if (row >=0) {
-                            Item item = getModel().getVisibleItem(row);
-                            fireItemSelected(item);
+                            fireItemSelected(getModel().getVisibleItem(row));
                         }
                     }
                 }
@@ -150,8 +136,7 @@ public class TabularPresetSelector extends JPanel {
         add(buildPresetGrid(), BorderLayout.CENTER);
         add(buildControlButtonPanel(), BorderLayout.SOUTH);
 
-        // wire the text field for filter expressions to the prests
-        // table
+        // wire the text field for filter expressions to the preset table
         //
         tfFilter.getDocument().addDocumentListener(
                 new DocumentListener() {
@@ -191,17 +176,14 @@ public class TabularPresetSelector extends JPanel {
                 }
         );
 
-
         // load the set of presets and bind them to the preset table
         //
-        Presets.initPresets();
-        bindTo(Presets.getPresets());
+        bindTo(TaggingPresets.getTaggingPresets());
         presetsTable.getSelectionModel().clearSelection();
         btnApply.setEnabled(false);
-
     }
 
-    public void bindTo(Presets presets) {
+    public void bindTo(Collection<TaggingPreset> presets) {
         PresetsTableModel model = (PresetsTableModel)presetsTable.getModel();
         model.setPresets(presets);
     }
@@ -226,7 +208,7 @@ public class TabularPresetSelector extends JPanel {
         }
     }
 
-    protected void fireItemSelected(Item item) {
+    protected void fireItemSelected(TaggingPreset item) {
         synchronized(this.listeners) {
             for(IPresetSelectorListener listener: listeners) {
                 listener.itemSelected(item);
@@ -234,20 +216,15 @@ public class TabularPresetSelector extends JPanel {
         }
     }
 
-
-
-
     private class DoubleClickAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() == 2) {
                 int rowNum = presetsTable.rowAtPoint(e.getPoint());
-                Item item = getModel().getVisibleItem(rowNum);
-                fireItemSelected(item);
+                fireItemSelected(getModel().getVisibleItem(rowNum));
             }
         }
     }
-
 
     public void filter(String filter) {
         presetsTable.getSelectionModel().clearSelection();
@@ -270,7 +247,6 @@ public class TabularPresetSelector extends JPanel {
         }
     }
 
-
     protected PresetsTableModel getModel() {
         return (PresetsTableModel)presetsTable.getModel();
     }
@@ -278,7 +254,5 @@ public class TabularPresetSelector extends JPanel {
     public void installKeyAction(Action a) {
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)a.getValue(AbstractAction.ACCELERATOR_KEY), a.getValue(AbstractAction.NAME));
         getActionMap().put(a.getValue(AbstractAction.NAME), a);
-
     }
-
 }

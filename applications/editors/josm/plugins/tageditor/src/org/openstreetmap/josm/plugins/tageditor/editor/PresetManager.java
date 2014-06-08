@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -13,13 +14,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.plugins.tageditor.preset.Item;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 
 public class PresetManager extends JPanel {
 
     //static private final Logger logger = Logger.getLogger(PresetManager.class.getName());
 
-    private JComboBox presets;
+    private JComboBox<TaggingPreset> presets;
     private JButton btnRemove;
     private JButton btnHighlight;
     private TagEditorModel model = null;
@@ -29,7 +30,7 @@ public class PresetManager extends JPanel {
 
         // create the combobox to display the list of applied presets
         //
-        presets = new JComboBox() {
+        presets = new JComboBox<TaggingPreset>() {
             @Override
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
@@ -79,7 +80,7 @@ public class PresetManager extends JPanel {
     }
 
     protected void removeCurrentPreset() {
-        Item item= (Item)presets.getSelectedItem();
+        TaggingPreset item= (TaggingPreset)presets.getSelectedItem();
         if (item != null && model !=null) {
             model.removeAppliedPreset(item);
         }

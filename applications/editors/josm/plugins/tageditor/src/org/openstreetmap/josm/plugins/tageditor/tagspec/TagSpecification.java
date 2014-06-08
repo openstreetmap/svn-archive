@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.tagspec;
 
 import java.util.ArrayList;
@@ -30,14 +31,14 @@ public class TagSpecification {
     private boolean applicableToWay = true;
     private boolean applicableToRelation = true;
 
-    private ArrayList<LableSpecification> lables = null;
+    private ArrayList<LabelSpecification> lables = null;
 
 
     /**
      * constructor
      */
     public TagSpecification() {
-        lables = new ArrayList<LableSpecification>();
+        lables = new ArrayList<LabelSpecification>();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class TagSpecification {
      * @return th e list of predefined labels for this tag; an empty list if no
      *   labels are defined
      */
-    public List<LableSpecification> getLables() {
+    public List<LabelSpecification> getLables() {
         return lables;
     }
 
@@ -67,11 +68,11 @@ public class TagSpecification {
      * @param lables  the list of lables; must not be null
      * @exception IllegalArgumentException thrown, if lables is null
      */
-    public void setLables(List<LableSpecification> lables) throws IllegalArgumentException {
+    public void setLables(List<LabelSpecification> lables) throws IllegalArgumentException {
         if (lables == null)
             throw new IllegalArgumentException("argument 'lables' must not be null");
         this.lables.clear();
-        for (LableSpecification l : lables) {
+        for (LabelSpecification l : lables) {
             this.lables.add(l);
         }
     }
@@ -83,7 +84,7 @@ public class TagSpecification {
      * @param lable the lalbe to add; must not be null
      * @exception IllegalArgumentException thrown, if lable is null
      */
-    public void addLable(LableSpecification lable) throws IllegalArgumentException  {
+    public void addLable(LabelSpecification lable) throws IllegalArgumentException  {
         if (lable == null)
             throw new IllegalArgumentException("argument 'lable' must not be null");
         if (!this.lables.contains(lable)) {

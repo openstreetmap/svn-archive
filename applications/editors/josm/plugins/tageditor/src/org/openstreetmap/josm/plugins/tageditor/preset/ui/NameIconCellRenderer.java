@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.preset.ui;
 
 import java.awt.Color;
@@ -8,15 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import org.openstreetmap.josm.plugins.tageditor.preset.INameIconProvider;
-
-
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 
 public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
 
     //private static Logger logger = Logger.getLogger(NameIconCellRenderer.class.getName());
     public static final Color BG_COLOR_SELECTED = new Color(143,170,255);
-
 
     protected void init() {
         setOpaque(true);
@@ -35,9 +33,11 @@ public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
         } else  {
             setBackground(Color.WHITE);
         }
-        INameIconProvider provider = (INameIconProvider) value;
-        setText(provider.getName());
-        setIcon(provider.getIcon());
+        TaggingPreset provider = (TaggingPreset) value;
+        if (provider != null) {
+            setText(provider.getName());
+            setIcon(provider.getIcon());
+        }
         return this;
     }
 }

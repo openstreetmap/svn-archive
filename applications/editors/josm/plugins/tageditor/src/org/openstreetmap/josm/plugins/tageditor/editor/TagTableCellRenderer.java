@@ -11,27 +11,25 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableCellRenderer;
 
 import org.openstreetmap.josm.gui.tagging.TagModel;
-import org.openstreetmap.josm.plugins.tageditor.preset.Item;
-import org.openstreetmap.josm.plugins.tageditor.preset.Tag;
-
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
 
 /**
  * This is the table cell renderer for cells for the table of tags
  * in the tag editor dialog.
- * 
- *
  */
-public class TableCellRenderer extends JLabel implements javax.swing.table.TableCellRenderer  {
+public class TagTableCellRenderer extends JLabel implements TableCellRenderer  {
     
-    //private static Logger logger = Logger.getLogger(TableCellRenderer.class.getName());
+    //private static Logger logger = Logger.getLogger(TagTableCellRenderer.class.getName());
     public static final Color BG_COLOR_HIGHLIGHTED = new Color(255,255,204);
         
     private Font fontStandard = null;
     private Font fontItalic = null;
     
-    public TableCellRenderer() {
+    public TagTableCellRenderer() {
         fontStandard = getFont();
         fontItalic = fontStandard.deriveFont(Font.ITALIC);
         setOpaque(true);
@@ -89,12 +87,12 @@ public class TableCellRenderer extends JLabel implements javax.swing.table.Table
         
         // no current preset selected? 
         //
-        Item item = (Item)model.getAppliedPresetsModel().getSelectedItem();
+        TaggingPreset item = (TaggingPreset)model.getAppliedPresetsModel().getSelectedItem();
         if (item == null) {
             return false;
         }
         
-        for(Tag tag: item.getTags()) {
+        for(AdvancedTag tag: AdvancedTag.forTaggingPreset(item)) {
             if (tag.getValue() == null) {
                 if (tagModel.getName().equals(tag.getKey())) {
                     return true; 

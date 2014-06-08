@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.tagspec.ui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -45,17 +46,7 @@ public class TabularTagSelector extends JPanel {
         tfFilter = new JTextField(20);
         pnl.add(lbl);
         pnl.add(tfFilter,BorderLayout.CENTER);
-        JButton btn = new JButton(tr("Filter"));
-        pnl.add(btn);
-        btn.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        filter(tfFilter.getText());
-                    }
-
-                }
-        );
-        btn = new JButton(tr("Clear"));
+        JButton btn = new JButton(tr("Clear"));
         pnl.add(btn);
         btn.addActionListener(
                 new ActionListener() {

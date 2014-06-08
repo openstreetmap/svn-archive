@@ -1,10 +1,10 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.tageditor.preset.ui;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-
 
 public class PresetsTable extends JTable {
 
@@ -16,7 +16,6 @@ public class PresetsTable extends JTable {
         setRowSelectionAllowed(true);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setRowHeight(18); // icon height (=16) + minimal border
-        
     }
     
     public PresetsTable(TableModel model, TableColumnModel columnModel) {
@@ -43,5 +42,4 @@ public class PresetsTable extends JTable {
             tcm.getColumn(1).setMaxWidth(width);            
         }
     }
-
 }

@@ -5,39 +5,14 @@
     <property name="commit.message" value="NanoLog"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
-    <!--
-      ************************************************
-      ** should not be necessary to change the following properties
-     -->
-    <property name="josm" location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.build.dir" value="build"/>
-    <property name="plugin.src.dir" value="src"/>
-    <!-- this is the directory where the plugin jar is copied to -->
-    <property name="plugin.dist.dir" value="../../dist"/>
-    <!--property name="plugin.dist.dir"        value="/Users/Zverik/AppData/Roaming/JOSM/plugins"/-->
-    <property name="ant.build.javac.target" value="1.7"/>
-    <property name="ant.build.javac.source" value="1.7"/>
-    <property name="plugin.jar" value="${plugin.dist.dir}/${ant.project.name}.jar"/>
-    <!--
-    **********************************************************
-    ** init - initializes the build
-    **********************************************************
-    -->
     <property name="plugin.author" value="Ilya Zverev"/>
     <property name="plugin.class" value="nanolog.NanoLogPlugin"/>
-    <property name="plugin.description" value="NanoLog adjustment and btowsing layer"/>
+    <property name="plugin.description" value="NanoLog adjustment and browsing layer"/>
     <property name="plugin.icon" value="images/nanolog.png"/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
-    <!--<property name="plugin.stage" value="..."/>-->
 	<property name="plugin.description.ru" value="Загрузчик слоя NanoLog"/>
 	<property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/NanoLog"/>
 	<property name="plugin.link.ru" value="http://wiki.openstreetmap.org/wiki/RU:NanoLog"/>
 
-    
-	<property name="josm" location="../../core/dist/josm-custom.jar"/>
-	<property name="plugin.dist.dir" value="../../dist"/>
-	
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
   

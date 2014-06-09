@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="pbf" default="dist" basedir=".">
 
-    <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
 
@@ -14,9 +12,6 @@
     <property name="plugin.description" value="Import OSM data in PBF format"/>
     <!--<property name="plugin.icon" value="images/pbf_24.png"/>-->
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PBF"/>
-    <!--<property name="plugin.early" value="..."/>-->
-    <!--<property name="plugin.requires" value="..."/>-->
-    <!--<property name="plugin.stage" value="..."/>-->
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
@@ -27,7 +22,7 @@
     **********************************************************
     -->
     <target name="compile" depends="init">
-        <echo message="compiling sources for  ${plugin.jar} ... "/>
+        <echo message="compiling sources for ${plugin.jar} ... "/>
         <javac classpath="${josm}" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
@@ -35,5 +30,4 @@
             <src path="gen" />
         </javac>
     </target>
-	
 </project>

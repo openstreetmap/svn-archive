@@ -54,7 +54,7 @@ public abstract class BinaryParser implements BlockReaderAdapter {
       return strings[id];
     }
     
-    //@Override
+    @Override
     public void handleBlock(FileBlock message) {
         // TODO Auto-generated method stub
         try {
@@ -76,7 +76,7 @@ public abstract class BinaryParser implements BlockReaderAdapter {
     }
 
 
-    //@Override
+    @Override
     public boolean skipBlock(FileBlockPosition block) {
         // System.out.println("Seeing block of type: "+block.getType());
         if (block.getType().equals("OSMData"))

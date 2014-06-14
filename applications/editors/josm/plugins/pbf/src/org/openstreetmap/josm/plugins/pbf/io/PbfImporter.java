@@ -8,7 +8,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.plugins.pbf.PbfConstants;
 import org.xml.sax.SAXException;
@@ -29,6 +29,6 @@ public class PbfImporter extends OsmImporter {
 	}
 
 	protected DataSet parseDataSet(final String source) throws IOException, SAXException, IllegalDataException {
-        return parseDataSet(new MirroredInputStream(source), NullProgressMonitor.INSTANCE);
+        return parseDataSet(new CachedFile(source).getInputStream(), NullProgressMonitor.INSTANCE);
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 // most of the layout was copied from the openstreetbugs plugin to get things started
@@ -50,7 +51,7 @@ public class CanvecLayer extends Layer implements MouseListener {
 		try {
 			long start = System.currentTimeMillis();
 			Pattern p = Pattern.compile("(\\d\\d\\d)([A-Z]\\d\\d).*");
-			MirroredInputStream index = new MirroredInputStream("http://ftp2.cits.rncan.gc.ca/OSM/pub/ZippedOsm.txt");
+			InputStream index = new CachedFile("http://ftp2.cits.rncan.gc.ca/OSM/pub/ZippedOsm.txt").getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(index));
 			String line;
 			int last_cell = -1;

@@ -8,7 +8,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.imagery.ImageryReader;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.xml.sax.SAXException;
@@ -33,7 +33,7 @@ public class ValidatingImageryReader extends ImageryReader implements XmlBoundsC
 
 	public static void validate(String source) throws SAXException, IOException {
         SchemaFactory factory =  SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = factory.newSchema(new StreamSource(new MirroredInputStream(XML_SCHEMA)));
+        Schema schema = factory.newSchema(new StreamSource(new CachedFile(XML_SCHEMA).getInputStream()));
         schema.newValidator().validate(new StreamSource(source));
 	}
 }

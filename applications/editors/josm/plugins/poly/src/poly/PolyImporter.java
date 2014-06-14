@@ -19,7 +19,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.xml.sax.SAXException;
@@ -35,7 +35,7 @@ public class PolyImporter extends OsmImporter {
     }
 
     protected DataSet parseDataSet( final String source ) throws IOException, SAXException, IllegalDataException {
-        return parseDataSet(new MirroredInputStream(source), NullProgressMonitor.INSTANCE);
+        return parseDataSet(new CachedFile(source).getInputStream(), NullProgressMonitor.INSTANCE);
     }
 
     @Override

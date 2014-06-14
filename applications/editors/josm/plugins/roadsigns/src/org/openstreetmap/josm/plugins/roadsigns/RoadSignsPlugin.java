@@ -29,7 +29,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences.pref;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog;
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignInputDialog.SettingsPanel;
@@ -243,7 +243,7 @@ public class RoadSignsPlugin extends Plugin {
     public static InputStream getInputStream(String source) throws IOException {
         InputStream in = null;
         if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("ftp://")) {
-            in = new MirroredInputStream(source);
+            in = new CachedFile(source).getInputStream();
         } else if (source.startsWith("file:")) {
             in = new URL(source).openStream();
         } else if (source.startsWith("resource://")) {

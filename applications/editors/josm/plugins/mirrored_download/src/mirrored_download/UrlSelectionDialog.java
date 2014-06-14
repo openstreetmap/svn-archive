@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 
 public class UrlSelectionDialog
 {
@@ -105,7 +105,7 @@ public class UrlSelectionDialog
     String src = Main.pref.get("plugin.mirrored_download.url-src", "https://josm.openstreetmap.de/mirrored_download_info");
     Collection<String> urls = new ArrayList<String>();
     try (
-      InputStream in = new MirroredInputStream(src, 24*60*60);
+      InputStream in = new CachedFile(src).setMaxAge(24*60*60).getInputStream();
       BufferedReader reader = new BufferedReader(new InputStreamReader(in))
     ) {
       String line = null;

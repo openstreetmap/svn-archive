@@ -12,7 +12,7 @@ import java.awt.Point;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.io.IllegalDataException;
-import org.openstreetmap.josm.io.MirroredInputStream;
+import org.openstreetmap.josm.io.CachedFile;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.io.File;
@@ -182,8 +182,7 @@ public class CanVecTile {
 	private ZipFile open_zip() throws IOException {
 		File download_path = new File(layer.plugin_self.getPluginDir() + File.separator);
 		download_path.mkdir();
-		MirroredInputStream tile_zip;
-		tile_zip = new MirroredInputStream(getDownloadUrl(),download_path.toString());
+		CachedFile tile_zip = new CachedFile(getDownloadUrl()).setDestDir(download_path.toString());
 		return new ZipFile(tile_zip.getFile());
 	}
 	public void downloadSelf() {

@@ -34,7 +34,6 @@ import org.openstreetmap.josm.plugins.mapdust.service.connector.MapdustConnector
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustGetBugResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustGetBugsResponse;
 import org.openstreetmap.josm.plugins.mapdust.service.connector.response.MapdustPostResponse;
-import org.openstreetmap.josm.plugins.mapdust.service.converter.MapdustConverter;
 import org.openstreetmap.josm.plugins.mapdust.service.value.BoundingBox;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;

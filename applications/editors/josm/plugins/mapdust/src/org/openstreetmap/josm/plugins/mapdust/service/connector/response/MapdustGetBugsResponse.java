@@ -54,22 +54,9 @@ public class MapdustGetBugsResponse {
         this.features = features;
     }
 
-    /**
-     * Returns the array of <code>MapdustBugContent</code> objects
-     *
-     * @return the features
-     */
+    
     public MapdustBugContent[] getFeatures() {
         return features;
-    }
-
-    /**
-     * Sets the array of <code>MapdustBugContent</code> objects
-     *
-     * @param features the features to set
-     */
-    public void setFeatures(MapdustBugContent[] features) {
-        this.features = features;
     }
 
 }

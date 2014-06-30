@@ -30,28 +30,28 @@ package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 
 /**
  * Defines the attributes of the <code>MapdustBugContent</code> object.
- *
+ * 
  * @author Bea
- *
+ * 
  */
 public class MapdustBugContent extends GeneralContent {
-
+    
     /** The <code>Geometry</code> object */
     private Geometry geometry;
-
+    
     /** The <code>MapdustBugProperties</code> object */
     private MapdustBugProperties properties;
-
+    
     /**
      * Builds a <code>MapdustBugContent</code> object.
-     *
+     * 
      */
     public MapdustBugContent() {}
-
+    
     /**
      * Builds a <code>MapdustBugContent</code> object based on the given
      * arguments.
-     *
+     * 
      * @param geometry A <code>Geometry</code> object
      * @param properties A <code>MapdustBugProperties</code> object
      */
@@ -59,41 +59,13 @@ public class MapdustBugContent extends GeneralContent {
         this.geometry = geometry;
         this.properties = properties;
     }
-
-    /**
-     * Returns the geometry
-     *
-     * @return the geometry
-     */
+    
+    
     public Geometry getGeometry() {
         return geometry;
     }
-
-    /**
-     * Sets the geometry
-     *
-     * @param geometry the geometry to set
-     */
-    public void setGeometry(Geometry geometry) {
-        this.geometry = geometry;
-    }
-
-    /**
-     * Returns the MapDust bug properties
-     *
-     * @return the properties
-     */
+    
     public MapdustBugProperties getProperties() {
         return properties;
     }
-
-    /**
-     * Sets the MapDust bug properties
-     *
-     * @param properties the properties to set
-     */
-    public void setProperties(MapdustBugProperties properties) {
-        this.properties = properties;
-    }
-
 }

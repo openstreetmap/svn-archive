@@ -82,112 +82,29 @@ public class MapdustCommentProperties {
         this.source = source;
     }
 
-    /**
-     * Returns the date created
-     *
-     * @return the dateCreated
-     */
+    
     public Date getDateCreated() {
         return dateCreated;
     }
-
-    /**
-     * Sets the date created
-     *
-     * @param dateCreated the dateCreated to set
-     */
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    /**
-     * Returns the comment text
-     *
-     * @return the comment
-     */
+    
     public String getComment() {
         return comment;
     }
 
-    /**
-     * Sets the comment text
-     *
-     * @param comment the comment to set
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 
-    /**
-     * Returns the nickname
-     *
-     * @return the nickname
-     */
     public String getNickname() {
         return nickname;
     }
 
-    /**
-     * Sets the nickname
-     *
-     * @param nickname the nickname to set
-     */
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    /**
-     * Returns the skobbler user id
-     *
-     * @return the skoUid
-     */
     public String getSkoUid() {
         return skoUid;
     }
 
-    /**
-     * Sets the skobbler user id
-     *
-     * @param skoUid the skoUid to set
-     */
-    public void setSkoUid(String skoUid) {
-        this.skoUid = skoUid;
-    }
-
-    /**
-     * Returns the external user id
-     *
-     * @return the extUid
-     */
     public String getExtUid() {
         return extUid;
     }
 
-    /**
-     * Sets the external user id
-     *
-     * @param extUid the extUid to set
-     */
-    public void setExtUid(String extUid) {
-        this.extUid = extUid;
-    }
-
-    /**
-     * Returns the source
-     *
-     * @return the source
-     */
     public String getSource() {
         return source;
     }
-
-    /**
-     * Sets the source
-     *
-     * @param source the source to set
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
 }

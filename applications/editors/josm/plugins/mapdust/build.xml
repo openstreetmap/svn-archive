@@ -68,7 +68,7 @@
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-            <zipfileset src="lib/gson-1.5.jar" includes="**/*.class"/>
+        	<zipfileset src="lib/gson-2.2.4.jar"/>
             <manifest>
                 <attribute name="Author" value="Beata Jancso"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>

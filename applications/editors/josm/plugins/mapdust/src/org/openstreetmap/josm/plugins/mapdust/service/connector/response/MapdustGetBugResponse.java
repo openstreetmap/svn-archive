@@ -65,58 +65,16 @@ public class MapdustGetBugResponse {
         this.properties = properties;
     }
 
-    /**
-     * Returns the <code>Geometry</code> object
-     *
-     * @return the geometry
-     */
+    
     public Geometry getGeometry() {
         return geometry;
     }
-
-    /**
-     * Sets the <code>Geometry</code> object
-     *
-     * @param geometry the geometry to set
-     */
-    public void setGeometry(Geometry geometry) {
-        this.geometry = geometry;
-    }
-
-    /**
-     * Returns the id
-     *
-     * @return the id
-     */
+    
     public Long getId() {
         return id;
     }
 
-    /**
-     * Sets the id
-     *
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * Returns the <code>MapdustBugProperties</code> properties
-     *
-     * @return the properties
-     */
     public MapdustBugProperties getProperties() {
         return properties;
     }
-
-    /**
-     * Sets the <code>MapdustBugProperties</code> object
-     *
-     * @param properties the properties to set
-     */
-    public void setProperties(MapdustBugProperties properties) {
-        this.properties = properties;
-    }
-
 }

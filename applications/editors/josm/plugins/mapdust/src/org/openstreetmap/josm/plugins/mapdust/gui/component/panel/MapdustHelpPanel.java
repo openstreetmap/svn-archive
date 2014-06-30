@@ -48,14 +48,14 @@ import org.openstreetmap.josm.tools.OpenBrowser;
 
 /**
  * Defines the JPanel which displays the Help.
- *
+ * 
  * @author Bea
  */
 public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
-
+    
     /** The serial version UID */
     private static final long serialVersionUID = 8366853437915060878L;
-
+    
     /**
      * Builds a <code>MapdustDescriptionPanel</code> object
      */
@@ -69,12 +69,13 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
         txtHelp.setEditable(false);
         txtHelp.setText(txt);
         txtHelp.addHyperlinkListener(this);
-        JScrollPane cmpDescription = ComponentUtil.createJScrollPane(txtHelp,
-                null, Color.white, true, true);
+        JScrollPane cmpDescription =
+                ComponentUtil.createJScrollPane(txtHelp, null, Color.white,
+                        true, true);
         cmpDescription.setPreferredSize(new Dimension(100, 100));
         add(cmpDescription, BorderLayout.CENTER);
     }
-
+    
     @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -88,34 +89,35 @@ public class MapdustHelpPanel extends JPanel implements HyperlinkListener {
             }
         }
     }
-
+    
     /**
      * Builds the text of the Help panel. This text contains general information
      * related to the MapDust plugin.
-     *
+     * 
      * @return a string containing the text which will be displayed on the Help
      * tab
      */
     private String buildText() {
-        Integer version = Integer.decode(Main.pref.get("mapdust.version"));
-        Integer localVersion = Integer.decode(Main.pref.get("mapdust.localVersion"));
-        String txt = "<html>";
-        txt += "<font style='font-size:10px' face='Times New Roman'>";
-        txt += "<b>You are using MapDust version ";
-        txt += "<i style='color:red;font-size:10px'>";
-        if (version <= localVersion) {
-            txt += version + "</i>.</b><br>";
+        String version = Main.pref.get("mapdust.version");
+        String localVersion = Main.pref.get("mapdust.localVersion");
+        StringBuilder sb = new StringBuilder("<html>");
+        sb.append("<font style='font-size:10px' face='Times New Roman'>");
+        sb.append("<b>You are using MapDust version ");
+        sb.append("<i style='color:red;font-size:10px'>");
+        if (version.equals(localVersion)) {
+            sb.append(version).append("</i>.</b><br>");
         } else {
-            txt += localVersion + "</i>. There is an update available. ";
-            txt += "Please update to version ";
-            txt += "<i style='color:red;font-size:10px'>" + version;
-            txt += "</i> to benefit from the latest improvements.</b><br>";
+            sb.append(localVersion);
+            sb.append("</i>. There is an update available. ");
+            sb.append("Please update to version ");
+            sb.append("<i style='color:red;font-size:10px'>");
+            sb.append(version);
+            sb.append("</i> to benefit from the latest improvements.</b><br>");
         }
-        txt += "<b>To add bugs on the map you need to activate ";
-        txt += "the MapDust layer in the Layer List Dialog.";
-        txt += "Click <a href='' target='_blank'>here</a> for more help.";
-        txt += "</b></font></html>";
-        return txt;
+        sb.append("<b>To add bugs on the map you need to activate ");
+        sb.append("the MapDust layer in the Layer List Dialog.");
+        sb.append("Click <a href='' target='_blank'>here</a> for more help.");
+        sb.append("</b></font></html>");
+        return sb.toString();
     }
-
 }

@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.openstreetmap.josm.plugins.mapdust.service.converter;
+package org.openstreetmap.josm.plugins.mapdust.service;
 
 
 import java.util.ArrayList;
@@ -47,20 +47,20 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 /**
  * The <code>MapdustConverter</code> object. Builds a MapdustBug, list of
  * MapdustBug based on the given response object.
- *
+ * 
  * @author Bea
- *
+ * 
  */
-public class MapdustConverter {
-
+class MapdustConverter {
+    
     /**
      * Builds a <code>MapdustBug</code> object from the given
      * <code>MapdustGetBugResponse</code> object.
-     *
+     * 
      * @param bugResponse A <code>MapdustGetBugResponse</code> object.
      * @return A <code>MapdustBug</code> object.
      */
-    public static MapdustBug buildMapdustBug(MapdustGetBugResponse bugResponse) {
+    static MapdustBug buildMapdustBug(MapdustGetBugResponse bugResponse) {
         MapdustBug bug = new MapdustBug();
         if (bugResponse != null) {
             /* sets the id */
@@ -98,8 +98,10 @@ public class MapdustConverter {
                 /* sets the description */
                 bug.setDescription(bugProperties.getDescription());
                 /* sets the isDefaultDescription */
-                bug.setIsDefaultDescription(bugProperties
-                        .getIsDefaultDescription());
+                boolean isDefDescr =
+                        bugProperties.getIsDefaultDescription() == 1 ? Boolean.TRUE
+                                : Boolean.FALSE;
+                bug.setIsDefaultDescription(isDefDescr);
                 /* sets the skobbler user id */
                 bug.setSkoUid(bugProperties.getSkoUid());
                 /* sets the external user id */
@@ -122,15 +124,15 @@ public class MapdustConverter {
         }
         return bug;
     }
-
+    
     /**
      * Builds a list of <code>MapdustBug</code> objects based on the given
      * <code>MapdustGetBugsResponse</code> object.
-     *
+     * 
      * @param bugsResponse A <code>MapdustGetBugsResponse</code> object
      * @return A list of <code>MapdustBug</code> objects
      */
-    public static List<MapdustBug> buildMapdustBugList(
+    static List<MapdustBug> buildMapdustBugList(
             MapdustGetBugsResponse bugsResponse) {
         List<MapdustBug> bugsList = new ArrayList<MapdustBug>();
         if (bugsResponse != null) {
@@ -144,11 +146,11 @@ public class MapdustConverter {
         }
         return bugsList;
     }
-
+    
     /**
      * Builds a <code>MapdustBug</code> object from the given
      * <code>MapdustBugContent</code> object.
-     *
+     * 
      * @param bugContent A <code>MapdustBugContent</code> object
      * @return A <code>MapdustBug</code> object.
      */
@@ -211,10 +213,10 @@ public class MapdustConverter {
         }
         return bug;
     }
-
+    
     /**
      * Builds a <code>MapdustComment</code> object based on the given arguments.
-     *
+     * 
      * @param bugId The id of the bug
      * @param commentProperties The <code>MapdustCommentProperties</code>
      * object.
@@ -236,11 +238,11 @@ public class MapdustConverter {
         }
         return comment;
     }
-
+    
     /**
      * Builds an array of <code>MapdustComment</code> objects based on the given
      * arguments.
-     *
+     * 
      * @param bugId the if of the bug
      * @param commentProperties The array of
      * <code>MapdusrCommentProperties</code> objects
@@ -261,5 +263,5 @@ public class MapdustConverter {
                 commentList.toArray(new MapdustComment[0]);
         return commentArray;
     }
-
+    
 }

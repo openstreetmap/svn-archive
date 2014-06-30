@@ -58,22 +58,9 @@ public class MapdustGetResponse {
         this.paging = paging;
     }
 
-    /**
-     * Returns the <code>Paging</code> object
-     *
-     * @return the paging
-     */
+    
     public Paging getPaging() {
         return paging;
-    }
-
-    /**
-     * Sets the <code>Paging</code> object
-     *
-     * @param paging the paging to set
-     */
-    public void setPaging(Paging paging) {
-        this.paging = paging;
     }
 
 }

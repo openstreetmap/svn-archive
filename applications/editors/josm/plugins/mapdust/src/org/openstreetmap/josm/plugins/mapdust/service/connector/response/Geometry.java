@@ -30,45 +30,32 @@ package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 
 /**
  * Defines the attributes of the geometry object.
- *
+ * 
  * @author Bea
- *
+ * 
  */
 public class Geometry {
-
+    
     /** The array of coordinates */
     private Double coordinates[];
-
+    
     /**
      * Builds a <code>Geometry</code> object
      */
     public Geometry() {}
-
+    
     /**
      * Builds a <code>Geometry</code> object
-     *
+     * 
      * @param coordinates An array of coordinates.
      */
     public Geometry(Double[] coordinates) {
         this.coordinates = coordinates;
     }
-
-    /**
-     * Returns the coordinates
-     *
-     * @return the coordinates
-     */
+    
+    
     public Double[] getCoordinates() {
         return coordinates;
     }
-
-    /**
-     * Returns the coordinates
-     *
-     * @param coordinates the coordinates to set
-     */
-    public void setCoordinates(Double[] coordinates) {
-        this.coordinates = coordinates;
-    }
-
+    
 }

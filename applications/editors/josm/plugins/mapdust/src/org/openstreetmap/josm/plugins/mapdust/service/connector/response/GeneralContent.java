@@ -30,44 +30,31 @@ package org.openstreetmap.josm.plugins.mapdust.service.connector.response;
 
 /**
  * Defines a general content, containing a given id.
- *
+ * 
  * @author Bea
- *
+ * 
  */
 public class GeneralContent {
-
+    
     /** The id */
     private Long id;
-
+    
     /**
      * Builds a <code>GeneralContent</code> object.
      */
     public GeneralContent() {}
-
+    
     /**
      * Builds a <code>GeneralContent</code> object.
-     *
+     * 
      * @param id The id of the object
      */
     public GeneralContent(Long id) {
         this.id = id;
     }
-
-    /**
-     * Returns the id
-     * @return the id
-     */
+    
+    
     public Long getId() {
         return id;
     }
-
-    /**
-     * Sets the id
-     *
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
 }

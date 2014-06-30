@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -31,6 +32,8 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
     private JLabel courseLabel;
     private JLabel speedLabel;
     private JPanel panel;
+    private LiveGpsStatus status;
+    private LiveGpsData data;
 
     /**
      * @param name
@@ -63,41 +66,48 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
     public void propertyChange(PropertyChangeEvent evt) {
         if (!isVisible())
             return;
+
         if("gpsdata".equals(evt.getPropertyName())) {
-            LiveGpsData data = (LiveGpsData) evt.getNewValue();
-            if(data.isFix()) {
-//                fixLabel.setText("fix");
-                panel.setBackground(Color.WHITE);
-                latLabel.setText(data.getLatitude() + "deg");
-                longLabel.setText(data.getLongitude() + "deg");
-                double mySpeed = data.getSpeed() * 3.6f;
-                speedLabel.setText((Math.round(mySpeed*100)/100) + "km/h"); // m(s to km/h
-                courseLabel.setText(data.getCourse() + "deg");
+            data = (LiveGpsData) evt.getNewValue();
 
-                String wayString = data.getWayInfo();
-                if(wayString.length() > 0) {
-                    wayLabel.setText(wayString);
+            SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if(data.isFix()) {
+                    panel.setBackground(Color.WHITE);
+                    latLabel.setText(data.getLatitude() + "deg");
+                    longLabel.setText(data.getLongitude() + "deg");
+                    double mySpeed = data.getSpeed() * 3.6f;
+                    speedLabel.setText((Math.round(mySpeed*100)/100) + "km/h");
+                    courseLabel.setText(data.getCourse() + "deg");
+
+                    String wayString = data.getWayInfo();
+                    if(wayString.length() > 0) {
+                        wayLabel.setText(wayString);
+                    } else {
+                        wayLabel.setText(tr("unknown"));
+                    }
                 } else {
-                    wayLabel.setText(tr("unknown"));
+                    latLabel.setText("");
+                    longLabel.setText("");
+                    speedLabel.setText("");
+                    courseLabel.setText("");
+                    panel.setBackground(Color.RED);
                 }
-
-            } else {
-//                fixLabel.setText("no fix");
-                latLabel.setText("");
-                longLabel.setText("");
-                speedLabel.setText("");
-                courseLabel.setText("");
-                panel.setBackground(Color.RED);
-            }
+            }});
         } else if ("gpsstatus".equals(evt.getPropertyName())) {
-            LiveGpsStatus status = (LiveGpsStatus) evt.getNewValue();
-            statusLabel.setText(status.getStatusMessage());
-            if(status.getStatus() != LiveGpsStatus.GpsStatus.CONNECTED) {
-                panel.setBackground(Color.RED);
-            } else {
-                panel.setBackground(Color.WHITE);
-            }
-        }
+            status = (LiveGpsStatus) evt.getNewValue();
 
+            SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                statusLabel.setText(status.getStatusMessage());
+                if(status.getStatus() != LiveGpsStatus.GpsStatus.CONNECTED) {
+                    panel.setBackground(Color.RED);
+                } else {
+                    panel.setBackground(Color.WHITE);
+                }
+            }});
+        }
     }
 }

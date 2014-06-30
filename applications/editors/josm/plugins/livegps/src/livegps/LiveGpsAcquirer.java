@@ -258,9 +258,7 @@ public class LiveGpsAcquirer implements Runnable {
 
     private LiveGpsData ParseJSON(String line) {
         JsonObject report;
-        String type;
-        double lat = 0;
-        double lon = 0;
+        double lat, lon;
         float speed = 0;
         float course = 0;
         float epx = 0;
@@ -268,32 +266,31 @@ public class LiveGpsAcquirer implements Runnable {
 
         try {
             report = Json.createReader(new StringReader(line)).readObject();
-            type = report.getString("class");
         } catch (JsonException jex) {
             Main.warn("LiveGps: line read from gpsd is not a JSON object:" + line);
             return null;
         }
-        if (!type.equals("TPV"))
+        if (!report.getString("class").equals("TPV") || report.getInt("mode") < 2)
             return null;
 
-        try {
-            lat = report.getJsonNumber("lat").doubleValue();
-            lon = report.getJsonNumber("lon").doubleValue();
-            speed = (new Float(report.getJsonNumber("speed").doubleValue())).floatValue();
-            course = (new Float(report.getJsonNumber("track").doubleValue())).floatValue();
-            JsonNumber epxJson = report.getJsonNumber("epx");
-            if (epxJson != null)
-                epx = (new Float(epxJson.doubleValue())).floatValue();
-            JsonNumber epyJson = report.getJsonNumber("epy");
-            if (epyJson != null)
-                epy = (new Float(epyJson.doubleValue())).floatValue();
+        lat = report.getJsonNumber("lat").doubleValue();
+        lon = report.getJsonNumber("lon").doubleValue();
 
-            return new LiveGpsData(lat, lon, course, speed, epx, epy);
-        } catch (JsonException je) {
-            Main.debug(je.getMessage());
-        }
+        JsonNumber epxJson = report.getJsonNumber("epx");
+        JsonNumber epyJson = report.getJsonNumber("epy");
+        JsonNumber speedJson = report.getJsonNumber("speed");
+        JsonNumber trackJson = report.getJsonNumber("track");
 
-        return null;
+        if (speedJson != null)
+            speed = (float )speedJson.doubleValue();
+        if (trackJson != null)
+            course = (float )trackJson.doubleValue();
+        if (epxJson != null)
+            epx = (float )epxJson.doubleValue();
+        if (epyJson != null)
+            epy = (float )epyJson.doubleValue();
+
+        return new LiveGpsData(lat, lon, course, speed, epx, epy);
     }
 
     private LiveGpsData ParseOld(String line) {

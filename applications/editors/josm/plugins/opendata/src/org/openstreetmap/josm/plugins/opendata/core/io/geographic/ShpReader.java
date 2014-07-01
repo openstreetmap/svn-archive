@@ -4,9 +4,16 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -167,9 +174,26 @@ public class ShpReader extends GeographicReader {
 		try {
 			if (file != null) { 
 		        Map params = new HashMap();
+		        Charset charset = null;
 		        params.put(ShapefileDataStoreFactory.URLP.key, file.toURI().toURL());
 		        if (handler != null && handler.getDbfCharset() != null) {
-		        	params.put(ShapefileDataStoreFactory.DBFCHARSET.key, handler.getDbfCharset());
+		            charset = handler.getDbfCharset();
+		        } else {
+		            String path = file.getAbsolutePath();
+		            // See http://gis.stackexchange.com/a/3663/17245
+		            path = path.substring(0, path.lastIndexOf('.')) + ".cpg";
+                    Path cpg = new File(path).toPath();
+		            if (Files.exists(cpg)) {
+		                try (BufferedReader reader = Files.newBufferedReader(cpg, StandardCharsets.UTF_8)) {
+		                    charset = Charset.forName(reader.readLine());
+                        } catch (IOException | UnsupportedCharsetException | IllegalCharsetNameException e) {
+                            Main.warn(e);
+                        }
+		            }
+		        }
+		        if (charset != null) {
+		            Main.info("Using charset "+charset);
+		            params.put(ShapefileDataStoreFactory.DBFCHARSET.key, charset);
 		        }
 				DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);//FIXME
 				if (dataStore == null) {
@@ -201,7 +225,7 @@ public class ShpReader extends GeographicReader {
 								handler.notifyFeatureParsed(feature, ds, featurePrimitives);
 							}
 						} catch (UserCancelException e) {
-                                                        e.printStackTrace();
+                            e.printStackTrace();
 							return ds;
 						}
 						if (instance != null) {
@@ -210,7 +234,7 @@ public class ShpReader extends GeographicReader {
 						}
 					}
 				} catch (Throwable e) {
-                                        e.printStackTrace();
+                    e.printStackTrace();
 				} finally {
 					iterator.close();
 					nodes.clear();
@@ -220,10 +244,10 @@ public class ShpReader extends GeographicReader {
 				}
 			}
 		} catch (IOException e) {
-                        e.printStackTrace();
+            e.printStackTrace();
 			throw e;
 		} catch (Throwable t) {
-                        t.printStackTrace();
+            t.printStackTrace();
 			throw new IOException(t);
 		}
 		return ds;

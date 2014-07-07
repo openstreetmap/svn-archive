@@ -128,7 +128,7 @@ class ChatServerConnection {
             throw new IllegalArgumentException("userName is null");
         LatLon pos = getPosition();
         if( pos == null ) {
-            fireLoginFailed("Position is unknown");
+            fireLoginFailed("Zoom level is too low");
             return;
         }
         String token = userName.startsWith(TOKEN_PREFIX) ? userName.substring(TOKEN_PREFIX.length()) : null;
@@ -234,7 +234,7 @@ class ChatServerConnection {
         }
         LatLon pos = getPosition();
         if( pos == null ) {
-            fireMessageFailed("Position is unknown");
+            fireMessageFailed("Zoom level is too low");
             return;
         }
         try {
@@ -249,7 +249,7 @@ class ChatServerConnection {
                     if( json == null )
                         fireMessageFailed(tr("Could not get server response, check logs"));
                     else if( json.get("error") != null )
-                        fireMessageFailed(tr("Failed to send message:") + "\n" + json.getString("error"));
+                        fireMessageFailed(json.getString("error"));
                 }
             });
         } catch( UnsupportedEncodingException e ) {

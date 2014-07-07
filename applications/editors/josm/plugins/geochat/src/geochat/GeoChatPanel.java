@@ -248,7 +248,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {
-                    new Notification(tr("GeoChat") + ": " + reason).show();
+                    new Notification(tr("Failed to log in to GeoChat:") + "\n" + reason).show();
                 }
             });
         } else {
@@ -266,7 +266,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         GuiHelper.runInEDT(new Runnable() {
             @Override
             public void run() {
-                new Notification(tr("GeoChat") + ": " + reason).show();
+                new Notification(tr("Failed to send message:") + "\n" + reason).show();
             }
         });
     }

@@ -3,6 +3,7 @@ package geochat;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -10,8 +11,7 @@ import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.JosmUserIdentityManager;
-import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.*;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -32,9 +32,9 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
     private JPanel gcPanel;
     private ChatServerConnection connection;
     // those fields should be visible to popup menu actions
-    protected Map<String, LatLon> users;
-    protected ChatPaneManager chatPanes;
-    protected boolean userLayerActive;
+    Map<String, LatLon> users;
+    ChatPaneManager chatPanes;
+    boolean userLayerActive;
     
     public GeoChatPanel() {
         super(tr("GeoChat"), "geochat", tr("Open GeoChat panel"), null, 200, true);
@@ -96,6 +96,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
 
         JButton loginButton = new JButton(tr("Login"));
         loginButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 connection.login(nameField.getText());
             }
@@ -104,6 +105,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
 
         final JCheckBox autoLoginBox = new JCheckBox(tr("Enable autologin"), Main.pref.getBoolean("geochat.autologin", true));
         autoLoginBox.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 Main.pref.put("geochat.autologin", autoLoginBox.isSelected());
             }
@@ -127,7 +129,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
                 connection.removeListener(this);
                 connection.bruteLogout();
             }
-        } catch( Throwable e ) {
+        } catch( IOException e ) {
             Main.warn("Failed to logout from geochat server: " + e.getMessage());
         }
         super.destroy();
@@ -157,6 +159,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
      * This is implementation of a "temporary layer". It paints circles
      * for all users nearby.
      */
+    @Override
     public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
         Graphics2D g2d = (Graphics2D)g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -204,6 +207,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
             title = title + " (" + comment + ")";
         final String alarm = (alarmLevel <= 0 ? "" : alarmLevel == 1 ? "* " : "!!! ") + title;
         GuiHelper.runInEDT(new Runnable() {
+            @Override
             public void run() {
                 setTitle(alarm);
             }
@@ -222,26 +226,29 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
 
     /* ============ ChatServerConnectionListener methods ============= */
 
+    @Override
     public void loggedIn( String userName ) {
         Main.pref.put("geochat.username", userName);
         if( gcPanel.getComponentCount() == 1 ) {
-        	GuiHelper.runInEDTAndWait(new Runnable() {
-				@Override
-				public void run() {
-		            gcPanel.remove(0);
-		            gcPanel.add(tabs, BorderLayout.CENTER);
-		            gcPanel.add(input, BorderLayout.SOUTH);
-				}
-			});
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    gcPanel.remove(0);
+                    gcPanel.add(tabs, BorderLayout.CENTER);
+                    gcPanel.add(input, BorderLayout.SOUTH);
+                }
+            });
         }
         updateTitleAlarm();
     }
 
+    @Override
     public void notLoggedIn( final String reason ) {
         if( reason != null ) {
-            SwingUtilities.invokeLater(new Runnable() {
+            GuiHelper.runInEDT(new Runnable() {
+                @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(Main.parent, reason);
+                    new Notification(tr("GeoChat") + ": " + reason).show();
                 }
             });
         } else {
@@ -254,20 +261,24 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         updateTitleAlarm();
     }
 
+    @Override
     public void messageSendFailed( final String reason ) {
-        SwingUtilities.invokeLater(new Runnable() {
+        GuiHelper.runInEDT(new Runnable() {
+            @Override
             public void run() {
-                JOptionPane.showMessageDialog(Main.parent, reason);
+                new Notification(tr("GeoChat") + ": " + reason).show();
             }
         });
     }
 
+    @Override
     public void statusChanged( boolean active ) {
         // only the public tab, because private chats don't rely on coordinates
         tabs.setComponentAt(0, active ? chatPanes.getPublicChatComponent() : noData);
         repaint();
     }
 
+    @Override
     public void updateUsers( Map<String, LatLon> newUsers ) {
         for( String uname : this.users.keySet() ) {
             if( !newUsers.containsKey(uname) )
@@ -291,6 +302,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         sb.append(msg.getAuthor()).append(": ").append(msg.getMessage());
     }
 
+    @Override
     public void receivedMessages( boolean replace, List<ChatMessage> messages ) {
         if( replace )
             chatPanes.clearPublicChatPane();
@@ -345,6 +357,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         return false;
     }
 
+    @Override
     public void receivedPrivateMessages( boolean replace, List<ChatMessage> messages ) {
         if( replace )
             chatPanes.closePrivateChatPanes();

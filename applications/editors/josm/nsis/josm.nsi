@@ -332,7 +332,6 @@ SectionEnd
 
 Section $(JOSM_SEC_DESKTOP_ICON) SecDesktopIcon
 ;-------------------------------------------
-; SectionIn 1 2
 ; Create desktop icon
 ; Desktop icon for a program should not be installed as default!
 CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
@@ -340,8 +339,8 @@ SectionEnd
 
 Section $(JOSM_SEC_QUICKLAUNCH_ICON) SecQuickLaunchIcon
 ;-------------------------------------------
-SectionIn 1 2
-; Create quick launch icon
+; Create quick launch icon. Does not really exist as of Windows 7/8 but still advanced users use it.
+; Only disable it by default, see #10241
 CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
 SectionEnd
 

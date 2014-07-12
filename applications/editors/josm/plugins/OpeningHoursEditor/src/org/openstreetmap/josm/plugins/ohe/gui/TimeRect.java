@@ -288,11 +288,10 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
 
                 if (transformDirections[transformType][0])
                     newMinutesStart = newMinutesStart + yDiff;
-                if (transformDirections[transformType][2]
-                        && !isOpenEndInterval())
+                if (transformDirections[transformType][2] && !isOpenEndInterval())
                     newMinutesEnd = newMinutesEnd + yDiff;
 
-                if (newMinutesStart >= 0
+                if (newMinutesStart >= 0 && newMinutesStart <= 24*60+1
                         && (newMinutesEnd <= 24 * 60 || isOpenEndInterval())) {
                     actualMinuteDrag += yDiff;
                     updateTimeInterval(dayStart, dayEnd, newMinutesStart, newMinutesEnd);

@@ -1,10 +1,9 @@
 /*
  *	  OsmToCmd.java
- *	
+ *
  *	  Copyright 2011 Hind <foxhind@gmail.com>
- *	
+ *
  */
-
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,8 +40,8 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.WayData;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
-import org.openstreetmap.josm.tools.DateUtils;
 import org.openstreetmap.josm.tools.XmlParsingException;
+import org.openstreetmap.josm.tools.date.DateUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;

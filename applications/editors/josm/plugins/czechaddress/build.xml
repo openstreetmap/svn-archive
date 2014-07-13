@@ -15,7 +15,7 @@
         <mkdir dir="${plugin.dist.dir}"/>
     </target>
     <target name="compile" depends="init,revision" description="Compile the plugin and make it ready for running">
-        <javac srcdir="src" classpath="${josm}" debug="true" encoding="utf8" destdir="${plugin.build.dir}">
+        <javac srcdir="src" classpath="${josm}" debug="true" encoding="utf8" destdir="${plugin.build.dir}" includeantruntime="false">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>

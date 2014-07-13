@@ -4,13 +4,12 @@ import java.text.ParseException;
 import java.util.*;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.*;
 import org.openstreetmap.josm.tools.Geometry;
 import static org.openstreetmap.josm.tools.I18n.tr;
-import org.openstreetmap.josm.tools.PrimaryDateParser;
+import org.openstreetmap.josm.tools.date.PrimaryDateParser;
 
 /**
  * A class that establishes correlation between GPS trace and NanoLog. Mostly copied from

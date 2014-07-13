@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="NanoLog"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="7299"/>
     <property name="plugin.author" value="Ilya Zverev"/>
     <property name="plugin.class" value="nanolog.NanoLogPlugin"/>
     <property name="plugin.description" value="NanoLog adjustment and browsing layer"/>

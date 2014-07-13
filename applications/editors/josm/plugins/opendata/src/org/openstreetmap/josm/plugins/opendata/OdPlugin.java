@@ -2,7 +2,6 @@
 package org.openstreetmap.josm.plugins.opendata;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
@@ -57,7 +56,7 @@ public final class OdPlugin extends Plugin implements OdConstants {
 	
 	private OdDialog dialog;
 	
-	public OdPlugin(PluginInformation info) { // NO_UCD
+	public OdPlugin(PluginInformation info) {
 		super(info);
 		if (instance == null) {
 			instance = this;
@@ -101,7 +100,6 @@ public final class OdPlugin extends Plugin implements OdConstants {
 	}
 	
 	private void buildMenu() {
-        int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
         for (Module module : ModuleHandler.moduleList) {
         	Map<DataSetCategory, JMenu> catMenus = new HashMap<DataSetCategory, JMenu>();
         	JMenu moduleMenu = null;
@@ -140,7 +138,8 @@ public final class OdPlugin extends Plugin implements OdConstants {
         					}
         				}
         				if (item != null) {
-        					MenuScroller.setScrollerFor(handlerMenu, (screenHeight / item.getPreferredSize().height)-3);
+        					MenuScroller.setScrollerFor(handlerMenu, 
+        					        MenuScroller.computeScrollCount(handlerMenu, item.getPreferredSize().height));
         					handlerItem = endMenu.add(handlerMenu);
         				}
         			}
@@ -150,13 +149,11 @@ public final class OdPlugin extends Plugin implements OdConstants {
         		}
         	}
         	if (moduleMenu != null) {
-        		//MenuScroller.setScrollerFor(moduleMenu, screenHeight / moduleMenu.getItem(0).getPreferredSize().height);
         		menu.add(moduleMenu);
         	}
         }
         menu.addSeparator();
-        /*JMenuItem itemIcon =*/ MainMenu.add(menu, new OpenPreferencesActions());
-        //MenuScroller.setScrollerFor(menu, screenHeight / itemIcon.getPreferredSize().height);
+        MainMenu.add(menu, new OpenPreferencesActions());
 	}
 	
 	private void setMenuItemIcon(ImageIcon icon, JMenuItem menuItem) {
@@ -211,15 +208,4 @@ public final class OdPlugin extends Plugin implements OdConstants {
     public OdDialog getDialog() {
         return dialog;
     }
-
-    /*
-    private static final void fixUcDetectorTest() {
-    	FilterFactoryImpl n1 = new FilterFactoryImpl();
-    	DatumAliases n2 = new DatumAliases();
-    	EPSGCRSAuthorityFactory n3 = new EPSGCRSAuthorityFactory();
-    	DefaultFunctionFactory n4 = new DefaultFunctionFactory();
-    	ShapefileDirectoryFactory n5 = new ShapefileDirectoryFactory();
-    	ReferencingObjectFactory n6 = new ReferencingObjectFactory();
-    	BufferedCoordinateOperationFactory n7 = new BufferedCoordinateOperationFactory();
-    }*/
 }

@@ -59,8 +59,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     String titleContext = null;
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
     final Set<String> articles = new HashSet<String>();
-    final DefaultListModel model = new DefaultListModel();
-    final JList list = new JList(model) {
+    final DefaultListModel<WikipediaEntry> model = new DefaultListModel<>();
+    final JList<WikipediaEntry> list = new JList<WikipediaEntry>(model) {
 
         {
             setToolTipText(tr("Double click on item to search for object with article name (and center coordinate)"));
@@ -83,7 +83,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             setCellRenderer(new DefaultListCellRenderer() {
 
                 @Override
-                public JLabel getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                public JLabel getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     final WikipediaEntry entry = (WikipediaEntry) value;
                     if (entry.getWiwosmStatus() != null && entry.getWiwosmStatus()) {

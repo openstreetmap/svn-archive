@@ -33,12 +33,7 @@ import org.openstreetmap.josm.plugins.tracer2.TracerPlugin;
 
 public class ServerParamSelectDialog extends JPanel {
 	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 5655941545321036641L;
-	
-	private JComboBox m_oComboBox;
+	private JComboBox<String> m_oComboBox;
     List<ServerParam> m_listServerParam;
     private boolean m_bShow = true;
     
@@ -73,7 +68,7 @@ public class ServerParamSelectDialog extends JPanel {
         	}
         	i++;
         }
-        m_oComboBox = new JComboBox(astr);
+        m_oComboBox = new JComboBox<>(astr);
         m_oComboBox.setSelectedIndex(pos);
         
         setLayout(new GridBagLayout());

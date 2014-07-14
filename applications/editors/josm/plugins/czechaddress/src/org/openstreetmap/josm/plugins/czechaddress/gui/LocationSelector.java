@@ -65,7 +65,7 @@ public class LocationSelector extends ExtendedDialog {
 
         initLocationHints();
 
-        DefaultComboBoxModel regions = new DefaultComboBoxModel(Database.getInstance().regions.toArray());
+        DefaultComboBoxModel<Region> regions = new DefaultComboBoxModel<>(Database.getInstance().regions.toArray(new Region[0]));
         regionHlIndex = reshuffleListItems(regions, hlRegions);
         oblastComboBox.setModel(regions);
         oblastComboBox.setSelectedItem(regions.getElementAt(0));
@@ -172,13 +172,12 @@ public class LocationSelector extends ExtendedDialog {
     * Reshuffle items in combo box list, put those in hlList to the
     * beginning, return number of moved items.
     */
-
-    private int reshuffleListItems(DefaultComboBoxModel list, final ArrayList<AddressElement> hlList) {
+    private <E> int reshuffleListItems(DefaultComboBoxModel<E> list, final ArrayList<AddressElement> hlList) {
         int curHlIndex = 0;
 
         for (int i = 0; i < list.getSize(); i++)
             for (int j = 0; j < hlList.size(); j++) {
-                Object t = list.getElementAt(i);
+                E t = list.getElementAt(i);
                 if (t == hlList.get(j)) {
                     list.removeElementAt(i);
                     list.insertElementAt(t, curHlIndex++);
@@ -198,9 +197,9 @@ public class LocationSelector extends ExtendedDialog {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        oblastComboBox = new javax.swing.JComboBox();
-        suburbComboBox = new javax.swing.JComboBox();
-        vitociComboBox = new javax.swing.JComboBox();
+        oblastComboBox = new javax.swing.JComboBox<>();
+        suburbComboBox = new javax.swing.JComboBox<>();
+        vitociComboBox = new javax.swing.JComboBox<>();
         obecLabel = new javax.swing.JLabel();
         castObceLabel = new javax.swing.JLabel();
         oblastLabel = new javax.swing.JLabel();
@@ -297,7 +296,7 @@ public class LocationSelector extends ExtendedDialog {
         Region oblast = (Region) oblastComboBox.getSelectedItem();
         if (oblast == null) return;
 
-        DefaultComboBoxModel vitocis = new DefaultComboBoxModel(oblast.getViToCis().toArray());
+        DefaultComboBoxModel<ViToCi> vitocis = new DefaultComboBoxModel<>(oblast.getViToCis().toArray(new ViToCi[0]));
         vitociHlIndex = reshuffleListItems(vitocis, hlViToCis);
         vitociComboBox.setModel(vitocis);
         vitociComboBox.setSelectedItem(vitocis.getElementAt(0));
@@ -311,16 +310,16 @@ public class LocationSelector extends ExtendedDialog {
         if (obec == null) return;
 
         if (obec.getSuburbs().size() > 0) {
-            Object[] suburbs = new Object[obec.getSuburbs().size() + 1];
+            ElementWithStreets[] suburbs = new ElementWithStreets[obec.getSuburbs().size() + 1];
             for (int i=0; i<obec.getSuburbs().size(); i++)
                 suburbs[i] = obec.getSuburbs().get(i);
             suburbs[obec.getSuburbs().size()] = obec;
-            DefaultComboBoxModel suburbsList = new DefaultComboBoxModel(suburbs);
+            DefaultComboBoxModel<ElementWithStreets> suburbsList = new DefaultComboBoxModel<>(suburbs);
             suburbHlIndex = reshuffleListItems(suburbsList, hlSuburbs);
             suburbComboBox.setModel(suburbsList);
             suburbComboBox.setSelectedItem(suburbsList.getElementAt(0));
         } else
-            suburbComboBox.setModel(new DefaultComboBoxModel());
+            suburbComboBox.setModel(new DefaultComboBoxModel<ElementWithStreets>());
 
         suburbComboBox.setEnabled(suburbComboBox.getModel().getSize() > 1);
         suburbComboBoxItemStateChanged(null);
@@ -352,16 +351,16 @@ public class LocationSelector extends ExtendedDialog {
     private javax.swing.JLabel castObceLabel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel obecLabel;
-    private javax.swing.JComboBox oblastComboBox;
+    private javax.swing.JComboBox<Region> oblastComboBox;
     private javax.swing.JLabel oblastLabel;
-    private javax.swing.JComboBox suburbComboBox;
-    private javax.swing.JComboBox vitociComboBox;
+    private javax.swing.JComboBox<ElementWithStreets> suburbComboBox;
+    private javax.swing.JComboBox<ViToCi> vitociComboBox;
     // End of variables declaration//GEN-END:variables
 
     private class AddressElementRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(
-                    JList list, Object value, int index,
+                    JList<?> list, Object value, int index,
                     boolean isSelected, boolean cellHasFocus) {
 
             Component c = super.getListCellRendererComponent(list, value, index,
@@ -382,7 +381,7 @@ public class LocationSelector extends ExtendedDialog {
 
     private class SuburbRenderer extends AddressElementRenderer {
         @Override
-        public Component getListCellRendererComponent(JList list, Object value,
+        public Component getListCellRendererComponent(JList<?> list, Object value,
                           int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value,
                                                index, isSelected, cellHasFocus);

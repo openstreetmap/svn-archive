@@ -43,7 +43,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
 //        JComboBox combo1=new JComboBox(new String[]{tr("Autosimplify and wait"),
 //            tr("Autosimplify and save"),tr("Simplify and wait"),tr("Simplify and save"),
 //            tr("Save as is")});
-        JComboBox combo1=new JComboBox(new String[]{tr("Autosimplify"),
+        JComboBox<String> combo1=new JComboBox<>(new String[]{tr("Autosimplify"),
             tr("Simplify with initial epsilon"),tr("Save as is")});
         JCheckBox snapCb=new JCheckBox(tr("Snap to nodes"));
         JCheckBox fixedClickCb = new JCheckBox(tr("Add fixed points on click"));

@@ -45,8 +45,8 @@ public class ModuleInformation implements OdConstants {
     public String downloadlink = null;
     public String iconPath;
     public ImageIcon icon;
-    public List<URL> libraries = new LinkedList<URL>();
-    public final Map<String, String> attr = new TreeMap<String, String>();
+    public List<URL> libraries = new LinkedList<>();
+    public final Map<String, String> attr = new TreeMap<>();
 
     /**
      * Creates a module information object by reading the module information from
@@ -244,6 +244,7 @@ public class ModuleInformation implements OdConstants {
      * @param classLoader the class loader to use
      * @return the loaded class
      */
+    @SuppressWarnings("unchecked")
     public Class<? extends Module> loadClass(ClassLoader classLoader) throws ModuleException {
         if (className == null)
             return null;
@@ -264,7 +265,7 @@ public class ModuleInformation implements OdConstants {
 
     public static Collection<String> getModuleLocations() {
         Collection<String> locations = Main.pref.getAllPossiblePreferenceDirs();
-        Collection<String> all = new ArrayList<String>(locations.size());
+        Collection<String> all = new ArrayList<>(locations.size());
         for (String s : locations) {
             all.add(s+"plugins/opendata/modules");
         }

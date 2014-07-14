@@ -55,7 +55,7 @@ public class XlsReader extends SpreadSheetReader {
 		if (sheet != null) {
 			Row row = sheet.getRow(rowIndex++);
 			if (row != null) {
-				List<String> result = new ArrayList<String>();
+				List<String> result = new ArrayList<>();
 				for (Cell cell : row) {
 		            switch (cell.getCellType()) {
 		                case Cell.CELL_TYPE_STRING:

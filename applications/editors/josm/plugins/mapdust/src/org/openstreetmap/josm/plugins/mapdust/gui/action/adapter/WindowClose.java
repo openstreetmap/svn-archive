@@ -45,8 +45,6 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
  */
 public class WindowClose extends WindowAdapter {
 
-    /** Serial version UID */
-
     /** A <code>AbstractDialog</code> object */
     private AbstractDialog dialog;
 

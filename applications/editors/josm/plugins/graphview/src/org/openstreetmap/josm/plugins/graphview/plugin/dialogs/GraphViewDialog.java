@@ -51,13 +51,12 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
     /** map from labels to available color schemes */
     private final LinkedHashMap<String, ColorScheme> availableColorSchemes;
 
-
     private final GraphViewPreferences preferences;
     private final GraphViewPlugin plugin;
 
-    private final JComboBox rulesetComboBox;
-    private final JComboBox bookmarkComboBox;
-    private final JComboBox colorSchemeComboBox;
+    private final JComboBox<String> rulesetComboBox;
+    private final JComboBox<String> bookmarkComboBox;
+    private final JComboBox<String> colorSchemeComboBox;
 
     /**
      * list of ruleset files in the order currently used by rulesetComboBox;
@@ -110,7 +109,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             selectionLayout.setConstraints(rulesetLabel, gbcLabel);
             selectionPanel.add(rulesetLabel);
 
-            rulesetComboBox = new JComboBox();
+            rulesetComboBox = new JComboBox<>();
             rulesetComboBox.addActionListener(rulesetActionListener);
             gbcComboBox.gridy = 0;
             selectionLayout.setConstraints(rulesetComboBox, gbcComboBox);
@@ -124,7 +123,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             selectionLayout.setConstraints(bookmarkLabel, gbcLabel);
             selectionPanel.add(bookmarkLabel);
 
-            bookmarkComboBox = new JComboBox();
+            bookmarkComboBox = new JComboBox<>();
             bookmarkComboBox.addActionListener(bookmarkActionListener);
             gbcComboBox.gridy = 1;
             selectionLayout.setConstraints(bookmarkComboBox, gbcComboBox);
@@ -138,7 +137,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
             selectionLayout.setConstraints(colorSchemeLabel, gbcLabel);
             selectionPanel.add(colorSchemeLabel);
 
-            colorSchemeComboBox = new JComboBox();
+            colorSchemeComboBox = new JComboBox<>();
             for (String colorSchemeName : availableColorSchemes.keySet()) {
                 colorSchemeComboBox.addItem(colorSchemeName);
                 ColorScheme colorScheme = availableColorSchemes.get(colorSchemeName);
@@ -284,7 +283,5 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
         }
 
         bookmarkComboBox.addActionListener(bookmarkActionListener);
-
     }
-
 }

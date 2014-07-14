@@ -38,8 +38,8 @@ public class ColorSchemePreference implements SubPreferenceSetting {
     private static final String PREF_KEY_SCHEMES_PREFIX = "colorschemes.";
     private static final String PREF_KEY_SCHEMES_NAMES = PREF_KEY_SCHEMES_PREFIX + "names";
     public static final String PREF_KEY_COLOR_PREFIX = "color.";
-    private JList schemesList;
-    private DefaultListModel listModel;
+    private JList<String> schemesList;
+    private DefaultListModel<String> listModel;
     private List<String>colorKeys;
     private ColorPreference colorPreference;
 
@@ -49,10 +49,6 @@ public class ColorSchemePreference implements SubPreferenceSetting {
     public ColorSchemePreference() {
     }
 
-
-    /* (non-Javadoc)
-     * @see org.openstreetmap.josm.gui.preferences.PreferenceSetting#addGui(org.openstreetmap.josm.gui.preferences.PreferenceDialog)
-     */
     @Override
     public void addGui(final PreferenceTabbedPane gui) {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -61,8 +57,8 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         Map<String, String> colorMap = Main.pref.getAllPrefix(PREF_KEY_COLOR_PREFIX);
         colorKeys = new ArrayList<String>(colorMap.keySet());
         Collections.sort(colorKeys);
-        listModel = new DefaultListModel();
-        schemesList = new JList(listModel);
+        listModel = new DefaultListModel<>();
+        schemesList = new JList<>(listModel);
         String schemes = Main.pref.get(PREF_KEY_SCHEMES_NAMES);
         StringTokenizer st = new StringTokenizer(schemes, ";");
         String schemeName;

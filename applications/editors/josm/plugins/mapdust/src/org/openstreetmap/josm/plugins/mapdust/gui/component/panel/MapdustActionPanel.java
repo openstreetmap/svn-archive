@@ -27,21 +27,22 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.component.panel;
 
-
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteActionList;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.model.ActionListModel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
-
 
 /**
  * Defines a JPanel for the <code>MapdustAction</code> object.
@@ -51,14 +52,11 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
  */
 public class MapdustActionPanel extends JPanel {
 
-    /** The serial version UID */
-    private static final long serialVersionUID = -6648507056357610823L;
-
     /** The scroll pane */
     private JScrollPane cmpActionList;
 
     /** The JList containing the MapDust action objects */
-    private JList actionJList;
+    private JList<MapdustAction> actionJList;
 
     /** The list of <code>MapdustAction</code> objects */
     private List<MapdustAction> actionList;
@@ -112,7 +110,6 @@ public class MapdustActionPanel extends JPanel {
         actionJList.setModel(new ActionListModel(actionList));
         cmpActionList.getViewport().setView(actionJList);
         cmpActionList.invalidate();
-
     }
 
     /**
@@ -132,5 +129,4 @@ public class MapdustActionPanel extends JPanel {
     public void setActionList(List<MapdustAction> actionList) {
         this.actionList = actionList;
     }
-
 }

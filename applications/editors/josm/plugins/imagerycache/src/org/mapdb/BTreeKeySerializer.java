@@ -17,9 +17,9 @@ public abstract class BTreeKeySerializer<K>{
 
     static final class BasicKeySerializer extends BTreeKeySerializer<Object> {
 
-        protected final Serializer defaultSerializer;
+        protected final Serializer<Object> defaultSerializer;
 
-        BasicKeySerializer(Serializer defaultSerializer) {
+        BasicKeySerializer(Serializer<Object> defaultSerializer) {
             this.defaultSerializer = defaultSerializer;
         }
 

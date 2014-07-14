@@ -19,15 +19,11 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleException;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 
-/**
- * TODO
- *
- */
 public class ModulePreferencesModel extends Observable implements OdConstants {
-    private final ArrayList<ModuleInformation> availableModules = new ArrayList<ModuleInformation>();
-    private final ArrayList<ModuleInformation> displayedModules = new ArrayList<ModuleInformation>();
-    private final HashMap<ModuleInformation, Boolean> selectedModulesMap = new HashMap<ModuleInformation, Boolean>();
-    private Set<String> pendingDownloads = new HashSet<String>();
+    private final ArrayList<ModuleInformation> availableModules = new ArrayList<>();
+    private final ArrayList<ModuleInformation> displayedModules = new ArrayList<>();
+    private final HashMap<ModuleInformation, Boolean> selectedModulesMap = new HashMap<>();
+    private Set<String> pendingDownloads = new HashSet<>();
     private String filterExpression;
     private final Set<String> currentActiveModules;
 
@@ -36,7 +32,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
     }
     
     public ModulePreferencesModel() {
-    	currentActiveModules = new HashSet<String>();
+    	currentActiveModules = new HashSet<>();
     	currentActiveModules.addAll(getModules(currentActiveModules));
     }
 
@@ -65,7 +61,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
         }
         sort();
         filterDisplayedModules(filterExpression);
-        Set<String> activeModules = new HashSet<String>();
+        Set<String> activeModules = new HashSet<>();
         activeModules.addAll(getModules(activeModules));
         for (ModuleInformation pi: availableModules) {
             if (selectedModulesMap.get(pi) == null) {
@@ -100,7 +96,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
         }
         sort();
         filterDisplayedModules(filterExpression);
-        Set<String> activeModules = new HashSet<String>();
+        Set<String> activeModules = new HashSet<>();
         activeModules.addAll(getModules(activeModules));
         for (ModuleInformation pi: availableModules) {
             if (selectedModulesMap.get(pi) == null) {
@@ -119,7 +115,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
      * @return the list of selected module information objects
      */
     public List<ModuleInformation> getSelectedModules() {
-        List<ModuleInformation> ret = new LinkedList<ModuleInformation>();
+        List<ModuleInformation> ret = new LinkedList<>();
         for (ModuleInformation pi: availableModules) {
             if (selectedModulesMap.get(pi) == null) {
                 continue;
@@ -137,7 +133,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
      * @return the list of selected module information objects
      */
     public Set<String> getSelectedModuleNames() {
-        Set<String> ret = new HashSet<String>();
+        Set<String> ret = new HashSet<>();
         for (ModuleInformation pi: getSelectedModules()) {
             ret.add(pi.name);
         }
@@ -176,7 +172,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
      * @return the list of modules waiting for update or download
      */
     public List<ModuleInformation> getModulesScheduledForUpdateOrDownload() {
-        List<ModuleInformation> ret = new ArrayList<ModuleInformation>();
+        List<ModuleInformation> ret = new ArrayList<>();
         for (String module: pendingDownloads) {
             ModuleInformation pi = getModuleInformation(module);
             if (pi == null) {

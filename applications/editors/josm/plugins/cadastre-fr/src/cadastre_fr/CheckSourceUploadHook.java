@@ -31,8 +31,6 @@ import org.openstreetmap.josm.tools.GBC;
  */
 public class CheckSourceUploadHook implements UploadHook
 {
-    /** Serializable ID */
-    private static final long serialVersionUID = -1;
 
     /**
      * Add the tag "source" if it doesn't exist for all new Nodes and Ways before uploading
@@ -81,7 +79,7 @@ public class CheckSourceUploadHook implements UploadHook
             p.add(new JLabel(tr("Add \"source=...\" to elements?")), GBC.eol());
             JTextField tf = new JTextField(CadastrePlugin.source);
             p.add(tf, GBC.eol());
-            JList l = new JList(sel.toArray());
+            JList<OsmPrimitive> l = new JList<>(sel.toArray(new OsmPrimitive[0]));
             l.setCellRenderer(renderer);
             l.setVisibleRowCount(l.getModel().getSize() < 6 ? l.getModel().getSize() : 10);
             p.add(new JScrollPane(l), GBC.eol().fill());
@@ -90,7 +88,5 @@ public class CheckSourceUploadHook implements UploadHook
             if (bContinue)
                 Main.main.undoRedo.add(new ChangePropertyCommand(sel, "source", tf.getText()));
         }
-
     }
 }
-

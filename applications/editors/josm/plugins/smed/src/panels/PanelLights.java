@@ -17,7 +17,7 @@ public class PanelLights extends JPanel {
 
 	public JLabel categoryLabel;
 
-	public JComboBox landCatBox;
+	public JComboBox<String> landCatBox;
 	public EnumMap<Cat, Integer> landCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alLandCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -30,7 +30,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox trafficCatBox;
+	public JComboBox<String> trafficCatBox;
 	public EnumMap<Cat, Integer> trafficCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alTrafficCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -43,7 +43,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox warningCatBox;
+	public JComboBox<String> warningCatBox;
 	public EnumMap<Cat, Integer> warningCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alWarningCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -56,7 +56,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox platformCatBox;
+	public JComboBox<String> platformCatBox;
 	public EnumMap<Cat, Integer> platformCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alPlatformCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -69,7 +69,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox pilotCatBox;
+	public JComboBox<String> pilotCatBox;
 	public EnumMap<Cat, Integer> pilotCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alPilotCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -82,7 +82,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox rescueCatBox;
+	public JComboBox<String> rescueCatBox;
 	public EnumMap<Cat, Integer> rescueCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alRescueCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -95,7 +95,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox radioCatBox;
+	public JComboBox<String> radioCatBox;
 	public EnumMap<Cat, Integer> radioCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alRadioCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -108,7 +108,7 @@ public class PanelLights extends JPanel {
 			}
 		}
 	};
-	public JComboBox radarCatBox;
+	public JComboBox<String> radarCatBox;
 	public EnumMap<Cat, Integer> radarCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alRadarCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -122,7 +122,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JLabel functionLabel;
-	public JComboBox functionBox;
+	public JComboBox<String> functionBox;
 	public EnumMap<Fnc, Integer> functions = new EnumMap<Fnc, Integer>(Fnc.class);
 	private ActionListener alfunctionBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -260,7 +260,7 @@ public class PanelLights extends JPanel {
 		add(functionLabel);
 		functionLabel.setVisible(false);
 
-		functionBox = new JComboBox();
+		functionBox = new JComboBox<>();
 		functionBox.setBounds(new Rectangle(5, 110, 160, 18));
 		add(functionBox);
 		functionBox.addActionListener(alfunctionBox);
@@ -280,7 +280,7 @@ public class PanelLights extends JPanel {
 		add(categoryLabel);
 		categoryLabel.setVisible(false);
 
-		landCatBox = new JComboBox();
+		landCatBox = new JComboBox<>();
 		landCatBox.setBounds(new Rectangle(5, 142, 160, 18));
 		add(landCatBox);
 		landCatBox.addActionListener(alLandCatBox);
@@ -307,7 +307,7 @@ public class PanelLights extends JPanel {
 		addLCItem(Messages.getString("Cairn"), Cat.LMK_CARN);
 		landCatBox.setVisible(false);
 
-		trafficCatBox = new JComboBox();
+		trafficCatBox = new JComboBox<>();
 		trafficCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(trafficCatBox);
 		trafficCatBox.addActionListener(alTrafficCatBox);
@@ -324,7 +324,7 @@ public class PanelLights extends JPanel {
 		addTCItem(Messages.getString("Dredging"), Cat.SIS_DRDG);
 		trafficCatBox.setVisible(false);
 
-		warningCatBox = new JComboBox();
+		warningCatBox = new JComboBox<>();
 		warningCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(warningCatBox);
 		warningCatBox.addActionListener(alWarningCatBox);
@@ -346,7 +346,7 @@ public class PanelLights extends JPanel {
 		addWCItem(Messages.getString("Military"), Cat.SIS_MILY);
 		warningCatBox.setVisible(false);
 
-		platformCatBox = new JComboBox();
+		platformCatBox = new JComboBox<>();
 		platformCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(platformCatBox);
 		platformCatBox.addActionListener(alPlatformCatBox);
@@ -363,7 +363,7 @@ public class PanelLights extends JPanel {
 		addPLItem(Messages.getString("NCCB"), Cat.OFP_NCCB);
 		platformCatBox.setVisible(false);
 
-		pilotCatBox = new JComboBox();
+		pilotCatBox = new JComboBox<>();
 		pilotCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(pilotCatBox);
 		pilotCatBox.addActionListener(alPilotCatBox);
@@ -373,7 +373,7 @@ public class PanelLights extends JPanel {
 		addPTItem(Messages.getString("FromShore"), Cat.PIL_SHORE);
 		pilotCatBox.setVisible(false);
 
-		rescueCatBox = new JComboBox();
+		rescueCatBox = new JComboBox<>();
 		rescueCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(rescueCatBox);
 		rescueCatBox.addActionListener(alRescueCatBox);
@@ -390,7 +390,7 @@ public class PanelLights extends JPanel {
 		addRSItem(Messages.getString("Tug"), Cat.RSC_TUG);
 		rescueCatBox.setVisible(false);
 
-		radioCatBox = new JComboBox();
+		radioCatBox = new JComboBox<>();
 		radioCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(radioCatBox);
 		radioCatBox.addActionListener(alRadioCatBox);
@@ -428,7 +428,7 @@ public class PanelLights extends JPanel {
 		addROItem(Messages.getString("V-AISWK"), Cat.ROS_VAWK);
 		radioCatBox.setVisible(false);
 
-		radarCatBox = new JComboBox();
+		radarCatBox = new JComboBox<>();
 		radarCatBox.setBounds(new Rectangle(5, 140, 160, 20));
 		add(radarCatBox);
 		radarCatBox.addActionListener(alRadarCatBox);

@@ -40,7 +40,6 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-
 /**
  * This is a layer that draws a grid
  */
@@ -205,13 +204,12 @@ public class MeasurementLayer extends Layer {
         return heading * 180 / Math.PI;
     }
 
-
     private class GPXLayerImportAction extends AbstractAction {
 
     /**
      * The data model for the list component.
      */
-    private DefaultListModel model = new DefaultListModel();
+    private DefaultListModel<GpxLayer> model = new DefaultListModel<>();
 
     /**
      * @param layer the targeting measurement layer
@@ -223,14 +221,14 @@ public class MeasurementLayer extends Layer {
     @Override
     public void actionPerformed(ActionEvent e) {
         Box panel = Box.createVerticalBox();
-        final JList layerList = new JList(model);
+        final JList<GpxLayer> layerList = new JList<>(model);
         Collection<Layer> data = Main.map.mapView.getAllLayers();
         Layer lastLayer = null;
         int layerCnt = 0;
 
         for (Layer l : data){
                 if(l instanceof GpxLayer){
-                    model.addElement(l);
+                    model.addElement((GpxLayer) l);
                     lastLayer = l;
                     layerCnt++;
                 }
@@ -241,7 +239,7 @@ public class MeasurementLayer extends Layer {
             if(layerCnt > 0){
 
                 layerList.setCellRenderer(new DefaultListCellRenderer(){
-                        @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                        @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                             Layer layer = (Layer)value;
                             JLabel label = (JLabel)super.getListCellRendererComponent(list,
                                                                                       layer.getName(), index, isSelected, cellHasFocus);
@@ -292,5 +290,4 @@ public class MeasurementLayer extends Layer {
             }
         }
     }
-
 }

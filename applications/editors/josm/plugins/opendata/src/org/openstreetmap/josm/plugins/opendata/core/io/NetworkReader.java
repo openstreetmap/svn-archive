@@ -44,7 +44,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
     /**
      * File readers
      */
-    public static final Map<String, Class<? extends AbstractReader>> FILE_READERS = new HashMap<String, Class<? extends AbstractReader>>();
+    public static final Map<String, Class<? extends AbstractReader>> FILE_READERS = new HashMap<>();
     static {
         FILE_READERS.put(CSV_EXT, CsvReader.class);
         FILE_READERS.put(KML_EXT, KmlReader.class);
@@ -57,7 +57,7 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
         FILE_READERS.put(TAB_EXT, TabReader.class);
     }
     
-    public static final Map<String, Class<? extends AbstractReader>> FILE_AND_ARCHIVE_READERS = new HashMap<String, Class<? extends AbstractReader>>(FILE_READERS);
+    public static final Map<String, Class<? extends AbstractReader>> FILE_AND_ARCHIVE_READERS = new HashMap<>(FILE_READERS);
     static {
         FILE_AND_ARCHIVE_READERS.put(ZIP_EXT, ZipReader.class);
         FILE_AND_ARCHIVE_READERS.put(SEVENZIP_EXT, SevenZipReader.class);

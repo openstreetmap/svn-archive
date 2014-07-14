@@ -27,12 +27,12 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.component.dialog;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.mapdust.MapdustPlugin;
 import org.openstreetmap.josm.plugins.mapdust.gui.action.adapter.WindowClose;
@@ -48,8 +49,8 @@ import org.openstreetmap.josm.plugins.mapdust.gui.action.execute.ExecuteCancel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.panel.MapdustButtonPanel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.renderer.ComboBoxRenderer;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.util.ComponentUtil;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.tools.ImageProvider;
-
 
 /**
  * This class is used for creating a dialog window for the new issue MapDust Bug
@@ -70,7 +71,7 @@ public class CreateBugDialog extends AbstractDialog {
     private JLabel lblType;
 
     /** The combo-box for the bug types */
-    private JComboBox cbbType;
+    private JComboBox<BugType> cbbType;
 
     /** The nickname label */
     private JLabel lblNickname;
@@ -247,7 +248,7 @@ public class CreateBugDialog extends AbstractDialog {
      *
      * @return the cbbType
      */
-    public JComboBox getCbbType() {
+    public JComboBox<BugType> getCbbType() {
         return cbbType;
     }
 

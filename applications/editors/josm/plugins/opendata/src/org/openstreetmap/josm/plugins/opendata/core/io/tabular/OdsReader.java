@@ -64,7 +64,7 @@ public class OdsReader extends SpreadSheetReader {
 				System.out.println("Lines read: "+rowIndex);
 			}
 
-			List<String> result = new ArrayList<String>();
+			List<String> result = new ArrayList<>();
 			boolean allFieldsBlank = true;
 			for (TableTableCell cell : row.getAllCells()) {
 			    TextP textP = cell.getTextP();

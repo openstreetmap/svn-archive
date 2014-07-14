@@ -38,7 +38,7 @@ public class PanelLit extends JPanel {
 		}
 	};
 	public JLabel visibilityLabel;
-	public JComboBox visibilityBox;
+	public JComboBox<String> visibilityBox;
 	public EnumMap<Vis, Integer> visibilities = new EnumMap<Vis, Integer>(Vis.class);
 	private ActionListener alVisibility = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -78,7 +78,7 @@ public class PanelLit extends JPanel {
 		}
 	};
 	public JLabel categoryLabel;
-	public JComboBox categoryBox;
+	public JComboBox<String> categoryBox;
 	public EnumMap<Lit, Integer> categories = new EnumMap<Lit, Integer>(Lit.class);
 	private ActionListener alCategory = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -114,7 +114,7 @@ public class PanelLit extends JPanel {
 		}
 	};
 	public JLabel exhibitionLabel;
-	public JComboBox exhibitionBox;
+	public JComboBox<String> exhibitionBox;
 	public EnumMap<Exh, Integer> exhibitions = new EnumMap<Exh, Integer>(Exh.class);
 	private ActionListener alExhibition = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -208,7 +208,7 @@ public class PanelLit extends JPanel {
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(185, 0, 165, 20));
 		add(categoryLabel);
-		categoryBox = new JComboBox();
+		categoryBox = new JComboBox<>();
 		categoryBox.setBounds(new Rectangle(185, 20, 165, 20));
 		add(categoryBox);
 		addCatItem("", Lit.UNKLIT);
@@ -234,7 +234,7 @@ public class PanelLit extends JPanel {
 		visibilityLabel = new JLabel(Messages.getString("Visibility"), SwingConstants.CENTER);
 		visibilityLabel.setBounds(new Rectangle(185, 40, 165, 20));
 		add(visibilityLabel);
-		visibilityBox = new JComboBox();
+		visibilityBox = new JComboBox<>();
 		visibilityBox.setBounds(new Rectangle(185, 60, 165, 20));
 		add(visibilityBox);
 		addVisibItem("", Vis.UNKVIS);
@@ -246,7 +246,7 @@ public class PanelLit extends JPanel {
 		exhibitionLabel = new JLabel(Messages.getString("Exhibition"), SwingConstants.CENTER);
 		exhibitionLabel.setBounds(new Rectangle(280, 80, 70, 20));
 		add(exhibitionLabel);
-		exhibitionBox = new JComboBox();
+		exhibitionBox = new JComboBox<>();
 		exhibitionBox.setBounds(new Rectangle(280, 100, 70, 20));
 		add(exhibitionBox);
 		addExhibItem("", Exh.UNKEXH);

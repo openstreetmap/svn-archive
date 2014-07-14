@@ -1,7 +1,18 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
@@ -69,25 +80,25 @@ public class Preferences extends DefaultTabPreferenceSetting {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
-        addNewTagCheckBox = new javax.swing.JCheckBox();
-        addNewTagKeyField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        addNewTagValueField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        optimizeComboBox = new javax.swing.JComboBox();
-        buildingCheckBox = new javax.swing.JCheckBox();
+        mainPanel = new JPanel();
+        addNewTagCheckBox = new JCheckBox();
+        addNewTagKeyField = new JTextField();
+        jLabel1 = new JLabel();
+        addNewTagValueField = new JTextField();
+        jLabel2 = new JLabel();
+        optimizeComboBox = new JComboBox<>();
+        buildingCheckBox = new JCheckBox();
 
         thisPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         addNewTagCheckBox.setText("Novým primitivám přidávat tag:");
-        addNewTagCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        addNewTagCheckBox.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
                 addNewTagChanged(evt);
             }
         });
-        addNewTagCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addNewTagCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 addNewTagCheckBoxActionPerformed(evt);
             }
         });
@@ -102,13 +113,13 @@ public class Preferences extends DefaultTabPreferenceSetting {
 
         jLabel2.setText("Optimalizovat algoritmus přiřazování:");
 
-        optimizeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pro rychlejší odezvu", "menší spotřebu paměti" }));
+        optimizeComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "pro rychlejší odezvu", "menší spotřebu paměti" }));
         optimizeComboBox.setSelectedIndex(1);
         optimizeComboBox.setEnabled(false);
 
         buildingCheckBox.setText("Nově polygonům přidávat tag \"building=yes\"");
-        buildingCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        buildingCheckBox.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
                 buildingCheckBoxaddNewTagChanged(evt);
             }
         });
@@ -118,7 +129,7 @@ public class Preferences extends DefaultTabPreferenceSetting {
             }
         });
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        javax.swing.GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,7 +223,7 @@ public class Preferences extends DefaultTabPreferenceSetting {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JComboBox optimizeComboBox;
+    private javax.swing.JComboBox<String> optimizeComboBox;
     // End of variables declaration//GEN-END:variables
 
 }

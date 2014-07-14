@@ -4,7 +4,6 @@
 package org.openstreetmap.josm.plugins.globalsat;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
-import gnu.io.CommPortIdentifier;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -12,13 +11,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,7 +23,6 @@ import javax.swing.JTextField;
 
 import org.kaintoch.gps.globalsat.dg100.Dg100Config;
 import org.openstreetmap.josm.Main;
-
 
 /**
  * Configuration download dialog.
@@ -54,12 +49,6 @@ public class GlobalsatConfigDialog extends JPanel {
         }
     }
 
-
-
-    // the JOptionPane that contains this dialog. required for the closeDialog() method.
-    private JOptionPane optionPane;
-    private JCheckBox delete;
-    private JComboBox portCombo;
     private JRadioButton formatPosOnly = new JRadioButton(tr("Position only"));
     private JRadioButton formatPosTDS = new JRadioButton(tr("Position, Time, Date, Speed"));
     private JRadioButton formatPosTDSA = new JRadioButton(tr("Position, Time, Date, Speed, Altitude"));
@@ -78,15 +67,10 @@ public class GlobalsatConfigDialog extends JPanel {
     private JTextField cSeconds = new IntegerTextField();
     private JTextField cMeters = new IntegerTextField();
 
-    private JLabel memUsage = new JLabel();
-
     private JCheckBox disableLogDist, disableLogSpeed;
     private JTextField minLogDist, minLogSpeed;
 
-    private List<CommPortIdentifier> ports = new LinkedList<CommPortIdentifier>();
-
     private Dg100Config conf;
-
 
     public GlobalsatConfigDialog(Dg100Config config) {
         conf = config;
@@ -322,14 +306,6 @@ public class GlobalsatConfigDialog extends JPanel {
         cSeconds.setText("" + conf.getSwCTime() / 1000);
         cMeters.setText("" + conf.getSwCDist());
 
-    }
-
-    /**
-     * Has to be called after this dialog has been added to a JOptionPane.
-     * @param optionPane
-     */
-    public void setOptionPane(JOptionPane optionPane) {
-        this.optionPane = optionPane;
     }
 
     /**

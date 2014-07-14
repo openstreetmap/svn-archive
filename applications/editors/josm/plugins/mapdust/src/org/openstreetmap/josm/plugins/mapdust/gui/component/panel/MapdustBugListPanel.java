@@ -78,7 +78,7 @@ public class MapdustBugListPanel extends JPanel implements
     private List<MapdustBug> mapdustBugsList;
 
     /** The list of bugs */
-    private JList mapdustBugsJList;
+    private JList<MapdustBug> mapdustBugsJList;
 
     /** The scroll pane for the <code>MapdustBug</code>s */
     private JScrollPane cmpMapdustBugs;
@@ -162,7 +162,7 @@ public class MapdustBugListPanel extends JPanel implements
         if (mapdustBugsList == null || mapdustBugsList.isEmpty()) {
             String text = " No bugs in the current view for the selected";
             text += " filters!";
-            JList textJList = new JList(new String[] { text });
+            JList<String> textJList = new JList<>(new String[] { text });
             textJList.setBorder(new LineBorder(Color.black, 1, false));
             textJList.setCellRenderer(new BugListCellRenderer());
             cmpMapdustBugs = ComponentUtil.createJScrollPane(textJList);
@@ -191,14 +191,13 @@ public class MapdustBugListPanel extends JPanel implements
         if (mapdustBugsList == null || mapdustBugsList.isEmpty()) {
             String text = " No bugs in the current view for the selected";
             text += " filters!";
-            JList textJList = new JList(new String[] { text });
+            JList<String> textJList = new JList<>(new String[] { text });
             textJList.setBorder(new LineBorder(Color.black, 1, false));
             textJList.setCellRenderer(new BugListCellRenderer());
             cmpMapdustBugs.getViewport().setView(textJList);
         } else {
             if (mapdustBugsJList == null) {
-                mapdustBugsJList = ComponentUtil.createJList(mapdustBugsList,
-                        menu);
+                mapdustBugsJList = ComponentUtil.createJList(mapdustBugsList, menu);
                 mapdustBugsJList.addListSelectionListener(this);
                 DisplayMenu adapter = new DisplayMenu(mapdustBugsJList, menu);
                 mapdustBugsJList.addMouseListener(adapter);
@@ -348,7 +347,7 @@ public class MapdustBugListPanel extends JPanel implements
      *
      * @return the listBugs
      */
-    public JList getMapdustBugsJList() {
+    public JList<MapdustBug> getMapdustBugsJList() {
         return mapdustBugsJList;
     }
 

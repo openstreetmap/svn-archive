@@ -40,12 +40,12 @@ import javax.swing.UIManager;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.osb.OsbPlugin;
 
-public class OsbBugListCellRenderer implements ListCellRenderer {
+public class OsbBugListCellRenderer implements ListCellRenderer<OsbListItem> {
 
     private Color background = Color.WHITE;
     private Color altBackground = new Color(250, 250, 220);
 
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+    public Component getListCellRendererComponent(JList<? extends OsbListItem> list, OsbListItem item, int index, boolean isSelected,
             boolean cellHasFocus) {
 
         JLabel label = new JLabel();
@@ -63,7 +63,6 @@ public class OsbBugListCellRenderer implements ListCellRenderer {
             label.setForeground(UIManager.getColor("Label.disabledForeground"));
         }
 
-        OsbListItem item = (OsbListItem) value;
         Node n = item.getNode();
         Icon icon = null;
         if("0".equals(n.get("state"))) {
@@ -85,5 +84,4 @@ public class OsbBugListCellRenderer implements ListCellRenderer {
         label.setEnabled(list.isEnabled());
         return label;
     }
-
 }

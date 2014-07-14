@@ -22,8 +22,7 @@ import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
  * @see OsmPrimitive
  * @see Proposal
  */
-public class ProposalContainer implements ListModel, Comparable<ProposalContainer> {
-
+public class ProposalContainer implements ListModel<Proposal>, Comparable<ProposalContainer> {
 
     /**
      * List of listeners for implementing the {@code ListModel}.
@@ -64,8 +63,7 @@ public class ProposalContainer implements ListModel, Comparable<ProposalContaine
     /**
      * The list of proposals to be applied to encapsulated primitive.
      */
-    protected List<Proposal> proposals
-            = new ArrayList<Proposal>();
+    protected List<Proposal> proposals = new ArrayList<Proposal>();
 
     /**
      * Adds a new {@link Proposal}.
@@ -183,24 +181,28 @@ public class ProposalContainer implements ListModel, Comparable<ProposalContaine
         return target.toString();
     }
 
+    @Override
     public int getSize() {
         return proposals.size();
     }
 
-    public Object getElementAt(int index) {
+    @Override
+    public Proposal getElementAt(int index) {
         return proposals.get(index);
     }
 
+    @Override
     public void addListDataListener(ListDataListener l) {
         listeners.add(l);
     }
 
+    @Override
     public void removeListDataListener(ListDataListener l) {
         listeners.remove(l);
     }
 
+    @Override
     public int compareTo(ProposalContainer o) {
         return PrimUtils.comparator.compare(this.target, o.target);
     }
-
 }

@@ -96,13 +96,13 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 	public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
 		System.out.println("Header: "+Arrays.toString(header));
 		
-		Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<ProjectionPatterns, List<CoordinateColumns>>();
+		Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<>();
 		
 		for (int i = 0; i<header.length; i++) {
 			for (ProjectionPatterns pp : PROJECTIONS) {
 			    List<CoordinateColumns> columns = projColumns.get(pp);
 			    if (columns == null) {
-			        projColumns.put(pp, columns = new ArrayList<CoordinateColumns>());
+			        projColumns.put(pp, columns = new ArrayList<>());
 			    }
 				CoordinateColumns col = columns.isEmpty() ? null : columns.get(columns.size()-1);
 				if (pp.getXPattern().matcher(header[i]).matches()) {
@@ -115,7 +115,7 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 			}
 		}
 
-		final List<CoordinateColumns> columns = new ArrayList<CoordinateColumns>();
+		final List<CoordinateColumns> columns = new ArrayList<>();
 		
 		for (ProjectionPatterns pp : projColumns.keySet()) {
 		    for (CoordinateColumns col : projColumns.get(pp)) {
@@ -179,8 +179,8 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 				handler.setYCol(-1);
 			}
 			
-            final Map<CoordinateColumns, EastNorth> ens = new HashMap<CoordinateColumns, EastNorth>();
-			final Map<CoordinateColumns, Node> nodes = new HashMap<CoordinateColumns, Node>();
+            final Map<CoordinateColumns, EastNorth> ens = new HashMap<>();
+			final Map<CoordinateColumns, Node> nodes = new HashMap<>();
 			for (CoordinateColumns c : columns) {
 			    nodes.put(c, new Node());
 			    ens.put(c, new EastNorth(Double.NaN, Double.NaN));

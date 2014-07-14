@@ -75,14 +75,14 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 	public static final String OSM_AERIALWAY = "aerialway";
 	public static final String OSM_FERRY = "ferry";
 
-	private static final List<URL> schemas = new ArrayList<URL>();
+	private static final List<URL> schemas = new ArrayList<>();
 	static {
 		schemas.add(NeptuneReader.class.getResource(NEPTUNE_XSD));
 	}
 	
 	private ChouettePTNetworkType root;
 	
-	private final Map<String, OsmPrimitive> tridentObjects = new HashMap<String, OsmPrimitive>();
+	private final Map<String, OsmPrimitive> tridentObjects = new HashMap<>();
 	
 	public static final boolean acceptsXmlNeptuneFile(File file) {
 		return acceptsXmlNeptuneFile(file, null);
@@ -132,7 +132,8 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 		String packageName = docClass.getPackage().getName();
 		JAXBContext jc = JAXBContext.newInstance(packageName, NeptuneReader.class.getClassLoader());
 		Unmarshaller u = jc.createUnmarshaller();
-		JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal(inputStream);
+		@SuppressWarnings("unchecked")
+        JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal(inputStream);
 		return doc.getValue();
 	}
 	

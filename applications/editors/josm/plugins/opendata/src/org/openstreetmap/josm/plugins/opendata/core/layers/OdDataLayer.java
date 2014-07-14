@@ -123,7 +123,7 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 
 	@Override
 	public Action[] getMenuEntries() {
-		List<Action> result = new ArrayList<Action>();
+		List<Action> result = new ArrayList<>();
 		for (Action entry : super.getMenuEntries()) {
 			result.add(entry);
 		}

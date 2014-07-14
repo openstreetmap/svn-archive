@@ -60,12 +60,12 @@ public class ModuleHandler implements OdConstants {
     /**
      * All installed and loaded modules (resp. their main classes)
      */
-    public final static Collection<Module> moduleList = new LinkedList<Module>();
+    public final static Collection<Module> moduleList = new LinkedList<>();
 
     /**
      * Add here all ClassLoader whose resource should be searched.
      */
-    private static final List<ClassLoader> sources = new LinkedList<ClassLoader>();
+    private static final List<ClassLoader> sources = new LinkedList<>();
 
     static {
         try {
@@ -197,7 +197,7 @@ public class ModuleHandler implements OdConstants {
      */
     public static ClassLoader createClassLoader(Collection<ModuleInformation> modules) {
         // iterate all modules and collect all libraries of all modules:
-        List<URL> allModuleLibraries = new LinkedList<URL>();
+        List<URL> allModuleLibraries = new LinkedList<>();
         File moduleDir = OdPlugin.getInstance().getModulesDirectory();
         for (ModuleInformation info : modules) {
             if (info.libraries == null) {
@@ -268,7 +268,7 @@ public class ModuleHandler implements OdConstants {
         try {
             monitor.beginTask(tr("Loading modules ..."));
             monitor.subTask(tr("Checking module preconditions..."));
-            List<ModuleInformation> toLoad = new LinkedList<ModuleInformation>();
+            List<ModuleInformation> toLoad = new LinkedList<>();
             for (ModuleInformation pi: modules) {
                 if (checkLoadPreconditions(parent, modules, pi)) {
                     toLoad.add(pi);
@@ -315,7 +315,7 @@ public class ModuleHandler implements OdConstants {
                 e.printStackTrace();
                 return null;
             }
-            HashMap<String, ModuleInformation> ret = new HashMap<String, ModuleInformation>();
+            HashMap<String, ModuleInformation> ret = new HashMap<>();
             for (ModuleInformation pi: task.getAvailableModules()) {
                 ret.put(pi.name, pi);
             }
@@ -357,13 +357,13 @@ public class ModuleHandler implements OdConstants {
      * @return the set of modules to load (as set of module names)
      */
     public static List<ModuleInformation> buildListOfModulesToLoad(Component parent) {
-        Set<String> modules = new HashSet<String>();
+        Set<String> modules = new HashSet<>();
         modules.addAll(Main.pref.getCollection(PREF_MODULES,  new LinkedList<String>()));
         if (System.getProperty("josm."+PREF_MODULES) != null) {
             modules.addAll(Arrays.asList(System.getProperty("josm."+PREF_MODULES).split(",")));
         }
         Map<String, ModuleInformation> infos = loadLocallyAvailableModuleInformation(null);
-        List<ModuleInformation> ret = new LinkedList<ModuleInformation>();
+        List<ModuleInformation> ret = new LinkedList<>();
         for (Iterator<String> it = modules.iterator(); it.hasNext();) {
             String module = it.next();
             if (infos.containsKey(module)) {
@@ -447,7 +447,7 @@ public class ModuleHandler implements OdConstants {
 
             // filter modules which actually have to be updated
             //
-            Collection<ModuleInformation> modulesToUpdate = new ArrayList<ModuleInformation>();
+            Collection<ModuleInformation> modulesToUpdate = new ArrayList<>();
             for(ModuleInformation pi: modules) {
                 if (pi.isUpdateRequired()) {
                     modulesToUpdate.add(pi);

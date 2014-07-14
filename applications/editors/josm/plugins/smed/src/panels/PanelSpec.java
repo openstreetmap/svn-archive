@@ -16,7 +16,7 @@ public class PanelSpec extends JPanel {
 
 	private SmedAction dlg;
 	public JLabel categoryLabel;
-	public JComboBox categoryBox;
+	public JComboBox<String> categoryBox;
 	public EnumMap<Cat, Integer> categories = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alCategoryBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -27,7 +27,7 @@ public class PanelSpec extends JPanel {
 			}
 		}
 	};
-	public JComboBox mooringBox;
+	public JComboBox<String> mooringBox;
 	public EnumMap<Cat, Integer> moorings = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alMooringBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -172,7 +172,7 @@ public class PanelSpec extends JPanel {
 		categoryLabel = new JLabel(Messages.getString("Category"), SwingConstants.CENTER);
 		categoryLabel.setBounds(new Rectangle(5, 125, 160, 18));
 		add(categoryLabel);
-		categoryBox = new JComboBox();
+		categoryBox = new JComboBox<>();
 		categoryBox.setBounds(new Rectangle(5, 142, 160, 18));
 		add(categoryBox);
 		categoryBox.setVisible(true);
@@ -195,7 +195,7 @@ public class PanelSpec extends JPanel {
 		addCatItem(Messages.getString("Diving"), Cat.SPM_DIVE);
 		addCatItem(Messages.getString("FerryCross"), Cat.SPM_FRRY);
 		addCatItem(Messages.getString("Anchorage"), Cat.SPM_ANCH);
-		mooringBox = new JComboBox();
+		mooringBox = new JComboBox<>();
 		mooringBox.setBounds(new Rectangle(5, 142, 160, 18));
 		add(mooringBox);
 		mooringBox.setVisible(false);

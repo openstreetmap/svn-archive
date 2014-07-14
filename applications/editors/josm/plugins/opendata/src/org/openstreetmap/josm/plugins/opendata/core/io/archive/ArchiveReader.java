@@ -58,7 +58,7 @@ public abstract class ArchiveReader extends AbstractReader implements OdConstant
     public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
         
         final File temp = OdUtils.createTempDir();
-        final List<File> candidates = new ArrayList<File>();
+        final List<File> candidates = new ArrayList<>();
         
         try {
             if (progressMonitor != null) {
@@ -69,7 +69,7 @@ public abstract class ArchiveReader extends AbstractReader implements OdConstant
             file = null;
             
             if (promptUser && candidates.size() > 1) {
-                DialogPrompter<CandidateChooser> prompt = new DialogPrompter() {
+                DialogPrompter<CandidateChooser> prompt = new DialogPrompter<CandidateChooser>() {
                     @Override
                     protected CandidateChooser buildDialog() {
                         return new CandidateChooser(progressMonitor.getWindowParent(), candidates);

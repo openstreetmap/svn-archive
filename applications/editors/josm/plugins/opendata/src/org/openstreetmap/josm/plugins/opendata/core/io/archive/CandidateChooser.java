@@ -26,8 +26,7 @@ public class CandidateChooser extends ExtendedDialog {
      */
     private final JPanel projPanel = new JPanel(new GridBagLayout());
 
-    //private final Map<JCheckBox, File> checkBoxes = new HashMap<JCheckBox, File>();
-    private final JComboBox fileCombo;
+    private final JComboBox<File> fileCombo;
 
 	public CandidateChooser(Component parent, List<File> candidates) {
 		this(parent, tr("File to load"), new String[] {tr("OK"), tr("Cancel")}, candidates);
@@ -36,7 +35,7 @@ public class CandidateChooser extends ExtendedDialog {
 	private class Renderer extends DefaultListCellRenderer {
 
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value,
+		public Component getListCellRendererComponent(JList<?> list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			if (value instanceof File) {
@@ -48,7 +47,7 @@ public class CandidateChooser extends ExtendedDialog {
 	
 	protected CandidateChooser(Component parent, String title, String[] buttonTexts, List<File> candidates) {
 		super(parent, title, buttonTexts);
-		this.fileCombo = new JComboBox(candidates.toArray());
+		this.fileCombo = new JComboBox<>(candidates.toArray(new File[0]));
 		this.fileCombo.setRenderer(new Renderer());
 		addGui(candidates);
 	}

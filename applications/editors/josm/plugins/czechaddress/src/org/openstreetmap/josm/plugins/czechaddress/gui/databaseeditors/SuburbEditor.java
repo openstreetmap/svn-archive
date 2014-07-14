@@ -38,14 +38,14 @@ public class SuburbEditor extends ExtendedDialog {
         parentEditButton.setText("");
         parentEditButton.setEnabled(EditorFactory.isEditable(parent));
 
-        houseList.setModel(new DefaultComboBoxModel(suburb.getHouses().toArray()));
+        houseList.setModel(new DefaultComboBoxModel<>(suburb.getHouses().toArray(new House[0])));
         houseList.setCellRenderer(new UniversalListRenderer());
 
         houseEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
         houseEditButton.setText("");
         houseListChanged(null);
 
-        streetList.setModel(new DefaultComboBoxModel(suburb.getStreets().toArray()));
+        streetList.setModel(new DefaultComboBoxModel<>(suburb.getStreets().toArray(new Street[0])));
         streetList.setCellRenderer(new UniversalListRenderer());
 
         streetEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
@@ -80,11 +80,11 @@ public class SuburbEditor extends ExtendedDialog {
         nameField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        houseList = new javax.swing.JList();
+        houseList = new javax.swing.JList<>();
         parentEditButton = new javax.swing.JButton();
         houseEditButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        streetList = new javax.swing.JList();
+        streetList = new javax.swing.JList<>();
         streetEditButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
@@ -211,7 +211,7 @@ public class SuburbEditor extends ExtendedDialog {
     private void houseEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_houseEditButtonActionPerformed
         assert selectedHouse != null;
         if (EditorFactory.editHouse(selectedHouse))
-            houseList.setModel(new DefaultComboBoxModel(suburb.getHouses().toArray()));
+            houseList.setModel(new DefaultComboBoxModel<>(suburb.getHouses().toArray(new House[0])));
 }//GEN-LAST:event_houseEditButtonActionPerformed
 
     private void streetListChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_streetListChanged
@@ -222,13 +222,13 @@ public class SuburbEditor extends ExtendedDialog {
     private void streetEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_streetEditButtonActionPerformed
         assert selectedStreet != null;
         if (EditorFactory.editStreet(selectedStreet))
-            streetList.setModel(new DefaultComboBoxModel(suburb.getStreets().toArray()));
+            streetList.setModel(new DefaultComboBoxModel<>(suburb.getStreets().toArray(new Street[0])));
     }//GEN-LAST:event_streetEditButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton houseEditButton;
-    private javax.swing.JList houseList;
+    private javax.swing.JList<House> houseList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -241,7 +241,7 @@ public class SuburbEditor extends ExtendedDialog {
     private javax.swing.JButton parentEditButton;
     private javax.swing.JTextField parentField;
     private javax.swing.JButton streetEditButton;
-    private javax.swing.JList streetList;
+    private javax.swing.JList<Street> streetList;
     // End of variables declaration//GEN-END:variables
 
 }

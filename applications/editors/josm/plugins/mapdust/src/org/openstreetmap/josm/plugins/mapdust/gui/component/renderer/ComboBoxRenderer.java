@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.component.renderer;
 
-
 import java.awt.Component;
 import java.awt.Font;
 import javax.swing.DefaultListCellRenderer;
@@ -38,13 +37,12 @@ import javax.swing.ListCellRenderer;
 import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-
 /**
  * Cell renderer for the <code>MapdustBug</code> types.
  *
  * @author Bea
  */
-public class ComboBoxRenderer implements ListCellRenderer {
+public class ComboBoxRenderer implements ListCellRenderer<BugType> {
 
     /** The default renderer */
     private final DefaultListCellRenderer defaultRenderer =
@@ -60,20 +58,16 @@ public class ComboBoxRenderer implements ListCellRenderer {
      * @param cellHasFocus Specifies if the item has focus or not
      */
     @Override
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<? extends BugType> list, BugType type,
             int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel) defaultRenderer.getListCellRendererComponent(
-                list, value, index, isSelected, cellHasFocus);
-        if (value instanceof BugType) {
-            BugType type = (BugType) value;
-            String iconPath = "bugs/normal/open_" + type.getKey() + ".png";
-            String text = type.getValue();
-            ImageIcon icon = ImageProvider.get(iconPath);
-            label.setIcon(icon);
-            label.setText(text);
-            label.setFont( new Font("Times New Roman", Font.BOLD, 12));
-        }
+                list, type, index, isSelected, cellHasFocus);
+        String iconPath = "bugs/normal/open_" + type.getKey() + ".png";
+        String text = type.getValue();
+        ImageIcon icon = ImageProvider.get(iconPath);
+        label.setIcon(icon);
+        label.setText(text);
+        label.setFont( new Font("Times New Roman", Font.BOLD, 12));
         return label;
     }
-
 }

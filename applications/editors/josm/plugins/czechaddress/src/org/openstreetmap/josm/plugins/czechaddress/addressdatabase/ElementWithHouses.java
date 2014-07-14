@@ -56,7 +56,4 @@ public abstract class ElementWithHouses extends AddressElement {
     public List<House> getHouses() {
         return houses;
     }
-
-
-
 }

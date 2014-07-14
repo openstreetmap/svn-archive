@@ -36,9 +36,6 @@ package org.openstreetmap.josm.plugins.mapdust.gui;
  */
 public class MapdustActionUploaderException extends Exception {
 
-    /** Serial version UID */
-    private static final long serialVersionUID = -6128820229665805478L;
-
     /**
      * Builds an empty <code>MapdustActionUploaderException</code> object.
      */

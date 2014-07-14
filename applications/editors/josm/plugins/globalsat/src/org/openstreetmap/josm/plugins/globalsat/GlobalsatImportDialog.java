@@ -9,8 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,11 +30,8 @@ import org.openstreetmap.josm.Main;
  */
 public class GlobalsatImportDialog extends JPanel {
 
-    // the JOptionPane that contains this dialog. required for the closeDialog() method.
-    private JOptionPane optionPane;
     private JCheckBox delete;
-    private JComboBox portCombo;
-    private List<CommPortIdentifier> ports = new LinkedList<CommPortIdentifier>();
+    private JComboBox<CommPortIdentifier> portCombo;
 
     public GlobalsatImportDialog() {
         GridBagConstraints c = new GridBagConstraints();
@@ -44,10 +39,10 @@ public class GlobalsatImportDialog extends JPanel {
 
         setLayout(new GridBagLayout());
 
-        portCombo = new JComboBox();
-        portCombo.setRenderer(new ListCellRenderer(){
-                public java.awt.Component getListCellRendererComponent(JList list, Object o, int x, boolean a, boolean b){
-                    String value = ((CommPortIdentifier)o).getName();
+        portCombo = new JComboBox<>();
+        portCombo.setRenderer(new ListCellRenderer<CommPortIdentifier>(){
+                public java.awt.Component getListCellRendererComponent(JList<? extends CommPortIdentifier> list, CommPortIdentifier o, int x, boolean a, boolean b){
+                    String value = o.getName();
                     if(value == null){
                         value = "null";
                     }
@@ -102,7 +97,6 @@ public class GlobalsatImportDialog extends JPanel {
                         GlobalsatConfigDialog dialog = new GlobalsatConfigDialog(GlobalsatPlugin.dg100().getConfig());
                         JOptionPane pane = new JOptionPane(dialog, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
                         JDialog dlg = pane.createDialog(Main.parent, tr("Configure Device"));
-                        dialog.setOptionPane(pane);
                         dlg.setVisible(true);
                         if(((Integer)pane.getValue()) == JOptionPane.OK_OPTION){
                             GlobalsatPlugin.dg100().setConfig(dialog.getConfig());
@@ -139,7 +133,7 @@ public class GlobalsatImportDialog extends JPanel {
         portCombo.setVisible(false);
         portCombo.removeAllItems();
 
-        Enumeration e = CommPortIdentifier.getPortIdentifiers();
+        Enumeration<?> e = CommPortIdentifier.getPortIdentifiers();
         for(e = CommPortIdentifier.getPortIdentifiers(); e.hasMoreElements(); ){
             CommPortIdentifier port = (CommPortIdentifier)e.nextElement();
             if(port.getPortType() == CommPortIdentifier.PORT_SERIAL){
@@ -161,12 +155,5 @@ public class GlobalsatImportDialog extends JPanel {
 
     public CommPortIdentifier getPort(){
         return (CommPortIdentifier)portCombo.getSelectedItem();
-    }
-    /**
-     * Has to be called after this dialog has been added to a JOptionPane.
-     * @param optionPane
-     */
-    public void setOptionPane(JOptionPane optionPane) {
-        this.optionPane = optionPane;
     }
 }

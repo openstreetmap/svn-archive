@@ -39,6 +39,7 @@ public final class Queues {
                 serializer.serialize(out, value.value);
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             public Node<E> deserialize(DataInput in, int available) throws IOException {
                 if(available==0)return Node.EMPTY;
@@ -70,6 +71,7 @@ public final class Queues {
 
         protected static final class Node<E>{
 
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             protected static final Node EMPTY = new Node(0L, null);
 
             final protected long next;
@@ -301,6 +303,7 @@ public final class Queues {
         return engine.put(root, rootSerializer);
     }
 
+    @SuppressWarnings("unchecked")
     static <E> Stack<E> getStack(Engine engine, Serializer<Serializer> serializerSerializer, long rootRecid){
         StackRoot root = engine.get(rootRecid, new StackRootSerializer(serializerSerializer));
         return new Stack<E>(engine, root.serializer, root.headerRecid, root.useLocks);
@@ -322,6 +325,7 @@ public final class Queues {
             size = new Atomic.Long(engine,sizeRecid);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public boolean add(E item){
             final long nextTail = engine.put((Node<E>)Node.EMPTY, nodeSerializer);
@@ -336,6 +340,7 @@ public final class Queues {
             return true;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public E poll(){
             while(true){
@@ -415,6 +420,7 @@ public final class Queues {
         }
     }
 
+    @SuppressWarnings("unchecked")
     static <E> long createQueue(Engine engine, Serializer<Serializer> serializerSerializer, Serializer<E> serializer){
         long headerRecid = engine.put(0L, Serializer.LONG_SERIALIZER);
         long nextTail = engine.put(SimpleQueue.Node.EMPTY, new SimpleQueue.NodeSerializer(null));
@@ -425,7 +431,7 @@ public final class Queues {
         return engine.put(root, rootSerializer);
     }
 
-
+    @SuppressWarnings("unchecked")
     static <E> Queue<E> getQueue(Engine engine, Serializer<Serializer> serializerSerializer, long rootRecid){
         QueueRoot root = engine.get(rootRecid, new QueueRootSerializer(serializerSerializer));
         return new Queue<E>(engine, root.serializer, root.headerRecid, root.nextTailRecid,root.sizeRecid);
@@ -438,12 +444,14 @@ public final class Queues {
         protected final Lock lock = new ReentrantLock();
         protected final long size;
 
+        @SuppressWarnings("unchecked")
         public CircularQueue(Engine engine, Serializer serializer, long headRecid, long headInsertRecid, long size) {
             super(engine, serializer, headRecid);
             headInsert = new Atomic.Long(engine, headInsertRecid);
             this.size = size;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public boolean add(Object o) {
             lock.lock();
@@ -544,6 +552,7 @@ public final class Queues {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     static <E> long createCircularQueue(Engine engine, Serializer<Serializer> serializerSerializer, Serializer<E> serializer, long size){
         if(size<2) throw new IllegalArgumentException();
         //insert N Nodes empty nodes into a circle

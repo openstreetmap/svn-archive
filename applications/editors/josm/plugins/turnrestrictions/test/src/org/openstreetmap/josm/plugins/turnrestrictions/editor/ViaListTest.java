@@ -20,16 +20,13 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  * Simple test application to test the via list editor
  *
  */
-public class ViaListTest  extends JFrame{
+public class ViaListTest extends JFrame {
     
-    private ViaList lstVias;
     private TurnRestrictionEditorModel model;
-    private JList lstJOSMSelection;
-    
     
     protected void build() {
         DataSet ds = new DataSet();
-        OsmDataLayer layer =new OsmDataLayer(ds, "test",null);
+        OsmDataLayer layer =new OsmDataLayer(ds, "test", null);
         // mock a controler 
         NavigationControler controler = new NavigationControler() {
             public void gotoAdvancedEditor() {
@@ -53,10 +50,10 @@ public class ViaListTest  extends JFrame{
         gc.weighty = 1.0;
         
         DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
-        c.add(lstVias = new ViaList(new ViaListModel(model, selectionModel), selectionModel), gc);
+        c.add(new ViaList(new ViaListModel(model, selectionModel), selectionModel), gc);
         
         gc.gridx = 1;
-        c.add(lstJOSMSelection = new JList(), gc);
+        c.add(new JList<>(), gc);
         
         setSize(600,600);       
         setDefaultCloseOperation(EXIT_ON_CLOSE);

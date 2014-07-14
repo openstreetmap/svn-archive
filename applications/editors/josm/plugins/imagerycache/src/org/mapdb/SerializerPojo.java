@@ -541,7 +541,7 @@ public class SerializerPojo extends SerializerBase{
 
     static{
         try{
-            Class clazz = Class.forName("sun.reflect.ReflectionFactory");
+            Class<?> clazz = Class.forName("sun.reflect.ReflectionFactory");
             if(clazz!=null){
                 Method getReflectionFactory = clazz.getMethod("getReflectionFactory");
                 sunReflFac = getReflectionFactory.invoke(null);
@@ -581,7 +581,7 @@ public class SerializerPojo extends SerializerBase{
      * <p/>
      *   If non of these works we fallback into usual reflection which requires an no-arg constructor
      */
-    @SuppressWarnings("restriction")
+    @SuppressWarnings({ "restriction", "unchecked" })
 	protected <T> T createInstanceSkippinkConstructor(Class<T> clazz)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
 

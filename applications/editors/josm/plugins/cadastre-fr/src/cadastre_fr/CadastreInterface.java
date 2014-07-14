@@ -413,7 +413,7 @@ public class CadastreInterface {
         for (int i = 0; i < listOfCommunes.size(); i++) {
             communeList[i + 1] = listOfCommunes.elementAt(i).substring(listOfCommunes.elementAt(i).indexOf(">")+1);
         }
-        JComboBox inputCommuneList = new JComboBox(communeList);
+        JComboBox<String> inputCommuneList = new JComboBox<>(communeList);
         p.add(inputCommuneList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
         JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null) {
             private static final long serialVersionUID = 1L;
@@ -431,11 +431,11 @@ public class CadastreInterface {
 
     private int selectFeuilleDialog() {
         JPanel p = new JPanel(new GridBagLayout());
-        Vector<String> ImageNames = new Vector<String>();
+        Vector<String> imageNames = new Vector<String>();
         for (PlanImage src : listOfFeuilles) {
-            ImageNames.add(src.name);
+            imageNames.add(src.name);
         }
-        JComboBox inputFeuilleList = new JComboBox(ImageNames);
+        JComboBox<String> inputFeuilleList = new JComboBox<>(imageNames);
         p.add(inputFeuilleList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
         JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
         //pane.createDialog(Main.parent, tr("Select Feuille")).setVisible(true);

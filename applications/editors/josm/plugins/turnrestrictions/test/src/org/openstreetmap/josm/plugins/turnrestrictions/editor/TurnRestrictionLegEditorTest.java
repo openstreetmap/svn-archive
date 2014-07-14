@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -34,13 +33,11 @@ import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListTransf
  */
 public class TurnRestrictionLegEditorTest extends JFrame {
     
-    private JTextArea taTest;
     private TurnRestrictionLegEditor editor;
     private TurnRestrictionEditorModel model;
-    private JList lstObjects;
-    private DefaultListModel listModel;
+    private JList<OsmPrimitive> lstObjects;
+    private DefaultListModel<OsmPrimitive> listModel;
     private DataSet dataSet;
-    
     
     protected JPanel buildLegEditorPanel() {
         DataSet ds = new DataSet();
@@ -75,8 +72,8 @@ public class TurnRestrictionLegEditorTest extends JFrame {
     
     protected JPanel buildObjectListPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
-        listModel = new DefaultListModel();
-        pnl.add(new JScrollPane(lstObjects = new JList(listModel)), BorderLayout.CENTER);
+        listModel = new DefaultListModel<>();
+        pnl.add(new JScrollPane(lstObjects = new JList<>(listModel)), BorderLayout.CENTER);
         lstObjects.setCellRenderer(new OsmPrimitivRenderer());      
         
         PrimitiveIdListProvider provider = new PrimitiveIdListProvider() {          

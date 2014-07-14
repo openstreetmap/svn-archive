@@ -76,7 +76,7 @@ public class NameManagerDialog extends JDialog {
     private Way selectedWay;
     private List<Way> waysInsideSelectedArea;
     private JTabbedPane tabPanel;
-    private JComboBox country;
+    private JComboBox<String> country;
     private JLabel labelLevel1;
     private JTextField level1;
     private JLabel labelLevel2;
@@ -137,7 +137,7 @@ public class NameManagerDialog extends JDialog {
         buildings = new JCheckBox(tr(TAG_BUILDINGS));
         buildings.setSelected(false);
         JLabel labelCountry = new JLabel("  " + tr(COUNTRY));
-        country = new JComboBox();
+        country = new JComboBox<>();
         labelLevel1 = new JLabel("  level1");
         level1 = new JTextField();
         labelLevel2 = new JLabel("  level2");

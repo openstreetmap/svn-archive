@@ -30,7 +30,7 @@ public class UrlSelectionDialog
 {
   private JDialog jDialog = null;
   private JTabbedPane tabbedPane = null;
-  private JComboBox cbSelectUrl = null;
+  private JComboBox<String> cbSelectUrl = null;
   private JCheckBox cbAddMeta = null;
 
   public UrlSelectionDialog() {
@@ -59,7 +59,7 @@ public class UrlSelectionDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    cbSelectUrl = new JComboBox();
+    cbSelectUrl = new JComboBox<>();
     cbSelectUrl.setEditable(true);
 
     cbSelectUrl.addItem(MirroredDownloadPlugin.getDownloadUrl());

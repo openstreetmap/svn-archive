@@ -274,7 +274,6 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
         }
     }
 
-
     protected final Serializer<BNode> nodeSerializer = new Serializer<BNode>() {
         @Override
         public void serialize(DataOutput out, BNode value) throws IOException {
@@ -297,13 +296,10 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                         throw new AssertionError("BTreeNode format error, wrong key order at #"+i+"\n"+value);
                     }
                 }
-
             }
-
 
             final boolean left = value.keys()[0] == null;
             final boolean right = value.keys()[value.keys().length-1] == null;
-
 
             final int header;
 
@@ -333,8 +329,6 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                 }
             }
 
-
-
             out.write(header);
             out.write(value.keys().length);
 
@@ -345,8 +339,6 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                 for(long child : ((DirNode)value).child)
                     Utils.packLong(out, child);
             }
-
-
 
             keySerializer.serialize(out,left?1:0,
                     right?value.keys().length-1:value.keys().length,

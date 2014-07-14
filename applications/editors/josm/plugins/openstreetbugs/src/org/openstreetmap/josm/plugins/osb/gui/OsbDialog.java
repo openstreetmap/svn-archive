@@ -92,9 +92,9 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
     private static final long serialVersionUID = 1L;
     private JPanel bugListPanel, queuePanel;
-    private DefaultListModel bugListModel;
-    private JList bugList;
-    private JList queueList;
+    private DefaultListModel<OsbListItem> bugListModel;
+    private JList<OsbListItem> bugList;
+    private JList<OsbAction> queueList;
     private OsbPlugin osbPlugin;
     private boolean fireSelectionChanged = true;
     private JButton refresh;
@@ -119,8 +119,8 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
         bugListPanel.setName(tr("Bug list"));
         add(bugListPanel, BorderLayout.CENTER);
 
-        bugListModel = new DefaultListModel();
-        bugList = new JList(bugListModel);
+        bugListModel = new DefaultListModel<>();
+        bugList = new JList<>(bugListModel);
         bugList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         bugList.addListSelectionListener(this);
         bugList.addMouseListener(this);
@@ -179,7 +179,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
         queuePanel = new JPanel(new BorderLayout());
         queuePanel.setName(tr("Queue"));
-        queueList = new JList(getActionQueue());
+        queueList = new JList<>(getActionQueue());
         queueList.setCellRenderer(new OsbQueueListCellRenderer());
         queuePanel.add(new JScrollPane(queueList), BorderLayout.CENTER);
         queuePanel.add(processQueue, BorderLayout.SOUTH);
@@ -240,7 +240,7 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
 
     public synchronized void update(final DataSet dataset) {
         // create a new list model
-        bugListModel = new DefaultListModel();
+        bugListModel = new DefaultListModel<>();
         List<Node> sortedList = new ArrayList<Node>(dataset.getNodes());
         Collections.sort(sortedList, new BugComparator());
         for (Node node : sortedList) {
@@ -252,14 +252,14 @@ DataSetListener, SelectionChangedListener, MouseListener, OsbActionObserver {
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        if (bugList.getSelectedValues().length == 0) {
+        if (bugList.getSelectedValuesList().isEmpty()) {
             addComment.setEnabled(false);
             closeIssue.setEnabled(false);
             return;
         }
 
         List<OsmPrimitive> selected = new ArrayList<OsmPrimitive>();
-        for (Object listItem : bugList.getSelectedValues()) {
+        for (Object listItem : bugList.getSelectedValuesList()) {
             Node node = ((OsbListItem) listItem).getNode();
             selected.add(node);
 

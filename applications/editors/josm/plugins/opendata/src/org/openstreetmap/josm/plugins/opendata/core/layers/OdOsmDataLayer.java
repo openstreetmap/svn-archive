@@ -40,7 +40,7 @@ public class OdOsmDataLayer extends OsmDataLayer implements OdLayer {
 							//data.removePrimitive(p);
 							if (nodes != null) {
 								for (Node n : nodes) {
-									List<OsmPrimitive> refferingAllowedWays = new ArrayList<OsmPrimitive>();
+									List<OsmPrimitive> refferingAllowedWays = new ArrayList<>();
 									for (OsmPrimitive referrer : n.getReferrers()) {
 										if (referrer instanceof Way && !dataLayer.handler.isForbidden(referrer)) {
 											refferingAllowedWays.add(referrer);

@@ -27,7 +27,6 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.component.renderer;
 
-
 import java.awt.Component;
 import java.awt.Font;
 import javax.swing.DefaultListCellRenderer;
@@ -38,7 +37,6 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-
 /**
  * Cell renderer for the <code>MapdustAction</code> objects.
  *
@@ -46,9 +44,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @version $Revision$
  */
 public class ActionListCellRenderer extends DefaultListCellRenderer {
-
-    /** The serial version UID */
-    private static final long serialVersionUID = 7552949107018269769L;
 
     /**
      * Returns the cell renderer component of the action list.
@@ -60,7 +55,7 @@ public class ActionListCellRenderer extends DefaultListCellRenderer {
      * @param hasFocus Specifies if the item has focus or not
      */
     @Override
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<?> list, Object value,
             int index, boolean isSelected, boolean hasFocus) {
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value,
                 index, isSelected, hasFocus);

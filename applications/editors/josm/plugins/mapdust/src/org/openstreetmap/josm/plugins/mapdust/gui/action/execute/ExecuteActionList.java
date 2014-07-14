@@ -55,9 +55,6 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBugFilter;
 public class ExecuteActionList extends MapdustExecuteAction implements
         MapdustUpdateObservable {
 
-    /** Serial version UID */
-    private static final long serialVersionUID = -7487830542214611774L;
-
     /** List of MapdustRefreshObserver objects */
     private final ArrayList<MapdustUpdateObserver> observers =
             new ArrayList<MapdustUpdateObserver>();

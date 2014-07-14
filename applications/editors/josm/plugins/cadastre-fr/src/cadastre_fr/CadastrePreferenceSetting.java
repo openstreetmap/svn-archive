@@ -36,7 +36,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
     private JCheckBox drawBoundaries = new JCheckBox(tr("Draw boundaries of downloaded data."));
 
-    private JComboBox imageInterpolationMethod = new JComboBox();
+    private JComboBox<String> imageInterpolationMethod = new JComboBox<>();
 
     private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
 
@@ -94,6 +94,9 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
     
     static final String DEFAULT_GRAB_MULTIPLIER = Scale.SQUARE_100M.value;
 
+    /**
+     * Constructs a new {@code CadastrePreferenceSetting}.
+     */
     public CadastrePreferenceSetting() {
         super("cadastrewms.gif", I18n.tr("French cadastre WMS"),
             tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
@@ -103,7 +106,6 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
                 + "before any upload of data created by this plugin.")
         );
     }
-
 
     public void addGui(final PreferenceTabbedPane gui) {
         JPanel cadastrewmsMast = gui.createPreferenceTab(this);

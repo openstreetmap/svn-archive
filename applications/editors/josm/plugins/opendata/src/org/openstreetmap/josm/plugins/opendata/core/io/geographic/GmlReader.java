@@ -143,10 +143,10 @@ public class GmlReader extends GeographicReader {
 	}
 	
 	private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
-		List<OsmPrimitive> list = new ArrayList<OsmPrimitive>();
+		List<OsmPrimitive> list = new ArrayList<>();
 		Way way = null;
 		Node node = null;
-		Map<String, String> tags = new HashMap<String, String>();
+		Map<String, String> tags = new HashMap<>();
 		while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {

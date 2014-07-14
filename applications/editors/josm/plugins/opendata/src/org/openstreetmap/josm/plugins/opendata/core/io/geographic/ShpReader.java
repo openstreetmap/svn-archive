@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +56,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class ShpReader extends GeographicReader {
 
 	private final ShpHandler handler;
-	private final Set<OsmPrimitive> featurePrimitives = new HashSet<OsmPrimitive>();
+	private final Set<OsmPrimitive> featurePrimitives = new HashSet<>();
 	
 	public ShpReader(ShpHandler handler) {
 		super(handler, NationalHandlers.DEFAULT_SHP_HANDLERS);
@@ -173,7 +174,7 @@ public class ShpReader extends GeographicReader {
 		transform = null;
 		try {
 			if (file != null) { 
-		        Map params = new HashMap();
+		        Map<String, Serializable> params = new HashMap<>();
 		        Charset charset = null;
 		        params.put(ShapefileDataStoreFactory.URLP.key, file.toURI().toURL());
 		        if (handler != null && handler.getDbfCharset() != null) {
@@ -193,9 +194,9 @@ public class ShpReader extends GeographicReader {
 		        }
 		        if (charset != null) {
 		            Main.info("Using charset "+charset);
-		            params.put(ShapefileDataStoreFactory.DBFCHARSET.key, charset);
+		            params.put(ShapefileDataStoreFactory.DBFCHARSET.key, charset.name());
 		        }
-				DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);//FIXME
+				DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);
 				if (dataStore == null) {
 					throw new IOException(tr("Unable to find a data store for file {0}", file.getName()));
 				}

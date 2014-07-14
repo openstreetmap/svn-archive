@@ -35,11 +35,11 @@ public class PanelSectors extends JFrame {
 				addSector(table.getSelectedRow()+1);
 		}
 	};
-	public JComboBox colourBox;
+	public JComboBox<ImageIcon> colourBox;
 	public EnumMap<Col, ImageIcon> colours = new EnumMap<Col, ImageIcon>(Col.class);
-	public JComboBox visibilityBox;
+	public JComboBox<String> visibilityBox;
 	public EnumMap<Vis, String> visibilities = new EnumMap<Vis, String>(Vis.class);
-	public JComboBox exhibitionBox;
+	public JComboBox<String> exhibitionBox;
 	public EnumMap<Exh, String> exhibitions = new EnumMap<Exh, String>(Exh.class);
 
 	public PanelSectors(SmedAction dia) {
@@ -73,7 +73,7 @@ public class PanelSectors extends JFrame {
 		table.getColumnModel().getColumn(1).setCellRenderer(new ColourCellRenderer());
 
 		TableColumn colColumn = table.getColumnModel().getColumn(1);
-		colourBox = new JComboBox();
+		colourBox = new JComboBox<>();
 		addColItem(new ImageIcon(getClass().getResource("/images/DelButton.png")), Col.UNKCOL);
 		addColItem(new ImageIcon(getClass().getResource("/images/WhiteButton.png")), Col.WHITE);
 		addColItem(new ImageIcon(getClass().getResource("/images/RedButton.png")), Col.RED);
@@ -86,7 +86,7 @@ public class PanelSectors extends JFrame {
 		colColumn.setCellEditor(new DefaultCellEditor(colourBox));
 		
 		TableColumn visColumn = table.getColumnModel().getColumn(12);
-		visibilityBox = new JComboBox();
+		visibilityBox = new JComboBox<>();
 		addVisibItem("", Vis.UNKVIS);
 		addVisibItem(Messages.getString("Intensified"), Vis.INTEN);
 		addVisibItem(Messages.getString("Unintensified"), Vis.UNINTEN);
@@ -94,7 +94,7 @@ public class PanelSectors extends JFrame {
 		visColumn.setCellEditor(new DefaultCellEditor(visibilityBox));
 		
 		TableColumn exhColumn = table.getColumnModel().getColumn(13);
-		exhibitionBox = new JComboBox();
+		exhibitionBox = new JComboBox<>();
 		addExhibItem("", Exh.UNKEXH);
 		addExhibItem(Messages.getString("24h"), Exh.H24);
 		addExhibItem(Messages.getString("Day"), Exh.DAY);

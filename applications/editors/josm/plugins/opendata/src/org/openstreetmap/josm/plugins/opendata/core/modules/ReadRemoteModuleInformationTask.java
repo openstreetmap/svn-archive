@@ -52,7 +52,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
         if (sites == null) {
             this.sites = Collections.emptySet();
         }
-        availableModules = new LinkedList<ModuleInformation>();
+        availableModules = new LinkedList<>();
 
     }
     /**
@@ -296,7 +296,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implemen
         File moduleDir = OdPlugin.getInstance().getModulesDirectory();
 
         // collect old cache files and remove if no longer in use
-        List<File> siteCacheFiles = new LinkedList<File>();
+        List<File> siteCacheFiles = new LinkedList<>();
         for (String location : ModuleInformation.getModuleLocations()) {
             File [] f = new File(location).listFiles(
                     new FilenameFilter() {

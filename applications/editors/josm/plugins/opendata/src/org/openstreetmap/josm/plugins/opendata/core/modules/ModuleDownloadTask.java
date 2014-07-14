@@ -31,9 +31,9 @@ import org.xml.sax.SAXException;
  *
  */
 public class ModuleDownloadTask extends PleaseWaitRunnable{
-    private final Collection<ModuleInformation> toUpdate = new LinkedList<ModuleInformation>();
-    private final Collection<ModuleInformation> failed = new LinkedList<ModuleInformation>();
-    private final Collection<ModuleInformation> downloaded = new LinkedList<ModuleInformation>();
+    private final Collection<ModuleInformation> toUpdate = new LinkedList<>();
+    private final Collection<ModuleInformation> failed = new LinkedList<>();
+    private final Collection<ModuleInformation> downloaded = new LinkedList<>();
     //private Exception lastException;
     private boolean canceled;
     private HttpURLConnection downloadConnection;

@@ -30,8 +30,11 @@ package org.openstreetmap.josm.plugins.mapdust.gui.action.adapter;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
+
+import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 
 
 /**
@@ -47,7 +50,7 @@ public class DisplayMenu extends MouseAdapter {
     private JPopupMenu menu;
 
     /** The list of bugs */
-    private JList listBugs;
+    private JList<MapdustBug> listBugs;
 
     /**
      * Builds a <code>DisplayMenu</code> object
@@ -60,7 +63,7 @@ public class DisplayMenu extends MouseAdapter {
      * @param listBugs The <code>JList</code> of <code>MapdustBug</code> objects
      * @param menu The <code>JPopupMenu</code> object
      */
-    public DisplayMenu(JList listBugs, JPopupMenu menu) {
+    public DisplayMenu(JList<MapdustBug> listBugs, JPopupMenu menu) {
         this.listBugs = listBugs;
         this.menu = menu;
     }

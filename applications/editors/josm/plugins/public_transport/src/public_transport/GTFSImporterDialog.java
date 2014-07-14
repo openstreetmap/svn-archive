@@ -27,7 +27,7 @@ public class GTFSImporterDialog
 {
   private JDialog jDialog = null;
   private JTabbedPane tabbedPane = null;
-  private JComboBox cbStoptype = null;
+  private JComboBox<TransText> cbStoptype = null;
   private JList tracksList = null;
   private JTextField tfGPSTimeStart = null;
   private JTextField tfStopwatchStart = null;
@@ -67,7 +67,7 @@ public class GTFSImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    cbStoptype = new JComboBox();
+    cbStoptype = new JComboBox<>();
     cbStoptype.setEditable(false);
     for(String type : stoptypes)
         cbStoptype.addItem(new TransText(type));
@@ -480,7 +480,6 @@ public class GTFSImporterDialog
 
   public static double parseTime(String s)
   {
-    double result = 0;
     if ((s.charAt(2) != ':') || (s.charAt(2) != ':')
      || (s.length() < 8))
       return -1;

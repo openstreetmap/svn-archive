@@ -37,13 +37,13 @@ import org.openstreetmap.josm.tools.Pair;
 public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHandler, OdConstants {
 
 	private static final List<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>> 
-		ellipsoids = new ArrayList<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>>();
+		ellipsoids = new ArrayList<>();
 	static {
 		ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.GRS80, Ellipsoid.GRS80));
 		ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.WGS84, Ellipsoid.WGS84));
 	}
 	
-	protected static final Double get(ParameterValueGroup values, ParameterDescriptor desc) {
+	protected static final Double get(ParameterValueGroup values, ParameterDescriptor<?> desc) {
 		return (Double) values.parameter(desc.getName().getCode()).getValue();
 	}
 	
@@ -63,7 +63,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
 		if (getCrsFor(sourceCRS.getName().getCode()) != null) {
 			return CRS.findMathTransform(getCrsFor(sourceCRS.getName().getCode()), targetCRS, lenient);
 		} else if (sourceCRS instanceof AbstractDerivedCRS && sourceCRS.getName().getCode().equalsIgnoreCase("Lambert_Conformal_Conic")) {
-			List<MathTransform> result = new ArrayList<MathTransform>();
+			List<MathTransform> result = new ArrayList<>();
 			AbstractDerivedCRS crs = (AbstractDerivedCRS) sourceCRS;
 			MathTransform transform = crs.getConversionFromBase().getMathTransform();
 			if (transform instanceof LambertConformal && crs.getDatum() instanceof GeodeticDatum) {

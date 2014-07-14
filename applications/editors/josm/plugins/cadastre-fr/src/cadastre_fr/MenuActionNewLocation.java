@@ -68,7 +68,7 @@ public class MenuActionNewLocation extends JosmAction {
         inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
                 + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));
         JLabel labelDepartement =  new JLabel(tr("Departement"));
-        final JComboBox inputDepartement = new JComboBox();
+        final JComboBox<String> inputDepartement = new JComboBox<>();
         for (int i=1; i<departements.length; i+=2) {
             inputDepartement.addItem(departements[i]);
         }

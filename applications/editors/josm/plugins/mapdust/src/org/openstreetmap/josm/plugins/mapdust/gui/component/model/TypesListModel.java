@@ -27,11 +27,9 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.component.model;
 
-
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
-
 
 /**
  * The combo box model for the bug <code>BugType</code>s.
@@ -39,7 +37,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
  * @author Bea
  * @version $Revision$
  */
-public class TypesListModel extends AbstractListModel implements ComboBoxModel {
+public class TypesListModel extends AbstractListModel<BugType> implements ComboBoxModel<BugType> {
 
     /** The serial version UID */
     private static final long serialVersionUID = 4005728061902494996L;
@@ -64,7 +62,7 @@ public class TypesListModel extends AbstractListModel implements ComboBoxModel {
      * @return <code>BugType</code> from the given position
      */
     @Override
-    public Object getElementAt(int index) {
+    public BugType getElementAt(int index) {
         return types[index];
     }
 

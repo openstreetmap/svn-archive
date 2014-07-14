@@ -15,14 +15,16 @@ import javax.swing.event.ListDataListener;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public abstract class HalfCookedListModel implements ListModel {
+public abstract class HalfCookedListModel<E> implements ListModel<E> {
 
     List<ListDataListener> listeners = new ArrayList<ListDataListener>();
 
+    @Override
     public void addListDataListener(ListDataListener l) {
         listeners.add(l);
     }
 
+    @Override
     public void removeListDataListener(ListDataListener l) {
         listeners.remove(l);
     }

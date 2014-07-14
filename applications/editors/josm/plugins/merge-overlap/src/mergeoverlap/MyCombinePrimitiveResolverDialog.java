@@ -952,7 +952,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             getActionMap().put("selectNextColumnCell", selectNextColumnCellAction);
             getActionMap().put("selectPreviousColumnCell", selectPreviousColumnCellAction);
 
-            setRowHeight((int)new JComboBox().getPreferredSize().getHeight());
+            setRowHeight((int)new JComboBox<Object>().getPreferredSize().getHeight());
         }
 
         /**
@@ -1375,7 +1375,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
             ((MultiValueCellEditor)getColumnModel().getColumn(2).getCellEditor()).addNavigationListeners(this);
 
-            setRowHeight((int)new JComboBox().getPreferredSize().getHeight());
+            setRowHeight((int)new JComboBox<Object>().getPreferredSize().getHeight());
         }
 
         /**

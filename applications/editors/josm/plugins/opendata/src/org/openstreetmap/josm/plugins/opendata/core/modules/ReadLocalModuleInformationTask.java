@@ -17,7 +17,6 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.SAXException;
 
 /**
@@ -40,12 +39,12 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
 
     public ReadLocalModuleInformationTask() {
         super(tr("Reading local module information.."), false);
-        availableModules = new HashMap<String, ModuleInformation>();
+        availableModules = new HashMap<>();
     }
 
     public ReadLocalModuleInformationTask(ProgressMonitor monitor) {
         super(tr("Reading local module information.."),monitor, false);
-        availableModules = new HashMap<String, ModuleInformation>();
+        availableModules = new HashMap<>();
     }
 
     @Override
@@ -224,7 +223,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
      * @return information about available modules detected by this task.
      */
     public List<ModuleInformation> getAvailableModules() {
-        return new ArrayList<ModuleInformation>(availableModules.values());
+        return new ArrayList<>(availableModules.values());
     }
 
     /**

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 
-public class ActionQueue extends AbstractListModel {
+public class ActionQueue extends AbstractListModel<OsbAction> {
 
     private LinkedList<OsbAction> queue = new LinkedList<OsbAction>();
 
@@ -24,7 +24,7 @@ public class ActionQueue extends AbstractListModel {
         return action;
     }
 
-    public boolean remove(Object o) {
+    public boolean remove(OsbAction o) {
         int index = queue.indexOf(o);
         if(index >= 0) {
             fireIntervalRemoved(this, index, index);
@@ -51,10 +51,12 @@ public class ActionQueue extends AbstractListModel {
         }
     }
 
-    public Object getElementAt(int index) {
+    @Override
+    public OsbAction getElementAt(int index) {
         return queue.get(index);
     }
 
+    @Override
     public int getSize() {
         return queue.size();
     }

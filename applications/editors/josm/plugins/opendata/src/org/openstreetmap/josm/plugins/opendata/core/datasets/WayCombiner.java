@@ -55,7 +55,7 @@ public class WayCombiner {
         ways.remove(null); // just in case -  remove all null ways from the collection
 
         // remove duplicates, preserving order
-        ways = new LinkedHashSet<Way>(ways);
+        ways = new LinkedHashSet<>(ways);
 
         // try to build a new way which includes all the combined
         // ways
@@ -70,8 +70,8 @@ public class WayCombiner {
         //
         TagCollection wayTags = TagCollection.unionOfAllPrimitives(ways);
 
-        List<Way> reversedWays = new LinkedList<Way>();
-        List<Way> unreversedWays = new LinkedList<Way>();
+        List<Way> reversedWays = new LinkedList<>();
+        List<Way> unreversedWays = new LinkedList<>();
         for (Way w: ways) {
             if ((path.indexOf(w.getNode(0)) + 1) == path.lastIndexOf(w.getNode(1))) {
                 unreversedWays.add(w);
@@ -98,10 +98,10 @@ public class WayCombiner {
             }
             // if there are still reversed ways with direction-dependent tags, reverse their tags
             if (!reversedWays.isEmpty()) {
-                List<Way> unreversedTagWays = new ArrayList<Way>(ways);
+                List<Way> unreversedTagWays = new ArrayList<>(ways);
                 unreversedTagWays.removeAll(reversedWays);
                 ReverseWayTagCorrector reverseWayTagCorrector = new ReverseWayTagCorrector();
-                List<Way> reversedTagWays = new ArrayList<Way>();
+                List<Way> reversedTagWays = new ArrayList<>();
                 Collection<Command> changePropertyCommands =  null;
                 for (Way w : reversedWays) {
                     Way wnew = new Way(w);
@@ -148,7 +148,7 @@ public class WayCombiner {
                 throw new UserCancelException();
         }
 
-        LinkedList<Way> deletedWays = new LinkedList<Way>(ways);
+        LinkedList<Way> deletedWays = new LinkedList<>(ways);
         deletedWays.remove(targetWay);
 
         //new ChangeCommand(targetWay, modifiedTargetWay).executeCommand();

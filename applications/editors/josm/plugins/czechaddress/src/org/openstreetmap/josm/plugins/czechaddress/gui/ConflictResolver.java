@@ -86,8 +86,8 @@ public class ConflictResolver extends ExtendedDialog {
         reassignButton = new javax.swing.JButton();
         candLabel = new javax.swing.JLabel();
         mainZoomButton = new javax.swing.JButton();
-        mainField = new javax.swing.JComboBox();
-        candField = new javax.swing.JComboBox();
+        mainField = new javax.swing.JComboBox<>();
+        candField = new javax.swing.JComboBox<>();
         candPickButton = new javax.swing.JButton();
         mainPickButton = new javax.swing.JButton();
 
@@ -122,10 +122,10 @@ public class ConflictResolver extends ExtendedDialog {
             }
         });
 
-        mainField.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        mainField.setModel(new javax.swing.DefaultComboBoxModel<Object>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         mainField.setRenderer(new UniversalListRenderer());
 
-        candField.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
+        candField.setModel(new javax.swing.DefaultComboBoxModel<Object>(new String[] { " " }));
         candField.setRenderer(new UniversalListRenderer());
 
         candPickButton.setText("     ");
@@ -235,7 +235,7 @@ public class ConflictResolver extends ExtendedDialog {
                 if (r.translate(prim) != null)
                     r.unOverwrite(prim, r.translate(prim));
 
-                ComboBoxModel model = candField.getModel();
+                ComboBoxModel<Object> model = candField.getModel();
                 for (int i = 0; i < model.getSize(); i++) {
                     AddressElement elem = (AddressElement) model.getElementAt(i);
                     r.unOverwrite(prim, elem);
@@ -252,7 +252,7 @@ public class ConflictResolver extends ExtendedDialog {
                 if (r.translate(elem) != null)
                     r.unOverwrite(r.translate(elem), elem);
 
-                ComboBoxModel model = candField.getModel();
+                ComboBoxModel<Object> model = candField.getModel();
                 for (int i = 0; i < model.getSize(); i++) {
                     OsmPrimitive prim = (OsmPrimitive) model.getElementAt(i);
                     r.unOverwrite(prim, elem);
@@ -278,11 +278,11 @@ public class ConflictResolver extends ExtendedDialog {
     }//GEN-LAST:event_candPickButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox candField;
+    private javax.swing.JComboBox<Object> candField;
     private javax.swing.JLabel candLabel;
     private javax.swing.JButton candPickButton;
     private javax.swing.JButton candZoomButton;
-    private javax.swing.JComboBox mainField;
+    private javax.swing.JComboBox<Object> mainField;
     private javax.swing.JLabel mainLabel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton mainPickButton;
@@ -324,7 +324,7 @@ public class ConflictResolver extends ExtendedDialog {
 //==============================================================================
 
     private ConflictsModel conflictModel = new ConflictsModel();
-    private class ConflictsModel implements ComboBoxModel {
+    private class ConflictsModel implements ComboBoxModel<Object> {
 
         ArrayList<AddressElement> elements = new ArrayList<AddressElement>();
         ArrayList<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
@@ -472,17 +472,17 @@ public class ConflictResolver extends ExtendedDialog {
             List<OsmPrimitive> conflPrims = new NotNullList<OsmPrimitive>();
             conflPrims.addAll(Reasoner.getInstance().getCandidates(selElem));
             Collections.sort(conflPrims, PrimUtils.comparator);
-            candField.setModel(new CandidatesModel<OsmPrimitive>(conflPrims));
+            candField.setModel(new CandidatesModel<Object>(conflPrims));
 
         } else if (selected instanceof OsmPrimitive) {
             OsmPrimitive selElem = (OsmPrimitive) selected;
             List<AddressElement> conflElems = new NotNullList<AddressElement>();
             conflElems.addAll(Reasoner.getInstance().getCandidates(selElem));
             Collections.sort(conflElems);
-            candField.setModel(new CandidatesModel<AddressElement>(conflElems));
+            candField.setModel(new CandidatesModel<Object>(conflElems));
 
         } else {
-            candField.setModel(new DefaultComboBoxModel());
+            candField.setModel(new DefaultComboBoxModel<>());
             candZoomButton.setEnabled(false);
             reassignButton.setEnabled(false);
         }
@@ -511,7 +511,7 @@ public class ConflictResolver extends ExtendedDialog {
         button.setEnabled(selected instanceof House || selected instanceof Street);
     }
 
-    private class CandidatesModel<E> implements ComboBoxModel {
+    private class CandidatesModel<E> implements ComboBoxModel<E> {
 
         Set<ListDataListener> listeners = new HashSet<ListDataListener>();
         List<? extends E> primitives;
@@ -539,8 +539,6 @@ public class ConflictResolver extends ExtendedDialog {
                 reassignButton.setEnabled(true);
             } else
                 reassignButton.setEnabled(false);
-
-
         }
 
         public Object getSelectedItem() {
@@ -551,7 +549,7 @@ public class ConflictResolver extends ExtendedDialog {
             return primitives.size();
         }
 
-        public Object getElementAt(int index) {
+        public E getElementAt(int index) {
             if (index < primitives.size())
                 return primitives.get(index);
             return null;

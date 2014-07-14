@@ -39,7 +39,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustComment;
  * @author Bea
  *
  */
-public class CommentListModel implements ListModel {
+public class CommentListModel implements ListModel<MapdustComment> {
 
     /** The list of <code>MapdustBug</code> objects */
     private final MapdustComment[] comments;
@@ -67,7 +67,7 @@ public class CommentListModel implements ListModel {
      * @return <code>MapdustComment</code> from the given position
      */
     @Override
-    public Object getElementAt(int index) {
+    public MapdustComment getElementAt(int index) {
         if (index > 0 && index < comments.length) {
             return comments[index];
         }

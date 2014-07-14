@@ -544,7 +544,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                 int colIndex = columnAtPoint(e.getPoint());
                 if (rowIndex == -1 || colIndex == -1)
                     return null;
-                int realColumnIndex = convertColumnIndexToModel(colIndex);
+                //int realColumnIndex = convertColumnIndexToModel(colIndex);
                 return (String) getValueAt(rowIndex, colIndex);
             }
         };
@@ -622,11 +622,11 @@ class RoadSignInputDialog extends ExtendedDialog {
                     String default_value;
                     List<String> values = new ArrayList<String>();
                     List<String> conditions = new ArrayList<String>();
-                    String ident;
+                    //String ident;
                     public TagEvaluater(Tag t) {
                         key = t.key.evaluate(env);
                         default_value = t.value.evaluate(env);
-                        ident = t.ident;
+                        //ident = t.ident;
                     }
 
                     public void append_value(String v) {
@@ -857,14 +857,14 @@ class RoadSignInputDialog extends ExtendedDialog {
     public static class SettingsPanel extends JPanel {
 
         private List<PresetMetaData> presetsData;
-        private JComboBox selectionBox;
+        private JComboBox<PresetMetaData> selectionBox;
         JRadioButton rbAll, rbUseful;
 
         public SettingsPanel(boolean standalone, final Action update) {
             super(new GridBagLayout());
             presetsData = RoadSignsPlugin.getAvailablePresetsMetaData();
 
-            selectionBox = new JComboBox(presetsData.toArray());
+            selectionBox = new JComboBox<>(presetsData.toArray(new PresetMetaData[0]));
             String code = Main.pref.get("plugin.roadsigns.preset.selection", null);
             if (code != null) {
                 for (PresetMetaData data : presetsData) {

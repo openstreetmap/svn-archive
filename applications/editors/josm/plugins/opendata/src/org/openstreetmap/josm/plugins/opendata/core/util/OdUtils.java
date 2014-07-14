@@ -28,7 +28,7 @@ public abstract class OdUtils {
     }
     
 	public static final String[] stripQuotesAndExtraChars(String[] split, String sep) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		boolean append = false;
 		for (int i = 0; i<split.length; i++) {
 			if (append) {

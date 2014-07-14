@@ -119,7 +119,7 @@ public class LoadPdfDialog extends JFrame{
 	/**
 	 * Combobox with all projections available
 	 */
-	private JComboBox projectionCombo;
+	private JComboBox<ProjectionChoice> projectionCombo;
 	private JButton projectionPreferencesButton;
 	private JTextField minXField;
 	private JTextField minYField;
@@ -246,7 +246,7 @@ public class LoadPdfDialog extends JFrame{
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridheight = 1;c.gridwidth = 1;c.weightx =1; c.weighty = 1; c.fill = GridBagConstraints.BOTH;
 
-		this.projectionCombo = new JComboBox();
+		this.projectionCombo = new JComboBox<>();
 		for (ProjectionChoice p: ProjectionPreference.getProjectionChoices()) {
 			this.projectionCombo.addItem(p);
 		}

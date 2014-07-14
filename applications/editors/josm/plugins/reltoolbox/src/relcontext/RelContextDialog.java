@@ -136,7 +136,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rcPanel.add(new JScrollPane(relationsTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 
         final MouseListener relationMouseAdapter = new ChosenRelationMouseAdapter();
-        final JComboBox roleBox = new JComboBox();
+        final JComboBox<String> roleBox = new JComboBox<>();
         roleBoxModel = new RoleComboBoxModel(roleBox);
         roleBox.setModel(roleBoxModel);
         roleBox.addMouseListener(relationMouseAdapter);
@@ -619,17 +619,17 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
             setEnabled(newRelation != null);
         }
-        }
+    }
         
-    private class RoleComboBoxModel extends AbstractListModel implements ComboBoxModel {
+    private class RoleComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String> {
         private List<String> roles = new ArrayList<String>();
         private int selectedIndex = -1;
-        private JComboBox combobox;
+        private JComboBox<String> combobox;
         private String membersRole;
         private final String EMPTY_ROLE = tr("<empty>");
         private final String ANOTHER_ROLE = tr("another...");
 
-        public RoleComboBoxModel( JComboBox combobox ) {
+        public RoleComboBoxModel( JComboBox<String> combobox ) {
             super();
             this.combobox = combobox;
             update();
@@ -707,7 +707,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return roles.size();
         }
 
-        public Object getElementAt( int index ) {
+        public String getElementAt( int index ) {
             return getRole(index);
         }
 

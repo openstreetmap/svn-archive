@@ -12,11 +12,9 @@ import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -37,17 +35,12 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		ListSelectionListener, LayerChangeListener, MouseListener {
 
 	private OsmInspectorLayer layer;
-	private JList bugsList;
+	private JList<String> bugsList;
 	private OsmInspectorNextAction actNext;
 	private OsmInspectorPrevAction actPrev;
-	private DefaultListModel model;
+	private DefaultListModel<String> model;
 
 	private OsmInspectorBugInfoDialog bugInfoDialog;
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5465011236663660394L;
-
 	
 	public void updateNextPrevAction(OsmInspectorLayer l) {
 		this.actNext.layer = l;
@@ -60,9 +53,9 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	protected void buildContentPanel() {
 		Main.map.addToggleDialog(this, true);
 
-		model = new DefaultListModel();
+		model = new DefaultListModel<>();
 		refreshModel();
-		bugsList = new JList(model);
+		bugsList = new JList<>(model);
 		bugsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		bugsList.setLayoutOrientation(JList.VERTICAL_WRAP);
 		
@@ -124,7 +117,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		Shortcut snext = Shortcut.registerShortcut("osmi:next", tr("Next OSMI bug"),
 				KeyEvent.VK_K, Shortcut.CTRL_SHIFT);
 		Main.registerActionShortcut(actNext, snext);
-
 	}
 
 	public void refreshModel() {
@@ -134,7 +126,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 				model.addElement(b.toString());
 			}
 		}
-
 	}
 
 	public OsmInspectorDialog(OsmInspectorLayer layer) {
@@ -167,7 +158,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	@Override
 	public void hideNotify() {
 		if (dialogsPanel != null) {
-			// TODO Auto-generated method stub
 			super.hideNotify();
 		}
 	}
@@ -175,10 +165,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	public class OsmInspectorNextAction extends AbstractAction implements
 			ListSelectionListener {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 123266015594117296L;
 		private OsmInspectorLayer layer;
 
 		public OsmInspectorNextAction(Layer inspector) {
@@ -202,8 +188,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 
 		@Override
 		public void valueChanged(ListSelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -217,16 +201,11 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	private class OsmInspectorPrevAction extends AbstractAction implements
 			ListSelectionListener {
 
-		/**
-         * 
-         */
-		private static final long serialVersionUID = 1L;
 		private OsmInspectorLayer layer;
 
 		public OsmInspectorPrevAction(Layer inspector) {
 			super("prev");
 			layer = (OsmInspectorLayer) inspector;
-
 		}
 
 		@Override
@@ -245,39 +224,27 @@ public class OsmInspectorDialog extends ToggleDialog implements
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -287,13 +254,11 @@ public class OsmInspectorDialog extends ToggleDialog implements
 			refreshModel();
 			refreshBugList();
 		}
-
 	}
 
 	private void refreshBugList() {
 		bugsList.clearSelection();
-		bugsList = new JList(model);
-
+		bugsList = new JList<>(model);
 	}
 
 	@Override
@@ -316,5 +281,4 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	public void valueChanged(ListSelectionEvent e) {
 		
 	}
-
 }

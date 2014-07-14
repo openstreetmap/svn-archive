@@ -13,9 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.mapdb;
-
 
 import java.io.IOError;
 import java.io.IOException;
@@ -24,7 +22,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 
 /**
  * EngineWrapper adapter. It implements all methods on Engine interface.
@@ -292,19 +289,18 @@ public abstract class EngineWrapper implements Engine{
         return v;
     }
 
-
     /**
      * check if Record Instances were not modified while in cache.
      * Usuful to diagnose strange problems with Instance Cache.
      */
-    public static class ImmutabilityCheckEngine extends EngineWrapper{
+    public static class ImmutabilityCheckEngine extends EngineWrapper {
 
-        protected static class Item {
-            final Serializer serializer;
-            final Object item;
+        protected static class Item<E> {
+            final Serializer<E> serializer;
+            final E item;
             final int oldChecksum;
 
-            public Item(Serializer serializer, Object item) {
+            public Item(Serializer<E> serializer, E item) {
                 if(item==null || serializer==null) throw new AssertionError("null");
                 this.serializer = serializer;
                 this.item = item;
@@ -312,7 +308,7 @@ public abstract class EngineWrapper implements Engine{
                 if(oldChecksum!=checksum()) throw new AssertionError("inconsistent serialization");
             }
 
-            private int checksum(){
+            private int checksum() {
                 try {
                     DataOutput2 out = new DataOutput2();
                     serializer.serialize(out, item);
@@ -323,13 +319,13 @@ public abstract class EngineWrapper implements Engine{
                 }
             }
 
-            void check(){
+            void check() {
                 int newChecksum = checksum();
                 if(oldChecksum!=newChecksum) throw new AssertionError("Record instance was modified: \n  "+item+"\n  "+serializer);
             }
         }
 
-        protected LongConcurrentHashMap<Item> items = new LongConcurrentHashMap<Item>();
+        protected LongConcurrentHashMap<Item<?>> items = new LongConcurrentHashMap<>();
 
         protected ImmutabilityCheckEngine(Engine engine) {
             super(engine);
@@ -337,31 +333,32 @@ public abstract class EngineWrapper implements Engine{
 
         @Override
         public <A> A get(long recid, Serializer<A> serializer) {
-            Item item = items.get(recid);
+            Item<?> item = items.get(recid);
             if(item!=null) item.check();
             A ret = super.get(recid, serializer);
-            if(ret!=null) items.put(recid, new Item(serializer,ret));
+            if(ret!=null) items.put(recid, new Item<A>(serializer,ret));
             return ret;
         }
 
         @Override
         public <A> long put(A value, Serializer<A> serializer) {
             long ret =  super.put(value, serializer);
-            if(value!=null) items.put(ret, new Item(serializer,value));
+            if(value!=null) items.put(ret, new Item<A>(serializer,value));
             return ret;
         }
 
         @Override
         public <A> void update(long recid, A value, Serializer<A> serializer) {
-            Item item = items.get(recid);
+            Item<?> item = items.get(recid);
             if(item!=null) item.check();
             super.update(recid, value, serializer);
-            if(value!=null) items.put(recid, new Item(serializer,value));
+            if(value!=null) items.put(recid, new Item<A>(serializer,value));
         }
 
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         @Override
         public <A> boolean compareAndSwap(long recid, A expectedOldValue, A newValue, Serializer<A> serializer) {
-            Item item = items.get(recid);
+            Item<?> item = items.get(recid);
             if(item!=null) item.check();
             boolean ret = super.compareAndSwap(recid, expectedOldValue, newValue, serializer);
             if(ret && newValue!=null) items.put(recid, new Item(serializer,item));
@@ -371,13 +368,12 @@ public abstract class EngineWrapper implements Engine{
         @Override
         public void close() {
             super.close();
-            for(Iterator<Item> iter = items.valuesIterator(); iter.hasNext();){
+            for(Iterator<Item<?>> iter = items.valuesIterator(); iter.hasNext();){
                 iter.next().check();
             }
             items.clear();
         }
     }
-    
     
     /** Engine wrapper with all methods synchronized on global lock, useful to diagnose concurrency issues.*/ 
     public static class SynchronizedEngineWrapper extends EngineWrapper{
@@ -441,5 +437,4 @@ public abstract class EngineWrapper implements Engine{
             super.compact();
         }
     }
-
 }

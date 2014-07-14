@@ -7,12 +7,12 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -23,28 +23,25 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.MoveCommand;
+import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.RelationToChildReference;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
-import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolutionUtil;
 
 import edu.princeton.cs.algs4.AssignmentProblem;
-import org.openstreetmap.josm.gui.Notification;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  *
  * @author joshdoe
  */
 public final class ReplaceGeometryUtils {
-    private static final String TITLE = tr("Replace Geometry");
     /**
      * Replace new or uploaded object with new object
      * 
@@ -167,12 +164,12 @@ public final class ReplaceGeometryUtils {
         AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) subjectNode.getKeys();
 
         // merge tags
-        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(subjectNode, referenceObject);
-        if (tagResolutionCommands == null) {
+        try {
+            commands.addAll(getTagConflictResolutionCommands(subjectNode, referenceObject));
+        } catch (UserCancelException e) {
             // user canceled tag merge dialog
             return null;
         }
-        commands.addAll(tagResolutionCommands);
 
         // replace sacrificial node in way with node that is being upgraded
         if (nodeToReplace != null) {
@@ -253,12 +250,12 @@ public final class ReplaceGeometryUtils {
         List<Command> commands = new ArrayList<Command>();
                 
         // merge tags
-        Collection<Command> tagResolutionCommands = getTagConflictResolutionCommands(referenceWay, subjectWay);
-        if (tagResolutionCommands == null) {
+        try {
+            commands.addAll(getTagConflictResolutionCommands(referenceWay, subjectWay));
+        } catch (UserCancelException e) {
             // user canceled tag merge dialog
             return null;
         }
-        commands.addAll(tagResolutionCommands);
         
         // Prepare a list of nodes that are not used anywhere except in the way
         List<Node> nodePool = getUnimportantNodes(subjectWay);
@@ -451,49 +448,15 @@ public final class ReplaceGeometryUtils {
      *
      * @param source object tags are merged from
      * @param target object tags are merged to
-     * @return
+     * @return The list of {@link Command commands} needed to apply resolution actions.
+     * @throws UserCancelException If the user cancelled a dialog.
      */
-    protected static List<Command> getTagConflictResolutionCommands(OsmPrimitive source, OsmPrimitive target) {
-        // determine if the same key in each object has different values
-        boolean keysWithMultipleValues;
-        Set<OsmPrimitive> set = new HashSet<OsmPrimitive>();
-        set.add(source);
-        set.add(target);
-        TagCollection tagCol = TagCollection.unionOfAllPrimitives(set);
-        Set<String> keys = tagCol.getKeysWithMultipleValues();
-        keysWithMultipleValues = !keys.isEmpty();
-            
+    protected static List<Command> getTagConflictResolutionCommands(OsmPrimitive source, OsmPrimitive target) throws UserCancelException {
         Collection<OsmPrimitive> primitives = Arrays.asList(source, target);
-        
-        Set<RelationToChildReference> relationToNodeReferences = RelationToChildReference.getRelationToChildReferences(primitives);
-
-        // build the tag collection
-        TagCollection tags = TagCollection.unionOfAllPrimitives(primitives);
-        TagConflictResolutionUtil.combineTigerTags(tags);
-        TagConflictResolutionUtil.normalizeTagCollectionBeforeEditing(tags, primitives);
-        TagCollection tagsToEdit = new TagCollection(tags);
-        TagConflictResolutionUtil.completeTagCollectionForEditing(tagsToEdit);
-
         // launch a conflict resolution dialog, if necessary
-        CombinePrimitiveResolverDialog dialog = CombinePrimitiveResolverDialog.getInstance();
-        dialog.getTagConflictResolverModel().populate(tagsToEdit, tags.getKeysWithMultipleValues());
-        dialog.getRelationMemberConflictResolverModel().populate(relationToNodeReferences);
-        dialog.setTargetPrimitive(target);
-        dialog.prepareDefaultDecisions();
-
-        // conflict resolution is necessary if there are conflicts in the merged tags
-        // or if both objects have relation memberships
-        if (keysWithMultipleValues || 
-                (!RelationToChildReference.getRelationToChildReferences(source).isEmpty() &&
-                 !RelationToChildReference.getRelationToChildReferences(target).isEmpty())) {
-            dialog.setVisible(true);
-            if (dialog.isCanceled()) {
-                return null;
-            }
-        }
-        return dialog.buildResolutionCommands();
+        return CombinePrimitiveResolverDialog.launchIfNecessary(
+                TagCollection.unionOfAllPrimitives(primitives), primitives, Collections.singleton(target));
     }
-
     
     /**
      * Find node from the collection which is nearest to <tt>node</tt>. Max distance is taken in consideration.

@@ -353,7 +353,7 @@ public class SerializerBase implements Serializer{
 
         /** classes bellow need object stack, so initialize it if not alredy initialized*/
         if (objectStack == null) {
-            objectStack = new FastArrayList();
+            objectStack = new FastArrayList<>();
             objectStack.add(obj);
         }
 
@@ -1064,7 +1064,7 @@ public class SerializerBase implements Serializer{
         /**  something else which needs object stack initialized*/
 
         if (objectStack == null)
-            objectStack = new FastArrayList();
+            objectStack = new FastArrayList<>();
         int oldObjectStackSize = objectStack.size();
 
         switch (head) {
@@ -1111,7 +1111,7 @@ public class SerializerBase implements Serializer{
                 ret = deserializeProperties(is, objectStack);
                 break;
             case SERIALIZER_COMPRESSION_WRAPPER:
-                ret = CompressLZF.CompressionWrapper((Serializer) deserialize(is, objectStack));
+                ret = CompressLZF.CompressionWrapper((Serializer<?>) deserialize(is, objectStack));
                 break;
             default:
                 ret = deserializeUnknownHeader(is, head, objectStack);

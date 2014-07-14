@@ -164,7 +164,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         }
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
                 boolean cellHasFocus) {
             Layer layer = (Layer) value;
             JLabel label = (JLabel) super.getListCellRendererComponent(list, layer.getName(), index, isSelected,
@@ -185,9 +185,9 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     protected Layer askAdjustLayer(List<? extends Layer> adjustableLayers) {
         if (adjustableLayers.size()==0) return null;
         if (adjustableLayers.size()==1) return adjustableLayers.get(0);
-        JComboBox layerList = new JComboBox();
+        JComboBox<Layer> layerList = new JComboBox<>();
         layerList.setRenderer(new LayerListCellRenderer());
-        layerList.setModel(new DefaultComboBoxModel(adjustableLayers.toArray()));
+        layerList.setModel(new DefaultComboBoxModel<Layer>(adjustableLayers.toArray(new Layer[0])));
         layerList.setSelectedIndex(0);
 
         JPanel pnl = new JPanel();

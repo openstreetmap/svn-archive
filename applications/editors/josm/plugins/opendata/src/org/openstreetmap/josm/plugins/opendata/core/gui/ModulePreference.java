@@ -218,7 +218,7 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
         if (! modulePreferencesActivated)
             return false;
         if (model.isActiveModulesChanged()) {
-            LinkedList<String> l = new LinkedList<String>(model.getSelectedModuleNames());
+            LinkedList<String> l = new LinkedList<>(model.getSelectedModuleNames());
             Collections.sort(l);
             Main.pref.putCollection(PREF_MODULES, l);
             return true;
@@ -445,16 +445,16 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
 
     static private class ModuleConfigurationSitesPanel extends JPanel {
 
-        private DefaultListModel model;
+        private DefaultListModel<String> model;
 
         protected void build() {
             setLayout(new GridBagLayout());
             add(new JLabel(tr("Add Open Data Module description URL.")), GBC.eol());
-            model = new DefaultListModel();
+            model = new DefaultListModel<>();
             for (String s : OdPreferenceSetting.getModuleSites()) {
                 model.addElement(s);
             }
-            final JList list = new JList(model);
+            final JList<String> list = new JList<>(model);
             add(new JScrollPane(list), GBC.std().fill());
             JPanel buttons = new JPanel(new GridBagLayout());
             buttons.add(new JButton(new AbstractAction(tr("Add")){
@@ -518,9 +518,9 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
 
         public List<String> getUpdateSites() {
             if (model.getSize() == 0) return Collections.emptyList();
-            List<String> ret = new ArrayList<String>(model.getSize());
+            List<String> ret = new ArrayList<>(model.getSize());
             for (int i=0; i< model.getSize();i++){
-                ret.add((String)model.get(i));
+                ret.add(model.get(i));
             }
             return ret;
         }

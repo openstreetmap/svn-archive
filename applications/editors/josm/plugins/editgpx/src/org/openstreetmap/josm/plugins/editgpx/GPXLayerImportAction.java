@@ -36,8 +36,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 class GPXLayerImportAction extends AbstractAction {
 
-
-    private static final long serialVersionUID = 5794897888911798168L;
     private EditGpxData data;
     public Object importing = new Object(); //used for synchronization
 
@@ -53,22 +51,22 @@ class GPXLayerImportAction extends AbstractAction {
      */
     public void activateImport() {
         Box panel = Box.createVerticalBox();
-        DefaultListModel dModel= new DefaultListModel();
+        DefaultListModel<GpxLayer> dModel = new DefaultListModel<>();
 
-        final JList layerList = new JList(dModel);
+        final JList<GpxLayer> layerList = new JList<>(dModel);
         Collection<Layer> data = Main.map.mapView.getAllLayers();
         int layerCnt = 0;
 
         for (Layer l : data){
             if(l instanceof GpxLayer){
-                dModel.addElement(l);
+                dModel.addElement((GpxLayer) l);
                 layerCnt++;
             }
         }
         if(layerCnt > 0){
             layerList.setSelectionInterval(0, layerCnt-1);
             layerList.setCellRenderer(new DefaultListCellRenderer(){
-                @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     Layer layer = (Layer)value;
                     JLabel label = (JLabel)super.getListCellRendererComponent(list,
                             layer.getName(), index, isSelected, cellHasFocus);
@@ -103,8 +101,7 @@ class GPXLayerImportAction extends AbstractAction {
                 this.data.getTracks().clear();
             }
             synchronized(importing) {
-                for (Object o : layerList.getSelectedValues()) {
-                    GpxLayer gpx = (GpxLayer )o;
+                for (GpxLayer gpx : layerList.getSelectedValuesList()) {
                     this.data.load(gpx.data);
                 }
             }

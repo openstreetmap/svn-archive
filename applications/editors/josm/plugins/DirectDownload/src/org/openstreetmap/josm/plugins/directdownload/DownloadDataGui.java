@@ -127,12 +127,16 @@ public class DownloadDataGui extends ExtendedDialog {
             
             return handler.getResult();
         } catch (java.net.MalformedURLException e) {
+            Main.error(e);
             JOptionPane.showMessageDialog(null, tr("Invalid URL {0}", urlString));
         } catch (java.io.IOException e) {
+            Main.error(e);
             JOptionPane.showMessageDialog(null, tr("Error fetching URL {0}", urlString));
         } catch (SAXException e) {
+            Main.error(e);
             JOptionPane.showMessageDialog(null, tr("Error parsing data from URL {0}", urlString));
-        } catch(ParserConfigurationException pce) {
+        } catch (ParserConfigurationException e) {
+            Main.error(e);
             JOptionPane.showMessageDialog(null, tr("Error parsing data from URL {0}", urlString));
         }
 

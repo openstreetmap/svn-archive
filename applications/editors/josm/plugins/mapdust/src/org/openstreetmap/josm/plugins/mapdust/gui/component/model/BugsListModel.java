@@ -27,11 +27,9 @@
  */
 package org.openstreetmap.josm.plugins.mapdust.gui.component.model;
 
-
 import java.util.List;
 import javax.swing.AbstractListModel;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
-
 
 /**
  * The list model for the <code>MapdustBug</code> objects.
@@ -39,7 +37,7 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
  * @author Bea
  *
  */
-public class BugsListModel extends AbstractListModel {
+public class BugsListModel extends AbstractListModel<MapdustBug> {
 
     /** The serial version UID */
     private static final long serialVersionUID = 3451277352571392219L;
@@ -70,7 +68,7 @@ public class BugsListModel extends AbstractListModel {
      * @return <code>MapdustBug</code> from the given position
      */
     @Override
-    public Object getElementAt(int index) {
+    public MapdustBug getElementAt(int index) {
         if (index >= 0 && index < bugs.size()) {
             return bugs.get(index);
         }
@@ -93,5 +91,4 @@ public class BugsListModel extends AbstractListModel {
     public void update() {
         this.fireContentsChanged(this, 0, bugs.size() - 1);
     }
-
 }

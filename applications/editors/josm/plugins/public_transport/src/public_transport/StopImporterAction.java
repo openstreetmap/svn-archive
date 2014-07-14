@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 public class StopImporterAction extends JosmAction
 {
   private static StopImporterDialog dialog = null;
-  private static DefaultListModel tracksListModel = null;
+  private static DefaultListModel<TrackReference> tracksListModel = null;
   private static GpxData data = null;
   private static TrackReference currentTrack = null;
   private static WaypointTableModel waypointTM = null;
@@ -61,10 +61,10 @@ public class StopImporterAction extends JosmAction
     return dialog;
   }
 
-  public DefaultListModel getTracksListModel()
+  public DefaultListModel<TrackReference> getTracksListModel()
   {
     if (tracksListModel == null)
-      tracksListModel = new DefaultListModel();
+      tracksListModel = new DefaultListModel<>();
     return tracksListModel;
   }
 

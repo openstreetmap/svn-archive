@@ -39,7 +39,7 @@ import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
  * @author Bea
  * @version $Revision$
  */
-public class ActionListModel extends AbstractListModel {
+public class ActionListModel extends AbstractListModel<MapdustAction> {
 
     /** The serial version UID */
     private static final long serialVersionUID = -4919264544683489112L;
@@ -72,7 +72,7 @@ public class ActionListModel extends AbstractListModel {
      * @return <code>MapdustAction</code> from the given position
      */
     @Override
-    public Object getElementAt(int index) {
+    public MapdustAction getElementAt(int index) {
         if (index >= 0 && index < list.size()) {
             return list.get(index);
         }
@@ -88,5 +88,4 @@ public class ActionListModel extends AbstractListModel {
     public int getSize() {
         return (list != null ? list.size() : 0);
     }
-
 }

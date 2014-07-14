@@ -29,11 +29,13 @@ package org.openstreetmap.josm.plugins.mapdust.gui.component.util;
 
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -51,12 +53,14 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
 import org.openstreetmap.josm.plugins.mapdust.gui.component.model.ActionListModel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.model.BugsListModel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.model.TypesListModel;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.renderer.ActionListCellRenderer;
 import org.openstreetmap.josm.plugins.mapdust.gui.component.renderer.BugListCellRenderer;
 import org.openstreetmap.josm.plugins.mapdust.gui.value.MapdustAction;
+import org.openstreetmap.josm.plugins.mapdust.service.value.BugType;
 import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -210,7 +214,7 @@ public class ComponentUtil {
      * @param list The list of the scroll pane
      * @return A <code>JScrollPane</code> object
      */
-    public static JScrollPane createJScrollPane(JList list) {
+    public static JScrollPane createJScrollPane(JList<?> list) {
         JScrollPane jScrollPane = new JScrollPane();
         jScrollPane.setViewportView(list);
         jScrollPane.setAutoscrolls(true);
@@ -223,8 +227,8 @@ public class ComponentUtil {
      * @param list The list of <code>MapdustAction</code> objects
      * @return A <code>JList</code> object
      */
-    public static JList createJList(List<MapdustAction> list) {
-        final JList jList = new JList(new ActionListModel(list));
+    public static JList<MapdustAction> createJList(List<MapdustAction> list) {
+        final JList<MapdustAction> jList = new JList<>(new ActionListModel(list));
         jList.setBorder(new LineBorder(Color.black, 1, false));
         jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList.setCellRenderer(new ActionListCellRenderer());
@@ -239,9 +243,8 @@ public class ComponentUtil {
      * @param menu The menu
      * @return A <code>JList</code>
      */
-    public static JList createJList(List<MapdustBug> bugsList,
-            final JPopupMenu menu) {
-        final JList jList = new JList(new BugsListModel(bugsList));
+    public static JList<MapdustBug> createJList(List<MapdustBug> bugsList, final JPopupMenu menu) {
+        final JList<MapdustBug> jList = new JList<>(new BugsListModel(bugsList));
         jList.setBorder(new LineBorder(Color.black, 1, false));
         jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList.setCellRenderer(new BugListCellRenderer());
@@ -295,9 +298,9 @@ public class ComponentUtil {
      * @param backgroundColor The background color
      * @return A <code>JComboBox</code> object
      */
-    public static JComboBox createJComboBox(Rectangle bounds,
-            ListCellRenderer renderer, Color backgroundColor) {
-        JComboBox jComboBox = new JComboBox(new TypesListModel());
+    public static JComboBox<BugType> createJComboBox(Rectangle bounds,
+            ListCellRenderer<BugType> renderer, Color backgroundColor) {
+        JComboBox<BugType> jComboBox = new JComboBox<>(new TypesListModel());
         jComboBox.setSelectedIndex(0);
         jComboBox.setBackground(backgroundColor);
         jComboBox.setFont(new Font("Times New Roman", Font.BOLD, 12));

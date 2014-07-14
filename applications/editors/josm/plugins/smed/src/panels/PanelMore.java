@@ -43,7 +43,7 @@ public class PanelMore extends JPanel {
 		}
 	};
 	public JLabel statusLabel;
-	public JComboBox statusBox;
+	public JComboBox<String> statusBox;
 	public EnumMap<Sts, Integer> statuses = new EnumMap<Sts, Integer>(Sts.class);
 	private ActionListener alStatus = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -55,7 +55,7 @@ public class PanelMore extends JPanel {
 		}
 	};
 	public JLabel constrLabel;
-	public JComboBox constrBox;
+	public JComboBox<String> constrBox;
 	public EnumMap<Cns, Integer> constructions = new EnumMap<Cns, Integer>(Cns.class);
 	private ActionListener alConstr = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -67,7 +67,7 @@ public class PanelMore extends JPanel {
 		}
 	};
 	public JLabel conLabel;
-	public JComboBox conBox;
+	public JComboBox<String> conBox;
 	public EnumMap<Con, Integer> conspicuities = new EnumMap<Con, Integer>(Con.class);
 	private ActionListener alCon = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -79,7 +79,7 @@ public class PanelMore extends JPanel {
 		}
 	};
 	public JLabel reflLabel;
-	public JComboBox reflBox;
+	public JComboBox<String> reflBox;
 	public EnumMap<Con, Integer> reflectivities = new EnumMap<Con, Integer>(Con.class);
 	private ActionListener alRefl = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -234,7 +234,7 @@ public class PanelMore extends JPanel {
 		statusLabel = new JLabel(Messages.getString("Status"), SwingConstants.CENTER);
 		statusLabel.setBounds(new Rectangle(250, 0, 100, 20));
 		add(statusLabel);
-		statusBox = new JComboBox();
+		statusBox = new JComboBox<>();
 		statusBox.setBounds(new Rectangle(250, 20, 100, 20));
 		addStsItem("", Sts.UNKSTS);
 		addStsItem(Messages.getString("Permanent"), Sts.PERM);
@@ -261,7 +261,7 @@ public class PanelMore extends JPanel {
 		constrLabel = new JLabel(Messages.getString("Construction"), SwingConstants.CENTER);
 		constrLabel.setBounds(new Rectangle(250, 40, 100, 20));
 		add(constrLabel);
-		constrBox = new JComboBox();
+		constrBox = new JComboBox<>();
 		constrBox.setBounds(new Rectangle(250, 60, 100, 20));
 		addCnsItem("", Cns.UNKCNS);
 		addCnsItem(Messages.getString("Masonry"), Cns.BRICK);
@@ -279,7 +279,7 @@ public class PanelMore extends JPanel {
 		conLabel = new JLabel(Messages.getString("Conspicuity"), SwingConstants.CENTER);
 		conLabel.setBounds(new Rectangle(250, 80, 100, 20));
 		add(conLabel);
-		conBox = new JComboBox();
+		conBox = new JComboBox<>();
 		conBox.setBounds(new Rectangle(250, 100, 100, 20));
 		addConItem("", Con.UNKCON);
 		addConItem(Messages.getString("Conspicuous"), Con.CONSP);
@@ -290,7 +290,7 @@ public class PanelMore extends JPanel {
 		reflLabel = new JLabel(Messages.getString("Reflectivity"), SwingConstants.CENTER);
 		reflLabel.setBounds(new Rectangle(250, 120, 100, 20));
 		add(reflLabel);
-		reflBox = new JComboBox();
+		reflBox = new JComboBox<>();
 		reflBox.setBounds(new Rectangle(250, 140, 100, 20));
 		addReflItem("", Con.UNKCON);
 		addReflItem(Messages.getString("Conspicuous"), Con.CONSP);
@@ -360,5 +360,4 @@ public class PanelMore extends JPanel {
 		regionButtons.add(button);
 		return button;
 	}
-
 }

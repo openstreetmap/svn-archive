@@ -27,7 +27,7 @@ public class PanelRadar extends JPanel {
 			}
 		}
 	};
-	private JComboBox radioCatBox;
+	private JComboBox<String> radioCatBox;
 	private EnumMap<Cat, Integer> radioCats = new EnumMap<Cat, Integer>(Cat.class);
 	private ActionListener alRadioCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -174,7 +174,7 @@ public class PanelRadar extends JPanel {
 		aisButton.addActionListener(alAis);
 		add(aisButton);
 
-		radioCatBox = new JComboBox();
+		radioCatBox = new JComboBox<>();
 		radioCatBox.setBounds(new Rectangle(210, 40, 150, 20));
 		add(radioCatBox);
 		radioCatBox.addActionListener(alRadioCatBox);

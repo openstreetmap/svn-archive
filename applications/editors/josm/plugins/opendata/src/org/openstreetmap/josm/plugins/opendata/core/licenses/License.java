@@ -16,8 +16,8 @@ public abstract class License {
 	public static final ODbL ODbL = new ODbL();
 	public static final LOOL LOOL = new LOOL();
 	
-	private final Map<String, URL> urls = new HashMap<String, URL>();
-	private final Map<String, URL> summaryURLs = new HashMap<String, URL>();
+	private final Map<String, URL> urls = new HashMap<>();
+	private final Map<String, URL> summaryURLs = new HashMap<>();
 	
 	private Icon icon;
 	

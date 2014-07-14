@@ -36,7 +36,7 @@ public class StreetEditor extends ExtendedDialog {
         parentEditButton.setEnabled(EditorFactory.isEditable(parent));
 
         nameField.setText(street.getName());
-        houseList.setModel(new DefaultComboBoxModel(street.getHouses().toArray()));
+        houseList.setModel(new DefaultComboBoxModel<>(street.getHouses().toArray(new House[0])));
         houseList.setCellRenderer(new UniversalListRenderer());
 
         houseEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
@@ -71,7 +71,7 @@ public class StreetEditor extends ExtendedDialog {
         nameField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        houseList = new javax.swing.JList();
+        houseList = new javax.swing.JList<>();
         parentEditButton = new javax.swing.JButton();
         houseEditButton = new javax.swing.JButton();
 
@@ -162,7 +162,7 @@ public class StreetEditor extends ExtendedDialog {
     private void houseEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_houseEditButtonActionPerformed
         assert selectedHouse != null;
         if (EditorFactory.editHouse(selectedHouse))
-            houseList.setModel(new DefaultComboBoxModel(street.getHouses().toArray()));
+            houseList.setModel(new DefaultComboBoxModel<>(street.getHouses().toArray(new House[0])));
     }//GEN-LAST:event_houseEditButtonActionPerformed
 
     private void parentEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parentEditButtonActionPerformed
@@ -174,7 +174,7 @@ public class StreetEditor extends ExtendedDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton houseEditButton;
-    private javax.swing.JList houseList;
+    private javax.swing.JList<House> houseList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

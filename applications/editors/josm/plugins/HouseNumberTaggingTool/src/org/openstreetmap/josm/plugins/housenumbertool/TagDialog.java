@@ -88,7 +88,7 @@ public class TagDialog extends ExtendedDialog
    private JCheckBox streetEnabled;
    private JCheckBox housenumberEnabled;
    private JSlider housenumberChangeSequence;
-   private JComboBox building;
+   private JComboBox<String> building;
    private JRadioButton streetRadio;
    private JRadioButton placeRadio;
 
@@ -138,7 +138,7 @@ public class TagDialog extends ExtendedDialog
       editPanel.add(buildingEnabled, c);
 
       Arrays.sort(buildingStrings);
-      building = new JComboBox(buildingStrings);
+      building = new JComboBox<>(buildingStrings);
       building.setSelectedItem(dto.getBuilding()); 
       building.setMaximumRowCount(50);
       c.gridx = 3;

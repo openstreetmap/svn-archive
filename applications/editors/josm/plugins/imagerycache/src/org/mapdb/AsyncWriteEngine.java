@@ -48,8 +48,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
 
     protected Throwable writerFailedException = null;
 
-
-    protected final LongConcurrentHashMap<Fun.Tuple2<Object,Serializer>> items = new LongConcurrentHashMap<Fun.Tuple2<Object, Serializer>>();
+    protected final LongConcurrentHashMap<Fun.Tuple2<Object,Serializer<Object>>> items = new LongConcurrentHashMap<>();
 
     protected final Thread newRecidsThread = new Thread("MapDB prealloc #"+threadNum){
         @Override public void run() {
@@ -72,7 +71,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
             try{
 
                 for(;;){
-                    LongMap.LongMapIterator<Fun.Tuple2<Object,Serializer>> iter = items.longMapIterator();
+                    LongMap.LongMapIterator<Fun.Tuple2<Object,Serializer<Object>>> iter = items.longMapIterator();
 
                     if(!iter.moveToNext()){
                         //empty map, pause for a moment to give it chance to fill
@@ -86,7 +85,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
                                     iter = items.longMapIterator();
                                     while(iter.moveToNext()){
                                         long recid = iter.key();
-                                        Fun.Tuple2<Object,Serializer> value = iter.value();
+                                        Fun.Tuple2<Object,Serializer<Object>> value = iter.value();
                                         if(value.a==DELETED){
                                             AsyncWriteEngine.super.delete(recid, value.b);
                                         }else{
@@ -106,7 +105,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
 
                         Utils.lock(writeLocks,recid);
                         try{
-                            Fun.Tuple2<Object,Serializer> value = iter.value();
+                            Fun.Tuple2<Object,Serializer<Object>> value = iter.value();
                             if(value.a==DELETED){
                                 AsyncWriteEngine.super.delete(recid, value.b);
                             }else{
@@ -164,6 +163,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
         if(writerFailedException!=null) throw new RuntimeException("Writer thread failed", writerFailedException);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <A> A get(long recid, Serializer<A> serializer) {
         if(commitLock!=null) commitLock.readLock().lock();
@@ -171,7 +171,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
             Utils.lock(writeLocks,recid);
             try{
                 checkState();
-                Fun.Tuple2<Object,Serializer> item = items.get(recid);
+                Fun.Tuple2<Object,Serializer<Object>> item = items.get(recid);
                 if(item!=null){
                     if(item.a == DELETED) return null;
                     return (A) item.a;
@@ -186,6 +186,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public <A> void update(long recid, A value, Serializer<A> serializer) {
 
@@ -205,13 +206,14 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
 
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public <A> boolean compareAndSwap(long recid, A expectedOldValue, A newValue, Serializer<A> serializer) {
         //TODO commit lock?
         Utils.lock(writeLocks, recid);
         try{
             checkState();
-            Fun.Tuple2<Object, Serializer> existing = items.get(recid);
+            Fun.Tuple2<Object, Serializer<Object>> existing = items.get(recid);
             A oldValue = existing!=null? (A) existing.a : super.get(recid, serializer);
             if(oldValue == expectedOldValue || (oldValue!=null && oldValue.equals(expectedOldValue))){
                 items.put(recid, new Fun.Tuple2(newValue,serializer));
@@ -225,6 +227,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <A> void delete(long recid, Serializer<A> serializer) {
         update(recid, (A) DELETED, serializer);
@@ -244,14 +247,11 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
             //wait for worker threads to shutdown
             shutdownCondition.await();
 
-
             super.close();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 
     protected WeakReference<Engine> parentEngineWeakRef = null;
 
@@ -301,5 +301,4 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
             commitLock.writeLock().unlock();
         }
     }
-
 }

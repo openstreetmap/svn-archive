@@ -20,9 +20,6 @@ package edu.princeton.cs.algs4;
  *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/44sp">Section 4.4</a> of
  *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  */
-
-
-
 public class EdgeWeightedDigraph {
     private final int V;
     private int E;
@@ -31,6 +28,7 @@ public class EdgeWeightedDigraph {
     /**
      * Create an empty edge-weighted digraph with V vertices.
      */
+    @SuppressWarnings("unchecked")
     public EdgeWeightedDigraph(int V) {
         if (V < 0) throw new RuntimeException("Number of vertices must be nonnegative");
         this.V = V;
@@ -101,7 +99,6 @@ public class EdgeWeightedDigraph {
         return E;
     }
 
-
    /**
      * Add the edge e to this digraph.
      */
@@ -110,7 +107,6 @@ public class EdgeWeightedDigraph {
         adj[v].add(e);
         E++;
     }
-
 
    /**
      * Return the edges leaving vertex v as an Iterable.
@@ -143,8 +139,6 @@ public class EdgeWeightedDigraph {
         return adj[v].size();
     }
 
-
-
    /**
      * Return a string representation of this graph.
      */
@@ -161,14 +155,4 @@ public class EdgeWeightedDigraph {
         }
         return s.toString();
     }
-
-    /**
-     * Test client.
-     */
-//    public static void main(String[] args) {
-//        In in = new In(args[0]);
-//        EdgeWeightedDigraph G = new EdgeWeightedDigraph(in);
-//        StdOut.println(G);
-//    }
-
 }

@@ -196,8 +196,8 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         locationEdit = new javax.swing.JTextField();
         changeLocationButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        proposalList = new javax.swing.JList();
-        matchesComboBox = new javax.swing.JComboBox();
+        proposalList = new javax.swing.JList<>();
+        matchesComboBox = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         statusLabel = new javax.swing.JLabel();
 
@@ -235,7 +235,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         });
         jScrollPane1.setViewportView(proposalList);
 
-        matchesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "" }));
+        //matchesComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "" }));
         matchesComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 matchChanged(evt);
@@ -306,7 +306,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
     private void proposalListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proposalListKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            for (Object o : proposalList.getSelectedValues())
+            for (Object o : proposalList.getSelectedValuesList())
                 proposalContainer.removeProposal((Proposal) o);
         }
     }//GEN-LAST:event_proposalListKeyReleased
@@ -340,15 +340,15 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField locationEdit;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JComboBox matchesComboBox;
-    private javax.swing.JList proposalList;
+    private javax.swing.JComboBox<AddressElement> matchesComboBox;
+    private javax.swing.JList<Proposal> proposalList;
     private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 
     /**
      * Container for all Houses, which match the given 'alternatenumber'.
      */
-    private class MatchesComboBoxModel extends HalfCookedComboBoxModel {
+    private class MatchesComboBoxModel extends HalfCookedComboBoxModel<AddressElement> {
 
         private List<AddressElement> matches = null;
         AddressElement selected = null;
@@ -378,7 +378,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             return matches.size();
         }
 
-        public Object getElementAt(int index) {
+        public AddressElement getElementAt(int index) {
             if (matches == null) return null;
             if (index >= matches.size()) return null;
             return matches.get(index);

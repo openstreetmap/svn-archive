@@ -49,7 +49,7 @@ public class GlobalsatDg100
     public static final int TRACK_TYPE = 1;
 
     /** delete file: A0 A2 00 02 BC 01 00 BD B0 B3 */
-    private static byte dg100CmdSwitch2Nmea[] =
+    /*private static byte dg100CmdSwitch2Nmea[] =
     { (byte) 0xA0, (byte) 0xA2, (byte) 0x00, (byte) 0x18, (byte) 0x81,
       (byte) 0x02, (byte) 0x01, (byte) 0x01, (byte) 0x00, (byte) 0x01,
       (byte) 0x01, (byte) 0x01, (byte) 0x05, (byte) 0x01, (byte) 0x01,
@@ -57,12 +57,12 @@ public class GlobalsatDg100
       (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0x00,
       (byte) 0x00, (byte) 0x25, (byte) 0x80, (byte) 0x00, (byte) 0x00,
       (byte) 0xB0, (byte) 0xB3
-    };
+    };*/
     /** delete file: A0 A2 00 02 BC 01 00 BD B0 B3 */
-    private static byte dg100CmdEnterGMouse[] =
+    /*private static byte dg100CmdEnterGMouse[] =
     { (byte) 0xA0, (byte) 0xA2, (byte) 0x00, (byte) 0x02, (byte) 0xBC
       , (byte) 0x01, (byte) 0x00, (byte) 0xBD, (byte) 0xB0, (byte) 0xB3
-    };
+    };*/
     /** delete file: A0 A2 00 03 BA FF FF 02 B8 B0 B3 */
     private static byte dg100CmdDelFile[] =
     { (byte) 0xA0, (byte) 0xA2, (byte) 0x00, (byte) 0x03, (byte) 0xBA
@@ -103,15 +103,15 @@ public class GlobalsatDg100
       , (byte) 0x00, (byte) 0x00, (byte) 0xB0, (byte) 0xB3
     };
     /** read config: A0 A2 00 01 BF 00 BF B0 B3 */
-    private static byte dg100CmdGetId[] =
+    /*private static byte dg100CmdGetId[] =
     { (byte) 0xA0, (byte) 0xA2, (byte) 0x00, (byte) 0x01, (byte) 0xBF
-      , (byte) 0x00, (byte) 0xBF, (byte) 0xB0, (byte) 0xB3 };
+      , (byte) 0x00, (byte) 0xBF, (byte) 0xB0, (byte) 0xB3 };*/
     /** read config: A0 A2 00 01 BF 00 BF B0 B3 */
-    private static byte dg100CmdSetId[] =
+    /*private static byte dg100CmdSetId[] =
     { (byte) 0xA0, (byte) 0xA2, (byte) 0x00, (byte) 0x09, (byte) 0xC0
       , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00
       , (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00
-      , (byte) 0x00, (byte) 0xC0, (byte) 0xB0, (byte) 0xB3};
+      , (byte) 0x00, (byte) 0xC0, (byte) 0xB0, (byte) 0xB3};*/
 
     private byte[] response = new byte[65536];
 
@@ -186,7 +186,7 @@ public class GlobalsatDg100
             connect();
         }
         try{
-            Response response = sendCmdDelFiles();
+            sendCmdDelFiles();
         }catch(Exception e){
             throw new ConnectionException(e);
         }
@@ -219,7 +219,7 @@ public class GlobalsatDg100
         List<FileInfoRec> result = new ArrayList<FileInfoRec>(64);
         try{
             do{
-                Response response = sendCmdGetFileInfo(nextIdx);
+                Response<FileInfoRec> response = sendCmdGetFileInfo(nextIdx);
                 nextIdx = response.getNextIdx();
                 result.addAll(response.getRecs());
             } while (nextIdx > 0);
@@ -231,13 +231,11 @@ public class GlobalsatDg100
 
     public List<GpsRec> readGpsRecList(List<FileInfoRec> fileInfoList) throws ConnectionException
     {
-        int cnt = 0;
         List<GpsRec> result = new ArrayList<GpsRec>(200);
 
         try{
             for(FileInfoRec fileInfoRec:fileInfoList){
-                cnt++;
-                Response response = sendCmdGetGpsRecs(fileInfoRec.getIdx());
+                Response<GpsRec> response = sendCmdGetGpsRecs(fileInfoRec.getIdx());
                 result.addAll(response.getRecs());
             }
             return result;
@@ -246,14 +244,15 @@ public class GlobalsatDg100
         }
     }
 
-    private Response sendCmdDelFiles() throws IOException, UnsupportedCommOperationException
+    private Response<?> sendCmdDelFiles() throws IOException, UnsupportedCommOperationException
     {
         System.out.println("deleting data...");
         int len = sendCmd(dg100CmdDelFile, response, -1);
         return Response.parseResponse(response, len);
     }
 
-    private Response sendCmdGetFileInfo(int idx) throws IOException, UnsupportedCommOperationException
+    @SuppressWarnings("unchecked")
+    private Response<FileInfoRec> sendCmdGetFileInfo(int idx) throws IOException, UnsupportedCommOperationException
     {
         byte[] src = dg100CmdGetFileInfo;
         ByteBuffer buf = ByteBuffer.wrap(src);
@@ -261,10 +260,10 @@ public class GlobalsatDg100
         buf.putShort((short)idx); // index of first file info rec to be read
         updateCheckSum(buf);
         int len = sendCmd(src, response, -1);
-        return Response.parseResponse(response, len);
+        return (Response<FileInfoRec>) Response.parseResponse(response, len);
     }
 
-    private Response sendCmdGetConfig() throws IOException, UnsupportedCommOperationException
+    private Response<?> sendCmdGetConfig() throws IOException, UnsupportedCommOperationException
     {
         byte[] src = dg100CmdGetConfig;
         int len = sendCmd(src, response, -1);
@@ -276,13 +275,11 @@ public class GlobalsatDg100
             if(port == null){
                 connect();
             }
-            Response response = sendCmdGetConfig();
-            return response.getConfig();
+            return sendCmdGetConfig().getConfig();
         }catch(Exception e){
             throw new ConnectionException(e);
         }
     }
-
 
     private void sendCmdSetConfig(Dg100Config config) throws IOException, UnsupportedCommOperationException
     {
@@ -309,7 +306,8 @@ public class GlobalsatDg100
         return canceled;
     }
 
-    private Response sendCmdGetGpsRecs(int idx) throws IOException, UnsupportedCommOperationException
+    @SuppressWarnings("unchecked")
+    private Response<GpsRec> sendCmdGetGpsRecs(int idx) throws IOException, UnsupportedCommOperationException
     {
         byte[] src = dg100CmdGetGpsRecs;
         ByteBuffer buf = ByteBuffer.wrap(src);
@@ -317,7 +315,7 @@ public class GlobalsatDg100
         buf.putShort((short)idx); // index of first chunk of gps recs to be read
         updateCheckSum(buf);
         int len = sendCmd(src, response, 2074);
-        return Response.parseResponse(response, len);
+        return (Response<GpsRec>) Response.parseResponse(response, len);
     }
 
     /**

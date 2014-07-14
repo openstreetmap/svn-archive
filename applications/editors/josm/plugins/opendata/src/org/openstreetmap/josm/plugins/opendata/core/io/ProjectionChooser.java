@@ -17,7 +17,6 @@ import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.tools.GBC;
 
-@SuppressWarnings("serial")
 public class ProjectionChooser extends ExtendedDialog {
 
     /**
@@ -28,7 +27,8 @@ public class ProjectionChooser extends ExtendedDialog {
     /**
      * Combobox with all projections available
      */
-    private final JComboBox projectionCombo = new JComboBox(ProjectionPreference.getProjectionChoices().toArray());
+    private final JComboBox<ProjectionChoice> projectionCombo = new JComboBox<>(
+            ProjectionPreference.getProjectionChoices().toArray(new ProjectionChoice[0]));
 
 	public ProjectionChooser(Component parent) {
 		this(parent, tr("Projection method"), new String[] {tr("OK"), tr("Cancel")});

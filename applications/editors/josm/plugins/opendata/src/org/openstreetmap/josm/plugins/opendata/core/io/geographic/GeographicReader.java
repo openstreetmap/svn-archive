@@ -71,7 +71,7 @@ public abstract class GeographicReader extends AbstractReader implements OdConst
 	protected MathTransform transform;
 
 	public GeographicReader(GeographicHandler handler, GeographicHandler[] defaultHandlers) {
-		this.nodes = new HashMap<LatLon, Node>();
+		this.nodes = new HashMap<>();
 		this.handler = handler;
 		this.defaultHandlers = defaultHandlers;
 	}
@@ -255,7 +255,7 @@ public abstract class GeographicReader extends AbstractReader implements OdConst
 			System.out.println(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
 			
 			if (findSimiliarCrs) { 
-				List<CoordinateReferenceSystem> candidates = new ArrayList<CoordinateReferenceSystem>();
+				List<CoordinateReferenceSystem> candidates = new ArrayList<>();
 				
 				// Find matching CRS with Bursa Wolf parameters in EPSG database
 				for (String code : CRS.getAuthorityFactory(false).getAuthorityCodes(ProjectedCRS.class)) {

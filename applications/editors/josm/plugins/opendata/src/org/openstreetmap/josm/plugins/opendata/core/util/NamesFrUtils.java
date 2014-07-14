@@ -30,7 +30,7 @@ public abstract class NamesFrUtils implements OdConstants {
 	}
 	
 	private static Map<String, String> initDictionary() {
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, String> result = new HashMap<>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					SimpleDataSetHandler.class.getResourceAsStream(DICTIONARY_FR), UTF8));

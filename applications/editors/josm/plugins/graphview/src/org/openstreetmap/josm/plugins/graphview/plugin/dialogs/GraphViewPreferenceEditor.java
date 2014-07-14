@@ -56,7 +56,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
     private JTextField rulesetFolderTextField;
     private JButton selectRulesetFolderButton;
 
-    private JComboBox bookmarkComboBox;
+    private JComboBox<String> bookmarkComboBox;
     private JButton editBookmarkButton;
     private JButton deleteBookmarkButton;
 
@@ -173,7 +173,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
         vehiclePanel.setBorder(BorderFactory.createTitledBorder(tr("Vehicle")));
         vehiclePanel.setLayout(new BoxLayout(vehiclePanel, BoxLayout.Y_AXIS));
 
-        bookmarkComboBox = new JComboBox();
+        bookmarkComboBox = new JComboBox<>();
         vehiclePanel.add(bookmarkComboBox);
 
         JPanel buttonPanel = new JPanel();

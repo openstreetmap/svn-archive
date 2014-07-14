@@ -11,7 +11,7 @@ import java.util.*;
  * @author skaintoch
  *
  */
-public class Response
+public class Response<E>
 {
     final static public byte typeFileInfo = (byte)0xBB;
     final static public byte typeId = (byte)0xBF;
@@ -22,7 +22,7 @@ public class Response
     private int cntDataCur = 0;
     private int nextIdx = 0;
     private Dg100Config config = null;
-    private List data = new ArrayList(100);
+    private List<E> data = new ArrayList<>(100);
     private long id = 0;
 
     private Response(int typeOfResponse)
@@ -34,14 +34,14 @@ public class Response
      *
      * @param resp
      */
-    static public Response parseResponse(byte resp[], int len)
+    static public Response<?> parseResponse(byte resp[], int len)
     {
         ByteBuffer buf = ByteBuffer.wrap(resp);
         byte respType = buf.get(4);
-        Response response = new Response(respType);
         buf.position(5);
         if (respType == typeFileInfo) // file info
         {
+            Response<FileInfoRec> response = new Response<>(respType);
             int cntInfoCur = buf.getShort();
             int nextIdx = buf.getShort();
             response.cntDataCur = cntInfoCur;
@@ -51,9 +51,11 @@ public class Response
                 FileInfoRec fileInfoRec = new FileInfoRec(buf);
                 response.addRec(fileInfoRec);
             }
+            return response;
         }
         else if (respType == typeGpsRec) // gps recs
         {
+            Response<GpsRec> response = new Response<>(respType);
             int recType = 2;
             // read part 1
             while (buf.position() <= len)
@@ -84,33 +86,38 @@ public class Response
                 }
                 recType = gpsRec.getDg100TypeOfNextRec();
             }
+            return response;
         }
         else if (respType == typeConfig) // config
         {
+            Response<?> response = new Response<>(respType);
             Dg100Config config = new Dg100Config(buf);
             response.config = config;
+            return response;
         }
         else if (respType == typeId) // id
         {
+            Response<?> response = new Response<>(respType);
             response.id = 0;
             for (int ii = 0 ; ii < 8 ; ++ii)
             {
                 int digit = (int)buf.get();
                 response.id = response.id * 10 + digit;
             }
+            return response;
         }
         else
         {
+            return new Response<>(respType);
         }
-        return response;
     }
 
-    private void addRec(Object obj)
+    private void addRec(E obj)
     {
         data.add(obj);
     }
 
-    public List getRecs()
+    public List<E> getRecs()
     {
         return data;
     }

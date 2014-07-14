@@ -36,7 +36,7 @@ public class FindRelationAction extends JosmAction {
         final JTextField searchField = new JTextField();
         panel.add(searchField, BorderLayout.NORTH);
         final FindRelationListModel relationsData = new FindRelationListModel();
-        final JList relationsList = new JList(relationsData);
+        final JList<Relation> relationsList = new JList<>(relationsData);
         relationsList.setSelectionModel(relationsData.getSelectionModel());
         relationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         relationsList.setCellRenderer(new OsmPrimitivRenderer());
@@ -166,7 +166,7 @@ public class FindRelationAction extends JosmAction {
     /**
      * I admit, some of it was copypasted from {@link org.openstreetmap.josm.gui.dialogs.RelationListDialog.RelationListModel}.
      */
-    protected class FindRelationListModel extends AbstractListModel {
+    protected class FindRelationListModel extends AbstractListModel<Relation> {
         private final ArrayList<Relation> relations = new ArrayList<Relation>();
         private DefaultListSelectionModel selectionModel;
 
@@ -183,21 +183,19 @@ public class FindRelationAction extends JosmAction {
             return selectionModel;
         }
 
-        public Relation getRelation( int idx ) {
-            return relations.get(idx);
-        }
-
+        @Override
         public int getSize() {
             return relations.size();
         }
 
-        public Object getElementAt( int index ) {
-            return getRelation(index);
+        @Override
+        public Relation getElementAt( int index ) {
+            return relations.get(index);
         }
 
         public void setRelations(Collection<Relation> relations) {
             int selectedIndex = selectionModel.getMinSelectionIndex();
-            Relation sel =  selectedIndex < 0 ? null : getRelation(selectedIndex);
+            Relation sel =  selectedIndex < 0 ? null : getElementAt(selectedIndex);
             
             this.relations.clear();
             selectionModel.clearSelection();

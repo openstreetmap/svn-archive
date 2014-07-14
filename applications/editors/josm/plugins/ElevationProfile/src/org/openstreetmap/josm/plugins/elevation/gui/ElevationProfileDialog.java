@@ -62,7 +62,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     private final JLabel elevationGainLabel;
     private final JLabel totalTimeLabel;
     private final JLabel distLabel;
-    private final JComboBox trackCombo;
+    private final JComboBox<IElevationProfile> trackCombo;
     private final JButton zoomButton;
 
     /* Listener to the elevation model */
@@ -169,7 +169,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
         });
         zoomButton.setEnabled(false);
 
-        trackCombo = new JComboBox(new TrackModel());
+        trackCombo = new JComboBox<>(new TrackModel());
         trackCombo.setPreferredSize(new Dimension(200, 24)); // HACK!
         trackCombo.setEnabled(false); // we have no model on startup
 
@@ -253,7 +253,6 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
      * Refreshes the dialog when model data have changed and notifies clients
      * that the model has changed.
      */
-    @SuppressWarnings("unchecked") // TODO: Can be removed in Java 1.7
     private void updateView() {
         if (model == null) {
             disableView();
@@ -409,8 +408,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     public void componentShown(ComponentEvent e) {
     }
 
-    @SuppressWarnings("rawtypes") // TODO: Can be removed in Java 1.7
-    class TrackModel implements ComboBoxModel {
+    class TrackModel implements ComboBoxModel<IElevationProfile> {
         private Collection<ListDataListener> listeners;
 
         @Override
@@ -444,7 +442,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
         }
 
         @Override
-        public Object getSelectedItem() {
+        public IElevationProfile getSelectedItem() {
             if (model == null) return null;
 
             return model.getCurrentProfile();
@@ -459,6 +457,5 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
                 repaint();
             }
         }
-
     }
 }

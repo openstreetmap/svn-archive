@@ -42,12 +42,13 @@ import org.openstreetmap.josm.plugins.osb.gui.action.AddCommentAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.CloseIssueAction;
 import org.openstreetmap.josm.plugins.osb.gui.action.OsbAction;
 
-public class OsbQueueListCellRenderer implements ListCellRenderer {
+public class OsbQueueListCellRenderer implements ListCellRenderer<OsbAction> {
 
     private Color background = Color.WHITE;
     private Color altBackground = new Color(250, 250, 220);
 
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+    @Override
+    public Component getListCellRendererComponent(JList<? extends OsbAction> list, OsbAction action, int index, boolean isSelected,
             boolean cellHasFocus) {
 
         JLabel label = new JLabel();
@@ -61,7 +62,6 @@ public class OsbQueueListCellRenderer implements ListCellRenderer {
             label.setBackground(index % 2 == 0 ? background : altBackground);
         }
 
-        OsbAction action = (OsbAction) value;
         Icon icon = null;
         if(action instanceof AddCommentAction) {
             icon = OsbPlugin.loadIcon("add_comment16.png");

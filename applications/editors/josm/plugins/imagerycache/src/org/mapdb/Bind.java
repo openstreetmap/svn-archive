@@ -3,7 +3,6 @@ package org.mapdb;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -20,11 +19,12 @@ public final class Bind {
             @Override
             public Iterator<K1> iterator() {
                 //use range query to get all values
+                @SuppressWarnings("unchecked")
                 final Iterator<Fun.Tuple2<K2,K1>> iter =
-                    ((NavigableSet)secondaryKeys) //cast is workaround for generics
+                    secondaryKeys
                         .subSet(
-                                Fun.t2(secondaryKey,null), //NULL represents lower bound, everything is larger than null
-                                Fun.t2(secondaryKey,Fun.HI) // HI is upper bound everything is smaller then HI
+                                Fun.t2(secondaryKey,(K1)null), //NULL represents lower bound, everything is larger than null
+                                Fun.t2(secondaryKey,(K1)Fun.HI) // HI is upper bound everything is smaller then HI
                         ).iterator();
 
                 return new Iterator<K1>() {
@@ -58,12 +58,12 @@ public final class Bind {
         public void removeModificationListener(MapListener<K,V> listener);
     }
 
-    public static void size(MapWithModificationListener map, final Atomic.Long size){
+    public static <K,V> void size(MapWithModificationListener<K, V> map, final Atomic.Long size){
         //set initial value first if necessary
         if(size.get() == 0 && map.isEmpty())
             size.set(map.size()); //TODO long overflow?
 
-        map.addModificationListener(new MapListener() {
+        map.addModificationListener(new MapListener<K, V>() {
             @Override
             public void update(Object key, Object oldVal, Object newVal) {
                 if(oldVal == null && newVal!=null)

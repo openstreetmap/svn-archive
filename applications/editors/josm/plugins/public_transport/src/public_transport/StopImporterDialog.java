@@ -32,8 +32,8 @@ public class StopImporterDialog
 {
   private JDialog jDialog = null;
   private JTabbedPane tabbedPane = null;
-  private JComboBox cbStoptype = null;
-  private JList tracksList = null;
+  private JComboBox<TransText> cbStoptype = null;
+  private JList<TrackReference> tracksList = null;
   private JTextField tfGPSTimeStart = null;
   private JTextField tfStopwatchStart = null;
   private JTextField tfTimeWindow = null;
@@ -79,8 +79,8 @@ public class StopImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    DefaultListModel tracksListModel = controller.getTracksListModel();
-    tracksList = new JList(tracksListModel);
+    DefaultListModel<TrackReference> tracksListModel = controller.getTracksListModel();
+    tracksList = new JList<>(tracksListModel);
     JScrollPane rpListSP = new JScrollPane(tracksList);
     String[] data = {"1", "2", "3", "4", "5", "6"};
     tracksListModel.copyInto(data);
@@ -113,7 +113,7 @@ public class StopImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    cbStoptype = new JComboBox();
+    cbStoptype = new JComboBox<>();
     cbStoptype.setEditable(false);
     for(String type : stoptypes)
         cbStoptype.addItem(new TransText(type));
@@ -639,7 +639,7 @@ public class StopImporterDialog
   public void setStoplistTableModel(TrackStoplistTableModel model)
   {
     stoplistTable.setModel(model);
-    JComboBox comboBox = new JComboBox();
+    JComboBox<TransText> comboBox = new JComboBox<>();
     comboBox.addItem(new TransText(null));
     comboBox.addItem(new TransText(marktr("yes")));
     comboBox.addItem(new TransText(marktr("no")));
@@ -660,7 +660,7 @@ public class StopImporterDialog
   public void setWaypointsTableModel(WaypointTableModel model)
   {
     waypointTable.setModel(model);
-    JComboBox comboBox = new JComboBox();
+    JComboBox<TransText> comboBox = new JComboBox<>();
     comboBox.addItem(new TransText(null));
     comboBox.addItem(new TransText(marktr("yes")));
     comboBox.addItem(new TransText(marktr("no")));

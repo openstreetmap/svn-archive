@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,14 +74,14 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         final JPanel cont = new JPanel(new GridBagLayout());
         cont.add(new JLabel(tr("Write position information into the exif header of the following files:")), GBC.eol());
 
-        DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
         DecimalFormat dFormatter = new DecimalFormat("###0.000000");
         for (ImageEntry e : images) {
             listModel.addElement(e.getFile().getAbsolutePath()+
                 " ("+dFormatter.format(e.getPos().lat())+","+dFormatter.format(e.getPos().lon())+")");
         }
 
-        JList entryList = new JList(listModel);
+        JList<String> entryList = new JList<>(listModel);
 
         JScrollPane scroll = new JScrollPane(entryList);
         scroll.setPreferredSize(new Dimension(900, 250));
@@ -100,7 +98,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         settingsPanel.add(setMTime, GBC.std().insets(3,3,5,3));
 
         final String[] mTimeModeArray = {"----", tr("to gps time"), tr("to previous value (unchanged mtime)")};
-        final JComboBox mTimeMode = new JComboBox(mTimeModeArray);
+        final JComboBox<String> mTimeMode = new JComboBox<>(mTimeModeArray);
         {
             String mTimeModePref = Main.pref.get(MTIME_MODE, null);
             int mTimeIdx = 0;

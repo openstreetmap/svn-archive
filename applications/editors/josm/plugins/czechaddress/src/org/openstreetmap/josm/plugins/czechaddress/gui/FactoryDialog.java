@@ -120,7 +120,7 @@ public class FactoryDialog extends ToggleDialog
             }
 
         for (int i=0; i<houseModel.getSize(); i++)
-            if (houseModel.getHouseAt(i) == house) {
+            if (houseModel.getElementAt(i) == house) {
                 houseList.setSelectedIndex(i);
                 houseList.ensureIndexIsVisible(i);
                 break;
@@ -158,7 +158,7 @@ public class FactoryDialog extends ToggleDialog
 
         index++; // Initial kick to do at least one move.
         House current;
-        while ( (current = houseModel.getHouseAt(index))  != null
+        while ( (current = houseModel.getElementAt(index)) != null
              && Reasoner.getInstance().translate(current) != null)
             index++;
 
@@ -261,20 +261,20 @@ public class FactoryDialog extends ToggleDialog
 
         mainPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        houseList = new javax.swing.JList();
+        houseList = new javax.swing.JList<>();
         keepOddityCheckBox = new javax.swing.JCheckBox();
         relocateButton = new javax.swing.JButton();
-        streetComboBox = new javax.swing.JComboBox();
+        streetComboBox = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.GridLayout(1, 0));
-
-        houseList.setModel(new javax.swing.AbstractListModel() {
+/*
+        houseList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { " " };
             @Override
             public int getSize() { return strings.length; }
             @Override
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+            public String getElementAt(int i) { return strings[i]; }
+        });*/
         houseList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         houseList.setEnabled(false);
         houseList.setFocusable(false);
@@ -348,12 +348,12 @@ public class FactoryDialog extends ToggleDialog
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList houseList;
+    private javax.swing.JList<House> houseList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBox keepOddityCheckBox;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton relocateButton;
-    private javax.swing.JComboBox streetComboBox;
+    private javax.swing.JComboBox<ElementWithHouses> streetComboBox;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -369,7 +369,7 @@ public class FactoryDialog extends ToggleDialog
 
     private class StreetListRenderer extends DefaultListCellRenderer {
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
             if (value instanceof Street) {
@@ -397,7 +397,7 @@ public class FactoryDialog extends ToggleDialog
         ImageIcon envelopeExclIcon = ImageProvider.get("envelope-closed-exclamation-small.png");
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
             if (plainFont == null) plainFont = getFont().deriveFont(Font.PLAIN);
@@ -466,7 +466,7 @@ public class FactoryDialog extends ToggleDialog
 
 //==============================================================================
 
-    private class StreetListModel extends HalfCookedComboBoxModel {
+    private class StreetListModel extends HalfCookedComboBoxModel<ElementWithHouses> {
 
         private ElementWithHouses selected = null;
         private ElementWithStreets parent = null;
@@ -498,7 +498,7 @@ public class FactoryDialog extends ToggleDialog
         }
 
         @Override
-        public Object getElementAt(int index) {
+        public ElementWithHouses getElementAt(int index) {
             if (parent == null) return null;
 
             if (index < metaElem.size())
@@ -527,7 +527,7 @@ public class FactoryDialog extends ToggleDialog
 
 //==============================================================================
 
-    private class HouseListModel extends HalfCookedListModel
+    private class HouseListModel extends HalfCookedListModel<House>
                                  implements ReasonerListener {
 
         public HouseListModel() {
@@ -543,7 +543,8 @@ public class FactoryDialog extends ToggleDialog
             return selected.getHouses().size();
         }
 
-        public House getHouseAt(int index) {
+        @Override
+        public House getElementAt(int index) {
             if (streetComboBox.getSelectedItem() == null) return null;
             ElementWithHouses selected
                     = (ElementWithHouses) streetComboBox.getSelectedItem();
@@ -551,11 +552,6 @@ public class FactoryDialog extends ToggleDialog
             if ((index < 0) || (index >= selected.getHouses().size()))
                 return null;
             return selected.getHouses().get(index);
-        }
-
-        @Override
-        public Object getElementAt(int index) {
-            return getHouseAt(index);
         }
 
         @Override

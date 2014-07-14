@@ -18,9 +18,9 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 
 public abstract class AbstractModule implements Module, OdConstants {
 
-	protected final List<Class<? extends AbstractDataSetHandler>> handlers = new ArrayList<Class <? extends AbstractDataSetHandler>>();
+	protected final List<Class<? extends AbstractDataSetHandler>> handlers = new ArrayList<>();
 
-	private final List<AbstractDataSetHandler> instanciatedHandlers = new ArrayList<AbstractDataSetHandler>();
+	private final List<AbstractDataSetHandler> instanciatedHandlers = new ArrayList<>();
 
 	protected final ModuleInformation info;
 	
@@ -45,7 +45,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 
 	@Override
 	public SourceProvider getMapPaintStyleSourceProvider() {
-		final List<SourceEntry> sources = new ArrayList<SourceEntry>();
+		final List<SourceEntry> sources = new ArrayList<>();
 		for (AbstractDataSetHandler handler : getInstanciatedHandlers()) {
 			ExtendedSourceEntry src;
 			if (handler != null && (src = handler.getMapPaintStyle()) != null) {
@@ -82,7 +82,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 
 	@Override
 	public SourceProvider getPresetSourceProvider() {
-		final List<SourceEntry> sources = new ArrayList<SourceEntry>();
+		final List<SourceEntry> sources = new ArrayList<>();
 		for (AbstractDataSetHandler handler : getInstanciatedHandlers()) {
 			if (handler != null && handler.getTaggingPreset() != null) {
 				sources.add(handler.getTaggingPreset());
@@ -98,7 +98,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 	
 	@Override
 	public final List<AbstractDataSetHandler> getNewlyInstanciatedHandlers() {
-		List<AbstractDataSetHandler> result = new ArrayList<AbstractDataSetHandler>();
+		List<AbstractDataSetHandler> result = new ArrayList<>();
 		for (Class<? extends AbstractDataSetHandler> handlerClass : handlers) {
 			if (handlerClass != null) {
 				try {

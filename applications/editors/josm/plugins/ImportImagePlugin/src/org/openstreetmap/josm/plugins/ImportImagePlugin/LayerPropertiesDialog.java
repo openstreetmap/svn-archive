@@ -65,7 +65,7 @@ public class LayerPropertiesDialog extends JFrame{
     private JLabel defaultCRSLabel = null;
     private JTextField searchField = null;
     private JScrollPane crsListScrollPane = null;
-    private JList crsJList = null;
+    private JList<String> crsJList = null;
     private JButton useDefaultCRSButton = null;
     private JButton applySelectedCRSButton = null;
     private JButton setSelectedCRSAsDefaultButton = null;
@@ -405,9 +405,9 @@ public class LayerPropertiesDialog extends JFrame{
      *  
      * @return javax.swing.JList    
      */
-    private JList getCrsJList() {
+    private JList<String> getCrsJList() {
         if (crsJList == null) {
-            crsJList = new JList(supportedCRS);
+            crsJList = new JList<>(supportedCRS);
             crsJList.addListSelectionListener(new ListSelectionHandler());
         }
         return crsJList;

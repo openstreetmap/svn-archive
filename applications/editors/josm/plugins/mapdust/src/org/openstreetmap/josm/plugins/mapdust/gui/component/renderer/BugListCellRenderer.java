@@ -60,7 +60,7 @@ public class BugListCellRenderer extends DefaultListCellRenderer {
      * @param hasFocus Specifies if the item has focus or not
      */
     @Override
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<?> list, Object value,
             int index, boolean isSelected, boolean hasFocus) {
         JLabel label =(JLabel) super.getListCellRendererComponent(list, value,
                 index,isSelected, hasFocus);

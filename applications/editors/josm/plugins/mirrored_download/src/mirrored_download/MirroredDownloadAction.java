@@ -116,7 +116,7 @@ public class MirroredDownloadAction extends JosmAction {
 
     static class MirroredDownloadDialog extends DownloadDialog {
 
-        protected JComboBox/*<String>*/ overpassType;
+        protected JComboBox<String> overpassType;
         protected HistoryComboBox overpassQuery;
         private static MirroredDownloadDialog instance;
 
@@ -136,7 +136,7 @@ public class MirroredDownloadAction extends JosmAction {
 
         @Override
         protected void buildMainPanelAboveDownloadSelections(JPanel pnl) {
-            overpassType = new JComboBox/*<String>*/(new String[]{"*", "node", "way", "relation"});
+            overpassType = new JComboBox<>(new String[]{"*", "node", "way", "relation"});
             pnl.add(new JLabel(tr("Object type: ")), GBC.std().insets(5, 5, 5, 5));
             pnl.add(overpassType, GBC.eol().fill(GridBagConstraints.HORIZONTAL));
             overpassType.setToolTipText(tr("OSM object type to download (''*'' stands for any)"));

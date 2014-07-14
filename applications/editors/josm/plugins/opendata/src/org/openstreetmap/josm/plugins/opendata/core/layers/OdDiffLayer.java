@@ -30,9 +30,9 @@ public class OdDiffLayer extends Layer implements OdLayer, OdConstants {
 	public OdDiffLayer(OdDataLayer dataLayer, String name) {
 		super(name);
 		this.dataLayer = dataLayer;
-		this.differentPrimitives = new ArrayList<Pair<OsmPrimitive,OsmPrimitive>>();
-		this.onlyInTlsPrimitives = new ArrayList<OsmPrimitive>();
-		this.onlyInOsmPrimitives = new ArrayList<OsmPrimitive>();
+		this.differentPrimitives = new ArrayList<>();
+		this.onlyInTlsPrimitives = new ArrayList<>();
+		this.onlyInOsmPrimitives = new ArrayList<>();
 		initDiff(dataLayer.data, dataLayer.osmLayer.data);
 	}
 	
@@ -43,7 +43,7 @@ public class OdDiffLayer extends Layer implements OdLayer, OdConstants {
 				if (p2 == null) {
 					onlyInTlsPrimitives.add(p1);
 				} else if (!dataLayer.handler.equals(p1, p2)) {
-					differentPrimitives.add(new Pair<OsmPrimitive, OsmPrimitive>(p1, p2));
+					differentPrimitives.add(new Pair<>(p1, p2));
 				}
 			}
 		}

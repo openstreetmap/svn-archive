@@ -64,9 +64,6 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.Status;
 public class ExecuteCloseBug extends MapdustExecuteAction implements
         MapdustBugObservable, MapdustActionObservable {
 
-    /** Serial version UID */
-    private static final long serialVersionUID = 3468827127588061014L;
-
     /** The list of Mapdust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
             new ArrayList<MapdustBugObserver>();

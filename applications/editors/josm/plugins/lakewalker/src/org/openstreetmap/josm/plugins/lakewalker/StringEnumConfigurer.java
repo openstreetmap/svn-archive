@@ -43,7 +43,7 @@ import javax.swing.JLabel;
 public class StringEnumConfigurer extends Configurer {
     protected String[] validValues;
     protected String[] transValues;
-    protected JComboBox box;
+    protected JComboBox<String> box;
     protected Box panel;
     protected String tooltipText = "";
 
@@ -67,7 +67,7 @@ public class StringEnumConfigurer extends Configurer {
         if (panel == null) {
             panel = Box.createHorizontalBox();
             panel.add(new JLabel(name));
-            box = new JComboBox(transValues);
+            box = new JComboBox<>(transValues);
             box.setToolTipText(tooltipText);
             box.setMaximumSize(new Dimension(box.getMaximumSize().width,box.getPreferredSize().height));
             setValue(value);

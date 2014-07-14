@@ -44,9 +44,6 @@ import org.openstreetmap.josm.plugins.mapdust.service.value.MapdustBug;
  */
 public abstract class MapdustExecuteAction extends AbstractAction {
 
-    /** Serial version UID */
-    private static final long serialVersionUID = 4318259806647818543L;
-
     /** The abstract dialog object */
     protected AbstractDialog dialog;
 

@@ -44,7 +44,7 @@ public class KmlReader extends AbstractReader implements OdConstants {
     
 
     private XMLStreamReader parser;
-    private Map<LatLon, Node> nodes = new HashMap<LatLon, Node>();
+    private Map<LatLon, Node> nodes = new HashMap<>();
     
     public KmlReader(XMLStreamReader parser) {
         this.parser = parser;

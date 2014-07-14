@@ -15,7 +15,7 @@ import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 final public class TaggingCellRenderer extends DefaultListCellRenderer {
-    @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         TaggingPreset a = null;
         if (value instanceof TaggingPreset)
             a = (TaggingPreset)value;

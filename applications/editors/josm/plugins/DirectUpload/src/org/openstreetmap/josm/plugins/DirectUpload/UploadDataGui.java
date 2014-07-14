@@ -94,7 +94,7 @@ public class UploadDataGui extends ExtendedDialog {
     private JMultilineLabel outputDisplay = new JMultilineLabel(" ");
     private HistoryComboBox descriptionField;
     private HistoryComboBox tagsField;
-    private JComboBox visibilityCombo;
+    private JComboBox<String> visibilityCombo;
 
     // Constants used when generating upload request
     private static final String BOUNDARY = "----------------------------d10f7aa230e8";
@@ -129,7 +129,7 @@ public class UploadDataGui extends ExtendedDialog {
         JLabel visibilityLabel = new JLabel(tr("Visibility"));
         visibilityLabel.setToolTipText(tr("Defines the visibility of your trace for other OSM users."));
         
-        visibilityCombo = new JComboBox();
+        visibilityCombo = new JComboBox<>();
         visibilityCombo.setEditable(false);
         for(visibility v : visibility.values()) {
             visibilityCombo.addItem(v.description);

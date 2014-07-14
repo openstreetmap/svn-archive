@@ -397,7 +397,7 @@ public class RoutePatternAction extends JosmAction {
 
   private static JDialog jDialog = null;
   private static JTabbedPane tabbedPane = null;
-  private static DefaultListModel relsListModel = null;
+  private static DefaultListModel<RouteReference> relsListModel = null;
   private static TagTableModel requiredTagsData = null;
   private static CustomCellEditorTable requiredTagsTable = null;
   private static TagTableModel commonTagsData = null;
@@ -409,7 +409,7 @@ public class RoutePatternAction extends JosmAction {
   private static JTable itineraryTable = null;
   private static StoplistTableModel stoplistData = null;
   private static JTable stoplistTable = null;
-  private static JList relsList = null;
+  private static JList<RouteReference> relsList = null;
   private static JCheckBox cbRight = null;
   private static JCheckBox cbLeft = null;
   private static JTextField tfSuggestStopsLimit = null;
@@ -417,8 +417,6 @@ public class RoutePatternAction extends JosmAction {
   private static Vector< SegmentMetric > segmentMetrics = null;
   private static Vector< RelationMember > markedWays = new Vector< RelationMember >();
   private static Vector< RelationMember > markedNodes = new Vector< RelationMember >();
-
-  private static Relation copy = null;
 
   public RoutePatternAction() {
     super(tr("Route patterns ..."), null,
@@ -469,8 +467,8 @@ public class RoutePatternAction extends JosmAction {
       gridbag.setConstraints(headline, layoutCons);
       contentPane.add(headline);
 
-      relsListModel = new DefaultListModel();
-      relsList = new JList(relsListModel);
+      relsListModel = new DefaultListModel<>();
+      relsList = new JList<>(relsListModel);
       JScrollPane rpListSP = new JScrollPane(relsList);
       String[] data = {"1", "2", "3", "4", "5", "6"};
       relsListModel.copyInto(data);
@@ -583,7 +581,7 @@ public class RoutePatternAction extends JosmAction {
       tagBlacklist.add("type");
       rowContent.add("route");
       requiredTagsData.addRow(rowContent);
-      JComboBox comboBox = new JComboBox();
+      JComboBox<String> comboBox = new JComboBox<>();
       comboBox.addItem("route");
       requiredTagsTable.setCellEditor(0, 1, new DefaultCellEditor(comboBox));
       rowContent = new Vector< String >();
@@ -591,7 +589,7 @@ public class RoutePatternAction extends JosmAction {
       tagBlacklist.add("route");
       rowContent.add(1, "bus");
       requiredTagsData.addRow(rowContent);
-      /*JComboBox*/ comboBox = new JComboBox();
+      /*JComboBox*/ comboBox = new JComboBox<>();
       comboBox.addItem("bus");
       comboBox.addItem("trolleybus");
       comboBox.addItem("tram");
@@ -742,7 +740,7 @@ public class RoutePatternAction extends JosmAction {
       itineraryData.addColumn(tr("Role"));
       itineraryTable.setModel(itineraryData);
       /*JScrollPane*/ tableSP = new JScrollPane(itineraryTable);
-      /*JComboBox*/ comboBox = new JComboBox();
+      /*JComboBox*/ comboBox = new JComboBox<>();
       comboBox.addItem("");
       comboBox.addItem("forward");
       comboBox.addItem("backward");
@@ -866,7 +864,7 @@ public class RoutePatternAction extends JosmAction {
       stoplistData.addColumn(tr("km"));
       stoplistTable.setModel(stoplistData);
       /*JScrollPane*/ tableSP = new JScrollPane(stoplistTable);
-      /*JComboBox*/ comboBox = new JComboBox();
+      /*JComboBox*/ comboBox = new JComboBox<>();
       comboBox.addItem("");
       comboBox.addItem("forward_stop");
       comboBox.addItem("backward_stop");
@@ -1108,11 +1106,10 @@ public class RoutePatternAction extends JosmAction {
 
       Vector< RelationMember > itemsToReflect = new Vector< RelationMember >();
       Vector< RelationMember > otherItems = new Vector< RelationMember >();
-      int insPos = itineraryTable.getSelectedRow();
 
       // Temp
       Node firstNode = null;
-      Node lastNode = null;
+      //Node lastNode = null;
 
       for (int i = 0; i < currentRoute.getMembersCount(); ++i)
       {
@@ -1135,7 +1132,7 @@ public class RoutePatternAction extends JosmAction {
           {
               firstNode = item.getWay().getNode(0);
           }
-          lastNode = item.getWay().getNode(item.getWay().getNodesCount() - 1);
+          //lastNode = item.getWay().getNode(item.getWay().getNodesCount() - 1);
         }
         else if (item.isNode())
           itemsToReflect.add(item);

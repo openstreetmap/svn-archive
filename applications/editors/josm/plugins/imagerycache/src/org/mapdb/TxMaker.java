@@ -10,6 +10,7 @@ import java.util.Set;
  */
 public class TxMaker {
 
+    @SuppressWarnings("unchecked")
     protected static final Fun.Tuple2<Object, Serializer> DELETED = new Fun.Tuple2(null, Serializer.STRING_SERIALIZER);
 
     protected Engine engine;
@@ -61,7 +62,6 @@ public class TxMaker {
 
         protected Set<Long> newItems = new LinkedHashSet<Long>();
 
-
         protected TxEngine(Engine engine) {
             super(engine);
         }
@@ -78,6 +78,7 @@ public class TxMaker {
             }
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public <A> A get(long recid, Serializer<A> serializer) {
             if(isClosed()) throw new IllegalAccessError("already closed");
@@ -92,6 +93,7 @@ public class TxMaker {
             }
         }
 
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
         public <A> void update(long recid, A value, Serializer<A> serializer) {
             if(isClosed()) throw new IllegalAccessError("already closed");
@@ -127,6 +129,7 @@ public class TxMaker {
             }
         }
 
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         @Override
         public void commit() {
             synchronized (lock){
@@ -143,7 +146,6 @@ public class TxMaker {
 
                 engine.commit();
             }
-
         }
 
         @Override
@@ -162,7 +164,6 @@ public class TxMaker {
                 modItems = null;
                 newItems = null;
             }
-
         }
 
         @Override
@@ -170,6 +171,4 @@ public class TxMaker {
             rollback();
         }
     }
-
-
 }

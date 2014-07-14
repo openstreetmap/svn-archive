@@ -57,7 +57,7 @@ public class ModuleListParser {
      * @throws ModuleListParseException thrown if something goes wrong while parsing
      */
     public List<ModuleInformation> parse(InputStream in) throws ModuleListParseException{
-        List<ModuleInformation> ret = new LinkedList<ModuleInformation>();
+        List<ModuleInformation> ret = new LinkedList<>();
         BufferedReader r = null;
         try {
             r = new BufferedReader(new InputStreamReader(in, "utf-8"));

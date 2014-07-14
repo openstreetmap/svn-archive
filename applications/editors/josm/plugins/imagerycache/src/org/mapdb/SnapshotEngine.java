@@ -35,6 +35,7 @@ public class SnapshotEngine extends EngineWrapper{
     /** protects <code>snapshot</code> when modified */
     protected final ReentrantReadWriteLock snapshotsLock = new ReentrantReadWriteLock();
 
+    @SuppressWarnings("unchecked")
     @Override
     public <A> long put(A value, Serializer<A> serializer) {
         long recid = super.put(value, serializer);
@@ -49,6 +50,7 @@ public class SnapshotEngine extends EngineWrapper{
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <A> boolean compareAndSwap(long recid, A expectedOldValue, A newValue, Serializer<A> serializer) {
         Utils.lock(locks,recid);
@@ -65,6 +67,7 @@ public class SnapshotEngine extends EngineWrapper{
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <A> void update(long recid, A value, Serializer<A> serializer) {
         Utils.lock(locks,recid);
@@ -84,6 +87,7 @@ public class SnapshotEngine extends EngineWrapper{
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public  <A> void delete(long recid, Serializer<A> serializer) {
         Utils.lock(locks,recid);
@@ -129,6 +133,7 @@ public class SnapshotEngine extends EngineWrapper{
         }
 
 
+        @SuppressWarnings("unchecked")
         @Override
         public <A> A get(long recid, Serializer<A> serializer) {
             Utils.lock(locks,recid);

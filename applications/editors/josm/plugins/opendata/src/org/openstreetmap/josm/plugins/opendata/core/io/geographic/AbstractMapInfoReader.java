@@ -74,7 +74,7 @@ public abstract class AbstractMapInfoReader extends AbstractReader implements Od
 	}
 	
 	protected void parseColumns(String[] words) {
-		columns = new ArrayList<String>();
+		columns = new ArrayList<>();
 		numcolumns = Integer.parseInt(words[1]);
 	}
 

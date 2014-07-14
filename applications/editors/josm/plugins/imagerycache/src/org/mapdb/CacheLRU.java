@@ -77,7 +77,7 @@ public class CacheLRU extends EngineWrapper {
         try{
             Utils.lock(locks,recid);
             Engine engine = getWrappedEngine();
-            LongMap cache2 = checkClosed(cache);
+            LongMap<Object> cache2 = checkClosed(cache);
             Object oldValue = cache.get(recid);
             if(oldValue == expectedOldValue || oldValue.equals(expectedOldValue)){
                 //found matching entry in cache, so just update and return true
@@ -93,7 +93,6 @@ public class CacheLRU extends EngineWrapper {
             Utils.unlock(locks,recid);
         }
     }
-
 
     @SuppressWarnings("rawtypes")
 	@Override

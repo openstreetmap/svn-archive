@@ -22,6 +22,9 @@ public class ImageryIdGenerator {
         if( ImageryType.SCANEX.equals(type) && url.toLowerCase().equals("irs") )
             return "scanex_irs";
 
+        if( ImageryType.TMS.equals(type) && url.toLowerCase().matches(".+tiles\\.mapbox\\.com/v[3-9]/openstreetmap\\.map.*") )
+            return "mapbox";
+
         boolean isWMS = ImageryType.WMS.equals(type);
 
 //        System.out.println(url);

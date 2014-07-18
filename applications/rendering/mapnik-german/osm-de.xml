@@ -210,6 +210,28 @@
       <LineSymbolizer stroke="#6c3" stroke-width="1"/>
     </Rule>
 </Style>
+<Style name="road-area-text">
+    <Rule>
+      <Filter>[way_area] &gt;= 150000</Filter>
+      &maxscale_zoom14;
+      <TextSymbolizer size="10" fill="black" fontset-name="book-fonts" halo-radius="1" wrap-width="20" placement="interior">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[way_area] &gt;= 80000 and [way_area] &lt; 150000</Filter>
+      &maxscale_zoom15;
+      <TextSymbolizer size="10" fill="black" fontset-name="book-fonts" halo-radius="1" wrap-width="20" placement="interior">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[way_area] &gt;= 20000 and [way_area] &lt; 80000</Filter>
+      &maxscale_zoom16;
+      <TextSymbolizer size="10" fill="black" fontset-name="book-fonts" halo-radius="1" wrap-width="20" placement="interior">[name]</TextSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[way_area] &lt; 20000</Filter>
+      &maxscale_zoom17;
+      <TextSymbolizer size="10" fill="black" fontset-name="book-fonts" halo-radius="1" wrap-width="20" placement="interior">[name]</TextSymbolizer>
+    </Rule>
+</Style>
 <Style name="area-text">
     <Rule>
       <Filter>[way_area] &gt;= 150000</Filter>
@@ -4617,7 +4639,7 @@
      <StyleName>roads-text-name</StyleName>
      <Datasource>
       <Parameter name="table">
-      (select way,highway,&get_name;
+      (select way,highway,&get_streetname;
        from &prefix;_line
        where waterway IS NULL
          and leisure IS NULL
@@ -4689,12 +4711,30 @@
        where name is not null
          and (waterway is null or waterway != 'riverbank')
          and place is null
+         and highway is null
        order by way_area desc
       ) as text
       </Parameter>
       &datasource-settings;
     </Datasource>
 </Layer>
+<Layer name="road-area-text" status="on" srs="&osm2pgsql_projection;">
+    <StyleName>road-area-text</StyleName>
+    <Datasource>
+      <Parameter name="table">
+      (select way,way_area, &get_streetname;
+       from &prefix;_polygon
+       where name is not null
+         and (waterway is null or waterway != 'riverbank')
+         and place is null
+         and highway is not null
+       order by way_area desc
+      ) as text
+      </Parameter>
+      &datasource-settings;
+    </Datasource>
+</Layer>
+
 &layer-addressing;
 <Layer name="misc_boundaries" status="on" srs="&osm2pgsql_projection;">
     <StyleName>boundary</StyleName>

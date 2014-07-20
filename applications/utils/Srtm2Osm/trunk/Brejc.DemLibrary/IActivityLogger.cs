@@ -15,5 +15,8 @@ namespace Brejc.DemLibrary
         ActivityLogLevel LogLevel { get; set;}
 
         void Log (ActivityLogLevel activityLogLevel, string message);
+
+        void LogFormat (ActivityLogLevel activityLogLevel, string format,
+            params object[] args);
     }
 }

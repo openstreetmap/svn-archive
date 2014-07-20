@@ -5,9 +5,9 @@ using System.Text;
 namespace Brejc.DemLibrary
 {
     [Serializable]
-    public class RasterDigitalElevationModel : RasterDigitalElevationModelBase
+    public class MemoryBasedRasterDigitalElevationModel : RasterDigitalElevationModelBase
     {
-        public RasterDigitalElevationModel (int lonResolution,
+        public MemoryBasedRasterDigitalElevationModel (int lonResolution,
             int latResolution,
             int lonOffset,
             int latOffset,
@@ -44,7 +44,7 @@ namespace Brejc.DemLibrary
 
         public override object Clone ()
         {
-            RasterDigitalElevationModel clone = new RasterDigitalElevationModel (
+            MemoryBasedRasterDigitalElevationModel clone = new MemoryBasedRasterDigitalElevationModel (
                 LonResolution, LatResolution, LonOffset, LatOffset, LonLength, LatLength);
             clone.data = (Int16[])this.data.Clone ();
             return clone;

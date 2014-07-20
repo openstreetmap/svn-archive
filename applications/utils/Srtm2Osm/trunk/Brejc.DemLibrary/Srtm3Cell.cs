@@ -78,7 +78,7 @@ namespace Brejc.DemLibrary
         static public int CalculateCellKey (Srtm3Cell cell)
         {
             if (cell == null)
-                throw new ArgumentNullException ("cell");                
+                throw new ArgumentNullException ("cell");
             
             int key = (((int)cell.CellLon + 180) << 16) | ((int)cell.CellLat + 90);
             return key;

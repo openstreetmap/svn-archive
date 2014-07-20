@@ -60,6 +60,7 @@
     <Compile Include="DigitalElevationModelStatistics.cs" />
     <Compile Include="ElevationAnalyzer.cs" />
     <Compile Include="ElevationDataProcessor.cs" />
+    <Compile Include="FileBasedRasterDigitalElevationModel.cs" />
     <Compile Include="FtpClient.cs" />
     <Compile Include="GeoPosition.cs" />
     <Compile Include="IActivityLogger.cs" />
@@ -70,9 +71,9 @@
     <Compile Include="Isohypse.cs" />
     <Compile Include="IsohypseCollection.cs" />
     <Compile Include="Igor4IsopletingAlgorithm.cs" />
+    <Compile Include="MemoryBasedRasterDigitalElevationModel.cs" />
     <Compile Include="PointOfInterest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RasterDigitalElevationModel.cs" />
     <Compile Include="Shading\IgorShadingMethod.cs" />
     <Compile Include="Shading\IShadingMethod.cs" />
     <Compile Include="Shading\ShadingParameters.cs" />

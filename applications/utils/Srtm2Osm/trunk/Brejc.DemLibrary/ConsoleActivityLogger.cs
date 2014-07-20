@@ -24,6 +24,13 @@ namespace Brejc.DemLibrary
                 System.Console.Out.WriteLine (message);
         }
 
+        public void LogFormat (ActivityLogLevel activityLogLevel, string format,
+            params object[] args)
+        {
+            if (activityLogLevel <= logLevel)
+                System.Console.Out.WriteLine(format, args);
+        }
+
         private ActivityLogLevel logLevel = ActivityLogLevel.Normal;
     }
 }

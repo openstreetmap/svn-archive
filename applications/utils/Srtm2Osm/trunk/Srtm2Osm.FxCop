@@ -227,6 +227,28 @@
       <Namespaces>
        <Namespace Name="Brejc.DemLibrary">
         <Types>
+         <Type Name="FileBasedRasterDigitalElevationModel">
+          <Messages>
+           <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Excluded" Created="2014-07-20 01:11:11Z" FixCategory="DependsOnFix">
+            <Issue Name="DependsOnFix">
+             <Item>'FileBasedRasterDigitalElevationModel'</Item>
+             <Item>'FileStream'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Finalize()">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Excluded" Created="2014-07-20 01:11:11Z">
+              <Issue>
+               <Item>'FileBasedRasterDigitalElevationModel.~FileBasedRasterDigitalElevationModel()'</Item>
+               <Item>'object'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
          <Type Name="FtpClient">
           <Messages>
            <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Excluded" Created="2008-01-06 17:38:35Z" FixCategory="DependsOnFix">
@@ -934,6 +956,36 @@
              <Message Id="V" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2007-11-27 22:21:53Z">
               <Issue Name="MemberMoreMeaningfulName">
                <Item>'tag.V'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/Srtm2Osm/bin/Release/Srtm2Osm.exe">
+    <Modules>
+     <Module Name="srtm2osm.exe">
+      <Namespaces>
+       <Namespace Name="Srtm2Osm">
+        <Types>
+         <Type Name="Srtm2OsmCommand">
+          <Members>
+           <Member Name="#ParseArgs(System.String[],System.Int32)">
+            <Messages>
+             <Message TypeName="TestForEmptyStringsUsingStringLength" Category="Microsoft.Performance" CheckId="CA1820" Status="Excluded" Created="2013-08-25 21:18:37Z">
+              <Issue Name="IsNullOrEmpty">
+               <Item>'string.operator !=(string, string)'</Item>
+               <Item>'Srtm2OsmCommand.ParseArgs(string[], int)'</Item>
+              </Issue>
+              <Issue Name="IsNullOrEmpty">
+               <Item>'string.operator !=(string, string)'</Item>
+               <Item>'Srtm2OsmCommand.ParseArgs(string[], int)'</Item>
               </Issue>
              </Message>
             </Messages>

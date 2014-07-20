@@ -168,12 +168,35 @@ namespace Brejc.DemLibrary
             int width = east - west + 1;
             int height = north - south + 1;
 
-            RasterDigitalElevationModel dem = new RasterDigitalElevationModel (1200, 1200, 
-                west, south, width, height);
+            long requiredBytes = width * height * 2L;
+            long maxBytes = 1024 * 1024 * 1024 * 2L;         // 2 GiB
+            int loadCounter = 1;
 
-            // and fill the array with each cell
+            RasterDigitalElevationModelBase dem = null;
+
+            // 2 GiB is the .NET limit for allocating RAM, at least in 2.0.
+            // See https://stackoverflow.com/questions/1087982/single-objects-still-limited-to-2-gb-in-size-in-clr-4-0
+            if (requiredBytes > maxBytes)
+            {
+                string msg = "WARNING: Using filesystem as cache due to .NET restrictions.";
+                msg += " This will take a huge amount of time, be patient.";
+                msg += " It will also create a {0} MiB file in your temp location.";
+
+                this.activityLogger.LogFormat (ActivityLogLevel.Normal, msg, requiredBytes / 1024 / 1024);
+
+                dem = new FileBasedRasterDigitalElevationModel (1200, 1200, west, south, width, height);
+            }
+            else
+                dem = new MemoryBasedRasterDigitalElevationModel (1200, 1200, west, south, width, height);
+
+            // and fill the DEM with each cell points
             foreach (Srtm3Cell cell in cellsToUse.Values)
+            {
+                this.activityLogger.LogFormat (ActivityLogLevel.Normal,
+                    "Loading cell {0} of {1} into DEM", loadCounter++, cellsToUse.Values.Count);
+
                 dem.CopyElevationPointsFrom (cell);
+            }
 
             return dem;
         }

@@ -64,6 +64,11 @@ namespace Srtm2Osm
             System.Console.Out.WriteLine ("-source <url>: base URL used for download");
             System.Console.Out.WriteLine ("       (default 'http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/')");
             System.Console.Out.WriteLine ("-maxwaynodes <count>: specifies the maximum number of nodes in a single way");
+            System.Console.Out.WriteLine ("-firstnodeid <id>: specifies the first ID of a node (default: 2^63-1)");
+            System.Console.Out.WriteLine ("-firstwayid <id>: specifies the first ID of a way (default: 2^63-1)");
+            System.Console.Out.WriteLine ("-incrementid: runs in 'ID incrementation mode' in which the OSM element ID is");
+            System.Console.Out.WriteLine ("       incremented instead of decremented. Needs the firstnodeid and firstwayid");
+            System.Console.Out.WriteLine ("       parameters set.");
             System.Console.Out.WriteLine ();
         }
     }

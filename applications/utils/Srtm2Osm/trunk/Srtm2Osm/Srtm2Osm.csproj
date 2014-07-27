@@ -64,6 +64,7 @@
     <Compile Include="ConsoleApp.cs" />
     <Compile Include="DefaultContourMarker.cs" />
     <Compile Include="IContourMarker.cs" />
+    <Compile Include="IdCounter.cs" />
     <Compile Include="MkgmapContourMarker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

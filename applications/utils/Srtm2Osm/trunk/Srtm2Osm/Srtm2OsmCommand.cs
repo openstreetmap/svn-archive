@@ -31,7 +31,10 @@ namespace Srtm2Osm
         LargeAreaMode,
         CorrectionXY,
         SrtmSource,
-        MaxWayNodes
+        MaxWayNodes,
+        FirstNodeId,
+        FirstWayId,
+        IncrementId
     }
 
     public class Srtm2OsmCommand : IConsoleApplicationCommand
@@ -100,7 +103,8 @@ namespace Srtm2Osm
 
             // Start with highest possible ID and count down. That should give maximum space between
             // contour data and real OSM data.
-            long wayId = long.MaxValue, nodeId = long.MaxValue;
+            IdCounter nodeCounter = new IdCounter (incrementId, firstNodeId);
+            IdCounter wayCounter = new IdCounter (incrementId, firstWayId);
 
             // The following IDs do exist in the OSM database
             string user = "Srtm2Osm";
@@ -137,7 +141,7 @@ namespace Srtm2Osm
 
                                 contourMarker.MarkContour (way, isohypse);
 
-                                way.Id = wayId--;
+                                way.Id = GetNextId (wayCounter, false);
                                 way.Nd = new List<osmWayND> ();
                                 way.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
                                 way.Version = 1;
@@ -145,14 +149,14 @@ namespace Srtm2Osm
                                 way.Uid = uid;
                                 way.Changeset = changeset;
 
-                                long firstNodeId = 0;
+                                long firstWayNodeId = 0;
 
                                 for (int i = 0; i < polyline.Vertices.Count; i++)
                                 {
                                     Point3<double> point = polyline.Vertices[i];
 
                                     OsmUtils.OsmSchema.osmNode node = new osmNode ();
-                                    node.Id = nodeId--;
+                                    node.Id = GetNextId (nodeCounter, true);
                                     node.Lat = point.Y + corrY;
                                     node.Lon = point.X + corrX;
                                     node.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
@@ -168,7 +172,7 @@ namespace Srtm2Osm
                                     node.LonSpecified = true;
 
                                     if (i == 0)
-                                        firstNodeId = node.Id;
+                                        firstWayNodeId = node.Id;
                                     
                                     nodeSerializer.Serialize (writer, node, ns);
 
@@ -185,7 +189,7 @@ namespace Srtm2Osm
                                         waySerializer.Serialize(writer, way, ns);
 
                                         way = new osmWay();
-                                        way.Id = wayId--;
+                                        way.Id = GetNextId (wayCounter, false);
                                         way.Nd = new List<osmWayND>();
                                         way.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
                                         way.Version = 1;
@@ -200,7 +204,7 @@ namespace Srtm2Osm
 
                                 // if the isohypse segment is closed, add the first node as the final node of the way
                                 if (polyline.IsClosed)
-                                    way.Nd.Add (new osmWayND (firstNodeId, true));
+                                    way.Nd.Add (new osmWayND (firstWayNodeId, true));
                                 
                                 waySerializer.Serialize (writer, way, ns);
                             }
@@ -225,22 +229,25 @@ namespace Srtm2Osm
                 {
                     foreach (Polyline polyline in isohypse.Segments)
                     {
-                        OsmWay isohypseWay = new OsmWay (wayId--);
+                        OsmWay isohypseWay = new OsmWay (GetNextId (wayCounter, false));
                         isohypseWay.Visible = true;
                         isohypseWay.Timestamp = DateTime.UtcNow;
                         contourMarker.MarkContour (isohypseWay, isohypse);
                         osmDb.AddWay (isohypseWay);
 
-                        long firstNodeId = nodeId;
+                        long firstWayNodeId = 0;
 
                         for (int i = 0; i < polyline.VerticesCount; i++)
                         {
                             Point3<double> point = polyline.Vertices[i];
 
-                            OsmNode node = new OsmNode(nodeId--, point.Y + corrY, point.X + corrX);
+                            OsmNode node = new OsmNode (GetNextId (nodeCounter, true), point.Y + corrY, point.X + corrX);
                             node.Visible = true;
                             node.Timestamp = DateTime.UtcNow;
-                            osmDb.AddNode(node);
+                            osmDb.AddNode (node);
+
+                            if (i == 0)
+                                firstWayNodeId = node.ObjectId;
 
                             isohypseWay.AddNode (node.ObjectId);
 
@@ -250,8 +257,8 @@ namespace Srtm2Osm
                                 // Don't create a new way if already at the end of the *unclosed* polyline
                                 if (i == polyline.VerticesCount - 1 && !polyline.IsClosed)
                                     continue;
-                                    
-                                isohypseWay = new OsmWay (wayId--);
+
+                                isohypseWay = new OsmWay (GetNextId (wayCounter, false));
                                 isohypseWay.Visible = true;
                                 isohypseWay.Timestamp = DateTime.UtcNow;
 
@@ -263,7 +270,7 @@ namespace Srtm2Osm
 
                         // if the isohypse segment is closed, add the first node as the final node of the way
                         if (polyline.IsClosed)
-                            isohypseWay.AddNode (firstNodeId);
+                            isohypseWay.AddNode (firstWayNodeId);
                     }
                 }
 
@@ -343,6 +350,9 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.CorrectionXY, "corrxy", 2));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SrtmSource, "source", 1));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.MaxWayNodes, "maxwaynodes", 1));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.FirstNodeId, "firstnodeid", 1));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.FirstWayId, "firstwayid", 1));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.IncrementId, "incrementid", 0));
 
             startFrom = options.ParseArgs (args, startFrom);
             System.Globalization.CultureInfo invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
@@ -542,12 +552,36 @@ namespace Srtm2Osm
                             throw new ArgumentException ("The minimum number of nodes in a single way is 2.");
 
                         continue;
+
+                    case Srtm2OsmCommandOption.FirstNodeId:
+                        firstNodeId = long.Parse(option.Parameters[0], invariantCulture);
+
+                        if (firstNodeId <= 0)
+                            throw new ArgumentException ("A negative or zero node ID is not supported.");
+
+                        continue;
+
+                    case Srtm2OsmCommandOption.FirstWayId:
+                        firstWayId = long.Parse(option.Parameters[0], invariantCulture);
+
+                        if (firstWayId <= 0)
+                            throw new ArgumentException ("A negative or zero way ID is not supported.");
+
+                        continue;
+
+                    case Srtm2OsmCommandOption.IncrementId:
+                        incrementId = true;
+                        continue;
                 }
             }
 
             // Check if bounds were specified
             if (bounds == null)
                 throw new ArgumentException ("No bounds specified.");
+
+            // Check if both first*id's are set when the user wants to increment the IDs
+            if (incrementId && (firstNodeId == long.MaxValue || firstWayId == long.MaxValue))
+                throw new ArgumentException ("firstnodeid and firstwayid must be set when ID incrementation mode is active.");
 
             return startFrom;
         }
@@ -625,6 +659,22 @@ namespace Srtm2Osm
             return new Bounds2 (minLng, minLat, maxLng, maxLat);
         }
 
+        private long GetNextId(IdCounter counter, bool isNodeCounter)
+        {
+            bool valid = false;
+            long result = counter.GetNextId(out valid);
+
+            if (!valid)
+            {
+                string msg = String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                    "Ran out of available ID numbers. {0}crement first{1}id parameter.",
+                    incrementId ? "De" : "In", isNodeCounter ? "node" : "way");
+                throw new ArgumentException (msg);
+            }
+
+            return result;
+        }
+
         private Bounds2 bounds;
         private double corrX, corrY;
         private bool generateIndex;
@@ -638,6 +688,9 @@ namespace Srtm2Osm
         private bool largeAreaMode;
         private string srtmSource = "";
         private int maxWayNodes = Int32.MaxValue;
+        private long firstNodeId = long.MaxValue;
+        private long firstWayId = long.MaxValue;
+        private bool incrementId = false;
 
         private static int[] zoomLevels = {0, 0, 111000000, 55000000, 28000000, 14000000, 7000000, 3000000, 2000000, 867000,
             433000, 217000, 108000, 54000, 27000, 14000, 6771, 3385, 1693};

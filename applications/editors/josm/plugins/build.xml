@@ -64,7 +64,6 @@
         <ant antfile="build.xml" target="dist" dir="no_more_mapping"/>
         <ant antfile="build.xml" target="dist" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="dist" dir="opendata"/>
-        <ant antfile="build.xml" target="dist" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="dist" dir="openvisible"/>
         <ant antfile="build.xml" target="dist" dir="osmarender"/>
         <ant antfile="build.xml" target="dist" dir="OsmInspectorPlugin"/>
@@ -165,7 +164,6 @@
         <ant antfile="build.xml" target="clean" dir="nearclick"/>
         <ant antfile="build.xml" target="clean" dir="OpeningHoursEditor"/>
         <ant antfile="build.xml" target="clean" dir="opendata"/>
-        <ant antfile="build.xml" target="clean" dir="openstreetbugs"/>
         <ant antfile="build.xml" target="clean" dir="openvisible"/>
         <ant antfile="build.xml" target="clean" dir="osmarender"/>
         <ant antfile="build.xml" target="clean" dir="OsmInspectorPlugin"/>

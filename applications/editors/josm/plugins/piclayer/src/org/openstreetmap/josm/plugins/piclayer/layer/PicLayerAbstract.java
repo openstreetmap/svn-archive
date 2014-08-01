@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -251,6 +252,8 @@ public abstract class PicLayerAbstract extends Layer {
             g.scale( scalex, scaley );
 
             g.transform(transformer.getTransform());
+
+            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
             // Draw picture
             g.drawImage( image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null );

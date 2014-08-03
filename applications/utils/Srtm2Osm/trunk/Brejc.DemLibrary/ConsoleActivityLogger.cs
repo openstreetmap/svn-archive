@@ -20,15 +20,19 @@ namespace Brejc.DemLibrary
 
         public void Log (ActivityLogLevel activityLogLevel, string message)
         {
-            if (activityLogLevel <= logLevel)
-                System.Console.Out.WriteLine (message);
+            LogFormat(activityLogLevel, "{0}", message);
         }
 
         public void LogFormat (ActivityLogLevel activityLogLevel, string format,
             params object[] args)
         {
             if (activityLogLevel <= logLevel)
+            {
+                if (activityLogLevel == ActivityLogLevel.Warning)
+                    format = "WARNING: " + format;
+
                 System.Console.Out.WriteLine(format, args);
+            }
         }
 
         private ActivityLogLevel logLevel = ActivityLogLevel.Normal;

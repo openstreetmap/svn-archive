@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.plugins.graphview.core.data.MapBasedTagGroup;
 import org.openstreetmap.josm.plugins.graphview.core.data.Tag;
 import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
-
 
 public class AccessRulesetReaderTest {
 
     @Test
     public void testReadAccessRuleset_valid_classes() throws IOException {
 
-        InputStream is = new FileInputStream("plugins/graphview/test/data/accessRuleset_valid.xml");
+        InputStream is = new FileInputStream(TestUtils.getTestDataRoot()+"accessRuleset_valid.xml");
         AccessRuleset ruleset = AccessRulesetReader.readAccessRuleset(is);
         assertNotNull(ruleset);
 
@@ -50,7 +50,7 @@ public class AccessRulesetReaderTest {
     @Test
     public void testReadAccessRuleset_valid_basetags() throws IOException {
 
-        InputStream is = new FileInputStream("plugins/graphview/test/data/accessRuleset_valid.xml");
+        InputStream is = new FileInputStream(TestUtils.getTestDataRoot()+"accessRuleset_valid.xml");
         AccessRuleset ruleset = AccessRulesetReader.readAccessRuleset(is);
         assertNotNull(ruleset);
 
@@ -66,7 +66,7 @@ public class AccessRulesetReaderTest {
     @Test
     public void testReadAccessRuleset_valid_implications() throws IOException {
 
-        InputStream is = new FileInputStream("plugins/graphview/test/data/accessRuleset_valid.xml");
+        InputStream is = new FileInputStream(TestUtils.getTestDataRoot()+"accessRuleset_valid.xml");
         AccessRuleset ruleset = AccessRulesetReader.readAccessRuleset(is);
         assertNotNull(ruleset);
 

@@ -353,7 +353,7 @@
     </target>
 	
     <path id="test.classpath">
-        <fileset dir="../../core/test/lib">
+        <fileset dir="../00_core_test_lib">
             <include name="**/*.jar"/>
         </fileset>
         <fileset dir="${plugin.test.dir}/lib" erroronmissingdir="no">

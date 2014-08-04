@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import org.junit.Ignore;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler;
@@ -17,6 +18,7 @@ import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEdi
 /**
  * Simple test application for layout and functionality of the issues view.
  */
+@Ignore("no test")
 public class IssuesViewTest extends JFrame {
     private IssuesModel model;
     

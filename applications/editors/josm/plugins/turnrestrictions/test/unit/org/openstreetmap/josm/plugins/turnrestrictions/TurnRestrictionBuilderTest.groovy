@@ -184,7 +184,7 @@ class TurnRestrictionBuilderTest{
 	   
 	   tr = builder.build([w2,w1,n2])
 	   
-	   double a = interesectionAngle(w2, w1)
+	   double a = intersectionAngle(w2, w1)
 	   println "a=" + Math.toDegrees(a)
 	   
 	   assert tr != null
@@ -376,7 +376,7 @@ class TurnRestrictionBuilderTest{
 		 Way from = nw(1,n1,n2)
 		 Way to = nw(2,n2,n3)
 		 
-		 double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 double a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		 RelativeWayJoinOrientation o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
 		 assert Math.toDegrees(a) == -90
 		 assert o == RelativeWayJoinOrientation.LEFT
@@ -386,7 +386,7 @@ class TurnRestrictionBuilderTest{
 		  */
 		 from = nw(1,n2,n1)
 		 to = nw(2,n2,n3)
-		 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		 o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
 		 assert Math.toDegrees(a) == -90
 		 assert o == RelativeWayJoinOrientation.LEFT
@@ -396,7 +396,7 @@ class TurnRestrictionBuilderTest{
 		 */
 		 from = nw(1,n1,n2)
 		 to = nw(2,n3,n2)
-		 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		 o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
 		 assert Math.toDegrees(a) == -90
 		 assert o == RelativeWayJoinOrientation.LEFT
@@ -406,7 +406,7 @@ class TurnRestrictionBuilderTest{
 		 */
 		 from = nw(1,n2,n1)
 		 to = nw(2,n3,n2)
-		 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		 a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		 o = TurnRestrictionBuilder.determineWayJoinOrientation(from,to)
 		 assert Math.toDegrees(a) == -90
 		 assert o == RelativeWayJoinOrientation.LEFT
@@ -431,7 +431,7 @@ class TurnRestrictionBuilderTest{
 		Way from = nw(1,n1,n2)
 		Way to = nw(2,n2,n3)
 		
-		double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		double a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		assert Math.toDegrees(a) == 90
 		
 		/*
@@ -439,7 +439,7 @@ class TurnRestrictionBuilderTest{
 		 */
 		from = nw(1,n2,n1)
 		to = nw(2,n2,n3)
-		a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		assert Math.toDegrees(a) == 90
 
 		/*
@@ -447,7 +447,7 @@ class TurnRestrictionBuilderTest{
 		*/
 		from = nw(1,n1,n2)
 		to = nw(2,n3,n2)
-		a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		assert Math.toDegrees(a) == 90
 
 		/*
@@ -455,7 +455,7 @@ class TurnRestrictionBuilderTest{
 		*/
 		from = nw(1,n2,n1)
 		to = nw(2,n3,n2)
-		a = TurnRestrictionBuilder.interesectionAngle(from, to)
+		a = TurnRestrictionBuilder.intersectionAngle(from, to)
 		assert Math.toDegrees(a) == 90
 	}
 	
@@ -483,7 +483,7 @@ class TurnRestrictionBuilderTest{
 	   Way from = nw(1,n1,n2)
 	   Way to = nw(2,n2,n3)
 	   
-	   double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   double a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	   assert Math.toDegrees(a) == 45
 	   
 	   /*
@@ -491,7 +491,7 @@ class TurnRestrictionBuilderTest{
 		*/
 	   from = nw(1,n2,n1)
 	   to = nw(2,n2,n3)
-	   a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	   assert Math.toDegrees(a) == 45
 
 	   /*
@@ -499,7 +499,7 @@ class TurnRestrictionBuilderTest{
 	   */
 	   from = nw(1,n1,n2)
 	   to = nw(2,n3,n2)
-	   a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	   assert Math.toDegrees(a) == 45
 
 	   /*
@@ -507,7 +507,7 @@ class TurnRestrictionBuilderTest{
 	   */
 	   from = nw(1,n2,n1)
 	   to = nw(2,n3,n2)
-	   a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	   a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	   assert Math.toDegrees(a) == 45
    }
    
@@ -534,7 +534,7 @@ class TurnRestrictionBuilderTest{
 	 Way from = nw(1,n1,n2)
 	 Way to = nw(2,n2,n3)
 	 
-	 double a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 double a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	 assert Math.toDegrees(a) == -45
 	 
 	 /*
@@ -542,7 +542,7 @@ class TurnRestrictionBuilderTest{
 	  */
 	 from = nw(1,n2,n1)
 	 to = nw(2,n2,n3)
-	 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	 assert Math.toDegrees(a) == -45
 
 	 /*
@@ -550,7 +550,7 @@ class TurnRestrictionBuilderTest{
 	 */
 	 from = nw(1,n1,n2)
 	 to = nw(2,n3,n2)
-	 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	 assert Math.toDegrees(a) == -45
 
 	 /*
@@ -558,7 +558,7 @@ class TurnRestrictionBuilderTest{
 	 */
 	 from = nw(1,n2,n1)
 	 to = nw(2,n3,n2)
-	 a = TurnRestrictionBuilder.interesectionAngle(from, to)
+	 a = TurnRestrictionBuilder.intersectionAngle(from, to)
 	 assert Math.toDegrees(a) == -45
  }
  

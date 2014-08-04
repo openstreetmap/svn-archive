@@ -210,4 +210,12 @@
     </target>
     <target name="clean_install"/>
     <target name="install" depends="dist"/>
+    <target name="test">
+        <ant antfile="build.xml" target="test" dir="alignways"/>
+        <ant antfile="build.xml" target="test" dir="ElevationProfile"/>
+        <ant antfile="build.xml" target="test" dir="graphview"/>
+        <ant antfile="build.xml" target="test" dir="opendata"/>
+        <ant antfile="build.xml" target="test" dir="turnrestrictions"/>
+        <ant antfile="build.xml" target="test" dir="wikipedia"/>
+    </target>
 </project>

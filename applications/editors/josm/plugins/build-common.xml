@@ -10,17 +10,19 @@
 ** Paths are relative to the build.xml that imports this template.
 **
 -->
-<project name="plugin_common" basedir=".">
+<project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
-    <property name="plugin.build.dir"       value="build"/>
-    <property name="plugin.src.dir"         value="src"/>
-    <property name="plugin.lib.dir"         value="lib"/>
+    <property name="groovy.jar"             location="../00_core_tools/groovy-all-2.3.4.jar"/>
+    <property name="plugin.build.dir"       location="build"/>
+    <property name="plugin.test.dir"        location="test"/>
+    <property name="plugin.src.dir"         location="src"/>
+    <property name="plugin.lib.dir"         location="lib"/>
     <!-- this is the directory where the plugin jar is copied to -->
-    <property name="plugin.dist.dir"        value="../../dist"/>
+    <property name="plugin.dist.dir"        location="../../dist"/>
     <property name="ant.build.javac.target" value="1.7"/>
     <property name="ant.build.javac.source" value="1.7"/>
-    <property name="plugin.jar"             value="${plugin.dist.dir}/${ant.project.name}.jar"/>
+    <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
     <!--
     **********************************************************
@@ -349,7 +351,97 @@
 
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
-
+	
+    <path id="test.classpath">
+        <fileset dir="../../core/test/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${plugin.test.dir}/lib" erroronmissingdir="no">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="lib" erroronmissingdir="no">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement path="../../core/test/build/unit"/>
+        <pathelement path="${josm}"/>
+        <pathelement path="${plugin.jar}"/>
+        <pathelement path="${groovy.jar}"/>
+    </path>
+    <macrodef name="init-test-preferences">
+        <attribute name="testfamily"/>
+        <sequential>
+            <copy file="${plugin.test.dir}/config/preferences.template.xml" tofile="${plugin.test.dir}/config/@{testfamily}-josm.home/preferences.xml"/>
+            <replace file="${plugin.test.dir}/config/@{testfamily}-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_USERNAME@" value="${osm.username}"/>
+            <replace file="${plugin.test.dir}/config/@{testfamily}-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_PASSWORD@" value="${osm.password}"/>
+        </sequential>
+    </macrodef>
+    <target name="test-init">
+        <mkdir dir="${plugin.test.dir}/build"/>
+        <mkdir dir="${plugin.test.dir}/build/unit"/>
+        <mkdir dir="${plugin.test.dir}/report"/>
+        <init-test-preferences testfamily="unit"/>
+    </target>
+    <target name="test-clean">
+        <delete dir="${plugin.test.dir}/build"/>
+        <delete dir="${plugin.test.dir}/report"/>
+        <delete file="${plugin.test.dir}/jacoco.exec" />
+        <delete file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" />
+        <delete dir="${plugin.test.dir}/config/unit-josm.home/cache" failonerror="false"/>
+    </target>
+    <macrodef name="call-groovyc">
+        <attribute name="testfamily"/>
+        <element name="cp-elements"/>
+        <sequential>
+            <groovyc srcdir="${plugin.test.dir}/@{testfamily}" destdir="${plugin.test.dir}/build/@{testfamily}" encoding="UTF-8">
+                <classpath>
+                    <cp-elements/>
+                </classpath>
+                <javac target="1.7" source="1.7" debug="on">
+                    <compilerarg value="-Xlint:all"/>
+                    <compilerarg value="-Xlint:-serial"/>
+                </javac>
+            </groovyc>
+        </sequential>
+    </macrodef>
+    <target name="test-compile" depends="test-init,dist">
+        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${groovy.jar}"/>
+        <call-groovyc testfamily="unit">
+            <cp-elements>
+                <path refid="test.classpath"/>
+            </cp-elements>
+        </call-groovyc>
+    </target>
+    <macrodef name="call-junit">
+        <attribute name="testfamily"/>
+        <sequential>
+            <echo message="Running @{testfamily} tests with JUnit"/>
+            <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec">
+                <junit printsummary="yes" fork="true" forkmode="once">
+                    <sysproperty key="josm.home" value="${plugin.test.dir}/config/@{testfamily}-josm.home"/>
+                    <sysproperty key="josm.test.data" value="${plugin.test.dir}/data"/>
+                    <sysproperty key="java.awt.headless" value="true"/>
+                    <sysproperty key="suppressPermanentFailure" value="${suppressPermanentFailure}"/>
+                    <classpath>
+                        <path refid="test.classpath"/>
+                        <pathelement path="${plugin.test.dir}/build/unit"/>
+                        <pathelement path="${plugin.test.dir}/build/@{testfamily}"/>
+                        <pathelement path="${plugin.test.dir}/config"/>
+                    </classpath>
+                    <formatter type="plain"/>
+                    <formatter type="xml"/>
+                    <batchtest fork="yes" todir="${plugin.test.dir}/report">
+                        <fileset dir="${plugin.test.dir}/build/@{testfamily}" includes="**/*Test.class"/>
+                    </batchtest>
+                </junit>
+            </jacoco:coverage>
+        </sequential>
+    </macrodef>
+    <target name="test" depends="test-compile" 
+        description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
+        <call-junit testfamily="unit"/>
+    </target>
+	
     <target name="runjosm" depends="install">
         <java jar="${josm}" fork="true">
         </java>
@@ -370,6 +462,7 @@
     You can use following targets:
     * dist        This default target builds the plugin jar file
     * clean       Cleanup automatical created files
+	* test        Run unit tests (if any)
     * publish     Checkin source code, build jar and checkin plugin jar
                   (requires proper entry for SVN commit message!)
     * install     Install the plugin in current system

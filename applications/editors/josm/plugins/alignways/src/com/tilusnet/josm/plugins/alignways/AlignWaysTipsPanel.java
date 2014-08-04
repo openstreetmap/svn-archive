@@ -8,17 +8,16 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Cursor;
 import java.awt.Dimension;
 
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-
-import org.jdesktop.layout.GroupLayout;
-import org.jdesktop.layout.LayoutStyle;
 
 /**
  * @author tilusnet <tilusnet@gmail.com>
@@ -63,18 +62,18 @@ public class AlignWaysTipsPanel extends JPanel {
         GroupLayout TitleLayout = new GroupLayout(Title);
         Title.setLayout(TitleLayout);
         TitleLayout.setHorizontalGroup(
-                TitleLayout.createParallelGroup(GroupLayout.LEADING)
-                .add(GroupLayout.TRAILING, TitleLayout.createSequentialGroup()
-                        .add(WelcomeTo, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(Icon, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
+                TitleLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, TitleLayout.createSequentialGroup()
+                        .addComponent(WelcomeTo, GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Icon, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
                 );
         TitleLayout.setVerticalGroup(
-                TitleLayout.createParallelGroup(GroupLayout.LEADING)
-                .add(TitleLayout.createSequentialGroup()
-                        .add(Icon)
+                TitleLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(TitleLayout.createSequentialGroup()
+                        .addComponent(Icon)
                         .addContainerGap())
-                        .add(WelcomeTo, GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                        .addComponent(WelcomeTo, GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                 );
 
         Intro.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -109,29 +108,29 @@ public class AlignWaysTipsPanel extends JPanel {
         GroupLayout stepsLayout = new GroupLayout(steps);
         steps.setLayout(stepsLayout);
         stepsLayout.setHorizontalGroup(
-                stepsLayout.createParallelGroup(GroupLayout.LEADING)
-                .add(stepsLayout.createSequentialGroup()
+                stepsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(stepsLayout.createSequentialGroup()
                         .addContainerGap()
-                        .add(stepsLayout.createParallelGroup(GroupLayout.TRAILING)
-                                .add(GroupLayout.LEADING, lastHint, 0, 0, Short.MAX_VALUE)
-                                .add(GroupLayout.LEADING, step04, 0, 0, Short.MAX_VALUE)
-                                .add(GroupLayout.LEADING, step03, 0, 0, Short.MAX_VALUE)
-                                .add(GroupLayout.LEADING, step02, 0, 0, Short.MAX_VALUE)
-                                .add(GroupLayout.LEADING, step01, GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
-                                .add(18, 18, 18))
+                        .addGroup(stepsLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addComponent(lastHint, GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                .addComponent(step04, GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                .addComponent(step03, GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                .addComponent(step02, GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                .addComponent(step01, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE))
+                                .addGap(18, 18, 18))
                 );
         stepsLayout.setVerticalGroup(
-                stepsLayout.createParallelGroup(GroupLayout.LEADING)
-                .add(stepsLayout.createSequentialGroup()
-                        .add(step01, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(step02, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(step03, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(step04, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(lastHint, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                stepsLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(stepsLayout.createSequentialGroup()
+                        .addComponent(step01, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(step02, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(step03, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(step04, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lastHint, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(22, Short.MAX_VALUE))
                 );
 
@@ -142,46 +141,46 @@ public class AlignWaysTipsPanel extends JPanel {
         GroupLayout IntroLayout = new GroupLayout(Intro);
         Intro.setLayout(IntroLayout);
         IntroLayout.setHorizontalGroup(
-                IntroLayout.createParallelGroup(GroupLayout.LEADING)
-                .add(IntroLayout.createSequentialGroup()
+                IntroLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(IntroLayout.createSequentialGroup()
                         .addContainerGap()
-                        .add(dontShow, GroupLayout.PREFERRED_SIZE, 245, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dontShow, GroupLayout.PREFERRED_SIZE, 245, GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(283, Short.MAX_VALUE))
-                        .add(scrollableSteps, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
-                        .add(introText, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+                        .addComponent(scrollableSteps, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+                        .addComponent(introText, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
                 );
         IntroLayout.setVerticalGroup(
-                IntroLayout.createParallelGroup(GroupLayout.LEADING)
-                .add(GroupLayout.TRAILING, IntroLayout.createSequentialGroup()
-                        .add(introText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(scrollableSteps, GroupLayout.PREFERRED_SIZE, 209, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.UNRELATED)
-                        .add(dontShow)
+                IntroLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, IntroLayout.createSequentialGroup()
+                        .addComponent(introText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(scrollableSteps, GroupLayout.PREFERRED_SIZE, 209, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(dontShow)
                         .addContainerGap())
                 );
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.LEADING)
-                .add(GroupLayout.TRAILING, layout.createSequentialGroup()
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(layout.createParallelGroup(GroupLayout.TRAILING)
-                                .add(GroupLayout.LEADING, separator, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
-                                .add(Title, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(Intro, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addComponent(separator, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+                                .addComponent(Title, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Intro, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
                 );
         layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.LEADING)
-                .add(layout.createSequentialGroup()
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(Title, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.UNRELATED)
-                        .add(separator, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(Intro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Title, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(separator, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Intro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(45, Short.MAX_VALUE))
                 );
     }
@@ -205,5 +204,4 @@ public class AlignWaysTipsPanel extends JPanel {
     public boolean isChkBoxSelected() {
         return dontShow.isSelected();
     }
-
 }

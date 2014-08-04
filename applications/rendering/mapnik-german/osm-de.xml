@@ -2140,14 +2140,8 @@
     <Rule>
       <Filter>([highway] = 'cycleway' or ([highway] = 'path' and [bicycle] = 'designated')) and not [tunnel] = 'yes'</Filter>
       &maxscale_zoom13;
-      &minscale_zoom13;
-      <LineSymbolizer stroke="#c8c8c8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
-    </Rule>
-    <Rule>
-      <Filter>([highway] = 'cycleway' or ([highway] = 'path' and [bicycle] = 'designated')) and not [tunnel] = 'yes'</Filter>
-      &maxscale_zoom14;
       &minscale_zoom14;
-      <LineSymbolizer stroke="#83cfe8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+      <LineSymbolizer stroke="#c8c8c8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
     </Rule>
     <Rule>
       <Filter>([highway] = 'cycleway' or ([highway] = 'path' and [bicycle] = 'designated')) and not [tunnel] = 'yes'</Filter>

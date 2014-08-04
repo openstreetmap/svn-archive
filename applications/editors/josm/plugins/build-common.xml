@@ -13,6 +13,7 @@
 <project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="josm.test.build.dir"    location="../../core/test/build"/>
     <property name="groovy.jar"             location="../00_core_tools/groovy-all-2.3.4.jar"/>
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>
@@ -362,7 +363,7 @@
         <fileset dir="lib" erroronmissingdir="no">
             <include name="**/*.jar"/>
         </fileset>
-        <pathelement path="../../core/test/build/unit"/>
+        <pathelement path="${josm.test.build.dir}/unit"/>
         <pathelement path="${josm}"/>
         <pathelement path="${plugin.jar}"/>
         <pathelement path="${groovy.jar}"/>

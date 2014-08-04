@@ -1,10 +1,17 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.tests;
 
+import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import junit.framework.TestCase;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.JOSMFixture;
+import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.elevation.HgtReader;
 
@@ -12,10 +19,27 @@ public class HgtReaderTest extends TestCase {
 
     /**
      * Setup test.
+     * @throws IOException if SRTM files cannot be installed
      */
     @Override
-    public void setUp() {
-        Main.pref = new Preferences();
+    public void setUp() throws IOException {
+        JOSMFixture.createUnitTestFixture().init();
+        // Install SRTM files to plugin directory
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(TestUtils.getTestDataRoot()), "*.hgt")) {
+            Path dir = Paths.get(System.getProperty("josm.home")).resolve("elevation");
+            if (!Files.exists(dir)) {
+                Files.createDirectory(dir);
+            }
+            for (Path src: stream) {
+                Path dst = dir.resolve(src.getFileName());
+                if (!Files.exists(dst)) {
+                    Files.copy(src, dst);
+                }
+            }
+        } catch (DirectoryIteratorException ex) {
+            // I/O error encounted during the iteration, the cause is an IOException
+            throw ex.getCause();
+        }
     }
 
     public void testGetElevationFromHgt() {

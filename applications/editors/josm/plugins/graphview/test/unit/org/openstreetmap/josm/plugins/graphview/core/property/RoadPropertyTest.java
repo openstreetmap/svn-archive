@@ -2,9 +2,11 @@ package org.openstreetmap.josm.plugins.graphview.core.property;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.openstreetmap.josm.plugins.graphview.core.TestDataSource;
 import org.openstreetmap.josm.plugins.graphview.core.data.Tag;
 
+@Ignore("no test")
 abstract public class RoadPropertyTest {
 
     protected static <P> void testEvaluateW(RoadPropertyType<P> property, P expectedForward, P expectedBackward, Tag... wayTags) {

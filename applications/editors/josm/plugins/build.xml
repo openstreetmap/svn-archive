@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="josm-plugins" default="build" basedir=".">
     <target name="compile_josm" unless="skip-josm">
-        <echo message="test"/>
         <ant dir="../core" target="dist"/>
+    </target>
+    <target name="compile_josm_test" unless="skip-josm">
+        <ant dir="../core" target="test-compile"/>
     </target>
     <target name="compile" depends="compile_josm"/>
     <target name="build" depends="dist"/>
@@ -210,7 +212,7 @@
     </target>
     <target name="clean_install"/>
     <target name="install" depends="dist"/>
-    <target name="test">
+    <target name="test" depends="compile_josm_test">
         <ant antfile="build.xml" target="test" dir="alignways"/>
         <ant antfile="build.xml" target="test" dir="ElevationProfile"/>
         <ant antfile="build.xml" target="test" dir="graphview"/>

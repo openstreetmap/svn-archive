@@ -417,7 +417,7 @@
         <sequential>
             <echo message="Running @{testfamily} tests with JUnit"/>
             <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec">
-                <junit printsummary="yes" fork="true" forkmode="once">
+                <junit printsummary="yes" fork="true" forkmode="once" dir="${basedir}">
                     <sysproperty key="josm.home" value="${plugin.test.dir}/config/@{testfamily}-josm.home"/>
                     <sysproperty key="josm.test.data" value="${plugin.test.dir}/data"/>
                     <sysproperty key="java.awt.headless" value="true"/>

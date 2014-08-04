@@ -6,7 +6,7 @@ import org.junit.*;
 import groovy.util.GroovyTestCase;
 
 import java.awt.Component
-import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
+import org.openstreetmap.josm.JOSMFixture;
 
 class TurnRestrictionTypeRendererTest extends GroovyTestCase{
 

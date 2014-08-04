@@ -10,7 +10,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
+import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.data.coor.LatLon;
 import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.*
 import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType;
@@ -382,7 +382,7 @@ class TurnRestrictionBuilderTest{
 		 assert o == RelativeWayJoinOrientation.LEFT
 		 
 		 /*
-		  * if reversed from, the intersection angle is still -90°
+		  * if reversed from, the intersection angle is still -90ï¿½
 		  */
 		 from = nw(1,n2,n1)
 		 to = nw(2,n2,n3)
@@ -392,7 +392,7 @@ class TurnRestrictionBuilderTest{
 		 assert o == RelativeWayJoinOrientation.LEFT
 
 		 /*
-		 * if reversed to, the intersection angle is still -90°
+		 * if reversed to, the intersection angle is still -90ï¿½
 		 */
 		 from = nw(1,n1,n2)
 		 to = nw(2,n3,n2)
@@ -402,7 +402,7 @@ class TurnRestrictionBuilderTest{
 		 assert o == RelativeWayJoinOrientation.LEFT
 
 		 /*
-		 * if reversed both, the intersection angle is still -90°
+		 * if reversed both, the intersection angle is still -90ï¿½
 		 */
 		 from = nw(1,n2,n1)
 		 to = nw(2,n3,n2)
@@ -435,7 +435,7 @@ class TurnRestrictionBuilderTest{
 		assert Math.toDegrees(a) == 90
 		
 		/*
-		 * if reversed from, the intersection angle is still 90°
+		 * if reversed from, the intersection angle is still 90ï¿½
 		 */
 		from = nw(1,n2,n1)
 		to = nw(2,n2,n3)
@@ -443,7 +443,7 @@ class TurnRestrictionBuilderTest{
 		assert Math.toDegrees(a) == 90
 
 		/*
-		* if reversed to, the intersection angle is still 90°
+		* if reversed to, the intersection angle is still 90ï¿½
 		*/
 		from = nw(1,n1,n2)
 		to = nw(2,n3,n2)
@@ -451,7 +451,7 @@ class TurnRestrictionBuilderTest{
 		assert Math.toDegrees(a) == 90
 
 		/*
-		* if reversed both, the intersection angle is still 90°
+		* if reversed both, the intersection angle is still 90ï¿½
 		*/
 		from = nw(1,n2,n1)
 		to = nw(2,n3,n2)

@@ -15,7 +15,7 @@ import org.openstreetmap.josm.data.coor.*
 import org.openstreetmap.josm.fixtures.JOSMFixture;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
-import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
+import org.openstreetmap.josm.JOSMFixture;
 
 /**
  * This is a unit test for {@link TurnRestrictionEditorModel}

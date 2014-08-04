@@ -5,7 +5,7 @@ import groovy.util.GroovyTestCase;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
-import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
+import org.openstreetmap.josm.JOSMFixture;
 
 import static org.junit.Assert.*;
 import org.junit.*;

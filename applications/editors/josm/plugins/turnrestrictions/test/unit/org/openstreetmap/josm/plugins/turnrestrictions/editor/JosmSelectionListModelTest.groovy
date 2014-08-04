@@ -7,8 +7,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import javax.swing.DefaultListSelectionModel;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.coor.*;
-
-import org.openstreetmap.josm.plugins.turnrestrictions.fixtures.JOSMFixture;
+import org.openstreetmap.josm.JOSMFixture;
 
 import static org.junit.Assert.*;
 import org.junit.*;

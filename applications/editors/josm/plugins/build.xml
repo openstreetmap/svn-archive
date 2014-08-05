@@ -18,6 +18,7 @@
     	<!-- order not important -->
         <ant target="dist" dir="addrinterpolation"/>
         <ant target="dist" dir="alignways"/>
+        <ant target="dist" dir="areaselector"/>
         <ant target="dist" dir="buildings_tools"/>
         <ant target="dist" dir="cadastre-fr"/>
         <ant target="dist" dir="canvec_helper"/>
@@ -115,6 +116,7 @@
         <ant target="clean" dir="00_plugin_dir_template"/>
         <ant target="clean" dir="addrinterpolation"/>
         <ant target="clean" dir="alignways"/>
+        <ant target="clean" dir="areaselector"/>
         <ant target="clean" dir="buildings_tools"/>
         <ant target="clean" dir="cadastre-fr"/>
         <ant target="clean" dir="canvec_helper"/>

@@ -34,7 +34,7 @@ import org.openstreetmap.josm.plugins.opendata.core.util.NamesFrUtils;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.Pair;
 
-public abstract class AbstractDataSetHandler implements OdConstants {
+public abstract class AbstractDataSetHandler {
 	
 	public abstract boolean acceptsFilename(String filename);
 	
@@ -97,67 +97,67 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	}
 	
 	protected final boolean acceptsCsvFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, CSV_EXT);
+		return acceptsFilename(filename, expected, OdConstants.CSV_EXT);
 	}
 
 	protected final boolean acceptsXlsFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, XLS_EXT);
+		return acceptsFilename(filename, expected, OdConstants.XLS_EXT);
 	}
 
 	protected final boolean acceptsOdsFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, ODS_EXT);
+		return acceptsFilename(filename, expected, OdConstants.ODS_EXT);
 	}
 
 	protected final boolean acceptsShpFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, SHP_EXT);
+		return acceptsFilename(filename, expected, OdConstants.SHP_EXT);
 	}
 
 	protected final boolean acceptsMifFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, MIF_EXT);
+		return acceptsFilename(filename, expected, OdConstants.MIF_EXT);
 	}
 
 	protected final boolean acceptsMifTabFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, MIF_EXT, TAB_EXT);
+		return acceptsFilename(filename, expected, OdConstants.MIF_EXT, OdConstants.TAB_EXT);
 	}
 
 	protected final boolean acceptsShpMifFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, SHP_EXT, MIF_EXT);
+		return acceptsFilename(filename, expected, OdConstants.SHP_EXT, OdConstants.MIF_EXT);
 	}
 
 	protected final boolean acceptsKmlFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, KML_EXT);
+		return acceptsFilename(filename, expected, OdConstants.KML_EXT);
 	}
 
 	protected final boolean acceptsKmzFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, KMZ_EXT);
+		return acceptsFilename(filename, expected, OdConstants.KMZ_EXT);
 	}
 
 	protected final boolean acceptsKmzShpFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, KMZ_EXT, SHP_EXT);
+		return acceptsFilename(filename, expected, OdConstants.KMZ_EXT, OdConstants.SHP_EXT);
 	}
 
 	protected final boolean acceptsKmzTabFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, KMZ_EXT, TAB_EXT);
+		return acceptsFilename(filename, expected, OdConstants.KMZ_EXT, OdConstants.TAB_EXT);
 	}
 
 	protected final boolean acceptsZipFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, ZIP_EXT);
+		return acceptsFilename(filename, expected, OdConstants.ZIP_EXT);
 	}
 
     protected final boolean accepts7ZipFilename(String filename, String ... expected) {
-        return acceptsFilename(filename, expected, SEVENZIP_EXT);
+        return acceptsFilename(filename, expected, OdConstants.SEVENZIP_EXT);
     }
 
 	protected final boolean acceptsCsvKmzFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, CSV_EXT, KMZ_EXT);
+		return acceptsFilename(filename, expected, OdConstants.CSV_EXT, OdConstants.KMZ_EXT);
 	}
 
 	protected final boolean acceptsCsvKmzTabFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, CSV_EXT, KMZ_EXT, TAB_EXT);
+		return acceptsFilename(filename, expected, OdConstants.CSV_EXT, OdConstants.KMZ_EXT, OdConstants.TAB_EXT);
 	}
 		
 	protected final boolean acceptsCsvXlsFilename(String filename, String ... expected) {
-		return acceptsFilename(filename, expected, CSV_EXT, XLS_EXT);
+		return acceptsFilename(filename, expected, OdConstants.CSV_EXT, OdConstants.XLS_EXT);
 	}
 	
 	// -------------------- License --------------------
@@ -275,7 +275,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	public boolean isRelevant(IPrimitive p) {return false;}
 	
 	public final Collection<IPrimitive> extractRelevantPrimitives(DataSet ds) {
-		ArrayList<IPrimitive> result = new ArrayList<IPrimitive>();
+		ArrayList<IPrimitive> result = new ArrayList<>();
 		for (IPrimitive p : ds.allPrimitives()) {
 			if (isRelevant(p)) {
 				result.add(p);
@@ -362,15 +362,15 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	}
 
 	public String getLocalPortalIconName() {
-		return ICON_CORE_24;
+		return OdConstants.ICON_CORE_24;
 	}
 		
 	public String getNationalPortalIconName() {
-		return ICON_CORE_24;
+		return OdConstants.ICON_CORE_24;
 	}
 		
 	public String getDataLayerIconName() {
-		return ICON_CORE_16;
+		return OdConstants.ICON_CORE_16;
 	}
 	
 	public ExtendedSourceEntry getMapPaintStyle() {
@@ -386,9 +386,9 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	}
 
 	protected final ExtendedSourceEntry getMapPaintStyle(String displayName, String fileNameWithoutExtension) {
-		return new ExtendedSourceEntry(displayName,	PROTO_RSRC+//"/"+
+		return new ExtendedSourceEntry(displayName,	OdConstants.PROTO_RSRC+//"/"+
 				this.getClass().getPackage().getName().replace(".", "/")+"/"+
-				fileNameWithoutExtension+"."+MAPCSS_EXT);
+				fileNameWithoutExtension+"."+OdConstants.MAPCSS_EXT);
 	}
 	
     public final ImageIcon getMenuIcon() {
@@ -489,7 +489,7 @@ public abstract class AbstractDataSetHandler implements OdConstants {
 	
 	// Tools
 
-	private final Collection<JosmAction> tools = new ArrayList<JosmAction>();
+	private final Collection<JosmAction> tools = new ArrayList<>();
 	
 	public final Collection<JosmAction> getTools() {
 	    return tools;

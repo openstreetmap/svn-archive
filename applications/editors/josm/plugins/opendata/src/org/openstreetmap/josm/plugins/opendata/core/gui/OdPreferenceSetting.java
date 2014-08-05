@@ -29,7 +29,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleDownloadTask;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.tools.GBC;
 
-public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements OdConstants {
+public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
 
     //private final JRadioButton rbCC43 = new JRadioButton(tr("CC43"));
     //private final JRadioButton rbWGS84 = new JRadioButton(tr("WGS84"));
@@ -45,7 +45,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
     private final ModulePreference modulePref = new ModulePreference();
 
     public OdPreferenceSetting() {
-    	super(ICON_CORE_48, tr("OpenData Preferences"),
+    	super(OdConstants.ICON_CORE_48, tr("OpenData Preferences"),
                 tr("A special handler for various Open Data portals<br/><br/>"+
                         "Please read the Terms and Conditions of Use of each portal<br/>"+
                         "before any upload of data loaded by this plugin."));
@@ -57,7 +57,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
      * @return
      */
     public static final Collection<String> getModuleSites() {
-        return Main.pref.getCollection(PREF_MODULES_SITES, Arrays.asList(DEFAULT_MODULE_SITES));
+        return Main.pref.getCollection(OdConstants.PREF_MODULES_SITES, Arrays.asList(OdConstants.DEFAULT_MODULE_SITES));
     }
 
     /**
@@ -66,7 +66,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
      * @param sites the site URLs
      */
 	public static void setModuleSites(List<String> sites) {
-		Main.pref.putCollection(PREF_MODULES_SITES, sites);
+		Main.pref.putCollection(OdConstants.PREF_MODULES_SITES, sites);
     }
     
     @Override
@@ -86,7 +86,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
         general.setName(tr("General settings"));
 
         // option to enable raw data
-        rawData.setSelected(Main.pref.getBoolean(PREF_RAWDATA, DEFAULT_RAWDATA));
+        rawData.setSelected(Main.pref.getBoolean(OdConstants.PREF_RAWDATA, OdConstants.DEFAULT_RAWDATA));
         rawData.setToolTipText(tr("Import only raw data (i.e. do not add/delete tags or replace them by standard OSM tags)"));
         general.add(rawData, GBC.eop().insets(0, 0, 0, 0));
         
@@ -111,14 +111,14 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
 
         // option to set the Overpass API server
         JLabel jLabelOapi = new JLabel(tr("Overpass API server:"));
-        oapi.setText(Main.pref.get(PREF_OAPI, DEFAULT_OAPI));
+        oapi.setText(Main.pref.get(OdConstants.PREF_OAPI, OdConstants.DEFAULT_OAPI));
         oapi.setToolTipText(tr("Overpass API server used to download OSM data"));
         general.add(jLabelOapi, GBC.std().insets(0, 5, 10, 0));
         general.add(oapi, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
         
         // option to set the XAPI server
         JLabel jLabelXapi = new JLabel(tr("XAPI server:"));
-        xapi.setText(Main.pref.get(PREF_XAPI, DEFAULT_XAPI));
+        xapi.setText(Main.pref.get(OdConstants.PREF_XAPI, OdConstants.DEFAULT_XAPI));
         xapi.setToolTipText(tr("XAPI server used to download OSM data when Overpass API is not available"));
         general.add(jLabelXapi, GBC.std().insets(0, 5, 10, 0));
         general.add(xapi, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 200, 5));
@@ -133,9 +133,9 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting implements 
     public boolean ok() {
     	boolean result = modulePref.ok();
    		//Main.pref.put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
-   		Main.pref.put(PREF_OAPI, oapi.getText());
-   		Main.pref.put(PREF_XAPI, xapi.getText());
-   		Main.pref.put(PREF_RAWDATA, rawData.isSelected());
+   		Main.pref.put(OdConstants.PREF_OAPI, oapi.getText());
+   		Main.pref.put(OdConstants.PREF_XAPI, xapi.getText());
+   		Main.pref.put(OdConstants.PREF_RAWDATA, rawData.isSelected());
         
         // create a task for downloading modules if the user has activated, yet not downloaded,
         // new modules

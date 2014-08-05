@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="utf8_test" id="utf8_test">
+	<SimpleField name="id" type="int"></SimpleField>
+	<SimpleField name="some_text" type="string"></SimpleField>
+</Schema>
+<Folder><name>utf8_test</name>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#utf8_test">
+		<SimpleData name="id">1</SimpleData>
+		<SimpleData name="some_text">à as italian località</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>13.605861338605969,45.804139637452899</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#utf8_test">
+		<SimpleData name="id">5</SimpleData>
+		<SimpleData name="some_text">ù</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>13.605861338605969,45.760093009107536</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#utf8_test">
+		<SimpleData name="id">4</SimpleData>
+		<SimpleData name="some_text">ò</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>13.605183698169887,45.771612896520935</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#utf8_test">
+		<SimpleData name="id">3</SimpleData>
+		<SimpleData name="some_text">ì</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>13.605183698169887,45.783132783934342</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#utf8_test">
+		<SimpleData name="id">2</SimpleData>
+		<SimpleData name="some_text">è</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>13.605861338605969,45.79397503091166</coordinates></Point>
+  </Placemark>
+</Folder>
+</Document></kml>

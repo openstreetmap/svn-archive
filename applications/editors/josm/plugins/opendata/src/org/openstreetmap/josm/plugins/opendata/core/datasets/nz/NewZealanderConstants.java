@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.nz;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface NewZealanderConstants extends OdConstants {
+public interface NewZealanderConstants {
 
 	/**
 	 * Portal

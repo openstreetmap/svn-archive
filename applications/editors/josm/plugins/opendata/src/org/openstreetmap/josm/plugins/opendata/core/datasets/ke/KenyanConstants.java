@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.ke;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface KenyanConstants extends OdConstants {
+public interface KenyanConstants {
 
 	/**
 	 * Portal

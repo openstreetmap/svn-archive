@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.OsmDownloader;
 import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
-public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, LayerChangeListener {
+public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeListener {
 
 	public OdDiffLayer diffLayer;
 	public OdOsmDataLayer osmLayer;
@@ -51,7 +51,7 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 	}
 	
     @Override public Icon getBaseIcon() {
-    	return OdUtils.getImageIcon(handler != null ? handler.getDataLayerIconName() : ICON_CORE_16);
+    	return OdUtils.getImageIcon(handler != null ? handler.getDataLayerIconName() : OdConstants.ICON_CORE_16);
     }
 
     public void addOsmLayer(OdOsmDataLayer layer) {
@@ -132,7 +132,7 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 				result.add(SeparatorLayerAction.INSTANCE);
 			}
 			if (this.handler.getWikiURL() != null) { 
-				result.add(new OpenLinkAction(this.handler.getWikiURL(), ICON_OSM_24, 
+				result.add(new OpenLinkAction(this.handler.getWikiURL(), OdConstants.ICON_OSM_24, 
 						tr("View OSM Wiki page"), tr("Launch browser to the OSM Wiki page of the selected data set")));
 			}
 			if (this.handler.getLocalPortalURL() != null) { 
@@ -146,11 +146,11 @@ public class OdDataLayer extends OsmDataLayer implements OdConstants, OdLayer, L
 			if (this.handler.getLicense() != null) {
 				License lic = this.handler.getLicense();
 				if (lic.getURL() != null && lic.getURL().getProtocol().startsWith("http")) {
-					result.add(new OpenLinkAction(lic.getURL(), ICON_AGREEMENT_24, 
+					result.add(new OpenLinkAction(lic.getURL(), OdConstants.ICON_AGREEMENT_24, 
 							tr("View License"), tr("Launch browser to the license page of the selected data set")));
 				}
 				if (lic.getSummaryURL() != null && lic.getSummaryURL().getProtocol().startsWith("http")) {
-					result.add(new OpenLinkAction(lic.getSummaryURL(), ICON_AGREEMENT_24, 
+					result.add(new OpenLinkAction(lic.getSummaryURL(), OdConstants.ICON_AGREEMENT_24, 
 							tr("View License (summary)"), tr("Launch browser to the summary license page of the selected data set")));
 				}
 				if ((lic.getURL() != null && !lic.getURL().getProtocol().startsWith("http")) || (lic.getSummaryURL() != null && !lic.getSummaryURL().getProtocol().startsWith("http"))) {

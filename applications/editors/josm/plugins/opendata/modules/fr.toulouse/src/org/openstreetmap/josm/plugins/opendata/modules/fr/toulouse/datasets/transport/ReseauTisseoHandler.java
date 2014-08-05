@@ -7,6 +7,7 @@ import java.net.URL;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
@@ -24,12 +25,13 @@ public class ReseauTisseoHandler extends ToulouseDataSetHandler {
 
     @Override
     public boolean acceptsFilename(String filename) {
-        return acceptsZipFilename(filename, "14022-reseau-tisseo-metro-bus-tram-") || filename.toLowerCase().endsWith(XML_EXT);
+        return acceptsZipFilename(filename, "14022-reseau-tisseo-metro-bus-tram-") || filename.toLowerCase().endsWith(OdConstants.XML_EXT);
     }
     
     @Override
     public boolean acceptsFile(File file) {
-        return acceptsFilename(file.getName()) && (file.getName().toLowerCase().endsWith(ZIP_EXT) || NeptuneReader.acceptsXmlNeptuneFile(file, neptuneSchemaUrl));
+        return acceptsFilename(file.getName()) 
+                && (file.getName().toLowerCase().endsWith(OdConstants.ZIP_EXT) || NeptuneReader.acceptsXmlNeptuneFile(file, neptuneSchemaUrl));
     }
 
     @Override

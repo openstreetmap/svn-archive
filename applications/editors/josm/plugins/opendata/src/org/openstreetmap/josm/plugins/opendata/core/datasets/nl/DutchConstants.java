@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.nl;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface DutchConstants extends OdConstants {
+public interface DutchConstants {
 
 	/**
 	 * Portal

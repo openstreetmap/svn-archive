@@ -3,6 +3,8 @@ package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
@@ -26,7 +28,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionChooser;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
-public abstract class SpreadSheetReader extends AbstractReader implements OdConstants {
+public abstract class SpreadSheetReader extends AbstractReader {
 	
 	private static final NumberFormat formatFrance = NumberFormat.getInstance(Locale.FRANCE);
 	private static final NumberFormat formatUK = NumberFormat.getInstance(Locale.UK);
@@ -64,7 +66,8 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		public final boolean isOk() {
 			return xCol > -1 && yCol > -1;
 		}
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return "CoordinateColumns [proj=" + proj + ", xCol=" + xCol + ", yCol=" + yCol + "]";
         }
 	}
@@ -85,8 +88,10 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
             this.progressMonitor = progressMonitor;
         }
 
-        @Override public void run() {
-            ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(progressMonitor.getWindowParent()).showDialog();
+        @Override
+        public void run() {
+            Component parent = progressMonitor == null ? Main.parent : progressMonitor.getWindowParent();
+            ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(parent).showDialog();
             if (dialog.getValue() == 1) {
                 proj = dialog.getProjection();
             }
@@ -99,7 +104,7 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 		Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<>();
 		
 		for (int i = 0; i<header.length; i++) {
-			for (ProjectionPatterns pp : PROJECTIONS) {
+			for (ProjectionPatterns pp : OdConstants.PROJECTIONS) {
 			    List<CoordinateColumns> columns = projColumns.get(pp);
 			    if (columns == null) {
 			        projColumns.put(pp, columns = new ArrayList<>());
@@ -143,6 +148,9 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
 			// projection identified, do nothing
 		} else if (!columns.isEmpty()) {
 			if (!handlerOK) {
+                if (GraphicsEnvironment.isHeadless()) {
+                    throw new IllegalArgumentException("No valid coordinates have been found and cannot prompt user in headless mode.");
+			    }
 				// TODO: filter proposed projections with min/max values ?
 			    ChooserLauncher launcher = new ChooserLauncher(progressMonitor);
 			    GuiHelper.runInEDTAndWait(launcher);
@@ -232,14 +240,14 @@ public abstract class SpreadSheetReader extends AbstractReader implements OdCons
     			    if (firstNode == null) {
     			        firstNode = n;
     			    }
-    			    if (n == firstNode || n.getCoor().greatCircleDistance(firstNode.getCoor()) > Main.pref.getDouble(PREF_TOLERANCE, DEFAULT_TOLERANCE)) {
+    			    if (n == firstNode || n.getCoor().greatCircleDistance(firstNode.getCoor()) > Main.pref.getDouble(OdConstants.PREF_TOLERANCE, OdConstants.DEFAULT_TOLERANCE)) {
     			        ds.addPrimitive(n);
     			    } else {
     			        nodes.remove(c);
     			    }
     			}
 			}
-			if (handler != null && !Main.pref.getBoolean(PREF_RAWDATA)) {
+			if (handler != null && !Main.pref.getBoolean(OdConstants.PREF_RAWDATA)) {
 			    handler.nodesAdded(ds, nodes, header, lineNumber);
 			}
 		}

@@ -14,14 +14,15 @@ import java.util.List;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public abstract class AbstractMapInfoReader extends AbstractReader implements OdConstants {
+public abstract class AbstractMapInfoReader extends AbstractReader {
 
 	protected static final String VERSION_1 = "1";
 	protected static final String VERSION_2 = "2";
 	protected static final String VERSION_300 = "300";
 	protected static final String VERSION_450 = "450";
 
-	protected static final String CHARSET_WINDOWS = "WindowsLatin1";
+	protected static final String CHARSET_WINDOWS_LATIN    = "WindowsLatin1";
+    protected static final String CHARSET_WINDOWS_CYRILLIC = "WindowsCyrillic";
 	protected static final String CHARSET_NEUTRAL = "Neutral";
 	protected static final String CHARSET_MAC     = "MacRoman";
 	
@@ -45,8 +46,7 @@ public abstract class AbstractMapInfoReader extends AbstractReader implements Od
 		return dataFile;
 	}
 	
-	@SuppressWarnings("resource")
-    protected final BufferedReader getDataReader(File headerFile, String extension, Charset charset) throws FileNotFoundException {
+	protected final BufferedReader getDataReader(File headerFile, String extension, Charset charset) throws FileNotFoundException {
 		File dataFile = getDataFile(headerFile, extension);
 		return dataFile.exists() ? new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), charset)) : null;
 	}
@@ -57,12 +57,14 @@ public abstract class AbstractMapInfoReader extends AbstractReader implements Od
 
 	protected Charset parseCharset(String[] words, int index) {
 		words[index] = words[index].replace("\"", "");
-		if (words[index].equalsIgnoreCase(CHARSET_WINDOWS)) {
-			return Charset.forName(CP1252);
+		if (words[index].equalsIgnoreCase(CHARSET_WINDOWS_LATIN)) {
+			return Charset.forName(OdConstants.CP1252);
+        } else if (words[index].equalsIgnoreCase(CHARSET_WINDOWS_CYRILLIC)) {
+            return Charset.forName(OdConstants.CP1251);
 		} else if (words[index].equalsIgnoreCase(CHARSET_NEUTRAL)) {
-			return Charset.forName(ISO8859_15);
+			return Charset.forName(OdConstants.ISO8859_15);
 		} else if (words[index].equalsIgnoreCase(CHARSET_MAC)) {
-			return Charset.forName(MAC_ROMAN);
+			return Charset.forName(OdConstants.MAC_ROMAN);
 		} else {
 			System.err.println("Line "+lineNum+". Unknown charset detected: "+line);
 			return Charset.forName(words[index]);

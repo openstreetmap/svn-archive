@@ -13,11 +13,12 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchShpHandler;
 
 public class ParisShpHandler extends FrenchShpHandler {
 	
-	public final Map<String, Node> nodeMap = new HashMap<String, Node>();
+	public final Map<String, Node> nodeMap = new HashMap<>();
 	
 	protected OsmPrimitive dataPrimitive;
 	protected Way closedWay;
@@ -25,7 +26,7 @@ public class ParisShpHandler extends FrenchShpHandler {
 	public List<Node> nodes;
 	
 	public ParisShpHandler() {
-		setDbfCharset(Charset.forName(CP850));
+		setDbfCharset(Charset.forName(OdConstants.CP850));
 	}
 	
 	private Node getNode(EastNorth en, String key) {
@@ -54,8 +55,8 @@ public class ParisShpHandler extends FrenchShpHandler {
 	protected final void initFeaturesPrimitives(Set<OsmPrimitive> featurePrimitives) {
 		dataPrimitive = null;
 		closedWay = null;
-		ways = new ArrayList<Way>();
-		nodes = new ArrayList<Node>();
+		ways = new ArrayList<>();
+		nodes = new ArrayList<>();
 		for (OsmPrimitive p : featurePrimitives) {
 			if (p.hasKeys()) {
 				dataPrimitive = p;

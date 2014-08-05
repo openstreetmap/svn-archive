@@ -15,6 +15,7 @@ import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetReader;
@@ -34,7 +35,7 @@ public class TabReader extends AbstractMapInfoReader {
 
 	public static DataSet parseDataSet(InputStream in, File file,
 			AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		return new TabReader(handler).parse(in, file, instance, Charset.forName(ISO8859_15));
+		return new TabReader(handler).parse(in, file, instance, Charset.forName(OdConstants.ISO8859_15));
 	}
 		
 	private class TabOsmReader extends SpreadSheetReader {
@@ -56,7 +57,7 @@ public class TabReader extends AbstractMapInfoReader {
 			if (!dbfReader.hasNext()) {
 				return null;
 			}
-        	List<String> result = new ArrayList<String>();
+        	List<String> result = new ArrayList<>();
 			Row row = dbfReader.readRow();
         	for (int i=0; i<columns.size(); i++) {
         		Object o = row.read(i);

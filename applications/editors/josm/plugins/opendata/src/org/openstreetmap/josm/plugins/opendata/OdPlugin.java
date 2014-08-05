@@ -21,7 +21,6 @@ import org.openstreetmap.josm.gui.MenuScroller;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.actions.DownloadDataAction;
 import org.openstreetmap.josm.plugins.opendata.core.actions.DownloadDataTask;
 import org.openstreetmap.josm.plugins.opendata.core.actions.OpenPreferencesActions;
@@ -46,7 +45,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.Pair;
 
-public final class OdPlugin extends Plugin implements OdConstants {
+public final class OdPlugin extends Plugin {
 
 	private static OdPlugin instance;
 	
@@ -101,7 +100,7 @@ public final class OdPlugin extends Plugin implements OdConstants {
 	
 	private void buildMenu() {
         for (Module module : ModuleHandler.moduleList) {
-        	Map<DataSetCategory, JMenu> catMenus = new HashMap<DataSetCategory, JMenu>();
+        	Map<DataSetCategory, JMenu> catMenus = new HashMap<>();
         	JMenu moduleMenu = null;
         	for (AbstractDataSetHandler handler: module.getNewlyInstanciatedHandlers()) {
         	    URL dataURL = handler.getDataURL();

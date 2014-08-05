@@ -19,7 +19,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Pair;
 
-public class OdDiffLayer extends Layer implements OdLayer, OdConstants {
+public class OdDiffLayer extends Layer implements OdLayer {
 
 	private final OdDataLayer dataLayer;
 	
@@ -61,7 +61,7 @@ public class OdDiffLayer extends Layer implements OdLayer, OdConstants {
 	}
 	
 	private OsmPrimitive findPrimitiveAt(DataSet dataSet, OsmPrimitive source) {
-		double maxDistance = Main.pref.getDouble(PREF_MAXDISTANCE, DEFAULT_MAXDISTANCE);
+		double maxDistance = Main.pref.getDouble(OdConstants.PREF_MAXDISTANCE, OdConstants.DEFAULT_MAXDISTANCE);
 		//List<OsmPrimitive> samePrimitives = new ArrayList<OsmPrimitive>();
 		OsmPrimitive nearestSamePrimitive = null;
 		//List<OsmPrimitive> potentialPrimitives = new ArrayList<OsmPrimitive>();

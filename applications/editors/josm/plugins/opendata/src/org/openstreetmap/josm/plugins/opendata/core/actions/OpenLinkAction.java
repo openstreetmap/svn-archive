@@ -15,7 +15,7 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 @SuppressWarnings("serial")
-public class OpenLinkAction extends JosmAction implements OdConstants {
+public class OpenLinkAction extends JosmAction {
 
     private URL url;
     
@@ -36,7 +36,7 @@ public class OpenLinkAction extends JosmAction implements OdConstants {
 				int index = e1.getIndex();
 				if (index > -1) {
 					String s = url.toString().substring(index, index+1);
-					s = url.toString().replace(s, URLEncoder.encode(s, UTF8));
+					s = url.toString().replace(s, URLEncoder.encode(s, OdConstants.UTF8));
 					URI uri = new URI(s);
 		        	System.out.println("Opening "+uri);
 					OpenBrowser.displayUrl(uri);

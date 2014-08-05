@@ -29,6 +29,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.UTFInputStreamReader;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.NationalHandlers;
 
@@ -65,7 +66,7 @@ public class GmlReader extends GeographicReader {
 		}
     }
 
-    private final Map<String, CrsData> crsDataMap = new HashMap<String, GmlReader.CrsData>();
+    private final Map<String, CrsData> crsDataMap = new HashMap<>();
     
     public GmlReader(XMLStreamReader parser, GmlHandler handler) {
 		super(handler, NationalHandlers.DEFAULT_GML_HANDLERS);
@@ -74,7 +75,7 @@ public class GmlReader extends GeographicReader {
     }
 
 	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException {
-        InputStreamReader ir = UTFInputStreamReader.create(in, UTF8);
+        InputStreamReader ir = UTFInputStreamReader.create(in, OdConstants.UTF8);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
         try {
         	return new GmlReader(parser, handler != null ? handler.getGmlHandler() : null).parseDoc(instance);

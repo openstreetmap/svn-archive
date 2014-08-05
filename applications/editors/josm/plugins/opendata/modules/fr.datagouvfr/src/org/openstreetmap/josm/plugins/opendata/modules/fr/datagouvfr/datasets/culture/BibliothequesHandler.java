@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.c
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 
 public class BibliothequesHandler extends DataGouvDataSetHandler {
@@ -11,7 +12,7 @@ public class BibliothequesHandler extends DataGouvDataSetHandler {
 		super("Adresses-des-bibliothèques-municipales-30382179", lambert93);
 		setName("Bibliothèques municipales");
 		setDownloadFileName("lieux de lecture_geoloc.txt");
-		getCsvHandler().setCharset(ISO8859_15);
+		getCsvHandler().setCharset(OdConstants.ISO8859_15);
 	}
 
 	@Override

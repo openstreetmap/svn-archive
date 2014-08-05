@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.it;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface ItalianConstants extends OdConstants {
+public interface ItalianConstants {
 
 	/**
 	 * Portal

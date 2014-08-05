@@ -18,14 +18,15 @@ import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi;
 
 public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 
-	protected static final Projection wgs84 = PRJ_WGS84.getProjection();
+	protected static final Projection wgs84 = OdConstants.PRJ_WGS84.getProjection();
 
-	private final List<Tag> relevantTags = new ArrayList<Tag>();
-	private final List<Tag> forbiddenTags = new ArrayList<Tag>();
+	private final List<Tag> relevantTags = new ArrayList<>();
+	private final List<Tag> forbiddenTags = new ArrayList<>();
 	
 	private final boolean relevantUnion;
 	
@@ -151,7 +152,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 	}
 
 	protected final String[] getOverpassApiConditions() {
-		List<String> conditions = new ArrayList<String>();
+		List<String> conditions = new ArrayList<>();
 		for (Tag tag : this.relevantTags) {
 			conditions.add(OverpassApi.hasKey(tag.getKey(), tag.getValue()));
 		}

@@ -22,6 +22,7 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
 import org.openstreetmap.josm.plugins.opendata.core.io.NeptuneReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.NetworkReader;
+import org.openstreetmap.josm.plugins.opendata.core.io.XmlImporter;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmlReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.KmzReader;
@@ -33,7 +34,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
-public abstract class ArchiveReader extends AbstractReader implements OdConstants {
+public abstract class ArchiveReader extends AbstractReader {
 
     protected final AbstractDataSetHandler handler;
     protected final ArchiveHandler archiveHandler;
@@ -112,25 +113,25 @@ public abstract class ArchiveReader extends AbstractReader implements OdConstant
             if (progressMonitor != null) {
                 instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
             }
-            if (file.getName().toLowerCase().endsWith(CSV_EXT)) {
+            if (file.getName().toLowerCase().endsWith(OdConstants.CSV_EXT)) {
                 from = CsvReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(KML_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.KML_EXT)) {
                 from = KmlReader.parseDataSet(in, instance);
-            } else if (file.getName().toLowerCase().endsWith(KMZ_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.KMZ_EXT)) {
                 from = KmzReader.parseDataSet(in, instance);
-            } else if (file.getName().toLowerCase().endsWith(XLS_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.XLS_EXT)) {
                 from = XlsReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(ODS_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.ODS_EXT)) {
                 from = OdsReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(SHP_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.SHP_EXT)) {
                 from = ShpReader.parseDataSet(in, file, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(MIF_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.MIF_EXT)) {
                 from = MifReader.parseDataSet(in, file, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(TAB_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.TAB_EXT)) {
                 from = TabReader.parseDataSet(in, file, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(GML_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.GML_EXT)) {
                 from = GmlReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(XML_EXT)) {
+            } else if (file.getName().toLowerCase().endsWith(OdConstants.XML_EXT)) {
                 if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
                     from = NeptuneReader.parseDataSet(in, handler, instance);
                 } else {
@@ -154,7 +155,7 @@ public abstract class ArchiveReader extends AbstractReader implements OdConstant
             }
         }
         // Special treatment for XML files (check supported XSD), unless handler explicitely skip it
-        if (XML_FILE_FILTER.accept(file) && ((archiveHandler != null && archiveHandler.skipXsdValidation()) 
+        if (XmlImporter.XML_FILE_FILTER.accept(file) && ((archiveHandler != null && archiveHandler.skipXsdValidation()) 
                 || OdPlugin.getInstance().xmlImporter.acceptFile(file))) {
             candidates.add(file);
             System.out.println(entryName);

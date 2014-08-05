@@ -15,9 +15,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public class KmzReader extends AbstractReader implements OdConstants {
+public class KmzReader extends AbstractReader {
 
 	private ZipInputStream zis;
     

@@ -31,7 +31,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.OdsReader;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.XlsReader;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
-public class NetworkReader extends OsmServerReader implements OdConstants {
+public class NetworkReader extends OsmServerReader {
 
 	private final String url;
 	private final AbstractDataSetHandler handler;
@@ -46,21 +46,21 @@ public class NetworkReader extends OsmServerReader implements OdConstants {
      */
     public static final Map<String, Class<? extends AbstractReader>> FILE_READERS = new HashMap<>();
     static {
-        FILE_READERS.put(CSV_EXT, CsvReader.class);
-        FILE_READERS.put(KML_EXT, KmlReader.class);
-        FILE_READERS.put(KMZ_EXT, KmzReader.class);
-        FILE_READERS.put(GML_EXT, GmlReader.class);
-        FILE_READERS.put(XLS_EXT, XlsReader.class);
-        FILE_READERS.put(ODS_EXT, OdsReader.class);
-        FILE_READERS.put(SHP_EXT, ShpReader.class);
-        FILE_READERS.put(MIF_EXT, MifReader.class);
-        FILE_READERS.put(TAB_EXT, TabReader.class);
+        FILE_READERS.put(OdConstants.CSV_EXT, CsvReader.class);
+        FILE_READERS.put(OdConstants.KML_EXT, KmlReader.class);
+        FILE_READERS.put(OdConstants.KMZ_EXT, KmzReader.class);
+        FILE_READERS.put(OdConstants.GML_EXT, GmlReader.class);
+        FILE_READERS.put(OdConstants.XLS_EXT, XlsReader.class);
+        FILE_READERS.put(OdConstants.ODS_EXT, OdsReader.class);
+        FILE_READERS.put(OdConstants.SHP_EXT, ShpReader.class);
+        FILE_READERS.put(OdConstants.MIF_EXT, MifReader.class);
+        FILE_READERS.put(OdConstants.TAB_EXT, TabReader.class);
     }
     
     public static final Map<String, Class<? extends AbstractReader>> FILE_AND_ARCHIVE_READERS = new HashMap<>(FILE_READERS);
     static {
-        FILE_AND_ARCHIVE_READERS.put(ZIP_EXT, ZipReader.class);
-        FILE_AND_ARCHIVE_READERS.put(SEVENZIP_EXT, SevenZipReader.class);
+        FILE_AND_ARCHIVE_READERS.put(OdConstants.ZIP_EXT, ZipReader.class);
+        FILE_AND_ARCHIVE_READERS.put(OdConstants.SEVENZIP_EXT, SevenZipReader.class);
     }
 
     public NetworkReader(String url, AbstractDataSetHandler handler, boolean promptUser) {

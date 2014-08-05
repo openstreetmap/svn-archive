@@ -15,7 +15,6 @@ import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetUpdater;
 import org.openstreetmap.josm.plugins.opendata.core.gui.AskLicenseAgreementDialog;
@@ -25,7 +24,7 @@ import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 
-public class DownloadDataTask extends DownloadOsmTask implements OdConstants {
+public class DownloadDataTask extends DownloadOsmTask {
 
 	private AbstractDataSetHandler handler;
 	

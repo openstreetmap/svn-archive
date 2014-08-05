@@ -14,7 +14,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
 
-public abstract class NamesFrUtils implements OdConstants {
+public abstract class NamesFrUtils {
 	
 	private static Map<String, String> dictionary = initDictionary();
 
@@ -33,7 +33,7 @@ public abstract class NamesFrUtils implements OdConstants {
 		Map<String, String> result = new HashMap<>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					SimpleDataSetHandler.class.getResourceAsStream(DICTIONARY_FR), UTF8));
+					SimpleDataSetHandler.class.getResourceAsStream(OdConstants.DICTIONARY_FR), OdConstants.UTF8));
 			String line = reader.readLine(); // Skip first line
 			while ((line = reader.readLine()) != null) {
 				String[] tab = line.split(";");

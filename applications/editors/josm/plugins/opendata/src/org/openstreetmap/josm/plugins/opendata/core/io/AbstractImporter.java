@@ -10,14 +10,13 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmImporter;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.DataSetUpdater;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.modules.Module;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 
-public abstract class AbstractImporter extends OsmImporter implements OdConstants {
+public abstract class AbstractImporter extends OsmImporter {
 	
 	protected AbstractDataSetHandler handler;
 	

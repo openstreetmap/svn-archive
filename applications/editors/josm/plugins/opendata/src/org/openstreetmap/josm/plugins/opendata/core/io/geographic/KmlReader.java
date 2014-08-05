@@ -28,7 +28,7 @@ import org.openstreetmap.josm.io.UTFInputStreamReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
-public class KmlReader extends AbstractReader implements OdConstants {
+public class KmlReader extends AbstractReader {
 
     public static final String KML_PLACEMARK   = "Placemark";
     public static final String KML_NAME	       = "name";
@@ -51,8 +51,9 @@ public class KmlReader extends AbstractReader implements OdConstants {
     }
 
 	public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
-        InputStreamReader ir = UTFInputStreamReader.create(in, UTF8);
+        InputStreamReader ir = UTFInputStreamReader.create(in);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
+	    //XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(in, UTF8);
         return new KmlReader(parser).parseDoc();
 	}
 
@@ -70,7 +71,7 @@ public class KmlReader extends AbstractReader implements OdConstants {
 	}
 	
 	private static boolean keyIsIgnored(String key) {
-		for (ProjectionPatterns pp : PROJECTIONS) {
+		for (ProjectionPatterns pp : OdConstants.PROJECTIONS) {
 			if (pp.getXPattern().matcher(key).matches() || pp.getYPattern().matcher(key).matches()) {
 				return true;
 			}
@@ -79,12 +80,12 @@ public class KmlReader extends AbstractReader implements OdConstants {
 	}
 	
 	private void parsePlaceMark(DataSet ds) throws XMLStreamException {
-		List<OsmPrimitive> list = new ArrayList<OsmPrimitive>();
+		List<OsmPrimitive> list = new ArrayList<>();
 		Way way = null;
 		Node node = null;
 		Relation relation = null;
 		String role = "";
-		Map<String, String> tags = new HashMap<String, String>();
+		Map<String, String> tags = new HashMap<>();
 		while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {

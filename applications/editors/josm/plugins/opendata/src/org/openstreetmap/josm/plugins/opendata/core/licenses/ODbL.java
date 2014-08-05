@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.core.licenses;
 
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public class ODbL extends License implements OdConstants {
+public class ODbL extends License {
 	
     //public static final String URL            = "http://opendatacommons.org/licenses/odbl/1-0";
     //public static final String SUMMARY_URL    = "http://opendatacommons.org/licenses/odbl/summary";
@@ -13,11 +13,11 @@ public class ODbL extends License implements OdConstants {
 	public ODbL() {
 		for (String lang : new String[]{"", "fr"}) {
 			if (lang.isEmpty()) {
-				setURL(ODbL.class.getResource(RESOURCE_PATH+"odbl-1.0.htm"));
-				setSummaryURL(ODbL.class.getResource(RESOURCE_PATH+"odbl-summary-1.0.htm"));
+				setURL(ODbL.class.getResource(OdConstants.RESOURCE_PATH+"odbl-1.0.htm"));
+				setSummaryURL(ODbL.class.getResource(OdConstants.RESOURCE_PATH+"odbl-summary-1.0.htm"));
 			} else {
-				setURL(ODbL.class.getResource(RESOURCE_PATH+"odbl-1.0-"+lang+".htm"), lang);
-				setSummaryURL(ODbL.class.getResource(RESOURCE_PATH+"odbl-summary-1.0-"+lang+".htm"), lang);
+				setURL(ODbL.class.getResource(OdConstants.RESOURCE_PATH+"odbl-1.0-"+lang+".htm"), lang);
+				setSummaryURL(ODbL.class.getResource(OdConstants.RESOURCE_PATH+"odbl-summary-1.0-"+lang+".htm"), lang);
 			}
 		}
 	}

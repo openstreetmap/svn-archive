@@ -34,7 +34,7 @@ import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.tools.Pair;
 
-public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHandler, OdConstants {
+public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHandler {
 
 	private static final List<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>> 
 		ellipsoids = new ArrayList<>();
@@ -48,8 +48,8 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
 	}
 	
 	private static final boolean equals(Double a, Double b) {
-		boolean res = Math.abs(a - b) <= Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE);
-		if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
+		boolean res = Math.abs(a - b) <= Main.pref.getDouble(OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE);
+		if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
 			System.out.println("Comparing "+a+" and "+b+" -> "+res);
 		}
 		return res; 

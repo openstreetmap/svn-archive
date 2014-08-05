@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
@@ -26,7 +27,7 @@ public class CsvReader extends SpreadSheetReader {
 
 	public CsvReader(CsvHandler handler, String defaultSep) {
 		super(handler);
-		this.charset = handler != null && handler.getCharset() != null ? handler.getCharset() : Charset.forName(UTF8);
+		this.charset = handler != null && handler.getCharset() != null ? handler.getCharset() : Charset.forName(OdConstants.UTF8);
 		this.sep = handler != null && handler.getSeparator() != null ? handler.getSeparator() : defaultSep;
 	}
 	
@@ -39,7 +40,7 @@ public class CsvReader extends SpreadSheetReader {
 		try {
 			return csvReader.parse(in, instance);
 		} catch (IllegalArgumentException e) {
-			if (csvHandler == null || (csvHandler.getSeparator() != null && csvHandler.getSeparator().equals(";"))) {
+			if (csvHandler == null || csvHandler.getSeparator() == null || ";".equals(csvHandler.getSeparator())) {
 				// If default sep has been used, try comma
 				System.out.println(e.getMessage());
 				csvReader.sep = ",";

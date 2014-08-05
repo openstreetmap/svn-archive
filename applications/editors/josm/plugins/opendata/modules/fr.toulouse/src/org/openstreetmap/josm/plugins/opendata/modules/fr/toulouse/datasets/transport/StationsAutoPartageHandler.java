@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.tra
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.ToulouseDataSetHandler;
 
 public class StationsAutoPartageHandler extends ToulouseDataSetHandler {
@@ -11,7 +12,7 @@ public class StationsAutoPartageHandler extends ToulouseDataSetHandler {
         super(19163, "amenity=car_sharing");
         setName("Stations d'auto partage");
         setCategory(CAT_TRANSPORT);
-        getCsvHandler().setCharset(ISO8859_15);
+        getCsvHandler().setCharset(OdConstants.ISO8859_15);
     }
 
     @Override

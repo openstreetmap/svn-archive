@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.uk;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface BritishConstants extends OdConstants {
+public interface BritishConstants {
 
 	/**
 	 * Portal

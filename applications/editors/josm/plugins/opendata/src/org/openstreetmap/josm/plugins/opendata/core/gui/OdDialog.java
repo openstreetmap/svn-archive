@@ -31,9 +31,9 @@ import org.openstreetmap.josm.plugins.opendata.core.layers.OdLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
-public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeListener, EditLayerChangeListener {
+public class OdDialog extends ToggleDialog implements LayerChangeListener, EditLayerChangeListener {
 
-    private final SideButton selectButton;
+    //private final SideButton selectButton;
     private final SideButton downloadButton;
     private final SideButton diffButton;
     private final SideButton toolsButton;
@@ -90,12 +90,12 @@ public class OdDialog extends ToggleDialog implements OdConstants, LayerChangeLi
     }
 
 	public OdDialog() {
-		super("OpenData", ICON_CORE_24, tr("Open the OpenData window."), 
+		super("OpenData", OdConstants.ICON_CORE_24, tr("Open the OpenData window."), 
 				Shortcut.registerShortcut("subwindow:opendata", tr("Toggle: {0}", "OpenData"),
 						KeyEvent.VK_A, Shortcut.ALT_CTRL_SHIFT), 150, false, OdPreferenceSetting.class);
 		
 		this.buttons = Arrays.asList(new SideButton[] {
-				selectButton = new SideButton(new SelectAction()), 
+				/*selectButton =*/ new SideButton(new SelectAction()), 
 				downloadButton = new SideButton(new DownloadAction()), 
 				diffButton = new SideButton(new DiffAction()),
 				toolsButton = new SideButton(new ToolsAction())

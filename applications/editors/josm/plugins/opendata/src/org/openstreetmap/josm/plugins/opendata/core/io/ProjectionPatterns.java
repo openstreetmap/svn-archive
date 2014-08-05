@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public class ProjectionPatterns implements OdConstants {
+public class ProjectionPatterns {
 
 	private final Pattern xPattern;
 	private final Pattern yPattern;
@@ -16,7 +16,7 @@ public class ProjectionPatterns implements OdConstants {
 		this.xPattern = xPattern;
 		this.yPattern = yPattern;
 		this.projection = projection;
-		PROJECTIONS.add(this);
+		OdConstants.PROJECTIONS.add(this);
 	}
 
 	public ProjectionPatterns(Pattern xPattern, Pattern yPattern) {
@@ -24,11 +24,11 @@ public class ProjectionPatterns implements OdConstants {
 	}
 
 	public ProjectionPatterns(String proj, Projection projection) {
-		this(getCoordinatePattern(X_STRING, proj), getCoordinatePattern(Y_STRING, proj), projection);
+		this(getCoordinatePattern(OdConstants.X_STRING, proj), getCoordinatePattern(OdConstants.Y_STRING, proj), projection);
 	}
 
 	public ProjectionPatterns(String proj) {
-		this(getCoordinatePattern(X_STRING, proj), getCoordinatePattern(Y_STRING, proj), null);
+		this(getCoordinatePattern(OdConstants.X_STRING, proj), getCoordinatePattern(OdConstants.Y_STRING, proj), null);
 	}
 	
 	public final Pattern getXPattern() {

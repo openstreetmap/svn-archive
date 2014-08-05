@@ -30,7 +30,6 @@ import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.plugins.opendata.OdPlugin;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.xml.sax.SAXException;
 
@@ -38,7 +37,7 @@ import org.xml.sax.SAXException;
  * An asynchronous task for downloading module lists from the configured module download sites.
  *
  */
-public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable implements OdConstants {
+public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
 
     private Collection<String> sites;
     private boolean canceled;

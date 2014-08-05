@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.no;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface NorwegianConstants extends OdConstants {
+public interface NorwegianConstants {
 
 	/**
 	 * Portal

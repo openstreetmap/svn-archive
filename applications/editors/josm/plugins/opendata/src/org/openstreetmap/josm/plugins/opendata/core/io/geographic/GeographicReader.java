@@ -49,7 +49,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public abstract class GeographicReader extends AbstractReader implements OdConstants {
+public abstract class GeographicReader extends AbstractReader {
 
 	protected static CoordinateReferenceSystem wgs84;
 	static {
@@ -171,7 +171,7 @@ public abstract class GeographicReader extends AbstractReader implements OdConst
      * want to continue
      */
     protected static final boolean warnLenientMethod(final Component parent, final CoordinateReferenceSystem crs) {
-    	return new DialogPrompter() {
+    	return new DialogPrompter<ExtendedDialog>() {
 			@Override
 			protected ExtendedDialog buildDialog() {
 		        final ExtendedDialog dlg = new ExtendedDialog(parent,
@@ -264,11 +264,11 @@ public abstract class GeographicReader extends AbstractReader implements OdConst
     					if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
     						
     						Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
-    								Main.pref.getDouble(PREF_CRS_COMPARISON_TOLERANCE, DEFAULT_CRS_COMPARISON_TOLERANCE));
+    								Main.pref.getDouble(OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE));
     						if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
     							System.out.println("Found a potential CRS: "+candidate.getName());
     							candidates.add(candidate);
-    						} else if (Main.pref.getBoolean(PREF_CRS_COMPARISON_DEBUG, false)) {
+    						} else if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
     							compareDebug(crs, candidate);
     						}
     						Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);

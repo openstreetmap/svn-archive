@@ -55,7 +55,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ReadRemoteModuleInfo
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class ModulePreference implements SubPreferenceSetting, OdConstants {
+public class ModulePreference implements SubPreferenceSetting {
     /*public static class Factory implements PreferenceSettingFactory {
         public PreferenceSetting createPreferenceSetting() {
             return new ModulePreference();
@@ -220,7 +220,7 @@ public class ModulePreference implements SubPreferenceSetting, OdConstants {
         if (model.isActiveModulesChanged()) {
             LinkedList<String> l = new LinkedList<>(model.getSelectedModuleNames());
             Collections.sort(l);
-            Main.pref.putCollection(PREF_MODULES, l);
+            Main.pref.putCollection(OdConstants.PREF_MODULES, l);
             return true;
         }
         return false;

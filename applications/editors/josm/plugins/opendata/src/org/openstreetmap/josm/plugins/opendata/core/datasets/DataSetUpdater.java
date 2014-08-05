@@ -13,7 +13,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public abstract class DataSetUpdater implements OdConstants {
+public abstract class DataSetUpdater {
 
 	public static final void updateDataSet(DataSet dataSet, AbstractDataSetHandler handler, File associatedFile) {
 		if (dataSet != null && handler != null) {
@@ -24,7 +24,7 @@ public abstract class DataSetUpdater implements OdConstants {
 					handler.setSourceDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date(lastmodified)));
 				}
 			}
-			if (!Main.pref.getBoolean(PREF_RAWDATA)) {
+			if (!Main.pref.getBoolean(OdConstants.PREF_RAWDATA)) {
 				handler.updateDataSet(dataSet);
 			}
 			handler.checkDataSetSource(dataSet);

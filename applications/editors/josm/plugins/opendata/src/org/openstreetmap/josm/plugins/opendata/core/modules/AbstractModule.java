@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 
-public abstract class AbstractModule implements Module, OdConstants {
+public abstract class AbstractModule implements Module {
 
 	protected final List<Class<? extends AbstractDataSetHandler>> handlers = new ArrayList<>();
 
@@ -51,11 +51,11 @@ public abstract class AbstractModule implements Module, OdConstants {
 			if (handler != null && (src = handler.getMapPaintStyle()) != null) {
 				try {
 					// Copy style sheet to disk to allow JOSM to load it at startup (even making the plugin "early" does not allow it)
-					String path = OdPlugin.getInstance().getResourcesDirectory()+File.separator+src.url.replace(PROTO_RSRC, "").replace('/', File.separatorChar);
+					String path = OdPlugin.getInstance().getResourcesDirectory()+File.separator+src.url.replace(OdConstants.PROTO_RSRC, "").replace('/', File.separatorChar);
 					
 					int n = 0;
 					byte[] buffer = new byte[4096];
-					InputStream in = getClass().getResourceAsStream(src.url.substring(PROTO_RSRC.length()-1));
+					InputStream in = getClass().getResourceAsStream(src.url.substring(OdConstants.PROTO_RSRC.length()-1));
 					new File(path.substring(0, path.lastIndexOf(File.separatorChar))).mkdirs();
 					FileOutputStream out = new FileOutputStream(path);
 					while ((n = in.read(buffer)) > 0) {
@@ -65,7 +65,7 @@ public abstract class AbstractModule implements Module, OdConstants {
 					in.close();
 
 					// Add source pointing to the local file
-					src.url = PROTO_FILE+path;
+					src.url = OdConstants.PROTO_FILE+path;
 					sources.add(src);
 				} catch (IOException e) {
 					System.err.println(e.getMessage());

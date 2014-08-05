@@ -10,12 +10,11 @@ import java.util.zip.ZipInputStream;
 
 import org.jopendocument.io.SaxContentUnmarshaller;
 import org.jopendocument.model.OpenDocument;
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public class OdsDocument extends OpenDocument implements OdConstants {
+public class OdsDocument extends OpenDocument {
 
 	public OdsDocument(InputStream in) {
 		loadFrom(in);

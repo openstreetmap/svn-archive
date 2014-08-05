@@ -7,13 +7,18 @@
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
     <property name="plugin.requires" value="jts;geotools;utilsplugin2"/>
+    <fileset id="plugin.requires.jars" dir="../../dist">
+        <include name="jts.jar"/>
+        <include name="geotools.jar"/>
+        <include name="opendata.jar"/>
+    </fileset>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-	
+    
     <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
     <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
-	
+    
     <!--
     **********************************************************
     ** compile_lang3 - compiles Apache Commons Lang 3 needed classes
@@ -49,10 +54,10 @@
     <target name="compile_jopendoc" depends="init, compile_collections">
         <echo message="compiling JOpenDocument ... "/>
         <javac srcdir="includes/org/jopendocument" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" >
-        	<classpath>
-        		<!-- JDOM is required and embededd in geotools jar -->
-        		<pathelement location="${geotools}"/>
-        	</classpath>
+            <classpath>
+                <!-- JDOM is required and embedded in geotools jar -->
+                <pathelement location="${geotools}"/>
+            </classpath>
         </javac>
     </target>
     <!--
@@ -79,10 +84,10 @@
     **********************************************************
     -->
     <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
-        <echo message="compiling sources for  ${plugin.jar} ... "/>
+        <echo message="compiling sources for ${plugin.jar} ... "/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
             <classpath>
-        	    <pathelement path="${plugin.build.dir}"/>
+                <pathelement path="${plugin.build.dir}"/>
                 <pathelement location="${josm}"/>
                 <pathelement location="${jts}"/>
                 <pathelement location="${geotools}"/>
@@ -97,7 +102,7 @@
             <fileset dir="lib/jaxb" includes="*.jar" />
           </classpath>
     </taskdef>
-	
+    
     <target name="xjc_neptune">
         <xjc schema="resources/neptune/neptune.xsd" destdir="includes" package="neptune" target="2.1" />
     </target>

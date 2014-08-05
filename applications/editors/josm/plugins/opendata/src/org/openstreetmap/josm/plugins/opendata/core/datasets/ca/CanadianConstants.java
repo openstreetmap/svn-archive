@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.ca;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface CanadianConstants extends OdConstants {
+public interface CanadianConstants {
 
 	/**
 	 * Portal

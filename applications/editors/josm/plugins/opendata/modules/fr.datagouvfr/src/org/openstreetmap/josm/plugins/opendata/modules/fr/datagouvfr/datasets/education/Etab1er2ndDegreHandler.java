@@ -5,6 +5,7 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 
@@ -13,7 +14,7 @@ public class Etab1er2ndDegreHandler extends DataGouvDataSetHandler {
 	private class EtabCsvHandler extends DefaultCsvHandler {
 		
 		public EtabCsvHandler() {
-			setCharset(ISO8859_15);
+			setCharset(OdConstants.ISO8859_15);
 			setHandlesProjection(true);
 		}
 		

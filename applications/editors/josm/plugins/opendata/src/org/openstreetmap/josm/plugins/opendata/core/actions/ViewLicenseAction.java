@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
-public class ViewLicenseAction extends JosmAction implements OdConstants {
+public class ViewLicenseAction extends JosmAction {
 
 	private final License license;
 	
@@ -21,7 +21,7 @@ public class ViewLicenseAction extends JosmAction implements OdConstants {
 		super(title, null, description, null, false);
 		CheckParameterUtil.ensureParameterNotNull(license, "license");
 		this.license = license;
-        putValue(Action.SMALL_ICON, OdUtils.getImageIcon(ICON_AGREEMENT_24));
+        putValue(Action.SMALL_ICON, OdUtils.getImageIcon(OdConstants.ICON_AGREEMENT_24));
 	}
 
 	@Override

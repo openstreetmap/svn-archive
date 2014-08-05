@@ -19,7 +19,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleException;
 import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleInformation;
 
-public class ModulePreferencesModel extends Observable implements OdConstants {
+public class ModulePreferencesModel extends Observable {
     private final ArrayList<ModuleInformation> availableModules = new ArrayList<>();
     private final ArrayList<ModuleInformation> displayedModules = new ArrayList<>();
     private final HashMap<ModuleInformation, Boolean> selectedModulesMap = new HashMap<>();
@@ -28,7 +28,7 @@ public class ModulePreferencesModel extends Observable implements OdConstants {
     private final Set<String> currentActiveModules;
 
     protected Collection<String> getModules(Collection<String> def) {
-    	return Main.pref.getCollection(PREF_MODULES, def);
+    	return Main.pref.getCollection(OdConstants.PREF_MODULES, def);
     }
     
     public ModulePreferencesModel() {

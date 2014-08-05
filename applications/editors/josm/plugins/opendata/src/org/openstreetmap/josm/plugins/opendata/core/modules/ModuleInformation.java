@@ -33,7 +33,7 @@ import org.openstreetmap.josm.tools.LanguageInfo;
  * Encapsulate general information about a module. This information is available
  * without the need of loading any class from the module jar file.
  */
-public class ModuleInformation implements OdConstants {
+public class ModuleInformation {
     public File file = null;
     public String name = null;
     public String className = null;
@@ -217,7 +217,7 @@ public class ModuleInformation implements OdConstants {
         if (link != null) {
             sb.append(" <a href=\"").append(link).append("\">").append(tr("More info...")).append("</a>");
         }
-        if (downloadlink != null && !downloadlink.startsWith(OSM_SITE+"dist/")) {
+        if (downloadlink != null && !downloadlink.startsWith(OdConstants.OSM_SITE+"dist/")) {
             sb.append("<p>&nbsp;</p><p>"+tr("<b>Module provided by an external source:</b> {0}", downloadlink)+"</p>");
         }
         sb.append("</body></html>");
@@ -346,7 +346,7 @@ public class ModuleInformation implements OdConstants {
 
     public ImageIcon getScaledIcon() {
         if (icon == null)
-            return OdUtils.getImageIcon(ICON_EMPTY_24);
+            return OdUtils.getImageIcon(OdConstants.ICON_EMPTY_24);
         return new ImageIcon(icon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
     }
 }

@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.datasets.au;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface AustralianConstants extends OdConstants {
+public interface AustralianConstants {
 
 	/**
 	 * Portal

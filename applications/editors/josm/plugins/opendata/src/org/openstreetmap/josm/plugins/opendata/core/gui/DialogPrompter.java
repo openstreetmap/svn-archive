@@ -36,7 +36,7 @@ public class DialogPrompter <T extends ExtendedDialog> implements Runnable {
 		}
 	}
 	
-	public final DialogPrompter promptInEdt() {
+	public final DialogPrompter<T> promptInEdt() {
 		if (SwingUtilities.isEventDispatchThread()) {
 			run();
 		} else {

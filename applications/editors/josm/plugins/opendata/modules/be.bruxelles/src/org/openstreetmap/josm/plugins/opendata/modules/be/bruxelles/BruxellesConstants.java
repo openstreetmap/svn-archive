@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface BruxellesConstants extends OdConstants {
+public interface BruxellesConstants {
 	
 	/**
 	 * Source

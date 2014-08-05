@@ -55,7 +55,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * and manage the loaded modules.
  *
  */
-public class ModuleHandler implements OdConstants {
+public class ModuleHandler {
 
     /**
      * All installed and loaded modules (resp. their main classes)
@@ -250,7 +250,7 @@ public class ModuleHandler implements OdConstants {
             e.printStackTrace();
         }
         if (msg != null && confirmDisableModule(parent, msg, module.name)) {
-            Main.pref.removeFromCollection(PREF_MODULES, module.name);
+            Main.pref.removeFromCollection(OdConstants.PREF_MODULES, module.name);
         }
     }
 
@@ -358,9 +358,9 @@ public class ModuleHandler implements OdConstants {
      */
     public static List<ModuleInformation> buildListOfModulesToLoad(Component parent) {
         Set<String> modules = new HashSet<>();
-        modules.addAll(Main.pref.getCollection(PREF_MODULES,  new LinkedList<String>()));
-        if (System.getProperty("josm."+PREF_MODULES) != null) {
-            modules.addAll(Arrays.asList(System.getProperty("josm."+PREF_MODULES).split(",")));
+        modules.addAll(Main.pref.getCollection(OdConstants.PREF_MODULES,  new LinkedList<String>()));
+        if (System.getProperty("josm."+OdConstants.PREF_MODULES) != null) {
+            modules.addAll(Arrays.asList(System.getProperty("josm."+OdConstants.PREF_MODULES).split(",")));
         }
         Map<String, ModuleInformation> infos = loadLocallyAvailableModuleInformation(null);
         List<ModuleInformation> ret = new LinkedList<>();

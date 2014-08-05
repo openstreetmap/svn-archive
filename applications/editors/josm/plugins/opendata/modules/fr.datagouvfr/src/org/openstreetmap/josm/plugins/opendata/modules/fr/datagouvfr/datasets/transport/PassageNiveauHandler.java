@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.t
 
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
 
 public class PassageNiveauHandler extends DataGouvDataSetHandler {
@@ -11,7 +12,7 @@ public class PassageNiveauHandler extends DataGouvDataSetHandler {
 		super("Passages-à-niveau-30383135");
 		setName("Passages à niveau");
 		setDownloadFileName("passage_a_niveau.csv");
-		getCsvHandler().setCharset(ISO8859_15);
+		getCsvHandler().setCharset(OdConstants.ISO8859_15);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
+import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
 
@@ -23,7 +24,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
 
 	private String nationalPortalPath;
 
-	protected static final Projection lambert93 = PRJ_LAMBERT_93.getProjection(); // France metropolitaine
+	protected static final Projection lambert93 = OdConstants.PRJ_LAMBERT_93.getProjection(); // France metropolitaine
 	protected static final Projection utm20 = Projections.getProjectionByCode("EPSG:32620"); // UTM 20 N - Guadeloupe, Martinique
 	protected static final Projection utm22 = Projections.getProjectionByCode("EPSG:32622"); // UTM 22 N - Guyane
 	protected static final Projection utm38 = Projections.getProjectionByCode("EPSG:32738"); // UTM 38 S - Mayotte

@@ -1,17 +1,14 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.plugins.opendata.core.io.LambertCC9ZonesProjectionPatterns;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
-public interface OdConstants {
+public abstract class OdConstants {
 	
 	/**
 	 * Encodings
@@ -19,6 +16,7 @@ public interface OdConstants {
 	public static final String UTF8 = "UTF-8";
 	public static final String ISO8859_15 = "ISO-8859-15";
 	public static final String CP850 = "Cp850";
+    public static final String CP1251 = "Cp1251";
 	public static final String CP1252 = "Cp1252";
 	public static final String MAC_ROMAN = "MacRoman";
 	
@@ -99,27 +97,13 @@ public interface OdConstants {
     public static final String PROTO_RSRC = "resource://";
     
     /**
-     * File filter used in import/export dialogs.
-     */
-    public static final ExtensionFileFilter CSV_FILE_FILTER = new ExtensionFileFilter(CSV_EXT, CSV_EXT, tr("CSV files") + " (*."+CSV_EXT+")");
-    public static final ExtensionFileFilter XLS_FILE_FILTER = new ExtensionFileFilter(XLS_EXT, XLS_EXT, tr("XLS files") + " (*."+XLS_EXT+")");
-    public static final ExtensionFileFilter ODS_FILE_FILTER = new ExtensionFileFilter(ODS_EXT, ODS_EXT, tr("ODS files") + " (*."+ODS_EXT+")");
-    public static final ExtensionFileFilter SHP_FILE_FILTER = new ExtensionFileFilter(SHP_EXT, SHP_EXT, tr("Shapefiles") + " (*."+SHP_EXT+")");
-    public static final ExtensionFileFilter MIF_TAB_FILE_FILTER = new ExtensionFileFilter(MIF_EXT+","+TAB_EXT, MIF_EXT, tr("MapInfo files") + " (*."+MIF_EXT+",*."+TAB_EXT+")");
-    public static final ExtensionFileFilter KML_KMZ_FILE_FILTER = new ExtensionFileFilter(KML_EXT+","+KMZ_EXT, KMZ_EXT, tr("KML/KMZ files") + " (*."+KML_EXT+",*."+KMZ_EXT+")");
-    public static final ExtensionFileFilter GML_FILE_FILTER = new ExtensionFileFilter(GML_EXT, GML_EXT, tr("GML files") + " (*."+GML_EXT+")");
-    public static final ExtensionFileFilter ZIP_FILE_FILTER = new ExtensionFileFilter(ZIP_EXT, ZIP_EXT, tr("Zip Files") + " (*."+ZIP_EXT+")");
-    public static final ExtensionFileFilter SEVENZIP_FILE_FILTER = new ExtensionFileFilter(SEVENZIP_EXT, SEVENZIP_EXT, tr("7Zip Files") + " (*."+SEVENZIP_EXT+")");
-    public static final ExtensionFileFilter XML_FILE_FILTER = new ExtensionFileFilter(XML_EXT, XML_EXT, tr("OpenData XML files") + " (*."+XML_EXT+")");
-    
-    /**
      * Coordinates fields
      */
     public static final String X_STRING = "X|LON|LONGI|.*LONGITUDE.*|EASTING";
     public static final String Y_STRING = "Y|LAT|LATI|.*LATITUDE.*|NORTHING";
     
     // The list of all ProjectionPatterns (filled at each constructor call)
-    public static final Collection<ProjectionPatterns> PROJECTIONS = new ArrayList<ProjectionPatterns>();
+    public static final Collection<ProjectionPatterns> PROJECTIONS = new ArrayList<>();
     
     public static final ProjectionPatterns PRJ_WGS84 = new ProjectionPatterns("GPS|WGS84|°décimaux", Projections.getProjectionByCode("EPSG:4326"));
     public static final ProjectionPatterns PRJ_LAMBERT_93 = new ProjectionPatterns("LAMB93|L93", Projections.getProjectionByCode("EPSG:2154"));

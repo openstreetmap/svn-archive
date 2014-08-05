@@ -1,9 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.modules.fr.paris;
 
-import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public interface ParisConstants extends OdConstants {
+public interface ParisConstants {
 		
 	/**
 	 * Source

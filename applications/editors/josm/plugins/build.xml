@@ -23,6 +23,7 @@
         <ant target="dist" dir="cadastre-fr"/>
         <ant target="dist" dir="canvec_helper"/>
         <ant target="dist" dir="colorscheme"/>
+        <ant target="dist" dir="conflation"/>
         <ant target="dist" dir="ColumbusCSV"/>
         <ant target="dist" dir="CommandLine"/>
         <ant target="dist" dir="Create_grid_of_ways"/>
@@ -121,6 +122,7 @@
         <ant target="clean" dir="cadastre-fr"/>
         <ant target="clean" dir="canvec_helper"/>
         <ant target="clean" dir="colorscheme"/>
+        <ant target="clean" dir="conflation"/>
         <ant target="clean" dir="ColumbusCSV"/>
         <ant target="clean" dir="CommandLine"/>
         <ant target="clean" dir="Create_grid_of_ways"/>

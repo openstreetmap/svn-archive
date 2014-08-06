@@ -3,7 +3,6 @@ package org.j7zip.SevenZip.Archive.Common;
 
 import java.io.IOException;
 
-import org.j7zip.SevenZip.HRESULT;
 import org.j7zip.SevenZip.ICompressCoder;
 import org.j7zip.SevenZip.ICompressSetOutStream;
 

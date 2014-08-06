@@ -30,7 +30,7 @@ public class Tuple2<A, B> {
 
     // just to make the code shorter
     public static final <A, B> Tuple2<A, B> create(A a, B b) {
-        return new Tuple2<A, B>(a, b);
+        return new Tuple2<>(a, b);
     }
 
     private final A a;

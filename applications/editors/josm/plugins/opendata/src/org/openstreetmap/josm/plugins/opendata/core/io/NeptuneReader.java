@@ -38,6 +38,7 @@ import neptune.StopAreaType;
 import neptune.StopPointType;
 import neptune.TridentObjectType;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
@@ -102,14 +103,14 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 				Schema schema = schemaFactory.newSchema(schemaURL);
 				Validator validator = schema.newValidator();
 				validator.validate(xmlFile);
-				System.out.println(xmlFile.getSystemId() + " is valid");
+				Main.info(xmlFile.getSystemId() + " is valid");
 				return true;
 			} catch (SAXException e) {
-				System.out.println(xmlFile.getSystemId() + " is NOT valid");
-				System.out.println("Reason: " + e.getLocalizedMessage());
+				Main.error(xmlFile.getSystemId() + " is NOT valid");
+				Main.error("Reason: " + e.getLocalizedMessage());
 			} catch (IOException e) {
-				System.out.println(xmlFile.getSystemId() + " is NOT valid");
-				System.out.println("Reason: " + e.getLocalizedMessage());
+			    Main.error(xmlFile.getSystemId() + " is NOT valid");
+			    Main.error("Reason: " + e.getLocalizedMessage());
 			} finally {
 				try {
 					in.close();
@@ -118,7 +119,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
+		    Main.error(e.getMessage());
 		}
 		
 		return false;
@@ -316,17 +317,17 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
 							System.err.println("Cannot find StopPoint: "+childId);
 						} else {
 							// TODO
-							System.out.println("TODO: handle StopPoint "+childId);
+							Main.info("TODO: handle StopPoint "+childId);
 						}
 
 					} else {
-						System.err.println("Unsupported child: "+childId);
+						Main.warn("Unsupported child: "+childId);
 					}
 				}
 			} else if (sa.getStopAreaExtension().getAreaType().equals(ChouetteAreaType.BOARDING_POSITION)) {
-				//System.out.println("skipping StopArea with type "+sa.getStopAreaExtension().getAreaType()+": "+sa.getObjectId());
+				//Main.info("skipping StopArea with type "+sa.getStopAreaExtension().getAreaType()+": "+sa.getObjectId());
 			} else {
-				System.err.println("Unsupported StopArea type: "+sa.getStopAreaExtension().getAreaType());
+			    Main.warn("Unsupported StopArea type: "+sa.getStopAreaExtension().getAreaType());
 			}
 		}
 

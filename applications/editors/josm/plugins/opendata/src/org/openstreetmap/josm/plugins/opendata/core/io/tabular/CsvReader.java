@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -42,7 +43,7 @@ public class CsvReader extends SpreadSheetReader {
 		} catch (IllegalArgumentException e) {
 			if (csvHandler == null || csvHandler.getSeparator() == null || ";".equals(csvHandler.getSeparator())) {
 				// If default sep has been used, try comma
-				System.out.println(e.getMessage());
+				Main.warn(e.getMessage());
 				csvReader.sep = ",";
 				return csvReader.doParse(csvReader.splitLine(), instance);
 			} else {
@@ -53,7 +54,7 @@ public class CsvReader extends SpreadSheetReader {
 
 	@Override
 	protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
-		System.out.println("Parsing CSV file using charset "+charset+" and separator '"+sep+"'");
+		Main.info("Parsing CSV file using charset "+charset+" and separator '"+sep+"'");
 
 		reader = new BufferedReader(new InputStreamReader(in, charset));
 	}

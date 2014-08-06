@@ -24,7 +24,7 @@ import java.util.List;
 public class TableTable {
 
     // Une colonne ou ligne repeated est dupliquée dans la liste
-    ArrayList<TableTableColumn> columns = new ArrayList<TableTableColumn>();
+    ArrayList<TableTableColumn> columns = new ArrayList<>();
 
     private int printStartCol = 0;
 
@@ -34,7 +34,7 @@ public class TableTable {
 
     private int printStopRow = 0;
 
-    ArrayList<TableTableRow> rows = new ArrayList<TableTableRow>();
+    ArrayList<TableTableRow> rows = new ArrayList<>();
 
     public void addColumn(final TableTableColumn col) {
         for (int i = 0; i < col.getTableNumberColumnsRepeated(); i++) {

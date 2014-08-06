@@ -10,8 +10,8 @@ import org.j7zip.SevenZip.Archive.Common.BindPair;
 
 
 class Folder {
-    public RecordVector<CoderInfo> Coders = new RecordVector<CoderInfo>();
-    RecordVector<BindPair> BindPairs = new RecordVector<BindPair>();
+    public RecordVector<CoderInfo> Coders = new RecordVector<>();
+    RecordVector<BindPair> BindPairs = new RecordVector<>();
     IntVector PackStreams = new IntVector();
     LongVector UnPackSizes = new LongVector();
     int UnPackCRC;

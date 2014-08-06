@@ -83,7 +83,7 @@ public class Handler implements org.j7zip.SevenZip.Archive.IInArchive {
         if(numItems == 0)
             return HRESULT.S_OK;
         
-        ObjectVector<ExtractFolderInfo> extractFolderInfoVector = new ObjectVector<ExtractFolderInfo>();
+        ObjectVector<ExtractFolderInfo> extractFolderInfoVector = new ObjectVector<>();
         for(int ii = 0; ii < numItems; ii++) {
             int ref2Index = allFilesMode ? ii : indices[ii];
             

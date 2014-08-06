@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
@@ -34,7 +35,7 @@ public class XlsReader extends SpreadSheetReader {
 
 	@Override
 	protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
-		System.out.println("Parsing XLS file");
+	    Main.info("Parsing XLS file");
 		try {
 			wb = new HSSFWorkbook(new POIFSFileSystem(in));
 			sheet = wb.getSheetAt(getSheetNumber());

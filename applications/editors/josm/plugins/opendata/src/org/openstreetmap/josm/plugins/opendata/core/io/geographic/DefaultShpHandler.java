@@ -50,7 +50,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
 	private static final boolean equals(Double a, Double b) {
 		boolean res = Math.abs(a - b) <= Main.pref.getDouble(OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE);
 		if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
-			System.out.println("Comparing "+a+" and "+b+" -> "+res);
+			Main.debug("Comparing "+a+" and "+b+" -> "+res);
 		}
 		return res; 
 	}

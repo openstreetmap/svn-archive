@@ -80,7 +80,7 @@ public enum XMLVersion {
     private final Map<String, Namespace> nss;
 
     private XMLVersion(String name, Namespace manifest) {
-        this.nss = new HashMap<String, Namespace>(16);
+        this.nss = new HashMap<>(16);
     }
 
     protected final void putMandatory(String office, String style, String text, String table) {

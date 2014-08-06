@@ -10,6 +10,7 @@ import java.util.zip.ZipInputStream;
 
 import org.jopendocument.io.SaxContentUnmarshaller;
 import org.jopendocument.model.OpenDocument;
+import org.openstreetmap.josm.Main;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -43,7 +44,7 @@ public class OdsDocument extends OpenDocument {
             while (!contentParsed && (entry = zis.getNextEntry()) != null) {
             	if (entry.getName().equals("content.xml")) {
                     rdr.setContentHandler(contentHandler);
-                    System.out.println("Parsing content.xml");
+                    Main.info("Parsing content.xml");
                     rdr.parse(getEntryInputSource(zis));
             		contentParsed = true;
             	}

@@ -44,7 +44,7 @@ class Decoder {
         _bindInfoExPrev = new BindInfoEx();
         
         _mixerCoder = null;
-        _decoders = new ObjectVector<Object>();
+        _decoders = new ObjectVector<>();
         
         // #ifndef EXCLUDE_COM -- LoadMethodMap();
     }
@@ -116,7 +116,7 @@ class Decoder {
             ) throws IOException {
         
         
-        ObjectVector<java.io.InputStream> inStreams = new ObjectVector<java.io.InputStream>(); // CObjectVector< CMyComPtr<ISequentialInStream> >
+        ObjectVector<java.io.InputStream> inStreams = new ObjectVector<>(); // CObjectVector< CMyComPtr<ISequentialInStream> >
         
         LockedInStream lockedInStream = new LockedInStream();
         lockedInStream.Init(inStream);
@@ -356,12 +356,12 @@ class Decoder {
         
         if (numCoders == 0)
             return 0;
-        RecordVector<java.io.InputStream> inStreamPointers = new RecordVector<java.io.InputStream>(); // CRecordVector<ISequentialInStream *>
+        RecordVector<java.io.InputStream> inStreamPointers = new RecordVector<>(); // CRecordVector<ISequentialInStream *>
         inStreamPointers.Reserve(inStreams.size());
         for (i = 0; i < inStreams.size(); i++)
             inStreamPointers.add(inStreams.get(i));
 
-        RecordVector<java.io.OutputStream> outStreamPointer = new RecordVector<java.io.OutputStream>();
+        RecordVector<java.io.OutputStream> outStreamPointer = new RecordVector<>();
         outStreamPointer.add(outStream);
         return _mixerCoder.Code(
                 inStreamPointers, //&inStreamPointers.Front(),

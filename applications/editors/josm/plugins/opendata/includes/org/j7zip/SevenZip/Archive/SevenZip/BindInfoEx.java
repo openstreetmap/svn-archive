@@ -6,7 +6,7 @@ import org.j7zip.SevenZip.Archive.Common.BindInfo;
 
 class BindInfoEx extends BindInfo {
     
-    RecordVector<MethodID> CoderMethodIDs = new RecordVector<MethodID>();
+    RecordVector<MethodID> CoderMethodIDs = new RecordVector<>();
     
     public void Clear() {
         super.Clear(); // CBindInfo::Clear();

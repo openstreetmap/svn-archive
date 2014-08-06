@@ -19,7 +19,7 @@ import org.j7zip.SevenZip.ICompressSetOutStreamSize;
 public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
     
     BindInfo _bindInfo = new BindInfo();
-    ObjectVector<STCoderInfo> _coders = new ObjectVector<STCoderInfo>();
+    ObjectVector<STCoderInfo> _coders = new ObjectVector<>();
     
     public CoderMixer2ST() {
     }
@@ -201,8 +201,8 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
         // _mainCoderIndex = _coders.Size() - 1;
         CoderInfo mainCoder = _coders.get(_mainCoderIndex);
         
-        ObjectVector< java.io.InputStream > seqInStreams = new ObjectVector< java.io.InputStream >(); // CObjectVector< CMyComPtr<ISequentialInStream> >
-        ObjectVector< java.io.OutputStream > seqOutStreams = new ObjectVector< java.io.OutputStream >(); // CObjectVector< CMyComPtr<ISequentialOutStream> >
+        ObjectVector< java.io.InputStream > seqInStreams = new ObjectVector< >(); // CObjectVector< CMyComPtr<ISequentialInStream> >
+        ObjectVector< java.io.OutputStream > seqOutStreams = new ObjectVector< >(); // CObjectVector< CMyComPtr<ISequentialOutStream> >
         int startInIndex = _bindInfo.GetCoderInStreamIndex(_mainCoderIndex);
         int startOutIndex = _bindInfo.GetCoderOutStreamIndex(_mainCoderIndex);
         for (i = 0; i < mainCoder.NumInStreams; i++) {
@@ -219,8 +219,8 @@ public class CoderMixer2ST implements ICompressCoder2 , CoderMixer2 {
             java.io.OutputStream seqOutStream = tmp[0];
             seqOutStreams.add(seqOutStream);
         }
-        RecordVector< java.io.InputStream > seqInStreamsSpec = new RecordVector< java.io.InputStream >();
-        RecordVector< java.io.OutputStream > seqOutStreamsSpec = new RecordVector< java.io.OutputStream >();
+        RecordVector< java.io.InputStream > seqInStreamsSpec = new RecordVector< >();
+        RecordVector< java.io.OutputStream > seqOutStreamsSpec = new RecordVector< >();
         for (i = 0; i < mainCoder.NumInStreams; i++)
             seqInStreamsSpec.add(seqInStreams.get(i));
         for (i = 0; i < mainCoder.NumOutStreams; i++)

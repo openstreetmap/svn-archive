@@ -31,7 +31,7 @@ class InArchive extends Header {
     long _position;
     
     public InArchive() {
-        _inByteVector = new ObjectVector<InByte2>();
+        _inByteVector = new ObjectVector<>();
         _inByteBack = new InByte2();
     }
     
@@ -709,7 +709,7 @@ class InArchive extends Header {
         BoolVector packCRCsDefined = new BoolVector(); // CRecordVector<bool> packCRCsDefined;
         IntVector packCRCs = new IntVector(); // CRecordVector<UInt32> packCRCs;
         
-        ObjectVector<Folder> folders = new ObjectVector<Folder>();
+        ObjectVector<Folder> folders = new ObjectVector<>();
         
         IntVector numUnPackStreamsInFolders = new IntVector();
         LongVector unPackSizes = new LongVector();
@@ -822,7 +822,7 @@ class InArchive extends Header {
         StreamSwitch streamSwitch = new StreamSwitch();
         streamSwitch.Set(this, buffer2);
         
-        ObjectVector<ByteBuffer> dataVector = new ObjectVector<ByteBuffer>(); // CObjectVector<CByteBuffer> dataVector;
+        ObjectVector<ByteBuffer> dataVector = new ObjectVector<>(); // CObjectVector<CByteBuffer> dataVector;
         
         for (;;) {
             long type = ReadID();
@@ -862,7 +862,7 @@ class InArchive extends Header {
             type = ReadID();
         }
         
-        ObjectVector<ByteBuffer> dataVector = new ObjectVector<ByteBuffer>();
+        ObjectVector<ByteBuffer> dataVector = new ObjectVector<>();
         
         if (type == NID.kAdditionalStreamsInfo) {
             long [] ltmp = new long[1];

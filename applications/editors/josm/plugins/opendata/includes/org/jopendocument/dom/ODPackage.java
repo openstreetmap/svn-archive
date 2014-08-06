@@ -36,7 +36,7 @@ public class ODPackage {
 
     private static final Set<String> subdocNames;
     static {
-        subdocNames = new HashSet<String>();
+        subdocNames = new HashSet<>();
         // section 2.1 of OpenDocument-v1.1-os.odt
         subdocNames.add("content.xml");
         subdocNames.add("styles.xml");
@@ -48,7 +48,7 @@ public class ODPackage {
     private File file;
 
     public ODPackage() {
-        this.files = new HashMap<String, ODPackageEntry>();
+        this.files = new HashMap<>();
         this.file = null;
     }
 

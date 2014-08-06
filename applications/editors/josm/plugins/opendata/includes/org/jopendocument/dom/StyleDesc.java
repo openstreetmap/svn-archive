@@ -67,9 +67,9 @@ public abstract class StyleDesc<S extends StyleStyle> {
         this.version = version;
         this.family = family;
         this.baseName = baseName;
-        this.refElements = new CollectionMap<String, String>();
+        this.refElements = new CollectionMap<>();
         // 4 since they are not common
-        this.multiRefElements = new CollectionMap<String, String>(4);
+        this.multiRefElements = new CollectionMap<>(4);
     }
 
     public abstract S create(ODPackage pkg, Element e);

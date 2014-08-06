@@ -6,7 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
@@ -55,35 +59,62 @@ public abstract class ArchiveReader extends AbstractReader {
     protected abstract void extractArchive(final File temp, final List<File> candidates) throws IOException, FileNotFoundException;
     
     protected abstract String getTaskMessage();
-        
-    public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
-        
-        final File temp = OdUtils.createTempDir();
+    
+    protected Collection<File> getDocsToParse(final File temp, final ProgressMonitor progressMonitor) throws FileNotFoundException, IOException {
         final List<File> candidates = new ArrayList<>();
         
-        try {
-            if (progressMonitor != null) {
-                progressMonitor.beginTask(getTaskMessage());
-            }
-            extractArchive(temp, candidates);
-            
-            file = null;
-            
-            if (promptUser && candidates.size() > 1) {
-                DialogPrompter<CandidateChooser> prompt = new DialogPrompter<CandidateChooser>() {
-                    @Override
-                    protected CandidateChooser buildDialog() {
-                        return new CandidateChooser(progressMonitor.getWindowParent(), candidates);
-                    }
-                };
-                if (prompt.promptInEdt().getValue() == 1) {
-                    file = prompt.getDialog().getSelectedFile();
+        if (progressMonitor != null) {
+            progressMonitor.beginTask(getTaskMessage());
+        }
+        extractArchive(temp, candidates);
+        
+        if (promptUser && candidates.size() > 1) {
+            DialogPrompter<CandidateChooser> prompt = new DialogPrompter<CandidateChooser>() {
+                @Override
+                protected CandidateChooser buildDialog() {
+                    return new CandidateChooser(progressMonitor.getWindowParent(), candidates);
                 }
-            } else if (!candidates.isEmpty()) {
-                file = candidates.get(0);
+            };
+            if (prompt.promptInEdt().getValue() == 1) {
+                return Collections.singleton(prompt.getDialog().getSelectedFile());
+            }
+        } else if (!candidates.isEmpty()) {
+            return candidates;
+        }
+        return Collections.emptyList();
+    }
+    
+    public Map<File, DataSet> parseDocs(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+        Map<File, DataSet> result = new HashMap<>();
+        File temp = OdUtils.createTempDir();
+        try {
+            file = null;
+            for (File f : getDocsToParse(temp, progressMonitor)) {
+                DataSet from = getDataForFile(f, progressMonitor);
+                if (from != null) {
+                    result.put(f, from);
+                }
+            }
+        } finally {
+            OdUtils.deleteDir(temp);
+            if (progressMonitor != null) {
+                progressMonitor.finishTask();
+            }
+        }
+        return result;
+    }
+    
+    public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
+        File temp = OdUtils.createTempDir();
+        
+        try {
+            file = null;        
+            Collection<File> files = getDocsToParse(temp, progressMonitor);
+            if (!files.isEmpty()) {
+                file = files.iterator().next();
             }
             
-            DataSet from = getDataForFile(progressMonitor);
+            DataSet from = getDataForFile(file, progressMonitor);
             if (from != null) {
                 ds = from;
             }
@@ -99,47 +130,48 @@ public abstract class ArchiveReader extends AbstractReader {
         return ds;
     }
 
-    protected DataSet getDataForFile(final ProgressMonitor progressMonitor)
+    protected DataSet getDataForFile(File f, final ProgressMonitor progressMonitor)
             throws FileNotFoundException, IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
-        if (file == null) {
+        if (f == null) {
             return null;
-        } else if (!file.exists()) {
-            Main.warn("File does not exist: "+file.getPath());
+        } else if (!f.exists()) {
+            Main.warn("File does not exist: "+f.getPath());
             return null;
         } else {
+            Main.info("Parsing file "+f.getName());
             DataSet from = null;
-            FileInputStream in = new FileInputStream(file);
+            FileInputStream in = new FileInputStream(f);
             ProgressMonitor instance = null;
             if (progressMonitor != null) {
                 instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
             }
-            if (file.getName().toLowerCase().endsWith(OdConstants.CSV_EXT)) {
+            if (f.getName().toLowerCase().endsWith(OdConstants.CSV_EXT)) {
                 from = CsvReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.KML_EXT)) {
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.KML_EXT)) {
                 from = KmlReader.parseDataSet(in, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.KMZ_EXT)) {
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.KMZ_EXT)) {
                 from = KmzReader.parseDataSet(in, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.XLS_EXT)) {
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.XLS_EXT)) {
                 from = XlsReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.ODS_EXT)) {
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.ODS_EXT)) {
                 from = OdsReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.SHP_EXT)) {
-                from = ShpReader.parseDataSet(in, file, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.MIF_EXT)) {
-                from = MifReader.parseDataSet(in, file, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.TAB_EXT)) {
-                from = TabReader.parseDataSet(in, file, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.GML_EXT)) {
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.SHP_EXT)) {
+                from = ShpReader.parseDataSet(in, f, handler, instance);
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.MIF_EXT)) {
+                from = MifReader.parseDataSet(in, f, handler, instance);
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.TAB_EXT)) {
+                from = TabReader.parseDataSet(in, f, handler, instance);
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.GML_EXT)) {
                 from = GmlReader.parseDataSet(in, handler, instance);
-            } else if (file.getName().toLowerCase().endsWith(OdConstants.XML_EXT)) {
-                if (OdPlugin.getInstance().xmlImporter.acceptFile(file)) {
+            } else if (f.getName().toLowerCase().endsWith(OdConstants.XML_EXT)) {
+                if (OdPlugin.getInstance().xmlImporter.acceptFile(f)) {
                     from = NeptuneReader.parseDataSet(in, handler, instance);
                 } else {
-                    System.err.println("Unsupported XML file: "+file.getName());
+                    System.err.println("Unsupported XML file: "+f.getName());
                 }
                 
             } else {
-                System.err.println("Unsupported file extension: "+file.getName());
+                System.err.println("Unsupported file extension: "+f.getName());
             }
             return from;
         }
@@ -150,7 +182,6 @@ public abstract class ArchiveReader extends AbstractReader {
         for (String ext : NetworkReader.FILE_READERS.keySet()) {
             if (entryName.toLowerCase().endsWith("."+ext)) {
                 candidates.add(file);
-                System.out.println(entryName);
                 break;
             }
         }
@@ -158,7 +189,6 @@ public abstract class ArchiveReader extends AbstractReader {
         if (XmlImporter.XML_FILE_FILTER.accept(file) && ((archiveHandler != null && archiveHandler.skipXsdValidation()) 
                 || OdPlugin.getInstance().xmlImporter.acceptFile(file))) {
             candidates.add(file);
-            System.out.println(entryName);
         }
     }
 }

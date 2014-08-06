@@ -1,8 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-import static org.junit.Assert.assertFalse;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.TestUtils;
-import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
 
 /**
  * Unit tests of {@link MifReader} class.
@@ -35,8 +33,7 @@ public class MifReaderTest {
     public void testTicket9592() throws IOException {
         File file = new File(TestUtils.getRegressionDataFile(9592, "bg.mif"));
         try (InputStream is = new FileInputStream(file)) {
-            DataSet ds = MifReader.parseDataSet(is, file, null, null);
-            assertFalse(ds.allPrimitives().isEmpty());
+            NonRegFunctionalTests.testGeneric(MifReader.parseDataSet(is, file, null, null));
         }
     }
 }

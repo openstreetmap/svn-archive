@@ -23,7 +23,7 @@ import java.util.Vector;
  */
 public class OfficeBody {
 
-    private final List<OfficeSpreadsheet> officeSpreadsheets = new Vector<OfficeSpreadsheet>();
+    private final List<OfficeSpreadsheet> officeSpreadsheets = new Vector<>();
 
     public void addOfficeSpreadsheet(final OfficeSpreadsheet spread) {
         this.officeSpreadsheets.add(spread);

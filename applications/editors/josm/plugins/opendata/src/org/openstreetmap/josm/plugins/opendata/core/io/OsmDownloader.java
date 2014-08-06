@@ -14,7 +14,7 @@ public class OsmDownloader {
 		if (oapiReq != null) {
 			try {
 				String oapiServer = Main.pref.get(OdConstants.PREF_OAPI, OdConstants.DEFAULT_OAPI);
-				System.out.println(oapiReq);
+				Main.info(oapiReq);
 				String oapiReqEnc = URLEncoder.encode(oapiReq, OdConstants.UTF8);
 				Main.main.menu.openLocation.openUrl(false, oapiServer+"data="+oapiReqEnc);
 			} catch (UnsupportedEncodingException e) {

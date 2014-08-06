@@ -6,7 +6,7 @@ class CoderInfo {
     
     int NumInStreams;
     int NumOutStreams;
-    public ObjectVector<AltCoderInfo> AltCoders = new org.j7zip.Common.ObjectVector<AltCoderInfo>();
+    public ObjectVector<AltCoderInfo> AltCoders = new org.j7zip.Common.ObjectVector<>();
     
     boolean IsSimpleCoder() { return (NumInStreams == 1) && (NumOutStreams == 1); }
     

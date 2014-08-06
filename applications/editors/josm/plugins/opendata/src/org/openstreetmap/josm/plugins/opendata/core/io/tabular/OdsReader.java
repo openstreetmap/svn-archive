@@ -12,6 +12,7 @@ import org.jopendocument.model.table.TableTable;
 import org.jopendocument.model.table.TableTableCell;
 import org.jopendocument.model.table.TableTableRow;
 import org.jopendocument.model.text.TextP;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
@@ -37,7 +38,7 @@ public class OdsReader extends SpreadSheetReader {
 	@Override
 	protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
 		try {
-			System.out.println("Parsing ODS file");
+			Main.info("Parsing ODS file");
 			doc = new OdsDocument(in);
 			List<OfficeSpreadsheet> spreadsheets = doc.getBody().getOfficeSpreadsheets();
 			if (spreadsheets != null && spreadsheets.size() > 0) {
@@ -61,7 +62,7 @@ public class OdsReader extends SpreadSheetReader {
 			TableTableRow row = rows.get(rowIndex++);
 
 			if (rowIndex % 5000 == 0) {
-				System.out.println("Lines read: "+rowIndex);
+				Main.info("Lines read: "+rowIndex);
 			}
 
 			List<String> result = new ArrayList<>();

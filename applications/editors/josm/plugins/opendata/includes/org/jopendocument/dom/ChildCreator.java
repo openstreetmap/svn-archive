@@ -36,7 +36,7 @@ public class ChildCreator {
         if (content == null)
             throw new NullPointerException("null content");
         this.content = content;
-        this.elemsOrder = new ArrayList<Element>(children);
+        this.elemsOrder = new ArrayList<>(children);
     }
 
     public final Element getElement() {

@@ -23,7 +23,7 @@ import java.util.Vector;
  */
 public class TextP {
 
-    private final List<TextSpan> textSpans = new Vector<TextSpan>();
+    private final List<TextSpan> textSpans = new Vector<>();
 
     public void addTextSpan(final TextSpan p) {
         if (p == null) {

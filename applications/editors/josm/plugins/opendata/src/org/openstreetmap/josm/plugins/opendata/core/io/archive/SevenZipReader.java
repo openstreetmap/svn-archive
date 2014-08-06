@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
@@ -56,7 +57,13 @@ public class SevenZipReader extends ArchiveReader {
         return new SevenZipReader(in, handler, promptUser).parseDoc(instance);
     }
 
-    @Override protected String getTaskMessage() {
+    public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
+            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+        return new SevenZipReader(in, handler, promptUser).parseDocs(instance);
+    }
+
+    @Override
+    protected String getTaskMessage() {
         return tr("Reading 7Zip file...");
     }
 

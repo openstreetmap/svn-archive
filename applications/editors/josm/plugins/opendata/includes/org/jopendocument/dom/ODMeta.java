@@ -41,7 +41,7 @@ public class ODMeta extends ODNode {
 
     private static final Map<XMLVersion, List<Element>> ELEMS_ORDER;
     static {
-        ELEMS_ORDER = new HashMap<XMLVersion, List<Element>>(2);
+        ELEMS_ORDER = new HashMap<>(2);
         ELEMS_ORDER.put(XMLVersion.getOOo(), createChildren(XMLVersion.getOOo()));
         ELEMS_ORDER.put(XMLVersion.getOD(), createChildren(XMLVersion.getOD()));
     }
@@ -49,7 +49,7 @@ public class ODMeta extends ODNode {
     private static final List<Element> createChildren(XMLVersion ins) {
         final Namespace meta = ins.getMETA();
         final Namespace dc = ins.getNS("dc");
-        final List<Element> res = new ArrayList<Element>(8);
+        final List<Element> res = new ArrayList<>(8);
         res.add(new Element("generator", meta));
         res.add(new Element("title", dc));
         res.add(new Element("description", dc));

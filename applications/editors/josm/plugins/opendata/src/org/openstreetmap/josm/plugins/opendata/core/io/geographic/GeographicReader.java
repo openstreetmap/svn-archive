@@ -4,8 +4,10 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,7 +201,7 @@ public abstract class GeographicReader extends AbstractReader {
     }
     
 	private static final void compareDebug(CoordinateReferenceSystem crs1, CoordinateReferenceSystem crs2) {
-		System.out.println("-- COMPARING "+crs1.getName()+" WITH "+crs2.getName()+" --");
+		Main.debug("-- COMPARING "+crs1.getName()+" WITH "+crs2.getName()+" --");
 		compareDebug("class", crs1.getClass(), crs2.getClass());
 		CoordinateSystem cs1 = crs1.getCoordinateSystem();
 		CoordinateSystem cs2 = crs2.getCoordinateSystem();
@@ -228,7 +230,7 @@ public abstract class GeographicReader extends AbstractReader {
 				compareDebug("conversionFromBase", adcrs1.getConversionFromBase(), adcrs2.getConversionFromBase());
 			}
 		}
-		System.out.println("-- COMPARING FINISHED --");
+		Main.debug("-- COMPARING FINISHED --");
 	}
 	
 	private static final boolean compareDebug(String text, Object o1, Object o2) {
@@ -244,7 +246,7 @@ public abstract class GeographicReader extends AbstractReader {
 	}
 
 	private static final boolean compareDebug(String text, boolean result, Object o1, Object o2) {
-		System.out.println(text + ": " + result + "("+o1+", "+o2+")");
+	    Main.debug(text + ": " + result + "("+o1+", "+o2+")");
 		return result;
 	}
 	
@@ -252,7 +254,7 @@ public abstract class GeographicReader extends AbstractReader {
 		try {
 			transform = CRS.findMathTransform(crs, wgs84);
 		} catch (OperationNotFoundException e) {
-			System.out.println(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
+			Main.info(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
 			
 			if (findSimiliarCrs) { 
 				List<CoordinateReferenceSystem> candidates = new ArrayList<>();
@@ -266,7 +268,7 @@ public abstract class GeographicReader extends AbstractReader {
     						Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
     								Main.pref.getDouble(OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE));
     						if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
-    							System.out.println("Found a potential CRS: "+candidate.getName());
+    							Main.info("Found a potential CRS: "+candidate.getName());
     							candidates.add(candidate);
     						} else if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
     							compareDebug(crs, candidate);
@@ -280,7 +282,8 @@ public abstract class GeographicReader extends AbstractReader {
 				}
 				
 				if (candidates.size() > 1) {
-					System.err.println("Found several potential CRS.");//TODO: ask user which one to use
+					Main.warn("Found several potential CRS: "+Arrays.toString(candidates.toArray()));
+					// TODO: ask user which one to use
 				}
 				
 				if (candidates.size() > 0) {
@@ -299,7 +302,7 @@ public abstract class GeographicReader extends AbstractReader {
 					try {
 						transform = handler.findMathTransform(crs, wgs84, false);
 					} catch (OperationNotFoundException ex) {
-						System.out.println(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
+					    Main.warn(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
 					}
 				} else {
 					// ask default known handlers
@@ -309,17 +312,17 @@ public abstract class GeographicReader extends AbstractReader {
 								break;
 							}
 						} catch (OperationNotFoundException ex) {
-							System.out.println(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
+						    Main.warn(crs.getName()+": "+ex.getMessage()); // Bursa wolf parameters required.
 						}
 					}
 				}
 				if (transform == null) {
-					// ask user before trying lenient method
-					if (warnLenientMethod(parent, crs)) {
+					// ask user before trying lenient method, unless in headless mode (unit tests)
+					if (!GraphicsEnvironment.isHeadless() && warnLenientMethod(parent, crs)) {
 						// User canceled
 						throw new UserCancelException();
 					}
-					System.out.println("Searching for a lenient math transform.");
+					Main.info("Searching for a lenient math transform.");
 					transform = CRS.findMathTransform(crs, wgs84, true);
 				}
 			}

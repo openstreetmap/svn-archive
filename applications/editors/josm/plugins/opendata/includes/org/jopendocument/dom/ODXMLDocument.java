@@ -40,14 +40,14 @@ public class ODXMLDocument {
      */
     private static final Map<XMLVersion, List<Element>> ELEMS_ORDER;
     static {
-        ELEMS_ORDER = new HashMap<XMLVersion, List<Element>>(2);
+        ELEMS_ORDER = new HashMap<>(2);
         ELEMS_ORDER.put(XMLVersion.getOOo(), createChildren(XMLVersion.getOOo()));
         ELEMS_ORDER.put(XMLVersion.getOD(), createChildren(XMLVersion.getOD()));
     }
 
     private static final List<Element> createChildren(XMLVersion ins) {
         final Namespace ns = ins.getOFFICE();
-        final List<Element> res = new ArrayList<Element>(8);
+        final List<Element> res = new ArrayList<>(8);
         res.add(new Element("meta", ns));
         res.add(new Element("settings", ns));
         res.add(new Element("script", ns));
@@ -62,7 +62,7 @@ public class ODXMLDocument {
     // namespaces for the name attributes
     static private final Map<String, String> namePrefixes;
     static {
-        namePrefixes = new HashMap<String, String>();
+        namePrefixes = new HashMap<>();
         namePrefixes.put("table:table", "table");
         namePrefixes.put("text:a", "office");
         namePrefixes.put("draw:text-box", "draw");

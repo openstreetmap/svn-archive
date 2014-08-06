@@ -27,7 +27,7 @@ public class ODSingleXMLDocument extends ODXMLDocument implements Cloneable, ODD
 
     final static Set<String> DONT_PREFIX;
     static {
-        DONT_PREFIX = new HashSet<String>();
+        DONT_PREFIX = new HashSet<>();
         // don't touch to user fields and variables
         // we want them to be the same across the document
         DONT_PREFIX.add("user-field-decl");
@@ -56,8 +56,8 @@ public class ODSingleXMLDocument extends ODXMLDocument implements Cloneable, ODD
 
     ODSingleXMLDocument(ODSingleXMLDocument doc, ODPackage p) {
         super(doc);
-        this.stylesNames = new HashSet<String>(doc.stylesNames);
-        this.listStylesNames = new HashSet<String>(doc.listStylesNames);
+        this.stylesNames = new HashSet<>(doc.stylesNames);
+        this.listStylesNames = new HashSet<>(doc.listStylesNames);
         this.pkg = p;
         this.meta = ODMeta.create(this);
         this.setNumero(doc.numero);

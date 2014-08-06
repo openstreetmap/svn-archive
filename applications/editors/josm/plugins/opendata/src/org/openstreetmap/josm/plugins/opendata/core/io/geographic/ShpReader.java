@@ -157,13 +157,13 @@ public class ShpReader extends GeographicReader {
 				}
 			} else {
 				// Debug unknown geometry
-				System.out.println("\ttype: "+geometry.getType());
-				System.out.println("\tbounds: "+geometry.getBounds());
-				System.out.println("\tdescriptor: "+desc);
-				System.out.println("\tname: "+geometry.getName());
-				System.out.println("\tvalue: "+geometry.getValue());
-				System.out.println("\tid: "+geometry.getIdentifier());
-				System.out.println("-------------------------------------------------------------");
+				Main.debug("\ttype: "+geometry.getType());
+				Main.debug("\tbounds: "+geometry.getBounds());
+				Main.debug("\tdescriptor: "+desc);
+				Main.debug("\tname: "+geometry.getName());
+				Main.debug("\tvalue: "+geometry.getValue());
+				Main.debug("\tid: "+geometry.getIdentifier());
+				Main.debug("-------------------------------------------------------------");
 			}
 			
 			if (primitive != null) {

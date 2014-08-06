@@ -106,7 +106,7 @@ public class GmlReader extends GeographicReader {
 	}
 	
 	private void findCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
-		System.out.println("Finding CRS for "+srs);
+		Main.info("Finding CRS for "+srs);
 		if (gmlHandler != null) {
 			crs = gmlHandler.getCrsFor(srs);
 		} else {

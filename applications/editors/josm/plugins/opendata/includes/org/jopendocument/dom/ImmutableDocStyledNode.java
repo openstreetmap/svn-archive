@@ -24,7 +24,7 @@ import org.jdom.Element;
 public class ImmutableDocStyledNode<S extends StyleStyle, D extends ODDocument> extends StyledNode<S, D> {
 
     private static final Set<Document> getDocuments(final ODPackage pkg) {
-        final Set<Document> res = new HashSet<Document>();
+        final Set<Document> res = new HashSet<>();
         for (final String entry : pkg.getEntries()) {
             final ODPackageEntry e = pkg.getEntry(entry);
             if (e.getData() instanceof ODXMLDocument)

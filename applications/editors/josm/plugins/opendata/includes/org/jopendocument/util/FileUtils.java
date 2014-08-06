@@ -30,7 +30,7 @@ public final class FileUtils {
 
     private static final Map<String, String> ext2mime;
     static {
-        ext2mime = new HashMap<String, String>();
+        ext2mime = new HashMap<>();
         ext2mime.put(".xml", "text/xml");
         ext2mime.put(".jpg", "image/jpeg");
         ext2mime.put(".png", "image/png");

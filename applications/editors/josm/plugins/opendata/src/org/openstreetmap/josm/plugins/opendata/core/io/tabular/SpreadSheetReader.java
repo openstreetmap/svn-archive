@@ -99,7 +99,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
 	}
 	
 	public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
-		System.out.println("Header: "+Arrays.toString(header));
+		Main.info("Header: "+Arrays.toString(header));
 		
 		Map<ProjectionPatterns, List<CoordinateColumns>> projColumns = new HashMap<>();
 		
@@ -174,7 +174,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
 		    message += c.proj + "("+header[c.xCol]+", "+header[c.yCol]+")";
 		}
 		
-		System.out.println("Loading data using projections "+message);
+		Main.info("Loading data using projections "+message);
 		
 		final DataSet ds = new DataSet();
 		int lineNumber = 1;

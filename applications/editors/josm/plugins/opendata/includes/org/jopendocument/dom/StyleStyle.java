@@ -36,8 +36,8 @@ public class StyleStyle extends ODNode {
     private static final Map<XMLVersion, Map<Class<? extends StyleStyle>, StyleDesc<?>>> class2Desc;
     private static boolean descsLoaded = false;
     static {
-        family2Desc = new HashMap<XMLVersion, Map<String, StyleDesc<?>>>();
-        class2Desc = new HashMap<XMLVersion, Map<Class<? extends StyleStyle>, StyleDesc<?>>>();
+        family2Desc = new HashMap<>();
+        class2Desc = new HashMap<>();
         for (final XMLVersion v : XMLVersion.values()) {
             family2Desc.put(v, new HashMap<String, StyleDesc<?>>());
             class2Desc.put(v, new HashMap<Class<? extends StyleStyle>, StyleDesc<?>>());

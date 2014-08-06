@@ -26,7 +26,7 @@ public class TableTableRow {
     static int count = 0;
     ArrayList<TableTableCell> allCells;
 
-    Vector<TableTableCell> cells = new Vector<TableTableCell>();
+    Vector<TableTableCell> cells = new Vector<>();
 
     int id = 0;
     
@@ -46,7 +46,7 @@ public class TableTableRow {
      * Compute AllCell except the last one
      */
     void computeAllCells() {
-        this.allCells = new ArrayList<TableTableCell>();
+        this.allCells = new ArrayList<>();
         for (int index = 0; index < this.cells.size(); index++) {
             final TableTableCell c = this.cells.get(index);
             // for (TableTableCell c : cells) {

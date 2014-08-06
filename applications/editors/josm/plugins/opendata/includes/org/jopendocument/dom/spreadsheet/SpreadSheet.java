@@ -48,7 +48,7 @@ public class SpreadSheet implements ODDocument {
             this.originalFile.putFile("styles.xml", styles);
 
         // map Sheet by XML elements so has not to depend on ordering or name
-        this.sheets = new HashMap<Element, Sheet>();
+        this.sheets = new HashMap<>();
     }
 
     final Document getContent() {

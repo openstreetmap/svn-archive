@@ -20,7 +20,7 @@ import org.apache.commons.collections.TransformerUtils;
 public abstract class Transformer<E, T> implements ITransformer<E, T>, org.apache.commons.collections.Transformer {
 
     public static final <N> ITransformer<N, N> nopTransformer() {
-        return new ITransformerWrapper<N, N>(TransformerUtils.nopTransformer());
+        return new ITransformerWrapper<>(TransformerUtils.nopTransformer());
     }
 
     @SuppressWarnings("unchecked")

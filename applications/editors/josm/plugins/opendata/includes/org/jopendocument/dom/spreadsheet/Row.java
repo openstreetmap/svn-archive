@@ -43,7 +43,7 @@ public class Row<D extends ODDocument> extends TableCalcNode<RowStyle, D> {
         super(parent.getODDocument(), tableRowElem, RowStyle.class);
         this.parent = parent;
         this.index = index;
-        this.cells = new ArrayList<Cell<D>>();
+        this.cells = new ArrayList<>();
         for (final Element cellElem : this.getCellElements()) {
             addCellElem(cellElem);
         }
@@ -58,7 +58,7 @@ public class Row<D extends ODDocument> extends TableCalcNode<RowStyle, D> {
     }
 
     private void addCellElem(final Element cellElem) {
-        final Cell<D> cell = new Cell<D>(this, cellElem);
+        final Cell<D> cell = new Cell<>(this, cellElem);
         this.cells.add(cell);
 
         final String repeatedS = cellElem.getAttributeValue("number-columns-repeated", this.getSheet().getTABLE());

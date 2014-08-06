@@ -46,8 +46,8 @@ public class StringUtils {
         public Escaper(char esc, char name) {
             super();
             this.esc = esc;
-            this.substitution = new LinkedHashMap<Character, Character>();
-            this.inv = new HashMap<Character, Character>();
+            this.substitution = new LinkedHashMap<>();
+            this.inv = new HashMap<>();
             this.add(esc, name);
         }
 

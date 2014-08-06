@@ -39,7 +39,7 @@ public class SaxContentUnmarshaller extends DefaultHandler {
     // -----
 
     public SaxContentUnmarshaller() {
-        this.stack = new Stack<Object>();
+        this.stack = new Stack<>();
     }
 
     // ----- callbacks: -----

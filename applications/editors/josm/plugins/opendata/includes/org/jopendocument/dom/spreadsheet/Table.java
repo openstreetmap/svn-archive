@@ -43,8 +43,8 @@ public class Table<D extends ODDocument> extends TableCalcNode<TableStyle, D> {
     public Table(D parent, Element local) {
         super(parent, local, TableStyle.class);
 
-        this.rows = new ArrayList<Row<D>>();
-        this.cols = new ArrayList<Column<D>>();
+        this.rows = new ArrayList<>();
+        this.cols = new ArrayList<>();
 
         this.readColumns();
         this.readRows();
@@ -70,11 +70,11 @@ public class Table<D extends ODDocument> extends TableCalcNode<TableStyle, D> {
     }
 
     private final void addCol(Element clone) {
-        this.cols.add(new Column<D>(this, clone));
+        this.cols.add(new Column<>(this, clone));
     }
 
     private Tuple2<List<Element>, Integer> flatten(boolean col) {
-        final List<Element> res = new ArrayList<Element>();
+        final List<Element> res = new ArrayList<>();
         final Element header = this.getElement().getChild("table-header-" + getName(col) + "s", getTABLE());
         if (header != null)
             res.addAll(flatten(header, col));
@@ -127,7 +127,7 @@ public class Table<D extends ODDocument> extends TableCalcNode<TableStyle, D> {
 
 
     private synchronized void addRow(Element child) {
-        this.rows.add(new Row<D>(this, child, this.rows.size()));
+        this.rows.add(new Row<>(this, child, this.rows.size()));
     }
 
 

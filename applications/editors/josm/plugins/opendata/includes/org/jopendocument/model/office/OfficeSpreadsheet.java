@@ -21,7 +21,7 @@ import java.util.Vector;
 import org.jopendocument.model.table.TableTable;
 
 public class OfficeSpreadsheet {
-    List<TableTable> tables = new Vector<TableTable>();
+    List<TableTable> tables = new Vector<>();
 
     public void addTable(final TableTable table) {
         this.tables.add(table);

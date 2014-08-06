@@ -135,7 +135,7 @@ public class Cell<D extends ODDocument> extends TableCalcNode<CellStyle, D> {
      * @return a string for the content of this cell.
      */
     public String getTextValue(final boolean ooMode) {
-        final List<String> ps = new ArrayList<String>();
+        final List<String> ps = new ArrayList<>();
         for (final Object o : this.getElement().getChildren()) {
             final Element child = (Element) o;
             if ((child.getName().equals("p") || child.getName().equals("h")) && child.getNamespacePrefix().equals("text")) {

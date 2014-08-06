@@ -103,6 +103,9 @@ public class ShpReader extends GeographicReader {
                             }
                         }
                     });
+    			} else {
+    			    // Always use WGS84 in headless mode (used for unit tests only)
+    			    crs = wgs84;
     			}
                 if (crs != null) {
                     findMathTransform(parent, true);

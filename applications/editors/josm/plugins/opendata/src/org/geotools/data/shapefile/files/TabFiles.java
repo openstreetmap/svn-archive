@@ -56,7 +56,7 @@ public class TabFiles extends ShpFiles {
      * The urls for each type of file that is associated with the shapefile. The
      * key is the type of file
      */
-    private final Map<ShpFileType, URL> urls = new ConcurrentHashMap<ShpFileType, URL>();
+    private final Map<ShpFileType, URL> urls = new ConcurrentHashMap<>();
 
     /**
      * A read/write lock, so that we can have concurrent readers 
@@ -67,7 +67,7 @@ public class TabFiles extends ShpFiles {
      * The set of locker sources per thread. Used as a debugging aid and to upgrade/downgrade
      * the locks
      */
-    private final Map<Thread, Collection<ShpFilesLocker>> lockers = new ConcurrentHashMap<Thread, Collection<ShpFilesLocker>>();
+    private final Map<Thread, Collection<ShpFilesLocker>> lockers = new ConcurrentHashMap<>();
 
     /**
      * A cache for read only memory mapped buffers
@@ -143,7 +143,7 @@ public class TabFiles extends ShpFiles {
         // IE Shp, SHP, Shp, ShP etc...
         if (isLocalTab()) {
             Set<Entry<ShpFileType, URL>> entries = urls.entrySet();
-            Map<ShpFileType, URL> toUpdate = new HashMap<ShpFileType, URL>();
+            Map<ShpFileType, URL> toUpdate = new HashMap<>();
             for (Entry<ShpFileType, URL> entry : entries) {
                 if( !existsTab(entry.getKey()) ){
                     url = findExistingFile(entry.getKey(), entry.getValue());
@@ -221,7 +221,7 @@ public class TabFiles extends ShpFiles {
      *         datastore.
      */
     public Map<ShpFileType, String> getFileNames() {
-        Map<ShpFileType, String> result = new HashMap<ShpFileType, String>();
+        Map<ShpFileType, String> result = new HashMap<>();
         Set<Entry<ShpFileType, URL>> entries = urls.entrySet();
 
         for (Entry<ShpFileType, URL> entry : entries) {
@@ -341,17 +341,17 @@ public class TabFiles extends ShpFiles {
             FileReader requestor) {
         URL url = urls.get(type);
         if (url == null) {
-            return new Result<URL, State>(null, State.NOT_EXIST);
+            return new Result<>(null, State.NOT_EXIST);
         }
         
         boolean locked = readWriteLock.readLock().tryLock();
         if (!locked) {
-            return new Result<URL, State>(null, State.LOCKED);
+            return new Result<>(null, State.LOCKED);
         }
         
         getCurrentThreadLockers().add(new ShpFilesLocker(url, requestor));
 
-        return new Result<URL, State>(url, State.GOOD);
+        return new Result<>(url, State.GOOD);
     }
 
     /**
@@ -389,7 +389,7 @@ public class TabFiles extends ShpFiles {
             throw new NullPointerException("requestor cannot be null");
         }
 
-        Collection threadLockers = getCurrentThreadLockers();
+        Collection<ShpFilesLocker> threadLockers = getCurrentThreadLockers();
         boolean removed = threadLockers.remove(new ShpFilesLocker(url, requestor));
         if (!removed) {
             throw new IllegalArgumentException(
@@ -488,7 +488,7 @@ public class TabFiles extends ShpFiles {
         
         URL url = urls.get(type);
         if (url == null) {
-            return new Result<URL, State>(null, State.NOT_EXIST);
+            return new Result<>(null, State.NOT_EXIST);
         }
 
         Collection<ShpFilesLocker> threadLockers = getCurrentThreadLockers();
@@ -499,12 +499,12 @@ public class TabFiles extends ShpFiles {
             locked = readWriteLock.writeLock().tryLock();
             if(locked == false) {
                 regainReadLocks(threadLockers);
-                return new Result<URL, State>(null, State.LOCKED);
+                return new Result<>(null, State.LOCKED);
             }
         }
 
         threadLockers.add(new ShpFilesLocker(url, requestor));
-        return new Result<URL, State>(url, State.GOOD);
+        return new Result<>(url, State.GOOD);
     }
 
     /**
@@ -567,7 +567,7 @@ public class TabFiles extends ShpFiles {
     private Collection<ShpFilesLocker> getCurrentThreadLockers() {
         Collection<ShpFilesLocker> threadLockers = lockers.get(Thread.currentThread());
         if(threadLockers == null) {
-            threadLockers = new ArrayList<ShpFilesLocker>();
+            threadLockers = new ArrayList<>();
             lockers.put(Thread.currentThread(), threadLockers);
         }
         return threadLockers;
@@ -770,6 +770,7 @@ public class TabFiles extends ShpFiles {
 
                 File file = DataUtilities.urlToFile(url);
                 
+                @SuppressWarnings("resource")
                 RandomAccessFile raf = new RandomAccessFile(file, "r");
                 channel = new FileChannelDecorator(raf.getChannel(), this, url,
                         requestor);
@@ -827,6 +828,7 @@ public class TabFiles extends ShpFiles {
 
                 File file = DataUtilities.urlToFile(url);
 
+                @SuppressWarnings("resource")
                 RandomAccessFile raf = new RandomAccessFile(file, "rw");
                 channel = new FileChannelDecorator(raf.getChannel(), this, url,
                         requestor);

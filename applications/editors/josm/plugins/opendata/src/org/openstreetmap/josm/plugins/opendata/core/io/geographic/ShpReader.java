@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +89,7 @@ public class ShpReader extends GeographicReader {
 			if (crs == null) {
     			if (desc != null && desc.getCoordinateReferenceSystem() != null) {
     				crs = desc.getCoordinateReferenceSystem();
-    			} else {
+    			} else if (!GraphicsEnvironment.isHeadless()) {
     			    GuiHelper.runInEDTAndWait(new Runnable() {
                         @Override
                         public void run() {

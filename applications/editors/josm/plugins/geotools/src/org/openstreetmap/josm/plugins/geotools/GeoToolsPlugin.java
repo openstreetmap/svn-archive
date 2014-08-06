@@ -10,6 +10,7 @@ import javax.media.jai.OperationRegistry;
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -73,9 +74,9 @@ public class GeoToolsPlugin extends Plugin {
         try {
             CRS.decode("EPSG:4326");
         } catch (NoSuchAuthorityCodeException e) {
-            System.err.println("geotools: error in EPSG database initialization. NoSuchAuthorityCodeException: "+e.getMessage());
+            Main.error("geotools: error in EPSG database initialization. NoSuchAuthorityCodeException: "+e.getMessage());
         } catch (FactoryException e) {
-            System.err.println("geotools: error in EPSG database initialization. FactoryException: "+e.getMessage());
+            Main.error("geotools: error in EPSG database initialization. FactoryException: "+e.getMessage());
         }
     }
 }

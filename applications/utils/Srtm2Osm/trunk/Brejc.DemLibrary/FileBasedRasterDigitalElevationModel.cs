@@ -61,7 +61,7 @@ namespace Brejc.DemLibrary
 
         private void SeekToPosition (int localLon, int localLat)
         {
-            long pos = (localLon + localLat * LonLength) * 2;
+            long pos = (localLon + localLat * LonLength) * 2L;
             data.Seek (pos, SeekOrigin.Begin);
         }
 

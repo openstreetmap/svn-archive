@@ -23,6 +23,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.projection.CustomProjection;
+import org.openstreetmap.josm.data.projection.CustomProjection.Param;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -32,9 +34,10 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
 /**
  * MapInfo Interchange File (MIF) reader, based on these specifications:<ul>
- * <li><a href="http://www.gissky.com/Download/Download/DataFormat/Mapinfo_Mif.pdf">Mapinfo_Mif.pdf (dead link)</a></li>
+ * <li><a href="https://github.com/tricycle/electrodrive-market-analysis/blob/master/specifications/Mapinfo_Mif.pdf">Mapinfo_Mif.pdf</a></li>
  * <li><a href="http://resource.mapinfo.com/static/files/document/1074660800077/interchange_file.pdf">interchange_file.pdf</a></li>
  * </ul>
+ * These files have been stored in reference directory to avoid future dead links.
  */
 public class MifReader extends AbstractMapInfoReader {
 
@@ -101,6 +104,10 @@ public class MifReader extends AbstractMapInfoReader {
         // TODO
         Main.warn("TODO Index: "+line);
     }
+    
+    private static String param(Param p, Object value) {
+        return " +"+p.key+"="+value;
+    }
 
     private void parseCoordSysSyntax1(String[] words) {
         proj = MifProjection.forCode(Integer.parseInt(words[3]));
@@ -114,11 +121,16 @@ public class MifReader extends AbstractMapInfoReader {
             return;
         }
         
+        // Initialize proj4-like parameters
+        String params = param(Param.proj, proj.getProj4Id());
+        
         // Units
         units = words[5+offset];
+        params += param(Param.units, units);
         
         // Origin, longitude
         originLon = Double.parseDouble(words[6+offset]);
+        params += param(Param.lon_0, originLon);
         
         // Origin, latitude
         switch(proj) {
@@ -139,6 +151,7 @@ public class MifReader extends AbstractMapInfoReader {
         case Transverse_Mercator_modified_for_Sjaelland:
         case Polyconic:
             originLat = Double.parseDouble(words[7+offset]);
+            params += param(Param.lat_0, originLat);
             break;
         }
         
@@ -147,12 +160,14 @@ public class MifReader extends AbstractMapInfoReader {
         case Cylindrical_Equal_Area:
         case Regional_Mercator:
             stdP1 = Double.parseDouble(words[7+offset]);
+            params += param(Param.lat_1, stdP1);
             break;
         case Albers_Equal_Area_Conic:
         case Equidistant_Conic_also_known_as_Simple_Conic:
         case Lambert_Conformal_Conic:
         case Lambert_Conformal_Conic_modified_for_Belgium_1972:
             stdP1 = Double.parseDouble(words[8+offset]);
+            params += param(Param.lat_1, stdP1);
             break;
         }
 
@@ -163,18 +178,21 @@ public class MifReader extends AbstractMapInfoReader {
         case Lambert_Conformal_Conic:
         case Lambert_Conformal_Conic_modified_for_Belgium_1972:
             stdP2 = Double.parseDouble(words[9+offset]);
+            params += param(Param.lat_2, stdP2);
             break;
         }
         
         // Azimuth
         if (proj == Hotine_Oblique_Mercator) {
             azimuth = Double.parseDouble(words[8+offset]);
+            // TODO: what's proj4 parameter ?
         }
 
         // Scale Factor
         switch (proj) {
         case Hotine_Oblique_Mercator:
             scaleFactor = Double.parseDouble(words[9+offset]);
+            params += param(Param.k_0, scaleFactor);
             break;
         case Stereographic:
         case Transverse_Mercator_also_known_as_Gauss_Kruger:
@@ -183,6 +201,7 @@ public class MifReader extends AbstractMapInfoReader {
         case Transverse_Mercator_modified_for_Finnish_KKJ:
         case Transverse_Mercator_modified_for_Sjaelland:
             scaleFactor = Double.parseDouble(words[8+offset]);
+            params += param(Param.k_0, scaleFactor);
             break;
         }
         
@@ -195,6 +214,8 @@ public class MifReader extends AbstractMapInfoReader {
         case Lambert_Conformal_Conic_modified_for_Belgium_1972:
             falseEasting = Double.parseDouble(words[10+offset]);
             falseNorthing = Double.parseDouble(words[11+offset]);
+            params += param(Param.x_0, falseEasting);
+            params += param(Param.y_0, falseNorthing);
             break;
         case Stereographic:
         case Transverse_Mercator_also_known_as_Gauss_Kruger:
@@ -204,12 +225,16 @@ public class MifReader extends AbstractMapInfoReader {
         case Transverse_Mercator_modified_for_Sjaelland:
             falseEasting = Double.parseDouble(words[9+offset]);
             falseNorthing = Double.parseDouble(words[10+offset]);
+            params += param(Param.x_0, falseEasting);
+            params += param(Param.y_0, falseNorthing);
             break;
         case New_Zealand_Map_Grid:
         case Swiss_Oblique_Mercator:
         case Polyconic:
             falseEasting = Double.parseDouble(words[8+offset]);
             falseNorthing = Double.parseDouble(words[9+offset]);
+            params += param(Param.x_0, falseEasting);
+            params += param(Param.y_0, falseNorthing);
             break;
         }
                                     
@@ -218,6 +243,7 @@ public class MifReader extends AbstractMapInfoReader {
         case Azimuthal_Equidistant_polar_aspect_only:
         case Lambert_Azimuthal_Equal_Area_polar_aspect_only:
             range = Double.parseDouble(words[8+offset]);
+            // TODO: what's proj4 parameter ?
         }
 
         switch (proj) {
@@ -235,9 +261,6 @@ public class MifReader extends AbstractMapInfoReader {
                 }
             }
             break;
-        default:
-            // TODO
-            Main.warn("TODO proj: "+line);
         }
         
         // TODO: handle cases with Affine declaration
@@ -245,6 +268,12 @@ public class MifReader extends AbstractMapInfoReader {
 
         // handle cases with Bounds declaration
         parseBounds(words, index);
+        
+        if (josmProj == null) {
+            Main.info(line);
+            Main.info(params);
+            josmProj = new CustomProjection(params);
+        }
     }
 
     private void parseCoordSysSyntax2(String[] words) {
@@ -343,11 +372,15 @@ public class MifReader extends AbstractMapInfoReader {
     }
 
     private void parseRegion(String[] words) throws IOException {
-        region = new Relation();
-        region.put("type", "multipolygon");
-        ds.addPrimitive(region);
-        readAttributes(region);
         numpolygons = Integer.parseInt(words[1]);
+        if (numpolygons > 1) {
+            region = new Relation();
+            region.put("type", "multipolygon");
+            ds.addPrimitive(region);
+            readAttributes(region);
+        } else {
+            region = null;
+        }
         state = State.START_POLYGON;
     }
 
@@ -415,7 +448,11 @@ public class MifReader extends AbstractMapInfoReader {
                 numpts = Integer.parseInt(words[0]);
                 polygon = new Way();
                 ds.addPrimitive(polygon);
-                region.addMember(new RelationMember("outer", polygon));
+                if (region != null) {
+                    region.addMember(new RelationMember("outer", polygon));
+                } else {
+                    readAttributes(polygon);
+                }
                 state = State.READING_POINTS;
                 
             } else if (state == State.START_POLYLINE) {
@@ -436,6 +473,9 @@ public class MifReader extends AbstractMapInfoReader {
                 }
                 if (--numpts == 0) {
                     if (numpolygons > -1) {
+                        if (!polygon.isClosed()) {
+                            polygon.addNode(polygon.firstNode());
+                        }
                         if (--numpolygons > 0) {
                             state = State.START_POLYGON;
                         } else {

@@ -17,7 +17,8 @@ import java.util.Collection;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public abstract class NonRegFunctionalTests {
@@ -25,17 +26,30 @@ public abstract class NonRegFunctionalTests {
     /**
      * Non-regression generic test.
      */
-    public static void testGeneric(DataSet ds) {
+    public static void testGeneric(String context, DataSet ds) {
         CheckParameterUtil.ensureParameterNotNull(ds, "ds");
-        Collection<OsmPrimitive> prims = ds.allPrimitives();
-        assertFalse(prims.isEmpty());
+        // Every dataset should at least contain a node
+        Collection<Node> nodes = ds.getNodes();
+        assertFalse("No nodes in dataset for "+context, nodes.isEmpty());
+        // Nodes should all have coordinates
+        for (Node n : nodes) {
+            assertTrue("Node without coordinate found for "+context, n.getCoor() != null);
+        }
+        // and no empty ways
+        for (Way w : ds.getWays()) {
+            assertTrue("Empty way found for "+context, w.getNodesCount() > 0);
+        }
+        // neither empty relations
+        for (Relation r : ds.getRelations()) {
+            assertTrue("Empty relation found for "+context, r.getMembersCount() > 0);
+        }
     }
     
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
      */
     public static void testTicket10214(DataSet ds) {
-        testGeneric(ds);
+        testGeneric("#10214", ds);
         boolean found = false;
         for (Node n : ds.getNodes()) {
             if (n.hasTag("id", "1")) {

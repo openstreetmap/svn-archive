@@ -48,7 +48,7 @@ public class ShpReaderTest {
     public void testTicket8309() throws IOException, XMLStreamException, FactoryConfigurationError {
         File file = new File(TestUtils.getRegressionDataFile(8309, "new_ti_declarada.shp"));
         try (InputStream is = new FileInputStream(file)) {
-            NonRegFunctionalTests.testGeneric(ShpReader.parseDataSet(is, file, null, null));
+            NonRegFunctionalTests.testGeneric("#8309", ShpReader.parseDataSet(is, file, null, null));
         }
     }
 }

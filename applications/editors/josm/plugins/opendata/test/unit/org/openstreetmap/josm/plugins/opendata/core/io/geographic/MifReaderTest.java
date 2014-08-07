@@ -33,7 +33,7 @@ public class MifReaderTest {
     public void testTicket9592() throws IOException {
         File file = new File(TestUtils.getRegressionDataFile(9592, "bg.mif"));
         try (InputStream is = new FileInputStream(file)) {
-            NonRegFunctionalTests.testGeneric(MifReader.parseDataSet(is, file, null, null));
+            NonRegFunctionalTests.testGeneric("#9592", MifReader.parseDataSet(is, file, null, null));
         }
     }
 }

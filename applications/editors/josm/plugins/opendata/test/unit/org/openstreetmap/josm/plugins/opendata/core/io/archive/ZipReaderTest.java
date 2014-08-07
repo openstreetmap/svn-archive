@@ -39,12 +39,13 @@ public class ZipReaderTest {
     @Test
     public void testReadZipFiles() throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         for (Path p : NonRegFunctionalTests.listDataFiles("zip")) {
-            File file = p.toFile();
-            Main.info("Testing reading file "+file.getPath());
-            try (InputStream is = new FileInputStream(file)) {
+            File zipfile = p.toFile();
+            Main.info("Testing reading file "+zipfile.getPath());
+            try (InputStream is = new FileInputStream(zipfile)) {
                 for (Entry<File, DataSet> entry : ZipReader.parseDataSets(is, null, null, false).entrySet()) {
-                    Main.info("Checking dataset for entry "+entry.getKey().getName());
-                    NonRegFunctionalTests.testGeneric(entry.getValue());
+                    String name = entry.getKey().getName();
+                    Main.info("Checking dataset for entry "+name);
+                    NonRegFunctionalTests.testGeneric(zipfile.getName()+"/"+name, entry.getValue());
                 }
             }
         }

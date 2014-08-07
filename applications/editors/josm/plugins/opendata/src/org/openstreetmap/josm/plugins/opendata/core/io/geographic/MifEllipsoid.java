@@ -1,6 +1,12 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
+/**
+ * MapInfo Interchange File (MIF) ellipsoids, based on this specification:<ul>
+ * <li><a href="https://github.com/tricycle/electrodrive-market-analysis/blob/master/specifications/Mapinfo_Mif.pdf">Mapinfo_Mif.pdf</a></li>
+ * </ul>
+ * This file has been stored in reference directory to avoid future dead links.
+ */
 public enum MifEllipsoid {
 	Airy,
 	Modified_Airy,

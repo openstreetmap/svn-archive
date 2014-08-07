@@ -17,6 +17,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
@@ -44,6 +45,9 @@ public class ZipReader extends ArchiveReader {
 
     protected void extractArchive(final File temp, final List<File> candidates) throws IOException, FileNotFoundException {
         while ((entry = zis.getNextEntry()) != null) {
+            if (Main.isDebugEnabled()) {
+                Main.debug("Extracting "+entry.getName());
+            }
             File file = new File(temp + File.separator + entry.getName());
             File parent = file.getParentFile();
             if (parent != null && !parent.exists()) {

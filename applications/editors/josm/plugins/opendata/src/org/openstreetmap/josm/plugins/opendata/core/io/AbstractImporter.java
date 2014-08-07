@@ -1,9 +1,15 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io;
 
-import java.io.File;
-import java.io.IOException;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -44,7 +50,13 @@ public abstract class AbstractImporter extends OsmImporter {
 			this.file = file;
 			this.handler = findDataSetHandler(file);
 		}
-		super.importData(file, progressMonitor);
+		// Do not call super.importData because Compression.getUncompressedFileInputStream skips the first entry
+        try (InputStream in = new FileInputStream(file)) {
+            importData(in, file, progressMonitor);
+        } catch (FileNotFoundException e) {
+            Main.error(e);
+            throw new IOException(tr("File ''{0}'' does not exist.", file.getName()), e);
+        }
 	}
 
 	@Override

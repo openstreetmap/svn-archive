@@ -48,7 +48,7 @@ public class KmlReaderTest {
     public void testTicket7714() throws IOException, XMLStreamException, FactoryConfigurationError {
         File file = new File(TestUtils.getRegressionDataFile(7714, "doc.kml"));
         try (InputStream is = new FileInputStream(file)) {
-            NonRegFunctionalTests.testGeneric(KmlReader.parseDataSet(is, null));
+            NonRegFunctionalTests.testGeneric("#7714", KmlReader.parseDataSet(is, null));
         }
     }
 }

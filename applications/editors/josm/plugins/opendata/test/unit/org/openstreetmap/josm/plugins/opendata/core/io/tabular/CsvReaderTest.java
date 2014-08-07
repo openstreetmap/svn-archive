@@ -76,7 +76,7 @@ public class CsvReaderTest {
     public void testTicket8805() throws IOException, XMLStreamException, FactoryConfigurationError {
         File file = new File(TestUtils.getRegressionDataFile(8805, "XXX.csv"));
         try (InputStream is = new FileInputStream(file)) {
-            NonRegFunctionalTests.testGeneric(CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
+            NonRegFunctionalTests.testGeneric("#8805", CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }
     }
 }

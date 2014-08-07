@@ -70,18 +70,14 @@ public class MifReader extends AbstractMapInfoReader {
     private Way polyline;
 
     // CoordSys clause
-    private MifProjection proj;
-    private MifDatum datum;
     private String units;
     private Double originLon;
     private Double originLat;
     private Double stdP1;
     private Double stdP2;
-    private Double azimuth;
     private Double scaleFactor;
     private Double falseEasting;
     private Double falseNorthing;
-    private Double range;
     private Double minx;
     private Double miny;
     private Double maxx;
@@ -118,8 +114,8 @@ public class MifReader extends AbstractMapInfoReader {
     }
 
     private void parseCoordSysSyntax1(String[] words) {
-        proj = MifProjection.forCode(Integer.parseInt(words[3]));
-        datum = MifDatum.forCode(Integer.parseInt(words[4]));
+        MifProjection proj = MifProjection.forCode(Integer.parseInt(words[3]));
+        MifDatum datum = MifDatum.forCode(Integer.parseInt(words[4]));
 
         // Custom datum: TODO: use custom decalage values
         int offset = datum == Custom ? 4 : 0;
@@ -192,7 +188,7 @@ public class MifReader extends AbstractMapInfoReader {
         
         // Azimuth
         if (proj == Hotine_Oblique_Mercator) {
-            azimuth = Double.parseDouble(words[8+offset]);
+            Double.parseDouble(words[8+offset]);
             // TODO: what's proj4 parameter ?
         }
 
@@ -250,7 +246,7 @@ public class MifReader extends AbstractMapInfoReader {
         switch (proj) {
         case Azimuthal_Equidistant_polar_aspect_only:
         case Lambert_Azimuthal_Equal_Area_polar_aspect_only:
-            range = Double.parseDouble(words[8+offset]);
+            Double.parseDouble(words[8+offset]);
             // TODO: what's proj4 parameter ?
         }
 

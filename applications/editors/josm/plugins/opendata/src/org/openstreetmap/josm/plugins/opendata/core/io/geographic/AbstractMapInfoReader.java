@@ -3,11 +3,12 @@ package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,16 +47,16 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
 		return dataFile;
 	}
 	
-	protected final BufferedReader getDataReader(File headerFile, String extension, Charset charset) throws FileNotFoundException {
+	protected final BufferedReader getDataReader(File headerFile, String extension, Charset charset) throws IOException {
 		File dataFile = getDataFile(headerFile, extension);
-		return dataFile.exists() ? new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), charset)) : null;
+		return dataFile.exists() ? Files.newBufferedReader(dataFile.toPath(), charset) : null;
 	}
 
-	protected Charset parseCharset(String[] words) {
+	protected Charset parseCharset(String[] words) throws IllegalCharsetNameException, UnsupportedCharsetException {
 		return parseCharset(words, 1);
 	}
 
-	protected Charset parseCharset(String[] words, int index) {
+	protected Charset parseCharset(String[] words, int index) throws IllegalCharsetNameException, UnsupportedCharsetException {
 		words[index] = words[index].replace("\"", "");
 		if (words[index].equalsIgnoreCase(CHARSET_WINDOWS_LATIN)) {
 			return Charset.forName(OdConstants.CP1252);

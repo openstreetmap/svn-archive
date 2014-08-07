@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -31,9 +32,11 @@ public abstract class NonRegFunctionalTests {
         // Every dataset should at least contain a node
         Collection<Node> nodes = ds.getNodes();
         assertFalse("No nodes in dataset for "+context, nodes.isEmpty());
-        // Nodes should all have coordinates
+        // Nodes should all have valid coordinates
         for (Node n : nodes) {
-            assertTrue("Node without coordinate found for "+context, n.getCoor() != null);
+            LatLon latlon = n.getCoor();
+            assertTrue("Node without coordinate found for "+context, latlon != null);
+            assertTrue("Node with invalid coordinate ("+latlon+") found for "+context, latlon.isValid());
         }
         // and no empty ways
         for (Way w : ds.getWays()) {

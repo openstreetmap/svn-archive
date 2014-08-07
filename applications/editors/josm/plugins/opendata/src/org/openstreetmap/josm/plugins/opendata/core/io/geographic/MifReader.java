@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.InputStreamReaderUnbuffered;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
 /**
@@ -47,10 +49,13 @@ public class MifReader extends AbstractMapInfoReader {
         START_POLYGON,
         READING_POINTS,
         END_POLYGON,
-        START_POLYLINE,
+        START_POLYLINE_SEGMENT,
         END_POLYLINE
     }
-
+    
+    private File file;
+    private InputStream stream;
+    protected Charset charset;
     protected BufferedReader midReader;
 
     private Character delimiter = '\t';
@@ -85,6 +90,9 @@ public class MifReader extends AbstractMapInfoReader {
     // Region clause
     private int numpolygons = -1;
     private int numpts = -1;
+    
+    // PLine clause
+    private int numsections = -1;
     
     public static DataSet parseDataSet(InputStream in, File file,
             AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
@@ -280,9 +288,6 @@ public class MifReader extends AbstractMapInfoReader {
         // handle cases with Affine declaration
         int index = parseAffineUnits(words);
         
-        // FIXME: no idea what projection has to be used for real with "non-earth" mode...
-        josmProj = Projections.getProjectionByCode("EPSG:4326"); // WGS 84
-        
         units = words[index+1];
         
         parseBounds(words, index+2);
@@ -316,15 +321,25 @@ public class MifReader extends AbstractMapInfoReader {
             break;
         case "nonearth":
             parseCoordSysSyntax2(words);
+            
+            // Syntax2 is not meant to be used for maps, and still... # 9592 happened
+            // From MapInfo documentation:
+            // http://testdrive.mapinfo.com/TDC/mxtreme4java.nsf/22fbc128f401ad818525666a00646bda/50100fdbe3e0a85085256a770053be1a/$FILE/coordsys.txt
+            // Use syntax 1 (above) to explicitly define a coordinate system for an Earth map (a map having coordinates which are specified with respect to a 
+            // location on the surface of the Earth). The optional Projection parameters dictate what map projection, if any, should be used in conjunction with 
+            // the coordinate system. If the Projection clause is omitted, MapBasic uses a longitude, latitude coordinate system using the North American Datum of 1927 (NAD-27). 
+            // Use syntax 2 to explicitly define a non-Earth coordinate system, such as the coordinate system used in a floor plan or other CAD drawing. 
+            
+            // FIXME: allow user to choose projection ?
+            josmProj = new CustomProjection(null);
             break;
         case "layout":
         case "table":
         case "window":
-            // TODO: support Layout, Table, Window clauses 
-            Main.warn("TODO: "+line);
+            Main.error("Unsupported CoordSys clause: "+line);
             break;
         default:
-            Main.warn("Line "+lineNum+". Invalid CoordSys clause: "+line);
+            Main.error("Line "+lineNum+". Invalid CoordSys clause: "+line);
         }
     }
 
@@ -357,21 +372,31 @@ public class MifReader extends AbstractMapInfoReader {
         line.addNode(createNode(words[3], words[4]));
     }
     
-    private void startPolyLine() throws IOException {
+    private void startPolyLineSegment(boolean initial) throws IOException {
+        Way previousPolyline = polyline;
         polyline = new Way();
         ds.addPrimitive(polyline);
-        readAttributes(polyline);
+        if (initial) {
+            readAttributes(polyline);
+        } else if (previousPolyline != null) {
+            // Not sure about how to handle multiple segments. In doubt we create a new way with the same tags
+            polyline.setKeys(previousPolyline.getKeys());
+        }
         state = State.READING_POINTS;
     }
     
     private void parsePLine(String[] words) throws IOException {
+        numsections = 1;
         if (words.length <= 1 || "MULTIPLE".equalsIgnoreCase(words[1])) {
-            // TODO: pline with multiple sections
             numpts = -1;
-            state = State.START_POLYLINE;
+            state = State.START_POLYLINE_SEGMENT;
+            if (words.length >= 3) {
+                // pline with multiple sections
+                numsections = Integer.parseInt(words[2]);
+            }
         } else {
             numpts = Integer.parseInt(words[1]); // Not described in PDF but found in real files: PLINE XX, with XX = numpoints
-            startPolyLine();
+            startPolyLineSegment(true);
         }
     }
 
@@ -413,15 +438,36 @@ public class MifReader extends AbstractMapInfoReader {
         Main.warn("TODO Ellipse: "+line);
     }
 
-    private DataSet parse(InputStream in, File file, ProgressMonitor instance, Charset charset) throws IOException {
+    private void initializeReaders(InputStream in, File f, Charset cs, int bufSize) throws IOException {
+        stream = in;
+        charset = cs;
+        file = f;
+        Reader isr;
+        // Did you know ? new InputStreamReader(in, charset) has a non-configurable buffer of 8kb :(
+        if (bufSize < 8192) {
+            isr = new InputStreamReaderUnbuffered(in, charset);
+        } else {
+            isr = new InputStreamReader(in, charset);
+        }
+        headerReader = new BufferedReader(isr, bufSize);
+        if (midReader != null) {
+            midReader.close();
+        }
+        midReader = getDataReader(file, ".mid", charset);
+    }
+    
+    private DataSet parse(InputStream in, File file, ProgressMonitor instance, Charset cs) throws IOException {
         try {
-            headerReader = new BufferedReader(new InputStreamReader(in, charset));
-            midReader = getDataReader(file, ".mid", charset);
-            parseHeader();
-            if (midReader != null) {
-                midReader.close();
+            try {
+                // Read header byte per byte until we determine correct charset
+                initializeReaders(in, file, cs, 1);
+                parseHeader();
+                return ds;
+            } finally {
+                if (midReader != null) {
+                    midReader.close();
+                }
             }
-            return ds;
         } catch (UnsupportedEncodingException e) {
             throw new IOException(e);
         }
@@ -432,7 +478,8 @@ public class MifReader extends AbstractMapInfoReader {
         if (words[0].equalsIgnoreCase("Version")) {
             parseVersion(words);
         } else if (words[0].equalsIgnoreCase("Charset")) {
-            parseCharset(words);
+            // Reinitialize readers with an efficient buffer value now we know for sure the good charset
+            initializeReaders(stream, file, parseCharset(words), 8192);
         } else if (words[0].equalsIgnoreCase("Delimiter")) {
             parseDelimiter(words);
         } else if (words[0].equalsIgnoreCase("Unique")) {
@@ -459,9 +506,9 @@ public class MifReader extends AbstractMapInfoReader {
                 }
                 state = State.READING_POINTS;
                 
-            } else if (state == State.START_POLYLINE) {
+            } else if (state == State.START_POLYLINE_SEGMENT) {
                 numpts = Integer.parseInt(words[0]);
-                startPolyLine();
+                startPolyLineSegment(polyline != null);
                 
             } else if (state == State.READING_POINTS && numpts > 0) {
                 if (josmProj != null) {
@@ -484,8 +531,12 @@ public class MifReader extends AbstractMapInfoReader {
                             polygon = null;
                         }
                     } else if (polyline != null) {
-                        state = State.UNKNOWN;
-                        polyline = null;
+                        if (--numsections > 0) {
+                            state = State.START_POLYLINE_SEGMENT;
+                        } else {
+                            state = State.UNKNOWN;
+                            polyline = null;
+                        }
                     }
                 }
             } else if (words[0].equalsIgnoreCase("Point")) {

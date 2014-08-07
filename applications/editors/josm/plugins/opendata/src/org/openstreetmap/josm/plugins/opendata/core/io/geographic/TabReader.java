@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.shapefile.files.TabFiles;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
+import org.geotools.data.shapefile.files.TabFiles;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -110,7 +112,7 @@ public class TabReader extends AbstractMapInfoReader {
 		--numcolumns;
 	}
 
-	private void parseType(String[] words) {
+	private void parseType(String[] words) throws IllegalCharsetNameException, UnsupportedCharsetException {
 		if (words[1].equalsIgnoreCase("NATIVE") && words[2].equalsIgnoreCase("Charset")) {
 			datCharset = parseCharset(words, 3);
 		} else {

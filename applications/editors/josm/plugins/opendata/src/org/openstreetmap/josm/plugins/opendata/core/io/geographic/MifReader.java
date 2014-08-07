@@ -357,17 +357,21 @@ public class MifReader extends AbstractMapInfoReader {
         line.addNode(createNode(words[3], words[4]));
     }
     
+    private void startPolyLine() throws IOException {
+        polyline = new Way();
+        ds.addPrimitive(polyline);
+        readAttributes(polyline);
+        state = State.READING_POINTS;
+    }
+    
     private void parsePLine(String[] words) throws IOException {
-        if (words.length > 2) {
+        if (words.length <= 1 || "MULTIPLE".equalsIgnoreCase(words[1])) {
             // TODO: pline with multiple sections
-            polyline = new Way();
-            ds.addPrimitive(polyline);
-            readAttributes(polyline);
-            numpts = Integer.parseInt(words[1]); // Not described in PDF but found in real files: PLINE XX, with XX = numpoints
-            state = State.READING_POINTS;
-        } else {
             numpts = -1;
             state = State.START_POLYLINE;
+        } else {
+            numpts = Integer.parseInt(words[1]); // Not described in PDF but found in real files: PLINE XX, with XX = numpoints
+            startPolyLine();
         }
     }
 
@@ -457,10 +461,7 @@ public class MifReader extends AbstractMapInfoReader {
                 
             } else if (state == State.START_POLYLINE) {
                 numpts = Integer.parseInt(words[0]);
-                polyline = new Way();
-                ds.addPrimitive(polyline);
-                readAttributes(polyline);
-                state = State.READING_POINTS;
+                startPolyLine();
                 
             } else if (state == State.READING_POINTS && numpts > 0) {
                 if (josmProj != null) {

@@ -3593,60 +3593,60 @@
 </Style>
 <Style name="roads-text-ref-low-zoom">
     <Rule>
-      <Filter>[highway] = 'motorway' and [length] le 8</Filter>
+      <Filter>[highway] = 'motorway' and [length] le 7</Filter><!-- no "Bundesautobahn8.png" in symbols folder" but "cp Bundesautobahn7.png Bundesautobahn8.png" would help as well -->
       &maxscale_zoom10;
       &minscale_zoom12;
-      <ShieldSymbolizer size="10" fill="#fff" placement="line" file="&symbols;/Bundesautobahn[length].png" spacing="750" minimum-distance="30" fontset-name="bold-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#fff" placement="line" file="&symbols;/Bundesautobahn[length].png" spacing="650" minimum-distance="30" fontset-name="bold-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'trunk'</Filter>
+      <Filter>[highway] = 'trunk' and [length] le 8</Filter>
       &maxscale_zoom11;
       &minscale_zoom12;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'primary'</Filter>
+      <Filter>[highway] = 'primary' and [length] le 8</Filter>
       &maxscale_zoom11;
       &minscale_zoom12;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'secondary'</Filter>
+      <Filter>[highway] = 'secondary' and [length] le 8</Filter>
       &maxscale_zoom12;
       &minscale_zoom12;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/L[length].png" spacing="750" minimum-distance="40" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/L[length].png" spacing="750" minimum-distance="40" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
 </Style>
 <Style name="roads-text-ref">
     <Rule>
-      <Filter>[highway] = 'motorway' and [length] le 8</Filter>
+      <Filter>[highway] = 'motorway' and [length] le 7</Filter>
       &maxscale_zoom13;
       &minscale_zoom18;
-      <ShieldSymbolizer size="10" fill="#fff" placement="line" file="&symbols;/Bundesautobahn[length].png" spacing="750" minimum-distance="30" fontset-name="bold-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#fff" placement="line" file="&symbols;/Bundesautobahn[length].png" spacing="750" minimum-distance="30" fontset-name="bold-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'trunk'</Filter>
+      <Filter>[highway] = 'trunk' and [length] le 8</Filter>
       &maxscale_zoom13;
       &minscale_zoom18;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'primary'</Filter>
+      <Filter>[highway] = 'primary' and [length] le 8 and [length] le 8</Filter>
       &maxscale_zoom13;
       &minscale_zoom18;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/B[length].png" spacing="750" minimum-distance="30" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'secondary' and not [bridge]='yes'</Filter>
+      <Filter>[highway] = 'secondary' and not [bridge]='yes' and [length] le 8</Filter>
       &maxscale_zoom13;
       &minscale_zoom18;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/L[length].png" spacing="750" minimum-distance="40" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/L[length].png" spacing="750" minimum-distance="40" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'tertiary' and not [bridge]='yes'</Filter>
+      <Filter>[highway] = 'tertiary' and not [bridge]='yes' and [length] le 8</Filter>
       &maxscale_zoom13;
       &minscale_zoom18;
-      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/L[length].png" spacing="750" minimum-distance="40" fontset-name="book-fonts">[ref]</ShieldSymbolizer>
+      <ShieldSymbolizer size="10" fill="#000" placement="line" file="&symbols;/L[length].png" spacing="750" minimum-distance="40" fontset-name="book-fonts" minimum-padding="31">[ref]</ShieldSymbolizer>
     </Rule>
     <Rule>
       <Filter>([highway] = 'unclassified' or [highway]='residential') and not [bridge]='yes'</Filter>

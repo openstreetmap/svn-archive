@@ -101,12 +101,12 @@ public class EleVertexTest extends TestCase {
         Color c3 = testMap.getColor(500);
         assertEquals(Color.gray, c3);
 
-        // test 0.75 (RGB 192 x 3)
-        Color c4 = testMap.getColor(751);
-        assertEquals(Color.lightGray, c4);
-        // test 0.25 (RGB 64 x 3)
-        Color c5 = testMap.getColor(251);
-        assertEquals(Color.darkGray, c5);
+        // test 0.75 (RGB 64 x 3)
+        Color c4 = testMap.getColor(749);
+        assertEquals(Color.darkGray, c4);
+        // test 0.25 (RGB 192 x 3)
+        Color c5 = testMap.getColor(249);
+        assertEquals(Color.lightGray, c5);
     }
 
     private void assertCoorEq(EleVertex v1, double x, double y, int n) {

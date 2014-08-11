@@ -6,8 +6,6 @@
 ; If you get an error here, please update to at least NSIS 2.07!
 SetCompressor /SOLID lzma
 
-!define DEST "josm"
-
 ; Used to refresh the display of file association
 !define SHCNE_ASSOCCHANGED 0x08000000
 !define SHCNF_IDLIST 0
@@ -46,7 +44,7 @@ Var /GLOBAL plugins
 !define MUI_WELCOMEFINISHPAGE_BITMAP "josm-nsis-brand.bmp"
 !define MUI_WELCOMEPAGE_TEXT $(JOSM_WELCOME_TEXT) 
 
-!define MUI_FINISHPAGE_RUN "$INSTDIR\josm.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\${DEST}.exe"
 
 
 ; ============================================================================
@@ -266,17 +264,17 @@ SetOutPath $INSTDIR
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayVersion" "${VERSION}"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayName" "JOSM ${VERSION}"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "UninstallString" '"$INSTDIR\uninstall.exe"'
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "Publisher" "The OpenStreetMap developer community, http://www.openstreetmap.org/"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "HelpLink" "mailto:newbies@openstreetmap.org."
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLInfoAbout" "http://www.openstreetmap.org/"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLUpdateInfo" "http://wiki.openstreetmap.org/index.php/JOSM"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "Publisher" "The OpenStreetMap JOSM developers team, https://josm.openstreetmap.de"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "HelpLink" "mailto:josm-dev@openstreetmap.org."
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLInfoAbout" "https://josm.openstreetmap.de"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLUpdateInfo" "https://josm.openstreetmap.de"
 WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "NoModify" 1
 WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "NoRepair" 1
 WriteUninstaller "uninstall.exe"
 
 ; Write an entry for ShellExecute
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe" "" '$INSTDIR\josm.exe'
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe" "Path" '$INSTDIR'
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\${DEST}.exe" "" '$INSTDIR\${DEST}.exe'
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\${DEST}.exe" "Path" '$INSTDIR'
 
 SectionEnd ; "Required"
 
@@ -285,7 +283,7 @@ Section $(JOSM_SEC_JOSM) SecJosm
 ;-------------------------------------------
 SectionIn 1
 SetOutPath $INSTDIR
-File "josm.exe"
+File "${DEST}.exe"
 File "josm-tested.jar"
 
 ; XXX - should be provided/done by josm.jar itself and not here!
@@ -327,21 +325,21 @@ Section $(JOSM_SEC_STARTMENU) SecStartMenu
 SectionIn 1 2
 ; To quote "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
 ; "Do not include Readme, Help, or Uninstall entries on the Programs menu."
-CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
+CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\${DEST}.exe" "" "$INSTDIR\${DEST}.exe" 0 "" "" $(JOSM_LINK_TEXT)
 SectionEnd
 
 Section $(JOSM_SEC_DESKTOP_ICON) SecDesktopIcon
 ;-------------------------------------------
 ; Create desktop icon
 ; Desktop icon for a program should not be installed as default!
-CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
+CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\${DEST}.exe" "" "$INSTDIR\${DEST}.exe" 0 "" "" $(JOSM_LINK_TEXT)
 SectionEnd
 
 Section $(JOSM_SEC_QUICKLAUNCH_ICON) SecQuickLaunchIcon
 ;-------------------------------------------
 ; Create quick launch icon. Does not really exist as of Windows 7/8 but still advanced users use it.
 ; Only disable it by default, see #10241
-CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" $(JOSM_LINK_TEXT)
+CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\${DEST}.exe" "" "$INSTDIR\${DEST}.exe" 0 "" "" $(JOSM_LINK_TEXT)
 SectionEnd
 
 Section $(JOSM_SEC_FILE_EXTENSIONS) SecFileExtensions
@@ -349,8 +347,8 @@ Section $(JOSM_SEC_FILE_EXTENSIONS) SecFileExtensions
 SectionIn 1 2
 ; Create File Extensions
 WriteRegStr HKCR ${OSM_ASSOC} "" "OpenStreetMap data"
-WriteRegStr HKCR "${OSM_ASSOC}\Shell\open\command" "" '"$INSTDIR\josm.exe" "%1"'
-WriteRegStr HKCR "${OSM_ASSOC}\DefaultIcon" "" '"$INSTDIR\josm.exe",0'
+WriteRegStr HKCR "${OSM_ASSOC}\Shell\open\command" "" '"$INSTDIR\${DEST}.exe" "%1"'
+WriteRegStr HKCR "${OSM_ASSOC}\DefaultIcon" "" '"$INSTDIR\${DEST}.exe",0'
 push $R0
 	StrCpy $R0 ".osm"
   	Call Associate
@@ -393,7 +391,7 @@ IfErrors 0 NoJOSMErrorMsg
 	MessageBox MB_OK $(un.JOSM_IN_USE_ERROR) IDOK 0 ;skipped if josm.jar removed
 	Abort $(un.JOSM_IN_USE_ERROR)
 NoJOSMErrorMsg:
-Delete "$INSTDIR\josm.exe"
+Delete "$INSTDIR\${DEST}.exe"
 Delete "$INSTDIR\imageformats\qjpeg4.dll"
 RMDir "$INSTDIR\imageformats"
 Delete "$INSTDIR\mingwm10.dll"
@@ -405,8 +403,8 @@ Delete "$INSTDIR\webkit-image.exe"
 Delete "$INSTDIR\uninstall.exe"
 
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM"
-DeleteRegKey HKEY_LOCAL_MACHINE "Software\josm.exe"
-DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe"
+DeleteRegKey HKEY_LOCAL_MACHINE "Software\${DEST}.exe"
+DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\${DEST}.exe"
 
 ; Remove Language preference info
 DeleteRegKey HKCU "Software/JOSM" ;${MUI_LANGDLL_REGISTRY_ROOT} ${MUI_LANGDLL_REGISTRY_KEY}

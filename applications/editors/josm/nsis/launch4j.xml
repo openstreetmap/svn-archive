@@ -1,23 +1,35 @@
 <launch4jConfig>
-  <dontWrapJar>true</dontWrapJar>
-  <headerType>0</headerType>
+  <headerType>gui</headerType>
+  <outfile>%TARGET%.exe</outfile>
   <jar>josm-tested.jar</jar>
-  <outfile>josm.exe</outfile>
+  <dontWrapJar>true</dontWrapJar>
   <errTitle></errTitle>
+  <downloadUrl>https://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
   <cmdLine></cmdLine>
   <chdir></chdir>
   <priority>normal</priority>
-  <downloadUrl>https://java.com/download</downloadUrl>
-  <supportUrl></supportUrl>
-  <customProcName>false</customProcName>
   <stayAlive>true</stayAlive>
   <icon>logo.ico</icon>
   <jre>
     <path></path>
     <minVersion>1.7.0</minVersion>
     <maxVersion></maxVersion>
-    <dontUsePrivateJres>false</dontUsePrivateJres>
-    <initialHeapSize>128</initialHeapSize>
-    <maxHeapSize>1024</maxHeapSize>
+    <jdkPreference>preferJre</jdkPreference>
+	<runtimeBits>%RTBITS%</runtimeBits>
+    <initialHeapSize>%INIHEAP%</initialHeapSize>
+    <maxHeapSize>%MAXHEAP%</maxHeapSize>
   </jre>
+  <versionInfo>
+    <fileVersion>1.5.0.%VERSION%</fileVersion>
+    <txtFileVersion>%VERSION%</txtFileVersion>
+    <fileDescription>Java OpenStreetMap Editor</fileDescription>
+    <copyright>GNU General Public License v2 or later</copyright>
+    <productVersion>1.5.0.%VERSION%</productVersion>
+    <txtProductVersion>%VERSION%</txtProductVersion>
+    <productName>JOSM</productName>
+    <companyName>OpenStreetMap</companyName>
+    <internalName>%TARGET%</internalName>
+    <originalFilename>%TARGET%.exe</originalFilename>
+  </versionInfo>
 </launch4jConfig>

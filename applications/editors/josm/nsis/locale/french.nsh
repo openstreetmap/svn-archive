@@ -6,15 +6,16 @@
 ;;
 ;;  Author: Vincent Privat <vprivat@openstreetmap.fr>, 2011.
 ;;
-;;
 
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_WELCOME_TEXT "Cet assistant va vous guider à travers l'installation de l'éditeur Java OpenStreetMap (JOSM).\r\n\r\nAvant de lancer l'installation, assure-vous que JOSM n'est pas déjà en cours d'exécution.\r\n\r\nVeuillez cliquer sur 'Suivant' pour continuer."
+; Make sure to update the JOSM_MACRO_LANGUAGEFILE_END macro in
+; langmacros.nsh when updating this file
+
+!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_WELCOME_TEXT "Cet assistant va vous guider à travers l'installation de l'éditeur Java OpenStreetMap (JOSM).$\r$\n$\r$\nAvant de lancer l'installation, assurez-vous que JOSM n'est pas déjà en cours d'exécution.$\r$\n$\r$\nVeuillez cliquer sur 'Suivant' pour continuer."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_DIR_TEXT "Veuillez choisir un dossier où installer JOSM."
 
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_FULL_INSTALL "JOSM (installation complète)"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_JOSM "JOSM"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_PLUGINS_GROUP "Greffons"
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_AGPIFOJ_PLUGIN  "AgPifoJ"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_TURNRESTRICTIONS_PLUGIN  "TurnRestrictions"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_WMS  "Téléchargement WMS"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_STARTMENU  "Entrée dans le menu Démarrer"
@@ -23,10 +24,7 @@
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_FILE_EXTENSIONS  "Extensions de fichier"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_JOSM "JOSM est l'éditeur Java OpenStreetMap pour les fichiers .osm."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_PLUGINS_GROUP "Une sélection de greffons utiles pour JOSM."
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_AGPIFOJ_PLUGIN  "Corrèle des photos avec des traces GPS ou importe des photos géolocalisées EXIF."
-;!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_REMOTECONTROL_PLUGIN  "Let other applications send commands to JOSM."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_TURNRESTRICTIONS_PLUGIN  "Permet de saisir et de maintenir des informations sur les restrictions de tourner."
-;!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_VALIDATOR_PLUGIN  "Validates edited data if it conforms to common suggestions."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_WMS  "Affiche des images en arrière-plan à partir de sources Web Map Service (WMS)."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_STARTMENU  "Ajoute une entrée JOSM au menu démarrer."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_DESKTOP_ICON  "Ajoute une icône JOSM au Bureau."
@@ -45,12 +43,9 @@
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_IN_USE_ERROR "Attention: JOSM n'a pas pu être retiré, il est probablement en utilisation !"
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_INSTDIR_ERROR "Attention: Le dossier $INSTDIR n'a pas pu être supprimé !"
 
-
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SEC_UNINSTALL "JOSM" 
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SEC_PERSONAL_SETTINGS "Paramètres personnels" 
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SEC_PLUGINS "Greffons personnels" 
 
-
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SECDESC_UNINSTALL "Désinstaller JOSM."
 !insertmacro JOSM_MACRO_DEFAULT_STRING un.JOSM_SECDESC_PERSONAL_SETTINGS  "Désinstaller les paramètres personnels de votre profil: $PROFILE."
-

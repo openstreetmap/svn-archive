@@ -100,9 +100,6 @@ fi
 function build_exe {
 
 	export TARGET=$1	# josm / josm64. Used in file name of launcher and installer
-	#export RTBITS=$2	# L4J "runtimeBits" (JVM architecture used by launcher)
-	#export INIHEAP=$3	# L4J "initialHeapSize" (initial heap size in MB)
-	#export MAXHEAP=$4	# L4J "maxHeapSize" (max heap size in MB)
 	
 	/bin/rm -f "launch4j_${TARGET}.xml"
 	/bin/sed -e "s/%TARGET%/$1/" -e "s/%RTBITS%/$2/" -e "s/%INIHEAP%/$3/" -e "s/%MAXHEAP%/$4/" -e "s/%VERSION%/$VERSION/" "launch4j.xml" > "launch4j_${TARGET}.xml"
@@ -136,6 +133,7 @@ function build_exe {
 }
 
 build_exe "josm" "64\/32" 128 1024
-build_exe "josm64"  "64" 256 2048
+# 64-bit binary generation commented until possible with launch4j / nsis
+# build_exe "josm64"  "64" 256 2048
 
 /bin/rm -f josm-tested.jar 2>/dev/null >/dev/null

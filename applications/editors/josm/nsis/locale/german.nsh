@@ -6,15 +6,16 @@
 ;;
 ;;  Author: Bjoern Voigt <bjoern@cs.tu-berlin.de>, 2003.
 ;;  Version 2
-;;
 
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_WELCOME_TEXT "Diese Installationshilfe wird Sie durch den Installationsvorgang des JAVA OpenStreetMap Editors (JOSM) führen.\r\n\r\nBevor Sie die Installation starten, stellen Sie bitte sicher das JOSM nicht bereits läuft.\r\n\r\nAuf 'Weiter' klicken um fortzufahren."
+; Make sure to update the JOSM_MACRO_LANGUAGEFILE_END macro in
+; langmacros.nsh when updating this file
+
+!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_WELCOME_TEXT "Diese Installationshilfe wird Sie durch den Installationsvorgang des JAVA OpenStreetMap Editors (JOSM) führen.$\r$\n$\r$\nBevor Sie die Installation starten, stellen Sie bitte sicher das JOSM nicht bereits läuft.$\r$\n$\r$\nAuf 'Weiter' klicken um fortzufahren."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_DIR_TEXT "Bitte das Verzeichnis auswählen, in das JOSM installiert werden soll."
 
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_FULL_INSTALL "JOSM (Komplettinstallation)"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_JOSM "JOSM"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_PLUGINS_GROUP "Plugins"
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_AGPIFOJ_PLUGIN  "AgPifoJ"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_TURNRESTRICTIONS_PLUGIN  "TurnRestrictions"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_WMS  "WMS Downloadprogram"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_STARTMENU  "Startmenü Eintrag"
@@ -23,10 +24,7 @@
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SEC_FILE_EXTENSIONS  "Dateiendungen"
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_JOSM "JOSM ist der JAVA OpenStreetMap Editor für .osm Dateien."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_PLUGINS_GROUP "Eine Auswahl an nützlichen JOSM Plugins."
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_AGPIFOJ_PLUGIN  "Bringt GPS Tracks mit Fotos in Übereinstimmung oder importiert EXIF Fotos"
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_REMOTECONTROL_PLUGIN  "Andere Applikationen können JOSM Kommandos zusenden."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_TURNRESTRICTIONS_PLUGIN  "Erleichtert die Eingabe und Pflege von Informationen zu Abbiegebeschränkungen."
-!insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_VALIDATOR_PLUGIN  "Validatiert geänderte Daten ob diese mit den üblichen Ratschlägen übereinstimmen."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_WMS  "Hintergrundbilder von Web Map Service (WMS) Quellen."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_STARTMENU  "Fügt JOSM zum Startmenü hinzu."
 !insertmacro JOSM_MACRO_DEFAULT_STRING JOSM_SECDESC_DESKTOP_ICON  "Fügt ein JOSM Icon zum Desktop hinzu."

@@ -3,8 +3,16 @@
 ;
 
 ; Set the compression mechanism first.
-; If you get an error here, please update to at least NSIS 2.07!
 SetCompressor /SOLID lzma
+
+; Load StdUtils plugin (ANSI until we switch to Unicode installer with NSIS 3)
+!addplugindir plugins/stdutils/Plugins/Release_ANSI
+!addincludedir plugins/stdutils/Include
+
+!include "StdUtils.nsh"
+
+; make sure the installer will get elevated rights on UAC-enabled system (Vista+)
+RequestExecutionLevel admin
 
 ; Used to refresh the display of file association
 !define SHCNE_ASSOCCHANGED 0x08000000
@@ -17,9 +25,7 @@ SetCompressor /SOLID lzma
 ; Header configuration
 ; ============================================================================
 ; The name of the installer
-!define PROGRAM_NAME "JOSM"
-
-Name "${PROGRAM_NAME} ${VERSION}"
+Name "JOSM ${VERSION}"
 
 ; The file to write
 OutFile "${DEST}-setup-${VERSION}.exe"
@@ -32,7 +38,7 @@ Var /GLOBAL plugins
 ; Modern UI
 ; ============================================================================
 
-!include "MUI.nsh"
+!include "MUI2.nsh"
 
 ; Icon of installer and uninstaller
 !define MUI_ICON "logo.ico"
@@ -44,8 +50,13 @@ Var /GLOBAL plugins
 !define MUI_WELCOMEFINISHPAGE_BITMAP "josm-nsis-brand.bmp"
 !define MUI_WELCOMEPAGE_TEXT $(JOSM_WELCOME_TEXT) 
 
-!define MUI_FINISHPAGE_RUN "$INSTDIR\${DEST}.exe"
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_FUNCTION LaunchJOSM
 
+; Function used to Launch JOSM in user (non-elevated) mode
+Function LaunchJOSM
+  ${StdUtils.ExecShellAsUser} $0 "$INSTDIR\${DEST}.exe" "open" ""
+FunctionEnd
 
 ; ============================================================================
 ; MUI Pages
@@ -54,7 +65,6 @@ Var /GLOBAL plugins
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\core\LICENSE"
 !insertmacro MUI_PAGE_COMPONENTS
-;Page custom DisplayAdditionalTasksPage
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -71,7 +81,7 @@ Var /GLOBAL plugins
 
   ;Remember the installer language
   !define MUI_LANGDLL_REGISTRY_ROOT "HKLM" 
-  !define MUI_LANGDLL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" 
   !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
   
   ;; English goes first because its the default. The rest are
@@ -104,15 +114,6 @@ InstType "$(JOSM_FULL_INSTALL)"
 
 InstType "un.$(un.JOSM_DEFAULT_UNINSTALL)"
 InstType "un.$(un.JOSM_FULL_UNINSTALL)"
-
-; ============================================================================
-; Reserve Files
-; ============================================================================
-
-  ;Things that need to be extracted on first (keep these lines before any File command!)
-  ;Only useful for BZIP2 compression
-
-!insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 ; ============================================================================
 ; Section macros
@@ -234,15 +235,11 @@ un.unlink.end:
 FunctionEnd
 
 Function .onInit
-  ;Extract InstallOptions INI files
-;  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "AdditionalTasksPage.ini"
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
 Function un.onInit
-
   !insertmacro MUI_UNGETLANGUAGE
-  
 FunctionEnd
 
 ; ============================================================================
@@ -261,15 +258,15 @@ SetShellVarContext current
 SetOutPath $INSTDIR
 
 ; Write the uninstall keys for Windows
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayVersion" "${VERSION}"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayName" "JOSM ${VERSION}"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "UninstallString" '"$INSTDIR\uninstall.exe"'
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "Publisher" "The OpenStreetMap JOSM developers team, https://josm.openstreetmap.de"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "HelpLink" "mailto:josm-dev@openstreetmap.org."
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLInfoAbout" "https://josm.openstreetmap.de"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLUpdateInfo" "https://josm.openstreetmap.de"
-WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "NoModify" 1
-WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "NoRepair" 1
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "DisplayVersion" "${VERSION}"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "DisplayName" "JOSM ${VERSION}"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "UninstallString" '"$INSTDIR\uninstall.exe"'
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "Publisher" "OpenStreetMap JOSM team"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "HelpLink" "mailto:josm-dev@openstreetmap.org."
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "URLInfoAbout" "https://josm.openstreetmap.de"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "URLUpdateInfo" "https://josm.openstreetmap.de"
+WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "NoModify" 1
+WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM" "NoRepair" 1
 WriteUninstaller "uninstall.exe"
 
 ; Write an entry for ShellExecute
@@ -359,7 +356,6 @@ pop $R0
 !insertmacro UpdateIcons
 SectionEnd
 
-
 Section "-PluginSetting"
 ;-------------------------------------------
 SectionIn 1 2
@@ -373,9 +369,7 @@ FileOpen $R0 "$APPDATA\JOSM\preferences.xml" w
 FileWrite $R0 "<?xml version='1.0' encoding='UTF-8'?><preferences xmlns='http://josm.openstreetmap.de/preferences-1.0' version='4660'><list key='plugins'>$plugins</list></preferences>"
 FileClose $R0
 settings_exists:
-
 SectionEnd
-
 
 Section "un.$(un.JOSM_SEC_UNINSTALL)" un.SecUinstall
 ;-------------------------------------------
@@ -402,7 +396,7 @@ Delete "$INSTDIR\QtWebKit4.dll"
 Delete "$INSTDIR\webkit-image.exe"
 Delete "$INSTDIR\uninstall.exe"
 
-DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM"
+DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\${DEST}.exe"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\${DEST}.exe"
 
@@ -445,7 +439,6 @@ Delete "$APPDATA\JOSM\preferences.xml"
 RMDir "$APPDATA\JOSM"
 SectionEnd
 
-
 Section "-Un.Finally"
 ;-------------------------------------------
 SectionIn 1 2
@@ -454,7 +447,6 @@ IfFileExists "$INSTDIR" 0 NoFinalErrorMsg
     MessageBox MB_OK $(un.JOSM_INSTDIR_ERROR) IDOK 0 ; skipped if dir doesn't exist
 NoFinalErrorMsg:
 SectionEnd
-
 
 ; ============================================================================
 ; PLEASE MAKE SURE, THAT THE DESCRIPTIVE TEXT FITS INTO THE DESCRIPTION FIELD!
@@ -468,8 +460,6 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(JOSM_SECDESC_DESKTOP_ICON)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} $(JOSM_SECDESC_QUICKLAUNCH_ICON) 
   !insertmacro MUI_DESCRIPTION_TEXT ${SecFileExtensions} $(JOSM_SECDESC_FILE_EXTENSIONS)
-  
-
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN

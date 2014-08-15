@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.MultipolygonCreate;
+import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -55,7 +55,7 @@ public class MultipolygonFixer extends RelationFixer {
         for( OsmPrimitive p : source.getMemberPrimitives() )
             if( p instanceof Way )
                 ways.add((Way)p);
-        MultipolygonCreate mpc = new MultipolygonCreate();
+        MultipolygonBuilder mpc = new MultipolygonBuilder();
         String error = mpc.makeFromWays(ways);
         if( error != null )
             return null;
@@ -63,11 +63,11 @@ public class MultipolygonFixer extends RelationFixer {
         Relation r = new Relation(source);
         boolean fixed = false;
         Set<Way> outerWays = new HashSet<Way>();
-        for( MultipolygonCreate.JoinedPolygon poly : mpc.outerWays )
+        for( MultipolygonBuilder.JoinedPolygon poly : mpc.outerWays )
             for( Way w : poly.ways )
                 outerWays.add(w);
         Set<Way> innerWays = new HashSet<Way>();
-        for( MultipolygonCreate.JoinedPolygon poly : mpc.innerWays )
+        for( MultipolygonBuilder.JoinedPolygon poly : mpc.innerWays )
             for( Way w : poly.ways )
                 innerWays.add(w);
         for( int i = 0; i < r.getMembersCount(); i++ ) {

@@ -87,7 +87,7 @@ public class CreateMultipolygonAction extends JosmAction {
 	}
 
 	// for now, just copying standard action
-	MultipolygonCreate mpc = new MultipolygonCreate();
+	MultipolygonBuilder mpc = new MultipolygonBuilder();
 	String error = mpc.makeFromWays(getCurrentDataSet().getSelectedWays());
 	if( error != null ) {
 	    JOptionPane.showMessageDialog(Main.parent, error);
@@ -99,10 +99,10 @@ public class CreateMultipolygonAction extends JosmAction {
 	    rel.put("boundary", "administrative");
 	} else
 	    rel.put("type", "multipolygon");
-	for( MultipolygonCreate.JoinedPolygon poly : mpc.outerWays )
+	for( MultipolygonBuilder.JoinedPolygon poly : mpc.outerWays )
 	    for( Way w : poly.ways )
 		rel.addMember(new RelationMember("outer", w));
-	for( MultipolygonCreate.JoinedPolygon poly : mpc.innerWays )
+	for( MultipolygonBuilder.JoinedPolygon poly : mpc.innerWays )
 	    for( Way w : poly.ways )
 		rel.addMember(new RelationMember("inner", w));
 	List<Command> list = removeTagsFromInnerWays(rel);

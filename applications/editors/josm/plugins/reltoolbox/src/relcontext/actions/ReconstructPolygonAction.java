@@ -1,16 +1,35 @@
 package relcontext.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.osm.MultipolygonCreate.JoinedPolygon;
+import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
+import org.openstreetmap.josm.data.osm.MultipolygonBuilder.JoinedPolygon;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.tools.ImageProvider;
+
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
@@ -48,7 +67,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 	    return;
 	}
 	
-	MultipolygonCreate mpc = new MultipolygonCreate();
+	MultipolygonBuilder mpc = new MultipolygonBuilder();
 	String error = mpc.makeFromWays(ways);
 	if( error != null ) {
 	    JOptionPane.showMessageDialog(Main.parent, error);

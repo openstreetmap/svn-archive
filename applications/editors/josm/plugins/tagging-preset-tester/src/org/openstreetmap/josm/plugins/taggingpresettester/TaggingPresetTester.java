@@ -68,11 +68,14 @@ public class TaggingPresetTester extends JFrame {
         super(tr("Tagging Preset Tester"));
         this.args = args;
         taggingPresets = new TaggingPresetSelector(true, true);
+        taggingPresets.setMinimumSize(new Dimension(150,250));
+        taggingPresets.setPreferredSize(new Dimension(300,500));
+        taggingPresetPanel.setMinimumSize(new Dimension(150,250));
         taggingPresetPanel.setPreferredSize(new Dimension(300,500));
         reload();
 
-        panel.add(taggingPresets, GBC.std(0,0).fill(GBC.BOTH));
-        panel.add(taggingPresetPanel, GBC.std(1,0).fill(GBC.BOTH));
+        panel.add(taggingPresets, GBC.std(0,0).fill(GBC.BOTH).weight(0.5, 1.0));
+        panel.add(taggingPresetPanel, GBC.std(1,0).fill(GBC.BOTH).weight(0.5, 1.0));
         taggingPresets.addSelectionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,6 +97,7 @@ public class TaggingPresetTester extends JFrame {
         panel.add(b, GBC.std(0,1).span(2,1).fill(GBC.HORIZONTAL));
 
         setContentPane(panel);
+        setMinimumSize(new Dimension(400,300));
         setSize(600,500);
     }
 

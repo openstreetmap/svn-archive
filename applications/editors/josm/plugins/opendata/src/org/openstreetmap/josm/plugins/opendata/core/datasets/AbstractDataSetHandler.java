@@ -25,6 +25,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.archive.ArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultGmlHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultShpHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.CsvHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.tabular.DefaultCsvHandler;
@@ -438,6 +439,18 @@ public abstract class AbstractDataSetHandler {
 	public final ShpHandler getShpHandler() {
 		return shpHandler;
 	}
+
+    // --------- MIF handling ---------
+    
+    private MifHandler mifHandler;
+
+    public final void setMifHandler(MifHandler handler) {
+        mifHandler = handler;
+    }
+    
+    public final MifHandler getMifHandler() {
+        return mifHandler;
+    }
 
 	// --------- GML handling ---------
 	

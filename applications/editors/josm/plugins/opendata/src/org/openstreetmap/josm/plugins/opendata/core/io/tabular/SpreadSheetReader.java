@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.opendata.core.io.tabular;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,10 +21,9 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
-import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionChooser;
+import org.openstreetmap.josm.plugins.opendata.core.gui.ChooserLauncher;
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
 public abstract class SpreadSheetReader extends AbstractReader {
@@ -77,25 +75,6 @@ public abstract class SpreadSheetReader extends AbstractReader {
             columns.add(col = new CoordinateColumns());
         }
         return col;
-	}
-	
-	private class ChooserLauncher implements Runnable {
-
-	    public Projection proj = null;
-        private final ProgressMonitor progressMonitor;
-	    
-        public ChooserLauncher(ProgressMonitor progressMonitor) {
-            this.progressMonitor = progressMonitor;
-        }
-
-        @Override
-        public void run() {
-            Component parent = progressMonitor == null ? Main.parent : progressMonitor.getWindowParent();
-            ProjectionChooser dialog = (ProjectionChooser) new ProjectionChooser(parent).showDialog();
-            if (dialog.getValue() == 1) {
-                proj = dialog.getProjection();
-            }
-        }
 	}
 	
 	public DataSet doParse(String[] header, ProgressMonitor progressMonitor) throws IOException {
@@ -152,13 +131,12 @@ public abstract class SpreadSheetReader extends AbstractReader {
                     throw new IllegalArgumentException("No valid coordinates have been found and cannot prompt user in headless mode.");
 			    }
 				// TODO: filter proposed projections with min/max values ?
-			    ChooserLauncher launcher = new ChooserLauncher(progressMonitor);
-			    GuiHelper.runInEDTAndWait(launcher);
-				if (launcher.proj == null) {
+                Projection p = ChooserLauncher.askForProjection(progressMonitor);
+				if (p == null) {
 					return null; // User clicked Cancel
 				}
 		        for (CoordinateColumns c : columns) {
-		            c.proj = launcher.proj;
+		            c.proj = p;
 		        }
 			}
 			

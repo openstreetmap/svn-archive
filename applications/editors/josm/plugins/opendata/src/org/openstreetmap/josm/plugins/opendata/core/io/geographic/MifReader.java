@@ -28,9 +28,11 @@ import org.openstreetmap.josm.data.projection.CustomProjection;
 import org.openstreetmap.josm.data.projection.CustomProjection.Param;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
+import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.gui.ChooserLauncher;
 import org.openstreetmap.josm.plugins.opendata.core.io.InputStreamReaderUnbuffered;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
@@ -52,6 +54,8 @@ public class MifReader extends AbstractMapInfoReader {
         START_POLYLINE_SEGMENT,
         END_POLYLINE
     }
+    
+    private final AbstractDataSetHandler handler;
     
     private File file;
     private InputStream stream;
@@ -90,9 +94,13 @@ public class MifReader extends AbstractMapInfoReader {
     // PLine clause
     private int numsections = -1;
     
+    private MifReader(AbstractDataSetHandler handler) {
+        this.handler = handler;
+    }
+    
     public static DataSet parseDataSet(InputStream in, File file,
             AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-        return new MifReader().parse(in, file, instance, Charset.forName(OdConstants.ISO8859_15));
+        return new MifReader(handler).parse(in, file, instance, Charset.forName(OdConstants.ISO8859_15));
     }
 
     private void parseDelimiter(String[] words) {
@@ -326,8 +334,11 @@ public class MifReader extends AbstractMapInfoReader {
             // the coordinate system. If the Projection clause is omitted, MapBasic uses a longitude, latitude coordinate system using the North American Datum of 1927 (NAD-27). 
             // Use syntax 2 to explicitly define a non-Earth coordinate system, such as the coordinate system used in a floor plan or other CAD drawing. 
             
-            // FIXME: allow user to choose projection ?
-            josmProj = new CustomProjection(null);
+            if (handler != null && handler.getMifHandler() != null && handler.getMifHandler().getCoordSysNonEarthProjection() != null) {
+                josmProj = handler.getMifHandler().getCoordSysNonEarthProjection();
+            } else {
+                josmProj = ChooserLauncher.askForProjection(NullProgressMonitor.INSTANCE);
+            }
             break;
         case "layout":
         case "table":

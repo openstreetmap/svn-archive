@@ -64,7 +64,6 @@
         <ant target="dist" dir="namemanager"/>
         <ant target="dist" dir="NanoLog"/>
         <ant target="dist" dir="native-password-manager"/>
-        <ant target="dist" dir="nearclick"/>
         <ant target="dist" dir="no_more_mapping"/>
         <ant target="dist" dir="OpeningHoursEditor"/>
         <ant target="dist" dir="opendata"/>
@@ -167,7 +166,6 @@
         <ant target="clean" dir="no_more_mapping"/>
         <ant target="clean" dir="NanoLog"/>
         <ant target="clean" dir="native-password-manager"/>
-        <ant target="clean" dir="nearclick"/>
         <ant target="clean" dir="OpeningHoursEditor"/>
         <ant target="clean" dir="opendata"/>
         <ant target="clean" dir="openvisible"/>

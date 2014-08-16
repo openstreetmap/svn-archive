@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences;
@@ -76,11 +78,12 @@ public class TaggingPresetTester extends JFrame {
 
         panel.add(taggingPresets, GBC.std(0,0).fill(GBC.BOTH).weight(0.5, 1.0));
         panel.add(taggingPresetPanel, GBC.std(1,0).fill(GBC.BOTH).weight(0.5, 1.0));
-        taggingPresets.addSelectionListener(new ActionListener(){
+        taggingPresets.addSelectionListener(new ListSelectionListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if (taggingPresets.getSelectedPreset()!=null)
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting() && taggingPresets.getSelectedPreset() != null) {
                     reselect();
+                }
             }
         });
         reselect();

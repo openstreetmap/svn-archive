@@ -59,7 +59,8 @@ namespace OsmUtils.Framework
                 OsmNode node = new OsmNode (originalNode.Id, originalNode.Lat, originalNode.Lon);
                 if (originalNode.Timestamp != null)
                     node.Timestamp = DateTime.Parse (originalNode.Timestamp, CultureInfo.InvariantCulture);
-                node.User = originalNode.User;
+                node.User = OsmUser.Fetch(originalNode.User, originalNode.Uid);
+                node.ChangesetId = originalNode.Changeset;
                 node.Visible = originalNode.Visible;
                 node.Action = objectAction;
 
@@ -79,7 +80,8 @@ namespace OsmUtils.Framework
                 OsmWay way = new OsmWay (originalWay.Id);
                 if (originalWay.Timestamp != null)
                     way.Timestamp = DateTime.Parse (originalWay.Timestamp, CultureInfo.InvariantCulture);
-                way.User = originalWay.User;
+                way.User = OsmUser.Fetch(originalWay.User, originalWay.Uid);
+                way.ChangesetId = originalWay.Changeset;
                 way.Visible = originalWay.Visible;
                 way.Action = objectAction;
 
@@ -105,7 +107,8 @@ namespace OsmUtils.Framework
                 OsmRelation relation = new OsmRelation (originalRelation.Id);
                 if (originalRelation.Timestamp != null)
                     relation.Timestamp = DateTime.Parse (originalRelation.Timestamp, CultureInfo.InvariantCulture);
-                relation.User = originalRelation.User;
+                relation.User = OsmUser.Fetch(originalRelation.User, originalRelation.Uid);
+                relation.ChangesetId = originalRelation.Changeset;
                 relation.Visible = originalRelation.Visible;
                 relation.Action = objectAction;
 
@@ -131,12 +134,16 @@ namespace OsmUtils.Framework
         /// <param name="changeset">Changeset ID</param>
         /// <returns>Data for XmlSerializer</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-        public osm ExportData (string user, int uid, int changeset)
+        public osm ExportData (string generator)
         {
             osm osmData = new osm ();
             osmData.Version = "0.6";
-            osmData.Generator = "Srtm2Osm";
             osmData.Upload = false;
+            if (String.IsNullOrEmpty(generator))
+                osmData.Generator = "OsmUtils";
+            else
+                osmData.Generator = generator;
+
             osmData.Node = new List<osmNode> ();
             osmData.Way = new List<osmWay> ();
             osmData.Relation = new List<osmRelation> ();
@@ -148,13 +155,12 @@ namespace OsmUtils.Framework
                 exportedNode.Lat = node.Latitude;
                 exportedNode.Lon = node.Longitude;
                 exportedNode.Timestamp = node.Timestamp.ToString ("o", CultureInfo.InvariantCulture);
-                exportedNode.User = node.User;
+                exportedNode.User = node.User.Name;
+                exportedNode.Uid = node.User.Id;
                 exportedNode.Visible = node.Visible;
                 exportedNode.Action = FormatOsmObjectAction (node.Action);
                 exportedNode.Version = 1;
-                exportedNode.User = user;
-                exportedNode.Uid = uid;
-                exportedNode.Changeset = changeset;
+                exportedNode.Changeset = node.ChangesetId;
 
                 // Do explicity set the Lat- / LonSpecified properties.
                 // Otherwise the lat / lon XML attributes would not get written, if the node has
@@ -174,13 +180,12 @@ namespace OsmUtils.Framework
                 osmWay exportedWay = new osmWay ();
                 exportedWay.Id = way.ObjectId;
                 exportedWay.Timestamp = way.Timestamp.ToString ("o" , CultureInfo.InvariantCulture);
-                exportedWay.User = way.User;
+                exportedWay.User = way.User.Name;
+                exportedWay.Uid = way.User.Id;
                 exportedWay.Visible = way.Visible;
                 exportedWay.Action = FormatOsmObjectAction (way.Action);
                 exportedWay.Version = 1;
-                exportedWay.User = user;
-                exportedWay.Uid = uid;
-                exportedWay.Changeset = changeset;
+                exportedWay.Changeset = way.ChangesetId;
 
                 exportedWay.Nd = new List<osmWayND> ();
                 foreach (long nodeId in way.EnumerateNodesIds ())
@@ -202,13 +207,12 @@ namespace OsmUtils.Framework
                 osmRelation exportedRelation = new osmRelation ();
                 exportedRelation.Id = relation.ObjectId;
                 exportedRelation.Timestamp = relation.Timestamp.ToString ("o", CultureInfo.InvariantCulture);
-                exportedRelation.User = relation.User;
+                exportedRelation.User = relation.User.Name;
+                exportedRelation.Uid = relation.User.Id;
                 exportedRelation.Visible = relation.Visible;
                 exportedRelation.Action = FormatOsmObjectAction (relation.Action);
                 exportedRelation.Version = 1;
-                exportedRelation.User = user;
-                exportedRelation.Uid = uid;
-                exportedRelation.Changeset = changeset;
+                exportedRelation.Changeset = relation.ChangesetId;
 
                 exportedRelation.Member = new List<osmRelationMember> ();
                 foreach (OsmRelationMember member in relation.EnumerateMembers ())

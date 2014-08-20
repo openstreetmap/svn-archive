@@ -79,6 +79,7 @@
     <Compile Include="OsmRelationMemberReference.cs" />
     <Compile Include="OsmSchema.cs" />
     <Compile Include="OsmTag.cs" />
+    <Compile Include="OsmUser.cs" />
     <Compile Include="OsmWay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -24,7 +24,7 @@ namespace OsmUtils.Framework
             set { timestamp = value; }
         }
 
-        public string User
+        public OsmUser User
         {
             get { return user; }
             set { user = value; }
@@ -34,6 +34,12 @@ namespace OsmUtils.Framework
         {
             get { return visible; }
             set { visible = value; }
+        }
+
+        public int ChangesetId
+        {
+            get { return changesetId; }
+            set { changesetId = value; }
         }
 
         public OsmObjectAction Action
@@ -114,7 +120,7 @@ namespace OsmUtils.Framework
             clone.objectId = objectId;
             clone.timestamp = timestamp;
             if (user != null)
-                clone.user = (string)user.Clone ();
+                clone.user = (OsmUser)user.Clone ();
             else
                 clone.user = null;
             clone.visible = visible;
@@ -130,7 +136,8 @@ namespace OsmUtils.Framework
 
         private long objectId;
         private DateTime timestamp;
-        private string user;
+        private OsmUser user;
+        private int changesetId;
         private bool visible;
         private OsmObjectAction action;
         private Dictionary<string, OsmTag> tags = new Dictionary<string, OsmTag> ();

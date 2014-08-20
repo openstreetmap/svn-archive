@@ -19,10 +19,10 @@ namespace OsmUtils.Framework
         public OsmTag (string key, string value)
         {
             if (key == null)
-                throw new ArgumentNullException ("key");                
+                throw new ArgumentNullException ("key");
 
             if (value == null)
-                throw new ArgumentNullException ("value");                
+                throw new ArgumentNullException ("value");
 
             this.key = key;
             this.value = value;

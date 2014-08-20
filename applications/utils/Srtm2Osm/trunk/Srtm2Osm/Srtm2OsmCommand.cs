@@ -64,7 +64,7 @@ namespace Srtm2Osm
                 // in case of exception, regenerate the index
                 generateIndex = true;
             }
-            
+
             if (generateIndex)
             {
                 srtmIndex = new SrtmIndex ();
@@ -79,9 +79,9 @@ namespace Srtm2Osm
             Srtm3Storage storage = new Srtm3Storage(Path.Combine(srtmDir, "SrtmCache"), srtmIndex);
             storage.ActivityLogger = activityLogger;
 
-            Bounds2 corrBounds = new Bounds2(bounds.MinX - corrX, bounds.MinY - corrY, 
+            Bounds2 corrBounds = new Bounds2(bounds.MinX - corrX, bounds.MinY - corrY,
                 bounds.MaxX - corrX, bounds.MaxY - corrY);
-     
+
             IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
 
             DigitalElevationModelStatistics statistics = dem.CalculateStatistics ();
@@ -101,236 +101,99 @@ namespace Srtm2Osm
             double elevationStepInUnits = elevationStep * elevationUnits;
             contourMarker.Configure (elevationUnits);
 
-            // Start with highest possible ID and count down. That should give maximum space between
-            // contour data and real OSM data.
+            // Default: Start with highest possible ID and count down. That should give maximum space
+            // between contour data and real OSM data.
             IdCounter nodeCounter = new IdCounter (incrementId, firstNodeId);
             IdCounter wayCounter = new IdCounter (incrementId, firstWayId);
 
-            // The following IDs do exist in the OSM database
-            string user = "Srtm2Osm";
-            int uid = 941874;
-            int changeset = 13341398;
+            OutputSettings settings = new OutputSettings ();
+            settings.ContourMarker = contourMarker;
+            settings.LongitudeCorrection = corrX;
+            settings.LatitudeCorrection = corrY;
+            settings.MaxWayNodes = maxWayNodes;
+
+            // The following IDs and name do exist in the OSM database.
+            settings.UserName = "Srtm2Osm";
+            settings.UserId = 941874;
+            settings.ChangesetId = 13341398;
+
+            OutputBase output = null;
 
             if (largeAreaMode)
-            {
-                XmlSerializer nodeSerializer = new XmlSerializer (typeof (osmNode), new XmlRootAttribute ("node"));
-                XmlSerializer waySerializer = new XmlSerializer (typeof (osmWay), new XmlRootAttribute ("way"));
-
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces ();
-                ns.Add (String.Empty, String.Empty);
-
-                using (FileStream stream = File.Open (outputOsmFile, FileMode.Create, FileAccess.Write))
-                {
-                    XmlWriterSettings settings = new XmlWriterSettings ();
-                    settings.Indent = true;
-                    settings.IndentChars = ("\t");
-                    settings.Encoding = new UTF8Encoding (false);
-
-                    using (XmlWriter writer = XmlWriter.Create (stream, settings))
-                    {
-                        writer.WriteStartElement ("osm");
-                        writer.WriteAttributeString ("version", "0.6");
-                        writer.WriteAttributeString ("generator", "Srtm2Osm");
-                        writer.WriteAttributeString ("upload", "false");
-
-                        alg.Isoplete (dem, elevationStepInUnits, delegate (Isohypse isohypse)
-                        {
-                            foreach (Polyline polyline in isohypse.Segments)
-                            {
-                                OsmUtils.OsmSchema.osmWay way = new osmWay ();
-
-                                contourMarker.MarkContour (way, isohypse);
-
-                                way.Id = GetNextId (wayCounter, false);
-                                way.Nd = new List<osmWayND> ();
-                                way.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
-                                way.Version = 1;
-                                way.User = user;
-                                way.Uid = uid;
-                                way.Changeset = changeset;
-
-                                long firstWayNodeId = 0;
-
-                                for (int i = 0; i < polyline.Vertices.Count; i++)
-                                {
-                                    Point3<double> point = polyline.Vertices[i];
-
-                                    OsmUtils.OsmSchema.osmNode node = new osmNode ();
-                                    node.Id = GetNextId (nodeCounter, true);
-                                    node.Lat = point.Y + corrY;
-                                    node.Lon = point.X + corrX;
-                                    node.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
-                                    node.Version = 1;
-                                    node.User = user;
-                                    node.Uid = uid;
-                                    node.Changeset = changeset;
-
-                                    // Do explicity set the Lat- / LonSpecified properties.
-                                    // Otherwise the lat / lon XML attributes would not get written, if the node has
-                                    // a latitude or longitude of exactly 0°.
-                                    node.LatSpecified = true;
-                                    node.LonSpecified = true;
-
-                                    if (i == 0)
-                                        firstWayNodeId = node.Id;
-                                    
-                                    nodeSerializer.Serialize (writer, node, ns);
-
-                                    way.Nd.Add (new osmWayND (node.Id, true));
-
-                                    // Split the way if the maximum node count per way is reached.
-                                    if (way.Nd.Count == maxWayNodes && polyline.VerticesCount > maxWayNodes)
-                                    {
-                                        // Don't create a new way if already at the end of the *unclosed* polyline
-                                        if (i == polyline.VerticesCount - 1 && !polyline.IsClosed)
-                                            continue;
-
-                                        // first, serialize old way
-                                        waySerializer.Serialize(writer, way, ns);
-
-                                        way = new osmWay();
-                                        way.Id = GetNextId (wayCounter, false);
-                                        way.Nd = new List<osmWayND>();
-                                        way.Timestamp = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
-                                        way.Version = 1;
-                                        way.User = user;
-                                        way.Uid = uid;
-                                        way.Changeset = changeset;
-
-                                        contourMarker.MarkContour(way, isohypse);
-                                        way.Nd.Add(new osmWayND(node.Id, true));
-                                    }
-                                }
-
-                                // if the isohypse segment is closed, add the first node as the final node of the way
-                                if (polyline.IsClosed)
-                                    way.Nd.Add (new osmWayND (firstWayNodeId, true));
-                                
-                                waySerializer.Serialize (writer, way, ns);
-                            }
-                        });
-
-                        writer.WriteEndElement ();
-                    }
-                }
-            }
+                output = new DirectOutput (new FileInfo (outputOsmFile), settings);
             else
+                output = new DatabaseOutput (new FileInfo (outputOsmFile), settings);
+
+
+            activityLogger.Log (ActivityLogLevel.Normal, "Saving the contour data to the file...");
+
+            output.Begin ();
+
+            if (osmMergeFile != null)
+                output.Merge (osmMergeFile);
+
+            alg.Isoplete (dem, elevationStepInUnits, delegate(Isohypse isohypse)
             {
-                IsohypseCollection isoCollection = alg.Isoplete (dem, elevationStepInUnits);
+                output.ProcessIsohypse (isohypse, delegate () { return GetNextId (nodeCounter, true); },
+                    delegate () { return GetNextId (wayCounter, false); });
+            });
 
-                OsmDatabase osmDb = new OsmDatabase ();
-                if (osmMergeFile != null)
-                {
-                    osm osmExistingFile = OsmClient06.LoadFile (osmMergeFile);
-                    osmDb.ImportData (osmExistingFile);
-                }
+            output.End ();
 
-                foreach (Isohypse isohypse in isoCollection.Isohypses.Values)
-                {
-                    foreach (Polyline polyline in isohypse.Segments)
-                    {
-                        OsmWay isohypseWay = new OsmWay (GetNextId (wayCounter, false));
-                        isohypseWay.Visible = true;
-                        isohypseWay.Timestamp = DateTime.UtcNow;
-                        contourMarker.MarkContour (isohypseWay, isohypse);
-                        osmDb.AddWay (isohypseWay);
-
-                        long firstWayNodeId = 0;
-
-                        for (int i = 0; i < polyline.VerticesCount; i++)
-                        {
-                            Point3<double> point = polyline.Vertices[i];
-
-                            OsmNode node = new OsmNode (GetNextId (nodeCounter, true), point.Y + corrY, point.X + corrX);
-                            node.Visible = true;
-                            node.Timestamp = DateTime.UtcNow;
-                            osmDb.AddNode (node);
-
-                            if (i == 0)
-                                firstWayNodeId = node.ObjectId;
-
-                            isohypseWay.AddNode (node.ObjectId);
-
-                            // Split the polyline if the maximum node count per way is reached.
-                            if (isohypseWay.NodesList.Count == maxWayNodes && polyline.VerticesCount > maxWayNodes)
-                            {
-                                // Don't create a new way if already at the end of the *unclosed* polyline
-                                if (i == polyline.VerticesCount - 1 && !polyline.IsClosed)
-                                    continue;
-
-                                isohypseWay = new OsmWay (GetNextId (wayCounter, false));
-                                isohypseWay.Visible = true;
-                                isohypseWay.Timestamp = DateTime.UtcNow;
-
-                                contourMarker.MarkContour (isohypseWay, isohypse);
-                                osmDb.AddWay (isohypseWay);
-                                isohypseWay.AddNode (node.ObjectId);
-                            }
-                        }
-
-                        // if the isohypse segment is closed, add the first node as the final node of the way
-                        if (polyline.IsClosed)
-                            isohypseWay.AddNode (firstWayNodeId);
-                    }
-                }
-
-                activityLogger.Log (ActivityLogLevel.Normal, "Saving the contour data to the file...");
-                OsmUtils.OsmSchema.osm osmData = osmDb.ExportData (user, uid, changeset);
-                OsmUtils.OsmClient.OsmClient06.SaveFile (osmData, outputOsmFile);
-            }
+            activityLogger.Log (ActivityLogLevel.Normal, "Done.");
 
             // TODO: SVG file generator code
 
-//            using (FileStream stream = File.Open ("test.svg", FileMode.Create, FileAccess.Write))
-//            {
-//                using (StreamWriter writer = new StreamWriter (stream))
-//                {
-//                    int width = 1000;
-//                    int height = 800;
-//                    double aspectRatio = (maxLat - minLat) / height;
-//                    aspectRatio = Math.Max (aspectRatio, (maxLng - minLng) / width);
+            //            using (FileStream stream = File.Open ("test.svg", FileMode.Create, FileAccess.Write))
+            //            {
+            //                using (StreamWriter writer = new StreamWriter (stream))
+            //                {
+            //                    int width = 1000;
+            //                    int height = 800;
+            //                    double aspectRatio = (maxLat - minLat) / height;
+            //                    aspectRatio = Math.Max (aspectRatio, (maxLng - minLng) / width);
 
-//                    writer.WriteLine (String.Format (System.Globalization.CultureInfo.InvariantCulture,
-//                        @"<?xml version='1.0' encoding='utf-8' standalone='yes'?>
-//<!DOCTYPE svg[]>
-//<svg viewBox='{0} {1} {2} {3}' width='{2}' height='{3}' id='0'>", 0, 0, width, height));
-                   
-//                    foreach (Isohypse isohypse in isoCollection.Isohypses.Values)
-//                    {
-//                        foreach (Polyline polyline in isohypse.Segments)
-//                        {
-//                            StringBuilder pathString = new StringBuilder ();
-//                            for (int i = 0; i < polyline.VerticesCount; i++)
-//                            {
-//                                Point3 point = polyline.Vertices[i];
+            //                    writer.WriteLine (String.Format (System.Globalization.CultureInfo.InvariantCulture,
+            //                        @"<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+            //<!DOCTYPE svg[]>
+            //<svg viewBox='{0} {1} {2} {3}' width='{2}' height='{3}' id='0'>", 0, 0, width, height));
 
-//                                if (i == 0)
-//                                {
-//                                    pathString.AppendFormat ("M ");
-//                                }
-//                                else if (i == 1)
-//                                {
-//                                    pathString.AppendFormat ("C ");
-//                                }
+            //                    foreach (Isohypse isohypse in isoCollection.Isohypses.Values)
+            //                    {
+            //                        foreach (Polyline polyline in isohypse.Segments)
+            //                        {
+            //                            StringBuilder pathString = new StringBuilder ();
+            //                            for (int i = 0; i < polyline.VerticesCount; i++)
+            //                            {
+            //                                Point3 point = polyline.Vertices[i];
 
-//                                pathString.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0},{1} ",
-//                                    (point.X - minLng) / aspectRatio, (maxLat - point.Y) / aspectRatio);
+            //                                if (i == 0)
+            //                                {
+            //                                    pathString.AppendFormat ("M ");
+            //                                }
+            //                                else if (i == 1)
+            //                                {
+            //                                    pathString.AppendFormat ("C ");
+            //                                }
 
-//                                if (i > 0)
-//                                    pathString.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0},{1} ",
-//                                        (point.X - minLng) / aspectRatio, (maxLat - point.Y) / aspectRatio);
-//                            }
+            //                                pathString.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0},{1} ",
+            //                                    (point.X - minLng) / aspectRatio, (maxLat - point.Y) / aspectRatio);
 
-//                            writer.WriteLine (@"<path d='{0}' fill='none' stroke='black' stroke-width='0.25px'/>", pathString.ToString ());
-//                        }
-//                    }
+            //                                if (i > 0)
+            //                                    pathString.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "{0},{1} ",
+            //                                        (point.X - minLng) / aspectRatio, (maxLat - point.Y) / aspectRatio);
+            //                            }
 
-//                    writer.WriteLine (@"</svg>");
-//                }
-//            }
+            //                            writer.WriteLine (@"<path d='{0}' fill='none' stroke='black' stroke-width='0.25px'/>", pathString.ToString ());
+            //                        }
+            //                    }
+
+            //                    writer.WriteLine (@"</svg>");
+            //                }
+            //            }
         }
 
-        public int ParseArgs (string[] args, int startFrom)
+        public int ParseArgs(string[] args, int startFrom)
         {
             if (args == null)
                 throw new ArgumentNullException ("args");
@@ -684,7 +547,7 @@ namespace Srtm2Osm
         private string osmMergeFile;
         private double elevationUnits = 1;
         private double majorFactor, mediumFactor;
-        private IContourMarker contourMarker = new DefaultContourMarker ();
+        private IContourMarker contourMarker = new DefaultContourMarker();
         private bool largeAreaMode;
         private string srtmSource = "";
         private int maxWayNodes = Int32.MaxValue;

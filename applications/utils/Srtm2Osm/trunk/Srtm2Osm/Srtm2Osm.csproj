@@ -66,9 +66,13 @@
     <Compile Include="IContourMarker.cs" />
     <Compile Include="IdCounter.cs" />
     <Compile Include="MkgmapContourMarker.cs" />
+    <Compile Include="OutputBase.cs" />
+    <Compile Include="OutputSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Srtm2OsmCommand.cs" />
+    <Compile Include="DatabaseOutput.cs" />
+    <Compile Include="DirectOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Brejc.Common.Library\Brejc.Common.Library.csproj">

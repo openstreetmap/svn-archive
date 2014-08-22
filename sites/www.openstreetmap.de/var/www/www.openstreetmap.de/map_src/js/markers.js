@@ -67,7 +67,7 @@
             strategies: [new OpenLayers.Strategy.Fixed(),
                         new OpenLayers.Strategy.Cluster()],
             protocol: new OpenLayers.Protocol.HTTP({
-                url: "map_src/osm_user_groups_dach.kml",
+                url: "map_src/osm_user_groups_DACH.kml",
                 format: new OpenLayers.Format.KML({ extractStyles: false, extractAttributes: true })
             }),
             styleMap: new OpenLayers.StyleMap({"default": dynStyle})

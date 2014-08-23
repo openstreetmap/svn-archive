@@ -31,11 +31,17 @@ namespace OsmUtils.Framework
 
         public void AddNode (OsmNode node)
         {
+            if (this.nodes.ContainsKey(node.ObjectId))
+                throw new OsmDuplicatedObjectIdException(node);
+
             nodes.Add (node.ObjectId, node);
         }
 
         public void AddWay (OsmWay way)
         {
+            if (this.ways.ContainsKey(way.ObjectId))
+                throw new OsmDuplicatedObjectIdException(way);
+
             ways.Add (way.ObjectId, way);
         }
 
@@ -45,6 +51,9 @@ namespace OsmUtils.Framework
         /// <param name="relation">The OSM relation to add.</param>
         public void AddRelation (OsmRelation relation)
         {
+            if (this.relations.ContainsKey(relation.ObjectId))
+                throw new OsmDuplicatedObjectIdException(relation);
+
             relations.Add (relation.ObjectId, relation);
         }
 
@@ -67,8 +76,7 @@ namespace OsmUtils.Framework
                 foreach (tag tag in originalNode.Tag)
                     node.SetTag (tag.K, tag.V);
 
-                //if (false == nodes.ContainsKey (node.ObjectId))
-                nodes.Add (node.ObjectId, node);
+                AddNode(node);
             }
 
             foreach (osmWay originalWay in osmData.Way)
@@ -91,8 +99,7 @@ namespace OsmUtils.Framework
                 foreach (tag tag in originalWay.Tag)
                     way.SetTag (tag.K, tag.V);
 
-                //if (false == ways.ContainsKey (way.ObjectId))
-                ways.Add (way.ObjectId, way);
+                AddWay(way);
             }
 
             foreach (osmRelation originalRelation in osmData.Relation)
@@ -121,8 +128,7 @@ namespace OsmUtils.Framework
                 foreach (tag tag in originalRelation.Tag)
                     relation.SetTag (tag.K, tag.V);
 
-                //if (false == relations.ContainsKey (relation.ObjectId))
-                relations.Add (relation.ObjectId, relation);
+                AddRelation(relation);
             }
         }
 
@@ -276,7 +282,7 @@ namespace OsmUtils.Framework
             if (action == null)
                 return OsmObjectAction.None;
 
-            return (OsmObjectAction)Enum.Parse (typeof (OsmObjectAction), action, true);
+            return (OsmObjectAction) Enum.Parse (typeof (OsmObjectAction), action, true);
         }
 
         /// <summary>
@@ -286,7 +292,7 @@ namespace OsmUtils.Framework
         /// <returns>The OSM object action value in a string form.</returns>
         static public string FormatOsmObjectAction (OsmObjectAction action)
         {
-            return osmObjectActionStringConstants[(int)action];
+            return osmObjectActionStringConstants [(int)action];
         }
 
         private Dictionary<long, OsmNode> nodes = new Dictionary<long, OsmNode> ();

@@ -69,6 +69,7 @@
     <Compile Include="KeyValueSelector.cs" />
     <Compile Include="MultipleKeyValueSelector.cs" />
     <Compile Include="OsmDatabase.cs" />
+    <Compile Include="OsmDuplicatedObjectIdException.cs" />
     <Compile Include="OsmElementSelectorException.cs" />
     <Compile Include="OsmFeature.cs" />
     <Compile Include="OsmNode.cs" />

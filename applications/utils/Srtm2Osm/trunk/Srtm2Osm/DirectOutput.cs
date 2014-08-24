@@ -18,7 +18,7 @@ namespace Srtm2Osm
         public DirectOutput (FileInfo file, OutputSettings settings)
             : base (file, settings)
         {
-            this.stream = file.OpenWrite ();
+            this.stream = file.Create ();
 
             nodeSerializer = new XmlSerializer (typeof (osmNode), new XmlRootAttribute ("node"));
             waySerializer = new XmlSerializer (typeof (osmWay), new XmlRootAttribute ("way"));
@@ -45,6 +45,8 @@ namespace Srtm2Osm
         {
             if (writer == null)
                 throw new InvalidOperationException ("The Begin method must be called before calling ProcessIsohypse.");
+            if (isohypse == null)
+                throw new ArgumentNullException("isohypse");
 
             foreach (Polyline polyline in isohypse.Segments)
             {
@@ -134,8 +136,37 @@ namespace Srtm2Osm
         {
             if (writer == null)
                 throw new InvalidOperationException ("The Begin method must be called before calling Merge.");
+            if (!File.Exists(mergeFile))
+                throw new FileNotFoundException("File not found.", mergeFile);
 
-            throw new NotImplementedException ();
+            XmlReader reader = XmlReader.Create(mergeFile);
+
+            // Iterate through all elements...
+            while (reader.Read())
+            {
+                // ... but ignore the root element "osm".
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "osm")
+                    continue;
+                else if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "osm")
+                    continue;
+
+                // Only the elements are merged with the new file.
+                // Text, CDATA, whitespace, comments, etc. are ignored.
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        writer.WriteStartElement(reader.Name);
+                        writer.WriteAttributes(reader, true);
+                        if (reader.IsEmptyElement)
+                            writer.WriteEndElement();
+                        break;
+                    case XmlNodeType.EndElement:
+                        writer.WriteFullEndElement();
+                        break;
+                }
+            }
+
+            reader.Close();
         }
 
         private readonly FileStream stream;

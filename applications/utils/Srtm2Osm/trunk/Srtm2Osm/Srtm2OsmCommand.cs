@@ -130,7 +130,10 @@ namespace Srtm2Osm
             output.Begin ();
 
             if (osmMergeFile != null)
-                output.Merge (osmMergeFile);
+            {
+                activityLogger.LogFormat(ActivityLogLevel.Normal, "Importing dataset from {0}", osmMergeFile);
+                output.Merge(osmMergeFile);
+            }
 
             alg.Isoplete (dem, elevationStepInUnits, delegate(Isohypse isohypse)
             {

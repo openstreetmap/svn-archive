@@ -58,8 +58,7 @@ namespace Srtm2Osm
             System.Console.Out.WriteLine ("           contours 100, 200, 300, 500 etc as contour_ext=elevation_medium");
             System.Console.Out.WriteLine ("           and all others as contour_ext=elevation_minor");
             System.Console.Out.WriteLine ("-large: runs in 'large area mode' in which each contour is written to OSM file ");
-            System.Console.Out.WriteLine ("       immediately upon discovery. This prevents 'out-of-memory' errors, but");
-            System.Console.Out.WriteLine ("       some other options cannot be used in this mode.");
+            System.Console.Out.WriteLine ("       immediately upon discovery. This prevents 'out-of-memory' errors.");
             System.Console.Out.WriteLine ("-corrxy <corrLng> <corrLat>: correction values to shift contours");
             System.Console.Out.WriteLine ("-source <url>: base URL used for download");
             System.Console.Out.WriteLine ("       (default 'http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/')");

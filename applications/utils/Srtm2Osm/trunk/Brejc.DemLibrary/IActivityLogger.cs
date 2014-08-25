@@ -6,6 +6,7 @@ namespace Brejc.DemLibrary
 {
     public enum ActivityLogLevel
     {
+        Error,
         Warning,
         Normal,
         Verbose,

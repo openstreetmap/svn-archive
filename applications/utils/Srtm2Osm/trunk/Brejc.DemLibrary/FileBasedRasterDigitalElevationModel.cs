@@ -18,6 +18,8 @@ namespace Brejc.DemLibrary
         {
             data = new FileStream (Path.GetTempFileName(), FileMode.Create);
             data.SetLength ((long) this.LonLength * this.LatLength * 2);
+
+            this.stats = new DigitalElevationModelStatistics();
         }
 
         ~FileBasedRasterDigitalElevationModel()
@@ -26,6 +28,11 @@ namespace Brejc.DemLibrary
             { File.Delete(data.Name); }
             catch
             { }
+        }
+
+        public override DigitalElevationModelStatistics CalculateStatistics()
+        {
+            return stats;
         }
 
         public override double GetElevationForDataPoint (int localLon, int localLat)
@@ -47,9 +54,16 @@ namespace Brejc.DemLibrary
             Int16 elevation16;
 
             if (elevation == double.MinValue)
+            {
                 elevation16 = Int16.MinValue;
+                this.stats.HasMissingPoints = true;
+            }
             else
+            {
                 elevation16 = (Int16)elevation;
+                this.stats.MaxElevation = Math.Max(this.stats.MaxElevation, elevation);
+                this.stats.MinElevation = Math.Min(this.stats.MinElevation, elevation);
+            }
 
             byte lowByte = (byte) (elevation16 & 0xff);
             byte highByte = (byte) ((elevation16 >> 8) & 0xff);
@@ -76,5 +90,7 @@ namespace Brejc.DemLibrary
 
         [NonSerialized()]
         private FileStream data;
+        [NonSerialized()]
+        private DigitalElevationModelStatistics stats;
     }
 }

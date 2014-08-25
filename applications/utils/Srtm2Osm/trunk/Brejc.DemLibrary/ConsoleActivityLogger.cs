@@ -30,6 +30,8 @@ namespace Brejc.DemLibrary
             {
                 if (activityLogLevel == ActivityLogLevel.Warning)
                     format = "WARNING: " + format;
+                else if (activityLogLevel == ActivityLogLevel.Error)
+                    format = "ERROR: " + format;
 
                 System.Console.Out.WriteLine(format, args);
             }

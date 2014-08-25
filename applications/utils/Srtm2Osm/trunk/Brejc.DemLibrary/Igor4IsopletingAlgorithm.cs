@@ -9,8 +9,9 @@ using Brejc.Geometry;
 namespace Brejc.DemLibrary
 {
     [SuppressMessage ("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames")]
+    [SuppressMessage ("Microsoft.Design", "CA1028:EnumStorageShouldBeInt32")]
     [Flags]
-    public enum IsohypseMovement
+    public enum IsohypseMovement : byte
     {
         None = 0,
         North = 1,
@@ -45,7 +46,6 @@ namespace Brejc.DemLibrary
             //        geoPosMax.Longitude, geoPosMax.Latitude);
             //}
 
-            Array2<byte> characteristics = new Array2<byte> (dem.LonLength - 1, dem.LatLength - 1);
             Array2<byte> flags = new Array2<byte> (dem.LonLength - 1, dem.LatLength - 1);
             Array2<IsohypseMovement> movements = new Array2<IsohypseMovement> (dem.LonLength - 1, dem.LatLength - 1);
 
@@ -82,7 +82,6 @@ namespace Brejc.DemLibrary
 
                 Isohypse isohypse = new Isohypse (isoElev);
 
-                characteristics.Initialize (0);
                 flags.Initialize (0);
                 movements.Initialize (0);
 
@@ -90,17 +89,17 @@ namespace Brejc.DemLibrary
                 {
                     for (int y = 0; y < dem.LatLength - 1; y++)
                     {
+                        byte cellCharacteristic = 0;
+
                         for (int i = 0; i < adjacentCells.GetLength (0); i++)
                         {
                             double adjacentCellElev = dem.GetElevationForDataPoint (x + adjacentCells[i, 0], y + adjacentCells[i, 1]);
                             if (adjacentCellElev >= isoElev)
                             {
-                                characteristics.SetValue ((byte)(characteristics.GetValue (x, y) + 1), x, y);
+                                cellCharacteristic++;
                                 flags.SetValue ((byte)(flags.GetValue (x, y) | (byte)(1 << i)), x, y);
                             }
                         }
-
-                        Int16 cellCharacteristic = characteristics.GetValue (x, y);
 
                         // skip cells which are definitively not along the isohypse
                         if (cellCharacteristic == 0 || cellCharacteristic == 4)

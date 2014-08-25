@@ -84,6 +84,10 @@ namespace Srtm2Osm
 
             IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
 
+            // clear up some memory used in storage object
+            storage = null;
+            GC.Collect();
+
             DigitalElevationModelStatistics statistics = dem.CalculateStatistics ();
 
             activityLogger.Log (ActivityLogLevel.Normal, String.Format (System.Globalization.CultureInfo.InvariantCulture,
@@ -124,22 +128,28 @@ namespace Srtm2Osm
             else
                 output = new DatabaseOutput (new FileInfo (outputOsmFile), settings);
 
-
             activityLogger.Log (ActivityLogLevel.Normal, "Saving the contour data to the file...");
 
             output.Begin ();
 
             if (osmMergeFile != null)
             {
-                activityLogger.LogFormat(ActivityLogLevel.Normal, "Importing dataset from {0}", osmMergeFile);
-                output.Merge(osmMergeFile);
+                activityLogger.LogFormat (ActivityLogLevel.Normal, "Importing dataset from {0}", osmMergeFile);
+                output.Merge (osmMergeFile);
             }
 
-            alg.Isoplete (dem, elevationStepInUnits, delegate(Isohypse isohypse)
+            try
             {
-                output.ProcessIsohypse (isohypse, delegate () { return GetNextId (nodeCounter, true); },
-                    delegate () { return GetNextId (wayCounter, false); });
-            });
+                alg.Isoplete (dem, elevationStepInUnits, delegate (Isohypse isohypse)
+                {
+                    output.ProcessIsohypse (isohypse, delegate() { return GetNextId (nodeCounter, true); },
+                        delegate() { return GetNextId (wayCounter, false); });
+                });
+            }
+            catch (OutOfMemoryException)
+            {
+                activityLogger.Log (ActivityLogLevel.Error, "Not enough memory. Decrease the bounding box.");
+            }
 
             output.End ();
 
@@ -525,14 +535,14 @@ namespace Srtm2Osm
             return new Bounds2 (minLng, minLat, maxLng, maxLat);
         }
 
-        private long GetNextId(IdCounter counter, bool isNodeCounter)
+        private long GetNextId (IdCounter counter, bool isNodeCounter)
         {
             bool valid = false;
-            long result = counter.GetNextId(out valid);
+            long result = counter.GetNextId (out valid);
 
             if (!valid)
             {
-                string msg = String.Format(System.Globalization.CultureInfo.InvariantCulture,
+                string msg = String.Format (System.Globalization.CultureInfo.InvariantCulture,
                     "Ran out of available ID numbers. {0}crement first{1}id parameter.",
                     incrementId ? "De" : "In", isNodeCounter ? "node" : "way");
                 throw new ArgumentException (msg);

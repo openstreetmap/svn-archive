@@ -13,6 +13,7 @@ using System.Collections.Specialized;
 using System.Xml.Serialization;
 using Brejc.Geometry;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Srtm2Osm
 {
@@ -79,26 +80,6 @@ namespace Srtm2Osm
             Srtm3Storage storage = new Srtm3Storage(Path.Combine(srtmDir, "SrtmCache"), srtmIndex);
             storage.ActivityLogger = activityLogger;
 
-            Bounds2 corrBounds = new Bounds2(bounds.MinX - corrX, bounds.MinY - corrY,
-                bounds.MaxX - corrX, bounds.MaxY - corrY);
-
-            IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
-
-            // clear up some memory used in storage object
-            storage = null;
-            GC.Collect();
-
-            DigitalElevationModelStatistics statistics = dem.CalculateStatistics ();
-
-            activityLogger.Log (ActivityLogLevel.Normal, String.Format (System.Globalization.CultureInfo.InvariantCulture,
-                "DEM data points count: {0}", dem.DataPointsCount));
-            activityLogger.Log (ActivityLogLevel.Normal, String.Format (System.Globalization.CultureInfo.InvariantCulture,
-                "DEM minimum elevation: {0}", statistics.MinElevation));
-            activityLogger.Log (ActivityLogLevel.Normal, String.Format (System.Globalization.CultureInfo.InvariantCulture,
-                "DEM maximum elevation: {0}", statistics.MaxElevation));
-            activityLogger.Log (ActivityLogLevel.Normal, String.Format (System.Globalization.CultureInfo.InvariantCulture,
-                "DEM has missing points: {0}", statistics.HasMissingPoints));
-
             IIsopletingAlgorithm alg = new Igor4IsopletingAlgorithm ();
             alg.ActivityLogger = activityLogger;
 
@@ -138,17 +119,44 @@ namespace Srtm2Osm
                 output.Merge (osmMergeFile);
             }
 
-            try
+            foreach (Bounds2 bound in this.bounds)
             {
-                alg.Isoplete (dem, elevationStepInUnits, delegate (Isohypse isohypse)
+                Bounds2 corrBounds = new Bounds2 (bound.MinX - corrX, bound.MinY - corrY,
+                    bound.MaxX - corrX, bound.MaxY - corrY);
+
+                IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
+
+                // clear up some memory used in storage object
+                if (this.bounds.Count == 1)
                 {
-                    output.ProcessIsohypse (isohypse, delegate() { return GetNextId (nodeCounter, true); },
-                        delegate() { return GetNextId (wayCounter, false); });
-                });
-            }
-            catch (OutOfMemoryException)
-            {
-                activityLogger.Log (ActivityLogLevel.Error, "Not enough memory. Decrease the bounding box.");
+                    storage = null;
+                    GC.Collect ();
+                }
+
+                DigitalElevationModelStatistics statistics = dem.CalculateStatistics ();
+
+                activityLogger.Log (ActivityLogLevel.Normal, String.Format (CultureInfo.InvariantCulture,
+                    "DEM data points count: {0}", dem.DataPointsCount));
+                activityLogger.Log (ActivityLogLevel.Normal, String.Format (CultureInfo.InvariantCulture,
+                    "DEM minimum elevation: {0}", statistics.MinElevation));
+                activityLogger.Log (ActivityLogLevel.Normal, String.Format (CultureInfo.InvariantCulture,
+                    "DEM maximum elevation: {0}", statistics.MaxElevation));
+                activityLogger.Log (ActivityLogLevel.Normal, String.Format (CultureInfo.InvariantCulture,
+                    "DEM has missing points: {0}", statistics.HasMissingPoints));
+
+                try
+                {
+                    alg.Isoplete (dem, elevationStepInUnits, delegate(Isohypse isohypse)
+                    {
+                        output.ProcessIsohypse (isohypse, delegate() { return GetNextId (nodeCounter, true); },
+                            delegate() { return GetNextId (wayCounter, false); });
+                    });
+                }
+                catch (OutOfMemoryException)
+                {
+                    activityLogger.Log (ActivityLogLevel.Error, "Not enough memory. Decrease the bounding box.");
+                    break;
+                }
             }
 
             output.End ();
@@ -231,7 +239,7 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.IncrementId, "incrementid", 0));
 
             startFrom = options.ParseArgs (args, startFrom);
-            System.Globalization.CultureInfo invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
+            CultureInfo invariantCulture = CultureInfo.InvariantCulture;
 
             foreach (ConsoleApplicationOption option in options.UsedOptions)
             {
@@ -303,7 +311,7 @@ namespace Srtm2Osm
                             if (minLng <= -180 || maxLng > 180)
                                 throw new ArgumentException ("Longitude is out of range.");
 
-                            bounds = new Bounds2 (minLng, minLat, maxLng, maxLat);
+                            this.bounds.Add (new Bounds2 (minLng, minLat, maxLng, maxLat));
                             continue;
                         }
 
@@ -313,7 +321,7 @@ namespace Srtm2Osm
                             double lng = Double.Parse (option.Parameters[1], invariantCulture);
                             double boxSizeInKilometers = Double.Parse (option.Parameters[2], invariantCulture);
 
-                            bounds = CalculateBounds (lat, lng, boxSizeInKilometers);
+                            this.bounds.Add (CalculateBounds (lat, lng, boxSizeInKilometers));
                             continue;
                         }
 
@@ -343,7 +351,7 @@ namespace Srtm2Osm
                                         throw new ArgumentException("Invalid slippymap URL.", fex);
                                     }
 
-                                    bounds = CalculateBounds(lat, lng, zoomLevel);
+                                    this.bounds.Add (CalculateBounds (lat, lng, zoomLevel));
                                 }
                                 else
                                     throw new ArgumentException("Invalid slippymap URL.");
@@ -368,10 +376,10 @@ namespace Srtm2Osm
                                         throw new ArgumentException("Invalid slippymap URL.", fex);
                                     }
 
-                                    bounds = CalculateBounds(lat, lng, zoomLevel);
+                                    this.bounds.Add (CalculateBounds (lat, lng, zoomLevel));
                                 }
                                 else if (queryParameters["bbox"] != null)
-                                    bounds = CalculateBounds(queryParameters["bbox"]);
+                                    this.bounds.Add (CalculateBounds (queryParameters["bbox"]));
                                 else
                                     throw new ArgumentException("Invalid slippymap URL.");
                             }
@@ -452,7 +460,10 @@ namespace Srtm2Osm
             }
 
             // Check if bounds were specified
-            if (bounds == null)
+            if (bounds.Count == 0 && osmMergeFile != null)
+                this.bounds = RetrieveBoundsFromFile (osmMergeFile);
+
+            if (bounds.Count == 0)
                 throw new ArgumentException ("No bounds specified.");
 
             // Check if both first*id's are set when the user wants to increment the IDs
@@ -463,6 +474,43 @@ namespace Srtm2Osm
         }
 
         #endregion
+
+        static private List<Bounds2> RetrieveBoundsFromFile(string file)
+        {
+            if (!File.Exists (file))
+                throw new FileNotFoundException ("File not found.", file);
+
+            List<Bounds2> result = new List<Bounds2> ();
+
+            XmlReader reader = XmlReader.Create (file);
+            while(reader.ReadToFollowing ("bounds"))
+            {
+                string minlat = reader.GetAttribute ("minlat");
+                string minlon = reader.GetAttribute ("minlon");
+                string maxlat = reader.GetAttribute ("maxlat");
+                string maxlon = reader.GetAttribute ("maxlon");
+
+                Bounds2 bound = new Bounds2 ();
+
+                try
+                {
+                    bound.MinX = double.Parse (minlon, CultureInfo.InvariantCulture);
+                    bound.MinY = double.Parse (minlat, CultureInfo.InvariantCulture);
+                    bound.MaxX = double.Parse (maxlon, CultureInfo.InvariantCulture);
+                    bound.MaxY = double.Parse (maxlat, CultureInfo.InvariantCulture);
+                }
+                catch (FormatException fex)
+                {
+                    throw new ArgumentException ("Bounding box XML element was not parseable.", fex);
+                }
+
+                result.Add (bound);
+            }
+
+            reader.Close ();
+
+            return result;
+        }
 
         static private Bounds2 CalculateBounds (double lat, double lng, int zoomLevel)
         {
@@ -516,10 +564,10 @@ namespace Srtm2Osm
 
             try
             {
-                minLng = Double.Parse (parts[0], System.Globalization.CultureInfo.InvariantCulture);
-                minLat = Double.Parse (parts[1], System.Globalization.CultureInfo.InvariantCulture);
-                maxLng = Double.Parse (parts[2], System.Globalization.CultureInfo.InvariantCulture);
-                maxLat = Double.Parse (parts[3], System.Globalization.CultureInfo.InvariantCulture);
+                minLng = Double.Parse (parts[0], CultureInfo.InvariantCulture);
+                minLat = Double.Parse (parts[1], CultureInfo.InvariantCulture);
+                maxLng = Double.Parse (parts[2], CultureInfo.InvariantCulture);
+                maxLat = Double.Parse (parts[3], CultureInfo.InvariantCulture);
             }
             catch (FormatException fex)
             {
@@ -542,7 +590,7 @@ namespace Srtm2Osm
 
             if (!valid)
             {
-                string msg = String.Format (System.Globalization.CultureInfo.InvariantCulture,
+                string msg = String.Format (CultureInfo.InvariantCulture,
                     "Ran out of available ID numbers. {0}crement first{1}id parameter.",
                     incrementId ? "De" : "In", isNodeCounter ? "node" : "way");
                 throw new ArgumentException (msg);
@@ -551,7 +599,7 @@ namespace Srtm2Osm
             return result;
         }
 
-        private Bounds2 bounds;
+        private List<Bounds2> bounds = new List<Bounds2>();
         private double corrX, corrY;
         private bool generateIndex;
         private string srtmDir = "srtm";

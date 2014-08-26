@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Brejc.Common.Console
 {
-    public class ConsoleApplicationOption
+    public class ConsoleApplicationOption : ICloneable
     {
         public int OptionId
         {
@@ -41,5 +41,10 @@ namespace Brejc.Common.Console
         private string optionName;
         private int parametersCount;
         private List<string> parameters = new List<string> ();
+
+        public object Clone()
+        {
+            return new ConsoleApplicationOption(OptionId, OptionName, ParametersCount);
+        }
     }
 }

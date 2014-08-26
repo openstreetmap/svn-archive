@@ -26,7 +26,8 @@ namespace Brejc.Common.Console
 
                     if (args[i].Equals (optionString, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        usedOptions.Add (option);
+                        ConsoleApplicationOption usedOption = (ConsoleApplicationOption)option.Clone ();
+                        usedOptions.Add (usedOption);
 
                         for (int j = 0; j < option.ParametersCount; j++)
                         {
@@ -39,8 +40,9 @@ namespace Brejc.Common.Console
                             //    throw new ArgumentException (String.Format (System.Globalization.CultureInfo.InvariantCulture,
                             //        "Too few arguments ('{0}').", option.OptionName));
 
-                            option.AddParameter (args[i + 1 + j]);
+                            usedOption.AddParameter (args[i + 1 + j]);
                         }
+                        break;
                     }
                 }
             }

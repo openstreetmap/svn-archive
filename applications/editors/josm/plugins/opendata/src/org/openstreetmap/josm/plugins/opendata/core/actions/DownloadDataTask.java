@@ -28,8 +28,6 @@ public class DownloadDataTask extends DownloadOsmTask {
 
 	private AbstractDataSetHandler handler;
 	
-	//private static final PdfEditorKit pdfEditorKit = new PdfEditorKit();
-	
 	@Override
 	public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
 		return null;

@@ -137,8 +137,7 @@ public final class OdPlugin extends Plugin {
         					}
         				}
         				if (item != null) {
-        					MenuScroller.setScrollerFor(handlerMenu, 
-        					        MenuScroller.computeScrollCount(handlerMenu, item.getPreferredSize().height));
+        					MenuScroller.setScrollerFor(handlerMenu);
         					handlerItem = endMenu.add(handlerMenu);
         				}
         			}

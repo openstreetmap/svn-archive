@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,7 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -194,7 +194,8 @@ public class OhePlugin extends Plugin {
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             sp.setViewportView(propertyTable);
 
-            final JTextField newTagField = new JTextField();
+            final JComboBox<String> newTagField = new JComboBox<>(new String[]{
+                    "opening_hours", "collection_times", "collection_times:local", "service_times", "lit"});
 
             JRadioButton editButton = new JRadioButton(new AbstractAction(tr("edit existing tag")) {
                 @Override
@@ -249,7 +250,7 @@ public class OhePlugin extends Plugin {
             } else {
                 propertyTable.setEnabled(false);
                 newTagField.setEnabled(true);
-                newTagField.setText(preSelectedKey);
+                newTagField.setSelectedItem(preSelectedKey);
                 newButton.setSelected(true);
             }
 
@@ -283,7 +284,7 @@ public class OhePlugin extends Plugin {
                     keyToEdit = (String) propertyData.getValueAt(propertyTable.getSelectedRow(), 0);
                     valuesToEdit = propertyData.getValueAt(propertyTable.getSelectedRow(), 1);
                 } else if (newButton.isSelected()) {
-                    keyToEdit = newTagField.getText();
+                    keyToEdit = newTagField.getSelectedItem().toString();
                 }
             if (keyToEdit == null)
                 return;

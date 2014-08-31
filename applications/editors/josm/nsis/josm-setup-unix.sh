@@ -58,7 +58,7 @@ else
   export JOSM_FILE="..\core\dist\josm-custom.jar"
 fi
 
-echo "Creating Windows Installers for josm-$VERSION"
+echo "Creating Windows Installer for josm-$VERSION"
 
 echo 
 echo "##################################################################"
@@ -111,7 +111,9 @@ function build_exe {
 	# launch4j - http://launch4j.sourceforge.net/
 	# delete old exe file first
 	/bin/rm -f ${TARGET}.exe
-	"$LAUNCH4J" "launch4j_${TARGET}.xml"
+	$LAUNCH4J "launch4j_${TARGET}.xml"
+	# comment previous line and uncomment next one on Windows
+	#"$LAUNCH4J" "launch4j_${TARGET}.xml"
 
 	if ! [ -s ${TARGET}.exe ]; then
 		echo "NO ${TARGET}.exe File Created"

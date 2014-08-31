@@ -182,7 +182,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             loLabel.setPreferredSize(new Dimension(111, 16));
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
 
-            handleRelationCheckBox = new JCheckBox(txt, Main.pref.getBoolean(HANDLE_RELATION, true));
+            handleRelationCheckBox = new JCheckBox(txt, relationExists ? Main.pref.getBoolean(HANDLE_RELATION, true) : false);
             deleteOutlineCheckBox = new JCheckBox(tr("delete outline way"), Main.pref.getBoolean(DELETE_OUTLINE, true));
 
             inputPanel = new JPanel();

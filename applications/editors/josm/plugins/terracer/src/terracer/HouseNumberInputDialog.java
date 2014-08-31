@@ -37,16 +37,13 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.tools.GBC;
 
-
 /**
  * The HouseNumberInputDialog is the layout of the house number input logic.
- * Created with the Eclipse Visual Editor.
  *
  *  This dialog is concerned with the layout, all logic goes into the
  *  HouseNumberinputHandler class.
  *
  * @author casualwalker
- *
  */
 public class HouseNumberInputDialog extends ExtendedDialog {
     /*
@@ -206,17 +203,12 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             } else {
                 inputPanel.add(new JLabel(tr("Street name: ")+"\""+streetName+"\""), GBC.eol().insets(3,3,0,0));
             }
-            if (buildingType == null) {
-                inputPanel.add(buildingLabel, GBC.std().insets(3,3,0,0));
-                inputPanel.add(getBuilding(), GBC.eol().insets(5,3,0,0));
-            } else {
-                inputPanel.add(new JLabel(tr("Building: ")+"\""+buildingType+"\""), GBC.eol().insets(3,3,0,0));
-            }
+            inputPanel.add(buildingLabel, GBC.std().insets(3,3,0,0));
+            inputPanel.add(getBuilding(), GBC.eol().insets(5,3,0,0));
             inputPanel.add(handleRelationCheckBox, GBC.eol().insets(3,3,0,0));
             inputPanel.add(deleteOutlineCheckBox, GBC.eol().insets(3,3,0,0));
             
-            if (numbers.isVisible())
-            {
+            if (numbers.isVisible()) {
                 loLabel.setVisible(false);
                 lo.setVisible(false);
                 lo.setEnabled(false);
@@ -236,8 +228,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     /**
      * Overrides the default actions. Will not close the window when upload trace is clicked
      */
-    @Override protected void buttonAction(int buttonIndex, final ActionEvent evt) {
-        //String a = evt.getActionCommand();
+    @Override
+    protected void buttonAction(int buttonIndex, final ActionEvent evt) {
         this.inputHandler.actionPerformed(evt);
     }
 
@@ -308,7 +300,6 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             streetComboBox.setPossibleItems(names);
             streetComboBox.setEditable(true);
             streetComboBox.setSelectedItem(null);
-
         }
         return streetComboBox;
     }
@@ -326,8 +317,11 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             buildingComboBox = new AutoCompletingComboBox();
             buildingComboBox.setPossibleACItems(values);
             buildingComboBox.setEditable(true);
-            buildingComboBox.setSelectedItem("yes");
-
+            if (buildingType != null && !buildingType.isEmpty()) {
+                buildingComboBox.setSelectedItem(buildingType);
+            } else {
+                buildingComboBox.setSelectedItem("yes");
+            }
         }
         return buildingComboBox;
     }
@@ -360,7 +354,6 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             } else {
                 interpolation.select(tr("Even/Odd"));
             }
-            //return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1 : 2;
         }
         return interpolation;
     }

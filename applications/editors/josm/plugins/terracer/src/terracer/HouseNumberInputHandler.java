@@ -393,9 +393,6 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      * @return the building type or null, if not set / invalid.
      */
     public String buildingType() {
-        if (buildingType != null)
-            return buildingType;
-
         return getItemText(dialog.buildingComboBox);
     }
     

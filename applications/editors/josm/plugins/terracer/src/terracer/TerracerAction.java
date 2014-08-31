@@ -231,7 +231,7 @@ public final class TerracerAction extends JosmAction {
             String title = trn("Change {0} object", "Change {0} objects", sel.size(), sel.size());
             // show input dialog.
             new HouseNumberInputHandler(this, outline, init, street, streetname, outline.get("building"),
-                    associatedStreet, housenumbers, title);
+                    associatedStreet, housenumbers, title).dialog.showDialog();
         }
     }
 

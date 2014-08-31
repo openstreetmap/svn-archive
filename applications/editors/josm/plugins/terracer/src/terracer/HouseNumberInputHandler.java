@@ -47,7 +47,6 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
     private final TerracerAction terracerAction;
     private final Way outline, street;
     private final String streetName;
-    private final String buildingType;
     private final Node init;
     private final Relation associatedStreet;
     private final ArrayList<Node> housenumbers;
@@ -77,15 +76,11 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
         this.init = init;
         this.street = street;
         this.streetName = streetName;
-        this.buildingType = buildingType;
         this.associatedStreet = associatedStreet;
         this.housenumbers = housenumbers;
 
-        // This dialog is started modal
         this.dialog = new HouseNumberInputDialog(this, street, streetName, buildingType,
                 associatedStreet != null, housenumbers);
-
-        // We're done
     }
 
     /**

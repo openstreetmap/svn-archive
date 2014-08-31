@@ -116,8 +116,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         setDefaultButton(1);
         setupDialog();
         getRootPane().setDefaultButton(defaultButton);
-        setVisible(true);
-        lo.requestFocus();
+        pack();
+        lo.requestFocusInWindow();
     }
 
     /**

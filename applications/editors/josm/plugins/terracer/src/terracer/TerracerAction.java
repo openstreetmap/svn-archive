@@ -61,7 +61,6 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * @author zere
  */
-@SuppressWarnings("serial")
 public final class TerracerAction extends JosmAction {
 
     // smsms1 asked for the last value to be remembered to make it easier to do

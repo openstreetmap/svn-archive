@@ -66,7 +66,6 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     final ArrayList<Node> housenumbers;
 
     protected static final String DEFAULT_MESSAGE = tr("Enter housenumbers or amount of segments");
-    private static final long serialVersionUID = 1L;
     private Container jContentPane;
     private JPanel inputPanel;
     private JLabel loLabel;
@@ -341,7 +340,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private JTextField getSegments() {
         if (segments == null) {
             segments = new JTextField();
-            segments.setText(Main.pref.get(DEFAULT_SEGMENTS, "1"));
+            segments.setText(Main.pref.get(DEFAULT_SEGMENTS, "2"));
         }
         return segments;
     }

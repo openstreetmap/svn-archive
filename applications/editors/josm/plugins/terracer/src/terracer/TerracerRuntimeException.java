@@ -14,9 +14,6 @@ package terracer;
  */
 public class TerracerRuntimeException extends RuntimeException {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 857926026580277816L;
-
     /**
      * Default constructor.
      */

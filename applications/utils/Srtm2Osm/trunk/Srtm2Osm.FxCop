@@ -645,6 +645,29 @@
     <Modules>
      <Module Name="osmutils.framework.dll">
       <Namespaces>
+       <Namespace Name="OsmUtils.Framework">
+        <Types>
+         <Type Name="OsmObjectBase">
+          <Members>
+           <Member Name="#ChangesetId">
+            <Messages>
+             <Message Id="Changeset" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2014-08-20 23:02:47Z">
+              <Issue Name="Member">
+               <Item>Changeset</Item>
+               <Item>'OsmObjectBase.ChangesetId'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Michi">
+                <Note Id="1" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
        <Namespace Name="OsmUtils.OsmSchema">
         <Types>
          <Type Name="NewDataSet">
@@ -974,6 +997,25 @@
       <Namespaces>
        <Namespace Name="Srtm2Osm">
         <Types>
+         <Type Name="OutputSettings">
+          <Members>
+           <Member Name="#ChangesetId">
+            <Messages>
+             <Message Id="Changeset" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2014-08-20 23:02:47Z">
+              <Issue Name="Member">
+               <Item>Changeset</Item>
+               <Item>'OutputSettings.ChangesetId'</Item>
+              </Issue>
+              <Notes>
+               <User Name="Michi">
+                <Note Id="0" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
          <Type Name="Srtm2OsmCommand">
           <Members>
            <Member Name="#ParseArgs(System.String[],System.Int32)">
@@ -999,6 +1041,12 @@
     </Modules>
    </Target>
   </Targets>
+  <Notes>
+   <User Name="Michi">
+    <Note Id="0" Modified="2014-08-20 23:02:53Z">false positive</Note>
+    <Note Id="1" Modified="2014-08-20 23:02:58Z">false positive</Note>
+   </User>
+  </Notes>
   <Rules>
    <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
     <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>

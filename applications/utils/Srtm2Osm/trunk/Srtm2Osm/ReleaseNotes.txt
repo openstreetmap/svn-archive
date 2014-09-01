@@ -3,6 +3,16 @@ Srtm2Osm tool by Igor Brejc and others
 VERSION HISTORY
 ---------------
 
+1.12
+----
+- New feature for splitting the bounding box into smaller ones for reduced memory footprint.
+- Support for multiple bounding boxes: The -bound* options can be specified more than once.
+- Catch more out-of-memory errors.
+- Reduced memory footprint a bit.
+- Merge support for large area mode.
+- The first node / way IDs and the direction of counting can be specified with the -first*id / -incrementid options.
+- Support for digital elevation models which are larger than 2 GiB (workaround for .NET restriction).
+
 1.11
 ----
 - added support for new slippymap URL syntax.

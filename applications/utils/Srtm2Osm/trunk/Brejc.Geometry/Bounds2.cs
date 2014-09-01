@@ -272,6 +272,52 @@ namespace Brejc.Geometry
         }
 
         /// <summary>
+        /// Adjust the current object about the specified delta value.
+        /// </summary>
+        /// <param name="point">Adjustment value</param>
+        public void Offset (Point2<double> point)
+        {
+            this.minX += point.X;
+            this.maxX += point.X;
+            this.minY += point.Y;
+            this.maxY += point.Y;
+        }
+
+        /// <summary>
+        /// Adjust the current object about the specified delta value.
+        /// </summary>
+        /// <param name="deltaX">Delta in the X axis.</param>
+        /// <param name="deltaY">Delta in the Y axis.</param>
+        public void Offset(double deltaX, double deltaY)
+        {
+            Offset(new Point2<double>(deltaX, deltaY));
+        }
+
+        /// <summary>
+        /// Moves the current object to the in <paramref name="location"/> specified location.
+        /// </summary>
+        /// <param name="location">New location of this object.</param>
+        public void MoveTo (Point2<double> location)
+        {
+            double deltaX = DeltaX;
+            double deltaY = DeltaY;
+            this.minX = location.X;
+            this.minY = location.Y;
+            this.maxX = this.minX + deltaX;
+            this.maxY = this.minY + deltaY;
+        }
+
+        /// <summary>
+        /// Moves the current object to the specified location.
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        public void MoveTo(double x, double y)
+        {
+            MoveTo(new Point2<double>(x, y));
+        }
+
+        /// <summary>
         /// Compares the current <see cref="Bounds2"/> object to the specified object for equivalence.
         /// </summary>
         /// <param name="obj">The <see cref="Bounds2"/> object to test for equivalence with the current object.</param>

@@ -73,6 +73,7 @@
     <Compile Include="Srtm2OsmCommand.cs" />
     <Compile Include="DatabaseOutput.cs" />
     <Compile Include="DirectOutput.cs" />
+    <Compile Include="BoundsSplitter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Brejc.Common.Library\Brejc.Common.Library.csproj">

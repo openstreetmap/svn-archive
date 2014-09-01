@@ -35,7 +35,8 @@ namespace Srtm2Osm
         MaxWayNodes,
         FirstNodeId,
         FirstWayId,
-        IncrementId
+        IncrementId,
+        SplitBounds
     }
 
     public class Srtm2OsmCommand : IConsoleApplicationCommand
@@ -109,8 +110,6 @@ namespace Srtm2Osm
             else
                 output = new DatabaseOutput (new FileInfo (outputOsmFile), settings);
 
-            activityLogger.Log (ActivityLogLevel.Normal, "Saving the contour data to the file...");
-
             output.Begin ();
 
             if (osmMergeFile != null)
@@ -119,10 +118,24 @@ namespace Srtm2Osm
                 output.Merge (osmMergeFile);
             }
 
+            if (this.splitWidth != 0 && this.splitHeight != 0)
+            {
+                List<Bounds2> newBounds = new List<Bounds2> ();
+
+                foreach (Bounds2 bound in this.bounds)
+                    newBounds.AddRange (BoundsSplitter.Split (bound, this.splitWidth, this.splitHeight));
+
+                this.bounds = newBounds;
+
+                activityLogger.LogFormat (ActivityLogLevel.Normal, "Will process {0} seperate bounds.", bounds.Count);
+            }
+
             foreach (Bounds2 bound in this.bounds)
             {
                 Bounds2 corrBounds = new Bounds2 (bound.MinX - corrX, bound.MinY - corrY,
                     bound.MaxX - corrX, bound.MaxY - corrY);
+
+                activityLogger.LogFormat (ActivityLogLevel.Normal, "Calculating contour data for bound {0}...", corrBounds);
 
                 IRasterDigitalElevationModel dem = (IRasterDigitalElevationModel) storage.LoadDemForArea (corrBounds);
 
@@ -154,10 +167,19 @@ namespace Srtm2Osm
                 }
                 catch (OutOfMemoryException)
                 {
-                    activityLogger.Log (ActivityLogLevel.Error, "Not enough memory. Decrease the bounding box.");
+                    string msg = "Not enough memory. ";
+                    if (this.splitWidth == 0 && this.splitHeight == 0)
+                        msg += "Try to decrease the bounding box or use the splitbounds parameter.";
+                    else
+                        msg += "Try to decrease the splitbounds value.";
+
+                    activityLogger.Log (ActivityLogLevel.Error, msg);
                     break;
                 }
             }
+
+            if (!largeAreaMode)
+                activityLogger.Log (ActivityLogLevel.Normal, "Saving contour data to file...");
 
             output.End ();
 
@@ -237,6 +259,7 @@ namespace Srtm2Osm
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.FirstNodeId, "firstnodeid", 1));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.FirstWayId, "firstwayid", 1));
             options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.IncrementId, "incrementid", 0));
+            options.AddOption (new ConsoleApplicationOption ((int)Srtm2OsmCommandOption.SplitBounds, "splitbounds", 2));
 
             startFrom = options.ParseArgs (args, startFrom);
             CultureInfo invariantCulture = CultureInfo.InvariantCulture;
@@ -456,6 +479,15 @@ namespace Srtm2Osm
                     case Srtm2OsmCommandOption.IncrementId:
                         incrementId = true;
                         continue;
+
+                    case Srtm2OsmCommandOption.SplitBounds:
+                        splitHeight = Double.Parse (option.Parameters[0], invariantCulture);
+                        splitWidth = Double.Parse (option.Parameters[1], invariantCulture);
+
+                        if (splitWidth <= 0 || splitHeight <= 0)
+                            throw new ArgumentException ("The split width or height may not be smaller than zero.");
+
+                        continue;
                 }
             }
 
@@ -615,6 +647,7 @@ namespace Srtm2Osm
         private long firstNodeId = long.MaxValue;
         private long firstWayId = long.MaxValue;
         private bool incrementId = false;
+        private double splitWidth, splitHeight;
 
         private static int[] zoomLevels = {0, 0, 111000000, 55000000, 28000000, 14000000, 7000000, 3000000, 2000000, 867000,
             433000, 217000, 108000, 54000, 27000, 14000, 6771, 3385, 1693};

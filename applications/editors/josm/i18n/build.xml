@@ -3,7 +3,7 @@
     <!-- compilation properties -->
     <property name="josm.build.dir" value="../core"/>
     <property name="josm.presets" value="${josm.build.dir}/data/defaultpresets.xml"/>
-    <property name="josm.style" value="${josm.build.dir}/styles/standard/elemstyles.xml"/>
+    <!--<property name="josm.style" value="${josm.build.dir}/styles/standard/elemstyles.xml"/>-->
     <property name="plugin.dir" value="../plugins"/>
     <property name="validator.tagfile" value="${josm.build.dir}/data/validator/tagchecker.cfg"/>
     <property name="wms.srcfile" value="http://josm.openstreetmap.de/maps"/>
@@ -27,9 +27,9 @@
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
             <arg line="convpreset.pl ${josm.presets}"/>
         </exec>
-        <exec executable="perl" output="${i18n.build.dir}/trans_style.java">
+        <!--<exec executable="perl" output="${i18n.build.dir}/trans_style.java">
             <arg line="convstyle.pl ${josm.style}"/>
-        </exec>
+        </exec>-->
         <exec executable="perl" output="${i18n.build.dir}/trans_validator.java">
             <arg line="convvalidator.pl ${validator.tagfile}"/>
         </exec>
@@ -47,10 +47,10 @@
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
         <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
-            <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
+            <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
         </gettext-extract>
     </target>

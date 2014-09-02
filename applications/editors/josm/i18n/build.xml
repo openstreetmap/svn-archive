@@ -47,6 +47,7 @@
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
         <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
+            <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
@@ -66,6 +67,7 @@
         <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
+            <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
         </gettext-extract>
         <exec executable="msgcomm" output="po/data.pot">
             <arg line="--unique po/core.pot ${i18n.build.dir}/core.2.pot ${i18n.build.dir}/data.raw.pot"/>

@@ -39,19 +39,15 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class SimplifyAreaAction extends JosmAction {
 
-    private static final long serialVersionUID = 6854238214548011750L;
-
     public SimplifyAreaAction() {
         super(tr("Simplify Area"), "simplify", tr("Delete unnecessary nodes from an area."),
                 Shortcut.registerShortcut("tools:simplifyArea", tr("Tool: {0}", tr("Simplify Area")), KeyEvent.VK_Y, Shortcut.CTRL_SHIFT),
                 true, "simplifyarea", true);
     }
 
-
     private List<Bounds> getCurrentEditBounds() {
         return Main.main.getEditLayer().data.getDataSourceBounds();
     }
-
 
     private boolean isInBounds(final Node node, final List<Bounds> bounds) {
         for (final Bounds b : bounds) {
@@ -61,7 +57,6 @@ public class SimplifyAreaAction extends JosmAction {
         }
         return false;
     }
-
 
     private boolean confirmWayWithNodesOutsideBoundingBox() {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes, delete nodes"), ImageProvider.get("ok"), tr("Delete nodes outside of downloaded data regions"), null),
@@ -75,11 +70,9 @@ public class SimplifyAreaAction extends JosmAction {
         return ret == 0;
     }
 
-
     private void alertSelectAtLeastOneWay() {
         HelpAwareOptionPane.showOptionDialog(Main.parent, tr("Please select at least one way to simplify."), tr("Warning"), JOptionPane.WARNING_MESSAGE, null);
     }
-
 
     private boolean confirmSimplifyManyWays(final int numWays) {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes"), ImageProvider.get("ok"), tr("Simplify all selected ways"), null),
@@ -89,7 +82,6 @@ public class SimplifyAreaAction extends JosmAction {
                 options, options[0], null);
         return ret == 0;
     }
-
 
     @Override
     public void actionPerformed(final ActionEvent e) {
@@ -189,7 +181,6 @@ public class SimplifyAreaAction extends JosmAction {
         }
     }
 
-
     // average nearby nodes
     private Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
         final double mergeThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.MERGE_THRESHOLD, 0.2);
@@ -249,11 +240,16 @@ public class SimplifyAreaAction extends JosmAction {
                         continue;
                     }
 
-                    final double dist = coordMap.get(n1).greatCircleDistance(coordMap.get(n2));
-                    if (dist < minDist && dist < mergeThreshold) {
-                        minDist = dist;
-                        node1 = n1;
-                        node2 = n2;
+                    final LatLon a = coordMap.get(n1);
+                    final LatLon b = coordMap.get(n2);
+                    
+                    if (a != null && b != null) {
+                        final double dist = a.greatCircleDistance(b);
+                        if (dist < minDist && dist < mergeThreshold) {
+                            minDist = dist;
+                            node1 = n1;
+                            node2 = n2;
+                        }
                     }
                 }
 
@@ -268,7 +264,6 @@ public class SimplifyAreaAction extends JosmAction {
                 coordMap.remove(node2);
             }
         }
-
 
         final Collection<Command> commands = new ArrayList<Command>();
         final Set<Node> nodesToDelete2 = new HashSet<Node>();
@@ -309,7 +304,6 @@ public class SimplifyAreaAction extends JosmAction {
 
         return commands;
     }
-
 
     private void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
         final double angleThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_THRESHOLD, 10);
@@ -407,12 +401,10 @@ public class SimplifyAreaAction extends JosmAction {
         nodesToDelete.addAll(delNodes);
     }
 
-
     public static double computeConvectAngle(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
         final double angle =  Math.abs(heading(coord2, coord3) - heading(coord1, coord2));
         return Math.toDegrees(angle < Math.PI ? angle : 2 * Math.PI - angle);
     }
-
 
     public static double computeArea(final LatLon coord1, final LatLon coord2, final LatLon coord3) {
         final double a = coord1.greatCircleDistance(coord2);
@@ -425,13 +417,11 @@ public class SimplifyAreaAction extends JosmAction {
         return q < 0.0 ? 0.0 : Math.sqrt(q);
     }
 
-
     public static double R = 6378135;
 
     public static double crossTrackError(final LatLon l1, final LatLon l2, final LatLon l3) {
         return R * Math.asin(sin(l1.greatCircleDistance(l2) / R) * sin(heading(l1, l2) - heading(l1, l3)));
     }
-
 
     public static double heading(final LatLon a, final LatLon b) {
         double hd = Math.atan2(sin(toRadians(a.lon() - b.lon())) * cos(toRadians(b.lat())),
@@ -444,7 +434,6 @@ public class SimplifyAreaAction extends JosmAction {
         return hd;
     }
 
-
     @Override
     protected void updateEnabledState() {
         if (getCurrentDataSet() == null) {
@@ -454,10 +443,8 @@ public class SimplifyAreaAction extends JosmAction {
         }
     }
 
-
     @Override
     protected void updateEnabledState(final Collection<? extends OsmPrimitive> selection) {
         setEnabled(selection != null && !selection.isEmpty());
     }
-
 }

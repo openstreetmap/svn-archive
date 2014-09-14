@@ -27,6 +27,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -58,36 +59,6 @@ public class WayDownloaderPlugin extends Plugin {
                     Shortcut.registerShortcut("waydownloader:waydownload", tr("Way Download"), KeyEvent.VK_W, Shortcut.CTRL_SHIFT),
                     true);
         }
-
-        protected void showWarningMessage(String msg) {
-             if(msg == null) return;
-             JOptionPane.showMessageDialog(
-                    Main.parent,
-                    msg,
-                    tr("Warning"),
-                    JOptionPane.WARNING_MESSAGE
-             );
-        }
-
-        protected void showErrorMessage(String msg) {
-         if(msg == null) return;
-            JOptionPane.showMessageDialog(
-                    Main.parent,
-                    msg,
-                    tr("Error"),
-                    JOptionPane.ERROR_MESSAGE
-            );
-       }
-
-        protected void showInfoMessage(String msg) {
-             if(msg == null) return;
-               JOptionPane.showMessageDialog(
-                    Main.parent,
-                    msg,
-                    tr("Information"),
-                    JOptionPane.INFORMATION_MESSAGE
-               );
-          }
 
         /** Called when the WayDownloadAction action is triggered (e.g. user clicked the menu option) */
         @Override
@@ -250,8 +221,7 @@ public class WayDownloaderPlugin extends Plugin {
         }
 
         @Override
-        protected void updateEnabledState(
-                Collection<? extends OsmPrimitive> selection) {
+        protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
             // do nothing
         }
     }
@@ -326,5 +296,53 @@ public class WayDownloaderPlugin extends Plugin {
             if (bounds != null && bounds.contains(node.getCoor())) return true;
         }
         return false;
+    }
+
+    private static void showWarningMessage(final String msg) {
+        if (msg != null) {
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(
+                            Main.parent,
+                            msg,
+                            tr("Warning"),
+                            JOptionPane.WARNING_MESSAGE
+                        );
+                }
+            });
+        }
+    }
+
+    private static void showErrorMessage(final String msg) {
+        if (msg != null) {
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(
+                            Main.parent,
+                            msg,
+                            tr("Error"),
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                }
+            });
+        }
+    }
+
+    private static void showInfoMessage(final String msg) {
+        if (msg != null) {
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(
+                            Main.parent,
+                            msg,
+                            tr("Information"),
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+                }
+            });
+        }
     }
 }

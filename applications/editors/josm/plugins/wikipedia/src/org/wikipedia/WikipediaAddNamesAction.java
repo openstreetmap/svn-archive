@@ -36,8 +36,10 @@ public class WikipediaAddNamesAction extends JosmAction {
                 tags.add(new String[]{"name:" + i.lang, i.article});
             }
         }
-	System.out.println(tags);
-        AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia");
+        if (Main.isDebugEnabled()) {
+            Main.debug(tags.toString());
+        }
+        AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia", Main.main.getCurrentDataSet().getSelected());
     }
 
     protected boolean useWikipediaLangArticle(WikipediaApp.WikipediaLangArticle i) {
@@ -45,7 +47,6 @@ public class WikipediaAddNamesAction extends JosmAction {
                 || Arrays.asList(Locale.getISOLanguages()).contains(i.lang))
                 && (!Main.pref.getBoolean("wikipedia.filter-same-names", true)
                 || !i.article.equals(getCurrentDataSet().getSelected().iterator().next().get("name")));
-
     }
 
     protected String getWikipediaValue() {
@@ -65,5 +66,4 @@ public class WikipediaAddNamesAction extends JosmAction {
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         updateEnabledState();
     }
-
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.waydownloader;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -18,7 +19,6 @@ import org.openstreetmap.josm.actions.MergeNodesAction;
 import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.DataSource;
 import org.openstreetmap.josm.data.osm.Node;
@@ -40,7 +40,6 @@ public class WayDownloaderPlugin extends Plugin {
 
     private Way priorConnectedWay = null;
     private Node selectedNode = null;
-
 
     /** Plugin constructor called at JOSM startup */
     public WayDownloaderPlugin(PluginInformation info) {
@@ -122,11 +121,11 @@ public class WayDownloaderPlugin extends Plugin {
                 );
                 return;
             }
-            priorConnectedWay =connectedWays.get(0);
+            priorConnectedWay = connectedWays.get(0);
 
             //Download a little rectangle around the selected node
-            double latbuffer=0.0003; //TODO make this an option
-            double lonbuffer=0.0005;
+            double latbuffer = Main.pref.getDouble("waydownloader.latbuffer", 0.00001);
+            double lonbuffer = Main.pref.getDouble("waydownloader.latbuffer", 0.00002);
             DownloadOsmTask downloadTask = new DownloadOsmTask();
             final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor();
             final Future<?> future = downloadTask.download(

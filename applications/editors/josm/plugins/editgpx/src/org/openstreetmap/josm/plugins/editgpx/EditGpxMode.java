@@ -20,11 +20,11 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxData;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxTrack;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxTrackSegment;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxWayPoint;
-
 
 public class EditGpxMode extends MapMode implements LayerChangeListener {
 
@@ -39,7 +39,8 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         super(name, "editgpx_mode.png", desc, mapFrame, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
 
-    @Override public void enterMode() {
+    @Override
+    public void enterMode() {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
@@ -47,26 +48,28 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         updateLayer();
     }
 
-    @Override public void exitMode() {
+    @Override
+    public void exitMode() {
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
     }
 
-
-    @Override public void mousePressed(MouseEvent e) {
+    @Override
+    public void mousePressed(MouseEvent e) {
         pointPressed = new Point(e.getPoint());
     }
 
-
-    @Override public void mouseDragged(MouseEvent e) {
+    @Override
+    public void mouseDragged(MouseEvent e) {
         if ( (e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) ==  InputEvent.BUTTON1_DOWN_MASK) {
             //if button1 is hold, draw the rectangle.
             paintRect(pointPressed, e.getPoint());
         }
     }
 
-    @Override public void mouseReleased(MouseEvent e) {
+    @Override
+    public void mouseReleased(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) {
             return;
         }
@@ -92,7 +95,6 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         }
         oldRect = null;
         Main.map.mapView.repaint();
-
     }
 
     /**
@@ -148,7 +150,6 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         }
     }
 
-
     public void setFrame(MapFrame mapFrame) {
         frame = mapFrame;
     }
@@ -176,8 +177,13 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
     public void layerRemoved(Layer oldLayer) {
         if (oldLayer instanceof EditGpxLayer) {
             currentEditLayer = null;
-            if(Main.map.mapMode instanceof EditGpxMode)
-                Main.map.selectSelectTool(false);
+            if (Main.map.mapMode instanceof EditGpxMode) {
+                if (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer) {
+                    Main.map.selectSelectTool(false);
+                } else {
+                    Main.map.selectZoomTool(false);
+                }
+            }
         }
     }
 

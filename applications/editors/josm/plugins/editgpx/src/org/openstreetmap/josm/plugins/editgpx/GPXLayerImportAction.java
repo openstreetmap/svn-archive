@@ -30,8 +30,7 @@ import org.openstreetmap.josm.plugins.editgpx.data.EditGpxData;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * Import GPX data from available layers
- *
+ * Import GPX data from available layers.
  *
  */
 class GPXLayerImportAction extends AbstractAction {
@@ -46,8 +45,7 @@ class GPXLayerImportAction extends AbstractAction {
     }
 
     /**
-     * shows a list of GPX layers. if user selects one the data from this layer is
-     * imported.
+     * shows a list of GPX layers. if user selects one the data from this layer is imported.
      */
     public void activateImport() {
         Box panel = Box.createVerticalBox();

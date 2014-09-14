@@ -31,7 +31,6 @@ import org.openstreetmap.josm.plugins.editgpx.data.EditGpxTrackSegment;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxWayPoint;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-
 public class EditGpxLayer extends Layer {
 
     private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(EditGpxPlugin.class.getResource("/images/editgpx_layer.png")));
@@ -50,12 +49,11 @@ public class EditGpxLayer extends Layer {
      */
     public void initializeImport() {
         try {
-            if(data.isEmpty()) {
+            if (data.isEmpty()) {
                 layerImport.activateImport();
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            Main.error(e);
         }
     }
 

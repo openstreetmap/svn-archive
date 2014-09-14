@@ -19,18 +19,15 @@ import com.tilusnet.josm.plugins.alignways.geometry.AlignWaysGeomLine;
 import com.tilusnet.josm.plugins.alignways.geometry.AlignWaysGeomLine.IntersectionStatus;
 import com.tilusnet.josm.plugins.alignways.geometry.AlignWaysGeomPoint;
 
-
 /**
  * @author tilusnet <tilusnet@gmail.com>
  *
  */
 public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 
-    AlignableStatus alignableStatKeepAngles = AlignableStatus.ALGN_VALID;
+    private AlignableStatus alignableStatKeepAngles = AlignableStatus.ALGN_VALID;
 
     public AlignWaysCmdKeepAngles() {
-        super();
-
         // Now the calculatedNodes reflect the coordinates that we'd have
         // without preserving the angles, i.e. preserving the length.
 
@@ -47,11 +44,9 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
 
         recalculateNodesAndValidate(lineKeepLength, nodeArr[0]);
         recalculateNodesAndValidate(lineKeepLength, nodeArr[1]);
-
     }
 
-
-    void recalculateNodesAndValidate(AlignWaysGeomLine alignedLineKeepLength, Node endpoint) {
+    private void recalculateNodesAndValidate(AlignWaysGeomLine alignedLineKeepLength, Node endpoint) {
 
         if (endpoint.getEastNorth().equals(pivot)) {
             // endpoint is pivot: the coordinates won't change
@@ -59,7 +54,8 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         }
         
         ArrayList<WaySegment> alws = algnSeg.getAdjacentWaySegments(endpoint);
-        if (alws.size() <= 2) {
+        int alwsSize = alws.size();
+        if (0 < alwsSize && alwsSize <= 2) {
             // We need the intersection point of
             //  - the alignee following the keep length rule
             //  - the adjacent way segment
@@ -69,7 +65,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             Node adjOther2 = null;
             EastNorth enAdjOther2 = null;
 
-            if (alws.size() == 2) {
+            if (alwsSize == 2) {
                 adjOther2 = getNonEqualNode(alws.get(1), endpoint);
                 enAdjOther2 = adjOther2.getEastNorth();
                 
@@ -105,7 +101,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             // this scenario is not allowed for the time being as placing the new intersection point on the line 
             // triggers complications.
             // TODO - find a solution
-            if (alws.size() == 2 && enIsectPt != null) {
+            if (alwsSize == 2 && enIsectPt != null) {
                 int middlePtIdx = AlignWaysGeomPoint.getMiddleOf3(
                         new AlignWaysGeomPoint(enIsectPt), 
                         new AlignWaysGeomPoint(enAdjOther1), 
@@ -154,9 +150,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
             // angle preserving alignment not possible
             alignableStatKeepAngles = AlignableStatus.ALGN_INV_TOOMANY_CONNECTED_WS;
         }
-
     }
-
 
     private boolean isEnSetCollinear(ArrayList<EastNorth> enAdjPts) {
         ArrayList<AlignWaysGeomPoint> awAdjPts = new ArrayList<AlignWaysGeomPoint>();
@@ -169,7 +163,6 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         return AlignWaysGeomPoint.isSetCollinear(awAdjPts);
     }
 
-
     private Node getNonEqualNode(WaySegment waySegment, Node endpoint) {
         if (waySegment.getFirstNode().equals(endpoint)) {
             return waySegment.getSecondNode();
@@ -178,7 +171,6 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
         } else
             return null;
     }
-
 
     /**
      * Reports invalid alignable statuses on screen in dialog boxes.
@@ -221,9 +213,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                 tr("AlignWayS: Alignment not possible"),
                 JOptionPane.WARNING_MESSAGE
                 );
-
     }
-
 
     /**
      * Returns true if the two selected segments are alignable.

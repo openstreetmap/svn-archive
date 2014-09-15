@@ -64,7 +64,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
     private VideoPositionLayer videoPositionLayer;
     private GPSVideoPlayer gpsVideoPlayer;
 
-    public static String VLC_VERSION = "2.0.x";
+    public static String VLC_VERSION = "2.1.x";
 
     public VideoPlugin(PluginInformation info) {
         super(info);

@@ -3,14 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry exported="true" kind="lib" path="lib/vlcj-2.1.0.jar" sourcepath="lib/vlcj-2.1.0-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/VideoMapping/lib/vlcj-2.1.0-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
-	<classpathentry exported="true" kind="lib" path="lib/jna-3.4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/platform-3.4.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-log4j"/>
+	<classpathentry kind="lib" path="lib/jna-3.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/platform-3.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/vlcj-3.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

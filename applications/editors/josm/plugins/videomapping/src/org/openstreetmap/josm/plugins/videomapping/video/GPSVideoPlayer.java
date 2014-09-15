@@ -17,8 +17,7 @@ import javax.swing.JButton;
 import org.openstreetmap.josm.plugins.videomapping.VideoPositionLayer;
 
 //extends video playback, major control has the video player
-public class GPSVideoPlayer extends VideoPlayer
-{
+public class GPSVideoPlayer extends VideoPlayer {
 	private List<GPSVideo> videos;
 	private VideoPositionLayer videoPositionLayer;
 
@@ -68,21 +67,18 @@ public class GPSVideoPlayer extends VideoPlayer
 	}
 	
 	//jump in all videos this date, if possible
-	public void jumpTo(Date date)
-	{
+	public void jumpTo(Date date) {
 		for (GPSVideo video : videos) {
 			video.jumpTo(date);
 		}
 	}
 	
-	public boolean areAllVideosSynced()
-	{
+	public boolean areAllVideosSynced() {
 		for (GPSVideo video : videos) {
 			if (!video.isSynced()) return false;
 		}
 		return true;		
 	}
-
 
 	@Override
 	public void update_plays() {		
@@ -96,16 +92,4 @@ public class GPSVideoPlayer extends VideoPlayer
 		videoPositionLayer.unload();
 		super.windowClosing(arg0);
 	}
-	
-	
-	
-	
-    
-    
-
-
-    
-    
-
-    
 }

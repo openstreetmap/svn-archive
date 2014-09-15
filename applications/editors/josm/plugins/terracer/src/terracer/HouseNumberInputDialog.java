@@ -36,6 +36,7 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 import org.openstreetmap.josm.tools.GBC;
+import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
  * The HouseNumberInputDialog is the layout of the house number input logic.
@@ -117,6 +118,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         setupDialog();
         getRootPane().setDefaultButton(defaultButton);
         pack();
+        setRememberWindowGeometry(getClass().getName() + ".geometry", WindowGeometry.centerInWindow(Main.parent, getPreferredSize()));
         lo.requestFocusInWindow();
     }
 

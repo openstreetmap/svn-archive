@@ -212,7 +212,6 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
                 // TerracerActon.terraceBuilding
                 dialog.segments.setText(String.valueOf(steps));
                 dialog.segments.setEditable(false);
-
             }
         }
         return true;
@@ -309,10 +308,10 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
                         // Ignore
                     }
 
-                    this.dialog.dispose();
+                    this.dialog.setVisible(false);
                 }
             } else if (tr("Cancel").equals(button.getActionCommand())) {
-                this.dialog.dispose();
+                this.dialog.setVisible(false);
             }
         } else {
             // Anything else is a change in the input (we don't get here though)
@@ -327,8 +326,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      * @return the stepSize (1 for all, 2 for odd /even)
      */
     public Integer stepSize() {
-        return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1
-                : 2;
+        return (dialog.interpolation.getSelectedItem().equals(tr("All"))) ? 1 : 2;
     }
 
     /**

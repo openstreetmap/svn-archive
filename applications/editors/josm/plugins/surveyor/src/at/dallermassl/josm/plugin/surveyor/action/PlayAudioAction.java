@@ -31,10 +31,7 @@ import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
 public class PlayAudioAction extends AbstractSurveyorAction {
     private String audioSource = null;
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
-     */
-    //@Override
+    @Override
     public void actionPerformed(GpsActionEvent event) {
         // run as a separate thread
         Main.worker.execute(new Runnable() {
@@ -42,7 +39,6 @@ public class PlayAudioAction extends AbstractSurveyorAction {
                 try {
                     if(audioSource == null) {
                         audioSource = getParameters().get(0);
-                        //System.out.println("reading audio from " + audioSource);
                     }
                     InputStream in = new BufferedInputStream(ResourceLoader.getInputStream(audioSource));
                     AudioInputStream stream = AudioSystem.getAudioInputStream(in);

@@ -52,15 +52,10 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
         return this.gpsLayerName;
     }
 
-
-    /* (non-Javadoc)
-     * @see java.util.TimerTask#run()
-     */
     @Override
     public void run() {
 
         try {
-
             GpxLayer gpsLayer = LayerUtil.findGpsLayer(gpsLayerName, GpxLayer.class);
             if(gpsLayer == null) {
                 return;

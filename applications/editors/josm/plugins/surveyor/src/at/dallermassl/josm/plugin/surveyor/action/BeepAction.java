@@ -19,11 +19,9 @@ import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
 public class BeepAction implements SurveyorAction {
     int beepNumber = 1;
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
-     */
+    @Override
     public void actionPerformed(GpsActionEvent event) {
-     // run as a separate thread
+        // run as a separate thread
         Main.worker.execute(new Runnable() {
             public void run() {
                 for(int index = 0; index < beepNumber; ++index) {
@@ -37,9 +35,7 @@ public class BeepAction implements SurveyorAction {
         });
     }
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
-     */
+    @Override
     public void setParameters(List<String> parameters) {
         try {
             beepNumber = Integer.parseInt(parameters.get(0));
@@ -48,5 +44,4 @@ public class BeepAction implements SurveyorAction {
             e.printStackTrace();
         }
     }
-
 }

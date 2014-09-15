@@ -5,6 +5,7 @@
 package at.dallermassl.josm.plugin.surveyor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -115,10 +116,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         }
     }
 
-
-
     public static void main(String[] args) {
-
 
         // parse xml file and create component from it:
         Reader in = new InputStreamReader(SurveyorComponent.class.getClassLoader().getResourceAsStream("resources/surveyor.xml"));
@@ -159,9 +157,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
-    /* (non-Javadoc)
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-     */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if("gpsdata".equals(evt.getPropertyName())) {
             gpsData = (LiveGpsData) evt.getNewValue();
@@ -170,11 +166,8 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
     }
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.GpsDataSource#getGpsData()
-     */
+    @Override
     public LiveGpsData getGpsData() {
         return gpsData;
     }
-
 }

@@ -35,10 +35,7 @@ public class SetNodeAction implements SurveyorAction {
 
     }
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
-     */
-    //@Override
+    @Override
     public void setParameters(List<String> parameters) {
         keyValues = new ArrayList<Pair<String, String>>();
         int pos;
@@ -56,9 +53,7 @@ public class SetNodeAction implements SurveyorAction {
         }
     }
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.ButtonAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
-     */
+    @Override
     public void actionPerformed(GpsActionEvent event) {
         LatLon coordinates = event.getCoordinates();
         //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon() + " params: " + keyValues);

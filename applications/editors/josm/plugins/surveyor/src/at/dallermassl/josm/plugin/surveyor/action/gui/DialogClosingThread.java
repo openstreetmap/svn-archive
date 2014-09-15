@@ -14,12 +14,14 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.openstreetmap.josm.Main;
+
 /**
  * @author cdaller
  *
  */
 public class DialogClosingThread extends Thread implements KeyListener, DocumentListener {
-    private static long DEFAULT_TIMEOUT = 5000;
+    public static final long DEFAULT_TIMEOUT = 5000;
     private JDialog dialog;
     private long timeout;
     private long loopCount;
@@ -43,9 +45,6 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
         this.loopCount = timeout / 1000;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Thread#run()
-     */
     @Override
     public void run() {
         String title = dialog.getTitle();
@@ -65,31 +64,22 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
         this.loopCount = timeout / 1000;
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-     */
-    //@Override
+    @Override
     public void keyPressed(KeyEvent e) {
         reset();
-        System.out.println("keypressed: " + e.getKeyCode());
+        Main.debug("keypressed: " + e.getKeyCode());
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-     */
-    //@Override
+    @Override
     public void keyReleased(KeyEvent e) {
         reset();
-        System.out.println("keyreleased: " + e.getKeyCode());
+        Main.debug("keyreleased: " + e.getKeyCode());
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-     */
-    //@Override
+    @Override
     public void keyTyped(KeyEvent e) {
         reset();
-        System.out.println("keytyped: " + e.getKeyCode());
+        Main.debug("keytyped: " + e.getKeyCode());
     }
 
     /**
@@ -113,30 +103,21 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
         textfield.getDocument().addDocumentListener(this);
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
-     */
-    //@Override
+    @Override
     public void changedUpdate(DocumentEvent e) {
         reset();
-        System.out.println("changedUpdate: " + e);
+        Main.debug("changedUpdate: " + e);
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
-     */
-    //@Override
+    @Override
     public void insertUpdate(DocumentEvent e) {
         reset();
-        System.out.println("insertUpdate: " + e);
+        Main.debug("insertUpdate: " + e);
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
-     */
-    //@Override
+    @Override
     public void removeUpdate(DocumentEvent e) {
         reset();
-        System.out.println("removeUpdate: " + e);
+        Main.debug("removeUpdate: " + e);
     }
 }

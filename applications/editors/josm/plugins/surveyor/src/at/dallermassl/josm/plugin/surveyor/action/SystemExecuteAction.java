@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.openstreetmap.josm.Main;
+
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 
 /**
@@ -17,21 +19,14 @@ import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
  */
 public class SystemExecuteAction extends AbstractSurveyorAction {
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent, java.util.List)
-     */
-    //@Override
+    @Override
     public void actionPerformed(GpsActionEvent event) {
         final ProcessBuilder builder = new ProcessBuilder(getParameters());
-        //Map<String, String> environ = builder.environment();
         builder.directory(new File(System.getProperty("user.home")));
 
-        System.out.println("Directory : " + builder.directory());
+        Main.debug("Directory : " + builder.directory());
         Thread executionThread = new Thread() {
 
-            /* (non-Javadoc)
-             * @see java.lang.Thread#run()
-             */
             @Override
             public void run() {
                 try {
@@ -47,17 +42,10 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
 
                     System.out.println(getClass().getSimpleName() + "Program terminated!");
                 } catch (Throwable t) {
-                    t.printStackTrace();
+                    Main.error(t);
                 }
             }
-
         };
         executionThread.start();
-//        try {
-//            System.in.read();
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
     }
 }

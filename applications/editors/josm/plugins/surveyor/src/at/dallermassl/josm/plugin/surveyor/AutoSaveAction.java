@@ -38,9 +38,7 @@ public class AutoSaveAction extends JosmAction {
         KeyEvent.VK_S, Shortcut.ALT_CTRL_SHIFT), true);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof AbstractButton) {
             autoSave = ((AbstractButton)e.getSource()).isSelected();
@@ -59,12 +57,8 @@ public class AutoSaveAction extends JosmAction {
             String osmFilename = MessageFormat.format(OSM_FILE_NAME_PATTERN, new Date());
             task = new AutoSaveEditLayerTimerTask(osmFilename);
             gpsDataTimer.schedule(task, 5000, AUTO_SAVE_PERIOD_SEC * 1000);
-        } else {
-            if(gpsDataTimer != null) {
-                gpsDataTimer.cancel();
-            }
+        } else if (gpsDataTimer != null) {
+            gpsDataTimer.cancel();
         }
-
-
     }
 }

@@ -23,6 +23,7 @@ import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorLock;
 import at.dallermassl.josm.plugin.surveyor.SurveyorPlugin;
+import at.dallermassl.josm.plugin.surveyor.action.gui.DialogClosingThread;
 import at.dallermassl.josm.plugin.surveyor.action.gui.WaypointDialog;
 import at.dallermassl.josm.plugin.surveyor.util.LayerUtil;
 
@@ -46,12 +47,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
 
     }
 
-
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.ButtonAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent, java.util.List)
-     */
     public void actionPerformed(GpsActionEvent event) {
-        //System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " + coordinates.lon());
         String markerTitle = getParameters().get(0);
         Object source = event.getSource();
         if(source instanceof JToggleButton) {
@@ -61,19 +57,31 @@ public class SetWaypointAction extends AbstractSurveyorAction {
                 markerTitle = tr("{0} end", markerTitle);
             }
         }
+        
+        String iconName = getParameters().size() > 1 ? getParameters().get(1).trim() : null;
 
-        if(dialog == null) {
-            dialog = new WaypointDialog();
+        long timeout = DialogClosingThread.DEFAULT_TIMEOUT;
+        if (getParameters().size() > 2) {
+            try {
+                timeout = Integer.parseInt(getParameters().get(2));
+            } catch (NumberFormatException e) {
+                Main.error(e.getMessage());
+            }
         }
-
+        
         String markerText = markerTitle;
-        String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), tr("Waypoint Description"));
-        if(inputText != null && inputText.length() > 0) {
-            inputText = inputText.replaceAll("<", "_"); // otherwise the gpx file is ruined
-            markerText = markerText + " " + inputText;
+        
+        if (timeout > 0) {
+            if (dialog == null) {
+                dialog = new WaypointDialog();
+            }
+    
+            String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), tr("Waypoint Description"), timeout*1000);
+            if(inputText != null && inputText.length() > 0) {
+                inputText = inputText.replaceAll("<", "_"); // otherwise the gpx file is ruined
+                markerText = markerText + " " + inputText;
+            }
         }
-
-        String iconName = getParameters().size() > 1 ? getParameters().get(1) : null;
 
         // add the waypoint to the marker layer AND to the gpx layer
         // (easy export of data + waypoints):
@@ -81,10 +89,9 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         GpxLayer gpsLayer = getGpxLayer();
         WayPoint waypoint = new WayPoint(event.getCoordinates());
         waypoint.attr.put("name", markerText);
-        if(iconName != null)
+        if(iconName != null && !iconName.isEmpty())
             waypoint.attr.put("sym", iconName);
         synchronized(SurveyorLock.class) {
-            //layer.data.add(new Marker(event.getCoordinates(), markerText, iconName));
             layer.data.add(new Marker(event.getCoordinates(), markerText, iconName, null, -1.0, 0.0));
             if(gpsLayer != null) {
                 gpsLayer.data.waypoints.add(waypoint);
@@ -104,7 +111,6 @@ public class SetWaypointAction extends AbstractSurveyorAction {
 
             if(markerLayer == null) {
                 // not found, add a new one
-                //markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null);
                 markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
                 Main.main.addLayer(markerLayer);
             }
@@ -128,5 +134,4 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         }
         return liveGpsLayer;
     }
-
 }

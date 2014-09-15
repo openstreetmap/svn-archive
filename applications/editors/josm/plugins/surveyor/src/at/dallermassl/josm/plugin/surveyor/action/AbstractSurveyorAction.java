@@ -23,12 +23,8 @@ public abstract class AbstractSurveyorAction implements SurveyorAction {
         return parameters;
     }
 
-    /* (non-Javadoc)
-     * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
-     */
-    //@Override
+    @Override
     public void setParameters(List<String> parameters) {
         this.parameters = parameters;
     }
-
 }

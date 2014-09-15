@@ -36,7 +36,6 @@ public class ResourceLoader {
         } else {
             in = new FileInputStream(source);
         }
-        System.out.println("stream for resource is " + in);
         return in;
     }
 }

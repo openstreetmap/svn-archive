@@ -49,26 +49,11 @@ public class SurveyorShowAction extends JosmAction {
         this.gpsPlugin = gpsPlugin;
     }
 
-
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         if(surveyorFrame == null) {
             surveyorFrame = new JFrame();
 
             SurveyorComponent comp = createComponent();
-//          comp.setGridSize(3,3);
-//          comp.addButton(new ButtonDescription("Tunnel", "T", "images/symbols/tunnel.png", "ConsolePrinterAction", ButtonType.SINGLE));
-//          comp.addButton(new ButtonDescription("Bridge", "B", null, "ConsolePrinterAction", ButtonType.TOGGLE));
-//          comp.addButton(new ButtonDescription("Motorway", "M", null, "ConsolePrinterAction", null));
-//          comp.addButton(new ButtonDescription("Primary", "I", null, "ConsolePrinterAction", null));
-//          comp.addButton(new ButtonDescription("Secondary", "S", null, "ConsolePrinterAction", null));
-//          comp.addButton(new ButtonDescription("Unclassified", "U", null, "ConsolePrinterAction", null));
-//          comp.addButton(new ButtonDescription("Residential", "R", null,
-//          new SurveyorActionDescription("SetWaypointAction", new String[] {"residential", "images/reorder.png"}), null));
-//          comp.addButton(new ButtonDescription("Parking", "P", "images/symbols/parking.png",
-//          new SurveyorActionDescription("SetNodeAction", new String[] {"amenity", "parking", "createdby", "surveyor"}), null));
 
             // add component as gps event listener:
             gpsPlugin.addPropertyChangeListener(comp);
@@ -142,7 +127,6 @@ public class SurveyorShowAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: {1}", source, e.getMessage()));
         }
         return component;
-
     }
 
     /**
@@ -174,10 +158,9 @@ public class SurveyorShowAction extends JosmAction {
                 //System.out.println("SurveyorActionDescription " + object);
                 actions.add((SurveyorActionDescription)object);
             } else {
-                System.err.println("surveyor: unknown xml element: " + object);
+                Main.error("surveyor: unknown xml element: " + object);
             }
         }
         return surveyorComponent;
     }
-
 }

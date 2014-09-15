@@ -32,7 +32,6 @@ public class MetaAction extends AbstractAction {
      *
      */
     public MetaAction() {
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -40,7 +39,6 @@ public class MetaAction extends AbstractAction {
      */
     public MetaAction(String name) {
         super(name);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -67,21 +65,15 @@ public class MetaAction extends AbstractAction {
         this.actions = actions;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         // check if action was called by repeating key presses too long pressed):
         long time = System.currentTimeMillis();
         if ((time - lastActionCall) < MIN_TIME_DIFF) {
             lastActionCall = time;
-// System.out.println("repeating key detected");
             return;
         }
         lastActionCall = time;
-        // System.out.println("meta action '" + super.toString() + "' called");
 
         // toggle on/off
         Boolean selected = (Boolean) getValue(ActionConstants.SELECTED_KEY);

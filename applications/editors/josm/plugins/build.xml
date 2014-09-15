@@ -90,7 +90,6 @@
         <ant target="dist" dir="simplifyarea"/>
         <ant target="dist" dir="smed"/>
         <ant target="dist" dir="surveyor"/>
-        <ant target="dist" dir="surveyor2"/>
         <ant target="dist" dir="tag2link"/>
         <ant target="dist" dir="tageditor"/>
         <ant target="dist" dir="tagging-preset-tester"/>
@@ -191,7 +190,6 @@
         <ant target="clean" dir="simplifyarea"/>
         <ant target="clean" dir="smed"/>
         <ant target="clean" dir="surveyor"/>
-        <ant target="clean" dir="surveyor2"/>
         <ant target="clean" dir="tag2link"/>
         <ant target="clean" dir="tageditor"/>
         <ant target="clean" dir="tagging-preset-tester"/>

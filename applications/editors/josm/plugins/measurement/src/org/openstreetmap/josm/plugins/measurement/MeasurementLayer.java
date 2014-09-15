@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.measurement;
 /// @author Raphael Mack <ramack@raphael-mack.de>
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -45,32 +46,36 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class MeasurementLayer extends Layer {
 
-    public MeasurementLayer(String arg0) {
-        super(arg0);
+    public MeasurementLayer(String name) {
+        super(name);
     }
 
     private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(MeasurementPlugin.class.getResource("/images/measurement.png")));
     private Collection<WayPoint> points = new ArrayList<WayPoint>(32);
 
-    @Override public Icon getIcon() {
+    @Override
+    public Icon getIcon() {
         return icon;
     }
 
-    @Override public String getToolTipText() {
+    @Override
+    public String getToolTipText() {
         return tr("Layer to make measurements");
     }
 
-    @Override public boolean isMergable(Layer other) {
+    @Override
+    public boolean isMergable(Layer other) {
         //return other instanceof MeasurementLayer;
         return false;
     }
 
-    @Override public void mergeFrom(Layer from) {
+    @Override
+    public void mergeFrom(Layer from) {
         // TODO: nyi - doubts about how this should be done are around. Ideas?
-
     }
 
-    @Override public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
+    @Override
+    public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
         g.setColor(Color.green);
         Point l = null;
         for(WayPoint p:points){
@@ -83,15 +88,18 @@ public class MeasurementLayer extends Layer {
         }
     }
 
-    @Override public void visitBoundingBox(BoundingXYVisitor v) {
+    @Override
+    public void visitBoundingBox(BoundingXYVisitor v) {
         // nothing to do here
     }
 
-    @Override public Object getInfoComponent() {
+    @Override
+    public Object getInfoComponent() {
         return getToolTipText();
     }
 
-    @Override public Action[] getMenuEntries() {
+    @Override
+    public Action[] getMenuEntries() {
         return new Action[]{
             LayerListDialog.getInstance().createShowHideLayerAction(),
             // TODO: implement new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
@@ -139,6 +147,9 @@ public class MeasurementLayer extends Layer {
         }
         if (MeasurementPlugin.measurementDialog != null) { 
             MeasurementPlugin.measurementDialog.pathLengthLabel.setText(NavigatableComponent.getDistText(pathLength));
+        }
+        if (Main.map.mapMode instanceof MeasurementMode) {
+            Main.map.statusLine.setDist(pathLength);
         }
     }
     
@@ -206,71 +217,72 @@ public class MeasurementLayer extends Layer {
 
     private class GPXLayerImportAction extends AbstractAction {
 
-    /**
-     * The data model for the list component.
-     */
-    private DefaultListModel<GpxLayer> model = new DefaultListModel<>();
-
-    /**
-     * @param layer the targeting measurement layer
-     */
-    public GPXLayerImportAction(MeasurementLayer layer) {
-        super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Box panel = Box.createVerticalBox();
-        final JList<GpxLayer> layerList = new JList<>(model);
-        Collection<Layer> data = Main.map.mapView.getAllLayers();
-        Layer lastLayer = null;
-        int layerCnt = 0;
-
-        for (Layer l : data){
-                if(l instanceof GpxLayer){
+        /**
+         * The data model for the list component.
+         */
+        private DefaultListModel<GpxLayer> model = new DefaultListModel<>();
+    
+        /**
+         * @param layer the targeting measurement layer
+         */
+        public GPXLayerImportAction(MeasurementLayer layer) {
+            super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
+        }
+    
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Box panel = Box.createVerticalBox();
+            final JList<GpxLayer> layerList = new JList<>(model);
+            Collection<Layer> data = Main.map.mapView.getAllLayers();
+            Layer lastLayer = null;
+            int layerCnt = 0;
+    
+            for (Layer l : data) {
+                if (l instanceof GpxLayer) {
                     model.addElement((GpxLayer) l);
                     lastLayer = l;
                     layerCnt++;
                 }
-        }
-        if(layerCnt == 1){
+            }
+            if (layerCnt == 1) {
                 layerList.setSelectedValue(lastLayer, true);
             }
-            if(layerCnt > 0){
-
+            if (layerCnt > 0) {
                 layerList.setCellRenderer(new DefaultListCellRenderer(){
-                        @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                            Layer layer = (Layer)value;
-                            JLabel label = (JLabel)super.getListCellRendererComponent(list,
-                                                                                      layer.getName(), index, isSelected, cellHasFocus);
-                            Icon icon = layer.getIcon();
-                            label.setIcon(icon);
-                            label.setToolTipText(layer.getToolTipText());
-                            return label;
-                        }
-                    });
-
+                    @Override
+                    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                        Layer layer = (Layer)value;
+                        JLabel label = (JLabel)super.getListCellRendererComponent(list,
+                                                                                  layer.getName(), index, isSelected, cellHasFocus);
+                        Icon icon = layer.getIcon();
+                        label.setIcon(icon);
+                        label.setToolTipText(layer.getToolTipText());
+                        return label;
+                    }
+                });
+    
                 JCheckBox dropFirst = new JCheckBox(tr("Drop existing path"));
-
+    
                 panel.add(layerList);
                 panel.add(dropFirst);
-
+    
                 final JOptionPane optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION){
-                        @Override public void selectInitialValue() {
+                        @Override
+                        public void selectInitialValue() {
                             layerList.requestFocusInWindow();
                         }
                     };
                 final JDialog dlg = optionPane.createDialog(Main.parent, tr("Import path from GPX layer"));
                 dlg.setVisible(true);
-
+    
                 Object answer = optionPane.getValue();
                 if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE ||
                     (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION)) {
                     return;
                 }
-
+    
                 GpxLayer gpx = (GpxLayer)layerList.getSelectedValue();
-                if(dropFirst.isSelected()){
+                if (dropFirst.isSelected()) {
                     points = new ArrayList<WayPoint>(32);
                 }
 
@@ -280,10 +292,10 @@ public class MeasurementLayer extends Layer {
                             points.add(p);
                         }
                     }
-            }
+                }
                 recalculate();
                 Main.parent.repaint();
-            }else{
+            } else{
                 // TODO: register a listener and show menu entry only if gps layers are available
                 // no gps layer
                 JOptionPane.showMessageDialog(Main.parent,tr("No GPX data layer found."));

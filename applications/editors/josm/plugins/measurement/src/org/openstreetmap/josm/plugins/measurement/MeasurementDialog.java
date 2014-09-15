@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.measurement;
 
 import static org.openstreetmap.josm.tools.I18n.tr;

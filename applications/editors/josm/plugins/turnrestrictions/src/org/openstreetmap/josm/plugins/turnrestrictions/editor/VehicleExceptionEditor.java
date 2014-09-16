@@ -39,6 +39,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     private TurnRestrictionEditorModel model;
     private JCheckBox cbPsv;
     private JCheckBox cbBicyle;
+    private JCheckBox cbMoped;
     private JCheckBox cbHgv;
     private JCheckBox cbMotorcar;
     private JTextField tfNonStandardValue;
@@ -123,10 +124,22 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         lbl.setText(tr("Bicycles"));
         lbl.setIcon(ImageProvider.get("vehicle", "bicycle"));
         
-
         gc.weightx = 0.0;
         gc.gridx++;
         pnlStandard.add(cbBicyle, gc);
+        gc.weightx = 1.0;
+        gc.gridx++;
+        pnlStandard.add(lbl, gc);
+        
+        cbMoped = new JCheckBox();
+        cbMoped.addItemListener(svtChangeListener);
+        lbl = new JLabel(tr("Mopeds"));
+        lbl.setIcon(ImageProvider.get("vehicle", "moped"));
+        
+        gc.weightx = 0.0;
+        gc.gridx = 0;
+        gc.gridy = 2;
+        pnlStandard.add(cbMoped, gc);
         gc.weightx = 1.0;
         gc.gridx++;
         pnlStandard.add(lbl, gc);
@@ -237,6 +250,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
             this.svtChangeListener.setEnabled(false);
             cbPsv.setSelected(exceptValue.isVehicleException("psv"));
             cbBicyle.setSelected(exceptValue.isVehicleException("bicycle"));
+            cbMoped.setSelected(exceptValue.isVehicleException("moped"));
             cbMotorcar.setSelected(exceptValue.isVehicleException("motorcar"));
             cbHgv.setSelected(exceptValue.isVehicleException("hgv"));
         } finally {
@@ -317,6 +331,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         public void itemStateChanged(ItemEvent e) {
             if (!enabled) return;
             exceptValue.setVehicleException("bicycle", cbBicyle.isSelected());
+            exceptValue.setVehicleException("moped", cbMoped.isSelected());
             exceptValue.setVehicleException("hgv", cbHgv.isSelected());
             exceptValue.setVehicleException("psv", cbPsv.isSelected());
             exceptValue.setVehicleException("motorcar", cbMotorcar.isSelected());            

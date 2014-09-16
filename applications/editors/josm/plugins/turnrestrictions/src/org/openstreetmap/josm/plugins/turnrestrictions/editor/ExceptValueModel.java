@@ -23,6 +23,7 @@ public class ExceptValueModel {
         s.add("psv");
         s.add("hgv");
         s.add("bicycle");
+        s.add("moped");
         s.add("motorcar");
         STANDARD_VEHICLE_EXCEPTION_VALUES = Collections.unmodifiableSet(s);
     }

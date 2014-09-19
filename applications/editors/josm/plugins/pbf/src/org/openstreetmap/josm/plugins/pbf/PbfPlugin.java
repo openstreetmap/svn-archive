@@ -6,6 +6,7 @@ import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pbf.action.DownloadPbfTask;
+import org.openstreetmap.josm.plugins.pbf.io.PbfExporter;
 import org.openstreetmap.josm.plugins.pbf.io.PbfImporter;
 
 /**
@@ -20,7 +21,7 @@ public class PbfPlugin extends Plugin {
         // Allow JOSM to import *.osm.pbf files
         ExtensionFileFilter.importers.add(new PbfImporter());
         // Allow JOSM to export *.osm.pbf files
-        //ExtensionFileFilter.exporters.add(new PbfExporter());// TODO: PBF export
+        ExtensionFileFilter.exporters.add(new PbfExporter());
         // Allow JOSM to download remote *.osm.pbf files
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadPbfTask.class);
     }

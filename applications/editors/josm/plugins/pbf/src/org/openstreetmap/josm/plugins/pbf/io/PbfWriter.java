@@ -331,8 +331,9 @@ public class PbfWriter implements Closeable {
 
             public void processSources(Collection<DataSource> sources) {
                 switchTypes();
-                for (DataSource source: sources) {
-                    processBounds(source);
+                // Can only write one bbox
+                if (!sources.isEmpty()) {
+                    processBounds(sources.iterator().next());
                 }
             }
 
@@ -355,8 +356,10 @@ public class PbfWriter implements Closeable {
                     nodes = new NodeGroup();
                 }
                 for (Node n : node) {
-                    nodes.add(n);
-                    checkLimit();
+                    if (n.getCoor() != null) {
+                        nodes.add(n);
+                        checkLimit();
+                    }
                 }
             }
 
@@ -409,9 +412,9 @@ public class PbfWriter implements Closeable {
             
             Osmformat.HeaderBBox.Builder bbox = Osmformat.HeaderBBox.newBuilder();
             bbox.setLeft(mapRawDegrees(entity.bounds.getMinLon()));
-            bbox.setBottom(mapRawDegrees(entity.bounds.getMaxLat()));
+            bbox.setBottom(mapRawDegrees(entity.bounds.getMinLat()));
             bbox.setRight(mapRawDegrees(entity.bounds.getMaxLon()));
-            bbox.setTop(mapRawDegrees(entity.bounds.getMinLat()));
+            bbox.setTop(mapRawDegrees(entity.bounds.getMaxLat()));
             headerblock.setBbox(bbox);
 
             if (entity.origin != null) {

@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.DataSource;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -29,6 +32,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 import crosby.binary.BinaryParser;
 import crosby.binary.Osmformat;
 import crosby.binary.Osmformat.DenseNodes;
+import crosby.binary.Osmformat.HeaderBBox;
 import crosby.binary.Osmformat.HeaderBlock;
 import crosby.binary.Osmformat.Info;
 import crosby.binary.file.BlockInputStream;
@@ -44,8 +48,39 @@ public class PbfReader extends AbstractReader {
 
         public IllegalDataException exception = null;
         
+        private double parseRawDegrees(long raw) {
+            return raw * .000000001;
+        }
+        
         @Override
         protected void parse(HeaderBlock header) {
+            
+            for (String requiredFeature : header.getRequiredFeaturesList()) {
+                switch (requiredFeature) {
+                case "OsmSchema-V0.6":
+                    ds.setVersion("0.6");
+                    break;
+                case "DenseNodes":
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Unsupported feature: "+requiredFeature);
+                }
+            }
+            
+            HeaderBBox bbox = header.getBbox();
+            if (bbox != null) {
+                double minlat = parseRawDegrees(bbox.getBottom());
+                double minlon = parseRawDegrees(bbox.getLeft());
+                double maxlat = parseRawDegrees(bbox.getTop());
+                double maxlon = parseRawDegrees(bbox.getRight());
+                Bounds b = new Bounds(minlat, minlon, maxlat, maxlon);
+                if (!b.isCollapsed() && LatLon.isValidLat(minlat) && LatLon.isValidLat(maxlat) 
+                                     && LatLon.isValidLon(minlon) && LatLon.isValidLon(maxlon)) {
+                    ds.dataSources.add(new DataSource(b, header.getSource()));
+                } else {
+                    Main.error("Invalid Bounds: "+b);
+                }
+            }
         }
 
         @Override

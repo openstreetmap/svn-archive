@@ -86,18 +86,23 @@ public class ComputeBoundsAction extends AbstractAction implements XmlBoundsCons
 		}
 		// Remove closed ways already inside a selected multipolygon
 		for (Iterator<Way> it = closedWays.iterator(); it.hasNext(); ) {
-			Way way = it.next();
-			for (Relation mp : multipolygons) {
-				for (RelationMember mb : mp.getMembers()) {
-					if (mb.getMember().equals(way)) {
-						it.remove();
-					}
-				}
-			}
+			processIterator(it);
 		}
 		// Enable the action if at least one area is found
 		setEnabled(!multipolygons.isEmpty() || !closedWays.isEmpty());
 	}
+
+    private void processIterator(Iterator<Way> it) {
+        Way way = it.next();
+        for (Relation mp : multipolygons) {
+        	for (RelationMember mb : mp.getMembers()) {
+        		if (mb.getMember().equals(way)) {
+        			it.remove();
+        			return;
+        		}
+        	}
+        }
+    }
 
 	public final String getXml() {
 		List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();

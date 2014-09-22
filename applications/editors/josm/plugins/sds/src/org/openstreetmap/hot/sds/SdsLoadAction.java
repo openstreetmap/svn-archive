@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JFileChooser;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.widgets.SwingFileChooser;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -34,7 +34,7 @@ public class SdsLoadAction extends SdsDiskAccessAction {
     }
     
     public void actionPerformed(ActionEvent e) {
-        JFileChooser fc = createAndOpenFileChooser(true, true, null);
+        SwingFileChooser fc = createAndOpenFileChooser(true, true, null);
         if (fc == null)
             return;
         File[] files = fc.getSelectedFiles();

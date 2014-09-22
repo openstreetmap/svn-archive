@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileFilter;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.DiskAccessAction;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.widgets.SwingFileChooser;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
@@ -20,12 +21,12 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
 		super(name, iconName, tooltip, shortcut);
 	}
 
-	public static JFileChooser createAndOpenFileChooser(boolean open, boolean multiple, String title) {
+	public static SwingFileChooser createAndOpenFileChooser(boolean open, boolean multiple, String title) {
         String curDir = Main.pref.get("lastDirectory");
         if (curDir.equals("")) {
             curDir = ".";
         }
-        JFileChooser fc = new JFileChooser(new File(curDir));
+        SwingFileChooser fc = new SwingFileChooser(new File(curDir));
         if (title != null) {
             fc.setDialogTitle(title);
         }

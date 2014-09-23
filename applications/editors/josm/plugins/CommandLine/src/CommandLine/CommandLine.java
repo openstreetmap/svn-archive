@@ -549,8 +549,11 @@ public class CommandLine extends Plugin {
                 BBox bbox = null;
                 final OutputStream outputStream = tp.process.getOutputStream();
                 PrintWriter printWriter = null;
-                try { printWriter = new PrintWriter(new OutputStreamWriter(outputStream, "utf-8")); }
-                catch (Exception e) {e.printStackTrace();}
+                try {
+                    printWriter = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+                } catch (Exception e) {
+                    Main.error(e);
+                }
                 final OsmWriter osmWriter = OsmWriterFactory.createOsmWriter(printWriter, true, null);
                 Collection<OsmPrimitive> refObjects = currentCommand.getDepsObjects();
                 Collection<OsmPrimitive> pObjects;

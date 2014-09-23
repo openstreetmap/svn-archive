@@ -27,7 +27,14 @@ public class Command {
     public boolean tracks;
     public boolean asynchronous;
 
-    public Command () {	parameters = new ArrayList<Parameter>(); optParameters = new ArrayList<Parameter>(); currentParameterNum = 0; tracks = false; asynchronous = false; icon = ""; }
+    public Command () {
+        parameters = new ArrayList<>();
+        optParameters = new ArrayList<>();
+        currentParameterNum = 0;
+        tracks = false;
+        asynchronous = false;
+        icon = "";
+    }
 
     @SuppressWarnings("unchecked")
     public boolean loadObject(Object obj) {
@@ -52,17 +59,12 @@ public class Command {
                     if (isPair(obj, currentParameter)) {
                         multiValue.add((OsmPrimitive)obj);
                         return true;
-                    }
-                    else {
-                        if (nextParameter() && multiValue.size() > 0) {
-                            return loadObject(obj);
-                        }
-                    }
-                }
-                else {
-                    if (nextParameter()) {
+                    } else if (nextParameter() && multiValue.size() > 0) {
                         return loadObject(obj);
                     }
+                }
+                else if (nextParameter()) {
+                    return loadObject(obj);
                 }
             }
             else if (obj instanceof String) {
@@ -166,7 +168,7 @@ public class Command {
     }
 
     public Collection<OsmPrimitive> getDepsObjects() {
-        ArrayList<OsmPrimitive> depsObjects = new ArrayList<OsmPrimitive>();
+        ArrayList<OsmPrimitive> depsObjects = new ArrayList<>();
         for (Parameter parameter : parameters) {
             if (!parameter.isOsm())
                 continue;
@@ -183,7 +185,7 @@ public class Command {
     }
 
     public Collection<OsmPrimitive> getDepsObjects(Collection<OsmPrimitive> currentObjects, OsmPrimitive primitive) {
-        ArrayList<OsmPrimitive> depsObjects = new ArrayList<OsmPrimitive>();
+        ArrayList<OsmPrimitive> depsObjects = new ArrayList<>();
         if (!currentObjects.contains(primitive)) {
             if (primitive instanceof Way) {
                 depsObjects.addAll(((Way)primitive).getNodes());

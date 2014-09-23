@@ -30,7 +30,7 @@ public class Loader extends DefaultHandler {
     public Loader (String dir) {
         dirToScan = dir;
         currentTag = "";
-        loadingCommands = new ArrayList<Command>();
+        loadingCommands = new ArrayList<>();
     }
 
     public ArrayList<Command> load() {

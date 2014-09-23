@@ -53,13 +53,13 @@ import org.xml.sax.helpers.DefaultHandler;
 final class OsmToCmd {
     private final CommandLine parentPlugin;
     private final DataSet targetDataSet;
-    private final LinkedList<Command> cmds = new LinkedList<Command>();
+    private final LinkedList<Command> cmds = new LinkedList<>();
     private final HashMap<PrimitiveId, OsmPrimitive> externalIdMap; // Maps external ids to internal primitives
 
     public OsmToCmd(CommandLine parentPlugin, DataSet targetDataSet) {
         this.parentPlugin = parentPlugin;
         this.targetDataSet = targetDataSet;
-        externalIdMap = new HashMap<PrimitiveId, OsmPrimitive>();
+        externalIdMap = new HashMap<>();
     }
 
     public void parseStream(InputStream stream) throws IllegalDataException {
@@ -98,8 +98,8 @@ final class OsmToCmd {
 
         private OsmPrimitive currentPrimitive;
         //private long currentExternalId;
-        private final List<Node> currentWayNodes = new ArrayList<Node>();
-        private final List<RelationMember> currentRelationMembers = new ArrayList<RelationMember>();
+        private final List<Node> currentWayNodes = new ArrayList<>();
+        private final List<RelationMember> currentRelationMembers = new ArrayList<>();
 
         @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
@@ -107,13 +107,16 @@ final class OsmToCmd {
                 if (qName.equals("osm")) {
                     if (atts == null) {
                         throwException(tr("Missing mandatory attribute ''{0}'' of XML element {1}.", "version", "osm"));
+                        return;
                     }
                     String v = atts.getValue("version");
                     if (v == null) {
                         throwException(tr("Missing mandatory attribute ''{0}''.", "version"));
+                        return;
                     }
                     if ( !(v.equals("0.6")) ) {
                         throwException(tr("Unsupported version: {0}", v));
+                        return;
                     }
 
                     // ---- PARSING NODES AND WAYS ----
@@ -223,6 +226,7 @@ final class OsmToCmd {
                     String value = atts.getValue("v");
                     if (key == null || value == null) {
                         throwException(tr("Missing key or value attribute in tag."));
+                        return;
                     }
                     currentPrimitive.put(key.intern(), value.intern());
                 }

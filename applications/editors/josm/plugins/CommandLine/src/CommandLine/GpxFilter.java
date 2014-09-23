@@ -35,22 +35,22 @@ public class GpxFilter {
         Collection<Collection<WayPoint>> currentTrack;
         Collection<WayPoint> currentSegment;
         for (GpxTrack track : data.tracks) {
-            currentTrack = new ArrayList<Collection<WayPoint>>();
+            currentTrack = new ArrayList<>();
             for (GpxTrackSegment segment : track.getSegments()) {
-                currentSegment = new ArrayList<WayPoint>();
+                currentSegment = new ArrayList<>();
                 for (WayPoint wp : segment.getWayPoints()) {
                     if ( bbox.bounds(wp.getCoor()) ) {
                         currentSegment.add(wp);
                     } else {
                         if (currentSegment.size() > 1) {
                             currentTrack.add(currentSegment);
-                            currentSegment = new ArrayList<WayPoint>();
+                            currentSegment = new ArrayList<>();
                         }
                     }
                 }
                 if (currentSegment.size() > 1) {
                     currentTrack.add(currentSegment);
-                    currentSegment = new ArrayList<WayPoint>();
+                    currentSegment = new ArrayList<>();
                 }
             }
             this.data.tracks.add( new ImmutableGpxTrack( currentTrack, Collections.<String, Object>emptyMap()) );

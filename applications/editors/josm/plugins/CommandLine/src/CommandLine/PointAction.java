@@ -46,7 +46,7 @@ public class PointAction extends MapMode implements AWTEventListener {
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
         currentCursor = cursorCrosshair;
         nearestNode = null;
-        pointList = new ArrayList<String>();
+        pointList = new ArrayList<>();
     }
 
     @Override public void enterMode() {

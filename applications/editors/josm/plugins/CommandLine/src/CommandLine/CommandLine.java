@@ -313,9 +313,7 @@ public class CommandLine extends Plugin {
             case IMAGERYURL:
                 Layer layer = Main.map.mapView.getActiveLayer();
                 if (layer != null) {
-                    if (layer instanceof ImageryLayer) {
-                    }
-                    else {
+                    if (!(layer instanceof ImageryLayer)) {
                         List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             layer = imageryLayers.get(0);
@@ -500,7 +498,7 @@ public class CommandLine extends Plugin {
                 Collection<OsmPrimitive> refObjects = currentCommand.getDepsObjects();
                 Collection<OsmPrimitive> pObjects;
                 osmWriter.header();
-                Collection<OsmPrimitive> contents = new ArrayList<OsmPrimitive>();
+                Collection<OsmPrimitive> contents = new ArrayList<>();
                 for (OsmPrimitive primitive : refObjects) {
                     contents.add(primitive);
                     if (bbox == null)
@@ -517,7 +515,7 @@ public class CommandLine extends Plugin {
                 for (Parameter parameter : parameters) {
                     if (!parameter.isOsm())
                         continue;
-                    contents = new ArrayList<OsmPrimitive>();
+                    contents = new ArrayList<>();
                     osmWriter.header();
                     pObjects = parameter.getParameterObjects();
                     for (OsmPrimitive primitive : pObjects) {

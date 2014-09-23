@@ -1,24 +1,23 @@
 /*
  *      CommandLine.java
- * 
+ *
  *      Copyright 2011 Hind <foxhind@gmail.com>
- * 
+ *
  *      This program is free software; you can redistribute it and/or modify
  *      it under the terms of the GNU General Public License as published by
  *      the Free Software Foundation; either version 2 of the License, or
  *      (at your option) any later version.
- * 
+ *
  *      This program is distributed in the hope that it will be useful,
  *      but WITHOUT ANY WARRANTY; without even the implied warranty of
  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *      GNU General Public License for more details.
- * 
+ *
  *      You should have received a copy of the GNU General Public License
  *      along with this program; if not, write to the Free Software
  *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *      MA 02110-1301, USA.
  */
-
 package CommandLine;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -60,6 +59,7 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.widgets.DisableShortcutsOnFocusGainedTextField;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
@@ -88,12 +88,11 @@ public class CommandLine extends Plugin {
         super(info);
         commandSymbol = ": ";
         history = new History(100);
-        historyField = new JTextField();
-        textField = new JTextField() {
+        historyField = new DisableShortcutsOnFocusGainedTextField();
+        textField = new DisableShortcutsOnFocusGainedTextField() {
             @Override
             protected void processKeyEvent(KeyEvent e) {
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
-                    //String text = textField.getText();
                     int code = e.getKeyCode();
                     if (code == KeyEvent.VK_ENTER) {
                         String commandText = textField.getText().substring(prefix.length());

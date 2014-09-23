@@ -29,16 +29,22 @@ import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -246,8 +252,59 @@ public class CommandLine extends Plugin {
 
     private void loadCommands() {
         commands = (new Loader(getPluginDir())).load();
+        if (commands.isEmpty()) {
+            if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Main.parent,
+                    tr("No command has been found. Would you like to download and install default commands now?"),
+                    tr("No command found"), JOptionPane.YES_NO_CANCEL_OPTION)) {
+                try {
+                    downloadAndInstallDefaultCommands();
+                    commands = (new Loader(getPluginDir())).load();
+                    JOptionPane.showMessageDialog(Main.parent, tr("Default commands have been successfully installed"),
+                            tr("Success"), JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException e) {
+                    Main.warn(e);
+                    JOptionPane.showMessageDialog(Main.parent,
+                            tr("Failed to download and install default commands.\n\nError: {0}", e.getMessage()),
+                            tr("Warning"), JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }
         for (Command command : commands) {
             commandMenu.add(new CommandAction(command, this));
+        }
+    }
+
+    private void downloadAndInstallDefaultCommands() throws IOException {
+        String url = Main.pref.get("commandline.default.commands.url",
+                "https://github.com/Foxhind/JOSM-CommandLine-commands/archive/master.zip");
+        try (ZipInputStream zis = new ZipInputStream(Utils.openURL(new URL(url)), StandardCharsets.UTF_8)) {
+            File dir = new File(getPluginDir());
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            ZipEntry entry = null;
+            while ( (entry = zis.getNextEntry()) != null ) {
+                if (!entry.isDirectory()) {
+                    String name = entry.getName();
+                    if (name.contains("/")) {
+                        name = name.substring(name.lastIndexOf("/"));
+                    }
+                    File file = new File(dir + File.separator + name);
+                    Main.info("Installing command file: "+file);
+                    if (!file.createNewFile()) {
+                        throw new IOException("Could not create file: " + file.getAbsolutePath());
+                    }
+                    // Write file
+                    try (FileOutputStream fos = new FileOutputStream(file)) {
+                        Utils.copyStream(zis, fos);
+                    }
+                    // Set last modification date
+                    long time = entry.getTime();
+                    if (time > -1) {
+                        file.setLastModified(time);
+                    }
+                }
+            }
         }
     }
 

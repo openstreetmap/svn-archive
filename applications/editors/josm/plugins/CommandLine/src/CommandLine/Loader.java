@@ -36,21 +36,20 @@ public class Loader extends DefaultHandler {
     public ArrayList<Command> load() {
         try {
             // Creating parser
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            SAXParser sp = spf.newSAXParser();
+            SAXParser sp = SAXParserFactory.newInstance().newSAXParser();
 
             // Files loading
-            File path = new File(dirToScan + "/");
-            String[] list;
-            list = path.list();
-            for(int i = 0; i < list.length; i++)
-                if (list[i].endsWith(".xml")) {
-                    currentFile = dirToScan + "/" + list[i];
-                    loadFile(sp, currentFile);
+            String[] list = new File(dirToScan + "/").list();
+            if (list != null) {
+                for (int i = 0; i < list.length; i++) {
+                    if (list[i].endsWith(".xml")) {
+                        currentFile = dirToScan + "/" + list[i];
+                        loadFile(sp, currentFile);
+                    }
                 }
-        }
-        catch (Exception e) {
-            System.err.println(e);
+            }
+        } catch (Exception e) {
+            Main.error(e);
         }
         return loadingCommands;
     }
@@ -60,8 +59,7 @@ public class Loader extends DefaultHandler {
             String a = new File(fileName).toURI().toString().replace("file:/", "file:///");
             Main.info(a);
             parser.parse(a, this);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Main.error(e);
         }
         // TODO: Create links for each argument
@@ -128,8 +126,7 @@ public class Loader extends DefaultHandler {
     }
 
     @Override
-    public void characters(char ch[], int start, int length)
-    {
+    public void characters(char ch[], int start, int length) {
         String text = (new String(ch, start, length)).trim();
         if (currentParameter != null) {
             if (currentTag.equals("name")) {
@@ -171,17 +168,17 @@ public class Loader extends DefaultHandler {
 
     @Override
     public void warning(SAXParseException ex) {
-        System.err.println("Warning in command xml file " + currentFile + ": " + ex.getMessage());
+        Main.warn("Warning in command xml file " + currentFile + ": " + ex.getMessage());
     }
 
     @Override
     public void error(SAXParseException ex) {
-        System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
+        Main.error("Error in command xml file " + currentFile + ": " + ex.getMessage());
     }
 
     @Override
     public void fatalError(SAXParseException ex) throws SAXException {
-        System.err.println("Error in command xml file " + currentFile + ": " + ex.getMessage());
+        Main.error("Error in command xml file " + currentFile + ": " + ex.getMessage());
         throw ex;
     }
 }

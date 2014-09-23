@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package sk.zdila.josm.plugin.simplify;
 
 import org.openstreetmap.josm.Main;
@@ -17,5 +18,4 @@ public class SimplifyAreaPlugin extends Plugin {
     public PreferenceSetting getPreferenceSetting() {
         return new SimplifyAreaPreferenceSetting();
     }
-
 }

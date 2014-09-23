@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package sk.zdila.josm.plugin.simplify;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -71,7 +72,6 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
         tab.add(distanceFactor, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
         mergeThreshold.setText(Main.pref.get(MERGE_THRESHOLD, "0.2"));
-        // mergeThreshold.setToolTipText(tr("bla bla"));
         tab.add(new JLabel(tr("Merge Nearby Nodes Threshold")), GBC.std());
         tab.add(mergeThreshold, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
 
@@ -89,5 +89,4 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
         Main.pref.put(DIST_FACTOR, distanceFactor.getText());
         return false;
     }
-
 }

@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package sk.zdila.josm.plugin.simplify;
 
 import static java.lang.Math.cos;
@@ -61,13 +61,12 @@ public class SimplifyAreaAction extends JosmAction {
     private boolean confirmWayWithNodesOutsideBoundingBox() {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes, delete nodes"), ImageProvider.get("ok"), tr("Delete nodes outside of downloaded data regions"), null),
                 new ButtonSpec(tr("No, abort"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
-        final int ret = HelpAwareOptionPane.showOptionDialog(
+        return 0 == HelpAwareOptionPane.showOptionDialog(
                 Main.parent,
                 "<html>" + trn("The selected way has nodes outside of the downloaded data region.", "The selected ways have nodes outside of the downloaded data region.", getCurrentDataSet().getSelectedWays().size())
                 + "<br>" + tr("This can lead to nodes being deleted accidentally.") + "<br>" + tr("Do you want to delete them anyway?") + "</html>",
                 tr("Delete nodes outside of data regions?"), JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
-        return ret == 0;
     }
 
     private void alertSelectAtLeastOneWay() {
@@ -77,10 +76,9 @@ public class SimplifyAreaAction extends JosmAction {
     private boolean confirmSimplifyManyWays(final int numWays) {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes"), ImageProvider.get("ok"), tr("Simplify all selected ways"), null),
                 new ButtonSpec(tr("Cancel"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
-        final int ret = HelpAwareOptionPane.showOptionDialog(Main.parent, tr("The selection contains {0} ways. Are you sure you want to simplify them all?", numWays), tr("Simplify ways?"),
+        return 0 == HelpAwareOptionPane.showOptionDialog(Main.parent, tr("The selection contains {0} ways. Are you sure you want to simplify them all?", numWays), tr("Simplify ways?"),
                 JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
-        return ret == 0;
     }
 
     @Override
@@ -114,7 +112,7 @@ public class SimplifyAreaAction extends JosmAction {
             }
         }
 
-        final List<Node> nodesToDelete = new ArrayList<Node>(); // can contain duplicate instances
+        final List<Node> nodesToDelete = new ArrayList<>(); // can contain duplicate instances
 
         for (final Way way : ways) {
             addNodesToDelete(nodesToDelete, way);
@@ -124,7 +122,7 @@ public class SimplifyAreaAction extends JosmAction {
             int count;
         }
 
-        final Map<Node, Count> nodeCountMap = new HashMap<Node, Count>();
+        final Map<Node, Count> nodeCountMap = new HashMap<>();
         for (final Node node : nodesToDelete) {
             Count count = nodeCountMap.get(node);
             if (count == null) {
@@ -134,7 +132,7 @@ public class SimplifyAreaAction extends JosmAction {
             count.count++;
         }
 
-        final Collection<Node> nodesReallyToRemove = new ArrayList<Node>();
+        final Collection<Node> nodesReallyToRemove = new ArrayList<>();
 
         for (final Entry<Node, Count> entry : nodeCountMap.entrySet()) {
             final Node node = entry.getKey();
@@ -145,7 +143,7 @@ public class SimplifyAreaAction extends JosmAction {
             }
         }
 
-        final Collection<Command> allCommands = new ArrayList<Command>();
+        final Collection<Command> allCommands = new ArrayList<>();
 
         if (!nodesReallyToRemove.isEmpty()) {
             for (final Way way : ways) {
@@ -185,7 +183,7 @@ public class SimplifyAreaAction extends JosmAction {
     private Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
         final double mergeThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.MERGE_THRESHOLD, 0.2);
 
-        final Map<Node, LatLon> coordMap = new HashMap<Node, LatLon>();
+        final Map<Node, LatLon> coordMap = new HashMap<>();
         for (final Way way : ways) {
             for (final Node n : way.getNodes()) {
                 coordMap.put(n, n.getCoor());
@@ -265,8 +263,8 @@ public class SimplifyAreaAction extends JosmAction {
             }
         }
 
-        final Collection<Command> commands = new ArrayList<Command>();
-        final Set<Node> nodesToDelete2 = new HashSet<Node>();
+        final Collection<Command> commands = new ArrayList<>();
+        final Set<Node> nodesToDelete2 = new HashSet<>();
         for (final Way way : ways) {
             final List<Node> nodesToDelete = way.getNodes();
             nodesToDelete.removeAll(nodesAlreadyDeleted);
@@ -328,7 +326,7 @@ public class SimplifyAreaAction extends JosmAction {
 
         // remove nodes within threshold
 
-        final List<Double> weightList = new ArrayList<Double>(nodes.size()); // weight cache
+        final List<Double> weightList = new ArrayList<>(nodes.size()); // weight cache
         for (int i = 0; i < nodes.size(); i++) {
             weightList.add(null);
         }
@@ -395,7 +393,7 @@ public class SimplifyAreaAction extends JosmAction {
             nodes.remove(index);
         }
 
-        final HashSet<Node> delNodes = new HashSet<Node>(w.getNodes());
+        final HashSet<Node> delNodes = new HashSet<>(w.getNodes());
         delNodes.removeAll(nodes);
 
         nodesToDelete.addAll(delNodes);

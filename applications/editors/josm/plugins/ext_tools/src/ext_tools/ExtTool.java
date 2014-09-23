@@ -142,17 +142,17 @@ public class ExtTool {
         return Math.log(screenPixels/tilePixels)/Math.log(2)/2+1;
     }
 
-    protected void showErrorMessage(String message, String details) {
-        final JPanel p = new JPanel(new GridBagLayout());
-        p.add(new JMultilineLabel(message),GBC.eol());
-        if (details != null) {
-            JTextArea info = new JTextArea(details, 20, 60);
-            info.setCaretPosition(0);
-            info.setEditable(false);
-            p.add(new JScrollPane(info), GBC.eop());
-        }
+    protected void showErrorMessage(final String message, final String details) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                final JPanel p = new JPanel(new GridBagLayout());
+                p.add(new JMultilineLabel(message),GBC.eol());
+                if (details != null) {
+                    JTextArea info = new JTextArea(details, 20, 60);
+                    info.setCaretPosition(0);
+                    info.setEditable(false);
+                    p.add(new JScrollPane(info), GBC.eop());
+                }
                 JOptionPane.showMessageDialog(Main.parent, p, tr("External tool error"), JOptionPane.ERROR_MESSAGE);
             }
         });

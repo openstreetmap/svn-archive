@@ -100,16 +100,15 @@ public class CommandLine extends Plugin {
                         case IDLE:
                             if (commandText.isEmpty()) {
                                 commandText = history.getLastItem();
-                            }
-                            else {
+                            } else {
                                 history.addItem(commandText);
                             }
                             Command command = findCommand(commandText, true);
                             if (command != null) {
                                 startCommand(command);
-                            }
-                            else
+                            } else {
                                 setMode(Mode.IDLE);
+                            }
                             break;
                         case SELECTION:
                             if (currentMapFrame.mapMode instanceof WayAction || currentMapFrame.mapMode instanceof NodeAction || currentMapFrame.mapMode instanceof RelationAction || currentMapFrame.mapMode instanceof AnyAction) {
@@ -188,7 +187,7 @@ public class CommandLine extends Plugin {
             }
         };
 
-        if ( Main.main.menu != null ) {
+        if (Main.main.menu != null) {
             commandMenu = Main.main.menu.addMenu(marktr("Commands") , KeyEvent.VK_O, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CommandLine"));
             MainMenu.add(commandMenu, new CommandLineAction(this));
         }
@@ -258,11 +257,8 @@ public class CommandLine extends Plugin {
                 if ( commands.get(i).name.equalsIgnoreCase(text) ) {
                     return commands.get(i);
                 }
-            }
-            else {
-                if ( commands.get(i).name.toLowerCase().startsWith( text.toLowerCase() ) && text.length() > 1 ) {
-                    return commands.get(i);
-                }
+            } else if ( commands.get(i).name.toLowerCase().startsWith( text.toLowerCase() ) && text.length() > 1 ) {
+                return commands.get(i);
             }
         }
         return null;
@@ -339,9 +335,7 @@ public class CommandLine extends Plugin {
             case IMAGERYOFFSET:
                 Layer olayer = Main.map.mapView.getActiveLayer();
                 if (olayer != null) {
-                    if (olayer instanceof ImageryLayer) {
-                    }
-                    else {
+                    if (!(olayer instanceof ImageryLayer)) {
                         List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             olayer = imageryLayers.get(0);
@@ -403,12 +397,10 @@ public class CommandLine extends Plugin {
                     currentCommand.nextParameter();
                     setMode(Mode.SELECTION);
                 }
-            }
-            else {
+            } else {
                 runTool();
             }
-        }
-        else {
+        } else {
             Main.info("Invalid argument");
             endInput();
         }
@@ -423,8 +415,7 @@ public class CommandLine extends Plugin {
         }
         if (ok) {
             currentCommand.nextParameter();
-        }
-        else {
+        } else {
             currentCommand.resetLoading();
         }
     }
@@ -462,15 +453,14 @@ public class CommandLine extends Plugin {
         for (String s : builder.command())
             debugstr.append(s + " ");
         debugstr.append("\n");
-        System.out.print(debugstr.toString());
+        Main.info(debugstr.toString());
 
         final ToolProcess tp = new ToolProcess();
         try {
             tp.process = builder.start();
         } catch (final IOException e) {
-            e.printStackTrace();
             synchronized (debugstr) {
-                System.out.print(
+                Main.error(
                         tr("Error executing the script: ") +
                         debugstr.toString() + e.getMessage() + "\n" + e.getStackTrace());
             }
@@ -576,7 +566,6 @@ public class CommandLine extends Plugin {
                 try {
                     final OsmToCmd osmToCmd = new OsmToCmd(that, currentDataSet);
                     String commandName = currentCommand.name;
-                    //HashMap<Long, Long> inexiDMap = new HashMap<Long, Long>();
                     final InputStream inputStream = tp.process.getInputStream();
                     osmToCmd.parseStream(inputStream);
                     final List<org.openstreetmap.josm.command.Command> cmdlist = osmToCmd.getCommandList();
@@ -589,8 +578,8 @@ public class CommandLine extends Plugin {
                             }
                         });
                     }
+                } catch (Exception e) {
                 }
-                catch (Exception e) {}
                 finally {
                     synchronized (syncObj) {
                         tp.running = false;

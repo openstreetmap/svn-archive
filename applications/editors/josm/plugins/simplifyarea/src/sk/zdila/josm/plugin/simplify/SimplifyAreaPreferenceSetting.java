@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
+import org.openstreetmap.josm.gui.widgets.JosmTextField;
 import org.openstreetmap.josm.tools.GBC;
 
 public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
@@ -23,13 +24,13 @@ public class SimplifyAreaPreferenceSetting extends DefaultTabPreferenceSetting {
     static final String ANGLE_THRESHOLD = "simplify-area.angle.threshold";
     static final String MERGE_THRESHOLD = "simplify-area.merge.threshold";
 
-    private final JTextField mergeThreshold = new JTextField(8);
-    private final JTextField angleThreshold = new JTextField(8);
-    private final JTextField angleFactor = new JTextField(8);
-    private final JTextField areaThreshold = new JTextField(8);
-    private final JTextField areaFactor = new JTextField(8);
-    private final JTextField distanceThreshold = new JTextField(8);
-    private final JTextField distanceFactor = new JTextField(8);
+    private final JTextField mergeThreshold = new JosmTextField(8);
+    private final JTextField angleThreshold = new JosmTextField(8);
+    private final JTextField angleFactor = new JosmTextField(8);
+    private final JTextField areaThreshold = new JosmTextField(8);
+    private final JTextField areaFactor = new JosmTextField(8);
+    private final JTextField distanceThreshold = new JosmTextField(8);
+    private final JTextField distanceFactor = new JosmTextField(8);
 
     public SimplifyAreaPreferenceSetting() {
         super("simplifyArea", tr("Simplify Area"), tr("Node of the way (area) is removed if all of <u>Angle Weight</u>, <u>Area Weight</u> and <u>Distance Weight</u> are greater than 1. " +

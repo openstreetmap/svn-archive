@@ -1,8 +1,8 @@
 /*
  *      Command.java
- * 
+ *
  *      Copyright 2011 Hind <foxhind@gmail.com>
- * 
+ *
  */
 
 package CommandLine;
@@ -32,54 +32,42 @@ public class Command {
     @SuppressWarnings("unchecked")
     public boolean loadObject(Object obj) {
         Parameter currentParameter = parameters.get(currentParameterNum);
-        //System.out.println("Parameter " + String.valueOf(currentParameterNum) + " (" + currentParameter.name + ")");
         if (currentParameter.maxInstances == 1) {
-            //System.out.println("mI = 1");
-            //System.out.println("Candidate: " + String.valueOf(obj));
             if (isPair(obj, currentParameter)) {
                 currentParameter.setValue(obj);
-                //System.out.println("Accepted");
                 return true;
             }
         }
         else {
-            //System.out.println("mI = " + String.valueOf(currentParameter.maxInstances));
             ArrayList<OsmPrimitive> multiValue = currentParameter.getValueList();
             if (obj instanceof Collection) {
                 if ( ((Collection<?>)obj).size() > currentParameter.maxInstances && currentParameter.maxInstances != 0)
                     return false;
-                //System.out.println("Candidate (selected) accepted");
                 multiValue.clear();
                 multiValue.addAll((Collection<OsmPrimitive>)obj);
                 return true;
             }
             else if (obj instanceof OsmPrimitive) {
                 if (multiValue.size() < currentParameter.maxInstances || currentParameter.maxInstances == 0) {
-                    //System.out.println("Candidate: " + String.valueOf(obj));
                     if (isPair(obj, currentParameter)) {
                         multiValue.add((OsmPrimitive)obj);
-                        //System.out.println("Accepted, added to list");
                         return true;
                     }
                     else {
                         if (nextParameter() && multiValue.size() > 0) {
-                            //System.out.println("Not accepted but considering for next Parameter");
                             return loadObject(obj);
                         }
                     }
                 }
                 else {
                     if (nextParameter()) {
-                        //System.out.println("Not accepted but considering for next Parameter");
                         return loadObject(obj);
                     }
                 }
             }
             else if (obj instanceof String) {
-                //System.out.println("Candidate: " + (String)obj);
                 if (isPair(obj, currentParameter)) {
                     currentParameter.setValue(obj);
-                    //System.out.println("Accepted");
                     return true;
                 }
             }

@@ -1,8 +1,8 @@
 /*
  *      AnyAction.java
- *      
+ *
  *      Copyright 2010 Hind <foxhind@gmail.com>
- *      
+ *
  */
 
 package CommandLine;
@@ -23,24 +23,24 @@ import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class AnyAction extends MapMode implements AWTEventListener {
-	private CommandLine parentPlugin;
+    private final CommandLine parentPlugin;
     final private Cursor cursorNormal, cursorActive;
     private Cursor currentCursor;
     private Point mousePos;
     private OsmPrimitive nearestPrimitive;
     private boolean isCtrlDown;
 
-	public AnyAction(MapFrame mapFrame, CommandLine parentPlugin) {
-		super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", "selection"));
-		this.parentPlugin = parentPlugin;
-	cursorNormal = ImageProvider.getCursor("normal", "selection");
-	cursorActive = ImageProvider.getCursor("normal", "joinnode");
+    public AnyAction(MapFrame mapFrame, CommandLine parentPlugin) {
+        super(null, "addsegment.png", null, mapFrame, ImageProvider.getCursor("normal", "selection"));
+        this.parentPlugin = parentPlugin;
+        cursorNormal = ImageProvider.getCursor("normal", "selection");
+        cursorActive = ImageProvider.getCursor("normal", "joinnode");
         currentCursor = cursorNormal;
         nearestPrimitive = null;
-	}
+    }
 
-	@Override public void enterMode() {
-		super.enterMode();
+    @Override public void enterMode() {
+        super.enterMode();
         currentCursor = cursorNormal;
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
@@ -48,17 +48,17 @@ public class AnyAction extends MapMode implements AWTEventListener {
             Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
         }
-	}
+    }
 
-	@Override public void exitMode() {
-		super.exitMode();
-		Main.map.mapView.removeMouseListener(this);
+    @Override public void exitMode() {
+        super.exitMode();
+        Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
         }
-	}
+    }
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -76,40 +76,40 @@ public class AnyAction extends MapMode implements AWTEventListener {
             return;
         processMouseEvent(e);
         if (nearestPrimitive != null) {
-			if (isCtrlDown) {
-				Main.main.getCurrentDataSet().clearSelection(nearestPrimitive);
-				Main.map.mapView.repaint();
-			}
-			else {
-				int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
-				switch (maxInstances) {
-				case 0:
-					Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
-					Main.map.mapView.repaint();
-					break;
-				case 1:
-					Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
-					Main.map.mapView.repaint();
-					parentPlugin.loadParameter(nearestPrimitive, true);
-					exitMode();
-					break;
-				default:
-					if (Main.main.getCurrentDataSet().getSelected().size() < maxInstances) {
-						Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
-						Main.map.mapView.repaint();
-					}
-					else
-						System.out.println("Maximum instances!");
-				}
-			}
-		}
+            if (isCtrlDown) {
+                Main.main.getCurrentDataSet().clearSelection(nearestPrimitive);
+                Main.map.mapView.repaint();
+            }
+            else {
+                int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
+                switch (maxInstances) {
+                case 0:
+                    Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
+                    Main.map.mapView.repaint();
+                    break;
+                case 1:
+                    Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
+                    Main.map.mapView.repaint();
+                    parentPlugin.loadParameter(nearestPrimitive, true);
+                    exitMode();
+                    break;
+                default:
+                    if (Main.main.getCurrentDataSet().getSelected().size() < maxInstances) {
+                        Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
+                        Main.map.mapView.repaint();
+                    }
+                    else
+                        Main.info("Maximum instances!");
+                }
+            }
+        }
         super.mousePressed(e);
     }
 
-        @Override
-	public void eventDispatched(AWTEvent arg0) {
+    @Override
+    public void eventDispatched(AWTEvent arg0) {
         if (!(arg0 instanceof KeyEvent))
-                return;
+            return;
         KeyEvent ev = (KeyEvent) arg0;
         isCtrlDown = (ev.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0;
         if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
@@ -120,21 +120,21 @@ public class AnyAction extends MapMode implements AWTEventListener {
 
     private void updCursor() {
         if (mousePos != null) {
-			if (!Main.isDisplayingMapView())
-				return;
-			nearestPrimitive = Main.map.mapView.getNearestNodeOrWay(mousePos, OsmPrimitive.isUsablePredicate, false);
-			if (nearestPrimitive != null) {
-				setCursor(cursorActive);
-			}
-			else {
-				setCursor(cursorNormal);
-			}
-		}
+            if (!Main.isDisplayingMapView())
+                return;
+            nearestPrimitive = Main.map.mapView.getNearestNodeOrWay(mousePos, OsmPrimitive.isUsablePredicate, false);
+            if (nearestPrimitive != null) {
+                setCursor(cursorActive);
+            }
+            else {
+                setCursor(cursorNormal);
+            }
+        }
     }
 
-	private void processMouseEvent(MouseEvent e) {
-		if (e != null) { mousePos = e.getPoint(); }
-	}
+    private void processMouseEvent(MouseEvent e) {
+        if (e != null) { mousePos = e.getPoint(); }
+    }
 
     private void setCursor(final Cursor c) {
         if (currentCursor.equals(c))

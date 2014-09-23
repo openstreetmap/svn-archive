@@ -222,8 +222,7 @@ public class CommandLine extends Plugin {
     }
 
     @Override
-    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame)
-    {
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         currentMapFrame = newFrame;
         if (oldFrame == null && newFrame != null) {
             JToolBar tb = new JToolBar();
@@ -410,7 +409,7 @@ public class CommandLine extends Plugin {
             }
         }
         else {
-            System.out.println("Invalid argument");
+            Main.info("Invalid argument");
             endInput();
         }
     }
@@ -428,7 +427,6 @@ public class CommandLine extends Plugin {
         else {
             currentCommand.resetLoading();
         }
-        //System.out.println("Selected before " + String.valueOf(currentCommand.currentParameterNum) + "\n");
     }
 
     private class ToolProcess {

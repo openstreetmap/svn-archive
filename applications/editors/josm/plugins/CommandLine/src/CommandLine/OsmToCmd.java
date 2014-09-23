@@ -134,7 +134,6 @@ final class OsmToCmd {
 
                     currentPrimitive = n;
                     externalIdMap.put(source.getPrimitiveId(), n);
-                    //System.out.println("NODE " + String.valueOf(source.getUniqueId()) + " HAS MAPPED TO INNER " + String.valueOf(n.getUniqueId()) );
                 }
                 else if (qName.equals("way")) {
                     Way w = new Way();
@@ -152,7 +151,6 @@ final class OsmToCmd {
                     currentPrimitive = w;
                     currentWayNodes.clear();
                     externalIdMap.put(source.getPrimitiveId(), w);
-                    //System.out.println("WAY " + String.valueOf(source.getUniqueId()) + " HAS MAPPED TO INNER " + String.valueOf(w.getUniqueId()) );
                 }
                 else if (qName.equals("nd")) {
                     if (atts.getValue("ref") == null)
@@ -160,7 +158,6 @@ final class OsmToCmd {
                     long id = getLong(atts, "ref");
                     if (id == 0)
                         throwException(tr("Illegal value of attribute ''ref'' of element <nd>. Got {0}.", id) );
-                    //System.out.println("NODE " + String.valueOf(id) + " HAS ADDED TO WAY " + String.valueOf(currentPrimitive.getUniqueId()));
                     Node node = (Node)externalIdMap.get(new SimplePrimitiveId(id, OsmPrimitiveType.NODE));
                     if (node == null || node.isModified()) {
                         node = (Node)targetDataSet.getPrimitiveById( new SimplePrimitiveId(id, OsmPrimitiveType.NODE) );
@@ -187,7 +184,6 @@ final class OsmToCmd {
                     currentPrimitive = r;
                     currentRelationMembers.clear();
                     externalIdMap.put(source.getPrimitiveId(), r);
-                    //System.out.println("RELATION " + String.valueOf(source.getUniqueId()) + " HAS MAPPED TO INNER " + String.valueOf(r.getUniqueId()) );
                 }
                 else if (qName.equals("member")) {
                     if (atts.getValue("ref") == null)
@@ -210,7 +206,6 @@ final class OsmToCmd {
 
                     String role = atts.getValue("role");
 
-                    //System.out.println("MEMBER " + value.toUpperCase() + " " +String.valueOf(id) + " HAS ADDED TO RELATION " + String.valueOf(currentPrimitive.getUniqueId()));
                     OsmPrimitive member = externalIdMap.get(new SimplePrimitiveId(id, type));
                     if (member == null) {
                         member = targetDataSet.getPrimitiveById(new SimplePrimitiveId(id, type));
@@ -232,7 +227,7 @@ final class OsmToCmd {
                     currentPrimitive.put(key.intern(), value.intern());
                 }
                 else {
-                    System.out.println(tr("Undefined element ''{0}'' found in input stream. Skipping.", qName));
+                    Main.warn(tr("Undefined element ''{0}'' found in input stream. Skipping.", qName));
                 }
             }
             catch (Exception e) {
@@ -247,7 +242,6 @@ final class OsmToCmd {
                     cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
                 }
                 else if (currentPrimitive.isModified()) {
-                    //System.out.println(String.valueOf(currentPrimitive.getUniqueId()) + " IS MODIFIED BY SCRIPT");
                     cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
@@ -392,7 +386,7 @@ final class OsmToCmd {
                     current.setChangesetId(Integer.parseInt(v));
                 } catch(NumberFormatException e) {
                     if (current.getUniqueId() <= 0) {
-                        System.out.println(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.", v, current.getUniqueId()));
+                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.", v, current.getUniqueId()));
                         current.setChangesetId(0);
                     } else {
                         throwException(tr("Illegal value for attribute ''changeset''. Got {0}.", v));
@@ -400,7 +394,7 @@ final class OsmToCmd {
                 }
                 if (current.getChangesetId() <=0) {
                     if (current.getUniqueId() <= 0) {
-                        System.out.println(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.", v, current.getUniqueId()));
+                        Main.warn(tr("Illegal value for attribute ''changeset'' on new object {1}. Got {0}. Resetting to 0.", v, current.getUniqueId()));
                         current.setChangesetId(0);
                     } else {
                         throwException(tr("Illegal value for attribute ''changeset''. Got {0}.", v));

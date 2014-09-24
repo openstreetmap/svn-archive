@@ -118,25 +118,20 @@ public class SimplifyAreaAction extends JosmAction {
             addNodesToDelete(nodesToDelete, way);
         }
 
-        class Count {
-            int count;
-        }
-
-        final Map<Node, Count> nodeCountMap = new HashMap<>();
+        final Map<Node, Integer> nodeCountMap = new HashMap<>();
         for (final Node node : nodesToDelete) {
-            Count count = nodeCountMap.get(node);
+            Integer count = nodeCountMap.get(node);
             if (count == null) {
-                count = new Count();
-                nodeCountMap.put(node, count);
+                count = 0;
             }
-            count.count++;
+            nodeCountMap.put(node, ++count);
         }
 
         final Collection<Node> nodesReallyToRemove = new ArrayList<>();
 
-        for (final Entry<Node, Count> entry : nodeCountMap.entrySet()) {
+        for (final Entry<Node, Integer> entry : nodeCountMap.entrySet()) {
             final Node node = entry.getKey();
-            final int count = entry.getValue().count;
+            final Integer count = entry.getValue();
 
             if (!node.isTagged() && node.getReferrers().size() == count) {
                 nodesReallyToRemove.add(node);

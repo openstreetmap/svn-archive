@@ -6,7 +6,7 @@
 
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.pbf.PbfPlugin"/>
-    <property name="plugin.description" value="Import OSM data in PBF format"/>
+    <property name="plugin.description" value="Import/export OSM data in PBF format"/>
     <!--<property name="plugin.icon" value="images/pbf_24.png"/>-->
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PBF"/>
 

@@ -20,12 +20,14 @@ import org.openstreetmap.josm.actions.downloadtasks.DownloadOsmTask;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.DataSource;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -99,13 +101,14 @@ public class WayDownloaderPlugin extends Plugin {
             double lonbuffer = Main.pref.getDouble("waydownloader.latbuffer", 0.00002);
             DownloadOsmTask downloadTask = new DownloadOsmTask();
             final PleaseWaitProgressMonitor monitor = new PleaseWaitProgressMonitor();
+            LatLon ll = selectedNode.getCoor();
             final Future<?> future = downloadTask.download(
                     false /* no new layer */,
                     new Bounds(
-                            selectedNode.getCoor().lat()- latbuffer,
-                            selectedNode.getCoor().lon()- lonbuffer,
-                            selectedNode.getCoor().lat()+ latbuffer,
-                            selectedNode.getCoor().lon()+ lonbuffer
+                            ll.lat()- latbuffer,
+                            ll.lon()- lonbuffer,
+                            ll.lat()+ latbuffer,
+                            ll.lon()+ lonbuffer
                     ),
                     monitor
             );
@@ -118,7 +121,7 @@ public class WayDownloaderPlugin extends Plugin {
                             try {
                                 future.get();
                             } catch(Exception e) {
-                                e.printStackTrace();
+                                Main.error(e);
                                 return;
                             }
                             monitor.close();
@@ -142,7 +145,6 @@ public class WayDownloaderPlugin extends Plugin {
                 String msg = tr("Way downloader data inconsistency. Prior connected way ''{0}'' wasn''t discovered after download",
                                 priorConnectedWay.getDisplayName(DefaultNameFormatter.getInstance())
                         );
-                System.err.println(msg);
                 showErrorMessage(msg);
                 return;
             }
@@ -300,15 +302,13 @@ public class WayDownloaderPlugin extends Plugin {
 
     private static void showWarningMessage(final String msg) {
         if (msg != null) {
-            GuiHelper.runInEDTAndWait(new Runnable() {
+            Main.warn(msg.replace("<html>", "").replace("</html>", ""));
+            GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(
-                            Main.parent,
-                            msg,
-                            tr("Warning"),
-                            JOptionPane.WARNING_MESSAGE
-                        );
+                    new Notification(msg)
+                    .setIcon(JOptionPane.WARNING_MESSAGE)
+                    .show();
                 }
             });
         }
@@ -316,15 +316,13 @@ public class WayDownloaderPlugin extends Plugin {
 
     private static void showErrorMessage(final String msg) {
         if (msg != null) {
-            GuiHelper.runInEDTAndWait(new Runnable() {
+            Main.error(msg.replace("<html>", "").replace("</html>", ""));
+            GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(
-                            Main.parent,
-                            msg,
-                            tr("Error"),
-                            JOptionPane.ERROR_MESSAGE
-                        );
+                    new Notification(msg)
+                    .setIcon(JOptionPane.ERROR_MESSAGE)
+                    .show();
                 }
             });
         }
@@ -332,15 +330,14 @@ public class WayDownloaderPlugin extends Plugin {
 
     private static void showInfoMessage(final String msg) {
         if (msg != null) {
-            GuiHelper.runInEDTAndWait(new Runnable() {
+            Main.info(msg.replace("<html>", "").replace("</html>", ""));
+            GuiHelper.runInEDT(new Runnable() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(
-                            Main.parent,
-                            msg,
-                            tr("Information"),
-                            JOptionPane.INFORMATION_MESSAGE
-                        );
+                    new Notification(msg)
+                    .setIcon(JOptionPane.INFORMATION_MESSAGE)
+                    .setDuration(Notification.TIME_SHORT)
+                    .show();
                 }
             });
         }

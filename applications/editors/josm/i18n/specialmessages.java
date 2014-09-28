@@ -15,6 +15,7 @@
 /* OSM server message */ tr("You must make your edits public to upload new data");
 /* Nominatim search place type */ tr("town");
 /* Landuse type used in multipolygons */ trc("landuse", "forest");
+/* Landuse type used in multipolygons */ trc("landuse", "meadow");
 /* Landuse type used in multipolygons */ trc("landuse", "farmland");
 /* Landuse type used in multipolygons */ trc("landuse", "residential");
 /* Landuse type used in multipolygons */ trc("natural", "scrub");

@@ -252,7 +252,7 @@ public class CircleArcMaker {
 
         double startAngle = realA1;
         // Transform the angles to get a consistent starting point
-        double a1 = 0;
+        //double a1 = 0;
         double a2 = normalizeAngle(realA2 - startAngle);
         double a3 = normalizeAngle(realA3 - startAngle);
         int direction = a3 > a2 ? 1 : -1;

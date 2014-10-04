@@ -34,7 +34,6 @@ public class GPSBlamMarker {
 	private CachedLatLon mean;
 	private CachedLatLon hair1Coord1, hair1Coord2, hair2Coord1, hair2Coord2;
 	private CachedLatLon ellipseCoord1, ellipseCoord2, ellipseCoord3; // 1=TL 2=TR 3=BL, where main axis = +R, minor +U 
-	private int ndays;
 	static final double fac = 2.45; // 2.45 gives 95% CI for 2D
 	
 	// construct a blammarker by analysis of selected GPS points

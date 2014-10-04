@@ -49,17 +49,17 @@ public class SanisettesHandler extends ParisDataSetHandler {
 	@Override
 	public void updateDataSet(DataSet ds) {
 		
-		List<Way> sourceWays = new ArrayList<Way>(ds.getWays());
-		List<List<Way>> waysToCombine = new ArrayList<List<Way>>();
+		List<Way> sourceWays = new ArrayList<>(ds.getWays());
+		List<List<Way>> waysToCombine = new ArrayList<>();
 		
 		for (Iterator<Way> it = sourceWays.iterator(); it.hasNext();) {
 			Way w = it.next();
 			it.remove();
 			if (!wayProcessed(w, waysToCombine)) {
-				List<Way> list = new ArrayList<Way>();
+				List<Way> list = new ArrayList<>();
 				list.add(w);
 				boolean finished = false;
-				List<Way> sourceWays2 = new ArrayList<Way>(sourceWays);
+				List<Way> sourceWays2 = new ArrayList<>(sourceWays);
 				while (!finished) {
 					int before = list.size();
 					for (Iterator<Way> it2 = sourceWays2.iterator(); it2.hasNext();) {

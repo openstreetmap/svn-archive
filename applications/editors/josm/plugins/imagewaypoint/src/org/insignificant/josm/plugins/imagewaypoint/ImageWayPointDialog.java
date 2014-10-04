@@ -97,17 +97,13 @@ public final class ImageWayPointDialog {
     }
 
     private static final class PreviousAction extends JosmAction {
-    private static final long serialVersionUID = -7899209365124237890L;
 
-    private final ImageWayPointDialog dialog;
-
-    public PreviousAction(final ImageWayPointDialog dialog) {
+    public PreviousAction() {
         super(tr("Previous"),
         null,
         tr("Previous image"),
         null,
         false);
-        this.dialog = dialog;
     }
 
     public final void actionPerformed(final ActionEvent actionEvent) {
@@ -118,13 +114,9 @@ public final class ImageWayPointDialog {
     }
 
     private static final class NextAction extends JosmAction {
-    private static final long serialVersionUID = 176134010956760988L;
 
-    private final ImageWayPointDialog dialog;
-
-    public NextAction(final ImageWayPointDialog dialog) {
+    public NextAction() {
         super(tr("Next"), null, tr("Next image"), null, false);
-        this.dialog = dialog;
     }
 
     public final void actionPerformed(final ActionEvent actionEvent) {
@@ -135,17 +127,13 @@ public final class ImageWayPointDialog {
     }
 
     private static final class RotateLeftAction extends JosmAction {
-    private static final long serialVersionUID = 3536922796446259943L;
 
-    private final ImageWayPointDialog dialog;
-
-    public RotateLeftAction(final ImageWayPointDialog dialog) {
+    public RotateLeftAction() {
         super(tr("Rotate left"),
         null,
         tr("Rotate image left"),
         null,
         false);
-        this.dialog = dialog;
     }
 
     public final void actionPerformed(final ActionEvent actionEvent) {
@@ -154,17 +142,13 @@ public final class ImageWayPointDialog {
     }
 
     private static final class RotateRightAction extends JosmAction {
-    private static final long serialVersionUID = 1760186810341888993L;
 
-    private final ImageWayPointDialog dialog;
-
-    public RotateRightAction(final ImageWayPointDialog dialog) {
+    public RotateRightAction() {
         super(tr("Rotate right"),
         null,
         tr("Rotate image right"),
         null,
         false);
-        this.dialog = dialog;
     }
 
     public final void actionPerformed(final ActionEvent actionEvent) {
@@ -190,10 +174,10 @@ public final class ImageWayPointDialog {
         KeyEvent.VK_Y, Shortcut.ALT_SHIFT),
         200);
 
-    this.previousAction = new PreviousAction(this);
-    this.nextAction = new NextAction(this);
-    this.rotateLeftAction = new RotateLeftAction(this);
-    this.rotateRightAction = new RotateRightAction(this);
+    this.previousAction = new PreviousAction();
+    this.nextAction = new NextAction();
+    this.rotateLeftAction = new RotateLeftAction();
+    this.rotateRightAction = new RotateRightAction();
 
     final JButton previousButton = new JButton(this.previousAction);
     final JButton nextButton = new JButton(this.nextAction);

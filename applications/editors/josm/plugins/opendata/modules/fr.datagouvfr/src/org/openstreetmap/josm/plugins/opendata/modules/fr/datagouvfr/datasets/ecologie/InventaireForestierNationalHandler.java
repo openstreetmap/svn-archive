@@ -80,7 +80,7 @@ public class InventaireForestierNationalHandler extends DataGouvDataSetHandler {
 	
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
 			for (int year = 2010; year >= 2005; year--) {
 				result.add(getIfnURL(year, "Peupleraies", PEUPLERAIE));
@@ -93,6 +93,6 @@ public class InventaireForestierNationalHandler extends DataGouvDataSetHandler {
 	}
 	
 	private Pair<String, URL> getIfnURL(int year, String name, String type) throws MalformedURLException {
-		return new Pair<String, URL>(name+" "+year, new URL("http://www.ifn.fr/spip/IMG/csv/placettes_"+type+"_"+year+".csv"));
+		return new Pair<>(name+" "+year, new URL("http://www.ifn.fr/spip/IMG/csv/placettes_"+type+"_"+year+".csv"));
 	}
 }

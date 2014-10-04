@@ -1,5 +1,8 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.multitagger;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -17,10 +20,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.AbstractAction;
-import static javax.swing.Action.SHORT_DESCRIPTION;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -34,6 +36,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.search.SearchAction;
@@ -50,10 +53,7 @@ import org.openstreetmap.josm.gui.util.TableHelper;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.tools.GBC;
-import static org.openstreetmap.josm.tools.I18n.marktr;
-import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
@@ -165,14 +165,14 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         tableModel.selectionChanged(newSelection);
     }
     
-    private OsmPrimitive getSelectedPrimitive() {
+    /*private OsmPrimitive getSelectedPrimitive() {
         int idx = tbl.getSelectedRow();
         if (idx>=0) {
             return tableModel.getPrimitiveAt(tbl.convertRowIndexToModel(idx));
         } else {
             return null;
         }
-    }
+    }*/
     
    private final MouseAdapter tableMouseAdapter = new MouseAdapter() {
         @Override

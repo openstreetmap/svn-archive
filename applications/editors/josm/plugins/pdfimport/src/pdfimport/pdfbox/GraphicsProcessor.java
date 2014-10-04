@@ -116,11 +116,8 @@ public class GraphicsProcessor{
 			else if (type == PathIterator.WIND_NON_ZERO) {
 				//fill all
 			}
-			else
-			{
+			else {
 				//Unexpected operation
-				int a = 10;
-				a++;
 			}
 
 			iter.next();

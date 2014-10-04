@@ -23,7 +23,6 @@ import relcontext.ChosenRelation;
  * @author Zverik
  */
 public class CreateMultipolygonAction extends JosmAction {
-    private static final String ACTION_NAME = "Create relation";
     private static final String PREF_MULTIPOLY = "reltoolbox.multipolygon.";
     protected ChosenRelation chRel;
 

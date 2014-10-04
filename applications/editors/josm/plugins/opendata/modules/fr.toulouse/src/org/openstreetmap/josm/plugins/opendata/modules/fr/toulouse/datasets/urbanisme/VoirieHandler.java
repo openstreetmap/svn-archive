@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.datasets.Toul
 
 public class VoirieHandler extends ToulouseDataSetHandler {
 
-    protected final Map<String, Collection<String>> map = new HashMap<String, Collection<String>>();
+    protected final Map<String, Collection<String>> map = new HashMap<>();
     
     private String streetField;
     
@@ -64,7 +64,7 @@ public class VoirieHandler extends ToulouseDataSetHandler {
     
     @Override
     public void updateDataSet(DataSet ds) {
-        Map<String, Relation> associatedStreets = new HashMap<String, Relation>();
+        Map<String, Relation> associatedStreets = new HashMap<>();
         
         for (Way w : ds.getWays()) {
             String name = w.get(streetField);

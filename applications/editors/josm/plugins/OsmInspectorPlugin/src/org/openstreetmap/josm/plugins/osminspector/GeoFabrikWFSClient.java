@@ -29,12 +29,12 @@ import org.openstreetmap.josm.data.coor.LatLon;
 
 public class GeoFabrikWFSClient {
 
-	private Bounds bbox;
+	//private Bounds bbox;
 	private DataStore data;
 	private boolean bInitialized = false;
 
 	public GeoFabrikWFSClient(Bounds bounds) {
-		bbox = bounds;
+		//bbox = bounds;
 	}
 
 	public FeatureCollection<SimpleFeatureType, SimpleFeature> getFeatures(
@@ -123,7 +123,6 @@ public class GeoFabrikWFSClient {
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 
 		// try {
@@ -153,5 +152,4 @@ public class GeoFabrikWFSClient {
 		// e.printStackTrace();
 		// }
 	}
-
 }

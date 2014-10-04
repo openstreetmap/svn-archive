@@ -26,7 +26,7 @@ public class NumerosRueHandler extends ToulouseDataSetHandler {
 
     @Override
     public void updateDataSet(DataSet ds) {
-        Map<String, Relation> associatedStreets = new HashMap<String, Relation>();
+        Map<String, Relation> associatedStreets = new HashMap<>();
         
         for (Node n : ds.getNodes()) {
             replace(n, "no", "addr:housenumber");

@@ -304,10 +304,6 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
     private class CorrelateEntries extends JosmAction {
         private boolean toZero;
 
-        public CorrelateEntries() {
-            this(false);
-        }
-
         public CorrelateEntries( boolean toZero ) {
             super(toZero ? tr("Correlate with GPX...") : tr("Put on GPX..."), "nanolog/correlate", tr("Correlate entries with GPS trace"), null, false);
             this.toZero = toZero;

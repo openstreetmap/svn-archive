@@ -4,7 +4,6 @@ public class SyntaxException extends Exception {
 
     private int startColumn;
     private int endColumn;
-    private String info;
 
     public int getStartColumn() {
         return startColumn;
@@ -18,6 +17,5 @@ public class SyntaxException extends Exception {
         super(info);
         this.startColumn = startColumn;
         this.endColumn = endColumn;
-        this.info = info;
     }
 }

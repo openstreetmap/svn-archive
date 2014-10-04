@@ -93,7 +93,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 	
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
 			for (WaterAgency wa : waterAgencies) {
 				result.add(getDownloadURL(wa));
@@ -105,7 +105,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 	}
 
 	private Pair<String, URL> getDownloadURL(WaterAgency a) throws MalformedURLException {
-		return new Pair<String, URL>("SurfaceWater_"+a.name, new URL("http://www.rapportage.eaufrance.fr/sites/default/files/SIG/FR"+a.code+"_SW.zip"));
+		return new Pair<>("SurfaceWater_"+a.name, new URL("http://www.rapportage.eaufrance.fr/sites/default/files/SIG/FR"+a.code+"_SW.zip"));
 	}
 	
 	private class InternalZipHandler extends DefaultArchiveHandler {

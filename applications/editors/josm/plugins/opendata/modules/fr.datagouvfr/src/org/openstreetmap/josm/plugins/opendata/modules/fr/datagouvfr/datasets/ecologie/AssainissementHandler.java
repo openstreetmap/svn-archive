@@ -37,11 +37,11 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
 
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
-			result.add(new Pair<String, URL>("Données 2009", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2.php")));
-			result.add(new Pair<String, URL>("Données 2010", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2010.php")));
-			result.add(new Pair<String, URL>("Données 2011", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2011.php")));
+			result.add(new Pair<>("Données 2009", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2.php")));
+			result.add(new Pair<>("Données 2010", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2010.php")));
+			result.add(new Pair<>("Données 2011", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2011.php")));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -52,7 +52,7 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
 
 	    private Node nodeWithKeys;
 	    
-	    private final Set<String> interestingKeys = new HashSet<String>();
+	    private final Set<String> interestingKeys = new HashSet<>();
 	    
         public InternalOdsHandler() {
             setSheetNumber(1);

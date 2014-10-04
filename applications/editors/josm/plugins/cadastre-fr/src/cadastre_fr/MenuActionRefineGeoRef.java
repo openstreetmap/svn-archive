@@ -1,16 +1,12 @@
 package cadastre_fr;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 
-@SuppressWarnings("serial")
 public class MenuActionRefineGeoRef extends JosmAction {
 
     public static String name = marktr("Refine georeferencing");

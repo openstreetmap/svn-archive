@@ -23,7 +23,6 @@ import javax.swing.JTable;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
@@ -67,9 +66,7 @@ public class GTFSImporterAction extends JosmAction
     return currentTrack;
   }
 
-  public void actionPerformed(ActionEvent event)
-  {
-    DataSet mainDataSet = Main.main.getCurrentDataSet();
+  public void actionPerformed(ActionEvent event) {
 
     if (dialog == null)
       dialog = new GTFSImporterDialog(this);

@@ -108,7 +108,7 @@ public class ForetsPubliquesHandler extends DataGouvDataSetHandler {
 
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
 			for (FrenchAdministrativeUnit region : FrenchAdministrativeUnit.allRegions) {
 				if (!region.getCode().startsWith("0")) { // Skip DOM/TOM
@@ -122,6 +122,6 @@ public class ForetsPubliquesHandler extends DataGouvDataSetHandler {
 	}
 
 	private Pair<String, URL> getForetURL(String code, String regionName) throws MalformedURLException {
-		return new Pair<String, URL>("PublicForests_"+regionName, new URL(FRENCH_PORTAL+"var/download/"+"for_publ_v2011_reg"+code+".zip"));
+		return new Pair<>("PublicForests_"+regionName, new URL(FRENCH_PORTAL+"var/download/"+"for_publ_v2011_reg"+code+".zip"));
 	}
 }

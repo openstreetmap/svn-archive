@@ -32,7 +32,6 @@ import relcontext.ChosenRelationListener;
  * @author Zverik
  */
 public class AddRemoveMemberAction extends JosmAction implements ChosenRelationListener {
-    private static final String ACTION_NAME = "Add/remove member";
     private ChosenRelation rel;
     private SortAndFixAction sortAndFix;
 

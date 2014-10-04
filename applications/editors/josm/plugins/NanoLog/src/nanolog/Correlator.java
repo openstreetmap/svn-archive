@@ -72,7 +72,7 @@ public class Correlator {
      */
     public static void correlate( List<NanoLogEntry> entries, GpxData data, long offset ) {
         List<NanoLogEntry> sortedEntries = new ArrayList<NanoLogEntry>(entries);
-        int ret = 0;
+        //int ret = 0;
         PrimaryDateParser dateParser = new PrimaryDateParser();
         Collections.sort(sortedEntries);
         for( GpxTrack track : data.tracks ) {
@@ -86,7 +86,7 @@ public class Correlator {
                     if( curWpTimeStr != null ) {
                         try {
                             long curWpTime = dateParser.parse(curWpTimeStr).getTime() + offset;
-                            ret += matchPoints(sortedEntries, prevWp, prevWpTime, curWp, curWpTime, offset);
+                            /*ret +=*/ matchPoints(sortedEntries, prevWp, prevWpTime, curWp, curWpTime, offset);
 
                             prevWp = curWp;
                             prevWpTime = curWpTime;

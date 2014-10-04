@@ -1,16 +1,21 @@
 package nanolog;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Rectangle;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractListModel;
+import javax.swing.JList;
+
 import nanolog.NanoLogLayer.NanoLogLayerListener;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
-import static org.openstreetmap.josm.tools.I18n.tr;
-import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * NanoLog Panel. Displays the selected log item, along with surrounding 30-50 lines.

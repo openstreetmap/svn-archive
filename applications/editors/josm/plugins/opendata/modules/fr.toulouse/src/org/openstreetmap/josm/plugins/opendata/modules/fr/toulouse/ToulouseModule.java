@@ -112,7 +112,7 @@ public class ToulouseModule extends AbstractModule {
     public static final DataSet data = new DataSet();
     
     private static final Collection<Relation> getBoundaries(int admin_level) {
-        Collection<Relation> result = new TreeSet<Relation>(new Comparator<Relation>() {
+        Collection<Relation> result = new TreeSet<>(new Comparator<Relation>() {
             @Override
             public int compare(Relation o1, Relation o2) {
                 if (o1.hasKey("name") && o2.hasKey("name")) {

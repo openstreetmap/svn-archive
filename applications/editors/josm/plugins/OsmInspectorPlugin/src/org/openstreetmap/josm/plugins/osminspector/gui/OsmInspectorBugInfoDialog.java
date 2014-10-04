@@ -23,13 +23,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 		ListSelectionListener, LayerChangeListener, MouseListener {
 
-	/**
-     * 
-     */
-    private static final long serialVersionUID = 7730268317164906579L;
-    private OsmInspectorLayer layer;
+    //private OsmInspectorLayer layer;
 	private JTextPane bugTextArea;
-	
 
 	/**
 	 * Builds the content panel for this dialog
@@ -41,9 +36,7 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 		createLayout(bugTextArea, true, Arrays.asList(new SideButton[] {}));
 		bugTextArea.setText("This is a demo");
 		this.add(bugTextArea);
-		
 	}
-
 
 	public OsmInspectorBugInfoDialog(OsmInspectorLayer layer) {
 
@@ -54,68 +47,55 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 																			// height
 				true // default is "show dialog"
 		);
-		this.layer = layer;
+		//this.layer = layer;
 		buildContentPanel();
 	}
 
 	public void updateDialog(OsmInspectorLayer l) {
-		this.layer = l;
+		//this.layer = l;
 	}
 	
 	public void setBugDescription(BugInfo i){
 	    bugTextArea.setText(i.getContentString());
 	}
 	
-	@Override
+	/*@Override
 	public void showNotify() {
 		super.showNotify();
-	}
+	}*/
 
 	@Override
 	public void hideNotify() {
 		if (dialogsPanel != null) {
-			// TODO Auto-generated method stub
 			super.hideNotify();
 		}
 	}
 
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		if(newLayer instanceof OsmInspectorLayer) {
+		/*if(newLayer instanceof OsmInspectorLayer) {
 			this.layer = (OsmInspectorLayer) newLayer;
-		}
-
+		}*/
 	}
 
 	@Override
@@ -128,7 +108,6 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		System.out.println(e.getFirstIndex());
+		//System.out.println(e.getFirstIndex());
 	}
-
 }

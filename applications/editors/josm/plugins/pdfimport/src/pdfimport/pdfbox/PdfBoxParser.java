@@ -21,7 +21,6 @@ public class PdfBoxParser extends PDFStreamEngine{
 		this.target = target;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void parse(File file, int maxPaths, ProgressMonitor monitor) throws Exception
 	{
 		monitor.beginTask(tr("Parsing PDF", 1));
@@ -32,7 +31,7 @@ public class PdfBoxParser extends PDFStreamEngine{
 			throw new Exception(tr("Encrypted documents not supported."));
 		}
 
-		List allPages = document.getDocumentCatalog().getAllPages();
+		List<?> allPages = document.getDocumentCatalog().getAllPages();
 
 		if (allPages.size() != 1) {
 			throw new Exception(tr("The PDF file must have exactly one page."));

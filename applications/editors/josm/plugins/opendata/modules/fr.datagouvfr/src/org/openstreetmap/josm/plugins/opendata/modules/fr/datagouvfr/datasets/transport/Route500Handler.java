@@ -43,7 +43,7 @@ public class Route500Handler extends DataGouvDataSetHandler {
     
     @Override
     public List<Pair<String, URL>> getDataURLs() {
-        List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+        List<Pair<String, URL>> result = new ArrayList<>();
         try {
             for (FrenchAdministrativeUnit dpt : FrenchAdministrativeUnit.allDepartments) {
                 if (dpt.getCode().startsWith("0")) { // Skip DOM/TOM
@@ -57,6 +57,6 @@ public class Route500Handler extends DataGouvDataSetHandler {
     }
 
     private Pair<String, URL> getRoute500URL(String code, String name) throws MalformedURLException {
-        return new Pair<String, URL>(name, new URL(OSMFR_PORTAL+"ROUTE500_1-1_SHP_LAMB93_D"+code+"_2012-11-21.7z"));
+        return new Pair<>(name, new URL(OSMFR_PORTAL+"ROUTE500_1-1_SHP_LAMB93_D"+code+"_2012-11-21.7z"));
     }
 }

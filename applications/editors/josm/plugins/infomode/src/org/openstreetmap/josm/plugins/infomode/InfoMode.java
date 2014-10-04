@@ -46,11 +46,11 @@ import org.openstreetmap.josm.tools.Shortcut;
 class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     private MapView mv;
     private String statusText;
-    private boolean drawing;
-    private boolean ctrl;
+    //private boolean drawing;
+    //private boolean ctrl;
     private boolean shift;
-    private boolean oldCtrl;
-    private boolean oldShift;
+    //private boolean oldCtrl;
+    //private boolean oldShift;
     private EastNorth pos;
     private WayPoint wpOld;
     private Popup oldPopup;
@@ -194,8 +194,8 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
      */
     @Override
     protected void updateKeyModifiers(InputEvent e) {
-        oldCtrl = ctrl;
-        oldShift = shift;
+        //oldCtrl = ctrl;
+        //oldShift = shift;
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         shift = (e.getModifiers() & ActionEvent.SHIFT_MASK) != 0;
     }
@@ -212,10 +212,10 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     private void repaint() {
         if (Main.map!=null) Main.map.mapView.repaint();
     }
-    private void setStatusLine(String tr) {
+    /*private void setStatusLine(String tr) {
         statusText=tr;
         updateStatusLine();
-    }
+    }*/
 
     private synchronized void filterTracks() {
         Layer l = Main.main.getActiveLayer();

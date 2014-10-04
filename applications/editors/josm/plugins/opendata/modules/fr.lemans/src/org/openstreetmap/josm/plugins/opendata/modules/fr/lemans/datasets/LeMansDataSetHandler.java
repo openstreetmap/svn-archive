@@ -74,10 +74,10 @@ public abstract class LeMansDataSetHandler extends FrenchDataSetHandler implemen
 
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
-			if (kmzUuid != null && !kmzUuid.isEmpty()) result.add(new Pair<String, URL>(getName() + " (KMZ)", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
-			if (shpUuid != null && !shpUuid.isEmpty()) result.add(new Pair<String, URL>(getName() + " (SHP)", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
+			if (kmzUuid != null && !kmzUuid.isEmpty()) result.add(new Pair<>(getName() + " (KMZ)", new URL(PORTAL + "download.do?uuid=" + kmzUuid)));
+			if (shpUuid != null && !shpUuid.isEmpty()) result.add(new Pair<>(getName() + " (SHP)", new URL(PORTAL + "download.do?uuid=" + shpUuid)));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

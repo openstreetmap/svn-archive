@@ -113,7 +113,6 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
      * {@link #showOffsetDialog(java.util.List)} on success.
      */
     private class DownloadOffsetsTask extends SimpleOffsetQueryTask {
-        private ImageryLayer layer;
         private List<ImageryOffsetBase> offsets;
 
         /**
@@ -135,7 +134,6 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
             } catch( UnsupportedEncodingException e ) {
                 throw new IllegalArgumentException(e);
             }
-            this.layer = layer;
         }
 
         /**

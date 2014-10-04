@@ -177,12 +177,12 @@ public class GeoFlaHandler extends DataGouvDataSetHandler {
 	}
 	
 	private Pair<String, URL> getGeoflaURL(String name, String urlSuffix) throws MalformedURLException {
-		return new Pair<String, URL>(name, new URL("http://professionnels.ign.fr/sites/default/files/"+urlSuffix));
+		return new Pair<>(name, new URL("http://professionnels.ign.fr/sites/default/files/"+urlSuffix));
 	}
 
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
 			result.add(getGeoflaURL("Départements France métropolitaine et Corse", "GEOFLADept_FR_Corse_AV_L93.zip"));
 			result.add(getGeoflaURL("Départements France entière",                 "FR_DOM_Mayotte_shp_WGS84.zip"));

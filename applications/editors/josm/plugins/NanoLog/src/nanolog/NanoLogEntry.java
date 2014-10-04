@@ -1,11 +1,8 @@
 package nanolog;
 
-import java.awt.*;
-import java.util.*;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
+import java.util.Date;
+
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.MapView;
 
 /**
  * This holds one NanoLog entry.

@@ -9,12 +9,13 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.JOptionPane;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.gui.Notification;
 
+import javax.swing.JOptionPane;
+
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**

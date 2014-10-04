@@ -15,8 +15,6 @@ public abstract class ImageModifier {
      */
     //public static int cadastreBackgroundTransp = 1; // original white but transparent
 
-    private static final long serialVersionUID = 1L;
-
     protected int parcelColor = Color.RED.getRGB();
 
     public BufferedImage bufferedImage;

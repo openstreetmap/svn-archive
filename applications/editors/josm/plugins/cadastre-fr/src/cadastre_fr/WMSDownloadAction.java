@@ -14,8 +14,6 @@ import org.openstreetmap.josm.gui.layer.Layer;
 
 public class WMSDownloadAction /*extends JosmAction */{
 
-    private static final long serialVersionUID = 1L;
-
 //    public WMSDownloadAction(String layerName) {
 //        super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
 //    }

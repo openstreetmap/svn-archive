@@ -116,12 +116,12 @@ public class RegistreParcellaireHandler extends DataGouvDataSetHandler {
 	}
 
 	private Pair<String, URL> getRpgURL(String number, String name) throws MalformedURLException {
-		return new Pair<String, URL>(number+" - "+name, new URL("http://www.data.gouv.fr/var/download/ign/RPG_2010_"+number+".ZIP"));
+		return new Pair<>(number+" - "+name, new URL("http://www.data.gouv.fr/var/download/ign/RPG_2010_"+number+".ZIP"));
 	}
 	
 	@Override
 	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<Pair<String,URL>>();
+		List<Pair<String, URL>> result = new ArrayList<>();
 		try {
 			for (FrenchAdministrativeUnit dpt : FrenchAdministrativeUnit.allDepartments) {
 				result.add(getRpgURL(dpt.getCode(), dpt.getName()));

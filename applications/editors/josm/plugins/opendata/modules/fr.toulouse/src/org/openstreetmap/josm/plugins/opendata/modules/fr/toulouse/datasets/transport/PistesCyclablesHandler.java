@@ -17,7 +17,7 @@ import static org.openstreetmap.josm.plugins.opendata.core.io.OverpassApi.OaRecu
 
 public class PistesCyclablesHandler extends ToulouseDataSetHandler {
 
-    protected final Map<String, Collection<String>> map = new HashMap<String, Collection<String>>();
+    protected final Map<String, Collection<String>> map = new HashMap<>();
     
     private String streetField;
     

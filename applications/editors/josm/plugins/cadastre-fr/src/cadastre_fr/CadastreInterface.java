@@ -227,6 +227,9 @@ public class CadastreInterface {
             while ((ln = in.readLine()) != null) {
                 lines += ln;
             }
+            if (Main.isDebugEnabled()) {
+            	Main.debug(lines);
+            }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(
                 "CadastreGrabber: Illegal url.").initCause(e);
@@ -541,14 +544,6 @@ public class CadastreInterface {
 //            System.out.println("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
 //                    fY+","+X0+","+Y0);
 //        }
-    }
-
-    private double tryParseDouble(String str) {
-        try {
-            return Double.parseDouble(str);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
     }
 
     private void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {

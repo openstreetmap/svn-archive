@@ -25,6 +25,17 @@
     <property name="ant.build.javac.source" value="1.7"/>
     <property name="plugin.jar"             location="${plugin.dist.dir}/${ant.project.name}.jar"/>
 
+    <!-- For Windows-specific stuff -->
+    <condition property="isWindows">
+        <os family="Windows"/>
+    </condition>
+    <target name="-jaxb_win" if="isWindows">
+        <property name="xjc" value="${java.home}\..\bin\xjc.exe" />
+    </target>
+    <target name="-jaxb_nix" unless="isWindows">
+        <property name="xjc" value="${java.home}/../bin/xjc" />
+    </target>
+
     <!--
     **********************************************************
     ** init - initializes the build

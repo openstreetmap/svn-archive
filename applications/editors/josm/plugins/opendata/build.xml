@@ -76,7 +76,7 @@
     ** compile_neptune - compiles Neptune classes
     **********************************************************
     -->
-    <target name="compile_neptune" depends="init">
+    <target name="compile_neptune" depends="init, xjc_neptune">
         <echo message="compiling Neptune ... "/>
         <javac srcdir="includes/neptune" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8" />
     </target>
@@ -99,13 +99,15 @@
         </javac>
     </target>
     
-    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-          <classpath>
-            <fileset dir="lib/jaxb" includes="*.jar" />
-          </classpath>
-    </taskdef>
-    
-    <target name="xjc_neptune">
-        <xjc schema="resources/neptune/neptune.xsd" destdir="includes" package="neptune" target="2.1" />
+    <target name="xjc_neptune" depends="init, -jaxb_win, -jaxb_nix" unless="jaxb.notRequired">
+        <exec executable="${xjc}" failonerror="true">
+            <arg value="-d"/>
+            <arg value="includes"/>
+            <arg value="-p"/>
+            <arg value="neptune"/>
+            <arg value="-encoding"/>
+            <arg value="UTF-8"/>
+            <arg value="resources/neptune/neptune.xsd"/>
+        </exec>
     </target>
 </project>

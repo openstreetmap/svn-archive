@@ -21,8 +21,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class AutoCompletionListRenderer extends JLabel implements TableCellRenderer {
 
-    static public final String RES_OSM_ICON = "/resources/osm.gif";
-    static public final String RES_SELECTION_ICON = "/resources/selection.gif";
+    static public final String RES_OSM_ICON = "/resources/osm.png";
+    static public final String RES_SELECTION_ICON = "/resources/selection.png";
 
     /** the icon used to decorate items of priority
      *  {@link AutoCompletionItemPriority#IS_IN_STANDARD}

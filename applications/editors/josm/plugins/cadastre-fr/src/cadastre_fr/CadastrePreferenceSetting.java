@@ -98,7 +98,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
      * Constructs a new {@code CadastrePreferenceSetting}.
      */
     public CadastrePreferenceSetting() {
-        super("cadastrewms.gif", I18n.tr("French cadastre WMS"),
+        super("cadastrewms.png", I18n.tr("French cadastre WMS"),
             tr("A special handler of the French cadastre wms at www.cadastre.gouv.fr" + "<BR><BR>"
                 + "Please read the Terms and Conditions of Use here (in French): <br>"
                 + "<a href=\"http://www.cadastre.gouv.fr/scpc/html/CU_01_ConditionsGenerales_fr.html\"> "

@@ -113,7 +113,7 @@ public class TabularTagSelector extends JPanel {
     protected JPanel buildControlButtonPanel() {
         JPanel pnl = new JPanel();
         pnl.setLayout(new FlowLayout(FlowLayout.LEFT));
-        btnApply = new JButton("Apply");
+        btnApply = new JButton(tr("Apply"));
         pnl.add(btnApply);
         btnApply.addActionListener(
                 new ActionListener() {

@@ -20,7 +20,6 @@
  *
  *
  */
-
 package org.openstreetmap.josm.plugins.print;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -45,9 +44,8 @@ public class PrintAction extends JosmAction implements Runnable {
      */
     public PrintAction() {
         super(tr("Print..."), (String)null, tr("Print the map"),
-        Shortcut.registerShortcut("print:print", tr("File: {0}", tr("Print...")),
-	KeyEvent.VK_P, Shortcut.CTRL),
-            true, "print/print", true);
+                Shortcut.registerShortcut("system:print", tr("File: {0}", tr("Print...")),
+                        KeyEvent.VK_P, Shortcut.CTRL), true, "print/print", true);
     }
 
     /**
@@ -56,7 +54,7 @@ public class PrintAction extends JosmAction implements Runnable {
      * @param e not used.
      */
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         // Allow the JOSM GUI to be redrawn before modifying preferences
         SwingUtilities.invokeLater(this);
     }
@@ -67,7 +65,7 @@ public class PrintAction extends JosmAction implements Runnable {
      * This will temporarily modify the mappaint preferences.
      */
     @Override
-	public void run () {
+    public void run () {
         PrintPlugin.adjustPrefs();
         PrintDialog window = new PrintDialog(Main.parent);
         window.setVisible(true);

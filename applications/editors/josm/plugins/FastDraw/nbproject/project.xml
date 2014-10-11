@@ -3,6 +3,9 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>FastDraw</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
             <!-- Не используйте диалоговое окно свойств проекта при редактировании данного файла вручную. -->
             <name>FastDraw</name>
             <properties/>
@@ -12,6 +15,9 @@
                     <type>java</type>
                     <location>src</location>
                 </source-folder>
+                <build-file>
+                    <location>../../dist/FastDraw.jar</location>
+                </build-file>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -55,11 +61,12 @@
                     <ide-action name="debug"/>
                 </context-menu>
             </view>
+            <subprojects/>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
                 <package-root>src</package-root>
-                <classpath mode="compile">../../core/src</classpath>
+                <classpath mode="compile">../../core/src;../../core/dist/josm-custom.jar</classpath>
                 <built-to>../../dist/FastDraw.jar</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>

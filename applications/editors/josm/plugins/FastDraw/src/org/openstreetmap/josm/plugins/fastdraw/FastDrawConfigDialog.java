@@ -6,6 +6,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -60,8 +63,9 @@ public class FastDrawConfigDialog extends ExtendedDialog {
             }
         });
         pasteButton.setToolTipText(tr("Try copying tags from properties table"));
-        
-        addTags.setPossibleItems(Main.pref.getCollection("fastdraw.tags-history"));
+        ArrayList<String> history = new ArrayList<>(Main.pref.getCollection("fastdraw.tags-history"));
+        while (history.remove("")) { };
+        addTags.setPossibleItems(history);
         
         all.add(label1,GBC.std().insets(10,0,0,0));
         all.add(text1, GBC.eol().fill(GBC.HORIZONTAL).insets(5,0,0,5));
@@ -117,7 +121,9 @@ public class FastDrawConfigDialog extends ExtendedDialog {
             settings.drawClosed=drawClosedCb.isSelected();
             settings.simplifyMode=combo1.getSelectedIndex();
             settings.autoTags=addTags.getText();
-            addTags.addCurrentItemToHistory();
+            if (!settings.autoTags.isEmpty()) {
+                addTags.addCurrentItemToHistory();
+            }
             Main.pref.putCollection("fastdraw.tags-history", addTags.getHistory());
             settings.savePrefs();
             } catch (ParseException e) {

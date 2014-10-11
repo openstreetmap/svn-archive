@@ -8,13 +8,17 @@ package org.openstreetmap.josm.plugins.fastdraw;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.openstreetmap.josm.Main;
@@ -264,7 +268,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 } else {
                   set.add((e.getKeyCode()));
                 }
-            doKeyEvent((KeyEvent) event);
+            // check if key press is done in main window, not in dialogs
+            Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            if (SwingUtilities.getWindowAncestor(focused) instanceof JFrame) {
+                doKeyEvent((KeyEvent) event);
+            }
         }
         if (event.getID() == KeyEvent.KEY_RELEASED) {
             if (timer.isRunning()) {

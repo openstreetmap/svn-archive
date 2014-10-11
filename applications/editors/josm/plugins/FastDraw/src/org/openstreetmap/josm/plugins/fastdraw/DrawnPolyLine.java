@@ -95,6 +95,11 @@ public class DrawnPolyLine {
         addLast(coor);
         fixed.add(coor);
     }
+
+    public Set<LatLon> getFixedPoints() {
+        return fixed;
+    }
+    
     void addLast(LatLon coor) {
         if (closedFlag && lastIdx>points.size()-1) return;
         if (lastIdx>=points.size()-1) {

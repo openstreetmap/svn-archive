@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="FastDraw" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="JOSM/FastDraw: do not catch keys from other windows, fix default tags combobox"/>
+    <property name="commit.message" value="JOSM/FastDraw: use Main.map.keyDetector instead of AWTEventListener"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="7609"/>
     
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

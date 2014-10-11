@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -29,30 +27,30 @@ import org.openstreetmap.josm.tools.Utils;
 
 public class FastDrawConfigDialog extends ExtendedDialog {
 
+    private final JLabel label1=new JLabel(tr("Epsilon multiplier"));
+    private final JLabel label2=new JLabel(tr("Starting Epsilon"));
+    private final JLabel label3=new JLabel(tr("Max points count per 1 km"));
+    private final JLabel label4=new JLabel(/* I18n: Combobox to select what a press to return key does */ tr("Enter key mode"));
+    private final JLabel label5=new JLabel(tr("Auto add tags"));
+    private final JFormattedTextField text1=new JFormattedTextField(NumberFormat.getInstance());
+    private final JFormattedTextField text2=new  JFormattedTextField(NumberFormat.getInstance());
+    private final JFormattedTextField text3=new  JFormattedTextField(NumberFormat.getInstance());
+    private final JComboBox<String> combo1=new JComboBox<>(new String[]{tr("Autosimplify"),
+        tr("Simplify with initial epsilon"),tr("Save as is")});
+    private final JCheckBox snapCb=new JCheckBox(tr("Snap to nodes"));
+    private final JCheckBox fixedClickCb = new JCheckBox(tr("Add fixed points on click"));
+    private final JCheckBox fixedSpaceCb = new JCheckBox(tr("Add fixed points on spacebar"));
+    private final JCheckBox drawClosedCb = new JCheckBox(tr("Draw closed polygons only"));
+    private final HistoryComboBox addTags = new HistoryComboBox();
+    private final FDSettings settings;
+
     public FastDrawConfigDialog(FDSettings settings) {
         super(Main.parent,tr("FastDraw configuration"),new String[] {tr("Ok"), tr("Cancel")});
+        this.settings = settings;
+        
         JPanel all = new JPanel();
         GridBagLayout layout = new GridBagLayout();
         all.setLayout(layout);
-        
-        JLabel label1=new JLabel(tr("Epsilon multiplier"));
-        JLabel label2=new JLabel(tr("Starting Epsilon"));
-        JLabel label3=new JLabel(tr("Max points count per 1 km"));
-        JLabel label4=new JLabel(/* I18n: Combobox to select what a press to return key does */ tr("Enter key mode"));
-        JLabel label5=new JLabel(tr("Auto add tags"));
-        JFormattedTextField text1=new JFormattedTextField(NumberFormat.getInstance());
-        JFormattedTextField text2=new  JFormattedTextField(NumberFormat.getInstance());
-        JFormattedTextField text3=new  JFormattedTextField(NumberFormat.getInstance());
-//        JComboBox combo1=new JComboBox(new String[]{tr("Autosimplify and wait"),
-//            tr("Autosimplify and save"),tr("Simplify and wait"),tr("Simplify and save"),
-//            tr("Save as is")});
-        JComboBox<String> combo1=new JComboBox<>(new String[]{tr("Autosimplify"),
-            tr("Simplify with initial epsilon"),tr("Save as is")});
-        JCheckBox snapCb=new JCheckBox(tr("Snap to nodes"));
-        JCheckBox fixedClickCb = new JCheckBox(tr("Add fixed points on click"));
-        JCheckBox fixedSpaceCb = new JCheckBox(tr("Add fixed points on spacebar"));
-        JCheckBox drawClosedCb = new JCheckBox(tr("Draw closed polygons only"));
-        final HistoryComboBox addTags = new HistoryComboBox();
         JButton pasteButton = new JButton(new AbstractAction(tr("Paste"), ImageProvider.get("apply")) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,6 +61,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
             }
         });
         pasteButton.setToolTipText(tr("Try copying tags from properties table"));
+        
         ArrayList<String> history = new ArrayList<>(Main.pref.getCollection("fastdraw.tags-history"));
         while (history.remove("")) { };
         addTags.setPossibleItems(history);
@@ -97,10 +96,6 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         drawClosedCb.setSelected(settings.drawClosed);
         combo1.setSelectedIndex(settings.simplifyMode);
         
-        ExtendedDialog dialog = new ExtendedDialog(Main.parent,
-                tr("FastDraw settings"),
-                new String[] {tr("Ok"), tr("Cancel")}
-        );
         setContent(all, false);
         setButtonIcons(new String[] {"ok.png", "cancel.png"});
         setToolTipTexts(new String[] {
@@ -109,29 +104,34 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         });
         setDefaultButton(1);
         //configureContextsensitiveHelp("/Action/DownloadObject", true /* show help button */);
-        showDialog();
-        if (dialog.getValue() == 0) {
+    }
+
+    @Override
+    public ExtendedDialog showDialog() {
+        ExtendedDialog result = super.showDialog();
+        if (getValue() == 0) {
             try {
-            settings.epsilonMult=NumberFormat.getInstance().parse(text1.getText()).doubleValue();
-            settings.startingEps=NumberFormat.getInstance().parse(text2.getText()).doubleValue();
-            settings.maxPointsPerKm=NumberFormat.getInstance().parse(text3.getText()).doubleValue();
-            settings.snapNodes=snapCb.isSelected();
-            settings.fixedClick=fixedClickCb.isSelected();
-            settings.fixedSpacebar=fixedSpaceCb.isSelected();
-            settings.drawClosed=drawClosedCb.isSelected();
-            settings.simplifyMode=combo1.getSelectedIndex();
-            settings.autoTags=addTags.getText();
-            if (!settings.autoTags.isEmpty()) {
-                addTags.addCurrentItemToHistory();
-            }
-            Main.pref.putCollection("fastdraw.tags-history", addTags.getHistory());
-            settings.savePrefs();
+                settings.epsilonMult=NumberFormat.getInstance().parse(text1.getText()).doubleValue();
+                settings.startingEps=NumberFormat.getInstance().parse(text2.getText()).doubleValue();
+                settings.maxPointsPerKm=NumberFormat.getInstance().parse(text3.getText()).doubleValue();
+                settings.snapNodes=snapCb.isSelected();
+                settings.fixedClick=fixedClickCb.isSelected();
+                settings.fixedSpacebar=fixedSpaceCb.isSelected();
+                settings.drawClosed=drawClosedCb.isSelected();
+                settings.simplifyMode=combo1.getSelectedIndex();
+                settings.autoTags=addTags.getText();
+                if (!settings.autoTags.isEmpty()) {
+                    addTags.addCurrentItemToHistory();
+                }
+                Main.pref.putCollection("fastdraw.tags-history", addTags.getHistory());
+                settings.savePrefs();
             } catch (ParseException e) {
               JOptionPane.showMessageDialog(Main.parent,
                   tr("Can not read settings"));
             }
         }
-            
+        return result;
+        
     }
     
 }

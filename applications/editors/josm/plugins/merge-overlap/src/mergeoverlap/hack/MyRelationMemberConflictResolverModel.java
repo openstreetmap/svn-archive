@@ -79,7 +79,7 @@ import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecisionTy
         }
 
         public MyRelationMemberConflictResolverModel() {
-            decisions = new ArrayList<RelationMemberConflictDecision>();
+            decisions = new ArrayList<>();
             support = new PropertyChangeSupport(this);
         }
 
@@ -164,7 +164,7 @@ import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecisionTy
         public void populate(Collection<RelationToChildReference> references) {
             references = references == null ? new LinkedList<RelationToChildReference>() : references;
             decisions.clear();
-            this.relations = new HashSet<Relation>(references.size());
+            this.relations = new HashSet<>(references.size());
             for (RelationToChildReference reference: references) {
                 decisions.add(new RelationMemberConflictDecision(reference.getParent(), reference.getPosition()));
                 relations.add(reference.getParent());
@@ -307,7 +307,7 @@ import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecisionTy
          * to the decisions managed by this model
          */
         public Set<Relation> getModifiedRelations(OsmPrimitive newPrimitive) {
-            HashSet<Relation> ret = new HashSet<Relation>();
+            HashSet<Relation> ret = new HashSet<>();
             for (Relation relation: relations) {
                 if (isChanged(relation, newPrimitive)) {
                     ret.add(relation);

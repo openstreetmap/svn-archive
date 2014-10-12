@@ -60,10 +60,10 @@ public class MergeOverlapAction extends JosmAction {
 				, true);
 	}
 
-	Map<Way, List<Relation>> relations = new HashMap<Way, List<Relation>>();
-	Map<Way, Way> oldWays = new HashMap<Way, Way>();
-	Map<Relation, Relation> newRelations = new HashMap<Relation, Relation>();
-	Set<Way> deletes = new HashSet<Way>();
+	Map<Way, List<Relation>> relations = new HashMap<>();
+	Map<Way, Way> oldWays = new HashMap<>();
+	Map<Relation, Relation> newRelations = new HashMap<>();
+	Set<Way> deletes = new HashSet<>();
 
 	/**
 	 * The action button has been clicked
@@ -75,7 +75,7 @@ public class MergeOverlapAction extends JosmAction {
 	public void actionPerformed(ActionEvent e) {
 
 		// List of selected ways
-		List<Way> ways = new ArrayList<Way>();
+		List<Way> ways = new ArrayList<>();
 		relations.clear();
 		newRelations.clear();
 
@@ -84,7 +84,7 @@ public class MergeOverlapAction extends JosmAction {
 			if (osm instanceof Way && !osm.isDeleted()) {
 				Way way = (Way) osm;
 				ways.add(way);
-				List<Relation> rels = new ArrayList<Relation>();
+				List<Relation> rels = new ArrayList<>();
 				for (Relation r : OsmPrimitive.getFilteredList(way
 						.getReferrers(), Relation.class)) {
 					rels.add(r);
@@ -93,17 +93,17 @@ public class MergeOverlapAction extends JosmAction {
 			}
 		}
 
-		List<Way> sel = new ArrayList<Way>(ways);
-		Collection<Command> cmds = new LinkedList<Command>();
+		List<Way> sel = new ArrayList<>(ways);
+		Collection<Command> cmds = new LinkedList<>();
 
 		// *****
 		// split
 		// *****
 		for (Way way : ways) {
-			Set<Node> nodes = new HashSet<Node>();
+			Set<Node> nodes = new HashSet<>();
 			for (Way opositWay : ways) {
 				if (way != opositWay) {
-					List<NodePos> nodesPos = new LinkedList<NodePos>();
+					List<NodePos> nodesPos = new LinkedList<>();
 
 					int pos = 0;
 					for (Node node : way.getNodes()) {
@@ -165,7 +165,7 @@ public class MergeOverlapAction extends JosmAction {
 			}
 			if (!nodes.isEmpty() && !way.isClosed() || nodes.size() >= 2) {
 				List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(
-						way, new ArrayList<Node>(nodes));
+						way, new ArrayList<>(nodes));
 				SplitWayResult result = splitWay(getEditLayer(), way, wayChunks);
 
 				cmds.add(result.getCommand());
@@ -183,10 +183,10 @@ public class MergeOverlapAction extends JosmAction {
 		// *****
 		// merge
 		// *****
-		ways = new ArrayList<Way>(sel);
+		ways = new ArrayList<>(sel);
 		while (!ways.isEmpty()) {
 			Way way = ways.get(0);
-			List<Way> combine = new ArrayList<Way>();
+			List<Way> combine = new ArrayList<>();
 			combine.add(way);
 			for (Way opositWay : ways) {
 				if (way != opositWay
@@ -231,7 +231,7 @@ public class MergeOverlapAction extends JosmAction {
 			cmds.add(new ChangeCommand(old, newRelations.get(old)));
 		}
 
-		List<Way> del = new LinkedList<Way>();
+		List<Way> del = new LinkedList<>();
 		for (Way w : deletes) {
 			if (!w.isDeleted()) {
 				del.add(w);
@@ -318,7 +318,7 @@ public class MergeOverlapAction extends JosmAction {
 	private SplitWayResult splitWay(OsmDataLayer layer, Way way,
 			List<List<Node>> wayChunks) {
 		// build a list of commands, and also a new selection list
-		Collection<Command> commandList = new ArrayList<Command>(wayChunks
+		Collection<Command> commandList = new ArrayList<>(wayChunks
 				.size());
 
 		Iterator<List<Node>> chunkIt = wayChunks.iterator();
@@ -332,7 +332,7 @@ public class MergeOverlapAction extends JosmAction {
 		changedWay.setNodes(chunkIt.next());
 		commandList.add(new ChangeCommand(way, changedWay));
 
-		List<Way> newWays = new ArrayList<Way>();
+		List<Way> newWays = new ArrayList<>();
 		// Second, create new ways
 		while (chunkIt.hasNext()) {
 			Way wayToAdd = new Way();
@@ -373,7 +373,7 @@ public class MergeOverlapAction extends JosmAction {
 									via = rmv.getMember();
 								}
 							}
-							List<Node> nodes = new ArrayList<Node>();
+							List<Node> nodes = new ArrayList<>();
 							if (via != null) {
 								if (via instanceof Node) {
 									nodes.add((Node) via);
@@ -511,7 +511,7 @@ public class MergeOverlapAction extends JosmAction {
 							// collection
 
 		// remove duplicates, preserving order
-		ways = new LinkedHashSet<Way>(ways);
+		ways = new LinkedHashSet<>(ways);
 
 		// try to build a new way which includes all the combined ways
 		NodeGraph graph = NodeGraph.createUndirectedGraphFromNodeWays(ways);
@@ -521,8 +521,8 @@ public class MergeOverlapAction extends JosmAction {
 		// and build the collection of tags used by the ways to combine
 		TagCollection wayTags = TagCollection.unionOfAllPrimitives(ways);
 
-		List<Way> reversedWays = new LinkedList<Way>();
-		List<Way> unreversedWays = new LinkedList<Way>();
+		List<Way> reversedWays = new LinkedList<>();
+		List<Way> unreversedWays = new LinkedList<>();
 		for (Way w : ways) {
 			if ((path.indexOf(w.getNode(0)) + 1) == path.lastIndexOf(w
 					.getNode(1))) {
@@ -554,10 +554,10 @@ public class MergeOverlapAction extends JosmAction {
 			// if there are still reversed ways with direction-dependent tags,
 			// reverse their tags
 			if (!reversedWays.isEmpty()) {
-				List<Way> unreversedTagWays = new ArrayList<Way>(ways);
+				List<Way> unreversedTagWays = new ArrayList<>(ways);
 				unreversedTagWays.removeAll(reversedWays);
 				ReverseWayTagCorrector reverseWayTagCorrector = new ReverseWayTagCorrector();
-				List<Way> reversedTagWays = new ArrayList<Way>();
+				List<Way> reversedTagWays = new ArrayList<>();
 				Collection<Command> changePropertyCommands = null;
 				for (Way w : reversedWays) {
 					Way wnew = new Way(w);
@@ -605,7 +605,7 @@ public class MergeOverlapAction extends JosmAction {
 				throw new UserCancelException();
 		}
 
-		LinkedList<Command> cmds = new LinkedList<Command>();
+		LinkedList<Command> cmds = new LinkedList<>();
 		deletes.addAll(ways);
 		deletes.remove(targetWay);
 
@@ -652,7 +652,7 @@ public class MergeOverlapAction extends JosmAction {
 	 * @return has duplicate parent relation
 	 */
 	private boolean duplicateParentRelations(Collection<Way> ways) {
-		Set<Relation> relations = new HashSet<Relation>();
+		Set<Relation> relations = new HashSet<>();
 		for (Way w : ways) {
 			List<Relation> rs = getParentRelations(w);
 			for (Relation r : rs) {
@@ -671,7 +671,7 @@ public class MergeOverlapAction extends JosmAction {
 	 * @return the set of referring relations
 	 */
 	private List<Relation> getParentRelations(Way way) {
-		List<Relation> rels = new ArrayList<Relation>();
+		List<Relation> rels = new ArrayList<>();
 		for (Relation r : relations.get(way)) {
 			if (newRelations.containsKey(r)) {
 				rels.add(newRelations.get(r));
@@ -715,7 +715,7 @@ public class MergeOverlapAction extends JosmAction {
 	 * @return the set of referring relations
 	 */
 	private Set<Relation> getParentRelations(Collection<Way> ways) {
-		HashSet<Relation> ret = new HashSet<Relation>();
+		HashSet<Relation> ret = new HashSet<>();
 		for (Way w : ways) {
 			ret.addAll(getParentRelations(w));
 		}

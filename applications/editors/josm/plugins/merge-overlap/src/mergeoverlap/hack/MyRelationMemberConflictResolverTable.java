@@ -41,7 +41,7 @@ public class MyRelationMemberConflictResolverTable extends JTable implements Mul
         getActionMap().put("selectNextColumnCell", selectNextColumnCellAction);
         getActionMap().put("selectPreviousColumnCell", selectPreviousColumnCellAction);
 
-        setRowHeight((int)new JComboBox<Object>().getPreferredSize().getHeight());
+        setRowHeight((int)new JComboBox<>().getPreferredSize().getHeight());
     }
 
     /**

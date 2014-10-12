@@ -42,6 +42,8 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.conflict.tags.MultiValueResolutionDecision;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecision;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecisionType;
+import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolver;
+import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolverModel;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -94,7 +96,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
 
     private AutoAdjustingSplitPane spTagConflictTypes;
-    private MyTagConflictResolver pnlTagConflictResolver;
+    private TagConflictResolver pnlTagConflictResolver;
     private MyRelationMemberConflictResolver pnlRelationMemberConflictResolver;
     private boolean cancelled;
     private JPanel pnlButtons;
@@ -161,7 +163,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
 
     protected JPanel buildTagConflictResolverPanel() {
-        pnlTagConflictResolver = new MyTagConflictResolver();
+        pnlTagConflictResolver = new TagConflictResolver();
         return pnlTagConflictResolver;
     }
 
@@ -198,7 +200,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         build();
     }
 
-    public MyTagConflictResolverModel getTagConflictResolverModel() {
+    public TagConflictResolverModel getTagConflictResolverModel() {
         return pnlTagConflictResolver.getModel();
     }
 
@@ -207,7 +209,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
 
     protected List<Command> buildTagChangeCommand(OsmPrimitive primitive, TagCollection tc) {
-        LinkedList<Command> cmds = new LinkedList<Command>();
+        LinkedList<Command> cmds = new LinkedList<>();
         for (String key : tc.getKeys()) {
             if (tc.hasUniqueEmptyValue(key)) {
                 if (primitive.get(key) != null) {
@@ -224,7 +226,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
 
     public List<Command> buildWayResolutionCommands() {
-        List<Command> cmds = new LinkedList<Command>();
+        List<Command> cmds = new LinkedList<>();
 
         TagCollection allResolutions = getTagConflictResolverModel().getAllResolutions();
         if (allResolutions.size() > 0) {
@@ -247,7 +249,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
     
     protected void prepareDefaultTagDecisions() {
-        MyTagConflictResolverModel model = getTagConflictResolverModel();
+        TagConflictResolverModel model = getTagConflictResolverModel();
         for (int i = 0; i < model.getRowCount(); i++) {
             MultiValueResolutionDecision decision = model.getDecision(i);
             List<String> values = decision.getValues();
@@ -263,7 +265,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
     protected void prepareDefaultRelationDecisions() {
         MyRelationMemberConflictResolverModel model = getRelationMemberConflictResolverModel();
-        Set<Relation> relations = new HashSet<Relation>();
+        Set<Relation> relations = new HashSet<>();
         for (int i = 0; i < model.getNumDecisions(); i++) {
             RelationMemberConflictDecision decision = model.getDecision(i);
             if (!relations.contains(decision.getRelation())) {
@@ -290,7 +292,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
     protected void prepareGUIBeforeConflictResolutionStarts() {
         MyRelationMemberConflictResolverModel relModel = getRelationMemberConflictResolverModel();
-        MyTagConflictResolverModel tagModel = getTagConflictResolverModel();
+        TagConflictResolverModel tagModel = getTagConflictResolverModel();
         getContentPane().removeAll();
 
         if (relModel.getNumDecisions() > 0 && tagModel.getNumDecisions() > 0) {
@@ -381,7 +383,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(MyTagConflictResolverModel.NUM_CONFLICTS_PROP)) {
+            if (evt.getPropertyName().equals(TagConflictResolverModel.NUM_CONFLICTS_PROP)) {
                 updateEnabledState();
             }
             if (evt.getPropertyName().equals(MyRelationMemberConflictResolverModel.NUM_CONFLICTS_PROP)) {

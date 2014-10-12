@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -13,6 +12,7 @@ import javax.swing.ListSelectionModel;
 
 import org.openstreetmap.josm.gui.conflict.tags.MultiValueCellEditor;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictResolverColumnModel;
+import org.openstreetmap.josm.gui.widgets.JosmComboBox;
 
 public class MyRelationMemberConflictResolverTable extends JTable implements MultiValueCellEditor.NavigationListener {
 
@@ -24,7 +24,7 @@ public class MyRelationMemberConflictResolverTable extends JTable implements Mul
         build();
     }
 
-    protected void build() {
+    protected final void build() {
         setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
@@ -41,14 +41,14 @@ public class MyRelationMemberConflictResolverTable extends JTable implements Mul
         getActionMap().put("selectNextColumnCell", selectNextColumnCellAction);
         getActionMap().put("selectPreviousColumnCell", selectPreviousColumnCellAction);
 
-        setRowHeight((int)new JComboBox<>().getPreferredSize().getHeight());
+        setRowHeight((int)new JosmComboBox<String>().getPreferredSize().getHeight());
     }
 
     /**
      * Action to be run when the user navigates to the next cell in the table, for instance by
      * pressing TAB or ENTER. The action alters the standard navigation path from cell to cell: <ul>
      * <li>it jumps over cells in the first column</li> <li>it automatically add a new empty row
-     * when the user leaves the last cell in the table</li> <ul>
+     * when the user leaves the last cell in the table</li></ul>
      *
      *
      */

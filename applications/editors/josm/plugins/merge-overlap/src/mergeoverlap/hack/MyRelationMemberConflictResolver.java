@@ -31,6 +31,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingTextField;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.gui.widgets.JMultilineLabel;
@@ -46,7 +47,7 @@ public class MyRelationMemberConflictResolver extends JPanel {
     private MyRelationMemberConflictResolverTable tblResolver;
     private JMultilineLabel lblHeader;
 
-    protected void build() {
+    protected final void build() {
         setLayout(new GridBagLayout());
         JPanel pnl = new JPanel();
         pnl.setLayout(new BorderLayout());
@@ -104,22 +105,28 @@ public class MyRelationMemberConflictResolver extends JPanel {
         pnl.add(cbTagRelations);
         pnl.add(new JLabel(trc("tag", "Key:")));
         pnl.add(tfKey = new AutoCompletingTextField(10));
-        tfKey.setToolTipText(tr("<html>Enter a tag key, i.e. <strong><tt>fixme</tt></strong></html>"));
+        tfKey.setToolTipText(tr("<html>Enter a tag key, e.g. <strong><tt>fixme</tt></strong></html>"));
         pnl.add(new JLabel(tr("Value:")));
         pnl.add(tfValue = new AutoCompletingTextField(10));
-        tfValue.setToolTipText(tr("<html>Enter a tag value, i.e. <strong><tt>check members</tt></strong></html>"));
+        tfValue.setToolTipText(tr("<html>Enter a tag value, e.g. <strong><tt>check members</tt></strong></html>"));
         cbTagRelations.setSelected(false);
         tfKey.setEnabled(false);
         tfValue.setEnabled(false);
         return pnl;
     }
 
+    /**
+     * Constructs a new {@code MyRelationMemberConflictResolver}.
+     */
     public MyRelationMemberConflictResolver() {
         build();
     }
 
+    /**
+     * Initializes for way combining.
+     */
     public void initForWayCombining() {
-        lblHeader.setText(tr("<html>The combined ways are members in one ore more relations. "
+        lblHeader.setText(tr("<html>The combined ways are members in one or more relations. "
                 + "Please decide whether you want to <strong>keep</strong> these memberships "
                 + "for the combined way or whether you want to <strong>remove</strong> them.<br>"
                 + "The default is to <strong>keep</strong> the first way and <strong>remove</strong> "
@@ -129,8 +136,11 @@ public class MyRelationMemberConflictResolver extends JPanel {
         invalidate();
     }
 
+    /**
+     * Initializes for node merging.
+     */
     public void initForNodeMerging() {
-        lblHeader.setText(tr("<html>The merged nodes are members in one ore more relations. "
+        lblHeader.setText(tr("<html>The merged nodes are members in one or more relations. "
                 + "Please decide whether you want to <strong>keep</strong> these memberships "
                 + "for the target node or whether you want to <strong>remove</strong> them.<br>"
                 + "The default is to <strong>keep</strong> the first node and <strong>remove</strong> "
@@ -173,13 +183,13 @@ public class MyRelationMemberConflictResolver extends JPanel {
     public Command buildTagApplyCommands(Collection<? extends OsmPrimitive> primitives) {
         if (!cbTagRelations.isSelected())
             return null;
-        if (tfKey.getText().trim().equals(""))
+        if (tfKey.getText().trim().isEmpty())
             return null;
-        if (tfValue.getText().trim().equals(""))
+        if (tfValue.getText().trim().isEmpty())
             return null;
         if (primitives == null || primitives.isEmpty())
             return null;
-        return new ChangePropertyCommand(primitives, tfKey.getText(), tfValue.getText());
+        return new ChangePropertyCommand(primitives, Tag.removeWhiteSpaces(tfKey.getText()), Tag.removeWhiteSpaces(tfValue.getText()));
     }
 
     public void prepareForEditing() {

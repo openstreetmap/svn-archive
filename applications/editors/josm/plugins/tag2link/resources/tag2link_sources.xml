@@ -38,11 +38,11 @@
     <src name="Wikipedia">
         <rule>
             <condition k="wikipedia(?::(\p{Lower}{2,}))?" v="(?:(\p{Lower}{2,}):)?(.*)" />
-            <link name="View %name% article" href="http://%k.1:v.1:en%.wikipedia.org/wiki/%v.2:v.1%" />
+            <link name="View %name% article" href="https://%k.1:v.1:en%.wikipedia.org/wiki/%v.2:v.1%" />
         </rule>
         <rule>
             <condition k="wikidata" />
-            <link name="View Wikidata page" href="http://www.wikidata.org/wiki/%v%" />
+            <link name="View Wikidata page" href="https://www.wikidata.org/wiki/%v%" />
         </rule>
     </src>
 

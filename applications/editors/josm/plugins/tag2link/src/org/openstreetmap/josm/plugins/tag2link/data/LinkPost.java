@@ -25,8 +25,8 @@ public class LinkPost extends Link {
     
     public LinkPost(LinkPost link) {
         this(new String(link.name), new String(link.url), 
-                link.headers == null ? null : new HashMap<String, String>(link.headers), 
-                link.params  == null ? null : new HashMap<String, String>(link.params));
+                link.headers == null ? null : new HashMap<>(link.headers), 
+                link.params  == null ? null : new HashMap<>(link.params));
     }
 
     public LinkPost(String name, String url) {

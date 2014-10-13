@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.tag2link.Tag2LinkConstants;
 import org.openstreetmap.josm.plugins.tag2link.data.Link;
@@ -70,38 +71,37 @@ public class OpenLinkAction extends JosmAction implements Tag2LinkConstants {
                     }
                     data += param+"="+lp.params.get(param);
                 }
-                OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-                osw.write(data);
-                osw.flush();
-                osw.close();
+                try (OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream())) {
+                    osw.write(data);
+                    osw.flush();
+                }
                 
                 String filename = "output.pdf";// FIXME: should work for PDF files only (not even tested)
-                FileOutputStream fos = new FileOutputStream(filename);
-                InputStream is = conn.getInputStream();
-                byte[] buffer = new byte[2048];
-                int n = -1;
-                while ((n = is.read(buffer)) > -1) {
-                    fos.write(buffer, 0, n);
+                try (FileOutputStream fos = new FileOutputStream(filename);
+                     InputStream is = conn.getInputStream()) {
+                    byte[] buffer = new byte[2048];
+                    int n = -1;
+                    while ((n = is.read(buffer)) > -1) {
+                        fos.write(buffer, 0, n);
+                    }
                 }
-                is.close();
-                fos.close();
                 
-                System.out.println("Opening "+filename);
+                Main.info("Opening "+filename);
                 String result = OpenBrowser.displayUrl("file://"+filename);
                 if (result != null) {
-                    System.err.println(result);
+                    Main.error(result);
                 }
                 
             } catch (MalformedURLException ex) {
-                ex.printStackTrace();
+                Main.error(ex);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Main.error(ex);
             }
         } else {
-            System.out.println("Opening "+link.url);
+            Main.info("Opening "+link.url);
             String result = OpenBrowser.displayUrl(link.url);
             if (result != null) {
-                System.err.println(result);
+                Main.error(result);
             }
         }
     }

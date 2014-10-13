@@ -32,7 +32,7 @@ public class Source {
     /**
      * The rules applied against an OSM primitive or tag.
      */
-    public final Collection<Rule> rules = new ArrayList<Rule>();
+    public final Collection<Rule> rules = new ArrayList<>();
 
     /**
      * Constructs a new {@code Source}.

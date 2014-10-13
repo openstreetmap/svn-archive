@@ -36,7 +36,7 @@ public abstract class AbstractPopupListener implements PopupMenuListener {
     
     protected AbstractPopupListener(MapFrame frame) {
         this.frame = frame;
-        this.itemList = new ArrayList<JMenuItem>();
+        this.itemList = new ArrayList<>();
     }
     
     @Override

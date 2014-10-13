@@ -43,7 +43,7 @@ import org.openstreetmap.josm.plugins.tag2link.io.SourcesReader;
  */
 public class Tag2LinkRuleChecker implements Tag2LinkConstants {
 
-    private static Collection<Source> sources = new ArrayList<Source>();
+    private static Collection<Source> sources = new ArrayList<>();
     
     private static boolean initialized = false;
     
@@ -148,7 +148,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
     }
     
     private static Collection<Link> processEval(EvalResult eval, Rule rule, Source source) {
-        Collection<Link> result = new ArrayList<Link>();
+        Collection<Link> result = new ArrayList<>();
         if (eval.matches()) {
             for (Link link : rule.links) {
                 try {
@@ -175,7 +175,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
      * @return the links relevant to the {@code p}.
      */
     public static Collection<Link> getLinks(IPrimitive p) {
-        Collection<Link> result = new ArrayList<Link>();
+        Collection<Link> result = new ArrayList<>();
         for (Source source : sources) {
             for (Rule rule : source.rules) {
                 result.addAll(processEval(rule.evaluates(p), rule, source));
@@ -190,7 +190,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
      * @return the links relevant to the {@code tag}.
      */
     public static Collection<Link> getLinks(Tag tag) {
-        Collection<Link> result = new ArrayList<Link>();
+        Collection<Link> result = new ArrayList<>();
         for (Source source : sources) {
             for (Rule rule : source.rules) {
                 result.addAll(processEval(rule.evaluates(tag), rule, source));

@@ -63,7 +63,7 @@ public class SourcesReader implements Tag2LinkConstants {
      * @return The colleciton of sources.
      */
     public static Collection<Source> readSources() {
-        List<Source> result = new ArrayList<Source>();
+        List<Source> result = new ArrayList<>();
 
         try {
             InputStream is = SourcesReader.class.getResourceAsStream(XML_LOCATION);
@@ -122,7 +122,7 @@ public class SourcesReader implements Tag2LinkConstants {
     }
     
     private Collection<Source> parseDoc() throws XMLStreamException {
-        List<Source> result = new ArrayList<Source>();
+        List<Source> result = new ArrayList<>();
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
@@ -139,7 +139,7 @@ public class SourcesReader implements Tag2LinkConstants {
     }
     
     private Collection<Source> parseRoot() throws XMLStreamException {
-        List<Source> result = new ArrayList<Source>();
+        List<Source> result = new ArrayList<>();
         while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
@@ -216,12 +216,12 @@ public class SourcesReader implements Tag2LinkConstants {
                 if (event == XMLStreamConstants.START_ELEMENT) {
                     if (parser.getLocalName().equals("header")) {
                         if (headers == null) {
-                            headers = new HashMap<String, String>();
+                            headers = new HashMap<>();
                         }
                         headers.put(parser.getAttributeValue(null, "name"), parser.getAttributeValue(null, "value"));
                     } else if (parser.getLocalName().equals("param")) {
                         if (params == null) {
-                            params = new HashMap<String, String>();
+                            params = new HashMap<>();
                         }
                         params.put(parser.getAttributeValue(null, "name"), parser.getAttributeValue(null, "value"));
                     } else {

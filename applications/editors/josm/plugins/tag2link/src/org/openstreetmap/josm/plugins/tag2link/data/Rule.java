@@ -25,8 +25,8 @@ import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
 
 public class Rule {
-    public final Collection<Condition> conditions = new ArrayList<Condition>();
-    public final Collection<Link> links = new ArrayList<Link>();
+    public final Collection<Condition> conditions = new ArrayList<>();
+    public final Collection<Link> links = new ArrayList<>();
     
     public static class MatchingTag {
         public String key;
@@ -36,7 +36,7 @@ public class Rule {
         public MatchingTag(String key, String value, String prefix) {
             this.key = key;
             this.value = value;
-            this.params = new HashMap<String, String>();
+            this.params = new HashMap<>();
             this.prefix = prefix;
             addKeyValueParams();
         }
@@ -70,7 +70,7 @@ public class Rule {
         public EvalResult(int conditionsNumber) {
             this.conditionsNumber = conditionsNumber;
         }
-        public final Collection<MatchingTag> matchingTags = new ArrayList<MatchingTag>();
+        public final Collection<MatchingTag> matchingTags = new ArrayList<>();
         public boolean matches() {
             return conditionsNumber > 0 && matchingTags.size() >= conditionsNumber;
         }
@@ -116,7 +116,7 @@ public class Rule {
     }
 
     public EvalResult evaluates(Tag tag) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put(tag.getKey(), tag.getValue());
         return evaluates(map);
     }

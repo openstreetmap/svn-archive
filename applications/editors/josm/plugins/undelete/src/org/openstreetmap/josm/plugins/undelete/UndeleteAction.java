@@ -199,7 +199,7 @@ public class UndeleteAction extends JosmAction {
                                 	Main.warn(msg);
                                 }
                             }
-                        } catch (Throwable t) {
+                        } catch (Exception t) {
                             Main.error(t);
                         }
                     }

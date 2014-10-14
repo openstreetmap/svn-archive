@@ -24,7 +24,7 @@ public class Filter {
 	}
 	
 	public String[] getTagValues() {
-		return (String[])tagValues.toArray();
+		return tagValues.toArray(new String[tagValues.size()]);
 	}
 
 	public void setTagValues(HashSet<String> tagValues) {

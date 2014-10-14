@@ -131,7 +131,7 @@ public class OheDialogPanel extends JPanel {
             OpeningTimeCompiler compiler = new OpeningTimeCompiler(value);
             try {
                 time = OpeningTimeUtils.convert(compiler.startCompile());
-            } catch (Throwable t) {
+            } catch (Exception | TokenMgrError t) {
                 Main.warn(t);
                 
                 int tColumns[] = null;

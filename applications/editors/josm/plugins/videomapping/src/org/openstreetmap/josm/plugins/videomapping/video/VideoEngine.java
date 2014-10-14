@@ -6,6 +6,8 @@ import java.awt.Window;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
+
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.DeinterlaceMode;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -47,7 +49,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 	                        WindowsRuntimeUtil.VLC_REGISTRY_KEY.replaceFirst("\\\\", "\\\\Wow6432Node\\\\"), 
 	                        WindowsRuntimeUtil.VLC_INSTALL_DIR_KEY);
 	            } catch (RuntimeException e) {
-	                System.err.println(e.getMessage());
+	                Main.error(e);
 	            }
 	        }
 	    } else if (RuntimeUtil.isMac()) {
@@ -57,34 +59,31 @@ public class VideoEngine implements MediaPlayerEventListener {
 	    }
 	    
         if (vlcInstallDir != null) {
-            System.out.println("videomapping: found VLC install dir: "+vlcInstallDir);
+            Main.info("videomapping: found VLC install dir: "+vlcInstallDir);
             NativeLibrary.addSearchPath("libvlc", vlcInstallDir);
         } else {
-            System.err.println("videomapping: unable to locate VLC install dir");
+            Main.error("videomapping: unable to locate VLC install dir");
         }
 	}
 	
-	public VideoEngine(Window parent)
-	{
+	public VideoEngine(Window parent) {
 		System.setProperty("logj4.configuration","file:log4j.xml"); //TODO still unsure if we can't link this to the JOSM log4j instance
-		videos = new LinkedList<Video>();
-		observers = new LinkedList<VideosObserver>();
+		videos = new LinkedList<>();
+		observers = new LinkedList<>();
 		try {
 			mediaPlayerFactory = new MediaPlayerFactory(libvlcArgs);
 	        fullScreenStrategy = new DefaultFullScreenStrategy(parent);
 		} catch (NoClassDefFoundError e) {
-            System.err.println(tr("Unable to find JNA Java library!"));
+		    Main.error(tr("Unable to find JNA Java library!"));
         } catch (UnsatisfiedLinkError e) {
-            System.err.println(tr("Unable to find native libvlc library!"));
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
+            Main.error(tr("Unable to find native libvlc library!"));
+        } catch (Exception t) {
+            Main.error(t);
         }
 	}
 	
-	public void add(Video video)
-	{
-		try
-		{
+	public void add(Video video) {
+		try {
 			EmbeddedMediaPlayer mp = mediaPlayerFactory.newEmbeddedMediaPlayer(fullScreenStrategy);
 			video.player=mp;
 			mp.setStandardMediaOptions(standardMediaOptions);
@@ -95,14 +94,10 @@ public class VideoEngine implements MediaPlayerEventListener {
 	        String mediaPath = video.filename.getAbsoluteFile().toString();
 	        mp.playMedia(mediaPath); 
 	        //now fetching and playback starts automatically			
-		}
-		catch (NoClassDefFoundError e)
-        {
-            System.err.println(tr("Unable to find JNA Java library!"));
-        }
-        catch (UnsatisfiedLinkError e)
-        {
-            System.err.println(tr("Unable to find native libvlc library!"));
+		} catch (NoClassDefFoundError e) {
+		    Main.error(tr("Unable to find JNA Java library!"));
+        } catch (UnsatisfiedLinkError e) {
+            Main.error(tr("Unable to find native libvlc library!"));
         }
 	}
 	/*
@@ -118,30 +113,21 @@ public class VideoEngine implements MediaPlayerEventListener {
 		return videos;
 	}
 
-	public void play()	
-	{
-		if (singleVideoMode)
-		{
+	public void play() {
+		if (singleVideoMode) {
 			lastAddedVideo.player.play();
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				video.player.play();
 			}
 		}
-		System.out.println("abspielen");
 	}
 	
 	//toggles pause and play 
-	public void pause()
-	{
-		if (singleVideoMode)
-		{
+	public void pause() {
+		if (singleVideoMode) {
 			lastAddedVideo.player.pause();
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				video.player.pause();
 			}
@@ -158,13 +144,10 @@ public class VideoEngine implements MediaPlayerEventListener {
 
 	//jumps relative for ms in all videos
 	public void jumpFor(long ms) {
-		if (singleVideoMode)
-		{
+		if (singleVideoMode) {
 			long start=lastAddedVideo.player.getTime();
 			lastAddedVideo.player.setTime(start+ms);
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				long start=video.player.getTime();
 				video.player.setTime(start+ms);
@@ -174,14 +157,10 @@ public class VideoEngine implements MediaPlayerEventListener {
 	}
 
 	//jumps in all videos to this absolute video time
-	public void jumpTo(long msVideo)
-	{
-		if (singleVideoMode)
-		{
+	public void jumpTo(long msVideo) {
+		if (singleVideoMode) {
 			lastAddedVideo.player.setTime(msVideo);
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				video.player.setTime(msVideo);
 			}
@@ -190,21 +169,16 @@ public class VideoEngine implements MediaPlayerEventListener {
 	}
 			
 	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
-	public long getVideoTime()
-	{
+	public long getVideoTime() {
 		return videos.get(0).player.getTime();
 	}
 	
 	//jumps in all videos to this absolute video time percentage
-	public void jumpToPosition(int percent)
-	{
+	public void jumpToPosition(int percent) {
 		float position = ((float)percent/100f);
-		if (singleVideoMode)
-		{
+		if (singleVideoMode) {
 			lastAddedVideo.player.setPosition(position);
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				video.player.setPosition(position);
 			}
@@ -213,15 +187,12 @@ public class VideoEngine implements MediaPlayerEventListener {
 	}
 	
 	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
-	public int getPosition()
-	{
+	public int getPosition() {
 		return (int) (videos.get(0).player.getPosition()*100);
 	}	
 	
-	public void setSpeed(int percent)
-	{
-		if (singleVideoMode)
-		{
+	public void setSpeed(int percent) {
+		if (singleVideoMode) {
 			lastAddedVideo.player.setRate((float)(percent/100f));
 		}
 		for (Video video : videos) {
@@ -231,62 +202,47 @@ public class VideoEngine implements MediaPlayerEventListener {
 	}
 	
 	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
-	public int getSpeed()
-	{
+	public int getSpeed() {
 		return (int) (videos.get(0).player.getRate()*100);
 	}
 	
 	//returns if at least one video has subtitles
-	public boolean hasSubtitles()
-	{
+	public boolean hasSubtitles() {
 		for (Video video : videos) {
 			if (video.player.getSpuCount()>0) return true;
 		}
 		return false;
 	}
 	
-	
-	public void setSubtitles (boolean enabled)
-	{
-		if (enabled)
-		{
+	public void setSubtitles (boolean enabled) {
+		if (enabled) {
 			//VLC uses a list of sub picture units
 			for (Video video : videos) {
 				video.player.setSpu(0);
 			}
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				video.player.setSpu(-1);
 			}
 		}
 	}
-		
 	
-	public void setDeinterlacer (DeinterlaceMode deinterlacer)
-	{
-		if (singleVideoMode)
-		{
+	public void setDeinterlacer (DeinterlaceMode deinterlacer) {
+		if (singleVideoMode) {
 			lastAddedVideo.player.setDeinterlace(deinterlacer);
-		}
-		else
-		{
+		} else {
 			for (Video video : videos) {
 				video.player.setDeinterlace(deinterlacer);
 			}
 		}
 	}
 	
-	public static String[] getDeinterlacers()
-	{
+	public static String[] getDeinterlacers() {
 		return deinterlacers;
 	}
 	
-	public void mute()
-	{
-		if (singleVideoMode)
-		{
+	public void mute() {
+		if (singleVideoMode) {
 			lastAddedVideo.player.mute();
 		}
 		for (Video video : videos) {
@@ -294,8 +250,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 		}
 	}
 	
-	public void unload()
-	{
+	public void unload() {
 		for (Video video : videos) {
 			video.player.stop();
 			video.player.release();
@@ -308,33 +263,31 @@ public class VideoEngine implements MediaPlayerEventListener {
 
 	public void addObserver(VideosObserver observer) {
 		observers.add(observer);
-		
 	}
 
-	private void notifyObservers(VideoObserversEvents event)
-	{
+	private void notifyObservers(VideoObserversEvents event) {
 		for (VideosObserver observer : observers) {
 			observer.update(event);
 		}
 	}
 
-        @Override
+    @Override
 	public void backward(MediaPlayer arg0) { }
 /*
 	public void buffering(MediaPlayer arg0) {
 		
 	}
 */
-        @Override
+    @Override
 	public void error(MediaPlayer arg0) { }
 
-        @Override
+    @Override
 	public void finished(MediaPlayer arg0) { }
 
-        @Override
+    @Override
 	public void forward(MediaPlayer arg0) { }
 
-        @Override
+    @Override
 	public void lengthChanged(MediaPlayer arg0, long arg1) { }
 /*
 	public void mediaChanged(MediaPlayer arg0) {
@@ -347,34 +300,34 @@ public class VideoEngine implements MediaPlayerEventListener {
 		notifyObservers(VideoObserversEvents.resizing);		
 	}
 */
-        @Override
+    @Override
 	public void opening(MediaPlayer arg0) {	}
 
-        @Override
+    @Override
 	public void pausableChanged(MediaPlayer arg0, int arg1) { }
 
-        @Override
+    @Override
 	public void paused(MediaPlayer arg0) { }
 
-        @Override
+    @Override
 	public void playing(MediaPlayer arg0) { }
 
-        @Override
+    @Override
 	public void positionChanged(MediaPlayer arg0, float arg1) { }
 
-        @Override
+    @Override
 	public void seekableChanged(MediaPlayer arg0, int arg1) { }
 
-        @Override
+    @Override
 	public void snapshotTaken(MediaPlayer arg0, String arg1) { }
 
-        @Override
+    @Override
 	public void stopped(MediaPlayer arg0) { }
 
-        @Override
+    @Override
 	public void timeChanged(MediaPlayer arg0, long arg1) { }
 
-        @Override
+    @Override
 	public void titleChanged(MediaPlayer arg0, int arg1) { }
 
 	public boolean isNoVideoPlaying() {
@@ -387,85 +340,70 @@ public class VideoEngine implements MediaPlayerEventListener {
 
 	public void enableSingleVideoMode(boolean enabled) {
 		singleVideoMode = true;
-		
 	}
 
     @Override
     public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void buffering(MediaPlayer mediaPlayer, float newCache) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mediaMetaChanged(MediaPlayer mediaPlayer, int metaType) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mediaSubItemAdded(MediaPlayer mediaPlayer, libvlc_media_t subItem) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mediaDurationChanged(MediaPlayer mediaPlayer, long newDuration) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mediaParsedChanged(MediaPlayer mediaPlayer, int newStatus) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mediaFreed(MediaPlayer mediaPlayer) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void mediaStateChanged(MediaPlayer mediaPlayer, int newState) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void newMedia(MediaPlayer mediaPlayer) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void subItemPlayed(MediaPlayer mediaPlayer, int subItemIndex) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void subItemFinished(MediaPlayer mediaPlayer, int subItemIndex) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
     public void endOfSubItems(MediaPlayer mediaPlayer) {
         // TODO Auto-generated method stub
-        
     }
-
 }

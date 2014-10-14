@@ -37,11 +37,11 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
                     String line;
 
                     while ((line = br.readLine()) != null) {
-                        System.out.println(getClass().getSimpleName() + ": " +  line);
+                        Main.info(getClass().getSimpleName() + ": " +  line);
                     }
 
-                    System.out.println(getClass().getSimpleName() + "Program terminated!");
-                } catch (Throwable t) {
+                    Main.info(getClass().getSimpleName() + "Program terminated!");
+                } catch (Exception t) {
                     Main.error(t);
                 }
             }

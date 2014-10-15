@@ -26,43 +26,43 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 
 public class DownloadDataTask extends DownloadOsmTask {
 
-	private AbstractDataSetHandler handler;
-	
-	@Override
-	public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
-		return null;
-	}
+    private AbstractDataSetHandler handler;
+    
+    @Override
+    public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
+        return null;
+    }
 
-	@Override
-	public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
+    @Override
+    public Future<?> loadUrl(boolean newLayer, String url, ProgressMonitor progressMonitor) {
         downloadTask = new InternalDownloadTasK(newLayer, new NetworkReader(url, handler, true), progressMonitor);
         currentBounds = null;
         if (handler == null || !handler.hasLicenseToBeAccepted() || askLicenseAgreement(handler.getLicense())) {
-        	return Main.worker.submit(downloadTask);
+            return Main.worker.submit(downloadTask);
         } else {
-        	return null;
+            return null;
         }
-	}
+    }
 
-	@Override
-	public boolean acceptsUrl(String url) {
-		this.handler = null;
-		for (Module module : ModuleHandler.moduleList) {
-			for (AbstractDataSetHandler handler : module.getNewlyInstanciatedHandlers()) {
-				if (handler.acceptsUrl(url)) {
-					this.handler = handler;
-					return true;
-				}
-			}
-		}
-		for (String ext : NetworkReader.FILE_AND_ARCHIVE_READERS.keySet()) {
-			if (Pattern.compile(".*\\."+ext, Pattern.CASE_INSENSITIVE).matcher(url).matches()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+    @Override
+    public boolean acceptsUrl(String url) {
+        this.handler = null;
+        for (Module module : ModuleHandler.moduleList) {
+            for (AbstractDataSetHandler handler : module.getNewlyInstanciatedHandlers()) {
+                if (handler.acceptsUrl(url)) {
+                    this.handler = handler;
+                    return true;
+                }
+            }
+        }
+        for (String ext : NetworkReader.FILE_AND_ARCHIVE_READERS.keySet()) {
+            if (Pattern.compile(".*\\."+ext, Pattern.CASE_INSENSITIVE).matcher(url).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
     public String[] getPatterns() {
         String pattern = "";
@@ -82,41 +82,41 @@ public class DownloadDataTask extends DownloadOsmTask {
 
     protected class InternalDownloadTasK extends DownloadTask {
 
-		public InternalDownloadTasK(boolean newLayer, NetworkReader reader, ProgressMonitor progressMonitor) {
-			super(newLayer, reader, progressMonitor);
-		}
+        public InternalDownloadTasK(boolean newLayer, NetworkReader reader, ProgressMonitor progressMonitor) {
+            super(newLayer, reader, progressMonitor);
+        }
 
-		@Override
-		protected OsmDataLayer createNewLayer(String layerName) {
+        @Override
+        protected OsmDataLayer createNewLayer(String layerName) {
             File associatedFile = ((NetworkReader)reader).getReadFile();
             String filename = ((NetworkReader)reader).getReadFileName();
             if (layerName == null || layerName.isEmpty()) {
-            	if (associatedFile != null) {
-            		layerName = associatedFile.getName();
-            	} else if (filename != null && !filename.isEmpty()) {
-            		layerName = filename;
-            	} else {
-            		layerName = OsmDataLayer.createNewName();
-            	}
+                if (associatedFile != null) {
+                    layerName = associatedFile.getName();
+                } else if (filename != null && !filename.isEmpty()) {
+                    layerName = filename;
+                } else {
+                    layerName = OsmDataLayer.createNewName();
+                }
             }
-    		DataSetUpdater.updateDataSet(dataSet, handler, associatedFile);
-    		return new OdDataLayer(dataSet, layerName, associatedFile, handler);
-		}
-	}
-	
+            DataSetUpdater.updateDataSet(dataSet, handler, associatedFile);
+            return new OdDataLayer(dataSet, layerName, associatedFile, handler);
+        }
+    }
+    
     /**
      * returns true if the user accepts the license, false if they refuse
      */
     protected final boolean askLicenseAgreement(License license) {
-    	if (license == null || (license.getURL() == null && license.getSummaryURL() == null)) {
-    		return true;
-    	}
-    	try {
-	        return new AskLicenseAgreementDialog(license).showDialog().getValue() == 1;
-	        
-		} catch (IOException e) {
+        if (license == null || (license.getURL() == null && license.getSummaryURL() == null)) {
+            return true;
+        }
+        try {
+            return new AskLicenseAgreementDialog(license).showDialog().getValue() == 1;
+            
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("License URL not available: {0}", license.toString()));
             return false;
-		}
+        }
     }
 }

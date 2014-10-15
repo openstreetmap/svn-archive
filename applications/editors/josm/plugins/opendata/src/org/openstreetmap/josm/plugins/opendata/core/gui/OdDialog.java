@@ -45,38 +45,38 @@ public class OdDialog extends ToggleDialog implements LayerChangeListener, EditL
     private OdDataLayer dataLayer;
     
     private class DownloadAction extends JosmAction {
-		public DownloadAction() {
-			super(marktr("Download"), "download", tr("Download OSM data corresponding to the current data set."), null, false);
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (Main.main.getEditLayer() instanceof OdLayer) {
-				dataLayer.downloadOsmData();
-				diffButton.setEnabled(dataLayer.osmLayer != null);
-			}
-		}
+        public DownloadAction() {
+            super(marktr("Download"), "download", tr("Download OSM data corresponding to the current data set."), null, false);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (Main.main.getEditLayer() instanceof OdLayer) {
+                dataLayer.downloadOsmData();
+                diffButton.setEnabled(dataLayer.osmLayer != null);
+            }
+        }
     }
 
     private class SelectAction extends JosmAction {
-		public SelectAction() {
-			super(marktr("Select"), "dialogs/select", tr("Set the selected elements on the map to the selected items in the list above."), null, false);
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO
-		}
+        public SelectAction() {
+            super(marktr("Select"), "dialogs/select", tr("Set the selected elements on the map to the selected items in the list above."), null, false);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // TODO
+        }
     }
 
     private class DiffAction extends JosmAction {
-		public DiffAction() {
-			super(marktr("Diff"), "dialogs/diff", tr("Perform diff between current data set and existing OSM data."), null, false);
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (Main.main.getEditLayer() instanceof OdLayer) {
-				dataLayer.makeDiff();
-			}
-		}
+        public DiffAction() {
+            super(marktr("Diff"), "dialogs/diff", tr("Perform diff between current data set and existing OSM data."), null, false);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (Main.main.getEditLayer() instanceof OdLayer) {
+                dataLayer.makeDiff();
+            }
+        }
     }
     
     private class ToolsAction extends JosmAction {
@@ -89,79 +89,79 @@ public class OdDialog extends ToggleDialog implements LayerChangeListener, EditL
         }
     }
 
-	public OdDialog() {
-		super("OpenData", OdConstants.ICON_CORE_24, tr("Open the OpenData window."), 
-				Shortcut.registerShortcut("subwindow:opendata", tr("Toggle: {0}", "OpenData"),
-						KeyEvent.VK_A, Shortcut.ALT_CTRL_SHIFT), 150, false, OdPreferenceSetting.class);
-		
-		this.buttons = Arrays.asList(new SideButton[] {
-				/*selectButton =*/ new SideButton(new SelectAction()), 
-				downloadButton = new SideButton(new DownloadAction()), 
-				diffButton = new SideButton(new DiffAction()),
-				toolsButton = new SideButton(new ToolsAction())
+    public OdDialog() {
+        super("OpenData", OdConstants.ICON_CORE_24, tr("Open the OpenData window."), 
+                Shortcut.registerShortcut("subwindow:opendata", tr("Toggle: {0}", "OpenData"),
+                        KeyEvent.VK_A, Shortcut.ALT_CTRL_SHIFT), 150, false, OdPreferenceSetting.class);
+        
+        this.buttons = Arrays.asList(new SideButton[] {
+                /*selectButton =*/ new SideButton(new SelectAction()), 
+                downloadButton = new SideButton(new DownloadAction()), 
+                diffButton = new SideButton(new DiffAction()),
+                toolsButton = new SideButton(new ToolsAction())
         });
-		
-		this.toolsButton.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mousePressed(MouseEvent e) {
-	            if (Main.main.getEditLayer() instanceof OdLayer) {
+        
+        this.toolsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (Main.main.getEditLayer() instanceof OdLayer) {
                     JPopupMenu popup = new JPopupMenu();
-	                for (JosmAction tool : dataLayer.handler.getTools()) {
-	                    popup.add(tool);
-	                }
+                    for (JosmAction tool : dataLayer.handler.getTools()) {
+                        popup.add(tool);
+                    }
                     popup.show(e.getComponent(), e.getX(), e.getY());
-	            }
-		    }
+                }
+            }
         });
-		
-		disableAllButtons();
-		
-		this.treeModel = new DefaultTreeModel(null); // TODO: treeNode
-		this.dataLayer = null;
-		
-		createLayout(new JTree(treeModel), true, buttons);
-		
-		MapView.addEditLayerChangeListener(this);
-	}
-	
-	private void disableAllButtons() {
-		for (SideButton button : buttons) {
-			button.setEnabled(false);
-		}
-	}
+        
+        disableAllButtons();
+        
+        this.treeModel = new DefaultTreeModel(null); // TODO: treeNode
+        this.dataLayer = null;
+        
+        createLayout(new JTree(treeModel), true, buttons);
+        
+        MapView.addEditLayerChangeListener(this);
+    }
+    
+    private void disableAllButtons() {
+        for (SideButton button : buttons) {
+            button.setEnabled(false);
+        }
+    }
 
-	@Override
-	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
-		activeLayerChange(oldLayer, newLayer);
-	}
+    @Override
+    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+        activeLayerChange(oldLayer, newLayer);
+    }
 
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		if (newLayer instanceof OdLayer) {
-			dataLayer = ((OdLayer) newLayer).getDataLayer();
-		} else {
-			dataLayer = null;
-		}
-		
-		if (dataLayer != null) {
-			if (dataLayer.osmLayer == null) {
-				downloadButton.setEnabled(true);
-			} else if (dataLayer.diffLayer == null) {
-				diffButton.setEnabled(true);
-			}
-			toolsButton.setEnabled(dataLayer.handler != null && !dataLayer.handler.getTools().isEmpty());
-		} else {
-			disableAllButtons();
-		}
-	}
+    @Override
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        if (newLayer instanceof OdLayer) {
+            dataLayer = ((OdLayer) newLayer).getDataLayer();
+        } else {
+            dataLayer = null;
+        }
+        
+        if (dataLayer != null) {
+            if (dataLayer.osmLayer == null) {
+                downloadButton.setEnabled(true);
+            } else if (dataLayer.diffLayer == null) {
+                diffButton.setEnabled(true);
+            }
+            toolsButton.setEnabled(dataLayer.handler != null && !dataLayer.handler.getTools().isEmpty());
+        } else {
+            disableAllButtons();
+        }
+    }
 
-	@Override
-	public void layerAdded(Layer newLayer) {
-	}
+    @Override
+    public void layerAdded(Layer newLayer) {
+    }
 
-	@Override
-	public void layerRemoved(Layer oldLayer) {
-	}
+    @Override
+    public void layerRemoved(Layer oldLayer) {
+    }
 
     @Override
     public void destroy() {

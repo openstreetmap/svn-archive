@@ -47,137 +47,137 @@ public class GmlReader extends GeographicReader {
     public static final String GML_SRS_DIMENSION = "srsDimension";
     public static final String GML_POS_LIST = "posList";
 
-	private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final GeometryFactory geometryFactory = new GeometryFactory();
     
     private final GmlHandler gmlHandler;
-	
+    
     private XMLStreamReader parser;
     
     private int dim;
     
     private final class CrsData {
-    	public CoordinateReferenceSystem crs;
-    	public MathTransform transform;
-    	public int dim;
-		public CrsData(CoordinateReferenceSystem crs, MathTransform transform, int dim) {
-			this.crs = crs;
-			this.transform = transform;
-			this.dim = dim;
-		}
+        public CoordinateReferenceSystem crs;
+        public MathTransform transform;
+        public int dim;
+        public CrsData(CoordinateReferenceSystem crs, MathTransform transform, int dim) {
+            this.crs = crs;
+            this.transform = transform;
+            this.dim = dim;
+        }
     }
 
     private final Map<String, CrsData> crsDataMap = new HashMap<>();
     
     public GmlReader(XMLStreamReader parser, GmlHandler handler) {
-		super(handler, NationalHandlers.DEFAULT_GML_HANDLERS);
+        super(handler, NationalHandlers.DEFAULT_GML_HANDLERS);
         this.parser = parser;
         this.gmlHandler = handler;
     }
 
-	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException {
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException {
         InputStreamReader ir = UTFInputStreamReader.create(in, OdConstants.UTF8);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
         try {
-        	return new GmlReader(parser, handler != null ? handler.getGmlHandler() : null).parseDoc(instance);
+            return new GmlReader(parser, handler != null ? handler.getGmlHandler() : null).parseDoc(instance);
         } catch (Exception e) {
-        	throw new IOException(e);
+            throw new IOException(e);
         }
-	}
-	
-	private final boolean isElement(String element) {
-		return parser.getLocalName().matches("(gml:)?"+element);
-	}
+    }
+    
+    private final boolean isElement(String element) {
+        return parser.getLocalName().matches("(gml:)?"+element);
+    }
 
-	private DataSet parseDoc(ProgressMonitor instance) throws XMLStreamException, GeoCrsException, FactoryException, GeoMathTransformException, MismatchedDimensionException, TransformException {
-		Component parent = instance != null ? instance.getWindowParent() : Main.parent;
-		while (parser.hasNext()) {
+    private DataSet parseDoc(ProgressMonitor instance) throws XMLStreamException, GeoCrsException, FactoryException, GeoMathTransformException, MismatchedDimensionException, TransformException {
+        Component parent = instance != null ? instance.getWindowParent() : Main.parent;
+        while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
                 if (isElement(GML_FEATURE_MEMBER)) {
-                	try {
-						parseFeatureMember(parent);
-					} catch (UserCancelException e) {
-						return ds;
-					}
+                    try {
+                        parseFeatureMember(parent);
+                    } catch (UserCancelException e) {
+                        return ds;
+                    }
                 }
             }
-		}
-		return ds;
-	}
-	
-	private void findCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
-		Main.info("Finding CRS for "+srs);
-		if (gmlHandler != null) {
-			crs = gmlHandler.getCrsFor(srs);
-		} else {
-			for (GmlHandler h : NationalHandlers.DEFAULT_GML_HANDLERS) {
-				if ((crs = h.getCrsFor(srs)) != null) {
-					return;
-				}
-			}
-		}
-	}
-	
-	private void parseSrs(Component parent) throws GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException {
-		String srs = parser.getAttributeValue(null, GML_SRS_NAME);
-		dim = Integer.parseInt(parser.getAttributeValue(null, GML_SRS_DIMENSION));
-		CrsData crsData = crsDataMap.get(srs);
-		if (crsData == null) {
-			try {
-        		findCRS(srs);
-			} catch (NoSuchAuthorityCodeException e) {
-				e.printStackTrace();
-			} catch (FactoryException e) {
-				e.printStackTrace();
-			}
-			if (crs == null) {
-				throw new GeoCrsException("Unable to detect CRS for srs '"+srs+"' !");
-			} else {
-				findMathTransform(parent, false);
-			}
-			crsDataMap.put(srs, new CrsData(crs, transform, dim));
-		} else {
-			crs = crsData.crs;
-			transform = crsData.transform;
-			dim = crsData.dim;
-		}
-	}
-	
-	private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
-		List<OsmPrimitive> list = new ArrayList<>();
-		Way way = null;
-		Node node = null;
-		Map<String, String> tags = new HashMap<>();
-		while (parser.hasNext()) {
+        }
+        return ds;
+    }
+    
+    private void findCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
+        Main.info("Finding CRS for "+srs);
+        if (gmlHandler != null) {
+            crs = gmlHandler.getCrsFor(srs);
+        } else {
+            for (GmlHandler h : NationalHandlers.DEFAULT_GML_HANDLERS) {
+                if ((crs = h.getCrsFor(srs)) != null) {
+                    return;
+                }
+            }
+        }
+    }
+    
+    private void parseSrs(Component parent) throws GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException {
+        String srs = parser.getAttributeValue(null, GML_SRS_NAME);
+        dim = Integer.parseInt(parser.getAttributeValue(null, GML_SRS_DIMENSION));
+        CrsData crsData = crsDataMap.get(srs);
+        if (crsData == null) {
+            try {
+                findCRS(srs);
+            } catch (NoSuchAuthorityCodeException e) {
+                e.printStackTrace();
+            } catch (FactoryException e) {
+                e.printStackTrace();
+            }
+            if (crs == null) {
+                throw new GeoCrsException("Unable to detect CRS for srs '"+srs+"' !");
+            } else {
+                findMathTransform(parent, false);
+            }
+            crsDataMap.put(srs, new CrsData(crs, transform, dim));
+        } else {
+            crs = crsData.crs;
+            transform = crsData.transform;
+            dim = crsData.dim;
+        }
+    }
+    
+    private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
+        List<OsmPrimitive> list = new ArrayList<>();
+        Way way = null;
+        Node node = null;
+        Map<String, String> tags = new HashMap<>();
+        while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
-            	if (isElement(GML_LINE_STRING)) {
-            		list.add(way = createWay());
-            		parseSrs(parent);
-            	} else if (isElement(GML_LINEAR_RING)) {
-            		list.add(way = createWay());
-            	} else if (isElement(GML_SURFACE)) {
-            		parseSrs(parent);
-            	} else if (isElement(GML_POS_LIST)) {
-            		String[] tab = parser.getElementText().split(" ");
-            		for (int i = 0; i < tab.length; i += dim) {
-            			Point p = geometryFactory.createPoint(new Coordinate(Double.valueOf(tab[i]), Double.valueOf(tab[i+1])));
-            			node = createOrGetNode(p, dim > 2 && !tab[i+2].equals("0") ? tab[i+2] : null);
-            			if (way != null) {
-            				way.addNode(node);
-            			}
-            		}
-            	}
+                if (isElement(GML_LINE_STRING)) {
+                    list.add(way = createWay());
+                    parseSrs(parent);
+                } else if (isElement(GML_LINEAR_RING)) {
+                    list.add(way = createWay());
+                } else if (isElement(GML_SURFACE)) {
+                    parseSrs(parent);
+                } else if (isElement(GML_POS_LIST)) {
+                    String[] tab = parser.getElementText().split(" ");
+                    for (int i = 0; i < tab.length; i += dim) {
+                        Point p = geometryFactory.createPoint(new Coordinate(Double.valueOf(tab[i]), Double.valueOf(tab[i+1])));
+                        node = createOrGetNode(p, dim > 2 && !tab[i+2].equals("0") ? tab[i+2] : null);
+                        if (way != null) {
+                            way.addNode(node);
+                        }
+                    }
+                }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (isElement(GML_FEATURE_MEMBER)) {
-                	break;
+                    break;
                 }
             }
-		}
-		for (OsmPrimitive p : list) {
-			for (String key : tags.keySet()) {
-				p.put(key, tags.get(key));
-			}
-		}
-	}
+        }
+        for (OsmPrimitive p : list) {
+            for (String key : tags.keySet()) {
+                p.put(key, tags.get(key));
+            }
+        }
+    }
 }

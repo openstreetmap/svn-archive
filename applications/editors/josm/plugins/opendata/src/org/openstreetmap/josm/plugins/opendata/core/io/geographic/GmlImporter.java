@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class GmlImporter extends AbstractImporter {
-	
+    
     public static final ExtensionFileFilter GML_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.GML_EXT, OdConstants.GML_EXT, tr("GML files") + " (*."+OdConstants.GML_EXT+")");
 
@@ -21,13 +21,13 @@ public class GmlImporter extends AbstractImporter {
         super(GML_FILE_FILTER);
     }
 
-	@Override
-	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
-			throws IllegalDataException {
-		try {
-			return GmlReader.parseDataSet(in, handler, instance);
-		} catch (Exception e) {
-			throw new IllegalDataException(e);
-		}
-	}
+    @Override
+    protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IllegalDataException {
+        try {
+            return GmlReader.parseDataSet(in, handler, instance);
+        } catch (Exception e) {
+            throw new IllegalDataException(e);
+        }
+    }
 }

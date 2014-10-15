@@ -144,7 +144,7 @@ public class ModuleInformation {
     }
     
     private static final ImageIcon extractIcon(String iconPath, File jarFile, boolean suppressWarnings) {
-    	return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true).setSuppressWarnings(suppressWarnings).get();
+        return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true).setSuppressWarnings(suppressWarnings).get();
     }
 
     private void scanManifest(Manifest manifest) {
@@ -158,7 +158,7 @@ public class ModuleInformation {
         if (s != null) {
             try {
                 @SuppressWarnings("unused")
-				URL url = new URL(s);
+                URL url = new URL(s);
             } catch (MalformedURLException e) {
                 System.out.println(tr("Invalid URL ''{0}'' in module {1}", s, name));
                 s = null;
@@ -182,7 +182,7 @@ public class ModuleInformation {
             icon = extractIcon(iconPath, file, true);
             // if not found, extract icon from the plugin jar file
             if (icon == null) {
-            	icon = extractIcon(iconPath, OdPlugin.getInstance().getPluginInformation().file, true);
+                icon = extractIcon(iconPath, OdPlugin.getInstance().getPluginInformation().file, true);
             }
         }
 

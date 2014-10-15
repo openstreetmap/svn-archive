@@ -22,20 +22,20 @@ public class CsvImporter extends AbstractImporter {
             OdConstants.CSV_EXT, OdConstants.CSV_EXT, tr("CSV files") + " (*."+OdConstants.CSV_EXT+")");
     
     public static final String COLOMBUS_HEADER = "INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX";
-	
+    
     public CsvImporter() {
         super(CSV_FILE_FILTER);
     }
 
-	@Override
-	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
-			throws IllegalDataException {
-		try {
-			return CsvReader.parseDataSet(in, handler, instance);
-		} catch (IOException e) {
-			throw new IllegalDataException(e);
-		}
-	}
+    @Override
+    protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IllegalDataException {
+        try {
+            return CsvReader.parseDataSet(in, handler, instance);
+        } catch (IOException e) {
+            throw new IllegalDataException(e);
+        }
+    }
 
     @Override
     public boolean acceptFile(File pathname) {

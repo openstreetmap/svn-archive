@@ -17,17 +17,17 @@ public class SevenZipImporter extends AbstractImporter {
     public static final ExtensionFileFilter SEVENZIP_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.SEVENZIP_EXT, OdConstants.SEVENZIP_EXT, tr("7Zip Files") + " (*."+OdConstants.SEVENZIP_EXT+")");
 
-	public SevenZipImporter() {
-		super(SEVENZIP_FILE_FILTER);
-	}
+    public SevenZipImporter() {
+        super(SEVENZIP_FILE_FILTER);
+    }
 
-	@Override
-	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
-			throws IllegalDataException {
-		try {
-			return SevenZipReader.parseDataSet(in, handler, instance, true);
-		} catch (Exception e) {
-			throw new IllegalDataException(e);
-		}
-	}
+    @Override
+    protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IllegalDataException {
+        try {
+            return SevenZipReader.parseDataSet(in, handler, instance, true);
+        } catch (Exception e) {
+            throw new IllegalDataException(e);
+        }
+    }
 }

@@ -8,15 +8,15 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 
 public interface Module {
 
-	public String getDisplayedName();
+    public String getDisplayedName();
 
-	public List<Class<? extends AbstractDataSetHandler>> getHandlers();
+    public List<Class<? extends AbstractDataSetHandler>> getHandlers();
 
-	public List<AbstractDataSetHandler> getNewlyInstanciatedHandlers();
+    public List<AbstractDataSetHandler> getNewlyInstanciatedHandlers();
 
-	public SourceProvider getMapPaintStyleSourceProvider();
-	
-	public SourceProvider getPresetSourceProvider();
-	
-	public ModuleInformation getModuleInformation();
+    public SourceProvider getMapPaintStyleSourceProvider();
+    
+    public SourceProvider getPresetSourceProvider();
+    
+    public ModuleInformation getModuleInformation();
 }

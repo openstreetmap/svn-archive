@@ -28,12 +28,12 @@ public class ModulePreferencesModel extends Observable {
     private final Set<String> currentActiveModules;
 
     protected Collection<String> getModules(Collection<String> def) {
-    	return Main.pref.getCollection(OdConstants.PREF_MODULES, def);
+        return Main.pref.getCollection(OdConstants.PREF_MODULES, def);
     }
     
     public ModulePreferencesModel() {
-    	currentActiveModules = new HashSet<>();
-    	currentActiveModules.addAll(getModules(currentActiveModules));
+        currentActiveModules = new HashSet<>();
+        currentActiveModules.addAll(getModules(currentActiveModules));
     }
 
     public void filterDisplayedModules(String filter) {

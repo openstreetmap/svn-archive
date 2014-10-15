@@ -45,7 +45,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
     private final ModulePreference modulePref = new ModulePreference();
 
     public OdPreferenceSetting() {
-    	super(OdConstants.ICON_CORE_48, tr("OpenData Preferences"),
+        super(OdConstants.ICON_CORE_48, tr("OpenData Preferences"),
                 tr("A special handler for various Open Data portals<br/><br/>"+
                         "Please read the Terms and Conditions of Use of each portal<br/>"+
                         "before any upload of data loaded by this plugin."));
@@ -65,8 +65,8 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
      *
      * @param sites the site URLs
      */
-	public static void setModuleSites(List<String> sites) {
-		Main.pref.putCollection(OdConstants.PREF_MODULES_SITES, sites);
+    public static void setModuleSites(List<String> sites) {
+        Main.pref.putCollection(OdConstants.PREF_MODULES_SITES, sites);
     }
     
     @Override
@@ -80,7 +80,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
         masterPanel.add(scrollpane, GBC.eol().fill(GBC.BOTH));
     }
 
-	protected JPanel createGeneralSettings() {
+    protected JPanel createGeneralSettings() {
         JPanel general = new JPanel(new GridBagLayout());
         general.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         general.setName(tr("General settings"));
@@ -103,9 +103,9 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
         bgCoordinates.add(rbWGS84);
         String currentCoordinates = Main.pref.get(PREF_COORDINATES, VALUE_CC9ZONES);
         if (currentCoordinates.equals(VALUE_WGS84))
-        	rbWGS84.setSelected(true);
+            rbWGS84.setSelected(true);
         else
-        	rbCC43.setSelected(true);
+            rbCC43.setSelected(true);
         p.add(rbCC43, GBC.std().insets(5, 0, 5, 0));
         p.add(rbWGS84, GBC.eol().fill(GBC.HORIZONTAL).insets(5, 5, 0, 5));*/
 
@@ -131,11 +131,11 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
     
     @Override
     public boolean ok() {
-    	boolean result = modulePref.ok();
-   		//Main.pref.put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
-   		Main.pref.put(OdConstants.PREF_OAPI, oapi.getText());
-   		Main.pref.put(OdConstants.PREF_XAPI, xapi.getText());
-   		Main.pref.put(OdConstants.PREF_RAWDATA, rawData.isSelected());
+        boolean result = modulePref.ok();
+           //Main.pref.put(PREF_COORDINATES, rbWGS84.isSelected() ? VALUE_WGS84 : VALUE_CC9ZONES);
+           Main.pref.put(OdConstants.PREF_OAPI, oapi.getText());
+           Main.pref.put(OdConstants.PREF_XAPI, xapi.getText());
+           Main.pref.put(OdConstants.PREF_RAWDATA, rawData.isSelected());
         
         // create a task for downloading modules if the user has activated, yet not downloaded,
         // new modules
@@ -145,7 +145,7 @@ public class OdPreferenceSetting extends DefaultTabPreferenceSetting {
         if (toDownload != null && ! toDownload.isEmpty()) {
             task = new ModuleDownloadTask(masterPanel, toDownload, tr("Download modules"));
         } else {
-        	task = null;
+            task = null;
         }
         
         // this is the task which will run *after* the modules are downloaded

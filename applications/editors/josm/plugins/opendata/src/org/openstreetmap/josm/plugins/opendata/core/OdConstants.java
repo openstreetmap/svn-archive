@@ -9,39 +9,39 @@ import org.openstreetmap.josm.plugins.opendata.core.io.LambertCC9ZonesProjection
 import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
 public abstract class OdConstants {
-	
-	/**
-	 * Encodings
-	 */
-	public static final String UTF8 = "UTF-8";
-	public static final String ISO8859_15 = "ISO-8859-15";
-	public static final String CP850 = "Cp850";
+    
+    /**
+     * Encodings
+     */
+    public static final String UTF8 = "UTF-8";
+    public static final String ISO8859_15 = "ISO-8859-15";
+    public static final String CP850 = "Cp850";
     public static final String CP1251 = "Cp1251";
-	public static final String CP1252 = "Cp1252";
-	public static final String MAC_ROMAN = "MacRoman";
-	
-	/**
-	 * Patterns
-	 */
-	public static final String PATTERN_LANG = "{lang}";
-	
-	/**
-	 * Preferences
-	 */
-/*	public static final String PREF_COORDINATES = "opendata.coordinates";
-	public static final String VALUE_CC9ZONES = "cc9zones";
-	public static final String VALUE_WGS84 = "wgs84";*/
+    public static final String CP1252 = "Cp1252";
+    public static final String MAC_ROMAN = "MacRoman";
+    
+    /**
+     * Patterns
+     */
+    public static final String PATTERN_LANG = "{lang}";
+    
+    /**
+     * Preferences
+     */
+/*    public static final String PREF_COORDINATES = "opendata.coordinates";
+    public static final String VALUE_CC9ZONES = "cc9zones";
+    public static final String VALUE_WGS84 = "wgs84";*/
 
-	public static final String PREF_OAPI = "opendata.oapi";
+    public static final String PREF_OAPI = "opendata.oapi";
     public static final String DEFAULT_OAPI = "http://www.overpass-api.de/api/interpreter?";
     
-	public static final String PREF_XAPI = "opendata.xapi";
+    public static final String PREF_XAPI = "opendata.xapi";
     public static final String DEFAULT_XAPI = "http://www.overpass-api.de/api/xapi?";
 
-	public static final String PREF_RAWDATA = "opendata.rawdata";
+    public static final String PREF_RAWDATA = "opendata.rawdata";
     public static final boolean DEFAULT_RAWDATA = false;
 
-	public static final String PREF_MAXDISTANCE = "opendata.maxdistance";
+    public static final String PREF_MAXDISTANCE = "opendata.maxdistance";
     public static final double DEFAULT_MAXDISTANCE = 10;
 
     public static final String PREF_TOLERANCE = "opendata.spreadsheet.tolerance";
@@ -57,20 +57,20 @@ public abstract class OdConstants {
 
     public static final String PREF_CRS_COMPARISON_DEBUG = "opendata.crs.comparison_debug";
 
-	/**
-	 * Icons
-	 */
-	public static final String ICON_CORE_16 = "o16.png";
-	public static final String ICON_CORE_24 = "o24.png";
-	public static final String ICON_CORE_48 = "o48.png";
-	
-	public static final String ICON_OSM_16 = "osm16.png";
-	public static final String ICON_OSM_24 = "osm24.png";
+    /**
+     * Icons
+     */
+    public static final String ICON_CORE_16 = "o16.png";
+    public static final String ICON_CORE_24 = "o24.png";
+    public static final String ICON_CORE_48 = "o48.png";
+    
+    public static final String ICON_OSM_16 = "osm16.png";
+    public static final String ICON_OSM_24 = "osm24.png";
 
-	public static final String ICON_AGREEMENT_24 = "agreement24.png";
-	public static final String ICON_EMPTY_24 = "empty24.png";
+    public static final String ICON_AGREEMENT_24 = "agreement24.png";
+    public static final String ICON_EMPTY_24 = "empty24.png";
 
-	public static final String ICON_LOOL_48 = "lool48.png";
+    public static final String ICON_LOOL_48 = "lool48.png";
 
     /**
      * File extensions.

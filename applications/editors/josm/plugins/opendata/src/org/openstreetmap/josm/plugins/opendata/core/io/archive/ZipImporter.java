@@ -18,19 +18,19 @@ public class ZipImporter extends AbstractImporter {
     public static final ExtensionFileFilter ZIP_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.ZIP_EXT, OdConstants.ZIP_EXT, tr("Zip Files") + " (*."+OdConstants.ZIP_EXT+")");
 
-	public ZipImporter() {
-		super(ZIP_FILE_FILTER);
-	}
+    public ZipImporter() {
+        super(ZIP_FILE_FILTER);
+    }
 
-	@Override
-	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
-			throws IllegalDataException {
-		try {
-			return ZipReader.parseDataSet(in, handler, instance, true);
-		} catch (Exception e) {
-			throw new IllegalDataException(e);
-		}
-	}
+    @Override
+    protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IllegalDataException {
+        try {
+            return ZipReader.parseDataSet(in, handler, instance, true);
+        } catch (Exception e) {
+            throw new IllegalDataException(e);
+        }
+    }
 
     @Override
     public boolean acceptFile(File pathname) {

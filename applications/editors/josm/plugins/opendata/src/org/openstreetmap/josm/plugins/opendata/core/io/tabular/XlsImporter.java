@@ -14,7 +14,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class XlsImporter extends AbstractImporter {
-	
+    
     public static final ExtensionFileFilter XLS_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.XLS_EXT, OdConstants.XLS_EXT, tr("XLS files") + " (*."+OdConstants.XLS_EXT+")");
     
@@ -22,13 +22,13 @@ public class XlsImporter extends AbstractImporter {
         super(XLS_FILE_FILTER);
     }
 
-	@Override
-	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
-			throws IllegalDataException {
-		try {
-			return XlsReader.parseDataSet(in, handler, instance);
-		} catch (IOException e) {
-			throw new IllegalDataException(e);
-		}
-	}
+    @Override
+    protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IllegalDataException {
+        try {
+            return XlsReader.parseDataSet(in, handler, instance);
+        } catch (IOException e) {
+            throw new IllegalDataException(e);
+        }
+    }
 }

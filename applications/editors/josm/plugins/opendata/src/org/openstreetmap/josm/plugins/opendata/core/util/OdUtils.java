@@ -20,55 +20,55 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Utils;
 
 public abstract class OdUtils {
-	
+    
     private static final String TEMP_DIR_PREFIX = "josm_opendata_temp_";
     
     public static final boolean isMultipolygon(OsmPrimitive p) {
         return p instanceof Relation && ((Relation) p).isMultipolygon();
     }
     
-	public static final String[] stripQuotesAndExtraChars(String[] split, String sep) {
-		List<String> result = new ArrayList<>();
-		boolean append = false;
-		for (int i = 0; i<split.length; i++) {
-			if (append) {
-				int index = result.size()-1;
-				if (split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 == 1) {
-					append = false;
-				}
-				result.set(index, result.get(index)+sep+split[i].replaceAll("\"", ""));
-			} else if (split[i].startsWith("\"")) {
-				if (!(split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 == 0)) {
-					append = true;
-				}
-				result.add(split[i].replaceAll("\"", ""));
-			} else {
-				result.add(split[i]);
-			}
-		}
-		// Remove exotic characters such as U+FEFF found in some CSV files
-		for (ListIterator<String> it = result.listIterator(); it.hasNext();) {
-		    it.set(Utils.strip(it.next()));
-		}
-		return result.toArray(new String[0]);
-	}
-	
-	public static final ImageIcon getImageIcon(String iconName) {
-		return getImageIcon(iconName, false);
-	}
-	
-	public static final ImageIcon getImageIcon(String iconName, boolean optional) {
-		return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
-	}
-	
-	public static final String getJosmLanguage() {
-		String lang = Main.pref.get("language");
-		if (lang == null || lang.isEmpty()) {
-			lang = Locale.getDefault().toString();
-		}
-		return lang;
-	}
-	
+    public static final String[] stripQuotesAndExtraChars(String[] split, String sep) {
+        List<String> result = new ArrayList<>();
+        boolean append = false;
+        for (int i = 0; i<split.length; i++) {
+            if (append) {
+                int index = result.size()-1;
+                if (split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 == 1) {
+                    append = false;
+                }
+                result.set(index, result.get(index)+sep+split[i].replaceAll("\"", ""));
+            } else if (split[i].startsWith("\"")) {
+                if (!(split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 == 0)) {
+                    append = true;
+                }
+                result.add(split[i].replaceAll("\"", ""));
+            } else {
+                result.add(split[i]);
+            }
+        }
+        // Remove exotic characters such as U+FEFF found in some CSV files
+        for (ListIterator<String> it = result.listIterator(); it.hasNext();) {
+            it.set(Utils.strip(it.next()));
+        }
+        return result.toArray(new String[0]);
+    }
+    
+    public static final ImageIcon getImageIcon(String iconName) {
+        return getImageIcon(iconName, false);
+    }
+    
+    public static final ImageIcon getImageIcon(String iconName, boolean optional) {
+        return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
+    }
+    
+    public static final String getJosmLanguage() {
+        String lang = Main.pref.get("language");
+        if (lang == null || lang.isEmpty()) {
+            lang = Locale.getDefault().toString();
+        }
+        return lang;
+    }
+    
     public static final double convertMinuteSecond(double minute, double second) {
         return (minute/60.0) + (second/3600.0);
     }

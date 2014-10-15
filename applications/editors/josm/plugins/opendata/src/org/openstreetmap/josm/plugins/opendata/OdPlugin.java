@@ -47,31 +47,31 @@ import org.openstreetmap.josm.tools.Pair;
 
 public final class OdPlugin extends Plugin {
 
-	private static OdPlugin instance;
-	
-	public final XmlImporter xmlImporter = new XmlImporter();
-	
-	private final JMenu menu;
-	
-	private OdDialog dialog;
-	
-	public OdPlugin(PluginInformation info) {
-		super(info);
-		if (instance == null) {
-			instance = this;
-		} else {
-			throw new IllegalAccessError("Cannot instantiate plugin twice !");
-		}
+    private static OdPlugin instance;
+    
+    public final XmlImporter xmlImporter = new XmlImporter();
+    
+    private final JMenu menu;
+    
+    private OdDialog dialog;
+    
+    public OdPlugin(PluginInformation info) {
+        super(info);
+        if (instance == null) {
+            instance = this;
+        } else {
+            throw new IllegalAccessError("Cannot instantiate plugin twice !");
+        }
         // Allow JOSM to import more files
-		for (AbstractImporter importer : Arrays.asList(new AbstractImporter[]{
-				new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
-				new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), new GmlImporter(), // Geographic file formats
-				new ZipImporter(), // Zip archive containing any of the others
+        for (AbstractImporter importer : Arrays.asList(new AbstractImporter[]{
+                new CsvImporter(), new OdsImporter(), new XlsImporter(), // Tabular file formats
+                new KmlKmzImporter(), new ShpImporter(), new MifTabImporter(), new GmlImporter(), // Geographic file formats
+                new ZipImporter(), // Zip archive containing any of the others
                 new SevenZipImporter(), // 7Zip archive containing any of the others
-				xmlImporter // Generic importer for XML files (currently used for Neptune files)
-		})) {
-			ExtensionFileFilter.importers.add(0, importer);
-		}
+                xmlImporter // Generic importer for XML files (currently used for Neptune files)
+        })) {
+            ExtensionFileFilter.importers.add(0, importer);
+        }
         // Load modules
         loadModules();
         // Add menu
@@ -82,96 +82,96 @@ public final class OdPlugin extends Plugin {
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadDataTask.class);
         // Delete previous temp dirs if any (old plugin versions did not remove them correctly)
         OdUtils.deletePreviousTempDirs();
-	}
-	
-	public static final OdPlugin getInstance() {
-		return instance;
-	}
-	
-	private JMenu getModuleMenu(Module module) {
-		String moduleName = module.getDisplayedName();
-		if (moduleName == null || moduleName.isEmpty()) {
-			moduleName = module.getModuleInformation().getName();
-		}
-		JMenu moduleMenu = new JMenu(moduleName);
-		moduleMenu.setIcon(module.getModuleInformation().getScaledIcon());
-		return moduleMenu;
-	}
-	
-	private void buildMenu() {
+    }
+    
+    public static final OdPlugin getInstance() {
+        return instance;
+    }
+    
+    private JMenu getModuleMenu(Module module) {
+        String moduleName = module.getDisplayedName();
+        if (moduleName == null || moduleName.isEmpty()) {
+            moduleName = module.getModuleInformation().getName();
+        }
+        JMenu moduleMenu = new JMenu(moduleName);
+        moduleMenu.setIcon(module.getModuleInformation().getScaledIcon());
+        return moduleMenu;
+    }
+    
+    private void buildMenu() {
         for (Module module : ModuleHandler.moduleList) {
-        	Map<DataSetCategory, JMenu> catMenus = new HashMap<>();
-        	JMenu moduleMenu = null;
-        	for (AbstractDataSetHandler handler: module.getNewlyInstanciatedHandlers()) {
-        	    URL dataURL = handler.getDataURL();
-        	    List<Pair<String, URL>> dataURLs = handler.getDataURLs();
-        		if (dataURL != null || (dataURLs != null && !dataURLs.isEmpty())) {
-        			if (moduleMenu == null) {
-        				moduleMenu = getModuleMenu(module);
-        			}
-        			DataSetCategory cat = handler.getCategory();
-        			JMenu endMenu = null;
-        			if (cat != null) {
-        				if ((endMenu = catMenus.get(cat)) == null) {
-        					catMenus.put(cat, endMenu = new JMenu(cat.getName()));
-        					setMenuItemIcon(cat.getIcon(), endMenu);
-        					moduleMenu.add(endMenu);
-        				}
-        			}
-        			if (endMenu == null) {
-        				endMenu = moduleMenu;
-        			}
-        			String handlerName = handler.getName();
-        			if (handlerName == null || handlerName.isEmpty()) {
-        				handlerName = handler.getClass().getName();
-        			}
-        			JMenuItem handlerItem = null;
-        			if (dataURL != null) {
-        			    handlerItem = endMenu.add(new DownloadDataAction(module, handlerName, dataURL));
-        			} else if (dataURLs != null) {
-        				JMenu handlerMenu = new JMenu(handlerName);
-        				JMenuItem item = null;
-        				for (Pair<String, URL> pair : dataURLs) {
-        					if (pair != null && pair.a != null && pair.b != null) {
-        						item = handlerMenu.add(new DownloadDataAction(module, pair.a, pair.b));
-        					}
-        				}
-        				if (item != null) {
-        					MenuScroller.setScrollerFor(handlerMenu);
-        					handlerItem = endMenu.add(handlerMenu);
-        				}
-        			}
-        			if (handlerItem != null) {
-        			    setMenuItemIcon(handler.getMenuIcon(), handlerItem);
-        			}
-        		}
-        	}
-        	if (moduleMenu != null) {
-        		menu.add(moduleMenu);
-        	}
+            Map<DataSetCategory, JMenu> catMenus = new HashMap<>();
+            JMenu moduleMenu = null;
+            for (AbstractDataSetHandler handler: module.getNewlyInstanciatedHandlers()) {
+                URL dataURL = handler.getDataURL();
+                List<Pair<String, URL>> dataURLs = handler.getDataURLs();
+                if (dataURL != null || (dataURLs != null && !dataURLs.isEmpty())) {
+                    if (moduleMenu == null) {
+                        moduleMenu = getModuleMenu(module);
+                    }
+                    DataSetCategory cat = handler.getCategory();
+                    JMenu endMenu = null;
+                    if (cat != null) {
+                        if ((endMenu = catMenus.get(cat)) == null) {
+                            catMenus.put(cat, endMenu = new JMenu(cat.getName()));
+                            setMenuItemIcon(cat.getIcon(), endMenu);
+                            moduleMenu.add(endMenu);
+                        }
+                    }
+                    if (endMenu == null) {
+                        endMenu = moduleMenu;
+                    }
+                    String handlerName = handler.getName();
+                    if (handlerName == null || handlerName.isEmpty()) {
+                        handlerName = handler.getClass().getName();
+                    }
+                    JMenuItem handlerItem = null;
+                    if (dataURL != null) {
+                        handlerItem = endMenu.add(new DownloadDataAction(module, handlerName, dataURL));
+                    } else if (dataURLs != null) {
+                        JMenu handlerMenu = new JMenu(handlerName);
+                        JMenuItem item = null;
+                        for (Pair<String, URL> pair : dataURLs) {
+                            if (pair != null && pair.a != null && pair.b != null) {
+                                item = handlerMenu.add(new DownloadDataAction(module, pair.a, pair.b));
+                            }
+                        }
+                        if (item != null) {
+                            MenuScroller.setScrollerFor(handlerMenu);
+                            handlerItem = endMenu.add(handlerMenu);
+                        }
+                    }
+                    if (handlerItem != null) {
+                        setMenuItemIcon(handler.getMenuIcon(), handlerItem);
+                    }
+                }
+            }
+            if (moduleMenu != null) {
+                menu.add(moduleMenu);
+            }
         }
         menu.addSeparator();
         MainMenu.add(menu, new OpenPreferencesActions());
-	}
-	
-	private void setMenuItemIcon(ImageIcon icon, JMenuItem menuItem) {
+    }
+    
+    private void setMenuItemIcon(ImageIcon icon, JMenuItem menuItem) {
         if (icon != null) {
             if (icon.getIconHeight() != 16 || icon.getIconWidth() != 16) { 
                 icon = new ImageIcon(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
             }
             menuItem.setIcon(icon);
         }
-	}
+    }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (newFrame != null) {
-			newFrame.addToggleDialog(dialog = new OdDialog());
-		} else {
-		    dialog = null;
-		}
-	}
-	
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (newFrame != null) {
+            newFrame.addToggleDialog(dialog = new OdDialog());
+        } else {
+            dialog = null;
+        }
+    }
+    
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return new OdPreferenceSetting();
@@ -184,11 +184,11 @@ public final class OdPlugin extends Plugin {
         }
 
         ModuleHandler.installDownloadedModules(true);
-    	ModuleHandler.loadModules(Main.parent, modulesToLoad, null);
+        ModuleHandler.loadModules(Main.parent, modulesToLoad, null);
     }
     
     private final File getSubDirectory(String name) {
-    	File dir = new File(getPluginDir()+File.separator+name);
+        File dir = new File(getPluginDir()+File.separator+name);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -196,11 +196,11 @@ public final class OdPlugin extends Plugin {
     }
     
     public final File getModulesDirectory() {
-    	return getSubDirectory("modules");
+        return getSubDirectory("modules");
     }
 
     public final File getResourcesDirectory() {
-    	return getSubDirectory("resources");
+        return getSubDirectory("resources");
     }
 
     public OdDialog getDialog() {

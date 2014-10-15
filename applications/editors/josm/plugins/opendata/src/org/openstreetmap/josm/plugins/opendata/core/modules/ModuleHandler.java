@@ -229,14 +229,14 @@ public class ModuleHandler {
                 System.out.println(tr("loading module ''{0}'' (version {1})", module.name, module.localversion));
                 Module mod = module.load(klass);
                 if (moduleList.add(mod)) {
-                	SourceProvider styleProvider = mod.getMapPaintStyleSourceProvider();
-                	if (styleProvider != null) {
-                		MapPaintPreference.registerSourceProvider(styleProvider);
-                	}
-                	SourceProvider presetProvider = mod.getPresetSourceProvider();
-                	if (presetProvider != null) {
-                		TaggingPresetPreference.registerSourceProvider(presetProvider);
-                	}
+                    SourceProvider styleProvider = mod.getMapPaintStyleSourceProvider();
+                    if (styleProvider != null) {
+                        MapPaintPreference.registerSourceProvider(styleProvider);
+                    }
+                    SourceProvider presetProvider = mod.getPresetSourceProvider();
+                    if (presetProvider != null) {
+                        TaggingPresetPreference.registerSourceProvider(presetProvider);
+                    }
                 }
             }
             msg = null;

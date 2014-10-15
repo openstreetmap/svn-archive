@@ -24,19 +24,19 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 
 public class ZipReader extends ArchiveReader {
 
-	private final ZipInputStream zis;
-	
-	private ZipEntry entry;
-	
+    private final ZipInputStream zis;
+    
+    private ZipEntry entry;
+    
     public ZipReader(InputStream in, AbstractDataSetHandler handler, boolean promptUser) {
         super(handler, handler != null ? handler.getArchiveHandler() : null, promptUser);
         this.zis = in instanceof ZipInputStream ? (ZipInputStream) in : new ZipInputStream(in);
     }
 
-	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
-	        throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
-		return new ZipReader(in, handler, promptUser).parseDoc(instance);
-	}
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
+            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+        return new ZipReader(in, handler, promptUser).parseDoc(instance);
+    }
 
     public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
             throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {

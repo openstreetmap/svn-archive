@@ -526,13 +526,13 @@ public class ModulePreference implements SubPreferenceSetting {
         }
     }
 
-	@Override
-	public boolean isExpert() {
-		return false;
-	}
+    @Override
+    public boolean isExpert() {
+        return false;
+    }
 
-	@Override
-	public TabPreferenceSetting getTabPreferenceSetting(PreferenceTabbedPane gui) {
-		return gui.getSetting(OdPreferenceSetting.class);
-	}
+    @Override
+    public TabPreferenceSetting getTabPreferenceSetting(PreferenceTabbedPane gui) {
+        return gui.getSetting(OdPreferenceSetting.class);
+    }
 }

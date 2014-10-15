@@ -7,20 +7,20 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
 public interface GeographicHandler {
-	
-	public void setPreferMultipolygonToSimpleWay(boolean prefer);
+    
+    public void setPreferMultipolygonToSimpleWay(boolean prefer);
 
-	public boolean preferMultipolygonToSimpleWay();
+    public boolean preferMultipolygonToSimpleWay();
 
-	public void setCheckNodeProximity(boolean check);
-	
-	public boolean checkNodeProximity();
-	
-	public void setUseNodeMap(boolean use);
-	
-	public boolean useNodeMap();
-	
-	public CoordinateReferenceSystem getCrsFor(String crsName) throws NoSuchAuthorityCodeException, FactoryException;
+    public void setCheckNodeProximity(boolean check);
+    
+    public boolean checkNodeProximity();
+    
+    public void setUseNodeMap(boolean use);
+    
+    public boolean useNodeMap();
+    
+    public CoordinateReferenceSystem getCrsFor(String crsName) throws NoSuchAuthorityCodeException, FactoryException;
 
-	public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient) throws FactoryException;
+    public MathTransform findMathTransform(CoordinateReferenceSystem sourceCRS, CoordinateReferenceSystem targetCRS, boolean lenient) throws FactoryException;
 }

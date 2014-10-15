@@ -11,27 +11,27 @@ import org.openstreetmap.josm.plugins.opendata.core.io.tabular.SpreadSheetReader
 
 public interface SpreadSheetHandler {
 
-	public void setSheetNumber(int n);
-	
-	public int getSheetNumber();
+    public void setSheetNumber(int n);
+    
+    public int getSheetNumber();
 
-	public void setHandlesProjection(boolean handle);
-	
-	public boolean handlesProjection();
+    public void setHandlesProjection(boolean handle);
+    
+    public boolean handlesProjection();
 
-	public LatLon getCoor(EastNorth en, String[] fields);
+    public LatLon getCoor(EastNorth en, String[] fields);
 
-	public void setLineNumber(int n);
-	
-	public int getLineNumber();
+    public void setLineNumber(int n);
+    
+    public int getLineNumber();
 
-	public void setXCol(int i);
+    public void setXCol(int i);
 
-	public void setYCol(int i);
-	
-	public int getXCol();
+    public void setYCol(int i);
+    
+    public int getXCol();
 
-	public int getYCol();
+    public int getYCol();
 
     public void nodesAdded(DataSet ds, Map<CoordinateColumns, Node> nodes, String[] fields, int lineNumber);
 }

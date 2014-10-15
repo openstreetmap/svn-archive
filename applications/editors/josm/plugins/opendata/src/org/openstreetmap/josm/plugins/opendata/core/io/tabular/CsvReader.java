@@ -16,60 +16,60 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
 public class CsvReader extends SpreadSheetReader {
 
-	private final Charset charset;
-	private String sep;
-	
-	private BufferedReader reader;
-	private String line;
+    private final Charset charset;
+    private String sep;
+    
+    private BufferedReader reader;
+    private String line;
 
-	public CsvReader(CsvHandler handler) {
-		this(handler, ";");
-	}
+    public CsvReader(CsvHandler handler) {
+        this(handler, ";");
+    }
 
-	public CsvReader(CsvHandler handler, String defaultSep) {
-		super(handler);
-		this.charset = handler != null && handler.getCharset() != null ? handler.getCharset() : Charset.forName(OdConstants.UTF8);
-		this.sep = handler != null && handler.getSeparator() != null ? handler.getSeparator() : defaultSep;
-	}
-	
-	public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		CsvHandler csvHandler = null;
-		if (handler != null && handler.getSpreadSheetHandler() instanceof CsvHandler) {
-			csvHandler = (CsvHandler) handler.getSpreadSheetHandler();
-		}
-		CsvReader csvReader = new CsvReader(csvHandler);
-		try {
-			return csvReader.parse(in, instance);
-		} catch (IllegalArgumentException e) {
-			if (csvHandler == null || csvHandler.getSeparator() == null || ";".equals(csvHandler.getSeparator())) {
-				// If default sep has been used, try comma
-				Main.warn(e.getMessage());
-				csvReader.sep = ",";
-				return csvReader.doParse(csvReader.splitLine(), instance);
-			} else {
-				throw e;
-			}
-		}
-	}
+    public CsvReader(CsvHandler handler, String defaultSep) {
+        super(handler);
+        this.charset = handler != null && handler.getCharset() != null ? handler.getCharset() : Charset.forName(OdConstants.UTF8);
+        this.sep = handler != null && handler.getSeparator() != null ? handler.getSeparator() : defaultSep;
+    }
+    
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+        CsvHandler csvHandler = null;
+        if (handler != null && handler.getSpreadSheetHandler() instanceof CsvHandler) {
+            csvHandler = (CsvHandler) handler.getSpreadSheetHandler();
+        }
+        CsvReader csvReader = new CsvReader(csvHandler);
+        try {
+            return csvReader.parse(in, instance);
+        } catch (IllegalArgumentException e) {
+            if (csvHandler == null || csvHandler.getSeparator() == null || ";".equals(csvHandler.getSeparator())) {
+                // If default sep has been used, try comma
+                Main.warn(e.getMessage());
+                csvReader.sep = ",";
+                return csvReader.doParse(csvReader.splitLine(), instance);
+            } else {
+                throw e;
+            }
+        }
+    }
 
-	@Override
-	protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
-		Main.info("Parsing CSV file using charset "+charset+" and separator '"+sep+"'");
+    @Override
+    protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
+        Main.info("Parsing CSV file using charset "+charset+" and separator '"+sep+"'");
 
-		reader = new BufferedReader(new InputStreamReader(in, charset));
-	}
+        reader = new BufferedReader(new InputStreamReader(in, charset));
+    }
 
-	@Override
-	protected String[] readLine(ProgressMonitor progressMonitor) throws IOException {
-		line = reader.readLine();
-		return splitLine();
-	}
-	
-	private final String[] splitLine() {
-		if (line != null) {
-			return OdUtils.stripQuotesAndExtraChars(line.split(sep), sep);
-		} else {
-			return null;
-		}
-	}
+    @Override
+    protected String[] readLine(ProgressMonitor progressMonitor) throws IOException {
+        line = reader.readLine();
+        return splitLine();
+    }
+    
+    private final String[] splitLine() {
+        if (line != null) {
+            return OdUtils.stripQuotesAndExtraChars(line.split(sep), sep);
+        } else {
+            return null;
+        }
+    }
 }

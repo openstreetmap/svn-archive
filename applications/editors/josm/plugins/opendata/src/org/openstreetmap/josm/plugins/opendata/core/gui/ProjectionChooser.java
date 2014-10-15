@@ -64,17 +64,17 @@ public class ProjectionChooser extends ExtendedDialog {
      */
     private static final GBC projSubPrefPanelGBC = GBC.std().fill(GBC.BOTH).weight(1.0, 1.0);
 
-	public ProjectionChooser(Component parent) {
-		this(parent, tr("Projection method"), new String[] {tr("OK"), tr("Cancel")});
-	}
-	
-	protected ProjectionChooser(Component parent, String title, String[] buttonTexts) {
-		super(parent, title, buttonTexts);
-		setMinimumSize(new Dimension(600, 200));
-		addGui();
-	}
-	
-	public void addGui() {
+    public ProjectionChooser(Component parent) {
+        this(parent, tr("Projection method"), new String[] {tr("OK"), tr("Cancel")});
+    }
+    
+    protected ProjectionChooser(Component parent, String title, String[] buttonTexts) {
+        super(parent, title, buttonTexts);
+        setMinimumSize(new Dimension(600, 200));
+        addGui();
+    }
+    
+    public void addGui() {
         projPanel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
         projPanel.setLayout(new GridBagLayout());
         projPanel.add(new JLabel(tr("Projection method")), GBC.std().insets(5,5,0,5));
@@ -100,9 +100,9 @@ public class ProjectionChooser extends ExtendedDialog {
             }
         });
         setContent(projPanel);
-	}
-	
-	private void selectedProjectionChanged(final ProjectionChoice pc) {
+    }
+    
+    private void selectedProjectionChanged(final ProjectionChoice pc) {
         // Don't try to update if we're still starting up
         int size = projPanel.getComponentCount();
         if(size < 1)
@@ -123,7 +123,7 @@ public class ProjectionChooser extends ExtendedDialog {
         projSubPrefPanel.repaint();
         updateMeta(pc);
     }
-	
+    
     private void updateMeta(ProjectionChoice pc) {
         pc.setPreferences(pc.getPreferences(projSubPrefPanel));
         Projection proj = pc.getProjection();
@@ -147,12 +147,12 @@ public class ProjectionChooser extends ExtendedDialog {
     }
 
     public Projection getProjection() {
-		ProjectionChoice pc = (ProjectionChoice) projectionCombo.getSelectedItem();
-		if (pc != null) {
-		    Main.info("Chosen projection: "+pc+" ("+pc.getProjection()+")");
-		    return pc.getProjection();
-		} else {
-		    return null;
-		}
-	}
+        ProjectionChoice pc = (ProjectionChoice) projectionCombo.getSelectedItem();
+        if (pc != null) {
+            Main.info("Chosen projection: "+pc+" ("+pc.getProjection()+")");
+            return pc.getProjection();
+        } else {
+            return null;
+        }
+    }
 }

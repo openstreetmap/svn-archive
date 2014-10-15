@@ -18,28 +18,28 @@ import org.openstreetmap.josm.io.AbstractReader;
 
 public class KmzReader extends AbstractReader {
 
-	private ZipInputStream zis;
+    private ZipInputStream zis;
     
     public KmzReader(ZipInputStream zis) {
         this.zis = zis;
     }
 
-	public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
-		return new KmzReader(new ZipInputStream(in)).parseDoc(instance);
-	}
+    public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
+        return new KmzReader(new ZipInputStream(in)).parseDoc(instance);
+    }
 
-	private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError  {
-	    ZipEntry entry;
-	    do {
-	        entry = zis.getNextEntry();
-	        if (entry == null) {
-	            Main.warn("No KML file found");
-	            return null;
-	        }
-	    } while (!entry.getName().toLowerCase().endsWith(".kml"));
-		long size = entry.getSize();
-		byte[] buffer;
-		if (size > 0) {
+    private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError  {
+        ZipEntry entry;
+        do {
+            entry = zis.getNextEntry();
+            if (entry == null) {
+                Main.warn("No KML file found");
+                return null;
+            }
+        } while (!entry.getName().toLowerCase().endsWith(".kml"));
+        long size = entry.getSize();
+        byte[] buffer;
+        if (size > 0) {
             buffer = new byte[(int) size];
             int off = 0;
             int count = 0;
@@ -58,7 +58,7 @@ public class KmzReader extends AbstractReader {
             } while (b != -1);
             buffer = out.toByteArray();
         }
-	    
-		return KmlReader.parseDataSet(new ByteArrayInputStream(buffer), instance);
-	}
+        
+        return KmlReader.parseDataSet(new ByteArrayInputStream(buffer), instance);
+    }
 }

@@ -9,9 +9,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public interface ShpHandler extends GeographicHandler {
 
-	public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
+    public void notifyFeatureParsed(Object feature, DataSet result, Set<OsmPrimitive> featurePrimitives);
 
-	public void setDbfCharset(Charset charset);
-	
-	public Charset getDbfCharset();
+    public void setDbfCharset(Charset charset);
+    
+    public Charset getDbfCharset();
 }

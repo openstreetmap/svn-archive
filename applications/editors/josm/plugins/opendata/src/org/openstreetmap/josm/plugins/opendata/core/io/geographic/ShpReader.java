@@ -56,41 +56,41 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class ShpReader extends GeographicReader {
 
-	private final ShpHandler handler;
-	private final Set<OsmPrimitive> featurePrimitives = new HashSet<>();
-	
-	public ShpReader(ShpHandler handler) {
-		super(handler, NationalHandlers.DEFAULT_SHP_HANDLERS);
-		this.handler = handler;
-	}
+    private final ShpHandler handler;
+    private final Set<OsmPrimitive> featurePrimitives = new HashSet<>();
+    
+    public ShpReader(ShpHandler handler) {
+        super(handler, NationalHandlers.DEFAULT_SHP_HANDLERS);
+        this.handler = handler;
+    }
 
-	public static DataSet parseDataSet(InputStream in, File file,
-			AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		if (in != null) {
-			in.close();
-		}
-		try {
-			return new ShpReader(handler != null ? handler.getShpHandler() : null).parse(file, instance);
-		} catch (IOException e) {
-			throw e;
-		} catch (Throwable t) {
-			throw new IOException(t);
-		}
-	}
-	
-	private void parseFeature(Feature feature, final Component parent) 
-			throws UserCancelException, GeoMathTransformException, FactoryException, GeoCrsException, MismatchedDimensionException, TransformException {
-		featurePrimitives.clear();
-		GeometryAttribute geometry = feature.getDefaultGeometryProperty();
-		if (geometry != null) {
+    public static DataSet parseDataSet(InputStream in, File file,
+            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+        if (in != null) {
+            in.close();
+        }
+        try {
+            return new ShpReader(handler != null ? handler.getShpHandler() : null).parse(file, instance);
+        } catch (IOException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new IOException(t);
+        }
+    }
+    
+    private void parseFeature(Feature feature, final Component parent) 
+            throws UserCancelException, GeoMathTransformException, FactoryException, GeoCrsException, MismatchedDimensionException, TransformException {
+        featurePrimitives.clear();
+        GeometryAttribute geometry = feature.getDefaultGeometryProperty();
+        if (geometry != null) {
 
-			GeometryDescriptor desc = geometry.getDescriptor();
-			
-			if (crs == null) {
-    			if (desc != null && desc.getCoordinateReferenceSystem() != null) {
-    				crs = desc.getCoordinateReferenceSystem();
-    			} else if (!GraphicsEnvironment.isHeadless()) {
-    			    GuiHelper.runInEDTAndWait(new Runnable() {
+            GeometryDescriptor desc = geometry.getDescriptor();
+            
+            if (crs == null) {
+                if (desc != null && desc.getCoordinateReferenceSystem() != null) {
+                    crs = desc.getCoordinateReferenceSystem();
+                } else if (!GraphicsEnvironment.isHeadless()) {
+                    GuiHelper.runInEDTAndWait(new Runnable() {
                         @Override
                         public void run() {
                             if (0 == JOptionPane.showConfirmDialog(
@@ -103,191 +103,191 @@ public class ShpReader extends GeographicReader {
                             }
                         }
                     });
-    			} else {
-    			    // Always use WGS84 in headless mode (used for unit tests only)
-    			    crs = wgs84;
-    			}
+                } else {
+                    // Always use WGS84 in headless mode (used for unit tests only)
+                    crs = wgs84;
+                }
                 if (crs != null) {
                     findMathTransform(parent, true);
                 } else {
                     throw new GeoCrsException(tr("Unable to detect CRS !"));
                 }
-			}
-			
-			OsmPrimitive primitive = null;
-			
-			if (geometry.getValue() instanceof Point) {
-				primitive = createOrGetEmptyNode((Point) geometry.getValue());
-				
-			} else if (geometry.getValue() instanceof GeometryCollection) { // Deals with both MultiLineString and MultiPolygon
-				GeometryCollection mp = (GeometryCollection) geometry.getValue();
-				int nGeometries = mp.getNumGeometries(); 
-				if (nGeometries < 1) {
-					System.err.println("Error: empty geometry collection found");
-				} else {
-					Relation r = null;
-					Way w = null;
-					
-					for (int i=0; i<nGeometries; i++) {
-						Geometry g = mp.getGeometryN(i);
-						if (g instanceof Polygon) {
-							Polygon p = (Polygon) g;
-							// Do not create relation if there's only one polygon without interior ring
-							// except if handler prefers it
-							if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 || (handler != null && handler.preferMultipolygonToSimpleWay()))) {
-								r = createMultipolygon();
-							}
-							w = createWay(p.getExteriorRing());
-							if (r != null) {
-								addWayToMp(r, "outer", w);
-								for (int j=0; j<p.getNumInteriorRing(); j++) {
-									addWayToMp(r, "inner", createWay(p.getInteriorRingN(j)));
-								}
-							}
-						} else if (g instanceof LineString) {
-							w = createWay((LineString) g);
-						} else if (g instanceof Point) {
-							// Some belgian data sets hold points into collections ?!
-							readNonGeometricAttributes(feature, createOrGetNode((Point) g));
-						} else {
-							System.err.println("Error: unsupported geometry : "+g);
-						}
-					}
-					primitive = r != null ? r : w;
-				}
-			} else {
-				// Debug unknown geometry
-				Main.debug("\ttype: "+geometry.getType());
-				Main.debug("\tbounds: "+geometry.getBounds());
-				Main.debug("\tdescriptor: "+desc);
-				Main.debug("\tname: "+geometry.getName());
-				Main.debug("\tvalue: "+geometry.getValue());
-				Main.debug("\tid: "+geometry.getIdentifier());
-				Main.debug("-------------------------------------------------------------");
-			}
-			
-			if (primitive != null) {
-				// Read primitive non geometric attributes
-				readNonGeometricAttributes(feature, primitive);
-			}
-		}
-	}
+            }
+            
+            OsmPrimitive primitive = null;
+            
+            if (geometry.getValue() instanceof Point) {
+                primitive = createOrGetEmptyNode((Point) geometry.getValue());
+                
+            } else if (geometry.getValue() instanceof GeometryCollection) { // Deals with both MultiLineString and MultiPolygon
+                GeometryCollection mp = (GeometryCollection) geometry.getValue();
+                int nGeometries = mp.getNumGeometries(); 
+                if (nGeometries < 1) {
+                    System.err.println("Error: empty geometry collection found");
+                } else {
+                    Relation r = null;
+                    Way w = null;
+                    
+                    for (int i=0; i<nGeometries; i++) {
+                        Geometry g = mp.getGeometryN(i);
+                        if (g instanceof Polygon) {
+                            Polygon p = (Polygon) g;
+                            // Do not create relation if there's only one polygon without interior ring
+                            // except if handler prefers it
+                            if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 || (handler != null && handler.preferMultipolygonToSimpleWay()))) {
+                                r = createMultipolygon();
+                            }
+                            w = createWay(p.getExteriorRing());
+                            if (r != null) {
+                                addWayToMp(r, "outer", w);
+                                for (int j=0; j<p.getNumInteriorRing(); j++) {
+                                    addWayToMp(r, "inner", createWay(p.getInteriorRingN(j)));
+                                }
+                            }
+                        } else if (g instanceof LineString) {
+                            w = createWay((LineString) g);
+                        } else if (g instanceof Point) {
+                            // Some belgian data sets hold points into collections ?!
+                            readNonGeometricAttributes(feature, createOrGetNode((Point) g));
+                        } else {
+                            System.err.println("Error: unsupported geometry : "+g);
+                        }
+                    }
+                    primitive = r != null ? r : w;
+                }
+            } else {
+                // Debug unknown geometry
+                Main.debug("\ttype: "+geometry.getType());
+                Main.debug("\tbounds: "+geometry.getBounds());
+                Main.debug("\tdescriptor: "+desc);
+                Main.debug("\tname: "+geometry.getName());
+                Main.debug("\tvalue: "+geometry.getValue());
+                Main.debug("\tid: "+geometry.getIdentifier());
+                Main.debug("-------------------------------------------------------------");
+            }
+            
+            if (primitive != null) {
+                // Read primitive non geometric attributes
+                readNonGeometricAttributes(feature, primitive);
+            }
+        }
+    }
 
-	public DataSet parse(File file, ProgressMonitor instance) throws IOException {
-		crs = null;
-		transform = null;
-		try {
-			if (file != null) { 
-		        Map<String, Serializable> params = new HashMap<>();
-		        Charset charset = null;
-		        params.put(ShapefileDataStoreFactory.URLP.key, file.toURI().toURL());
-		        if (handler != null && handler.getDbfCharset() != null) {
-		            charset = handler.getDbfCharset();
-		        } else {
-		            String path = file.getAbsolutePath();
-		            // See http://gis.stackexchange.com/a/3663/17245
-		            path = path.substring(0, path.lastIndexOf('.')) + ".cpg";
+    public DataSet parse(File file, ProgressMonitor instance) throws IOException {
+        crs = null;
+        transform = null;
+        try {
+            if (file != null) { 
+                Map<String, Serializable> params = new HashMap<>();
+                Charset charset = null;
+                params.put(ShapefileDataStoreFactory.URLP.key, file.toURI().toURL());
+                if (handler != null && handler.getDbfCharset() != null) {
+                    charset = handler.getDbfCharset();
+                } else {
+                    String path = file.getAbsolutePath();
+                    // See http://gis.stackexchange.com/a/3663/17245
+                    path = path.substring(0, path.lastIndexOf('.')) + ".cpg";
                     Path cpg = new File(path).toPath();
-		            if (Files.exists(cpg)) {
-		                try (BufferedReader reader = Files.newBufferedReader(cpg, StandardCharsets.UTF_8)) {
-		                    charset = Charset.forName(reader.readLine());
+                    if (Files.exists(cpg)) {
+                        try (BufferedReader reader = Files.newBufferedReader(cpg, StandardCharsets.UTF_8)) {
+                            charset = Charset.forName(reader.readLine());
                         } catch (IOException | UnsupportedCharsetException | IllegalCharsetNameException e) {
                             Main.warn(e);
                         }
-		            }
-		        }
-		        if (charset != null) {
-		            Main.info("Using charset "+charset);
-		            params.put(ShapefileDataStoreFactory.DBFCHARSET.key, charset.name());
-		        }
-				DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);
-				if (dataStore == null) {
-					throw new IOException(tr("Unable to find a data store for file {0}", file.getName()));
-				}
-				
-				String[] typeNames = dataStore.getTypeNames();
-				String typeName = typeNames[0];
-	
-				FeatureSource<?,?> featureSource = dataStore.getFeatureSource(typeName);
-				FeatureCollection<?,?> collection = featureSource.getFeatures();
-				FeatureIterator<?> iterator = collection.features();
-				
-				if (instance != null) {
-					instance.beginTask(tr("Loading shapefile ({0} features)", collection.size()), collection.size());
-				}
-				
-				int n = 0;
-				
-				Component parent = instance != null ? instance.getWindowParent() : Main.parent;
-				
-				try {
-					while (iterator.hasNext()) {
-						n++;
-						try {
-							Feature feature = iterator.next();
-							parseFeature(feature, parent);
-							if (handler != null) {
-								handler.notifyFeatureParsed(feature, ds, featurePrimitives);
-							}
-						} catch (UserCancelException e) {
+                    }
+                }
+                if (charset != null) {
+                    Main.info("Using charset "+charset);
+                    params.put(ShapefileDataStoreFactory.DBFCHARSET.key, charset.name());
+                }
+                DataStore dataStore = new ShapefileDataStoreFactory().createDataStore(params);
+                if (dataStore == null) {
+                    throw new IOException(tr("Unable to find a data store for file {0}", file.getName()));
+                }
+                
+                String[] typeNames = dataStore.getTypeNames();
+                String typeName = typeNames[0];
+    
+                FeatureSource<?,?> featureSource = dataStore.getFeatureSource(typeName);
+                FeatureCollection<?,?> collection = featureSource.getFeatures();
+                FeatureIterator<?> iterator = collection.features();
+                
+                if (instance != null) {
+                    instance.beginTask(tr("Loading shapefile ({0} features)", collection.size()), collection.size());
+                }
+                
+                int n = 0;
+                
+                Component parent = instance != null ? instance.getWindowParent() : Main.parent;
+                
+                try {
+                    while (iterator.hasNext()) {
+                        n++;
+                        try {
+                            Feature feature = iterator.next();
+                            parseFeature(feature, parent);
+                            if (handler != null) {
+                                handler.notifyFeatureParsed(feature, ds, featurePrimitives);
+                            }
+                        } catch (UserCancelException e) {
                             e.printStackTrace();
-							return ds;
-						}
-						if (instance != null) {
-							instance.worked(1);
-							instance.setCustomText(n+"/"+collection.size());
-						}
-					}
-				} catch (Throwable e) {
+                            return ds;
+                        }
+                        if (instance != null) {
+                            instance.worked(1);
+                            instance.setCustomText(n+"/"+collection.size());
+                        }
+                    }
+                } catch (Throwable e) {
                     e.printStackTrace();
-				} finally {
-					iterator.close();
-					nodes.clear();
-					if (instance != null) {
-						instance.setCustomText(null);
-					}
-				}
-			}
-		} catch (IOException e) {
+                } finally {
+                    iterator.close();
+                    nodes.clear();
+                    if (instance != null) {
+                        instance.setCustomText(null);
+                    }
+                }
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-			throw e;
-		} catch (Throwable t) {
+            throw e;
+        } catch (Throwable t) {
             t.printStackTrace();
-			throw new IOException(t);
-		}
-		return ds;
-	}
-	
-	private static final void readNonGeometricAttributes(Feature feature, OsmPrimitive primitive) {
+            throw new IOException(t);
+        }
+        return ds;
+    }
+    
+    private static final void readNonGeometricAttributes(Feature feature, OsmPrimitive primitive) {
             try {
-		for (Property prop : feature.getProperties()) {
-			if (!(prop instanceof GeometryAttribute)) {
-				Name name = prop.getName();
-				Object value = prop.getValue();
-				if (name != null && value != null) {
-					String sName = name.toString();
-					String sValue = value.toString();
-					if (!sName.isEmpty() && !sValue.isEmpty()) {
+        for (Property prop : feature.getProperties()) {
+            if (!(prop instanceof GeometryAttribute)) {
+                Name name = prop.getName();
+                Object value = prop.getValue();
+                if (name != null && value != null) {
+                    String sName = name.toString();
+                    String sValue = value.toString();
+                    if (!sName.isEmpty() && !sValue.isEmpty()) {
                                                primitive.put(sName, sValue);
-					}
-				}
-			}
-		}
+                    }
+                }
+            }
+        }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-	}
+    }
 
-	@Override
-	protected Node createOrGetNode(Point p) throws MismatchedDimensionException, TransformException {
-		Node n = super.createOrGetNode(p);
-		featurePrimitives.add(n);
-		return n;
-	}
-	
-	@Override
-	protected <T extends OsmPrimitive> T addOsmPrimitive(T p) {
-		featurePrimitives.add(p);
-		return super.addOsmPrimitive(p);
-	}
+    @Override
+    protected Node createOrGetNode(Point p) throws MismatchedDimensionException, TransformException {
+        Node n = super.createOrGetNode(p);
+        featurePrimitives.add(n);
+        return n;
+    }
+    
+    @Override
+    protected <T extends OsmPrimitive> T addOsmPrimitive(T p) {
+        featurePrimitives.add(p);
+        return super.addOsmPrimitive(p);
+    }
 }

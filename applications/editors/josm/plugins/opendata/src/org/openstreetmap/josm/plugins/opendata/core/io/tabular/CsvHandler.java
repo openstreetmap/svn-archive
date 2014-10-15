@@ -5,13 +5,13 @@ import java.nio.charset.Charset;
 
 public interface CsvHandler extends SpreadSheetHandler {
 
-	public void setCharset(Charset charset);
+    public void setCharset(Charset charset);
 
-	public void setCharset(String charset);
+    public void setCharset(String charset);
 
-	public Charset getCharset();
+    public Charset getCharset();
 
-	public void setSeparator(String sep);
-	
-	public String getSeparator();
+    public void setSeparator(String sep);
+    
+    public String getSeparator();
 }

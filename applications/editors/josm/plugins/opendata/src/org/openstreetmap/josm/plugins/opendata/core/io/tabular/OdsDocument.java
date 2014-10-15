@@ -17,19 +17,19 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class OdsDocument extends OpenDocument {
 
-	public OdsDocument(InputStream in) {
-		loadFrom(in);
-	}
-	
-	private InputSource getEntryInputSource(ZipInputStream zis) throws IOException {
+    public OdsDocument(InputStream in) {
+        loadFrom(in);
+    }
+    
+    private InputSource getEntryInputSource(ZipInputStream zis) throws IOException {
         int n = -1;
-		final byte[] buffer = new byte[4096];
+        final byte[] buffer = new byte[4096];
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         while ((n = zis.read(buffer, 0, buffer.length)) != -1) {
-        	baos.write(buffer, 0, n);
+            baos.write(buffer, 0, n);
         }
-		return new InputSource(new ByteArrayInputStream(baos.toByteArray()));
-	}
+        return new InputSource(new ByteArrayInputStream(baos.toByteArray()));
+    }
 
     public void loadFrom(final InputStream in) {
         final SaxContentUnmarshaller contentHandler = new SaxContentUnmarshaller();
@@ -42,12 +42,12 @@ public class OdsDocument extends OpenDocument {
             boolean contentParsed = false;
             
             while (!contentParsed && (entry = zis.getNextEntry()) != null) {
-            	if (entry.getName().equals("content.xml")) {
+                if (entry.getName().equals("content.xml")) {
                     rdr.setContentHandler(contentHandler);
                     Main.info("Parsing content.xml");
                     rdr.parse(getEntryInputSource(zis));
-            		contentParsed = true;
-            	}
+                    contentParsed = true;
+                }
             }
             
         } catch (final Exception e) {

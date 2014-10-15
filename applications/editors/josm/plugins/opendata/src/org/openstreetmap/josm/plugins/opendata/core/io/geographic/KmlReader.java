@@ -31,7 +31,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 public class KmlReader extends AbstractReader {
 
     public static final String KML_PLACEMARK   = "Placemark";
-    public static final String KML_NAME	       = "name";
+    public static final String KML_NAME           = "name";
     public static final String KML_COLOR       = "color";
     public static final String KML_SIMPLE_DATA = "SimpleData";
     public static final String KML_LINE_STRING = "LineString";
@@ -50,105 +50,105 @@ public class KmlReader extends AbstractReader {
         this.parser = parser;
     }
 
-	public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
+    public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
         InputStreamReader ir = UTFInputStreamReader.create(in);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
-	    //XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(in, UTF8);
+        //XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(in, UTF8);
         return new KmlReader(parser).parseDoc();
-	}
+    }
 
-	private DataSet parseDoc() throws XMLStreamException {
-		DataSet ds = new DataSet();
-		while (parser.hasNext()) {
+    private DataSet parseDoc() throws XMLStreamException {
+        DataSet ds = new DataSet();
+        while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
                 if (parser.getLocalName().equals(KML_PLACEMARK)) {
-                	parsePlaceMark(ds);
+                    parsePlaceMark(ds);
                 }
             }
-		}
-		return ds;
-	}
-	
-	private static boolean keyIsIgnored(String key) {
-		for (ProjectionPatterns pp : OdConstants.PROJECTIONS) {
-			if (pp.getXPattern().matcher(key).matches() || pp.getYPattern().matcher(key).matches()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private void parsePlaceMark(DataSet ds) throws XMLStreamException {
-		List<OsmPrimitive> list = new ArrayList<>();
-		Way way = null;
-		Node node = null;
-		Relation relation = null;
-		String role = "";
-		Map<String, String> tags = new HashMap<>();
-		while (parser.hasNext()) {
+        }
+        return ds;
+    }
+    
+    private static boolean keyIsIgnored(String key) {
+        for (ProjectionPatterns pp : OdConstants.PROJECTIONS) {
+            if (pp.getXPattern().matcher(key).matches() || pp.getYPattern().matcher(key).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void parsePlaceMark(DataSet ds) throws XMLStreamException {
+        List<OsmPrimitive> list = new ArrayList<>();
+        Way way = null;
+        Node node = null;
+        Relation relation = null;
+        String role = "";
+        Map<String, String> tags = new HashMap<>();
+        while (parser.hasNext()) {
             int event = parser.next();
             if (event == XMLStreamConstants.START_ELEMENT) {
-            	if (parser.getLocalName().equals(KML_COLOR)) {
-            		String s = parser.getElementText();
-            		// KML color format is aabbggrr, convert it to OSM (web) format: #rrggbb
-            		String rgbColor = '#'+s.substring(6,8)+s.substring(4,6)+s.substring(2,4);
-            		tags.put(KML_COLOR, rgbColor);
-            	} else if (parser.getLocalName().equals(KML_NAME)) {
-                	tags.put(KML_NAME, parser.getElementText());
-            	} else if (parser.getLocalName().equals(KML_SIMPLE_DATA)) {
-            		String key = parser.getAttributeValue(null, "name");
-            		if (!keyIsIgnored(key)) {
-            			tags.put(key, parser.getElementText());
-            		}
-            	} else if (parser.getLocalName().equals(KML_POLYGON)) {
-            		ds.addPrimitive(relation = new Relation());
-            		relation.put("type", "multipolygon");
-            		list.add(relation);
-            	} else if (parser.getLocalName().equals(KML_OUTER_BOUND)) {
-            		role = "outer";
-            	} else if (parser.getLocalName().equals(KML_INNER_BOUND)) {
-            		role = "inner";
-            	} else if (parser.getLocalName().equals(KML_LINEAR_RING)) {
-            		if (relation != null) {
-            			ds.addPrimitive(way = new Way());
-            			relation.addMember(new RelationMember(role, way));
-            		}
-            	} else if (parser.getLocalName().equals(KML_LINE_STRING)) {
-            		ds.addPrimitive(way = new Way());
-            		list.add(way);
-            	} else if (parser.getLocalName().equals(KML_COORDINATES)) {
-            		String[] tab = parser.getElementText().trim().split("\\s");
-            		for (int i = 0; i < tab.length; i ++) {
-            			String[] values = tab[i].split(",");
-            			if (values.length >= 2) {
-	            			LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecisionStrict();
-	            			node = nodes.get(ll);
-	            			if (node == null) {
-	            				ds.addPrimitive(node = new Node(ll));
-	            				nodes.put(ll, node);
-	            				if (values.length > 2 && !values[2].equals("0")) {
-	            					node.put("ele", values[2]);
-	            				}
-	            			}
-	            			if (way != null) {
-	            				way.addNode(node);
-	            			}
-            			}
-            		}
-            	}
+                if (parser.getLocalName().equals(KML_COLOR)) {
+                    String s = parser.getElementText();
+                    // KML color format is aabbggrr, convert it to OSM (web) format: #rrggbb
+                    String rgbColor = '#'+s.substring(6,8)+s.substring(4,6)+s.substring(2,4);
+                    tags.put(KML_COLOR, rgbColor);
+                } else if (parser.getLocalName().equals(KML_NAME)) {
+                    tags.put(KML_NAME, parser.getElementText());
+                } else if (parser.getLocalName().equals(KML_SIMPLE_DATA)) {
+                    String key = parser.getAttributeValue(null, "name");
+                    if (!keyIsIgnored(key)) {
+                        tags.put(key, parser.getElementText());
+                    }
+                } else if (parser.getLocalName().equals(KML_POLYGON)) {
+                    ds.addPrimitive(relation = new Relation());
+                    relation.put("type", "multipolygon");
+                    list.add(relation);
+                } else if (parser.getLocalName().equals(KML_OUTER_BOUND)) {
+                    role = "outer";
+                } else if (parser.getLocalName().equals(KML_INNER_BOUND)) {
+                    role = "inner";
+                } else if (parser.getLocalName().equals(KML_LINEAR_RING)) {
+                    if (relation != null) {
+                        ds.addPrimitive(way = new Way());
+                        relation.addMember(new RelationMember(role, way));
+                    }
+                } else if (parser.getLocalName().equals(KML_LINE_STRING)) {
+                    ds.addPrimitive(way = new Way());
+                    list.add(way);
+                } else if (parser.getLocalName().equals(KML_COORDINATES)) {
+                    String[] tab = parser.getElementText().trim().split("\\s");
+                    for (int i = 0; i < tab.length; i ++) {
+                        String[] values = tab[i].split(",");
+                        if (values.length >= 2) {
+                            LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecisionStrict();
+                            node = nodes.get(ll);
+                            if (node == null) {
+                                ds.addPrimitive(node = new Node(ll));
+                                nodes.put(ll, node);
+                                if (values.length > 2 && !values[2].equals("0")) {
+                                    node.put("ele", values[2]);
+                                }
+                            }
+                            if (way != null) {
+                                way.addNode(node);
+                            }
+                        }
+                    }
+                }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (parser.getLocalName().equals(KML_PLACEMARK)) {
-                	break;
+                    break;
                 } else if (parser.getLocalName().equals(KML_POINT)) {
-                	list.add(node);
+                    list.add(node);
                 }
             }
-		}
-		for (OsmPrimitive p : list) {
-			for (String key : tags.keySet()) {
-				p.put(key, tags.get(key));
-			}
-		}
-	}
+        }
+        for (OsmPrimitive p : list) {
+            for (String key : tags.keySet()) {
+                p.put(key, tags.get(key));
+            }
+        }
+    }
 }

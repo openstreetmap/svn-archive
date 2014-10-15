@@ -33,13 +33,13 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public class NetworkReader extends OsmServerReader {
 
-	private final String url;
-	private final AbstractDataSetHandler handler;
-	private Class<? extends AbstractReader> readerClass;
-	private final boolean promptUser;
+    private final String url;
+    private final AbstractDataSetHandler handler;
+    private Class<? extends AbstractReader> readerClass;
+    private final boolean promptUser;
 
-	private File file;
-	private String filename;
+    private File file;
+    private String filename;
     
     /**
      * File readers
@@ -65,114 +65,114 @@ public class NetworkReader extends OsmServerReader {
 
     public NetworkReader(String url, AbstractDataSetHandler handler, boolean promptUser) {
         CheckParameterUtil.ensureParameterNotNull(url, "url");
-    	this.url = url;
+        this.url = url;
         this.handler = handler;
         this.readerClass = null;
         this.promptUser = promptUser;
     }
     
-	public final File getReadFile() {
-		return file;
-	}
+    public final File getReadFile() {
+        return file;
+    }
 
-	public final String getReadFileName() {
-		return filename;
-	}
+    public final String getReadFileName() {
+        return filename;
+    }
 
-	private Class<? extends AbstractReader> findReaderByAttachment() {
-		String cdisp = this.activeConnection.getHeaderField("Content-disposition");
-		if (cdisp != null) {
-			Matcher m = Pattern.compile("attachment;.?filename=(.*)").matcher(cdisp);
-			if (m.matches()) {
-				filename = m.group(1);
-				return findReaderByExtension(filename);
-			}
-		}
-		return null;
-	}
+    private Class<? extends AbstractReader> findReaderByAttachment() {
+        String cdisp = this.activeConnection.getHeaderField("Content-disposition");
+        if (cdisp != null) {
+            Matcher m = Pattern.compile("attachment;.?filename=(.*)").matcher(cdisp);
+            if (m.matches()) {
+                filename = m.group(1);
+                return findReaderByExtension(filename);
+            }
+        }
+        return null;
+    }
 
-	private Class<? extends AbstractReader> findReaderByContentType() {
-    	String contentType = this.activeConnection.getContentType();
-    	if (contentType.startsWith("application/zip")) {
-    		return ZipReader.class;
+    private Class<? extends AbstractReader> findReaderByContentType() {
+        String contentType = this.activeConnection.getContentType();
+        if (contentType.startsWith("application/zip")) {
+            return ZipReader.class;
         } else if (contentType.startsWith("application/x-7z-compressed")) {
             return SevenZipReader.class;
-    	} else if (contentType.startsWith("application/vnd.ms-excel")) {
-    		return XlsReader.class;
-    	} else if (contentType.startsWith("application/octet-stream")) {
-        	//return OdsReader.class;//FIXME, can be anything
-    	} else if (contentType.startsWith("text/csv")) {
-    		return CsvReader.class;
-    	} else if (contentType.startsWith("text/plain")) {//TODO: extract charset
-    		return CsvReader.class;
-    	} else if (contentType.startsWith("tdyn/html")) {
-        	//return CsvReader.class;//FIXME, can also be .tar.gz
-    	} else {
-    		System.err.println("Unsupported content type: "+contentType);
-    	}
-    	return null;
-	}
+        } else if (contentType.startsWith("application/vnd.ms-excel")) {
+            return XlsReader.class;
+        } else if (contentType.startsWith("application/octet-stream")) {
+            //return OdsReader.class;//FIXME, can be anything
+        } else if (contentType.startsWith("text/csv")) {
+            return CsvReader.class;
+        } else if (contentType.startsWith("text/plain")) {//TODO: extract charset
+            return CsvReader.class;
+        } else if (contentType.startsWith("tdyn/html")) {
+            //return CsvReader.class;//FIXME, can also be .tar.gz
+        } else {
+            System.err.println("Unsupported content type: "+contentType);
+        }
+        return null;
+    }
 
-	private Class<? extends AbstractReader> findReaderByExtension(String filename) {
-		filename = filename.replace("\"", "").toLowerCase();
-		for (String ext : FILE_AND_ARCHIVE_READERS.keySet()) {
-		    if (filename.endsWith("."+ext)) {
-		        return FILE_AND_ARCHIVE_READERS.get(ext);
-		    }
-		}
-		return null;
-	}
+    private Class<? extends AbstractReader> findReaderByExtension(String filename) {
+        filename = filename.replace("\"", "").toLowerCase();
+        for (String ext : FILE_AND_ARCHIVE_READERS.keySet()) {
+            if (filename.endsWith("."+ext)) {
+                return FILE_AND_ARCHIVE_READERS.get(ext);
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {
+    @Override
+    public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {
         InputStream in = null;
         ProgressMonitor instance = null;
         try {
-        	in = getInputStreamRaw(url, progressMonitor);
+            in = getInputStreamRaw(url, progressMonitor);
             if (in == null)
                 return null;
             progressMonitor.subTask(tr("Downloading data..."));
             if (readerClass == null) {
-            	readerClass = findReaderByAttachment();
+                readerClass = findReaderByAttachment();
             }
             if (readerClass == null) {
                 readerClass = findReaderByExtension(url);
             }
             if (readerClass == null) {
-            	readerClass = findReaderByContentType();
+                readerClass = findReaderByContentType();
             }
             if (readerClass == null) {
-           		throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?
+                   throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?
             } else if (findReaderByExtension(url) != null) {
-            	filename = url.substring(url.lastIndexOf('/')+1);
+                filename = url.substring(url.lastIndexOf('/')+1);
             }
             instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
             if (readerClass.equals(ZipReader.class) || readerClass.equals(SevenZipReader.class)) {
-            	ArchiveReader zipReader = readerClass.equals(ZipReader.class) 
-            	        ? new ZipReader(in, handler, promptUser) : new SevenZipReader(in, handler, promptUser);
-            	DataSet ds = zipReader.parseDoc(instance);
-            	file = zipReader.getReadFile();
-            	return ds;
+                ArchiveReader zipReader = readerClass.equals(ZipReader.class) 
+                        ? new ZipReader(in, handler, promptUser) : new SevenZipReader(in, handler, promptUser);
+                DataSet ds = zipReader.parseDoc(instance);
+                file = zipReader.getReadFile();
+                return ds;
             } else if (readerClass.equals(KmlReader.class)) {
-            	return KmlReader.parseDataSet(in, instance);
+                return KmlReader.parseDataSet(in, instance);
             } else if (readerClass.equals(KmzReader.class)) {
-            	return KmzReader.parseDataSet(in, instance);
+                return KmzReader.parseDataSet(in, instance);
             } else if (readerClass.equals(MifReader.class)) {
-            	return MifReader.parseDataSet(in, null, handler, instance);
+                return MifReader.parseDataSet(in, null, handler, instance);
             } else if (readerClass.equals(ShpReader.class)) {
-            	return ShpReader.parseDataSet(in, null, handler, instance);
+                return ShpReader.parseDataSet(in, null, handler, instance);
             } else if (readerClass.equals(TabReader.class)) {
-            	return TabReader.parseDataSet(in, null, handler, instance);
+                return TabReader.parseDataSet(in, null, handler, instance);
             } else if (readerClass.equals(CsvReader.class)) {
-            	return CsvReader.parseDataSet(in, handler, instance);
+                return CsvReader.parseDataSet(in, handler, instance);
             } else if (readerClass.equals(OdsReader.class)) {
-            	return OdsReader.parseDataSet(in, handler, instance);
+                return OdsReader.parseDataSet(in, handler, instance);
             } else if (readerClass.equals(XlsReader.class)) {
-            	return XlsReader.parseDataSet(in, handler, instance);
+                return XlsReader.parseDataSet(in, handler, instance);
             } else if (readerClass.equals(GmlReader.class)) {
-            	return GmlReader.parseDataSet(in, handler, instance);
+                return GmlReader.parseDataSet(in, handler, instance);
             } else {
-            	throw new IllegalArgumentException("Unsupported reader class: "+readerClass.getName());
+                throw new IllegalArgumentException("Unsupported reader class: "+readerClass.getName());
             }
         } catch (OsmTransferException e) {
             throw e;
@@ -189,5 +189,5 @@ public class NetworkReader extends OsmServerReader {
                 }
             } catch (Exception e) {/* ignore it */}
         }
-	}
+    }
 }

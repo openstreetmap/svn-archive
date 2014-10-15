@@ -26,7 +26,7 @@ import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 
 // FIXME: Try to refactor CombineWayAction instead of using this class
 public class WayCombiner {
-	
+    
     protected static Way getTargetWay(Collection<Way> combinedWays) {
         // init with an arbitrary way
         Way targetWay = combinedWays.iterator().next();
@@ -154,7 +154,7 @@ public class WayCombiner {
         //new ChangeCommand(targetWay, modifiedTargetWay).executeCommand();
         targetWay.cloneFrom(modifiedTargetWay);
         /*for (Command c : dialog.buildResolutionCommands()) {
-        	c.executeCommand();//FIXME
+            c.executeCommand();//FIXME
         }*/
         //new DeleteCommand(deletedWays).executeCommand();
         for (Way way: deletedWays) {

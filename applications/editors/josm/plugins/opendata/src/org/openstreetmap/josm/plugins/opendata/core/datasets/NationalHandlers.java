@@ -8,11 +8,11 @@ import org.openstreetmap.josm.plugins.opendata.core.io.geographic.ShpHandler;
 
 public abstract class NationalHandlers {
 
-	public static final GmlHandler[] DEFAULT_GML_HANDLERS = new GmlHandler[]{
-		new AustrianGmlHandler()
-	};
+    public static final GmlHandler[] DEFAULT_GML_HANDLERS = new GmlHandler[]{
+        new AustrianGmlHandler()
+    };
 
-	public static final ShpHandler[] DEFAULT_SHP_HANDLERS = new ShpHandler[]{
-		new FrenchShpHandler()
-	};
+    public static final ShpHandler[] DEFAULT_SHP_HANDLERS = new ShpHandler[]{
+        new FrenchShpHandler()
+    };
 }

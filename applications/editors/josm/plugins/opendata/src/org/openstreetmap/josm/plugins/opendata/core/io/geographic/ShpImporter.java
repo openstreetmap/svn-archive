@@ -14,7 +14,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class ShpImporter extends AbstractImporter {
-	
+    
     public static final ExtensionFileFilter SHP_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.SHP_EXT, OdConstants.SHP_EXT, tr("Shapefiles") + " (*."+OdConstants.SHP_EXT+")");
 
@@ -22,13 +22,13 @@ public class ShpImporter extends AbstractImporter {
         super(SHP_FILE_FILTER);
     }
 
-	@Override
-	protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
-			throws IllegalDataException {
-		try {
-			return ShpReader.parseDataSet(in, file, handler, instance);
-		} catch (IOException e) {
-			throw new IllegalDataException(e);
-		}
-	}
+    @Override
+    protected DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IllegalDataException {
+        try {
+            return ShpReader.parseDataSet(in, file, handler, instance);
+        } catch (IOException e) {
+            throw new IllegalDataException(e);
+        }
+    }
 }

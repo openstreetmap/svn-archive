@@ -15,21 +15,21 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public class ViewLicenseAction extends JosmAction {
 
-	private final License license;
-	
-	public ViewLicenseAction(License license, String title, String description) {
-		super(title, null, description, null, false);
-		CheckParameterUtil.ensureParameterNotNull(license, "license");
-		this.license = license;
+    private final License license;
+    
+    public ViewLicenseAction(License license, String title, String description) {
+        super(title, null, description, null, false);
+        CheckParameterUtil.ensureParameterNotNull(license, "license");
+        this.license = license;
         putValue(Action.SMALL_ICON, OdUtils.getImageIcon(OdConstants.ICON_AGREEMENT_24));
-	}
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		try {
-			new ViewLicenseDialog(license).showDialog();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            new ViewLicenseDialog(license).showDialog();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

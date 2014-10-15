@@ -19,65 +19,65 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 
 public class OdsReader extends SpreadSheetReader {
 
-	private OpenDocument doc;
-	private TableTable sheet;
-	private List<TableTableRow> rows;
-	private int rowIndex;
-	
-	private static final String SEP = "TextP:[";
-	
-	public OdsReader(SpreadSheetHandler handler) {
-		super(handler);
-	}
+    private OpenDocument doc;
+    private TableTable sheet;
+    private List<TableTableRow> rows;
+    private int rowIndex;
+    
+    private static final String SEP = "TextP:[";
+    
+    public OdsReader(SpreadSheetHandler handler) {
+        super(handler);
+    }
 
-	public static DataSet parseDataSet(InputStream in,
-			AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
-		return new OdsReader(handler != null ? handler.getSpreadSheetHandler() : null).parse(in, instance);
-	}
+    public static DataSet parseDataSet(InputStream in,
+            AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
+        return new OdsReader(handler != null ? handler.getSpreadSheetHandler() : null).parse(in, instance);
+    }
 
-	@Override
-	protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
-		try {
-			Main.info("Parsing ODS file");
-			doc = new OdsDocument(in);
-			List<OfficeSpreadsheet> spreadsheets = doc.getBody().getOfficeSpreadsheets();
-			if (spreadsheets != null && spreadsheets.size() > 0) {
-				List<TableTable> tables = spreadsheets.get(0).getTables();
-				if (tables != null && tables.size() > 0) {
-					sheet = tables.get(getSheetNumber());
-					if (sheet != null) {
-						rows = sheet.getRows();
-					}
-				}
-			}
-			rowIndex = 0;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-	}
+    @Override
+    protected void initResources(InputStream in, ProgressMonitor progressMonitor) throws IOException {
+        try {
+            Main.info("Parsing ODS file");
+            doc = new OdsDocument(in);
+            List<OfficeSpreadsheet> spreadsheets = doc.getBody().getOfficeSpreadsheets();
+            if (spreadsheets != null && spreadsheets.size() > 0) {
+                List<TableTable> tables = spreadsheets.get(0).getTables();
+                if (tables != null && tables.size() > 0) {
+                    sheet = tables.get(getSheetNumber());
+                    if (sheet != null) {
+                        rows = sheet.getRows();
+                    }
+                }
+            }
+            rowIndex = 0;
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
+    }
 
-	@Override
-	protected String[] readLine(ProgressMonitor progressMonitor) throws IOException {
-		if (rows != null && rowIndex < rows.size()) {
-			TableTableRow row = rows.get(rowIndex++);
+    @Override
+    protected String[] readLine(ProgressMonitor progressMonitor) throws IOException {
+        if (rows != null && rowIndex < rows.size()) {
+            TableTableRow row = rows.get(rowIndex++);
 
-			if (rowIndex % 5000 == 0) {
-				Main.info("Lines read: "+rowIndex);
-			}
+            if (rowIndex % 5000 == 0) {
+                Main.info("Lines read: "+rowIndex);
+            }
 
-			List<String> result = new ArrayList<>();
-			boolean allFieldsBlank = true;
-			for (TableTableCell cell : row.getAllCells()) {
-			    TextP textP = cell.getTextP();
-			    String text = textP == null ? "" : textP.toString().replace(SEP, "").replace("]", "").replace("null", "").trim();
+            List<String> result = new ArrayList<>();
+            boolean allFieldsBlank = true;
+            for (TableTableCell cell : row.getAllCells()) {
+                TextP textP = cell.getTextP();
+                String text = textP == null ? "" : textP.toString().replace(SEP, "").replace("]", "").replace("null", "").trim();
                 result.add(text);
                 if (allFieldsBlank && !text.isEmpty()) {
                     allFieldsBlank = false;
                 }
-			}
-			
-			return rowIndex == 1 || !allFieldsBlank ? result.toArray(new String[0]) : null;
-		}
-		return null;
-	}
+            }
+            
+            return rowIndex == 1 || !allFieldsBlank ? result.toArray(new String[0]) : null;
+        }
+        return null;
+    }
 }

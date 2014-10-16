@@ -14,34 +14,34 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class ExportSigsAction extends DiskAccessAction {
 
-	public ExportSigsAction() {
-		super(tr("Export sigs..."), "exportsigs", tr("Export all signatures to XML file."),
-				Shortcut.registerShortcut("file:exportsigs", tr("Export sigs to XML..."), KeyEvent.VK_X, Shortcut.ALT_CTRL));
-	}
+    public ExportSigsAction() {
+        super(tr("Export sigs..."), "exportsigs", tr("Export all signatures to XML file."),
+                Shortcut.registerShortcut("file:exportsigs", tr("Export sigs to XML..."), KeyEvent.VK_X, Shortcut.ALT_CTRL));
+    }
 
-	public ExportSigsAction(String name, String iconName, String tooltip, Shortcut shortcut) {
-		super(name, iconName, tooltip, shortcut);
-	}
+    public ExportSigsAction(String name, String iconName, String tooltip, Shortcut shortcut) {
+        super(name, iconName, tooltip, shortcut);
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!isEnabled())
-			return;
-		doSave();
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!isEnabled())
+            return;
+        doSave();
+    }
 
-	public boolean doSave() {
-		File f = createAndOpenSaveFileChooser(tr("Save Signatures file"), "tosm");
-		if (f == null)
-			return false;
-		SigExporter exporter = new SigExporter();
-		try {
-			exporter.exportData(f, null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
+    public boolean doSave() {
+        File f = createAndOpenSaveFileChooser(tr("Save Signatures file"), "tosm");
+        if (f == null)
+            return false;
+        SigExporter exporter = new SigExporter();
+        try {
+            exporter.exportData(f, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 }

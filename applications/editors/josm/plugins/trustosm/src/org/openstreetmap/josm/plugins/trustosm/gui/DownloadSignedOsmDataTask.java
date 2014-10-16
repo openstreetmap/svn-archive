@@ -24,104 +24,104 @@ import org.xml.sax.SAXException;
 
 public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
 
-	private boolean canceled;
-	private Exception lastException;
-	private final Collection<OsmPrimitive> missing;
-	private final OsmDataLayer curLayer;
-	private MultiFetchServerObjectReader objectReader;
+    private boolean canceled;
+    private Exception lastException;
+    private final Collection<OsmPrimitive> missing;
+    private final OsmDataLayer curLayer;
+    private MultiFetchServerObjectReader objectReader;
 
-	/**
-	 * Download the given OSMPrimitives to the given layer
-	 * 
-	 */
-	public DownloadSignedOsmDataTask(Collection<OsmPrimitive> missing, OsmDataLayer curLayer) {
-		super(tr("Download signed data"));
-		this.missing = missing;
-		this.curLayer = curLayer;
-	}
+    /**
+     * Download the given OSMPrimitives to the given layer
+     * 
+     */
+    public DownloadSignedOsmDataTask(Collection<OsmPrimitive> missing, OsmDataLayer curLayer) {
+        super(tr("Download signed data"));
+        this.missing = missing;
+        this.curLayer = curLayer;
+    }
 
 
-	@Override
-	protected void cancel() {
-		canceled = true;
-		synchronized(this) {
-			if (objectReader != null) {
-				objectReader.cancel();
-			}
-		}
-	}
+    @Override
+    protected void cancel() {
+        canceled = true;
+        synchronized(this) {
+            if (objectReader != null) {
+                objectReader.cancel();
+            }
+        }
+    }
 
-	@Override
-	protected void finish() {
-		Main.map.repaint();
-		if (canceled)
-			return;
-		if (lastException != null) {
-			ExceptionDialogUtil.explainException(lastException);
-		}
-	}
+    @Override
+    protected void finish() {
+        Main.map.repaint();
+        if (canceled)
+            return;
+        if (lastException != null) {
+            ExceptionDialogUtil.explainException(lastException);
+        }
+    }
 
-	protected String buildDownloadFeedbackMessage() {
-		return trn("Downloading {0} incomplete child of relation ''{1}''",
-				"Downloading {0} incomplete children of relation ''{1}''",
-				missing.size(),
-				missing.size(),
-				"Wurst"
-		);
-	}
+    protected String buildDownloadFeedbackMessage() {
+        return trn("Downloading {0} incomplete child of relation ''{1}''",
+                "Downloading {0} incomplete children of relation ''{1}''",
+                missing.size(),
+                missing.size(),
+                "Wurst"
+        );
+    }
 
-	@Override
-	protected void realRun() throws SAXException, IOException, OsmTransferException {
-		try {
-			synchronized (this) {
-				if (canceled) return;
-				objectReader = new MultiFetchServerObjectReader();
-			}
-			objectReader.append(missing);
-			progressMonitor.indeterminateSubTask(
-					buildDownloadFeedbackMessage()
-			);
-			final DataSet dataSet = objectReader.parseOsm(progressMonitor
-					.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
-			if (dataSet == null)
-				return;
-			synchronized (this) {
-				if (canceled) return;
-				objectReader = null;
-			}
+    @Override
+    protected void realRun() throws SAXException, IOException, OsmTransferException {
+        try {
+            synchronized (this) {
+                if (canceled) return;
+                objectReader = new MultiFetchServerObjectReader();
+            }
+            objectReader.append(missing);
+            progressMonitor.indeterminateSubTask(
+                    buildDownloadFeedbackMessage()
+            );
+            final DataSet dataSet = objectReader.parseOsm(progressMonitor
+                    .createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
+            if (dataSet == null)
+                return;
+            synchronized (this) {
+                if (canceled) return;
+                objectReader = null;
+            }
 
-			SwingUtilities.invokeLater(
-					new Runnable() {
-						public void run() {
-							curLayer.mergeFrom(dataSet);
-							curLayer.onPostDownloadFromServer();
-							AutoScaleAction.zoomTo(dataSet.allPrimitives());
-							updateReferences(dataSet);
-						}
-					}
-			);
+            SwingUtilities.invokeLater(
+                    new Runnable() {
+                        public void run() {
+                            curLayer.mergeFrom(dataSet);
+                            curLayer.onPostDownloadFromServer();
+                            AutoScaleAction.zoomTo(dataSet.allPrimitives());
+                            updateReferences(dataSet);
+                        }
+                    }
+            );
 
-		} catch (Exception e) {
-			if (canceled) {
-				System.out.println(tr("Warning: Ignoring exception because task was canceled. Exception: {0}", e.toString()));
-				return;
-			}
-			lastException = e;
-		}
-	}
+        } catch (Exception e) {
+            if (canceled) {
+                System.out.println(tr("Warning: Ignoring exception because task was canceled. Exception: {0}", e.toString()));
+                return;
+            }
+            lastException = e;
+        }
+    }
 
-	public boolean updateReferences(DataSet ds) {
-		for (TrustOsmPrimitive t : TrustOSMplugin.signedItems.values()) {
-			OsmPrimitive osm = ds.getPrimitiveById(t.getOsmPrimitive().getPrimitiveId());
-			if (osm != null) {
-				t.setOsmPrimitive(osm);
-				return true;
-			} else {
-				System.out.println("No item found");
-			}
-		}
-		return false;
-	}
+    public boolean updateReferences(DataSet ds) {
+        for (TrustOsmPrimitive t : TrustOSMplugin.signedItems.values()) {
+            OsmPrimitive osm = ds.getPrimitiveById(t.getOsmPrimitive().getPrimitiveId());
+            if (osm != null) {
+                t.setOsmPrimitive(osm);
+                return true;
+            } else {
+                System.out.println("No item found");
+            }
+        }
+        return false;
+    }
 
 }
 

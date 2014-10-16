@@ -23,49 +23,49 @@ import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 
 public class SigImporter extends FileImporter {
 
-	public SigImporter() {
-		super(new ExtensionFileFilter("txml,xml", "txml", tr("OSM Signature Files") + " (*.txml *.xml)"));
-	}
+    public SigImporter() {
+        super(new ExtensionFileFilter("txml,xml", "txml", tr("OSM Signature Files") + " (*.txml *.xml)"));
+    }
 
-	public SigImporter(ExtensionFileFilter filter) {
-		super(filter);
-	}
+    public SigImporter(ExtensionFileFilter filter) {
+        super(filter);
+    }
 
-	@Override public void importData(File file, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-		try {
-			FileInputStream in = new FileInputStream(file);
-			importData(in, file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw new IOException(tr("File ''{0}'' does not exist.", file.getName()));
-		}
-	}
+    @Override public void importData(File file, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
+        try {
+            FileInputStream in = new FileInputStream(file);
+            importData(in, file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new IOException(tr("File ''{0}'' does not exist.", file.getName()));
+        }
+    }
 
-	protected void importData(InputStream in, File associatedFile) throws IllegalDataException {
-		if (!Main.main.hasEditLayer()) {
-			DataSet dataSet = new DataSet();
-			final OsmDataLayer layer = new OsmDataLayer(dataSet, associatedFile.getName(), associatedFile);
-			Main.main.addLayer(layer);
-		}
-		//		Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
-		Map<String,TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
-		System.out.println(trustitems.size());
-		/*
-		int missingCount = missingData.size();
-		int itemCount = trustitems.size();
-		if (missingCount == 0) {
-			JOptionPane.showMessageDialog(Main.parent, tr("{0} Signatures loaded. All referenced OSM objects found.",itemCount));
-		} else {
-			int n = JOptionPane.showOptionDialog(Main.parent, tr("{0} of {1} OSM objects are referenced but not there.\nDo you want to load them from OSM-Server?",missingCount,itemCount), tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+    protected void importData(InputStream in, File associatedFile) throws IllegalDataException {
+        if (!Main.main.hasEditLayer()) {
+            DataSet dataSet = new DataSet();
+            final OsmDataLayer layer = new OsmDataLayer(dataSet, associatedFile.getName(), associatedFile);
+            Main.main.addLayer(layer);
+        }
+        //        Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
+        Map<String,TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
+        System.out.println(trustitems.size());
+        /*
+        int missingCount = missingData.size();
+        int itemCount = trustitems.size();
+        if (missingCount == 0) {
+            JOptionPane.showMessageDialog(Main.parent, tr("{0} Signatures loaded. All referenced OSM objects found.",itemCount));
+        } else {
+            int n = JOptionPane.showOptionDialog(Main.parent, tr("{0} of {1} OSM objects are referenced but not there.\nDo you want to load them from OSM-Server?",missingCount,itemCount), tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-			if (n == JOptionPane.YES_OPTION) {
-				Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.main.getEditLayer()));
-			}
-		}
-		 */
-		TrustOSMplugin.signedItems.putAll(trustitems);
-		new GetMissingDataAction().downloadMissing();
-		//TrustOSMplugin.signedItems.putAll(TrustStoreHandler.loadSigsFromFile(in));
+            if (n == JOptionPane.YES_OPTION) {
+                Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.main.getEditLayer()));
+            }
+        }
+         */
+        TrustOSMplugin.signedItems.putAll(trustitems);
+        new GetMissingDataAction().downloadMissing();
+        //TrustOSMplugin.signedItems.putAll(TrustStoreHandler.loadSigsFromFile(in));
 
-	}
+    }
 }

@@ -17,34 +17,32 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public class SigExporter extends FileExporter {
 
-	public SigExporter(ExtensionFileFilter filter) {
-		super(filter);
-		// TODO Auto-generated constructor stub
-	}
+    public SigExporter(ExtensionFileFilter filter) {
+        super(filter);
+        // TODO Auto-generated constructor stub
+    }
 
-	public SigExporter() {
-		super(new ExtensionFileFilter("txml,xml", "txml", tr("Signature Files") + " (*.txml *.xml)"));
-	}
+    public SigExporter() {
+        super(new ExtensionFileFilter("txml,xml", "txml", tr("Signature Files") + " (*.txml *.xml)"));
+    }
 
-	@Override
-	public void exportData(File file, Layer layer) throws IOException {
-		CheckParameterUtil.ensureParameterNotNull(file, "file");
+    @Override
+    public void exportData(File file, Layer layer) throws IOException {
+        CheckParameterUtil.ensureParameterNotNull(file, "file");
 
-		String fn = file.getPath();
-		if (fn.indexOf('.') == -1) {
-			fn += ".tosm";
-			file = new File(fn);
-		}
-		try {
-			FileOutputStream fo = new FileOutputStream(file);
-			new SigWriter(fo).write(TrustOSMplugin.signedItems.values());
-			fo.flush();
-			fo.close();
-		} catch (IOException x) {
-			x.printStackTrace();
-			JOptionPane.showMessageDialog(Main.parent, tr("Error while exporting {0}:\n{1}", fn, x.getMessage()),
-					tr("Error"), JOptionPane.ERROR_MESSAGE);
-		}
-	}
+        String fn = file.getPath();
+        if (fn.indexOf('.') == -1) {
+            fn += ".tosm";
+            file = new File(fn);
+        }
+        try (FileOutputStream fo = new FileOutputStream(file)) {
+            new SigWriter(fo).write(TrustOSMplugin.signedItems.values());
+            fo.flush();
+        } catch (IOException x) {
+            x.printStackTrace();
+            JOptionPane.showMessageDialog(Main.parent, tr("Error while exporting {0}:\n{1}", fn, x.getMessage()),
+                    tr("Error"), JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
 }

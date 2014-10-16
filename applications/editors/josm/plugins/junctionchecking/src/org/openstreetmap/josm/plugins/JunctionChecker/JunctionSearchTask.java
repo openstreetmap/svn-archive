@@ -21,49 +21,49 @@ import org.xml.sax.SAXException;
  */
 public class JunctionSearchTask extends PleaseWaitRunnable{
 
-	private final JunctionChecker jc;
-	private final JunctionCheckerPlugin plugin;
-	private final int n;
-	private final HashSet<Channel> subset;
-	private final boolean produceRelation;
-	private boolean canceled;
+    private final JunctionChecker jc;
+    private final JunctionCheckerPlugin plugin;
+    private final int n;
+    private final HashSet<Channel> subset;
+    private final boolean produceRelation;
+    private boolean canceled;
 
-	public JunctionSearchTask(JunctionCheckerPlugin plugin, int n,
-			HashSet<Channel> subset,
-			boolean produceRelation) {
-		super("JunctionSearch",false);
-		this.plugin = plugin;
-		this.n = n;
-		this.subset = subset;
-		this.produceRelation = produceRelation;
-		jc = new JunctionChecker(plugin.getChannelDigraph(), n);
-	}
+    public JunctionSearchTask(JunctionCheckerPlugin plugin, int n,
+            HashSet<Channel> subset,
+            boolean produceRelation) {
+        super("JunctionSearch",false);
+        this.plugin = plugin;
+        this.n = n;
+        this.subset = subset;
+        this.produceRelation = produceRelation;
+        jc = new JunctionChecker(plugin.getChannelDigraph(), n);
+    }
 
-	@Override
-	protected void cancel() {
-		this.canceled = true;
-		progressMonitor.cancel();
-	}
+    @Override
+    protected void cancel() {
+        this.canceled = true;
+        progressMonitor.cancel();
+    }
 
-	@Override
-	protected void finish() {
-		progressMonitor.finishTask();
-		if (canceled) {
-			return;
-		}
-		ArrayList<HashSet<Channel>> junctions = jc.getJunctions();
-		JOptionPane.showMessageDialog(Main.parent, tr("Number of {0}-ways junctions found: {1}", n, junctions.size()));
-		if (produceRelation) {
-			for (int i = 0; i < junctions.size(); i++) {
-				plugin.getRelationProducer().produceRelation(junctions.get(i) , n);
-			}
-		}
-	}
+    @Override
+    protected void finish() {
+        progressMonitor.finishTask();
+        if (canceled) {
+            return;
+        }
+        ArrayList<HashSet<Channel>> junctions = jc.getJunctions();
+        JOptionPane.showMessageDialog(Main.parent, tr("Number of {0}-ways junctions found: {1}", n, junctions.size()));
+        if (produceRelation) {
+            for (int i = 0; i < junctions.size(); i++) {
+                plugin.getRelationProducer().produceRelation(junctions.get(i) , n);
+            }
+        }
+    }
 
-	@Override
-	protected void realRun() throws SAXException, IOException,
-	OsmTransferException {
-		jc.junctionSearch(new ArrayList<Channel>(subset), getProgressMonitor());
-	}
+    @Override
+    protected void realRun() throws SAXException, IOException,
+    OsmTransferException {
+        jc.junctionSearch(new ArrayList<Channel>(subset), getProgressMonitor());
+    }
 
 }

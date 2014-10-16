@@ -18,48 +18,48 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
  */
 public class RelationProducer {
 
-	private JunctionCheckerPlugin plugin;
-	private HashSet<HashSet<Channel>> storedRelations;
+    private JunctionCheckerPlugin plugin;
+    private HashSet<HashSet<Channel>> storedRelations;
 
-	public RelationProducer(JunctionCheckerPlugin plugin) {
-		this.plugin = plugin;
-		storedRelations = new HashSet<HashSet<Channel>>();
-	}
+    public RelationProducer(JunctionCheckerPlugin plugin) {
+        this.plugin = plugin;
+        storedRelations = new HashSet<HashSet<Channel>>();
+    }
 
-	public void produceRelation(HashSet<Channel> subset, int n) {
-		if (isProduced(subset)) {
-			return;
-		}
-		LinkedList<OsmPrimitive> ways = new LinkedList<OsmPrimitive>();
-		Iterator<Channel> cit = subset.iterator();
-		while (cit.hasNext()) {
-			Channel c = cit.next();
-			// System.out.println(c.getWay().getId());
-			if (!(ways.contains(plugin.getOsmlayer().data.getPrimitiveById(c
-					.getWay().getId(), OsmPrimitiveType.WAY)))) {
-				ways.add(plugin.getOsmlayer().data.getPrimitiveById(c.getWay()
-						.getId(), OsmPrimitiveType.WAY));
-			}
-		}
-		Main.map.mapView.setActiveLayer(plugin.getOsmlayer());
-		plugin.getOsmlayer().data.setSelected(ways);
+    public void produceRelation(HashSet<Channel> subset, int n) {
+        if (isProduced(subset)) {
+            return;
+        }
+        LinkedList<OsmPrimitive> ways = new LinkedList<OsmPrimitive>();
+        Iterator<Channel> cit = subset.iterator();
+        while (cit.hasNext()) {
+            Channel c = cit.next();
+            // System.out.println(c.getWay().getId());
+            if (!(ways.contains(plugin.getOsmlayer().data.getPrimitiveById(c
+                    .getWay().getId(), OsmPrimitiveType.WAY)))) {
+                ways.add(plugin.getOsmlayer().data.getPrimitiveById(c.getWay()
+                        .getId(), OsmPrimitiveType.WAY));
+            }
+        }
+        Main.map.mapView.setActiveLayer(plugin.getOsmlayer());
+        plugin.getOsmlayer().data.setSelected(ways);
 
-		Relation jrelation = new Relation();
-		jrelation.put("type", "junction");
-		jrelation.put("n", Integer.toString(n));
-		for (int i = 0; i < ways.size(); i++) {
-			jrelation.addMember(new RelationMember("part of", ways.get(i)));
-		}
+        Relation jrelation = new Relation();
+        jrelation.put("type", "junction");
+        jrelation.put("n", Integer.toString(n));
+        for (int i = 0; i < ways.size(); i++) {
+            jrelation.addMember(new RelationMember("part of", ways.get(i)));
+        }
 
-		plugin.getOsmlayer().data.addPrimitive(jrelation);
-	}
+        plugin.getOsmlayer().data.addPrimitive(jrelation);
+    }
 
-	private boolean isProduced(HashSet<Channel> subset) {
-		if (storedRelations.contains(subset)) {
-			return true;
-		} else {
-			storedRelations.add(subset);
-		}
-		return false;
-	}
+    private boolean isProduced(HashSet<Channel> subset) {
+        if (storedRelations.contains(subset)) {
+            return true;
+        } else {
+            storedRelations.add(subset);
+        }
+        return false;
+    }
 }

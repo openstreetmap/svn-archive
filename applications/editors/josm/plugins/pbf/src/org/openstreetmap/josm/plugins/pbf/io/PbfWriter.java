@@ -349,42 +349,36 @@ public class PbfWriter implements Closeable {
                 processBatch();
             }
 
-            public void processNodes(Collection<Node> node) {
+            public void processNode(Node node) {
                 if (nodes == null) {
                     writeEmptyHeaderIfNeeded();
                     switchTypes();
                     nodes = new NodeGroup();
                 }
-                for (Node n : node) {
-                    if (n.getCoor() != null) {
-                        nodes.add(n);
-                        checkLimit();
-                    }
+                if (node.getCoor() != null) {
+                    nodes.add(node);
+                    checkLimit();
                 }
             }
 
-            public void processWays(Collection<Way> way) {
+            public void processWay(Way way) {
                 if (ways == null) {
                     writeEmptyHeaderIfNeeded();
                     switchTypes();
                     ways = new WayGroup();
                 }
-                for (Way w : way) {
-                    ways.add(w);
-                    checkLimit();
-                }
+                ways.add(way);
+                checkLimit();
             }
 
-            public void processRelations(Collection<Relation> relation) {
+            public void processRelation(Relation relation) {
                 if (relations == null) {
                     writeEmptyHeaderIfNeeded();
                     switchTypes();
                     relations = new RelationGroup();
                 }
-                for (Relation r : relation) {
-                    relations.add(r);
-                    checkLimit();
-                }
+                relations.add(relation);
+                checkLimit();
             }
         }
 
@@ -454,9 +448,15 @@ public class PbfWriter implements Closeable {
         
         public void process(DataSet ds) {
             processor.processSources(ds.dataSources);
-            processor.processNodes(ds.getNodes());
-            processor.processWays(ds.getWays());
-            processor.processRelations(ds.getRelations());
+            for (Node n : ds.getNodes()) {
+                processor.processNode(n);
+            }
+            for (Way w : ds.getWays()) {
+                processor.processWay(w);
+            }
+            for (Relation r : ds.getRelations()) {
+                processor.processRelation(r);
+            }
         }
 
         public void complete() {

@@ -4,7 +4,7 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
-	
+    
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.geotools.GeoToolsPlugin"/>
     <property name="plugin.description" value="Provides parts of the GeoTools library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
@@ -16,27 +16,27 @@
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-	
+    
     <!--
     **********************************************************
     ** post-dist - replaces files from the generated jar
     **********************************************************
     -->
     <target name="post-dist">
-    	<move file="${plugin.jar}" todir="${plugin.build.dir}" />
-    	<jar destfile="${plugin.jar}" filesetmanifest="merge">
+        <move file="${plugin.jar}" todir="${plugin.build.dir}" />
+        <jar destfile="${plugin.jar}" filesetmanifest="merge">
             <fileset dir="jar"/>
-    		<zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
+            <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
                 <exclude name="*.class"/>
-    			<exclude name="*.html"/>
+                <exclude name="*.html"/>
                 <exclude name="META-INF/**/*"/>
                 <exclude name="javax/*.txt"/>
-    		</zipfileset>
-    	    <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
-    	        <include name="META-INF/MANIFEST.MF"/>
-    	        <include name="META-INF/*.jai"/>
-    	    </zipfileset>
-    	</jar>
-    	<delete file="${plugin.build.dir}/${ant.project.name}.jar" />
+            </zipfileset>
+            <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
+                <include name="META-INF/MANIFEST.MF"/>
+                <include name="META-INF/*.jai"/>
+            </zipfileset>
+        </jar>
+        <delete file="${plugin.build.dir}/${ant.project.name}.jar" />
     </target>
 </project>

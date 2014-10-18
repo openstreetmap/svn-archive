@@ -14,11 +14,11 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class EpciPlugin extends Plugin {
 
-	/**
-	 * @param info
-	 */
-	public EpciPlugin(PluginInformation info) {
-		super(info);
-		DefaultNameFormatter.registerFormatHook(new EpciNameFormatter());
-	}
+    /**
+     * @param info
+     */
+    public EpciPlugin(PluginInformation info) {
+        super(info);
+        DefaultNameFormatter.registerFormatHook(new EpciNameFormatter());
+    }
 }

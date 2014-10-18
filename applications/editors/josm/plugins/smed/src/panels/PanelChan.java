@@ -27,18 +27,18 @@ public class PanelChan extends JPanel {
 			panelPort.setVisible(false);
 			panelStbd.setVisible(false);
 			panelSaw.setVisible(false);
-			dlg.panelMain.moreButton.setVisible(false);
-			dlg.panelMain.saveButton.setEnabled(false);
+			SmedAction.panelMain.moreButton.setVisible(false);
+			SmedAction.panelMain.saveButton.setEnabled(false);
 			topmarkButton.setVisible(false);
 			lightButton.setVisible(false);
-			Shp shp = dlg.panelMain.mark.getShape();
+			Shp shp = SmedAction.panelMain.mark.getShape();
 			if (portButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.LAM_PORT);
+				SmedAction.panelMain.mark.setCategory(Cat.LAM_PORT);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).setSelected(true);
 				} else {
 					panelPort.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKSHP);
+					SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelPort.alShape.actionPerformed(null);
 				panelPort.setVisible(true);
@@ -47,12 +47,12 @@ public class PanelChan extends JPanel {
 				portButton.setBorderPainted(false);
 			}
 			if (stbdButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.LAM_STBD);
+				SmedAction.panelMain.mark.setCategory(Cat.LAM_STBD);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
 					panelStbd.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKSHP);
+					SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
@@ -61,12 +61,12 @@ public class PanelChan extends JPanel {
 				stbdButton.setBorderPainted(false);
 			}
 			if (prefStbdButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.LAM_PSTBD);
+				SmedAction.panelMain.mark.setCategory(Cat.LAM_PSTBD);
 				if (panelPort.shapes.containsKey(shp)) {
 					panelPort.shapes.get(shp).setSelected(true);
 				} else {
 					panelPort.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKSHP);
+					SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelPort.alShape.actionPerformed(null);
 				panelPort.setVisible(true);
@@ -75,12 +75,12 @@ public class PanelChan extends JPanel {
 				prefStbdButton.setBorderPainted(false);
 			}
 			if (prefPortButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.LAM_PPORT);
+				SmedAction.panelMain.mark.setCategory(Cat.LAM_PPORT);
 				if (panelStbd.shapes.containsKey(shp)) {
 					panelStbd.shapes.get(shp).setSelected(true);
 				} else {
 					panelStbd.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKSHP);
+					SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelStbd.alShape.actionPerformed(null);
 				panelStbd.setVisible(true);
@@ -89,13 +89,13 @@ public class PanelChan extends JPanel {
 				prefPortButton.setBorderPainted(false);
 			}
 			if (safeWaterButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.NOCAT);
+				SmedAction.panelMain.mark.setCategory(Cat.NOCAT);
 				panelSaw.setVisible(true);
 				if (panelSaw.shapes.containsKey(shp)) {
 					panelSaw.shapes.get(shp).setSelected(true);
 				} else {
 					panelSaw.shapeButtons.clearSelection();
-					dlg.panelMain.mark.setShape(Shp.UNKSHP);
+					SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 				}
 				panelSaw.alShape.actionPerformed(null);
 				panelSaw.setVisible(true);
@@ -103,19 +103,19 @@ public class PanelChan extends JPanel {
 			} else {
 				safeWaterButton.setBorderPainted(false);
 			}
-			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-			lightButton.setVisible(dlg.panelMain.mark.testValid());
-			dlg.panelMain.panelMore.syncPanel();
+			topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
+			lightButton.setVisible(SmedAction.panelMain.mark.testValid());
+			SmedAction.panelMain.panelMore.syncPanel();
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/ChanTopButton.png")));
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
-				if (SeaMark.GrpMAP.get(dlg.panelMain.mark.getObject()) == Grp.SAW) {
-					dlg.panelMain.mark.setTopmark(Top.SPHERE);
-					dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
-					dlg.panelMain.mark.setTopColour(Col.RED);
+				if (SeaMark.GrpMAP.get(SmedAction.panelMain.mark.getObject()) == Grp.SAW) {
+					SmedAction.panelMain.mark.setTopmark(Top.SPHERE);
+					SmedAction.panelMain.mark.setTopPattern(Pat.NOPAT);
+					SmedAction.panelMain.mark.setTopColour(Col.RED);
 				} else {
 					switch (dlg.panelMain.mark.getCategory()) {
 					case LAM_PORT:

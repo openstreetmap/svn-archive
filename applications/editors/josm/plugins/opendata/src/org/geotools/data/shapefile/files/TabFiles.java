@@ -716,6 +716,7 @@ public class TabFiles extends ShpFiles {
      * @throws IOException
      *                 if a problem occurred opening the stream.
      */
+    @SuppressWarnings("resource")
     @Override
     public OutputStream getOutputStream(ShpFileType type,
             final FileWriter requestor) throws IOException {

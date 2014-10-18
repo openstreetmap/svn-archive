@@ -24,8 +24,8 @@ import relcontext.relationfix.NothingFixer;
 import relcontext.relationfix.RelationFixer;
 
 public class SortAndFixAction extends AbstractAction implements ChosenRelationListener {
-	private static final long serialVersionUID = 1L;
-	private ChosenRelation rel;
+    private static final long serialVersionUID = 1L;
+    private ChosenRelation rel;
     private List<RelationFixer> fixers;
 
     public SortAndFixAction( ChosenRelation rel ) {
@@ -66,10 +66,10 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     }
 
     private RelationFixer getFixer( Relation rel ) {
-    	for(RelationFixer fixer : fixers)
-    		if (fixer.isFixerApplicable(rel))
-    			return fixer;
-    	return new NothingFixer();
+        for(RelationFixer fixer : fixers)
+            if (fixer.isFixerApplicable(rel))
+                return fixer;
+        return new NothingFixer();
     }
 
     public Command fixRelation( Relation rel ) {

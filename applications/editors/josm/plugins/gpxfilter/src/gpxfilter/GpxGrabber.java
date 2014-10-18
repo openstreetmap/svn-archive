@@ -22,7 +22,7 @@ public class GpxGrabber extends OsmServerReader {
     private final double lon1;
     private final double lat2;
     private final double lon2;
-    
+
     private int page;
 
     public GpxGrabber(Bounds downloadArea) {
@@ -30,7 +30,7 @@ public class GpxGrabber extends OsmServerReader {
         this.lon1 = downloadArea.getMin().lon();
         this.lat2 = downloadArea.getMax().lat();
         this.lon2 = downloadArea.getMax().lon();
-        
+
         page = 0;
     }
 
@@ -41,14 +41,11 @@ public class GpxGrabber extends OsmServerReader {
      *      ways.
      */
     public GpxData parseRawGps() throws IOException, SAXException,OsmTransferException {
-        try {
-            String url = "trackpoints?bbox="+lon1+","+lat1+","+lon2+","+lat2+"&page="+page;
-
-            InputStream in = getInputStream(url, NullProgressMonitor.INSTANCE);
+        String url = "trackpoints?bbox="+lon1+","+lat1+","+lon2+","+lat2+"&page="+page;
+        try (InputStream in = getInputStream(url, NullProgressMonitor.INSTANCE)) {
             GpxReader reader = new GpxReader(in);
             reader.parse(false);
             GpxData result = reader.getGpxData();
-            in.close();
             result.fromServer = true;
             page++;
             return result;
@@ -69,7 +66,8 @@ public class GpxGrabber extends OsmServerReader {
             if (cancel)
                 return null;
             throw e;
-        }    }
+        }
+    }
 
     @Override
     public DataSet parseOsm(ProgressMonitor progressMonitor) throws OsmTransferException {

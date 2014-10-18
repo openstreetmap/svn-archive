@@ -7,31 +7,31 @@ import java.util.ArrayList;
 
 /**
  * This class is released under GNU general public license
- * 
+ *
  * Description: This class generates random names from syllables, and provides programmer a
  * simple way to set a group of rules for generator to avoid unpronounceable and bizarre names.
- * 
+ *
  * SYLLABLE FILE REQUIREMENTS/FORMAT:
  * 1) all syllables are separated by line break.
  * 2) Syllable should not contain or start with whitespace, as this character is ignored and only first part of the syllable is read.
  * 3) + and - characters are used to set rules, and using them in other way, may result in unpredictable results.
  * 4) Empty lines are ignored.
- * 
+ *
  * SYLLABLE CLASSIFICATION:
  * Name is usually composed from 3 different class of syllables, which include prefix, middle part and suffix.
  * To declare syllable as a prefix in the file, insert "-" as a first character of the line.
  * To declare syllable as a suffix in the file, insert "+" as a first character of the line.
  * everything else is read as a middle part.
- * 
+ *
  * NUMBER OF SYLLABLES:
  * Names may have any positive number of syllables. In case of 2 syllables, name will be composed from prefix and suffix.
  * In case of 1 syllable, name will be chosen from amongst the prefixes.
  * In case of 3 and more syllables, name will begin with prefix, is filled with middle parts and ended with suffix.
- * 
+ *
  * ASSIGNING RULES:
  * I included a way to set 4 kind of rules for every syllable. To add rules to the syllables, write them right after the
  * syllable and SEPARATE WITH WHITESPACE. (example: "aad +v -c"). The order of rules is not important.
- * 
+ *
  * RULES:
  * 1) +v means that next syllable must definitely start with a vocal.
  * 2) +c means that next syllable must definitely start with a consonant.
@@ -40,10 +40,10 @@ import java.util.ArrayList;
  * So, our example: "aad +v -c" means that "aad" can only be after consonant and next syllable must start with vocal.
  * Beware of creating logical mistakes, like providing only syllables ending with consonants, but expecting only vocals, which will be detected
  * and RuntimeException will be thrown.
- * 
+ *
  * TO START:
  * Create a new NameGenerator object, provide the syllable file, and create names using compose() method.
- * 
+ *
  * @author Joonas Vali, August 2009.
  *
  */
@@ -84,40 +84,34 @@ public class NameGenerator {
      * @throws IOException
      */
     public void refresh() throws IOException{
+        try (
+    		FileReader input = new FileReader(fileName);
+    		BufferedReader bufRead = new BufferedReader(input);
+        ) {
+        	String line="";
 
-        FileReader input = null;
-        BufferedReader bufRead;
-        String line;
-
-        input = new FileReader(fileName);
-
-        bufRead = new BufferedReader(input);
-        line="";
-
-        while(line != null){
-            line = bufRead.readLine();
-            if(line != null && !line.equals("")){
-                if(line.charAt(0) == '-'){
-                    pre.add(line.substring(1).toLowerCase());
-                }
-                else if(line.charAt(0) == '+'){
-                    sur.add(line.substring(1).toLowerCase());
-                }
-                else{
-                    mid.add(line.toLowerCase());
-                }
-            }
+	        while (line != null) {
+	            line = bufRead.readLine();
+	            if (line != null && !line.equals("")) {
+	                if (line.charAt(0) == '-') {
+	                    pre.add(line.substring(1).toLowerCase());
+	                } else if (line.charAt(0) == '+') {
+	                    sur.add(line.substring(1).toLowerCase());
+	                } else{
+	                    mid.add(line.toLowerCase());
+	                }
+	            }
+	        }
         }
-        bufRead.close();
     }
 
-    private String upper(String s){
+    private String upper(String s) {
         return s.substring(0,1).toUpperCase().concat(s.substring(1));
     }
 
-    private boolean containsConsFirst(ArrayList<String> array){
-        for(String s: array){
-            if(consonantFirst(s)) return true;
+    private boolean containsConsFirst(ArrayList<String> array) {
+        for (String s: array) {
+            if (consonantFirst(s)) return true;
         }
         return false;
     }

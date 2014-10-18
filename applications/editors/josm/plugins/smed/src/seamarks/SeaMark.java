@@ -1360,20 +1360,20 @@ public class SeaMark extends JPanel {
 			break;
 		}
 		if (tmp) {
-			dlg.panelMain.moreButton.setVisible(true);
-			dlg.panelMain.saveButton.setEnabled(true);
-			dlg.panelMain.topButton.setEnabled(true);
-			dlg.panelMain.fogButton.setEnabled(true);
-			dlg.panelMain.radButton.setEnabled(true);
-			dlg.panelMain.litButton.setEnabled(true);
+			SmedAction.panelMain.moreButton.setVisible(true);
+			SmedAction.panelMain.saveButton.setEnabled(true);
+			SmedAction.panelMain.topButton.setEnabled(true);
+			SmedAction.panelMain.fogButton.setEnabled(true);
+			SmedAction.panelMain.radButton.setEnabled(true);
+			SmedAction.panelMain.litButton.setEnabled(true);
 			return true;
 		} else {
-			dlg.panelMain.moreButton.setVisible(false);
-			dlg.panelMain.moreButton.setText(">>");
-			dlg.panelMain.topButton.setEnabled(false);
-			dlg.panelMain.fogButton.setEnabled(false);
-			dlg.panelMain.radButton.setEnabled(false);
-			dlg.panelMain.litButton.setEnabled(false);
+			SmedAction.panelMain.moreButton.setVisible(false);
+			SmedAction.panelMain.moreButton.setText(">>");
+			SmedAction.panelMain.topButton.setEnabled(false);
+			SmedAction.panelMain.fogButton.setEnabled(false);
+			SmedAction.panelMain.radButton.setEnabled(false);
+			SmedAction.panelMain.litButton.setEnabled(false);
 			PanelMain.messageBar.setText("Seamark not recognised");
 			return false;
 		}
@@ -1397,7 +1397,7 @@ public class SeaMark extends JPanel {
 		setInfo("");
 		setSource("");
 		setFixme("");
-		dlg.panelMain.syncPanel();
+		SmedAction.panelMain.syncPanel();
 		repaint();
 	}
 

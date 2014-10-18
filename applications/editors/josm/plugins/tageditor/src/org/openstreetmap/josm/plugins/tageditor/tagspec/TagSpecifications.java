@@ -25,10 +25,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * This class manages a list of {@link TagSpecification}s.
- * 
+ *
  * It also provides a method for reading a list of {@link TagSpecification}s from
  * an XML file.
- * 
+ *
  * @author Gubaer
  *
  */
@@ -62,7 +62,7 @@ public class TagSpecifications {
     /**
      * loads the tag specifications from the resource file given by
      * {@link #RES_NAME_TAG_SPECIFICATIONS}.
-     * 
+     *
      * @return the list of {@link TagSpecification}s
      * @throws Exception thrown, if an exception occurs
      */
@@ -70,13 +70,13 @@ public class TagSpecifications {
         InputStream in = TagSpecifications.class.getResourceAsStream(RES_NAME_TAG_SPECIFICATIONS);
         if (in == null) {
             logger.log(Level.SEVERE, "failed to create input stream for resource '" + RES_NAME_TAG_SPECIFICATIONS + "'");
+            return;
         }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        TagSpecifications spec = new TagSpecifications();
-        spec.load(reader);
-        reader.close();
-        instance = spec;
-
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+	        TagSpecifications spec = new TagSpecifications();
+	        spec.load(reader);
+	        instance = spec;
+        }
     }
 
     static public TagSpecifications getInstance() throws Exception {
@@ -96,7 +96,7 @@ public class TagSpecifications {
 
     /**
      * loads the tag specifications from a specific reader
-     * 
+     *
      * @param in  the reader to read from
      * @throws Exception thrown, if an exception occurs
      */
@@ -155,11 +155,11 @@ public class TagSpecifications {
         }
         return items;
     }
-    
+
     /**
      * replies a list of {@see KeyValuePair}s for all {@see TagSpecification}s and
      * {@see LableSpecification}s.
-     * 
+     *
      * @return the list
      */
     public ArrayList<KeyValuePair> asList() {
@@ -177,7 +177,7 @@ public class TagSpecifications {
 
     /**
      * The SAX handler for reading XML files with tag specifications
-     * 
+     *
      * @author gubaer
      *
      */
@@ -211,7 +211,7 @@ public class TagSpecifications {
         /**
          * parses a string value consisting of 'yes' or 'no' (exactly, case
          * sensitive)
-         * 
+         *
          * @param value the string value
          * @return true, if value is <code>yes</code>; false, if value is <code>no</code>
          * @throws SAXException thrown, if value is neither <code>yes</code> nor <code>no</code>
@@ -227,7 +227,7 @@ public class TagSpecifications {
 
         /**
          * handles a start element with name <code>osm-tag-definitions</code>
-         * 
+         *
          * @param atts  the XML attributes
          * @throws SAXException
          */
@@ -237,7 +237,7 @@ public class TagSpecifications {
 
         /**
          * handles an end element with name <code>osm-tag-specifications</code>
-         * 
+         *
          * @throws SAXException
          */
         protected void endElementOsmTagDefinitions() throws SAXException {
@@ -246,7 +246,7 @@ public class TagSpecifications {
 
         /**
          * handles a start element with name <code>tag</code>
-         * 
+         *
          * @param atts the XML attributes of the element
          * @throws SAXException
          */
@@ -284,7 +284,7 @@ public class TagSpecifications {
 
         /**
          * handles a start element with name <code>label</code>
-         * 
+         *
          * @param atts the XML attributes
          * @throws SAXException
          */
@@ -310,7 +310,7 @@ public class TagSpecifications {
 
         /**
          * handles an end element with name <code>label</code>
-         * 
+         *
          * @throws SAXException
          */
         protected void endElementLabel() throws SAXException {
@@ -351,7 +351,8 @@ public class TagSpecifications {
 
     class ResourceEntityResolver implements EntityResolver {
 
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+        @Override
+		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             if (systemId != null && systemId.endsWith(DTD)) {
                 InputStream stream = TagSpecifications.class.getResourceAsStream("/resources/"+DTD);
                 if (stream == null) {

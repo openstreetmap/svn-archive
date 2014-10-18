@@ -53,12 +53,12 @@ public class OsmarenderPlugin extends Plugin {
         }
 
         @Override
-		public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             DataSet ds = Main.main.getCurrentDataSet();
             if (ds == null) {
                 return;
             }
-            
+
             // get all stuff visible on screen
             LatLon bottomLeft = Main.map.mapView.getLatLon(0,Main.map.mapView.getHeight());
             LatLon topRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
@@ -66,16 +66,15 @@ public class OsmarenderPlugin extends Plugin {
 
             try {
                 writeGenerated(b);
-            } catch(Exception ex) {
-                //how handle the exception?
+            } catch (Exception ex) {
+                // how handle the exception?
+            	Main.error(ex);
             }
 
-
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
-            try {
+            try (OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new OutputStreamWriter(
+                    new FileOutputStream(getPluginDir()+File.separator+"data.osm"), "UTF-8")), false, "0.6")) {
                 // write to plugin dir
-                OsmWriter w = OsmWriterFactory.createOsmWriter(new PrintWriter(new OutputStreamWriter(
-                        new FileOutputStream(getPluginDir()+File.separator+"data.osm"), "UTF-8")), false, "0.6");
                 w.header();
 
                 // Write nodes, make list of ways and relations
@@ -115,7 +114,7 @@ public class OsmarenderPlugin extends Plugin {
                 w.close();
 
                 // get the exec line
-                String argument; 
+                String argument;
                 if (Main.platform instanceof PlatformHookWindows)
                     argument = "file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+File.separator+"generated.xml\"";
                 else
@@ -197,28 +196,26 @@ public class OsmarenderPlugin extends Plugin {
             "minlon=\"" + b.getMin().lon() + "\" " +
             "maxlon=\"" + b.getMax().lon() + "\" " + "/>";
 
-        BufferedReader reader = new BufferedReader(
-                new FileReader( getPluginDir() + File.separator + "osm-map-features.xml") );
-        PrintWriter writer = new PrintWriter( getPluginDir() + File.separator + "generated.xml", "UTF-8");
-
-        // osm-map-features.xml contain two placemark
-        // (bounds_mkr1 and bounds_mkr2). We write the bounds tag
-        // between the two
-        String str = null;
-        while( (str = reader.readLine()) != null ) {
-            if(str.contains("<!--bounds_mkr1-->")) {
-                writer.println(str);
-                writer.println("    " + bounds_tag);
-                while(!str.contains("<!--bounds_mkr2-->")) {
-                    str = reader.readLine();
+        try (
+            BufferedReader reader = new BufferedReader(
+                    new FileReader( getPluginDir() + File.separator + "osm-map-features.xml") );
+            PrintWriter writer = new PrintWriter( getPluginDir() + File.separator + "generated.xml", "UTF-8");
+        ) {
+            // osm-map-features.xml contain two placemark
+            // (bounds_mkr1 and bounds_mkr2). We write the bounds tag between the two
+            String str = null;
+            while( (str = reader.readLine()) != null ) {
+                if(str.contains("<!--bounds_mkr1-->")) {
+                    writer.println(str);
+                    writer.println("    " + bounds_tag);
+                    while(!str.contains("<!--bounds_mkr2-->")) {
+                        str = reader.readLine();
+                    }
+                    writer.println(str);
+                } else {
+                    writer.println(str);
                 }
-                writer.println(str);
-            } else {
-                writer.println(str);
             }
         }
-
-        writer.close();
-        reader.close();
     }
 }

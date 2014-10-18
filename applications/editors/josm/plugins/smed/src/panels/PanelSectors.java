@@ -122,10 +122,10 @@ public class PanelSectors extends JFrame {
 		}
 
 		public int getRowCount() {
-			if (dlg.panelMain == null)
+			if (SmedAction.panelMain == null)
 				return 1;
 			else
-				return dlg.panelMain.mark.getSectorCount();
+				return SmedAction.panelMain.mark.getSectorCount();
 		}
 
 		public boolean isCellEditable(int row, int col) {
@@ -151,29 +151,29 @@ public class PanelSectors extends JFrame {
 				else
 					return row;
 			case 1:
-				if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
-					if (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL) {
+				if (((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
+					if (SmedAction.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL) {
 						return Col.UNKCOL;
 					} else {
-						return dlg.panelMain.mark.getLightAtt(Att.ALT, row);
+						return SmedAction.panelMain.mark.getLightAtt(Att.ALT, row);
 					}
 				} else {
-					return dlg.panelMain.mark.getLightAtt(Att.COL, row);
+					return SmedAction.panelMain.mark.getLightAtt(Att.COL, row);
 				}
 			case 6:
-				return (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR);
+				return (SmedAction.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR);
 			case 7:
 			case 8:
-				if (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR)
-					return dlg.panelMain.mark.getLightAtt(Att.ORT, row);
+				if (SmedAction.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR)
+					return SmedAction.panelMain.mark.getLightAtt(Att.ORT, row);
 				else
-					return dlg.panelMain.mark.getLightAtt(col - 1, row);
+					return SmedAction.panelMain.mark.getLightAtt(col - 1, row);
 			case 12:
-				return visibilities.get(dlg.panelMain.mark.getLightAtt(Att.VIS, row));
+				return visibilities.get(SmedAction.panelMain.mark.getLightAtt(Att.VIS, row));
 			case 13:
-				return exhibitions.get(dlg.panelMain.mark.getLightAtt(Att.EXH, row));
+				return exhibitions.get(SmedAction.panelMain.mark.getLightAtt(Att.EXH, row));
 			default:
-				return dlg.panelMain.mark.getLightAtt(col - 1, row);
+				return SmedAction.panelMain.mark.getLightAtt(col - 1, row);
 			}
 		}
 
@@ -183,15 +183,15 @@ public class PanelSectors extends JFrame {
 				for (Col colour : colours.keySet()) {
 					ImageIcon img = colours.get(colour);
 					if (img == value)
-						if (((String)dlg.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
-							if (((colour == Col.UNKCOL) && (dlg.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKCOL))
-									|| (dlg.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL)) {
-								dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
+						if (((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, row)).contains("Al")) {
+							if (((colour == Col.UNKCOL) && (SmedAction.panelMain.mark.getLightAtt(Att.ALT, row) == Col.UNKCOL))
+									|| (SmedAction.panelMain.mark.getLightAtt(Att.COL, row) == Col.UNKCOL)) {
+								SmedAction.panelMain.mark.setLightAtt(Att.COL, row, colour);
 							} else {
-								dlg.panelMain.mark.setLightAtt(Att.ALT, row, colour);
+								SmedAction.panelMain.mark.setLightAtt(Att.ALT, row, colour);
 							}
 						} else {
-							dlg.panelMain.mark.setLightAtt(Att.COL, row, colour);
+							SmedAction.panelMain.mark.setLightAtt(Att.COL, row, colour);
 						}
 				}
 				break;
@@ -199,42 +199,42 @@ public class PanelSectors extends JFrame {
 			case 9:
 			case 10:
 			case 11:
-				dlg.panelMain.mark.setLightAtt(col - 1, row, value);
+				SmedAction.panelMain.mark.setLightAtt(col - 1, row, value);
 				break;
 			case 6:
 				if ((Boolean) value == true) {
-					dlg.panelMain.mark.setLightAtt(Att.LIT, row, Lit.DIR);
-					dlg.panelMain.mark.setLightAtt(Att.BEG, row, "");
-					dlg.panelMain.mark.setLightAtt(Att.END, row, "");
+					SmedAction.panelMain.mark.setLightAtt(Att.LIT, row, Lit.DIR);
+					SmedAction.panelMain.mark.setLightAtt(Att.BEG, row, "");
+					SmedAction.panelMain.mark.setLightAtt(Att.END, row, "");
 				} else {
-					dlg.panelMain.mark.setLightAtt(Att.LIT, row, Lit.UNKLIT);
-					dlg.panelMain.mark.setLightAtt(Att.ORT, row, "");
+					SmedAction.panelMain.mark.setLightAtt(Att.LIT, row, Lit.UNKLIT);
+					SmedAction.panelMain.mark.setLightAtt(Att.ORT, row, "");
 				}
 				break;
 			case 7:
 			case 8:
-				if (dlg.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR) {
-					dlg.panelMain.mark.setLightAtt(Att.ORT, row, value);
+				if (SmedAction.panelMain.mark.getLightAtt(Att.LIT, row) == Lit.DIR) {
+					SmedAction.panelMain.mark.setLightAtt(Att.ORT, row, value);
 				} else {
-					dlg.panelMain.mark.setLightAtt(col - 1, row, value);
+					SmedAction.panelMain.mark.setLightAtt(col - 1, row, value);
 				}
 				break;
 			case 12:
 				for (Vis vis : visibilities.keySet()) {
 					String str = visibilities.get(vis);
 					if (str.equals(value))
-						dlg.panelMain.mark.setLightAtt(Att.VIS, row, vis);
+						SmedAction.panelMain.mark.setLightAtt(Att.VIS, row, vis);
 				}
 				break;
 			case 13:
 				for (Exh exh : exhibitions.keySet()) {
 					String str = exhibitions.get(exh);
 					if (str.equals(value))
-						dlg.panelMain.mark.setLightAtt(Att.EXH, row, exh);
+						SmedAction.panelMain.mark.setLightAtt(Att.EXH, row, exh);
 				}
 				break;
 			default:
-				dlg.panelMain.mark.setLightAtt(col - 1, row, value);
+				SmedAction.panelMain.mark.setLightAtt(col - 1, row, value);
 			}
 		}
 	}
@@ -260,12 +260,12 @@ public class PanelSectors extends JFrame {
 			add(col2Label);
 		}
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-			if (!((String)dlg.panelMain.mark.getLightAtt(Att.CHR, rowIndex)).contains("Al")) {
-				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
+			if (!((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, rowIndex)).contains("Al")) {
+				col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
 			} else {
-				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, rowIndex)));
+				col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.ALT, rowIndex)));
 			}
-			col1Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
+			col1Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, rowIndex)));
 			return this;
 		}
 	}
@@ -275,7 +275,7 @@ public class PanelSectors extends JFrame {
 	}
 
 	public void addSector(int idx) {
-		dlg.panelMain.mark.addLight(idx);
+		SmedAction.panelMain.mark.addLight(idx);
 		table.setSize(860, ((table.getRowCount() * 16) + 28));
 		if (table.getRowCount() > 3) {
 			setSize(900, ((table.getRowCount() * 16) + 48));
@@ -286,7 +286,7 @@ public class PanelSectors extends JFrame {
 
 	public void deleteSector(int idx) {
 		if (idx > 0) {
-			dlg.panelMain.mark.delLight(idx);
+			SmedAction.panelMain.mark.delLight(idx);
 			table.setSize(860, ((table.getRowCount() * 16) + 28));
 			if (table.getRowCount() > 3) {
 				setSize(900, ((table.getRowCount() * 16) + 48));

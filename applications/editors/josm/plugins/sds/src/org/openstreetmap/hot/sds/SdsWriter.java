@@ -28,20 +28,20 @@ public class SdsWriter extends XmlWriter {
     }
 
     public void write(IPrimitive what, Map<String,String> tags) {
-    	out.print("<osm_shadow osm_type=\"");
-    	out.print(what.getType().getAPIName());
-    	out.print("\" osm_id=\"");
-    	out.print(what.getId());
-    	out.println("\">");
+        out.print("<osm_shadow osm_type=\"");
+        out.print(what.getType().getAPIName());
+        out.print("\" osm_id=\"");
+        out.print(what.getId());
+        out.println("\">");
         
-    	if (tags != null) {
-    		for(Entry<String,String> e : tags.entrySet()) {
-    			out.println("    <tag k='"+ XmlWriter.encode(e.getKey()) +
-    					"' v='"+XmlWriter.encode(e.getValue())+ "' />");
-    		}
-    	}
-    	
-    	out.println("</osm_shadow>");
+        if (tags != null) {
+            for(Entry<String,String> e : tags.entrySet()) {
+                out.println("    <tag k='"+ XmlWriter.encode(e.getKey()) +
+                        "' v='"+XmlWriter.encode(e.getValue())+ "' />");
+            }
+        }
+        
+        out.println("</osm_shadow>");
     }
 
     public void close() {

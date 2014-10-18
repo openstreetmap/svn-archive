@@ -24,7 +24,7 @@ import org.openstreetmap.josm.io.OsmExporter;
 
 /**
  * Writes poly files.
- * 
+ *
  * @author zverik
  */
 public class PolyExporter extends OsmExporter {
@@ -36,8 +36,7 @@ public class PolyExporter extends OsmExporter {
     @Override
     public void exportData( File file, Layer layer ) throws IOException {
         if( layer instanceof OsmDataLayer ) {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
-            try {
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"))) {
                 DataSet ds = ((OsmDataLayer)layer).data;
                 Map<Way, Boolean> ways = new TreeMap<>();
                 String polygonName = file.getName();
@@ -70,8 +69,6 @@ public class PolyExporter extends OsmExporter {
                 }
                 writer.write("END");
                 writer.newLine();
-            } finally {
-                writer.close();
             }
         }
     }

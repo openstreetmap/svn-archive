@@ -1,36 +1,60 @@
 package iodb;
 
-import java.awt.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
-import org.openstreetmap.josm.tools.*;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.LanguageInfo;
+import org.openstreetmap.josm.tools.OpenBrowser;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * The dialog which presents a choice between imagery align options.
- * 
+ *
  * @author Zverik
  * @license WTFPL
  */
 public class OffsetDialog extends JDialog implements ActionListener, MapView.ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
-    private static final int MAX_OFFSETS = Main.main.pref.getInteger("iodb.max.offsets", 4);
+    private static final int MAX_OFFSETS = Main.pref.getInteger("iodb.max.offsets", 4);
 
     /**
      * Whether to create a modal frame. It turns out, modal dialogs
@@ -44,7 +68,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
     private JPanel buttonPanel;
 
     /**
-     * Initialize the dialog and install listeners. 
+     * Initialize the dialog and install listeners.
      * @param offsets The list of offset to choose from.
      */
     public OffsetDialog( List<ImageryOffsetBase> offsets ) {
@@ -59,7 +83,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
-    
+
     /**
      * Creates the GUI.
      */
@@ -68,7 +92,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         final JCheckBox calibrationBox = new JCheckBox(tr("Calibration geometries"));
         calibrationBox.setSelected(Main.pref.getBoolean(PREF_CALIBRATION, true));
         calibrationBox.addActionListener(new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
+            @Override
+			public void actionPerformed( ActionEvent e ) {
                 Main.pref.put(PREF_CALIBRATION, calibrationBox.isSelected());
                 updateButtonPanel();
             }
@@ -76,7 +101,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         final JCheckBox deprecatedBox = new JCheckBox(tr("Deprecated offsets"));
         deprecatedBox.setSelected(Main.pref.getBoolean(PREF_DEPRECATED, false));
         deprecatedBox.addActionListener(new ActionListener() {
-            public void actionPerformed( ActionEvent e ) {
+            @Override
+			public void actionPerformed( ActionEvent e ) {
                 Main.pref.put(PREF_DEPRECATED, deprecatedBox.isSelected());
                 updateButtonPanel();
             }
@@ -153,7 +179,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
      * This listener method is called when a user pans or zooms the map.
      * It does nothing, only passes the event to all displayed offset buttons.
      */
-    public void zoomChanged() {
+    @Override
+	public void zoomChanged() {
         for( Component c : buttonPanel.getComponents() ) {
             if( c instanceof OffsetDialogButton ) {
                 ((OffsetDialogButton)c).updateLocation();
@@ -165,7 +192,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
      * Draw dots on the map where offsets are located. I doubt it has practical
      * value, but looks nice.
      */
-    public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
+    @Override
+	public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
         if( offsets == null )
             return;
 
@@ -180,7 +208,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
             g2.drawOval(p.x - 3, p.y - 3, 7, 7);
         }
     }
-    
+
     /**
      * Display the dialog and get the return value is case of a modal frame.
      * Creates GUI, install a temporary map layer (see {@link #paint} and
@@ -207,7 +235,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
      * Should it apply the offset either way? Probably.
      * @see #applyOffset()
      */
-    public void actionPerformed( ActionEvent e ) {
+    @Override
+	public void actionPerformed( ActionEvent e ) {
         if( e.getSource() instanceof OffsetDialogButton ) {
             selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
         } else
@@ -282,7 +311,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         /**
          * Remove the deprecated offset from the offsets list. Then rebuild the button panel.
          */
-        public void queryPassed() {
+        @Override
+		public void queryPassed() {
             offset.setDeprecated(new Date(), JosmUserIdentityManager.getInstance().getUserName(), "");
             updateButtonPanel();
         }
@@ -298,7 +328,8 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
             putValue(SMALL_ICON, ImageProvider.get("help"));
         }
 
-        public void actionPerformed( ActionEvent e ) {
+        @Override
+		public void actionPerformed( ActionEvent e ) {
             String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
             String lang = LanguageInfo.getWikiLanguagePrefix();
             String page = "Imagery_Offset_Database";

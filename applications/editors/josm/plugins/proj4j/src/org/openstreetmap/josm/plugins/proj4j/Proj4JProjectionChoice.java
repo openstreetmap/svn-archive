@@ -63,7 +63,7 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
 
         sorter = new TableRowSorter<>(model);
     }
-    
+
     @Override
     public String getId() {
         return "proj4jplugin";
@@ -73,9 +73,9 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
     public JPanel getPreferencePanel(ActionListener actionListener) {
         return new Proj4JPanel(actionListener);
     }
-    
+
     protected class Proj4JPanel extends JPanel {
-        
+
         public Proj4JPanel(ActionListener actionListener) {
             GridBagConstraints c = new GridBagConstraints();
             this.setLayout(new GridBagLayout());
@@ -93,14 +93,17 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
             filterTextField.getDocument().addDocumentListener(
                     new DocumentListener() {
 
+                        @Override
                         public void insertUpdate(DocumentEvent e) {
                             newFilter();
                         }
 
+                        @Override
                         public void removeUpdate(DocumentEvent e) {
                             newFilter();
                         }
 
+                        @Override
                         public void changedUpdate(DocumentEvent e) {
                             newFilter();
                         }
@@ -212,6 +215,7 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
             this.table = table;
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateSelectedCode();
         }
@@ -257,17 +261,18 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
 
         public CRSTableModel() throws java.io.IOException {
             // Read projection information from file, (authority, code, description)
-            InputStream inStr = getClass().getResourceAsStream("/resources/projections.txt");
-            BufferedReader fh = new BufferedReader(new InputStreamReader(inStr));
-
-            String s;
-            while ((s = fh.readLine()) != null) {
-                String f[] = s.split("\t");
-                if (f.length >= 3) {
-                    crsList.add(new CRSEntry(f[0], f[1], f[2]));
+            try (
+                InputStream inStr = getClass().getResourceAsStream("/resources/projections.txt");
+                BufferedReader fh = new BufferedReader(new InputStreamReader(inStr));
+            ) {
+                String s;
+                while ((s = fh.readLine()) != null) {
+                    String f[] = s.split("\t");
+                    if (f.length >= 3) {
+                        crsList.add(new CRSEntry(f[0], f[1], f[2]));
+                    }
                 }
             }
-            fh.close();
         }
 
         @Override

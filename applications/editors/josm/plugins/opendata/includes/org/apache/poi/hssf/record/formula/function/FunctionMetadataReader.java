@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,13 +30,13 @@ import org.apache.poi.hssf.record.formula.Ptg;
 
 /**
  * Converts the text meta-data file into a <tt>FunctionMetadataRegistry</tt>
- * 
+ *
  * @author Josh Micich
  */
 final class FunctionMetadataReader {
 
 	private static final String METADATA_FILE_NAME = "functionMetadata.txt";
-	
+
 	/** plain ASCII text metadata file uses three dots for ellipsis */
 	private static final String ELLIPSIS = "...";
 
@@ -58,15 +57,9 @@ final class FunctionMetadataReader {
 			throw new RuntimeException("resource '" + METADATA_FILE_NAME + "' not found");
 		}
 
-		BufferedReader br;
-		try {
-			br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-		} catch(UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
 		FunctionDataBuilder fdb = new FunctionDataBuilder(400);
 
-		try {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
 			while (true) {
 				String line = br.readLine();
 				if (line == null) {
@@ -81,7 +74,6 @@ final class FunctionMetadataReader {
 				}
 				processLine(fdb, line);
 			}
-			br.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -106,10 +98,10 @@ final class FunctionMetadataReader {
 
 		validateFunctionName(functionName);
 		// TODO - make POI use isVolatile
-		fdb.add(functionIndex, functionName, minParams, maxParams, 
+		fdb.add(functionIndex, functionName, minParams, maxParams,
 				returnClassCode, parameterClassCodes, hasNote);
 	}
-	
+
 
 	private static byte parseReturnTypeCode(String code) {
 		if(code.length() == 0) {
@@ -163,7 +155,7 @@ final class FunctionMetadataReader {
 	}
 
 	/**
-	 * Makes sure that footnote digits from the original OOO document have not been accidentally 
+	 * Makes sure that footnote digits from the original OOO document have not been accidentally
 	 * left behind
 	 */
 	private static void validateFunctionName(String functionName) {
@@ -181,7 +173,7 @@ final class FunctionMetadataReader {
 		if(DIGIT_ENDING_FUNCTION_NAMES_SET.contains(functionName)) {
 			return;
 		}
-		throw new RuntimeException("Invalid function name '" + functionName 
+		throw new RuntimeException("Invalid function name '" + functionName
 				+ "' (is footnote number incorrectly appended)");
 	}
 

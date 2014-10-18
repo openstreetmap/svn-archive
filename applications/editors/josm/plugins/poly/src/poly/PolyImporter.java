@@ -1,16 +1,18 @@
 package poly;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -18,8 +20,8 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.CachedFile;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.xml.sax.SAXException;
@@ -43,15 +45,13 @@ public class PolyImporter extends OsmImporter {
         if( progressMonitor == null )
             progressMonitor = NullProgressMonitor.INSTANCE;
         CheckParameterUtil.ensureParameterNotNull(in, "in");
-        BufferedReader reader = null;
 
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
             progressMonitor.beginTask(tr("Reading polygon filter file..."), 2);
             progressMonitor.indeterminateSubTask(tr("Reading polygon filter file..."));
-            reader = new BufferedReader(new InputStreamReader(in, "UTF8"));
             List<Area> areas = loadPolygon(reader);
             progressMonitor.worked(1);
-            
+
             progressMonitor.indeterminateSubTask(tr("Preparing data set..."));
             DataSet ds = constructDataSet(areas);
             progressMonitor.worked(1);
@@ -59,14 +59,10 @@ public class PolyImporter extends OsmImporter {
         } catch( IOException e ) {
             throw new IllegalDataException(tr("Error reading poly file: {0}", e.getMessage()), e);
         } finally {
-            try {
-                if( reader != null )
-                    reader.close();
-            } catch( IOException e ) { }
             progressMonitor.finishTask();
         }
     }
-    
+
     private List<Area> loadPolygon( BufferedReader reader ) throws IllegalDataException, IOException {
         String name = reader.readLine();
         if( name == null || name.trim().length() == 0 )
@@ -144,7 +140,7 @@ public class PolyImporter extends OsmImporter {
     private DataSet constructDataSet( List<Area> areas ) {
         DataSet ds = new DataSet();
         ds.setUploadDiscouraged(true);
-        
+
         boolean foundInner = false;
         for( Area area : areas ) {
             if( !area.isOuter() )

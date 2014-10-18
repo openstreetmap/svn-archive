@@ -55,85 +55,85 @@ public class SdsMenu extends JMenu implements LayerChangeListener {
     }
 
     void setEnabledState() {
-    	boolean en = (Main.map != null) && (Main.map.mapView != null) && (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer);
-    	loadItem.setEnabled(en);
-    	saveItem.setEnabled(en);
+        boolean en = (Main.map != null) && (Main.map.mapView != null) && (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer);
+        loadItem.setEnabled(en);
+        saveItem.setEnabled(en);
     }
   
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {	setEnabledState(); }
+    @Override
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {    setEnabledState(); }
 
-	@Override
-	public void layerAdded(Layer newLayer) { setEnabledState(); }
+    @Override
+    public void layerAdded(Layer newLayer) { setEnabledState(); }
 
-	@Override
-	public void layerRemoved(Layer oldLayer) { setEnabledState(); }
+    @Override
+    public void layerRemoved(Layer oldLayer) { setEnabledState(); }
 
-	private class SdsAboutAction extends JosmAction {
+    private class SdsAboutAction extends JosmAction {
 
-	    public SdsAboutAction() {
-	        super(tr("About"), "sds", tr("Information about SDS."), null, true);
-	    }
+        public SdsAboutAction() {
+            super(tr("About"), "sds", tr("Information about SDS."), null, true);
+        }
 
-	    public void actionPerformed(ActionEvent e) {
-	        JPanel about = new JPanel();
+        public void actionPerformed(ActionEvent e) {
+            JPanel about = new JPanel();
 
-	        JTextArea l = new JTextArea();
-	        l.setLineWrap(true);
-	        l.setWrapStyleWord(true);
-	        l.setEditable(false);
-	        l.setText("Separate Data Store\n\nThis plugin provides access to a \"Separate Data Store\" server. " +
-	        		"Whenever data is loaded from the OSM API, it queries the SDS for additional tags that have been stored for the objects just loaded, " +
-	        		"and adds these tags. When you upload data to JOSM, SDS tags will again be separated and, instead of sending them to OSM, they will be uplaoded to SDS." +
-	        		"\n\n" +
-	        		"This depends on SDS tags starting with a special prefix, which can be configured in the SDS preferences." + 
-	        		"\n\n" + 
-	        		"Using the SDS server will usually require an account to be set up there, which is completely independent of your OSM account.");
-	        
-	        l.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-	        l.setOpaque(false);
-	        l.setPreferredSize(new Dimension(500,300));
-	        JScrollPane sp = new JScrollPane(l);
-	        sp.setBorder(null);
-	        sp.setOpaque(false);
-	        	        
-	        about.add(sp);
-	        
-	        about.setPreferredSize(new Dimension(500,300));
+            JTextArea l = new JTextArea();
+            l.setLineWrap(true);
+            l.setWrapStyleWord(true);
+            l.setEditable(false);
+            l.setText("Separate Data Store\n\nThis plugin provides access to a \"Separate Data Store\" server. " +
+                    "Whenever data is loaded from the OSM API, it queries the SDS for additional tags that have been stored for the objects just loaded, " +
+                    "and adds these tags. When you upload data to JOSM, SDS tags will again be separated and, instead of sending them to OSM, they will be uplaoded to SDS." +
+                    "\n\n" +
+                    "This depends on SDS tags starting with a special prefix, which can be configured in the SDS preferences." + 
+                    "\n\n" + 
+                    "Using the SDS server will usually require an account to be set up there, which is completely independent of your OSM account.");
+            
+            l.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            l.setOpaque(false);
+            l.setPreferredSize(new Dimension(500,300));
+            JScrollPane sp = new JScrollPane(l);
+            sp.setBorder(null);
+            sp.setOpaque(false);
+                        
+            about.add(sp);
+            
+            about.setPreferredSize(new Dimension(500,300));
 
-	        JOptionPane.showMessageDialog(Main.parent, about, tr("About SDS..."),
-	                JOptionPane.INFORMATION_MESSAGE, null);
-	    }
-	}
-	
-	private class SdsPreferencesAction extends JosmAction implements Runnable {
+            JOptionPane.showMessageDialog(Main.parent, about, tr("About SDS..."),
+                    JOptionPane.INFORMATION_MESSAGE, null);
+        }
+    }
+    
+    private class SdsPreferencesAction extends JosmAction implements Runnable {
 
-	    private SdsPreferencesAction() {
-	        super(tr("Preferences..."), "preference", tr("Open a preferences dialog for SDS."),
-	                null, true);
-	        putValue("help", ht("/Action/Preferences"));
-	    }
+        private SdsPreferencesAction() {
+            super(tr("Preferences..."), "preference", tr("Open a preferences dialog for SDS."),
+                    null, true);
+            putValue("help", ht("/Action/Preferences"));
+        }
 
-	    /**
-	     * Launch the preferences dialog.
-	     */
-	    public void actionPerformed(ActionEvent e) {
-	        run();
-	    }
+        /**
+         * Launch the preferences dialog.
+         */
+        public void actionPerformed(ActionEvent e) {
+            run();
+        }
 
-	    public void run() {
-	    	PreferenceDialog pd = new PreferenceDialog(Main.parent);
-	    	// unusual reflection mechanism to cater for older JOSM versions where 
-	    	// the selectPreferencesTabByName method was not public
-	    	try {
-	    		Method sptbn = pd.getClass().getMethod("selectPreferencesTabByName", String.class);
-	    		sptbn.invoke(pd, "sds");
-	    	} catch (Exception ex) {
-	    		// ignore
-	    	}
-	    	pd.setVisible(true);
-	    }
-	}
+        public void run() {
+            PreferenceDialog pd = new PreferenceDialog(Main.parent);
+            // unusual reflection mechanism to cater for older JOSM versions where 
+            // the selectPreferencesTabByName method was not public
+            try {
+                Method sptbn = pd.getClass().getMethod("selectPreferencesTabByName", String.class);
+                sptbn.invoke(pd, "sds");
+            } catch (Exception ex) {
+                // ignore
+            }
+            pd.setVisible(true);
+        }
+    }
 
 
 }

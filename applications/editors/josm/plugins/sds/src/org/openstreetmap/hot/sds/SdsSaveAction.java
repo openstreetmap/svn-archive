@@ -5,8 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,8 +18,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.IPrimitive;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.tools.Utils;
 
-@SuppressWarnings("serial")
 public class SdsSaveAction extends SdsDiskAccessAction {
 
     public SdsSaveAction() {
@@ -29,6 +27,7 @@ public class SdsSaveAction extends SdsDiskAccessAction {
             null);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (!isEnabled())
             return;
@@ -39,7 +38,7 @@ public class SdsSaveAction extends SdsDiskAccessAction {
         Layer layer = null;
         if (Main.isDisplayingMapView() && (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer))
             layer = Main.map.mapView.getActiveLayer();
-        
+
         if (layer == null)
             return false;
         return doSave(layer);
@@ -63,21 +62,19 @@ public class SdsSaveAction extends SdsDiskAccessAction {
 
             if (file.exists()) {
                 tmpFile = new File(file.getPath() + "~");
-                copy(file, tmpFile);
+                Utils.copyFile(file, tmpFile);
             }
 
             OutputStream out = new FileOutputStream(file);
             Writer writer = new OutputStreamWriter(out, "UTF-8");
 
-            SdsWriter w = new SdsWriter(new PrintWriter(writer));
             layer.data.getReadLock().lock();
-            try {
+            try (SdsWriter w = new SdsWriter(new PrintWriter(writer))) {
                 w.header();
                 for (IPrimitive p : layer.data.allNonDeletedPrimitives()) {
                     w.write(p, p.getKeys());
                 }
                 w.footer();
-                w.close();
             } finally {
                 layer.data.getReadLock().unlock();
             }
@@ -86,7 +83,7 @@ public class SdsSaveAction extends SdsDiskAccessAction {
                 tmpFile.delete();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.error(e);
             JOptionPane.showMessageDialog(
                     Main.parent,
                     tr("<html>An error occurred while saving.<br>Error is:<br>{0}</html>", e.getMessage()),
@@ -98,10 +95,10 @@ public class SdsSaveAction extends SdsDiskAccessAction {
                 // if the file save failed, then the tempfile will not
                 // be deleted.  So, restore the backup if we made one.
                 if (tmpFile != null && tmpFile.exists()) {
-                    copy(tmpFile, file);
+                    Utils.copyFile(tmpFile, file);
                 }
             } catch (IOException e2) {
-                e2.printStackTrace();
+                Main.error(e2);
                 JOptionPane.showMessageDialog(
                         Main.parent,
                         tr("<html>An error occurred while restoring backup file.<br>Error is:<br>{0}</html>", e2.getMessage()),
@@ -111,25 +108,5 @@ public class SdsSaveAction extends SdsDiskAccessAction {
             }
         }
         return true;
-    }
-
-    private void copy(File src, File dst) throws IOException {
-        FileInputStream srcStream;
-        FileOutputStream dstStream;
-        try {
-            srcStream = new FileInputStream(src);
-            dstStream = new FileOutputStream(dst);
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Could not back up file. Exception is: {0}", e
-                    .getMessage()), tr("Error"), JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        byte buf[] = new byte[1 << 16];
-        int len;
-        while ((len = srcStream.read(buf)) != -1) {
-            dstStream.write(buf, 0, len);
-        }
-        srcStream.close();
-        dstStream.close();
     }
 }

@@ -29,13 +29,13 @@ public class CadastreSessionExporter implements SessionLayerExporter {
         this.layer = layer;
     }
 
-	@Override
-	public Collection<Layer> getDependencies() {
+    @Override
+    public Collection<Layer> getDependencies() {
         return Collections.emptySet();
-	}
+    }
 
-	@Override
-	public Component getExportPanel() {
+    @Override
+    public Component getExportPanel() {
         final JPanel p = new JPanel(new GridBagLayout());
         export = new JCheckBox();
         export.setSelected(true);
@@ -45,20 +45,20 @@ public class CadastreSessionExporter implements SessionLayerExporter {
         p.add(lbl, GBC.std());
         p.add(GBC.glue(1,0), GBC.std().fill(GBC.HORIZONTAL));
         return p;
-	}
+    }
 
-	@Override
-	public boolean shallExport() {
+    @Override
+    public boolean shallExport() {
         return export.isSelected();
-	}
+    }
 
-	@Override
-	public boolean requiresZip() {
-		return false;
-	}
+    @Override
+    public boolean requiresZip() {
+        return false;
+    }
 
-	@Override
-	public Element export(ExportSupport support) throws IOException {
+    @Override
+    public Element export(ExportSupport support) throws IOException {
         Element layerEl = support.createElement("layer");
         layerEl.setAttribute("type", "cadastre-fr");
         layerEl.setAttribute("version", "0.1");
@@ -75,6 +75,6 @@ public class CadastreSessionExporter implements SessionLayerExporter {
         }
         file.appendChild(support.createTextNode(url.toString()));
         return layerEl;
-	}
+    }
 
 }

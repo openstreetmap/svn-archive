@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
+
 public class ToolsInformation {
     String filename;
 
@@ -19,9 +21,8 @@ public class ToolsInformation {
     }
 
     public void load() {
-        try {
-            BufferedReader rdr = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(filename), "UTF-8"));
+        try (BufferedReader rdr = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(filename), "UTF-8"))) {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = rdr.readLine()) != null) {
@@ -31,23 +32,17 @@ public class ToolsInformation {
                     sb = new StringBuilder();
                 }
             }
-            rdr.close();
         } catch (Exception e) {
-	    System.err.println("Ext_Tools warning: can not load file "+filename);
-//            e.printStackTrace();
+            Main.warn("Ext_Tools warning: can not load file "+filename);
         }
     }
 
     public void save() {
-        try {
-            OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(filename),
-                    "UTF-8");
+        try (OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")) {
             for (ExtTool tool : tools)
                 w.write(tool.serialize());
-            w.close();
         } catch (Exception e) {
-	    System.err.println("Ext_Tools warning: can not save file "+filename);
-//            e.printStackTrace();
+            Main.warn("Ext_Tools warning: can not save file "+filename);
         }
     }
 

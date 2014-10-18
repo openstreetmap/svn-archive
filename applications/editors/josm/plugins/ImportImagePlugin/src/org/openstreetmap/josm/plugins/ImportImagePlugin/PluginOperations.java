@@ -295,15 +295,12 @@ public class PluginOperations {
         if (!prjFile.exists()) return null;
         logger.debug("Loading .prj file: " + prjFile.getAbsolutePath());
 
-        StringBuilder sb = new StringBuilder();
-        String content = null;
-        BufferedReader br = new BufferedReader(new FileReader(prjFile));
-        while((content = br.readLine()) != null)
-        {
-            sb.append(content);
-        }
-        br.close();
-        try {
+        try (BufferedReader br = new BufferedReader(new FileReader(prjFile))) {
+            StringBuilder sb = new StringBuilder();
+            String content = null;
+            while((content = br.readLine()) != null) {
+                sb.append(content);
+            }
             refSys = CRS.parseWKT(sb.toString().trim());
         } catch (FactoryException e) {
             throw new IOException("Unable to parse prj-file: '" + prjFile.getName() + "'");

@@ -33,7 +33,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * Class that encapsulates the communications with the SDS API.
  *
  * This is modeled after JOSM's own OsmAPI class.
- * 
+ *
  */
 public class SdsApi extends SdsConnection {
     /** max number of retries to send a request in case of HTTP 500 errors or timeouts */
@@ -41,7 +41,7 @@ public class SdsApi extends SdsConnection {
 
     /** the collection of instantiated OSM APIs */
     private static HashMap<String, SdsApi> instances = new HashMap<>();
-    
+
     /**
      * replies the {@see OsmApi} for a given server URL
      *
@@ -122,7 +122,7 @@ public class SdsApi extends SdsConnection {
      *
      * @param osm the primitive
      * @throws SdsTransferException if something goes wrong
-     
+
     public void createPrimitive(IPrimitive osm, ProgressMonitor monitor) throws SdsTransferException {
         String ret = "";
         try {
@@ -143,7 +143,7 @@ public class SdsApi extends SdsConnection {
      * @param osm the primitive. Must not be null.
      * @param monitor the progress monitor
      * @throws SdsTransferException if something goes wrong
-     
+
     public void modifyPrimitive(IPrimitive osm, ProgressMonitor monitor) throws SdsTransferException {
         String ret = null;
         try {
@@ -164,7 +164,7 @@ public class SdsApi extends SdsConnection {
      * Deletes an OSM primitive on the server.
      * @param osm the primitive
      * @throws SdsTransferException if something goes wrong
-     
+
     public void deletePrimitive(IPrimitive osm, ProgressMonitor monitor) throws SdsTransferException {
         ensureValidChangeset();
         initialize(monitor);
@@ -181,11 +181,11 @@ public class SdsApi extends SdsConnection {
      *
      * @param list the list of changed OSM Primitives
      * @param  monitor the progress monitor
-     * @return 
+     * @return
      * @return list of processed primitives
-     * @throws SdsTransferException 
+     * @throws SdsTransferException
      * @throws SdsTransferException if something is wrong
-     
+
     public Collection<IPrimitive> uploadDiff(Collection<? extends IPrimitive> list, ProgressMonitor monitor) throws SdsTransferException {
         try {
             monitor.beginTask("", list.size() * 2);
@@ -226,49 +226,49 @@ public class SdsApi extends SdsConnection {
         }
     }
     */
-    
+
     public String requestShadowsFromSds(List<Long> nodes, List<Long> ways, List<Long> relations, ProgressMonitor pm) throws SdsTransferException {
-    	
-    	StringBuilder request = new StringBuilder();
-    	String delim = "";
-    	String comma = "";
-    	
-    	if (nodes != null && !nodes.isEmpty()) {
-    		request.append(delim);
-    		delim = "&";
-    		comma = "";
-    		request.append("nodes=");
-    		for (long i : nodes) {
-    			request.append(comma);
-    			comma = ",";
-    			request.append(i);
-    		}
-    	}
-    	if (ways != null && !ways.isEmpty()) {
-    		request.append(delim);
-    		delim = "&";
-    		comma = "";
-    		request.append("ways=");
-    		for (long i : ways) {
-    			request.append(comma);
-    			comma = ",";
-    			request.append(i);
-    		}
-    	}
-    	if (relations != null && !relations.isEmpty()) {
-    		request.append(delim);
-    		delim = "&";
-    		comma = "";
-    		request.append("relations=");
-    		for (long i : relations) {
-    			request.append(comma);
-    			comma = ",";
-    			request.append(i);
-    		}
-    	}
-    	
-    	return sendRequest("POST", "collectshadows", request.toString(), pm ,true);
-   
+
+        StringBuilder request = new StringBuilder();
+        String delim = "";
+        String comma = "";
+
+        if (nodes != null && !nodes.isEmpty()) {
+            request.append(delim);
+            delim = "&";
+            comma = "";
+            request.append("nodes=");
+            for (long i : nodes) {
+                request.append(comma);
+                comma = ",";
+                request.append(i);
+            }
+        }
+        if (ways != null && !ways.isEmpty()) {
+            request.append(delim);
+            delim = "&";
+            comma = "";
+            request.append("ways=");
+            for (long i : ways) {
+                request.append(comma);
+                comma = ",";
+                request.append(i);
+            }
+        }
+        if (relations != null && !relations.isEmpty()) {
+            request.append(delim);
+            delim = "&";
+            comma = "";
+            request.append("relations=");
+            for (long i : relations) {
+                request.append(comma);
+                comma = ",";
+                request.append(i);
+            }
+        }
+
+        return sendRequest("POST", "collectshadows", request.toString(), pm ,true);
+
     }
 
     private void sleepAndListen(int retry, ProgressMonitor monitor) throws SdsTransferException {
@@ -303,15 +303,15 @@ public class SdsApi extends SdsConnection {
     private String sendRequest(String requestMethod, String urlSuffix, String requestBody, ProgressMonitor monitor, boolean doAuth) throws SdsTransferException {
         return sendRequest(requestMethod, urlSuffix, requestBody, monitor, doAuth, false);
     }
-    
+
     public boolean updateSds(String message, ProgressMonitor pm) {
-    	try {
-			sendRequest("POST", "createshadows", message, pm);
-		} catch (SdsTransferException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	return true;
+        try {
+            sendRequest("POST", "createshadows", message, pm);
+        } catch (SdsTransferException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return true;
     }
 
     /**
@@ -351,20 +351,20 @@ public class SdsApi extends SdsConnection {
                 if (requestMethod.equals("PUT") || requestMethod.equals("POST") || requestMethod.equals("DELETE")) {
                     activeConnection.setDoOutput(true);
                     activeConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-                    OutputStream out = activeConnection.getOutputStream();
+                    try (OutputStream out = activeConnection.getOutputStream()) {
 
-                    // It seems that certain bits of the Ruby API are very unhappy upon
-                    // receipt of a PUT/POST message without a Content-length header,
-                    // even if the request has no payload.
-                    // Since Java will not generate a Content-length header unless
-                    // we use the output stream, we create an output stream for PUT/POST
-                    // even if there is no payload.
-                    if (requestBody != null) {
-                        BufferedWriter bwr = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-                        bwr.write(requestBody);
-                        bwr.flush();
+                        // It seems that certain bits of the Ruby API are very unhappy upon
+                        // receipt of a PUT/POST message without a Content-length header,
+                        // even if the request has no payload.
+                        // Since Java will not generate a Content-length header unless
+                        // we use the output stream, we create an output stream for PUT/POST
+                        // even if there is no payload.
+                        if (requestBody != null) {
+                            BufferedWriter bwr = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+                            bwr.write(requestBody);
+                            bwr.flush();
+                        }
                     }
-                    out.close();
                 }
 
                 activeConnection.connect();
@@ -441,10 +441,10 @@ public class SdsApi extends SdsConnection {
             }
         }
     }
-    
+
     protected InputStream getInputStream(String urlStr, ProgressMonitor progressMonitor) throws SdsTransferException {
         urlStr = getBaseUrl() + urlStr;
-    	try {
+        try {
             URL url = null;
             try {
                 url = new URL(urlStr.replace(" ", "%20"));

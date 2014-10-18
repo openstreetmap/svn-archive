@@ -10,7 +10,7 @@ import org.openstreetmap.josm.gui.io.CredentialDialog;
 @SuppressWarnings("serial")
 public class SdsCredentialDialog extends CredentialDialog {
 
-	static public SdsCredentialDialog getSdsApiCredentialDialog(String username, String password, String host, String saveUsernameAndPasswordCheckboxText) {
+    static public SdsCredentialDialog getSdsApiCredentialDialog(String username, String password, String host, String saveUsernameAndPasswordCheckboxText) {
         SdsCredentialDialog dialog = new SdsCredentialDialog(saveUsernameAndPasswordCheckboxText);
         dialog.prepareForSdsApiCredentials(username, password);
         dialog.pack();
@@ -20,9 +20,9 @@ public class SdsCredentialDialog extends CredentialDialog {
     String saveUsernameAndPasswordCheckboxText;
 
     public SdsCredentialDialog(String saveUsernameAndPasswordCheckboxText) {
-    	super(saveUsernameAndPasswordCheckboxText);
+        super(saveUsernameAndPasswordCheckboxText);
     }
-    	 
+         
     public void prepareForSdsApiCredentials(String username, String password) {
         setTitle(tr("Enter credentials for Separate Data Store API"));
         getContentPane().add(pnlCredentials = new SdsApiCredentialsPanel(this), BorderLayout.CENTER);
@@ -32,7 +32,7 @@ public class SdsCredentialDialog extends CredentialDialog {
  
     private static class SdsApiCredentialsPanel extends CredentialPanel {
 
-		@Override
+        @Override
         protected void build() {
             super.build();
             tfUserName.setToolTipText(tr("Please enter the user name of your SDS account"));

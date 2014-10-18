@@ -53,7 +53,7 @@ public class SdsParser extends DefaultHandler
         if ("osm_shadow".equals(qName))
         {
             String type = atts.getValue("osm_type");
-            String id = atts.getValue("osm_id");     	
+            String id = atts.getValue("osm_id");         
             currentPrimitive = dataSet.getPrimitiveById(Long.parseLong(id), OsmPrimitiveType.fromApiTypeName(type));
             if (currentPrimitive == null && ensureMatch) {
                 throw new SAXException("unexpected object in response");

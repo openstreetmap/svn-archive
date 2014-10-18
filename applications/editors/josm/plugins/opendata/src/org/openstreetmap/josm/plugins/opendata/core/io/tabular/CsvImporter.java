@@ -17,12 +17,12 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class CsvImporter extends AbstractImporter {
-    
+
     public static final ExtensionFileFilter CSV_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.CSV_EXT, OdConstants.CSV_EXT, tr("CSV files") + " (*."+OdConstants.CSV_EXT+")");
-    
+
     public static final String COLOMBUS_HEADER = "INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX";
-    
+
     public CsvImporter() {
         super(CSV_FILE_FILTER);
     }
@@ -45,14 +45,9 @@ public class CsvImporter extends AbstractImporter {
     public static boolean isColombusCsv(File file) {
         boolean result = false;
         if (file != null && file.isFile()) {
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                try {
-                    String line = reader.readLine();
-                    result = line != null && line.equalsIgnoreCase(COLOMBUS_HEADER);
-                } finally {
-                    reader.close();
-                }
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line = reader.readLine();
+                result = line != null && line.equalsIgnoreCase(COLOMBUS_HEADER);
             } catch (IOException e) {
                 // Ignore exceptions
             }

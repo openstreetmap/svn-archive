@@ -30,58 +30,58 @@ public class PanelStbd extends JPanel {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
-					dlg.panelMain.mark.setShape(shp);
-					dlg.panelMain.mark.setObject(objects.get(shp));
+					SmedAction.panelMain.mark.setShape(shp);
+					SmedAction.panelMain.mark.setObject(objects.get(shp));
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			if (dlg.panelMain.mark.testValid()) {
-				dlg.panelMain.panelChan.topmarkButton.setVisible(true);
-				dlg.panelMain.panelChan.lightButton.setVisible(true);
-				if (dlg.panelMain.mark.getCategory() == Cat.LAM_STBD) {
-					switch (dlg.panelMain.mark.getRegion()) {
+			if (SmedAction.panelMain.mark.testValid()) {
+				SmedAction.panelMain.panelChan.topmarkButton.setVisible(true);
+				SmedAction.panelMain.panelChan.lightButton.setVisible(true);
+				if (SmedAction.panelMain.mark.getCategory() == Cat.LAM_STBD) {
+					switch (SmedAction.panelMain.mark.getRegion()) {
 					case A:
-						dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
-						dlg.panelMain.mark.setObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.setObjPattern(Pat.NOPAT);
+						SmedAction.panelMain.mark.setObjColour(Col.GREEN);
 						break;
 					case B:
-						dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
-						dlg.panelMain.mark.setObjColour(Col.RED);
+						SmedAction.panelMain.mark.setObjPattern(Pat.NOPAT);
+						SmedAction.panelMain.mark.setObjColour(Col.RED);
 						break;
 					case C:
-						dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
-						dlg.panelMain.mark.setObjColour(Col.GREEN);
-						dlg.panelMain.mark.addObjColour(Col.WHITE);
-						dlg.panelMain.mark.addObjColour(Col.GREEN);
-						dlg.panelMain.mark.addObjColour(Col.WHITE);
+						SmedAction.panelMain.mark.setObjPattern(Pat.HSTRP);
+						SmedAction.panelMain.mark.setObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.addObjColour(Col.WHITE);
+						SmedAction.panelMain.mark.addObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.addObjColour(Col.WHITE);
 						break;
 					}
 				} else {
-					dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
-					switch (dlg.panelMain.mark.getRegion()) {
+					SmedAction.panelMain.mark.setObjPattern(Pat.HSTRP);
+					switch (SmedAction.panelMain.mark.getRegion()) {
 					case A:
-						dlg.panelMain.mark.setObjColour(Col.GREEN);
-						dlg.panelMain.mark.addObjColour(Col.RED);
-						dlg.panelMain.mark.addObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.setObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.addObjColour(Col.RED);
+						SmedAction.panelMain.mark.addObjColour(Col.GREEN);
 						break;
 					case B:
-						dlg.panelMain.mark.setObjColour(Col.RED);
-						dlg.panelMain.mark.addObjColour(Col.GREEN);
-						dlg.panelMain.mark.addObjColour(Col.RED);
+						SmedAction.panelMain.mark.setObjColour(Col.RED);
+						SmedAction.panelMain.mark.addObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.addObjColour(Col.RED);
 						break;
 					case C:
-						dlg.panelMain.mark.setObjColour(Col.RED);
-						dlg.panelMain.mark.addObjColour(Col.GREEN);
-						dlg.panelMain.mark.addObjColour(Col.RED);
-						dlg.panelMain.mark.addObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.setObjColour(Col.RED);
+						SmedAction.panelMain.mark.addObjColour(Col.GREEN);
+						SmedAction.panelMain.mark.addObjColour(Col.RED);
+						SmedAction.panelMain.mark.addObjColour(Col.GREEN);
 						break;
 					}
 				}
-				dlg.panelMain.panelMore.syncPanel();
+				SmedAction.panelMain.panelMore.syncPanel();
 			} else {
-				dlg.panelMain.panelChan.topmarkButton.setVisible(false);
-				dlg.panelMain.panelChan.lightButton.setVisible(false);
+				SmedAction.panelMain.panelChan.topmarkButton.setVisible(false);
+				SmedAction.panelMain.panelChan.lightButton.setVisible(false);
 			}
 		}
 	};
@@ -103,7 +103,7 @@ public class PanelStbd extends JPanel {
 	public void syncPanel() {
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			if (dlg.panelMain.mark.getShape() == shp) {
+			if (SmedAction.panelMain.mark.getShape() == shp) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);

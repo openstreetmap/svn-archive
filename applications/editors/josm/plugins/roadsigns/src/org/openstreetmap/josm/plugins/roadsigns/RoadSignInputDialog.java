@@ -67,8 +67,8 @@ import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.widgets.MultiSplitLayout;
-import org.openstreetmap.josm.gui.widgets.MultiSplitPane;
 import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Node;
+import org.openstreetmap.josm.gui.widgets.MultiSplitPane;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin.PresetMetaData;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.Tag;
@@ -102,7 +102,7 @@ class RoadSignInputDialog extends ExtendedDialog {
     protected JPanel pnlPossibleSupplements;
     protected JEditorPane info;
     protected JScrollPane scrollInfo;
-    
+
     private MultiSplitPane multiSplitPane;
 
     public RoadSignInputDialog() {
@@ -149,12 +149,11 @@ class RoadSignInputDialog extends ExtendedDialog {
             if (multiSplitPane != null) {
                 Node model = multiSplitPane.getMultiSplitLayout().getModel();
                 File f = new File(RoadSignsPlugin.pluginDir(), "roadsigns-layout.xml");
-                try {
+                try (
                     XMLEncoder xmlenc = new XMLEncoder(
                             new BufferedOutputStream(new FileOutputStream(f))
-                    );
+                    )) {
                     xmlenc.writeObject(model);
-                    xmlenc.close();
                 } catch (FileNotFoundException ex) {
                     Main.warn("unable to write dialog layout: "+ex);
                 }
@@ -162,7 +161,6 @@ class RoadSignInputDialog extends ExtendedDialog {
         }
         super.setVisible(visible);
     }
-
 
     private Command createCommand(Collection<OsmPrimitive> selPrim) {
         List<Command> cmds = new LinkedList<>();
@@ -197,15 +195,12 @@ class RoadSignInputDialog extends ExtendedDialog {
         fillSigns();
 
         multiSplitPane = new MultiSplitPane();
-        try {
-            File f = new File(RoadSignsPlugin.pluginDir(), "roadsigns-layout.xml");
-            XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(f)));
+        File f = new File(RoadSignsPlugin.pluginDir(), "roadsigns-layout.xml");
+        try (XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(f)))) {
             Node model = (Node) decoder.readObject();
-            decoder.close();
             multiSplitPane.getMultiSplitLayout().setModel(model);
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
             multiSplitPane.getMultiSplitLayout().setModel(modelRoot);
         }
@@ -224,10 +219,10 @@ class RoadSignInputDialog extends ExtendedDialog {
         info.setText(" ");
         info.setBackground(this.getBackground());
         info.addHyperlinkListener(new HyperlinkListener() {
-            public void hyperlinkUpdate(HyperlinkEvent e) {
+            @Override
+			public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e == null || e.getURL() == null)
                     return;
-                System.out.println(e.getURL());
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     OpenBrowser.displayUrl(e.getURL().toString());
                 }
@@ -471,15 +466,18 @@ class RoadSignInputDialog extends ExtendedDialog {
                             tf = new JTextField(p.getDefault());
                         }
                         class TFDocumentListener implements DocumentListener {
-                            public void insertUpdate(DocumentEvent e) {
+                            @Override
+							public void insertUpdate(DocumentEvent e) {
                                 update();
                             }
 
-                            public void removeUpdate(DocumentEvent e) {
+                            @Override
+							public void removeUpdate(DocumentEvent e) {
                                 update();
                             }
 
-                            public void changedUpdate(DocumentEvent e) {
+                            @Override
+							public void changedUpdate(DocumentEvent e) {
                                 update();
                             }
                             public void update() {
@@ -539,7 +537,8 @@ class RoadSignInputDialog extends ExtendedDialog {
         String[] columnNames = {tr("Key"), tr("Value")};
         String[][] data = {{}};
         previewTable = new JTable(data, columnNames) {
-            public String getToolTipText(MouseEvent e) {
+            @Override
+			public String getToolTipText(MouseEvent e) {
                 int rowIndex = rowAtPoint(e.getPoint());
                 int colIndex = columnAtPoint(e.getPoint());
                 if (rowIndex == -1 || colIndex == -1)
@@ -563,7 +562,8 @@ class RoadSignInputDialog extends ExtendedDialog {
         addTrafficSignTag = new JCheckBox(tr("{0} tag", "traffic_sign"));
         addTrafficSignTag.setSelected(Main.pref.getBoolean("plugin.roadsigns.addTrafficSignTag"));
         addTrafficSignTag.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 previewModel.update();
             }
         });
@@ -580,15 +580,18 @@ class RoadSignInputDialog extends ExtendedDialog {
         int rows=3;
         String[] header = {tr("Key"), tr("Value")};
 
-        public int getRowCount() {
+        @Override
+		public int getRowCount() {
             return keys.size();
         }
 
-        public int getColumnCount() {
+        @Override
+		public int getColumnCount() {
             return 2;
         }
 
-        public Object getValueAt(int rowIndex, int columnIndex) {
+        @Override
+		public Object getValueAt(int rowIndex, int columnIndex) {
             if (columnIndex == 0) {
                 return keys.get(rowIndex);
             } else if (columnIndex == 1) {
@@ -757,7 +760,8 @@ class RoadSignInputDialog extends ExtendedDialog {
             info.setText(longText());
             /* scroll up again */
             SwingUtilities.invokeLater(new Runnable(){
-                public void run() {
+                @Override
+				public void run() {
                     scrollInfo.getVerticalScrollBar().setValue(0);
                 }
             });
@@ -817,25 +821,30 @@ class RoadSignInputDialog extends ExtendedDialog {
             return new Dimension(getWidth(), getPreferredHeight());
         }
 
-        public Dimension getPreferredScrollableViewportSize() {
+        @Override
+		public Dimension getPreferredScrollableViewportSize() {
             return super.getPreferredSize();
         }
 
-        public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
+        @Override
+		public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction ) {
             final int FRAC = 20;
             int inc = (orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth()) / FRAC;
             return Math.max(inc, 1);
         }
 
-        public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
+        @Override
+		public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction ) {
             return orientation == SwingConstants.VERTICAL ? getParent().getHeight() : getParent().getWidth();
         }
 
-        public boolean getScrollableTracksViewportWidth() {
+        @Override
+		public boolean getScrollableTracksViewportWidth() {
             return true;
         }
 
-        public boolean getScrollableTracksViewportHeight() {
+        @Override
+		public boolean getScrollableTracksViewportHeight() {
             return false;
         }
 

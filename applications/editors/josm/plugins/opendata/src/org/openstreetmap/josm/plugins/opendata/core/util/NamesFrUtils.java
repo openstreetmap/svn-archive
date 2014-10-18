@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.SimpleDataSetHandler;
 
 public abstract class NamesFrUtils {
-    
+
     private static Map<String, String> dictionary = initDictionary();
 
     public static final String checkDictionary(String value) {
@@ -28,20 +29,18 @@ public abstract class NamesFrUtils {
         }
         return result;
     }
-    
+
     private static Map<String, String> initDictionary() {
         Map<String, String> result = new HashMap<>();
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    SimpleDataSetHandler.class.getResourceAsStream(OdConstants.DICTIONARY_FR), OdConstants.UTF8));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                SimpleDataSetHandler.class.getResourceAsStream(OdConstants.DICTIONARY_FR), OdConstants.UTF8))) {
             String line = reader.readLine(); // Skip first line
             while ((line = reader.readLine()) != null) {
                 String[] tab = line.split(";");
                 result.put(tab[0].replace("\"", ""), tab[1].replace("\"", ""));
             }
-            reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.error(e);
         }
         return result;
     }
@@ -169,7 +168,7 @@ public abstract class NamesFrUtils {
             value = p.get(key);
             if (value != null) {
                 value = WordUtils.capitalizeFully(value);
-                // Cas particuliers 
+                // Cas particuliers
                 if (value.equals("Boulingrin")) { // square Boulingrin, mal formé
                     value = "Sq Boulingrin";
                 } else if (value.matches("A[0-9]+")) { // Autoroutes sans le mot "Autoroute"

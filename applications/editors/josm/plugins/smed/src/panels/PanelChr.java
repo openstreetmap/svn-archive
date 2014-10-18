@@ -66,12 +66,12 @@ public class PanelChr extends JPanel {
 				}
 			}
 			String str = charBox.getText();
-			dlg.panelMain.mark.setLightAtt(Att.CHR, 0, str);
+			SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, str);
 			if (!str.contains("Al")) {
-				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, 0)));
-				dlg.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKCOL);
+				col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, 0)));
+				SmedAction.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKCOL);
 			} else {
-				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, 0)));
+				col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.ALT, 0)));
 			}
 		}
 	};
@@ -79,7 +79,7 @@ public class PanelChr extends JPanel {
 		public void focusGained(java.awt.event.FocusEvent e) {}
 			public void focusLost(java.awt.event.FocusEvent e) {
 			String str = charBox.getText();
-			dlg.panelMain.mark.setLightAtt(Att.CHR, 0, str);
+			SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, str);
 			EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
 			for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
 				if (str.equals(SeaMark.ChrMAP.get(map))) {
@@ -98,10 +98,10 @@ public class PanelChr extends JPanel {
 				}
 			}
 			if (!str.contains("Al")) {
-				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, 0)));
-				dlg.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKCOL);
+				col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, 0)));
+				SmedAction.panelMain.mark.setLightAtt(Att.ALT, 0, Col.UNKCOL);
 			} else {
-				col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, 0)));
+				col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.ALT, 0)));
 			}
 		}
 	};
@@ -140,7 +140,7 @@ public class PanelChr extends JPanel {
 	}
 
 	public void syncPanel() {
-		String str = (String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0);
+		String str = (String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0);
 		charBox.setText(str);
 		EnumSet<Chr> set = EnumSet.noneOf(Chr.class);
 		for (EnumSet<Chr> map : SeaMark.ChrMAP.keySet()) {
@@ -150,11 +150,11 @@ public class PanelChr extends JPanel {
 			}
 		}
 		if (!str.contains("Al")) {
-			col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, 0)));
+			col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, 0)));
 		} else {
-			col2Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.ALT, 0)));
+			col2Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.ALT, 0)));
 		}
-		col1Label.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getLightAtt(Att.COL, 0)));
+		col1Label.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getLightAtt(Att.COL, 0)));
 		for (Chr chr : buttons.keySet()) {
 			JToggleButton button = buttons.get(chr);
 			if (set.contains(chr)) {

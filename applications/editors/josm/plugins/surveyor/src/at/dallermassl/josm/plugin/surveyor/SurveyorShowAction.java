@@ -25,9 +25,9 @@ import javax.swing.KeyStroke;
 import livegps.LiveGpsPlugin;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.XmlObjectParser;
-import org.openstreetmap.josm.actions.JosmAction;
 import org.xml.sax.SAXException;
 
 import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
@@ -49,7 +49,8 @@ public class SurveyorShowAction extends JosmAction {
         this.gpsPlugin = gpsPlugin;
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         if(surveyorFrame == null) {
             surveyorFrame = new JFrame();
 
@@ -63,7 +64,8 @@ public class SurveyorShowAction extends JosmAction {
             InputMap inputMap = comp.getInputMap();
             // zoomout:
             actionMap.put("zoomout", new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
+                @Override
+				public void actionPerformed(ActionEvent e) {
                     if(Main.map != null && Main.map.mapView != null) {
                         Main.map.mapView.zoomToFactor(2);
                     }
@@ -72,7 +74,8 @@ public class SurveyorShowAction extends JosmAction {
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "zoomout");
             // zoomin:
             actionMap.put("zoomin", new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
+                @Override
+				public void actionPerformed(ActionEvent e) {
                     if(Main.map != null && Main.map.mapView != null) {
                         Main.map.mapView.zoomToFactor(1/2);
                     }
@@ -81,7 +84,8 @@ public class SurveyorShowAction extends JosmAction {
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "zoomin");
             // autocenter:
             actionMap.put("autocenter", new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
+                @Override
+				public void actionPerformed(ActionEvent e) {
                     // toggle autocenter
                     gpsPlugin.setAutoCenter(!gpsPlugin.isAutoCenter());
                 }
@@ -104,7 +108,6 @@ public class SurveyorShowAction extends JosmAction {
     }
 
     public SurveyorComponent createComponent() {
-        InputStream in = null;
         String source = Main.pref.get("surveyor.source");
         if(source == null || source.length() == 0) {
             source = DEFAULT_SOURCE;
@@ -113,20 +116,16 @@ public class SurveyorShowAction extends JosmAction {
             // TODO copy xml file to .josm directory if it does not exist!
             // </FIXXME>
         }
-        SurveyorComponent component= null;
-        try {
-            in = ResourceLoader.getInputStream(source);
-            component = createComponent(in);
-            in.close();
-            return component;
+        try (InputStream in = ResourceLoader.getInputStream(source)) {
+            return createComponent(in);
         } catch (IOException e) {
-            e.printStackTrace();
+            Main.error(e);
             JOptionPane.showMessageDialog(Main.parent, tr("Could not read surveyor definition: {0}",source));
         } catch (SAXException e) {
-            e.printStackTrace();
+            Main.error(e);
             JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: {1}", source, e.getMessage()));
         }
-        return component;
+        return null;
     }
 
     /**

@@ -46,6 +46,9 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     private EastNorthBound viewBox = null;
     private static String errorMessage;
 
+    /**
+     * Constructs a new {@code DownloadSVGTask}.
+     */
     public DownloadSVGTask(WMSLayer wmsLayer) {
         super(tr("Downloading {0}", wmsLayer.getName()));
 
@@ -193,27 +196,24 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         wmsInterface.urlConn.setRequestProperty("Connection", "close");
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
-        InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE);
         File file = new File(CadastrePlugin.cacheDir + "boundary.svg");
         String svg = new String();
-        try {
+        try (InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE)) {
             if (file.exists())
                 file.delete();
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
-            InputStreamReader isr =new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String line="";
-            while ( null!=(line=br.readLine())){
-                line += "\n";
-                bos.write(line.getBytes());
-                svg += line;
+            try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
+                 InputStreamReader isr =new InputStreamReader(is);
+                 BufferedReader br = new BufferedReader(isr)) {
+                String line="";
+                while ( null!=(line=br.readLine())){
+                    line += "\n";
+                    bos.write(line.getBytes());
+                    svg += line;
+                }
             }
-            br.close();
-            bos.close();
         } catch (IOException e) {
-            e.printStackTrace(System.out);
+            Main.error(e);
         }
-        is.close();
         return svg;
     }
 

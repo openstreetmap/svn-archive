@@ -18,28 +18,28 @@ public class PanelMore extends JPanel {
 	public JTextField infoBox;
 	private FocusListener flInfo = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setInfo(infoBox.getText());
+			SmedAction.panelMain.mark.setInfo(infoBox.getText());
 		}
 	};
 	public JLabel sourceLabel;
 	public JTextField sourceBox;
 	private FocusListener flSource = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setSource(sourceBox.getText());
+			SmedAction.panelMain.mark.setSource(sourceBox.getText());
 		}
 	};
 	public JLabel elevLabel;
 	public JTextField elevBox;
 	private FocusListener flElev = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setElevation(elevBox.getText());
+			SmedAction.panelMain.mark.setElevation(elevBox.getText());
 		}
 	};
 	public JLabel heightLabel;
 	public JTextField heightBox;
 	private FocusListener flHeight = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setObjectHeight(heightBox.getText());
+			SmedAction.panelMain.mark.setObjectHeight(heightBox.getText());
 		}
 	};
 	public JLabel statusLabel;
@@ -49,8 +49,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Sts sts : statuses.keySet()) {
 				int idx = statuses.get(sts);
-				if (dlg.panelMain.mark != null && (idx == statusBox.getSelectedIndex()))
-					dlg.panelMain.mark.setStatus(sts);
+				if (SmedAction.panelMain.mark != null && (idx == statusBox.getSelectedIndex()))
+					SmedAction.panelMain.mark.setStatus(sts);
 			}
 		}
 	};
@@ -61,8 +61,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cns cns : constructions.keySet()) {
 				int idx = constructions.get(cns);
-				if (dlg.panelMain.mark != null && (idx == constrBox.getSelectedIndex()))
-					dlg.panelMain.mark.setConstr(cns);
+				if (SmedAction.panelMain.mark != null && (idx == constrBox.getSelectedIndex()))
+					SmedAction.panelMain.mark.setConstr(cns);
 			}
 		}
 	};
@@ -73,8 +73,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Con con : conspicuities.keySet()) {
 				int idx = conspicuities.get(con);
-				if (dlg.panelMain.mark != null && (idx == conBox.getSelectedIndex()))
-					dlg.panelMain.mark.setConsp(con);
+				if (SmedAction.panelMain.mark != null && (idx == conBox.getSelectedIndex()))
+					SmedAction.panelMain.mark.setConsp(con);
 			}
 		}
 	};
@@ -85,8 +85,8 @@ public class PanelMore extends JPanel {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Con con : reflectivities.keySet()) {
 				int idx = reflectivities.get(con);
-				if (dlg.panelMain.mark != null && (idx == reflBox.getSelectedIndex()))
-					dlg.panelMain.mark.setRefl(con);
+				if (SmedAction.panelMain.mark != null && (idx == reflBox.getSelectedIndex()))
+					SmedAction.panelMain.mark.setRefl(con);
 			}
 		}
 	};
@@ -98,7 +98,7 @@ public class PanelMore extends JPanel {
 	private ActionListener alRegion = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (regionAButton.isSelected()) {
-				dlg.panelMain.mark.setRegion(Reg.A);
+				SmedAction.panelMain.mark.setRegion(Reg.A);
 				switch (dlg.panelMain.mark.getCategory()) {
 				case LAM_PORT:
 					dlg.panelMain.mark.setObjColour(Col.RED);

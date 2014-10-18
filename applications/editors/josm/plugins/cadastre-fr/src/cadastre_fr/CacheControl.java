@@ -1,5 +1,25 @@
 // License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
 package cadastre_fr;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
+import org.openstreetmap.josm.Main;
+
 /**
  * This class handles the WMS layer cache mechanism. The design is oriented for a good performance (no
  * wait status on GUI, fast saving even in big file). A separate thread is created for each WMS
@@ -9,18 +29,6 @@ package cadastre_fr;
  * ObjectOutputStream in order to have objects appended readable (otherwise a stream header
  * is inserted before each append and an exception is raised at objects read).
  */
-
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import org.openstreetmap.josm.Main;
-
 public class CacheControl implements Runnable {
 
     public static final String cLambertCC9Z = "CC";
@@ -31,6 +39,7 @@ public class CacheControl implements Runnable {
         public ObjectOutputStreamAppend(OutputStream out) throws IOException {
             super(out);
         }
+        @Override
         protected void writeStreamHeader() throws IOException {
             reset();
         }
@@ -39,7 +48,6 @@ public class CacheControl implements Runnable {
     public static boolean cacheEnabled = true;
 
     public static int cacheSize = 500;
-
 
     public WMSLayer wmsLayer = null;
 
@@ -140,23 +148,15 @@ public class CacheControl implements Runnable {
 
     public boolean loadCache(File file, int currentLambertZone) {
         boolean successfulRead = false;
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        try {
-            fis = new FileInputStream(file);
-            ois = new ObjectInputStream(fis);
+        try (
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+        ) {
             successfulRead = wmsLayer.read(file, ois, currentLambertZone);
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
             JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
-        } finally {
-            try {
-                ois.close();
-                fis.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         if (successfulRead && wmsLayer.isRaster()) {
             // serialized raster bufferedImage hangs-up on Java6. Recreate them here
@@ -164,7 +164,6 @@ public class CacheControl implements Runnable {
         }
         return successfulRead;
     }
-
 
     public synchronized void saveCache(GeorefImage image) {
         imagesLock.lock();
@@ -176,6 +175,7 @@ public class CacheControl implements Runnable {
     /**
      * Thread saving the grabbed images in background.
      */
+    @Override
     public synchronized void run() {
         for (;;) {
             imagesLock.lock();
@@ -185,23 +185,23 @@ public class CacheControl implements Runnable {
                 File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
                 try {
                     if (file.exists()) {
-                        ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(
-                                new BufferedOutputStream(new FileOutputStream(file, true)));
-                        for (int i=0; i < size; i++) {
-                            oos.writeObject(imagesToSave.get(i));
+                        try (ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(
+                                new BufferedOutputStream(new FileOutputStream(file, true)))) {
+                            for (int i=0; i < size; i++) {
+                                oos.writeObject(imagesToSave.get(i));
+                            }
                         }
-                        oos.close();
                     } else {
-                        ObjectOutputStream oos = new ObjectOutputStream(
-                                new BufferedOutputStream(new FileOutputStream(file)));
-                        wmsLayer.write(file, oos);
-                        for (int i=0; i < size; i++) {
-                            oos.writeObject(imagesToSave.get(i));
+                        try (ObjectOutputStream oos = new ObjectOutputStream(
+                                new BufferedOutputStream(new FileOutputStream(file)))) {
+                            wmsLayer.write(file, oos);
+                            for (int i=0; i < size; i++) {
+                                oos.writeObject(imagesToSave.get(i));
+                            }
                         }
-                        oos.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace(System.out);
+                    Main.error(e);
                 }
                 imagesLock.lock();
                 for (int i=0; i < size; i++) {

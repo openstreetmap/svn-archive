@@ -73,10 +73,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
         Image image = null;
 
         if (isZip) {
-            ZipFile zipFile = null;
-            try
-            {
-                zipFile = new ZipFile(m_file);
+            try (ZipFile zipFile = new ZipFile(m_file)) {
                 ZipEntry imgEntry = null;
                 Enumeration<? extends ZipEntry> entries = zipFile.entries();
                 String[] supportedImageExtensions = ImageIO.getReaderFormatNames();
@@ -102,13 +99,6 @@ public class PicLayerFromFile extends PicLayerAbstract {
             } catch (Exception e) {
                 System.err.println(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
                 return null;
-            } finally {
-                if (zipFile != null) {
-                    try {
-                        zipFile.close();
-                    } catch (IOException ex) {
-                    }
-                }
             }
         } else {
             image = ImageIO.read( m_file );
@@ -148,10 +138,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
         };
 
         if (isZip) {
-            ZipFile zipFile = null;
-            try
-            {
-                zipFile = new ZipFile(m_file);
+            try (ZipFile zipFile = new ZipFile(m_file)) {
                 String calFileStr = imgNameInZip + CalibrationFileFilter.EXTENSION;
                 ZipEntry calEntry = zipFile.getEntry(calFileStr);
                 if (calEntry != null) {
@@ -182,15 +169,8 @@ public class PicLayerFromFile extends PicLayerAbstract {
                     }
                 }
             } catch (Exception e) {
-                System.err.println(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
+                Main.warn(tr("Warning: failed to handle zip file ''{0}''. Exception was: {1}", m_file.getName(), e.toString()));
                 return;
-            } finally {
-                if (zipFile != null) {
-                    try {
-                        zipFile.close();
-                    } catch (IOException ex) {
-                    }
-                }
             }
         } else {
             File calFile = new File(m_file + CalibrationFileFilter.EXTENSION);

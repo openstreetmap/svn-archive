@@ -34,12 +34,12 @@ public class SdsPluginPreferences extends DefaultTabPreferenceSetting {
     private final JTextField prefix = new JTextField(8);
    
     public SdsPluginPreferences() {
-    	super("sds", tr("Separate Data Store"), tr("Configures access to the Separate Data Store."));
+        super("sds", tr("Separate Data Store"), tr("Configures access to the Separate Data Store."));
     }
     @Override
     public void addGui(final PreferenceTabbedPane gui) {
         final JPanel tab = gui.createPreferenceTab(this);
-        	
+            
         final JPanel access = new JPanel(new GridBagLayout());
         access.setBorder(BorderFactory.createTitledBorder(tr("Server")));
 

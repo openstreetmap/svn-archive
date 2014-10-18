@@ -94,9 +94,9 @@ public class ImportImagePlugin extends Plugin{
 
             // add menu entries
             //Main.main.menu.fileMenu.insert(loadFileAction, 8);
-            
+
             //Main.main.menu.fileMenu.insertSeparator(9);
-            
+
             ExtensionFileFilter.importers.add(new ImportImageFileImporter());
 
         } catch (Exception e) {
@@ -128,8 +128,7 @@ public class ImportImagePlugin extends Plugin{
 
 
         // if properties file doesn't exist, install plugin
-        if(!isInstalled)
-        {
+        if (!isInstalled) {
 
             /*----------- Begin installation ---------------*/
 
@@ -146,32 +145,29 @@ public class ImportImagePlugin extends Plugin{
             }
 
             // create local properties file
-            if(pluginProps == null || pluginProps.isEmpty()){
-
-                FileWriter fw = new FileWriter(new File(PLUGINPROPERTIES_PATH));
-                URL propertiesURL = pluginClassLoader.getResource("resources/" + PLUGINPROPERTIES_FILENAME);
-                pluginProps = new Properties();
-                pluginProps.load(propertiesURL.openStream());
-                pluginProps.store(fw, null);
-                fw.close();
+            if (pluginProps == null || pluginProps.isEmpty()) {
+                try (FileWriter fw = new FileWriter(new File(PLUGINPROPERTIES_PATH))) {
+	                URL propertiesURL = pluginClassLoader.getResource("resources/" + PLUGINPROPERTIES_FILENAME);
+	                pluginProps = new Properties();
+	                pluginProps.load(propertiesURL.openStream());
+	                pluginProps.store(fw, null);
+                }
                 logger.debug("Plugin properties loaded");
             }
 
-            if(!new File(LOGGING_PROPERTIES_FILEPATH).exists())
-            {
-                FileWriter fw = new FileWriter(new File(LOGGING_PROPERTIES_FILEPATH));
-                URL propertiesURL = pluginClassLoader.getResource("resources/log4j.properties");
-                Properties loggingProps = new Properties();
-                loggingProps.load(propertiesURL.openStream());
-                loggingProps.store(fw, null);
-                fw.close();
+            if (!new File(LOGGING_PROPERTIES_FILEPATH).exists()) {
+                try (FileWriter fw = new FileWriter(new File(LOGGING_PROPERTIES_FILEPATH))) {
+	                URL propertiesURL = pluginClassLoader.getResource("resources/log4j.properties");
+	                Properties loggingProps = new Properties();
+	                loggingProps.load(propertiesURL.openStream());
+	                loggingProps.store(fw, null);
+                }
                 logger.debug("Logging properties created");
             }
 
             logger.debug("Plugin successfully installed");
         }
     }
-
 
     /**
      * Initialize logger using plugin classloader.

@@ -21,10 +21,10 @@ import org.w3c.dom.Element;
 
 public class CadastreSessionImporter implements SessionLayerImporter{
 
-	@Override
-	public Layer load(Element elem, ImportSupport support,
-			ProgressMonitor progressMonitor) throws IOException,
-			IllegalDataException {
+    @Override
+    public Layer load(Element elem, ImportSupport support,
+            ProgressMonitor progressMonitor) throws IOException,
+            IllegalDataException {
         String version = elem.getAttribute("version");
         if (!"0.1".equals(version)) {
             throw new IllegalDataException(tr("Version ''{0}'' of meta data for imagery layer is not supported. Expected: 0.1", version));
@@ -40,7 +40,7 @@ public class CadastreSessionImporter implements SessionLayerImporter{
 
             fileStr = URLDecoder.decode(fileStr, "UTF-8");
             fileStr = fileStr.substring(fileStr.indexOf(":/")+2);
-    		String filename = fileStr.substring(fileStr.lastIndexOf("/")+1,fileStr.length());
+            String filename = fileStr.substring(fileStr.lastIndexOf("/")+1,fileStr.length());
             String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
             // create layer and load cache
             if (ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z))
@@ -59,6 +59,6 @@ public class CadastreSessionImporter implements SessionLayerImporter{
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }
-	}
+    }
 
 }

@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
-import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.*;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.czechaddress.DatabaseLoadException;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
 
 /**
  * General superclass for any parser capable of filling the database.
@@ -108,17 +109,15 @@ public abstract class DatabaseParser {
                 throw new DatabaseLoadException(
                         "Požadavek na server selhal, číslo chyby: " + String.valueOf( con.getResponseCode() ));
 
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getDatabasePath()));
-
-            int total = 0, count;
-            byte[] buffer = new byte[1024*512];
-            while ((count = con.getInputStream().read(buffer)) >= 0) {
-                bos.write(buffer, 0, count);
-                total += count;
-                System.err.println("CzechAddress: MVČR database: " + String.valueOf(total/1024) + " kb downloaded.");
+            try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getDatabasePath()))) {
+	            int total = 0, count;
+	            byte[] buffer = new byte[1024*512];
+	            while ((count = con.getInputStream().read(buffer)) >= 0) {
+	                bos.write(buffer, 0, count);
+	                total += count;
+	                Main.error("CzechAddress: MVČR database: " + String.valueOf(total/1024) + " kb downloaded.");
+	            }
             }
-
-            bos.close();
 
             // Look for a detailed error message from the server
             if (con.getHeaderField("Error") != null) {

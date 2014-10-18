@@ -24,6 +24,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -115,10 +116,9 @@ public final class WikipediaApp {
                 URLConnection connection = new URL(url).openConnection();
                 connection.setDoOutput(true);
 
-                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
-                out.write("articles=" + encodeURL(Utils.join(",", articleNames)));
-                out.close();
-
+                try (OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8")) {
+                	out.write("articles=" + encodeURL(Utils.join(",", articleNames)));
+                }
 
                 final Scanner scanner = new Scanner(connection.getInputStream(), "UTF-8").useDelimiter("\n");
                 while (scanner.hasNext()) {
@@ -128,7 +128,7 @@ public final class WikipediaApp {
                     if (x.length == 2) {
                         status.put(x[0], "1".equals(x[1]));
                     } else {
-                        System.err.println("Unknown element " + line);
+                        Main.error("Unknown element " + line);
                     }
                 }
             } catch (Exception ex) {

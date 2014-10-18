@@ -8,21 +8,21 @@ import org.openstreetmap.josm.data.osm.Relation;
  */
 public class NothingFixer extends RelationFixer {
 
-	public NothingFixer() {
-		super("");
-	}
-	@Override
-	public boolean isFixerApplicable(Relation rel) {
-		return true;
-	}
-	@Override
-	public boolean isRelationGood(Relation rel) {
-		return true;
-	}
+    public NothingFixer() {
+        super("");
+    }
+    @Override
+    public boolean isFixerApplicable(Relation rel) {
+        return true;
+    }
+    @Override
+    public boolean isRelationGood(Relation rel) {
+        return true;
+    }
 
-	@Override
-	public Command fixRelation(Relation rel) {
-		return null;
-	}
+    @Override
+    public Command fixRelation(Relation rel) {
+        return null;
+    }
 
 }

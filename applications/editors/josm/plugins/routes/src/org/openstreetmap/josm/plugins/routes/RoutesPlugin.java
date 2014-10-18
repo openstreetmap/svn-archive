@@ -18,7 +18,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.routes.xml.Routes;
@@ -35,24 +34,22 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
         File routesFile = new File(getPluginDir() + File.separator + "routes.xml");
         if (!routesFile.exists()) {
-            System.out.println("File with route definitions doesn't exist, using default");
+            Main.info("File with route definitions doesn't exist, using default");
 
             try {
                 routesFile.getParentFile().mkdir();
-                OutputStream outputStream = new FileOutputStream(routesFile);
-                InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
-
-                byte[] b = new byte[512];
-                int read;
-                while ((read = inputStream.read(b)) != -1) {
-                    outputStream.write(b, 0, read);
+                try (
+                    OutputStream outputStream = new FileOutputStream(routesFile);
+                    InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
+                ) {
+                    byte[] b = new byte[512];
+                    int read;
+                    while ((read = inputStream.read(b)) != -1) {
+                        outputStream.write(b, 0, read);
+                    }
                 }
-
-                outputStream.close();
-                inputStream.close();
-
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.error(e);
             }
         }
 
@@ -61,7 +58,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
                     Routes.class.getPackage().getName(), Routes.class.getClassLoader());
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Routes routes = (Routes)unmarshaller.unmarshal(
-                new FileInputStream(getPluginDir() + File.separator + "routes.xml"));
+                    new FileInputStream(getPluginDir() + File.separator + "routes.xml"));
             for (RoutesXMLLayer layer:routes.getLayer()) {
                 if (layer.isEnabled()) {
                     routeLayers.add(new RouteLayer(layer));
@@ -76,7 +73,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
     }
 
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-        // TODO Auto-generated method stub
+        // Do nothing
     }
 
     private void checkLayers() {
@@ -116,5 +113,4 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
     public void layerRemoved(Layer oldLayer) {
         checkLayers();
     }
-
 }

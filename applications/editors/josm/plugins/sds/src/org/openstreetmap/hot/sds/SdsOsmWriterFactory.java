@@ -14,13 +14,13 @@ import org.openstreetmap.josm.io.OsmWriterFactory;
  */
 public class SdsOsmWriterFactory extends OsmWriterFactory {
 
-	SeparateDataStorePlugin plugin;
-	
-	public SdsOsmWriterFactory(SeparateDataStorePlugin plugin) {
-		this.plugin = plugin;
-	}
-	
-	@Override
+    SeparateDataStorePlugin plugin;
+    
+    public SdsOsmWriterFactory(SeparateDataStorePlugin plugin) {
+        this.plugin = plugin;
+    }
+    
+    @Override
     protected OsmWriter createOsmWriterImpl(PrintWriter out, boolean osmConform, String version) {
         return new SdsOsmWriter(plugin, out, osmConform, version);
     }

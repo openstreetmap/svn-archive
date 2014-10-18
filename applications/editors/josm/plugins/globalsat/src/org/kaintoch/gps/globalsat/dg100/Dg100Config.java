@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Properties;
 
+import org.openstreetmap.josm.Main;
+
 /**
  * @author skaintoch
  *
@@ -106,7 +108,8 @@ public class Dg100Config
         readProps(fName);
     }
 
-    public String toString()
+    @Override
+	public String toString()
     {
         return
             "[Dg100Config: logFormat = " + logFormat
@@ -458,41 +461,23 @@ public class Dg100Config
         props.setProperty(propRemainder, "" + remainder);
         props.setProperty(propUnk3, "" + unk3);
         props.setProperty(propUnk4, "" + unk4);
-        OutputStream os = null;
-        try
-        {
-            os = new FileOutputStream(fName);
+
+        try (OutputStream os = new FileOutputStream(fName)) {
             props.store(os, "dg100 config");
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            Main.error(ex);
             throw ex;
-        }
-        finally
-        {
-            if (os != null) {os.close();}
         }
     }
 
-    public void readProps(String fName)
-        throws Exception
-    {
+    public void readProps(String fName) throws Exception {
         Properties props = new Properties();
-        InputStream is = null;
-        try
-        {
-            is = new FileInputStream(fName);
+
+        try (InputStream is = new FileInputStream(fName)) {
             props.load(is);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            Main.error(ex);;
             throw ex;
-        }
-        finally
-        {
-            if (is != null) {is.close();}
         }
         logFormat = Byte.parseByte(props.getProperty(propLogFormat, "2"));
         disableLogSpeed = Byte.parseByte(props.getProperty(propDisableLogSpeed, "0"));

@@ -119,13 +119,13 @@ public class SdsCredentialAgent extends AbstractCredentialsAgent {
         return tr("Save user and password (unencrypted)");
     }
 
-	@Override
-	public void storeOAuthAccessToken(OAuthToken accessToken)
-			throws CredentialsAgentException {
-		// no-op
-		
-	}
-	
+    @Override
+    public void storeOAuthAccessToken(OAuthToken accessToken)
+            throws CredentialsAgentException {
+        // no-op
+        
+    }
+    
     @Override
     public CredentialsAgentResponse getCredentials(RequestorType requestorType, String host, boolean noSuccessWithLastResponse) throws CredentialsAgentException{
         if (requestorType == null)

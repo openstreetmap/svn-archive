@@ -116,7 +116,7 @@ public class StoreImageryOffsetAction extends JosmAction {
                 }
                 query.append(key).append('=').append(URLEncoder.encode(params.get(key), "UTF8"));
             }
-            Main.main.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading a new offset...")));
+            Main.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading a new offset...")));
         } catch( UnsupportedEncodingException ex ) {
             // WTF
         }

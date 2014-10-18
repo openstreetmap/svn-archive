@@ -34,7 +34,7 @@ public class PanelRadar extends JPanel {
 			for (Cat cat : radioCats.keySet()) {
 				int idx = radioCats.get(cat);
 				if (dlg.node != null && (idx == radioCatBox.getSelectedIndex())) {
-					dlg.panelMain.mark.setRadio(cat);
+					SmedAction.panelMain.mark.setRadio(cat);
 				}
 			}
 		}
@@ -51,7 +51,7 @@ public class PanelRadar extends JPanel {
 			for (Rtb rtb : rads.keySet()) {
 				JRadioButton button = rads.get(rtb);
 				if (button.isSelected()) {
-					dlg.panelMain.mark.setRadar(rtb);
+					SmedAction.panelMain.mark.setRadar(rtb);
 				}
 			}
 			syncPanel();
@@ -61,42 +61,42 @@ public class PanelRadar extends JPanel {
 	public JTextField groupBox;
 	private FocusListener flGroup = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setRaconGroup(groupBox.getText());
+			SmedAction.panelMain.mark.setRaconGroup(groupBox.getText());
 		}
 	};
 	public JLabel periodLabel;
 	public JTextField periodBox;
 	private FocusListener flPeriod = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setRaconPeriod(periodBox.getText());
+			SmedAction.panelMain.mark.setRaconPeriod(periodBox.getText());
 		}
 	};
 	public JLabel seqLabel;
 	public JTextField seqBox;
 	private FocusListener flSeq = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setRaconSequence(seqBox.getText());
+			SmedAction.panelMain.mark.setRaconSequence(seqBox.getText());
 		}
 	};
 	public JLabel rangeLabel;
 	public JTextField rangeBox;
 	private FocusListener flRange = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setRaconRange(rangeBox.getText());
+			SmedAction.panelMain.mark.setRaconRange(rangeBox.getText());
 		}
 	};
 	public JLabel sector1Label;
 	public JTextField sector1Box;
 	private FocusListener flSector1 = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setRaconSector1(sector1Box.getText());
+			SmedAction.panelMain.mark.setRaconSector1(sector1Box.getText());
 		}
 	};
 	public JLabel sector2Label;
 	public JTextField sector2Box;
 	private FocusListener flSector2 = new FocusAdapter() {
 		public void focusLost(java.awt.event.FocusEvent e) {
-			dlg.panelMain.mark.setRaconSector2(sector2Box.getText());
+			SmedAction.panelMain.mark.setRaconSector2(sector2Box.getText());
 		}
 	};
 	public JLabel sectorsLabel;
@@ -203,7 +203,7 @@ public class PanelRadar extends JPanel {
 	}
 
 	public void syncPanel() {
-		boolean rad = ((dlg.panelMain.mark.getRadar() != Rtb.NORTB) && (dlg.panelMain.mark.getRadar() != Rtb.REFLECTOR));
+		boolean rad = ((SmedAction.panelMain.mark.getRadar() != Rtb.NORTB) && (SmedAction.panelMain.mark.getRadar() != Rtb.REFLECTOR));
 		groupLabel.setVisible(rad);
 		groupBox.setVisible(rad);
 		periodLabel.setVisible(rad);
@@ -218,17 +218,17 @@ public class PanelRadar extends JPanel {
 		sector2Box.setVisible(rad);
 		sectorsLabel.setVisible(rad);
 		for (Rtb rtb : rads.keySet()) {
-			rads.get(rtb).setBorderPainted(dlg.panelMain.mark.getRadar() == rtb);
+			rads.get(rtb).setBorderPainted(SmedAction.panelMain.mark.getRadar() == rtb);
 		}
-		groupBox.setText(dlg.panelMain.mark.getRaconGroup());
-		seqBox.setText(dlg.panelMain.mark.getRaconSequence());
-		periodBox.setText(dlg.panelMain.mark.getRaconPeriod());
-		rangeBox.setText(dlg.panelMain.mark.getRaconRange());
-		sector1Box.setText(dlg.panelMain.mark.getRaconSector1());
-		sector2Box.setText(dlg.panelMain.mark.getRaconSector2());
-		aisButton.setSelected(dlg.panelMain.mark.getRadio() != Cat.NOROS);
+		groupBox.setText(SmedAction.panelMain.mark.getRaconGroup());
+		seqBox.setText(SmedAction.panelMain.mark.getRaconSequence());
+		periodBox.setText(SmedAction.panelMain.mark.getRaconPeriod());
+		rangeBox.setText(SmedAction.panelMain.mark.getRaconRange());
+		sector1Box.setText(SmedAction.panelMain.mark.getRaconSector1());
+		sector2Box.setText(SmedAction.panelMain.mark.getRaconSector2());
+		aisButton.setSelected(SmedAction.panelMain.mark.getRadio() != Cat.NOROS);
 		aisButton.setBorderPainted(aisButton.isSelected());
-		radioCatBox.setVisible(dlg.panelMain.mark.getRadio() != Cat.NOROS);
+		radioCatBox.setVisible(SmedAction.panelMain.mark.getRadio() != Cat.NOROS);
 	}
 
 	private JRadioButton getRadButton(JRadioButton button, int x, int y, int w, int h, String tip, Rtb rtb) {

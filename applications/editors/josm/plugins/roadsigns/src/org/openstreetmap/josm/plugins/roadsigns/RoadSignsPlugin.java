@@ -23,7 +23,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import org.xml.sax.SAXException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences.pref;
@@ -35,6 +34,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignInputDialog.SettingsPanel;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.Utils;
+import org.xml.sax.SAXException;
 
 public class RoadSignsPlugin extends Plugin {
     static PresetMetaData selectedPreset;
@@ -78,7 +78,8 @@ public class RoadSignsPlugin extends Plugin {
                     Shortcut.registerShortcut("plugin:roadsigns:dialog", tr("Roadsigns plugin: open dialog"), KeyEvent.VK_Q, Shortcut.ALT_SHIFT), false);
         }
 
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             String code = Main.pref.get("plugin.roadsigns.preset.selection", null);
             if (code == null) {
                 ExtendedDialog ed = new ExtendedDialog(Main.parent, tr("Settings"), new String[] { tr("Ok"), tr("Cancel") });
@@ -240,7 +241,8 @@ public class RoadSignsPlugin extends Plugin {
     /**
      * Returns an inputstream from urls, files and classloaders, depending on the name.
      */
-    public static InputStream getInputStream(String source) throws IOException {
+    @SuppressWarnings("resource")
+	public static InputStream getInputStream(String source) throws IOException {
         InputStream in = null;
         if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("ftp://")) {
             in = new CachedFile(source).getInputStream();

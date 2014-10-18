@@ -26,8 +26,8 @@ import org.openstreetmap.josm.io.XmlWriter;
  */
 public class SdsOsmWriter extends OsmWriter {
 
-	private SeparateDataStorePlugin plugin;
-	
+    private SeparateDataStorePlugin plugin;
+    
     public SdsOsmWriter(SeparateDataStorePlugin plugin, PrintWriter out, boolean osmConform, String version) {
         super(out, osmConform, version);
         this.plugin = plugin;
@@ -42,7 +42,7 @@ public class SdsOsmWriter extends OsmWriter {
             List<Entry<String, String>> entries = new ArrayList<>(osm.getKeys().entrySet());
             Collections.sort(entries, byKeyComparator);
             for (Entry<String, String> e : entries) {
-            	String key = e.getKey();
+                String key = e.getKey();
                 if (!(osm instanceof Changeset) && ("created_by".equals(key))) continue;
                 if (key.startsWith(plugin.getIgnorePrefix())) continue;          
                 out.println("    <tag k='"+ XmlWriter.encode(e.getKey()) +

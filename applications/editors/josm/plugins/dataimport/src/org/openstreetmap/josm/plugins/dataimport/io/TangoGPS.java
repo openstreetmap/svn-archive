@@ -29,7 +29,8 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.FileImporter;
 
 /**
- * @author dmuecke Data import for TangoGPS file format.
+ * Data import for TangoGPS file format.
+ * @author dmuecke
  */
 public class TangoGPS extends FileImporter {
 
@@ -39,8 +40,7 @@ public class TangoGPS extends FileImporter {
 
     /**
      * @author cbrill
-     * This function imports data from file and adds trackpoints
-     *         to a layer.
+     * This function imports data from file and adds trackpoints to a layer.
      * Read a log file from TangoGPS. These are simple text files in the
      * form: <lat>,<lon>,<elevation>,<speed>,<course>,<hdop>,<datetime>
      */
@@ -52,11 +52,10 @@ public class TangoGPS extends FileImporter {
         int imported = 0;
         int failure = 0;
 
-        BufferedReader rd = null;
-        try {
+        try (
             InputStream source = new FileInputStream(file);
-            rd = new BufferedReader(new InputStreamReader(source));
-
+            BufferedReader rd = new BufferedReader(new InputStreamReader(source));
+         ) {
             String line;
             while ((line = rd.readLine()) != null) {
                 failure++;
@@ -71,7 +70,7 @@ public class TangoGPS extends FileImporter {
                         currentTrackSeg.add(currentWayPoint);
                         imported++;
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                        Main.error(e);
                     }
                 }
             }
@@ -91,10 +90,6 @@ public class TangoGPS extends FileImporter {
                 }
             }
             showInfobox(imported,failure);
-        } finally {
-            if (rd != null) {
-                rd.close();
-            }
         }
     }
 
@@ -105,8 +100,7 @@ public class TangoGPS extends FileImporter {
     private LatLon parseLatLon(String[] lineElements) {
         if (lineElements.length < 2)
             return null;
-        return new LatLon(parseCoord(lineElements[0]),
-                parseCoord(lineElements[1]));
+        return new LatLon(parseCoord(lineElements[0]), parseCoord(lineElements[1]));
     }
 
     private void showInfobox(int success,int failure) {
@@ -117,6 +111,4 @@ public class TangoGPS extends FileImporter {
             JOptionPane.showMessageDialog(Main.parent, msg, tr("TangoGPS import failure!"), JOptionPane.ERROR_MESSAGE);
         }
     }
-
-
 }

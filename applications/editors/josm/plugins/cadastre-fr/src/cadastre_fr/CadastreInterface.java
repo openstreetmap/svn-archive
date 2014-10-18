@@ -228,7 +228,7 @@ public class CadastreInterface {
                 lines += ln;
             }
             if (Main.isDebugEnabled()) {
-            	Main.debug(lines);
+                Main.debug(lines);
             }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(
@@ -283,16 +283,16 @@ public class CadastreInterface {
             urlConn.setDoOutput(true);
             urlConn.setDoInput(true);
             setCookie();
-            OutputStream wr = urlConn.getOutputStream();
-            wr.write(content.getBytes());
-            System.out.println("POST "+content);
-            wr.flush();
-            wr.close();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            while ((ln = rd.readLine()) != null) {
-                lines += ln;
+            try (OutputStream wr = urlConn.getOutputStream()) {
+                wr.write(content.getBytes());
+                Main.info("POST "+content);
+                wr.flush();
             }
-            rd.close();
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream()))) {
+                while ((ln = rd.readLine()) != null) {
+                    lines += ln;
+                }
+            }
             urlConn.disconnect();
             if (lines != null) {
                 if (lines.indexOf(cImageFormat) != -1) {
@@ -370,17 +370,16 @@ public class CadastreInterface {
             urlConn2 = (HttpURLConnection)getAllImagesURL.openConnection();
             setCookie(urlConn2);
             urlConn2.connect();
-            System.out.println("GET "+getAllImagesURL);
-            BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream()));
-            while ((ln = rd.readLine()) != null) {
-                lines += ln;
+            Main.info("GET "+getAllImagesURL);
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream()))) {
+                while ((ln = rd.readLine()) != null) {
+                    lines += ln;
+                }
             }
-            rd.close();
             urlConn2.disconnect();
-            //System.out.println("GET="+lines);
         } catch (IOException e) {
             listOfFeuilles.clear();
-            e.printStackTrace();
+            Main.error(e);
         }
         return lines;
     }
@@ -482,11 +481,11 @@ public class CadastreInterface {
             throw new IOException("Cannot get Cadastre response.");
         }
         System.out.println("GET "+searchFormURL);
-        BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-        while ((ln = in.readLine()) != null) {
-            line += ln;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()))) {
+            while ((ln = in.readLine()) != null) {
+                line += ln;
+            }
         }
-        in.close();
         urlConn.disconnect();
         parseBBoxCommune(wmsLayer, line);
         if (wmsLayer.isRaster() && !wmsLayer.isAlreadyGeoreferenced()) {
@@ -510,7 +509,7 @@ public class CadastreInterface {
     }
 
     private void parseGeoreferences(WMSLayer wmsLayer, String input) {
-        /* commented since cadastre WMS changes mid july 2013 
+        /* commented since cadastre WMS changes mid july 2013
          * until new GeoBox coordinates parsing is solved */
 //        if (input.lastIndexOf(cBBoxCommunStart) != -1) {
 //            input = input.substring(input.lastIndexOf(cBBoxCommunStart));

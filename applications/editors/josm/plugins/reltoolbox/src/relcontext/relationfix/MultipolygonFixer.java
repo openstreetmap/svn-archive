@@ -21,33 +21,33 @@ import org.openstreetmap.josm.data.osm.Way;
  */
 public class MultipolygonFixer extends RelationFixer {
 
-	public MultipolygonFixer() {
-		super("multipolygon");
-	}
+    public MultipolygonFixer() {
+        super("multipolygon");
+    }
 
-	protected MultipolygonFixer(String...types) {
-		super(types);
-	}
+    protected MultipolygonFixer(String...types) {
+        super(types);
+    }
 
 
-	@Override
-	public boolean isRelationGood(Relation rel) {
-		for (RelationMember m : rel.getMembers())
-			if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
-			    setWarningMessage(tr("Way without ''inner'' or ''outer'' role found"));
-			    return false;
-			}
-		clearWarningMessage();
-		return true;
-	}
+    @Override
+    public boolean isRelationGood(Relation rel) {
+        for (RelationMember m : rel.getMembers())
+            if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
+                setWarningMessage(tr("Way without ''inner'' or ''outer'' role found"));
+                return false;
+            }
+        clearWarningMessage();
+        return true;
+    }
 
-	@Override
-	public Command fixRelation(Relation rel) {
-		Relation rr = fixMultipolygonRoles(rel);
-		return rr != null? new ChangeCommand(rel, rr) : null;
-	}
+    @Override
+    public Command fixRelation(Relation rel) {
+        Relation rr = fixMultipolygonRoles(rel);
+        return rr != null? new ChangeCommand(rel, rr) : null;
+    }
 
-	/**
+    /**
      * Basically, created multipolygon from scratch, and if successful, replace roles with new ones.
      */
     protected Relation fixMultipolygonRoles( Relation source ) {

@@ -15,13 +15,13 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
 public abstract class SdsDiskAccessAction extends DiskAccessAction {
-	
+    
     public SdsDiskAccessAction(String name, String iconName, String tooltip,
-			Shortcut shortcut) {
-		super(name, iconName, tooltip, shortcut);
-	}
+            Shortcut shortcut) {
+        super(name, iconName, tooltip, shortcut);
+    }
 
-	public static SwingFileChooser createAndOpenFileChooser(boolean open, boolean multiple, String title) {
+    public static SwingFileChooser createAndOpenFileChooser(boolean open, boolean multiple, String title) {
         String curDir = Main.pref.get("lastDirectory");
         if (curDir.equals("")) {
             curDir = ".";
@@ -34,10 +34,10 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fc.setMultiSelectionEnabled(multiple);
         fc.setAcceptAllFileFilterUsed(false);
-        		
+                
         fc.setFileFilter(new FileFilter() {
-        	public boolean accept(File pathname) { return pathname.getName().endsWith(".sds") || pathname.isDirectory(); }
-			public String getDescription() { return (tr("SDS data file")); }
+            public boolean accept(File pathname) { return pathname.getName().endsWith(".sds") || pathname.isDirectory(); }
+            public String getDescription() { return (tr("SDS data file")); }
         });     
 
         int answer = open ? fc.showOpenDialog(Main.parent) : fc.showSaveDialog(Main.parent);
@@ -82,8 +82,8 @@ public abstract class SdsDiskAccessAction extends DiskAccessAction {
         fc.setAcceptAllFileFilterUsed(false);
         
         fc.setFileFilter(new FileFilter() {
-        	public boolean accept(File pathname) { return pathname.getName().endsWith(".sds") || pathname.isDirectory(); }
-			public String getDescription() { return (tr("SDS data file")); }
+            public boolean accept(File pathname) { return pathname.getName().endsWith(".sds") || pathname.isDirectory(); }
+            public String getDescription() { return (tr("SDS data file")); }
         }); 
         
         int answer = fc.showSaveDialog(Main.parent);

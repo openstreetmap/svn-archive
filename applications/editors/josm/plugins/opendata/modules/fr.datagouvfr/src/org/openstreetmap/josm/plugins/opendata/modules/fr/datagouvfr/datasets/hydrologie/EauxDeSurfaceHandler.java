@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.DataGouvDataSetHandler;
@@ -22,7 +23,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
 
     private static final String ZIP_PATTERN = "FR(.*)_SW";
     private static final String SHP_PATTERN = "FR_(.*)_SWB_.W_20......";
-    
+
     private static final class WaterAgency {
         public final String code;
         public final String name;
@@ -33,7 +34,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
             this.suffix = suffix;
         }
     }
-    
+
     private static final WaterAgency[] waterAgencies = new WaterAgency[]{
         new WaterAgency("A",  "Escaut Somme", "Escaut-Somme-30381967"),
         new WaterAgency("B1", "Meuse", "Meuse-30381855"),
@@ -48,12 +49,12 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
         new WaterAgency("K",  "Guyane", "Guyane-30381988"),
         new WaterAgency("L",  "La Réunion", "Réunion-30381991"),
     };
-    
+
     public EauxDeSurfaceHandler() {
         setName("Eaux de surface");
         setArchiveHandler(new InternalZipHandler());
     }
-    
+
     @Override
     public boolean acceptsFilename(String filename) {
         boolean result = acceptsZipFilename(filename, ZIP_PATTERN) || acceptsShpFilename(filename, SHP_PATTERN);
@@ -62,7 +63,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
         }
         return result;
     }
-    
+
     @Override
     public boolean acceptsUrl(String url) {
         boolean result = super.acceptsUrl(url);
@@ -90,7 +91,7 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
     public void updateDataSet(DataSet ds) {
         // TODO Auto-generated method stub
     }
-    
+
     @Override
     public List<Pair<String, URL>> getDataURLs() {
         List<Pair<String, URL>> result = new ArrayList<>();
@@ -105,27 +106,27 @@ public class EauxDeSurfaceHandler extends DataGouvDataSetHandler {
     }
 
     private Pair<String, URL> getDownloadURL(WaterAgency a) throws MalformedURLException {
-        return new Pair<>("SurfaceWater_"+a.name, new URL("http://www.rapportage.eaufrance.fr/sites/default/files/SIG/FR"+a.code+"_SW.zip"));
+        return new Pair<>("SurfaceWater_"+a.name,
+                new URL("http://www.rapportage.eaufrance.fr/sites/default/files/SIG/FR"+a.code+"_SW.zip"));
     }
-    
+
     private class InternalZipHandler extends DefaultArchiveHandler {
         @Override
         public void notifyTempFileWritten(File file) {
-            if (file.getName().matches(SHP_PATTERN.replace("(.*)", "F")+"\\.prj")) { // Adour-Garonne .prj files cannot be parsed because they do not contain quotes... 
-                try {
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
+            // Adour-Garonne .prj files cannot be parsed because they do not contain quotes...
+            if (file.getName().matches(SHP_PATTERN.replace("(.*)", "F")+"\\.prj")) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     String line = reader.readLine();
-                    reader.close();
                     if (!line.contains("\"")) {
                         for (String term : new String[]{"GCS_ETRS_1989", "D_ETRS_1989", "GRS_1980", "Greenwich", "Degree"}) {
                             line = line.replace(term, "\""+term+"\"");
                         }
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(line);
-                        writer.close();
+                        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                            writer.write(line);
+                        }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Main.error(e);
                 }
             }
         }

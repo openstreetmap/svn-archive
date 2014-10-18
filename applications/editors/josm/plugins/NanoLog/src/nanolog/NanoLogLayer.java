@@ -102,40 +102,40 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         final Pattern NANOLOG_LINE = Pattern.compile("(.+?)\\t(.+?)(?:\\s*\\{\\{(-?\\d+\\.\\d+),\\s*(-?\\d+\\.\\d+)(?:,\\s*(\\d+))?\\}\\})?");
         final SimpleDateFormat fmt = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS");
         List<NanoLogEntry> result = new ArrayList<>();
-        BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
-        while( r.ready() ) {
-            String line = r.readLine();
-            if( line != null ) {
-                Matcher m = NANOLOG_LINE.matcher(line);
-                if( m.matches() ) {
-                    String time = m.group(1);
-                    String message = m.group(2);
-                    String lat = m.group(3);
-                    String lon = m.group(4);
-                    String dir = m.group(5);
-                    Date timeDate = null;
-                    try {
-                        timeDate = fmt.parse(time);
-                    } catch( ParseException e ) {
-                    }
-                    if( message == null || message.length() == 0 || timeDate == null )
-                        continue;
-                    LatLon pos = null;
-                    Integer direction = null;
-                    if( lat != null && lon != null ) {
-                        try {
-                            pos = new LatLon(Double.parseDouble(lat), Double.parseDouble(lon));
-                            direction = new Integer(dir);
-                        } catch( NumberFormatException e ) {
-                            // well...
-                        }
-                    }
-                    NanoLogEntry entry = new NanoLogEntry(timeDate, message, pos, direction);
-                    result.add(entry);
-                }
-            }
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"))) {
+	        while( r.ready() ) {
+	            String line = r.readLine();
+	            if( line != null ) {
+	                Matcher m = NANOLOG_LINE.matcher(line);
+	                if( m.matches() ) {
+	                    String time = m.group(1);
+	                    String message = m.group(2);
+	                    String lat = m.group(3);
+	                    String lon = m.group(4);
+	                    String dir = m.group(5);
+	                    Date timeDate = null;
+	                    try {
+	                        timeDate = fmt.parse(time);
+	                    } catch( ParseException e ) {
+	                    }
+	                    if( message == null || message.length() == 0 || timeDate == null )
+	                        continue;
+	                    LatLon pos = null;
+	                    Integer direction = null;
+	                    if( lat != null && lon != null ) {
+	                        try {
+	                            pos = new LatLon(Double.parseDouble(lat), Double.parseDouble(lon));
+	                            direction = new Integer(dir);
+	                        } catch( NumberFormatException e ) {
+	                            // well...
+	                        }
+	                    }
+	                    NanoLogEntry entry = new NanoLogEntry(timeDate, message, pos, direction);
+	                    result.add(entry);
+	                }
+	            }
+	        }
         }
-        r.close();
         return result;
     }
 

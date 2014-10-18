@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 import java.util.Random;
+
 import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.Tile;
@@ -19,32 +20,33 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource.TileUpdate;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.preferences.BooleanProperty;
 
 /**
- * 
+ *
  * @author Alexei Kasatkin, based on OsmFileCacheTileLoader by @author Jan Peter Stotz, @author Stefan Zeller
  */
 class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
-    
-    
+
+
     public static final long FILE_AGE_ONE_DAY = 1000 * 60 * 60 * 24;
     public static final long FILE_AGE_ONE_WEEK = FILE_AGE_ONE_DAY * 7;
-    
+
     public static final boolean debug = new BooleanProperty("imagerycache.debug", false).get();
-            
+
     TileDAOMapDB dao;
-   
+
     protected long maxCacheFileAge = FILE_AGE_ONE_WEEK;
     protected long recheckAfter = FILE_AGE_ONE_DAY;
 
-    
+
     public OsmDBTilesLoader(TileLoaderListener smap, File cacheFolder) {
         super(smap);
         dao = TileDAOMapDB.getInstance();
         dao.setCacheFolder(cacheFolder);
     }
-    
+
     @Override
     public TileJob createTileLoaderJob(final Tile tile) {
         return new DatabaseLoadJob(tile);
@@ -59,21 +61,21 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
     public void clearCache(TileSource source, TileClearController controller) {
         dao.cleanStorage(source.getName());
     }
-    
+
     protected class DatabaseLoadJob implements TileJob {
 
         private final Tile tile;
         File tileCacheDir;
-        
+
         /**
-         * Stores the tile loaded from database, null if nothing found. 
+         * Stores the tile loaded from database, null if nothing found.
          */
         DBTile dbTile = null;
         long fileAge = 0;
-        
+
         long id;
         String sourceName;
-        
+
         public DatabaseLoadJob(Tile tile) {
             this.tile = tile;
             id = 0x01000000L * tile.getZoom() + 0x00200000L *tile.getXtile() +tile.getYtile();
@@ -111,7 +113,7 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
         }
 
         /**
-         * Loads tile from database. 
+         * Loads tile from database.
          * There can be dbTile != null but the tile is outdated and reload is still needed
          * @return true if no loading from server is needed.
          */
@@ -119,10 +121,10 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
             ByteArrayInputStream bin = null;
             try {
                 dbTile = dao.getById(sourceName, id);
-                
+
                 if (dbTile == null) return false;
-                
-                loadMetadata(); 
+
+                loadMetadata();
                 if (debug) System.out.println(id+": found in cache, metadata ="+dbTile.metaData);
 
                 if ("no-tile".equals(tile.getValue("tile-info")))
@@ -148,8 +150,8 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
                     return false; // Tile is loaded, but too old. Should be reloaded from server
                 }
             } catch (Exception e) {
-                System.out.println("Error: Can not load tile from database: "+sourceName+":"+id);
-                e.printStackTrace(System.out);
+            	Main.error("Error: Can not load tile from database: "+sourceName+":"+id);
+            	Main.error(e);
                 try {
                     if (bin != null) {
                         bin.close();
@@ -160,18 +162,18 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
                 fileAge = 0;
                 return false; // tile is not because of some error (corrupted database, etc.)
             } catch (Error e) { // this is bad, bat MapDB throws it
-                System.out.println("Serious database error: Can not load tile from database: "+sourceName+":"+id);
-                e.printStackTrace(System.out);
-                dbTile = null;  fileAge = 0;  return false;                                            
+                Main.error("Serious database error: Can not load tile from database: "+sourceName+":"+id);
+            	Main.error(e);
+                dbTile = null;  fileAge = 0;  return false;
             }
         }
 
         long getLastModTime() {
             return System.currentTimeMillis() - maxCacheFileAge + recheckAfter;
         }
-                
+
         private void loadOrUpdateTileFromServer() {
-            
+
             try {
                 URLConnection urlConn = loadTileFromOsm(tile);
                 final TileUpdate tileUpdate = tile.getSource().getTileUpdate();
@@ -194,7 +196,7 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
                 } else {
                     dbTile = new DBTile();
                 }
-                
+
                 if (tileUpdate == TileSource.TileUpdate.ETag || tileUpdate == TileSource.TileUpdate.IfNoneMatch) {
                     String fileETag = tile.getValue("etag");
                     if (fileETag != null) {
@@ -223,7 +225,7 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
 
                 loadTileMetadata(tile, urlConn);
                 dbTile.metaData = tile.getMetadata();
-                
+
                 if ("no-tile".equals(tile.getValue("tile-info")))
                 {
                     tile.setError("No tile at this zoom level");
@@ -247,7 +249,7 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
                         }
                     }
                 }
-                
+
             } catch (Exception e) {
                 tile.setError(e.getMessage());
                 listener.tileLoadingFinished(tile, false);
@@ -260,8 +262,8 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
                 tile.finishLoading();
             }
         }
-        
-        
+
+
         protected byte[] loadTileInBuffer(URLConnection urlConn) throws IOException {
             InputStream input = urlConn.getInputStream();
             ByteArrayOutputStream bout = new ByteArrayOutputStream(input.available());
@@ -291,7 +293,7 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
          * <li>{@link tilesources.OsmTileSource.Mapnik} - not supported</li>
          * </ul>
          *
-         * @param fileAge time of the 
+         * @param fileAge time of the
          * @return <code>true</code> if the tile on the server is newer than the
          *         file
          * @throws IOException

@@ -40,48 +40,48 @@ public class PanelCol extends JPanel {
 				JRadioButton button = colours.get(col);
 				if (button.isSelected()) {
 					if (ent == Ent.LIGHT) {
-						if (((String) dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).contains("Al")) {
-							if (((button == delButton) && (dlg.panelMain.mark.getLightAtt(Att.ALT, 0) == Col.UNKCOL))
-									|| (dlg.panelMain.mark.getLightAtt(Att.COL, 0) == Col.UNKCOL)) {
-								dlg.panelMain.mark.setLightAtt(Att.COL, 0, col);
-								dlg.panelMain.panelLit.panelChr.col1Label.setBackground(SeaMark.ColMAP.get(col));
+						if (((String) SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0)).contains("Al")) {
+							if (((button == delButton) && (SmedAction.panelMain.mark.getLightAtt(Att.ALT, 0) == Col.UNKCOL))
+									|| (SmedAction.panelMain.mark.getLightAtt(Att.COL, 0) == Col.UNKCOL)) {
+								SmedAction.panelMain.mark.setLightAtt(Att.COL, 0, col);
+								SmedAction.panelMain.panelLit.panelChr.col1Label.setBackground(SeaMark.ColMAP.get(col));
 							} else {
-								dlg.panelMain.mark.setLightAtt(Att.ALT, 0, col);
-								dlg.panelMain.panelLit.panelChr.col2Label.setBackground(SeaMark.ColMAP.get(col));
+								SmedAction.panelMain.mark.setLightAtt(Att.ALT, 0, col);
+								SmedAction.panelMain.panelLit.panelChr.col2Label.setBackground(SeaMark.ColMAP.get(col));
 							}
 						} else {
-							dlg.panelMain.mark.setLightAtt(Att.COL, 0, col);
-							dlg.panelMain.panelLit.panelChr.col1Label.setBackground(SeaMark.ColMAP.get(col));
-							dlg.panelMain.panelLit.panelChr.col2Label.setBackground(SeaMark.ColMAP.get(col));
+							SmedAction.panelMain.mark.setLightAtt(Att.COL, 0, col);
+							SmedAction.panelMain.panelLit.panelChr.col1Label.setBackground(SeaMark.ColMAP.get(col));
+							SmedAction.panelMain.panelLit.panelChr.col2Label.setBackground(SeaMark.ColMAP.get(col));
 						}
 						button.setBorderPainted(true);
 					} else {
 						if (button == delButton) {
-							dlg.panelMain.mark.subColour(ent, stackIdx);
+							SmedAction.panelMain.mark.subColour(ent, stackIdx);
 						} else if (button == addButton) {
 							if (stackCol.size() != 0)
 								stackIdx++;
 							if (stackCol.size() == 0)
-								dlg.panelMain.mark.setColour(ent, col);
+								SmedAction.panelMain.mark.setColour(ent, col);
 							else
-								switch (dlg.panelMain.mark.getPattern(ent)) {
+								switch (SmedAction.panelMain.mark.getPattern(ent)) {
 								case NOPAT:
 									break;
 								case BORDER:
 								case CROSS:
 									if (stackCol.size() < 2)
-										dlg.panelMain.mark.addColour(ent, stackIdx, col);
+										SmedAction.panelMain.mark.addColour(ent, stackIdx, col);
 									break;
 								case SQUARED:
 									if (stackCol.size() < 4)
-										dlg.panelMain.mark.addColour(ent, stackIdx, col);
+										SmedAction.panelMain.mark.addColour(ent, stackIdx, col);
 									break;
 								default:
-									dlg.panelMain.mark.addColour(ent, stackIdx, col);
+									SmedAction.panelMain.mark.addColour(ent, stackIdx, col);
 									break;
 								}
 						} else {
-							dlg.panelMain.mark.setColour(ent, stackIdx, col);
+							SmedAction.panelMain.mark.setColour(ent, stackIdx, col);
 						}
 						syncPanel();
 					}
@@ -149,14 +149,14 @@ public class PanelCol extends JPanel {
 		if (ent == Ent.LIGHT) {
 			for (Col col : colours.keySet()) {
 				JRadioButton button = colours.get(col);
-				if (dlg.panelMain.mark.getLightAtt(Att.COL, 0) == col) {
+				if (SmedAction.panelMain.mark.getLightAtt(Att.COL, 0) == col) {
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
 		} else {
 			int idx;
-			for (idx = 0; dlg.panelMain.mark.getColour(ent, idx) != Col.UNKCOL; idx++) {
+			for (idx = 0; SmedAction.panelMain.mark.getColour(ent, idx) != Col.UNKCOL; idx++) {
 				if (stackCol.size() <= idx) {
 					stackCol.add(idx, new JRadioButton(new ImageIcon(getClass().getResource("/images/ColourButton.png"))));
 					JRadioButton btnI = stackCol.get(idx);
@@ -184,7 +184,7 @@ public class PanelCol extends JPanel {
 				for (idx = 0; stackCol.size() > idx; idx++) {
 					JRadioButton btnI = stackCol.get(idx);
 					btnI.setBounds(2, (2 + (idx * height)), 30, height);
-					btnI.setBackground(SeaMark.ColMAP.get(dlg.panelMain.mark.getColour(ent, idx)));
+					btnI.setBackground(SeaMark.ColMAP.get(SmedAction.panelMain.mark.getColour(ent, idx)));
 					if (stackIdx == idx) {
 						btnI.setBorderPainted(true);
 					} else {

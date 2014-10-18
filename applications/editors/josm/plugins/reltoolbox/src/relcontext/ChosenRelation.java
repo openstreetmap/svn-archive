@@ -149,8 +149,8 @@ public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable
                     g.draw(b);
                 }
             } else if( element.getType() == OsmPrimitiveType.RELATION ) {
-            	Color oldColor = g.getColor();
-            	g.setColor(Color.magenta);
+                Color oldColor = g.getColor();
+                g.setColor(Color.magenta);
                 drawRelations(g, mv, bbox, (Relation)element);
                 g.setColor(oldColor);
             }

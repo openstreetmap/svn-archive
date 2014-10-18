@@ -72,11 +72,10 @@ public class ModuleInformation {
     public ModuleInformation(File file, String name) throws ModuleException{
         this.name = name;
         this.file = file;
-        FileInputStream fis = null;
-        JarInputStream jar = null;
-        try {
-            fis = new FileInputStream(file);
-            jar = new JarInputStream(fis);
+        try (
+            FileInputStream fis = new FileInputStream(file);
+            JarInputStream jar = new JarInputStream(fis);
+        ) {
             Manifest manifest = jar.getManifest();
             if (manifest == null)
                 throw new ModuleException(name, tr("The module file ''{0}'' does not include a Manifest.", file.toString()));
@@ -84,17 +83,6 @@ public class ModuleInformation {
             libraries.add(0, fileToURL(file));
         } catch (IOException e) {
             throw new ModuleException(name, e);
-        } finally {
-            if (jar != null) {
-                try {
-                    jar.close();
-                } catch(IOException e) { /* ignore */ }
-            }
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch(IOException e) { /* ignore */ }
-            }
         }
     }
 

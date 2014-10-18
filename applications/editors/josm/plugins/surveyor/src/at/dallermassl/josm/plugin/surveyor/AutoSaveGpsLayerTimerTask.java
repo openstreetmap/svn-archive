@@ -67,9 +67,9 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
             // quite a hack, but no other object to sync available :-(
             // @see LiveGpsLayer
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(tmpFile)));
-            GpxWriter gpxWriter = new GpxWriter(out);
-            gpxWriter.write(gpsLayer.data);
-            gpxWriter.close();
+            try (GpxWriter gpxWriter = new GpxWriter(out)) {
+            	gpxWriter.write(gpsLayer.data);
+            }
             tmpFile.renameTo(file);
         } catch (IOException ioExc) {
             ioExc.printStackTrace();

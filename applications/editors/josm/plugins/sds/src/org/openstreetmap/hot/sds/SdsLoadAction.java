@@ -25,12 +25,12 @@ import org.xml.sax.SAXException;
 
 @SuppressWarnings("serial")
 public class SdsLoadAction extends SdsDiskAccessAction {
-	
-	private SeparateDataStorePlugin plugin;
+    
+    private SeparateDataStorePlugin plugin;
 
     public SdsLoadAction(SeparateDataStorePlugin p) {
         super(tr("Load..."), "sds_load", tr("Load separate data store data from a file."), null);
-    	plugin = p;
+        plugin = p;
     }
     
     public void actionPerformed(ActionEvent e) {

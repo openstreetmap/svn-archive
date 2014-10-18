@@ -15,23 +15,23 @@ import org.openstreetmap.josm.data.osm.RelationMember;
  */
 public class BoundaryFixer extends MultipolygonFixer {
 
-	public BoundaryFixer() {
-		super("boundary", "multipolygon");
-	}
+    public BoundaryFixer() {
+        super("boundary", "multipolygon");
+    }
 
-	/**
-	 * For boundary relations both "boundary" and "multipolygon" types are applicable, but
-	 * it should also have key boundary=administrative to be fully boundary.
-	 * @see http://wiki.openstreetmap.org/wiki/Relation:boundary
-	 */
-	@Override
-	public boolean isFixerApplicable(Relation rel) {
-		return super.isFixerApplicable(rel) && "administrative".equals(rel.get("boundary"));
-	}
+    /**
+     * For boundary relations both "boundary" and "multipolygon" types are applicable, but
+     * it should also have key boundary=administrative to be fully boundary.
+     * @see http://wiki.openstreetmap.org/wiki/Relation:boundary
+     */
+    @Override
+    public boolean isFixerApplicable(Relation rel) {
+        return super.isFixerApplicable(rel) && "administrative".equals(rel.get("boundary"));
+    }
 
-	@Override
-	public boolean isRelationGood(Relation rel) {
-		for( RelationMember m : rel.getMembers() ) {
+    @Override
+    public boolean isRelationGood(Relation rel) {
+        for( RelationMember m : rel.getMembers() ) {
             if (m.getType().equals(OsmPrimitiveType.RELATION) && !"subarea".equals(m.getRole())) {
                 setWarningMessage(tr("Relation without ''subarea'' role found"));
                 return false;
@@ -42,31 +42,31 @@ public class BoundaryFixer extends MultipolygonFixer {
             }
             if (m.getType().equals(OsmPrimitiveType.WAY) && !("outer".equals(m.getRole()) || "inner".equals(m.getRole()))) {
                 setWarningMessage(tr("Way without ''inner'' or ''outer'' role found"));
-				return false;
+                return false;
             }
         }
-		clearWarningMessage();
-		return true;
-	}
+        clearWarningMessage();
+        return true;
+    }
 
-	@Override
-	public Command fixRelation(Relation rel) {
-		Relation r = rel;
-		Relation rr = fixMultipolygonRoles(r);
-		boolean fixed = false;
-		if (rr != null) {
-			fixed = true;
-			r = rr;
-		}
-		rr = fixBoundaryRoles(r);
-		if (rr != null) {
-			fixed = true;
-			r = rr;
-		}
-		return fixed ? new ChangeCommand(rel, r) : null;
-	}
+    @Override
+    public Command fixRelation(Relation rel) {
+        Relation r = rel;
+        Relation rr = fixMultipolygonRoles(r);
+        boolean fixed = false;
+        if (rr != null) {
+            fixed = true;
+            r = rr;
+        }
+        rr = fixBoundaryRoles(r);
+        if (rr != null) {
+            fixed = true;
+            r = rr;
+        }
+        return fixed ? new ChangeCommand(rel, r) : null;
+    }
 
-	private Relation fixBoundaryRoles( Relation source ) {
+    private Relation fixBoundaryRoles( Relation source ) {
         Relation r = new Relation(source);
         boolean fixed = false;
         for( int i = 0; i < r.getMembersCount(); i++ ) {

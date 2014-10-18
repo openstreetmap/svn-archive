@@ -12,63 +12,61 @@ import org.openstreetmap.josm.io.OsmServerWritePostprocessor;
 
 public class WritePostprocessor implements OsmServerWritePostprocessor {
 
-	SeparateDataStorePlugin plugin;
+    SeparateDataStorePlugin plugin;
 
-	public WritePostprocessor(SeparateDataStorePlugin plugin) {
-		this.plugin = plugin;
-	}	
+    public WritePostprocessor(SeparateDataStorePlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void postprocessUploadedPrimitives(Collection<IPrimitive> primitives,
-			ProgressMonitor progress) {
-		
-	    StringWriter swriter = new StringWriter();
-	    SdsWriter sdsWriter = new SdsWriter(new PrintWriter(swriter));
-	    sdsWriter.header();
-	    boolean somethingWritten = false;
-	   
-	    for (IPrimitive p : primitives) {
-			for (QueueItem q : plugin.uploadQueue) {
-				if (q.primitive.equals(p) && !q.sdsOnly) {
-					sdsWriter.write(q.primitive, q.tags);
-					somethingWritten = true;
-					q.processed = true;
-					continue;
-				}
-			}
-	    }
-	    
-		for (QueueItem q : plugin.uploadQueue) {
-			if (q.sdsOnly) {
-				sdsWriter.write(q.primitive, q.tags);
-				somethingWritten = true;
-				q.processed = true;
-			}
-		}
+    @Override
+    public void postprocessUploadedPrimitives(Collection<IPrimitive> primitives, ProgressMonitor progress) {
 
-		if (somethingWritten) {
-			sdsWriter.footer();
+        StringWriter swriter = new StringWriter();
+        try (SdsWriter sdsWriter = new SdsWriter(new PrintWriter(swriter))) {
+            sdsWriter.header();
+            boolean somethingWritten = false;
 
-			SdsApi api = SdsApi.getSdsApi();
-			System.out.println("sending message:\n" + swriter.toString());
-			api.updateSds(swriter.toString(), progress);
-		}
-		
-		sdsWriter.close();
-		
-		for (IPrimitive p : primitives) {
-			plugin.learn(p);
-		}
+            for (IPrimitive p : primitives) {
+                for (QueueItem q : plugin.uploadQueue) {
+                    if (q.primitive.equals(p) && !q.sdsOnly) {
+                        sdsWriter.write(q.primitive, q.tags);
+                        somethingWritten = true;
+                        q.processed = true;
+                        continue;
+                    }
+                }
+            }
 
-		for (QueueItem q : plugin.uploadQueue) {
-			if (q.sdsOnly) {
-				q.primitive.setModified(false);
-				plugin.learn(q.primitive);
-			}
-		}
-		
-		plugin.clearQueue();
-		// TODO: if exception -> resetQueue
-	}
+            for (QueueItem q : plugin.uploadQueue) {
+                if (q.sdsOnly) {
+                    sdsWriter.write(q.primitive, q.tags);
+                    somethingWritten = true;
+                    q.processed = true;
+                }
+            }
+
+            if (somethingWritten) {
+                sdsWriter.footer();
+
+                SdsApi api = SdsApi.getSdsApi();
+                System.out.println("sending message:\n" + swriter.toString());
+                api.updateSds(swriter.toString(), progress);
+            }
+        }
+
+        for (IPrimitive p : primitives) {
+            plugin.learn(p);
+        }
+
+        for (QueueItem q : plugin.uploadQueue) {
+            if (q.sdsOnly) {
+                q.primitive.setModified(false);
+                plugin.learn(q.primitive);
+            }
+        }
+
+        plugin.clearQueue();
+        // TODO: if exception -> resetQueue
+    }
 
 }

@@ -37,6 +37,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetryAgent;
 import org.openstreetmap.josm.plugins.mapdust.util.retry.RetrySetup;
 
@@ -159,11 +160,10 @@ public class HttpConnector {
 
                 /* 3: write content */
                 if (sbEncodeParameters.length() > 0) {
-                    OutputStreamWriter out =
-                            new OutputStreamWriter(connection.getOutputStream());
-
-                    out.write(sbEncodeParameters.toString());
-                    out.close();
+                    try (OutputStreamWriter out =
+                            new OutputStreamWriter(connection.getOutputStream())) {
+                        out.write(sbEncodeParameters.toString());
+                    }
                 }
 
                 return true;

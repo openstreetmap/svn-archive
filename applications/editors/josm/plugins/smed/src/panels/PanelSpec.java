@@ -23,7 +23,7 @@ public class PanelSpec extends JPanel {
 			for (Cat cat : categories.keySet()) {
 				int idx = categories.get(cat);
 				if (dlg.node != null && (idx == categoryBox.getSelectedIndex()))
-					dlg.panelMain.mark.setCategory(cat);
+					SmedAction.panelMain.mark.setCategory(cat);
 			}
 		}
 	};
@@ -34,14 +34,14 @@ public class PanelSpec extends JPanel {
 			for (Cat cat : moorings.keySet()) {
 				int idx = moorings.get(cat);
 				if (dlg.node != null && (idx == mooringBox.getSelectedIndex())) {
-					dlg.panelMain.mark.setCategory(cat);
+					SmedAction.panelMain.mark.setCategory(cat);
 					if ((cat == Cat.INB_CALM) || (cat == Cat.INB_SBM)) {
-						dlg.panelMain.mark.setObject(Obj.BOYINB);
-						dlg.panelMain.mark.setShape(Shp.UNKSHP);
+						SmedAction.panelMain.mark.setObject(Obj.BOYINB);
+						SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 					} else {
-						dlg.panelMain.mark.setObject(Obj.MORFAC);
+						SmedAction.panelMain.mark.setObject(Obj.MORFAC);
 						if (cat != Cat.MOR_BUOY)
-							dlg.panelMain.mark.setShape(Shp.UNKSHP);
+							SmedAction.panelMain.mark.setShape(Shp.UNKSHP);
 					}
 				}
 			}
@@ -65,28 +65,28 @@ public class PanelSpec extends JPanel {
 	public EnumMap<Shp, Obj> objects = new EnumMap<>(Shp.class);
 	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if ((dlg.panelMain.mark.getObject() != Obj.MORFAC) || (dlg.panelMain.mark.getCategory() == Cat.MOR_BUOY)) {
+			if ((SmedAction.panelMain.mark.getObject() != Obj.MORFAC) || (SmedAction.panelMain.mark.getCategory() == Cat.MOR_BUOY)) {
 				for (Shp shp : shapes.keySet()) {
 					JRadioButton button = shapes.get(shp);
 					if (button.isSelected()) {
-						dlg.panelMain.mark.setShape(shp);
-						if (SeaMark.EntMAP.get(dlg.panelMain.mark.getObject()) != Ent.MOORING) {
-							dlg.panelMain.mark.setObject(objects.get(shp));
-							if (dlg.panelMain.mark.getObjColour(0) == Col.UNKCOL) {
-								dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
-								dlg.panelMain.mark.setObjColour(Col.YELLOW);
+						SmedAction.panelMain.mark.setShape(shp);
+						if (SeaMark.EntMAP.get(SmedAction.panelMain.mark.getObject()) != Ent.MOORING) {
+							SmedAction.panelMain.mark.setObject(objects.get(shp));
+							if (SmedAction.panelMain.mark.getObjColour(0) == Col.UNKCOL) {
+								SmedAction.panelMain.mark.setObjPattern(Pat.NOPAT);
+								SmedAction.panelMain.mark.setObjColour(Col.YELLOW);
 							}
 							if (button == cairnButton) {
-								dlg.panelMain.mark.setObjPattern(Pat.NOPAT);
-								dlg.panelMain.mark.setObjColour(Col.UNKCOL);
+								SmedAction.panelMain.mark.setObjPattern(Pat.NOPAT);
+								SmedAction.panelMain.mark.setObjColour(Col.UNKCOL);
 							}
-							topmarkButton.setVisible(dlg.panelMain.mark.testValid());
+							topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
 						}
 						button.setBorderPainted(true);
 					} else
 						button.setBorderPainted(false);
 				}
-				dlg.panelMain.panelMore.syncPanel();
+				SmedAction.panelMain.panelMore.syncPanel();
 			}
 		}
 	};
@@ -94,41 +94,41 @@ public class PanelSpec extends JPanel {
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
-				dlg.panelMain.mark.setTopmark(Top.X_SHAPE);
-				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
-				dlg.panelMain.mark.setTopColour(Col.YELLOW);
+				SmedAction.panelMain.mark.setTopmark(Top.X_SHAPE);
+				SmedAction.panelMain.mark.setTopPattern(Pat.NOPAT);
+				SmedAction.panelMain.mark.setTopColour(Col.YELLOW);
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.setTopmark(Top.NOTOP);
-				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
-				dlg.panelMain.mark.setTopColour(Col.UNKCOL);
+				SmedAction.panelMain.mark.setTopmark(Top.NOTOP);
+				SmedAction.panelMain.mark.setTopPattern(Pat.NOPAT);
+				SmedAction.panelMain.mark.setTopColour(Col.UNKCOL);
 				topmarkButton.setBorderPainted(false);
 			}
-			dlg.panelMain.panelTop.syncPanel();
+			SmedAction.panelMain.panelTop.syncPanel();
 		}
 	};
 	public JToggleButton noticeButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/NoticeButton.png")));
 	private ActionListener alNotice = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.panelMain.mark.clrMark();
+			SmedAction.panelMain.mark.clrMark();
 			if (noticeButton.isSelected()) {
-				dlg.panelMain.mark.setObject(Obj.NOTMRK);
+				SmedAction.panelMain.mark.setObject(Obj.NOTMRK);
 				noticeButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.setObject(Obj.UNKOBJ);
+				SmedAction.panelMain.mark.setObject(Obj.UNKOBJ);
 				noticeButton.setBorderPainted(false);
 			}
-			dlg.panelMain.syncPanel();
+			SmedAction.panelMain.syncPanel();
 		}
 	};
 	public JToggleButton mooringButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/MooringButton.png")));
 	private ActionListener alMooring = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.panelMain.mark.setObject(Obj.UNKOBJ);
-			dlg.panelMain.mark.setCategory(Cat.NOCAT);
-			dlg.panelMain.mark.setTopmark(Top.NOTOP);
+			SmedAction.panelMain.mark.setObject(Obj.UNKOBJ);
+			SmedAction.panelMain.mark.setCategory(Cat.NOCAT);
+			SmedAction.panelMain.mark.setTopmark(Top.NOTOP);
 			if (mooringButton.isSelected()) {
-				dlg.panelMain.mark.setObject(Obj.MORFAC);
+				SmedAction.panelMain.mark.setObject(Obj.MORFAC);
 				categoryBox.setVisible(false);
 				mooringBox.setVisible(true);
 				pillarButton.setEnabled(false);
@@ -233,7 +233,7 @@ public class PanelSpec extends JPanel {
 	}
 
 	public void syncPanel() {
-		if (SeaMark.EntMAP.get(dlg.panelMain.mark.getObject()) == Ent.MOORING) {
+		if (SeaMark.EntMAP.get(SmedAction.panelMain.mark.getObject()) == Ent.MOORING) {
 			mooringButton.setBorderPainted(true);
 			categoryBox.setVisible(false);
 			mooringBox.setVisible(true);
@@ -247,7 +247,7 @@ public class PanelSpec extends JPanel {
 			topmarkButton.setVisible(false);
 			for (Cat cat : moorings.keySet()) {
 				int item = moorings.get(cat);
-				if (dlg.panelMain.mark.getCategory() == cat)
+				if (SmedAction.panelMain.mark.getCategory() == cat)
 					mooringBox.setSelectedIndex(item);
 			}
 		} else {
@@ -261,24 +261,24 @@ public class PanelSpec extends JPanel {
 			stakeButton.setEnabled(true);
 			cairnButton.setEnabled(true);
 			noticeButton.setEnabled(true);
-			topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
-			topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
-			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
+			topmarkButton.setBorderPainted(SmedAction.panelMain.mark.getTopmark() != Top.NOTOP);
+			topmarkButton.setSelected(SmedAction.panelMain.mark.getTopmark() != Top.NOTOP);
+			topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
 			for (Cat cat : categories.keySet()) {
 				int item = categories.get(cat);
-				if (dlg.panelMain.mark.getCategory() == cat)
+				if (SmedAction.panelMain.mark.getCategory() == cat)
 					categoryBox.setSelectedIndex(item);
 			}
 		}
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			if (dlg.panelMain.mark.getShape() == shp) {
+			if (SmedAction.panelMain.mark.getShape() == shp) {
 				button.setBorderPainted(true);
 			} else
 				button.setBorderPainted(false);
 		}
 		noticeButton.setBorderPainted(false);
-		dlg.panelMain.mark.testValid();
+		SmedAction.panelMain.mark.testValid();
 	}
 
 	private void addCatItem(String str, Cat cat) {

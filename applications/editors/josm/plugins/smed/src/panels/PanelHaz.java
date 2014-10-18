@@ -23,53 +23,53 @@ public class PanelHaz extends JPanel {
 	public JRadioButton isolButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/IsolButton.png")));
 	private ActionListener alCat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			dlg.panelMain.mark.setObjPattern(Pat.HSTRP);
+			SmedAction.panelMain.mark.setObjPattern(Pat.HSTRP);
 			if (northButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.CAM_NORTH);
-				dlg.panelMain.mark.setObjColour(Col.BLACK);
-				dlg.panelMain.mark.addObjColour(Col.YELLOW);
+				SmedAction.panelMain.mark.setCategory(Cat.CAM_NORTH);
+				SmedAction.panelMain.mark.setObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.addObjColour(Col.YELLOW);
 				northButton.setBorderPainted(true);
 			} else {
 				northButton.setBorderPainted(false);
 			}
 			if (southButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.CAM_SOUTH);
-				dlg.panelMain.mark.setObjColour(Col.YELLOW);
-				dlg.panelMain.mark.addObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.setCategory(Cat.CAM_SOUTH);
+				SmedAction.panelMain.mark.setObjColour(Col.YELLOW);
+				SmedAction.panelMain.mark.addObjColour(Col.BLACK);
 				southButton.setBorderPainted(true);
 			} else {
 				southButton.setBorderPainted(false);
 			}
 			if (eastButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.CAM_EAST);
-				dlg.panelMain.mark.setObjColour(Col.BLACK);
-				dlg.panelMain.mark.addObjColour(Col.YELLOW);
-				dlg.panelMain.mark.addObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.setCategory(Cat.CAM_EAST);
+				SmedAction.panelMain.mark.setObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.addObjColour(Col.YELLOW);
+				SmedAction.panelMain.mark.addObjColour(Col.BLACK);
 				eastButton.setBorderPainted(true);
 			} else {
 				eastButton.setBorderPainted(false);
 			}
 			if (westButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.CAM_WEST);
-				dlg.panelMain.mark.setObjColour(Col.YELLOW);
-				dlg.panelMain.mark.addObjColour(Col.BLACK);
-				dlg.panelMain.mark.addObjColour(Col.YELLOW);
+				SmedAction.panelMain.mark.setCategory(Cat.CAM_WEST);
+				SmedAction.panelMain.mark.setObjColour(Col.YELLOW);
+				SmedAction.panelMain.mark.addObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.addObjColour(Col.YELLOW);
 				westButton.setBorderPainted(true);
 			} else {
 				westButton.setBorderPainted(false);
 			}
 			if (isolButton.isSelected()) {
-				dlg.panelMain.mark.setCategory(Cat.NOCAT);
-				dlg.panelMain.mark.setObjColour(Col.BLACK);
-				dlg.panelMain.mark.addObjColour(Col.RED);
-				dlg.panelMain.mark.addObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.setCategory(Cat.NOCAT);
+				SmedAction.panelMain.mark.setObjColour(Col.BLACK);
+				SmedAction.panelMain.mark.addObjColour(Col.RED);
+				SmedAction.panelMain.mark.addObjColour(Col.BLACK);
 				isolButton.setBorderPainted(true);
 			} else {
 				isolButton.setBorderPainted(false);
 			}
-			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-			lightButton.setVisible(dlg.panelMain.mark.testValid());
-			dlg.panelMain.panelMore.syncPanel();
+			topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
+			lightButton.setVisible(SmedAction.panelMain.mark.testValid());
+			SmedAction.panelMain.panelMore.syncPanel();
 		}
 	};
 	private ButtonGroup shapeButtons = new ButtonGroup();
@@ -89,85 +89,85 @@ public class PanelHaz extends JPanel {
 			for (Shp shp : shapes.keySet()) {
 				JRadioButton button = shapes.get(shp);
 				if (button.isSelected()) {
-					dlg.panelMain.mark.setShape(shp);
+					SmedAction.panelMain.mark.setShape(shp);
 					if (isolButton.isSelected())
-						dlg.panelMain.mark.setObject(isdObjects.get(shp));
+						SmedAction.panelMain.mark.setObject(isdObjects.get(shp));
 					else
-						dlg.panelMain.mark.setObject(carObjects.get(shp));
+						SmedAction.panelMain.mark.setObject(carObjects.get(shp));
 					button.setBorderPainted(true);
 				} else
 					button.setBorderPainted(false);
 			}
-			topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-			lightButton.setVisible(dlg.panelMain.mark.testValid());
+			topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
+			lightButton.setVisible(SmedAction.panelMain.mark.testValid());
 		}
 	};
 	public JToggleButton topmarkButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/HazTopButton.png")));
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (topmarkButton.isSelected()) {
-				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
-				dlg.panelMain.mark.setTopColour(Col.BLACK);
-				switch (dlg.panelMain.mark.getCategory()) {
+				SmedAction.panelMain.mark.setTopPattern(Pat.NOPAT);
+				SmedAction.panelMain.mark.setTopColour(Col.BLACK);
+				switch (SmedAction.panelMain.mark.getCategory()) {
 				case CAM_NORTH:
-					dlg.panelMain.mark.setTopmark(Top.NORTH);
+					SmedAction.panelMain.mark.setTopmark(Top.NORTH);
 					break;
 				case CAM_SOUTH:
-					dlg.panelMain.mark.setTopmark(Top.SOUTH);
+					SmedAction.panelMain.mark.setTopmark(Top.SOUTH);
 					break;
 				case CAM_EAST:
-					dlg.panelMain.mark.setTopmark(Top.EAST);
+					SmedAction.panelMain.mark.setTopmark(Top.EAST);
 					break;
 				case CAM_WEST:
-					dlg.panelMain.mark.setTopmark(Top.WEST);
+					SmedAction.panelMain.mark.setTopmark(Top.WEST);
 					break;
 				default:
-					dlg.panelMain.mark.setTopmark(Top.SPHERES2);
+					SmedAction.panelMain.mark.setTopmark(Top.SPHERES2);
 					break;
 				}
 				topmarkButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.setTopmark(Top.NOTOP);
-				dlg.panelMain.mark.setTopPattern(Pat.NOPAT);
-				dlg.panelMain.mark.setTopColour(Col.UNKCOL);
+				SmedAction.panelMain.mark.setTopmark(Top.NOTOP);
+				SmedAction.panelMain.mark.setTopPattern(Pat.NOPAT);
+				SmedAction.panelMain.mark.setTopColour(Col.UNKCOL);
 				topmarkButton.setBorderPainted(false);
 			}
-			dlg.panelMain.panelTop.syncPanel();
+			SmedAction.panelMain.panelTop.syncPanel();
 		}
 	};
 	public JToggleButton lightButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/DefLitButton.png")));
 	private ActionListener alLit = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if (lightButton.isSelected()) {
-				dlg.panelMain.mark.setLightAtt(Att.COL, 0, Col.WHITE);
-				switch (dlg.panelMain.mark.getCategory()) {
+				SmedAction.panelMain.mark.setLightAtt(Att.COL, 0, Col.WHITE);
+				switch (SmedAction.panelMain.mark.getCategory()) {
 				case CAM_NORTH:
-					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "Q");
-					dlg.panelMain.mark.setLightAtt(Att.GRP, 0, "");
+					SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, "Q");
+					SmedAction.panelMain.mark.setLightAtt(Att.GRP, 0, "");
 					break;
 				case CAM_SOUTH:
-					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "Q+LFl");
-					dlg.panelMain.mark.setLightAtt(Att.GRP, 0, "6");
+					SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, "Q+LFl");
+					SmedAction.panelMain.mark.setLightAtt(Att.GRP, 0, "6");
 					break;
 				case CAM_EAST:
-					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "Q");
-					dlg.panelMain.mark.setLightAtt(Att.GRP, 0, "3");
+					SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, "Q");
+					SmedAction.panelMain.mark.setLightAtt(Att.GRP, 0, "3");
 					break;
 				case CAM_WEST:
-					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "Q");
-					dlg.panelMain.mark.setLightAtt(Att.GRP, 0, "9");
+					SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, "Q");
+					SmedAction.panelMain.mark.setLightAtt(Att.GRP, 0, "9");
 					break;
 				default:
-					dlg.panelMain.mark.setLightAtt(Att.CHR, 0, "Fl");
-					dlg.panelMain.mark.setLightAtt(Att.GRP, 0, "2");
+					SmedAction.panelMain.mark.setLightAtt(Att.CHR, 0, "Fl");
+					SmedAction.panelMain.mark.setLightAtt(Att.GRP, 0, "2");
 					break;
 				}
 				lightButton.setBorderPainted(true);
 			} else {
-				dlg.panelMain.mark.clrLight();
+				SmedAction.panelMain.mark.clrLight();
 				lightButton.setBorderPainted(false);
 			}
-			dlg.panelMain.panelLit.syncPanel();
+			SmedAction.panelMain.panelLit.syncPanel();
 		}
 	};
 
@@ -204,22 +204,22 @@ public class PanelHaz extends JPanel {
 	}
 
 	public void syncPanel() {
-		northButton.setBorderPainted(dlg.panelMain.mark.getCategory() == Cat.CAM_NORTH);
-		southButton.setBorderPainted(dlg.panelMain.mark.getCategory() == Cat.CAM_SOUTH);
-		eastButton.setBorderPainted(dlg.panelMain.mark.getCategory() == Cat.CAM_EAST);
-		westButton.setBorderPainted(dlg.panelMain.mark.getCategory() == Cat.CAM_WEST);
-		isolButton.setBorderPainted(SeaMark.GrpMAP.get(dlg.panelMain.mark.getObject()) == Grp.ISD);
+		northButton.setBorderPainted(SmedAction.panelMain.mark.getCategory() == Cat.CAM_NORTH);
+		southButton.setBorderPainted(SmedAction.panelMain.mark.getCategory() == Cat.CAM_SOUTH);
+		eastButton.setBorderPainted(SmedAction.panelMain.mark.getCategory() == Cat.CAM_EAST);
+		westButton.setBorderPainted(SmedAction.panelMain.mark.getCategory() == Cat.CAM_WEST);
+		isolButton.setBorderPainted(SeaMark.GrpMAP.get(SmedAction.panelMain.mark.getObject()) == Grp.ISD);
 		for (Shp shp : shapes.keySet()) {
 			JRadioButton button = shapes.get(shp);
-			button.setBorderPainted(dlg.panelMain.mark.getShape() == shp);
+			button.setBorderPainted(SmedAction.panelMain.mark.getShape() == shp);
 		}
-		topmarkButton.setBorderPainted(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
-		topmarkButton.setSelected(dlg.panelMain.mark.getTopmark() != Top.NOTOP);
-		topmarkButton.setVisible(dlg.panelMain.mark.testValid());
-		Boolean lit = (dlg.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL) && !((String)dlg.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
+		topmarkButton.setBorderPainted(SmedAction.panelMain.mark.getTopmark() != Top.NOTOP);
+		topmarkButton.setSelected(SmedAction.panelMain.mark.getTopmark() != Top.NOTOP);
+		topmarkButton.setVisible(SmedAction.panelMain.mark.testValid());
+		Boolean lit = (SmedAction.panelMain.mark.getLightAtt(Att.COL, 0) != Col.UNKCOL) && !((String)SmedAction.panelMain.mark.getLightAtt(Att.CHR, 0)).isEmpty();
 		lightButton.setBorderPainted(lit);
 		lightButton.setSelected(lit);
-		lightButton.setVisible(dlg.panelMain.mark.testValid());
+		lightButton.setVisible(SmedAction.panelMain.mark.testValid());
 	}
 
 	private JRadioButton getCatButton(JRadioButton button, int x, int y, int w, int h, String tip) {

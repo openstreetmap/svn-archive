@@ -48,6 +48,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.spi.keyring.KeyringProvider;
 
 /**
@@ -68,9 +69,9 @@ public class KWalletProvider implements KeyringProvider{
             return false;
         }
         CommandResult result = runCommand("isEnabled");
-        if(new String(result.retVal).equals("true")) {        
+        if(new String(result.retVal).equals("true")) {
             return updateHandler();
-        }                   
+        }
         return false;
     };
 
@@ -120,38 +121,38 @@ public class KWalletProvider implements KeyringProvider{
             return false;
         }
         handler = new String(handler).equals("")? "0".toCharArray() : handler;
-        CommandResult result = runCommand("isOpen",handler);          
+        CommandResult result = runCommand("isOpen",handler);
         if(new String(result.retVal).equals("true")){
             return true;
         }
         char[] localWallet = defaultLocalWallet;
-        result = runCommand("localWallet");                      
-        if(result.exitCode == 0) {                    
+        result = runCommand("localWallet");
+        if(result.exitCode == 0) {
             localWallet = result.retVal;
         }
-            
-        if(new String(localWallet).contains(".service")) {            
+
+        if(new String(localWallet).contains(".service")) {
             //Temporary workaround for the bug in kdelibs/kdeui/util/kwallet.cpp
             //The bug was fixed http://svn.reviewboard.kde.org/r/5885/diff/
             //but many people currently use buggy kwallet
             return false;
         }
         result = runCommand("open", localWallet , "0".toCharArray(), getApplicationName(true));
-        if(result.exitCode == 2) { 
+        if(result.exitCode == 2) {
             warning("time out happened while accessing KWallet");
             //don't try to open KWallet anymore until bug https://bugs.kde.org/show_bug.cgi?id=259229 is fixed
             timeoutHappened = true;
             return false;
-        }      
+        }
         if(result.exitCode != 0 || new String(result.retVal).equals("-1")) {
             warning("failed to access KWallet");
             return false;
-        }         
+        }
         handler = result.retVal;
         return true;
     }
-          
-    
+
+
 
     private CommandResult runCommand(String command,char[]... commandArgs) {
         String[] argv = new String[commandArgs.length+4];
@@ -173,32 +174,31 @@ public class KWalletProvider implements KeyringProvider{
                 logger.log(Level.FINE, "executing {0}", Arrays.toString(argv));
             }
             Process pr = rt.exec(argv);
-            
-            BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-
             String line;
-            while((line = input.readLine()) != null) {
-                if (!retVal.equals("")){
-                    retVal = retVal.concat("\n");
-                }
-                retVal = retVal.concat(line);
-            }            
-            input.close();
-            input = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 
-            while((line = input.readLine()) != null) {
-                if (!errVal.equals("")){
-                    errVal = errVal.concat("\n");
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+                while((line = input.readLine()) != null) {
+                    if (!retVal.equals("")){
+                        retVal = retVal.concat("\n");
+                    }
+                    retVal = retVal.concat(line);
                 }
-                errVal = errVal.concat(line);
             }
-            input.close();
+
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
+                while((line = input.readLine()) != null) {
+                    if (!errVal.equals("")){
+                        errVal = errVal.concat("\n");
+                    }
+                    errVal = errVal.concat(line);
+                }
+            }
 
             exitCode = pr.waitFor();
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "application exit with code {0} for commandString: {1}; errVal: {2}",
                             new Object[]{exitCode, Arrays.toString(argv), errVal});
-            }       
+            }
         } catch (InterruptedException ex) {
             logger.log(Level.FINE,
                     "exception thrown while invoking the command \""+Arrays.toString(argv)+"\"",
@@ -209,7 +209,7 @@ public class KWalletProvider implements KeyringProvider{
                     ex);
         }
         return new CommandResult(exitCode, retVal.trim().toCharArray(), errVal.trim());
-    }    
+    }
 
     private char[] getApplicationName(){
         return getApplicationName(false);
@@ -221,18 +221,16 @@ public class KWalletProvider implements KeyringProvider{
 
     private void warning(String descr) {
         logger.log(Level.WARNING, "Something went wrong: {0}", descr);
-    }      
-  
+    }
+
     private class CommandResult {
         private int exitCode;
         private char[] retVal;
-        private String errVal;
 
         public CommandResult(int exitCode, char[] retVal, String errVal) {
             this.exitCode = exitCode;
             this.retVal = retVal;
-            this.errVal = errVal;
-        }                        
+        }
     }
 
 }

@@ -25,24 +25,25 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 public class ZipReader extends ArchiveReader {
 
     private final ZipInputStream zis;
-    
+
     private ZipEntry entry;
-    
+
     public ZipReader(InputStream in, AbstractDataSetHandler handler, boolean promptUser) {
         super(handler, handler != null ? handler.getArchiveHandler() : null, promptUser);
         this.zis = in instanceof ZipInputStream ? (ZipInputStream) in : new ZipInputStream(in);
     }
 
-    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
             throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         return new ZipReader(in, handler, promptUser).parseDoc(instance);
     }
 
-    public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
+    public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
             throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         return new ZipReader(in, handler, promptUser).parseDocs(instance);
     }
 
+    @Override
     protected void extractArchive(final File temp, final List<File> candidates) throws IOException, FileNotFoundException {
         while ((entry = zis.getNextEntry()) != null) {
             if (Main.isDebugEnabled()) {
@@ -57,17 +58,17 @@ public class ZipReader extends ArchiveReader {
                 throw new IOException("Could not delete temp file/dir: " + file.getAbsolutePath());
             }
             if (!entry.isDirectory()) {
-                if (!file.createNewFile()) { 
+                if (!file.createNewFile()) {
                     throw new IOException("Could not create temp file: " + file.getAbsolutePath());
                 }
                 // Write temp file
-                FileOutputStream fos = new FileOutputStream(file);
-                byte[] buffer = new byte[8192];
-                int count = 0;
-                while ((count = zis.read(buffer, 0, buffer.length)) > 0) {
-                    fos.write(buffer, 0, count);
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    byte[] buffer = new byte[8192];
+                    int count = 0;
+                    while ((count = zis.read(buffer, 0, buffer.length)) > 0) {
+                        fos.write(buffer, 0, count);
+                    }
                 }
-                fos.close();
                 // Allow handler to perform specific treatments (for example, fix invalid .prj files)
                 if (archiveHandler != null) {
                     archiveHandler.notifyTempFileWritten(file);

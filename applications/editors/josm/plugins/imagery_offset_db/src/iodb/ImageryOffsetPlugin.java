@@ -1,24 +1,29 @@
 package iodb;
 
+import static org.openstreetmap.josm.tools.I18n.marktr;
+
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import javax.swing.JMenu;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Version;
+import org.openstreetmap.josm.gui.preferences.ToolbarPreferences;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import static org.openstreetmap.josm.tools.I18n.marktr;
 
 /**
  * A plugin to request and store imagery offsets in the centralized database.
- * 
+ *
  * @author Zverik
  * @license WTFPL
  */
 public class ImageryOffsetPlugin extends Plugin {
     private GetImageryOffsetAction getAction;
     private StoreImageryOffsetAction storeAction;
-    
+
     /**
      * Add both actions to their own menu. This creates
      * "Offset" menu, because "Imagery" is constantly rebuilt,
@@ -27,10 +32,10 @@ public class ImageryOffsetPlugin extends Plugin {
      */
     public ImageryOffsetPlugin( PluginInformation info ) {
         super(info);
-        
+
         getAction = new GetImageryOffsetAction();
         storeAction = new StoreImageryOffsetAction();
-        
+
         // before 5803 imagery menu was constantly regenerated, erasing extra items
         // before 5729 it was regenerated only when the imagery list was modified (also bad)
         int version = Version.getInstance().getVersion();
@@ -42,7 +47,7 @@ public class ImageryOffsetPlugin extends Plugin {
 
         // an ugly hack to add this plugin to the toolbar
         if( Main.pref.getBoolean("iodb.modify.toolbar", true) ) {
-            Collection<String> toolbar = new LinkedList<>(Main.toolbar.getToolString());
+            Collection<String> toolbar = new LinkedList<>(ToolbarPreferences.getToolString());
             if( !toolbar.contains("getoffset") ) {
                 toolbar.add("getoffset");
                 Main.pref.putCollection("toolbar", toolbar);

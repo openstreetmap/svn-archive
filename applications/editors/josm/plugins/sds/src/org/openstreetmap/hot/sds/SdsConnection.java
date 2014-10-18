@@ -20,7 +20,7 @@ import org.openstreetmap.josm.tools.Base64;
  * Modeled after JOSM's OsmConnection class.
  */
 public class SdsConnection {
-	
+    
     protected boolean cancel = false;
     protected HttpURLConnection activeConnection;
     private SdsCredentialAgent credAgent = new SdsCredentialAgent();

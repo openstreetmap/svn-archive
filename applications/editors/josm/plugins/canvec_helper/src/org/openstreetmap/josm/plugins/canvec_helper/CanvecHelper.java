@@ -7,16 +7,16 @@ import org.openstreetmap.josm.Main;
 
 public class CanvecHelper extends Plugin {
     
-	public CanvecHelper(PluginInformation info) {
-		super(info);
-		Main.main.menu.imagerySubMenu.add(new CanvecHelperAction(this));
-	}
-	
-    @Override
-	public void mapFrameInitialized(MapFrame old, MapFrame new1) {
-		updateLayer();
-	}
+    public CanvecHelper(PluginInformation info) {
+        super(info);
+        Main.main.menu.imagerySubMenu.add(new CanvecHelperAction(this));
+    }
     
-	private synchronized void updateLayer() {
-	}
+    @Override
+    public void mapFrameInitialized(MapFrame old, MapFrame new1) {
+        updateLayer();
+    }
+    
+    private synchronized void updateLayer() {
+    }
 }

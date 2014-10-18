@@ -30,18 +30,19 @@ import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.openstreetmap.josm.Main;
 
 /**
  * UI-Dialog which provides:
  * - general and spatial information about the georeferenced image
  * - a possiblitly to change the source reference system of the image
- * 
- * 
+ *
+ *
  * @author Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny
  *
  */
 public class LayerPropertiesDialog extends JFrame{
-    
+
     private Vector<String> supportedCRS;
     private ImageLayer imageLayer;
 
@@ -85,8 +86,8 @@ public class LayerPropertiesDialog extends JFrame{
     private JLabel currentCRSValueLabel = null;
 
     /**
-     * This method initializes 
-     * 
+     * This method initializes
+     *
      */
     public LayerPropertiesDialog(ImageLayer imageLayer, Vector<String> supportedCRS) {
         super(imageLayer.getName());
@@ -94,33 +95,33 @@ public class LayerPropertiesDialog extends JFrame{
         this.imageLayer = imageLayer;
         initialize();
     }
-    
+
     /**
-     * This method initializes 
-     * 
+     * This method initializes
+     *
      */
     public LayerPropertiesDialog(Vector<String> supportedCRS) {
         super();
         this.supportedCRS = supportedCRS;
         initialize();
     }
-    
+
 
     /**
      * This method initializes this
-     * 
+     *
      */
     private void initialize() {
         this.setMinimumSize(new Dimension(404, 485));
         this.setContentPane(getMainPanel());
         this.setPreferredSize(new Dimension(404, 485));
-            
+
     }
 
     /**
-     * This method initializes mainPanel    
-     *  
-     * @return javax.swing.JPanel   
+     * This method initializes mainPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getMainPanel() {
         if (mainPanel == null) {
@@ -133,9 +134,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes jPanel   
-     *  
-     * @return javax.swing.JPanel   
+     * This method initializes jPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getJPanel() {
         if (jPanel == null) {
@@ -154,9 +155,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes buttonPanel  
-     *  
-     * @return javax.swing.JPanel   
+     * This method initializes buttonPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getButtonPanel() {
         if (buttonPanel == null) {
@@ -169,9 +170,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes jTabbedPane  
-     *  
-     * @return javax.swing.JTabbedPane  
+     * This method initializes jTabbedPane
+     *
+     * @return javax.swing.JTabbedPane
      */
     private JTabbedPane getJTabbedPane() {
         if (jTabbedPane == null) {
@@ -183,9 +184,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes infoPanel    
-     *  
-     * @return javax.swing.JPanel   
+     * This method initializes infoPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getInfoPanel() {
         if (infoPanel == null) {
@@ -225,14 +226,14 @@ public class LayerPropertiesDialog extends JFrame{
             extentLabel.setText("Extent");
             crsValueLabel = new JLabel();
             crsValueLabel.setBounds(new Rectangle(150, 150, 226, 16));
-            
+
             String crsDescription = "";
             try {
                 crsDescription = imageLayer.getBbox().getCoordinateReferenceSystem().getIdentifiers().iterator().next().toString();
             } catch (Exception e) {
             }
             crsValueLabel.setText(crsDescription + "(" + imageLayer.getBbox().getCoordinateReferenceSystem().getName().toString() + ")");
-            
+
             crsLabel = new JLabel();
             crsLabel.setBounds(new Rectangle(15, 150, 118, 16));
             crsLabel.setText("Reference System");
@@ -280,9 +281,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes crsPanel 
-     *  
-     * @return javax.swing.JPanel   
+     * This method initializes crsPanel
+     *
+     * @return javax.swing.JPanel
      */
     private JPanel getCrsPanel() {
         if (crsPanel == null) {
@@ -294,7 +295,7 @@ public class LayerPropertiesDialog extends JFrame{
             } catch (Exception e) {
             }
             currentCRSValueLabel.setText(crsDescription);
-            
+
             currentCRSLabel = new JLabel();
             currentCRSLabel.setBounds(new Rectangle(15, 33, 52, 16));
             currentCRSLabel.setText("Current:");
@@ -338,9 +339,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes okButton 
-     *  
-     * @return javax.swing.JButton  
+     * This method initializes okButton
+     *
+     * @return javax.swing.JButton
      */
     private JButton getOkButton() {
         if (okButton == null) {
@@ -348,8 +349,9 @@ public class LayerPropertiesDialog extends JFrame{
             okButton.setBounds(new Rectangle(134, 5, 136, 31));
             okButton.setText("OK");
             okButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    
+                @Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+
                     setVisible(false);
                     dispose();
                 }
@@ -359,9 +361,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes searchField  
-     *  
-     * @return javax.swing.JTextField   
+     * This method initializes searchField
+     *
+     * @return javax.swing.JTextField
      */
     private JTextField getSearchField() {
         if (searchField == null) {
@@ -369,16 +371,17 @@ public class LayerPropertiesDialog extends JFrame{
             searchField.setBounds(new Rectangle(13, 111, 282, 20));
             searchField.setToolTipText("Enter keywords or EPSG codes");
             searchField.addKeyListener(new java.awt.event.KeyAdapter() {
-                public void keyTyped(java.awt.event.KeyEvent e) {
-                    
+                @Override
+				public void keyTyped(java.awt.event.KeyEvent e) {
+
                     for (Iterator<String> iterator = supportedCRS.iterator(); iterator.hasNext();) {
-                        String type = (String) iterator.next();
+                        String type = iterator.next();
                         if (type.contains(searchField.getText())) {
                             crsJList.setSelectedIndex(supportedCRS.indexOf(type));
                             crsJList.ensureIndexIsVisible(supportedCRS.indexOf(type));
                             break;
                         }
-                        
+
                     }
                 }
             });
@@ -387,9 +390,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes crsListScrollPane    
-     *  
-     * @return javax.swing.JScrollPane  
+     * This method initializes crsListScrollPane
+     *
+     * @return javax.swing.JScrollPane
      */
     private JScrollPane getCrsListScrollPane() {
         if (crsListScrollPane == null) {
@@ -401,9 +404,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes crsJList 
-     *  
-     * @return javax.swing.JList    
+     * This method initializes crsJList
+     *
+     * @return javax.swing.JList
      */
     private JList<String> getCrsJList() {
         if (crsJList == null) {
@@ -414,9 +417,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes useDefaultCRSButton  
-     *  
-     * @return javax.swing.JButton  
+     * This method initializes useDefaultCRSButton
+     *
+     * @return javax.swing.JButton
      */
     private JButton getUseDefaultCRSButton() {
         if (useDefaultCRSButton == null) {
@@ -424,10 +427,11 @@ public class LayerPropertiesDialog extends JFrame{
             useDefaultCRSButton.setBounds(new Rectangle(253, 54, 118, 28));
             useDefaultCRSButton.setText("Apply Default");
             useDefaultCRSButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    
+                @Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+
                     try {
-                        
+
                         setCursor(new Cursor(Cursor.WAIT_CURSOR));
                         if(PluginOperations.defaultSourceCRS != null){
                             imageLayer.resample(PluginOperations.defaultSourceCRS);
@@ -435,7 +439,7 @@ public class LayerPropertiesDialog extends JFrame{
                         {
                             JOptionPane.showMessageDialog(getContentPane(), "<html>No default reference system available.<br>Please select one from the list</html>");
                         }
-                        
+
                     } catch (NoSuchAuthorityCodeException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -456,9 +460,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes applySelectedCRSButton   
-     *  
-     * @return javax.swing.JButton  
+     * This method initializes applySelectedCRSButton
+     *
+     * @return javax.swing.JButton
      */
     private JButton getApplySelectedCRSButton() {
         if (applySelectedCRSButton == null) {
@@ -468,17 +472,18 @@ public class LayerPropertiesDialog extends JFrame{
             applySelectedCRSButton.setHorizontalTextPosition(SwingConstants.TRAILING);
             applySelectedCRSButton.setText("<html>Apply<br>Selection</html>");
             applySelectedCRSButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    
-                    String selection = (String) crsJList.getSelectedValue();
+                @Override
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+
+                    String selection = crsJList.getSelectedValue();
                     String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
-                    
+
                     CoordinateReferenceSystem newRefSys = null;
                     try {
                         newRefSys = CRS.decode(code, eastingFirstCheckBox.isSelected());
-                        
+
                         setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        
+
                         imageLayer.resample(newRefSys);
 
                     } catch (NoSuchAuthorityCodeException e1) {
@@ -494,8 +499,8 @@ public class LayerPropertiesDialog extends JFrame{
                     finally{
                         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     }
-                    
-                    
+
+
                 }
             });
         }
@@ -503,9 +508,9 @@ public class LayerPropertiesDialog extends JFrame{
     }
 
     /**
-     * This method initializes setSelectedCRSAsDefaultButton    
-     *  
-     * @return javax.swing.JButton  
+     * This method initializes setSelectedCRSAsDefaultButton
+     *
+     * @return javax.swing.JButton
      */
     private JButton getSetSelectedCRSAsDefaultButton() {
         if (setSelectedCRSAsDefaultButton == null) {
@@ -514,49 +519,41 @@ public class LayerPropertiesDialog extends JFrame{
             setSelectedCRSAsDefaultButton.setText("<html>Set as<br>Default</html>");
             setSelectedCRSAsDefaultButton
                     .addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent e) {
-                            
+                        @Override
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+
                             if(crsJList.getSelectedValue() != null){
-                                String selection = (String) crsJList.getSelectedValue();
+                                String selection = crsJList.getSelectedValue();
                                 String code = selection.substring(selection.indexOf("[-") + 2, selection.indexOf("-]"));
-                                
+
                                 try {
                                     PluginOperations.defaultSourceCRS = CRS.decode(code, eastingFirstCheckBox.isSelected());
                                     PluginOperations.defaultSourceCRSDescription = selection;
-                                    
+
                                     ImportImagePlugin.pluginProps.setProperty("default_crs_eastingfirst", "" + eastingFirstCheckBox.isSelected());
                                     ImportImagePlugin.pluginProps.setProperty("default_crs_srid", code);
-                                    FileWriter fileWriter = new FileWriter(new File(ImportImagePlugin.PLUGINPROPERTIES_PATH));
-                                    ImportImagePlugin.pluginProps.store(fileWriter, null);
-                                    fileWriter.close();
-                                    
+                                    try (FileWriter fileWriter = new FileWriter(new File(ImportImagePlugin.PLUGINPROPERTIES_PATH))) {
+                                    	ImportImagePlugin.pluginProps.store(fileWriter, null);
+                                    }
+
                                     defaultCRSLabel.setText(selection);
-                                    
-                                } catch (IOException e2) {
-                                    // TODO Auto-generated catch block
-                                    e2.printStackTrace();
-                                } catch (NoSuchAuthorityCodeException e3) {
-                                    // TODO Auto-generated catch block
-                                    e3.printStackTrace();
-                                } catch (FactoryException e4) {
-                                    // TODO Auto-generated catch block
-                                    e4.printStackTrace();
+
+                                } catch (IOException | FactoryException e2) {
+                                    Main.error(e2);
                                 }
-                            }else{
+                            } else {
                                 JOptionPane.showMessageDialog(getContentPane(), "Please make a selection from the list.");
                             }
-
-                            
                         }
                     });
         }
         return setSelectedCRSAsDefaultButton;
     }
-    
+
     /**
-     * This method initializes eastingFirstCheckBox 
-     *  
-     * @return javax.swing.JCheckBox    
+     * This method initializes eastingFirstCheckBox
+     *
+     * @return javax.swing.JCheckBox
      */
     private JCheckBox getEastingFirstCheckBox() {
         if (eastingFirstCheckBox == null) {
@@ -567,14 +564,15 @@ public class LayerPropertiesDialog extends JFrame{
         return eastingFirstCheckBox;
     }
 
-    
-    
+
+
     /**
      * Listener setting text in the search field if selection has changed.
      *
      */
     class ListSelectionHandler implements ListSelectionListener {
-        public void valueChanged(ListSelectionEvent e) {
+        @Override
+		public void valueChanged(ListSelectionEvent e) {
             if(e.getValueIsAdjusting())
             {
                 searchField.setText(supportedCRS.get(e.getLastIndex()));

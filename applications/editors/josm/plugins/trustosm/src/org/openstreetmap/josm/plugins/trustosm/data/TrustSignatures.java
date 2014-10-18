@@ -12,6 +12,7 @@ import java.util.Vector;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
 import org.bouncycastle.openpgp.PGPSignature;
+import org.openstreetmap.josm.Main;
 
 public class TrustSignatures {
 
@@ -125,26 +126,23 @@ public class TrustSignatures {
     public String getArmoredFulltextSignatureAll(String plain) {
         if (textsigs.containsKey(plain)){
             List<PGPSignature> l = textsigs.get(plain);
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ArmoredOutputStream aOut = new ArmoredOutputStream(baos);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (ArmoredOutputStream aOut = new ArmoredOutputStream(baos)) {
                 aOut.beginClearText(l.get(0).getHashAlgorithm());
                 aOut.write(plain.getBytes(Charset.forName("UTF-8")));
                 aOut.write('\n');
                 aOut.endClearText();
 
-                BCPGOutputStream bOut = new BCPGOutputStream(aOut);
-                for (PGPSignature sig : l) {
-                    sig.encode(bOut);
+                try (BCPGOutputStream bOut = new BCPGOutputStream(aOut)) {
+		            for (PGPSignature sig : l) {
+		                sig.encode(bOut);
+		            }
                 }
-
-                bOut.close();
-                aOut.close();
 
                 return baos.toString("UTF-8");
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.error(e);
                 return "Error - read console Output";
             }
         }
@@ -152,25 +150,21 @@ public class TrustSignatures {
     }
 
     public String getArmoredFulltextSignature(PGPSignature sig) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ArmoredOutputStream aOut = new ArmoredOutputStream(baos);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ArmoredOutputStream aOut = new ArmoredOutputStream(baos)) {
             aOut.beginClearText(sig.getHashAlgorithm());
             aOut.write(getSigtext(sig).getBytes(Charset.forName("UTF-8")));
             aOut.write('\n');
             aOut.endClearText();
 
-            BCPGOutputStream bOut = new BCPGOutputStream(aOut);
-            sig.encode(bOut);
-            bOut.close();
-            aOut.close();
-
+            try (BCPGOutputStream bOut = new BCPGOutputStream(aOut)) {
+            	sig.encode(bOut);
+            }
 
             return baos.toString("UTF-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.error(e);
             return "Error - read console Output";
         }
     }
-
 }

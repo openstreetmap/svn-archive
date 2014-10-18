@@ -10,7 +10,7 @@ public class RelContextPlugin extends Plugin {
 
     public RelContextPlugin( PluginInformation info ) {
         super(info);
-	DefaultNameFormatter.registerFormatHook(new ExtraNameFormatHook());
+    DefaultNameFormatter.registerFormatHook(new ExtraNameFormatHook());
     }
 
     @Override

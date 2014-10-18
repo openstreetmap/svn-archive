@@ -96,13 +96,13 @@ import relcontext.actions.SortAndFixAction;
 
 /**
  * The new, advanced relation editing panel.
- * 
+ *
  * @author Zverik
  */
 public class RelContextDialog extends ToggleDialog implements EditLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
 
     public final static String PREF_PREFIX = "reltoolbox";
-    
+
     private final DefaultTableModel relationsData;
     private ChosenRelation chosenRelation;
     private JPanel chosenRelationPanel;
@@ -141,6 +141,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         roleBox.setModel(roleBoxModel);
         roleBox.addMouseListener(relationMouseAdapter);
         roleBox.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged( ItemEvent e ) {
                 if( e.getStateChange() == ItemEvent.DESELECTED ) return;
                 String memberRole = roleBoxModel.getSelectedMembersRole();
@@ -173,6 +174,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         rcPanel.add(chosenRelationPanel, BorderLayout.NORTH);
 
         roleBox.addPropertyChangeListener("enabled", new PropertyChangeListener() {
+            @Override
             public void propertyChange( PropertyChangeEvent evt ) {
                 boolean showRoleBox = roleBox.isEnabled();
                 roleBox.setVisible(showRoleBox);
@@ -181,6 +183,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         });
 
         sortAndFixAction.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
             public void propertyChange( PropertyChangeEvent evt ) {
                 sortAndFixButton.setVisible(sortAndFixAction.isEnabled());
             }
@@ -188,6 +191,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         sortAndFixButton.setVisible(false);
 
         downloadChosenRelationAction.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
             public void propertyChange( PropertyChangeEvent evt ) {
                 downloadButton.setVisible(downloadChosenRelationAction.isEnabled());
             }
@@ -303,6 +307,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         columns.getColumn(1).setPreferredWidth(40);
         columns.getColumn(0).setPreferredWidth(220);
         relationsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged( ListSelectionEvent e ) {
                 int selectedRow = relationsTable.getSelectedRow();
                 if( selectedRow >= 0 ) {
@@ -338,6 +343,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         return chosenRelation;
     }
 
+    @Override
     public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
         if( chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false) )
             chosenRelationPanel.setVisible(newRelation != null);
@@ -347,6 +353,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         // ?
     }
 
+    @Override
     public void selectionChanged( Collection<? extends OsmPrimitive> newSelection ) {
         if( !isVisible() || relationsData == null )
             return;
@@ -396,6 +403,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         }
     }
 
+    @Override
     public void editLayerChanged( OsmDataLayer oldLayer, OsmDataLayer newLayer ) {
         updateSelection();
     }
@@ -409,16 +417,17 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         addRemoveMemberAction.destroy();
         super.destroy();
     }
-    
+
     private static final String POSSIBLE_ROLES_FILE = "relcontext/possible_roles.txt";
     private static final Map<String, List<String>> possibleRoles = loadRoles();
 
     private static Map<String, List<String>> loadRoles() {
         Map<String, List<String>> result = new HashMap<>();
-        try {
-            ClassLoader classLoader = RelContextDialog.class.getClassLoader();
-            final InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
+        ClassLoader classLoader = RelContextDialog.class.getClassLoader();
+        try (
+            InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
             BufferedReader r = new BufferedReader(new InputStreamReader(possibleRolesStream));
+        ) {
             while( r.ready() ) {
                 String line = r.readLine();
                 StringTokenizer t = new StringTokenizer(line, " ,;:\"");
@@ -430,10 +439,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                     result.put(type, roles);
                 }
             }
-            r.close();
         } catch( Exception e ) {
-            System.err.println("[RelToolbox] Error reading possible roles file.");
-            e.printStackTrace();
+            Main.error("[RelToolbox] Error reading possible roles file.");
+            Main.error(e);
         }
         return result;
     }
@@ -465,6 +473,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         dlg.setModalityType(ModalityType.DOCUMENT_MODAL);
 
         role.getEditor().addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed( ActionEvent e ) {
                 dlg.setVisible(false);
                 optionPane.setValue(JOptionPane.OK_OPTION);
@@ -588,6 +597,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return item;
         }
 
+        @Override
         public void actionPerformed( ActionEvent e ) {
             String property = e.getActionCommand();
             if( property != null && property.length() > 0 && e.getSource() instanceof JCheckBoxMenuItem ) {
@@ -608,6 +618,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed( ActionEvent e ) {
             if( roleBoxModel.membersRole != null ) {
                 String role = askForRoleName();
@@ -616,11 +627,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         }
 
+        @Override
         public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
             setEnabled(newRelation != null);
         }
     }
-        
+
     private class RoleComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String> {
         private List<String> roles = new ArrayList<>();
         private int selectedIndex = -1;
@@ -703,10 +715,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return roles;
         }
 
+        @Override
         public int getSize() {
             return roles.size();
         }
 
+        @Override
         public String getElementAt( int index ) {
             return getRole(index);
         }
@@ -715,6 +729,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return roles.get(index);
         }
 
+        @Override
         public void setSelectedItem( Object anItem ) {
             int newIndex = anItem == null ? -1 : roles.indexOf(anItem);
             if( newIndex != selectedIndex ) {
@@ -723,6 +738,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         }
 
+        @Override
         public Object getSelectedItem() {
             return selectedIndex < 0 || selectedIndex >= getSize() ? null : getRole(selectedIndex);
         }

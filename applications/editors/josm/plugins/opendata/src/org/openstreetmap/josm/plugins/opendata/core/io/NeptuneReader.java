@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.opendata.core.io;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -53,7 +52,7 @@ import org.xml.sax.SAXException;
 
 /**
  * NEPTUNE -> OSM converter
- * See http://www.chouette.mobi/IMG/pdf/NF__F_-Neptune-maj.pdf 
+ * See http://www.chouette.mobi/IMG/pdf/NF__F_-Neptune-maj.pdf
  */
 public class NeptuneReader extends AbstractReader implements FrenchConstants {
 
@@ -80,23 +79,22 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
     static {
         schemas.add(NeptuneReader.class.getResource(NEPTUNE_XSD));
     }
-    
+
     private ChouettePTNetworkType root;
-    
+
     private final Map<String, OsmPrimitive> tridentObjects = new HashMap<>();
-    
+
     public static final boolean acceptsXmlNeptuneFile(File file) {
         return acceptsXmlNeptuneFile(file, null);
     }
 
     public static final boolean acceptsXmlNeptuneFile(File file, URL schemaURL) {
-        
+
         if (schemaURL == null) {
             schemaURL = schemas.get(0);
         }
-        
-        try {
-            FileInputStream in = new FileInputStream(file);
+
+        try (FileInputStream in = new FileInputStream(file)) {
             Source xmlFile = new StreamSource(in);
             try {
                 SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -111,20 +109,14 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
             } catch (IOException e) {
                 Main.error(xmlFile.getSystemId() + " is NOT valid");
                 Main.error("Reason: " + e.getLocalizedMessage());
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // Ignore exception 
-                }
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             Main.error(e.getMessage());
         }
-        
+
         return false;
     }
-    
+
     public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws JAXBException {
         return new NeptuneReader().parse(in, instance);
     }
@@ -137,7 +129,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal(inputStream);
         return doc.getValue();
     }
-    
+
     private final void linkTridentObjectToOsmPrimitive(TridentObjectType object, OsmPrimitive p) {
         p.put("ref:neptune", object.getObjectId());
         if (tridentObjects.put(object.getObjectId(), p) != null) {
@@ -150,7 +142,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         ds.addPrimitive(n);
         return n;
     }
-    
+
     private Node createPlatform(StopPointType stop) {
         Node n = createNode(createLatLon(stop));
         n.put(OSM_PUBLIC_TRANSPORT, OSM_PLATFORM);
@@ -180,14 +172,14 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         linkTridentObjectToOsmPrimitive(object, r);
         return r;
     }
-    
+
     protected Relation createNetwork(PTNetworkType network) {
         Relation r = createRelation(OSM_NETWORK);
         linkTridentObjectToOsmPrimitive(network, r);
         r.put("name", network.getName());
         return r;
     }
-    
+
     protected Relation createRouteMaster(LineType line) {
         Relation r = createPtRelation(OSM_ROUTE_MASTER, line);
         switch (line.getTransportModeName()) {
@@ -218,17 +210,17 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         r.put("name", route.getName());
         return r;
     }
-    
+
     protected Relation createStopArea(StopAreaType sa) {
         Relation r = createPtRelation(OSM_STOP_AREA, sa);
         r.put("name", sa.getName());
         return r;
     }
-    
+
     protected LatLon createLatLon(PointType point) {
         return new LatLon(point.getLatitude().doubleValue(), point.getLongitude().doubleValue());
     }
-    
+
     protected final <T extends TridentObjectType> T findTridentObject(List<T> list, String id) {
         for (T object : list) {
             if (object.getObjectId().equals(id)) {
@@ -237,7 +229,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         }
         return null;
     }
-    
+
     protected StopPoint findStopPoint(String id) {
         return findTridentObject(root.getChouetteLineDescription().getStopPoint(), id);
     }
@@ -310,7 +302,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                                 System.err.println("Unsupported child type: "+child.getStopAreaExtension().getAreaType());
                             }
                         }
-                        
+
                     } else if (childId.contains("StopPoint")) {
                         StopPoint child = findStopPoint(childId);
                         if (child == null) {
@@ -351,7 +343,7 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                     } else if (start.get(OSM_PUBLIC_TRANSPORT).equals(OSM_STOP) || start.get(OSM_PUBLIC_TRANSPORT).equals(OSM_PLATFORM)) {
                         addStopToRoute(route, start);
                     }
-                    
+
                     if (end == null) {
                         System.err.println("Cannot find end StopPoint: "+ptlink.getEndOfLink());
                     } else if (end.get(OSM_PUBLIC_TRANSPORT).equals(OSM_STOP) || end.get(OSM_PUBLIC_TRANSPORT).equals(OSM_PLATFORM)) {
@@ -360,10 +352,10 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
                 }
             }
         }
-        
+
         return ds;
     }
-        
+
     private static final boolean addStopToRoute(Relation route, OsmPrimitive stop) {
         if (route.getMembersCount() == 0 || !route.getMember(route.getMembersCount()-1).getMember().equals(stop) ) {
             route.addMember(new RelationMember(stop.get(OSM_PUBLIC_TRANSPORT), stop));

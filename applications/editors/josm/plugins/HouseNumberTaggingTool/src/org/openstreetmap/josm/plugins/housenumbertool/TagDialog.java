@@ -410,11 +410,12 @@ public class TagDialog extends ExtendedDialog
 
       try {
          path.mkdirs();
-
-         FileOutputStream file = new FileOutputStream(fileName);
-         ObjectOutputStream o = new ObjectOutputStream(file);
-         o.writeObject(dto);
-         o.close();
+         try (
+	         FileOutputStream file = new FileOutputStream(fileName);
+	         ObjectOutputStream o = new ObjectOutputStream(file)
+         ) {
+             o.writeObject(dto);
+         }
       } catch (Exception ex) {
          logger.log(Level.SEVERE, ex.getMessage());
          fileName.delete();
@@ -533,36 +534,34 @@ public class TagDialog extends ExtendedDialog
       return names;
    }
 
-   private Dto loadDto() {
-      Dto dto = new Dto();
-      File fileName = new File(pluginDir + TagDialog.TEMPLATE_DATA);
+    private Dto loadDto() {
+        Dto dto = new Dto();
+        File fileName = new File(pluginDir + TagDialog.TEMPLATE_DATA);
 
-      try {
-
-         if (fileName.exists()) {
-            FileInputStream file = new FileInputStream(fileName);
-            ObjectInputStream o = new ObjectInputStream(file);
-
-            dto = (Dto) o.readObject();
-            o.close();
-         } else {
-            dto.setCity(selection.get(TagDialog.TAG_ADDR_CITY));
-            dto.setCountry(selection.get(TagDialog.TAG_ADDR_COUNTRY));
-            dto.setHousenumber(selection.get(TagDialog.TAG_ADDR_HOUSENUMBER));
-            dto.setPostcode(selection.get(TagDialog.TAG_ADDR_POSTCODE));
-            dto.setStreet(selection.get(TagDialog.TAG_ADDR_STREET));
-            dto.setState(selection.get(TagDialog.TAG_ADDR_STATE));
-         }
-      } catch (Exception ex) {
+        try {
+            if (fileName.exists()) {
+                try (
+					FileInputStream file = new FileInputStream(fileName);
+					ObjectInputStream o = new ObjectInputStream(file);
+                ) {
+                	dto = (Dto) o.readObject();
+                }
+            } else {
+	            dto.setCity(selection.get(TagDialog.TAG_ADDR_CITY));
+	            dto.setCountry(selection.get(TagDialog.TAG_ADDR_COUNTRY));
+	            dto.setHousenumber(selection.get(TagDialog.TAG_ADDR_HOUSENUMBER));
+	            dto.setPostcode(selection.get(TagDialog.TAG_ADDR_POSTCODE));
+	            dto.setStreet(selection.get(TagDialog.TAG_ADDR_STREET));
+	            dto.setState(selection.get(TagDialog.TAG_ADDR_STATE));
+            }
+        } catch (Exception ex) {
             logger.log(Level.SEVERE, ex.getMessage());
             fileName.delete();
-      }
-      return dto;
+        }
+        return dto;
+    }
 
-   }
-
-    class RadioChangeListener implements ItemListener
-    {
+    class RadioChangeListener implements ItemListener {
 
          @Override
         public void itemStateChanged(ItemEvent e)

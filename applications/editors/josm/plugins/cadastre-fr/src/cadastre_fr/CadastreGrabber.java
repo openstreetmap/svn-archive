@@ -21,8 +21,8 @@ public class CadastreGrabber {
 
     private CadastreInterface wmsInterface = new CadastreInterface();
 
-    public GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax) throws IOException, OsmTransferException {
-
+    public GeorefImage grab(WMSLayer wmsLayer, EastNorth lambertMin, EastNorth lambertMax)
+            throws IOException, OsmTransferException {
         try {
             URL url = null;
             if (wmsLayer.isRaster())
@@ -87,14 +87,12 @@ public class CadastreGrabber {
         wmsInterface.urlConn.setRequestProperty("Connection", "close");
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
-        InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE);
-        BufferedImage img = ImageIO.read(is);
-        is.close();
-        return img;
+        try (InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE)) {
+            return ImageIO.read(is);
+        }
     }
 
     public CadastreInterface getWmsInterface() {
         return wmsInterface;
     }
-
 }

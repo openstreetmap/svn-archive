@@ -14,6 +14,8 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.openstreetmap.josm.Main;
+
 public class ModuleListGenerator {
 
 	/**
@@ -25,9 +27,10 @@ public class ModuleListGenerator {
 		if (args.length > 0) {
 			baseDir = args[0];
 		}
-		try {
+		try (
 			BufferedWriter list = new BufferedWriter(new FileWriter(baseDir+"modules.txt"));
 			ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(baseDir+"modules-icons.zip"));
+		) {
 			for (File file : new File(baseDir+"dist").listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
@@ -36,7 +39,7 @@ public class ModuleListGenerator {
 			})) {
 				try {
 					String filename = file.getName();
-					System.out.println("Processing "+filename);
+					Main.info("Processing "+filename);
 					list.write(filename+";"+url+filename); list.newLine();
 					Manifest mf = new JarFile(file).getManifest();
 					for (Object att : mf.getMainAttributes().keySet()) {
@@ -76,23 +79,20 @@ public class ModuleListGenerator {
 										in.close();
 									}
 								} catch (IOException e) {
-									System.err.println("Cannot load Image-Icon: "+value.toString());
+									Main.error("Cannot load Image-Icon: "+value.toString());
 								} finally {
 									zip.closeEntry();
 								}
 							}
 						}
 					}
-					
+
 				} catch (IOException e) {
-					e.printStackTrace();
+				    Main.error(e);
 				}
 			}
-			System.out.println("Done");
-			zip.close();
-			list.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Main.error(e);
 		}
 	}
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class OSMRelation extends OSMEntity {
 
-    private ArrayList<Member> members = new ArrayList<Member>();
+    private ArrayList<Member> members = new ArrayList<>();
 
     public void setMembers(ArrayList<Member> members) {
         this.members = members;

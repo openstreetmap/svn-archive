@@ -212,7 +212,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
      * @return list of visible GeoImageLayer's
      */
     private List<GeoImageLayer> getVisibleGeoImageLayers() {
-        List<GeoImageLayer> all = new ArrayList<GeoImageLayer>(Main.map.mapView.getLayersOfType(GeoImageLayer.class));
+        List<GeoImageLayer> all = new ArrayList<>(Main.map.mapView.getLayersOfType(GeoImageLayer.class));
         Iterator<GeoImageLayer> it = all.iterator();
         while (it.hasNext()) {
             if (!it.next().isVisible()) it.remove();

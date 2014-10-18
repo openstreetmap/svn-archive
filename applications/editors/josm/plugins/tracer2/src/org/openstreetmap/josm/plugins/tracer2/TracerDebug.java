@@ -65,10 +65,10 @@ public class TracerDebug {
         	Collection<OsmPrimitive> cp3 = null;
         	Collection<? extends OsmPrimitive> cpx = null;
         	
-        	List<OsmPrimitive> lp1 = new LinkedList<OsmPrimitive>();
-        	List<OsmPrimitive> lp2 = new LinkedList<OsmPrimitive>();
-        	List<OsmPrimitive> lp3 = new LinkedList<OsmPrimitive>();
-        	List<OsmPrimitive> lp = new LinkedList<OsmPrimitive>();
+        	List<OsmPrimitive> lp1 = new LinkedList<>();
+        	List<OsmPrimitive> lp2 = new LinkedList<>();
+        	List<OsmPrimitive> lp3 = new LinkedList<>();
+        	List<OsmPrimitive> lp = new LinkedList<>();
         	
         	cp1 = lp1;
         	cp2 = lp2;

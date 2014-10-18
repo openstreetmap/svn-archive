@@ -66,7 +66,7 @@ public class Status implements Serializable {
         this.key = key;
         this.value = value;
         if (Status.table == null) {
-            Status.table = new HashMap<Integer, Status>();
+            Status.table = new HashMap<>();
         }
         Status.table.put(key, this);
     }

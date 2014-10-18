@@ -68,7 +68,7 @@ public class POIFSFileSystem
     public POIFSFileSystem()
     {
         _property_table = new PropertyTable();
-        _documents      = new ArrayList<POIFSDocument>();
+        _documents      = new ArrayList<>();
         _root           = null;
     }
 

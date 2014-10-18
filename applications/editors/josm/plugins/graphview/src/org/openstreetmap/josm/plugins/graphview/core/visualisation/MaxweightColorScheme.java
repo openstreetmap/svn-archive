@@ -14,7 +14,7 @@ public class MaxweightColorScheme extends FloatPropertyColorScheme {
     private static final Map<Float, Color> COLOR_MAP;
 
     static {
-        COLOR_MAP = new HashMap<Float, Color>();
+        COLOR_MAP = new HashMap<>();
         COLOR_MAP.put(0f, new Color(0, 0, 50));
         COLOR_MAP.put(20f, new Color(100, 100, 255));
         COLOR_MAP.put(50f, new Color(200, 200, 255));

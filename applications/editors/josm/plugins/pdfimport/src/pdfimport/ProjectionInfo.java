@@ -10,8 +10,8 @@ import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 
 public class ProjectionInfo {
-    private static Map<String, ProjectionChoice> allCodesPC = new HashMap<String, ProjectionChoice>();
-    private static Map<String, Projection> allCodes = new HashMap<String, Projection>();
+    private static Map<String, ProjectionChoice> allCodesPC = new HashMap<>();
+    private static Map<String, Projection> allCodes = new HashMap<>();
 
     static {
         for (ProjectionChoice pc : ProjectionPreference.getProjectionChoices()) {

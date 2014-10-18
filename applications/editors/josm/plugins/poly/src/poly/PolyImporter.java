@@ -71,7 +71,7 @@ public class PolyImporter extends OsmImporter {
         String name = reader.readLine();
         if( name == null || name.trim().length() == 0 )
             throw new IllegalDataException(tr("The file must begin with a polygon name"));
-        List<Area> areas = new ArrayList<Area>();
+        List<Area> areas = new ArrayList<>();
         Area area = null;
         boolean parsingSection = false;
         int fixedCoords = 0;
@@ -176,7 +176,7 @@ public class PolyImporter extends OsmImporter {
             outer = name.charAt(0) != '!';
             if( !outer )
                 this.name = this.name.substring(1);
-            nodes = new ArrayList<LatLon>();
+            nodes = new ArrayList<>();
             way = null;
             polygonName = null;
         }

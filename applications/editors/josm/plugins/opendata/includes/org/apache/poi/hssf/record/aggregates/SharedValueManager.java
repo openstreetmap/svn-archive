@@ -134,7 +134,7 @@ public final class SharedValueManager {
 		}
 		_arrayRecords = toList(arrayRecords);
 		_tableRecords = tableRecords;
-		Map<SharedFormulaRecord, SharedFormulaGroup> m = new HashMap<SharedFormulaRecord, SharedFormulaGroup>(nShF * 3 / 2);
+		Map<SharedFormulaRecord, SharedFormulaGroup> m = new HashMap<>(nShF * 3 / 2);
 		for (int i = 0; i < nShF; i++) {
 			SharedFormulaRecord sfr = sharedFormulaRecords[i];
 			m.put(sfr, new SharedFormulaGroup(sfr, firstCells[i]));
@@ -146,7 +146,7 @@ public final class SharedValueManager {
 	 * @return a modifiable list, independent of the supplied array
 	 */
 	private static <Z> List<Z> toList(Z[] zz) {
-		List<Z> result = new ArrayList<Z>(zz.length);
+		List<Z> result = new ArrayList<>(zz.length);
 		for (int i = 0; i < zz.length; i++) {
 			result.add(zz[i]);
 		}

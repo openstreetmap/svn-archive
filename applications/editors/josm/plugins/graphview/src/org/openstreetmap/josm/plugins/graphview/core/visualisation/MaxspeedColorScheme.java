@@ -14,7 +14,7 @@ public class MaxspeedColorScheme extends FloatPropertyColorScheme {
     private static final Map<Float, Color> COLOR_MAP;
 
     static {
-        COLOR_MAP = new HashMap<Float, Color>();
+        COLOR_MAP = new HashMap<>();
         COLOR_MAP.put(0f, new Color(50, 0, 0));
         COLOR_MAP.put(30f, Color.RED);
         COLOR_MAP.put(60f, Color.YELLOW);

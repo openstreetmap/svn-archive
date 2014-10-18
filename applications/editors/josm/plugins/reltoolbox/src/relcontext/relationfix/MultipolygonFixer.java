@@ -51,7 +51,7 @@ public class MultipolygonFixer extends RelationFixer {
      * Basically, created multipolygon from scratch, and if successful, replace roles with new ones.
      */
     protected Relation fixMultipolygonRoles( Relation source ) {
-        Collection<Way> ways = new ArrayList<Way>();
+        Collection<Way> ways = new ArrayList<>();
         for( OsmPrimitive p : source.getMemberPrimitives() )
             if( p instanceof Way )
                 ways.add((Way)p);
@@ -62,11 +62,11 @@ public class MultipolygonFixer extends RelationFixer {
 
         Relation r = new Relation(source);
         boolean fixed = false;
-        Set<Way> outerWays = new HashSet<Way>();
+        Set<Way> outerWays = new HashSet<>();
         for( MultipolygonBuilder.JoinedPolygon poly : mpc.outerWays )
             for( Way w : poly.ways )
                 outerWays.add(w);
-        Set<Way> innerWays = new HashSet<Way>();
+        Set<Way> innerWays = new HashSet<>();
         for( MultipolygonBuilder.JoinedPolygon poly : mpc.innerWays )
             for( Way w : poly.ways )
                 innerWays.add(w);

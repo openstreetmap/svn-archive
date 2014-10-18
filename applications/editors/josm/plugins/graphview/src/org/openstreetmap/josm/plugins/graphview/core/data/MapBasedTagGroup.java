@@ -33,7 +33,7 @@ public class MapBasedTagGroup implements TagGroup {
         if (tags == null) {
             throw new IllegalArgumentException();
         }
-        this.tagMap = new HashMap<String, String>();
+        this.tagMap = new HashMap<>();
         for (Tag tag : tags) {
             if (tag == null) {
                 throw new IllegalArgumentException();
@@ -47,7 +47,7 @@ public class MapBasedTagGroup implements TagGroup {
      * @param tags  tags to add to the group; each != null
      */
     public MapBasedTagGroup(Tag... tags) {
-        this.tagMap = new HashMap<String, String>(tags.length);
+        this.tagMap = new HashMap<>(tags.length);
         for (Tag tag : tags) {
             if (tag == null) {
                 throw new IllegalArgumentException();
@@ -87,7 +87,7 @@ public class MapBasedTagGroup implements TagGroup {
      */
     public Iterator<Tag> iterator() {
 
-        Collection<Tag> tagCollection = new LinkedList<Tag>();
+        Collection<Tag> tagCollection = new LinkedList<>();
 
         for (String key : tagMap.keySet()) {
             tagCollection.add(new Tag(key, tagMap.get(key)));

@@ -24,7 +24,7 @@ public class WMSDownloadAction /*extends JosmAction */{
 
     public static WMSLayer getLayer() {
         // check if we already have a layer created. if not, create; if yes, reuse.
-        ArrayList<WMSLayer> existingWMSlayers = new ArrayList<WMSLayer>();
+        ArrayList<WMSLayer> existingWMSlayers = new ArrayList<>();
         if (Main.map != null) {
             Layer activeLayer = Main.map.mapView.getActiveLayer();
             if (activeLayer instanceof WMSLayer)

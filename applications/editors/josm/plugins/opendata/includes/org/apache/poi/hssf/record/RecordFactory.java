@@ -244,8 +244,8 @@ public final class RecordFactory {
 	 * most of org.apache.poi.hssf.record.*
 	 */
 	private static Map<Integer, I_RecordCreator> recordsToMap(Class<? extends Record> [] records) {
-		Map<Integer, I_RecordCreator> result = new HashMap<Integer, I_RecordCreator>();
-		Set<Class<?>> uniqueRecClasses = new HashSet<Class<?>>(records.length * 3 / 2);
+		Map<Integer, I_RecordCreator> result = new HashMap<>();
+		Set<Class<?>> uniqueRecClasses = new HashSet<>(records.length * 3 / 2);
 
 		for (int i = 0; i < records.length; i++) {
 
@@ -305,7 +305,7 @@ public final class RecordFactory {
 	 */
 	public static List<Record> createRecords(InputStream in) throws RecordFormatException {
 
-		List<Record> records = new ArrayList<Record>(NUM_RECORDS);
+		List<Record> records = new ArrayList<>(NUM_RECORDS);
 
 		RecordFactoryInputStream recStream = new RecordFactoryInputStream(in, true);
 

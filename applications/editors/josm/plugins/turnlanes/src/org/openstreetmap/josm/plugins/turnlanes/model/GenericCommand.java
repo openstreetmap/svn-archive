@@ -33,7 +33,7 @@ public class GenericCommand extends Command {
     
     private final DataSet dataSet;
     private final String description;
-    private final Map<OsmPrimitive, BeforeAfter> beforeAfters = new HashMap<OsmPrimitive, BeforeAfter>();
+    private final Map<OsmPrimitive, BeforeAfter> beforeAfters = new HashMap<>();
     
     public GenericCommand(DataSet dataSet, String description) {
         this.dataSet = dataSet;

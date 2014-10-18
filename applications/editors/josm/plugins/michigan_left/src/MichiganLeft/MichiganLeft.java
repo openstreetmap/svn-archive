@@ -41,7 +41,7 @@ public class MichiganLeft extends Plugin {
          *
          */
     private static final long serialVersionUID = 1L;
-    private LinkedList<Command> cmds = new LinkedList<Command>();
+    private LinkedList<Command> cmds = new LinkedList<>();
 
     public MichiganLeftAction() {
       super(tr("Michigan Left"), "michigan_left",
@@ -55,7 +55,7 @@ public class MichiganLeft extends Plugin {
       Collection<OsmPrimitive> mainSelection = Main.main.getCurrentDataSet()
           .getSelected();
 
-      ArrayList<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
+      ArrayList<OsmPrimitive> selection = new ArrayList<>();
 
       for (OsmPrimitive prim: mainSelection) selection.add(prim);
 
@@ -73,7 +73,7 @@ public class MichiganLeft extends Plugin {
 
       if (ways == 4) {
         // Find extremities of ways
-        Hashtable<Node, Integer> ExtremNodes = new Hashtable<Node, Integer>();
+        Hashtable<Node, Integer> ExtremNodes = new Hashtable<>();
         for (OsmPrimitive prim : selection) {
           if (prim instanceof Way) {
             Way way = (Way) prim;
@@ -89,7 +89,7 @@ public class MichiganLeft extends Plugin {
         }
 
         // order the ways
-        ArrayList<Way> orderedWays = new ArrayList<Way>();
+        ArrayList<Way> orderedWays = new ArrayList<>();
         Way currentWay = (Way) selection.iterator().next();
         orderedWays.add((Way) currentWay);
         selection.remove(currentWay);
@@ -129,7 +129,7 @@ public class MichiganLeft extends Plugin {
 
       if (ways == 5) {
         // Find extremities of ways
-        Hashtable<Node, Integer> ExtremNodes = new Hashtable<Node, Integer>();
+        Hashtable<Node, Integer> ExtremNodes = new Hashtable<>();
         for (OsmPrimitive prim : selection) {
           if (prim instanceof Way) {
             Way way = (Way) prim;
@@ -139,7 +139,7 @@ public class MichiganLeft extends Plugin {
         }
         // System.out.println(tr("{0} extrem nodes.", ExtremNodes.size()));
 
-        ArrayList<Node> viaNodes = new ArrayList<Node>();
+        ArrayList<Node> viaNodes = new ArrayList<>();
         // find via nodes (they have 3 occurences in the list)
         for (Enumeration<Node> enumKey = ExtremNodes.keys(); enumKey
             .hasMoreElements();) {

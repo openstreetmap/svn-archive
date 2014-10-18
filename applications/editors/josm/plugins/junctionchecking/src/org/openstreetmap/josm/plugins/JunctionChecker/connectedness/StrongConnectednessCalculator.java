@@ -7,11 +7,11 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGra
 public class StrongConnectednessCalculator {
 
     private int index = 0;
-    private final ArrayList<Channel> stack = new ArrayList<Channel>();
-    private final ArrayList<ArrayList<Channel>> SCC = new ArrayList<ArrayList<Channel>>();
+    private final ArrayList<Channel> stack = new ArrayList<>();
+    private final ArrayList<ArrayList<Channel>> SCC = new ArrayList<>();
     private final int numberOfNodes;
     private int calculatedNodes = 0;
-    private ArrayList<Channel> nsccchannels = new ArrayList<Channel>();
+    private ArrayList<Channel> nsccchannels = new ArrayList<>();
     private final ChannelDiGraph digraph;
     int biggestPart = 0;
 
@@ -56,7 +56,7 @@ public class StrongConnectednessCalculator {
      * speichert alle Channel, die nicht stark zusammenhängend sind, in einer ArrayList
      **/
     private void saveNotSCCChannel() {
-        nsccchannels = new ArrayList<Channel>();
+        nsccchannels = new ArrayList<>();
         for (int i = 0; i < SCC.size(); i++) {
             if (i != biggestPart) {
                 nsccchannels.addAll(SCC.get(i));
@@ -123,7 +123,7 @@ public class StrongConnectednessCalculator {
         }
         if (v.getLowlink() == v.getIndex()) {
             Channel n;
-            ArrayList<Channel> component = new ArrayList<Channel>();
+            ArrayList<Channel> component = new ArrayList<>();
             do {
                 n = stack.remove(0);
                 component.add(n);

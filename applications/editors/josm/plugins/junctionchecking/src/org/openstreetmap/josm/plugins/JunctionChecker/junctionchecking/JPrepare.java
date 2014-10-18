@@ -16,8 +16,8 @@ public class JPrepare {
     private final ChannelDiGraph digraph;
 
     public JPrepare(ChannelDiGraph digraph) {
-        entries = new ArrayList<Channel>();
-        exits = new ArrayList<Channel>();
+        entries = new ArrayList<>();
+        exits = new ArrayList<>();
         this.digraph = digraph;
     }
 

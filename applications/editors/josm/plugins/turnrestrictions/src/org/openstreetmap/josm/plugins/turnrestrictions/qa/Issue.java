@@ -20,7 +20,7 @@ abstract public class Issue {
     /** the parent model for this issue */
     protected IssuesModel parent;
     protected Severity severity;
-    protected final ArrayList<Action> actions = new ArrayList<Action>();
+    protected final ArrayList<Action> actions = new ArrayList<>();
     
     /**
      * Creates a new issue associated with a parent model. Severity is

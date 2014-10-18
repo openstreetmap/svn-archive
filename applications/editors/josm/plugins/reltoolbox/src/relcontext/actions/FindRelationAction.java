@@ -122,7 +122,7 @@ public class FindRelationAction extends JosmAction {
     protected void updateRelationData( FindRelationListModel data, String filter ) {
         String[] keywords = filter == null ? new String[0] : filter.split("\\s+");
         if( keywords.length > 0 ) {
-            List<String> filteredKeywords = new ArrayList<String>(keywords.length);
+            List<String> filteredKeywords = new ArrayList<>(keywords.length);
             for( String s : keywords )
                 if( s.length() > 0 )
                     filteredKeywords.add(s.trim().toLowerCase());
@@ -133,7 +133,7 @@ public class FindRelationAction extends JosmAction {
         for( int i = 0; i < keywords.length; i++ )
             System.out.println("keyword["+i+"] = " + keywords[i]);
 
-        List<Relation> relations = new ArrayList<Relation>();
+        List<Relation> relations = new ArrayList<>();
         if( getEditLayer() != null ) {
             for( Relation r : getEditLayer().data.getRelations() ) {
                 if( !r.isDeleted() && r.isVisible() && !r.isIncomplete() ) {
@@ -167,7 +167,7 @@ public class FindRelationAction extends JosmAction {
      * I admit, some of it was copypasted from {@link org.openstreetmap.josm.gui.dialogs.RelationListDialog.RelationListModel}.
      */
     protected class FindRelationListModel extends AbstractListModel<Relation> {
-        private final ArrayList<Relation> relations = new ArrayList<Relation>();
+        private final ArrayList<Relation> relations = new ArrayList<>();
         private DefaultListSelectionModel selectionModel;
 
         public FindRelationListModel( DefaultListSelectionModel selectionModel ) {

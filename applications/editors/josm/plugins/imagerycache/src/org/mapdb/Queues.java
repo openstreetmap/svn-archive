@@ -43,7 +43,7 @@ public final class Queues {
             @Override
             public Node<E> deserialize(DataInput in, int available) throws IOException {
                 if(available==0)return Node.EMPTY;
-                return new Node<E>(Utils.unpackLong(in), serializer.deserialize(in,-1));
+                return new Node<>(Utils.unpackLong(in), serializer.deserialize(in,-1));
             }
         }
 
@@ -55,7 +55,7 @@ public final class Queues {
             this.serializer = serializer;
             if(headRecid == 0) headRecid = engine.put(0L, Serializer.LONG_SERIALIZER);
             head = new Atomic.Long(engine,headRecid);
-            nodeSerializer = new NodeSerializer<E>(serializer);
+            nodeSerializer = new NodeSerializer<>(serializer);
         }
 
 
@@ -245,12 +245,12 @@ public final class Queues {
         @Override
         public boolean add(E e) {
             long head2 = head.get();
-            Node<E> n = new Node<E>(head2, e);
+            Node<E> n = new Node<>(head2, e);
             long recid = engine.put(n, nodeSerializer);
             while(!head.compareAndSet(head2, recid)){
                 //failed to update head, so read new value and start over
                 head2 = head.get();
-                n = new Node<E>(head2, e);
+                n = new Node<>(head2, e);
                 engine.update(recid, n, nodeSerializer);
             }
             return true;
@@ -306,7 +306,7 @@ public final class Queues {
     @SuppressWarnings("unchecked")
     static <E> Stack<E> getStack(Engine engine, Serializer<Serializer> serializerSerializer, long rootRecid){
         StackRoot root = engine.get(rootRecid, new StackRootSerializer(serializerSerializer));
-        return new Stack<E>(engine, root.serializer, root.headerRecid, root.useLocks);
+        return new Stack<>(engine, root.serializer, root.headerRecid, root.useLocks);
     }
 
     /**
@@ -329,7 +329,7 @@ public final class Queues {
         @Override
         public boolean add(E item){
             final long nextTail = engine.put((Node<E>)Node.EMPTY, nodeSerializer);
-            Node<E> n = new Node<E>(nextTail, item);
+            Node<E> n = new Node<>(nextTail, item);
             long tail2 = tail.get();
             while(!engine.compareAndSwap(tail2, (Node<E>)Node.EMPTY, n, nodeSerializer)){
                 tail2 = tail.get();
@@ -434,7 +434,7 @@ public final class Queues {
     @SuppressWarnings("unchecked")
     static <E> Queue<E> getQueue(Engine engine, Serializer<Serializer> serializerSerializer, long rootRecid){
         QueueRoot root = engine.get(rootRecid, new QueueRootSerializer(serializerSerializer));
-        return new Queue<E>(engine, root.serializer, root.headerRecid, root.nextTailRecid,root.sizeRecid);
+        return new Queue<>(engine, root.serializer, root.headerRecid, root.nextTailRecid,root.sizeRecid);
     }
 
     public static class CircularQueue<E> extends SimpleQueue<E> {
@@ -458,7 +458,7 @@ public final class Queues {
             try{
                 long nRecid = headInsert.get();
                 Node<E> n = engine.get(nRecid, nodeSerializer);
-                n = new Node<E>(n.next, (E) o);
+                n = new Node<>(n.next, (E) o);
                 engine.update(nRecid, n, nodeSerializer);
                 headInsert.set(n.next);
                 //move 'poll' head if it points to currently replaced item
@@ -578,7 +578,7 @@ public final class Queues {
 
     static <E> CircularQueue<E> getCircularQueue(Engine engine, Serializer<Serializer> serializerSerializer, long rootRecid){
         CircularQueueRoot root = engine.get(rootRecid, new CircularQueueRootSerializer(serializerSerializer));
-        return new CircularQueue<E>(engine, root.serializer, root.headerRecid, root.headerInsertRecid,root.sizeRecid);
+        return new CircularQueue<>(engine, root.serializer, root.headerRecid, root.headerInsertRecid,root.sizeRecid);
     }
 
 }

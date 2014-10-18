@@ -26,7 +26,7 @@ public class PictureTransform {
 
     public PictureTransform() {
         cachedTransform = new AffineTransform();
-        originPoints = new ArrayList<Point2D>(3);
+        originPoints = new ArrayList<>(3);
     }
 
     public AffineTransform getTransform() {
@@ -72,7 +72,7 @@ public class PictureTransform {
         }
         case 2: {
             // find triangle and move it
-            List<Point2D> desiredPoints = new ArrayList<Point2D>(3);
+            List<Point2D> desiredPoints = new ArrayList<>(3);
             Point2D o1 = originPoints.get(0);
             Point2D o2 = originPoints.get(1);
             Point2D d1, d2;
@@ -92,7 +92,7 @@ public class PictureTransform {
             break;
         }
         case 3: {
-            List<Point2D> desiredPoints = new ArrayList<Point2D>(3);
+            List<Point2D> desiredPoints = new ArrayList<>(3);
 
             for (Point2D origin : originPoints) {
                 if (origin.equals(originPoint))
@@ -184,7 +184,7 @@ public class PictureTransform {
     }
 
     public void setOriginPoints(List<Point2D> list) {
-        this.originPoints = new ArrayList<Point2D>(list);
+        this.originPoints = new ArrayList<>(list);
     }
 
     public void removeOriginPoint(Point2D selectedPoint) {

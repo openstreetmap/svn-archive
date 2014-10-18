@@ -101,7 +101,7 @@ class TracerAction extends MapMode implements MouseListener {
     }
 
     private void traceSync(LatLon pos, ProgressMonitor progressMonitor) {
-        Collection<Command> commands = new LinkedList<Command>();
+        Collection<Command> commands = new LinkedList<>();
 
         progressMonitor.beginTask(null, 3);
         try {

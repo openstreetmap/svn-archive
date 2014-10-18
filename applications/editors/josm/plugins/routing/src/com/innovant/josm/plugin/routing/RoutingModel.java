@@ -78,7 +78,7 @@ public class RoutingModel {
      * Default Constructor.
      */
     public RoutingModel(DataSet data) {
-        nodes = new ArrayList<Node>();
+        nodes = new ArrayList<>();
         System.out.println("gr " + data);
         routingGraph = new RoutingGraph(data);
     }
@@ -127,7 +127,7 @@ public class RoutingModel {
      * Reverse list of nodes
      */
     public void reverseNodes() {
-        List<Node> aux = new ArrayList<Node>();
+        List<Node> aux = new ArrayList<>();
         for (Node n : nodes) {
             aux.add(0,n);
         }

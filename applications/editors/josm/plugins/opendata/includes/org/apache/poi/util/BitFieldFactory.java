@@ -28,7 +28,7 @@ import java.util.Map;
  */
 
 public class BitFieldFactory {
-    private static Map<Integer, BitField> instances = new HashMap<Integer, BitField>();
+    private static Map<Integer, BitField> instances = new HashMap<>();
 
     public static BitField getInstance(int mask) {
       BitField f = instances.get(Integer.valueOf(mask));

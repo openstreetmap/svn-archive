@@ -26,11 +26,11 @@ public class OSMAddress extends OSMEntityBase {
     private boolean isPartOfAssocStreetRel;
 
     /** The dictionary containing guessed values. */
-    private HashMap<String, String> guessedValues = new HashMap<String, String>();
+    private HashMap<String, String> guessedValues = new HashMap<>();
     /** The dictionary containing guessed objects. */
-    private HashMap<String, OsmPrimitive> guessedObjects = new HashMap<String, OsmPrimitive>();
+    private HashMap<String, OsmPrimitive> guessedObjects = new HashMap<>();
     /** The dictionary containing indirect values. */
-    private HashMap<String, String> derivedValues = new HashMap<String, String>();
+    private HashMap<String, String> derivedValues = new HashMap<>();
 
     public OSMAddress(OsmPrimitive osmObject) {
     super(osmObject);
@@ -48,7 +48,7 @@ public class OSMAddress extends OSMEntityBase {
     /**
      * Checks if the underlying address node has all tags usually needed to
      * describe an address.
-     * 
+     *
      * @return
      */
     public boolean isComplete() {
@@ -71,7 +71,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the name of the street associated with this address.
-     * 
+     *
      * @return
      */
     public String getStreetName() {
@@ -82,7 +82,7 @@ public class OSMAddress extends OSMEntityBase {
      * Gets the tag value with guess. If the object does not have the given tag,
      * this method looks for an appropriate guess. If both, real value and
      * guess, are missing, a question mark is returned.
-     * 
+     *
      * @param tag
      *            the tag
      * @return the tag value with guess
@@ -114,7 +114,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Returns <tt>true</tt>, if this address node has a street name.
-     * 
+     *
      * @return
      */
     public boolean hasStreetName() {
@@ -123,7 +123,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Returns the street name guessed by the nearest-neighbor search.
-     * 
+     *
      * @return the guessedStreetName
      */
     public String getGuessedStreetName() {
@@ -132,7 +132,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the guessed street name.
-     * 
+     *
      * @param guessedStreetName
      *            the guessedStreetName to set
      * @param srcObj
@@ -145,7 +145,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for a guessed street name.
-     * 
+     *
      * @return true, if this instance has a guessed street name.
      */
     public boolean hasGuessedStreetName() {
@@ -161,7 +161,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the guessed post code.
-     * 
+     *
      * @param guessedPostCode
      *            the guessedPostCode to set
      * @param srcObj
@@ -173,7 +173,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for a guessed post code.
-     * 
+     *
      * @return true, if this instance has a guessed post code.
      */
     public boolean hasGuessedPostalCode() {
@@ -189,7 +189,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the guessed city.
-     * 
+     *
      * @param guessedCity
      *            the guessedCity to set
      * @param srcObj
@@ -201,7 +201,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for a guessed city name.
-     * 
+     *
      * @return true, if this instance has a guessed city name.
      */
     public boolean hasGuessedCity() {
@@ -210,7 +210,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Returns true, if this instance has guesses regarding address tags.
-     * 
+     *
      * @return
      */
     public boolean hasGuesses() {
@@ -232,7 +232,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Apply the guessed value for the given tag.
-     * 
+     *
      * @param tag
      *            the tag to apply the guessed value for.
      */
@@ -247,7 +247,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the name of the post code associated with this address.
-     * 
+     *
      * @return
      */
     public String getPostalCode() {
@@ -262,7 +262,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks if this instance has a valid postal code.
-     * 
+     *
      * @return true, if successful
      */
     public boolean hasValidPostalCode() {
@@ -271,7 +271,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for post code tag.
-     * 
+     *
      * @return true, if successful
      */
     public boolean hasPostalCode() {
@@ -280,7 +280,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the name of the house number associated with this address.
-     * 
+     *
      * @return
      */
     public String getHouseNumber() {
@@ -296,7 +296,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for house number.
-     * 
+     *
      * @return true, if successful
      */
     public boolean hasHouseNumber() {
@@ -304,7 +304,8 @@ public class OSMAddress extends OSMEntityBase {
         || isPartOfInterpolation;
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
     String name = TagUtils.getNameValue(osmObject);
     if (!StringUtils.isNullOrEmpty(name)) {
         return TagUtils.getAddrHousenameValue(osmObject);
@@ -315,7 +316,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks if this address is part of a address interpolation.
-     * 
+     *
      * @return true, if is part of interpolation
      */
     protected boolean isPartOfInterpolation() {
@@ -324,7 +325,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks if this address is part of an 'associated street' relation.
-     * 
+     *
      * @return true, if is part of interpolation
      */
     protected boolean isPartOfRelation() {
@@ -333,7 +334,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the name of the city associated with this address.
-     * 
+     *
      * @return
      */
     public String getCity() {
@@ -342,7 +343,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for city tag.
-     * 
+     *
      * @return true, if a city tag is present or available via referrer.
      */
     public boolean hasCity() {
@@ -351,7 +352,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the name of the state associated with this address.
-     * 
+     *
      * @return
      */
     public String getState() {
@@ -360,7 +361,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for state tag.
-     * 
+     *
      * @return true, if a state tag is present or available via referrer.
      */
     public boolean hasState() {
@@ -369,7 +370,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the name of the country associated with this address.
-     * 
+     *
      * @return
      */
     public String getCountry() {
@@ -378,7 +379,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Checks for country tag.
-     * 
+     *
      * @return true, if a country tag is present or available via referrer.
      */
     public boolean hasCountry() {
@@ -400,7 +401,7 @@ public class OSMAddress extends OSMEntityBase {
     /**
      * Checks if the associated OSM object has the given tag or if the tag is
      * available via a referrer.
-     * 
+     *
      * @param tag
      *            the tag to look for.
      * @return true, if there is a value for the given tag.
@@ -466,7 +467,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Applies the street name from the specified street node.
-     * 
+     *
      * @param node
      */
     public void assignStreet(OSMStreet node) {
@@ -482,7 +483,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the guessed value for the given tag.
-     * 
+     *
      * @param tag
      *            The tag to get the guessed value for.
      * @return the guessed value
@@ -498,7 +499,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the guessed object.
-     * 
+     *
      * @param tag
      *            the guessed tag
      * @return the object which has been selected for the guess
@@ -515,7 +516,7 @@ public class OSMAddress extends OSMEntityBase {
     /**
      * Gets all guessed objects or an empty list, if no guesses have been made
      * yet.
-     * 
+     *
      * @return the guessed objects.
      */
     public Collection<OsmPrimitive> getGuessedObjects() {
@@ -528,7 +529,7 @@ public class OSMAddress extends OSMEntityBase {
     /**
      * Check if this instance needs guessed values. This is the case, if the
      * underlying OSM node has either no street name, post code or city.
-     * 
+     *
      * @return true, if this instance needs at least one guessed value.
      */
     public boolean needsGuess() {
@@ -541,7 +542,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Check if this instance needs guessed value for a given tag.
-     * 
+     *
      * @return true, if successful
      */
     public boolean needsGuessedValue(String tag) {
@@ -558,7 +559,7 @@ public class OSMAddress extends OSMEntityBase {
     /**
      * Checks if given tag has a guessed value (tag exists and has a non-empty
      * value).
-     * 
+     *
      * @param tag
      *            the tag
      * @return true, if tag has a guessed value.
@@ -572,7 +573,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the guessed value with the given tag.
-     * 
+     *
      * @param tag
      *            the tag to set the guess for
      * @param value
@@ -595,7 +596,7 @@ public class OSMAddress extends OSMEntityBase {
     /**
      * Checks if given tag has a derived value (value is available via a
      * referrer).
-     * 
+     *
      * @param tag
      *            the tag
      * @return true, if tag has a derived value.
@@ -609,7 +610,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Returns true, if this instance has derived values from any referrer.
-     * 
+     *
      * @return
      */
     public boolean hasDerivedValues() {
@@ -618,7 +619,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the derived value for the given tag.
-     * 
+     *
      * @param tag
      *            The tag to get the derived value for.
      * @return
@@ -632,7 +633,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the value known indirectly via a referrer with the given tag.
-     * 
+     *
      * @param tag
      *            the tag to set the derived value for
      * @param value
@@ -644,7 +645,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the street name of the address node.
-     * 
+     *
      * @param streetName
      */
     public void setStreetName(String streetName) {
@@ -656,7 +657,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the state of the address node.
-     * 
+     *
      * @param state
      */
     public void setState(String state) {
@@ -668,7 +669,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the country of the address node.
-     * 
+     *
      * @param country
      */
     public void setCountry(String country) {
@@ -680,7 +681,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Sets the post code of the address node.
-     * 
+     *
      * @param postCode
      */
     public void setPostCode(String postCode) {
@@ -754,7 +755,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Adds the guess value solution to a problem.
-     * 
+     *
      * @param p
      *            the problem to add the solution to.
      * @param tag
@@ -770,7 +771,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Adds the remove address tags solution entry to a problem.
-     * 
+     *
      * @param problem
      *            the problem
      */
@@ -789,7 +790,7 @@ public class OSMAddress extends OSMEntityBase {
 
     /**
      * Gets the formatted string representation of the given node.
-     * 
+     *
      * @param node
      *            the node
      * @return the format string

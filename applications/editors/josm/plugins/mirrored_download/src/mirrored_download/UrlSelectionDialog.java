@@ -103,7 +103,7 @@ public class UrlSelectionDialog
   private Collection<String> getURLs() {
     // List can be edited at https://josm.openstreetmap.de/wiki/MirroredDownloadInfo
     String src = Main.pref.get("plugin.mirrored_download.url-src", "https://josm.openstreetmap.de/mirrored_download_info");
-    Collection<String> urls = new ArrayList<String>();
+    Collection<String> urls = new ArrayList<>();
     try (
       InputStream in = new CachedFile(src).setMaxAge(24*60*60).getInputStream();
       BufferedReader reader = new BufferedReader(new InputStreamReader(in))

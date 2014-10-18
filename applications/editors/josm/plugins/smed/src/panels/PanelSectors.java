@@ -36,11 +36,11 @@ public class PanelSectors extends JFrame {
 		}
 	};
 	public JComboBox<ImageIcon> colourBox;
-	public EnumMap<Col, ImageIcon> colours = new EnumMap<Col, ImageIcon>(Col.class);
+	public EnumMap<Col, ImageIcon> colours = new EnumMap<>(Col.class);
 	public JComboBox<String> visibilityBox;
-	public EnumMap<Vis, String> visibilities = new EnumMap<Vis, String>(Vis.class);
+	public EnumMap<Vis, String> visibilities = new EnumMap<>(Vis.class);
 	public JComboBox<String> exhibitionBox;
-	public EnumMap<Exh, String> exhibitions = new EnumMap<Exh, String>(Exh.class);
+	public EnumMap<Exh, String> exhibitions = new EnumMap<>(Exh.class);
 
 	public PanelSectors(SmedAction dia) {
 		super(Messages.getString("SectorTable"));

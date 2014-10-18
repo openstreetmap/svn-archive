@@ -13,9 +13,9 @@ public class PresetsTableModel extends AbstractTableModel  {
 
     //private static final Logger logger = Logger.getLogger(PresetsTableModel.class.getName());
 
-    private final ArrayList<TableModelListener> listeners = new ArrayList<TableModelListener>();
-    private final ArrayList<TaggingPreset> items = new ArrayList<TaggingPreset>();
-    private final ArrayList<TaggingPreset> visibleItems = new ArrayList<TaggingPreset>();
+    private final ArrayList<TableModelListener> listeners = new ArrayList<>();
+    private final ArrayList<TaggingPreset> items = new ArrayList<>();
+    private final ArrayList<TaggingPreset> visibleItems = new ArrayList<>();
 
     protected void initModelFromPresets(Collection<TaggingPreset> presets) {
         items.clear();

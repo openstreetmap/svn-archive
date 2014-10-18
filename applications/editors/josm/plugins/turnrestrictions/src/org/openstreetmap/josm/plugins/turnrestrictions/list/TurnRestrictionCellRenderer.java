@@ -42,7 +42,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
     //static private final Logger logger = Logger.getLogger(TurnRestrictionCellRenderer.class.getName());
     
     /** the names of restriction types */
-    static private Set<String> RESTRICTION_TYPES = new HashSet<String>(
+    static private Set<String> RESTRICTION_TYPES = new HashSet<>(
             Arrays.asList(new String[] {
                     "no_left_turn",
                     "no_right_turn",

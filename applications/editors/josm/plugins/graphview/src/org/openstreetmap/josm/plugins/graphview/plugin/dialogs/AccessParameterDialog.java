@@ -49,7 +49,7 @@ public class AccessParameterDialog extends JDialog {
     private static final Map<VehiclePropertyType<Float>, String> FLOAT_PROPERTIES;
 
     static {
-        FLOAT_PROPERTIES = new LinkedHashMap<VehiclePropertyType<Float>, String>();
+        FLOAT_PROPERTIES = new LinkedHashMap<>();
         FLOAT_PROPERTIES.put(VehiclePropertyTypes.HEIGHT, tr("height (m)"));
         FLOAT_PROPERTIES.put(VehiclePropertyTypes.WIDTH, tr("width (m)"));
         FLOAT_PROPERTIES.put(VehiclePropertyTypes.LENGTH, tr("length (m)"));
@@ -131,7 +131,7 @@ public class AccessParameterDialog extends JDialog {
         private static final int COLS = 4;
 
         private final Map<AccessType, JCheckBox> accessTypeCheckBoxes =
-            new EnumMap<AccessType, JCheckBox>(AccessType.class);
+            new EnumMap<>(AccessType.class);
 
         public AccessTypesPanel(PreferenceAccessParameters initialParameters) {
             super();
@@ -151,7 +151,7 @@ public class AccessParameterDialog extends JDialog {
 
         public Collection<AccessType> getUsableAccessTypes() {
 
-            Collection<AccessType> usableAccessTypes = new LinkedList<AccessType>();
+            Collection<AccessType> usableAccessTypes = new LinkedList<>();
 
             for (AccessType accessType : AccessType.values()) {
                 if (accessTypeCheckBoxes.get(accessType).isSelected()) {
@@ -168,7 +168,7 @@ public class AccessParameterDialog extends JDialog {
         private static final int COLS = 2;
 
         private final Map<VehiclePropertyType<Float>, JTextField> floatPropertyTextFields =
-            new HashMap<VehiclePropertyType<Float>, JTextField>();
+            new HashMap<>();
 
         public VehiclePropertiesPanel(PreferenceAccessParameters initialParameters) {
             super();
@@ -199,7 +199,7 @@ public class AccessParameterDialog extends JDialog {
         public Map<VehiclePropertyType<?>, String> getVehiclePropertyStrings() {
 
             Map<VehiclePropertyType<?>, String> vehiclePropertyStrings =
-                new HashMap<VehiclePropertyType<?>, String>();
+                new HashMap<>();
 
             for (VehiclePropertyType<Float> vehicleProperty : floatPropertyTextFields.keySet()) {
                 String textFieldContent = floatPropertyTextFields.get(vehicleProperty).getText();
@@ -309,7 +309,7 @@ public class AccessParameterDialog extends JDialog {
         public Map<VehiclePropertyType<?>, String> getVehiclePropertyStrings() {
 
             Map<VehiclePropertyType<?>, String> vehiclePropertyStrings =
-                new HashMap<VehiclePropertyType<?>, String>();
+                new HashMap<>();
 
             String incUpString = inclineUpTextField.getText();
             if (incUpString.trim().length() > 0) {

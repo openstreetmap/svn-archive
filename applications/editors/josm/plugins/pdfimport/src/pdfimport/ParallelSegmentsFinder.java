@@ -15,7 +15,7 @@ public class ParallelSegmentsFinder {
 	public double angle;
 	public double angleSum;
 	public int refCount;
-	public List<PdfPath> paths = new ArrayList<PdfPath>();
+	public List<PdfPath> paths = new ArrayList<>();
 
 	public void addPath(PdfPath path, double angle2) {
 		angleSum += angle2;
@@ -29,7 +29,7 @@ public class ParallelSegmentsFinder {
 		AffineTransform tr = new AffineTransform();
 		tr.rotate(-angle);
 
-		final Map<PdfPath, Point2D> positions = new HashMap<PdfPath, Point2D>();
+		final Map<PdfPath, Point2D> positions = new HashMap<>();
 		Point2D src = new Point2D.Double();
 
 		for(PdfPath path: paths)
@@ -54,13 +54,13 @@ public class ParallelSegmentsFinder {
 		});
 
 		//process sweep
-		List<ParallelSegmentsFinder> result = new ArrayList<ParallelSegmentsFinder>();
+		List<ParallelSegmentsFinder> result = new ArrayList<>();
 
-		Map<PdfPath, ParallelSegmentsFinder> sweepLine = new HashMap<PdfPath, ParallelSegmentsFinder>();
+		Map<PdfPath, ParallelSegmentsFinder> sweepLine = new HashMap<>();
 
-		Set<ParallelSegmentsFinder> adjacentClustersSet = new HashSet<ParallelSegmentsFinder>();
-		List<ParallelSegmentsFinder> adjacentClusters = new ArrayList<ParallelSegmentsFinder>();
-		List<PdfPath> pathsToRemove = new ArrayList<PdfPath>();
+		Set<ParallelSegmentsFinder> adjacentClustersSet = new HashSet<>();
+		List<ParallelSegmentsFinder> adjacentClusters = new ArrayList<>();
+		List<PdfPath> pathsToRemove = new ArrayList<>();
 
 		for (PdfPath path: paths){
 			adjacentClusters.clear();

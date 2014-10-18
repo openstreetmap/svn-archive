@@ -35,7 +35,7 @@ public class PanelChr extends JPanel {
 	public JToggleButton occultingButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/OccultingButton.png")));
 	public JToggleButton morseButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/MorseButton.png")));
 	public JToggleButton alternatingButton = new JToggleButton(new ImageIcon(getClass().getResource("/images/AlternatingButton.png")));
-	private EnumMap<Chr, JToggleButton> buttons = new EnumMap<Chr, JToggleButton>(Chr.class);
+	private EnumMap<Chr, JToggleButton> buttons = new EnumMap<>(Chr.class);
 	private ActionListener alCharButton = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			JToggleButton source = (JToggleButton) e.getSource();

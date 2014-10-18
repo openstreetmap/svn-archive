@@ -248,7 +248,7 @@ class RoadGui {
         private IncomingConnector(Road.End end) {
             this.end = end;
             
-            final List<LaneGui> lanes = new ArrayList<LaneGui>(end.getLanes().size());
+            final List<LaneGui> lanes = new ArrayList<>(end.getLanes().size());
             for (Lane l : end.getOppositeEnd().getLanes()) {
                 lanes.add(new LaneGui(RoadGui.this, l));
             }
@@ -463,7 +463,7 @@ class RoadGui {
     private static final boolean ROUND_CORNERS = false;
     
     private static final List<Point2D> prepended(List<Point2D> bends, Point2D point) {
-        final List<Point2D> result = new ArrayList<Point2D>(bends.size() + 1);
+        final List<Point2D> result = new ArrayList<>(bends.size() + 1);
         result.add(point);
         result.addAll(bends);
         return result;
@@ -485,7 +485,7 @@ class RoadGui {
     private final IncomingConnector incomingB;
     
     private final Road road;
-    private final List<Segment> segments = new ArrayList<Segment>();
+    private final List<Segment> segments = new ArrayList<>();
     
     final double connectorRadius;
     
@@ -500,7 +500,7 @@ class RoadGui {
         this.incomingA = new IncomingConnector(road.getFromEnd());
         this.incomingB = new IncomingConnector(road.getToEnd());
         
-        final List<Point2D> bends = new ArrayList<Point2D>();
+        final List<Point2D> bends = new ArrayList<>();
         final List<Node> nodes = road.getRoute().getNodes();
         for (int i = nodes.size() - 2; i > 0; --i) {
             bends.add(container.translateAndScale(loc(nodes.get(i))));
@@ -581,7 +581,7 @@ class RoadGui {
     }
     
     List<InteractiveElement> paint(Graphics2D g2d) {
-        final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
+        final List<InteractiveElement> result = new ArrayList<>();
         
         result.addAll(paintLanes(g2d));
         
@@ -603,7 +603,7 @@ class RoadGui {
     }
     
     private List<LaneAdder> laneAdders() {
-        final List<LaneAdder> result = new ArrayList<LaneAdder>(4);
+        final List<LaneAdder> result = new ArrayList<>(4);
         
         if (!incomingA.getLanes().isEmpty()) {
             result.add(new LaneAdder(getModel().getToEnd(), Lane.Kind.EXTRA_LEFT));
@@ -623,7 +623,7 @@ class RoadGui {
             return Collections.emptyList();
         }
         
-        final List<Extender> result = new ArrayList<Extender>();
+        final List<Extender> result = new ArrayList<>();
         
         final Node n = end.getJunction().getNode();
         for (Way w : OsmPrimitive.getFilteredList(n.getReferrers(), Way.class)) {
@@ -677,7 +677,7 @@ class RoadGui {
         g2d.setColor(Color.WHITE);
         g2d.draw(middleLines);
         
-        final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
+        final List<InteractiveElement> result = new ArrayList<>();
         
         moveIncoming(getModel().getFromEnd());
         moveIncoming(getModel().getToEnd());
@@ -706,7 +706,7 @@ class RoadGui {
         final Path middle = middlePath(forward);
         
         Path innerPath = middle.offset(innerMargin, -1, -1, innerMargin);
-        final List<Path> linePaths = new ArrayList<Path>();
+        final List<Path> linePaths = new ArrayList<>();
         linePaths.add(innerPath);
         
         for (LaneGui l : forward ? incomingA.getLanes() : incomingB.getLanes()) {
@@ -866,7 +866,7 @@ class RoadGui {
     }
     
     public List<LaneGui> getLanes() {
-        final List<LaneGui> result = new ArrayList<LaneGui>();
+        final List<LaneGui> result = new ArrayList<>();
         
         result.addAll(incomingB.getLanes());
         result.addAll(incomingA.getLanes());

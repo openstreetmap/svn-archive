@@ -35,9 +35,9 @@ public class CanvecLayer extends Layer implements MouseListener {
 	private Icon layerIcon = null;
 	private int max_zoom = 4;
 	public CanvecHelper plugin_self;
-	private ArrayList<CanVecTile> tiles = new ArrayList<CanVecTile>();
-	public ArrayList<CanVecTile> downloadable = new ArrayList<CanVecTile>();
-	public ArrayList<CanVecTile> openable = new ArrayList<CanVecTile>();
+	private ArrayList<CanVecTile> tiles = new ArrayList<>();
+	public ArrayList<CanVecTile> downloadable = new ArrayList<>();
+	public ArrayList<CanVecTile> openable = new ArrayList<>();
 
 	public CanvecLayer(String name,CanvecHelper self){
 		super(name);
@@ -55,7 +55,7 @@ public class CanvecLayer extends Layer implements MouseListener {
 			BufferedReader br = new BufferedReader(new InputStreamReader(index));
 			String line;
 			int last_cell = -1;
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<String> list = new ArrayList<>();
 			while ((line = br.readLine()) != null) {
 				Matcher m = p.matcher(line);
 				if (m.find()) {
@@ -65,7 +65,7 @@ public class CanvecLayer extends Layer implements MouseListener {
 					} else if (last_cell != -1) {
 						CanVecTile tile = new CanVecTile(last_cell,"",0,"",this,list);
 						if (tile.isValid()) tiles.add(tile);
-						list = new ArrayList<String>();
+						list = new ArrayList<>();
 						list.add(m.group(0));
 					}
 					last_cell = cell;
@@ -204,8 +204,8 @@ public class CanvecLayer extends Layer implements MouseListener {
 	public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 		//long start = System.currentTimeMillis();
 		//System.out.println("painting the area covered by "+bounds.toString());
-		downloadable = new ArrayList<CanVecTile>();
-		openable = new ArrayList<CanVecTile>();
+		downloadable = new ArrayList<>();
+		openable = new ArrayList<>();
 		// loop over each canvec tile in the db and check bounds.intersects(Bounds)
 		g.setColor(Color.red);
 		for (int i = 0; i < tiles.size(); i++) {

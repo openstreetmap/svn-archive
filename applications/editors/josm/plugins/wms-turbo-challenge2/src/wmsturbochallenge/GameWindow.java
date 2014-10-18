@@ -93,7 +93,7 @@ public class GameWindow extends JFrame implements ActionListener {
             super(1000, null);
             addActionListener(this);
 
-            trackSegs = new ArrayList<Collection<WayPoint>>();
+            trackSegs = new ArrayList<>();
         }
 
         protected Collection<WayPoint> segment;
@@ -112,7 +112,7 @@ public class GameWindow extends JFrame implements ActionListener {
             super.start();
 
             /* Start recording */
-            segment = new ArrayList<WayPoint>();
+            segment = new ArrayList<>();
             trackSegs.add(segment);
             actionPerformed(null);
         }
@@ -232,8 +232,8 @@ public class GameWindow extends JFrame implements ActionListener {
     protected int current_bg = 0;
     protected int current_car = 0;
     protected boolean cacti_on = true;
-    protected List<EastNorth> cacti = new ArrayList<EastNorth>();
-    protected List<EastNorth> todelete = new ArrayList<EastNorth>();
+    protected List<EastNorth> cacti = new ArrayList<>();
+    protected List<EastNorth> todelete = new ArrayList<>();
     protected int splashframe = -1;
     protected EastNorth splashcactus;
 
@@ -336,7 +336,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     todelete.add(pos);
             }
             cacti.removeAll(todelete);
-            todelete = new ArrayList<EastNorth>();
+            todelete = new ArrayList<>();
         }
     }
 
@@ -672,7 +672,7 @@ public class GameWindow extends JFrame implements ActionListener {
             if (key == KeyEvent.VK_C) {
                 cacti_on = !cacti_on;
                 if (!cacti_on)
-                    cacti = new ArrayList<EastNorth>();
+                    cacti = new ArrayList<>();
             }
 
             /* Switch vehicle */

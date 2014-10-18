@@ -35,7 +35,7 @@ public class EdgeWeightedDigraph {
         this.E = 0;
         adj = (Bag<DirectedEdge>[]) new Bag[V];
         for (int v = 0; v < V; v++)
-            adj[v] = new Bag<DirectedEdge>();
+            adj[v] = new Bag<>();
     }
 
    /**
@@ -75,7 +75,7 @@ public class EdgeWeightedDigraph {
         this.E = G.E();
         for (int v = 0; v < G.V(); v++) {
             // reverse so that adjacency list is in same order as original
-            Stack<DirectedEdge> reverse = new Stack<DirectedEdge>();
+            Stack<DirectedEdge> reverse = new Stack<>();
             for (DirectedEdge e : G.adj[v]) {
                 reverse.push(e);
             }
@@ -123,7 +123,7 @@ public class EdgeWeightedDigraph {
      * <tt>for (DirectedEdge e : graph.edges())</tt>.
      */
     public Iterable<DirectedEdge> edges() {
-        Bag<DirectedEdge> list = new Bag<DirectedEdge>();
+        Bag<DirectedEdge> list = new Bag<>();
         for (int v = 0; v < V; v++) {
             for (DirectedEdge e : adj(v)) {
                 list.add(e);

@@ -1,7 +1,5 @@
 package org.osgeo.proj4j;
 
-import org.osgeo.proj4j.datum.Datum;
-
 /**
  * Creates {@link CoordinateTransform}s
  * from source and target {@link CoordinateReferenceSystem}s.

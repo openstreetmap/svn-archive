@@ -1,14 +1,22 @@
 package nanolog;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.gpx.*;
+import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.gpx.GpxTrack;
+import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
+import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.tools.Geometry;
-import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.date.PrimaryDateParser;
 
 /**
@@ -23,7 +31,7 @@ public class Correlator {
      * Matches entries to GPX so most points are on the trace.
      */
     public static long crudeMatch( List<NanoLogEntry> entries, GpxData data ) {
-        List<NanoLogEntry> sortedEntries = new ArrayList<NanoLogEntry>(entries);
+        List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
         PrimaryDateParser dateParser = new PrimaryDateParser();
         Collections.sort(sortedEntries);
         long firstExifDate = sortedEntries.get(0).getTime().getTime();
@@ -71,7 +79,7 @@ public class Correlator {
      * @param offset
      */
     public static void correlate( List<NanoLogEntry> entries, GpxData data, long offset ) {
-        List<NanoLogEntry> sortedEntries = new ArrayList<NanoLogEntry>(entries);
+        List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
         //int ret = 0;
         PrimaryDateParser dateParser = new PrimaryDateParser();
         Collections.sort(sortedEntries);

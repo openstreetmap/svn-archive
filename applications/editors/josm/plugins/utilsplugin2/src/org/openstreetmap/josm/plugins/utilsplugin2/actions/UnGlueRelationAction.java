@@ -48,8 +48,8 @@ public class UnGlueRelationAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        LinkedList<Command> cmds = new LinkedList<Command>();
-        List<OsmPrimitive> newPrimitives = new LinkedList<OsmPrimitive>();
+        LinkedList<Command> cmds = new LinkedList<>();
+        List<OsmPrimitive> newPrimitives = new LinkedList<>();
         Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
 
         for (OsmPrimitive p : selection) {

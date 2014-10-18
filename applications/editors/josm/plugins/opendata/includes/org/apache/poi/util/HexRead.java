@@ -37,7 +37,7 @@ public class HexRead
     {
         int characterCount = 0;
         byte b = (byte) 0;
-        List<Byte> bytes = new ArrayList<Byte>();
+        List<Byte> bytes = new ArrayList<>();
         boolean done = false;
         while ( !done )
         {

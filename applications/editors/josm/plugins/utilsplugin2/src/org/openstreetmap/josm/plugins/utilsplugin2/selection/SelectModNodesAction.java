@@ -51,7 +51,7 @@ public class SelectModNodesAction extends JosmAction {
            // System.out.println("last history item taken");
         }
 
-        Set<Node> nodes = new HashSet<Node>(10);
+        Set<Node> nodes = new HashSet<>(10);
         do {  //  select next history element
             if (idx>0) idx--; else idx=num-1;
             cmd = Main.main.undoRedo.commands.get(idx);

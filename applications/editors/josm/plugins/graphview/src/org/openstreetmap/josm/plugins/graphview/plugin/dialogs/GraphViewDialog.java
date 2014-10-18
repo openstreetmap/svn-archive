@@ -72,7 +72,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
         this.preferences = GraphViewPreferences.getInstance();
         this.plugin = plugin;
 
-        availableColorSchemes = new LinkedHashMap<String, ColorScheme>();
+        availableColorSchemes = new LinkedHashMap<>();
 
         availableColorSchemes.put(tr("default"),
                 new PreferencesColorScheme(preferences));
@@ -237,7 +237,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
 
         } else {
 
-            rulesetFiles = new LinkedList<File>();
+            rulesetFiles = new LinkedList<>();
 
             File[] filesInRulesetFolder = preferences.getRulesetFolder().listFiles();
 
@@ -272,7 +272,7 @@ public class GraphViewDialog extends ToggleDialog implements Observer {
         bookmarkComboBox.removeActionListener(bookmarkActionListener);
 
         String activeBookmarkName = preferences.getCurrentParameterBookmarkName();
-        Set<String> bookmarkNames = new HashSet<String>(preferences.getParameterBookmarks().keySet());
+        Set<String> bookmarkNames = new HashSet<>(preferences.getParameterBookmarks().keySet());
 
         bookmarkComboBox.removeAllItems();
         for (String bookmarkName : bookmarkNames) {

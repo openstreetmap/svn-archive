@@ -42,15 +42,15 @@ public final class Fun {
     }
 
     public static <A,B> Tuple2<A,B> t2(A a, B b) {
-        return new Tuple2<A, B>(a,b);
+        return new Tuple2<>(a,b);
     }
 
     public static <A,B,C> Tuple3<A,B,C> t3(A a, B b, C c) {
-        return new Tuple3<A, B, C>((A)a, (B)b, (C)c);
+        return new Tuple3<>((A)a, (B)b, (C)c);
     }
 
     public static <A,B,C,D> Tuple4<A,B,C,D> t4(A a, B b, C c, D d) {
-        return new Tuple4<A, B, C, D>(a,b,c,d);
+        return new Tuple4<>(a,b,c,d);
     }
 
 

@@ -53,7 +53,7 @@ public class SelectWayNodesAction extends JosmAction {
             else if (p instanceof Node) {
                 Node n = (Node) p;
                 if (selectedNodes == null) {
-                    selectedNodes = new ArrayList<Node>();
+                    selectedNodes = new ArrayList<>();
                 }
                 selectedNodes.add(n);
             }
@@ -67,7 +67,7 @@ public class SelectWayNodesAction extends JosmAction {
         
         for (Node n : w.getNodes()) {
             if (selectedNodes == null) {
-                selectedNodes = new ArrayList<Node>();
+                selectedNodes = new ArrayList<>();
             }
             selectedNodes.add(n);
         }

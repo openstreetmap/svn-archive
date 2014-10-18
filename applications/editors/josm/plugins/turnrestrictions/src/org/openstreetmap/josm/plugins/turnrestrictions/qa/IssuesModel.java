@@ -32,7 +32,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  *  
  */
 public class IssuesModel extends Observable implements Observer{
-    private final ArrayList<Issue> issues = new ArrayList<Issue>();
+    private final ArrayList<Issue> issues = new ArrayList<>();
     private TurnRestrictionEditorModel editorModel;
     
     /**

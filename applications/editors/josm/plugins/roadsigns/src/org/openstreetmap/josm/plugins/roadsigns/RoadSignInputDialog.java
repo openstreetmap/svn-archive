@@ -165,7 +165,7 @@ class RoadSignInputDialog extends ExtendedDialog {
 
 
     private Command createCommand(Collection<OsmPrimitive> selPrim) {
-        List<Command> cmds = new LinkedList<Command>();
+        List<Command> cmds = new LinkedList<>();
         for (int i=0; i<previewModel.getRowCount(); i++) {
             String key = (String) previewModel.getValueAt(i, 0);
             String value = (String) previewModel.getValueAt(i, 1);
@@ -271,7 +271,7 @@ class RoadSignInputDialog extends ExtendedDialog {
      * Manages the update of gui elements when the selection changes.
      */
     public class SignSelection  {
-        private final LinkedList<SignCombination> combos=new LinkedList<SignCombination>();
+        private final LinkedList<SignCombination> combos=new LinkedList<>();
 
         public void remove(SignCombination sc) {
             int i = findIndex(sc);
@@ -332,7 +332,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                 int combIdx=0;
                 for (SignWrapper sw : sc.signs) {
                     if (swFind == sw) {
-                        return new Pair<Integer, Integer>(selIdx, combIdx);
+                        return new Pair<>(selIdx, combIdx);
                     }
                     combIdx++;
                 }
@@ -377,7 +377,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         public LinkedList<SignWrapper> signs;
 
         public SignCombination() {
-            signs = new LinkedList<SignWrapper>();
+            signs = new LinkedList<>();
         }
 
         public void updatePanel(JPanel panel) {
@@ -427,7 +427,7 @@ class RoadSignInputDialog extends ExtendedDialog {
         JLabel signIcon;
         String signRef;
         JPanel paramsPanel;
-        Map<String, String> paramValues = new HashMap<String, String>();
+        Map<String, String> paramValues = new HashMap<>();
         public SignWrapper(Sign sign) {
             this.sign = sign;
             for (final SignParameter p : this.sign.params) {
@@ -574,8 +574,8 @@ class RoadSignInputDialog extends ExtendedDialog {
     }
 
     public class PreviewTableModel extends AbstractTableModel {
-        private List<String> keys = new ArrayList<String>();
-        private List<String> values = new ArrayList<String>();
+        private List<String> keys = new ArrayList<>();
+        private List<String> values = new ArrayList<>();
 
         int rows=3;
         String[] header = {tr("Key"), tr("Value")};
@@ -606,11 +606,11 @@ class RoadSignInputDialog extends ExtendedDialog {
          * Analyse the selection and derive corresponding tags.
          */
         public void update() {
-            final TreeMap<String, String> map= new TreeMap<String, String>();
+            final TreeMap<String, String> map= new TreeMap<>();
             String traffic_sign = "";
 
             for (SignCombination sc : sel.combos) {
-                final Map<String, String> env = new HashMap<String, String>();
+                final Map<String, String> env = new HashMap<>();
                 String combo_traffic_sign = "";
 
                 /**
@@ -620,8 +620,8 @@ class RoadSignInputDialog extends ExtendedDialog {
                 class TagEvaluater {
                     String key;
                     String default_value;
-                    List<String> values = new ArrayList<String>();
-                    List<String> conditions = new ArrayList<String>();
+                    List<String> values = new ArrayList<>();
+                    List<String> conditions = new ArrayList<>();
                     //String ident;
                     public TagEvaluater(Tag t) {
                         key = t.key.evaluate(env);
@@ -652,7 +652,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                         if (conditions.isEmpty())
                             return Collections.singletonMap(key, value);
                         else {
-                            Map<String, String> result = new HashMap<String, String>();
+                            Map<String, String> result = new HashMap<>();
                             for (String c : conditions) {
                                 result.put(key+":"+c, value);
                             }
@@ -661,7 +661,7 @@ class RoadSignInputDialog extends ExtendedDialog {
                     }
                 }
 
-                Map<String, TagEvaluater> tags = new LinkedHashMap<String, TagEvaluater>();
+                Map<String, TagEvaluater> tags = new LinkedHashMap<>();
                 for (SignWrapper sw : sc.signs) {
                     for (Map.Entry<String,String> entry : sw.paramValues.entrySet()) {
                         env.put(entry.getKey(), entry.getValue());

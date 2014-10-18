@@ -407,8 +407,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         building.clearAngleSnap();
         // update snap only if selection isn't too big
         if (newSelection.size() <= 10) {
-            LinkedList<Node> nodes = new LinkedList<Node>();
-            LinkedList<Way> ways = new LinkedList<Way>();
+            LinkedList<Node> nodes = new LinkedList<>();
+            LinkedList<Way> ways = new LinkedList<>();
 
             for (OsmPrimitive p : newSelection) {
                 switch (p.getType()) {

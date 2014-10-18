@@ -21,7 +21,7 @@ public class SnapshotEngine extends EngineWrapper{
     protected final static Object NOT_INIT_YET = new Object();
 
 
-    protected final Map<Snapshot, String> snapshots = new ConcurrentHashMap<Snapshot, String>();
+    protected final Map<Snapshot, String> snapshots = new ConcurrentHashMap<>();
 
 
     protected SnapshotEngine(Engine engine) {

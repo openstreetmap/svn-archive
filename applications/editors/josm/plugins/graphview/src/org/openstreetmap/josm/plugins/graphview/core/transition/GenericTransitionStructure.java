@@ -32,13 +32,13 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
     private static final Collection<Segment> EMPTY_SEGMENT_LIST =
         Collections.unmodifiableList(new ArrayList<Segment>(0));
     private static final Collection<Restriction> EMPTY_RESTRICTION_COLLECTION =
-        new ArrayList<Restriction>(0);
+        new ArrayList<>(0);
 
     private static class SegmentNodeImpl implements SegmentNode {
         private final double lat;
         private final double lon;
-        private final List<Segment> inboundSegments = new LinkedList<Segment>();
-        private final List<Segment> outboundSegments = new LinkedList<Segment>();
+        private final List<Segment> inboundSegments = new LinkedList<>();
+        private final List<Segment> outboundSegments = new LinkedList<>();
         private final Map<RoadPropertyType<?>, Object> properties;
         public SegmentNodeImpl(double lat, double lon, Map<RoadPropertyType<?>, Object> properties) {
             assert properties != null;
@@ -147,7 +147,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         }
     }
 
-    private final Set<TransitionStructureObserver> observers = new HashSet<TransitionStructureObserver>();
+    private final Set<TransitionStructureObserver> observers = new HashSet<>();
 
     private final Collection<RoadPropertyType<?>> properties;
 
@@ -159,8 +159,8 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
     private AccessEvaluator<N, W> accessEvaluator;
 
     private Collection<SegmentNode> nodes = null;
-    private Collection<Segment> segments = new LinkedList<Segment>();
-    private Collection<Restriction> restrictions = new LinkedList<Restriction>();
+    private Collection<Segment> segments = new LinkedList<>();
+    private Collection<Restriction> restrictions = new LinkedList<>();
 
     public GenericTransitionStructure(
             AccessParameters accessParameters, AccessRuleset ruleset,
@@ -200,7 +200,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
 
             assert dataSource != null;
 
-            accessEvaluator = new RulesetAccessEvaluator<N, W, R, M>(
+            accessEvaluator = new RulesetAccessEvaluator<>(
                     dataSource,
                     this.ruleset,
                     this.accessParameters);
@@ -229,11 +229,11 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
      */
     protected void updateData() {
 
-        ArrayList<SegmentNode> nodes = new ArrayList<SegmentNode>();
-        ArrayList<Segment> segments = new ArrayList<Segment>();
+        ArrayList<SegmentNode> nodes = new ArrayList<>();
+        ArrayList<Segment> segments = new ArrayList<>();
 
-        Map<N, SegmentNodeImpl> nodeCreationMap = new HashMap<N, SegmentNodeImpl>();
-        Map<W, List<Segment>> waySegmentMap = new HashMap<W, List<Segment>>();
+        Map<N, SegmentNodeImpl> nodeCreationMap = new HashMap<>();
+        Map<W, List<Segment>> waySegmentMap = new HashMap<>();
 
         /* create segments (nodes are created only when included in a segment) */
 
@@ -371,7 +371,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
 
         assert relations != null && nodeCreationMap != null && waySegmentMap != null;
 
-        Collection<Restriction> results = new LinkedList<Restriction>();
+        Collection<Restriction> results = new LinkedList<>();
 
         for (R relation : relations) {
 
@@ -403,9 +403,9 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         /* collect information about the relation */
 
         W fromWay = null;
-        Collection<N> viaNodes = new LinkedList<N>();
-        Collection<W> viaWays = new LinkedList<W>();
-        Collection<W> toWays = new LinkedList<W>();
+        Collection<N> viaNodes = new LinkedList<>();
+        Collection<W> viaWays = new LinkedList<>();
+        Collection<W> toWays = new LinkedList<>();
 
         for (M member : dataSource.getMembers(relation)) {
 
@@ -441,7 +441,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
                     fromWay, viaNodes, viaWays, toWays);
 
         } else {
-            return new ArrayList<Restriction>(0);
+            return new ArrayList<>(0);
         }
     }
 
@@ -450,7 +450,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
             Map<N, SegmentNodeImpl> nodeCreationMap, Map<W, List<Segment>> waySegmentMap,
             W fromWay, Collection<N> viaNodes, Collection<W> viaWays, Collection<W> toWays) {
 
-        Collection<SegmentNode> nodesCreatedFromViaNodes = new ArrayList<SegmentNode>(viaNodes.size());
+        Collection<SegmentNode> nodesCreatedFromViaNodes = new ArrayList<>(viaNodes.size());
         for (N viaNode : viaNodes) {
             if (nodeCreationMap.containsKey(viaNode)) {
                 nodesCreatedFromViaNodes.add(nodeCreationMap.get(viaNode));
@@ -482,7 +482,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
          * via segments are segments created from via ways
          * or segments starting and ending with nodes created from via nodes */
 
-        ArrayList<Segment> viaSegments = new ArrayList<Segment>();
+        ArrayList<Segment> viaSegments = new ArrayList<>();
 
         for (W viaWay : viaWays) {
             viaSegments.addAll(waySegmentMap.get(viaWay));
@@ -501,7 +501,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         /* create a set with all nodes that are based on via members */
 
         Set<SegmentNode> nodesCreatedFromViaMembers
-        = new HashSet<SegmentNode>(nodesCreatedFromViaNodes);
+        = new HashSet<>(nodesCreatedFromViaNodes);
 
         for (W viaWay : viaWays) {
             for (N viaWayNode : dataSource.getNodes(viaWay)) {
@@ -517,7 +517,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
          */
 
         Segment fromSegment = null;
-        Collection<Segment> toSegments = new ArrayList<Segment>();
+        Collection<Segment> toSegments = new ArrayList<>();
 
         for (Segment possibleFromSegment : waySegmentMap.get(fromWay)) {
             if (nodesCreatedFromViaMembers.contains(possibleFromSegment.getNode2())) {
@@ -594,7 +594,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
 
         /* create restriction */
 
-        Collection<Restriction> results = new ArrayList<Restriction>(1);
+        Collection<Restriction> results = new ArrayList<>(1);
         results.add(new RestrictionImpl(fromSegment, viaSegments, toSegments));
         return results;
     }
@@ -617,7 +617,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
         assert nodeCreationMap != null;
         assert waySegmentMap != null;
 
-        Collection<Restriction> results = new LinkedList<Restriction>();
+        Collection<Restriction> results = new LinkedList<>();
 
         for (N node : nodeCreationMap.keySet()) {
 
@@ -644,7 +644,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
      */
     private Map<RoadPropertyType<?>, Object> getWayPropertyMap(W way, boolean forward) {
         Map<RoadPropertyType<?>, Object> propertyValues;
-        propertyValues = new HashMap<RoadPropertyType<?>, Object>();
+        propertyValues = new HashMap<>();
         for (RoadPropertyType<?> property : properties) {
             Object value = property.evaluateW(way, forward, accessParameters, dataSource);
             if (value != null) {
@@ -660,7 +660,7 @@ public class GenericTransitionStructure<N, W, R, M> implements TransitionStructu
      */
     private Map<RoadPropertyType<?>, Object> getNodePropertyMap(N node) {
         Map<RoadPropertyType<?>, Object> propertyValues;
-        propertyValues = new HashMap<RoadPropertyType<?>, Object>();
+        propertyValues = new HashMap<>();
         for (RoadPropertyType<?> property : properties) {
             Object value = property.evaluateN(node, accessParameters, dataSource);
             if (value != null) {

@@ -62,7 +62,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
         GeoImageLayer layer = getLayer();
 
-        final List<ImageEntry> images = new ArrayList<ImageEntry>();
+        final List<ImageEntry> images = new ArrayList<>();
         for (ImageEntry e : layer.getImages()) {
              /* Only write lat/lon to the file, if the position is known and
                 we have a time from the correlation to the gpx track. */

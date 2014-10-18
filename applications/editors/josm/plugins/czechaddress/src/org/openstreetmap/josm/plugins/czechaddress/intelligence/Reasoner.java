@@ -43,17 +43,17 @@ public class Reasoner {
     public static final int MATCH_NOMATCH   = 0;
 
     private     Map<OsmPrimitive, AddressElement> primBestIndex
-      = new HashMap<OsmPrimitive, AddressElement> ();
+      = new HashMap<> ();
     private     Map<AddressElement, OsmPrimitive> elemBestIndex
-      = new HashMap<AddressElement, OsmPrimitive> ();
+      = new HashMap<> ();
 
     private     Map<OsmPrimitive,   Map<AddressElement, Integer>> primMatchIndex
-      = new HashMap<OsmPrimitive,   Map<AddressElement, Integer>> ();
+      = new HashMap<> ();
     private     Map<AddressElement, Map<OsmPrimitive,   Integer>> elemMatchIndex
-      = new HashMap<AddressElement, Map<OsmPrimitive,   Integer>> ();
+      = new HashMap<> ();
 
-    private Set<OsmPrimitive>   primToUpdate = new HashSet<OsmPrimitive>();
-    private Set<AddressElement> elemToUpdate = new HashSet<AddressElement>();
+    private Set<OsmPrimitive>   primToUpdate = new HashSet<>();
+    private Set<AddressElement> elemToUpdate = new HashSet<>();
 
     public static Logger logger = Logger.getLogger(Reasoner.class.getName());
 
@@ -126,8 +126,8 @@ public class Reasoner {
     public void closeTransaction() {
         assert transactionOpened;
 
-        Set<AddressElement> elemChanges = new HashSet<AddressElement>();
-        Set<OsmPrimitive>   primChanges = new HashSet<OsmPrimitive>();
+        Set<AddressElement> elemChanges = new HashSet<>();
+        Set<OsmPrimitive>   primChanges = new HashSet<>();
 
         for (OsmPrimitive prim : primToUpdate) {
             AddressElement bestMatch = getStrictlyBest(prim);
@@ -203,7 +203,7 @@ public class Reasoner {
         Map<AddressElement, Integer> matches = primMatchIndex.get(prim);
         if (matches == null) {
             logger.log(Level.FINE, "new primitive detected", AddressElement.getName(prim));
-            matches = new HashMap<AddressElement, Integer>();
+            matches = new HashMap<>();
             primMatchIndex.put(prim, matches);
             primToUpdate.add(prim);
         }
@@ -231,7 +231,7 @@ public class Reasoner {
         Map<OsmPrimitive, Integer> matches = elemMatchIndex.get(elem);
         if (matches == null) {
             logger.log(Level.FINE, "new element detected", elem);
-            matches = new HashMap<OsmPrimitive, Integer>();
+            matches = new HashMap<>();
             elemMatchIndex.put(elem, matches);
             elemToUpdate.add(elem);
         }
@@ -471,7 +471,7 @@ public class Reasoner {
      */
     public Set<AddressElement> getCandidates(OsmPrimitive prim) {
 
-        Set<AddressElement> result = new HashSet<AddressElement>();
+        Set<AddressElement> result = new HashSet<>();
         if (primMatchIndex.get(prim) == null) return result;
 
         int best = MATCH_NOMATCH;
@@ -505,7 +505,7 @@ public class Reasoner {
      */
     public Set<OsmPrimitive> getCandidates(AddressElement elem) {
 
-        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> result = new HashSet<>();
         if (elemMatchIndex.get(elem) == null) return result;
 
         int best = MATCH_NOMATCH;
@@ -626,7 +626,7 @@ public class Reasoner {
      * Returns all elements which are not translatable.
      */
     public Set<AddressElement> getUnassignedElements() {
-        Set<AddressElement> result = new HashSet<AddressElement>();
+        Set<AddressElement> result = new HashSet<>();
         for (AddressElement elem : elemMatchIndex.keySet())
             if (translate(elem) == null)
                 result.add(elem);
@@ -637,7 +637,7 @@ public class Reasoner {
      * Returns all primitives which are not translatable.
      */
     public Set<OsmPrimitive> getUnassignedPrimitives() {
-        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> result = new HashSet<>();
         for (OsmPrimitive prim : primMatchIndex.keySet())
             if (translate(prim) == null)
                 result.add(prim);
@@ -649,7 +649,7 @@ public class Reasoner {
      * the last {@code reset}.
      */
     public Set<AddressElement> getAllElements() {
-        Set<AddressElement> result = new HashSet<AddressElement>();
+        Set<AddressElement> result = new HashSet<>();
         result.addAll(elemMatchIndex.keySet());
         return result;
     }
@@ -659,7 +659,7 @@ public class Reasoner {
      * the last {@code reset}.
      */
     public Set<OsmPrimitive> getAllPrimitives() {
-        Set<OsmPrimitive> result = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> result = new HashSet<>();
         result.addAll(primMatchIndex.keySet());
         return result;
     }
@@ -694,7 +694,7 @@ public class Reasoner {
     /**
      * Set of listeners currently hooked to changes in this reasoner.
      */
-    private Set<ReasonerListener> listeners = new HashSet<ReasonerListener>();
+    private Set<ReasonerListener> listeners = new HashSet<>();
 
     /**
      * Adds a new listener to receive reasoner's status changes.

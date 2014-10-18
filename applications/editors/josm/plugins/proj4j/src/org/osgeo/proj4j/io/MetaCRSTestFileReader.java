@@ -47,7 +47,7 @@ public class MetaCRSTestFileReader
   private List<MetaCRSTestCase> parseFile(LineNumberReader lineReader)
   throws IOException
   {
-    List<MetaCRSTestCase> tests = new ArrayList<MetaCRSTestCase>();
+    List<MetaCRSTestCase> tests = new ArrayList<>();
     boolean isHeaderRead = false;
     while (true) {
       String line = lineReader.readLine();

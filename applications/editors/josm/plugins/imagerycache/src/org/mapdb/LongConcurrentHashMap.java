@@ -385,7 +385,7 @@ public class LongConcurrentHashMap< V>
                 else {
                     oldValue = null;
                     ++modCount;
-                    tab[index] = new HashEntry<V>(key, hash, first, value);
+                    tab[index] = new HashEntry<>(key, hash, first, value);
                     count = c; // write-volatile
                 }
                 return oldValue;
@@ -447,7 +447,7 @@ public class LongConcurrentHashMap< V>
                         for (HashEntry<V> p = e; p != lastRun; p = p.next) {
                             int k = p.hash & sizeMask;
                             HashEntry<V> n = newTable[k];
-                            newTable[k] = new HashEntry<V>(p.key, p.hash,
+                            newTable[k] = new HashEntry<>(p.key, p.hash,
                                     n, p.value);
                         }
                     }
@@ -481,7 +481,7 @@ public class LongConcurrentHashMap< V>
                         ++modCount;
                         HashEntry<V> newFirst = e.next;
                         for (HashEntry<V> p = first; p != e; p = p.next)
-                            newFirst = new HashEntry<V>(p.key, p.hash,
+                            newFirst = new HashEntry<>(p.key, p.hash,
                                                           newFirst, p.value);
                         tab[index] = newFirst;
                         count = c; // write-volatile
@@ -558,7 +558,7 @@ public class LongConcurrentHashMap< V>
             cap <<= 1;
 
         for (int i = 0; i < this.segments.length; ++i)
-            this.segments[i] = new Segment<V>(cap, loadFactor);
+            this.segments[i] = new Segment<>(cap, loadFactor);
     }
 
     /**

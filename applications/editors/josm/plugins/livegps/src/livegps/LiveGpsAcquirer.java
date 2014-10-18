@@ -34,7 +34,7 @@ public class LiveGpsAcquirer implements Runnable {
     private boolean shutdownFlag = false;
     private boolean JSONProtocol = true;
 
-    private final List<PropertyChangeListener> propertyChangeListener = new ArrayList<PropertyChangeListener>();
+    private final List<PropertyChangeListener> propertyChangeListener = new ArrayList<>();
     private PropertyChangeEvent lastStatusEvent;
     private PropertyChangeEvent lastDataEvent;
 

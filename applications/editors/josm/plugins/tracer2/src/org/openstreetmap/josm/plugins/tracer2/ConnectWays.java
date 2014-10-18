@@ -145,8 +145,8 @@ public class ConnectWays {
      * @return Commands.
      */
     public static Command connect(Way newWay, LatLon pos, ServerParam param, boolean ctrl, boolean alt) {
-        LinkedList<Command> cmds = new LinkedList<Command>();
-        LinkedList<Command> cmds2 = new LinkedList<Command>();
+        LinkedList<Command> cmds = new LinkedList<>();
+        LinkedList<Command> cmds2 = new LinkedList<>();
         
         s_oParam = param;
         s_bCtrl = ctrl;
@@ -213,8 +213,8 @@ public class ConnectWays {
      * @return Commands.
      */
     public static List<Command> connectTo() {
-        Map<Way, Way> modifiedWays = new HashMap<Way, Way>();
-        LinkedList<Command> cmds = new LinkedList<Command>();
+        Map<Way, Way> modifiedWays = new HashMap<>();
+        LinkedList<Command> cmds = new LinkedList<>();
         Way way = new Way(s_oWay);
         for (int i = 0; i < way.getNodesCount() - 1; i++) {
             Node n = way.getNode(i);
@@ -270,7 +270,7 @@ public class ConnectWays {
      * @return List of Commands.
      */
     private static List<Command> mergeNodes(Node n1, Node n2){
-        List<Command> cmds = new LinkedList<Command>();
+        List<Command> cmds = new LinkedList<>();
         cmds.add(new MoveCommand(n2,
                  (n1.getEastNorth().getX() - n2.getEastNorth().getX())/2,
                  (n1.getEastNorth().getY() - n2.getEastNorth().getY())/2

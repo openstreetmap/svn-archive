@@ -69,11 +69,11 @@ public class ChangesetReverter {
     private final ChangesetDataSet cds; // Current changeset data
     private DataSet nds; // Dataset that contains new objects downloaded by reverter
 
-    private final HashSet<PrimitiveId> missing = new HashSet<PrimitiveId>();
+    private final HashSet<PrimitiveId> missing = new HashSet<>();
 
-    private final HashSet<HistoryOsmPrimitive> created = new HashSet<HistoryOsmPrimitive>();
-    private final HashSet<HistoryOsmPrimitive> updated = new HashSet<HistoryOsmPrimitive>();
-    private final HashSet<HistoryOsmPrimitive> deleted = new HashSet<HistoryOsmPrimitive>();
+    private final HashSet<HistoryOsmPrimitive> created = new HashSet<>();
+    private final HashSet<HistoryOsmPrimitive> updated = new HashSet<>();
+    private final HashSet<HistoryOsmPrimitive> deleted = new HashSet<>();
 
     //// Handling missing objects
     ////////////////////////////////////////
@@ -279,13 +279,13 @@ public class ChangesetReverter {
     private static Conflict<? extends OsmPrimitive> CreateConflict(OsmPrimitive p, boolean isMyDeleted) {
         switch (p.getType()) {
         case NODE:
-            return new Conflict<Node>((Node)p,new Node((Node)p), isMyDeleted);
+            return new Conflict<>((Node)p,new Node((Node)p), isMyDeleted);
         case CLOSEDWAY:
         case WAY:
-            return new Conflict<Way>((Way)p,new Way((Way)p), isMyDeleted);
+            return new Conflict<>((Way)p,new Way((Way)p), isMyDeleted);
         case MULTIPOLYGON:
         case RELATION:
-            return new Conflict<Relation>((Relation)p,new Relation((Relation)p), isMyDeleted);
+            return new Conflict<>((Relation)p,new Relation((Relation)p), isMyDeleted);
         default: throw new AssertionError();
         }
     }
@@ -347,7 +347,7 @@ public class ChangesetReverter {
         //////////////////////////////////////////////////////////////////////////
         // Create a set of objects to be deleted
 
-        HashSet<OsmPrimitive> toDelete = new HashSet<OsmPrimitive>();
+        HashSet<OsmPrimitive> toDelete = new HashSet<>();
         // Mark objects that has visible=false to be deleted
         for (OsmPrimitive p : nds.allPrimitives()) {
             if (!p.isVisible()) {
@@ -364,7 +364,7 @@ public class ChangesetReverter {
         //////////////////////////////////////////////////////////////////////////
         // Check reversion against current dataset and create necessary conflicts
 
-        HashSet<OsmPrimitive> conflicted = new HashSet<OsmPrimitive>();
+        HashSet<OsmPrimitive> conflicted = new HashSet<>();
 
         for (Conflict<? extends OsmPrimitive> conflict : merger.getConflicts()) {
             cmds.add(new ConflictAddCommand(layer,conflict));

@@ -37,9 +37,9 @@ public class ReadPostprocessor implements OsmServerReadPostprocessor {
     @Override
     public void postprocessDataSet(DataSet ds, ProgressMonitor progress) {
         
-		nodeList = new ArrayList<Long>();
-		wayList = new ArrayList<Long>();
-		relationList = new ArrayList<Long>();
+		nodeList = new ArrayList<>();
+		wayList = new ArrayList<>();
+		relationList = new ArrayList<>();
 
 		Visitor adder = new Visitor() {
 			@Override

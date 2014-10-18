@@ -92,7 +92,7 @@ public class Lakewalker {
 
             Boolean detect_loop = false;
 
-            ArrayList<double[]> nodelist = new ArrayList<double[]>();
+            ArrayList<double[]> nodelist = new ArrayList<>();
 
             int[] xy = geo_to_xy(lat,lon,this.resolution);
 
@@ -254,7 +254,7 @@ public class Lakewalker {
         }
 
         double[] test_v = nodes.get(0);
-        ArrayList<double[]> reducednodes = new ArrayList<double[]>();
+        ArrayList<double[]> reducednodes = new ArrayList<>();
 
         double prox_sq = Math.pow(proximity, 2);
 
@@ -361,7 +361,7 @@ public class Lakewalker {
         double[] first = nodes.get(0);
         double[] last = nodes.get(nodes.size()-1);
 
-        ArrayList<double[]> new_nodes = new ArrayList<double[]>();
+        ArrayList<double[]> new_nodes = new ArrayList<>();
 
         double d = 0;
 
@@ -390,7 +390,7 @@ public class Lakewalker {
     }
 
     private ArrayList<double[]> sublist(ArrayList<double[]> l, int i, int f) throws ArrayIndexOutOfBoundsException {
-        ArrayList<double[]> sub = new ArrayList<double[]>();
+        ArrayList<double[]> sub = new ArrayList<>();
 
         if(f<i || i < 0 || f < 0 || f > l.size()){
             throw new ArrayIndexOutOfBoundsException();

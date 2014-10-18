@@ -28,7 +28,7 @@ public class PanelRadar extends JPanel {
 		}
 	};
 	private JComboBox<String> radioCatBox;
-	private EnumMap<Cat, Integer> radioCats = new EnumMap<Cat, Integer>(Cat.class);
+	private EnumMap<Cat, Integer> radioCats = new EnumMap<>(Cat.class);
 	private ActionListener alRadioCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : radioCats.keySet()) {
@@ -45,7 +45,7 @@ public class PanelRadar extends JPanel {
 	public JRadioButton ramarkButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RamarkButton.png")));
 	public JRadioButton raconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RaconButton.png")));
 	public JRadioButton leadingButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/LeadingRaconButton.png")));
-	private EnumMap<Rtb, JRadioButton> rads = new EnumMap<Rtb, JRadioButton>(Rtb.class);
+	private EnumMap<Rtb, JRadioButton> rads = new EnumMap<>(Rtb.class);
 	private ActionListener alRad = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Rtb rtb : rads.keySet()) {

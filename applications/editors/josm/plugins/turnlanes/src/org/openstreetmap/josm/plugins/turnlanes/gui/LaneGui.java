@@ -240,7 +240,7 @@ final class LaneGui {
                 return activate(old);
             }
             
-            final List<Road> via = new ArrayList<Road>();
+            final List<Road> via = new ArrayList<>();
             assert (s.getViaConnectors().size() & 1) == 0;
             for (int i = 0; i < s.getViaConnectors().size(); i += 2) {
                 final RoadGui.ViaConnector a = s.getViaConnectors().get(i);

@@ -100,7 +100,7 @@ public class AccessRulesetReaderTest {
     }
 
     private static TagGroup createTagGroup(Tag... tags) {
-        Map<String, String> tagMap = new HashMap<String, String>();
+        Map<String, String> tagMap = new HashMap<>();
         for (Tag tag : tags) {
             tagMap.put(tag.key, tag.value);
         }

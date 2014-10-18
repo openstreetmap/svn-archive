@@ -15,7 +15,7 @@ public class OSMIFeatureTracker {
 
 	public OSMIFeatureTracker(
 			FeatureCollection<SimpleFeatureType, SimpleFeature> featuresIn) {
-		hashFeatures = new HashMap<Long, SimpleFeature>();
+		hashFeatures = new HashMap<>();
 		features = new MemoryFeatureCollection(featuresIn.getSchema());
 
 		for (Iterator<?> it = features.iterator(); it.hasNext();) {

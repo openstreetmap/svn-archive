@@ -165,7 +165,7 @@ public abstract class AbstractAddressEditAction extends JosmAction implements IA
             throw new RuntimeException("TX has not been closed (missing finishTransaction?)");
         }
 
-        commands = new ArrayList<Command>();
+        commands = new ArrayList<>();
         if (StringUtils.isNullOrEmpty(txName)) {
             throw new RuntimeException("Transaction must have a name");
         }

@@ -53,7 +53,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     protected static final Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
             CadastrePlugin.class.getResource("/images/cadastre_small.png")));
 
-    private Vector<GeorefImage> images = new Vector<GeorefImage>();
+    private Vector<GeorefImage> images = new Vector<>();
 
     public Lock imagesLock = new ReentrantLock();
 
@@ -66,7 +66,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     public static int currentFormat;
 
-    private ArrayList<EastNorthBound> dividedBbox = new ArrayList<EastNorthBound>();
+    private ArrayList<EastNorthBound> dividedBbox = new ArrayList<>();
 
     private String location = "";
 
@@ -539,8 +539,8 @@ public class WMSLayer extends Layer implements ImageObserver {
             EastNorth max = images.get(images.size()-1).max;
             int oldImgWidth = images.get(0).image.getWidth();
             int oldImgHeight = images.get(0).image.getHeight();
-            HashSet<Double> lx = new HashSet<Double>();
-            HashSet<Double> ly = new HashSet<Double>();
+            HashSet<Double> lx = new HashSet<>();
+            HashSet<Double> ly = new HashSet<>();
             for (GeorefImage img : images) {
                 lx.add(img.min.east());
                 ly.add(img.min.north());

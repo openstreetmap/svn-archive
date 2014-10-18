@@ -44,7 +44,7 @@ public class CellRangeAddressList {
 	protected final List<CellRangeAddress> _list;
 
 	public CellRangeAddressList() {
-		_list = new ArrayList<CellRangeAddress>();
+		_list = new ArrayList<>();
 	}
 	/**
 	 * @param in the RecordInputstream to read the record from

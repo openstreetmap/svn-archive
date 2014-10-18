@@ -24,11 +24,11 @@ import org.xml.sax.SAXException;
  */
 public class GuessAddressRunnable extends PleaseWaitRunnable {
     private List<OSMAddress> addressesToGuess;
-    private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<IProgressMonitorFinishedListener>();
+    private List<IProgressMonitorFinishedListener> finishListeners = new ArrayList<>();
     private boolean isRunning = false;
     private boolean canceled;
 
-    private GuessedValueHandler[] wayGuessers = new GuessedValueHandler[]{new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG)}; 
+    private GuessedValueHandler[] wayGuessers = new GuessedValueHandler[]{new GuessStreetValueHandler(TagUtils.ADDR_STREET_TAG)};
     private GuessedValueHandler[] nodeGuessers = new GuessedValueHandler[]{
             new GuessedValueHandler(TagUtils.ADDR_POSTCODE_TAG, 500.0),
             new GuessedValueHandler(TagUtils.ADDR_CITY_TAG, 5000.0),
@@ -98,7 +98,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
      */
     protected void fireFinished() {
         for (IProgressMonitorFinishedListener l : finishListeners) {
-            l.finished();            
+            l.finished();
         }
         // this event is fired only once, then we disconnect all listeners
         finishListeners.clear();
@@ -129,7 +129,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
         try {
             progressMonitor.setTicksCount(addressesToGuess.size());
 
-            List<OSMAddress> shadowCopy = new ArrayList<OSMAddress>(addressesToGuess);
+            List<OSMAddress> shadowCopy = new ArrayList<>(addressesToGuess);
             for (OSMAddress aNode : shadowCopy) {
                 if (!aNode.needsGuess()) { // nothing to do
                     progressMonitor.worked(1);
@@ -147,7 +147,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                 // Run way-related guessers
                 for (int i = 0; i < wayGuessers.length; i++) {
                     GuessedValueHandler guesser = wayGuessers[i];
-                    
+
                     guesser.setAddressNode(aNode);
 
                     // visit osm data
@@ -155,19 +155,19 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                         if (canceled) {
                             break;
                         }
-                        way.accept(guesser);                        
+                        way.accept(guesser);
                     }
-                    
+
                     String guessedVal = guesser.getCurrentValue();
                     if (guessedVal != null) {
                         aNode.setGuessedValue(guesser.getTag(), guessedVal, guesser.getSourceNode());
                     }
                 }
-                
+
                 // Run node-related guessers
                 for (int i = 0; i < nodeGuessers.length; i++) {
                     GuessedValueHandler guesser = nodeGuessers[i];
-                    
+
                     guesser.setAddressNode(aNode);
 
                     // visit osm data
@@ -175,9 +175,9 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                         if (canceled) {
                             break;
                         }
-                        node.accept(guesser);                        
+                        node.accept(guesser);
                     }
-                    
+
                     String guessedVal = guesser.getCurrentValue();
                     if (guessedVal != null) {
                         aNode.setGuessedValue(guesser.getTag(), guessedVal, guesser.getSourceNode());
@@ -213,10 +213,10 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
             if (TagUtils.isStreetSupportingHousenumbers(w)) {
                 OSMAddress aNode = getAddressNode();
                 String newVal = TagUtils.getNameValue(w);
-                
+
                 if (newVal != null) {
                     double dist = OsmUtils.getMinimumDistanceToWay(aNode.getCoor(), w);
-                    
+
                     if (dist < minDist && dist < getMaxDistance()) {
                         minDist = dist;
                         currentValue = newVal;

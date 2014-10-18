@@ -37,7 +37,7 @@ public class FloatPropertyColorScheme implements ColorScheme {
         assert propertyClass != null && colorMap != null && defaultColor != null;
 
         this.propertyClass = propertyClass;
-        this.colorMap = new HashMap<Float, Color>(colorMap);
+        this.colorMap = new HashMap<>(colorMap);
         this.defaultColor = defaultColor;
     }
 
@@ -64,7 +64,7 @@ public class FloatPropertyColorScheme implements ColorScheme {
 
     public Color getNodeColor(GraphNode node) {
 
-        List<Color> segmentColors = new ArrayList<Color>();
+        List<Color> segmentColors = new ArrayList<>();
 
 
 
@@ -105,7 +105,7 @@ public class FloatPropertyColorScheme implements ColorScheme {
 
         } else {
 
-            LinkedList<Float> valuesWithDefinedColor = new LinkedList<Float>(colorMap.keySet());
+            LinkedList<Float> valuesWithDefinedColor = new LinkedList<>(colorMap.keySet());
             Collections.sort(valuesWithDefinedColor);
 
             if (value <= valuesWithDefinedColor.getFirst()) {

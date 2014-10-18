@@ -42,7 +42,7 @@ public class Street extends ElementWithHouses  {
 
     @Override
     public List<Proposal> getDiff(OsmPrimitive prim) {
-        List<Proposal> props = new NotNullList<Proposal>();
+        List<Proposal> props = new NotNullList<>();
 
         props.add(getStringFieldDiff(PrimUtils.KEY_NAME, prim.get(PrimUtils.KEY_NAME), getName()));
         return props;

@@ -48,7 +48,7 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
             @Override
             public void mousePressed(MouseEvent evt) {
                 if (imageLayer != null) {
-                    List<GeoImageLayer> layers = new ArrayList<GeoImageLayer>(1);
+                    List<GeoImageLayer> layers = new ArrayList<>(1);
                     layers.add(imageLayer);
                     worker.doMousePressed(evt, layers);
                 }

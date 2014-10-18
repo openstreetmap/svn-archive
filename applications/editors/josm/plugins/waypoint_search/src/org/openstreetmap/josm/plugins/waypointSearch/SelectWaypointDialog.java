@@ -21,7 +21,7 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
     private JTextField searchPattern = new JTextField(20);
     private DefaultListModel<String> listModel = new DefaultListModel<>();
     private JList<String> searchResult = new JList<>(listModel);
-    private List<Marker> SearchResultObjectCache = new ArrayList<Marker>();
+    private List<Marker> SearchResultObjectCache = new ArrayList<>();
     private boolean first_time_search = true;
     private Engine engine = new Engine();
     

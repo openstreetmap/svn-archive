@@ -70,7 +70,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
                 enAdjOther2 = adjOther2.getEastNorth();
                 
                 // In order have a chance to align, (enAdjOther1, enAdjOther2 and endpoint) must be collinear
-                ArrayList<EastNorth> enAdjPts = new ArrayList<EastNorth>(3);
+                ArrayList<EastNorth> enAdjPts = new ArrayList<>(3);
                 enAdjPts.add(enAdjOther1);
                 enAdjPts.add(endpoint.getEastNorth());
                 enAdjPts.add(enAdjOther2);
@@ -153,7 +153,7 @@ public class AlignWaysCmdKeepAngles extends AlignWaysCmdKeepLength {
     }
 
     private boolean isEnSetCollinear(ArrayList<EastNorth> enAdjPts) {
-        ArrayList<AlignWaysGeomPoint> awAdjPts = new ArrayList<AlignWaysGeomPoint>();
+        ArrayList<AlignWaysGeomPoint> awAdjPts = new ArrayList<>();
         
         for (EastNorth en : enAdjPts) {
             AlignWaysGeomPoint pt = new AlignWaysGeomPoint(en.getX(), en.getY());

@@ -188,7 +188,7 @@ public class House extends AddressElement {
     @Override
     public List<Proposal> getDiff(OsmPrimitive prim) {
 
-        List<Proposal> props = new NotNullList<Proposal>();
+        List<Proposal> props = new NotNullList<>();
         ParentResolver resolver = new ParentResolver(this);
 
         props.add(getStringFieldDiff(PrimUtils.KEY_ADDR_HOUSE_N, prim.get(PrimUtils.KEY_ADDR_HOUSE_N), name));

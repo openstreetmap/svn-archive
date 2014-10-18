@@ -40,7 +40,7 @@ public class SdsApi extends SdsConnection {
     static public final int DEFAULT_MAX_NUM_RETRIES = 5;
 
     /** the collection of instantiated OSM APIs */
-    private static HashMap<String, SdsApi> instances = new HashMap<String, SdsApi>();
+    private static HashMap<String, SdsApi> instances = new HashMap<>();
     
     /**
      * replies the {@see OsmApi} for a given server URL

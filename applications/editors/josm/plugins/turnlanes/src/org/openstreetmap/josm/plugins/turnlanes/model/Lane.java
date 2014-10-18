@@ -26,7 +26,7 @@ public class Lane {
     }
     
     static List<Lane> load(Road.End roadEnd) {
-        final List<Lane> result = new ArrayList<Lane>();
+        final List<Lane> result = new ArrayList<>();
         int i;
         
         i = 0;
@@ -49,7 +49,7 @@ public class Lane {
     }
     
     static List<Double> loadLengths(Relation r, String key, double lengthBound) {
-        final List<Double> result = new ArrayList<Double>();
+        final List<Double> result = new ArrayList<>();
         
         if (r != null && r.get(key) != null) {
             for (String s : Constants.SPLIT_PATTERN.split(r.get(key))) {

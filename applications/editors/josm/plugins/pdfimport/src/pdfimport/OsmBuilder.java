@@ -65,7 +65,7 @@ public class OsmBuilder {
 
 
 	private void addLayer(DataSet target, LayerContents layer) {
-		Map<Point2D, Node> point2Node = new HashMap<Point2D, Node>();
+		Map<Point2D, Node> point2Node = new HashMap<>();
 
 		this.fillName = this.printColor(layer.info.fill);
 		this.lineName = this.printColor(layer.info.stroke);
@@ -81,7 +81,7 @@ public class OsmBuilder {
 		}
 
 		//insert ways
-		Map<PdfPath, Way> path2Way = new HashMap<PdfPath, Way>();
+		Map<PdfPath, Way> path2Way = new HashMap<>();
 
 		for (PdfPath path: layer.paths){
 			Way w = this.insertWay(path, point2Node, -1, false);
@@ -104,7 +104,7 @@ public class OsmBuilder {
 			for (PdfMultiPath mpath: layer.multiPaths) {
 				Relation rel = new Relation();
 
-				Map<String, String> keys = new HashMap<String, String>();
+				Map<String, String> keys = new HashMap<>();
 				keys.put("type", "multipolygon");
 				keys.put("area", "yes");
 				rel.setKeys(keys);
@@ -127,7 +127,7 @@ public class OsmBuilder {
 		}
 		this.monitorPos ++;
 
-		List<Node> nodes = new ArrayList<Node>(path.points.size());
+		List<Node> nodes = new ArrayList<>(path.points.size());
 
 		for (Point2D point: path.points) {
 			Node node = point2Node.get(point);
@@ -138,7 +138,7 @@ public class OsmBuilder {
 			nodes.add(node);
 		}
 
-		Map<String, String> keys = new HashMap<String, String>();
+		Map<String, String> keys = new HashMap<>();
 
 		if (this.mode != Mode.Draft) {
 			keys.put("PDF_nr", "" + path.nr);

@@ -18,8 +18,8 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 public class EditGpxTrack {
 
-    private final List<EditGpxTrackSegment> segments = new ArrayList<EditGpxTrackSegment>();
-    private final Map<String, Object> attributes = new HashMap<String, Object>();
+    private final List<EditGpxTrackSegment> segments = new ArrayList<>();
+    private final Map<String, Object> attributes = new HashMap<>();
     private boolean isDeleted;
 
     public EditGpxTrack(GpxTrack track) {
@@ -38,7 +38,7 @@ public class EditGpxTrack {
 
     public GpxTrack createGpxTrack(boolean anonTime, double minTime) {
 
-        Collection<Collection<WayPoint>> wayPoints = new ArrayList<Collection<WayPoint>>();
+        Collection<Collection<WayPoint>> wayPoints = new ArrayList<>();
 
         final DateFormat iso8601 =
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

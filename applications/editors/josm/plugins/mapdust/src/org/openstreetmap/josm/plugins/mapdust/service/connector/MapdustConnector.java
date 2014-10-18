@@ -371,7 +371,7 @@ public class MapdustConnector {
         String mapdustUri = Configuration.getInstance().getMapdustUrl();
         String mapdustApiKey = Configuration.getInstance().getMapdustKey();
         String urlString = null;
-        Map<String, String> requestParameters = new HashMap<String, String>();
+        Map<String, String> requestParameters = new HashMap<>();
         if (mapdustUri != null && mapdustApiKey != null) {
             urlString = mapdustUri;
             urlString += "/addBug";
@@ -408,7 +408,7 @@ public class MapdustConnector {
         String mapdustUri = Configuration.getInstance().getMapdustUrl();
         String mapdustApiKey = Configuration.getInstance().getMapdustKey();
         String urlString = null;
-        Map<String, String> requestParameters = new HashMap<String, String>();
+        Map<String, String> requestParameters = new HashMap<>();
         if (mapdustUri != null && mapdustApiKey != null) {
             urlString = mapdustUri;
             urlString += "/commentBug";
@@ -444,7 +444,7 @@ public class MapdustConnector {
         String mapdustUri = Configuration.getInstance().getMapdustUrl();
         String mapdustApiKey = Configuration.getInstance().getMapdustKey();
         String urlString = null;
-        Map<String, String> requestParameters = new HashMap<String, String>();
+        Map<String, String> requestParameters = new HashMap<>();
         if (mapdustUri != null && mapdustApiKey != null) {
             urlString = mapdustUri;
             urlString += "/changeBugStatus";

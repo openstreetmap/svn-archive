@@ -33,8 +33,8 @@ public class DiGraphSealer {
      * versiegelt den vorher gesetzten DiGraphen
      */
     public void sealingGraph() {
-        Vector<Integer> outgoingChannelIDs = new Vector<Integer>();
-        Vector<Integer> incomingChannelIDs = new Vector<Integer>();
+        Vector<Integer> outgoingChannelIDs = new Vector<>();
+        Vector<Integer> incomingChannelIDs = new Vector<>();
 
         for (int i = 0; i < digraph.numberOfChannels(); i++) {
             if (digraph.isInBBox(digraph.getChannelAtPosition(i).getFromNode()) == false) {

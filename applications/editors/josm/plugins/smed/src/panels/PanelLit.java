@@ -39,7 +39,7 @@ public class PanelLit extends JPanel {
 	};
 	public JLabel visibilityLabel;
 	public JComboBox<String> visibilityBox;
-	public EnumMap<Vis, Integer> visibilities = new EnumMap<Vis, Integer>(Vis.class);
+	public EnumMap<Vis, Integer> visibilities = new EnumMap<>(Vis.class);
 	private ActionListener alVisibility = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Vis vis : visibilities.keySet()) {
@@ -79,7 +79,7 @@ public class PanelLit extends JPanel {
 	};
 	public JLabel categoryLabel;
 	public JComboBox<String> categoryBox;
-	public EnumMap<Lit, Integer> categories = new EnumMap<Lit, Integer>(Lit.class);
+	public EnumMap<Lit, Integer> categories = new EnumMap<>(Lit.class);
 	private ActionListener alCategory = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Lit lit : categories.keySet()) {
@@ -115,7 +115,7 @@ public class PanelLit extends JPanel {
 	};
 	public JLabel exhibitionLabel;
 	public JComboBox<String> exhibitionBox;
-	public EnumMap<Exh, Integer> exhibitions = new EnumMap<Exh, Integer>(Exh.class);
+	public EnumMap<Exh, Integer> exhibitions = new EnumMap<>(Exh.class);
 	private ActionListener alExhibition = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Exh exh : exhibitions.keySet()) {

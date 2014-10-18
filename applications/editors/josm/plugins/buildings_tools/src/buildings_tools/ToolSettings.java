@@ -23,7 +23,7 @@ public final class ToolSettings {
     private static double width = 0;
     private static double lenstep = 0;
     private static boolean useAddr;
-    private static final Map<String, String> TAGS = new HashMap<String, String>();
+    private static final Map<String, String> TAGS = new HashMap<>();
     private static boolean autoSelect;
 
     public static void setAddrDialog(boolean _useAddr) {
@@ -53,7 +53,7 @@ public final class ToolSettings {
     }
 
     public static void saveTags() {
-        ArrayList<String> values = new ArrayList<String>(TAGS.size() * 2);
+        ArrayList<String> values = new ArrayList<>(TAGS.size() * 2);
         for (Entry<String, String> entry : TAGS.entrySet()) {
             values.add(entry.getKey());
             values.add(entry.getValue());

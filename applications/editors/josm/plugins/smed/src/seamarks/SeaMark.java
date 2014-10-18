@@ -29,7 +29,7 @@ public class SeaMark extends JPanel {
 		A, B, C, R, X
 	}
 
-	public static final EnumMap<Reg, String> RegSTR = new EnumMap<Reg, String>(Reg.class);
+	public static final EnumMap<Reg, String> RegSTR = new EnumMap<>(Reg.class);
 	static {
 		RegSTR.put(Reg.A, "iala-a");
 		RegSTR.put(Reg.B, "iala-b");
@@ -68,7 +68,7 @@ public class SeaMark extends JPanel {
 		CGUSTA, PILBOP, RSCSTA, RDOSTA, RADSTA
 	}
 
-	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<Obj, String>(Obj.class);
+	public static final EnumMap<Obj, String> ObjSTR = new EnumMap<>(Obj.class);
 	static {
 		ObjSTR.put(Obj.BCNCAR, "beacon_cardinal");
 		ObjSTR.put(Obj.BCNISD, "beacon_isolated_danger");
@@ -129,7 +129,7 @@ public class SeaMark extends JPanel {
 		BODY, BUOY, BEACON, LFLOAT, TOPMARK, LIGHT, MOORING, STATION, PLATFORM, NOTICE
 	}
 
-	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<Obj, Ent>(Obj.class);
+	public static final EnumMap<Obj, Ent> EntMAP = new EnumMap<>(Obj.class);
 	static {
 		EntMAP.put(Obj.BCNCAR, Ent.BEACON);
 		EntMAP.put(Obj.BCNISD, Ent.BEACON);
@@ -169,7 +169,7 @@ public class SeaMark extends JPanel {
 		NUL, LAT, CAR, SAW, ISD, SPP, LGT, STN, PLF, NTC
 	}
 
-	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<Obj, Grp>(Obj.class);
+	public static final EnumMap<Obj, Grp> GrpMAP = new EnumMap<>(Obj.class);
 	static {
 		GrpMAP.put(Obj.UNKOBJ, Grp.NUL);
 		GrpMAP.put(Obj.BCNCAR, Grp.CAR);
@@ -228,7 +228,7 @@ public class SeaMark extends JPanel {
 		ROS_PCOM, ROS_COMB, ROS_FACS, ROS_TIME, ROS_PAIS, ROS_SAIS, ROS_VAIS, ROS_VANC, ROS_VASC, ROS_VAEC, ROS_VAWC, ROS_VAPL, ROS_VASL, ROS_VAID, ROS_VASW, ROS_VASP, ROS_VAWK
 	}
 		 
-	public static final EnumMap<Cat, String> CatSTR = new EnumMap<Cat, String>(Cat.class);
+	public static final EnumMap<Cat, String> CatSTR = new EnumMap<>(Cat.class);
 	static {
 		CatSTR.put(Cat.LAM_PORT, "port");
 		CatSTR.put(Cat.LAM_STBD, "starboard");
@@ -434,7 +434,7 @@ public class SeaMark extends JPanel {
 		UNKSHP, PILLAR, SPAR, CAN, CONI, SPHERI, BARREL, FLOAT, SUPER, BUOYANT, CAIRN, PILE, LATTICE, TOWER, STAKE, POLE, POST, PERCH, BUOY, BEACON
 	}
 
-	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<Shp, String>(Shp.class);
+	public static final EnumMap<Shp, String> ShpSTR = new EnumMap<>(Shp.class);
 	static {
 		ShpSTR.put(Shp.PILLAR, "pillar");
 		ShpSTR.put(Shp.SPAR, "spar");
@@ -468,7 +468,7 @@ public class SeaMark extends JPanel {
 		UNKCOL, BLANK, WHITE, RED, ORANGE, AMBER, YELLOW, GREEN, BLUE, VIOLET, BLACK, GREY, BROWN, MAGENTA, PINK
 	}
 
-	public static final EnumMap<Col, Color> ColMAP = new EnumMap<Col, Color>(Col.class);
+	public static final EnumMap<Col, Color> ColMAP = new EnumMap<>(Col.class);
 	static {
 		ColMAP.put(Col.UNKCOL, new Color(0xc0c0c0));
 		ColMAP.put(Col.WHITE, Color.WHITE);
@@ -486,7 +486,7 @@ public class SeaMark extends JPanel {
 		ColMAP.put(Col.PINK, Color.PINK);
 	}
 
-	public static final EnumMap<Col, String> ColSTR = new EnumMap<Col, String>(Col.class);
+	public static final EnumMap<Col, String> ColSTR = new EnumMap<>(Col.class);
 	static {
 		ColSTR.put(Col.WHITE, "white");
 		ColSTR.put(Col.RED, "red");
@@ -538,7 +538,7 @@ public class SeaMark extends JPanel {
 			subTopColour(idx);
 	}
 
-	private ArrayList<Col> bodyColour = new ArrayList<Col>();
+	private ArrayList<Col> bodyColour = new ArrayList<>();
 
 	public Col getObjColour(int i) {
 		if (i < bodyColour.size())
@@ -576,7 +576,7 @@ public class SeaMark extends JPanel {
 		repaint();
 	}
 
-	private ArrayList<Col> topmarkColour = new ArrayList<Col>();
+	private ArrayList<Col> topmarkColour = new ArrayList<>();
 
 	public Col getTopColour(int i) {
 		if (i < topmarkColour.size())
@@ -618,7 +618,7 @@ public class SeaMark extends JPanel {
 		UNKCHR, FIXED, FLASH, LFLASH, QUICK, VQUICK, UQUICK, ISOPHASED, OCCULTING, MORSE, ALTERNATING, IQUICK, IVQUICK, IUQUICK
 	}
 
-	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<EnumSet<Chr>, String>();
+	public static final Map<EnumSet<Chr>, String> ChrMAP = new HashMap<>();
 	static {
 		ChrMAP.put(EnumSet.of(Chr.FIXED), "F");
 		ChrMAP.put(EnumSet.of(Chr.FLASH), "Fl");
@@ -653,7 +653,7 @@ public class SeaMark extends JPanel {
 		UNKVIS, HIGH, LOW, FAINT, INTEN, UNINTEN, REST, OBS, PARTOBS
 	}
 
-	public static final EnumMap<Vis, String> VisSTR = new EnumMap<Vis, String>(Vis.class);
+	public static final EnumMap<Vis, String> VisSTR = new EnumMap<>(Vis.class);
 	static {
 		VisSTR.put(Vis.HIGH, "high");
 		VisSTR.put(Vis.LOW, "low");
@@ -669,7 +669,7 @@ public class SeaMark extends JPanel {
 		UNKLIT, VERT, HORIZ, DIR, UPPER, LOWER, LEAD, REAR, FRONT, AERO, AIROBS, FOGDET, FLOOD, STRIP, SUBS, SPOT, MOIRE, EMERG, BEAR
 	}
 
-	public static final EnumMap<Lit, String> LitSTR = new EnumMap<Lit, String>(Lit.class);
+	public static final EnumMap<Lit, String> LitSTR = new EnumMap<>(Lit.class);
 	static {
 		LitSTR.put(Lit.VERT, "vertical");
 		LitSTR.put(Lit.HORIZ, "horizontal");
@@ -695,7 +695,7 @@ public class SeaMark extends JPanel {
 		UNKEXH, H24, DAY, NIGHT, FOG, WARN, STORM
 	}
 
-	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<Exh, String>(Exh.class);
+	public static final EnumMap<Exh, String> ExhSTR = new EnumMap<>(Exh.class);
 	static {
 		ExhSTR.put(Exh.H24, "24h");
 		ExhSTR.put(Exh.DAY, "day");
@@ -712,7 +712,7 @@ public class SeaMark extends JPanel {
 	public Object[] sector = { Col.UNKCOL, "", "", "", "", Lit.UNKLIT, "", "",
 			"", "", "", Vis.UNKVIS, Exh.UNKEXH, "", "", Col.UNKCOL };
 
-	private ArrayList<Object[]> sectors = new ArrayList<Object[]>();
+	private ArrayList<Object[]> sectors = new ArrayList<>();
 
 	public int getSectorCount() {
 		return sectors.size();
@@ -800,7 +800,7 @@ public class SeaMark extends JPanel {
 		NOPAT, HSTRP, VSTRP, DIAG, SQUARED, BORDER, CROSS, SALTIRE
 	}
 
-	public static final EnumMap<Pat, String> PatSTR = new EnumMap<Pat, String>(Pat.class);
+	public static final EnumMap<Pat, String> PatSTR = new EnumMap<>(Pat.class);
 	static {
 		PatSTR.put(Pat.HSTRP, "horizontal");
 		PatSTR.put(Pat.VSTRP, "vertical");
@@ -849,7 +849,7 @@ public class SeaMark extends JPanel {
 		NOTOP, CYL, CONE, SPHERE, X_SHAPE, NORTH, SOUTH, EAST, WEST, SPHERES2, BOARD, RHOMBUS, CIRCLE, TRIANGLE, TRIANGLE_INV, SQUARE
 	}
 
-	public static final EnumMap<Top, String> TopSTR = new EnumMap<Top, String>(Top.class);
+	public static final EnumMap<Top, String> TopSTR = new EnumMap<>(Top.class);
 	static {
 		TopSTR.put(Top.CYL, "cylinder");
 		TopSTR.put(Top.CONE, "cone, point up");
@@ -894,7 +894,7 @@ public class SeaMark extends JPanel {
 		NORTB, REFLECTOR, RACON, RAMARK, LEADING
 	}
 
-	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<Rtb, String>(Rtb.class);
+	public static final EnumMap<Rtb, String> RtbSTR = new EnumMap<>(Rtb.class);
 	static {
 		RtbSTR.put(Rtb.RACON, "racon");
 		RtbSTR.put(Rtb.RAMARK, "ramark");
@@ -990,7 +990,7 @@ public class SeaMark extends JPanel {
 		NOFOG, FOGSIG, HORN, SIREN, DIA, BELL, WHIS, GONG, EXPLOS
 	}
 
-	public static final EnumMap<Fog, String> FogSTR = new EnumMap<Fog, String>(Fog.class);
+	public static final EnumMap<Fog, String> FogSTR = new EnumMap<>(Fog.class);
 	static {
 		FogSTR.put(Fog.FOGSIG, "yes");
 		FogSTR.put(Fog.HORN, "horn");
@@ -1067,7 +1067,7 @@ public class SeaMark extends JPanel {
 		UNKSTS, PERM, OCC, REC, NIU, INT, RESV, TEMP, PRIV, MAND, DEST, EXT, ILLUM, HIST, PUB, SYNC, WATCH, UNWAT, DOUBT
 	}
 
-	public static final EnumMap<Sts, String> StsSTR = new EnumMap<Sts, String>(Sts.class);
+	public static final EnumMap<Sts, String> StsSTR = new EnumMap<>(Sts.class);
 	static {
 		StsSTR.put(Sts.PERM, "permanent");
 		StsSTR.put(Sts.OCC, "occasional");
@@ -1103,7 +1103,7 @@ public class SeaMark extends JPanel {
 		UNKCNS, BRICK, CONC, BOULD, HSURF, USURF, WOOD, METAL, GLAS, PAINT
 	}
 
-	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<Cns, String>(Cns.class);
+	public static final EnumMap<Cns, String> CnsSTR = new EnumMap<>(Cns.class);
 	static {
 		CnsSTR.put(Cns.BRICK, "masonry");
 		CnsSTR.put(Cns.CONC, "concreted");
@@ -1130,7 +1130,7 @@ public class SeaMark extends JPanel {
 		UNKCON, CONSP, NCONS, REFL
 	}
 
-	public static final EnumMap<Con, String> ConSTR = new EnumMap<Con, String>(Con.class);
+	public static final EnumMap<Con, String> ConSTR = new EnumMap<>(Con.class);
 	static {
 		ConSTR.put(Con.CONSP, "conspicuous");
 		ConSTR.put(Con.NCONS, "not_conspicuous");
@@ -1163,7 +1163,7 @@ public class SeaMark extends JPanel {
 	  PRHB, RGLN, RSTN, RCMD, INFO
 	}
 
-	public static final EnumMap<Fnc, String> FncSTR = new EnumMap<Fnc, String>(Fnc.class);
+	public static final EnumMap<Fnc, String> FncSTR = new EnumMap<>(Fnc.class);
 	static {
 		FncSTR.put(Fnc.UNKFNC, "");
 		FncSTR.put(Fnc.HMO, "harbour-master");

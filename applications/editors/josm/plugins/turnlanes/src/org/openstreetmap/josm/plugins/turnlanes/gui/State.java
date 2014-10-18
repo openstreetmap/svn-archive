@@ -46,7 +46,7 @@ abstract class State {
                 return new Connecting(lane, Collections.unmodifiableList(Arrays.asList(via)));
             }
             
-            final List<RoadGui.ViaConnector> tmp = new ArrayList<RoadGui.ViaConnector>(vias.size() + 1);
+            final List<RoadGui.ViaConnector> tmp = new ArrayList<>(vias.size() + 1);
             final boolean even = (vias.size() & 1) == 0;
             final RoadGui.ViaConnector last = vias.get(vias.size() - 1);
             

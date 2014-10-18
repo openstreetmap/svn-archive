@@ -47,7 +47,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
     public SurveyorComponent() {
         super();
-        hotKeys = new HashSet<String>();
+        hotKeys = new HashSet<>();
         setLayout(new BorderLayout());
         streetLabel = new JLabel(tr("Way: "));
         float fontSize = Float.parseFloat(Main.pref.get(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, "35"));
@@ -131,7 +131,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
         } catch(SAXException e) {
             e.printStackTrace();
         }
-        List<SurveyorActionDescription> actions = new ArrayList<SurveyorActionDescription>();
+        List<SurveyorActionDescription> actions = new ArrayList<>();
         while(parser.hasNext()) {
             Object object = parser.next();
             if (object instanceof SurveyorComponent) {

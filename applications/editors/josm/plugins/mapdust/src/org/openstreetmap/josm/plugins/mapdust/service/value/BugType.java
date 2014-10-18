@@ -68,7 +68,7 @@ public class BugType implements Serializable {
         this.key = key;
         this.value = value;
         if (BugType.table == null) {
-            BugType.table = new HashMap<String, BugType>();
+            BugType.table = new HashMap<>();
         }
         BugType.table.put(key, this);
     }

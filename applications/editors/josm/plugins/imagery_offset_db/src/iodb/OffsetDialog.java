@@ -136,7 +136,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
     private List<ImageryOffsetBase> filterOffsets() {
         boolean showCalibration = Main.pref.getBoolean(PREF_CALIBRATION, true);
         boolean showDeprecated = Main.pref.getBoolean(PREF_DEPRECATED, false);
-        List<ImageryOffsetBase> filteredOffsets = new ArrayList<ImageryOffsetBase>();
+        List<ImageryOffsetBase> filteredOffsets = new ArrayList<>();
         for( ImageryOffsetBase offset : offsets ) {
             if( offset.isDeprecated() && !showDeprecated )
                 continue;

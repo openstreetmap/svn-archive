@@ -86,7 +86,7 @@ public class EleVertex {
     System.out.println(pK);
     System.out.println(newP);
 		 */
-		List<EleVertex> res = new ArrayList<EleVertex>();
+		List<EleVertex> res = new ArrayList<>();
 		res.add(new EleVertex(pI, pK, newP));
 		res.add(new EleVertex(pJ, pK, newP));
 

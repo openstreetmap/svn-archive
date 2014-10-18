@@ -136,7 +136,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
 
         @Override
         public LinkedNode<K,V> deserialize(DataInput in, int available) throws IOException {
-            return new LinkedNode<K, V>(
+            return new LinkedNode<>(
                     Utils.unpackLong(in),
                     (K) keySerializer.deserialize(in,-1),
                     hasValues? (V) valueSerializer.deserialize(in,-1) : (V) Utils.EMPTY_STRING
@@ -293,7 +293,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
         //check if record already exist
         HashRoot r = engine.get(Engine.NAME_DIR_RECID, serializer);
         if(r!=null)
-            return new HTreeMap<String, Long>(engine, Engine.NAME_DIR_RECID, Serializer.BASIC_SERIALIZER);
+            return new HTreeMap<>(engine, Engine.NAME_DIR_RECID, Serializer.BASIC_SERIALIZER);
 
         if(engine.isReadOnly())
             return Collections.unmodifiableMap(new HashMap<String, Long>());
@@ -309,7 +309,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
         r.valueSerializer = Serializer.BASIC_SERIALIZER;
         engine.update(Engine.NAME_DIR_RECID, r, serializer);
         //and now load it
-        return new HTreeMap<String, Long>(engine, Engine.NAME_DIR_RECID, Serializer.BASIC_SERIALIZER);
+        return new HTreeMap<>(engine, Engine.NAME_DIR_RECID, Serializer.BASIC_SERIALIZER);
 
     }
 
@@ -481,7 +481,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
                         if(ln.key.equals(key)){
                             //found, replace value at this node
                             V oldVal = ln.value;
-                            ln = new LinkedNode<K, V>(ln.next, ln.key, value);
+                            ln = new LinkedNode<>(ln.next, ln.key, value);
                             engine.update(recid, ln, LN_SERIALIZER);
                             notify(key,  oldVal, value);
                             return oldVal;
@@ -502,7 +502,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
                         //add newly inserted record
                         int pos =(h >>>(7*(level-1) )) & 0x7F;
                         nextDir[pos/8] = new long[8];
-                        nextDir[pos/8][pos%8] = (engine.put(new LinkedNode<K, V>(0, key, value), LN_SERIALIZER) <<1) | 1;
+                        nextDir[pos/8][pos%8] = (engine.put(new LinkedNode<>(0, key, value), LN_SERIALIZER) <<1) | 1;
                     }
 
 
@@ -513,7 +513,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
                         final long nextRecid = n.next;
                         int pos = (hash(n.key) >>>(7*(level -1) )) & 0x7F;
                         if(nextDir[pos/8]==null) nextDir[pos/8] = new long[8];
-                        n = new LinkedNode<K, V>(nextDir[pos/8][pos%8]>>>1, n.key, n.value);
+                        n = new LinkedNode<>(nextDir[pos/8][pos%8]>>>1, n.key, n.value);
                         nextDir[pos/8][pos%8] = (nodeRecid<<1) | 1;
                         engine.update(nodeRecid, n, LN_SERIALIZER);
                         nodeRecid = nextRecid;
@@ -529,7 +529,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
                 }else{
                     // record does not exist in linked list, so create new one
                     recid = dir[slot/8][slot%8]>>>1;
-                    long newRecid = engine.put(new LinkedNode<K, V>(recid, key, value), LN_SERIALIZER);
+                    long newRecid = engine.put(new LinkedNode<>(recid, key, value), LN_SERIALIZER);
                     dir[slot/8][slot%8] = (newRecid<<1) | 1;
                     engine.update(dirRecid, dir, DIR_SERIALIZER);
                     notify(key, null, value);
@@ -600,7 +600,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
 
                             }else{
                                 //referenced from LinkedNode
-                                prevLn = new LinkedNode<K, V>(ln.next, prevLn.key, prevLn.value);
+                                prevLn = new LinkedNode<>(ln.next, prevLn.key, prevLn.value);
                                 engine.update(prevRecid, prevLn, LN_SERIALIZER);
                             }
                             //found, remove this node
@@ -1175,7 +1175,7 @@ public class HTreeMap<K,V>   extends AbstractMap<K,V> implements ConcurrentMap<K
      */
     public Map<K,V> snapshot(){
         Engine snapshot = SnapshotEngine.createSnapshotFor(engine);
-        return new HTreeMap<K, V>(snapshot,rootRecid, defaultSerialzierForSnapshots);
+        return new HTreeMap<>(snapshot,rootRecid, defaultSerialzierForSnapshots);
     }
 
 

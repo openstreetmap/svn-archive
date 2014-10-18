@@ -14,15 +14,15 @@ public class OpeningTimeUtils {
      * Implements the subtraction of daytimes in spans of days when a day in the list occurs direct afterwards 
      */
     public static ArrayList<int[]> convert(ArrayList<DateTime> dateTimes) {
-        ArrayList<int[]> ret = new ArrayList<int[]>(); // the list which is
+        ArrayList<int[]> ret = new ArrayList<>(); // the list which is
         // returned
         for (int i = 0; i < dateTimes.size(); ++i) { // iterate over every entry
             DateTime dateTime = dateTimes.get(i);
-            ArrayList<DateTime> newDateTimes = new ArrayList<DateTime>();
+            ArrayList<DateTime> newDateTimes = new ArrayList<>();
 
             // test if the given entry is a single dayspan
             if (dateTime.daySpans.size() == 1 && dateTime.daySpans.get(0).isSpan()) {
-                ArrayList<DaySpan> partDaySpans = new ArrayList<DaySpan>();
+                ArrayList<DaySpan> partDaySpans = new ArrayList<>();
                 int start_day = dateTime.daySpans.get(0).startDay;
 
                 // look in every entry behind

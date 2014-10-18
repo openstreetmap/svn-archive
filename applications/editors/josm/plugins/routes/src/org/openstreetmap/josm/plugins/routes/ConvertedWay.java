@@ -42,7 +42,7 @@ public class ConvertedWay {
         }
     }
 
-    private List<Node> nodes = new ArrayList<Node>();
+    private List<Node> nodes = new ArrayList<>();
     private BitSet routes;
 
     public ConvertedWay(BitSet routes, Way way) {

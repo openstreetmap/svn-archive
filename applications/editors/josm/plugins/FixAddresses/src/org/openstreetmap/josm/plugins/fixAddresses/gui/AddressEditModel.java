@@ -9,14 +9,14 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.OSMStreet;
 
 public class AddressEditModel {
     private List<OSMStreet> streets;
     private List<OSMAddress> unresolvedAddresses;
-    private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>();
+    private List<OSMAddress> incompleteAddresses = new ArrayList<>();
     private DefaultMutableTreeNode streetRoot;
     private DefaultMutableTreeNode unresolvedRoot;
     private DefaultMutableTreeNode incompleteRoot;

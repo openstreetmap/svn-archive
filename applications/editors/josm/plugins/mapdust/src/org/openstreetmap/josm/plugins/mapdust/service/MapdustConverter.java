@@ -134,7 +134,7 @@ class MapdustConverter {
      */
     static List<MapdustBug> buildMapdustBugList(
             MapdustGetBugsResponse bugsResponse) {
-        List<MapdustBug> bugsList = new ArrayList<MapdustBug>();
+        List<MapdustBug> bugsList = new ArrayList<>();
         if (bugsResponse != null) {
             MapdustBugContent[] bugContent = bugsResponse.getFeatures();
             if (bugContent != null) {
@@ -250,7 +250,7 @@ class MapdustConverter {
      */
     private static MapdustComment[] buildMapdustCommentArray(Long bugId,
             MapdustCommentProperties[] commentProperties) {
-        List<MapdustComment> commentList = new ArrayList<MapdustComment>();
+        List<MapdustComment> commentList = new ArrayList<>();
         if (bugId != null) {
             if (commentProperties != null) {
                 for (MapdustCommentProperties obj : commentProperties) {

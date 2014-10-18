@@ -17,7 +17,7 @@ public class FloatPropertyColorSchemeTest {
     @Before
     public void setUp() {
 
-        Map<Float, Color> colorMap = new HashMap<Float, Color>();
+        Map<Float, Color> colorMap = new HashMap<>();
         colorMap.put( 5f, new Color( 42,  42,  42));
         colorMap.put(10f, new Color(100, 100, 100));
         colorMap.put(20f, new Color(200, 200, 200));

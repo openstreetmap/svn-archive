@@ -17,7 +17,7 @@ public class PanelSpec extends JPanel {
 	private SmedAction dlg;
 	public JLabel categoryLabel;
 	public JComboBox<String> categoryBox;
-	public EnumMap<Cat, Integer> categories = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> categories = new EnumMap<>(Cat.class);
 	private ActionListener alCategoryBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : categories.keySet()) {
@@ -28,7 +28,7 @@ public class PanelSpec extends JPanel {
 		}
 	};
 	public JComboBox<String> mooringBox;
-	public EnumMap<Cat, Integer> moorings = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> moorings = new EnumMap<>(Cat.class);
 	private ActionListener alMooringBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : moorings.keySet()) {
@@ -61,8 +61,8 @@ public class PanelSpec extends JPanel {
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
 	public JRadioButton stakeButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/StakeButton.png")));
 	public JRadioButton cairnButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CairnButton.png")));
-	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
-	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<>(Shp.class);
+	public EnumMap<Shp, Obj> objects = new EnumMap<>(Shp.class);
 	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if ((dlg.panelMain.mark.getObject() != Obj.MORFAC) || (dlg.panelMain.mark.getCategory() == Cat.MOR_BUOY)) {

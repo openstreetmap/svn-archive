@@ -15,9 +15,9 @@ public class DBTile implements Serializable {
     public DBTile(DBTile dbTile) {
         data = dbTile.data.clone();
         if (dbTile.metaData != null) {
-            metaData = new HashMap<String, String>(dbTile.metaData);
+            metaData = new HashMap<>(dbTile.metaData);
         } else {
-            metaData = new HashMap<String, String>();
+            metaData = new HashMap<>();
         }
         lastModified = dbTile.lastModified;
     }

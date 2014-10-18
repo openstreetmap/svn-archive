@@ -44,7 +44,7 @@ public final class SymmetryAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
-        HashSet<Node> nodes = new HashSet<Node>();
+        HashSet<Node> nodes = new HashSet<>();
         EastNorth p1=null,p2=null;
         
         for (OsmPrimitive osm : sel) {
@@ -73,7 +73,7 @@ public final class SymmetryAction extends JosmAction {
         l = Math.hypot(ne,nn);
         ne /= l; nn /= l; // normal unit vector
         
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
 
         for (Node n : nodes) {
             EastNorth c = n.getEastNorth();

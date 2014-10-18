@@ -9,7 +9,7 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 public class EditGpxTrackSegment {
 
-    private final List<EditGpxWayPoint> wayPoints = new ArrayList<EditGpxWayPoint>();
+    private final List<EditGpxWayPoint> wayPoints = new ArrayList<>();
     private boolean deleted;
 
     public EditGpxTrackSegment(GpxTrackSegment segment) {
@@ -23,7 +23,7 @@ public class EditGpxTrackSegment {
     }
 
     public List<WayPoint> getNonDeletedWaypoints() {
-        List<WayPoint> result = new ArrayList<WayPoint>();
+        List<WayPoint> result = new ArrayList<>();
 
         for (EditGpxWayPoint wp: wayPoints) {
             if (!wp.isDeleted()) {

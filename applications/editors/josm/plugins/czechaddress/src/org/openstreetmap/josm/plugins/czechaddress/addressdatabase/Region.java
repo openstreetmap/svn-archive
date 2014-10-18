@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Region extends ElementWithStreets {
 
     private ArrayList<ViToCi> vitocis
-            = new ArrayList<ViToCi>();
+            = new ArrayList<>();
 
     /**
      * Adds a single municipality into this element.

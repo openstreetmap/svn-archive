@@ -113,7 +113,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
     protected final Comparator comparator;
 
     /** holds node level locks*/
-    protected final LongConcurrentHashMap<Thread> nodeLocks = new LongConcurrentHashMap<Thread>();
+    protected final LongConcurrentHashMap<Thread> nodeLocks = new LongConcurrentHashMap<>();
 
     /** maximal node size allowed in this BTree*/
     protected final int maxNodeSize;
@@ -962,7 +962,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
     protected Entry<K, V> makeEntry(Object key, Object value) {
         if(value instanceof ValRef) throw new InternalError();
-        return new SimpleImmutableEntry<K, V>((K)key,  (V)value);
+        return new SimpleImmutableEntry<>((K)key,  (V)value);
     }
 
 
@@ -1335,7 +1335,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                                               boolean toInclusive) {
         if (fromKey == null || toKey == null)
             throw new NullPointerException();
-        return new SubMap<K,V>
+        return new SubMap<>
                 ( this, fromKey, fromInclusive, toKey, toInclusive);
     }
 
@@ -1344,7 +1344,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                                                boolean inclusive) {
         if (toKey == null)
             throw new NullPointerException();
-        return new SubMap<K,V>
+        return new SubMap<>
                 (this, null, false, toKey, inclusive);
     }
 
@@ -1353,7 +1353,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                                                boolean inclusive) {
         if (fromKey == null)
             throw new NullPointerException();
-        return new SubMap<K,V>
+        return new SubMap<>
                 (this, fromKey, inclusive, null, false);
     }
 
@@ -1420,7 +1420,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
     static final <E> List<E> toList(Collection<E> c) {
         // Using size() here would be a pessimization.
-        List<E> list = new ArrayList<E>();
+        List<E> list = new ArrayList<>();
         for (E e : c){
             list.add(e);
         }
@@ -1505,16 +1505,16 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                                       boolean fromInclusive,
                                       E toElement,
                                       boolean toInclusive) {
-            return new KeySet<E>(m.subMap(fromElement, fromInclusive,
+            return new KeySet<>(m.subMap(fromElement, fromInclusive,
                     toElement,   toInclusive),hasValues);
         }
         @Override
 		public NavigableSet<E> headSet(E toElement, boolean inclusive) {
-            return new KeySet<E>(m.headMap(toElement, inclusive),hasValues);
+            return new KeySet<>(m.headMap(toElement, inclusive),hasValues);
         }
         @Override
 		public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
-            return new KeySet<E>(m.tailMap(fromElement, inclusive),hasValues);
+            return new KeySet<>(m.tailMap(fromElement, inclusive),hasValues);
         }
         @Override
 		public NavigableSet<E> subSet(E fromElement, E toElement) {
@@ -1936,7 +1936,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
                         throw new IllegalArgumentException("key out of range");
                 }
             }
-            return new SubMap<K,V>(m, fromKey, fromInclusive,
+            return new SubMap<>(m, fromKey, fromInclusive,
                     toKey, toInclusive);
         }
 
@@ -1988,7 +1988,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
         @Override
         public NavigableSet<K> navigableKeySet() {
-            return new KeySet<K>((ConcurrentNavigableMap<K,Object>) this,m.hasValues);
+            return new KeySet<>((ConcurrentNavigableMap<K,Object>) this,m.hasValues);
         }
 
 
@@ -2031,7 +2031,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
         @Override
         public NavigableSet<K> keySet() {
-            return new KeySet<K>((ConcurrentNavigableMap<K,Object>) this, m.hasValues);
+            return new KeySet<>((ConcurrentNavigableMap<K,Object>) this, m.hasValues);
         }
 
         @Override
@@ -2043,7 +2043,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
 
         @Override
         public Set<Entry<K, V>> entrySet() {
-            return new EntrySet<K, V>(this);
+            return new EntrySet<>(this);
         }
 
 
@@ -2122,7 +2122,7 @@ public class BTreeMap<K,V> extends AbstractMap<K,V>
     public NavigableMap<K,V> snapshot(){
         Engine snapshot = SnapshotEngine.createSnapshotFor(engine);
 
-        return new BTreeMap<K, V>(snapshot,treeRecid, defaultSerializer);
+        return new BTreeMap<>(snapshot,treeRecid, defaultSerializer);
     }
 
 

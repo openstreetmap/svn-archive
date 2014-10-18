@@ -45,7 +45,6 @@ package org.netbeans.modules.keyring.fallback;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.keyring.impl.Utils;
 import org.netbeans.modules.keyring.spi.EncryptionProvider;
 import org.netbeans.spi.keyring.KeyringProvider;
 

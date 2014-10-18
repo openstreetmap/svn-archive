@@ -159,10 +159,10 @@ public class Tcx extends FileImporter {
                         if (activityLap.getTrack() != null) {
                             XMLGregorianCalendar startTime = activityLap
                                     .getStartTime();
-                            Collection<Collection<WayPoint>> currentTrack = new ArrayList<Collection<WayPoint>>();
+                            Collection<Collection<WayPoint>> currentTrack = new ArrayList<>();
                             for (TrackT track : activityLap.getTrack()) {
                                 if (track.getTrackpoint() != null) {
-                                    Collection<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
+                                    Collection<WayPoint> currentTrackSeg = new ArrayList<>();
                                     currentTrack.add(currentTrackSeg);
                                     for (TrackpointT tp :
                                            track.getTrackpoint()) {
@@ -197,10 +197,10 @@ public class Tcx extends FileImporter {
                 && (tcd.getCourses().getCourse() != null)) {
             for (CourseT course : tcd.getCourses().getCourse()) {
                 if (course.getTrack() != null) {
-                    Collection<Collection<WayPoint>> currentTrack = new ArrayList<Collection<WayPoint>>();
+                    Collection<Collection<WayPoint>> currentTrack = new ArrayList<>();
                     for (TrackT track : course.getTrack()) {
                         if (track.getTrackpoint() != null) {
-                            Collection<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
+                            Collection<WayPoint> currentTrackSeg = new ArrayList<>();
                             currentTrack.add(currentTrackSeg);
                             for (TrackpointT tp : track.getTrackpoint()) {
                                 WayPoint waypt = convertPoint(tp);

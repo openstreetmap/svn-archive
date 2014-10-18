@@ -36,7 +36,7 @@ public class CollectionUtils {
     }
     
     public static <E> Set<E> toSet(Iterable<? extends E> iterable) {
-        final Set<E> set = new HashSet<E>();
+        final Set<E> set = new HashSet<>();
         
         for (E e : iterable) {
             set.add(e);
@@ -46,7 +46,7 @@ public class CollectionUtils {
     }
     
     public static <E> List<E> toList(Iterable<? extends E> iterable) {
-        final List<E> list = new ArrayList<E>();
+        final List<E> list = new ArrayList<>();
         
         for (E e : iterable) {
             list.add(e);

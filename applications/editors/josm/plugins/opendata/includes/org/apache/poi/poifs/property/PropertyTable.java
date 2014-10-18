@@ -39,7 +39,7 @@ public final class PropertyTable implements BlockWritable {
 
     public PropertyTable()
     {
-        _properties  = new ArrayList<Property>();
+        _properties  = new ArrayList<>();
         addProperty(new RootProperty());
         _blocks = null;
     }
@@ -110,7 +110,7 @@ public final class PropertyTable implements BlockWritable {
             // property has no children
             return;
         }
-        Stack<Property> children = new Stack<Property>();
+        Stack<Property> children = new Stack<>();
 
         children.push(_properties.get(index));
         while (!children.empty())

@@ -472,7 +472,7 @@ public class FactoryDialog extends ToggleDialog
         private ElementWithStreets parent = null;
 
         private List<ElementWithHouses> metaElem
-                = new ArrayList<ElementWithHouses>();
+                = new ArrayList<>();
 
         public StreetListModel() {
             metaElem.add(null);

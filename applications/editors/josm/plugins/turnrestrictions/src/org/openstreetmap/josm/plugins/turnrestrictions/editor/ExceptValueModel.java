@@ -19,7 +19,7 @@ public class ExceptValueModel {
      */
     static public final Set<String> STANDARD_VEHICLE_EXCEPTION_VALUES;
     static {
-        HashSet<String> s = new HashSet<String>();
+        HashSet<String> s = new HashSet<>();
         s.add("psv");
         s.add("hgv");
         s.add("bicycle");
@@ -43,7 +43,7 @@ public class ExceptValueModel {
         
     private String value = "";
     private boolean isStandard = true;
-    private final Set<String> vehicleExceptions = new HashSet<String>();
+    private final Set<String> vehicleExceptions = new HashSet<>();
     
     protected void parseValue(String value) {
         if (value == null || value.trim().equals("")) value = "";
@@ -90,7 +90,7 @@ public class ExceptValueModel {
             // we use an ordered list because equals()
             // is based on getValue()
             //
-            List<String> values = new ArrayList<String>(vehicleExceptions);
+            List<String> values = new ArrayList<>(vehicleExceptions);
             Collections.sort(values);
             for (String v: values){
                 if (sb.length() > 0) {

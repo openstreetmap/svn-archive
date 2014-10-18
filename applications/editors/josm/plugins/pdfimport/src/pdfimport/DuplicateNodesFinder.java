@@ -19,7 +19,7 @@ public class DuplicateNodesFinder {
 	 * @return map from nodes that need replacement to a representative node.
 	 */
 	public static Map<Point2D, Point2D> findDuplicateNodes(Collection<Point2D> nodes, final double tolerance){
-		List<Point2D> points = new ArrayList<Point2D>(nodes);
+		List<Point2D> points = new ArrayList<>(nodes);
 		Collections.sort(points, new Comparator<Point2D>(){
 			public int compare(Point2D o1, Point2D o2) {
 				double diff = o1.getY() - o2.getY();
@@ -27,8 +27,8 @@ public class DuplicateNodesFinder {
 			}
 		});
 
-		Map<Point2D, Point2D> result = new HashMap<Point2D, Point2D>();
-		TreeMap<Point2D, Point2D> sweepLine = new TreeMap<Point2D, Point2D>(new Comparator<Point2D>(){
+		Map<Point2D, Point2D> result = new HashMap<>();
+		TreeMap<Point2D, Point2D> sweepLine = new TreeMap<>(new Comparator<Point2D>(){
 			public int compare(Point2D o1, Point2D o2) {
 				double diff = o1.getX() - o2.getX();
 

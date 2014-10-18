@@ -58,9 +58,9 @@ public final class LatLonAction extends JosmAction {
         textLatLon = dialog.getLatLonText();
 
         // we create a list of commands that will modify the map in the way we want.
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
         // first we create all the nodes, then we do extra stuff based on what geometry type we need.
-        LinkedList<Node> nodes = new LinkedList<Node>();
+        LinkedList<Node> nodes = new LinkedList<>();
 
         for (LatLon ll : coordinates) {
             Node nnew = new Node(ll);

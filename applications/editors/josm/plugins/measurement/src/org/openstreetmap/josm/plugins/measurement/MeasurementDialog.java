@@ -31,8 +31,8 @@ import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.NavigatableComponent;
-import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.NavigatableComponent.SoMChangeListener;
+import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.util.GuiHelper;
@@ -72,12 +72,12 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
      * The measurement label for the segment angle, actually updated, if 2 nodes are selected
      */
     protected JLabel segAngleLabel;
-    
+
     private DataSet ds;
 
     private Collection<Way> ways;
     private Collection<Node> nodes;
-    
+
     /**
      * Constructor
      */
@@ -130,7 +130,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         createLayout(valuePanel, false, Arrays.asList(new SideButton[] {
             resetButton
         }));
-        
+
         DataSet.addSelectionListener(this);
         NavigatableComponent.addSoMChangeListener(this);
     }
@@ -161,9 +161,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         double area = 0.0;
         Node lastNode = null;
         // Don't mix up way and nodes computation (fix #6872). Priority given to ways
-        ways = new SubclassFilteredCollection<OsmPrimitive, Way>(newSelection, OsmPrimitive.wayPredicate);
+        ways = new SubclassFilteredCollection<>(newSelection, OsmPrimitive.wayPredicate);
         if (ways.isEmpty()) {
-            nodes = new SubclassFilteredCollection<OsmPrimitive, Node>(newSelection, OsmPrimitive.nodePredicate);
+            nodes = new SubclassFilteredCollection<>(newSelection, OsmPrimitive.nodePredicate);
             for (Node n : nodes) {
                 if (n.getCoor() != null) {
                     if (lastNode == null) {
@@ -197,11 +197,11 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                 area += wayArea;
             }
         }
-        
+
         final String lengthLabel = getDistText(length);
         final String angleLabel = getAngleText(segAngle);
         final String areaLabel = getAreaText(area);
-        
+
         GuiHelper.runInEDT(new Runnable() {
             @Override
             public void run() {
@@ -210,9 +210,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                 selectAreaLabel.setText(areaLabel);
             }
         });
-        
+
         DataSet currentDs = Main.main.getCurrentDataSet();
-    
+
         if (ds != currentDs) {
             if (ds != null) {
                 ds.removeDataSetListener(this);
@@ -245,7 +245,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         }
         return false;
     }
-    
+
     @Override public void nodeMoved(NodeMovedEvent event) {
         Node n = event.getNode();
         // Refresh selection if a node belonging to a selected member has moved (example: scale action)

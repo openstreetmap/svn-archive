@@ -262,7 +262,7 @@ public class WayDownloaderPlugin extends Plugin {
      */
     private List<Way> findConnectedWays(Node referenceNode) {
         List<Way> referers = OsmPrimitive.getFilteredList(referenceNode.getReferrers(), Way.class);
-        ArrayList<Way> connectedWays = new ArrayList<Way>(referers.size());
+        ArrayList<Way> connectedWays = new ArrayList<>(referers.size());
 
         //loop through referers
         for (Way way: referers) {

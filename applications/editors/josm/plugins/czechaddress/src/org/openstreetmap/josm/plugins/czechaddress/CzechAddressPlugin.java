@@ -57,7 +57,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
 
 
     private JMenu czechMenu;
-    private List<JMenuItem> menuItems = new ArrayList<JMenuItem>();
+    private List<JMenuItem> menuItems = new ArrayList<>();
     private static Logger logger = Logger.getLogger(CzechAddressPlugin.class.getName());
 
     public void initLoggers() {
@@ -173,7 +173,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         }
     }
 
-    static private final Set<StatusListener> listeners = new HashSet<StatusListener>();
+    static private final Set<StatusListener> listeners = new HashSet<>();
     static public synchronized void addStatusListener(StatusListener l)    {listeners.add(l);}
     static public synchronized void removeStatusListener(StatusListener l) {listeners.remove(l);}
     static public synchronized void broadcastStatusChange(int statusMessage) {

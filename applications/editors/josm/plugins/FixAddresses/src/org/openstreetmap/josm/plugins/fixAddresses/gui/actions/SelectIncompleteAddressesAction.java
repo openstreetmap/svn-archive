@@ -29,7 +29,7 @@ public class SelectIncompleteAddressesAction extends JosmAction {
         addressEditContainer.invalidate();
 
         if (addressEditContainer.getIncompleteAddresses() != null) {
-            List<OsmPrimitive> osms = new ArrayList<OsmPrimitive>();
+            List<OsmPrimitive> osms = new ArrayList<>();
 
             for (OSMAddress aNode : addressEditContainer.getIncompleteAddresses()) {
                 osms.add(aNode.getOsmObject());

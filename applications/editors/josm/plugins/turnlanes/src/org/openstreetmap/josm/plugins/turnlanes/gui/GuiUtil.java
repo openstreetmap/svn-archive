@@ -132,7 +132,7 @@ class GuiUtil {
     }
     
     public static List<Point2D> locs(Iterable<Junction> junctions) {
-        final List<Point2D> locs = new ArrayList<Point2D>();
+        final List<Point2D> locs = new ArrayList<>();
         
         for (Junction j : junctions) {
             locs.add(loc(j.getNode()));

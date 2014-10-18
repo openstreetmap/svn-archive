@@ -146,7 +146,7 @@ public class TagEditorModel extends org.openstreetmap.josm.gui.tagging.TagEditor
      * 
      */
     public void updateJOSMSelection() {
-        ArrayList<Command> commands = new ArrayList<Command>();
+        ArrayList<Command> commands = new ArrayList<>();
         Collection<OsmPrimitive> selection = Main.main.getCurrentDataSet().getSelected();
         if (selection == null)
             return;

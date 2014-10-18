@@ -68,7 +68,7 @@ public class CreateMultipolygonAction extends JosmAction {
 		    rels = SplittingMultipolygons.process(getCurrentDataSet().getSelectedWays());
 	    } else {
 		if( TheRing.areAllOfThoseRings(selectedWays) ) {
-		    List<Command> commands = new ArrayList<Command>();
+		    List<Command> commands = new ArrayList<>();
 		    rels = TheRing.makeManySimpleMultipolygons(getCurrentDataSet().getSelectedWays(), commands);
 		    if( !commands.isEmpty() )
 			Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
@@ -107,7 +107,7 @@ public class CreateMultipolygonAction extends JosmAction {
 	List<Command> list = removeTagsFromInnerWays(rel);
 	if( !list.isEmpty() && isBoundary ) {
 	    Main.main.undoRedo.add(new SequenceCommand(tr("Move tags from ways to relation"), list));
-	    list = new ArrayList<Command>();
+	    list = new ArrayList<>();
 	}
 	if( isBoundary ) {
 	    if( !askForAdminLevelAndName(rel) )
@@ -178,7 +178,7 @@ public class CreateMultipolygonAction extends JosmAction {
      * For all untagged ways in relation, add tags boundary and admin_level.
      */
     private List<Command> fixWayTagsForBoundary( Relation rel ) {
-	List<Command> commands = new ArrayList<Command>();
+	List<Command> commands = new ArrayList<>();
 	if( !rel.hasKey("boundary") || !rel.hasKey("admin_level") )
 	    return commands;
 	String adminLevelStr = rel.get("admin_level");
@@ -188,8 +188,8 @@ public class CreateMultipolygonAction extends JosmAction {
 	} catch( NumberFormatException e ) {
 	    return commands;
 	}
-	Set<OsmPrimitive> waysBoundary = new HashSet<OsmPrimitive>();
-	Set<OsmPrimitive> waysAdminLevel = new HashSet<OsmPrimitive>();
+	Set<OsmPrimitive> waysBoundary = new HashSet<>();
+	Set<OsmPrimitive> waysAdminLevel = new HashSet<>();
 	for( OsmPrimitive p : rel.getMemberPrimitives() ) {
 	    if( p instanceof Way ) {
 		int count = 0;
@@ -221,7 +221,7 @@ public class CreateMultipolygonAction extends JosmAction {
 	return commands;
     }
     static public final List<String> DEFAULT_LINEAR_TAGS = Arrays.asList(new String[] {"barrier", "source"});
-    private static final Set<String> REMOVE_FROM_BOUNDARY_TAGS = new TreeSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> REMOVE_FROM_BOUNDARY_TAGS = new TreeSet<>(Arrays.asList(new String[] {
 		"boundary", "boundary_type", "type", "admin_level"
 	    }));
 
@@ -231,7 +231,7 @@ public class CreateMultipolygonAction extends JosmAction {
      * Todo: rewrite it.
      */
     private List<Command> removeTagsFromInnerWays( Relation relation ) {
-	Map<String, String> values = new HashMap<String, String>();
+	Map<String, String> values = new HashMap<>();
 
 	if( relation.hasKeys() ) {
 	    for( String key : relation.keySet() ) {
@@ -239,10 +239,10 @@ public class CreateMultipolygonAction extends JosmAction {
 	    }
 	}
 
-	List<Way> innerWays = new ArrayList<Way>();
-	List<Way> outerWays = new ArrayList<Way>();
+	List<Way> innerWays = new ArrayList<>();
+	List<Way> outerWays = new ArrayList<>();
 
-	Set<String> conflictingKeys = new TreeSet<String>();
+	Set<String> conflictingKeys = new TreeSet<>();
 
 	for( RelationMember m : relation.getMembers() ) {
 
@@ -283,7 +283,7 @@ public class CreateMultipolygonAction extends JosmAction {
 
 	String name = values.get("name");
 	if( isBoundary ) {
-	    Set<String> keySet = new TreeSet<String>(values.keySet());
+	    Set<String> keySet = new TreeSet<>(values.keySet());
 	    for( String key : keySet )
 		if( !REMOVE_FROM_BOUNDARY_TAGS.contains(key) )
 		    values.remove(key);
@@ -291,11 +291,11 @@ public class CreateMultipolygonAction extends JosmAction {
 
 	values.put("area", "yes");
 
-	List<Command> commands = new ArrayList<Command>();
+	List<Command> commands = new ArrayList<>();
 	boolean moveTags = getPref("tags");
 
 	for( String key : values.keySet() ) {
-	    List<OsmPrimitive> affectedWays = new ArrayList<OsmPrimitive>();
+	    List<OsmPrimitive> affectedWays = new ArrayList<>();
 	    String value = values.get(key);
 
 	    for( Way way : innerWays ) {

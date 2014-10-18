@@ -10,9 +10,9 @@ public class OSMNode extends OSMEntity {
     
     private double latitude;
     private double longitude;
-    private ArrayList<Channel> outgoingChannels = new ArrayList<Channel>();
-    private ArrayList<OSMNode> succNodeList = new ArrayList<OSMNode>();
-    private ArrayList<OSMNode> predNodeList = new ArrayList<OSMNode>();
+    private ArrayList<Channel> outgoingChannels = new ArrayList<>();
+    private ArrayList<OSMNode> succNodeList = new ArrayList<>();
+    private ArrayList<OSMNode> predNodeList = new ArrayList<>();
     
     public void addOutgoingChannel(Channel channel) {
         outgoingChannels.add(channel);

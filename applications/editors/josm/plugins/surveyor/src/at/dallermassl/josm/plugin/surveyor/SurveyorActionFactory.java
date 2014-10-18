@@ -17,7 +17,7 @@ import java.util.Map;
  *
  */
 public class SurveyorActionFactory {
-    private static Map<String, SurveyorAction>actionCache = new HashMap<String, SurveyorAction>();
+    private static Map<String, SurveyorAction>actionCache = new HashMap<>();
     public static final String DEFAULT_PACKAGE = SurveyorActionFactory.class.getPackage().getName() + ".action";
 
     /**

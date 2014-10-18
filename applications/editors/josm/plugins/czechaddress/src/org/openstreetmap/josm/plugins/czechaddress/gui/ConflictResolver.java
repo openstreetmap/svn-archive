@@ -326,9 +326,9 @@ public class ConflictResolver extends ExtendedDialog {
     private ConflictsModel conflictModel = new ConflictsModel();
     private class ConflictsModel implements ComboBoxModel<Object> {
 
-        ArrayList<AddressElement> elements = new ArrayList<AddressElement>();
-        ArrayList<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
-        Set<ListDataListener> listeners = new HashSet<ListDataListener>();
+        ArrayList<AddressElement> elements = new ArrayList<>();
+        ArrayList<OsmPrimitive> primitives = new ArrayList<>();
+        Set<ListDataListener> listeners = new HashSet<>();
 
         Object selected = null;
 
@@ -469,14 +469,14 @@ public class ConflictResolver extends ExtendedDialog {
 
         if (selected instanceof AddressElement) {
             AddressElement selElem = (AddressElement) selected;
-            List<OsmPrimitive> conflPrims = new NotNullList<OsmPrimitive>();
+            List<OsmPrimitive> conflPrims = new NotNullList<>();
             conflPrims.addAll(Reasoner.getInstance().getCandidates(selElem));
             Collections.sort(conflPrims, PrimUtils.comparator);
             candField.setModel(new CandidatesModel<Object>(conflPrims));
 
         } else if (selected instanceof OsmPrimitive) {
             OsmPrimitive selElem = (OsmPrimitive) selected;
-            List<AddressElement> conflElems = new NotNullList<AddressElement>();
+            List<AddressElement> conflElems = new NotNullList<>();
             conflElems.addAll(Reasoner.getInstance().getCandidates(selElem));
             Collections.sort(conflElems);
             candField.setModel(new CandidatesModel<Object>(conflElems));
@@ -513,7 +513,7 @@ public class ConflictResolver extends ExtendedDialog {
 
     private class CandidatesModel<E> implements ComboBoxModel<E> {
 
-        Set<ListDataListener> listeners = new HashSet<ListDataListener>();
+        Set<ListDataListener> listeners = new HashSet<>();
         List<? extends E> primitives;
         Object selected = null;
 

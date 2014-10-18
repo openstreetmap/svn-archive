@@ -46,8 +46,8 @@ public final class CreateGridOfWaysAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
-        Collection<Node> nodesWay1 = new LinkedList<Node>();
-        Collection<Node> nodesWay2 = new LinkedList<Node>();
+        Collection<Node> nodesWay1 = new LinkedList<>();
+        Collection<Node> nodesWay2 = new LinkedList<>();
         if ((sel.size() != 2) || !(sel.toArray()[0] instanceof Way) || !(sel.toArray()[1] instanceof Way)) {
             JOptionPane.showMessageDialog(Main.parent, tr("Select two ways with a node in common"));
             return;
@@ -70,7 +70,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
         Way w1[] = new Way[nodesWay1.size()-1];
         for (int c=0;c<w1.length;c++)
             w1[c]=new Way();
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
         int c1=0,c2;
         double latDif,lonDif;
         for (Node n1 : nodesWay1) {

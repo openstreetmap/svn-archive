@@ -39,7 +39,7 @@ public class PolyExporter extends OsmExporter {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
             try {
                 DataSet ds = ((OsmDataLayer)layer).data;
-                Map<Way, Boolean> ways = new TreeMap<Way, Boolean>();
+                Map<Way, Boolean> ways = new TreeMap<>();
                 String polygonName = file.getName();
                 if( polygonName.indexOf('.') > 0 )
                     polygonName = polygonName.substring(0, polygonName.indexOf('.'));
@@ -90,8 +90,8 @@ public class PolyExporter extends OsmExporter {
     }
 
     private Map<Way, Boolean> sortOuterInner( Map<Way, Boolean> ways ) {
-        LinkedHashMap<Way, Boolean> result = new LinkedHashMap<Way, Boolean>(ways.size());
-        List<Way> inner = new ArrayList<Way>();
+        LinkedHashMap<Way, Boolean> result = new LinkedHashMap<>(ways.size());
+        List<Way> inner = new ArrayList<>();
         for( Way w : ways.keySet() ) {
             Boolean outer = ways.get(w);
             if( outer )

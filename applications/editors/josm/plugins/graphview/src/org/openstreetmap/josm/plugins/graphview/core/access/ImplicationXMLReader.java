@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  */
 public class ImplicationXMLReader {
 
-    private final List<Implication> implications = new LinkedList<Implication>();
+    private final List<Implication> implications = new LinkedList<>();
 
     private static enum State {BEFORE_IMPLICATION, BEFORE_CONDITION, CONDITION, BEFORE_IMPLIES, IMPLIES, AFTER_IMPLIES};
     private State state = State.BEFORE_IMPLICATION;
@@ -57,7 +57,7 @@ public class ImplicationXMLReader {
             case BEFORE_IMPLIES:
 
                 if ("implies".equals(name)) {
-                    currentImpliedTags = new LinkedList<Tag>();
+                    currentImpliedTags = new LinkedList<>();
                     state = State.IMPLIES;
                     return;
                 }
@@ -136,7 +136,7 @@ public class ImplicationXMLReader {
         if (state != State.BEFORE_IMPLICATION) {
             throw new SAXException(tr("Some tags have not been closed; now in state {0}", state));
         } else {
-            return new ArrayList<Implication>(implications);
+            return new ArrayList<>(implications);
         }
     }
 
@@ -174,7 +174,7 @@ public class ImplicationXMLReader {
         TagCondition condition;
         boolean finished;
 
-        private final List<ConditionReader> childReaders = new LinkedList<ConditionReader>();
+        private final List<ConditionReader> childReaders = new LinkedList<>();
         private ConditionReader currentChildReader = null;
 
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
@@ -233,7 +233,7 @@ public class ImplicationXMLReader {
 
                 if (openingName.equals(name)) {
 
-                    List<TagCondition> childConditions = new ArrayList<TagCondition>();
+                    List<TagCondition> childConditions = new ArrayList<>();
                     for (ConditionReader childReader : childReaders) {
                         childConditions.add(childReader.getCondition());
                     }

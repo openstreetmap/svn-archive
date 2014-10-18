@@ -32,11 +32,11 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
 public class LocationSelector extends ExtendedDialog {
 
     protected ElementWithStreets selectedElement;
-    protected ArrayList<ItemListener> listeners = new ArrayList<ItemListener>();
+    protected ArrayList<ItemListener> listeners = new ArrayList<>();
     int regionHlIndex, vitociHlIndex, suburbHlIndex;
-    protected ArrayList<AddressElement> hlRegions = new ArrayList<AddressElement>();
-    protected ArrayList<AddressElement> hlViToCis = new ArrayList<AddressElement>();
-    protected ArrayList<AddressElement> hlSuburbs = new ArrayList<AddressElement>();
+    protected ArrayList<AddressElement> hlRegions = new ArrayList<>();
+    protected ArrayList<AddressElement> hlViToCis = new ArrayList<>();
+    protected ArrayList<AddressElement> hlSuburbs = new ArrayList<>();
 
 
     public static ElementWithStreets selectLocation() {

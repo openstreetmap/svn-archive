@@ -55,7 +55,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
         panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         Map<String, String> colorMap = Main.pref.getAllPrefix(PREF_KEY_COLOR_PREFIX);
-        colorKeys = new ArrayList<String>(colorMap.keySet());
+        colorKeys = new ArrayList<>(colorMap.keySet());
         Collections.sort(colorKeys);
         listModel = new DefaultListModel<>();
         schemesList = new JList<>(listModel);
@@ -186,7 +186,7 @@ public class ColorSchemePreference implements SubPreferenceSetting {
     public Map<String, String> getColorMap(String schemeName) {
         String colorKey;
         String prefix = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX;
-        Map<String, String>colorMap = new HashMap<String, String>();
+        Map<String, String>colorMap = new HashMap<>();
         for(String schemeColorKey : Main.pref.getAllPrefix(prefix).keySet()) {
             colorKey = schemeColorKey.substring(prefix.length());
             colorMap.put(colorKey, Main.pref.get(schemeColorKey));

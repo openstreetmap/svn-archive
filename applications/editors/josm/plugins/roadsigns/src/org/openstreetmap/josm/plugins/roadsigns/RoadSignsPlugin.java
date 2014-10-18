@@ -156,14 +156,14 @@ public class RoadSignsPlugin extends Plugin {
             String customIconDirsStr = Main.pref.get("plugin.roadsigns.icon.sources", null);
             Collection<String> customIconDirs = null;
             if (customIconDirsStr != null) {
-                customIconDirs = new ArrayList<String>(Arrays.asList(customIconDirsStr.split(",")));
+                customIconDirs = new ArrayList<>(Arrays.asList(customIconDirsStr.split(",")));
             } else {
                 customIconDirs = Main.pref.getCollection("plugin.roadsigns.icon.sources", null);
             }
             if (customIconDirs != null) {
-                customIconDirs = new ArrayList<String>(customIconDirs);
+                customIconDirs = new ArrayList<>(customIconDirs);
             } else {
-                customIconDirs = new ArrayList<String>();
+                customIconDirs = new ArrayList<>();
             }
             // add icon directory relative to preset file
             if (!customFile.startsWith("resource:")) {

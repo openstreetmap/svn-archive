@@ -75,7 +75,7 @@ public class JunctionCheckTask extends PleaseWaitRunnable{
     @Override
     protected void realRun() throws SAXException, IOException,
     OsmTransferException {
-        jc.checkjunctions(new ArrayList<Channel>(subset), getProgressMonitor());
+        jc.checkjunctions(new ArrayList<>(subset), getProgressMonitor());
     }
 
     public JunctionChecker getJunctionChecker() {

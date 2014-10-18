@@ -30,7 +30,7 @@ public class WikipediaAddNamesAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         final WikipediaApp.WikipediaLangArticle wp = WikipediaApp.WikipediaLangArticle.parseTag("wikipedia", getWikipediaValue());
-        List<String[]> tags = new ArrayList<String[]>();
+        List<String[]> tags = new ArrayList<>();
         for (WikipediaApp.WikipediaLangArticle i : WikipediaApp.getInterwikiArticles(wp.lang, wp.article)) {
             if (useWikipediaLangArticle(i)) {
                 tags.add(new String[]{"name:" + i.lang, i.article});

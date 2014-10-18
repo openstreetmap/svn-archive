@@ -49,7 +49,7 @@ public class IssuesViewTest extends JFrame {
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         c.add(pane, gc);
         
-        List<Issue> issues = new ArrayList<Issue>();
+        List<Issue> issues = new ArrayList<>();
         issues.add(new RequiredTagMissingError(model, "type", "restriction"));
         issues.add(new MissingRestrictionTypeError(model));
         model.populate(issues);

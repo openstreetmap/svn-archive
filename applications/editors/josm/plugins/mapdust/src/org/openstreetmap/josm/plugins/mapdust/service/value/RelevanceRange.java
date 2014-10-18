@@ -91,7 +91,7 @@ public class RelevanceRange implements Serializable, Comparable<RelevanceRange> 
         this.lowerValue = lowerValue;
         this.upperValue = upperValue;
         if (set == null) {
-            set = new HashSet<RelevanceRange>();
+            set = new HashSet<>();
         }
         set.add(this);
     }

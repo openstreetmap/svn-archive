@@ -37,7 +37,7 @@ public class TabularTagSelector extends JPanel {
     private JTextField tfFilter;
     private JButton btnApply;
     private JScrollPane scrollPane;
-    private final ArrayList<ITagSelectorListener> listeners = new ArrayList<ITagSelectorListener>();
+    private final ArrayList<ITagSelectorListener> listeners = new ArrayList<>();
 
     protected JPanel buildFilterPanel() {
         JPanel pnl = new JPanel();

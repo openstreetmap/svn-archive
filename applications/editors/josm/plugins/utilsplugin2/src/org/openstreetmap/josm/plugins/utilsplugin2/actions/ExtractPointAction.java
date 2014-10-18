@@ -48,7 +48,7 @@ public class ExtractPointAction extends JosmAction {
         }
         Node nd = selectedNodes.get(0);
         Node ndCopy = new Node(nd.getCoor());
-        List<Command> cmds = new LinkedList<Command>();
+        List<Command> cmds = new LinkedList<>();
         
         Point p = Main.map.mapView.getMousePosition();
         if (p!=null) cmds.add(new MoveCommand(nd,Main.map.mapView.getLatLon(p.x, p.y)));

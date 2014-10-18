@@ -186,7 +186,7 @@ public final class NodeWayUtils {
 
     public static void addWaysIntersectingWaysRecursively
         (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
-        Set<Way> foundWays = new HashSet<Way>();
+        Set<Way> foundWays = new HashSet<>();
         foundWays.addAll(initWays);
         newWays.addAll(initWays);
         Set<Way> newFoundWays;
@@ -194,7 +194,7 @@ public final class NodeWayUtils {
         int level=0,c;
         do {
              c=0;
-             newFoundWays = new HashSet<Way>();
+             newFoundWays = new HashSet<>();
              for (Way w : foundWays){
                   c+=addWaysIntersectingWay(allWays, w, newFoundWays,newWays);
              }
@@ -219,7 +219,7 @@ public final class NodeWayUtils {
         newWays.addAll(initWays);
         do {
              c=0;
-             Set<Way> foundWays = new HashSet<Way>();
+             Set<Way> foundWays = new HashSet<>();
              foundWays.addAll(newWays);
              for (Way w : foundWays){
                   c+=addWaysConnectedToWay(w, newWays);
@@ -240,7 +240,7 @@ public final class NodeWayUtils {
         Iterator<Node> it=selectedNodes.iterator();
         Node n1 = it.next();
         Node n2 = it.next();
-        Set<Way> ways=new HashSet<Way>();
+        Set<Way> ways=new HashSet<>();
         ways.addAll(OsmPrimitive.getFilteredList(n1.getReferrers(), Way.class));
         for (Way w: ways) {
 
@@ -279,7 +279,7 @@ public final class NodeWayUtils {
         Way w=firstWay;
         Node curNode = w.lastNode();
         Node prevNode = w.getNode(w.getNodes().size()-2);
-        Set<Way> newestWays = new HashSet<Way>();
+        Set<Way> newestWays = new HashSet<>();
         while(true) {
 
             Node nextNode, endNode, otherEnd, preLast;
@@ -360,8 +360,8 @@ public final class NodeWayUtils {
         List<EastNorth> polyPoints = buildPointList(usedWays);
        
         List<Node> searchNodes = data.searchNodes(box);
-        Set<Node> newestNodes = new HashSet<Node>();
-        Set<Way> newestWays = new HashSet<Way>();
+        Set<Node> newestNodes = new HashSet<>();
+        Set<Way> newestWays = new HashSet<>();
         for (Node n : searchNodes) {
             //if (Geometry.nodeInsidePolygon(n, polyNodes)) {
             if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)) {
@@ -390,8 +390,8 @@ public final class NodeWayUtils {
         Iterable<EastNorth> polyPoints = getWayPoints(way);
         
         List<Node> searchNodes = data.searchNodes(box);
-        Set<Node> newestNodes = new HashSet<Node>();
-        Set<Way> newestWays = new HashSet<Way>();
+        Set<Node> newestNodes = new HashSet<>();
+        Set<Way> newestWays = new HashSet<>();
         for (Node n : searchNodes) {
             //if (Geometry.nodeInsidePolygon(n, polyNodes)) {
             if (NodeWayUtils.isPointInsidePolygon(n.getEastNorth(), polyPoints)) {
@@ -482,8 +482,8 @@ public final class NodeWayUtils {
             }
         }
 
-        Set<Way> newWays = new HashSet<Way>();
-        Set<Node> newNodes = new HashSet<Node>();
+        Set<Way> newWays = new HashSet<>();
+        Set<Node> newNodes = new HashSet<>();
         // select nodes and ways inside slexcted ways and multipolygons
         if (!selectedWays.isEmpty()) {
             for (Way w: selectedWays) {
@@ -502,7 +502,7 @@ public final class NodeWayUtils {
             }            
         }
         
-        Set<OsmPrimitive> insideSelection = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> insideSelection = new HashSet<>();
         if (!newWays.isEmpty() || !newNodes.isEmpty()) {
             insideSelection.addAll(newWays);
             insideSelection.addAll(newNodes);
@@ -511,7 +511,7 @@ public final class NodeWayUtils {
     }
 
     private static List<EastNorth> buildPointList(Iterable<Way> ways) {
-        ArrayList<EastNorth> points = new ArrayList<EastNorth>(1000);
+        ArrayList<EastNorth> points = new ArrayList<>(1000);
         for (Way way: ways) {
             for (EastNorth en: getWayPoints(way)) {
                 points.add(en);

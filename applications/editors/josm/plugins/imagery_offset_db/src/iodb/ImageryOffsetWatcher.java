@@ -18,8 +18,8 @@ import org.openstreetmap.josm.tools.Destroyable;
 public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView.LayerChangeListener, Destroyable {
     private static final double THRESHOLD = 1e-8;
     private static ImageryOffsetWatcher instance;
-    private Map<Integer, ImageryLayerData> layers = new TreeMap<Integer, ImageryLayerData>();
-    private List<OffsetStateListener> listeners = new ArrayList<OffsetStateListener>();
+    private Map<Integer, ImageryLayerData> layers = new TreeMap<>();
+    private List<OffsetStateListener> listeners = new ArrayList<>();
     private Timer time;
     private double maxDistance;
     private boolean offsetGood = true;
@@ -191,7 +191,7 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
         String id = ImageryOffsetTools.getImageryID(layer);
         if( !Main.pref.getBoolean("iodb.remember.offsets", true) || id == null )
             return;
-        Collection<String> offsets = new LinkedList<String>(Main.pref.getCollection("iodb.stored.offsets"));
+        Collection<String> offsets = new LinkedList<>(Main.pref.getCollection("iodb.stored.offsets"));
         for( Iterator<String> iter = offsets.iterator(); iter.hasNext(); ) {
             String[] offset = iter.next().split(":");
             if( offset.length == 5 && offset[0].equals(id) )

@@ -29,7 +29,7 @@ public class PasteRelationsAction extends JosmAction {
         if( selection.isEmpty() )
             return;
 
-        Map<Relation, String> relations = new HashMap<Relation, String>();
+        Map<Relation, String> relations = new HashMap<>();
         for( PrimitiveData pdata : Main.pasteBuffer.getDirectlyAdded() ) {
             OsmPrimitive p = getCurrentDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
             for( Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
@@ -49,7 +49,7 @@ public class PasteRelationsAction extends JosmAction {
             }
         }
 
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
         for( Relation rel : relations.keySet() ) {
             Relation r = new Relation(rel);
             boolean changed = false;

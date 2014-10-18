@@ -53,11 +53,11 @@ public class SelectHighwayAction extends JosmAction {
     }
 
     private Set<Way> selectNamedRoad( Way firstWay ) {
-        Set<Way> newWays = new HashSet<Way>();
+        Set<Way> newWays = new HashSet<>();
         String key = firstWay.hasKey("name") ? "name" : "ref";
         if( firstWay.hasKey(key) ) {
             String value = firstWay.get(key);
-            Queue<Node> nodeQueue = new LinkedList<Node>();
+            Queue<Node> nodeQueue = new LinkedList<>();
             nodeQueue.add(firstWay.firstNode());
             while( !nodeQueue.isEmpty() ) {
                 Node node = nodeQueue.remove();
@@ -82,7 +82,7 @@ public class SelectHighwayAction extends JosmAction {
 	    secondTree.processNextLevel();
 	    intersection = firstTree.getIntersection(secondTree);
 	}
-	Set<Way> newWays = new HashSet<Way>();
+	Set<Way> newWays = new HashSet<>();
 	newWays.addAll(firstTree.getPath(intersection));
 	newWays.addAll(secondTree.getPath(intersection));
 	return newWays;
@@ -141,13 +141,13 @@ public class SelectHighwayAction extends JosmAction {
 	private int minHighwayRank;
 
 	public HighwayTree( Way from, int minHighwayRank ) {
-	    tree = new ArrayList<Way>(1);
-	    refs = new ArrayList<Integer>(1);
+	    tree = new ArrayList<>(1);
+	    refs = new ArrayList<>(1);
 	    tree.add(from);
 	    refs.add(Integer.valueOf(-1));
 	    this.minHighwayRank = minHighwayRank;
-	    nodesToCheck = new ArrayList<Node>(2);
-	    nodeRefs = new ArrayList<Integer>(2);
+	    nodesToCheck = new ArrayList<>(2);
+	    nodeRefs = new ArrayList<>(2);
 	    nodesToCheck.add(from.firstNode());
 	    nodesToCheck.add(from.lastNode());
 	    nodeRefs.add(Integer.valueOf(0));
@@ -155,8 +155,8 @@ public class SelectHighwayAction extends JosmAction {
 	}
 	
 	public void processNextLevel() {
-	    List<Node> newNodes = new ArrayList<Node>();
-	    List<Integer> newIdx = new ArrayList<Integer>();
+	    List<Node> newNodes = new ArrayList<>();
+	    List<Integer> newIdx = new ArrayList<>();
 	    for( int i = 0; i < nodesToCheck.size(); i++ ) {
 		Node node = nodesToCheck.get(i);
 		Integer nodeRef = nodeRefs.get(i);
@@ -196,7 +196,7 @@ public class SelectHighwayAction extends JosmAction {
 	    int pos = tree.indexOf(to);
 	    if( pos < 0 )
 		throw new ArrayIndexOutOfBoundsException("Way " + to + " is not in the tree.");
-	    List<Way> result = new ArrayList<Way>(1);
+	    List<Way> result = new ArrayList<>(1);
 	    while( pos >= 0 ) {
 		result.add(tree.get(pos));
 		pos = refs.get(pos);

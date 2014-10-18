@@ -32,10 +32,10 @@ public class Capitalizator {
 
         int expResults = elems.size()/2;
 
-        map  = new HashMap<Street, OsmPrimitive>(expResults);
+        map  = new HashMap<>(expResults);
         ExecutorService serv = Executors.newCachedThreadPool();
         Map<Street, Future<OsmPrimitive>> results
-                = new HashMap<Street, Future<OsmPrimitive>>(expResults);
+                = new HashMap<>(expResults);
 
         for (Street elem : elems)
              results.put(elem, serv.submit(new StreetMatcher(elem, prims)));

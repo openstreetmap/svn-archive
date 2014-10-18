@@ -233,7 +233,7 @@ public class RoadSignsReader {
             }
         }
         public void wireSupplements() throws XmlParsingException {
-            Map<String, Sign> map = new HashMap<String, Sign>();
+            Map<String, Sign> map = new HashMap<>();
             for (Sign sign : allSigns) {
                 if (map.get(sign.id) != null)
                     throwException("Found 2 signs with same ref "+sign.ref);
@@ -308,8 +308,8 @@ public class RoadSignsReader {
      */
     public List<Sign> parse() throws SAXException, IOException {
         SignParser parser = new SignParser();
-        parser.allSigns = new ArrayList<Sign>();
-        parser.supplementIds = new HashMap<Sign, List<String>>();
+        parser.allSigns = new ArrayList<>();
+        parser.supplementIds = new HashMap<>();
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -317,7 +317,7 @@ public class RoadSignsReader {
             parser.wireSupplements();
             String filterPref = Main.pref.get("plugin.roadsigns.preset.filter");
             if (filterPref.equals("useful")) {
-                List<Sign> filtered = new ArrayList<Sign>();
+                List<Sign> filtered = new ArrayList<>();
                 for (Sign s : parser.allSigns) {
                     if (s.isUseful()) {
                         filtered.add(s);

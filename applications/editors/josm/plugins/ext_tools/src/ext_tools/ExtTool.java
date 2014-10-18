@@ -161,14 +161,14 @@ public class ExtTool {
     public void runTool(LatLon pos) {
         Main.map.mapView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         // parse cmdline and build cmdParams array
-        HashMap<String, String> replace = new HashMap<String, String>();
+        HashMap<String, String> replace = new HashMap<>();
 
         replace.put("{lat}", "" + pos.lat());
         replace.put("{lon}", "" + pos.lon());
         replace.put("{PPD}", "" + getPPD());
         replace.put("{TZoom}", "" + getTMSZoom());
 
-        ArrayList<String> cmdParams = new ArrayList<String>();
+        ArrayList<String> cmdParams = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(cmdline);
 
         while (st.hasMoreTokens()) {

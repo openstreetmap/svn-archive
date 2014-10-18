@@ -22,7 +22,7 @@ public class TurnRestrictionComboBoxModel implements ComboBoxModel<Object>, Obse
     //static private final Logger logger = Logger.getLogger(TurnRestrictionComboBoxModel.class.getName());
     
     private TurnRestrictionEditorModel model;
-    final private List<Object> values = new ArrayList<Object>();
+    final private List<Object> values = new ArrayList<>();
     private String selectedTagValue = null;
     private final transient EventListenerList listeners = new EventListenerList();
     

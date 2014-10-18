@@ -421,7 +421,7 @@ public class CadastrePlugin extends Plugin {
                 } else if (code >= 27561 && 27564 <= code) {        // Lambert
                     zone = code - 27561;
                 } else {                                            // UTM_France_DOM
-                    Map<Integer, Integer> utmfr = new HashMap<Integer, Integer>();
+                    Map<Integer, Integer> utmfr = new HashMap<>();
                     utmfr.put(2969, 0);
                     utmfr.put(2970, 1);
                     utmfr.put(2973, 2);

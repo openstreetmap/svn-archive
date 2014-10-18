@@ -19,13 +19,13 @@ public class TagConditionLogicTest {
 
     @Before
     public void setUp() {
-        Map<String, String> mapA = new HashMap<String, String>();
+        Map<String, String> mapA = new HashMap<>();
         mapA.put("key1", "value1");
         mapA.put("key2", "value2");
         mapA.put("key3", "value1");
         groupA = new MapBasedTagGroup(mapA);
 
-        Map<String, String> mapB = new HashMap<String, String>();
+        Map<String, String> mapB = new HashMap<>();
         mapB.put("key1", "value1");
         mapB.put("key4", "value4");
         groupB = new MapBasedTagGroup(mapB);

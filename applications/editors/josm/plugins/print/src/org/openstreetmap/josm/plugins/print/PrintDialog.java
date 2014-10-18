@@ -474,7 +474,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         // Save only one printer service attribute: printer name 
         PrintService service = job.getPrintService();
         if (service != null) {
-            Collection<Collection<String>> serviceAttributes = new ArrayList<Collection<String>>();
+            Collection<Collection<String>> serviceAttributes = new ArrayList<>();
             for (Attribute a : service.getAttributes().toArray()) {
                 if ("printer-name".equals(a.getName()) && a instanceof TextSyntax) {
                     serviceAttributes.add(marshallPrintSetting(a, TextSyntax.class, ((TextSyntax)a).getValue()));
@@ -485,7 +485,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         
         // Save all request attributes
         Collection<String> ignoredAttributes = Arrays.asList("media-printable-area");
-        Collection<Collection<String>> requestAttributes = new ArrayList<Collection<String>>();
+        Collection<Collection<String>> requestAttributes = new ArrayList<>();
         for (Attribute a : attrs.toArray()) {
             Collection<String> setting = null;
             if (a instanceof TextSyntax) {
@@ -506,7 +506,7 @@ public class PrintDialog extends JDialog implements ActionListener {
     }
     
     protected Collection<String> marshallPrintSetting(Attribute a, Class<?> syntaxClass, String value) {
-        return new ArrayList<String>(Arrays.asList(a.getCategory().getName(), a.getClass().getName(), syntaxClass.getName(), value));
+        return new ArrayList<>(Arrays.asList(a.getCategory().getName(), a.getClass().getName(), syntaxClass.getName(), value));
     }
     
     @SuppressWarnings("unchecked")

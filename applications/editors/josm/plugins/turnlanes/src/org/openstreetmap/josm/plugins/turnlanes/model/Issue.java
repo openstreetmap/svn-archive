@@ -48,7 +48,7 @@ public class Issue {
     private Issue(Severity severity, Relation relation, List<? extends OsmPrimitive> primitives, String description,
         QuickFix quickFix) {
         this.relation = relation;
-        this.primitives = Collections.unmodifiableList(new ArrayList<OsmPrimitive>(primitives));
+        this.primitives = Collections.unmodifiableList(new ArrayList<>(primitives));
         this.severity = severity;
         this.description = description;
         this.quickFix = quickFix;

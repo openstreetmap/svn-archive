@@ -24,7 +24,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 public class RelationMemberEditorModel extends AbstractTableModel{  
     //static private final Logger logger = Logger.getLogger(RelationMemberEditorModel.class.getName());
-    private final ArrayList<RelationMemberModel> members = new ArrayList<RelationMemberModel>();
+    private final ArrayList<RelationMemberModel> members = new ArrayList<>();
     private OsmDataLayer layer;
     private DefaultListSelectionModel rowSelectionModel;
     private DefaultListSelectionModel colSelectionModel;
@@ -88,7 +88,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      * @return the set of {@link OsmPrimitive}s with the role {@code role}
      */
     protected Set<OsmPrimitive> getPrimitivesWithRole(String role) {
-        HashSet<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
+        HashSet<OsmPrimitive> ret = new HashSet<>();
         for (RelationMemberModel rm: members){
             if (rm.getRole().equals(role)){
                 OsmPrimitive p = layer.data.getPrimitiveById(rm.getTarget());
@@ -107,7 +107,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      * @return the set of {@link RelationMemberModel}s with the role {@code role}
      */
     protected List<RelationMemberModel> getRelationMembersWithRole(String role) {
-        ArrayList<RelationMemberModel> ret = new ArrayList<RelationMemberModel>();
+        ArrayList<RelationMemberModel> ret = new ArrayList<>();
         for (RelationMemberModel rm: members){
             if (rm.getRole().equals(role)){
                 ret.add(rm);
@@ -162,7 +162,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      * @return 
      */
     public List<OsmPrimitive> getVias() {
-        ArrayList<OsmPrimitive> ret = new ArrayList<OsmPrimitive>();
+        ArrayList<OsmPrimitive> ret = new ArrayList<>();
         for (RelationMemberModel rm: getRelationMembersWithRole("via")){
             ret.add(layer.data.getPrimitiveById(rm.getTarget()));
         }
@@ -267,7 +267,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      * this model.
      */
     public Set<OsmPrimitive> getMemberPrimitives() {
-        Set<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> ret = new HashSet<>();
         for (RelationMemberModel rm: members){
             OsmPrimitive p = layer.data.getPrimitiveById(rm.getTarget());
             if (p != null) ret.add(p);
@@ -301,7 +301,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      */
     public void applyTo(Relation tr){
         if (tr == null) return;
-        List<RelationMember> newMembers = new ArrayList<RelationMember>();
+        List<RelationMember> newMembers = new ArrayList<>();
         for(RelationMemberModel model: members){
             RelationMember rm = new RelationMember(model.getRole(), layer.data.getPrimitiveById(model.getTarget()));
             newMembers.add(rm);
@@ -350,7 +350,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
     }
     
     protected List<Integer> getSelectedIndices() {
-        ArrayList<Integer> ret = new ArrayList<Integer>();
+        ArrayList<Integer> ret = new ArrayList<>();
         for(int i =0; i < members.size(); i++){
             if (rowSelectionModel.isSelectedIndex(i)) 
                 ret.add(i);
@@ -415,7 +415,7 @@ public class RelationMemberEditorModel extends AbstractTableModel{
      */
     public void insertMembers(Collection<PrimitiveId> ids) throws IllegalArgumentException {
         if (ids == null) return;    
-        ArrayList<RelationMemberModel> newMembers = new ArrayList<RelationMemberModel>();
+        ArrayList<RelationMemberModel> newMembers = new ArrayList<>();
         for (PrimitiveId id: ids){
             OsmPrimitive p = layer.data.getPrimitiveById(id);
             if (p == null){

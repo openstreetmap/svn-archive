@@ -15,7 +15,7 @@ public class EditGpxWayPoint implements Comparable<EditGpxWayPoint> {
     public EditGpxWayPoint(WayPoint wayPoint) {
         this.time = wayPoint.time;
         this.coor = new CachedLatLon(wayPoint.getCoor());
-        this.attributes = new HashMap<String, Object>(wayPoint.attr);
+        this.attributes = new HashMap<>(wayPoint.attr);
     }
 
     public WayPoint createWayPoint() {

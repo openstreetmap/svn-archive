@@ -42,7 +42,7 @@ public class NameManagerUtils {
     }
 
     public static List<Way> getWaysInsideSelectedArea(Way areaBorder) {
-        List<Way> waysInsideSelectedArea = new ArrayList<Way>();
+        List<Way> waysInsideSelectedArea = new ArrayList<>();
         if (areaBorder != null) {
             Coordinate topLeftCorner = getTopLeftCorener(areaBorder);
             List<Pair<Node, Node>> areaBorderLines = areaBorder.getNodePairs(true);

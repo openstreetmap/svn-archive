@@ -10,7 +10,7 @@ import java.util.TreeSet;
 import javax.swing.Timer;
 
 public class TimedKeyReleaseListener implements AWTEventListener {
-    private final TreeSet<Integer> set = new TreeSet<Integer>();
+    private final TreeSet<Integer> set = new TreeSet<>();
     private Timer timer;
     protected KeyEvent releaseEvent;
     

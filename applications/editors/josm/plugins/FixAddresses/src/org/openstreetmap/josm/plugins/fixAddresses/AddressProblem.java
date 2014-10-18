@@ -55,7 +55,7 @@ public class AddressProblem implements IProblem {
      */
     private void lazyCreateSolutions() {
         if (solutions == null) {
-            solutions = new ArrayList<ISolution>();
+            solutions = new ArrayList<>();
         }
     }
 

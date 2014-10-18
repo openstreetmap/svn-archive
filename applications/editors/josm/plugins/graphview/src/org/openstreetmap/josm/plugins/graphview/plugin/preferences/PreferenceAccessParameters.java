@@ -78,7 +78,7 @@ public class PreferenceAccessParameters implements AccessParameters {
 
         this.accessClass = accessClass;
 
-        accessTypeUsableMap = new EnumMap<AccessType, Boolean>(AccessType.class);
+        accessTypeUsableMap = new EnumMap<>(AccessType.class);
         for (AccessType accessType : AccessType.values()) {
             accessTypeUsableMap.put(accessType, usableAccessTypes.contains(accessType));
         }
@@ -86,9 +86,9 @@ public class PreferenceAccessParameters implements AccessParameters {
         /* check and use vehicle properties */
 
         this.vehiclePropertyStrings = Collections.unmodifiableMap(
-                new HashMap<VehiclePropertyType<?>, String>(vehiclePropertyStrings));
+                new HashMap<>(vehiclePropertyStrings));
 
-        this.vehiclePropertyValues = new HashMap<VehiclePropertyType<?>, Object>();
+        this.vehiclePropertyValues = new HashMap<>();
         for (VehiclePropertyType<?> vehiclePropertyType : vehiclePropertyStrings.keySet()) {
             String propertyValueString = vehiclePropertyStrings.get(vehiclePropertyType);
             Object propertyValue = VehiclePropertyStringParser.parsePropertyValue(

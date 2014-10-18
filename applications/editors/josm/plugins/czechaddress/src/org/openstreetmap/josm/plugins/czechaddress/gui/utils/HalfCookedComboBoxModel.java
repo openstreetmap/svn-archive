@@ -17,7 +17,7 @@ import javax.swing.event.ListDataListener;
  */
 public abstract class HalfCookedComboBoxModel<E> implements ComboBoxModel<E> {
 
-    List<ListDataListener> listeners = new ArrayList<ListDataListener>();
+    List<ListDataListener> listeners = new ArrayList<>();
 
     @Override
     public void addListDataListener(ListDataListener l) {

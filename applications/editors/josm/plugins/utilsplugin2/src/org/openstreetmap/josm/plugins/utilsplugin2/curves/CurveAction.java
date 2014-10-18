@@ -52,8 +52,8 @@ public class CurveAction extends JosmAction {
 
         updatePreferences();
 
-        List<Node> selectedNodes = new ArrayList<Node>(getCurrentDataSet().getSelectedNodes());
-        List<Way> selectedWays = new ArrayList<Way>(getCurrentDataSet().getSelectedWays());
+        List<Node> selectedNodes = new ArrayList<>(getCurrentDataSet().getSelectedNodes());
+        List<Way> selectedWays = new ArrayList<>(getCurrentDataSet().getSelectedWays());
 
         // Collection<Command> cmds = doSpline(selectedNodes, selectedWays);
         Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays, angleSeparation);

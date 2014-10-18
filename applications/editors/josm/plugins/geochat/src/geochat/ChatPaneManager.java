@@ -29,7 +29,7 @@ class ChatPaneManager {
         this.panel = panel;
         this.tabs = tabs;
         this.collapsed = panel.isDialogInCollapsedView();
-        chatPanes = new HashMap<String, ChatPane>();
+        chatPanes = new HashMap<>();
         createChatPane(null);
         tabs.addChangeListener(new ChangeListener() {
             public void stateChanged( ChangeEvent e ) {
@@ -195,7 +195,7 @@ class ChatPaneManager {
     }
 
     public void closePrivateChatPanes() {
-        List<String> entries = new ArrayList<String>(chatPanes.keySet());
+        List<String> entries = new ArrayList<>(chatPanes.keySet());
         for( String user : entries )
             if( !user.equals(PUBLIC_PANE) )
                 closeChatPane(user);

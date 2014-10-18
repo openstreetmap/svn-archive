@@ -62,8 +62,8 @@ public abstract class StringUtils {
         s1 = anglicize(s1);
         s2 = anglicize(s2);
 
-        List<Integer> beg1 = new ArrayList<Integer>(4);
-        List<Integer> beg2 = new ArrayList<Integer>(4);
+        List<Integer> beg1 = new ArrayList<>(4);
+        List<Integer> beg2 = new ArrayList<>(4);
 
         char lastChar = ' ';
         for (int i=0; i<s1.length(); i++) {

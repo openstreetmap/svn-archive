@@ -54,7 +54,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 
     public void actionPerformed( ActionEvent e ) {
         Relation r = rel.get();
-	List<Way> ways = new ArrayList<Way>();
+	List<Way> ways = new ArrayList<>();
 	boolean wont = false;
 	for( RelationMember m : r.getMembers() ) {
 	    if( m.isWay() )
@@ -80,8 +80,8 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 	}
 	
 	rel.clear();
-	List<Way> newSelection = new ArrayList<Way>();
-	List<Command> commands = new ArrayList<Command>();
+	List<Way> newSelection = new ArrayList<>();
+	List<Command> commands = new ArrayList<>();
         Command c = DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(r), true, true);
         if( c == null )
             return;
@@ -91,7 +91,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 	    // move all tags from relation and common tags from ways
 	    Map<String, String> tags = p.ways.get(0).getKeys();
 	    List<OsmPrimitive> relations = p.ways.get(0).getReferrers();
-	    Set<String> noTags = new HashSet<String>(r.keySet());
+	    Set<String> noTags = new HashSet<>(r.keySet());
 	    for( int i = 1; i < p.ways.size(); i++ ) {
 		Way w = p.ways.get(i);
 		for( String key : w.keySet() ) {
@@ -114,7 +114,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 	    for( Way w : p.ways ) {
 		if( w.getReferrers().equals(relations) ) {
 		    // check tags that remain
-		    Set<String> keys = new HashSet<String>(w.keySet());
+		    Set<String> keys = new HashSet<>(w.keySet());
 		    keys.removeAll(tags.keySet());
 		    keys.removeAll(IRRELEVANT_KEYS);
 		    if( keys.isEmpty() ) {

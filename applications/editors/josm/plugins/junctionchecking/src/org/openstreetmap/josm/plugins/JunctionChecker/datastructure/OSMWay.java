@@ -7,7 +7,7 @@ import java.util.Vector;
  */
 public class OSMWay extends OSMEntity {
 
-    private Vector<OSMNode> nodes = new Vector<OSMNode>();
+    private Vector<OSMNode> nodes = new Vector<>();
 
     public OSMNode[] getNodes() {
         OSMNode[] nodearray = new OSMNode[nodes.size()];

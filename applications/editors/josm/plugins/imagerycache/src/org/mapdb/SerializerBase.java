@@ -1300,7 +1300,7 @@ public class SerializerBase implements Serializer{
 
     private ArrayList<Object> deserializeArrayList(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
-        ArrayList<Object> s = new ArrayList<Object>(size);
+        ArrayList<Object> s = new ArrayList<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++) {
             s.add(deserialize(is, objectStack));
@@ -1313,7 +1313,7 @@ public class SerializerBase implements Serializer{
         if (size < 0)
             throw new EOFException();
 
-        ArrayList<Object> s = new ArrayList<Object>(size);
+        ArrayList<Object> s = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             long l = Utils.unpackLong(is);
             if (l == 0)
@@ -1337,7 +1337,7 @@ public class SerializerBase implements Serializer{
 
     private Vector<Object> deserializeVector(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
-        Vector<Object> s = new Vector<Object>(size);
+        Vector<Object> s = new Vector<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.add(deserialize(is, objectStack));
@@ -1347,7 +1347,7 @@ public class SerializerBase implements Serializer{
 
     private HashSet<Object> deserializeHashSet(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
-        HashSet<Object> s = new HashSet<Object>(size);
+        HashSet<Object> s = new HashSet<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.add(deserialize(is, objectStack));
@@ -1357,7 +1357,7 @@ public class SerializerBase implements Serializer{
 
     private LinkedHashSet<Object> deserializeLinkedHashSet(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
-        LinkedHashSet<Object> s = new LinkedHashSet<Object>(size);
+        LinkedHashSet<Object> s = new LinkedHashSet<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.add(deserialize(is, objectStack));
@@ -1367,11 +1367,11 @@ public class SerializerBase implements Serializer{
 
     private TreeSet<Object> deserializeTreeSet(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
-        TreeSet<Object> s = new TreeSet<Object>();
+        TreeSet<Object> s = new TreeSet<>();
         objectStack.add(s);
         Comparator comparator = (Comparator) deserialize(is, objectStack);
         if (comparator != null)
-            s = new TreeSet<Object>(comparator);
+            s = new TreeSet<>(comparator);
 
         for (int i = 0; i < size; i++)
             s.add(deserialize(is, objectStack));
@@ -1382,11 +1382,11 @@ public class SerializerBase implements Serializer{
     private TreeMap<Object, Object> deserializeTreeMap(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
 
-        TreeMap<Object, Object> s = new TreeMap<Object, Object>();
+        TreeMap<Object, Object> s = new TreeMap<>();
         objectStack.add(s);
         Comparator comparator = (Comparator) deserialize(is, objectStack);
         if (comparator != null)
-            s = new TreeMap<Object, Object>(comparator);
+            s = new TreeMap<>(comparator);
         for (int i = 0; i < size; i++)
             s.put(deserialize(is, objectStack), deserialize(is, objectStack));
         return s;
@@ -1396,7 +1396,7 @@ public class SerializerBase implements Serializer{
     private HashMap<Object, Object> deserializeHashMap(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
 
-        HashMap<Object, Object> s = new HashMap<Object, Object>(size);
+        HashMap<Object, Object> s = new HashMap<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.put(deserialize(is, objectStack), deserialize(is, objectStack));
@@ -1406,7 +1406,7 @@ public class SerializerBase implements Serializer{
     private IdentityHashMap<Object, Object> deserializeIdentityHashMap(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
 
-        IdentityHashMap<Object, Object> s = new IdentityHashMap<Object, Object>(size);
+        IdentityHashMap<Object, Object> s = new IdentityHashMap<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.put(deserialize(is, objectStack), deserialize(is, objectStack));
@@ -1416,7 +1416,7 @@ public class SerializerBase implements Serializer{
     private LinkedHashMap<Object, Object> deserializeLinkedHashMap(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
 
-        LinkedHashMap<Object, Object> s = new LinkedHashMap<Object, Object>(size);
+        LinkedHashMap<Object, Object> s = new LinkedHashMap<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.put(deserialize(is, objectStack), deserialize(is, objectStack));
@@ -1427,7 +1427,7 @@ public class SerializerBase implements Serializer{
     private Hashtable<Object, Object> deserializeHashtable(DataInput is, FastArrayList<Object> objectStack) throws IOException {
         int size = Utils.unpackInt(is);
 
-        Hashtable<Object, Object> s = new Hashtable<Object, Object>(size);
+        Hashtable<Object, Object> s = new Hashtable<>(size);
         objectStack.add(s);
         for (int i = 0; i < size; i++)
             s.put(deserialize(is, objectStack), deserialize(is, objectStack));

@@ -19,7 +19,7 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 
 public class Utils {
-    private static final Set<String> ROAD_HIGHWAY_VALUES = Collections.unmodifiableSet(new HashSet<String>(Arrays
+    private static final Set<String> ROAD_HIGHWAY_VALUES = Collections.unmodifiableSet(new HashSet<>(Arrays
             .asList("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary",
                     "secondary_link", "tertiary", "tertiary_link", "residential", "unclassified", "road", "living_street", "service",
                     "track", "pedestrian", "raceway", "services")));
@@ -29,7 +29,7 @@ public class Utils {
     }
     
     public static final List<Way> filterRoads(List<OsmPrimitive> of) {
-        final List<Way> result = new ArrayList<Way>();
+        final List<Way> result = new ArrayList<>();
         
         for (OsmPrimitive p : of) {
             if (p.getType() == OsmPrimitiveType.WAY && Utils.isRoad((Way) p)) {
@@ -69,7 +69,7 @@ public class Utils {
     }
     
     public static List<RelationMember> getMembers(Relation r, String role) {
-        final List<RelationMember> result = new ArrayList<RelationMember>();
+        final List<RelationMember> result = new ArrayList<>();
         for (RelationMember m : r.getMembers()) {
             if (m.getRole().equals(role)) {
                 result.add(m);
@@ -87,7 +87,7 @@ public class Utils {
     }
     
     private static <T> List<T> mapMembers(List<RelationMember> ms, Class<T> t) {
-        final List<T> result = new ArrayList<T>(ms.size());
+        final List<T> result = new ArrayList<>(ms.size());
         for (RelationMember m : ms) {
             result.add(t.cast(m.getMember()));
         }
@@ -101,7 +101,7 @@ public class Utils {
      * @return the node at which {@code a} and {@code b} are connected
      */
     public static Node lineUp(Way a, Way b) {
-        final Set<Node> s = new HashSet<Node>(Arrays.asList(a.firstNode(), a.lastNode(), b.firstNode(), b.lastNode()));
+        final Set<Node> s = new HashSet<>(Arrays.asList(a.firstNode(), a.lastNode(), b.firstNode(), b.lastNode()));
         if (a.firstNode() == a.lastNode() || b.firstNode().equals(b.lastNode()) || s.size() == 2) {
             throw new IllegalArgumentException("Cycles are not allowed.");
         } else if (s.size() == 4) {
@@ -151,10 +151,10 @@ public class Utils {
      *             if the ways can't be ordered
      */
     public static List<Route> orderWays(Iterable<Way> ways, Iterable<Node> nodes) {
-        final List<Way> ws = new LinkedList<Way>(CollectionUtils.toList(ways));
-        final Set<Node> ns = new HashSet<Node>(CollectionUtils.toList(nodes));
+        final List<Way> ws = new LinkedList<>(CollectionUtils.toList(ways));
+        final Set<Node> ns = new HashSet<>(CollectionUtils.toList(nodes));
         
-        final List<Route> result = new ArrayList<Route>();
+        final List<Route> result = new ArrayList<>();
         
         while (!ws.isEmpty()) {
             result.add(findPath(ws, ns));
@@ -174,7 +174,7 @@ public class Utils {
             throw new AssertionError();
         }
         
-        final List<Way> result = new ArrayList<Way>();
+        final List<Way> result = new ArrayList<>();
         result.add(w);
         Node n = first ? w.lastNode() : w.firstNode();
         while (true) {
@@ -204,7 +204,7 @@ public class Utils {
     }
     
     public static Iterable<Way> flattenVia(Node start, List<Road> via, Node end) {
-        final List<Way> result = new ArrayList<Way>();
+        final List<Way> result = new ArrayList<>();
         
         Node n = start;
         for (Road r : via) {

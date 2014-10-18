@@ -37,7 +37,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
      * when they decide not to save the credentials.
      * In contrast, this cache avoids read request the backend in general.
      */
-    private Map<RequestorType, PasswordAuthentication> credentialsCache = new HashMap<RequestorType, PasswordAuthentication>();
+    private Map<RequestorType, PasswordAuthentication> credentialsCache = new HashMap<>();
     private OAuthToken oauthCache;
     
     public NPMCredentialsAgent(NPMType type) {
@@ -221,7 +221,7 @@ public class NPMCredentialsAgent extends AbstractCredentialsAgent {
                     + "<strong>"+tr("Native Password Manager Plugin")+"</strong><br>"
                     + tr("The username and password is protected by {0}.", type.getName())
         );
-        List<String> sensitive = new ArrayList<String>();
+        List<String> sensitive = new ArrayList<>();
         if (Main.pref.get("osm-server.username", null) != null) {
             sensitive.add(tr("username"));
         }

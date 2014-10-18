@@ -136,7 +136,7 @@ public class PbfReader extends AbstractReader {
                         // A single table contains all keys/values of all nodes.
                         // Each node's tags are encoded in alternating <key_id> <value_id>.
                         // A single stringid of 0 delimit when the tags of a node ends and the tags of the next node begin.
-                        Map<String, String> keys = new HashMap<String, String>();
+                        Map<String, String> keys = new HashMap<>();
                         while (keyIndex < nodes.getKeysValsCount()) {
                             int key_id = nodes.getKeysVals(keyIndex++);
                             if (key_id == 0) {
@@ -171,7 +171,7 @@ public class PbfReader extends AbstractReader {
                         node.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
                         checkTimestamp(info.getTimestamp());
                         node.setTimestamp(getDate(info));
-                        Map<String, String> keys = new HashMap<String, String>();
+                        Map<String, String> keys = new HashMap<>();
                         for (int i=0; i<n.getKeysCount(); i++) {
                             keys.put(getStringById(n.getKeys(i)), getStringById(n.getVals(i)));
                         }
@@ -196,13 +196,13 @@ public class PbfReader extends AbstractReader {
                         way.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
                         checkTimestamp(info.getTimestamp());
                         way.setTimestamp(getDate(info));
-                        Map<String, String> keys = new HashMap<String, String>();
+                        Map<String, String> keys = new HashMap<>();
                         for (int i=0; i<w.getKeysCount(); i++) {
                             keys.put(getStringById(w.getKeys(i)), getStringById(w.getVals(i)));
                         }
                         way.setKeys(keys);
                         long previousId = 0; // Node ids are delta coded
-                        Collection<Long> nodeIds = new ArrayList<Long>();
+                        Collection<Long> nodeIds = new ArrayList<>();
                         for (Long id : w.getRefsList()) {
                             nodeIds.add(previousId+=id);
                         }
@@ -227,13 +227,13 @@ public class PbfReader extends AbstractReader {
                         rel.setUser(User.createOsmUser(info.getUid(), getStringById(info.getUserSid())));
                         checkTimestamp(info.getTimestamp());
                         rel.setTimestamp(getDate(info));
-                        Map<String, String> keys = new HashMap<String, String>();
+                        Map<String, String> keys = new HashMap<>();
                         for (int i=0; i<r.getKeysCount(); i++) {
                             keys.put(getStringById(r.getKeys(i)), getStringById(r.getVals(i)));
                         }
                         rel.setKeys(keys);
                         long previousId = 0; // Member ids are delta coded
-                        Collection<RelationMemberData> members = new ArrayList<RelationMemberData>();
+                        Collection<RelationMemberData> members = new ArrayList<>();
                         for (int i = 0; i<r.getMemidsCount(); i++) {
                             long id = previousId+=r.getMemids(i);
                             String role = getStringById(r.getRolesSid(i));

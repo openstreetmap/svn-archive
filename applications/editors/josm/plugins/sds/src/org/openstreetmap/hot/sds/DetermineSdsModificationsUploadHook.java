@@ -39,7 +39,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
 	
     public boolean checkUpload(APIDataSet apiDataSet) {
     	
-    	ArrayList<OsmPrimitive> droplist = new ArrayList<OsmPrimitive>();
+    	ArrayList<OsmPrimitive> droplist = new ArrayList<>();
     	
     	// check deleted primitives for special tags.
     	for (OsmPrimitive del : apiDataSet.getPrimitivesToDelete()) {
@@ -53,7 +53,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
     	// check modified primitives.
        	for (OsmPrimitive upd : apiDataSet.getPrimitivesToUpdate()) {
        		
-       		HashSet<String> allKeys = new HashSet<String>();
+       		HashSet<String> allKeys = new HashSet<>();
        		boolean specialTags = false;
        		
        		// process tags of new object
@@ -86,7 +86,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
        		if (!changeInSpecialTags) continue;
        		
        		// assemble new set of special tags. might turn out to be empty.
-       		HashMap<String, String> newSpecialTags = new HashMap<String, String>();
+       		HashMap<String, String> newSpecialTags = new HashMap<>();
        		for (String key : upd.keySet()) {
        			if (isSpecialKey(key)) newSpecialTags.put(key, upd.get(key));
        		}
@@ -150,7 +150,7 @@ public class DetermineSdsModificationsUploadHook implements UploadHook
        	// check added primitives. 
        	for (OsmPrimitive add : apiDataSet.getPrimitivesToAdd()) {
        		// assemble new set of special tags. might turn out to be empty.
-       		HashMap<String, String> newSpecialTags = new HashMap<String, String>();
+       		HashMap<String, String> newSpecialTags = new HashMap<>();
        		for (String key : add.keySet()) {
        			if (isSpecialKey(key)) newSpecialTags.put(key, add.get(key));
        		}

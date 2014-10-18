@@ -190,7 +190,7 @@ public class OheEditor extends JPanel implements MouseListener, MouseMotionListe
         }
 
         setEnabled(true);
-        timeRects = new ArrayList<TimeRect>();
+        timeRects = new ArrayList<>();
         if (time != null) {
             for (int[] timeRectValues : time) {
                 int day0 = timeRectValues[0];

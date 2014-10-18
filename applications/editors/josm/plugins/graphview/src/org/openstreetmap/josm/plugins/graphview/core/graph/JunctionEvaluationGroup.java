@@ -83,8 +83,8 @@ public class JunctionEvaluationGroup extends EvaluationGroup {
         /* find inbound and outbound segments. An inbound segment is a segment whose target
          * is in the set and whose start node isn't (analogous for outbound segments)       */
 
-        inboundSegments = new ArrayList<Segment>();
-        outboundSegments = new ArrayList<Segment>();
+        inboundSegments = new ArrayList<>();
+        outboundSegments = new ArrayList<>();
 
         for (SegmentNode segmentNode : segmentNodes) {
             for (Segment segment : segmentNode.getInboundSegments()) {

@@ -32,8 +32,8 @@ final class DataSetCommandMerger {
     private final DataSet sourceDataSet;
     private final DataSet targetDataSet;
 
-    private final List<Command> cmds = new LinkedList<Command>();
-    private final List<OsmPrimitive> nominalRevertedPrimitives = new LinkedList<OsmPrimitive>();
+    private final List<Command> cmds = new LinkedList<>();
+    private final List<OsmPrimitive> nominalRevertedPrimitives = new LinkedList<>();
 
     /**
      * constructor
@@ -97,9 +97,9 @@ final class DataSetCommandMerger {
         if (!source.isVisible()) return;
         Way target = (Way)getMergeTarget(source);
         
-        Collection<Conflict<OsmPrimitive>> localConflicts = new ArrayList<Conflict<OsmPrimitive>>();
+        Collection<Conflict<OsmPrimitive>> localConflicts = new ArrayList<>();
 
-        List<Node> newNodes = new ArrayList<Node>(source.getNodesCount());
+        List<Node> newNodes = new ArrayList<>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node)getMergeTarget(sourceNode);
             // Target node is not deleted or it will be undeleted when running existing commands
@@ -141,12 +141,12 @@ final class DataSetCommandMerger {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Relation target = (Relation) getMergeTarget(source);
-        LinkedList<RelationMember> newMembers = new LinkedList<RelationMember>();
+        LinkedList<RelationMember> newMembers = new LinkedList<>();
         for (RelationMember sourceMember : source.getMembers()) {
             OsmPrimitive targetMember = getMergeTarget(sourceMember.getMember());
             if (targetMember.isDeleted() && sourceMember.getMember().isIncomplete()
                     && !conflicts.hasConflictForMy(targetMember)) {
-                conflicts.add(new Conflict<OsmPrimitive>(targetMember, sourceMember.getMember(), true));
+                conflicts.add(new Conflict<>(targetMember, sourceMember.getMember(), true));
                 OsmPrimitive undeletedTargetMember;
                 switch(targetMember.getType()) {
                 case NODE: undeletedTargetMember = new Node((Node)targetMember); break;

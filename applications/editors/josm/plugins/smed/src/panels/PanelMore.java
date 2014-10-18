@@ -44,7 +44,7 @@ public class PanelMore extends JPanel {
 	};
 	public JLabel statusLabel;
 	public JComboBox<String> statusBox;
-	public EnumMap<Sts, Integer> statuses = new EnumMap<Sts, Integer>(Sts.class);
+	public EnumMap<Sts, Integer> statuses = new EnumMap<>(Sts.class);
 	private ActionListener alStatus = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Sts sts : statuses.keySet()) {
@@ -56,7 +56,7 @@ public class PanelMore extends JPanel {
 	};
 	public JLabel constrLabel;
 	public JComboBox<String> constrBox;
-	public EnumMap<Cns, Integer> constructions = new EnumMap<Cns, Integer>(Cns.class);
+	public EnumMap<Cns, Integer> constructions = new EnumMap<>(Cns.class);
 	private ActionListener alConstr = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cns cns : constructions.keySet()) {
@@ -68,7 +68,7 @@ public class PanelMore extends JPanel {
 	};
 	public JLabel conLabel;
 	public JComboBox<String> conBox;
-	public EnumMap<Con, Integer> conspicuities = new EnumMap<Con, Integer>(Con.class);
+	public EnumMap<Con, Integer> conspicuities = new EnumMap<>(Con.class);
 	private ActionListener alCon = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Con con : conspicuities.keySet()) {
@@ -80,7 +80,7 @@ public class PanelMore extends JPanel {
 	};
 	public JLabel reflLabel;
 	public JComboBox<String> reflBox;
-	public EnumMap<Con, Integer> reflectivities = new EnumMap<Con, Integer>(Con.class);
+	public EnumMap<Con, Integer> reflectivities = new EnumMap<>(Con.class);
 	private ActionListener alRefl = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Con con : reflectivities.keySet()) {

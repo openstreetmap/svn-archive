@@ -23,7 +23,7 @@ public class GPSVideoPlayer extends VideoPlayer {
 
 	public GPSVideoPlayer(DateFormat videoTimeFormat,VideoPositionLayer videoPositionLayer) throws HeadlessException {
 		super(videoTimeFormat);
-		videos = new LinkedList<GPSVideo>();
+		videos = new LinkedList<>();
 		this.videoPositionLayer=videoPositionLayer;
 		videoPositionLayer.setGPSVideoPlayer(this);
 	}

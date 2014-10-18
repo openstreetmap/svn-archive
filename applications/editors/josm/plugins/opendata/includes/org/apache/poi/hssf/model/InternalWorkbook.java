@@ -111,13 +111,13 @@ public final class InternalWorkbook {
     private InternalWorkbook() {
     	records     = new WorkbookRecordList();
 
-		boundsheets = new ArrayList<BoundSheetRecord>();
-		formats = new ArrayList<FormatRecord>();
-		hyperlinks = new ArrayList<HyperlinkRecord>();
+		boundsheets = new ArrayList<>();
+		formats = new ArrayList<>();
+		hyperlinks = new ArrayList<>();
 		numxfs = 0;
 		maxformatid = -1;
 		uses1904datewindowing = false;
-		commentRecords = new LinkedHashMap<String, NameCommentRecord>();
+		commentRecords = new LinkedHashMap<>();
     }
 
     /**
@@ -137,7 +137,7 @@ public final class InternalWorkbook {
             log.log(DEBUG, "Workbook (readfile) created with reclen=",
                     Integer.valueOf(recs.size()));
         InternalWorkbook retval = new InternalWorkbook();
-        List<Record> records = new ArrayList<Record>(recs.size() / 3);
+        List<Record> records = new ArrayList<>(recs.size() / 3);
         retval.records.setRecords(records);
 
         int k;

@@ -382,7 +382,7 @@ public class PropertySet
          * Summary Information stream has 2. Everything else is a rare
          * exception and is no longer fostered by Microsoft.
          */
-        sections = new ArrayList<Section>(sectionCount);
+        sections = new ArrayList<>(sectionCount);
 
         /*
          * Loop over the section descriptor array. Each descriptor

@@ -91,7 +91,7 @@ public class SplitObjectAction extends JosmAction {
         // If only nodes are selected, try to guess which way to split. This works if there
         // is exactly one way that all nodes are part of.
         if (selectedWay == null && !selectedNodes.isEmpty()) {
-            Map<Way, Integer> wayOccurenceCounter = new HashMap<Way, Integer>();
+            Map<Way, Integer> wayOccurenceCounter = new HashMap<>();
             for (Node n : selectedNodes) {
                 for (Way w : OsmPrimitive.getFilteredList(n.getReferrers(), Way.class)) {
                     if (!w.isUsable()) {
@@ -147,7 +147,7 @@ public class SplitObjectAction extends JosmAction {
                 showWarningNotification(tr("The selected way is not closed."));
                 return;
             }
-            HashSet<Node> nds = new HashSet<Node>(selectedNodes);
+            HashSet<Node> nds = new HashSet<>(selectedNodes);
             nds.removeAll(selectedWay.getNodes());
             if (!nds.isEmpty()) {
                 showWarningNotification(

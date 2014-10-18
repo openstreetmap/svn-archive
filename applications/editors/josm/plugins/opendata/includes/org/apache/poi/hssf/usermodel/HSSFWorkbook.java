@@ -93,8 +93,8 @@ public final class HSSFWorkbook extends POIDocument implements org.apache.poi.ss
 	private HSSFWorkbook(InternalWorkbook book) {
 		super(null);
 		workbook = book;
-		_sheets = new ArrayList<HSSFSheet>(INITIAL_CAPACITY);
-		names = new ArrayList<HSSFName>(INITIAL_CAPACITY);
+		_sheets = new ArrayList<>(INITIAL_CAPACITY);
+		names = new ArrayList<>(INITIAL_CAPACITY);
 	}
 
     public HSSFWorkbook(POIFSFileSystem fs) throws IOException {
@@ -181,8 +181,8 @@ public final class HSSFWorkbook extends POIDocument implements org.apache.poi.ss
            this.directory = null;
         }
 
-        _sheets = new ArrayList<HSSFSheet>(INITIAL_CAPACITY);
-        names  = new ArrayList<HSSFName>(INITIAL_CAPACITY);
+        _sheets = new ArrayList<>(INITIAL_CAPACITY);
+        names  = new ArrayList<>(INITIAL_CAPACITY);
 
         // Grab the data from the workbook stream, however
         //  it happens to be spelled.

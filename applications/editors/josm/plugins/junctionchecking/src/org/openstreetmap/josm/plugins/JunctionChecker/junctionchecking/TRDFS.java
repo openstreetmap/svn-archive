@@ -25,7 +25,7 @@ public class TRDFS {
     public TRDFS(ArrayList<Channel> adnodes, ChannelDiGraph digraph) {
         this.vertices = adnodes;
         this.digraph = digraph;
-        this.cycleEdges = new ArrayList<LeadsTo>();
+        this.cycleEdges = new ArrayList<>();
     }
 
 

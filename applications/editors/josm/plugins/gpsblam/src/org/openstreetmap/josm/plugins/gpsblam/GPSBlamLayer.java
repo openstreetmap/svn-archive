@@ -24,7 +24,7 @@ public class GPSBlamLayer extends Layer {
 	
     public GPSBlamLayer(String name) {
 		super(name);
-		blamMarkers = new LinkedList<GPSBlamMarker>();
+		blamMarkers = new LinkedList<>();
 	}
 
 	private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(GPSBlamPlugin.class.getResource("/images/gpsblam_layer.png")));

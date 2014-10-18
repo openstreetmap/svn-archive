@@ -17,7 +17,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMRelation;
  */
 public class TurnRestrictionChecker {
 
-    private final ArrayList<OSMRelation> turnrestrictionsrelations = new ArrayList<OSMRelation>();
+    private final ArrayList<OSMRelation> turnrestrictionsrelations = new ArrayList<>();
     private final ChannelDiGraph channelDigraph;
     private int relationpointer;
     private LeadsTo tempLeadsTo;

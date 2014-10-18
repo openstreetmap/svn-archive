@@ -53,7 +53,7 @@ public class SdsLoadAction extends SdsDiskAccessAction {
 
         public OpenFileTask(List<File> files, SeparateDataStorePlugin p) {
             super(tr("Loading files"), false /* don't ignore exception */);
-            this.files = new ArrayList<File>(files);
+            this.files = new ArrayList<>(files);
             plugin = p;
         }
 

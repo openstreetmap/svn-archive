@@ -94,7 +94,7 @@ public class GeoFabrikWFSClient {
 
 		String getCapabilities = "http://tools.geofabrik.de/osmi/view/routing_non_eu/wxs?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities";
 		@SuppressWarnings("rawtypes")
-		Map<String, Comparable> connectionParameters = new HashMap<String, Comparable>();
+		Map<String, Comparable> connectionParameters = new HashMap<>();
 		connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL",
 				getCapabilities);
 		connectionParameters.put("WFSDataStoreFactory:WFS_STRATEGY",

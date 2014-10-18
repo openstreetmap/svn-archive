@@ -43,7 +43,7 @@ public class CacheControl implements Runnable {
 
     public WMSLayer wmsLayer = null;
 
-    private ArrayList<GeorefImage> imagesToSave = new ArrayList<GeorefImage>();
+    private ArrayList<GeorefImage> imagesToSave = new ArrayList<>();
     private Lock imagesLock = new ReentrantLock();
 
     public boolean isCachePipeEmpty() {

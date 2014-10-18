@@ -599,7 +599,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             // Get additional nodes with addr:housenumber tags:
             //   Either selected or in the middle of the Address Interpolation way
             //     Do not include end points of Address Interpolation way in this set yet.
-            houseNumberNodes  = new ArrayList<Node>();
+            houseNumberNodes  = new ArrayList<>();
             // Check selected nodes
             for (OsmPrimitive osm : currentDataSet.getSelectedNodes()) {
                 Node node = (Node) osm;
@@ -1023,7 +1023,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         // Entries are valid ... save in map
 
-        commandGroup = new LinkedList<Command>();
+        commandGroup = new LinkedList<>();
 
         String streetName = selectedStreet.get("name");
 

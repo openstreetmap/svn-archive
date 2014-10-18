@@ -308,7 +308,7 @@ public class LatLonDialog extends ExtendedDialog {
 
     private static LatLon[] parseLatLons(final String text) {
         String lines[] = text.split("\\r?\\n");
-        List<LatLon> latLons = new ArrayList<LatLon>();
+        List<LatLon> latLons = new ArrayList<>();
         for (String line : lines) {
             latLons.add(parseLatLon(line));
         }
@@ -319,7 +319,7 @@ public class LatLonDialog extends ExtendedDialog {
         final Matcher m = p.matcher(coord);
 
         final StringBuilder sb = new StringBuilder();
-        final List<Object> list = new ArrayList<Object>();
+        final List<Object> list = new ArrayList<>();
 
         while (m.find()) {
             if (m.group(1) != null) {

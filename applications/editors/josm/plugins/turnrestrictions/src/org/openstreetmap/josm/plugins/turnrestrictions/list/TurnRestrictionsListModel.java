@@ -21,7 +21,7 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
  * 
  */
 public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
-    private final ArrayList<Relation> turnrestrictions = new ArrayList<Relation>();
+    private final ArrayList<Relation> turnrestrictions = new ArrayList<>();
     private DefaultListSelectionModel selectionModel;
 
     /**
@@ -140,7 +140,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
      */
     public void removeTurnRestrictions(Collection<? extends OsmPrimitive> removedPrimitives) {
         if (removedPrimitives == null) return;
-        Set<Relation> removedTurnRestrictions = new HashSet<Relation>();
+        Set<Relation> removedTurnRestrictions = new HashSet<>();
         for (OsmPrimitive p: removedPrimitives) {
             if (!isTurnRestriction(p)) continue;
             removedTurnRestrictions.add((Relation)p);
@@ -171,7 +171,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
      * @return the list of selected, non-new relations.
      */
     public List<Relation> getSelectedNonNewRelations() {
-        ArrayList<Relation> ret = new ArrayList<Relation>();
+        ArrayList<Relation> ret = new ArrayList<>();
         for (int i=0; i<getSize();i++) {
             if (!selectionModel.isSelectedIndex(i)) {
                 continue;
@@ -191,7 +191,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
      * @return the list of selected turn restrictions
      */
     public List<Relation> getSelectedTurnRestrictions() {
-        ArrayList<Relation> ret = new ArrayList<Relation>();
+        ArrayList<Relation> ret = new ArrayList<>();
         for (int i=0; i<getSize();i++) {
             if (!selectionModel.isSelectedIndex(i)) {
                 continue;

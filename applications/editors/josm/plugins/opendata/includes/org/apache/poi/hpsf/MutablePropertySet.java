@@ -67,7 +67,7 @@ public class MutablePropertySet extends PropertySet
 
         /* Initialize the sections. Since property set must have at least
          * one section it is added right here. */
-        sections = new LinkedList<Section>();
+        sections = new LinkedList<>();
         sections.add(new MutableSection());
     }
 
@@ -89,7 +89,7 @@ public class MutablePropertySet extends PropertySet
         setClassID(ps.getClassID());
         clearSections();
         if (sections == null)
-            sections = new LinkedList<Section>();
+            sections = new LinkedList<>();
         for (final Iterator<Section> i = ps.getSections().iterator(); i.hasNext();)
         {
             addSection(new MutableSection(i.next()));
@@ -181,7 +181,7 @@ public class MutablePropertySet extends PropertySet
     public void addSection(final Section section)
     {
         if (sections == null)
-            sections = new LinkedList<Section>();
+            sections = new LinkedList<>();
         sections.add(section);
     }
 

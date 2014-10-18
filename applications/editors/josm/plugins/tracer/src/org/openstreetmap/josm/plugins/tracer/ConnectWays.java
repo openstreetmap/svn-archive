@@ -36,8 +36,8 @@ public class ConnectWays {
      * @return Commands.
      */
     public static Command connect(Way way) {
-        Map<Way, Way> modifiedWays = new HashMap<Way, Way>();
-        LinkedList<Command> cmds = new LinkedList<Command>();
+        Map<Way, Way> modifiedWays = new HashMap<>();
+        LinkedList<Command> cmds = new LinkedList<>();
         Way newWay = new Way(way);
         for (int i = 0; i < way.getNodesCount() - 1; i++) {
             Node n = way.getNode(i);
@@ -91,7 +91,7 @@ public class ConnectWays {
      * @return List of Commands.
      */
     private static List<Command> mergeNodes(Node n1, Node n2, Way way){
-        List<Command> cmds = new LinkedList<Command>();
+        List<Command> cmds = new LinkedList<>();
         cmds.add(new MoveCommand(n2,
                  (n1.getEastNorth().getX() - n2.getEastNorth().getX())/2,
                  (n1.getEastNorth().getY() - n2.getEastNorth().getY())/2

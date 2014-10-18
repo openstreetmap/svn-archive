@@ -56,7 +56,7 @@ public class AlignWaysSegment implements MapViewPaintable {
             Node node1 = segment.way.getNode(segment.lowerIndex);
             Node node2 = segment.way.getNode(segment.lowerIndex + 1);
 
-            segmentEndPoints = new HashSet<Node>();
+            segmentEndPoints = new HashSet<>();
             segmentEndPoints.add(node1);
             segmentEndPoints.add(node2);
 

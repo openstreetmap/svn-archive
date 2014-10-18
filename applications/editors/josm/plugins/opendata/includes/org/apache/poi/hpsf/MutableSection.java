@@ -73,7 +73,7 @@ public class MutableSection extends Section
         dirty = true;
         formatID = null;
         offset = -1;
-        preprops = new LinkedList<Property>();
+        preprops = new LinkedList<>();
     }
 
 
@@ -123,7 +123,7 @@ public class MutableSection extends Section
     public void setProperties(final Property[] properties)
     {
         this.properties = properties;
-        preprops = new LinkedList<Property>();
+        preprops = new LinkedList<>();
         for (int i = 0; i < properties.length; i++)
             preprops.add(properties[i]);
         dirty = true;
@@ -199,6 +199,7 @@ public class MutableSection extends Section
      *
      * @return the section's size.
      */
+    @Override
     public int getSize()
     {
         if (dirty)
@@ -314,6 +315,7 @@ public class MutableSection extends Section
         /* Sort the property list by their property IDs: */
         Collections.sort(preprops, new Comparator<Property>()
             {
+                @Override
                 public int compare(final Property p1, final Property p2)
                 {
                     if (p1.getID() < p2.getID())
@@ -452,6 +454,7 @@ public class MutableSection extends Section
      *
      * @return The number of properties in this section
      */
+    @Override
     public int getPropertyCount()
     {
         return preprops.size();
@@ -464,6 +467,7 @@ public class MutableSection extends Section
      *
      * @return this section's properties.
      */
+    @Override
     public Property[] getProperties()
     {
         properties = preprops.toArray(new Property[0]);
@@ -478,6 +482,7 @@ public class MutableSection extends Section
      * @param id The ID of the property to get
      * @return The property or <code>null</code> if there is no such property
      */
+    @Override
     public Object getProperty(final long id)
     {
         /* Calling getProperties() ensures that properties and preprops are in

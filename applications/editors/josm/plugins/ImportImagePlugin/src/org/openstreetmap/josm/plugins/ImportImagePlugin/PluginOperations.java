@@ -155,10 +155,10 @@ public class PluginOperations {
             BufferedImage img = ImageIO.read(file);
 
             // create Envelope
-            double width = (double) (img.getWidth() * tfwReader.getXPixelSize());
-            double height = (double) (img.getHeight() * (-tfwReader.getYPixelSize()));
-            double lowerLeft_x = (double) tfwReader.getXULC();
-            double lowerLeft_y = (double) tfwReader.getYULC() - height;
+            double width = img.getWidth() * tfwReader.getXPixelSize();
+            double height = img.getHeight() * (-tfwReader.getYPixelSize());
+            double lowerLeft_x = tfwReader.getXULC();
+            double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
 
             coverage = createGridCoverage(img, bbox, refSys);
@@ -190,10 +190,10 @@ public class PluginOperations {
             BufferedImage img = ImageIO.read(file);
 
             // create Envelope
-            double width = (double) (img.getWidth() * tfwReader.getXPixelSize());
-            double height = (double) (img.getHeight() * (-tfwReader.getYPixelSize()));
-            double lowerLeft_x = (double) tfwReader.getXULC();
-            double lowerLeft_y = (double) tfwReader.getYULC() - height;
+            double width = img.getWidth() * tfwReader.getXPixelSize();
+            double height = img.getHeight() * (-tfwReader.getYPixelSize());
+            double lowerLeft_x = tfwReader.getXULC();
+            double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
 
             coverage = createGridCoverage(img, bbox, refSys);
@@ -223,10 +223,10 @@ public class PluginOperations {
             BufferedImage img = ImageIO.read(file);
 
             // create Envelope
-            double width = (double) (img.getWidth() * tfwReader.getXPixelSize());
-            double height = (double) (img.getHeight() * (-tfwReader.getYPixelSize()));
-            double lowerLeft_x = (double) tfwReader.getXULC();
-            double lowerLeft_y = (double) tfwReader.getYULC() - height;
+            double width = img.getWidth() * tfwReader.getXPixelSize();
+            double height = img.getHeight() * (-tfwReader.getYPixelSize());
+            double lowerLeft_x = tfwReader.getXULC();
+            double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
 
             coverage = createGridCoverage(img, bbox, refSys);
@@ -257,10 +257,10 @@ public class PluginOperations {
             BufferedImage img = ImageIO.read(file);
 
             // create Envelope
-            double width = (double) (img.getWidth() * tfwReader.getXPixelSize());
-            double height = (double) (img.getHeight() * (-tfwReader.getYPixelSize()));
-            double lowerLeft_x = (double) tfwReader.getXULC();
-            double lowerLeft_y = (double) tfwReader.getYULC() - height;
+            double width = img.getWidth() * tfwReader.getXPixelSize();
+            double height = img.getHeight() * (-tfwReader.getYPixelSize());
+            double lowerLeft_x = tfwReader.getXULC();
+            double lowerLeft_y = tfwReader.getYULC() - height;
             Envelope2D bbox = new Envelope2D(null, new Rectangle2D.Double(lowerLeft_x, lowerLeft_y, width, height));
 
             coverage = createGridCoverage(img, bbox, refSys);
@@ -349,7 +349,7 @@ public class PluginOperations {
 
         GeoTiffReader reader = new GeoTiffReader(file, hints);
 
-        coverage = (GridCoverage2D) reader.read(null);
+        coverage = reader.read(null);
 
         return coverage;
     }
@@ -365,12 +365,12 @@ public class PluginOperations {
     {
         String defaultcrsString = pluginProps.getProperty("default_crs_srid");
 
-        crsDescriptions = new Vector<String>();
+        crsDescriptions = new Vector<>();
         Set<String> supportedCodes = CRS.getSupportedCodes("EPSG");
         CRSAuthorityFactory fac = CRS.getAuthorityFactory(false);
 
         for (Iterator<String> iterator = supportedCodes.iterator(); iterator.hasNext();) {
-            String string = (String) iterator.next();
+            String string = iterator.next();
             try {
                 if ("WGS84(DD)".equals(string)) {
                     continue;

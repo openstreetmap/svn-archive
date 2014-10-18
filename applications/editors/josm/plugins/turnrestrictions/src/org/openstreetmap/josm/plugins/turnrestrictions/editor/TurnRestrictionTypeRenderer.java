@@ -20,7 +20,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer<Object> {
  
-    final private Map<TurnRestrictionType, ImageIcon> icons = new HashMap<TurnRestrictionType, ImageIcon>();
+    final private Map<TurnRestrictionType, ImageIcon> icons = new HashMap<>();
     private String iconSet = "set-a";
     
     /**

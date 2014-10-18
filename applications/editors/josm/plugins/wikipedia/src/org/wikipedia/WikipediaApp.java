@@ -53,7 +53,7 @@ public final class WikipediaApp {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new URL(url).openStream());
             NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
             // construct WikipediaEntry for each XML element
-            List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>(nodes.getLength());
+            List<WikipediaEntry> entries = new ArrayList<>(nodes.getLength());
             for (int i = 0; i < nodes.getLength(); i++) {
                 final String[] coord = xpathCoord.evaluate(nodes.item(i)).split(",");
                 if (coord.length <= 2) {
@@ -78,7 +78,7 @@ public final class WikipediaApp {
                     + "&cat=" + encodeURL(category);
             System.out.println("Wikipedia: GET " + url);
             final Scanner scanner = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\n");
-            final List<WikipediaEntry> entries = new ArrayList<WikipediaEntry>();
+            final List<WikipediaEntry> entries = new ArrayList<>();
             while (scanner.hasNext()) {
                 final String article = scanner.next().trim().replace("_", " ");
                 entries.add(new WikipediaEntry(article, wikipediaLang, article));
@@ -91,7 +91,7 @@ public final class WikipediaApp {
 
     static List<WikipediaEntry> getEntriesFromClipboard(final String wikipediaLang) {
         final List<String> clipboardLines = Arrays.asList(Utils.getClipboardContent().split("[\\n\\r]+"));
-        return new ArrayList<WikipediaEntry>(Utils.transform(clipboardLines, new Function<String, WikipediaEntry>() {
+        return new ArrayList<>(Utils.transform(clipboardLines, new Function<String, WikipediaEntry>() {
 
             @Override
             public WikipediaEntry apply(String x) {
@@ -101,11 +101,11 @@ public final class WikipediaApp {
     }
 
     static void updateWIWOSMStatus(String wikipediaLang, Collection<WikipediaEntry> entries) {
-        Collection<String> articleNames = new ArrayList<String>();
+        Collection<String> articleNames = new ArrayList<>();
         for (WikipediaEntry i : entries) {
             articleNames.add(i.wikipediaArticle);
         }
-        Map<String, Boolean> status = new HashMap<String, Boolean>();
+        Map<String, Boolean> status = new HashMap<>();
         if (!articleNames.isEmpty()) {
             final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
                     + "&lang=" + wikipediaLang;
@@ -161,7 +161,7 @@ public final class WikipediaApp {
 
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {
         try {
-            Collection<WikipediaLangArticle> r = new ArrayList<WikipediaLangArticle>();
+            Collection<WikipediaLangArticle> r = new ArrayList<>();
             final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php" +
                     "?action=query" +
                     "&prop=langlinks" +

@@ -18,7 +18,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class TagSourceAction extends JosmAction {
     private static final String TITLE = tr("Add Source Tag");
     private String source;
-    private Set<OsmPrimitive> selectionBuf = new HashSet<OsmPrimitive>();
+    private Set<OsmPrimitive> selectionBuf = new HashSet<>();
     private boolean clickedTwice = false;
 
     public TagSourceAction() {

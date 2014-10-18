@@ -144,7 +144,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     }
 
     private void loadHistory() {
-        List<String> cmtHistory = new LinkedList<String>(
+        List<String> cmtHistory = new LinkedList<>(
                 Main.pref.getCollection(HISTORY_KEY, Arrays.asList(defaultHistory)));
         Collections.reverse(cmtHistory);
         cbTagSet.setPossibleItems(cmtHistory);
@@ -196,7 +196,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     };
     
     public List<OsmPrimitive> getSelectedPrimitives() {
-        ArrayList<OsmPrimitive> sel = new ArrayList<OsmPrimitive>(100);
+        ArrayList<OsmPrimitive> sel = new ArrayList<>(100);
         for (int idx: tbl.getSelectedRows()) {
             sel.add(tableModel.getPrimitiveAt(tbl.convertRowIndexToModel(idx)));
         }

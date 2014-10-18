@@ -11,10 +11,10 @@ import org.openstreetmap.josm.data.gpx.WayPoint;
 
 public class EditGpxData {
 
-    private final List<EditGpxTrack> tracks = new ArrayList<EditGpxTrack>();
+    private final List<EditGpxTrack> tracks = new ArrayList<>();
     // Only copy of routes and waypoints to preserve all info when converting back to gpx track
-    private final List<GpxRoute> routes = new ArrayList<GpxRoute>();
-    private final List<WayPoint> waypoints = new ArrayList<WayPoint>();
+    private final List<GpxRoute> routes = new ArrayList<>();
+    private final List<WayPoint> waypoints = new ArrayList<>();
 
     public void load(GpxData data) {
         for (GpxTrack track: data.tracks) {

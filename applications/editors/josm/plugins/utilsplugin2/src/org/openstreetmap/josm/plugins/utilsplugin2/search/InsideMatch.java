@@ -29,7 +29,7 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
      * Find all objects inside areas which match the expression
      */
     private void init() {
-        Collection<OsmPrimitive> matchedAreas = new HashSet<OsmPrimitive>();
+        Collection<OsmPrimitive> matchedAreas = new HashSet<>();
         // find all ways that match the expression
         Collection<Way> ways = Main.main.getCurrentDataSet().getWays();
         for (Way way : ways) {

@@ -243,7 +243,7 @@ public class NameManagerDialog extends JDialog {
 
     public void setCountryComboBox() {
         Set<String> keySetUnsorted = CountryDataMemory.getCountryCache().keySet();
-        List<String> keySet = new ArrayList<String>(keySetUnsorted);
+        List<String> keySet = new ArrayList<>(keySetUnsorted);
         Collections.sort(keySet);
         country.removeAllItems();
         for (String string : keySet) {

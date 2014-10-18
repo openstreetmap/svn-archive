@@ -90,7 +90,7 @@ public class CLI {
         }
 
         JunctionChecker jc = new JunctionChecker(cdgb.getDigraph(), n);
-        ArrayList<Channel> subset = new ArrayList<Channel>();
+        ArrayList<Channel> subset = new ArrayList<>();
 
         Channel seed = new Channel();
         Channel vorChannel;

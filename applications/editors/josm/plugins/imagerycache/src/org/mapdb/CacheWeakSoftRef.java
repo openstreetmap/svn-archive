@@ -78,7 +78,7 @@ public class CacheWeakSoftRef extends EngineWrapper implements Engine {
     };
 
 
-    protected LongConcurrentHashMap<CacheItem> items = new LongConcurrentHashMap<CacheItem>();
+    protected LongConcurrentHashMap<CacheItem> items = new LongConcurrentHashMap<>();
 
 
     final protected boolean useWeakRef;
@@ -156,8 +156,8 @@ public class CacheWeakSoftRef extends EngineWrapper implements Engine {
 	private <A> void putItemIntoCache(long recid, A value) {
         ReferenceQueue<A> q = checkClosed(queue);
         checkClosed(items).put(recid, useWeakRef?
-            new CacheWeakItem<A>(value, q, recid) :
-            new CacheSoftItem<A>(value, q, recid));
+            new CacheWeakItem<>(value, q, recid) :
+            new CacheSoftItem<>(value, q, recid));
     }
 
     @Override

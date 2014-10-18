@@ -27,8 +27,6 @@ import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 

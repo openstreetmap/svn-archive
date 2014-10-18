@@ -212,7 +212,7 @@ final public class Atomic {
         if(serializer == null) serializer = (Serializer<E>) db.getDefaultSerializer();
         long recid = db.getEngine().put(initVal, serializer);
         db.getNameDir().put(name, recid);
-        return new Var<E>(db.getEngine(), recid, serializer);
+        return new Var<>(db.getEngine(), recid, serializer);
     }
 
     /**
@@ -229,7 +229,7 @@ final public class Atomic {
         if(serializer == null) serializer = (Serializer<E>) db.getDefaultSerializer();
         return  recid == null ?
                 createVar(db, name, null, serializer) :
-                new Var<E>(db.getEngine(),recid, serializer);
+                new Var<>(db.getEngine(),recid, serializer);
     }
 
 

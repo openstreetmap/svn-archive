@@ -12,7 +12,7 @@ public class Junction {
     private final ModelContainer container;
     
     private final Node node;
-    private final Set<Way> roads = new HashSet<Way>();
+    private final Set<Way> roads = new HashSet<>();
     
     Junction(ModelContainer container, Node n) {
         this.container = container;
@@ -28,7 +28,7 @@ public class Junction {
     }
     
     public List<Road> getRoads() {
-        final List<Road> result = new ArrayList<Road>(roads.size());
+        final List<Road> result = new ArrayList<>(roads.size());
         
         for (Way w : roads) {
             result.add(container.getRoad(w));
@@ -38,7 +38,7 @@ public class Junction {
     }
     
     public List<Road.End> getRoadEnds() {
-        final List<Road.End> result = new ArrayList<Road.End>(roads.size());
+        final List<Road.End> result = new ArrayList<>(roads.size());
         
         for (Way w : roads) {
             result.add(getRoadEnd(w));

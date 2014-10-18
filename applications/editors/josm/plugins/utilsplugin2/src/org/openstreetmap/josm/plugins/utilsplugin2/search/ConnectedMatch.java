@@ -28,8 +28,8 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
      * Find (all) ways connected to ways or nodes which match the expression.
      */
     private void init(boolean all) {
-        Collection<Way> matchedWays = new HashSet<Way>();
-        Set<Node> matchedNodes = new HashSet<Node>();
+        Collection<Way> matchedWays = new HashSet<>();
+        Set<Node> matchedNodes = new HashSet<>();
         // find all ways that match the expression
         Collection<Way> allWays = Main.main.getCurrentDataSet().getWays();
         for (Way way : allWays) {
@@ -44,7 +44,7 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
                 matchedNodes.add(node);
             }
         }
-        Set<Way> newWays = new HashSet<Way>();
+        Set<Way> newWays = new HashSet<>();
         if (all) {
             NodeWayUtils.addWaysConnectedToNodes(matchedNodes, newWays);
             NodeWayUtils.addWaysConnectedToWaysRecursively(matchedWays, newWays);

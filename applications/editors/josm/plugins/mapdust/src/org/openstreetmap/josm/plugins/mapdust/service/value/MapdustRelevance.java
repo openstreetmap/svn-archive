@@ -95,7 +95,7 @@ public class MapdustRelevance implements Serializable,
         this.range = range;
         if (MapdustRelevance.map == null) {
             MapdustRelevance.map =
-                    new HashMap<RelevanceRange, MapdustRelevance>();
+                    new HashMap<>();
         }
         MapdustRelevance.map.put(range, this);
     }

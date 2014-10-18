@@ -11,7 +11,7 @@ import java.util.List;
 public class ToolsInformation {
     String filename;
 
-    ArrayList<ExtTool> tools = new ArrayList<ExtTool>();
+    ArrayList<ExtTool> tools = new ArrayList<>();
 
     public ToolsInformation(String filename) {
         this.filename = filename;

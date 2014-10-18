@@ -79,7 +79,7 @@ public class OsmarenderPlugin extends Plugin {
                 w.header();
 
                 // Write nodes, make list of ways and relations
-                Set<OsmPrimitive> parents = new HashSet<OsmPrimitive>();
+                Set<OsmPrimitive> parents = new HashSet<>();
                 for (Node n : ds.getNodes()) {
                     if (n.isUsable() && n.getCoor() != null && n.getCoor().isWithin(b)) {
                         parents.addAll(n.getReferrers());
@@ -88,7 +88,7 @@ public class OsmarenderPlugin extends Plugin {
                 }
 
                 // I'm not sure why (if) is this usefull
-                for (OsmPrimitive p : new HashSet<OsmPrimitive>(parents)) {
+                for (OsmPrimitive p : new HashSet<>(parents)) {
                     if (p instanceof Way) {
                         for (Node n : ((Way) p).getNodes()) {
                             if (n.getCoor() != null && n.getCoor().isWithin(b))

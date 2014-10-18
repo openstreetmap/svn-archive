@@ -52,7 +52,7 @@ public class TagValues {
         m_strPreferredValues = param.getPreferredValues();
         
     	// get values
-        List<String> tagValues = new ArrayList<String>();
+        List<String> tagValues = new ArrayList<>();
         List<AutoCompletionListItem> values = Main.main.getCurrentDataSet().getAutoCompletionManager().getValues(m_strTag);
         for ( AutoCompletionListItem i : values ) {
         	tagValues.add(i.getValue());
@@ -64,7 +64,7 @@ public class TagValues {
     		m_astrTagValuesPreferred = new String[0];
     	} else {
     		String[] prefered = m_strPreferredValues.split(";");
-    		tagValues = new ArrayList<String>();
+    		tagValues = new ArrayList<>();
     		
     		for (String str: prefered) {
     			String temp = str.trim();

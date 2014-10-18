@@ -31,7 +31,7 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 
 public class GPSBlamInputData extends LinkedList<CachedLatLon> {
-	private Collection<Calendar> datesSeen = new HashSet<Calendar>();
+	private Collection<Calendar> datesSeen = new HashSet<>();
 
 	public int getNDays() { return datesSeen.size(); }
 

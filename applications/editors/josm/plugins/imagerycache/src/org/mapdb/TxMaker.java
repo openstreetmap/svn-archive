@@ -17,7 +17,7 @@ public class TxMaker {
 
     protected final Object lock = new Object();
 
-    protected final LongMap<TxEngine> globalMod = new LongHashMap<TxEngine>();
+    protected final LongMap<TxEngine> globalMod = new LongHashMap<>();
 
 
     public TxMaker(Engine engine) {
@@ -58,9 +58,9 @@ public class TxMaker {
     protected class TxEngine extends EngineWrapper{
 
         protected LongMap<Fun.Tuple2<?, Serializer>> modItems =
-                new LongHashMap<Fun.Tuple2<?, Serializer>>();
+                new LongHashMap<>();
 
-        protected Set<Long> newItems = new LinkedHashSet<Long>();
+        protected Set<Long> newItems = new LinkedHashSet<>();
 
         protected TxEngine(Engine engine) {
             super(engine);

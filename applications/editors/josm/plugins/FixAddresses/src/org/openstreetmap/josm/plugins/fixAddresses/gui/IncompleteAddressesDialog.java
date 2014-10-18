@@ -63,7 +63,7 @@ public class IncompleteAddressesDialog extends ToggleDialog implements DataSetLi
         header.addMouseListener(model.new ColumnListener(incompleteAddr));
         incompleteAddr.getSelectionModel().addListSelectionListener(this);
 
-        LinkedList<SideButton> buttons = new LinkedList<SideButton>();
+        LinkedList<SideButton> buttons = new LinkedList<>();
         // Link actions with address container
         for (AbstractAddressEditAction action : actions) {
             buttons.add(new SideButton(action));

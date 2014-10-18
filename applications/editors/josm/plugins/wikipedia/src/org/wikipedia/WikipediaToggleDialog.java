@@ -58,7 +58,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     /** A string describing the context (use-case) for determining the dialog title */
     String titleContext = null;
     final StringProperty wikipediaLang = new StringProperty("wikipedia.lang", LanguageInfo.getJOSMLocaleCode().substring(0, 2));
-    final Set<String> articles = new HashSet<String>();
+    final Set<String> articles = new HashSet<>();
     final DefaultListModel<WikipediaEntry> model = new DefaultListModel<>();
     final JList<WikipediaEntry> list = new JList<WikipediaEntry>(model) {
 

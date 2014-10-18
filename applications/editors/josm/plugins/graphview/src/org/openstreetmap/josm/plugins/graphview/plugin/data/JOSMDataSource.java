@@ -38,11 +38,11 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
     }
 
     public Iterable<Node> getNodes(Way way) {
-        return new FilteredOsmPrimitiveIterable<Node>(way.getNodes());
+        return new FilteredOsmPrimitiveIterable<>(way.getNodes());
     }
 
     public Iterable<Node> getNodes() {
-        return new FilteredOsmPrimitiveIterable<Node>(Main.main.getCurrentDataSet().getNodes());
+        return new FilteredOsmPrimitiveIterable<>(Main.main.getCurrentDataSet().getNodes());
     }
 
     public Iterable<Relation> getRelations() {
@@ -50,7 +50,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
     }
 
     public Iterable<Way> getWays() {
-        return new FilteredOsmPrimitiveIterable<Way>(Main.main.getCurrentDataSet().getWays());
+        return new FilteredOsmPrimitiveIterable<>(Main.main.getCurrentDataSet().getWays());
     }
 
     public TagGroup getTagsN(Node node) {
@@ -96,7 +96,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
 
     private static final TagGroup EMPTY_TAG_GROUP;
     static {
-        Map<String, String> emptyMap = new HashMap<String, String>(0);
+        Map<String, String> emptyMap = new HashMap<>(0);
         EMPTY_TAG_GROUP = new MapBasedTagGroup(emptyMap);
     }
 
@@ -203,7 +203,7 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
         }
     }
 
-    private final Set<DataSourceObserver> observers = new HashSet<DataSourceObserver>();
+    private final Set<DataSourceObserver> observers = new HashSet<>();
 
     public void addObserver(DataSourceObserver observer) {
         observers.add(observer);

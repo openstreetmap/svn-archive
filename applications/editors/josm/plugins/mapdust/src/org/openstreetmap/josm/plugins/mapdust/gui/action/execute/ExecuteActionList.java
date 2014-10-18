@@ -57,7 +57,7 @@ public class ExecuteActionList extends MapdustExecuteAction implements
 
     /** List of MapdustRefreshObserver objects */
     private final ArrayList<MapdustUpdateObserver> observers =
-            new ArrayList<MapdustUpdateObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>ExceuteActionList</code> object

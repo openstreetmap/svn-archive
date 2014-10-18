@@ -46,35 +46,35 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
 
     private Collection<? extends OsmPrimitive> workingSet;
     /** The street dictionary collecting all streets to a set of unique street names. */
-    private HashMap<String, OSMStreet> streetDict = new HashMap<String, OSMStreet>(100);
+    private HashMap<String, OSMStreet> streetDict = new HashMap<>(100);
 
     /** The unresolved (addresses without valid street name) addresses list. */
-    private List<OSMAddress> unresolvedAddresses = new ArrayList<OSMAddress>(100);
+    private List<OSMAddress> unresolvedAddresses = new ArrayList<>(100);
 
     /** The incomplete addresses list. */
-    private List<OSMAddress> incompleteAddresses = new ArrayList<OSMAddress>(100);
+    private List<OSMAddress> incompleteAddresses = new ArrayList<>(100);
 
     /** The shadow copy to assemble the street dict during update. */
-    private HashMap<String, OSMStreet> shadowStreetDict = new HashMap<String, OSMStreet>(100);
+    private HashMap<String, OSMStreet> shadowStreetDict = new HashMap<>(100);
     /** The shadow copy to assemble the unresolved addresses during update. */
-    private List<OSMAddress> shadowUnresolvedAddresses = new ArrayList<OSMAddress>(100);
+    private List<OSMAddress> shadowUnresolvedAddresses = new ArrayList<>(100);
     /** The shadow copy to assemble the incomplete addresses during update. */
-    private List<OSMAddress> shadowIncompleteAddresses = new ArrayList<OSMAddress>(100);
+    private List<OSMAddress> shadowIncompleteAddresses = new ArrayList<>(100);
 
     /** The visited nodes cache to increase iteration speed. */
-    private HashSet<Node> visitedNodes = new HashSet<Node>();
+    private HashSet<Node> visitedNodes = new HashSet<>();
     /** The visited ways cache to increase iteration speed. */
-    private HashSet<Way> visitedWays = new HashSet<Way>();
+    private HashSet<Way> visitedWays = new HashSet<>();
     /** The tag list used within the data area. */
-    private HashSet<String> tags = new HashSet<String>();
+    private HashSet<String> tags = new HashSet<>();
     /** The tag list used within the data area. */
-    private HashMap<String, String> values = new HashMap<String, String>();
+    private HashMap<String, String> values = new HashMap<>();
 
     /** The list containing the problems */
-    private List<IProblem> problems = new ArrayList<IProblem>();
+    private List<IProblem> problems = new ArrayList<>();
 
     /** The change listeners. */
-    private List<IAddressEditContainerListener> listeners = new ArrayList<IAddressEditContainerListener>();
+    private List<IAddressEditContainerListener> listeners = new ArrayList<>();
 
     /**
      * Creates an empty container.
@@ -114,7 +114,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
      */
     protected void fireContainerChanged() {
         List<IAddressEditContainerListener> shadowListeners =
-            new ArrayList<IAddressEditContainerListener>(listeners);
+            new ArrayList<>(listeners);
 
         for (IAddressEditContainerListener listener : shadowListeners) {
             listener.containerChanged(this);
@@ -128,7 +128,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         if (entity == null) throw new RuntimeException("Entity must not be null");
 
         List<IAddressEditContainerListener> shadowListeners =
-            new ArrayList<IAddressEditContainerListener>(listeners);
+            new ArrayList<>(listeners);
 
         for (IAddressEditContainerListener listener : shadowListeners) {
             listener.entityChanged(entity);
@@ -335,7 +335,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
      * @return the street list
      */
     public List<OSMStreet> getStreetList() {
-        ArrayList<OSMStreet> sortedList = new ArrayList<OSMStreet>(streetDict.values());
+        ArrayList<OSMStreet> sortedList = new ArrayList<>(streetDict.values());
         Collections.sort(sortedList);
         return sortedList;
     }
@@ -416,7 +416,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
      * @return
      */
     public List<OSMAddress> getAllAddressesToFix() {
-        List<OSMAddress> all = new ArrayList<OSMAddress>(incompleteAddresses);
+        List<OSMAddress> all = new ArrayList<>(incompleteAddresses);
 
         for (OSMAddress aNode : unresolvedAddresses) {
             if (!all.contains(aNode)) {
@@ -452,7 +452,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         if (aNode.isPartOfRelation()) {
             return true;
         }
-        
+
         if (streetName != null && shadowStreetDict.containsKey(streetName)) {
             OSMStreet sNode = shadowStreetDict.get(streetName);
             sNode.addAddress(aNode);
@@ -466,7 +466,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
      * Walks through the list of unassigned addresses and tries to assign them to streets.
      */
     public void resolveAddresses() {
-        List<OSMAddress> resolvedAddresses = new ArrayList<OSMAddress>();
+        List<OSMAddress> resolvedAddresses = new ArrayList<>();
         for (OSMAddress node : shadowUnresolvedAddresses) {
             if (assignAddressToStreet(node)) {
                 resolvedAddresses.add(node);
@@ -512,7 +512,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
                     osmPrimitive.accept(this);
                 }
             }
-            
+
             // match streets with addresses...
             resolveAddresses();
             // sort problem lists
@@ -520,9 +520,9 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
             Collections.sort(shadowUnresolvedAddresses);
 
             // put results from shadow copy into real lists
-            incompleteAddresses = new ArrayList<OSMAddress>(shadowIncompleteAddresses);
-            unresolvedAddresses = new ArrayList<OSMAddress>(shadowUnresolvedAddresses);
-            streetDict = new HashMap<String, OSMStreet>(shadowStreetDict);
+            incompleteAddresses = new ArrayList<>(shadowIncompleteAddresses);
+            unresolvedAddresses = new ArrayList<>(shadowUnresolvedAddresses);
+            streetDict = new HashMap<>(shadowStreetDict);
             // remove temp data
             shadowStreetDict.clear();
             shadowUnresolvedAddresses.clear();
@@ -567,7 +567,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
      */
     public void attachToDataSet(Collection<? extends OsmPrimitive> osmDataToWorkOn) {
         if (osmDataToWorkOn != null && !osmDataToWorkOn.isEmpty()) {
-            workingSet = new ArrayList<OsmPrimitive>(osmDataToWorkOn);
+            workingSet = new ArrayList<>(osmDataToWorkOn);
         } else {
             detachFromDataSet(); // drop old stuff, if present
         }
@@ -642,7 +642,7 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
     public void removeProblemsOfSource(IOSMEntity entity) {
         CheckParameterUtil.ensureParameterNotNull(entity, "entity");
 
-        List<IProblem> problemsToRemove = new ArrayList<IProblem>();
+        List<IProblem> problemsToRemove = new ArrayList<>();
         for (IProblem problem : problems) {
             if (problem.getSource() == entity) {
                 problemsToRemove.add(problem);
@@ -672,8 +672,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         // ensure right number of entries
         if (maxEntries < 1) maxEntries = 1;
 
-        List<StreetScore> scores = new ArrayList<StreetScore>();
-        List<String> matches = new ArrayList<String>();
+        List<StreetScore> scores = new ArrayList<>();
+        List<String> matches = new ArrayList<>();
 
         // Find the longest common sub string
         for (String streetName : streetDict.keySet()) {

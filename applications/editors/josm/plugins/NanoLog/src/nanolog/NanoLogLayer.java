@@ -1,25 +1,47 @@
 package nanolog;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.regex.*;
-import javax.swing.*;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.actions.*;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.dialogs.*;
-import org.openstreetmap.josm.gui.layer.*;
-import static org.openstreetmap.josm.tools.I18n.tr;
+import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
+import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
+import org.openstreetmap.josm.gui.layer.JumpToMarkerActions;
+import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -31,12 +53,12 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
 
     private List<NanoLogEntry> log;
     private int selectedEntry;
-    private final Set<NanoLogLayerListener> listeners = new HashSet<NanoLogLayerListener>();
+    private final Set<NanoLogLayerListener> listeners = new HashSet<>();
     private NLLMouseAdapter mouseListener;
-    
+
     public NanoLogLayer( List<NanoLogEntry> entries ) {
         super(tr("NanoLog"));
-        log = new ArrayList<NanoLogEntry>(entries);
+        log = new ArrayList<>(entries);
         selectedEntry = -1;
         mouseListener = new NLLMouseAdapter();
         Main.map.mapView.addMouseListener(mouseListener);
@@ -49,7 +71,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         Main.map.mapView.removeMouseMotionListener(mouseListener);
         super.destroy();
     }
-    
+
     public NanoLogLayer( File file ) throws IOException {
         this(readNanoLog(file));
     }
@@ -75,11 +97,11 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
     public List<NanoLogEntry> getEntries() {
         return Collections.unmodifiableList(log);
     }
-    
+
     public static List<NanoLogEntry> readNanoLog( File file ) throws IOException {
         final Pattern NANOLOG_LINE = Pattern.compile("(.+?)\\t(.+?)(?:\\s*\\{\\{(-?\\d+\\.\\d+),\\s*(-?\\d+\\.\\d+)(?:,\\s*(\\d+))?\\}\\})?");
         final SimpleDateFormat fmt = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SS");
-        List<NanoLogEntry> result = new ArrayList<NanoLogEntry>();
+        List<NanoLogEntry> result = new ArrayList<>();
         BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
         while( r.ready() ) {
             String line = r.readLine();
@@ -300,7 +322,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         Correlator.correlate(log, gpx.data, log.get(entry).getTime().getTime() - newTime);
         Main.map.mapView.repaint();
     }
-    
+
     private class CorrelateEntries extends JosmAction {
         private boolean toZero;
 
@@ -327,7 +349,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
             // (todo: better slider, like in blender)
         }
     }
-    
+
     private class SaveLayer extends JosmAction {
 
         public SaveLayer() {

@@ -244,7 +244,7 @@ public class Road {
             }
             
             final double extraLength = left ? extraLengthLeft : extraLengthRight;
-            final List<Double> newLengths = new ArrayList<Double>();
+            final List<Double> newLengths = new ArrayList<>();
             int i = Math.abs(lane.getIndex());
             final String key = left ? Constants.LENGTHS_KEY_LENGTHS_LEFT : Constants.LENGTHS_KEY_LENGTHS_RIGHT;
             for (double l : Lane.loadLengths(rel, key, 0)) {
@@ -274,8 +274,8 @@ public class Road {
     }
     
     private static Pair<Relation, Relation> getLengthRelations(Way w, Node n) {
-        final List<Relation> left = new ArrayList<Relation>();
-        final List<Relation> right = new ArrayList<Relation>();
+        final List<Relation> left = new ArrayList<>();
+        final List<Relation> right = new ArrayList<>();
         
         for (OsmPrimitive p : w.getReferrers()) {
             if (p.getType() != OsmPrimitiveType.RELATION) {
@@ -306,7 +306,7 @@ public class Road {
                     + " lengths relations for given direction, both specifying right lane lengths.");
         }
         
-        return new Pair<Relation, Relation>( //
+        return new Pair<>( //
                 left.isEmpty() ? null : left.get(0), //
                 right.isEmpty() ? null : right.get(0) //
         );

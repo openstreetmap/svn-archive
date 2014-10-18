@@ -19,7 +19,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  */
 public class ChosenRelation implements EditLayerChangeListener, MapViewPaintable, DataSetListener {
     protected Relation chosenRelation = null;
-    private Set<ChosenRelationListener> chosenRelationListeners = new HashSet<ChosenRelationListener>();
+    private Set<ChosenRelationListener> chosenRelationListeners = new HashSet<>();
 
     public void set( Relation rel ) {
         if( rel == chosenRelation || (rel != null && chosenRelation != null && rel.equals(chosenRelation)) ) {

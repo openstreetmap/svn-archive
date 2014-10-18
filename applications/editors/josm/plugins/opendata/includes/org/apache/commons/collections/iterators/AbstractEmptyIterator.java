@@ -20,16 +20,16 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.collections.ResettableIterator;
 
-/** 
+/**
  * Provides an implementation of an empty iterator.
  *
  * @since Commons Collections 3.1
  * @version $Revision: 646777 $ $Date: 2008-04-10 14:33:15 +0200 (jeu., 10 avr. 2008) $
- * 
+ *
  * @author Stephen Colebourne
  */
 abstract class AbstractEmptyIterator implements ResettableIterator {
- 
+
     /**
      * Constructor.
      */
@@ -37,10 +37,12 @@ abstract class AbstractEmptyIterator implements ResettableIterator {
         super();
     }
 
+    @Override
     public boolean hasNext() {
         return false;
     }
 
+    @Override
     public Object next() {
         throw new NoSuchElementException("Iterator contains no elements");
     }
@@ -61,16 +63,15 @@ abstract class AbstractEmptyIterator implements ResettableIterator {
         return -1;
     }
 
-    @SuppressWarnings("unused")
-	public void add(Object obj) {
+    public void add(Object obj) {
         throw new UnsupportedOperationException("add() not supported for empty Iterator");
     }
 
-    @SuppressWarnings("unused")
-	public void set(Object obj) {
+    public void set(Object obj) {
         throw new IllegalStateException("Iterator contains no elements");
     }
 
+    @Override
     public void remove() {
         throw new IllegalStateException("Iterator contains no elements");
     }
@@ -83,8 +84,7 @@ abstract class AbstractEmptyIterator implements ResettableIterator {
         throw new IllegalStateException("Iterator contains no elements");
     }
 
-    @SuppressWarnings("unused")
-	public Object setValue(Object value) {
+    public Object setValue(Object value) {
         throw new IllegalStateException("Iterator contains no elements");
     }
 

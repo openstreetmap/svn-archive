@@ -133,7 +133,7 @@ public class UtilsPluginPreferences extends DefaultTabPreferenceSetting {
     private List<String> readItemsFromTable() {
         TableModel model = (table.getModel());
         String v;
-        ArrayList<String> lst=new ArrayList<String>();
+        ArrayList<String> lst=new ArrayList<>();
         int n=model.getRowCount();
         for (int i=0;i<n;i++) {
             v=(String) model.getValueAt(i, 0);

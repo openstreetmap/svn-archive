@@ -52,7 +52,7 @@ public class DownloadDataGui extends ExtendedDialog {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-    
+
         DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
         model = new NamedResultTableModel(selectionModel);
         columnmodel = new NamedResultTableColumnModel();
@@ -70,30 +70,32 @@ public class DownloadDataGui extends ExtendedDialog {
     }
 
     private static class TrackListHandler extends DefaultHandler {
-        private LinkedList<UserTrack> data = new LinkedList<UserTrack>();
-        
+        private LinkedList<UserTrack> data = new LinkedList<>();
+
         private String cdata = new String();
-    
+
         @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
             if (qName.equals("gpx_file")) {
             UserTrack track = new UserTrack();
-    
+
             track.id       = atts.getValue("id");
             track.filename = atts.getValue("name");
             track.datetime = atts.getValue("timestamp").replaceAll("[TZ]", " "); // TODO: do real parsing and time zone conversion
-            
+
             data.addFirst(track);
-            } 
+            }
             cdata = new String();
         }
-    
-        public void characters(char ch[], int start, int length)
+
+        @Override
+		public void characters(char ch[], int start, int length)
             throws SAXException {
             cdata += new String(ch, start, length);
         }
-    
-        public void endElement(String uri, String localName, String qName) throws SAXException {
+
+        @Override
+		public void endElement(String uri, String localName, String qName) throws SAXException {
             if (qName.equals("description")) {
             data.getFirst().description = cdata;
             }
@@ -101,7 +103,7 @@ public class DownloadDataGui extends ExtendedDialog {
             else if (qName.equals("tag")) {
             data.getFirst().tags = cdata;
             cdata = new String();
-            }    
+            }
             */
         }
 
@@ -115,16 +117,16 @@ public class DownloadDataGui extends ExtendedDialog {
 
         try {
             URL userTracksUrl = new URL(urlString);
-    
+
             SAXParserFactory spf = SAXParserFactory.newInstance();
             TrackListHandler handler = new TrackListHandler();
-    
+
             //get a new instance of parser
             SAXParser sp = spf.newSAXParser();
-            
+
             //parse the file and also register this class for call backs
             sp.parse(userTracksUrl.openStream(), handler);
-            
+
             return handler.getResult();
         } catch (java.net.MalformedURLException e) {
             Main.error(e);
@@ -140,7 +142,7 @@ public class DownloadDataGui extends ExtendedDialog {
             JOptionPane.showMessageDialog(null, tr("Error parsing data from URL {0}", urlString));
         }
 
-        return new LinkedList<UserTrack>();
+        return new LinkedList<>();
     }
 
     static class NamedResultTableModel extends DefaultTableModel {
@@ -148,10 +150,10 @@ public class DownloadDataGui extends ExtendedDialog {
         private ListSelectionModel selectionModel;
 
         public NamedResultTableModel(ListSelectionModel selectionModel) {
-            data = new ArrayList<UserTrack>();
+            data = new ArrayList<>();
             this.selectionModel = selectionModel;
         }
-        
+
         @Override
         public int getRowCount() {
             if (data == null) return 0;
@@ -168,11 +170,11 @@ public class DownloadDataGui extends ExtendedDialog {
             if (data == null) {
                 this.data.clear();
             } else {
-                this.data  =new ArrayList<UserTrack>(data);
+                this.data  =new ArrayList<>(data);
             }
             fireTableDataChanged();
         }
-        
+
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -235,7 +237,8 @@ public class DownloadDataGui extends ExtendedDialog {
     }
 
     class ListSelectionHandler implements ListSelectionListener {
-        public void valueChanged(ListSelectionEvent lse) {
+        @Override
+		public void valueChanged(ListSelectionEvent lse) {
         }
     }
 
@@ -261,7 +264,8 @@ public class DownloadDataGui extends ExtendedDialog {
             }
         }
 
-        public Component getTableCellRendererComponent(JTable table, Object value,
+        @Override
+		public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
 
             reset();
@@ -275,7 +279,7 @@ public class DownloadDataGui extends ExtendedDialog {
                 break;
             case 1:
                 setText(sr.filename);
-                break;        
+                break;
             case 2:
                 setText(sr.description);
                 break;

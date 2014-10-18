@@ -81,7 +81,7 @@ public class OSMXMLReader extends XMLReader {
         OSMNode node = new OSMNode();
         OSMWay way = new OSMWay();
         OSMRelation relation = new OSMRelation();
-        HashMap<String, String> hashmap = new HashMap<String, String>();
+        HashMap<String, String> hashmap = new HashMap<>();
         try {
             while (parser.hasNext()) {
                 switch (parser.getEventType()) {
@@ -91,7 +91,7 @@ public class OSMXMLReader extends XMLReader {
 
                     if (xmlelement.equals("node")) {
                         node = new OSMNode();
-                        hashmap = new HashMap<String, String>();
+                        hashmap = new HashMap<>();
                         readAttributes(node);
                         node.setLatitude(Double.parseDouble(parser
                                 .getAttributeValue(null, "lat")));
@@ -101,13 +101,13 @@ public class OSMXMLReader extends XMLReader {
 
                     if (xmlelement.equals("way")) {
                         way = new OSMWay();
-                        hashmap = new HashMap<String, String>();
+                        hashmap = new HashMap<>();
                         readAttributes(way);
                     }
 
                     if (xmlelement.equals("relation")) {
                         relation = new OSMRelation();
-                        hashmap = new HashMap<String, String>();
+                        hashmap = new HashMap<>();
                         readAttributes(relation);
                     }
 
@@ -138,7 +138,7 @@ public class OSMXMLReader extends XMLReader {
 
                     if (xmlelement.equals("relation")) {
                         relation = new OSMRelation();
-                        hashmap = new HashMap<String, String>();
+                        hashmap = new HashMap<>();
                         readAttributes(relation);
                     }
 

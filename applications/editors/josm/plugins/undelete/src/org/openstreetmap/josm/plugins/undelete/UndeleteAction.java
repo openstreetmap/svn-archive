@@ -79,7 +79,7 @@ public class UndeleteAction extends JosmAction {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                List<Node> nodes = new ArrayList<Node>();
+                List<Node> nodes = new ArrayList<>();
                 for (PrimitiveId pid : ids) {
                     OsmPrimitive primitive = layer.data.getPrimitiveById(pid);
                     if (primitive == null) { 
@@ -126,7 +126,7 @@ public class UndeleteAction extends JosmAction {
                                     // System.out.println(tr("Primitive {0} version {1}: {2} nodes",
                                     // hPrimitive2.getId(), hPrimitive2.getVersion(),
                                     // hWay.getNumNodes()));
-                                    List<PrimitiveId> nodeIds = new ArrayList<PrimitiveId>();
+                                    List<PrimitiveId> nodeIds = new ArrayList<>();
                                     if (hWay != null) {
 	                                    for (Long i : hWay.getNodes()) {
 	                                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
@@ -145,7 +145,7 @@ public class UndeleteAction extends JosmAction {
                                     HistoryRelation hRel = (HistoryRelation) hPrimitive2;
         
                                     if (hRel != null) {
-	                                    List<RelationMember> members = new ArrayList<RelationMember>(hRel.getNumMembers());
+	                                    List<RelationMember> members = new ArrayList<>(hRel.getNumMembers());
 	                                    for (RelationMemberData m : hRel.getMembers()) {
 	                                        OsmPrimitive p = layer.data.getPrimitiveById(m.getMemberId(), m.getMemberType());
 	                                        if (p == null) {

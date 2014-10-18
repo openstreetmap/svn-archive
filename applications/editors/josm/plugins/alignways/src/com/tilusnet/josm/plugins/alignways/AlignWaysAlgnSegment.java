@@ -40,11 +40,11 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
     };
 
     private PivotLocations currPivot;
-    Map<PivotLocations, EastNorth> pivotList = new EnumMap<PivotLocations, EastNorth>(
+    Map<PivotLocations, EastNorth> pivotList = new EnumMap<>(
             PivotLocations.class);
     private final Color pivotColor = Color.YELLOW;
     private final Color crossColor = pivotColor;
-    private final Map<Node,ArrayList<WaySegment>> adjWaySegs = new HashMap<Node,ArrayList<WaySegment>>();
+    private final Map<Node,ArrayList<WaySegment>> adjWaySegs = new HashMap<>();
 
     public AlignWaysAlgnSegment(MapView mapview, Point p)
             throws IllegalArgumentException {
@@ -69,7 +69,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
 
         // Update the list of adjacent waysegments to the endpoints
         for (Node nA : getSegmentEndPoints()) {
-            adjWaySegs.put(nA, new ArrayList<WaySegment>(determineAdjacentWaysegments(nA)));
+            adjWaySegs.put(nA, new ArrayList<>(determineAdjacentWaysegments(nA)));
         }
     }
 
@@ -181,7 +181,7 @@ public class AlignWaysAlgnSegment extends AlignWaysSegment {
      * @return The collection of the adjacent waysegments.
      */
     private Collection<WaySegment> determineAdjacentWaysegments(Node node) {
-        Collection<WaySegment> wsSet = new HashSet<WaySegment>();
+        Collection<WaySegment> wsSet = new HashSet<>();
         final double radius = 10.0;
         final int stepsOnCircle = 24;
         final double incrementOnCircle = 2 * Math.PI / stepsOnCircle;

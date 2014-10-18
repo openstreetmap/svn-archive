@@ -9,7 +9,7 @@ public class CountryDataMemory {
 
     public static void instantiateCountryCache() {
         if (countryCache == null) {
-            countryCache = new HashMap<String, Country>();
+            countryCache = new HashMap<>();
         }
     }
 

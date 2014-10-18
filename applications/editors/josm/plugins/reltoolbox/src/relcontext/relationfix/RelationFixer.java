@@ -22,7 +22,7 @@ public abstract class RelationFixer {
 	 * @param types
 	 */
 	public RelationFixer(String... types) {
-	    applicableTypes = new ArrayList<String>();
+	    applicableTypes = new ArrayList<>();
 		for(String type: types) {
 			applicableTypes.add(type);
 		}

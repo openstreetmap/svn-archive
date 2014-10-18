@@ -55,7 +55,7 @@ public final class SSTRecord extends ContinuableRecord {
     {
         field_1_num_strings = 0;
         field_2_num_unique_strings = 0;
-        field_3_strings = new IntMapper<UnicodeString>();
+        field_3_strings = new IntMapper<>();
     }
 
     /**
@@ -226,7 +226,7 @@ public final class SSTRecord extends ContinuableRecord {
         // we initialize our fields
         field_1_num_strings = in.readInt();
         field_2_num_unique_strings = in.readInt();
-        field_3_strings = new IntMapper<UnicodeString>();
+        field_3_strings = new IntMapper<>();
         deserializer = new SSTDeserializer(field_3_strings);
         deserializer.manufactureStrings( field_2_num_unique_strings, in );
     }

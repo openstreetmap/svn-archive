@@ -15,7 +15,7 @@ public class XMLFilterReader extends XMLReader{
 
     public XMLFilterReader(String filename) {
         super(filename);
-        filters = new Vector<Filter>();
+        filters = new Vector<>();
     }
 
     @Override

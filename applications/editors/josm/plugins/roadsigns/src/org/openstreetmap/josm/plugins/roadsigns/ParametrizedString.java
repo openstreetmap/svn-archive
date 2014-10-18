@@ -21,7 +21,7 @@ import org.openstreetmap.josm.plugins.roadsigns.javacc.TokenMgrError;
  *
  */
 public class ParametrizedString {
-    final List<StringOrParameter> token = new ArrayList<StringOrParameter>();
+    final List<StringOrParameter> token = new ArrayList<>();
 
     /**
      * Describes the union of String and Parameter type. Both

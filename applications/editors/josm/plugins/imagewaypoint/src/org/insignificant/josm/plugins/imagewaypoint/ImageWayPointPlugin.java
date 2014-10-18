@@ -59,7 +59,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
             if (null != files && !files.isEmpty()) {
             
                 // recursively find all files
-                final List<File> allFiles = new ArrayList<File>();
+                final List<File> allFiles = new ArrayList<>();
                 addFiles(allFiles, files.toArray(new File[0]));
 
                 // add files to ImageEntries

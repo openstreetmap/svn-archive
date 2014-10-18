@@ -49,7 +49,7 @@ import org.apache.poi.ss.usermodel.DataFormat;
 public final class HSSFDataFormat implements DataFormat {
 	private static final String[] _builtinFormats = BuiltinFormats.getAll();
 
-	private final Vector<String> _formats = new Vector<String>();
+	private final Vector<String> _formats = new Vector<>();
 	private boolean _movedBuiltins = false;  // Flag to see if need to
 	// check the built in list
 	// or if the regular list

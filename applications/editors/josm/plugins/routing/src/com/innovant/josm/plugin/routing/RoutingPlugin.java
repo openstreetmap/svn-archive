@@ -147,7 +147,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
         logger.debug("Loading routing plugin...");
         preferenceSettings=new RoutingPreferenceDialog();
         // Initialize layers list
-        layers = new ArrayList<RoutingLayer>();
+        layers = new ArrayList<>();
         // Add menu
         menu = new RoutingMenu();
         // Register this class as LayerChangeListener

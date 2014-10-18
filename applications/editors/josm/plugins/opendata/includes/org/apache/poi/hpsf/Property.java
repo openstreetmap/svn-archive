@@ -210,7 +210,7 @@ public class Property
         final long nrEntries = LittleEndian.getUInt(src, o);
         o += LittleEndian.INT_SIZE;
 
-        final Map<Long, String> m = new HashMap<Long, String>((int) nrEntries, (float) 1.0);
+        final Map<Long, String> m = new HashMap<>((int) nrEntries, (float) 1.0);
 
         try
         {
@@ -297,6 +297,7 @@ public class Property
      *
      * @see Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(final Object o)
     {
         if (!(o instanceof Property)) {
@@ -342,6 +343,7 @@ public class Property
     /**
      * @see Object#hashCode()
      */
+    @Override
     public int hashCode()
     {
         long hashCode = 0;
@@ -359,6 +361,7 @@ public class Property
     /**
      * @see Object#toString()
      */
+    @Override
     public String toString()
     {
         final StringBuffer b = new StringBuffer();

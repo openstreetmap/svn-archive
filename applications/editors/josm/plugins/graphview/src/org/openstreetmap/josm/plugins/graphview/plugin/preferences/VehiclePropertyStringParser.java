@@ -131,7 +131,7 @@ public final class VehiclePropertyStringParser {
         } else if (propertyType == VehiclePropertyTypes.SURFACE_BLACKLIST) {
 
             String[] surfaces = propertyValueString.split(";\\s*");
-            Collection<String> surfaceBlacklist = new ArrayList<String>(surfaces.length);
+            Collection<String> surfaceBlacklist = new ArrayList<>(surfaces.length);
             for (String surface : surfaces) {
                 for (char nameChar : surface.toCharArray()) {
                     if (FORBIDDEN_SURFACE_CHARS.contains(nameChar)) {

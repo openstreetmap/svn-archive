@@ -23,7 +23,7 @@ public class PanelFog extends JPanel {
 	public JRadioButton whisButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogWhisButton.png")));
 	public JRadioButton gongButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogGongButton.png")));
 	public JRadioButton explosButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FogExplosButton.png")));
-	private EnumMap<Fog, JRadioButton> fogs = new EnumMap<Fog, JRadioButton>(Fog.class);
+	private EnumMap<Fog, JRadioButton> fogs = new EnumMap<>(Fog.class);
 	private ActionListener alFog = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Fog fog : fogs.keySet()) {

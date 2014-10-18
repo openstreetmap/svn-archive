@@ -15,9 +15,9 @@ import org.openstreetmap.josm.data.osm.Way;
  */
 public class OSMGraph extends Graph{
 
-    private final HashMap<Long, OSMWay> ways = new HashMap<Long, OSMWay>();
-    private HashMap<Long, OSMRelation> relations = new HashMap<Long, OSMRelation>();
-    private final HashMap<Long, OSMNode> nodes = new HashMap<Long, OSMNode>();
+    private final HashMap<Long, OSMWay> ways = new HashMap<>();
+    private HashMap<Long, OSMRelation> relations = new HashMap<>();
+    private final HashMap<Long, OSMNode> nodes = new HashMap<>();
 
     public void addNode(OSMNode node) {
         nodes.put(node.getId(), node);
@@ -85,7 +85,7 @@ public class OSMGraph extends Graph{
 
     public ArrayList<Long> getIDsfromWay(int id) {
         OSMWay w = ways.get(id);
-        ArrayList<Long> ids  = new ArrayList<Long>();
+        ArrayList<Long> ids  = new ArrayList<>();
         ids.add(w.getToNode().getId());
         ids.add(w.getFromNode().getId());
         return ids;
@@ -96,7 +96,7 @@ public class OSMGraph extends Graph{
         OSMnode.setId(node.getId());
         OSMnode.setLatitude(node.getBBox().getTopLeft().lat());
         OSMnode.setLongitude(node.getBBox().getTopLeft().lon());
-        OSMnode.setHashmap(new HashMap<String, String>(node.getKeys()));
+        OSMnode.setHashmap(new HashMap<>(node.getKeys()));
         nodes.put(OSMnode.getId(), OSMnode);
     }
 
@@ -107,14 +107,14 @@ public class OSMGraph extends Graph{
         while (it.hasNext()) {
             osmway.addNode(getNode(it.next().getId()));
         }
-        osmway.setHashmap(new HashMap<String, String>(way.getKeys()));
+        osmway.setHashmap(new HashMap<>(way.getKeys()));
         ways.put(osmway.getId(), osmway);
     }
 
     public void addRelation(Relation relation) {
         OSMRelation osmrelation = new OSMRelation();
         osmrelation.setId(relation.getId());
-        osmrelation.setHashmap(new HashMap<String, String>(relation.getKeys()));
+        osmrelation.setHashmap(new HashMap<>(relation.getKeys()));
         RelationMember rmember;
         for (int i = 0; i < relation.getMembers().size(); i++) {
             rmember = relation.getMember(i);

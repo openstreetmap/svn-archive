@@ -75,8 +75,8 @@ public class GraphicsProcessor{
 
 
 	private List<PdfPath> parsePath(Shape s, boolean closed) {
-		List<PdfPath> result = new ArrayList<PdfPath>(2);
-		List<Point2D> points = new ArrayList<Point2D>(2);
+		List<PdfPath> result = new ArrayList<>(2);
+		List<Point2D> points = new ArrayList<>(2);
 
 		PathIterator iter = s.getPathIterator(null);
 		double[] coords = new double[6];
@@ -90,7 +90,7 @@ public class GraphicsProcessor{
 				if (points.size() > 1) {
 					result.add(new PdfPath(points));
 				}
-				points = new ArrayList<Point2D>(2);
+				points = new ArrayList<>(2);
 			} else if (type == PathIterator.SEG_CUBICTO) {
 				//cubic curve
 				this.addPoint(points, this.parsePoint(coords, 4));
@@ -103,7 +103,7 @@ public class GraphicsProcessor{
 				if (points.size() > 1){
 					result.add(new PdfPath(points));
 				}
-				points = new ArrayList<Point2D>(2);
+				points = new ArrayList<>(2);
 				this.addPoint(points, this.parsePoint(coords, 0));
 			}
 			else if (type == PathIterator.SEG_QUADTO) {

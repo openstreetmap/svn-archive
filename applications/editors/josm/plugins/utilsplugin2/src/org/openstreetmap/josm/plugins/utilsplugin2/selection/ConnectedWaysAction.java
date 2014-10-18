@@ -32,7 +32,7 @@ public class ConnectedWaysAction extends JosmAction {
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
-        Set<Way> newWays = new HashSet<Way>();
+        Set<Way> newWays = new HashSet<>();
 
         // selecting ways attached to selected nodes
         if(!selectedNodes.isEmpty()) {

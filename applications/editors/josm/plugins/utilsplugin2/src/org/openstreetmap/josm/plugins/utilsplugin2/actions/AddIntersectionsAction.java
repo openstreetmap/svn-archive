@@ -46,11 +46,11 @@ public class AddIntersectionsAction extends JosmAction {
             return;
         }
 
-        LinkedList<Command> cmds = new LinkedList<Command>();
+        LinkedList<Command> cmds = new LinkedList<>();
         Geometry.addIntersections(ways, false, cmds);
         if (!cmds.isEmpty()) {
             Main.main.undoRedo.add(new SequenceCommand(tr("Add nodes at intersections"),cmds));
-            Set<Node> nodes = new HashSet<Node>(10);
+            Set<Node> nodes = new HashSet<>(10);
             // find and select newly added nodes
             for (Command cmd: cmds) if (cmd instanceof AddCommand){
                 Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();

@@ -3,7 +3,6 @@ package org.mapdb;
 import java.io.File;
 import java.io.IOError;
 import java.io.IOException;
-import java.util.BitSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -36,8 +35,8 @@ public class StoreAppend implements Engine{
     volatile protected int currentFileOffset;
     volatile protected long maxRecid;
 
-    protected LongConcurrentHashMap<Volume> volumes = new LongConcurrentHashMap<Volume>();
-    protected final LongConcurrentHashMap<Long> recidsInTx = new LongConcurrentHashMap<Long>();
+    protected LongConcurrentHashMap<Volume> volumes = new LongConcurrentHashMap<>();
+    protected final LongConcurrentHashMap<Long> recidsInTx = new LongConcurrentHashMap<>();
 
 
     protected final Volume recidsTable = new Volume.MemoryVol(true);
@@ -84,7 +83,7 @@ public class StoreAppend implements Engine{
             currentVolumeNum = fileNum;
 
             //replay file and rebuild recid index table
-            LongHashMap<Long> recidsTable2 = new LongHashMap<Long>();
+            LongHashMap<Long> recidsTable2 = new LongHashMap<>();
             if(!currentVolume.isEmpty()){
                 currentFileOffset =0;
                 long header = currentVolume.getLong(currentFileOffset); currentFileOffset+=8;
@@ -404,7 +403,7 @@ public class StoreAppend implements Engine{
         try{
             if(!recidsInTx.isEmpty()) throw new IllegalAccessError("Uncommited changes");
 
-            LongHashMap<Boolean> ff = new LongHashMap<Boolean>();
+            LongHashMap<Boolean> ff = new LongHashMap<>();
             for(long recid=0;recid<maxRecid;recid++){
                 long indexVal = recidsTable.getLong(recid*8);
                 if(indexVal ==0)continue;

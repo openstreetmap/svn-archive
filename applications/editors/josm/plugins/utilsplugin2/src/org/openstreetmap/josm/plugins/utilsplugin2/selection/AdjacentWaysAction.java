@@ -37,7 +37,7 @@ public class AdjacentWaysAction extends JosmAction {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
         // select ways attached to already selected ways
-        Set<Way> newWays = new HashSet<Way>();
+        Set<Way> newWays = new HashSet<>();
         NodeWayUtils.addWaysConnectedToWays(selectedWays, newWays);
         newWays.addAll(selectedWays);
 

@@ -70,11 +70,11 @@ public class ExecuteAddBug extends MapdustExecuteAction implements
 
     /** The list of MapDust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
-            new ArrayList<MapdustBugObserver>();
+            new ArrayList<>();
 
     /** The list of MapDust action observers */
     private final ArrayList<MapdustActionObserver> actionObservers =
-            new ArrayList<MapdustActionObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>ExecuteAddBug</code> object

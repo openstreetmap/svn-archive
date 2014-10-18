@@ -133,7 +133,7 @@ public class OsmServerChangesetReader extends OsmServerReader {
         try {
             monitor.beginTask(trn("Downloading {0} changeset ...", "Downloading {0} changesets ...",ids.size(),ids.size()));
             monitor.setTicksCount(ids.size());
-            List<Changeset> ret = new ArrayList<Changeset>();
+            List<Changeset> ret = new ArrayList<>();
             int i=0;
             for (Iterator<Integer> it = ids.iterator(); it.hasNext(); ) {
                 int id = it.next();

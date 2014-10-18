@@ -97,7 +97,7 @@ public final class POIFSDocument {
 	 * @param stream the InputStream we read data from
 	 */
 	public POIFSDocument(String name, POIFSBigBlockSize bigBlockSize, InputStream stream) throws IOException {
-		List<DocumentBlock> blocks = new ArrayList<DocumentBlock>();
+		List<DocumentBlock> blocks = new ArrayList<>();
 
 		_size = 0;
 		while (true) {

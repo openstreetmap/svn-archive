@@ -80,8 +80,8 @@ public class DirectoryNode
             });
         }
         _filesystem = filesystem;
-        _byname     = new HashMap<String, Entry>();
-        _entries    = new ArrayList<Entry>();
+        _byname     = new HashMap<>();
+        _entries    = new ArrayList<>();
         Iterator<Property> iter = property.getChildren();
 
         while (iter.hasNext())

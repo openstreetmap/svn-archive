@@ -68,11 +68,11 @@ public class ExecuteCommentBug extends MapdustExecuteAction implements
 
     /** The list of MapDust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
-            new ArrayList<MapdustBugObserver>();
+            new ArrayList<>();
 
     /** The list of mapdust action observers */
     private final ArrayList<MapdustActionObserver> actionObservers =
-            new ArrayList<MapdustActionObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>ExecuteCommentBug</code> object

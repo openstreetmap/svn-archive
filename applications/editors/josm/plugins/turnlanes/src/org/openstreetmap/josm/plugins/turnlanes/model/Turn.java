@@ -20,7 +20,7 @@ import org.openstreetmap.josm.plugins.turnlanes.CollectionUtils;
 
 public final class Turn {
     static Set<Turn> load(ModelContainer c, String role, OsmPrimitive primitive) {
-        final Set<Turn> result = new HashSet<Turn>();
+        final Set<Turn> result = new HashSet<>();
         
         for (Relation r : OsmPrimitive.getFilteredList(primitive.getReferrers(), Relation.class)) {
             if (!r.isUsable() || !r.get("type").equals(Constants.TYPE_TURNS)) {
@@ -60,7 +60,7 @@ public final class Turn {
         }
         
         final List<Way> tmp = Utils.getMemberWays(r, Constants.TURN_ROLE_VIA);
-        final LinkedList<Road> via = new LinkedList<Road>();
+        final LinkedList<Road> via = new LinkedList<>();
         
         final Road.End fromRoadEnd = c.getJunction(Utils.lineUp(from, tmp.get(0))).getRoadEnd(from);
         
@@ -96,7 +96,7 @@ public final class Turn {
         final Road.End toRoadEnd = c.getJunction(n).getRoadEnd(to);
         n = Utils.getOppositeEnd(to, n);
         
-        final Set<Turn> result = new HashSet<Turn>();
+        final Set<Turn> result = new HashSet<>();
         for (int i : indices(r, Constants.TURN_KEY_LANES)) {
             result.add(new Turn(r, fromRoadEnd.getLane(Lane.Kind.REGULAR, i), via, toRoadEnd));
         }
@@ -110,10 +110,10 @@ public final class Turn {
         final String joined = r.get(key);
         
         if (joined == null) {
-            return new ArrayList<Integer>(1);
+            return new ArrayList<>(1);
         }
         
-        final List<Integer> result = new ArrayList<Integer>();
+        final List<Integer> result = new ArrayList<>();
         for (String lane : Constants.SPLIT_PATTERN.split(joined)) {
             result.add(Integer.parseInt(lane));
         }
@@ -135,7 +135,7 @@ public final class Turn {
         final Road.End fromRoadEnd = j.getRoadEnd(from);
         final Road.End toRoadEnd = j.getRoadEnd(to);
         
-        final Set<Turn> result = new HashSet<Turn>();
+        final Set<Turn> result = new HashSet<>();
         for (int i : indices(r, Constants.TURN_KEY_LANES)) {
             result.add(new Turn(r, fromRoadEnd.getLane(Lane.Kind.REGULAR, i), Collections.<Road> emptyList(), toRoadEnd));
         }
@@ -216,7 +216,7 @@ public final class Turn {
     }
     
     void fixReferences(GenericCommand cmd, boolean left, int index) {
-        final List<Integer> fixed = new ArrayList<Integer>();
+        final List<Integer> fixed = new ArrayList<>();
         for (int i : indices(relation, Constants.TURN_KEY_EXTRA_LANES)) {
             if (left ? i < index : i > index) {
                 fixed.add(left ? i + 1 : i - 1);

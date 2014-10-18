@@ -37,7 +37,7 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
 
         if (!selectedWays.isEmpty()) {
-            Set<Way> newWays = new HashSet<Way>();
+            Set<Way> newWays = new HashSet<>();
             NodeWayUtils.addWaysIntersectingWaysRecursively(
                     getCurrentDataSet().getWays(),
                     selectedWays, newWays);

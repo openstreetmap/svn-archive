@@ -81,9 +81,9 @@ public class PanelHaz extends JPanel {
 	public JRadioButton sphereButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereButton.png")));
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
 	public JRadioButton towerButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TowerButton.png")));
-	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
-	public EnumMap<Shp, Obj> carObjects = new EnumMap<Shp, Obj>(Shp.class);
-	public EnumMap<Shp, Obj> isdObjects = new EnumMap<Shp, Obj>(Shp.class);
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<>(Shp.class);
+	public EnumMap<Shp, Obj> carObjects = new EnumMap<>(Shp.class);
+	public EnumMap<Shp, Obj> isdObjects = new EnumMap<>(Shp.class);
 	private ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {

@@ -27,14 +27,14 @@ public class JMinimality {
     private final ArrayList<Channel> OrEn;
     private final ArrayList<Channel> OrEx;
     private final int n;
-    private final List<List<Object>> L = new ArrayList<List<Object>>(); //The list of columns to be sorted
+    private final List<List<Object>> L = new ArrayList<>(); //The list of columns to be sorted
     private long EEovern = 0;
-    private final HashSet<Channel> subgraph = new HashSet<Channel>();//The candidate subgraph to be tested
+    private final HashSet<Channel> subgraph = new HashSet<>();//The candidate subgraph to be tested
     private ProgressMonitor pm;
     private final boolean pmenabled;
-    private final ArrayList<HashSet<Channel>> junctions = new ArrayList<HashSet<Channel>>();
+    private final ArrayList<HashSet<Channel>> junctions = new ArrayList<>();
     private final boolean searchFirstJunction;
-    private final ArrayList<Channel> subJunction = new ArrayList<Channel>();
+    private final ArrayList<Channel> subJunction = new ArrayList<>();
     private final JPrepare jprepare;
     private boolean Check = false;
     private Iterator<int[]> it;
@@ -91,7 +91,7 @@ public class JMinimality {
             int h = 0;    //this is the index denoting the "n out of Grid.length"- combination, indicating a subcolumn of length n
             do {
                 int missing = 0;
-                C = new ArrayList<Object>(3);
+                C = new ArrayList<>(3);
                 v = new int[n][2];
                 C.add(i);//the first position of column variable C is the column index
                 C.add(h);//the second is the entry-subset index
@@ -132,7 +132,7 @@ public class JMinimality {
         Combination c;
         Iterator<List<Object>> l = L.listIterator();
         List<Object> C;
-        ArrayList<int[]> CandidateK = new ArrayList<int[]>(n*n); //saves the candidate K_{n-1} in entry-exit pairs
+        ArrayList<int[]> CandidateK = new ArrayList<>(n*n); //saves the candidate K_{n-1} in entry-exit pairs
         long lindex= 0;
         int h = 0;
         int m = 0;
@@ -228,7 +228,7 @@ public class JMinimality {
                 }
             }
         }
-        jprepare.jPrepare(new ArrayList<Channel>(subgraph));
+        jprepare.jPrepare(new ArrayList<>(subgraph));
         JCheck jCheck = new JCheck();
         Check = jCheck.jCheck(jprepare.getEntries(), jprepare.getExits(), n);
         jprepare.resetSubgraph();
@@ -252,7 +252,7 @@ public class JMinimality {
                     }
                 }
                 if (isin == false) {
-                    junctions.add(new HashSet<Channel>(subgraph));
+                    junctions.add(new HashSet<>(subgraph));
                     //log.info("Kreuzungskandidat der Liste zugefügt" + junctions.size());
                 }
                 Check = false;
@@ -266,7 +266,7 @@ public class JMinimality {
      * @return
      */
     public ArrayList<Channel> getSubJunctionCandidate(){
-        return new ArrayList<Channel>(subgraph);
+        return new ArrayList<>(subgraph);
     }
 
     /**

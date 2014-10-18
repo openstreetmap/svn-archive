@@ -39,7 +39,7 @@ public class TabularPresetSelector extends JPanel {
 
     private PresetsTable presetsTable = null;
     private JTextField   tfFilter = null;
-    private final ArrayList<IPresetSelectorListener> listeners = new ArrayList<IPresetSelectorListener>();
+    private final ArrayList<IPresetSelectorListener> listeners = new ArrayList<>();
     private JScrollPane scrollPane;
     private JButton btnApply;
 

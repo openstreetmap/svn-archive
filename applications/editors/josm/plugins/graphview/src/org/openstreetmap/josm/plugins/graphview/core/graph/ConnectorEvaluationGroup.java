@@ -29,7 +29,7 @@ public class ConnectorEvaluationGroup extends EvaluationGroup {
         assert segments != null && borderNodes != null;
 
         this.segments = segments;
-        this.borderNodes = new ArrayList<SegmentNode>(borderNodes);
+        this.borderNodes = new ArrayList<>(borderNodes);
     }
 
     /**

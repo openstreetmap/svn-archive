@@ -62,7 +62,7 @@ public class ExecuteWorkOffline extends MapdustExecuteAction implements
 
     /** The list of MapDust refresh observers */
     private final ArrayList<MapdustUpdateObserver> observers =
-            new ArrayList<MapdustUpdateObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>ExecuteWorkOffline</code> object.

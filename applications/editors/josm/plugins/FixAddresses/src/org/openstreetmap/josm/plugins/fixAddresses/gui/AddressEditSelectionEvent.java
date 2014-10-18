@@ -152,7 +152,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 
             int[] selRows = unresolvedAddressTable.getSelectedRows();
 
-            unresolvedCache = new ArrayList<OSMAddress>();
+            unresolvedCache = new ArrayList<>();
             for (int i = 0; i < selRows.length; i++) {
                 if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfUnresolvedAddresses()) {
                     unresolvedCache.add(addressContainer.getUnresolvedAddresses().get(selRows[i]));
@@ -176,7 +176,7 @@ public class AddressEditSelectionEvent extends ActionEvent {
 
             int[] selRows = incompleteAddressTable.getSelectedRows();
 
-            incompleteCache = new ArrayList<OSMAddress>();
+            incompleteCache = new ArrayList<>();
             for (int i = 0; i < selRows.length; i++) {
                 if (selRows[i] >= 0 && selRows[i] < addressContainer.getNumberOfIncompleteAddresses()) {
                     incompleteCache.add(addressContainer.getIncompleteAddresses().get(selRows[i]));

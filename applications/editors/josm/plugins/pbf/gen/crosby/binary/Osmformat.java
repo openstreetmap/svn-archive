@@ -2415,7 +2415,7 @@ public final class Osmformat {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                primitivegroup_ = new java.util.ArrayList<crosby.binary.Osmformat.PrimitiveGroup>();
+                primitivegroup_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               primitivegroup_.add(input.readMessage(crosby.binary.Osmformat.PrimitiveGroup.PARSER, extensionRegistry));
@@ -2981,7 +2981,7 @@ public final class Osmformat {
         java.util.Collections.emptyList();
       private void ensurePrimitivegroupIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          primitivegroup_ = new java.util.ArrayList<crosby.binary.Osmformat.PrimitiveGroup>(primitivegroup_);
+          primitivegroup_ = new java.util.ArrayList<>(primitivegroup_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -3414,7 +3414,7 @@ public final class Osmformat {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                nodes_ = new java.util.ArrayList<crosby.binary.Osmformat.Node>();
+                nodes_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000001;
               }
               nodes_.add(input.readMessage(crosby.binary.Osmformat.Node.PARSER, extensionRegistry));
@@ -3435,7 +3435,7 @@ public final class Osmformat {
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                ways_ = new java.util.ArrayList<crosby.binary.Osmformat.Way>();
+                ways_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               ways_.add(input.readMessage(crosby.binary.Osmformat.Way.PARSER, extensionRegistry));
@@ -3443,7 +3443,7 @@ public final class Osmformat {
             }
             case 34: {
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                relations_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation>();
+                relations_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000008;
               }
               relations_.add(input.readMessage(crosby.binary.Osmformat.Relation.PARSER, extensionRegistry));
@@ -3451,7 +3451,7 @@ public final class Osmformat {
             }
             case 42: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                changesets_ = new java.util.ArrayList<crosby.binary.Osmformat.ChangeSet>();
+                changesets_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               changesets_.add(input.readMessage(crosby.binary.Osmformat.ChangeSet.PARSER, extensionRegistry));
@@ -4006,7 +4006,7 @@ public final class Osmformat {
         java.util.Collections.emptyList();
       private void ensureNodesIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          nodes_ = new java.util.ArrayList<crosby.binary.Osmformat.Node>(nodes_);
+          nodes_ = new java.util.ArrayList<>(nodes_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -4191,7 +4191,7 @@ public final class Osmformat {
         java.util.Collections.emptyList();
       private void ensureWaysIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          ways_ = new java.util.ArrayList<crosby.binary.Osmformat.Way>(ways_);
+          ways_ = new java.util.ArrayList<>(ways_);
           bitField0_ |= 0x00000004;
          }
       }
@@ -4316,7 +4316,7 @@ public final class Osmformat {
         java.util.Collections.emptyList();
       private void ensureRelationsIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          relations_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation>(relations_);
+          relations_ = new java.util.ArrayList<>(relations_);
           bitField0_ |= 0x00000008;
          }
       }
@@ -4441,7 +4441,7 @@ public final class Osmformat {
         java.util.Collections.emptyList();
       private void ensureChangesetsIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          changesets_ = new java.util.ArrayList<crosby.binary.Osmformat.ChangeSet>(changesets_);
+          changesets_ = new java.util.ArrayList<>(changesets_);
           bitField0_ |= 0x00000010;
          }
       }
@@ -4648,7 +4648,7 @@ public final class Osmformat {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                s_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                s_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000001;
               }
               s_.add(input.readBytes());
@@ -4924,7 +4924,7 @@ public final class Osmformat {
       private java.util.List<com.google.protobuf.ByteString> s_ = java.util.Collections.emptyList();
       private void ensureSIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          s_ = new java.util.ArrayList<com.google.protobuf.ByteString>(s_);
+          s_ = new java.util.ArrayList<>(s_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -6093,7 +6093,7 @@ public final class Osmformat {
             }
             case 8: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                version_ = new java.util.ArrayList<java.lang.Integer>();
+                version_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000001;
               }
               version_.add(input.readInt32());
@@ -6103,7 +6103,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                version_ = new java.util.ArrayList<java.lang.Integer>();
+                version_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000001;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -6114,7 +6114,7 @@ public final class Osmformat {
             }
             case 16: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                timestamp_ = new java.util.ArrayList<java.lang.Long>();
+                timestamp_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               timestamp_.add(input.readSInt64());
@@ -6124,7 +6124,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
-                timestamp_ = new java.util.ArrayList<java.lang.Long>();
+                timestamp_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -6135,7 +6135,7 @@ public final class Osmformat {
             }
             case 24: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                changeset_ = new java.util.ArrayList<java.lang.Long>();
+                changeset_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               changeset_.add(input.readSInt64());
@@ -6145,7 +6145,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                changeset_ = new java.util.ArrayList<java.lang.Long>();
+                changeset_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -6156,7 +6156,7 @@ public final class Osmformat {
             }
             case 32: {
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                uid_ = new java.util.ArrayList<java.lang.Integer>();
+                uid_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000008;
               }
               uid_.add(input.readSInt32());
@@ -6166,7 +6166,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008) && input.getBytesUntilLimit() > 0) {
-                uid_ = new java.util.ArrayList<java.lang.Integer>();
+                uid_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000008;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -6177,7 +6177,7 @@ public final class Osmformat {
             }
             case 40: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                userSid_ = new java.util.ArrayList<java.lang.Integer>();
+                userSid_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               userSid_.add(input.readSInt32());
@@ -6187,7 +6187,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
-                userSid_ = new java.util.ArrayList<java.lang.Integer>();
+                userSid_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -6198,7 +6198,7 @@ public final class Osmformat {
             }
             case 48: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                visible_ = new java.util.ArrayList<java.lang.Boolean>();
+                visible_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000020;
               }
               visible_.add(input.readBool());
@@ -6208,7 +6208,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020) && input.getBytesUntilLimit() > 0) {
-                visible_ = new java.util.ArrayList<java.lang.Boolean>();
+                visible_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000020;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -6898,7 +6898,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> version_ = java.util.Collections.emptyList();
       private void ensureVersionIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          version_ = new java.util.ArrayList<java.lang.Integer>(version_);
+          version_ = new java.util.ArrayList<>(version_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -6964,7 +6964,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> timestamp_ = java.util.Collections.emptyList();
       private void ensureTimestampIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          timestamp_ = new java.util.ArrayList<java.lang.Long>(timestamp_);
+          timestamp_ = new java.util.ArrayList<>(timestamp_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -7058,7 +7058,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> changeset_ = java.util.Collections.emptyList();
       private void ensureChangesetIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          changeset_ = new java.util.ArrayList<java.lang.Long>(changeset_);
+          changeset_ = new java.util.ArrayList<>(changeset_);
           bitField0_ |= 0x00000004;
          }
       }
@@ -7152,7 +7152,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> uid_ = java.util.Collections.emptyList();
       private void ensureUidIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          uid_ = new java.util.ArrayList<java.lang.Integer>(uid_);
+          uid_ = new java.util.ArrayList<>(uid_);
           bitField0_ |= 0x00000008;
          }
       }
@@ -7246,7 +7246,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> userSid_ = java.util.Collections.emptyList();
       private void ensureUserSidIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          userSid_ = new java.util.ArrayList<java.lang.Integer>(userSid_);
+          userSid_ = new java.util.ArrayList<>(userSid_);
           bitField0_ |= 0x00000010;
          }
       }
@@ -7340,7 +7340,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Boolean> visible_ = java.util.Collections.emptyList();
       private void ensureVisibleIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          visible_ = new java.util.ArrayList<java.lang.Boolean>(visible_);
+          visible_ = new java.util.ArrayList<>(visible_);
           bitField0_ |= 0x00000020;
          }
       }
@@ -8080,7 +8080,7 @@ public final class Osmformat {
             }
             case 16: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                keys_ = new java.util.ArrayList<java.lang.Integer>();
+                keys_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               keys_.add(input.readUInt32());
@@ -8090,7 +8090,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
-                keys_ = new java.util.ArrayList<java.lang.Integer>();
+                keys_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -8101,7 +8101,7 @@ public final class Osmformat {
             }
             case 24: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                vals_ = new java.util.ArrayList<java.lang.Integer>();
+                vals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               vals_.add(input.readUInt32());
@@ -8111,7 +8111,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                vals_ = new java.util.ArrayList<java.lang.Integer>();
+                vals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -8701,7 +8701,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> keys_ = java.util.Collections.emptyList();
       private void ensureKeysIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          keys_ = new java.util.ArrayList<java.lang.Integer>(keys_);
+          keys_ = new java.util.ArrayList<>(keys_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -8795,7 +8795,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> vals_ = java.util.Collections.emptyList();
       private void ensureValsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          vals_ = new java.util.ArrayList<java.lang.Integer>(vals_);
+          vals_ = new java.util.ArrayList<>(vals_);
           bitField0_ |= 0x00000004;
          }
       }
@@ -9218,7 +9218,7 @@ public final class Osmformat {
             }
             case 8: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                id_ = new java.util.ArrayList<java.lang.Long>();
+                id_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000001;
               }
               id_.add(input.readSInt64());
@@ -9228,7 +9228,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                id_ = new java.util.ArrayList<java.lang.Long>();
+                id_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000001;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -9252,7 +9252,7 @@ public final class Osmformat {
             }
             case 64: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                lat_ = new java.util.ArrayList<java.lang.Long>();
+                lat_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               lat_.add(input.readSInt64());
@@ -9262,7 +9262,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                lat_ = new java.util.ArrayList<java.lang.Long>();
+                lat_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -9273,7 +9273,7 @@ public final class Osmformat {
             }
             case 72: {
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                lon_ = new java.util.ArrayList<java.lang.Long>();
+                lon_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000008;
               }
               lon_.add(input.readSInt64());
@@ -9283,7 +9283,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008) && input.getBytesUntilLimit() > 0) {
-                lon_ = new java.util.ArrayList<java.lang.Long>();
+                lon_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000008;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -9294,7 +9294,7 @@ public final class Osmformat {
             }
             case 80: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                keysVals_ = new java.util.ArrayList<java.lang.Integer>();
+                keysVals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               keysVals_.add(input.readInt32());
@@ -9304,7 +9304,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
-                keysVals_ = new java.util.ArrayList<java.lang.Integer>();
+                keysVals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -9873,7 +9873,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> id_ = java.util.Collections.emptyList();
       private void ensureIdIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          id_ = new java.util.ArrayList<java.lang.Long>(id_);
+          id_ = new java.util.ArrayList<>(id_);
           bitField0_ |= 0x00000001;
          }
       }
@@ -10051,7 +10051,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> lat_ = java.util.Collections.emptyList();
       private void ensureLatIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          lat_ = new java.util.ArrayList<java.lang.Long>(lat_);
+          lat_ = new java.util.ArrayList<>(lat_);
           bitField0_ |= 0x00000004;
          }
       }
@@ -10145,7 +10145,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> lon_ = java.util.Collections.emptyList();
       private void ensureLonIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          lon_ = new java.util.ArrayList<java.lang.Long>(lon_);
+          lon_ = new java.util.ArrayList<>(lon_);
           bitField0_ |= 0x00000008;
          }
       }
@@ -10239,7 +10239,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> keysVals_ = java.util.Collections.emptyList();
       private void ensureKeysValsIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          keysVals_ = new java.util.ArrayList<java.lang.Integer>(keysVals_);
+          keysVals_ = new java.util.ArrayList<>(keysVals_);
           bitField0_ |= 0x00000010;
          }
       }
@@ -10483,7 +10483,7 @@ public final class Osmformat {
             }
             case 16: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                keys_ = new java.util.ArrayList<java.lang.Integer>();
+                keys_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               keys_.add(input.readUInt32());
@@ -10493,7 +10493,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
-                keys_ = new java.util.ArrayList<java.lang.Integer>();
+                keys_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -10504,7 +10504,7 @@ public final class Osmformat {
             }
             case 24: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                vals_ = new java.util.ArrayList<java.lang.Integer>();
+                vals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               vals_.add(input.readUInt32());
@@ -10514,7 +10514,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                vals_ = new java.util.ArrayList<java.lang.Integer>();
+                vals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -10538,7 +10538,7 @@ public final class Osmformat {
             }
             case 64: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                refs_ = new java.util.ArrayList<java.lang.Long>();
+                refs_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               refs_.add(input.readSInt64());
@@ -10548,7 +10548,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
-                refs_ = new java.util.ArrayList<java.lang.Long>();
+                refs_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -11092,7 +11092,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> keys_ = java.util.Collections.emptyList();
       private void ensureKeysIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          keys_ = new java.util.ArrayList<java.lang.Integer>(keys_);
+          keys_ = new java.util.ArrayList<>(keys_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -11186,7 +11186,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> vals_ = java.util.Collections.emptyList();
       private void ensureValsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          vals_ = new java.util.ArrayList<java.lang.Integer>(vals_);
+          vals_ = new java.util.ArrayList<>(vals_);
           bitField0_ |= 0x00000004;
          }
       }
@@ -11312,7 +11312,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> refs_ = java.util.Collections.emptyList();
       private void ensureRefsIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          refs_ = new java.util.ArrayList<java.lang.Long>(refs_);
+          refs_ = new java.util.ArrayList<>(refs_);
           bitField0_ |= 0x00000010;
          }
       }
@@ -11594,7 +11594,7 @@ public final class Osmformat {
             }
             case 16: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                keys_ = new java.util.ArrayList<java.lang.Integer>();
+                keys_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               keys_.add(input.readUInt32());
@@ -11604,7 +11604,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
-                keys_ = new java.util.ArrayList<java.lang.Integer>();
+                keys_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000002;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -11615,7 +11615,7 @@ public final class Osmformat {
             }
             case 24: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                vals_ = new java.util.ArrayList<java.lang.Integer>();
+                vals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               vals_.add(input.readUInt32());
@@ -11625,7 +11625,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                vals_ = new java.util.ArrayList<java.lang.Integer>();
+                vals_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000004;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -11649,7 +11649,7 @@ public final class Osmformat {
             }
             case 64: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                rolesSid_ = new java.util.ArrayList<java.lang.Integer>();
+                rolesSid_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               rolesSid_.add(input.readInt32());
@@ -11659,7 +11659,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
-                rolesSid_ = new java.util.ArrayList<java.lang.Integer>();
+                rolesSid_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000010;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -11670,7 +11670,7 @@ public final class Osmformat {
             }
             case 72: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                memids_ = new java.util.ArrayList<java.lang.Long>();
+                memids_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000020;
               }
               memids_.add(input.readSInt64());
@@ -11680,7 +11680,7 @@ public final class Osmformat {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020) && input.getBytesUntilLimit() > 0) {
-                memids_ = new java.util.ArrayList<java.lang.Long>();
+                memids_ = new java.util.ArrayList<>();
                 mutable_bitField0_ |= 0x00000020;
               }
               while (input.getBytesUntilLimit() > 0) {
@@ -11697,7 +11697,7 @@ public final class Osmformat {
                 unknownFieldsCodedOutput.writeRawVarint32(rawValue);
                 } else {
                 if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                  types_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation.MemberType>();
+                  types_ = new java.util.ArrayList<>();
                   mutable_bitField0_ |= 0x00000040;
                 }
                 types_.add(value);
@@ -11715,7 +11715,7 @@ public final class Osmformat {
                   unknownFieldsCodedOutput.writeRawVarint32(rawValue);
                   } else {
                   if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                    types_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation.MemberType>();
+                    types_ = new java.util.ArrayList<>();
                     mutable_bitField0_ |= 0x00000040;
                   }
                   types_.add(value);
@@ -12463,7 +12463,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> keys_ = java.util.Collections.emptyList();
       private void ensureKeysIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          keys_ = new java.util.ArrayList<java.lang.Integer>(keys_);
+          keys_ = new java.util.ArrayList<>(keys_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -12557,7 +12557,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> vals_ = java.util.Collections.emptyList();
       private void ensureValsIsMutable() {
         if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          vals_ = new java.util.ArrayList<java.lang.Integer>(vals_);
+          vals_ = new java.util.ArrayList<>(vals_);
           bitField0_ |= 0x00000004;
          }
       }
@@ -12683,7 +12683,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Integer> rolesSid_ = java.util.Collections.emptyList();
       private void ensureRolesSidIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          rolesSid_ = new java.util.ArrayList<java.lang.Integer>(rolesSid_);
+          rolesSid_ = new java.util.ArrayList<>(rolesSid_);
           bitField0_ |= 0x00000010;
          }
       }
@@ -12777,7 +12777,7 @@ public final class Osmformat {
       private java.util.List<java.lang.Long> memids_ = java.util.Collections.emptyList();
       private void ensureMemidsIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          memids_ = new java.util.ArrayList<java.lang.Long>(memids_);
+          memids_ = new java.util.ArrayList<>(memids_);
           bitField0_ |= 0x00000020;
          }
       }
@@ -12872,7 +12872,7 @@ public final class Osmformat {
         java.util.Collections.emptyList();
       private void ensureTypesIsMutable() {
         if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          types_ = new java.util.ArrayList<crosby.binary.Osmformat.Relation.MemberType>(types_);
+          types_ = new java.util.ArrayList<>(types_);
           bitField0_ |= 0x00000040;
         }
       }

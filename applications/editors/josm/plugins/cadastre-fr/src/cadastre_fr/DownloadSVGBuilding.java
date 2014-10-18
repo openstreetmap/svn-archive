@@ -98,11 +98,11 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
      */
     private void createBuildings(String svg) {
         String[] SVGpaths = new SVGParser().getClosedPaths(svg);
-        ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
+        ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<>();
 
         // convert SVG nodes to eastNorth coordinates
         for (int i=0; i< SVGpaths.length; i++) {
-            ArrayList<EastNorth> eastNorth = new ArrayList<EastNorth>();
+            ArrayList<EastNorth> eastNorth = new ArrayList<>();
             createNodes(SVGpaths[i], eastNorth);
             if (eastNorth.size() > 2)
                 eastNorths.add(eastNorth);
@@ -155,7 +155,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
         }
 
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
         for (Node node : svgDataSet.getNodes())
             if (!node.isDeleted())
                 cmds.add(new AddCommand(node));

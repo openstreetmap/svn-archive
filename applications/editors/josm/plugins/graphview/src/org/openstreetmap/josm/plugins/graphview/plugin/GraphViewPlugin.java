@@ -56,7 +56,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
     private static final Collection<RoadPropertyType<?>> PROPERTIES;
 
     static {
-        PROPERTIES = new LinkedList<RoadPropertyType<?>>();
+        PROPERTIES = new LinkedList<>();
         PROPERTIES.add(new RoadIncline());
         PROPERTIES.add(new RoadMaxaxleload());
         PROPERTIES.add(new RoadMaxheight());

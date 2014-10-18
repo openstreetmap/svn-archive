@@ -66,7 +66,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
      * @return the collection of "parent" turn restrictions. 
      */
     static public Collection<Relation> getTurnRestrictionsParticipatingIn(Collection<OsmPrimitive> primitives){
-        HashSet<Relation> ret = new HashSet<Relation>();
+        HashSet<Relation> ret = new HashSet<>();
         if (primitives == null) return ret;
         for (OsmPrimitive p: primitives){
             if (p == null) continue;
@@ -295,7 +295,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
     }
     
     private static class TurnRestrictionTableModel extends AbstractTableModel {
-        private final ArrayList<Relation> turnrestrictions = new ArrayList<Relation>();
+        private final ArrayList<Relation> turnrestrictions = new ArrayList<>();
 
         public TurnRestrictionTableModel(Collection<Relation> turnrestrictions){
             this.turnrestrictions.clear();

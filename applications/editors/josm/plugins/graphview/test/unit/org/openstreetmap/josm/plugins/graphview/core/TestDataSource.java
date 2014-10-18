@@ -14,7 +14,7 @@ import org.openstreetmap.josm.plugins.graphview.core.data.TagGroup;
 public class TestDataSource implements DataSource<TestDataSource.TestNode, TestDataSource.TestWay, TestDataSource.TestRelation, TestDataSource.TestRelationMember> {
 
     public static class TestPrimitive {
-        public final Map<String, String> tags = new HashMap<String, String>();
+        public final Map<String, String> tags = new HashMap<>();
     };
 
     public static class TestNode extends TestPrimitive {
@@ -34,7 +34,7 @@ public class TestDataSource implements DataSource<TestDataSource.TestNode, TestD
     }
 
     public static class TestWay extends TestPrimitive {
-        public final List<TestNode> nodes = new LinkedList<TestNode>();
+        public final List<TestNode> nodes = new LinkedList<>();
         @Override
         public String toString() {
             return nodes + "; " + tags;
@@ -42,7 +42,7 @@ public class TestDataSource implements DataSource<TestDataSource.TestNode, TestD
     }
 
     public static class TestRelation extends TestPrimitive {
-        public final Collection<TestRelationMember> members = new LinkedList<TestRelationMember>();
+        public final Collection<TestRelationMember> members = new LinkedList<>();
         @Override
         public String toString() {
             return members + "; " + tags;
@@ -69,9 +69,9 @@ public class TestDataSource implements DataSource<TestDataSource.TestNode, TestD
     }
 
 
-    public final Collection<TestNode> nodes = new LinkedList<TestNode>();
-    public final Collection<TestWay> ways = new LinkedList<TestWay>();
-    public final Collection<TestRelation> relations = new LinkedList<TestRelation>();
+    public final Collection<TestNode> nodes = new LinkedList<>();
+    public final Collection<TestWay> ways = new LinkedList<>();
+    public final Collection<TestRelation> relations = new LinkedList<>();
 
 
     public double getLat(TestNode node) {

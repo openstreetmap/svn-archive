@@ -357,7 +357,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         if( newSelection == null )
             return;
 
-        Set<Relation> relations = new TreeSet<Relation>(
+        Set<Relation> relations = new TreeSet<>(
                 DefaultNameFormatter.getInstance().getRelationComparator());
         for( OsmPrimitive element : newSelection ) {
             for( OsmPrimitive ref : element.getReferrers() ) {
@@ -414,7 +414,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private static final Map<String, List<String>> possibleRoles = loadRoles();
 
     private static Map<String, List<String>> loadRoles() {
-        Map<String, List<String>> result = new HashMap<String, List<String>>();
+        Map<String, List<String>> result = new HashMap<>();
         try {
             ClassLoader classLoader = RelContextDialog.class.getClassLoader();
             final InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
@@ -424,7 +424,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 StringTokenizer t = new StringTokenizer(line, " ,;:\"");
                 if( t.hasMoreTokens() ) {
                     String type = t.nextToken();
-                    List<String> roles = new ArrayList<String>();
+                    List<String> roles = new ArrayList<>();
                     while( t.hasMoreTokens() )
                         roles.add(t.nextToken());
                     result.put(type, roles);
@@ -441,7 +441,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private String askForRoleName() {
         JPanel panel = new JPanel(new GridBagLayout());
 
-        List<String> items = new ArrayList<String>();
+        List<String> items = new ArrayList<>();
         for( String role : roleBoxModel.getRoles() ) {
             if( role.length() > 1 )
                 items.add(role);
@@ -526,7 +526,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         if( chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty() ) {
             Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
             Relation r = chosenRelation.get();
-            List<Command> commands = new ArrayList<Command>();
+            List<Command> commands = new ArrayList<>();
             for( int i = 0; i < r.getMembersCount(); i++ ) {
                 RelationMember m = r.getMember(i);
                 if( selected.contains(m.getMember()) ) {
@@ -622,7 +622,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
         
     private class RoleComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String> {
-        private List<String> roles = new ArrayList<String>();
+        private List<String> roles = new ArrayList<>();
         private int selectedIndex = -1;
         private JComboBox<String> combobox;
         private String membersRole;
@@ -645,7 +645,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             if( !combobox.isEnabled() )
                 combobox.setEnabled(true);
 
-            List<String> items = new ArrayList<String>();
+            List<String> items = new ArrayList<>();
             if( chosenRelation != null && chosenRelation.get() != null ) {
                 if( chosenRelation.isMultipolygon() ) {
                     items.add("outer");

@@ -12,8 +12,8 @@ import java.util.List;
 import javax.swing.JTable;
 
 import org.openstreetmap.josm.plugins.fixAddresses.AddressEditContainer;
-import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.IOSMEntity;
+import org.openstreetmap.josm.plugins.fixAddresses.OSMAddress;
 import org.openstreetmap.josm.plugins.fixAddresses.StringUtils;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditSelectionEvent;
 import org.openstreetmap.josm.plugins.fixAddresses.gui.AddressEditTableModel;
@@ -69,7 +69,7 @@ public class ApplyAllGuessesAction extends AbstractAddressEditAction implements 
      */
     private void applyGuesses(List<OSMAddress> addrToFix) {
         beginTransaction(tr("Applied guessed values"));
-        List<OSMAddress> addrToFixShadow = new ArrayList<OSMAddress>(addrToFix);
+        List<OSMAddress> addrToFixShadow = new ArrayList<>(addrToFix);
         for (OSMAddress aNode : addrToFixShadow) {
             beginObjectTransaction(aNode);
 

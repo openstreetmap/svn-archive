@@ -145,7 +145,7 @@ public class GraphViewPreferences extends Observable {
         assert parameterBookmarks != null;
 
         this.parameterBookmarks =
-            new HashMap<String, PreferenceAccessParameters>(parameterBookmarks);
+            new HashMap<>(parameterBookmarks);
     }
 
     public synchronized ColorScheme getCurrentColorScheme() {
@@ -324,7 +324,7 @@ public class GraphViewPreferences extends Observable {
     private static final Pattern PROPERTY_MAP_ENTRY_PATTERN = Pattern.compile("^([^=]*)=(.*)$");
 
     private static final Map<VehiclePropertyType<?>, String> VEHICLE_PROPERTY_TYPE_NAME_MAP =
-        new HashMap<VehiclePropertyType<?>, String>();
+        new HashMap<>();
 
 
     static {
@@ -411,7 +411,7 @@ public class GraphViewPreferences extends Observable {
             String string) {
 
         Map<String, PreferenceAccessParameters> resultMap =
-            new HashMap<String, PreferenceAccessParameters>();
+            new HashMap<>();
 
         String[] bookmarkStrings = string.split("\\|");
 
@@ -434,7 +434,7 @@ public class GraphViewPreferences extends Observable {
             String accessClass = matcher.group(2);
 
             String[] accessTypeStrings = matcher.group(3).split(",");
-            Collection<AccessType> accessTypes = new LinkedList<AccessType>();
+            Collection<AccessType> accessTypes = new LinkedList<>();
             for (String accessTypeString : accessTypeStrings) {
                 AccessType accessType = AccessType.valueOf(accessTypeString);
                 if (accessType != null) {
@@ -445,7 +445,7 @@ public class GraphViewPreferences extends Observable {
 
             String[] vehiclePropertyStrings = matcher.group(4).split(",");
             Map<VehiclePropertyType<?>, String> vehiclePropertyMap =
-                new HashMap<VehiclePropertyType<?>, String>();
+                new HashMap<>();
 
             for (String vehiclePropertyString : vehiclePropertyStrings) {
 

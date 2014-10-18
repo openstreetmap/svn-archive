@@ -227,7 +227,7 @@ public abstract class EngineWrapper implements Engine{
 
         //TODO CAS
 
-        final Queue<Record> records = new ConcurrentLinkedQueue<Record>();
+        final Queue<Record> records = new ConcurrentLinkedQueue<>();
 
 
         protected static final class Record{
@@ -336,14 +336,14 @@ public abstract class EngineWrapper implements Engine{
             Item<?> item = items.get(recid);
             if(item!=null) item.check();
             A ret = super.get(recid, serializer);
-            if(ret!=null) items.put(recid, new Item<A>(serializer,ret));
+            if(ret!=null) items.put(recid, new Item<>(serializer,ret));
             return ret;
         }
 
         @Override
         public <A> long put(A value, Serializer<A> serializer) {
             long ret =  super.put(value, serializer);
-            if(value!=null) items.put(ret, new Item<A>(serializer,value));
+            if(value!=null) items.put(ret, new Item<>(serializer,value));
             return ret;
         }
 
@@ -352,7 +352,7 @@ public abstract class EngineWrapper implements Engine{
             Item<?> item = items.get(recid);
             if(item!=null) item.check();
             super.update(recid, value, serializer);
-            if(value!=null) items.put(recid, new Item<A>(serializer,value));
+            if(value!=null) items.put(recid, new Item<>(serializer,value));
         }
 
         @SuppressWarnings({ "unchecked", "rawtypes" })

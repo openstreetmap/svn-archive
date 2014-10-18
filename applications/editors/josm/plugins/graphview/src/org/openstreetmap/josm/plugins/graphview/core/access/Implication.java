@@ -33,7 +33,7 @@ public final class Implication {
 
         if (condition.matches(tags)) {
 
-            Map<String, String> newTagMap = new HashMap<String, String>();
+            Map<String, String> newTagMap = new HashMap<>();
 
             for (Tag tag : tags) {
                 newTagMap.put(tag.key, tag.value);

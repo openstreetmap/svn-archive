@@ -61,7 +61,7 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
             // since projections.txt is included in the JAR
         }
 
-        sorter = new TableRowSorter<CRSTableModel>(model);
+        sorter = new TableRowSorter<>(model);
     }
     
     @Override
@@ -253,7 +253,7 @@ public class Proj4JProjectionChoice implements ProjectionChoice {
     class CRSTableModel extends AbstractTableModel {
 
         private String[] columnNames = {tr("Code"), tr("Description")};
-        private ArrayList<CRSEntry> crsList = new ArrayList<CRSEntry>();
+        private ArrayList<CRSEntry> crsList = new ArrayList<>();
 
         public CRSTableModel() throws java.io.IOException {
             // Read projection information from file, (authority, code, description)

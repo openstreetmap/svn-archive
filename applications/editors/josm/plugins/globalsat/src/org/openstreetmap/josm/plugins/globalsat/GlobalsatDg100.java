@@ -149,7 +149,7 @@ public class GlobalsatDg100
             if(gpsRecList.size() > 0){
                 GpsRec last = null;
                 result = new GpxData();
-                Collection<WayPoint> seg = new ArrayList<WayPoint>(100);
+                Collection<WayPoint> seg = new ArrayList<>(100);
                 for(GpsRec r:gpsRecList){
                     if(canceled){
                         return result;
@@ -216,7 +216,7 @@ public class GlobalsatDg100
     private List<FileInfoRec> readFileInfoList() throws ConnectionException
     {
         int nextIdx = 0;
-        List<FileInfoRec> result = new ArrayList<FileInfoRec>(64);
+        List<FileInfoRec> result = new ArrayList<>(64);
         try{
             do{
                 Response<FileInfoRec> response = sendCmdGetFileInfo(nextIdx);
@@ -231,7 +231,7 @@ public class GlobalsatDg100
 
     public List<GpsRec> readGpsRecList(List<FileInfoRec> fileInfoList) throws ConnectionException
     {
-        List<GpsRec> result = new ArrayList<GpsRec>(200);
+        List<GpsRec> result = new ArrayList<>(200);
 
         try{
             for(FileInfoRec fileInfoRec:fileInfoList){

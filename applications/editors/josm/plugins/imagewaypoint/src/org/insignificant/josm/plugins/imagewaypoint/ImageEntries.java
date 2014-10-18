@@ -38,9 +38,9 @@ public final class ImageEntries {
     private Image currentImage;
 
     private ImageEntries() {
-        this.images = new ArrayList<ImageEntry>();
-        this.locatedImages = new ArrayList<ImageEntry>();
-        this.listeners = new ArrayList<IImageChangeListener>();
+        this.images = new ArrayList<>();
+        this.locatedImages = new ArrayList<>();
+        this.listeners = new ArrayList<>();
         this.listener = new ImageReadyListener(this);
 
         this.currentImageEntry = null;
@@ -111,7 +111,7 @@ public final class ImageEntries {
 
     private final List<String> getTextContentsFromWayPoint(
     final WayPoint wayPoint) {
-    final List<String> texts = new ArrayList<String>();
+    final List<String> texts = new ArrayList<>();
     for(String s : new String[]{"name", "cmt", "desc"})
     {
         String t = wayPoint.getString(s);

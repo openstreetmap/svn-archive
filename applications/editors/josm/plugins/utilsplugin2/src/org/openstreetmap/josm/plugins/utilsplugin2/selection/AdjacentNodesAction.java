@@ -28,7 +28,7 @@ public class AdjacentNodesAction extends JosmAction {
         putValue("help", ht("/Action/AdjacentNodes"));
     }
 
-    private  Set<Way> activeWays = new HashSet<Way>();
+    private  Set<Way> activeWays = new HashSet<>();
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -57,7 +57,7 @@ public class AdjacentNodesAction extends JosmAction {
 
         // selecting nodes of selected ways
         if(selectedNodes.isEmpty()) {
-            HashSet<Node> newNodes = new HashSet<Node>();
+            HashSet<Node> newNodes = new HashSet<>();
             NodeWayUtils.addNodesConnectedToWays(selectedWays, newNodes);
             activeWays.clear();
             getCurrentDataSet().setSelected(newNodes);
@@ -68,7 +68,7 @@ public class AdjacentNodesAction extends JosmAction {
                 NodeWayUtils.addWaysConnectedToNodes(selectedNodes, activeWays);
         }
 
-        Set<Node> newNodes = new HashSet <Node>();
+        Set<Node> newNodes = new HashSet <>();
         for (Node node: selectedNodes) {
             for (Way w: activeWays) {
                 NodeWayUtils.addNeighbours(w, node, newNodes);

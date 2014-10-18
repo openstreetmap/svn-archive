@@ -70,11 +70,11 @@ public class ExecuteInvalidateBug extends MapdustExecuteAction implements
 
     /** The list of mapdust bug observers */
     private final ArrayList<MapdustBugObserver> bugObservers =
-            new ArrayList<MapdustBugObserver>();
+            new ArrayList<>();
 
     /** The list of mapdust action observers */
     private final ArrayList<MapdustActionObserver> actionObservers =
-            new ArrayList<MapdustActionObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>ExecuteInvalidateBug</code> object

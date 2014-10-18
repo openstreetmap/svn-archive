@@ -47,7 +47,7 @@ public class FormulaRenderer {
         if (ptgs == null || ptgs.length == 0) {
             throw new IllegalArgumentException("ptgs must not be null");
         }
-        Stack<String> stack = new Stack<String>();
+        Stack<String> stack = new Stack<>();
 
         for (int i=0 ; i < ptgs.length; i++) {
             Ptg ptg = ptgs[i];

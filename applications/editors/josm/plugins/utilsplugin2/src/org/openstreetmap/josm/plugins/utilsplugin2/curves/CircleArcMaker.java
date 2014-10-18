@@ -22,7 +22,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 public class CircleArcMaker {
     public static Collection<Command> doCircleArc(List<Node> selectedNodes, List<Way> selectedWays, int angleSeparation) {
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
 
         //// Decides which nodes to use as anchors based on selection
         /*
@@ -60,7 +60,7 @@ public class CircleArcMaker {
             }
         }
 
-        Set<Way> targetWays = new HashSet<Way>();
+        Set<Way> targetWays = new HashSet<>();
 
         boolean nodesHaveBeenChoosen = false;
         if (selectedNodes.size() == 3) {
@@ -126,11 +126,11 @@ public class CircleArcMaker {
         // TODO: Check that the points are distinct
 
         // // Calculate the new points in the arc
-        ReturnValue<Integer> p2Index = new ReturnValue<Integer>();
+        ReturnValue<Integer> p2Index = new ReturnValue<>();
         List<EastNorth> points = circleArcPoints(p1, p2, p3, angleSeparation, false, p2Index);
 
         //// Create the new arc nodes. Insert anchor nodes at correct positions.
-        List<Node> arcNodes = new ArrayList<Node>(points.size());
+        List<Node> arcNodes = new ArrayList<>(points.size());
         arcNodes.add(n1);
         {
             int i = 1;
@@ -268,7 +268,7 @@ public class CircleArcMaker {
         }
         int numberOfNodesInArc = Math.max((int) Math.ceil((radialLength / Math.PI) * 180 / angleSeparation)+1,
                 3);
-        List<EastNorth> points = new ArrayList<EastNorth>(numberOfNodesInArc);
+        List<EastNorth> points = new ArrayList<>(numberOfNodesInArc);
 
         // Calculate the circle points in order
         double stepLength = radialLength / (numberOfNodesInArc-1);

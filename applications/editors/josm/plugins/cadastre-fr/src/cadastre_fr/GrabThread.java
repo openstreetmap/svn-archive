@@ -24,7 +24,7 @@ public class GrabThread extends Thread {
 
     private Lock lockImagesToGrag = new ReentrantLock();
 
-    private ArrayList<EastNorthBound> imagesToGrab = new ArrayList<EastNorthBound>();
+    private ArrayList<EastNorthBound> imagesToGrab = new ArrayList<>();
 
     private CacheControl cacheControl = null;
     
@@ -57,7 +57,7 @@ public class GrabThread extends Thread {
     }
     
     public ArrayList<EastNorthBound> getImagesToGrabCopy() {
-        ArrayList<EastNorthBound> copyList = new ArrayList<EastNorthBound>(); 
+        ArrayList<EastNorthBound> copyList = new ArrayList<>(); 
         lockImagesToGrag.lock();
         for (EastNorthBound img : imagesToGrab) {
             EastNorthBound imgCpy = new EastNorthBound(img.min, img.max);

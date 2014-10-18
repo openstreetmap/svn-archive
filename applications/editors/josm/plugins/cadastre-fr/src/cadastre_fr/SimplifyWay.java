@@ -22,7 +22,7 @@ public class SimplifyWay {
 
     public void simplifyWayRange(Way wnew, int from, int to, double thr) {
         if (to - from >= 2) {
-            ArrayList<Node> ns = new ArrayList<Node>();
+            ArrayList<Node> ns = new ArrayList<>();
             simplifyWayRange(wnew, from, to, ns, thr);
             List<Node> nodes = wnew.getNodes();
             for (int j = to - 1; j > from; j--)

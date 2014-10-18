@@ -68,7 +68,7 @@ public class PbfWriter implements Closeable {
          */
         private abstract class Prim<T extends OsmPrimitive> {
             /** Queue that tracks the list of all primitives. */
-            ArrayList<T> contents = new ArrayList<T>();
+            ArrayList<T> contents = new ArrayList<>();
 
             /**
              * Add to the queue.

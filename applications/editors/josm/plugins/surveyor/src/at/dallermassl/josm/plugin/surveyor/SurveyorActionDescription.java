@@ -50,7 +50,7 @@ public class SurveyorActionDescription {
     public SurveyorActionDescription(String actionClass, String[] params) {
         super();
         this.actionClass = actionClass;
-        this.params = new ArrayList<String>();
+        this.params = new ArrayList<>();
         for (int index = 0; index < params.length; index++) {
             this.params.add(params[index]);
         }

@@ -97,7 +97,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
         for (Way way : selectedWays) {
             for (Node p : way.getNodes()) {
                 LatLon c = p.getCoor();
-                ArrayList<LatLon> intermediateNodes = new ArrayList<LatLon>();
+                ArrayList<LatLon> intermediateNodes = new ArrayList<>();
                 if (previous != null && c.greatCircleDistance(previous) > buffer_dist) {
                     Double d = c.greatCircleDistance(previous) / buffer_dist;
                     int nbNodes = d.intValue();

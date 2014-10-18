@@ -99,7 +99,7 @@ public class AssociatedStreetFixer extends RelationFixer {
 		}
 
 		// fill relation name
-		Map<String, Integer> streetNames = new HashMap<String, Integer>();
+		Map<String, Integer> streetNames = new HashMap<>();
 		for (RelationMember m : rel.getMembers())
 			if ("street".equals(m.getRole()) && m.isWay()) {
 				String name = m.getWay().get("name");
@@ -125,7 +125,7 @@ public class AssociatedStreetFixer extends RelationFixer {
 			commonName = ""; // set empty common name - if we already have name on relation, do not overwrite it
 		}
 
-		List<Command> commandList = new ArrayList<Command>();
+		List<Command> commandList = new ArrayList<>();
 		if (fixed) {
 			commandList.add(new ChangeCommand(source, rel));
 		}

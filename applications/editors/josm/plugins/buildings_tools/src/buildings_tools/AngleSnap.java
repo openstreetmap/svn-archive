@@ -12,7 +12,7 @@ import org.openstreetmap.josm.tools.Pair;
 
 public class AngleSnap {
     private static final double PI_2 = Math.PI / 2;
-    final TreeSet<Double> snapSet = new TreeSet<Double>();
+    final TreeSet<Double> snapSet = new TreeSet<>();
 
     public final void clear() {
         snapSet.clear();

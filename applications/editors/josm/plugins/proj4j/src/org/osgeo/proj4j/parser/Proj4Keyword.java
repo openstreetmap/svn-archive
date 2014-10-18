@@ -56,7 +56,7 @@ public class Proj4Keyword
   public static synchronized Set supportedParameters()
   {
     if (supportedParams == null) {
-      supportedParams = new TreeSet<String>();
+      supportedParams = new TreeSet<>();
       
       supportedParams.add(a);
       supportedParams.add(rf);

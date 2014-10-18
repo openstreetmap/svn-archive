@@ -36,7 +36,7 @@ public class IntersectedWaysAction extends JosmAction {
 
         // select ways attached to already selected ways
         if (!selectedWays.isEmpty()) {
-            Set<Way> newWays = new HashSet<Way>();
+            Set<Way> newWays = new HashSet<>();
             NodeWayUtils.addWaysIntersectingWays(
                     getCurrentDataSet().getWays(),
                     selectedWays, newWays);

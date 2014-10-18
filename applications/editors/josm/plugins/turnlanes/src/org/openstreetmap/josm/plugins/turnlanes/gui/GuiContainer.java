@@ -43,8 +43,8 @@ class GuiContainer {
     private final double scale;
     private final double laneWidth;
     
-    private final Map<Junction, JunctionGui> junctions = new HashMap<Junction, JunctionGui>();
-    private final Map<Road, RoadGui> roads = new HashMap<Road, RoadGui>();
+    private final Map<Junction, JunctionGui> junctions = new HashMap<>();
+    private final Map<Road, RoadGui> roads = new HashMap<>();
     
     private final Stroke connectionStroke;
     
@@ -158,11 +158,11 @@ class GuiContainer {
             return new Rectangle2D.Double(-1, -1, 2, 2);
         }
         
-        final List<Junction> primaries = new ArrayList<Junction>(mc.getPrimaryJunctions());
-        final List<Double> top = new ArrayList<Double>();
-        final List<Double> left = new ArrayList<Double>();
-        final List<Double> right = new ArrayList<Double>();
-        final List<Double> bottom = new ArrayList<Double>();
+        final List<Junction> primaries = new ArrayList<>(mc.getPrimaryJunctions());
+        final List<Double> top = new ArrayList<>();
+        final List<Double> left = new ArrayList<>();
+        final List<Double> right = new ArrayList<>();
+        final List<Double> bottom = new ArrayList<>();
         
         for (Junction j : primaries) {
             final JunctionGui g = getGui(j);

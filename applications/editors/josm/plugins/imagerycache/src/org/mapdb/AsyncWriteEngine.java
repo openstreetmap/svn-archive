@@ -35,7 +35,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
     protected static final AtomicLong threadCounter = new AtomicLong();
     protected final long threadNum = threadCounter.incrementAndGet();
 
-    protected final BlockingQueue<Long> newRecids = new ArrayBlockingQueue<Long>(128);
+    protected final BlockingQueue<Long> newRecids = new ArrayBlockingQueue<>(128);
 
     protected volatile boolean closeInProgress = false;
     protected final CountDownLatch shutdownCondition = new CountDownLatch(2);
@@ -265,7 +265,7 @@ public class AsyncWriteEngine extends EngineWrapper implements Engine {
      * @param parentEngineReference reference to user facing Engine
      */
     public void setParentEngineReference(Engine parentEngineReference) {
-        parentEngineWeakRef = new WeakReference<Engine>(parentEngineReference);
+        parentEngineWeakRef = new WeakReference<>(parentEngineReference);
     }
 
     @Override

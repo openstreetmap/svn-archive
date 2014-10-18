@@ -27,7 +27,7 @@ public class IntersectingMatch extends SearchCompiler.UnaryMatch {
      * Find (all) ways intersecting ways which match the expression.
      */
     private void init(boolean all) {
-        Collection<Way> matchedWays = new HashSet<Way>();
+        Collection<Way> matchedWays = new HashSet<>();
         // find all ways that match the expression
         Collection<Way> allWays = Main.main.getCurrentDataSet().getWays();
         for (Way way : allWays) {
@@ -35,7 +35,7 @@ public class IntersectingMatch extends SearchCompiler.UnaryMatch {
                 matchedWays.add(way);
             }
         }
-        Set<Way> newWays = new HashSet<Way>();
+        Set<Way> newWays = new HashSet<>();
         if (all) {
             NodeWayUtils.addWaysIntersectingWaysRecursively(allWays, matchedWays, newWays);
         } else {

@@ -213,7 +213,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
     @Override
     public synchronized void changedData(MapdustBug mapdustBug) {
         if (mapdustBugList == null) {
-            mapdustBugList = new ArrayList<MapdustBug>();
+            mapdustBugList = new ArrayList<>();
         }
         if (getMapdustGUI().isDialogShowing()) {
             if (Main.map != null && Main.map.mapView != null) {
@@ -553,7 +553,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                 wasError = false;
             } catch (MapdustServiceHandlerException e) {
                 wasError = true;
-                mapdustBugList = new ArrayList<MapdustBug>();
+                mapdustBugList = new ArrayList<>();
             }
             /* update the view */
             SwingUtilities.invokeLater(new Runnable() {

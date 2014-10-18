@@ -125,7 +125,7 @@ public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W>
          * (this also allows to use keySet instead of accessClasses later)
          */
 
-        Map<String, AccessType> accessTypePerClass = new HashMap<String, AccessType>();
+        Map<String, AccessType> accessTypePerClass = new HashMap<>();
 
         for (String accessClass : accessClasses) {
             accessTypePerClass.put(accessClass, AccessType.UNDEFINED);
@@ -154,7 +154,7 @@ public class RulesetAccessEvaluator<N, W, R, M> implements AccessEvaluator<N, W>
 
         /* evaluate implied tagging of other tags */
 
-        Map<String, String> tagMap = new HashMap<String, String>();
+        Map<String, String> tagMap = new HashMap<>();
         for (Tag tag : wayTags) {
             if (!tag.equals(baseTag)) {
                 tagMap.put(tag.key, tag.value);

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class ViToCi extends ElementWithStreets {
 
-    private ArrayList<Suburb> suburbs = new ArrayList<Suburb>();
+    private ArrayList<Suburb> suburbs = new ArrayList<>();
 
     /**
      * Default constructor setting the name of this element.

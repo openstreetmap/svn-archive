@@ -10,7 +10,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * The Class PostcodeChecker.
  */
 public class PostalCodeChecker {
-    private static HashMap<String, String> postalCodePatternMap = new HashMap<String, String>();
+    private static HashMap<String, String> postalCodePatternMap = new HashMap<>();
 
     static {
         fillMap();

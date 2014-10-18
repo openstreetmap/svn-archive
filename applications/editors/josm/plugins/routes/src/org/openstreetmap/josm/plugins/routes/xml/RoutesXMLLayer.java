@@ -73,7 +73,7 @@ public class RoutesXMLLayer {
      */
     public List<RoutesXMLRoute> getRoute() {
         if (route == null) {
-            route = new ArrayList<RoutesXMLRoute>();
+            route = new ArrayList<>();
         }
         return this.route;
     }

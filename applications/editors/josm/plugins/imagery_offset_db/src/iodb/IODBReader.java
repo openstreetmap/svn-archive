@@ -35,7 +35,7 @@ public class IODBReader {
      */
     public IODBReader( InputStream source ) throws IOException {
         this.source = new InputSource(UTFInputStreamReader.create(source, "UTF-8"));
-        this.offsets = new ArrayList<ImageryOffsetBase>();
+        this.offsets = new ArrayList<>();
     }
 
     /**
@@ -211,7 +211,7 @@ public class IODBReader {
             minZoom = -1;
             maxZoom = -1;
             flagged = false;
-            geometry = new ArrayList<LatLon>();
+            geometry = new ArrayList<>();
         }
 
         /**

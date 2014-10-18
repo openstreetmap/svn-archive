@@ -22,8 +22,8 @@ public class TagsTableModel extends AbstractTableModel {
     private ArrayList<KeyValuePair> visibleItems = null;
 
     public TagsTableModel() {
-        items = new ArrayList<KeyValuePair>();
-        visibleItems = new ArrayList<KeyValuePair>();
+        items = new ArrayList<>();
+        visibleItems = new ArrayList<>();
     }
 
     protected void sort() {

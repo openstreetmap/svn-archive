@@ -36,7 +36,7 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> implements EditLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
     //static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
     
-    private final List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>();
+    private final List<OsmPrimitive> selection = new ArrayList<>();
     private final DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
     private OsmDataLayer layer;
 
@@ -68,7 +68,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
      * @return the selected primitives
      */
     public Collection<OsmPrimitive> getSelected() {
-        Set<OsmPrimitive> sel = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> sel = new HashSet<>();
         for(int i=0; i< getSize();i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 sel.add(selection.get(i));
@@ -218,7 +218,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     /* interface PrimitiveIdListProvider                                        */
     /* ------------------------------------------------------------------------ */
     public List<PrimitiveId> getSelectedPrimitiveIds() {
-        List<PrimitiveId> ret = new ArrayList<PrimitiveId>(getSelected().size());
+        List<PrimitiveId> ret = new ArrayList<>(getSelected().size());
         for(int i=0; i< selection.size(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 ret.add(selection.get(i).getPrimitiveId());

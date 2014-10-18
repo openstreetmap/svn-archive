@@ -190,7 +190,7 @@ public class RoutingLayer extends Layer {
 
     @Override
     public Action[] getMenuEntries() {
-        Collection<Action> components = new ArrayList<Action>();
+        Collection<Action> components = new ArrayList<>();
         components.add(LayerListDialog.getInstance().createShowHideLayerAction());
 //        components.add(new JMenuItem(new LayerListDialog.ShowHideMarkerText(this)));
         components.add(LayerListDialog.getInstance().createDeleteLayerAction());

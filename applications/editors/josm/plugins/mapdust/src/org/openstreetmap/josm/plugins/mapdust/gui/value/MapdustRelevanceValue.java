@@ -94,7 +94,7 @@ public class MapdustRelevanceValue {
         this.sliderValue = sliderValue;
         if (MapdustRelevanceValue.map == null) {
             MapdustRelevanceValue.map =
-                    new HashMap<MapdustRelevance, Integer>();
+                    new HashMap<>();
         }
         MapdustRelevanceValue.map.put(relevance, sliderValue);
     }

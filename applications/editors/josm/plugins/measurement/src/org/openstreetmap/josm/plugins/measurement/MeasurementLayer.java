@@ -51,7 +51,7 @@ public class MeasurementLayer extends Layer {
     }
 
     private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(MeasurementPlugin.class.getResource("/images/measurement.png")));
-    private Collection<WayPoint> points = new ArrayList<WayPoint>(32);
+    private Collection<WayPoint> points = new ArrayList<>(32);
 
     @Override
     public Icon getIcon() {
@@ -145,14 +145,14 @@ public class MeasurementLayer extends Layer {
             }
             last = p;
         }
-        if (MeasurementPlugin.measurementDialog != null) { 
+        if (MeasurementPlugin.measurementDialog != null) {
             MeasurementPlugin.measurementDialog.pathLengthLabel.setText(NavigatableComponent.getDistText(pathLength));
         }
         if (Main.map.mapMode instanceof MeasurementMode) {
             Main.map.statusLine.setDist(pathLength);
         }
     }
-    
+
     /*
      * Use an equal area sinusoidal projection to improve accuracy and so we can still use normal polygon area calculation
      * https://stackoverflow.com/questions/4681737/how-to-calculate-the-area-of-a-polygon-on-the-earths-surface-using-python
@@ -221,14 +221,14 @@ public class MeasurementLayer extends Layer {
          * The data model for the list component.
          */
         private DefaultListModel<GpxLayer> model = new DefaultListModel<>();
-    
+
         /**
          * @param layer the targeting measurement layer
          */
         public GPXLayerImportAction(MeasurementLayer layer) {
             super(tr("Import path from GPX layer"), ImageProvider.get("dialogs", "edit")); // TODO: find better image
         }
-    
+
         @Override
         public void actionPerformed(ActionEvent e) {
             Box panel = Box.createVerticalBox();
@@ -236,7 +236,7 @@ public class MeasurementLayer extends Layer {
             Collection<Layer> data = Main.map.mapView.getAllLayers();
             Layer lastLayer = null;
             int layerCnt = 0;
-    
+
             for (Layer l : data) {
                 if (l instanceof GpxLayer) {
                     model.addElement((GpxLayer) l);
@@ -260,12 +260,12 @@ public class MeasurementLayer extends Layer {
                         return label;
                     }
                 });
-    
+
                 JCheckBox dropFirst = new JCheckBox(tr("Drop existing path"));
-    
+
                 panel.add(layerList);
                 panel.add(dropFirst);
-    
+
                 final JOptionPane optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION){
                         @Override
                         public void selectInitialValue() {
@@ -274,16 +274,16 @@ public class MeasurementLayer extends Layer {
                     };
                 final JDialog dlg = optionPane.createDialog(Main.parent, tr("Import path from GPX layer"));
                 dlg.setVisible(true);
-    
+
                 Object answer = optionPane.getValue();
                 if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE ||
                     (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION)) {
                     return;
                 }
-    
-                GpxLayer gpx = (GpxLayer)layerList.getSelectedValue();
+
+                GpxLayer gpx = layerList.getSelectedValue();
                 if (dropFirst.isSelected()) {
-                    points = new ArrayList<WayPoint>(32);
+                    points = new ArrayList<>(32);
                 }
 
                 for (GpxTrack trk : gpx.data.tracks) {

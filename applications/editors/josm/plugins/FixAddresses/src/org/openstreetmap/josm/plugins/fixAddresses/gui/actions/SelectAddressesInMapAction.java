@@ -61,7 +61,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
     private void internalSelectAddresses(List<OSMAddress> addrToSel) {
         if (addrToSel == null) return;
 
-        List<OsmPrimitive> sel = new ArrayList<OsmPrimitive>();
+        List<OsmPrimitive> sel = new ArrayList<>();
 
         getCurrentDataSet().clearSelection();
         for (OSMAddress aNode : addrToSel) {

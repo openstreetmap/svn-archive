@@ -49,7 +49,7 @@ public class TagDialog extends ExtendedDialog
 {
    private static final String APPLY_CHANGES = tr("Apply Changes");
    private static final String TAG_STREET_OR_PLACE = tr("Use tag ''addr:street'' or ''addr:place''");
-   
+
    public static final String TAG_BUILDING = "building";
    public static final String TAG_ADDR_COUNTRY = "addr:country";
    public static final String TAG_ADDR_STATE = "addr:state";
@@ -60,10 +60,10 @@ public class TagDialog extends ExtendedDialog
    public static final String TAG_ADDR_PLACE = "addr:place";
 
    public static final String[] buildingStrings = {"yes", "apartments", "chapel", "church", "commercial", "dormitory", "hotel", "house", "residential", "terrace",  "industrial", "retail", "warehouse", "cathedral",  "civic", "hospital", "school", "train_station", "transportation", "university", "public", "bridge", "bunker", "cabin", "construction", "farm_auxiliary", "garage", "garages" , "greenhouse", "hangar", "hut", "roof", "shed", "stable" };
-   
+
    private static final int FPS_MIN = -2;
    private static final int FPS_MAX =  2;
-   
+
    private static final long serialVersionUID = 6414385452106276923L;
 
    static private final Logger logger = Logger.getLogger(TagDialog.class.getName());
@@ -139,14 +139,14 @@ public class TagDialog extends ExtendedDialog
 
       Arrays.sort(buildingStrings);
       building = new JComboBox<>(buildingStrings);
-      building.setSelectedItem(dto.getBuilding()); 
+      building.setSelectedItem(dto.getBuilding());
       building.setMaximumRowCount(50);
       c.gridx = 3;
       c.gridy = 0;
       c.weightx = 1;
       c.gridwidth = 1;
       editPanel.add(building, c);
-      
+
       // country
       countryEnabled = new JCheckBox(TAG_ADDR_COUNTRY);
       countryEnabled.setFocusable(false);
@@ -257,7 +257,7 @@ public class TagDialog extends ExtendedDialog
       c.gridwidth = 1;
       editPanel.add(streetEnabled, c);
 
-      
+
       streetRadio = new JRadioButton(TAG_ADDR_STREET);
       streetRadio.setToolTipText(TAG_STREET_OR_PLACE);
       streetRadio.setSelected(dto.isTagStreet());
@@ -268,7 +268,7 @@ public class TagDialog extends ExtendedDialog
       c.weightx = 0;
       c.gridwidth = 1;
       editPanel.add(streetRadio, c);
-      
+
       placeRadio = new JRadioButton("addr:place");
       placeRadio.setToolTipText(TAG_STREET_OR_PLACE);
       placeRadio.setSelected(!dto.isTagStreet());
@@ -279,11 +279,11 @@ public class TagDialog extends ExtendedDialog
       c.weightx = 0;
       c.gridwidth = 1;
       editPanel.add(placeRadio, c);
-      
+
       ButtonGroup g = new ButtonGroup();
-      g.add( streetRadio ); 
+      g.add( streetRadio );
       g.add( placeRadio );
-      
+
       street = new AutoCompletingComboBox();
       if (dto.isTagStreet())
       {
@@ -317,7 +317,7 @@ public class TagDialog extends ExtendedDialog
 
       housnumber = new JTextField();
       housnumber.setPreferredSize(new Dimension(200, 24));
-      
+
       int number = 0;
       try {
          number = Integer.valueOf(dto.getHousenumber()) + dto.getHousenumberChangeValue();
@@ -326,15 +326,15 @@ public class TagDialog extends ExtendedDialog
       if (number > 0) {
          housnumber.setText(String.valueOf(number));
       }
-      
-      
+
+
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 3;
       c.gridy = 6;
       c.weightx = 1;
       c.gridwidth = 1;
       editPanel.add(housnumber, c);
-      
+
       JLabel seqLabel = new JLabel(tr("House number increment:"));
       c.fill = GridBagConstraints.HORIZONTAL;
       c.gridx = 0;
@@ -354,7 +354,7 @@ public class TagDialog extends ExtendedDialog
       c.weightx = 1;
       c.gridwidth = 1;
       editPanel.add(housenumberChangeSequence, c);
-   
+
       return editPanel;
    }
 
@@ -371,7 +371,7 @@ public class TagDialog extends ExtendedDialog
          dto.setSavePostcode(zipEnabled.isSelected());
          dto.setSaveStreet(streetEnabled.isSelected());
          dto.setTagStreet(streetRadio.isSelected());
-         
+
          dto.setBuilding((String) building.getSelectedItem());
          dto.setCity(getAutoCompletingComboBoxValue(city));
          dto.setCountry(getAutoCompletingComboBoxValue(country));
@@ -380,7 +380,7 @@ public class TagDialog extends ExtendedDialog
          dto.setStreet(getAutoCompletingComboBoxValue(street));
          dto.setState(getAutoCompletingComboBoxValue(state));
          dto.setHousenumberChangeValue(housenumberChangeSequence.getValue());
-         
+
          updateJOSMSelection(selection, dto);
          saveDto(dto);
       }
@@ -423,7 +423,7 @@ public class TagDialog extends ExtendedDialog
 
    protected void updateJOSMSelection(OsmPrimitive selection, Dto dto)
    {
-      ArrayList<Command> commands = new ArrayList<Command>();
+      ArrayList<Command> commands = new ArrayList<>();
 
       if (dto.isSaveBuilding()) {
          String value = selection.get(TagDialog.TAG_BUILDING);
@@ -475,7 +475,7 @@ public class TagDialog extends ExtendedDialog
                 {
                     ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_ADDR_STREET, dto.getStreet());
                     commands.add(command);
-                    
+
                     // remove old place-tag
                     if (selection.get(TagDialog.TAG_ADDR_PLACE) != null)
                     {
@@ -491,7 +491,7 @@ public class TagDialog extends ExtendedDialog
                 {
                     ChangePropertyCommand command = new ChangePropertyCommand(selection, TagDialog.TAG_ADDR_PLACE, dto.getStreet());
                     commands.add(command);
-                    
+
                     // remove old place-tag
                     if (selection.get(TagDialog.TAG_ADDR_STREET) != null)
                     {
@@ -522,7 +522,7 @@ public class TagDialog extends ExtendedDialog
       /**
        * Generates a list of all visible names of highways in order to do autocompletion on the road name.
        */
-      TreeSet<String> names = new TreeSet<String>();
+      TreeSet<String> names = new TreeSet<>();
       for (OsmPrimitive osm : Main.main.getCurrentDataSet().allNonDeletedPrimitives())
       {
          if (osm.getKeys() != null && osm.keySet().contains("highway") && osm.keySet().contains("name"))
@@ -560,7 +560,7 @@ public class TagDialog extends ExtendedDialog
       return dto;
 
    }
-   
+
     class RadioChangeListener implements ItemListener
     {
 

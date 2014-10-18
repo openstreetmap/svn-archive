@@ -28,7 +28,7 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
      * List of listeners for implementing the {@code ListModel}.
      */
     private List<ListDataListener> listeners =
-            new ArrayList<ListDataListener>();
+            new ArrayList<>();
 
     /**
      * The internal reference to an {@link OsmPrimitive}, to which the
@@ -63,7 +63,7 @@ public class ProposalContainer implements ListModel<Proposal>, Comparable<Propos
     /**
      * The list of proposals to be applied to encapsulated primitive.
      */
-    protected List<Proposal> proposals = new ArrayList<Proposal>();
+    protected List<Proposal> proposals = new ArrayList<>();
 
     /**
      * Adds a new {@link Proposal}.

@@ -38,7 +38,7 @@ public class TagSpecification {
      * constructor
      */
     public TagSpecification() {
-        lables = new ArrayList<LabelSpecification>();
+        lables = new ArrayList<>();
     }
 
     @Override

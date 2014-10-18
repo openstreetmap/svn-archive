@@ -35,7 +35,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public class ManagerDialog extends ExtendedDialog {
 
-    RenameModel<Street> streetModel = new RenameModel<Street>();
+    RenameModel<Street> streetModel = new RenameModel<>();
 
     public ManagerDialog() {
         super(Main.parent, "Inspektor databáze", new String[] {}, true);
@@ -381,8 +381,8 @@ public class ManagerDialog extends ExtendedDialog {
 
     private class RenameModel<Element> implements TableModel {
 
-        List<Element> elems = new ArrayList<Element>();
-        List<String>  names = new ArrayList<String>();
+        List<Element> elems = new ArrayList<>();
+        List<String>  names = new ArrayList<>();
 
         public int getRowCount() {
             assert elems.size() == names.size();

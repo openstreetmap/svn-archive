@@ -42,7 +42,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
         try {
             String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
             String lang = LanguageInfo.getWikiLanguagePrefix();
-            final List<URI> uris = new ArrayList<URI>();
+            final List<URI> uris = new ArrayList<>();
             String type = URLEncoder.encode(rel.get().get("type"), "UTF-8");
 
             if (type != null && !type.equals("")) {

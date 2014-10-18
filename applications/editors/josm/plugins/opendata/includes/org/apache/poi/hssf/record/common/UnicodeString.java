@@ -413,7 +413,7 @@ public class UnicodeString implements Comparable<UnicodeString> { // TODO - make
 
 
         if (isRichText() && (runCount > 0)) {
-          field_4_format_runs = new ArrayList<FormatRun>(runCount);
+          field_4_format_runs = new ArrayList<>(runCount);
           for (int i=0;i<runCount;i++) {
             field_4_format_runs.add(new FormatRun(in));
           }
@@ -538,7 +538,7 @@ public class UnicodeString implements Comparable<UnicodeString> { // TODO - make
      */
     public void addFormatRun(FormatRun r) {
       if (field_4_format_runs == null) {
-		field_4_format_runs = new ArrayList<FormatRun>();
+		field_4_format_runs = new ArrayList<>();
 	}
 
       int index = findFormatRunAt(r._character);
@@ -708,7 +708,7 @@ public class UnicodeString implements Comparable<UnicodeString> { // TODO - make
         str.field_2_optionflags = field_2_optionflags;
         str.field_3_string = field_3_string;
         if (field_4_format_runs != null) {
-          str.field_4_format_runs = new ArrayList<FormatRun>();
+          str.field_4_format_runs = new ArrayList<>();
           for (FormatRun r : field_4_format_runs) {
             str.field_4_format_runs.add(new FormatRun(r._character, r._fontIndex));
           }

@@ -38,14 +38,14 @@ import org.openstreetmap.josm.tools.I18n;
  * @author ak
  */
 public class SvgImportTask extends PleaseWaitRunnable {
-    LinkedList<Node> nodes = new LinkedList<Node>();
-    LinkedList<Way> ways = new LinkedList<Way>();
+    LinkedList<Node> nodes = new LinkedList<>();
+    LinkedList<Way> ways = new LinkedList<>();
     private List<File> files;
     private boolean canceled;
 
     public SvgImportTask(List<File> files) {
         super(I18n.tr("Importing..."), false);
-        this.files = new ArrayList<File>(files);
+        this.files = new ArrayList<>(files);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class SvgImportTask extends PleaseWaitRunnable {
         } catch (Exception e) {
             throw new IOException(e);
         }
-        LinkedList<Command> cmds = new LinkedList<Command>();
+        LinkedList<Command> cmds = new LinkedList<>();
         for (Node n : nodes) {
             cmds.add(new AddCommand(n));
         }

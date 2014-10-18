@@ -63,7 +63,7 @@ public class JunctionSearchTask extends PleaseWaitRunnable{
     @Override
     protected void realRun() throws SAXException, IOException,
     OsmTransferException {
-        jc.junctionSearch(new ArrayList<Channel>(subset), getProgressMonitor());
+        jc.junctionSearch(new ArrayList<>(subset), getProgressMonitor());
     }
 
 }

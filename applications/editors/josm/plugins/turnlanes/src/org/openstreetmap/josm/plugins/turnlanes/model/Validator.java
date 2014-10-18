@@ -104,8 +104,8 @@ public class Validator {
     }
     
     public List<Issue> validate(DataSet dataSet) {
-        final List<Relation> lenghts = new ArrayList<Relation>();
-        final List<Relation> turns = new ArrayList<Relation>();
+        final List<Relation> lenghts = new ArrayList<>();
+        final List<Relation> turns = new ArrayList<>();
         
         for (Relation r : OsmPrimitive.getFilteredList(dataSet.allPrimitives(), Relation.class)) {
             if (!r.isUsable()) {
@@ -120,9 +120,9 @@ public class Validator {
             }
         }
         
-        final List<Issue> issues = new ArrayList<Issue>();
+        final List<Issue> issues = new ArrayList<>();
         
-        final Map<IncomingLanes.Key, IncomingLanes> incomingLanes = new HashMap<IncomingLanes.Key, IncomingLanes>();
+        final Map<IncomingLanes.Key, IncomingLanes> incomingLanes = new HashMap<>();
         issues.addAll(validateLengths(lenghts, incomingLanes));
         issues.addAll(validateTurns(turns, incomingLanes));
         
@@ -137,7 +137,7 @@ public class Validator {
     }
     
     private List<Issue> validateLengths(List<Relation> lenghts, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
-        final List<Issue> issues = new ArrayList<Issue>();
+        final List<Issue> issues = new ArrayList<>();
         
         for (Relation r : lenghts) {
             issues.addAll(validateLengths(r, incomingLanes));
@@ -147,7 +147,7 @@ public class Validator {
     }
     
     private List<Issue> validateLengths(Relation r, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
-        final List<Issue> issues = new ArrayList<Issue>();
+        final List<Issue> issues = new ArrayList<>();
         
         try {
             final Node end = Utils.getMemberNode(r, Constants.LENGTHS_ROLE_END);
@@ -226,9 +226,9 @@ public class Validator {
     }
     
     private Route orderWays(final Relation r, List<Way> ways, Node end, List<Issue> issues, String role, String type) {
-        final List<Way> unordered = new ArrayList<Way>(ways);
-        final List<Way> ordered = new ArrayList<Way>(ways.size());
-        final Set<Node> ends = new HashSet<Node>(); // to find cycles
+        final List<Way> unordered = new ArrayList<>(ways);
+        final List<Way> ordered = new ArrayList<>(ways.size());
+        final Set<Node> ends = new HashSet<>(); // to find cycles
         
         Node current = end;
         findNext: while (!unordered.isEmpty()) {
@@ -279,7 +279,7 @@ public class Validator {
     }
     
     private List<Issue> validateTurns(List<Relation> turns, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
-        final List<Issue> issues = new ArrayList<Issue>();
+        final List<Issue> issues = new ArrayList<>();
         
         for (Relation r : turns) {
             issues.addAll(validateTurns(r, incomingLanes));
@@ -289,7 +289,7 @@ public class Validator {
     }
     
     private List<Issue> validateTurns(Relation r, Map<IncomingLanes.Key, IncomingLanes> incomingLanes) {
-        final List<Issue> issues = new ArrayList<Issue>();
+        final List<Issue> issues = new ArrayList<>();
         
         try {
             final Way from = Utils.getMemberWay(r, Constants.TURN_ROLE_FROM);
@@ -366,7 +366,7 @@ public class Validator {
             return Collections.emptyList();
         }
         
-        final List<Integer> result = new ArrayList<Integer>();
+        final List<Integer> result = new ArrayList<>();
         
         for (String s : Constants.SPLIT_PATTERN.split(ints)) {
             try {

@@ -22,7 +22,7 @@ public class PrepareJunctionCheckorSearch {
     public PrepareJunctionCheckorSearch(JunctionCheckerPlugin plugin, int n, boolean producerelation) {
         this.plugin = plugin;
         this.n = n;
-        this.subset = new HashSet<Channel>();
+        this.subset = new HashSet<>();
         this.produceRelation = producerelation;
     }
 

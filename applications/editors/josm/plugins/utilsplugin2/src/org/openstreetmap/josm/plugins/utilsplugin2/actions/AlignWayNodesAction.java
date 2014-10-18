@@ -44,7 +44,7 @@ public class AlignWayNodesAction extends JosmAction {
         // Prepare a list of nodes to align
         int firstNodePos = findFirstNode(way, selectedNodes);
         int lastNodePos = way.isClosed() ? firstNodePos : way.getNodesCount();
-        List<Node> nodes = new ArrayList<Node>();
+        List<Node> nodes = new ArrayList<>();
         int i = firstNodePos;
         boolean iterated = false;
         while( !iterated || i != lastNodePos ) {
@@ -74,7 +74,7 @@ public class AlignWayNodesAction extends JosmAction {
 
         // Now, we have an ordered list of nodes, of which idx 0 and N-1 serve as guides
         // and 1..N-2 should be aligned with them
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
         double ax = nodes.get(0).getEastNorth().east();
         double ay = nodes.get(0).getEastNorth().north();
         double bx = nodes.get(nodes.size() - 1).getEastNorth().east();
@@ -133,7 +133,7 @@ public class AlignWayNodesAction extends JosmAction {
         for( Node n : nodes ) {
             List<Way> referrers = OsmPrimitive.getFilteredList(n.getReferrers(), Way.class);
             if( ways == null )
-                ways = new HashSet<Way>(referrers);
+                ways = new HashSet<>(referrers);
             else {
                 ways.retainAll(referrers);
             }
@@ -142,7 +142,7 @@ public class AlignWayNodesAction extends JosmAction {
     }
 
     private Set<Node> filterNodes( Collection<? extends OsmPrimitive> selection ) {
-        Set<Node> result = new HashSet<Node>();
+        Set<Node> result = new HashSet<>();
         if( selection != null ) {
             for( OsmPrimitive p : selection )
                 if( p instanceof Node )

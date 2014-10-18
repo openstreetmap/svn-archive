@@ -18,7 +18,7 @@ public class PanelLights extends JPanel {
 	public JLabel categoryLabel;
 
 	public JComboBox<String> landCatBox;
-	public EnumMap<Cat, Integer> landCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> landCats = new EnumMap<>(Cat.class);
 	private ActionListener alLandCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : landCats.keySet()) {
@@ -31,7 +31,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> trafficCatBox;
-	public EnumMap<Cat, Integer> trafficCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> trafficCats = new EnumMap<>(Cat.class);
 	private ActionListener alTrafficCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : trafficCats.keySet()) {
@@ -44,7 +44,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> warningCatBox;
-	public EnumMap<Cat, Integer> warningCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> warningCats = new EnumMap<>(Cat.class);
 	private ActionListener alWarningCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : warningCats.keySet()) {
@@ -57,7 +57,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> platformCatBox;
-	public EnumMap<Cat, Integer> platformCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> platformCats = new EnumMap<>(Cat.class);
 	private ActionListener alPlatformCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : platformCats.keySet()) {
@@ -70,7 +70,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> pilotCatBox;
-	public EnumMap<Cat, Integer> pilotCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> pilotCats = new EnumMap<>(Cat.class);
 	private ActionListener alPilotCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : pilotCats.keySet()) {
@@ -83,7 +83,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> rescueCatBox;
-	public EnumMap<Cat, Integer> rescueCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> rescueCats = new EnumMap<>(Cat.class);
 	private ActionListener alRescueCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : rescueCats.keySet()) {
@@ -96,7 +96,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> radioCatBox;
-	public EnumMap<Cat, Integer> radioCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> radioCats = new EnumMap<>(Cat.class);
 	private ActionListener alRadioCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : radioCats.keySet()) {
@@ -109,7 +109,7 @@ public class PanelLights extends JPanel {
 		}
 	};
 	public JComboBox<String> radarCatBox;
-	public EnumMap<Cat, Integer> radarCats = new EnumMap<Cat, Integer>(Cat.class);
+	public EnumMap<Cat, Integer> radarCats = new EnumMap<>(Cat.class);
 	private ActionListener alRadarCatBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Cat cat : radarCats.keySet()) {
@@ -123,7 +123,7 @@ public class PanelLights extends JPanel {
 	};
 	public JLabel functionLabel;
 	public JComboBox<String> functionBox;
-	public EnumMap<Fnc, Integer> functions = new EnumMap<Fnc, Integer>(Fnc.class);
+	public EnumMap<Fnc, Integer> functions = new EnumMap<>(Fnc.class);
 	private ActionListener alfunctionBox = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Fnc fnc : functions.keySet()) {
@@ -150,7 +150,7 @@ public class PanelLights extends JPanel {
 	public JRadioButton rescueButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RescueButton.png")));
 	public JRadioButton radioButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadioStationButton.png")));
 	public JRadioButton radarButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/RadarStationButton.png")));
-	public EnumMap<Obj, JRadioButton> objects = new EnumMap<Obj, JRadioButton>(Obj.class);
+	public EnumMap<Obj, JRadioButton> objects = new EnumMap<>(Obj.class);
 	private ActionListener alObj = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Obj obj : objects.keySet()) {

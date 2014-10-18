@@ -103,22 +103,22 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
      */
     private void createWay(String svg) {
         String[] SVGpaths = new SVGParser().getClosedPaths(svg);
-        ArrayList<Double> fitViewBox = new ArrayList<Double>();
-        ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<ArrayList<EastNorth>>();
+        ArrayList<Double> fitViewBox = new ArrayList<>();
+        ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<>();
         for (int i=0; i< SVGpaths.length; i++) {
-            ArrayList<EastNorth> eastNorth = new ArrayList<EastNorth>();
+            ArrayList<EastNorth> eastNorth = new ArrayList<>();
             fitViewBox.add( createNodes(SVGpaths[i], eastNorth) );
             eastNorths.add(eastNorth);
         }
         // the smallest fitViewBox indicates the best fitting path in viewBox
         Double min = Collections.min(fitViewBox);
         int bestPath = fitViewBox.indexOf(min);
-        List<Node> nodeList = new ArrayList<Node>();
+        List<Node> nodeList = new ArrayList<>();
         for (EastNorth eastNorth : eastNorths.get(bestPath)) {
             nodeList.add(new Node(Main.getProjection().eastNorth2latlon(eastNorth)));
         }
         Way wayToAdd = new Way();
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
         for (Node node : nodeList) {
             cmds.add(new AddCommand(node));
             wayToAdd.addNode(node);

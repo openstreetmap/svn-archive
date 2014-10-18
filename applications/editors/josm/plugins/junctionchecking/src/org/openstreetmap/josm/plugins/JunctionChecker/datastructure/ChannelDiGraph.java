@@ -10,10 +10,10 @@ import java.util.Iterator;
  */
 public class ChannelDiGraph extends Graph {
 
-    private ArrayList<Channel> channels = new ArrayList<Channel>();
-    private final ArrayList<LeadsTo> leadsTos = new ArrayList<LeadsTo>();
-    private final HashSet<Channel> selectedChannels = new HashSet<Channel>();
-    private HashSet<Channel> junctioncandidate = new HashSet<Channel>();
+    private ArrayList<Channel> channels = new ArrayList<>();
+    private final ArrayList<LeadsTo> leadsTos = new ArrayList<>();
+    private final HashSet<Channel> selectedChannels = new HashSet<>();
+    private HashSet<Channel> junctioncandidate = new HashSet<>();
 
     public void setChannels(ArrayList<Channel> channels) {
         this.channels = channels;
@@ -99,7 +99,7 @@ public class ChannelDiGraph extends Graph {
      * @return alle From und To Nodes aller Channels des Digraphen
      */
     public OSMNode[] getAllOSMNodes() {
-        HashMap<Long, OSMNode> nodes = new HashMap<Long, OSMNode>();
+        HashMap<Long, OSMNode> nodes = new HashMap<>();
         for (int i = 0; i < channels.size(); i++) {
             if (!nodes.containsKey(channels.get(i).getFromNode().getId())) {
                 nodes.put(channels.get(i).getFromNode().getId(), channels
@@ -184,7 +184,7 @@ public class ChannelDiGraph extends Graph {
      * @return
      */
     public ArrayList<Channel> getChannelsTouchingOSMNodes (ArrayList<OSMNode> nodes) {
-        ArrayList<Channel> touchingChannel = new ArrayList<Channel>();
+        ArrayList<Channel> touchingChannel = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < channels.size(); j++) {
                 if (channels.get(j).getFromNode().getId() == nodes.get(i).getId()) {
@@ -203,7 +203,7 @@ public class ChannelDiGraph extends Graph {
     }
 
     public ArrayList<Channel> getChannelsTouchingOSMNode(long id) {
-        ArrayList<Channel> returnchannels = new ArrayList<Channel>();
+        ArrayList<Channel> returnchannels = new ArrayList<>();
         for (int i = 0; i < channels.size(); i++) {
             if (channels.get(i).getFromNode().getId() == id) {
                 returnchannels.add(channels.get(i));
@@ -222,7 +222,7 @@ public class ChannelDiGraph extends Graph {
      * @return
      */
     public ArrayList<Channel> getChannelsBetween(int idfrom, int idto) {
-        ArrayList<Channel> channelsresult = new ArrayList<Channel>();
+        ArrayList<Channel> channelsresult = new ArrayList<>();
         for (int i = 0; i < channels.size(); i++) {
             if (channels.get(i).getFromNode().getId() == idfrom) {
                 if (channels.get(i).getToNode().getId() == idto) {
@@ -239,7 +239,7 @@ public class ChannelDiGraph extends Graph {
     }
 
     public ArrayList<Channel> getChannelswithWayID(int id) {
-        ArrayList<Channel> channelsresult = new ArrayList<Channel>();
+        ArrayList<Channel> channelsresult = new ArrayList<>();
         for (int i = 0; i < channels.size(); i++) {
             if (channels.get(i).getWay().getId() == id) {
                 channelsresult.add(channels.get(i));

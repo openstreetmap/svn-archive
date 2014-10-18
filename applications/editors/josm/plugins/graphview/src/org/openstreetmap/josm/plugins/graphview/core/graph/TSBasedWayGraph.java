@@ -29,8 +29,8 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
     private static class GraphNodeImpl implements GraphNode {
         private final SegmentNode node;
         private final Segment segment;
-        private final List<GraphEdge> incomingEdges = new ArrayList<GraphEdge>();
-        private final List<GraphEdge> outgoingEdges = new ArrayList<GraphEdge>();
+        private final List<GraphEdge> incomingEdges = new ArrayList<>();
+        private final List<GraphEdge> outgoingEdges = new ArrayList<>();
         public GraphNodeImpl(SegmentNode node, Segment segment) {
             assert node != null && segment != null;
             assert segment.getNode1() == node || segment.getNode2() == node;
@@ -100,7 +100,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 
     };
 
-    private final Set<WayGraphObserver> observers = new HashSet<WayGraphObserver>();
+    private final Set<WayGraphObserver> observers = new HashSet<>();
 
     private final TransitionStructure transitionStructure;
 
@@ -146,7 +146,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             TransitionStructure transitionStructure) {
 
         Map<SegmentNode, Set<SegmentNode>> nodeSetMap =
-            new HashMap<SegmentNode, Set<SegmentNode>>();
+            new HashMap<>();
 
         /* first step: everything that is part of the same restriction goes into the same set */
 
@@ -188,7 +188,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
          *  or the nodes are part of different junction evaluation groups)  */
 
         Map<Segment, Set<Segment>> segmentSetMap =
-            new HashMap<Segment, Set<Segment>>();
+            new HashMap<>();
 
         for (Segment segment : transitionStructure.getSegments()) {
 
@@ -217,16 +217,16 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
         /* create EvaluationGroup objects */
 
         Collection<EvaluationGroup> evaluationGroups =
-            new ArrayList<EvaluationGroup>(nodeSetMap.size() + segmentSetMap.size());
+            new ArrayList<>(nodeSetMap.size() + segmentSetMap.size());
 
-        Set<Set<SegmentNode>> nodeSets = new HashSet<Set<SegmentNode>>(nodeSetMap.values());
+        Set<Set<SegmentNode>> nodeSets = new HashSet<>(nodeSetMap.values());
         for (Set<SegmentNode> nodeSet : nodeSets) {
             evaluationGroups.add(new JunctionEvaluationGroup(nodeSet));
         }
 
-        HashSet<Set<Segment>> hashSets = new HashSet<Set<Segment>>(segmentSetMap.values());
+        HashSet<Set<Segment>> hashSets = new HashSet<>(segmentSetMap.values());
         for (Set<Segment> segmentSet : hashSets) {
-            Set<SegmentNode> borderNodes = new HashSet<SegmentNode>();
+            Set<SegmentNode> borderNodes = new HashSet<>();
             for (Segment segment : segmentSet) {
                 if (nodeSetMap.containsKey(segment.getNode1())) {
                     borderNodes.add(segment.getNode1());
@@ -244,28 +244,28 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
     private void createNodesAndEdgesFromEvaluationGroups(
             Collection<EvaluationGroup> evaluationGroups) {
 
-        nodes = new LinkedList<GraphNode>();
-        edges = new LinkedList<GraphEdge>();
+        nodes = new LinkedList<>();
+        edges = new LinkedList<>();
 
         //map from Segments to GraphNodes;
         //for those GraphNodes representing an "approaching node on segment" state
         final Map<Segment, GraphNodeImpl> segment2GNMap_approaching =
-            new HashMap<Segment, GraphNodeImpl>();
+            new HashMap<>();
 
         //map from Segments to GraphNodes;
         //for those GraphNodes representing a "leaving node on segment" state
         final Map<Segment, GraphNodeImpl> segment2GNMap_leaving =
-            new HashMap<Segment, GraphNodeImpl>();
+            new HashMap<>();
 
         //map from SegmentNodes to GraphNode collections;
         //for those GraphNodes representing an "approaching node on segment" state
         final Map<SegmentNode, Collection<GraphNodeImpl>> segNode2GNMap_approaching =
-            new HashMap<SegmentNode, Collection<GraphNodeImpl>>();
+            new HashMap<>();
 
         //map from SegmentNodes to GraphNodes collections;
         //for those GraphNodes representing a "leaving node on segment" state
         final Map<SegmentNode, Collection<GraphNodeImpl>> segNode2GNMap_leaving =
-            new HashMap<SegmentNode, Collection<GraphNodeImpl>>();
+            new HashMap<>();
 
 
 
@@ -365,7 +365,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             List<Segment> segments, ConnectorEvaluationGroup evaluationGroup) {
 
         Map<GraphEdgePropertyType<?>, Object> properties =
-            new HashMap<GraphEdgePropertyType<?>, Object>(); //TODO: replace HashMap with List-based solution
+            new HashMap<>(); //TODO: replace HashMap with List-based solution
 
         for (GraphEdgePropertyType<?> propertyType : PROPERTY_TYPES) {
             Object value = propertyType.evaluate(evaluationGroup, segments, transitionStructure);
@@ -381,7 +381,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
             List<Segment> segments, JunctionEvaluationGroup evaluationGroup) {
 
         Map<GraphEdgePropertyType<?>, Object> properties =
-            new HashMap<GraphEdgePropertyType<?>, Object>(); //TODO: replace HashMap with List-based solution
+            new HashMap<>(); //TODO: replace HashMap with List-based solution
 
         for (GraphEdgePropertyType<?> propertyType : PROPERTY_TYPES) {
             Object value = propertyType.evaluate(evaluationGroup, segments, transitionStructure);
@@ -410,7 +410,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 
     private static boolean isConnectedWithExactly2Nodes(SegmentNode node) {
 
-        Set<SegmentNode> connectedNodes = new HashSet<SegmentNode>(2);
+        Set<SegmentNode> connectedNodes = new HashSet<>(2);
 
         for (Segment segment : node.getInboundSegments()) {
             connectedNodes.add(segment.getNode1());
@@ -429,7 +429,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
     private static <T> void createSetIfHasNone(T object, Map<T, Set<T>> objectSetMap) {
 
         if (!objectSetMap.containsKey(object)) {
-            Set<T> set = new HashSet<T>();
+            Set<T> set = new HashSet<>();
             set.add(object);
             objectSetMap.put(object, set);
         }
@@ -471,7 +471,7 @@ public class TSBasedWayGraph implements WayGraph, TransitionStructureObserver {
 
     private static <K, E> void addToCollectionMap(final Map<K, Collection<E>> map, K key, E entry) {
         if (!map.containsKey(key)) {
-            Collection<E> newCollection = new ArrayList<E>();
+            Collection<E> newCollection = new ArrayList<>();
             map.put(key, newCollection);
         }
         map.get(key).add(entry);

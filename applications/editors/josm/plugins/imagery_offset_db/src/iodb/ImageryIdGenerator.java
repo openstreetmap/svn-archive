@@ -42,10 +42,10 @@ public class ImageryIdGenerator {
         }
 
         // Parse query parameters into a sorted map
-        final Set<String> removeWMSParams = new TreeSet<String>(Arrays.asList(new String[] {
+        final Set<String> removeWMSParams = new TreeSet<>(Arrays.asList(new String[] {
                     "srs", "width", "height", "bbox", "service", "request", "version", "format", "styles", "transparent"
                 }));
-        Map<String, String> qparams = new TreeMap<String, String>();
+        Map<String, String> qparams = new TreeMap<>();
         String[] qparamsStr = query.length() > 1 ? query.substring(1).split("&") : new String[0];
         for( String param : qparamsStr ) {
             String[] kv = param.split("=");

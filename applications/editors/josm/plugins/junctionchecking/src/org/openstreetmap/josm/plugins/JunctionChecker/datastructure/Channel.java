@@ -16,13 +16,13 @@ public class Channel extends BasicChannel{
     private int outdegree;
     private boolean subgraph;
     private int visited = BacktrackingColors.WHITE;
-    private final ArrayList<Channel> reachableNodes = new ArrayList<Channel>();
+    private final ArrayList<Channel> reachableNodes = new ArrayList<>();
     private int ennr;
     private boolean isStrongConnected = true;
     private boolean isSelected = false; //wird für den eigenen Layer benötigt, um markierte Channels zu erhalten
     private boolean isPartOfJunction = false; //wird für den eigenen Layer benötigt, um Teile einer Kreuzung farbig repräsentieren zu können
     
-    private final HashMap<Channel , ArrayList<Channel>> paths2 = new HashMap<Channel , ArrayList<Channel>>();
+    private final HashMap<Channel , ArrayList<Channel>> paths2 = new HashMap<>();
 
 
     public Channel(OSMNode fromNode, OSMNode toNode) {
@@ -196,7 +196,7 @@ public class Channel extends BasicChannel{
      * @return
      */
     public ArrayList<ArrayList<Channel>> getPaths() {
-        ArrayList<ArrayList<Channel>> t = new ArrayList<ArrayList<Channel>>();
+        ArrayList<ArrayList<Channel>> t = new ArrayList<>();
         t.addAll(paths2.values());
         return t;
     }

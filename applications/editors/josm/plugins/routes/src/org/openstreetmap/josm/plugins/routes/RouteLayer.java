@@ -34,7 +34,7 @@ public class RouteLayer extends Layer implements DataSetListenerAdapter.Listener
 
     private final PathPainter pathPainter;
     private final PathBuilder pathBuilder = new PathBuilder();
-    private final List<RouteDefinition> routes = new ArrayList<RouteDefinition>();
+    private final List<RouteDefinition> routes = new ArrayList<>();
     private volatile boolean datasetChanged = true;
 
     public RouteLayer(RoutesXMLLayer xmlLayer) {

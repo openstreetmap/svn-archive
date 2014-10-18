@@ -90,7 +90,7 @@ public class TagSpecifications {
      * constructor
      */
     public TagSpecifications() {
-        tagSpecifications = new ArrayList<TagSpecification>();
+        tagSpecifications = new ArrayList<>();
     }
 
 
@@ -124,7 +124,7 @@ public class TagSpecifications {
     }
 
     public List<AutoCompletionListItem> getKeysForAutoCompletion(AutoCompletionContext context) {
-        ArrayList<AutoCompletionListItem> keys = new ArrayList<AutoCompletionListItem>();
+        ArrayList<AutoCompletionListItem> keys = new ArrayList<>();
         for (TagSpecification spec : tagSpecifications) {
             if (!spec.isApplicable(context)) {
                 continue;
@@ -138,7 +138,7 @@ public class TagSpecifications {
     }
 
     public List<AutoCompletionListItem> getLabelsForAutoCompletion(String forKey, AutoCompletionContext context) {
-        ArrayList<AutoCompletionListItem> items = new ArrayList<AutoCompletionListItem>();
+        ArrayList<AutoCompletionListItem> items = new ArrayList<>();
         for (TagSpecification spec : tagSpecifications) {
             if (spec.getKey().equals(forKey)) {
                 List<LabelSpecification> lables = spec.getLables();
@@ -163,7 +163,7 @@ public class TagSpecifications {
      * @return the list
      */
     public ArrayList<KeyValuePair> asList() {
-        ArrayList<KeyValuePair> entries = new ArrayList<KeyValuePair>();
+        ArrayList<KeyValuePair> entries = new ArrayList<>();
 
         for (TagSpecification s : tagSpecifications) {
             for (LabelSpecification l : s.getLables()) {
@@ -232,7 +232,7 @@ public class TagSpecifications {
          * @throws SAXException
          */
         protected void startElementOsmTagDefinitions(Attributes atts) throws SAXException {
-            tagSpecifications = new ArrayList<TagSpecification>();
+            tagSpecifications = new ArrayList<>();
         }
 
         /**

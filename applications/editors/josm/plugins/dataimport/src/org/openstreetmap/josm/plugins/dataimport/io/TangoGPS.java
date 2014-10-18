@@ -47,7 +47,7 @@ public class TangoGPS extends FileImporter {
     @Override
     public void importData(File file, ProgressMonitor progressMonitor) throws IOException {
         // create the data tree
-        List<WayPoint> currentTrackSeg = new ArrayList<WayPoint>();
+        List<WayPoint> currentTrackSeg = new ArrayList<>();
 
         int imported = 0;
         int failure = 0;

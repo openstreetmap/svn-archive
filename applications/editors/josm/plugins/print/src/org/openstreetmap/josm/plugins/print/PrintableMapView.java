@@ -411,7 +411,7 @@ public class PrintableMapView extends MapView implements Printable {
      */
     @Override
     protected List<Layer> getVisibleLayersInZOrder() {
-        ArrayList<Layer> layers = new ArrayList<Layer>();
+        ArrayList<Layer> layers = new ArrayList<>();
         for (Layer l: mapView.getAllLayersAsList()) {
             if (l.isVisible()) {
                 layers.add(l);

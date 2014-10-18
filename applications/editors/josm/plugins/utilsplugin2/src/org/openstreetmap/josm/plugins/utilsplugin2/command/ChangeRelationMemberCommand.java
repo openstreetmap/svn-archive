@@ -33,7 +33,7 @@ public class ChangeRelationMemberCommand extends Command {
         if (relation == null || oldMember == null || newMember == null) {
             return;
         }
-        LinkedList<RelationMember> newrms = new LinkedList<RelationMember>();
+        LinkedList<RelationMember> newrms = new LinkedList<>();
         for (RelationMember rm : relation.getMembers()) {
             if (rm.getMember() == oldP) {
                 newrms.add(new RelationMember(rm.getRole(), newP));

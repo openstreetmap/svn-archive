@@ -34,7 +34,7 @@ public class FullGraphCreationTest {
     private static final AccessParameters ACCESS_PARAMS;
     static {
         Map<VehiclePropertyType<?>, String> vehiclePropertyValues =
-            new HashMap<VehiclePropertyType<?>, String>();
+            new HashMap<>();
         vehiclePropertyValues.put(VehiclePropertyTypes.WIDTH, "3.0");
 
         try {
@@ -55,7 +55,7 @@ public class FullGraphCreationTest {
             return Arrays.asList(new Tag("highway", "test"));
         }
         public java.util.List<Implication> getImplications() {
-            return new LinkedList<Implication>();
+            return new LinkedList<>();
         }
     };
 
@@ -161,10 +161,10 @@ public class FullGraphCreationTest {
 
     private TransitionStructure createTestTransitionStructure(TestDataSource dataSource) {
 
-        LinkedList<RoadPropertyType<?>> properties = new LinkedList<RoadPropertyType<?>>();
+        LinkedList<RoadPropertyType<?>> properties = new LinkedList<>();
         properties.add(new RoadWidth());
 
-        return new GenericTransitionStructure<TestNode, TestWay, TestRelation, TestRelationMember>(
+        return new GenericTransitionStructure<>(
                 ACCESS_PARAMS, TEST_RULESET, dataSource, properties);
     }
 

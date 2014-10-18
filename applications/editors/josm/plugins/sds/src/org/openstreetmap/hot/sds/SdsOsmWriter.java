@@ -39,7 +39,7 @@ public class SdsOsmWriter extends OsmWriter {
             if (tagOpen) {
                 out.println(">");
             }
-            List<Entry<String, String>> entries = new ArrayList<Entry<String,String>>(osm.getKeys().entrySet());
+            List<Entry<String, String>> entries = new ArrayList<>(osm.getKeys().entrySet());
             Collections.sort(entries, byKeyComparator);
             for (Entry<String, String> e : entries) {
             	String key = e.getKey();

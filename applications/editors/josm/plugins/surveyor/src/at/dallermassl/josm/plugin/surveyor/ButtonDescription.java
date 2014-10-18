@@ -72,7 +72,7 @@ public class ButtonDescription {
      * @return a list holding one ButtonActionDescription element.
      */
     private static List<SurveyorActionDescription> createFromOneElement(SurveyorActionDescription actionDescription) {
-        List<SurveyorActionDescription> list = new ArrayList<SurveyorActionDescription>();
+        List<SurveyorActionDescription> list = new ArrayList<>();
         list.add(actionDescription);
         return list;
     }

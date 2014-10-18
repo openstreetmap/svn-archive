@@ -130,9 +130,9 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         ctrl = (e.getModifiers() & ActionEvent.CTRL_MASK) != 0;
         MapView mv = Main.map.mapView;
         Point mousePos = e.getPoint();
-        List<Way> mouseOnExistingWays = new ArrayList<Way>();
-        List<Way> mouseOnExistingBuildingWays = new ArrayList<Way>();
-        mouseOnExistingWays = new ArrayList<Way>();
+        List<Way> mouseOnExistingWays = new ArrayList<>();
+        List<Way> mouseOnExistingBuildingWays = new ArrayList<>();
+        mouseOnExistingWays = new ArrayList<>();
         Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
         if (currentMouseNode != null) {
             // click on existing node
@@ -143,7 +143,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                     && findWayInRelationAddr(currentMouseNode) == null
                     && !inputStreet.getText().equals("")) {
                 // house number already present but not linked to a street
-                Collection<Command> cmds = new LinkedList<Command>();
+                Collection<Command> cmds = new LinkedList<>();
                 addStreetNameOrRelation(currentMouseNode, cmds);
                 Command c = new SequenceCommand("Add node address", cmds);
                 Main.main.undoRedo.add(c);
@@ -163,7 +163,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                     if(Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
                         inputStreet.setText(currentMouseNode.get(tagHouseStreet));
                         if (ctrl) {
-                            Collection<Command> cmds = new LinkedList<Command>();
+                            Collection<Command> cmds = new LinkedList<>();
                             addAddrToPrimitive(currentMouseNode, cmds);
                             if (num == null)
                                 applyInputNumberChange();
@@ -178,7 +178,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                         if (ctrl) {
                             applyInputNumberChange();
                         }
-                        Collection<Command> cmds = new LinkedList<Command>();
+                        Collection<Command> cmds = new LinkedList<>();
                         addAddrToPrimitive(currentMouseNode, cmds);
                     } else {
                         inputStreet.setText(wayInRelationAddr.get(tagHighwayName));
@@ -205,7 +205,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 if (inputStreet.getText().equals("") || inputNumber.getText().equals("")) {
                     Toolkit.getDefaultToolkit().beep();
                 } else {
-                    Collection<Command> cmds = new LinkedList<Command>();
+                    Collection<Command> cmds = new LinkedList<>();
                     if (ctrl) {
                         applyInputNumberChange();
                     }
@@ -304,28 +304,28 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         Node n = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         cmds.add(new AddCommand(n));
         List<WaySegment> wss = Main.map.mapView.getNearestWaySegments(e.getPoint(), OsmPrimitive.isSelectablePredicate);
-        Map<Way, List<Integer>> insertPoints = new HashMap<Way, List<Integer>>();
+        Map<Way, List<Integer>> insertPoints = new HashMap<>();
         for (WaySegment ws : wss) {
             List<Integer> is;
             if (insertPoints.containsKey(ws.way)) {
                 is = insertPoints.get(ws.way);
             } else {
-                is = new ArrayList<Integer>();
+                is = new ArrayList<>();
                 insertPoints.put(ws.way, is);
             }
 
             is.add(ws.lowerIndex);
         }
-        Set<Pair<Node,Node>> segSet = new HashSet<Pair<Node,Node>>();
-        ArrayList<Way> replacedWays = new ArrayList<Way>();
-        ArrayList<Way> reuseWays = new ArrayList<Way>();
+        Set<Pair<Node,Node>> segSet = new HashSet<>();
+        ArrayList<Way> replacedWays = new ArrayList<>();
+        ArrayList<Way> reuseWays = new ArrayList<>();
         for (Map.Entry<Way, List<Integer>> insertPoint : insertPoints.entrySet()) {
             Way w = insertPoint.getKey();
             List<Integer> is = insertPoint.getValue();
             Way wnew = new Way(w);
             pruneSuccsAndReverse(is);
             for (int i : is) {
-                segSet.add(Pair.sort(new Pair<Node,Node>(w.getNode(i), w.getNode(i+1))));
+                segSet.add(Pair.sort(new Pair<>(w.getNode(i), w.getNode(i+1))));
             }
             for (int i : is) {
                 wnew.addNode(i + 1, n);
@@ -402,7 +402,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     private static void pruneSuccsAndReverse(List<Integer> is) {
         //if (is.size() < 2) return;
 
-        HashSet<Integer> is2 = new HashSet<Integer>();
+        HashSet<Integer> is2 = new HashSet<>();
         for (int i : is) {
             if (!is2.contains(i - 1) && !is2.contains(i + 1)) {
                 is2.add(i);
@@ -540,7 +540,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     }
     
     private void setNewSelection(OsmPrimitive osm) {
-        Collection<OsmPrimitive> newSelection = new LinkedList<OsmPrimitive>(Main.main.getCurrentDataSet().getSelected());
+        Collection<OsmPrimitive> newSelection = new LinkedList<>(Main.main.getCurrentDataSet().getSelected());
         newSelection.clear();
         newSelection.add(osm);
         getCurrentDataSet().setSelected(osm);

@@ -15,7 +15,7 @@ public class CacheLRU extends EngineWrapper {
 
 
     public CacheLRU(Engine engine, int cacheSize) {
-        this(engine, new LongConcurrentLRUMap<Object>(cacheSize, (int) (cacheSize*0.8)));
+        this(engine, new LongConcurrentLRUMap<>(cacheSize, (int) (cacheSize*0.8)));
     }
 
     public CacheLRU(Engine engine, LongMap<Object> cache){

@@ -143,7 +143,7 @@ public class SurveyorShowAction extends JosmAction {
 
         SurveyorComponent surveyorComponent = null;
         parser.start(new BufferedReader(new InputStreamReader(in)));
-        List<SurveyorActionDescription> actions = new ArrayList<SurveyorActionDescription>();
+        List<SurveyorActionDescription> actions = new ArrayList<>();
         while(parser.hasNext()) {
             Object object = parser.next();
             if (object instanceof SurveyorComponent) {
@@ -153,7 +153,7 @@ public class SurveyorShowAction extends JosmAction {
                 //System.out.println("ButtonDescription " + object);
                 ((ButtonDescription)object).setActions(actions);
                 surveyorComponent.addButton(((ButtonDescription)object));
-                actions = new ArrayList<SurveyorActionDescription>();
+                actions = new ArrayList<>();
             } else if (object instanceof SurveyorActionDescription) {
                 //System.out.println("SurveyorActionDescription " + object);
                 actions.add((SurveyorActionDescription)object);

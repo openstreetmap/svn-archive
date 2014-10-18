@@ -27,7 +27,7 @@ public class GetTrace extends Request {
 	
 	private LatLon m_oLatLon;
 	private ServerParam m_oServerParam;
-    public ArrayList<LatLon> m_listLatLon = new ArrayList<LatLon>();
+    public ArrayList<LatLon> m_listLatLon = new ArrayList<>();
     
     /**
      * Trace s simple shape on position.
@@ -70,7 +70,7 @@ public class GetTrace extends Request {
             }
             strResponse = strResponse.substring(1, strResponse.length()-1);
             
-            ArrayList<LatLon> nodelist = new ArrayList<LatLon>();
+            ArrayList<LatLon> nodelist = new ArrayList<>();
             
             String[] astrPoints = strResponse.split("\\)\\(");
             for (String strPoint : astrPoints) {
@@ -81,7 +81,7 @@ public class GetTrace extends Request {
             }
             m_listLatLon = nodelist;
         } catch (Exception e) {
-        	m_listLatLon = new ArrayList<LatLon>();
+        	m_listLatLon = new ArrayList<>();
         }
     }
     

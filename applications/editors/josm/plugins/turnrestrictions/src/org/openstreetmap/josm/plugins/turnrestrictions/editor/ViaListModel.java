@@ -25,7 +25,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     //static private final Logger logger = Logger.getLogger(ViaListModel.class.getName());
     
     private DefaultListSelectionModel selectionModel;
-    private final ArrayList<OsmPrimitive> vias = new ArrayList<OsmPrimitive>();
+    private final ArrayList<OsmPrimitive> vias = new ArrayList<>();
     private TurnRestrictionEditorModel model;
     
     /**
@@ -51,7 +51,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
      * @return the list of currently selected vias
      */
     public List<OsmPrimitive> getSelectedVias() {
-        ArrayList<OsmPrimitive> ret = new ArrayList<OsmPrimitive>();
+        ArrayList<OsmPrimitive> ret = new ArrayList<>();
         for (int i=0; i < getSize(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 ret.add(vias.get(i));
@@ -81,7 +81,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
      * @return the list of selected rows
      */
     public List<Integer> getSelectedRows() {
-        ArrayList<Integer> ret = new ArrayList<Integer>();
+        ArrayList<Integer> ret = new ArrayList<>();
         for (int i=0; i < getSize(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 ret.add(i);
@@ -91,7 +91,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     }
     
     protected List<Integer> moveUp(List<Integer> rows, int targetRow) {
-        List<Integer> ret = new ArrayList<Integer>(rows.size());
+        List<Integer> ret = new ArrayList<>(rows.size());
         int delta = rows.get(0) - targetRow;
         for(int row: rows) {
             OsmPrimitive via = vias.remove(row);
@@ -102,7 +102,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     }
     
     protected List<Integer> moveDown(List<Integer> rows, int targetRow) {
-        List<Integer> ret = new ArrayList<Integer>(rows.size());
+        List<Integer> ret = new ArrayList<>(rows.size());
         int delta = targetRow - rows.get(0);
         for(int i = rows.size()-1; i >=0; i--) {
             int row = rows.get(i);
@@ -169,7 +169,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
      */
     public void insertVias(List<PrimitiveId> idsToInsert) {
         if (idsToInsert == null) return;
-        List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>(idsToInsert.size());
+        List<OsmPrimitive> primitives = new ArrayList<>(idsToInsert.size());
         DataSet ds = model.getLayer().data;
         for(PrimitiveId id: idsToInsert){
             OsmPrimitive p = ds.getPrimitiveById(id);
@@ -180,7 +180,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
             primitives.add(p);
         }
         int targetRow = Math.max(selectionModel.getMinSelectionIndex(),0);
-        List<OsmPrimitive> newVias = new ArrayList<OsmPrimitive>(vias);
+        List<OsmPrimitive> newVias = new ArrayList<>(vias);
         newVias.addAll(targetRow, primitives);
         model.setVias(newVias);
         fireContentsChanged(this, 0, getSize());
@@ -194,7 +194,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
      * Removes the currently selected vias
      */
     public void removeSelectedVias() {
-        ArrayList<OsmPrimitive> newVias = new ArrayList<OsmPrimitive>(vias);
+        ArrayList<OsmPrimitive> newVias = new ArrayList<>(vias);
         int j = 0;
         for(int i=0; i< getSize();i++){
             if (!selectionModel.isSelectedIndex(i)) continue;
@@ -229,7 +229,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     /* interface PrimitiveIdListProvider                                       */
     /* ----------------------------------------------------------------------- */
     public List<PrimitiveId> getSelectedPrimitiveIds() {
-        ArrayList<PrimitiveId> ids = new ArrayList<PrimitiveId>();
+        ArrayList<PrimitiveId> ids = new ArrayList<>();
         for (OsmPrimitive p: getSelectedVias()) {
             ids.add(p.getPrimitiveId());
         }

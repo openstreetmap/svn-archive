@@ -67,7 +67,7 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
 
     protected void downloadIncomplete( Relation rel ) {
         if( rel.isNew() ) return;
-        Set<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
         if( ret.isEmpty() ) return;
         Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));

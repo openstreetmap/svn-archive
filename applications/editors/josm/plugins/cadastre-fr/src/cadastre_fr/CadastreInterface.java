@@ -32,8 +32,8 @@ public class CadastreInterface {
     private String interfaceRef = null;
     private String lastWMSLayerName = null;
     private URL searchFormURL;
-    private Vector<String> listOfCommunes = new Vector<String>();
-    private Vector<String> listOfTA = new Vector<String>();
+    private Vector<String> listOfCommunes = new Vector<>();
+    private Vector<String> listOfTA = new Vector<>();
     class PlanImage {
         String name;
         String ref;
@@ -42,7 +42,7 @@ public class CadastreInterface {
             this.ref = ref;
         }
     }
-    private Vector<PlanImage> listOfFeuilles = new Vector<PlanImage>();
+    private Vector<PlanImage> listOfFeuilles = new Vector<>();
     private long cookieTimestamp;
 
     final String baseURL = "http://www.cadastre.gouv.fr";
@@ -434,7 +434,7 @@ public class CadastreInterface {
 
     private int selectFeuilleDialog() {
         JPanel p = new JPanel(new GridBagLayout());
-        Vector<String> imageNames = new Vector<String>();
+        Vector<String> imageNames = new Vector<>();
         for (PlanImage src : listOfFeuilles) {
             imageNames.add(src.name);
         }

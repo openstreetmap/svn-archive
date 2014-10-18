@@ -32,9 +32,9 @@ public class SplitOnIntersectionsAction extends JosmAction {
 
     @Override
     public void actionPerformed( ActionEvent e ) {
-        List<Command> list = new ArrayList<Command>();
+        List<Command> list = new ArrayList<>();
         List<Way> selectedWays = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
-        Map<Way, List<Node>> splitWays = new HashMap<Way, List<Node>>();
+        Map<Way, List<Node>> splitWays = new HashMap<>();
 
         for( Way way : selectedWays ) {
             if( way.getNodesCount() > 1 && !way.hasIncompleteNodes() && !way.isClosed() )
@@ -60,7 +60,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
                     if( splitWays.containsKey(refs.get(0)) )
                         splitWays.get(refs.get(0)).add(node);
                     else {
-                        List<Node> nodes = new ArrayList<Node>(1);
+                        List<Node> nodes = new ArrayList<>(1);
                         nodes.add(node);
                         splitWays.put(refs.get(0), nodes);
                     }
@@ -76,7 +76,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
         for( Way splitWay : splitWays.keySet() ) {
             List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(splitWay, splitWays.get(splitWay));
             if( wayChunks != null ) {
-                List<OsmPrimitive> sel = new ArrayList<OsmPrimitive>(selectedWays.size());
+                List<OsmPrimitive> sel = new ArrayList<>(selectedWays.size());
                 sel.addAll(selectedWays);
                 SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(getEditLayer(), splitWay, wayChunks, sel);
                 list.add(result.getCommand());

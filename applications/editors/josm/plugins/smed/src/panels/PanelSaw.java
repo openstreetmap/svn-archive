@@ -19,8 +19,8 @@ public class PanelSaw extends JPanel {
 	public JRadioButton sphereButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SphereButton.png")));
 	public JRadioButton floatButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/FloatButton.png")));
 	public JRadioButton beaconButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BeaconButton.png")));
-	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<Shp, JRadioButton>(Shp.class);
-	public EnumMap<Shp, Obj> objects = new EnumMap<Shp, Obj>(Shp.class);
+	public EnumMap<Shp, JRadioButton> shapes = new EnumMap<>(Shp.class);
+	public EnumMap<Shp, Obj> objects = new EnumMap<>(Shp.class);
 	public ActionListener alShape = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Shp shp : shapes.keySet()) {

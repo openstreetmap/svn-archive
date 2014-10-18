@@ -231,7 +231,7 @@ class Building {
         BBox bbox = new BBox(eastNorth2latlon(en[0]), eastNorth2latlon(en[1]));
         bbox.add(eastNorth2latlon(en[2]));
         bbox.add(eastNorth2latlon(en[3]));
-        List<Node> nodes = new LinkedList<Node>();
+        List<Node> nodes = new LinkedList<>();
         nodesloop:
         for (Node n : Main.main.getCurrentDataSet().searchNodes(bbox)) {
             if (!n.isUsable())
@@ -294,7 +294,7 @@ class Building {
             w.addNode(nodes[1]);
         }
         w.addNode(nodes[0]);
-        Collection<Command> cmds = new LinkedList<Command>();
+        Collection<Command> cmds = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
             if (created[i])
                 cmds.add(new AddCommand(nodes[i]));

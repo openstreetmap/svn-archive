@@ -50,7 +50,7 @@ public class AlignWaysCmdKeepLength extends Command {
      * Maps the alignee nodes with their calculated coordinates.
      * Useful for validation.
      */
-    final Map<Node,EastNorth> calculatedNodes = new HashMap<Node,EastNorth>();
+    final Map<Node,EastNorth> calculatedNodes = new HashMap<>();
 
 
     /**
@@ -72,7 +72,7 @@ public class AlignWaysCmdKeepLength extends Command {
     /**
      * List of all old states of the objects.
      */
-    final Map<Node, Node> oldNodes = new HashMap<Node, Node>();
+    final Map<Node, Node> oldNodes = new HashMap<>();
 
     /**
      * Creates an AlignWaysRotateCommand.
@@ -147,7 +147,7 @@ public class AlignWaysCmdKeepLength extends Command {
     private void rotateNodes(boolean setModified) {
 
         // "Backup" state
-        lastAffectedNodes = new HashSet<Node>();
+        lastAffectedNodes = new HashSet<>();
         for (Node n : this.displaceableNodes) {
             Node nodeBackup = new Node(n);
             // Set other fields that clone doesn't copy

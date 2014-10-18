@@ -19,7 +19,7 @@ import javax.swing.tree.TreePath;
  */
 public abstract class HalfCookedTreeModel implements TreeModel {
 
-    List<TreeModelListener> listeneres = new ArrayList<TreeModelListener>();
+    List<TreeModelListener> listeneres = new ArrayList<>();
 
     protected String root;
     public Object getRoot() {

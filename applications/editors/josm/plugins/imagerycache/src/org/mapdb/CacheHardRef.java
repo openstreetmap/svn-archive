@@ -30,7 +30,7 @@ public class CacheHardRef extends CacheLRU {
     int counter = 0;
 
     public CacheHardRef(Engine engine, int initialCapacity) {
-        super(engine, new LongConcurrentHashMap<Object>(initialCapacity));
+        super(engine, new LongConcurrentHashMap<>(initialCapacity));
     }
 
     @Override

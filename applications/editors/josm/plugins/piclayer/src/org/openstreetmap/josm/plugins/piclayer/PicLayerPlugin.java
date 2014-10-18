@@ -99,7 +99,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
             ShearPictureAction shearPictureAction = new ShearPictureAction(newFrame);
             // Create plugin buttons and add them to the toolbar
 
-            buttonList = new ArrayList<IconToggleButton>(7);
+            buttonList = new ArrayList<>(7);
             buttonList.add(picLayerActionButtonFactory(movePictureAction));
             buttonList.add(picLayerActionButtonFactory(movePointAction));
             buttonList.add(picLayerActionButtonFactory(transformPointAction));

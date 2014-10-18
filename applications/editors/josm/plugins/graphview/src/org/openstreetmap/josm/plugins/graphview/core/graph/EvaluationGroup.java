@@ -76,7 +76,7 @@ abstract class EvaluationGroup {
             Collection<Restriction> initiallyActiveRestrictions =
                 activeRestrictionsAfterSegment(firstSegment, EMPTY_RESTRICTION_LIST, restrictions);
 
-            Collection<Restriction> restrictionsForbiddenAtLastNode = new HashSet<Restriction>();
+            Collection<Restriction> restrictionsForbiddenAtLastNode = new HashSet<>();
             for (Restriction restriction : restrictions) {
                 if (restriction.getTos().contains(lastSegment)) {
                     restrictionsForbiddenAtLastNode.add(restriction);
@@ -109,7 +109,7 @@ abstract class EvaluationGroup {
             return EMPTY_SEGMENT_LIST;
         }
 
-        Queue<State> stateQueue = new LinkedList<State>();
+        Queue<State> stateQueue = new LinkedList<>();
         stateQueue.add(createStartingState(firstNode, initiallyActiveRestrictions));
 
         /* search for a possible segment sequence */
@@ -142,7 +142,7 @@ abstract class EvaluationGroup {
         startingState.currentNode = firstNode;
         startingState.activeRestrictions = initiallyActiveRestrictions;
         startingState.segmentHistory = EMPTY_SEGMENT_LIST;
-        startingState.visitedNodes = new HashSet<SegmentNode>();
+        startingState.visitedNodes = new HashSet<>();
         startingState.visitedNodes.add(firstNode);
 
         return startingState;
@@ -150,7 +150,7 @@ abstract class EvaluationGroup {
 
     private List<State> createSubsequentStates(State state, Collection<Restriction> allRestrictions) {
 
-        List<State> subsequentStates = new ArrayList<State>();
+        List<State> subsequentStates = new ArrayList<>();
 
         for (Segment segment : state.currentNode.getOutboundSegments()) {
 
@@ -162,13 +162,13 @@ abstract class EvaluationGroup {
                 newState.activeRestrictions = activeRestrictionsAfterSegment(
                         segment, state.activeRestrictions, allRestrictions);
 
-                newState.segmentHistory = new ArrayList<Segment>(state.segmentHistory.size() + 1);
+                newState.segmentHistory = new ArrayList<>(state.segmentHistory.size() + 1);
                 newState.segmentHistory.addAll(state.segmentHistory);
                 newState.segmentHistory.add(segment);
 
                 newState.currentNode = segment.getNode2();
 
-                newState.visitedNodes = new HashSet<SegmentNode>(state.visitedNodes);
+                newState.visitedNodes = new HashSet<>(state.visitedNodes);
                 newState.visitedNodes.add(newState.currentNode);
 
                 /* add state to queue,
@@ -199,7 +199,7 @@ abstract class EvaluationGroup {
         for (Restriction restriction : restrictions) {
             if (restriction.getFrom() == segment) {
                 if (result == EMPTY_RESTRICTION_LIST) {
-                    result = new ArrayList<Restriction>(restrictions.size());
+                    result = new ArrayList<>(restrictions.size());
                 }
                 result.add(restriction);
             }
@@ -217,7 +217,7 @@ abstract class EvaluationGroup {
         for (Restriction restriction : activeRestrictionsBeforeSegment) {
             if (restriction.getVias().contains(segment)) {
                 if (result == EMPTY_RESTRICTION_LIST) {
-                    result = new ArrayList<Restriction>(allRestrictions.size());
+                    result = new ArrayList<>(allRestrictions.size());
                 }
                 result.add(restriction);
             }

@@ -26,7 +26,7 @@ import org.openstreetmap.josm.plugins.routes.xml.RoutesXMLLayer;
 
 public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
-    private final List<RouteLayer> routeLayers = new ArrayList<RouteLayer>();
+    private final List<RouteLayer> routeLayers = new ArrayList<>();
     private boolean isShown;
 
     public RoutesPlugin(PluginInformation info) {

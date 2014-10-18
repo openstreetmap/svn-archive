@@ -25,7 +25,7 @@ public class AppendableGpxTrackSegment implements GpxTrackSegment {
 
     @Override
     public Collection<WayPoint> getWayPoints() {
-        return new CopyList<WayPoint>(wayPoints, size);
+        return new CopyList<>(wayPoints, size);
     }
 
     public void addWaypoint(WayPoint p) {

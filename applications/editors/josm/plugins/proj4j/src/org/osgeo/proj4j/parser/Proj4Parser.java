@@ -9,7 +9,6 @@ import org.osgeo.proj4j.datum.Ellipsoid;
 import org.osgeo.proj4j.proj.Projection;
 import org.osgeo.proj4j.proj.TransverseMercatorProjection;
 import org.osgeo.proj4j.units.Angle;
-import org.osgeo.proj4j.units.AngleFormat;
 import org.osgeo.proj4j.units.Unit;
 import org.osgeo.proj4j.units.Units;
 import org.osgeo.proj4j.util.ProjectionMath;

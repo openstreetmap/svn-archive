@@ -208,7 +208,7 @@ public class Section
 
         /* Pass 1: Read the property list. */
         int pass1Offset = o1;
-        final List<PropertyListEntry> propertyList = new ArrayList<PropertyListEntry>(propertyCount);
+        final List<PropertyListEntry> propertyList = new ArrayList<>(propertyCount);
         PropertyListEntry ple;
         for (int i = 0; i < properties.length; i++)
         {
@@ -307,6 +307,7 @@ public class Section
          *
          * @see Comparable#compareTo(java.lang.Object)
          */
+        @Override
         public int compareTo(final PropertyListEntry o)
         {
             final int otherOffset = o.offset;
@@ -318,6 +319,7 @@ public class Section
                 return 1;
         }
 
+        @Override
         public String toString()
         {
             final StringBuffer b = new StringBuffer();
@@ -456,6 +458,7 @@ public class Section
      * @return <code>true</code> if the objects are equal, <code>false</code> if
      * not
      */
+    @Override
     public boolean equals(final Object o)
     {
         if (o == null || !(o instanceof Section))
@@ -549,6 +552,7 @@ public class Section
     /**
      * @see Object#hashCode()
      */
+    @Override
     public int hashCode()
     {
         long hashCode = 0;
@@ -565,6 +569,7 @@ public class Section
     /**
      * @see Object#toString()
      */
+    @Override
     public String toString()
     {
         final StringBuffer b = new StringBuffer();

@@ -59,7 +59,7 @@ public class ExecuteFilterBug extends MapdustExecuteAction implements
 
     /** The list MapDustBug filter observers */
     private final ArrayList<MapdustUpdateObserver> observers =
-            new ArrayList<MapdustUpdateObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>ExecuteFilterBug</code> object.

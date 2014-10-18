@@ -365,7 +365,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      * autocompletion on the road name.
      */
     TreeSet<String> createAutoCompletionInfo() {
-        final TreeSet<String> names = new TreeSet<String>();
+        final TreeSet<String> names = new TreeSet<>();
         for (OsmPrimitive osm : Main.main.getCurrentDataSet()
                 .allNonDeletedPrimitives()) {
             if (osm.getKeys() != null && osm.keySet().contains("highway")

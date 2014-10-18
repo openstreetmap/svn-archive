@@ -64,7 +64,7 @@ public class AccessRulesetReader {
             List<String> getAncestorHierarchy() {
                 List<String> names;
                 if (parent == null) {
-                    names = new LinkedList<String>();
+                    names = new LinkedList<>();
                 } else {
                     names = parent.getAncestorHierarchy();
                 }
@@ -73,8 +73,8 @@ public class AccessRulesetReader {
             }
         }
 
-        private final Collection<AccessClass> accessClasses = new LinkedList<AccessClass>();
-        private final Collection<Tag> baseTags = new LinkedList<Tag>();
+        private final Collection<AccessClass> accessClasses = new LinkedList<>();
+        private final Collection<Tag> baseTags = new LinkedList<>();
 
         private static enum Section {NONE, CLASSES, BASETAGS, IMPLICATIONS};
         private Section currentSection = Section.NONE;
@@ -82,7 +82,7 @@ public class AccessRulesetReader {
         private AccessClass currentAccessClass = null;
 
         private ImplicationXMLReader implicationReader = null;
-        private final List<Implication> implications = new LinkedList<Implication>();
+        private final List<Implication> implications = new LinkedList<>();
 
         /** returns the AccessRuleset that was read */
         AccessRuleset getAccessRuleset() {
@@ -95,7 +95,7 @@ public class AccessRulesetReader {
                             return accessClass.getAncestorHierarchy();
                         }
                     }
-                    return new LinkedList<String>();
+                    return new LinkedList<>();
                 }
 
                 public Collection<Tag> getBaseTags() {

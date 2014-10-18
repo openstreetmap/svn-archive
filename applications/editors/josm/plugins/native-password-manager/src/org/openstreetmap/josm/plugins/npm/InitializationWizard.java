@@ -60,7 +60,7 @@ public class InitializationWizard extends JDialog {
     protected Action nextAction, finishAction;
     protected JPanel cardPanel;
     
-    List<WizardPanel> panels = new ArrayList<WizardPanel>();
+    List<WizardPanel> panels = new ArrayList<>();
     int panelIndex;
     
     private CardLayout cardLayout;

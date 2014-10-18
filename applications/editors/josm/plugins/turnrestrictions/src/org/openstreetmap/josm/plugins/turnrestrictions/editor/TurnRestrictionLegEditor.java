@@ -61,7 +61,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     //static private final Logger logger = Logger.getLogger(TurnRestrictionLegEditor.class.getName());
  
     private JLabel lblOsmObject;
-    private final Set<OsmPrimitive> legs = new HashSet<OsmPrimitive>();
+    private final Set<OsmPrimitive> legs = new HashSet<>();
     private TurnRestrictionEditorModel model;
     private TurnRestrictionLegRole role; 
     private DeleteAction actDelete;

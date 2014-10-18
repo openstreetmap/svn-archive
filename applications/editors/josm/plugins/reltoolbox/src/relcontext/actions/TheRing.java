@@ -36,12 +36,12 @@ public class TheRing {
 
     public TheRing( Way source ) {
 	this.source = source;
-	segments = new ArrayList<RingSegment>(1);
+	segments = new ArrayList<>(1);
 	segments.add(new RingSegment(source));
     }
     
     public static boolean areAllOfThoseRings( Collection<Way> ways ) {
-	List<Way> rings = new ArrayList<Way>();
+	List<Way> rings = new ArrayList<>();
 	for( Way way : ways ) {
 	    if( way.isClosed() )
 		rings.add(way);
@@ -69,15 +69,15 @@ public class TheRing {
      */
     public static List<Relation> makeManySimpleMultipolygons( Collection<Way> selection, List<Command> commands ) {
 	log("---------------------------------------");
-	List<TheRing> rings = new ArrayList<TheRing>(selection.size());
+	List<TheRing> rings = new ArrayList<>(selection.size());
 	for( Way w : selection )
 	    rings.add(new TheRing(w));
 	for( int i = 0; i < rings.size() - 1; i++ )
 	    for( int j = i + 1; j < rings.size(); j++ )
 		rings.get(i).collide(rings.get(j));
 	redistributeSegments(rings);
-	List<Relation> relations = new ArrayList<Relation>();
-	Map<Relation, Relation> relationCache = new HashMap<Relation, Relation>();
+	List<Relation> relations = new ArrayList<>();
+	Map<Relation, Relation> relationCache = new HashMap<>();
 	for( TheRing r : rings ) {
 	    commands.addAll(r.getCommands(relationCache));
 	    relations.add(r.getRelation());
@@ -246,7 +246,7 @@ public class TheRing {
      */
     public static void redistributeSegments( List<TheRing> rings ) {
 	// build segments map
-	Map<RingSegment, TheRing> segmentMap = new HashMap<RingSegment, TheRing>();
+	Map<RingSegment, TheRing> segmentMap = new HashMap<>();
 	for( TheRing ring : rings )
 	    for( RingSegment seg : ring.segments )
 		if( !seg.isReference() )
@@ -316,8 +316,8 @@ public class TheRing {
 	}
 
 	// build a map of referencing relations
-	Map<Relation, Integer> referencingRelations = new HashMap<Relation, Integer>();
-	List<Command> relationCommands = new ArrayList<Command>();
+	Map<Relation, Integer> referencingRelations = new HashMap<>();
+	List<Command> relationCommands = new ArrayList<>();
 	for( OsmPrimitive p : source.getReferrers() ) {
 	    if( p instanceof Relation ) {
 		Relation rel = null;
@@ -341,7 +341,7 @@ public class TheRing {
 	// Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ Ð±Ð°Ð·Ð¾Ð²Ð¾Ð³Ð¾ Ð¾Ñ‚Ð½Ð¾ÑˆÐµÐ½Ð¸Ñ� Ð½Ð° Ð½Ð¾Ð²Ð¾Ðµ, Ð° Ð½Ðµ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÐµÐ³Ð¾
 	// Ð¿Ð¾Ñ�Ñ‚Ð¾Ð¼Ñƒ Ñ�Ð¾Ñ…Ñ€Ð°Ð½Ñ�ÐµÑ‚Ñ�Ñ� Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿ÐµÑ€Ð²Ð¾Ðµ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ
 
-	List<Command> commands = new ArrayList<Command>();
+	List<Command> commands = new ArrayList<>();
 	boolean foundOwnWay = false;
 	for( RingSegment seg : segments ) {
 	    boolean needAdding = !seg.isWayConstructed();
@@ -463,7 +463,7 @@ public class TheRing {
 	    int pos = nodes.indexOf(n);
 	    if( pos <= 0 || pos >= nodes.size() - 1 )
 		return null;
-	    List<Node> newNodes = new ArrayList<Node>(nodes.subList(pos, nodes.size()));
+	    List<Node> newNodes = new ArrayList<>(nodes.subList(pos, nodes.size()));
 	    nodes.subList(pos + 1, nodes.size()).clear();
 	    return new RingSegment(newNodes);
 	}
@@ -488,7 +488,7 @@ public class TheRing {
 	    if( pos1 == pos2 )
 		return null;
 
-	    List<Node> newNodes = new ArrayList<Node>();
+	    List<Node> newNodes = new ArrayList<>();
 	    if( pos2 > pos1 ) {
 		newNodes.addAll(nodes.subList(pos2, nodes.size()));
 		newNodes.addAll(nodes.subList(0, pos1 + 1));
@@ -498,7 +498,7 @@ public class TheRing {
 		    nodes.subList(0, pos1).clear();
 	    } else {
 		newNodes.addAll(nodes.subList(pos2, pos1 + 1));
-		nodes.addAll(new ArrayList<Node>(nodes.subList(0, pos2 + 1)));
+		nodes.addAll(new ArrayList<>(nodes.subList(0, pos2 + 1)));
 		nodes.subList(0, pos1).clear();
 	    }
 	    isRing = false;
@@ -512,7 +512,7 @@ public class TheRing {
 	public List<Node> getWayNodes() {
 	    if( nodes == null )
 		throw new IllegalArgumentException("Won't give you wayNodes: it is a reference");
-	    List<Node> wayNodes = new ArrayList<Node>(nodes);
+	    List<Node> wayNodes = new ArrayList<>(nodes);
 	    if( isRing )
 		wayNodes.add(wayNodes.get(0));
 	    return wayNodes;

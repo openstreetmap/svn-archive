@@ -64,7 +64,7 @@ public class GeoChatPanel extends ToggleDialog implements ChatServerConnectionLi
         gcPanel.add(loginPanel, BorderLayout.CENTER);
         createLayout(gcPanel, false, null);
 
-        users = new TreeMap<String, LatLon>();
+        users = new TreeMap<>();
         // Start threads
         connection = ChatServerConnection.getInstance();
         connection.addListener(this);

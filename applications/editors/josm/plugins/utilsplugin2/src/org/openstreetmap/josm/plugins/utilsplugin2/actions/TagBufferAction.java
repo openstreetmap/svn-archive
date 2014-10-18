@@ -17,9 +17,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class TagBufferAction extends JosmAction {
     private static final String TITLE = tr("Copy tags from previous selection");
-    private Map<String, String> tags = new HashMap<String, String>();
-    private Map<String, String> currentTags = new HashMap<String, String>();
-    private Set<OsmPrimitive> selectionBuf = new HashSet<OsmPrimitive>();
+    private Map<String, String> tags = new HashMap<>();
+    private Map<String, String> currentTags = new HashMap<>();
+    private Set<OsmPrimitive> selectionBuf = new HashSet<>();
 
     public TagBufferAction() {
         super(TITLE, "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
@@ -33,7 +33,7 @@ public class TagBufferAction extends JosmAction {
         if( selection.isEmpty() )
             return;
 
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
         for( String key : tags.keySet() ) {
             String value = tags.get(key);
             boolean foundNew = false;
@@ -91,7 +91,7 @@ public class TagBufferAction extends JosmAction {
 
     private void rememberSelectionTags() {
         // Fix #8350 - only care about tagged objects
-        Collection<OsmPrimitive> selectedTaggedObjects = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
+        Collection<OsmPrimitive> selectedTaggedObjects = new ArrayList<>(getCurrentDataSet().getSelected());
         for (Iterator<OsmPrimitive> it = selectedTaggedObjects.iterator(); it.hasNext(); ) {
             if (!it.next().isTagged()) {
                 it.remove();
@@ -99,7 +99,7 @@ public class TagBufferAction extends JosmAction {
         }
         if( !selectedTaggedObjects.isEmpty() ) {
             currentTags.clear();
-            Set<String> bad = new HashSet<String>();
+            Set<String> bad = new HashSet<>();
             for( OsmPrimitive p : selectedTaggedObjects ) {
                 if( currentTags.isEmpty() ) {
                     for( String key : p.keySet() )

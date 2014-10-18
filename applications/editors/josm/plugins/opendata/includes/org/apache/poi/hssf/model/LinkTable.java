@@ -89,7 +89,7 @@ final class LinkTable {
 
 		public ExternalBookBlock(RecordStream rs) {
 			_externalBookRecord = (SupBookRecord) rs.getNext();
-			List<Object> temp = new ArrayList<Object>();
+			List<Object> temp = new ArrayList<>();
 			while(rs.peekNextClass() == ExternalNameRecord.class) {
 			   temp.add(rs.getNext());
 			}
@@ -126,7 +126,7 @@ final class LinkTable {
 		_workbookRecordList = workbookRecordList;
 		RecordStream rs = new RecordStream(inputList, startIndex);
 
-		List<ExternalBookBlock> temp = new ArrayList<ExternalBookBlock>();
+		List<ExternalBookBlock> temp = new ArrayList<>();
 		while(rs.peekNextClass() == SupBookRecord.class) {
 		   temp.add(new ExternalBookBlock(rs));
 		}
@@ -147,7 +147,7 @@ final class LinkTable {
 			_externSheetRecord = null;
 		}
 
-		_definedNames = new ArrayList<NameRecord>();
+		_definedNames = new ArrayList<>();
 		// collect zero or more DEFINEDNAMEs id=0x18,
 		//  with their comments if present
 		while(true) {
@@ -170,7 +170,7 @@ final class LinkTable {
 	}
 
 	private static ExternSheetRecord readExtSheetRecord(RecordStream rs) {
-		List<ExternSheetRecord> temp = new ArrayList<ExternSheetRecord>(2);
+		List<ExternSheetRecord> temp = new ArrayList<>(2);
 		while(rs.peekNextClass() == ExternSheetRecord.class) {
 			temp.add((ExternSheetRecord) rs.getNext());
 		}

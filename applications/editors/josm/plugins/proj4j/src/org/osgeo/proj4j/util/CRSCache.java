@@ -6,7 +6,7 @@ import org.osgeo.proj4j.*;
 
 public class CRSCache 
 {
-  private static Map<String, CoordinateReferenceSystem> projCache = new HashMap<String, CoordinateReferenceSystem>();
+  private static Map<String, CoordinateReferenceSystem> projCache = new HashMap<>();
   private static CRSFactory crsFactory = new CRSFactory();
 
 // TODO: provide limit on number of items in cache (LRU)

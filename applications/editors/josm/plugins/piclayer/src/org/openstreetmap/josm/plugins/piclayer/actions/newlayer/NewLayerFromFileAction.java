@@ -59,7 +59,7 @@ public class NewLayerFromFileAction extends JosmAction {
         private String[] supportedExtensions;
 
         public ImageFileFilter() {
-            List<String> extensions = new ArrayList<String>();
+            List<String> extensions = new ArrayList<>();
             extensions.add("zip");
             extensions.add("kml");
             for (String ext : ImageIO.getReaderFormatNames())

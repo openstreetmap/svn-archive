@@ -42,7 +42,7 @@ public class ImageryOffsetPlugin extends Plugin {
 
         // an ugly hack to add this plugin to the toolbar
         if( Main.pref.getBoolean("iodb.modify.toolbar", true) ) {
-            Collection<String> toolbar = new LinkedList<String>(Main.toolbar.getToolString());
+            Collection<String> toolbar = new LinkedList<>(Main.toolbar.getToolString());
             if( !toolbar.contains("getoffset") ) {
                 toolbar.add("getoffset");
                 Main.pref.putCollection("toolbar", toolbar);

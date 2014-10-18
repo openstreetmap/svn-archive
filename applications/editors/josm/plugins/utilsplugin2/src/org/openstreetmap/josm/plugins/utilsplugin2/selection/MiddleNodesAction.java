@@ -45,7 +45,7 @@ public class MiddleNodesAction extends JosmAction {
             return;
         }
 
-        Set<Node> newNodes = new HashSet <Node>();
+        Set<Node> newNodes = new HashSet <>();
         NodeWayUtils.addMiddle(selectedNodes, newNodes);
         
         // select only newly found nodes

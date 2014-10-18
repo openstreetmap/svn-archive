@@ -47,7 +47,7 @@ public class UndoSelectionAction extends JosmAction {
             // first is selected, next list is previous selection
         }
         int k=0;
-        Set<OsmPrimitive> newsel = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> newsel = new HashSet<>();
         do {
             if (index+1<history.size()) index++; else index=0;
             Collection<? extends OsmPrimitive> histsel = history.get(index);

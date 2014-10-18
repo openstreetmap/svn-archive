@@ -82,7 +82,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
     	//System.out.println("keyPressed: key:" + e.getKeyChar() + " code" + e.getKeyCode() + " Loc" + e.getKeyLocation()+ " ID" + KeyEvent.getKeyText(e.getKeyCode()));
         
     	Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
-    	List<Command> commands = new ArrayList<Command>();
+    	List<Command> commands = new ArrayList<>();
     	
     	if ( checkActiveServerParam() == false ) return;
     	
@@ -280,7 +280,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
     }
     
     private void traceSync(LatLon pos, ProgressMonitor progressMonitor) {
-        Collection<Command> commands = new LinkedList<Command>();
+        Collection<Command> commands = new LinkedList<>();
         
         progressMonitor.beginTask(null, 3);
         try {
@@ -304,7 +304,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
 	            }
 	            coordList = oTraceSimple.m_listLatLon;
         	} catch (Exception e) {
-            	coordList = new ArrayList<LatLon>();
+            	coordList = new ArrayList<>();
             }
            
             if (m_bCancel == true || coordList.size() == 0) {

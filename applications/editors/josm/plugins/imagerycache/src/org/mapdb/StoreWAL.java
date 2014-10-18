@@ -2,8 +2,6 @@ package org.mapdb;
 
 import java.io.IOError;
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Write-Ahead-Log
@@ -30,7 +28,7 @@ public class StoreWAL extends StoreDirect {
 
     protected long logSize;
 
-    protected final LongConcurrentHashMap<long[]> modified = new LongConcurrentHashMap<long[]>();
+    protected final LongConcurrentHashMap<long[]> modified = new LongConcurrentHashMap<>();
 
 
     public StoreWAL(Volume.Factory volFac) {

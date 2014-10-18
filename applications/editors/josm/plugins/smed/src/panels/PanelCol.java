@@ -33,7 +33,7 @@ public class PanelCol extends JPanel {
 	public JRadioButton brownButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BrownButton.png")));
 	public JRadioButton magentaButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/MagentaButton.png")));
 	public JRadioButton pinkButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/PinkButton.png")));
-	public EnumMap<Col, JRadioButton> colours = new EnumMap<Col, JRadioButton>(Col.class);
+	public EnumMap<Col, JRadioButton> colours = new EnumMap<>(Col.class);
 	private ActionListener alColour = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Col col : colours.keySet()) {
@@ -93,7 +93,7 @@ public class PanelCol extends JPanel {
 	};
 	private JPanel stack;
 	private ButtonGroup stackColours = new ButtonGroup();
-	private ArrayList<JRadioButton> stackCol = new ArrayList<JRadioButton>();
+	private ArrayList<JRadioButton> stackCol = new ArrayList<>();
 	private int stackIdx = 0;
 	private ActionListener alStack = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {

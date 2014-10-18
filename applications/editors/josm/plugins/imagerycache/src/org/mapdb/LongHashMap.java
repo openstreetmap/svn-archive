@@ -378,7 +378,7 @@ public class LongHashMap<V> extends LongMap<V> implements Serializable {
 
 
     Entry<V> createHashedEntry(long key, int index, int hash) {
-        Entry<V> entry = new Entry<V>(key,hash);
+        Entry<V> entry = new Entry<>(key,hash);
         entry.next = elementData[index];
         elementData[index] = entry;
         return entry;
@@ -465,12 +465,12 @@ public class LongHashMap<V> extends LongMap<V> implements Serializable {
 
     @Override
     public Iterator<V> valuesIterator() {
-        return new ValueIterator<V>(this);
+        return new ValueIterator<>(this);
     }
 
     @Override
     public LongMapIterator<V> longMapIterator() {
-        return new EntryIterator<V>(this);
+        return new EntryIterator<>(this);
     }
 
 

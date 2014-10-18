@@ -13,7 +13,7 @@ import org.openstreetmap.josm.plugins.routes.ConvertedWay.WayEnd;
 
 public class PathBuilder {
 
-    private Map<Way, BitSet> wayRoutes = new HashMap<Way, BitSet>();
+    private Map<Way, BitSet> wayRoutes = new HashMap<>();
     private Collection<ConvertedWay> convertedWays;
 
     public void addWay(Way way, RouteDefinition route) {
@@ -31,7 +31,7 @@ public class PathBuilder {
 
     public Collection<ConvertedWay> getConvertedWays() {
         if (convertedWays == null) {
-            Map<WayEnd, ConvertedWay> ways = new HashMap<WayEnd, ConvertedWay>();
+            Map<WayEnd, ConvertedWay> ways = new HashMap<>();
 
             for (Entry<Way, BitSet> wayEntry:wayRoutes.entrySet()) {
                 ConvertedWay way = new ConvertedWay(wayEntry.getValue(), wayEntry.getKey());
@@ -53,7 +53,7 @@ public class PathBuilder {
                 ways.put(way.getStop(), way);
             }
 
-            Set<ConvertedWay> uniqueWays = new HashSet<ConvertedWay>();
+            Set<ConvertedWay> uniqueWays = new HashSet<>();
             uniqueWays.addAll(ways.values());
             convertedWays = uniqueWays;
         }

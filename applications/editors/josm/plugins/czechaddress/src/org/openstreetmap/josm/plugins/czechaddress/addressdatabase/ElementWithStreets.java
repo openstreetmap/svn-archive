@@ -12,7 +12,7 @@ import java.util.List;
  */
 public abstract class ElementWithStreets extends ElementWithHouses {
 
-    private ArrayList<Street> streets = new ArrayList<Street>();
+    private ArrayList<Street> streets = new ArrayList<>();
 
     public ElementWithStreets(String name) {
         super(name);
@@ -77,7 +77,7 @@ public abstract class ElementWithStreets extends ElementWithHouses {
      */
     public List<House> getAllHouses() {
         // We make an conservative estimate...
-        List<House> result = new ArrayList<House>(20 * streets.size());
+        List<House> result = new ArrayList<>(20 * streets.size());
 
         result.addAll(this.houses);
 

@@ -19,7 +19,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
  */
 public class SelectionMonitor implements SelectionChangedListener {
 
-    Collection<OsmPrimitive> lastSelection = new NotNullList<OsmPrimitive>();
+    Collection<OsmPrimitive> lastSelection = new NotNullList<>();
 
     private SelectionMonitor() {}
     private static SelectionMonitor singleton = null;

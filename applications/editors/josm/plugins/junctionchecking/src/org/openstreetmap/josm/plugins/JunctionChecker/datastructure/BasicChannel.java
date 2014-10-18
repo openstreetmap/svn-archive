@@ -10,12 +10,12 @@ public class BasicChannel {
 
     private OSMNode toNode;
     private OSMNode fromNode;
-    private ArrayList<LeadsTo> leadsTo = new ArrayList<LeadsTo>();
-    private final ArrayList<OSMWay> ways = new ArrayList<OSMWay>();
+    private ArrayList<LeadsTo> leadsTo = new ArrayList<>();
+    private final ArrayList<OSMWay> ways = new ArrayList<>();
     private int newid;
     //gibt es nur, wenn ein Channelobjekt aus einer Nichteinbahnstraße erzeugt wurde (backchannelID ist dann die ID des anderen Channels)
     private int backChannelID = -100;
-    private final ArrayList<Channel> predChannels = new ArrayList<Channel>();
+    private final ArrayList<Channel> predChannels = new ArrayList<>();
 
     //werden für den Tarjan-Algorithmus gebraucht
     private int lowlink = -1;

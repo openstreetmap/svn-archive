@@ -23,12 +23,12 @@ public class ModelContainer {
             Collections.<Way> emptySet(), false);
     
     public static ModelContainer create(Iterable<Node> primaryNodes, Iterable<Way> primaryWays) {
-        return new ModelContainer(new HashSet<Node>(CollectionUtils.toList(primaryNodes)), new HashSet<Way>(
+        return new ModelContainer(new HashSet<>(CollectionUtils.toList(primaryNodes)), new HashSet<>(
                 CollectionUtils.toList(primaryWays)), false);
     }
     
     public static ModelContainer createEmpty(Iterable<Node> primaryNodes, Iterable<Way> primaryWays) {
-        return new ModelContainer(new HashSet<Node>(CollectionUtils.toList(primaryNodes)), new HashSet<Way>(
+        return new ModelContainer(new HashSet<>(CollectionUtils.toList(primaryNodes)), new HashSet<>(
                 CollectionUtils.toList(primaryWays)), true);
     }
     
@@ -42,14 +42,14 @@ public class ModelContainer {
         while (!closed) {
             closed = true;
             
-            for (Node n : new ArrayList<Node>(closedNodes)) {
+            for (Node n : new ArrayList<>(closedNodes)) {
                 for (Way w : Utils.filterRoads(n.getReferrers())) {
                     if (w.isFirstLastNode(n)) {
                         closed &= close(closedNodes, closedWays, w);
                     }
                 }
                 
-                for (Way w : new ArrayList<Way>(closedWays)) {
+                for (Way w : new ArrayList<>(closedWays)) {
                     closed &= close(closedNodes, closedWays, w);
                 }
             }
@@ -77,7 +77,7 @@ public class ModelContainer {
     private static boolean close(Set<Node> closedNodes, Set<Way> closedWays, Relation r) {
         boolean closed = true;
         
-        final List<Way> via = new ArrayList<Way>();
+        final List<Way> via = new ArrayList<>();
         for (RelationMember m : Utils.getMembers(r, Constants.TURN_ROLE_VIA)) {
             if (m.isWay()) {
                 closed &= !closedWays.add(m.getWay());
@@ -112,8 +112,8 @@ public class ModelContainer {
         return collection;
     }
     
-    private final Map<Node, Junction> junctions = new HashMap<Node, Junction>();
-    private final Map<Way, Road> roads = new HashMap<Way, Road>();
+    private final Map<Node, Junction> junctions = new HashMap<>();
+    private final Map<Way, Road> roads = new HashMap<>();
     
     private final Set<Node> primaryNodes;
     private final Set<Way> primaryWays;
@@ -122,12 +122,12 @@ public class ModelContainer {
     
     private ModelContainer(Set<Node> primaryNodes, Set<Way> primaryWays, boolean empty) {
         if (empty) {
-            this.primaryNodes = Collections.unmodifiableSet(new HashSet<Node>(primaryNodes));
-            this.primaryWays = Collections.unmodifiableSet(new HashSet<Way>(primaryWays));
+            this.primaryNodes = Collections.unmodifiableSet(new HashSet<>(primaryNodes));
+            this.primaryWays = Collections.unmodifiableSet(new HashSet<>(primaryWays));
             this.empty = true;
         } else {
-            final Set<Node> closedNodes = filterUsables(new HashSet<Node>(primaryNodes));
-            final Set<Way> closedWays = filterUsables(new HashSet<Way>(primaryWays));
+            final Set<Node> closedNodes = filterUsables(new HashSet<>(primaryNodes));
+            final Set<Way> closedWays = filterUsables(new HashSet<>(primaryWays));
             
             close(closedNodes, closedWays);
             
@@ -153,10 +153,10 @@ public class ModelContainer {
     }
     
     private Set<Pair<Way, Junction>> createPrimaryJunctions() {
-        final Set<Pair<Way, Junction>> roads = new HashSet<Pair<Way, Junction>>();
+        final Set<Pair<Way, Junction>> roads = new HashSet<>();
         
         for (Node n : primaryNodes) {
-            final List<Way> ws = new ArrayList<Way>();
+            final List<Way> ws = new ArrayList<>();
             for (Way w : Utils.filterRoads(n.getReferrers())) {
                 if (w.isFirstLastNode(n)) {
                     ws.add(w);
@@ -166,7 +166,7 @@ public class ModelContainer {
             if (ws.size() > 1) {
                 final Junction j = register(new Junction(this, n));
                 for (Way w : ws) {
-                    roads.add(new Pair<Way, Junction>(w, j));
+                    roads.add(new Pair<>(w, j));
                 }
             }
         }
@@ -227,7 +227,7 @@ public class ModelContainer {
     private Road mergeRoads(Road a, Road b) {
         final String ERR_ILLEGAL_ARGS = "The given roads can not be merged into one.";
         
-        final List<Way> ws = new ArrayList<Way>(CollectionUtils.toList(CollectionUtils.reverse(a.getRoute().getWays())));
+        final List<Way> ws = new ArrayList<>(CollectionUtils.toList(CollectionUtils.reverse(a.getRoute().getWays())));
         final List<Way> bws = b.getRoute().getWays();
         
         int i = -1;
@@ -261,7 +261,7 @@ public class ModelContainer {
             return Collections.emptySet();
         }
         
-        final Set<Junction> pjs = new HashSet<Junction>();
+        final Set<Junction> pjs = new HashSet<>();
         for (Node n : primaryNodes) {
             pjs.add(getJunction(n));
         }
@@ -273,7 +273,7 @@ public class ModelContainer {
             return Collections.emptySet();
         }
         
-        final Set<Road> prs = new HashSet<Road>();
+        final Set<Road> prs = new HashSet<>();
         for (Way w : primaryWays) {
             prs.add(roads.get(w));
         }

@@ -76,7 +76,7 @@ public class TurnRestrictionBuilder {
      * w1 and w2 don't share exactly one node
      */
     static public Node getUniqueCommonNode(Way w1, Way w2) throws IllegalArgumentException{
-        Set<Node> w1Nodes = new HashSet<Node>(w1.getNodes());
+        Set<Node> w1Nodes = new HashSet<>(w1.getNodes());
         w1Nodes.retainAll(w2.getNodes());
         if (w1Nodes.size() != 1) return null;
         return w1Nodes.iterator().next();
@@ -294,7 +294,7 @@ public class TurnRestrictionBuilder {
      */
     public synchronized Relation buildFromSelection(OsmDataLayer layer) {
         CheckParameterUtil.ensureParameterNotNull(layer, "layer");
-        List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>(layer.data.getSelected());
+        List<OsmPrimitive> selection = new ArrayList<>(layer.data.getSelected());
         return build(selection);
     }
 

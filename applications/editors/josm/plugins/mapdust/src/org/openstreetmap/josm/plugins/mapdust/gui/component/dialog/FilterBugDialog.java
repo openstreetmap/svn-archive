@@ -334,7 +334,7 @@ public class FilterBugDialog extends AbstractDialog {
      * status filter IDs
      */
     public List<Integer> getCheckedStatuses() {
-        List<Integer> statusList = new ArrayList<Integer>();
+        List<Integer> statusList = new ArrayList<>();
         for (FilterCheckBox filter : filterStatuses) {
             if (filter.getChbFilter().isSelected()) {
                 statusList.add((Integer) filter.getId());
@@ -350,7 +350,7 @@ public class FilterBugDialog extends AbstractDialog {
      * type filter values
      */
     public List<String> getCheckedTypes() {
-        List<String> typeList = new ArrayList<String>();
+        List<String> typeList = new ArrayList<>();
         for (FilterCheckBox filter : filterTypes) {
             if (filter.getChbFilter().isSelected()) {
                 typeList.add((String) filter.getId());

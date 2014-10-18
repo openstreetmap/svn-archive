@@ -42,7 +42,7 @@ class ChatServerConnection {
     private ChatServerConnection() {
         userId = 0;
         userName = null;
-        listeners = new HashSet<ChatServerConnectionListener>();
+        listeners = new HashSet<>();
         requestThread = new LogRequest();
         new Thread(requestThread).start();
     }
@@ -397,7 +397,7 @@ class ChatServerConnection {
         }
 
         private List<ChatMessage> parseMessages( JsonArray messages, boolean priv ) {
-            List<ChatMessage> result = new ArrayList<ChatMessage>();
+            List<ChatMessage> result = new ArrayList<>();
             for( int i = 0; i < messages.size(); i++ ) {
                 try {
                 	JsonObject msg = messages.getJsonObject(i);
@@ -422,7 +422,7 @@ class ChatServerConnection {
         }
 
         private Map<String, LatLon> parseUsers( JsonArray users ) {
-            Map<String, LatLon> result = new HashMap<String, LatLon>();
+            Map<String, LatLon> result = new HashMap<>();
             for( int i = 0; i < users.size(); i++ ) {
                 try {
                 	JsonObject user = users.getJsonObject(i);

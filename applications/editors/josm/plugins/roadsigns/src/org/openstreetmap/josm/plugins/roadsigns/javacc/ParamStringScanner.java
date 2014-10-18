@@ -17,7 +17,7 @@ public class ParamStringScanner implements ParamStringScannerConstants {
   final public List<StringOrParameter> parse() throws ParseException {
     String val;
     Token t;
-    List<StringOrParameter> lst = new ArrayList<StringOrParameter>();
+    List<StringOrParameter> lst = new ArrayList<>();
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {

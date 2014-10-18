@@ -38,7 +38,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         setEnabled(false);
 
         // construct all available fixers
-        fixers = new ArrayList<RelationFixer>();
+        fixers = new ArrayList<>();
         //should be before multipolygon as takes special case of multipolygon relation - boundary
         fixers.add(new BoundaryFixer()); // boundary, multipolygon, boundary=administrative
         fixers.add(new MultipolygonFixer()); // multipolygon

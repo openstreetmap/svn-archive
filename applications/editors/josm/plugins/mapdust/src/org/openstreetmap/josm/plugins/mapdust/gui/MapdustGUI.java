@@ -68,11 +68,11 @@ public class MapdustGUI extends ToggleDialog implements MapdustActionObserver,
 
     /** The list of MapDust bug details observers */
     private final ArrayList<MapdustBugDetailsObserver> bugDetailsObservers =
-            new ArrayList<MapdustBugDetailsObserver>();
+            new ArrayList<>();
 
     /** The list of MapDust initial update observers */
     private final ArrayList<MapdustUpdateObserver> initialUpdateObservers =
-            new ArrayList<MapdustUpdateObserver>();
+            new ArrayList<>();
 
     /** The <code>MapdustPlugin</code> plug-in */
     private MapdustPlugin mapdustPlugin;

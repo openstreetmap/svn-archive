@@ -51,7 +51,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
         Relation r = new Relation(rel.get());
 
-        Collection<OsmPrimitive> toAdd = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
+        Collection<OsmPrimitive> toAdd = new ArrayList<>(getCurrentDataSet().getSelected());
         toAdd.remove(rel.get());
         toAdd.removeAll(r.getMemberPrimitives());
 
@@ -131,7 +131,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
                 || getCurrentDataSet().getSelected().isEmpty() || rel == null || rel.get() == null )
             state = 0;
         else {
-            Collection<OsmPrimitive> toAdd = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
+            Collection<OsmPrimitive> toAdd = new ArrayList<>(getCurrentDataSet().getSelected());
             toAdd.remove(rel.get());
             int selectedSize = toAdd.size();
             if( selectedSize == 0 )

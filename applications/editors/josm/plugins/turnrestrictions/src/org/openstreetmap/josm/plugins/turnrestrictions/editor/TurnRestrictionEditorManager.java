@@ -96,7 +96,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     }
 
     /** the map of open dialogs */
-    private final HashMap<DialogContext, TurnRestrictionEditor> openDialogs =  new HashMap<DialogContext, TurnRestrictionEditor>();
+    private final HashMap<DialogContext, TurnRestrictionEditor> openDialogs =  new HashMap<>();
 
     /**
      * constructor

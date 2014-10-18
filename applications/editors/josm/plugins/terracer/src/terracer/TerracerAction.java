@@ -81,7 +81,7 @@ public final class TerracerAction extends JosmAction {
     }
 
     protected static final Set<Relation> findAssociatedStreets(Collection<OsmPrimitive> objects) {
-        Set<Relation> result = new HashSet<Relation>();
+        Set<Relation> result = new HashSet<>();
         if (objects != null) {
             for (OsmPrimitive c : objects) {
                 if (c != null) {
@@ -112,7 +112,7 @@ public final class TerracerAction extends JosmAction {
         Way outline = null;
         Way street = null;
         String streetname = null;
-        ArrayList<Node> housenumbers = new ArrayList<Node>();
+        ArrayList<Node> housenumbers = new ArrayList<>();
         Node init = null;
 
         try {
@@ -360,10 +360,10 @@ public final class TerracerAction extends JosmAction {
         Node[][] new_nodes = new Node[2][nb + 1];
         // This list will contain nodes of the outline that are used in new lines.
         // These nodes will not be deleted with the outline (if deleting was prompted).
-        ArrayList<Node> reused_nodes = new ArrayList<Node>();
+        ArrayList<Node> reused_nodes = new ArrayList<>();
 
-        this.commands = new LinkedList<Command>();
-        Collection<Way> ways = new LinkedList<Way>();
+        this.commands = new LinkedList<>();
+        Collection<Way> ways = new LinkedList<>();
 
         if (nb > 1) {
             for (int i = 0; i <= nb; ++i) {
@@ -400,7 +400,7 @@ public final class TerracerAction extends JosmAction {
             if (deleteOutline) {
                 // Delete outline nodes having no tags and referrers but the outline itself
                 List<Node> nodes = outline.getNodes();
-                ArrayList<Node> nodesToDelete = new ArrayList<Node>();
+                ArrayList<Node> nodesToDelete = new ArrayList<>();
                 for (Node n : nodes)
                     if (!n.hasKeys() && n.getReferrers().size() == 1 && !reused_nodes.contains(n))
                         nodesToDelete.add(n);
@@ -461,7 +461,7 @@ public final class TerracerAction extends JosmAction {
                         List<Command> conflictCommands = CombinePrimitiveResolverDialog.launchIfNecessary(
                                 tagsInConflict, primitives, Collections.singleton(outline));
                         if (!conflictCommands.isEmpty()) {
-                            List<Command> newCommands = new ArrayList<Command>(commands);
+                            List<Command> newCommands = new ArrayList<>(commands);
                             newCommands.addAll(conflictCommands);
                             setSequence(newCommands.toArray(new Command[0]));
                             // Run conflicts commands
@@ -637,7 +637,7 @@ public final class TerracerAction extends JosmAction {
             back.addNode(w.getNode(i));
         }
 
-        return new Pair<Way, Way>(front, back);
+        return new Pair<>(front, back);
     }
 
     /**
@@ -699,7 +699,7 @@ public final class TerracerAction extends JosmAction {
         }
 
         final int length = a.length;
-        ArrayList<SortWithIndex> sortable = new ArrayList<SortWithIndex>(length);
+        ArrayList<SortWithIndex> sortable = new ArrayList<>(length);
         for (int i = 0; i < length; ++i) {
             sortable.add(new SortWithIndex(a[i], i));
         }

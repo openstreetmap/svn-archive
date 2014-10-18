@@ -48,9 +48,9 @@ import java.util.ArrayList;
  *
  */
 public class NameGenerator {
-    ArrayList<String> pre = new ArrayList<String>();
-    ArrayList<String> mid = new ArrayList<String>();
-    ArrayList<String> sur = new ArrayList<String>();
+    ArrayList<String> pre = new ArrayList<>();
+    ArrayList<String> mid = new ArrayList<>();
+    ArrayList<String> sur = new ArrayList<>();
 
     final private static char[] vocals = {'a', 'e', 'i', 'o', 'u', 'ä', 'ö', 'õ', 'ü', 'y'};
     final private static char[] consonants = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p',    'q', 'r', 's', 't', 'v', 'w', 'x', 'y'};

@@ -28,11 +28,11 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class SeparateDataStorePlugin extends Plugin 
 {
 
-	public HashMap<Long, IPrimitive> originalNodes = new HashMap<Long, IPrimitive>();
-	public HashMap<Long, IPrimitive> originalWays = new HashMap<Long, IPrimitive>();
-	public HashMap<Long, IPrimitive> originalRelations = new HashMap<Long, IPrimitive>();
+	public HashMap<Long, IPrimitive> originalNodes = new HashMap<>();
+	public HashMap<Long, IPrimitive> originalWays = new HashMap<>();
+	public HashMap<Long, IPrimitive> originalRelations = new HashMap<>();
 	
-	public ArrayList<QueueItem> uploadQueue = new ArrayList<QueueItem>();
+	public ArrayList<QueueItem> uploadQueue = new ArrayList<>();
 	
 	private PrimitiveVisitor learnVisitor = new PrimitiveVisitor() {
 		public void visit(INode i) { originalNodes.put(i.getId(), i); }
@@ -112,7 +112,7 @@ public class SeparateDataStorePlugin extends Plugin
 	 * removes all elements from the upload queue that have the processed flag set.
 	 */
 	protected void clearQueue() {
-		ArrayList<QueueItem> newQueue = new ArrayList<QueueItem>();
+		ArrayList<QueueItem> newQueue = new ArrayList<>();
 		for (QueueItem q : uploadQueue) {
 			if (!q.processed) newQueue.add(q);
 		}

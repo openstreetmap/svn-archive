@@ -46,7 +46,7 @@ public class SVGParser {
      * @return
      */
     public String [] getClosedPaths(String svg) {
-        ArrayList<String> path = new ArrayList<String>();
+        ArrayList<String> path = new ArrayList<>();
         int i = 0;
         while (svg.indexOf(cPathStart, i) != -1) {
             int s = svg.indexOf(cPathStart, i) + cViewBoxStart.length();

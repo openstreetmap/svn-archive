@@ -26,7 +26,7 @@ import org.openstreetmap.josm.io.auth.CredentialsAgentResponse;
  */
 public class SdsCredentialAgent extends AbstractCredentialsAgent {
 
-    Map<RequestorType, PasswordAuthentication> sdsMemoryCredentialsCache = new HashMap<RequestorType, PasswordAuthentication>();
+    Map<RequestorType, PasswordAuthentication> sdsMemoryCredentialsCache = new HashMap<>();
 
     /**
      * @see CredentialsAgent#lookup(RequestorType)

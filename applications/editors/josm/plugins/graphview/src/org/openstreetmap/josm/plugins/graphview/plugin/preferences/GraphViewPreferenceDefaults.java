@@ -31,7 +31,7 @@ public final class GraphViewPreferenceDefaults {
             Arrays.asList(UNDEFINED, YES, PERMISSIVE, DESIGNATED);
 
         Map<VehiclePropertyType<?>, String> propertyStringMap =
-            new HashMap<VehiclePropertyType<?>, String>();
+            new HashMap<>();
 
         try {
             return new PreferenceAccessParameters("", accessTypes, propertyStringMap);
@@ -47,7 +47,7 @@ public final class GraphViewPreferenceDefaults {
         try {
 
             Map<String, PreferenceAccessParameters> result =
-                new HashMap<String, PreferenceAccessParameters>();
+                new HashMap<>();
 
             Collection<AccessType> accessTypes =
                 Arrays.asList(UNDEFINED, YES, PERMISSIVE, DESIGNATED);
@@ -55,7 +55,7 @@ public final class GraphViewPreferenceDefaults {
             /* create motorcar bookmark */
             {
                 Map<VehiclePropertyType<?>, String> propertyMap =
-                    new HashMap<VehiclePropertyType<?>, String>();
+                    new HashMap<>();
 
                 PreferenceAccessParameters accessParameters =
                     new PreferenceAccessParameters("motorcar", accessTypes, propertyMap);
@@ -66,7 +66,7 @@ public final class GraphViewPreferenceDefaults {
             /* create hgv bookmark */
             {
                 Map<VehiclePropertyType<?>, String> propertyMap =
-                    new HashMap<VehiclePropertyType<?>, String>();
+                    new HashMap<>();
                 propertyMap.put(VehiclePropertyTypes.WEIGHT, "3.5");
 
                 PreferenceAccessParameters accessParameters =
@@ -78,7 +78,7 @@ public final class GraphViewPreferenceDefaults {
             /* create bicycle bookmark */
             {
                 Map<VehiclePropertyType<?>, String> propertyMap =
-                    new HashMap<VehiclePropertyType<?>, String>();
+                    new HashMap<>();
 
                 PreferenceAccessParameters accessParameters =
                     new PreferenceAccessParameters("bicycle", accessTypes, propertyMap);
@@ -89,7 +89,7 @@ public final class GraphViewPreferenceDefaults {
             /* create pedestrian bookmark */
             {
                 Map<VehiclePropertyType<?>, String> propertyMap =
-                    new HashMap<VehiclePropertyType<?>, String>();
+                    new HashMap<>();
 
                 PreferenceAccessParameters accessParameters =
                     new PreferenceAccessParameters("foot", accessTypes, propertyMap);

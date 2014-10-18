@@ -136,7 +136,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             setVisible(false);
         OsmPrimitive prim = this.proposalContainer.getTarget();
         Reasoner r = Reasoner.getInstance();
-        List<AddressElement> elems = new NotNullList<AddressElement>();
+        List<AddressElement> elems = new NotNullList<>();
 
         synchronized (r) {
             Map<String,String> backup = prim.getKeys();

@@ -32,7 +32,7 @@ public class JunctionChecker {
     private boolean smallerJunction;
     private JMinimality m;
     // Variable wird beim KreuzungsSuchen benutzt, sonst ist sie leer!
-    private ArrayList<HashSet<Channel>> junctions = new ArrayList<HashSet<Channel>>();
+    private ArrayList<HashSet<Channel>> junctions = new ArrayList<>();
     //dient zur Zeitmessung
     private long startIterate = 0;
     private long stopIterate = 0;
@@ -43,7 +43,7 @@ public class JunctionChecker {
         this.channeldigraph = channeldigraph;
         this.n = n;
         this.jCheck = new JCheck();
-        this.subjunction = new ArrayList<Channel>();
+        this.subjunction = new ArrayList<>();
         smallerJunction = false;
     }
 
@@ -137,7 +137,7 @@ public class JunctionChecker {
 
 
     private void collectECandidates(ArrayList<Channel> subgraph) {
-        E = new ArrayList<Channel>();
+        E = new ArrayList<>();
         for (int i = 0; i < subgraph.size(); i++) {
             if ((subgraph.get(i).getIndegree() + subgraph.get(i).getOutdegree() >= 3)
                     || entries.contains(subgraph.get(i))

@@ -37,7 +37,7 @@ public class OSMEntity {
     /**
      * @uml.property  name="hashmap"
      */
-    private HashMap<String, String> hashmap = new HashMap<String, String>();
+    private HashMap<String, String> hashmap = new HashMap<>();
     /**
      * @uml.property  name="version"
      */

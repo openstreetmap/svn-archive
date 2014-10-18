@@ -45,8 +45,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     protected boolean cancel;
     protected boolean active = false;
 
-    protected Collection<Command> commands = new LinkedList<Command>();
-    protected Collection<Way> ways = new ArrayList<Way>();
+    protected Collection<Command> commands = new LinkedList<>();
+    protected Collection<Way> ways = new ArrayList<>();
 
     public LakewalkerAction(String name) {
         super(name, "lakewalker-sml", tr("Lake Walker."),
@@ -169,7 +169,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     private void processnodelist(LatLon pos, LatLon topLeft, LatLon botRight, int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer, File workingdir, ProgressMonitor progressMonitor){
         progressMonitor.beginTask(null, 3);
         try {
-            ArrayList<double[]> nodelist = new ArrayList<double[]>();
+            ArrayList<double[]> nodelist = new ArrayList<>();
 
             Lakewalker lw = new Lakewalker(waylen,maxnode,threshold,epsilon,resolution,tilesize,startdir,wmslayer,workingdir);
             try {
@@ -290,8 +290,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
                 System.out.println("Failed");
             }
 
-            commands = new LinkedList<Command>();
-            ways = new ArrayList<Way>();
+            commands = new LinkedList<>();
+            ways = new ArrayList<>();
         } finally {
             progressMonitor.finishTask();
         }

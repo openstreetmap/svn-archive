@@ -134,7 +134,7 @@ public class Route {
     }
     
     public static Route create(List<Way> ws, Node end) {
-        final List<Segment> segments = new ArrayList<Segment>(ws.size());
+        final List<Segment> segments = new ArrayList<>(ws.size());
         
         for (Way w : ws) {
             if (!w.isFirstLastNode(end)) {
@@ -152,7 +152,7 @@ public class Route {
     private final List<Segment> segments;
     
     private Route(List<Segment> segments) {
-        this.segments = Collections.unmodifiableList(new ArrayList<Segment>(segments));
+        this.segments = Collections.unmodifiableList(new ArrayList<>(segments));
     }
     
     public List<Segment> getSegments() {
@@ -160,7 +160,7 @@ public class Route {
     }
     
     public List<Node> getNodes() {
-        final List<Node> ns = new ArrayList<Node>();
+        final List<Node> ns = new ArrayList<>();
         
         ns.add(segments.get(0).getStart());
         for (Segment s : segments) {
@@ -219,7 +219,7 @@ public class Route {
     }
     
     public List<Way> getWays() {
-        final List<Way> ws = new ArrayList<Way>();
+        final List<Way> ws = new ArrayList<>();
         
         for (Segment s : segments) {
             ws.add(s.getWay());

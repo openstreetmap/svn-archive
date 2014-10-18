@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerParamList {
-    ArrayList<ServerParam> m_listServerParam = new ArrayList<ServerParam>();
+    ArrayList<ServerParam> m_listServerParam = new ArrayList<>();
     ServerParam m_oActivParam = null;
     String m_strFilename;
     
@@ -106,7 +106,7 @@ public class ServerParamList {
     }
     
     public List<ServerParam> getEnableParamList() {
-    	List<ServerParam> listParam = new ArrayList<ServerParam>();
+    	List<ServerParam> listParam = new ArrayList<>();
     	for ( ServerParam param: m_listServerParam) {
         	if (param.isEnabled()) {
         		listParam.add(param);

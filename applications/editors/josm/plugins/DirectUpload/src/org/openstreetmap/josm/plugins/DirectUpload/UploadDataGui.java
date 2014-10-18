@@ -51,7 +51,7 @@ import org.openstreetmap.josm.tools.Utils;
  * @author  subhodip, xeen, ax
  */
 public class UploadDataGui extends ExtendedDialog {
-    
+
     /**
      * This enum contains the possible values for the visibility field and their
      * explanation. Provides some methods for easier handling.
@@ -102,7 +102,7 @@ public class UploadDataGui extends ExtendedDialog {
     private static final String uploadTraceText = tr("Upload Trace");
 
     private boolean canceled = false;
-    
+
     public UploadDataGui() {
         // Initalizes ExtendedDialog
         super(Main.parent,
@@ -112,7 +112,7 @@ public class UploadDataGui extends ExtendedDialog {
         );
         JPanel content = initComponents();
         GpxData gpxData = UploadOsmConnection.getInstance().autoSelectTrace();
-        initTitleAndDescriptionFromGpxData(gpxData);    // this is changing some dialog elements, so it (probably) must be before the following  
+        initTitleAndDescriptionFromGpxData(gpxData);    // this is changing some dialog elements, so it (probably) must be before the following
         setContent(content);
         setButtonIcons(new String[] { "uploadtrace.png", "cancel.png" });
         setupDialog();
@@ -128,7 +128,7 @@ public class UploadDataGui extends ExtendedDialog {
         // visibilty
         JLabel visibilityLabel = new JLabel(tr("Visibility"));
         visibilityLabel.setToolTipText(tr("Defines the visibility of your trace for other OSM users."));
-        
+
         visibilityCombo = new JComboBox<>();
         visibilityCombo.setEditable(false);
         for(visibility v : visibility.values()) {
@@ -141,8 +141,8 @@ public class UploadDataGui extends ExtendedDialog {
         JLabel descriptionLabel = new JLabel(tr("Description"));
         descriptionField = new HistoryComboBox();
         descriptionField.setToolTipText(tr("Please enter Description about your trace."));
-        
-        List<String> descHistory = new LinkedList<String>(Main.pref.getCollection("directupload.description.history", new LinkedList<String>()));
+
+        List<String> descHistory = new LinkedList<>(Main.pref.getCollection("directupload.description.history", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         // XXX this should be handled in HistoryComboBox
         Collections.reverse(descHistory);
@@ -153,7 +153,7 @@ public class UploadDataGui extends ExtendedDialog {
         tagsField = new HistoryComboBox();
         tagsField.setToolTipText(tr("Please enter tags about your trace."));
 
-        List<String> tagsHistory = new LinkedList<String>(Main.pref.getCollection("directupload.tags.history", new LinkedList<String>()));
+        List<String> tagsHistory = new LinkedList<>(Main.pref.getCollection("directupload.tags.history", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it againin addElement()
         // XXX this should be handled in HistoryComboBox
         Collections.reverse(tagsHistory);
@@ -198,7 +198,7 @@ public class UploadDataGui extends ExtendedDialog {
           }
       }
       else {
-          description = new SimpleDateFormat("yyMMddHHmmss").format(new Date()); 
+          description = new SimpleDateFormat("yyMMddHHmmss").format(new Date());
           title = tr("No GPX layer selected. Cannot upload a trace.");
       }
       outputDisplay.setText(title);
@@ -295,8 +295,8 @@ public class UploadDataGui extends ExtendedDialog {
         c.setConnectTimeout(15000);
         c.setRequestMethod("POST");
         c.setDoOutput(true);
-        // unfortunately, addAuth() is protected, so we need to subclass OsmConnection 
-        // XXX make addAuth public. 
+        // unfortunately, addAuth() is protected, so we need to subclass OsmConnection
+        // XXX make addAuth public.
         UploadOsmConnection.getInstance().addAuthHack(c);
 
         c.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
@@ -321,7 +321,7 @@ public class UploadDataGui extends ExtendedDialog {
             if (c.getHeaderField("Error") != null)
                 returnMsg += "\n" + c.getHeaderField("Error");
         }
-        
+
         final String returnMsgEDT = returnMsg;
 
         GuiHelper.runInEDT(new Runnable() {
@@ -407,13 +407,13 @@ public class UploadDataGui extends ExtendedDialog {
             errors += tr("No GPX layer selected. Cannot upload a trace.");
 
         final String errorsEDT = errors;
-        
+
         GuiHelper.runInEDT(new Runnable() {
             @Override public void run() {
                 outputDisplay.setText(errorsEDT);
             }
         });
-        
+
         return errors.length() > 0;
     }
 
@@ -428,10 +428,10 @@ public class UploadDataGui extends ExtendedDialog {
 
         // Disable Upload button so users can't just upload that track again
         buttons.get(0).setEnabled(false);
-        
+
         // save history
         Main.pref.put("directupload.visibility.last-used", visibility.desc2visi(visibilityCombo.getSelectedItem().toString()).name());
-        
+
         descriptionField.addCurrentItemToHistory();
         Main.pref.putCollection("directupload.description.history", descriptionField.getHistory());
 

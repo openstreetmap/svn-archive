@@ -345,7 +345,7 @@ public final class CompressLZF{
      * Wraps existing serializer and compresses its input/output
      */
     public static <E> Serializer<E> CompressionWrapper(Serializer<E> serializer) {
-        return new Serializer.CompressSerializerWrapper<E>(serializer);
+        return new Serializer.CompressSerializerWrapper<>(serializer);
     }
 
 

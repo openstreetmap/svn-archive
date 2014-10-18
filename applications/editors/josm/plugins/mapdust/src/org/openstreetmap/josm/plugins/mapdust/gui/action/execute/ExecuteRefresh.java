@@ -54,7 +54,7 @@ public class ExecuteRefresh extends AbstractAction implements
 
     /** The list of MapDust refresh observers */
     private final ArrayList<MapdustUpdateObserver> observers =
-            new ArrayList<MapdustUpdateObserver>();
+            new ArrayList<>();
 
     /**
      * Builds a <code>EexecuteRefresh<code> object

@@ -105,7 +105,7 @@ public class StoreImageryOffsetAction extends JosmAction {
 
         // upload object info to server
         try {
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, String> params = new HashMap<>();
             offsetObj.putServerParams(params);
             StringBuilder query = null;
             for( String key : params.keySet() ) {

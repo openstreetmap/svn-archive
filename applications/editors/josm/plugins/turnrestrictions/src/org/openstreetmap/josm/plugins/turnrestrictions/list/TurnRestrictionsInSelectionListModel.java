@@ -31,7 +31,7 @@ public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListMo
      * @param selection the collection of selected primitives
      */
     public void initFromSelection(Collection<? extends OsmPrimitive> selection) {
-        Set<Relation> turnRestrictions = new HashSet<Relation>();
+        Set<Relation> turnRestrictions = new HashSet<>();
         if (selection == null) return;
         for (OsmPrimitive p: selection) {
             for (OsmPrimitive parent: p.getReferrers()) {

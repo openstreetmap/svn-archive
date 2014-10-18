@@ -37,7 +37,7 @@ public class SetNodeAction implements SurveyorAction {
 
     @Override
     public void setParameters(List<String> parameters) {
-        keyValues = new ArrayList<Pair<String, String>>();
+        keyValues = new ArrayList<>();
         int pos;
         String key;
         String value;
@@ -46,7 +46,7 @@ public class SetNodeAction implements SurveyorAction {
             if(pos > 0) {
                 key = keyValuePair.substring(0, pos);
                 value = keyValuePair.substring(pos + 1);
-                keyValues.add(new Pair<String, String>(key, value));
+                keyValues.add(new Pair<>(key, value));
             } else {
                 System.err.println("SetNodeAction: ignoring invalid key value pair: " + keyValuePair);
             }

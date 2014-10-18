@@ -49,7 +49,7 @@ public class TracerServer {
     public ArrayList<LatLon> trace(LatLon pos) {
         try {
             String content = callServer("trace/simple/" + pos.lat() + ";" + pos.lon());
-            ArrayList<LatLon> nodelist = new ArrayList<LatLon>();
+            ArrayList<LatLon> nodelist = new ArrayList<>();
             String[] lines = content.split("\\|");
             for (String line : lines) {
                 String[] items = line.split(";");
@@ -59,7 +59,7 @@ public class TracerServer {
             }
             return nodelist;
         } catch (Exception e) {
-            return new ArrayList<LatLon>();
+            return new ArrayList<>();
         }
     }
 

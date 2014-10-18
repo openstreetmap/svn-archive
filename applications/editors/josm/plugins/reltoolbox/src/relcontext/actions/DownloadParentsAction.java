@@ -42,7 +42,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
     public void actionPerformed( ActionEvent e ) {
         Relation relation = rel.get();
         if( relation == null ) return;
-        List<OsmPrimitive> objects = new ArrayList<OsmPrimitive>();
+        List<OsmPrimitive> objects = new ArrayList<>();
         objects.add(relation);
         objects.addAll(relation.getMemberPrimitives());
         Main.worker.submit(new DownloadReferrersTask(Main.main.getEditLayer(), objects));
@@ -60,7 +60,7 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
 
     protected void downloadIncomplete( Relation rel ) {
         if( rel.isNew() ) return;
-        Set<OsmPrimitive> ret = new HashSet<OsmPrimitive>();
+        Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
         if( ret.isEmpty() ) return;
         Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));

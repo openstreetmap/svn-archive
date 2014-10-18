@@ -27,8 +27,8 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  */
 public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
     public static final String ANONYMOUS = tr("No name");
-    private static List<IAddressEditContainerListener> containerListeners = new ArrayList<IAddressEditContainerListener>();
-    private List<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
+    private static List<IAddressEditContainerListener> containerListeners = new ArrayList<>();
+    private List<ICommandListener> cmdListeners = new ArrayList<>();
 
     protected OsmPrimitive osmObject;
 
@@ -80,7 +80,8 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
      * Adds a command listener.
      * @param listener
      */
-    public void addCommandListener(ICommandListener listener) {
+    @Override
+	public void addCommandListener(ICommandListener listener) {
         CheckParameterUtil.ensureParameterNotNull(listener, "listener");
         cmdListeners.add(listener);
     }
@@ -89,7 +90,8 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
      * Removes a command listener.
      * @param listener
      */
-    public void removeCommandListener(ICommandListener listener) {
+    @Override
+	public void removeCommandListener(ICommandListener listener) {
         CheckParameterUtil.ensureParameterNotNull(listener, "listener");
         cmdListeners.remove(listener);
     }
@@ -111,7 +113,8 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
         }
     }
 
-    public OsmPrimitive getOsmObject() {
+    @Override
+	public OsmPrimitive getOsmObject() {
         return osmObject;
     }
 
@@ -147,7 +150,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
      */
     protected void setOSMTag(String tag, String newValue) {
         CheckParameterUtil.ensureParameterNotNull(tag, "tag");
-        
+
 
         if (osmObject != null) {
                 String existingValue = osmObject.get(tag);
@@ -155,7 +158,7 @@ public class OSMEntityBase implements IOSMEntity, Comparable<IOSMEntity> {
                 if (!StringUtils.isNullOrEmpty(existingValue)) {
                     return;
                 }
-                
+
             if ((osmObject.hasKey(tag) && newValue == null) || newValue != null) {
                 fireCommandIssued(new ChangePropertyCommand(osmObject, tag, newValue));
                 fireEntityChanged(this);

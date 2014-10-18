@@ -28,9 +28,9 @@ public class LakewalkerWMS {
     private int imagey;
 
     // Vector to cache images in memory
-    private List<BufferedImage> images = new Vector<BufferedImage>();
+    private List<BufferedImage> images = new Vector<>();
     // Hashmap to hold the mapping of cached images
-    private Map<String,Integer> imageindex = new HashMap<String,Integer>();
+    private Map<String,Integer> imageindex = new HashMap<>();
 
     private int resolution;
     private int tilesize;

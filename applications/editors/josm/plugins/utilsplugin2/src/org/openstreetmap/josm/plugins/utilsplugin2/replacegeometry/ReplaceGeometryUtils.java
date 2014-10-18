@@ -115,7 +115,7 @@ public final class ReplaceGeometryUtils {
             throw new ReplaceGeometryException(tr("Node belongs to way(s), cannot replace."));
         }
         // FIXME: handle different layers
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
         commands.add(MergeNodesAction.mergeNodes(Main.main.getEditLayer(), Arrays.asList(subjectNode, referenceNode), referenceNode));
 
         return new ReplaceGeometryCommand(
@@ -142,7 +142,7 @@ public final class ReplaceGeometryUtils {
         // see if we need to replace a node in the replacement way to preserve connection in history
         if (!subjectNode.isNew()) {
             // Prepare a list of nodes that are not important
-            Collection<Node> nodePool = new HashSet<Node>();
+            Collection<Node> nodePool = new HashSet<>();
             if (referenceObject instanceof Way) {
                 nodePool.addAll(getUnimportantNodes((Way) referenceObject));
             } else if (referenceObject instanceof Relation) {
@@ -160,7 +160,7 @@ public final class ReplaceGeometryUtils {
             nodeToReplace = findNearestNode(subjectNode, nodePool);
         }
 
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
         AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) subjectNode.getKeys();
 
         // merge tags
@@ -247,7 +247,7 @@ public final class ReplaceGeometryUtils {
                     tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."));
         }
 
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
                 
         // merge tags
         try {
@@ -261,7 +261,7 @@ public final class ReplaceGeometryUtils {
         List<Node> nodePool = getUnimportantNodes(subjectWay);
 
         // And the same for geometry, list nodes that can be freely deleted
-        List<Node> geometryPool = new LinkedList<Node>();
+        List<Node> geometryPool = new LinkedList<>();
         for( Node node : referenceWay.getNodes() ) {
             List<OsmPrimitive> referrers = node.getReferrers();
             if( node.isNew() && !node.isDeleted() && referrers.size() == 1
@@ -274,7 +274,7 @@ public final class ReplaceGeometryUtils {
         
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
         // Assign node moves with least overall distance moved
-        Map<Node, Node> nodeAssoc = new HashMap<Node, Node>();
+        Map<Node, Node> nodeAssoc = new HashMap<>();
         if (geometryPool.size() > 0 && nodePool.size() > 0) {
             if (useRobust) {  // use robust, but slower assignment
                 int gLen = geometryPool.size();
@@ -318,7 +318,7 @@ public final class ReplaceGeometryUtils {
                     new Notification(
                         tr("Exceeded iteration limit for robust method, using simpler method.")
                     ).setIcon(JOptionPane.WARNING_MESSAGE).show();     
-                    nodeAssoc = new HashMap<Node, Node>();
+                    nodeAssoc = new HashMap<>();
                 }
             }
             if (!useRobust) { // use simple, faster, but less robust assignment method
@@ -374,7 +374,7 @@ public final class ReplaceGeometryUtils {
      * @return 
      */
     protected static List<Node> getUnimportantNodes(Way way) {
-        List<Node> nodePool = new LinkedList<Node>();
+        List<Node> nodePool = new LinkedList<>();
         for (Node n : way.getNodes()) {
             List<OsmPrimitive> referrers = n.getReferrers();
             if (!n.isDeleted() && referrers.size() == 1 && referrers.get(0).equals(way)

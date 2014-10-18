@@ -144,7 +144,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
      * @param cbHistory
      */
     protected void restoreChangesetsHistory(HistoryComboBox cbHistory) {
-        List<String> cmtHistory = new LinkedList<String>(Main.pref.getCollection(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
+        List<String> cmtHistory = new LinkedList<>(Main.pref.getCollection(getClass().getName() + ".changesetsHistory", new LinkedList<String>()));
         // we have to reverse the history, because ComboBoxHistory will reverse it again in addElement()
         Collections.reverse(cmtHistory);
         cbHistory.setPossibleItems(cmtHistory);

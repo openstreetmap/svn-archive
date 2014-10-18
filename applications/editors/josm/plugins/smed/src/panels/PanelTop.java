@@ -31,7 +31,7 @@ public class PanelTop extends JPanel {
 	public JRadioButton triangleInvDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/TriangleInvDayButton.png")));
 	public JRadioButton squareDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquareDayButton.png")));
 	public JRadioButton circleDayButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/CircleDayButton.png")));
-	private EnumMap<Top, JRadioButton> tops = new EnumMap<Top, JRadioButton>(Top.class);
+	private EnumMap<Top, JRadioButton> tops = new EnumMap<>(Top.class);
 	private ActionListener alTop = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Top top : tops.keySet()) {

@@ -187,7 +187,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
         if (adjustableLayers.size()==1) return adjustableLayers.get(0);
         JComboBox<Layer> layerList = new JComboBox<>();
         layerList.setRenderer(new LayerListCellRenderer());
-        layerList.setModel(new DefaultComboBoxModel<Layer>(adjustableLayers.toArray(new Layer[0])));
+        layerList.setModel(new DefaultComboBoxModel<>(adjustableLayers.toArray(new Layer[0])));
         layerList.setSelectedIndex(0);
 
         JPanel pnl = new JPanel();

@@ -28,12 +28,12 @@ import org.openstreetmap.josm.tools.Geometry;
  */
 public class MultiTaggerTableModel extends AbstractTableModel implements SelectionChangedListener {
 
-    ArrayList<OsmPrimitive> list = new ArrayList<OsmPrimitive>(50);
+    ArrayList<OsmPrimitive> list = new ArrayList<>(50);
     String mainTags[] = new String[]{};
     boolean isSpecialTag[] = new boolean[]{};
-    Set<OsmPrimitiveType> shownTypes = new HashSet<OsmPrimitiveType>();
+    Set<OsmPrimitiveType> shownTypes = new HashSet<>();
     private boolean autoCommit = true;
-    List<Command> cmds = new ArrayList<Command>();
+    List<Command> cmds = new ArrayList<>();
     private boolean watchSelection = true;
     private JTable table;
 

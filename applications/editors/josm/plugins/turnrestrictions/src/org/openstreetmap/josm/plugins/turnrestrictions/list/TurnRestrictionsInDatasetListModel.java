@@ -46,7 +46,7 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
      * @return the list of turn restrictions 
      */
     protected List<Relation> filterTurnRestrictions(Collection<? extends OsmPrimitive> primitives) {
-        List<Relation> ret = new LinkedList<Relation>();
+        List<Relation> ret = new LinkedList<>();
         if (primitives == null) return ret;
         for(OsmPrimitive p: primitives){
             if (!isTurnRestriction(p)) continue;
@@ -63,7 +63,7 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
             setTurnRestrictions(null);
             return;
         }
-        List<Relation> turnRestrictions = new LinkedList<Relation>();
+        List<Relation> turnRestrictions = new LinkedList<>();
         for (Relation r: newLayer.data.getRelations()) {
             if (isValid(r) && isTurnRestriction(r)) {
                 turnRestrictions.add(r);

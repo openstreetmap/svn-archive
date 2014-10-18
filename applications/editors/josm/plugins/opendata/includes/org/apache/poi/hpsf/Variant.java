@@ -135,7 +135,7 @@ public class Variant
     static
     {
         /* Initialize the number-to-name map: */
-        Map<Long, Object> tm1 = new HashMap<Long, Object>();
+        Map<Long, Object> tm1 = new HashMap<>();
         tm1.put(Long.valueOf(0), "VT_EMPTY");
         tm1.put(Long.valueOf(1), "VT_NULL");
         tm1.put(Long.valueOf(2), "VT_I2");
@@ -176,7 +176,7 @@ public class Variant
         tm1.put(Long.valueOf(70), "VT_BLOB_OBJECT");
         tm1.put(Long.valueOf(71), "VT_CF");
         tm1.put(Long.valueOf(72), "VT_CLSID");
-        Map<Long, Object> tm2 = new HashMap<Long, Object>(tm1.size(), 1.0F);
+        Map<Long, Object> tm2 = new HashMap<>(tm1.size(), 1.0F);
         tm2.putAll(tm1);
         numberToName = Collections.unmodifiableMap(tm2);
 
@@ -222,7 +222,7 @@ public class Variant
         tm1.put(Long.valueOf(70), LENGTH_UNKNOWN);
         tm1.put(Long.valueOf(71), LENGTH_UNKNOWN);
         tm1.put(Long.valueOf(72), LENGTH_UNKNOWN);
-        tm2 = new HashMap<Long, Object>(tm1.size(), 1.0F);
+        tm2 = new HashMap<>(tm1.size(), 1.0F);
         tm2.putAll(tm1);
     }
 

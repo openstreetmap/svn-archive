@@ -24,7 +24,7 @@ public class PanelPat extends JPanel {
 	public JRadioButton diagButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/DiagonalButton.png")));
 	public JRadioButton squareButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/SquaredButton.png")));
 	public JRadioButton borderButton = new JRadioButton(new ImageIcon(getClass().getResource("/images/BorderButton.png")));
-	public EnumMap<Pat, JRadioButton> patterns = new EnumMap<Pat, JRadioButton>(Pat.class);
+	public EnumMap<Pat, JRadioButton> patterns = new EnumMap<>(Pat.class);
 	private ActionListener alPat = new ActionListener() {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			for (Pat pat : patterns.keySet()) {

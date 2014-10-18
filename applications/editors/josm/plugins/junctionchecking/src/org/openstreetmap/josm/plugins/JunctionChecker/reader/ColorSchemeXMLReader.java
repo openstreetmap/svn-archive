@@ -30,7 +30,7 @@ public class ColorSchemeXMLReader extends XMLReader{
 
     @Override
     public void parseXML() {
-        colorScheme = new HashMap<String, Color>();
+        colorScheme = new HashMap<>();
         String tempValue;
         //String tempKeyValue ="";
         try {

@@ -120,8 +120,8 @@ public class OhePlugin extends Plugin {
             // handling of multiple objects and their tags
             // copied from
             // org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog[rev4079][line802]
-            Map<String, Integer> keyCount = new HashMap<String, Integer>();
-            Map<String, Map<String, Integer>> valueCount = new TreeMap<String, Map<String, Integer>>();
+            Map<String, Integer> keyCount = new HashMap<>();
+            Map<String, Map<String, Integer>> valueCount = new TreeMap<>();
             for (OsmPrimitive osm : selection) {
                 for (String key : osm.keySet()) {
                     String value = osm.get(key);
@@ -130,7 +130,7 @@ public class OhePlugin extends Plugin {
                         Map<String, Integer> v = valueCount.get(key);
                         v.put(value, v.containsKey(value) ? v.get(value) + 1 : 1);
                     } else {
-                        TreeMap<String, Integer> v = new TreeMap<String, Integer>();
+                        TreeMap<String, Integer> v = new TreeMap<>();
                         v.put(value, 1);
                         valueCount.put(key, v);
                     }
@@ -324,17 +324,17 @@ public class OhePlugin extends Plugin {
             if (key.equals(newkey) || value == null) {
                 Main.main.undoRedo.add(new ChangePropertyCommand(selection, newkey, value));
             } else {
-                Collection<Command> commands = new Vector<Command>();
+                Collection<Command> commands = new Vector<>();
                 commands.add(new ChangePropertyCommand(selection, key, null));
                 if (value.equals(tr("<different>"))) {
-                    HashMap<String, Vector<OsmPrimitive>> map = new HashMap<String, Vector<OsmPrimitive>>();
+                    HashMap<String, Vector<OsmPrimitive>> map = new HashMap<>();
                     for (OsmPrimitive osm : selection) {
                         String val = osm.get(key);
                         if (val != null) {
                             if (map.containsKey(val)) {
                                 map.get(val).add(osm);
                             } else {
-                                Vector<OsmPrimitive> v = new Vector<OsmPrimitive>();
+                                Vector<OsmPrimitive> v = new Vector<>();
                                 v.add(osm);
                                 map.put(val, v);
                             }

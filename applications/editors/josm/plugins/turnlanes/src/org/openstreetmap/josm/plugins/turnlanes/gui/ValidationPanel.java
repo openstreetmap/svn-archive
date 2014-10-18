@@ -73,7 +73,7 @@ class ValidationPanel extends JPanel {
     private final SideButton selectButton = new SideButton(selectAction);
     
     private final DefaultTableModel issueModel = new DefaultTableModel(COLUMN_NAMES, 0);
-    private final List<Issue> issues = new ArrayList<Issue>();
+    private final List<Issue> issues = new ArrayList<>();
     private final JTable issueTable = new JTable(issueModel) {
         private static final long serialVersionUID = 6323348290180585298L;
         

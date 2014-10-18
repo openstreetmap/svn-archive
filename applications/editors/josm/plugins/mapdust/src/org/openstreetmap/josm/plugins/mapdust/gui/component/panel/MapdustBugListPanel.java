@@ -72,7 +72,7 @@ public class MapdustBugListPanel extends JPanel implements
 
     /** The list of observers */
     private final ArrayList<MapdustBugDetailsObserver> observers =
-            new ArrayList<MapdustBugDetailsObserver>();
+            new ArrayList<>();
 
     /** The list of <code>MapdustBug</code> objects */
     private List<MapdustBug> mapdustBugsList;

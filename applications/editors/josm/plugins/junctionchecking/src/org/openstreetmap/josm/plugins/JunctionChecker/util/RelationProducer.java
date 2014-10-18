@@ -23,14 +23,14 @@ public class RelationProducer {
 
     public RelationProducer(JunctionCheckerPlugin plugin) {
         this.plugin = plugin;
-        storedRelations = new HashSet<HashSet<Channel>>();
+        storedRelations = new HashSet<>();
     }
 
     public void produceRelation(HashSet<Channel> subset, int n) {
         if (isProduced(subset)) {
             return;
         }
-        LinkedList<OsmPrimitive> ways = new LinkedList<OsmPrimitive>();
+        LinkedList<OsmPrimitive> ways = new LinkedList<>();
         Iterator<Channel> cit = subset.iterator();
         while (cit.hasNext()) {
             Channel c = cit.next();

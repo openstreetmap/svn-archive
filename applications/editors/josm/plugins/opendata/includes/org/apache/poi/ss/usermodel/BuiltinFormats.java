@@ -74,7 +74,7 @@ public final class BuiltinFormats {
 	private final static String[] _formats;
 
 	static {
-		List<String> m = new ArrayList<String>();
+		List<String> m = new ArrayList<>();
 		putFormat(m, 0, "General");
 		putFormat(m, 1, "0");
 		putFormat(m, 2, "0.00");

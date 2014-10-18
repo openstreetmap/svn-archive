@@ -24,10 +24,10 @@ import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 public class CanVecTile {
 	CanvecLayer layer;
 	public boolean can_download = false;
-	private ArrayList<String> sub_tile_ids = new ArrayList<String>();
+	private ArrayList<String> sub_tile_ids = new ArrayList<>();
 	private boolean zip_scanned = false;
 	
-	private ArrayList<CanVecTile> sub_tiles = new ArrayList<CanVecTile>();
+	private ArrayList<CanVecTile> sub_tiles = new ArrayList<>();
 	private boolean sub_tiles_made = false;
 
 	private ArrayList<String> index;
@@ -231,7 +231,7 @@ public class CanVecTile {
 		}
 	}
 	private void make_sub_tiles(int layer) {
-		ArrayList<String> buffer = new ArrayList<String>();
+		ArrayList<String> buffer = new ArrayList<>();
 		Pattern p;
 		if (sub_tiles_made) return;
 		switch (layer) {
@@ -249,7 +249,7 @@ public class CanVecTile {
 					buffer.add(m.group(0));
 				} else {
 					sub_tiles.add(new CanVecTile(corda,last_cell,0,"",this.layer,buffer));
-					buffer = new ArrayList<String>();
+					buffer = new ArrayList<>();
 					buffer.add(m.group(0));
 				}
 				last_cell = cell;
@@ -270,7 +270,7 @@ public class CanVecTile {
 					buffer.add(m.group(0));
 				} else {
 					sub_tiles.add(new CanVecTile(corda,cordb,last_cell2,"",this.layer,buffer));
-					buffer = new ArrayList<String>();
+					buffer = new ArrayList<>();
 					buffer.add(m.group(0));
 				}
 				last_cell2 = cell;

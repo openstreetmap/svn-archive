@@ -98,7 +98,7 @@ public class AlignWaysGeomPoint {
     private static int getMiddleOf3(double d1, double d2, double d3) {
         
         Double[] dValues = {d1, d2, d3};
-        ArrayList<Double> alValues = new ArrayList<Double>(Arrays.asList(dValues));
+        ArrayList<Double> alValues = new ArrayList<>(Arrays.asList(dValues));
         Collections.sort(alValues);
         
         if ((Math.abs(alValues.get(1) - alValues.get(0)) < 0.01) ||

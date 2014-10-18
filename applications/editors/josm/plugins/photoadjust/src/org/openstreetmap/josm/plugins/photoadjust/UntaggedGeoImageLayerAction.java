@@ -40,7 +40,7 @@ public class UntaggedGeoImageLayerAction
     public void actionPerformed(ActionEvent arg0) {
         GeoImageLayer layer = getSelectedLayer();
         if (layer != null) {
-            List<ImageEntry> untagged = new ArrayList<ImageEntry>();
+            List<ImageEntry> untagged = new ArrayList<>();
             List<ImageEntry> images = layer.getImages();
             ImageEntry img;
             for (int idx = images.size() - 1; idx >= 0; idx--) {

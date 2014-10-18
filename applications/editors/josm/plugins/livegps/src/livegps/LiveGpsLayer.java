@@ -55,7 +55,7 @@ public class LiveGpsLayer extends GpxLayer implements PropertyChangeListener {
         super(data, LAYER_NAME);
         trackSegment = new AppendableGpxTrackSegment();
 
-        Map<String, Object> attr = new HashMap<String, Object>();
+        Map<String, Object> attr = new HashMap<>();
         attr.put("desc", "josm live gps");
 
         GpxTrack trackBeingWritten = new SingleSegmentGpxTrack(trackSegment, attr);

@@ -7,16 +7,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 
 public class DrawnPolyLine {
     MapView mv;
-    private LinkedList<LatLon> points = new LinkedList<LatLon>();
-    private LinkedList<LatLon> simplePoints = new LinkedList<LatLon>();
+    private LinkedList<LatLon> points = new LinkedList<>();
+    private LinkedList<LatLon> simplePoints = new LinkedList<>();
     private Set<LatLon> used;
-    private Set<LatLon> fixed = new HashSet<LatLon>();
-    
+    private Set<LatLon> fixed = new HashSet<>();
+
     private int lastIdx;
     private boolean closedFlag;
 
@@ -30,7 +31,7 @@ public class DrawnPolyLine {
     boolean isFixed(LatLon pp2) {
         return fixed.contains(pp2);
     }
-    
+
     double getLength() {
         List<LatLon> pts = getPoints();
         Iterator<LatLon> it1,it2;
@@ -54,7 +55,7 @@ public class DrawnPolyLine {
     boolean wasSimplified() {
         return (simplePoints!=null && simplePoints.size()>0);
     }
-    
+
     int findClosestPoint(Point p, double d) {
         double x=p.x, y=p.y;
         int n=points.size();
@@ -86,7 +87,7 @@ public class DrawnPolyLine {
         lastIdx--;
         }
     }
-    
+
     void fixPoint(LatLon p) {
         fixed.add(p);
     }
@@ -99,24 +100,24 @@ public class DrawnPolyLine {
     public Set<LatLon> getFixedPoints() {
         return fixed;
     }
-    
+
     void addLast(LatLon coor) {
         if (closedFlag && lastIdx>points.size()-1) return;
         if (lastIdx>=points.size()-1) {
-            // 
+            //
             if (points.isEmpty() || !coor.equals(points.getLast())) {
-                points.addLast(coor); 
+                points.addLast(coor);
                 if (points.size()>1) lastIdx++;
                 }
         } else {
             // insert point into midlle of the line
             if (points.isEmpty() || !coor.equals(points.get(lastIdx))) {
-                points.add(lastIdx+1, coor); 
-                lastIdx++; 
+                points.add(lastIdx+1, coor);
+                lastIdx++;
             }
         }
     }
-  
+
     Point getLastPoint() {
         if (lastIdx<points.size()) return getPoint(points.get(lastIdx));
         else return null;
@@ -125,11 +126,11 @@ public class DrawnPolyLine {
     Point getPoint(LatLon p) {
         return mv.getPoint(p);
     }
-    
+
     int getSimplePointsCount() {
         if (simplePoints!=null)return simplePoints.size(); else return -1;
     }
-    
+
     /**
      * Increase epsilon to fit points count in maxPKM point per 1 km
      */
@@ -145,7 +146,7 @@ public class DrawnPolyLine {
         }
         return e;
     }
-            
+
     /**
      * Simplified drawn line, not touching the nodes includes in "fixed" set.
      */
@@ -153,7 +154,7 @@ public class DrawnPolyLine {
         //System.out.println("Simplify polyline...");
         int n = points.size();
         if (n < 3) return;
-        used = new HashSet<LatLon>(n);
+        used = new HashSet<>(n);
         int start = 0;
         for (int i = 0; i < n; i++) {
             LatLon p = points.get(i);
@@ -165,7 +166,7 @@ public class DrawnPolyLine {
                 }
             }
         }
-        simplePoints = new LinkedList<LatLon>();
+        simplePoints = new LinkedList<>();
         simplePoints.addAll(points);
         simplePoints.retainAll(used);
         //Main.map.mapView.repaint();
@@ -191,7 +192,7 @@ public class DrawnPolyLine {
         used.add(last);
 
         if (end - start < 2) return;
-        
+
         int farthest_node = -1;
         double farthest_dist = 0;
 
@@ -232,15 +233,15 @@ public class DrawnPolyLine {
     boolean isClosed() {
         return closedFlag;
     }
-    
+
     void deleteNode(int idx) {
         if (idx<=lastIdx) lastIdx--;
         fixed.remove(points.get(idx));
-        points.remove(idx); 
+        points.remove(idx);
     }
     void tryToDeleteSegment(Point p) {
         if (points.size()<3) return;
-        
+
         LatLon start;
         start = findBigSegment(p);
         ListIterator<LatLon> it= points.listIterator();
@@ -260,9 +261,9 @@ public class DrawnPolyLine {
                 lastIdx=points.size()-1;
                 return;
             }
-            
+
             // if we are deleting this segment
-            if (f) it.remove(); 
+            if (f) it.remove();
             if (pp == start) {f=true;idx=i;} // next node should be removed
             i++;
         }
@@ -272,7 +273,7 @@ public class DrawnPolyLine {
     /** find starting point of the polyline line fragment close to p
      *  line fragment = segments between two fixed (green) nodes
      * @param p
-     * @return 
+     * @return
      */
     LatLon findBigSegment(Point p) {
         if (points.size()<2) return null;
@@ -290,15 +291,15 @@ public class DrawnPolyLine {
         if (fixed.contains(pp1) ) { start=pp1; }
         if (pointSegmentDistance(p,p1,p2) < 5) {
             return start;
-        } 
+        }
         } while (it2.hasNext());
         return null;
-        
+
     }
 
     private double pointSegmentDistance(Point p, Point p1, Point p2) {
         double a,b,x,y,l,kt,kn,dist;
-        x=p.x-p1.x; y=p.y-p1.y; 
+        x=p.x-p1.x; y=p.y-p1.y;
         a=p2.x-p1.x; b=p2.y-p1.y;
         l=Math.hypot(a,b);
         if (l==0) return Math.hypot(x, y); // p1 = p2
@@ -343,7 +344,7 @@ public class DrawnPolyLine {
                 fixed.add(coor);
          }
     }
-        
+
     /**
      * Returns maximum number of simplified line points divided by line segment length
      * max((k-1) / (L(i,i+1)+L(i+1,i+2)+...+L(i+k-1,i+k))) [ i=1..n-k ]
@@ -356,7 +357,7 @@ public class DrawnPolyLine {
         if (n<2) return 0;
         if (k<2) k=2;
         if (k>n) k=n;
-        
+
         LatLon pp1, pp2=null;
         Iterator<LatLon> it1,it2;
         it1=pts.listIterator(0);
@@ -384,7 +385,7 @@ public class DrawnPolyLine {
                 }
             }
         return Math.round(maxpkm);
-            
+
     }
 
     int getPointCount() {

@@ -24,13 +24,13 @@ public class ProposalDatabase implements TreeModel {
      * The internal database of {@link ProposalContainer}s.
      */
     protected List<ProposalContainer> changeSet =
-             new ArrayList<ProposalContainer>();
+             new ArrayList<>();
 
     /**
      * Listeners for the {@link TreeModel} interface.
      */
     protected List<TreeModelListener> listeners =
-            new ArrayList<TreeModelListener>();
+            new ArrayList<>();
 
     /**
      * The root element for the {@link TreeView}.

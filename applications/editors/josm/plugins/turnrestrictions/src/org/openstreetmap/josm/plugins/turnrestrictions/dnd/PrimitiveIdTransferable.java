@@ -34,7 +34,7 @@ public class PrimitiveIdTransferable implements Transferable{
     };
 
     
-    private List<PrimitiveId> ids = new ArrayList<PrimitiveId>();
+    private List<PrimitiveId> ids = new ArrayList<>();
     
     /**
      * Creates a transferable from a collection of {@link PrimitiveId}s

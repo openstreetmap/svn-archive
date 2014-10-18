@@ -159,7 +159,7 @@ public class RoutingGraph {
     public void createGraph() {
 
         logger.debug("Creating Graph...");
-        graph = new DirectedWeightedMultigraph<Node, OsmEdge>(OsmEdge.class);
+        graph = new DirectedWeightedMultigraph<>(OsmEdge.class);
         rgDelegator=new RoutingGraphDelegator(graph);
         rgDelegator.setRouteType(this.routeType);
         // iterate all ways and segments for all nodes:
@@ -346,7 +346,7 @@ public class RoutingGraph {
      * @return new path.
      */
     public List<OsmEdge> applyAlgorithm(List<Node> nodes, Algorithm algorithm) {
-        List<OsmEdge> path = new ArrayList<OsmEdge>();
+        List<OsmEdge> path = new ArrayList<>();
         Graph<Node,OsmEdge> g;
         double totalWeight = 0;
         RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
@@ -369,7 +369,7 @@ public class RoutingGraph {
             logger.debug("Using Dijkstra algorithm");
             DijkstraShortestPath<Node, OsmEdge> routingk = null;
             for (int index = 1; index < nodes.size(); ++index) {
-                routingk = new DijkstraShortestPath<Node, OsmEdge>(g, nodes
+                routingk = new DijkstraShortestPath<>(g, nodes
                         .get(index - 1), nodes.get(index));
                 if (routingk.getPathEdgeList() == null) {
                     logger.debug("no path found!");

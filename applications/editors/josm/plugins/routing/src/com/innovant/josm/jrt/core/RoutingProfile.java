@@ -74,7 +74,7 @@ public class RoutingProfile {
     public RoutingProfile(String name) {
         logger.debug("Init RoutingProfile with name: "+name);
         this.name = name;
-        waySpeeds=new HashMap<String,Double>();
+        waySpeeds=new HashMap<>();
         Map<String,String> prefs=Main.pref.getAllPrefix("routing.profile."+name+".speed");
         for(String key:prefs.keySet()){
             waySpeeds.put((key.split("\\.")[4]), Double.valueOf(prefs.get(key)));

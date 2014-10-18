@@ -18,8 +18,8 @@ public class TileDAOMapDB implements TileDAO {
     
     public static boolean dbNotAvailable = false;
 
-    protected HashMap<String, DB> dbs = new HashMap<String, DB>();
-    protected HashMap<String, Map<Long, DBTile>> storages = new HashMap<String, Map<Long, DBTile>>();
+    protected HashMap<String, DB> dbs = new HashMap<>();
+    protected HashMap<String, Map<Long, DBTile>> storages = new HashMap<>();
     private File cacheFolder;
     
     

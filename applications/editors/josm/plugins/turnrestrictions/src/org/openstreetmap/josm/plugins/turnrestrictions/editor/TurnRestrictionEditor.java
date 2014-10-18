@@ -440,7 +440,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
          * a deleted or invisible member
          */
         protected List<RelationMember> getDeletedRelationMembers(Relation r) {
-            List<RelationMember> ret = new ArrayList<RelationMember>();
+            List<RelationMember> ret = new ArrayList<>();
             for(RelationMember rm: r.getMembers()) {
                 if (rm.getMember().isDeleted() || !rm.getMember().isVisible()) {
                     ret.add(rm);
@@ -566,7 +566,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         protected void applyExistingConflictingTurnRestriction() {
             Relation toUpdate = new Relation(getTurnRestriction());
             editorModel.apply(toUpdate);
-            Conflict<Relation> conflict = new Conflict<Relation>(getTurnRestriction(), toUpdate);
+            Conflict<Relation> conflict = new Conflict<>(getTurnRestriction(), toUpdate);
             Main.main.undoRedo.add(new ConflictAddCommand(getLayer(),conflict));
         }
 

@@ -68,7 +68,7 @@ public class Routes {
      */
     public List<RoutesXMLLayer> getLayer() {
         if (layer == null) {
-            layer = new ArrayList<RoutesXMLLayer>();
+            layer = new ArrayList<>();
         }
         return this.layer;
     }

@@ -100,7 +100,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
         rulesetFolder = preferences.getRulesetFolder();
 
         parameterBookmarks =
-            new HashMap<String, PreferenceAccessParameters>(preferences.getParameterBookmarks());
+            new HashMap<>(preferences.getParameterBookmarks());
 
     }
 
@@ -348,7 +348,7 @@ public class GraphViewPreferenceEditor extends DefaultTabPreferenceSetting {
                 PreferenceAccessParameters parameters =
                     parameterBookmarks.get(selectedBookmarkName);
 
-                Collection<String> otherBookmarkNames = new LinkedList<String>();
+                Collection<String> otherBookmarkNames = new LinkedList<>();
                 for (String bookmarkName : parameterBookmarks.keySet()) {
                     if (!bookmarkName.equals(selectedBookmarkName)) {
                         otherBookmarkNames.add(bookmarkName);

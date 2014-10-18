@@ -124,7 +124,7 @@ public final class RecordFactoryInputStream {
 	 */
 	public RecordFactoryInputStream(InputStream in, boolean shouldIncludeContinueRecords) {
 		RecordInputStream rs = new RecordInputStream(in);
-		List<Record> records = new ArrayList<Record>();
+		List<Record> records = new ArrayList<>();
 		StreamEncryptionInfo sei = new StreamEncryptionInfo(rs, records);
 
 		if (!records.isEmpty()) {

@@ -8,7 +8,7 @@ import java.util.HashSet;
  */
 public class Filter {
     
-    private HashSet<String> tagValues = new HashSet<String>();
+    private HashSet<String> tagValues = new HashSet<>();
     private String keyValue;
     
     public Filter(String keyname, ArrayList<String> values) {

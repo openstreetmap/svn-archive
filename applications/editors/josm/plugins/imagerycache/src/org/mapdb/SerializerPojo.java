@@ -58,10 +58,10 @@ public class SerializerPojo extends SerializerBase{
 
         @Override
 		public CopyOnWriteArrayList<ClassInfo> deserialize(DataInput in, int available) throws IOException{
-            if(available==0) return new CopyOnWriteArrayList<ClassInfo>();
+            if(available==0) return new CopyOnWriteArrayList<>();
 
             int size = Utils.unpackInt(in);
-            ArrayList<ClassInfo> ret = new ArrayList<ClassInfo>(size);
+            ArrayList<ClassInfo> ret = new ArrayList<>(size);
 
             for (int i = 0; i < size; i++) {
                 String className = in.readUTF();
@@ -75,7 +75,7 @@ public class SerializerPojo extends SerializerBase{
                 }
                 ret.add(new ClassInfo(className, fields,isEnum,isExternalizable));
             }
-            return new CopyOnWriteArrayList<ClassInfo>(ret);
+            return new CopyOnWriteArrayList<>(ret);
         }
     };
 
@@ -94,7 +94,7 @@ public class SerializerPojo extends SerializerBase{
 
     public SerializerPojo(CopyOnWriteArrayList<ClassInfo> registered){
         if(registered == null)
-            this.registered = new CopyOnWriteArrayList<ClassInfo>();
+            this.registered = new CopyOnWriteArrayList<>();
         else
             this.registered = registered;
     }
@@ -106,9 +106,9 @@ public class SerializerPojo extends SerializerBase{
     protected static class ClassInfo {
 
         private final String name;
-        private final List<FieldInfo> fields = new ArrayList<FieldInfo>();
-        private final Map<String, FieldInfo> name2fieldInfo = new HashMap<String, FieldInfo>();
-        private final Map<String, Integer> name2fieldId = new HashMap<String, Integer>();
+        private final List<FieldInfo> fields = new ArrayList<>();
+        private final Map<String, FieldInfo> name2fieldInfo = new HashMap<>();
+        private final Map<String, Integer> name2fieldId = new HashMap<>();
         private ObjectStreamField[] objectStreamFields;
 
         final boolean isEnum;
@@ -289,8 +289,8 @@ public class SerializerPojo extends SerializerBase{
 
 
     CopyOnWriteArrayList<ClassInfo> registered;
-    Map<Class<?>, Integer> class2classId = new HashMap<Class<?>, Integer>();
-    Map<Integer, Class<?>> classId2class = new HashMap<Integer, Class<?>>();
+    Map<Class<?>, Integer> class2classId = new HashMap<>();
+    Map<Integer, Class<?>> classId2class = new HashMap<>();
 
 
 
@@ -332,7 +332,7 @@ public class SerializerPojo extends SerializerBase{
         }
         if (fields == null) {
             ObjectStreamClass streamClass = ObjectStreamClass.lookup(clazz);
-            FastArrayList<ObjectStreamField> fieldsList = new FastArrayList<ObjectStreamField>();
+            FastArrayList<ObjectStreamField> fieldsList = new FastArrayList<>();
             while (streamClass != null) {
                 for (ObjectStreamField f : streamClass.getFields()) {
                     fieldsList.add(f);
@@ -566,7 +566,7 @@ public class SerializerPojo extends SerializerBase{
     }
 
 
-    private static Map<Class<?>, Constructor<?>> class2constuctor = new ConcurrentHashMap<Class<?>, Constructor<?>>();
+    private static Map<Class<?>, Constructor<?>> class2constuctor = new ConcurrentHashMap<>();
 
     /**
      * For pojo serialization we need to instanciate class without invoking its constructor.

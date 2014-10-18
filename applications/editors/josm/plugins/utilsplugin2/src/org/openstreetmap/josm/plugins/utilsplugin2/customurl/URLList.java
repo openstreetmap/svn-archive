@@ -22,7 +22,7 @@ public class URLList {
         Main.pref.put("utilsplugin2.customurl",url);
     }    
     public static List<String> resetURLList() {
-        List<String> items=new ArrayList<String>();
+        List<String> items=new ArrayList<>();
         items.add("Wikipedia");
         items.add("https://en.wikipedia.org/w/index.php?search={name}&fulltext=Search");
         items.add("Wikipedia RU");
@@ -59,7 +59,7 @@ public class URLList {
     }
     
     public static  List<String> loadURLList() {
-        ArrayList<String> items=new ArrayList<String>();
+        ArrayList<String> items=new ArrayList<>();
         BufferedReader fr=null;
         try {
         File f = new File (Main.pref.getPreferencesDir(),"customurl.txt");

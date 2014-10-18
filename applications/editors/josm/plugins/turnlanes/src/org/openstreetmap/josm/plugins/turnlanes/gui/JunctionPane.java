@@ -161,7 +161,7 @@ class JunctionPane extends JComponent {
     private BufferedImage passive;
     private BufferedImage interactive;
     
-    private final NavigableMap<Integer, List<InteractiveElement>> interactives = new TreeMap<Integer, List<InteractiveElement>>();
+    private final NavigableMap<Integer, List<InteractiveElement>> interactives = new TreeMap<>();
     private State state;
     private InteractiveElement dragging;
     
@@ -422,7 +422,7 @@ class JunctionPane extends JComponent {
     }
     
     private List<InteractiveElement> interactives() {
-        final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
+        final List<InteractiveElement> result = new ArrayList<>();
         
         for (List<InteractiveElement> ies : interactives.descendingMap().values()) {
             result.addAll(ies);
@@ -460,7 +460,7 @@ class JunctionPane extends JComponent {
             
             final List<InteractiveElement> list;
             if (existing == null) {
-                list = new ArrayList<InteractiveElement>();
+                list = new ArrayList<>();
                 interactives.put(ie.getZIndex(), list);
             } else {
                 list = existing;

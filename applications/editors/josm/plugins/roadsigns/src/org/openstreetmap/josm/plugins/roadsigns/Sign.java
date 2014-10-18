@@ -26,9 +26,9 @@ public class Sign {
     public ImageIcon disabledIcon;
     public String name;
     public String long_name;
-    public List<Tag> tags = new ArrayList<Tag>();
-    public List<Sign> supplements = new ArrayList<Sign>();
-    public List<SignParameter> params = new ArrayList<SignParameter>();
+    public List<Tag> tags = new ArrayList<>();
+    public List<Sign> supplements = new ArrayList<>();
+    public List<SignParameter> params = new ArrayList<>();
     public boolean isSupplementing;
     public String loc_wiki;
     public String wiki;

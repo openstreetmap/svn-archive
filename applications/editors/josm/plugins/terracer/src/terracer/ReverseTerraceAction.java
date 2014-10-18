@@ -54,12 +54,12 @@ public class ReverseTerraceAction extends JosmAction {
 
         // Set to keep track of all the nodes that have been visited - that is: if
         // we encounter them again we will not follow onto the connected ways.
-        HashSet<Node> visitedNodes = new HashSet<Node>();
+        HashSet<Node> visitedNodes = new HashSet<>();
 
         // Set to keep track of the ways the algorithm has seen, but not yet visited.
         // Since when a way is visited all of its nodes are marked as visited, there
         // is no need to keep a visitedWays set.
-        HashSet<Way> front = new HashSet<Way>();
+        HashSet<Way> front = new HashSet<>();
 
         // Find the first or last way from the teracced houses.
         // It should be connected to exactly one other way.
@@ -84,10 +84,10 @@ public class ReverseTerraceAction extends JosmAction {
         }
 
         // This is like a visitedWays set, but in a linear order.
-        LinkedList<Way> orderedWays = new LinkedList<Way>();
+        LinkedList<Way> orderedWays = new LinkedList<>();
 
         // And the tags to reverse on the orderedWays.
-        LinkedList<String> houseNumbers = new LinkedList<String>();
+        LinkedList<String> houseNumbers = new LinkedList<>();
 
         while (front.size() > 0) {
             // Java apparently doesn't have useful methods to get single items from sets...
@@ -113,7 +113,7 @@ public class ReverseTerraceAction extends JosmAction {
             houseNumbers.addFirst(w.get("addr:housenumber"));
         }
 
-        Collection<Command> commands = new LinkedList<Command>();
+        Collection<Command> commands = new LinkedList<>();
         for (int i = 0; i < orderedWays.size(); ++i) {
             commands.add(new ChangePropertyCommand(
                     orderedWays.get(i),

@@ -141,7 +141,7 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
     private final JToggleButton editButton = new JToggleButton(editAction);
     private final JToggleButton validateButton = new JToggleButton(validateAction);
     
-    private final Set<OsmPrimitive> selected = new HashSet<OsmPrimitive>();
+    private final Set<OsmPrimitive> selected = new HashSet<>();
     
     private boolean editing = true;
     private boolean wasShowing = false;
@@ -204,7 +204,7 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
 
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        if (selected.equals(new HashSet<OsmPrimitive>(newSelection))) {
+        if (selected.equals(new HashSet<>(newSelection))) {
             return;
         }
         selected.clear();

@@ -90,7 +90,7 @@ public class RelevanceSlider extends JSlider {
         setSnapToTicks(true);
         setFocusable(false);
         /* set label for the slider values */
-        Dictionary<Integer, JLabel> values = new Hashtable<Integer, JLabel>();
+        Dictionary<Integer, JLabel> values = new Hashtable<>();
         Font font = new Font("Times New Roman", Font.BOLD, 12);
         values.put(MapdustRelevanceValue.LOW.getSliderValue(), ComponentUtil
                 .createJLabel(MapdustRelevance.LOW.getName(), font, null, null));

@@ -41,7 +41,7 @@ public final class DataValidityTable extends RecordAggregate {
 
 	public DataValidityTable(RecordStream rs) {
 		_headerRec = (DVALRecord) rs.getNext();
-		List<Record> temp = new ArrayList<Record>();
+		List<Record> temp = new ArrayList<>();
 		while (rs.peekNextClass() == DVRecord.class) {
 			temp.add(rs.getNext());
 		}
@@ -50,7 +50,7 @@ public final class DataValidityTable extends RecordAggregate {
 
 	public DataValidityTable() {
 		_headerRec = new DVALRecord();
-		_validationList = new ArrayList<Record>();
+		_validationList = new ArrayList<>();
 	}
 
 	public void visitContainedRecords(RecordVisitor rv) {

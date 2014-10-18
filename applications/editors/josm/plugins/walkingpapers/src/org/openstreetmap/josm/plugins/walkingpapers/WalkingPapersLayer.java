@@ -111,7 +111,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
     }
 
     public void clearTileStorage() {
-        tileStorage = new HashMap<WalkingPapersKey, WalkingPapersTile>();
+        tileStorage = new HashMap<>();
         checkTileStorage();
     }
 
@@ -140,7 +140,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
         long now = System.currentTimeMillis();
         if (now - lastCheck < 1000) return;
         lastCheck = now;
-        TreeSet<WalkingPapersTile> tiles = new TreeSet<WalkingPapersTile>(new TileTimeComp());
+        TreeSet<WalkingPapersTile> tiles = new TreeSet<>(new TileTimeComp());
         tiles.addAll(tileStorage.values());
         int max_nr_tiles = 100;
         if (tiles.size() < max_nr_tiles) {

@@ -32,7 +32,7 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     private JCheckBoxMenuItem lgpsautocenter;
     private LiveGpsDialog lgpsdialog;
     /* List of foreign (e.g. other plugins) subscribers */
-    List<PropertyChangeListener> listenerQueue = new ArrayList<PropertyChangeListener>();
+    List<PropertyChangeListener> listenerQueue = new ArrayList<>();
 
     private GpxData data = new GpxData();
     private LiveGpsLayer lgpslayer = null;

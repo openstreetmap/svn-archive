@@ -295,7 +295,7 @@ class JunctionGui {
     final double x;
     final double y;
     
-    private final NavigableMap<Double, Linkage> roads = new TreeMap<Double, Linkage>();
+    private final NavigableMap<Double, Linkage> roads = new TreeMap<>();
     
     private final Path2D area = new Path2D.Double();
     
@@ -309,7 +309,7 @@ class JunctionGui {
         this.x = loc.getX();
         this.y = loc.getY();
         
-        final Set<Road> done = new HashSet<Road>();
+        final Set<Road> done = new HashSet<>();
         for (Road r : j.getRoads()) {
             if (!done.contains(r)) {
                 done.add(r);
@@ -362,7 +362,7 @@ class JunctionGui {
     }
     
     private Iterable<Corner> corners() {
-        final List<Corner> result = new ArrayList<JunctionGui.Corner>(roads.size());
+        final List<Corner> result = new ArrayList<>(roads.size());
         
         Linkage last = roads.lastEntry().getValue();
         for (Linkage l : roads.values()) {
@@ -395,7 +395,7 @@ class JunctionGui {
     }
     
     public Set<RoadGui> getRoads() {
-        final Set<RoadGui> result = new HashSet<RoadGui>();
+        final Set<RoadGui> result = new HashSet<>();
         
         for (Linkage l : roads.values()) {
             result.add(l.roadGui);
@@ -434,10 +434,10 @@ class JunctionGui {
         g2d.setColor(new Color(96, 96, 96));
         g2d.fill(area);
         
-        final List<InteractiveElement> result = new ArrayList<InteractiveElement>();
+        final List<InteractiveElement> result = new ArrayList<>();
         
         if (getModel().isPrimary()) {
-            for (Road.End r : new HashSet<Road.End>(getModel().getRoadEnds())) {
+            for (Road.End r : new HashSet<>(getModel().getRoadEnds())) {
                 for (Turn t : r.getTurns()) {
                     result.add(new TurnConnection(t));
                 }

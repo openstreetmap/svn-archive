@@ -7,7 +7,7 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 
 public class OsmFactory {
-    private static HashMap<String, OSMAddress> addressCache = new HashMap<String, OSMAddress>();
+    private static HashMap<String, OSMAddress> addressCache = new HashMap<>();
 
     /**
      * Creates an address node from an OSM node, if possible.

@@ -28,7 +28,7 @@ public class Database {
     /**
      * List of regions, which are in this database.
      */
-    public ArrayList<Region> regions = new ArrayList<Region>();
+    public ArrayList<Region> regions = new ArrayList<>();
 
     public Region findRegion(String name, String nuts3, String nuts4) {
 

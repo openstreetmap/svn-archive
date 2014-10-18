@@ -199,7 +199,7 @@ public class OsmInspectorLayer extends Layer {
 				throws IndexOutOfBoundsException, ParseException {
 
 			bugId = idx;
-			attributes = new HashMap<String, String>();
+			attributes = new HashMap<>();
 			Collection<Property> properties = next.getProperties();
 			Iterator<Property> it = properties.iterator();
 			while (it.hasNext()) {
@@ -260,13 +260,13 @@ public class OsmInspectorLayer extends Layer {
 		private ArrayList<BugInfo> osmBugs;
 
 		public BugIndex(Map<BugInfo, Long> bugs) {
-			osmBugs = new ArrayList<BugInfo>(bugs.keySet());
+			osmBugs = new ArrayList<>(bugs.keySet());
 			nextIndex = 0;
 			previousIndex = -1;
 		}
 
 		public BugIndex(Map<BugInfo, Long> bugs, int n, int p) {
-			osmBugs = new ArrayList<BugInfo>(bugs.keySet());
+			osmBugs = new ArrayList<>(bugs.keySet());
 			nextIndex = n;
 			previousIndex = p;
 		}
@@ -344,9 +344,9 @@ public class OsmInspectorLayer extends Layer {
 			ParseException {
 		super("OsmInspector");
 
-		arrFeatures = new ArrayList<OSMIFeatureTracker>();
-		osmiBugInfo = new LinkedHashMap<BugInfo, Long>();
-		selectGeomType = new ArrayList<GeomType>();
+		arrFeatures = new ArrayList<>();
+		osmiBugInfo = new LinkedHashMap<>();
+		selectGeomType = new ArrayList<>();
 
 		// Step 3 - discovery; enhance to iterate over all types with bounds
 
@@ -359,7 +359,7 @@ public class OsmInspectorLayer extends Layer {
 		selectGeomType.add(GeomType.POINT);
 		for (int idx = 1; idx < typeNames.length; ++idx) {
 			String typeName = typeNames[idx];
-			Set<FeatureId> selectedFeatures = new HashSet<FeatureId>();
+			Set<FeatureId> selectedFeatures = new HashSet<>();
 
 			FeatureCollection<SimpleFeatureType, SimpleFeature> features = wfsClient
 					.getFeatures(typeName, monitor);
@@ -416,7 +416,7 @@ public class OsmInspectorLayer extends Layer {
 
 		for (int idx = 1; idx < typeNames.length; ++idx) {
 			String typeName = typeNames[idx];
-			Set<FeatureId> selectedFeatures = new HashSet<FeatureId>();
+			Set<FeatureId> selectedFeatures = new HashSet<>();
 
 			monitor.setProgress(100 / typeNames.length * idx);
 			FeatureCollection<SimpleFeatureType, SimpleFeature> features = wfsClient
@@ -620,7 +620,7 @@ public class OsmInspectorLayer extends Layer {
 
 				FeatureIterator<SimpleFeature> iter = selectedFeatures
 						.features();
-				Set<FeatureId> IDs = new HashSet<FeatureId>();
+				Set<FeatureId> IDs = new HashSet<>();
 
 				System.out.println("Selected features "
 						+ selectedFeatures.size());

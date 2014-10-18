@@ -58,7 +58,7 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
 
     //make a flat copy
     private List<WayPoint> importGPSLayer(GpxData gps) {
-        LinkedList<WayPoint> ls = new LinkedList<WayPoint>();
+        LinkedList<WayPoint> ls = new LinkedList<>();
         for (GpxTrack trk : gps.tracks) {
             for (GpxTrackSegment segment : trk.getSegments()) {
                 ls.addAll(segment.getWayPoints());

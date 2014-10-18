@@ -72,7 +72,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      */
     protected HSSFSheet(HSSFWorkbook workbook, InternalSheet sheet) {
         this._sheet = sheet;
-        _rows = new TreeMap<Integer, HSSFRow>();
+        _rows = new TreeMap<>();
         this._workbook = workbook;
         setPropertiesFromSheet(sheet);
     }
@@ -263,7 +263,7 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
         int lastColumn = range.getLastColumn();
         int height = lastRow - firstRow + 1;
         int width = lastColumn - firstColumn + 1;
-        List<HSSFCell> temp = new ArrayList<HSSFCell>(height*width);
+        List<HSSFCell> temp = new ArrayList<>(height*width);
         for (int rowIn = firstRow; rowIn <= lastRow; rowIn++) {
             for (int colIn = firstColumn; colIn <= lastColumn; colIn++) {
                 HSSFRow row = getRow(rowIn);

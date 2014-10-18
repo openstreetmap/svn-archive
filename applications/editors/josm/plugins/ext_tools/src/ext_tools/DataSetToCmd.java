@@ -24,9 +24,9 @@ final class DataSetToCmd {
      * the PrimitiveId in their dataset, the value is the PrimitiveId in my
      * dataset
      */
-    private final Map<PrimitiveId, OsmPrimitive> mergedMap = new HashMap<PrimitiveId, OsmPrimitive>();
+    private final Map<PrimitiveId, OsmPrimitive> mergedMap = new HashMap<>();
 
-    private final LinkedList<Command> cmds = new LinkedList<Command>();
+    private final LinkedList<Command> cmds = new LinkedList<>();
 
     /**
      * constructor
@@ -109,7 +109,7 @@ final class DataSetToCmd {
             throw new IllegalStateException(tr(
                     "Missing merge target for way with id {0}", source.getUniqueId()));
 
-        List<Node> newNodes = new ArrayList<Node>(source.getNodesCount());
+        List<Node> newNodes = new ArrayList<>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {
             Node targetNode = (Node) getMergeTarget(sourceNode);
             if (targetNode == null)
@@ -147,7 +147,7 @@ final class DataSetToCmd {
             throw new IllegalStateException(
                     tr("Missing merge target for relation with id {0}", source
                             .getUniqueId()));
-        LinkedList<RelationMember> newMembers = new LinkedList<RelationMember>();
+        LinkedList<RelationMember> newMembers = new LinkedList<>();
         for (RelationMember sourceMember : source.getMembers()) {
             OsmPrimitive targetMember = getMergeTarget(sourceMember.getMember());
             if (targetMember == null)

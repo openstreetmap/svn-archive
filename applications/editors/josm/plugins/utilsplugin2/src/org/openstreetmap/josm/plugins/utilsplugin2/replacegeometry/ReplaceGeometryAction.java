@@ -34,7 +34,7 @@ public class ReplaceGeometryAction extends JosmAction {
         }
 
         // There must be two ways selected: one with id > 0 and one new.
-        List<OsmPrimitive> selection = new ArrayList<OsmPrimitive>(getCurrentDataSet().getSelected());
+        List<OsmPrimitive> selection = new ArrayList<>(getCurrentDataSet().getSelected());
         if (selection.size() != 2) {
             new Notification(
                     tr("This tool replaces geometry of one object with another, and so requires exactly two objects to be selected.")

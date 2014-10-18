@@ -729,7 +729,7 @@ public class Tokenizer
     throws IOException
   {
     int token = nextToken();
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     String word = "";
 //    while(token != Tokenizer.EOF)
     while(true)
@@ -789,7 +789,7 @@ public class Tokenizer
     {
       Iterator<String> iterator = list.iterator();
       String value;
-      List<String> new_list = new ArrayList<String>();
+      List<String> new_list = new ArrayList<>();
       while(iterator.hasNext())
       {
         value = iterator.next();

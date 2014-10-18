@@ -5,12 +5,12 @@ import org.openstreetmap.josm.plugins.opendata.core.licenses.ODbL;
 
 public class ParisLicense extends ODbL {
 
-	public ParisLicense() {
-		// TODO: Paris license
-		/*try {
-			setURL(PORTAL + "/la-licence", "fr");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}*/
-	}
+    public ParisLicense() {
+        // TODO: Paris license
+        /*try {
+            setURL(PORTAL + "/la-licence", "fr");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }*/
+    }
 }

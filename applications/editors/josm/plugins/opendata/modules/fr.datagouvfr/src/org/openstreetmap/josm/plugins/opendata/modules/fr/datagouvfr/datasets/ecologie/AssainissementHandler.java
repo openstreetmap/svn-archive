@@ -19,41 +19,41 @@ import org.openstreetmap.josm.tools.Pair;
 
 public class AssainissementHandler extends DataGouvDataSetHandler {
 
-	public AssainissementHandler() {
-		super("assainissement-collectif-30381843");
-		setName("Assainissement collectif");
-		setSpreadSheetHandler(new InternalOdsHandler());
-	}
+    public AssainissementHandler() {
+        super("assainissement-collectif-30381843");
+        setName("Assainissement collectif");
+        setSpreadSheetHandler(new InternalOdsHandler());
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsOdsFilename(filename, "Export_ERU_20..");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsOdsFilename(filename, "Export_ERU_20..");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		// Implemented in InternalOdsHandler.nodesAdded()
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        // Implemented in InternalOdsHandler.nodesAdded()
+    }
 
-	@Override
-	public List<Pair<String, URL>> getDataURLs() {
-		List<Pair<String, URL>> result = new ArrayList<>();
-		try {
-			result.add(new Pair<>("Données 2009", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2.php")));
-			result.add(new Pair<>("Données 2010", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2010.php")));
-			result.add(new Pair<>("Données 2011", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2011.php")));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	private final class InternalOdsHandler extends DefaultSpreadSheetHandler {
+    @Override
+    public List<Pair<String, URL>> getDataURLs() {
+        List<Pair<String, URL>> result = new ArrayList<>();
+        try {
+            result.add(new Pair<>("Données 2009", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2.php")));
+            result.add(new Pair<>("Données 2010", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2010.php")));
+            result.add(new Pair<>("Données 2011", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2011.php")));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    private final class InternalOdsHandler extends DefaultSpreadSheetHandler {
 
-	    private Node nodeWithKeys;
-	    
-	    private final Set<String> interestingKeys = new HashSet<>();
-	    
+        private Node nodeWithKeys;
+        
+        private final Set<String> interestingKeys = new HashSet<>();
+        
         public InternalOdsHandler() {
             setSheetNumber(1);
         }
@@ -122,5 +122,5 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
             
             removeUninterestingTags();
         }
-	}
+    }
 }

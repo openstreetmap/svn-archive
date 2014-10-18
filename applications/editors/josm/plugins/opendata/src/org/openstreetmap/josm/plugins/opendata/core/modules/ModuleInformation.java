@@ -142,7 +142,7 @@ public class ModuleInformation {
         this.attr.clear();
         this.attr.putAll(other.attr);
     }
-    
+
     private static final ImageIcon extractIcon(String iconPath, File jarFile, boolean suppressWarnings) {
         return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true).setSuppressWarnings(suppressWarnings).get();
     }
@@ -233,7 +233,7 @@ public class ModuleInformation {
     public Module load(Class<? extends Module> klass) throws ModuleException {
         try {
             return klass.getConstructor(ModuleInformation.class).newInstance(this);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             throw new ModuleException(name, t);
         }
     }
@@ -250,7 +250,7 @@ public class ModuleInformation {
             return null;
         try{
             return (Class<? extends Module>) Class.forName(className, true, classLoader);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             throw new ModuleException(name, t);
         }
     }
@@ -259,6 +259,7 @@ public class ModuleInformation {
         try {
             return f.toURI().toURL();
         } catch (MalformedURLException ex) {
+            Main.warn(ex.getMessage());
             return null;
         }
     }
@@ -335,14 +336,6 @@ public class ModuleInformation {
     public String getName() {
         return name;
     }
-
-    /**
-     * Sets the name
-     * @param name
-     */
-    /*public void setName(String name) {
-        this.name = name;
-    }*/
 
     public ImageIcon getScaledIcon() {
         if (icon == null)

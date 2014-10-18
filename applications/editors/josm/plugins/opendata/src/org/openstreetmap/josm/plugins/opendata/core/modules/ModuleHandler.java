@@ -246,8 +246,8 @@ public class ModuleHandler {
                 msg = tr("<html>Could not load module {0} because the module<br>main class ''{1}'' was not found.<br>"
                         + "Delete from preferences?</html>", module.name, module.className);
             }
-        }  catch (Throwable e) {
-            e.printStackTrace();
+        }  catch (Exception e) {
+            Main.error(e);
         }
         if (msg != null && confirmDisableModule(parent, msg, module.name)) {
             Main.pref.removeFromCollection(OdConstants.PREF_MODULES, module.name);
@@ -549,6 +549,7 @@ public class ModuleHandler {
             return;
 
         final File[] files = moduleDir.listFiles(new FilenameFilter() {
+            @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".jar.new");
             }});

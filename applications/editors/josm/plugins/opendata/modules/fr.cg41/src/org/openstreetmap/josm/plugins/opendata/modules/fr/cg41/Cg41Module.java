@@ -8,9 +8,9 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.cg41.datasets.transpor
 
 public class Cg41Module extends AbstractModule {
 
-	public Cg41Module(ModuleInformation info) {
-		super(info);
-		handlers.add(ArretsBusHandler.class);
-		handlers.add(ZonesInondablesBrayeHandler.class);
+    public Cg41Module(ModuleInformation info) {
+        super(info);
+        handlers.add(ArretsBusHandler.class);
+        handlers.add(ZonesInondablesBrayeHandler.class);
     }
 }

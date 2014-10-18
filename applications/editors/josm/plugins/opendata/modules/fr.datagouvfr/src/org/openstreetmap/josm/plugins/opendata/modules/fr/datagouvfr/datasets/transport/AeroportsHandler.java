@@ -14,60 +14,60 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.Da
 
 public class AeroportsHandler extends DataGouvDataSetHandler {
 
-	private static final Pattern COOR_PATTERN = Pattern.compile(
-			"(-?\\p{Digit}+)°\\p{Space}*(\\p{Digit}+)'\\p{Space}*(\\p{Digit}+)\\p{Space}*((Nord|Sud|Est|Ouest)?)", Pattern.CASE_INSENSITIVE);
-	
-	public AeroportsHandler() {
-		super("Aéroports-français-coordonnées-géographiques-30382044");
-		setName("Aéroports");
-		setDownloadFileName("coordonn_es g_ographiques a_roports fran_ais v2.xls");
-		setSpreadSheetHandler(new InternalXlsHandler());
-	}
+    private static final Pattern COOR_PATTERN = Pattern.compile(
+            "(-?\\p{Digit}+)°\\p{Space}*(\\p{Digit}+)'\\p{Space}*(\\p{Digit}+)\\p{Space}*((Nord|Sud|Est|Ouest)?)", Pattern.CASE_INSENSITIVE);
+    
+    public AeroportsHandler() {
+        super("Aéroports-français-coordonnées-géographiques-30382044");
+        setName("Aéroports");
+        setDownloadFileName("coordonn_es g_ographiques a_roports fran_ais v2.xls");
+        setSpreadSheetHandler(new InternalXlsHandler());
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsXlsFilename(filename, "coordonn_es g_ographiques a_roports fran_ais v2");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsXlsFilename(filename, "coordonn_es g_ographiques a_roports fran_ais v2");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			n.put("aeroway", "aerodrome");
-		}
-	}
-	
-	protected class InternalXlsHandler extends DefaultSpreadSheetHandler {
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            n.put("aeroway", "aerodrome");
+        }
+    }
+    
+    protected class InternalXlsHandler extends DefaultSpreadSheetHandler {
 
-		public InternalXlsHandler() {
-			setLineNumber(4);
-			setHandlesProjection(true);
-		}
+        public InternalXlsHandler() {
+            setLineNumber(4);
+            setHandlesProjection(true);
+        }
 
-		@Override
-		public LatLon getCoor(EastNorth en, String[] fields) {
-			Matcher x = COOR_PATTERN.matcher(fields[getXCol()]);
-			Matcher y = COOR_PATTERN.matcher(fields[getYCol()]);
-			if (x.matches() && y.matches() && x.groupCount() >= 4 && y.groupCount() >= 4) {
-				return new LatLon(convertDegreeMinuteSecond(y), convertDegreeMinuteSecond(x));
-			}
-			return null;
-		}
-		
-		protected double convertDegreeMinuteSecond(Matcher m) {
-			Double deg = Double.parseDouble(m.group(1));
-			Double min = Double.parseDouble(m.group(2));
-			Double sec = Double.parseDouble(m.group(3));
-			Double sign = deg < 0 
-					|| (m.groupCount() >= 5 && (m.group(4).equalsIgnoreCase("Sud") || m.group(4).equalsIgnoreCase("Ouest"))) 
-					? -1.0 : +1.0;
-			if (sign < 0) {
-				if (deg > 0) {
-					deg *= sign;
-				}
-				min *= sign;
-				sec *= sign;
-			}
-			return OdUtils.convertDegreeMinuteSecond(deg, min, sec);
-		}
-	}
+        @Override
+        public LatLon getCoor(EastNorth en, String[] fields) {
+            Matcher x = COOR_PATTERN.matcher(fields[getXCol()]);
+            Matcher y = COOR_PATTERN.matcher(fields[getYCol()]);
+            if (x.matches() && y.matches() && x.groupCount() >= 4 && y.groupCount() >= 4) {
+                return new LatLon(convertDegreeMinuteSecond(y), convertDegreeMinuteSecond(x));
+            }
+            return null;
+        }
+        
+        protected double convertDegreeMinuteSecond(Matcher m) {
+            Double deg = Double.parseDouble(m.group(1));
+            Double min = Double.parseDouble(m.group(2));
+            Double sec = Double.parseDouble(m.group(3));
+            Double sign = deg < 0 
+                    || (m.groupCount() >= 5 && (m.group(4).equalsIgnoreCase("Sud") || m.group(4).equalsIgnoreCase("Ouest"))) 
+                    ? -1.0 : +1.0;
+            if (sign < 0) {
+                if (deg > 0) {
+                    deg *= sign;
+                }
+                min *= sign;
+                sec *= sign;
+            }
+            return OdUtils.convertDegreeMinuteSecond(deg, min, sec);
+        }
+    }
 }

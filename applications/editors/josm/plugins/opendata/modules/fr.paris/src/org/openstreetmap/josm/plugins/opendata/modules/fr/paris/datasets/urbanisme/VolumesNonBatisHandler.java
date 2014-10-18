@@ -6,23 +6,23 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.datasets.ParisDa
 
 public class VolumesNonBatisHandler extends ParisDataSetHandler {
 
-	public VolumesNonBatisHandler() {
-		super(106);
-		setName("Volumes non bâtis");
-	}
+    public VolumesNonBatisHandler() {
+        super(106);
+        setName("Volumes non bâtis");
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsShpFilename(filename, "VOL_NBATI") || acceptsZipFilename(filename, "VOL_NBATI");
-	}
-	
-	@Override
-	public void updateDataSet(DataSet ds) {
-		// TODO
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsShpFilename(filename, "VOL_NBATI") || acceptsZipFilename(filename, "VOL_NBATI");
+    }
+    
+    @Override
+    public void updateDataSet(DataSet ds) {
+        // TODO
+    }
 
-	@Override
-	protected String getDirectLink() {
-		return PORTAL+"hn/VOL_NBATI.zip";
-	}
+    @Override
+    protected String getDirectLink() {
+        return PORTAL+"hn/VOL_NBATI.zip";
+    }
 }

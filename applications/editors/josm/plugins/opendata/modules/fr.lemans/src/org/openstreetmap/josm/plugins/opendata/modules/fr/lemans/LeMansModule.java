@@ -13,14 +13,14 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.lemans.datasets.Servic
 
 public class LeMansModule extends AbstractModule {
 
-	public LeMansModule(ModuleInformation info) {
-		super(info);
-		handlers.add(ServicesCommunautairesMunicipauxHandler.class);
-		handlers.add(CantonsSartheHandler.class);
-		handlers.add(CommunesHandler.class);
-		handlers.add(CodesPostauxHandler.class);
-		handlers.add(CirconscriptionsLegislativesHandler.class);
-		handlers.add(ConseilsQuartiersHandler.class);
-		handlers.add(PointsApportVolontaireHandler.class);
+    public LeMansModule(ModuleInformation info) {
+        super(info);
+        handlers.add(ServicesCommunautairesMunicipauxHandler.class);
+        handlers.add(CantonsSartheHandler.class);
+        handlers.add(CommunesHandler.class);
+        handlers.add(CodesPostauxHandler.class);
+        handlers.add(CirconscriptionsLegislativesHandler.class);
+        handlers.add(ConseilsQuartiersHandler.class);
+        handlers.add(PointsApportVolontaireHandler.class);
     }
 }

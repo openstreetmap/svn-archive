@@ -7,8 +7,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.be.bruxelles.datasets.cul
 
 public class BruxellesModule extends AbstractModule {
 
-	public BruxellesModule(ModuleInformation info) {
-		super(info);
-		handlers.add(BDHandler.class);
+    public BruxellesModule(ModuleInformation info) {
+        super(info);
+        handlers.add(BDHandler.class);
     }
 }

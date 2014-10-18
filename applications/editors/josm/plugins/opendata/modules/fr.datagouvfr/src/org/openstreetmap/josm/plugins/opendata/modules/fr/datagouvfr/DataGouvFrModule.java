@@ -21,8 +21,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.tr
 
 public class DataGouvFrModule extends AbstractModule {
 
-	public DataGouvFrModule(ModuleInformation info) {
-		super(info);
+    public DataGouvFrModule(ModuleInformation info) {
+        super(info);
         handlers.add(Etab1er2ndDegreHandler.class);
         handlers.add(EtabAEFEHandler.class);
         handlers.add(BibliothequesHandler.class);

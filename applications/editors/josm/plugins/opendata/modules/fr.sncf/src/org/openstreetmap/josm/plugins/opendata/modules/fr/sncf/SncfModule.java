@@ -7,8 +7,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.sncf.datasets.Equipeme
 
 public class SncfModule extends AbstractModule {
 
-	public SncfModule(ModuleInformation info) {
-		super(info);
-		handlers.add(EquipementsHandler.class);
+    public SncfModule(ModuleInformation info) {
+        super(info);
+        handlers.add(EquipementsHandler.class);
     }
 }

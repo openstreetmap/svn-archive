@@ -7,8 +7,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.be.datagovbe.datasets.cul
 
 public class DataGovBeModule extends AbstractModule {
 
-	public DataGovBeModule(ModuleInformation info) {
-		super(info);
-		handlers.add(ArchitecturalHeritageHandler.class);
+    public DataGovBeModule(ModuleInformation info) {
+        super(info);
+        handlers.add(ArchitecturalHeritageHandler.class);
     }
 }

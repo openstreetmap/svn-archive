@@ -36,7 +36,7 @@
     <!-- this is the directory where the module jar is copied to -->
     <property name="module.dist.dir" value="../../dist"/>
     <property name="module.jar" value="${module.dist.dir}/${ant.project.name}.jar"/>
-	<!-- conditions -->
+    <!-- conditions -->
     <condition property="resources.exist">
         <available file="resources" type="dir" />
     </condition>

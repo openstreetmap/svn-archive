@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
 import org.openstreetmap.josm.gui.preferences.SourceEntry;
 import org.openstreetmap.josm.gui.preferences.SourceProvider;
@@ -23,7 +24,7 @@ public abstract class AbstractModule implements Module {
     private final List<AbstractDataSetHandler> instanciatedHandlers = new ArrayList<>();
 
     protected final ModuleInformation info;
-    
+
     public AbstractModule(ModuleInformation info) {
         this.info = info;
     }
@@ -49,26 +50,28 @@ public abstract class AbstractModule implements Module {
         for (AbstractDataSetHandler handler : getInstanciatedHandlers()) {
             ExtendedSourceEntry src;
             if (handler != null && (src = handler.getMapPaintStyle()) != null) {
-                try {
-                    // Copy style sheet to disk to allow JOSM to load it at startup (even making the plugin "early" does not allow it)
-                    String path = OdPlugin.getInstance().getResourcesDirectory()+File.separator+src.url.replace(OdConstants.PROTO_RSRC, "").replace('/', File.separatorChar);
-                    
-                    int n = 0;
-                    byte[] buffer = new byte[4096];
-                    InputStream in = getClass().getResourceAsStream(src.url.substring(OdConstants.PROTO_RSRC.length()-1));
-                    new File(path.substring(0, path.lastIndexOf(File.separatorChar))).mkdirs();
-                    FileOutputStream out = new FileOutputStream(path);
+                // Copy style sheet to disk to allow JOSM to load it at startup
+                // (even making the plugin "early" does not allow it)
+                String path = OdPlugin.getInstance().getResourcesDirectory() + File.separator
+                        + src.url.replace(OdConstants.PROTO_RSRC, "").replace('/', File.separatorChar);
+
+                int n = 0;
+                byte[] buffer = new byte[4096];
+                try (InputStream in = getClass().getResourceAsStream(
+                        src.url.substring(OdConstants.PROTO_RSRC.length()-1));
+                     FileOutputStream out = new FileOutputStream(path)) {
+                    String dir = path.substring(0, path.lastIndexOf(File.separatorChar));
+                    if (new File(dir).mkdirs() && Main.isDebugEnabled()) {
+                        Main.debug("Created directory: "+dir);
+                    }
                     while ((n = in.read(buffer)) > 0) {
                         out.write(buffer, 0, n);
                     }
-                    out.close();
-                    in.close();
-
                     // Add source pointing to the local file
                     src.url = OdConstants.PROTO_FILE+path;
                     sources.add(src);
                 } catch (IOException e) {
-                    System.err.println(e.getMessage());
+                    Main.error(e.getMessage());
                 }
             }
         }
@@ -95,7 +98,7 @@ public abstract class AbstractModule implements Module {
             }
         };
     }
-    
+
     @Override
     public final List<AbstractDataSetHandler> getNewlyInstanciatedHandlers() {
         List<AbstractDataSetHandler> result = new ArrayList<>();
@@ -103,8 +106,8 @@ public abstract class AbstractModule implements Module {
             if (handlerClass != null) {
                 try {
                     result.add(handlerClass.newInstance());
-                } catch (Throwable t) {
-                    System.err.println("Cannot instantiate "+handlerClass+" because of "+t.getClass().getName()+": "+t.getMessage());
+                } catch (InstantiationException | IllegalAccessException t) {
+                    Main.error("Cannot instantiate "+handlerClass+" because of "+t.getClass().getName()+": "+t.getMessage());
                 }
             }
         }

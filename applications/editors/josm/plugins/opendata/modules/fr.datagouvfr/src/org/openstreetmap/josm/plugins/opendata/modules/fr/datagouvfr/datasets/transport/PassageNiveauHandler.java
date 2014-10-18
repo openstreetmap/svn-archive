@@ -8,22 +8,22 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.datasets.Da
 
 public class PassageNiveauHandler extends DataGouvDataSetHandler {
 
-	public PassageNiveauHandler() {
-		super("Passages-à-niveau-30383135");
-		setName("Passages à niveau");
-		setDownloadFileName("passage_a_niveau.csv");
-		getCsvHandler().setCharset(OdConstants.ISO8859_15);
-	}
+    public PassageNiveauHandler() {
+        super("Passages-à-niveau-30383135");
+        setName("Passages à niveau");
+        setDownloadFileName("passage_a_niveau.csv");
+        getCsvHandler().setCharset(OdConstants.ISO8859_15);
+    }
 
-	@Override
-	public boolean acceptsFilename(String filename) {
-		return acceptsCsvFilename(filename, "passage_a_niveau(\\.csv-fr)?");
-	}
+    @Override
+    public boolean acceptsFilename(String filename) {
+        return acceptsCsvFilename(filename, "passage_a_niveau(\\.csv-fr)?");
+    }
 
-	@Override
-	public void updateDataSet(DataSet ds) {
-		for (Node n : ds.getNodes()) {
-			n.put("railway", "level_crossing");
-		}
-	}
+    @Override
+    public void updateDataSet(DataSet ds) {
+        for (Node n : ds.getNodes()) {
+            n.put("railway", "level_crossing");
+        }
+    }
 }

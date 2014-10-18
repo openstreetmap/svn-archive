@@ -46,12 +46,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
 import org.geotools.data.DataUtilities;
+import org.openstreetmap.josm.Main;
 
 /**
  * Ugly copy of ShpFiles class modified to fit MapInfo TAB needs.
  */
 public class TabFiles extends ShpFiles {
-   
+
     /**
      * The urls for each type of file that is associated with the shapefile. The
      * key is the type of file
@@ -59,7 +60,7 @@ public class TabFiles extends ShpFiles {
     private final Map<ShpFileType, URL> urls = new ConcurrentHashMap<>();
 
     /**
-     * A read/write lock, so that we can have concurrent readers 
+     * A read/write lock, so that we can have concurrent readers
      */
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -73,38 +74,38 @@ public class TabFiles extends ShpFiles {
      * A cache for read only memory mapped buffers
      */
     private final MemoryMapCache mapCache = new MemoryMapCache();
-    
+
     private boolean memoryMapCacheEnabled;
-    
-    
+
+
     ////////////////////////////////////////////////////
-    
+
     public TabFiles(File headerFile, File dataFile) throws IllegalArgumentException {
         super(fakeShpFile(headerFile)); // Useless but necessary
         init(DataUtilities.fileToURL(headerFile));
         urls.put(ShpFileType.DBF, DataUtilities.fileToURL(dataFile));
     }
-    
+
     /**
      * This is really ugly. Used only to give a fake shp file to ShpFiles constructor to avoid IllegalArgument at initialization.
      */
     private static URL fakeShpFile(File headerFile) {
         return DataUtilities.fileToURL(new File(headerFile.getAbsolutePath()+".shp"));
     }
-    
+
     private String baseName(Object obj) {
         if (obj instanceof URL) {
             return toBase(((URL) obj).toExternalForm());
         }
         return null;
     }
-    
+
     private String toBase(String path) {
         return path.substring(0, path.toLowerCase().lastIndexOf(".tab"));
     }
 
     ////////////////////////////////////////////////////
-    
+
     private void init(URL url) {
         String base = baseName(url);
         if (base == null) {
@@ -118,14 +119,14 @@ public class TabFiles extends ShpFiles {
         boolean upperCase = Character.isUpperCase(lastChar);
 
         for (ShpFileType type : ShpFileType.values()) {
-            
+
             String extensionWithPeriod = type.extensionWithPeriod;
             if (upperCase) {
                 extensionWithPeriod = extensionWithPeriod.toUpperCase();
             } else {
                 extensionWithPeriod = extensionWithPeriod.toLowerCase();
             }
-            
+
             URL newURL;
             String string = base + extensionWithPeriod;
             try {
@@ -138,7 +139,7 @@ public class TabFiles extends ShpFiles {
         }
 
         // if the files are local check each file to see if it exists
-        // if not then search for a file of the same name but try all combinations of the 
+        // if not then search for a file of the same name but try all combinations of the
         // different cases that the extension can be made up of.
         // IE Shp, SHP, Shp, ShP etc...
         if (isLocalTab()) {
@@ -165,16 +166,17 @@ public class TabFiles extends ShpFiles {
         }
         File[] files = directory.listFiles(new FilenameFilter(){
 
+            @Override
             public boolean accept(File dir, String name) {
                 return file.getName().equalsIgnoreCase(name);
             }
-            
+
         });
         if( files.length>0 ){
             try {
                 return files[0].toURI().toURL();
             } catch (MalformedURLException e) {
-                //ShapefileDataStoreFactory.LOGGER().log(Level.SEVERE, "", e);
+                Main.error(e);
             }
         }
         return null;
@@ -189,6 +191,7 @@ public class TabFiles extends ShpFiles {
         dispose();
     }
 
+    @Override
     public void dispose() {
         if (numberOfLocks() != 0) {
             logCurrentLockers(Level.SEVERE);
@@ -199,16 +202,17 @@ public class TabFiles extends ShpFiles {
 
     /**
      * Writes to the log all the lockers and when they were constructed.
-     * 
+     *
      * @param logLevel
      *                the level at which to log.
      */
+    @Override
     public void logCurrentLockers(Level logLevel) {
         for (Collection<ShpFilesLocker> lockerList : lockers.values()) {
             for (ShpFilesLocker locker : lockerList) {
                 StringBuilder sb = new StringBuilder("The following locker still has a lock: ");
                 sb.append(locker);
-                //ShapefileDataStoreFactory.LOGGER().log(logLevel, sb.toString(), locker.getTrace());
+                Main.error(sb.toString());
             }
         }
     }
@@ -216,10 +220,11 @@ public class TabFiles extends ShpFiles {
     /**
      * Returns the URLs (in string form) of all the files for the shapefile
      * datastore.
-     * 
+     *
      * @return the URLs (in string form) of all the files for the shapefile
      *         datastore.
      */
+    @Override
     public Map<ShpFileType, String> getFileNames() {
         Map<ShpFileType, String> result = new HashMap<>();
         Set<Entry<ShpFileType, URL>> entries = urls.entrySet();
@@ -234,18 +239,19 @@ public class TabFiles extends ShpFiles {
     /**
      * Returns the string form of the url that identifies the file indicated by
      * the type parameter or null if it is known that the file does not exist.
-     * 
+     *
      * <p>
      * Note: a URL should NOT be constructed from the string instead the URL
      * should be obtained through calling one of the aquireLock methods.
-     * 
+     *
      * @param type
      *                indicates the type of file the caller is interested in.
-     * 
+     *
      * @return the string form of the url that identifies the file indicated by
      *         the type parameter or null if it is known that the file does not
      *         exist.
      */
+    @Override
     public String get(ShpFileType type) {
         return urls.get(type).toExternalForm();
     }
@@ -254,9 +260,10 @@ public class TabFiles extends ShpFiles {
      * Returns the number of locks on the current set of shapefile files. This
      * is not thread safe so do not count on it to have a completely accurate
      * picture but it can be useful debugging
-     * 
+     *
      * @return the number of locks on the current set of shapefile files.
      */
+    @Override
     public int numberOfLocks() {
         int count = 0;
         for (Collection<ShpFilesLocker> lockerList : lockers.values()) {
@@ -268,19 +275,20 @@ public class TabFiles extends ShpFiles {
      * Acquire a File for read only purposes. It is recommended that get*Stream or
      * get*Channel methods are used when reading or writing to the file is
      * desired.
-     * 
-     * 
+     *
+     *
      * @see #getInputStream(ShpFileType, FileReader)
      * @see #getReadChannel(ShpFileType, FileReader)
      * @see #getWriteChannel(ShpFileType, FileReader)
-     * 
+     *
      * @param type
      *                the type of the file desired.
      * @param requestor
      *                the object that is requesting the File. The same object
      *                must release the lock and is also used for debugging.
-     * @return the File type requested 
+     * @return the File type requested
      */
+    @Override
     public File acquireReadFile(ShpFileType type,
             FileReader requestor) {
         if(!isLocalTab() ){
@@ -289,17 +297,17 @@ public class TabFiles extends ShpFiles {
         URL url = acquireRead(type, requestor);
         return DataUtilities.urlToFile(url);
     }
-    
+
     /**
      * Acquire a URL for read only purposes.  It is recommended that get*Stream or
      * get*Channel methods are used when reading or writing to the file is
      * desired.
-     * 
-     * 
+     *
+     *
      * @see #getInputStream(ShpFileType, FileReader)
      * @see #getReadChannel(ShpFileType, FileReader)
      * @see #getWriteChannel(ShpFileType, FileReader)
-     * 
+     *
      * @param type
      *                the type of the file desired.
      * @param requestor
@@ -307,11 +315,12 @@ public class TabFiles extends ShpFiles {
      *                must release the lock and is also used for debugging.
      * @return the URL to the file of the type requested
      */
+    @Override
     public URL acquireRead(ShpFileType type, FileReader requestor) {
         URL url = urls.get(type);
         if (url == null)
             return null;
-        
+
         readWriteLock.readLock().lock();
         Collection<ShpFilesLocker> threadLockers = getCurrentThreadLockers();
         threadLockers.add(new ShpFilesLocker(url, requestor));
@@ -325,11 +334,11 @@ public class TabFiles extends ShpFiles {
      * get*Channel methods are used when reading or writing to the file is
      * desired.
      * </p>
-     * 
+     *
      * @see #getInputStream(ShpFileType, FileReader)
      * @see #getReadChannel(ShpFileType, FileReader)
      * @see #getWriteChannel(ShpFileType, FileReader)
-     * 
+     *
      * @param type
      *                the type of the file desired.
      * @param requestor
@@ -337,18 +346,19 @@ public class TabFiles extends ShpFiles {
      *                must release the lock and is also used for debugging.
      * @return A result object containing the URL or the reason for the failure.
      */
+    @Override
     public Result<URL, State> tryAcquireRead(ShpFileType type,
             FileReader requestor) {
         URL url = urls.get(type);
         if (url == null) {
             return new Result<>(null, State.NOT_EXIST);
         }
-        
+
         boolean locked = readWriteLock.readLock().tryLock();
         if (!locked) {
             return new Result<>(null, State.LOCKED);
         }
-        
+
         getCurrentThreadLockers().add(new ShpFilesLocker(url, requestor));
 
         return new Result<>(url, State.GOOD);
@@ -357,12 +367,13 @@ public class TabFiles extends ShpFiles {
     /**
      * Unlocks a read lock. The file and requestor must be the the same as the
      * one of the lockers.
-     * 
+     *
      * @param file
      *                file that was locked
      * @param requestor
      *                the class that requested the file
      */
+    @Override
     public void unlockRead(File file, FileReader requestor) {
         Collection<URL> allURLS = urls.values();
         for (URL url : allURLS) {
@@ -375,12 +386,13 @@ public class TabFiles extends ShpFiles {
     /**
      * Unlocks a read lock. The url and requestor must be the the same as the
      * one of the lockers.
-     * 
+     *
      * @param url
      *                url that was locked
      * @param requestor
      *                the class that requested the url
      */
+    @Override
     public void unlockRead(URL url, FileReader requestor) {
         if (url == null) {
             throw new NullPointerException("url cannot be null");
@@ -403,17 +415,17 @@ public class TabFiles extends ShpFiles {
     }
 
     /**
-     * Acquire a File for read and write purposes. 
+     * Acquire a File for read and write purposes.
      * <p> It is recommended that get*Stream or
      * get*Channel methods are used when reading or writing to the file is
      * desired.
      * </p>
-     * 
+     *
      * @see #getInputStream(ShpFileType, FileReader)
      * @see #getReadChannel(ShpFileType, FileReader)
      * @see #getWriteChannel(ShpFileType, FileReader)
 
-     * 
+     *
      * @param type
      *                the type of the file desired.
      * @param requestor
@@ -421,6 +433,7 @@ public class TabFiles extends ShpFiles {
      *                must release the lock and is also used for debugging.
      * @return the File to the file of the type requested
      */
+    @Override
     public File acquireWriteFile(ShpFileType type,
             FileWriter requestor) {
         if(!isLocalTab() ){
@@ -430,17 +443,17 @@ public class TabFiles extends ShpFiles {
         return DataUtilities.urlToFile(url);
     }
     /**
-     * Acquire a URL for read and write purposes. 
+     * Acquire a URL for read and write purposes.
      * <p> It is recommended that get*Stream or
      * get*Channel methods are used when reading or writing to the file is
      * desired.
      * </p>
-     * 
+     *
      * @see #getInputStream(ShpFileType, FileReader)
      * @see #getReadChannel(ShpFileType, FileReader)
      * @see #getWriteChannel(ShpFileType, FileReader)
 
-     * 
+     *
      * @param type
      *                the type of the file desired.
      * @param requestor
@@ -448,6 +461,7 @@ public class TabFiles extends ShpFiles {
      *                must release the lock and is also used for debugging.
      * @return the URL to the file of the type requested
      */
+    @Override
     public URL acquireWrite(ShpFileType type, FileWriter requestor) {
         URL url = urls.get(type);
         if (url == null) {
@@ -459,10 +473,10 @@ public class TabFiles extends ShpFiles {
         relinquishReadLocks(threadLockers);
         readWriteLock.writeLock().lock();
         threadLockers.add(new ShpFilesLocker(url, requestor));
-        mapCache.cleanFileCache(url);        
+        mapCache.cleanFileCache(url);
         return url;
     }
-    
+
     /**
      * Tries to acquire a URL for read/write purposes. Returns null if the
      * acquire failed or if the file does not exist
@@ -470,12 +484,12 @@ public class TabFiles extends ShpFiles {
      * get*Channel methods are used when reading or writing to the file is
      * desired.
      * </p>
-     * 
+     *
      * @see #getInputStream(ShpFileType, FileReader)
      * @see #getReadChannel(ShpFileType, FileReader)
      * @see #getWriteChannel(ShpFileType, FileReader)
 
-     * 
+     *
      * @param type
      *                the type of the file desired.
      * @param requestor
@@ -483,9 +497,10 @@ public class TabFiles extends ShpFiles {
      *                must release the lock and is also used for debugging.
      * @return A result object containing the URL or the reason for the failure.
      */
+    @Override
     public Result<URL, State> tryAcquireWrite(ShpFileType type,
             FileWriter requestor) {
-        
+
         URL url = urls.get(type);
         if (url == null) {
             return new Result<>(null, State.NOT_EXIST);
@@ -510,12 +525,13 @@ public class TabFiles extends ShpFiles {
     /**
      * Unlocks a read lock. The file and requestor must be the the same as the
      * one of the lockers.
-     * 
+     *
      * @param file
      *                file that was locked
      * @param requestor
      *                the class that requested the file
      */
+    @Override
     public void unlockWrite(File file, FileWriter requestor) {
         Collection<URL> allURLS = urls.values();
         for (URL url : allURLS) {
@@ -528,13 +544,14 @@ public class TabFiles extends ShpFiles {
     /**
      * Unlocks a read lock. The requestor must be have previously obtained a
      * lock for the url.
-     * 
-     * 
+     *
+     *
      * @param url
      *                url that was locked
      * @param requestor
      *                the class that requested the url
      */
+    @Override
     public void unlockWrite(URL url, FileWriter requestor) {
         if (url == null) {
             throw new NullPointerException("url cannot be null");
@@ -550,7 +567,7 @@ public class TabFiles extends ShpFiles {
                             + requestor
                             + " to have locked the url but it does not hold the lock for the URL");
         }
-        
+
         if(threadLockers.size() == 0) {
             lockers.remove(Thread.currentThread());
         } else {
@@ -559,7 +576,7 @@ public class TabFiles extends ShpFiles {
         }
         readWriteLock.writeLock().unlock();
     }
-   
+
     /**
      * Returns the list of lockers attached to a given thread, or creates it if missing
      * @return
@@ -585,7 +602,7 @@ public class TabFiles extends ShpFiles {
             }
         }
     }
-    
+
     /**
      * Re-takes the read locks in preparation for lock downgrade
      * @param threadLockers
@@ -601,7 +618,7 @@ public class TabFiles extends ShpFiles {
 
     /**
      * Determine if the location of this shapefile is local or remote.
-     * 
+     *
      * @return true if local, false if remote
      */
     public boolean isLocalTab() {
@@ -612,6 +629,7 @@ public class TabFiles extends ShpFiles {
      * Delete all the shapefile files. If the files are not local or the one
      * files cannot be deleted return false.
      */
+    @Override
     public boolean delete() {
         BasicShpFileWriter requestor = new BasicShpFileWriter("ShpFiles for deleting all files");
         URL writeLockURL = acquireWrite(SHP, requestor);
@@ -637,16 +655,17 @@ public class TabFiles extends ShpFiles {
     /**
      * Opens a input stream for the indicated file. A read lock is requested at
      * the method call and released on close.
-     * 
+     *
      * @param type
      *                the type of file to open the stream to.
      * @param requestor
      *                the object requesting the stream
      * @return an input stream
-     * 
+     *
      * @throws IOException
      *                 if a problem occurred opening the stream.
      */
+    @Override
     public InputStream getInputStream(ShpFileType type,
             final FileReader requestor) throws IOException {
         final URL url = acquireRead(type, requestor);
@@ -683,26 +702,27 @@ public class TabFiles extends ShpFiles {
             }
         }
     }
-    
+
     /**
      * Opens a output stream for the indicated file. A write lock is requested at
      * the method call and released on close.
-     * 
+     *
      * @param type
      *                the type of file to open the stream to.
      * @param requestor
      *                the object requesting the stream
      * @return an output stream
-     * 
+     *
      * @throws IOException
      *                 if a problem occurred opening the stream.
      */
+    @Override
     public OutputStream getOutputStream(ShpFileType type,
             final FileWriter requestor) throws IOException {
         final URL url = acquireWrite(type, requestor);
 
         try {
-            
+
             OutputStream out;
             if (isLocalTab()) {
                 File file = DataUtilities.urlToFile(url);
@@ -712,7 +732,7 @@ public class TabFiles extends ShpFiles {
                 connection.setDoOutput(true);
                 out = connection.getOutputStream();
             }
-            
+
             FilterOutputStream output = new FilterOutputStream(out) {
 
                 private volatile boolean closed = false;
@@ -754,13 +774,14 @@ public class TabFiles extends ShpFiles {
      * A read lock is obtained when this method is called and released when the
      * channel is closed.
      * </p>
-     * 
+     *
      * @param type
      *                the type of file to open the channel to.
      * @param requestor
      *                the object requesting the channel
-     * 
+     *
      */
+    @Override
     public ReadableByteChannel getReadChannel(ShpFileType type,
             FileReader requestor) throws IOException {
         URL url = acquireRead(type, requestor);
@@ -769,7 +790,7 @@ public class TabFiles extends ShpFiles {
             if (isLocalTab()) {
 
                 File file = DataUtilities.urlToFile(url);
-                
+
                 @SuppressWarnings("resource")
                 RandomAccessFile raf = new RandomAccessFile(file, "r");
                 channel = new FileChannelDecorator(raf.getChannel(), this, url,
@@ -800,23 +821,24 @@ public class TabFiles extends ShpFiles {
      * file, a FileChannel will be returned. Currently, this method will return
      * a generic channel for remote urls, however both shape and dbf writing can
      * only occur with a local FileChannel channel.
-     * 
+     *
      * <p>
      * A write lock is obtained when this method is called and released when the
      * channel is closed.
      * </p>
-     * 
-     * 
+     *
+     *
      * @param type
      *                the type of file to open the stream to.
      * @param requestor
      *                the object requesting the stream
-     * 
+     *
      * @return a WritableByteChannel for the provided file type
-     * 
+     *
      * @throws IOException
      *                 if there is an error opening the stream
      */
+    @Override
     public WritableByteChannel getWriteChannel(ShpFileType type,
             FileWriter requestor) throws IOException {
 
@@ -859,14 +881,15 @@ public class TabFiles extends ShpFiles {
     /**
      * Obtains a Storage file for the type indicated. An id is provided so that
      * the same file can be obtained at a later time with just the id
-     * 
+     *
      * @param type
      *                the type of file to create and return
-     * 
+     *
      * @return StorageFile
      * @throws IOException
      *                 if temporary files cannot be created
      */
+    @Override
     public StorageFile getStorageFile(ShpFileType type) throws IOException {
         String baseName = getTypeName();
         if (baseName.length() < 3) { // min prefix length for createTempFile
@@ -876,6 +899,7 @@ public class TabFiles extends ShpFiles {
         return new StorageFile(this, tmp, type);
     }
 
+    @Override
     public String getTypeName() {
         String path = SHP.toBase(urls.get(SHP));
         int slash = Math.max(0, path.lastIndexOf('/') + 1);
@@ -887,7 +911,7 @@ public class TabFiles extends ShpFiles {
 
         return path.substring(slash, dot);
     }
-    
+
     /**
      * Internal method that the file channel decorators will call to allow reuse of the memory mapped buffers
      * @param wrapped
@@ -898,6 +922,7 @@ public class TabFiles extends ShpFiles {
      * @return
      * @throws IOException
      */
+    @Override
     MappedByteBuffer map(FileChannel wrapped, URL url, MapMode mode, long position, long size) throws IOException {
         if(memoryMapCacheEnabled) {
             return mapCache.map(wrapped, url, mode, position, size);
@@ -905,12 +930,13 @@ public class TabFiles extends ShpFiles {
             return wrapped.map(mode, position, size);
         }
     }
-    
+
     /**
      * Returns the status of the memory map cache. When enabled the memory mapped portions of the files are cached and shared
      * (giving each thread a clone of it)
      * @param memoryMapCacheEnabled
      */
+    @Override
     public boolean isMemoryMapCacheEnabled() {
         return memoryMapCacheEnabled;
     }
@@ -920,6 +946,7 @@ public class TabFiles extends ShpFiles {
      * (giving each thread a clone of it)
      * @param memoryMapCacheEnabled
      */
+    @Override
     public void setMemoryMapCacheEnabled(boolean memoryMapCacheEnabled) {
         this.memoryMapCacheEnabled = memoryMapCacheEnabled;
         if (!memoryMapCacheEnabled) {
@@ -930,12 +957,12 @@ public class TabFiles extends ShpFiles {
     /**
      * Returns true if the file exists. Throws an exception if the file is not
      * local.
-     * 
+     *
      * @param fileType
      *                the type of file to check existance for.
-     * 
+     *
      * @return true if the file exists.
-     * 
+     *
      * @throws IllegalArgumentException
      *                 if the files are not local.
      */

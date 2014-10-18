@@ -10,8 +10,8 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.datasets.urbanis
 
 public class ParisModule extends AbstractModule {
 
-	public ParisModule(ModuleInformation info) {
-		super(info);
+    public ParisModule(ModuleInformation info) {
+        super(info);
         handlers.add(SanisettesHandler.class);
         handlers.add(ArbresRemarquablesHandler.class);
         //handlers.add(VolumesBatisHandler.class); // Disabled as the projection cannot be transformed

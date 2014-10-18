@@ -16,6 +16,9 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsConstants;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.io.JosmServerLocationReader;
 
+/**
+ * Download imagery XML bounds from JOSM server.
+ */
 public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsConstants {
 
     @Override
@@ -48,10 +51,17 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
     }
 
     protected class DownloadTask extends DownloadOsmTask.DownloadTask {
+
+        /**
+         * Constructs a new {@code DownloadTask}.
+         * @param newLayer if {@code true}, download to a new layer
+         * @param reader server reader
+         * @param progressMonitor progress monitor
+         */
         public DownloadTask(boolean newLayer, OsmServerReader reader, ProgressMonitor progressMonitor) {
             super(newLayer, reader, progressMonitor);
         }
-        
+
         @Override
         protected OsmDataLayer getEditLayer() {
             OsmDataLayer editLayer = super.getEditLayer();

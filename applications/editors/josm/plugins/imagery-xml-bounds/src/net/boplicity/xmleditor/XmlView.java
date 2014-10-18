@@ -17,7 +17,6 @@ package net.boplicity.xmleditor;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -46,7 +45,7 @@ import javax.swing.text.Utilities;
  */
 public class XmlView extends PlainView {
 
-    private static HashMap<Pattern, Color> patternColors;
+    private static Map<Pattern, Color> patternColors;
     private static String GENERIC_XML_NAME = "[A-Za-z]+[A-Za-z0-9\\-_]*(:[A-Za-z]+[A-Za-z0-9\\-_]+)?";
     private static String TAG_PATTERN = "(</?" + GENERIC_XML_NAME + ")";
     private static String TAG_END_PATTERN = "(>|/>)";
@@ -57,7 +56,7 @@ public class XmlView extends PlainView {
 
     static {
         // NOTE: the order is important!
-        patternColors = new LinkedHashMap<Pattern, Color>();
+        patternColors = new LinkedHashMap<>();
         patternColors
                 .put(Pattern.compile(TAG_PATTERN), new Color(63, 127, 127));
         patternColors.put(Pattern.compile(TAG_CDATA), Color.GRAY);
@@ -70,6 +69,10 @@ public class XmlView extends PlainView {
         patternColors.put(Pattern.compile(TAG_COMMENT), Color.BLUE);
     }
 
+    /**
+     * Constructs a new {@code XmlView}.
+     * @param element the element
+     */
     public XmlView(Element element) {
 
         super(element);
@@ -79,16 +82,16 @@ public class XmlView extends PlainView {
     }
 
     @Override
-    protected int drawUnselectedText(Graphics graphics, int x, int y, int p0,
-            int p1) throws BadLocationException {
+    protected int drawUnselectedText(Graphics graphics, int x, int y, int p0, int p1)
+            throws BadLocationException {
 
         Document doc = getDocument();
         String text = doc.getText(p0, p1 - p0);
 
         Segment segment = getLineBuffer();
 
-        SortedMap<Integer, Integer> startMap = new TreeMap<Integer, Integer>();
-        SortedMap<Integer, Color> colorMap = new TreeMap<Integer, Color>();
+        SortedMap<Integer, Integer> startMap = new TreeMap<>();
+        SortedMap<Integer, Color> colorMap = new TreeMap<>();
 
         // Match all regexes on this snippet, store positions
         for (Map.Entry<Pattern, Color> entry : patternColors.entrySet()) {

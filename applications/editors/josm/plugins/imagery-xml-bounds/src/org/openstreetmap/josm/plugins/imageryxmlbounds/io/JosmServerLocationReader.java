@@ -8,10 +8,17 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 
+/**
+ * Read XML bounds from JOSM server.
+ */
 public class JosmServerLocationReader extends OsmServerReader {
 
     private String url;
-    
+
+    /**
+     * Constructs a new {@code JosmServerLocationReader}.
+     * @param url URL to read
+     */
     public JosmServerLocationReader(String url) {
         this.url = url;
     }

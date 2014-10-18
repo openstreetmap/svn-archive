@@ -20,19 +20,19 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ComputeBoundsActi
  */
 public class XmlBoundsExporter extends FileExporter implements XmlBoundsConstants {
 
-	public XmlBoundsExporter() {
-		super(FILE_FILTER);
-	}
+    /**
+     * Constructs a new {@code XmlBoundsExporter}.
+     */
+    public XmlBoundsExporter() {
+        super(FILE_FILTER);
+    }
 
-	@Override
-	public void exportData(File file, Layer layer) throws IOException {
-		if (layer instanceof OsmDataLayer) {
-			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), ENCODING));
-			try {
-				writer.write(new ComputeBoundsAction((OsmDataLayer) layer).getXml());
-			} finally {
-				writer.close();
-			}
-		}
-	}
+    @Override
+    public void exportData(File file, Layer layer) throws IOException {
+        if (layer instanceof OsmDataLayer) {
+            try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), ENCODING))) {
+                writer.write(new ComputeBoundsAction((OsmDataLayer) layer).getXml());
+            }
+        }
+    }
 }

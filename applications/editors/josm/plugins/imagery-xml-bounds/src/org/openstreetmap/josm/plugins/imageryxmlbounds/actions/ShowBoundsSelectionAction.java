@@ -7,19 +7,21 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
- * 
+ *
  * @author Don-vip
  *
  */
-@SuppressWarnings("serial")
 public class ShowBoundsSelectionAction extends ShowBoundsAction implements SelectionChangedListener {
 
-	public ShowBoundsSelectionAction() {
-		putValue("toolbar", "xml-imagery-bounds");
-	}
+    /**
+     * Constructs a new {@code ShowBoundsSelectionAction}.
+     */
+    public ShowBoundsSelectionAction() {
+        putValue("toolbar", "xml-imagery-bounds");
+    }
 
-	@Override
-	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		updateOsmPrimitives(newSelection);
-	}
+    @Override
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+        updateOsmPrimitives(newSelection);
+    }
 }

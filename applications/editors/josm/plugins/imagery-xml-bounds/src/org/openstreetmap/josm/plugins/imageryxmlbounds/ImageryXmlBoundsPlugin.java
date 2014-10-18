@@ -29,71 +29,71 @@ public class ImageryXmlBoundsPlugin extends Plugin {
     /**
      * Action showing bounds of the selected closed ways in Selection dialog 
      */
-	private final ShowBoundsAction selectionListAction = new ShowBoundsAction();
+    private final ShowBoundsAction selectionListAction = new ShowBoundsAction();
 
     /**
      * Action showing bounds of the selected multipolygons in Properties dialog 
      */
     private final ShowBoundsAction propertiesListAction = new ShowBoundsAction();
     
-	/**
+    /**
      * Action showing bounds of the selected multipolygons in Relations dialog
      */
-	private final ShowBoundsAction relationListAction = new ShowBoundsAction();
+    private final ShowBoundsAction relationListAction = new ShowBoundsAction();
 
     /**
      * Action showing bounds of the current selection
      */
-	private final ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
-	
-	/**
-	 * Class modifying the Imagery preferences panel
-	 */
-	private final XmlBoundsPreferenceSetting preferenceSetting = new XmlBoundsPreferenceSetting();
-	
-	/**
-	 * Initializes the plugin.
-	 * @param info
-	 */
-	public ImageryXmlBoundsPlugin(PluginInformation info) {
-		super(info);
-		// Allow JOSM to import *.imagery.xml files
-		ExtensionFileFilter.importers.add(0, new XmlBoundsImporter());
+    private final ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
+    
+    /**
+     * Class modifying the Imagery preferences panel
+     */
+    private final XmlBoundsPreferenceSetting preferenceSetting = new XmlBoundsPreferenceSetting();
+    
+    /**
+     * Initializes the plugin.
+     * @param info
+     */
+    public ImageryXmlBoundsPlugin(PluginInformation info) {
+        super(info);
+        // Allow JOSM to import *.imagery.xml files
+        ExtensionFileFilter.importers.add(0, new XmlBoundsImporter());
         // Allow JOSM to export *.imagery.xml files
-		ExtensionFileFilter.exporters.add(0, new XmlBoundsExporter());
+        ExtensionFileFilter.exporters.add(0, new XmlBoundsExporter());
         // Initialize the selection action
-		DataSet.addSelectionListener(selectionAction);
-		Main.toolbar.register(selectionAction);
-		// Allow JOSM to download *.imagery.xml files
-		Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
-	}
-	
+        DataSet.addSelectionListener(selectionAction);
+        Main.toolbar.register(selectionAction);
+        // Allow JOSM to download *.imagery.xml files
+        Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
+    }
+    
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return this.preferenceSetting;
     }
 
-	@Override
-	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if (newFrame != null) {
-		    // Initialize dialogs actions only after the main frame is created 
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if (newFrame != null) {
+            // Initialize dialogs actions only after the main frame is created 
             newFrame.selectionListDialog.getPopupMenuHandler().addSeparator();
             newFrame.selectionListDialog.getPopupMenuHandler().addAction(selectionListAction);
             newFrame.propertiesDialog.getMembershipPopupMenuHandler().addSeparator();
             newFrame.propertiesDialog.getMembershipPopupMenuHandler().addAction(propertiesListAction);
-			newFrame.relationListDialog.getPopupMenuHandler().addSeparator();
-			newFrame.relationListDialog.getPopupMenuHandler().addAction(relationListAction);
-		} else if (oldFrame != null) {
+            newFrame.relationListDialog.getPopupMenuHandler().addSeparator();
+            newFrame.relationListDialog.getPopupMenuHandler().addAction(relationListAction);
+        } else if (oldFrame != null) {
             // Remove listeners from previous frame to avoid memory leaks
-		    if (oldFrame.relationListDialog != null) {
-		        oldFrame.relationListDialog.getPopupMenuHandler().removeAction(relationListAction);
-		    }
-		    if (oldFrame.propertiesDialog != null) {
-		        oldFrame.propertiesDialog.getMembershipPopupMenuHandler().removeAction(propertiesListAction);
-		    }
-		    if (oldFrame.selectionListDialog != null) {
-		        oldFrame.selectionListDialog.getPopupMenuHandler().removeAction(selectionListAction);
-		    }
-		}
-	}
+            if (oldFrame.relationListDialog != null) {
+                oldFrame.relationListDialog.getPopupMenuHandler().removeAction(relationListAction);
+            }
+            if (oldFrame.propertiesDialog != null) {
+                oldFrame.propertiesDialog.getMembershipPopupMenuHandler().removeAction(propertiesListAction);
+            }
+            if (oldFrame.selectionListDialog != null) {
+                oldFrame.selectionListDialog.getPopupMenuHandler().removeAction(selectionListAction);
+            }
+        }
+    }
 }

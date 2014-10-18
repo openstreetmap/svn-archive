@@ -23,93 +23,105 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsAction;
 
 /**
  * An "OSM data" layer that cannot be uploaded, merged, and in which real OSM data cannot be imported.
- * Its sole purpose is to allow "classic" OSM edition tools to edit Imagery bounds (as XML files) without compromising OSM database integrity. 
- * 
+ * Its sole purpose is to allow "classic" OSM edition tools to edit Imagery bounds (as XML files)
+ * without compromising OSM database integrity.
+ *
  * @author Don-vip
  */
 public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener, XmlBoundsConstants {
 
-	@Override
-	public Action[] getMenuEntries() {
-		List<Action> result = new ArrayList<Action>();
-		for (Action action : super.getMenuEntries()) {
-			if (action instanceof LayerSaveAction) {
-				result.add(new BoundsLayerSaveAction(this));
+    @Override
+    public Action[] getMenuEntries() {
+        List<Action> result = new ArrayList<>();
+        for (Action action : super.getMenuEntries()) {
+            if (action instanceof LayerSaveAction) {
+                result.add(new BoundsLayerSaveAction(this));
 
-			} else if (action instanceof LayerSaveAsAction) {
-				result.add(new BoundsLayerSaveAsAction(this));
-				
-			} else if (!(action instanceof LayerGpxExportAction) && !(action instanceof ConvertToGpxLayerAction)) {
-				// Add everything else, expect GPX-related action
-				result.add(action);
-			}
-		}
-		result.add(new ShowBoundsAction(this));
-		return result.toArray(new Action[0]);
-	}
+            } else if (action instanceof LayerSaveAsAction) {
+                result.add(new BoundsLayerSaveAsAction(this));
 
-	private static final JosmAction[] actionsToDisable = new JosmAction[] {
-		Main.main.menu.download,
-		Main.main.menu.downloadPrimitive,
-		Main.main.menu.downloadReferrers,
-		Main.main.menu.upload,
-		Main.main.menu.uploadSelection,
-		Main.main.menu.update,
-		Main.main.menu.updateModified,
-		Main.main.menu.updateSelection,
-		Main.main.menu.openLocation
-	};
-	
-	private static final Map<JosmAction, Boolean> actionsStates = new HashMap<JosmAction, Boolean>();
-	
-	public XmlBoundsLayer(DataSet data) {
-		this(data, OsmDataLayer.createNewName(), null);
-	}
+            } else if (!(action instanceof LayerGpxExportAction) && !(action instanceof ConvertToGpxLayerAction)) {
+                // Add everything else, expect GPX-related action
+                result.add(action);
+            }
+        }
+        result.add(new ShowBoundsAction(this));
+        return result.toArray(new Action[0]);
+    }
 
-	public XmlBoundsLayer(DataSet data, String name, File associatedFile) {
-		super(data, name, associatedFile);
-		MapView.addLayerChangeListener(this);
-	}
-	
-	@Override
-	public boolean isMergable(Layer other) {
-		return other instanceof XmlBoundsLayer;
-	}
+    private static final JosmAction[] ACTIONS_TO_DISABLE = new JosmAction[] {
+        Main.main.menu.download,
+        Main.main.menu.downloadPrimitive,
+        Main.main.menu.downloadReferrers,
+        Main.main.menu.upload,
+        Main.main.menu.uploadSelection,
+        Main.main.menu.update,
+        Main.main.menu.updateModified,
+        Main.main.menu.updateSelection,
+        Main.main.menu.openLocation
+    };
 
-	@Override
-	public Icon getIcon() {
-		return XML_ICON_16;
-	}
+    private static final Map<JosmAction, Boolean> ACTIONS_STATES = new HashMap<>();
 
-	@Override
-	public boolean requiresUploadToServer() {
-		return false; // Never !
-	}
+    /**
+     * Constructs a new {@code XmlBoundsLayer}.
+     * @param data data
+     */
+    public XmlBoundsLayer(DataSet data) {
+        this(data, OsmDataLayer.createNewName(), null);
+    }
 
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		if (newLayer == this && !(oldLayer instanceof XmlBoundsLayer)) {
-			for (JosmAction action : actionsToDisable) {
-				actionsStates.put(action, action.isEnabled());
-				action.setEnabled(false);
-			}
-		} else if (oldLayer == this && !(newLayer instanceof XmlBoundsLayer)) {
-			for (JosmAction action : actionsToDisable) {
-				action.setEnabled(actionsStates.get(action));
-			}
-		}
-	}
+    /**
+     * Constructs a new {@code XmlBoundsLayer}.
+     * @param data data
+     * @param name Layer name
+     * @param associatedFile Associated file (can be null)
+     */
+    public XmlBoundsLayer(DataSet data, String name, File associatedFile) {
+        super(data, name, associatedFile);
+        MapView.addLayerChangeListener(this);
+    }
 
-	@Override
-	public void layerAdded(Layer newLayer) {
-	}
+    @Override
+    public boolean isMergable(Layer other) {
+        return other instanceof XmlBoundsLayer;
+    }
 
-	@Override
-	public void layerRemoved(Layer oldLayer) {
-	    if (Main.main.getEditLayer() instanceof XmlBoundsLayer) {
-	        for (JosmAction action : actionsToDisable) {
+    @Override
+    public Icon getIcon() {
+        return XML_ICON_16;
+    }
+
+    @Override
+    public boolean requiresUploadToServer() {
+        return false; // Never !
+    }
+
+    @Override
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        if (newLayer == this && !(oldLayer instanceof XmlBoundsLayer)) {
+            for (JosmAction action : ACTIONS_TO_DISABLE) {
+                ACTIONS_STATES.put(action, action.isEnabled());
                 action.setEnabled(false);
             }
-	    }
-	}
+        } else if (oldLayer == this && !(newLayer instanceof XmlBoundsLayer)) {
+            for (JosmAction action : ACTIONS_TO_DISABLE) {
+                action.setEnabled(ACTIONS_STATES.get(action));
+            }
+        }
+    }
+
+    @Override
+    public void layerAdded(Layer newLayer) {
+        // Do nothing
+    }
+
+    @Override
+    public void layerRemoved(Layer oldLayer) {
+        if (Main.main.getEditLayer() instanceof XmlBoundsLayer) {
+            for (JosmAction action : ACTIONS_TO_DISABLE) {
+                action.setEnabled(false);
+            }
+        }
+    }
 }

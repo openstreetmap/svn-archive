@@ -10,9 +10,8 @@ import org.openstreetmap.josm.gui.preferences.imagery.ImageryPreference.ImageryP
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.EditEntriesAction;
 
 /**
- *
+ * Plugin preferences.
  * @author Don-vip
- *
  */
 public class XmlBoundsPreferenceSetting implements SubPreferenceSetting {
 
@@ -33,8 +32,8 @@ public class XmlBoundsPreferenceSetting implements SubPreferenceSetting {
         return false;
     }
 
+    @Override
     public TabPreferenceSetting getTabPreferenceSetting(final PreferenceTabbedPane gui) {
         return gui.getImageryPreference();
     }
-
 }

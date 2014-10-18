@@ -18,34 +18,40 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.XmlBoundsLayer;
 
 /**
+ * Show XML bounds.
  * @author Don-vip
- *
  */
-@SuppressWarnings("serial")
 public class ShowBoundsAction extends ComputeBoundsAction implements OsmPrimitiveAction {
 
-	public ShowBoundsAction() {
-	}
-	
-	public ShowBoundsAction(XmlBoundsLayer xmlBoundsLayer) {
-		super(xmlBoundsLayer);
-	}
+    /**
+     * Constructs a new {@code ShowBoundsAction}.
+     */
+    public ShowBoundsAction() {
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		XmlTextPane pane = new XmlTextPane();
-		Font courierNew = Font.getFont("Courier New"); 
-		if (courierNew != null) {
-			pane.setFont(courierNew);
-		}
-		pane.setText(getXml());
-		pane.setEditable(false);
-		Box box = Box.createVerticalBox();
-		JScrollPane scrollPane = new JScrollPane(pane);
+    /**
+     * Constructs a new {@code ShowBoundsAction}.
+     * @param xmlBoundsLayer XML bounds layer
+     */
+    public ShowBoundsAction(XmlBoundsLayer xmlBoundsLayer) {
+        super(xmlBoundsLayer);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        XmlTextPane pane = new XmlTextPane();
+        Font courierNew = Font.getFont("Courier New");
+        if (courierNew != null) {
+            pane.setFont(courierNew);
+        }
+        pane.setText(getXml());
+        pane.setEditable(false);
+        Box box = Box.createVerticalBox();
+        JScrollPane scrollPane = new JScrollPane(pane);
         scrollPane.setPreferredSize(new Dimension(1024, 600));
         box.add(scrollPane);
         JOptionPane.showMessageDialog(Main.parent, box, ACTION_NAME, JOptionPane.PLAIN_MESSAGE);
-	}
+    }
 
     @Override
     public void setPrimitives(Collection<? extends OsmPrimitive> primitives) {

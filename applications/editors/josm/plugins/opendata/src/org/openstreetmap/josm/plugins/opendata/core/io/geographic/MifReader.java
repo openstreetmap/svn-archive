@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
-import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifDatum.Custom;
-import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifDatum.Geodetic_Reference_System_1980_GRS_80;
+import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifDatum.CUSTOM;
+import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifDatum.GEODETIC_REFERENCE_SYSTEM_1980_GRS_80;
 import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifProjection.Hotine_Oblique_Mercator;
 import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifProjection.Longitude_Latitude;
 
@@ -54,18 +54,18 @@ public class MifReader extends AbstractMapInfoReader {
         START_POLYLINE_SEGMENT,
         END_POLYLINE
     }
-    
+
     private final AbstractDataSetHandler handler;
-    
+
     private File file;
     private InputStream stream;
     protected Charset charset;
     protected BufferedReader midReader;
 
     private Character delimiter = '\t';
-    
+
     private State state = State.UNKNOWN;
-    
+
     private Projection josmProj;
     private DataSet ds;
     private Relation region;
@@ -86,18 +86,18 @@ public class MifReader extends AbstractMapInfoReader {
     private Double miny;
     private Double maxx;
     private Double maxy;
-    
+
     // Region clause
     private int numpolygons = -1;
     private int numpts = -1;
-    
+
     // PLine clause
     private int numsections = -1;
-    
+
     private MifReader(AbstractDataSetHandler handler) {
         this.handler = handler;
     }
-    
+
     public static DataSet parseDataSet(InputStream in, File file,
             AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
         return new MifReader(handler).parse(in, file, instance, Charset.forName(OdConstants.ISO8859_15));
@@ -116,7 +116,7 @@ public class MifReader extends AbstractMapInfoReader {
         // TODO
         Main.warn("TODO Index: "+line);
     }
-    
+
     private static String param(Param p, Object value) {
         return " +"+p.key+"="+value;
     }
@@ -126,24 +126,24 @@ public class MifReader extends AbstractMapInfoReader {
         MifDatum datum = MifDatum.forCode(Integer.parseInt(words[4]));
 
         // Custom datum: TODO: use custom decalage values
-        int offset = datum == Custom ? 4 : 0;
+        int offset = datum == CUSTOM ? 4 : 0;
 
         if (proj == Longitude_Latitude) {
             josmProj = Projections.getProjectionByCode("EPSG:4326"); // WGS 84
             return;
         }
-        
+
         // Initialize proj4-like parameters
         String params = param(Param.proj, proj.getProj4Id());
-        
+
         // Units
         units = words[5+offset];
         params += param(Param.units, units);
-        
+
         // Origin, longitude
         originLon = Double.parseDouble(words[6+offset]);
         params += param(Param.lon_0, originLon);
-        
+
         // Origin, latitude
         switch(proj) {
         case Albers_Equal_Area_Conic:
@@ -166,7 +166,7 @@ public class MifReader extends AbstractMapInfoReader {
             params += param(Param.lat_0, originLat);
             break;
         }
-        
+
         // Standard Parallel 1
         switch (proj) {
         case Cylindrical_Equal_Area:
@@ -193,7 +193,7 @@ public class MifReader extends AbstractMapInfoReader {
             params += param(Param.lat_2, stdP2);
             break;
         }
-        
+
         // Azimuth
         if (proj == Hotine_Oblique_Mercator) {
             Double.parseDouble(words[8+offset]);
@@ -216,7 +216,7 @@ public class MifReader extends AbstractMapInfoReader {
             params += param(Param.k_0, scaleFactor);
             break;
         }
-        
+
         // False Easting/Northing
         switch (proj) {
         case Albers_Equal_Area_Conic:
@@ -249,7 +249,7 @@ public class MifReader extends AbstractMapInfoReader {
             params += param(Param.y_0, falseNorthing);
             break;
         }
-                                    
+
         // Range
         switch (proj) {
         case Azimuthal_Equidistant_polar_aspect_only:
@@ -260,7 +260,7 @@ public class MifReader extends AbstractMapInfoReader {
 
         switch (proj) {
         case Lambert_Conformal_Conic:
-            if ((datum == Geodetic_Reference_System_1980_GRS_80 || datum == Custom) && equals(originLon, 3.0)) {
+            if ((datum == GEODETIC_REFERENCE_SYSTEM_1980_GRS_80 || datum == CUSTOM) && equals(originLon, 3.0)) {
                 // This sounds good for Lambert 93 or Lambert CC 9
                 if (equals(originLat, 46.5) && equals(stdP1, 44.0) && equals(stdP2, 49.0) && equals(falseEasting, 700000.0) && equals(falseNorthing, 6600000.0)) {
                     josmProj = Projections.getProjectionByCode("EPSG:2154"); // Lambert 93
@@ -274,13 +274,13 @@ public class MifReader extends AbstractMapInfoReader {
             }
             break;
         }
-        
+
         // TODO: handle cases with Affine declaration
         int index = parseAffineUnits(words);
 
         // handle cases with Bounds declaration
         parseBounds(words, index);
-        
+
         if (josmProj == null) {
             Main.info(line);
             Main.info(params);
@@ -291,12 +291,12 @@ public class MifReader extends AbstractMapInfoReader {
     private void parseCoordSysSyntax2(String[] words) {
         // handle cases with Affine declaration
         int index = parseAffineUnits(words);
-        
+
         units = words[index+1];
-        
+
         parseBounds(words, index+2);
     }
-    
+
     private int parseAffineUnits(String[] words) {
         // TODO: handle affine units
         return 2+0;
@@ -325,15 +325,15 @@ public class MifReader extends AbstractMapInfoReader {
             break;
         case "nonearth":
             parseCoordSysSyntax2(words);
-            
+
             // Syntax2 is not meant to be used for maps, and still... # 9592 happened
             // From MapInfo documentation:
             // http://testdrive.mapinfo.com/TDC/mxtreme4java.nsf/22fbc128f401ad818525666a00646bda/50100fdbe3e0a85085256a770053be1a/$FILE/coordsys.txt
-            // Use syntax 1 (above) to explicitly define a coordinate system for an Earth map (a map having coordinates which are specified with respect to a 
-            // location on the surface of the Earth). The optional Projection parameters dictate what map projection, if any, should be used in conjunction with 
-            // the coordinate system. If the Projection clause is omitted, MapBasic uses a longitude, latitude coordinate system using the North American Datum of 1927 (NAD-27). 
-            // Use syntax 2 to explicitly define a non-Earth coordinate system, such as the coordinate system used in a floor plan or other CAD drawing. 
-            
+            // Use syntax 1 (above) to explicitly define a coordinate system for an Earth map (a map having coordinates which are specified with respect to a
+            // location on the surface of the Earth). The optional Projection parameters dictate what map projection, if any, should be used in conjunction with
+            // the coordinate system. If the Projection clause is omitted, MapBasic uses a longitude, latitude coordinate system using the North American Datum of 1927 (NAD-27).
+            // Use syntax 2 to explicitly define a non-Earth coordinate system, such as the coordinate system used in a floor plan or other CAD drawing.
+
             if (handler != null && handler.getMifHandler() != null && handler.getMifHandler().getCoordSysNonEarthProjection() != null) {
                 josmProj = handler.getMifHandler().getCoordSysNonEarthProjection();
             } else {
@@ -366,7 +366,7 @@ public class MifReader extends AbstractMapInfoReader {
             ds = new DataSet();
         }
     }
-    
+
     private void parsePoint(String[] words) throws IOException {
         readAttributes(createNode(words[1], words[2]));
     }
@@ -378,7 +378,7 @@ public class MifReader extends AbstractMapInfoReader {
         line.addNode(createNode(words[1], words[2]));
         line.addNode(createNode(words[3], words[4]));
     }
-    
+
     private void startPolyLineSegment(boolean initial) throws IOException {
         Way previousPolyline = polyline;
         polyline = new Way();
@@ -391,7 +391,7 @@ public class MifReader extends AbstractMapInfoReader {
         }
         state = State.READING_POINTS;
     }
-    
+
     private void parsePLine(String[] words) throws IOException {
         numsections = 1;
         if (words.length <= 1 || "MULTIPLE".equalsIgnoreCase(words[1])) {
@@ -462,7 +462,7 @@ public class MifReader extends AbstractMapInfoReader {
         }
         midReader = getDataReader(file, ".mid", charset);
     }
-    
+
     private DataSet parse(InputStream in, File file, ProgressMonitor instance, Charset cs) throws IOException {
         try {
             try {
@@ -512,11 +512,11 @@ public class MifReader extends AbstractMapInfoReader {
                     readAttributes(polygon);
                 }
                 state = State.READING_POINTS;
-                
+
             } else if (state == State.START_POLYLINE_SEGMENT) {
                 numpts = Integer.parseInt(words[0]);
                 startPolyLineSegment(polyline != null);
-                
+
             } else if (state == State.READING_POINTS && numpts > 0) {
                 if (josmProj != null) {
                     node = createNode(words[0], words[1]);
@@ -586,9 +586,9 @@ public class MifReader extends AbstractMapInfoReader {
             Main.warn("Line "+lineNum+". Unknown clause in header: "+line);
         }
     }
-    
+
     protected void readAttributes(OsmPrimitive p) throws IOException {
-        if (midReader != null) { 
+        if (midReader != null) {
             String midLine = midReader.readLine();
             if (midLine != null) {
                 String[] fields = OdUtils.stripQuotesAndExtraChars(midLine.split(delimiter.toString()), delimiter.toString());
@@ -607,13 +607,13 @@ public class MifReader extends AbstractMapInfoReader {
             }
         }
     }
-    
+
     protected final Node createNode(String x, String y) {
         Node node = new Node(josmProj.eastNorth2latlon(new EastNorth(Double.parseDouble(x), Double.parseDouble(y))));
         ds.addPrimitive(node);
         return node;
     }
-    
+
     /** Compare two doubles within a default epsilon */
     public static boolean equals(Double a, Double b) {
         if (a==b) return true;

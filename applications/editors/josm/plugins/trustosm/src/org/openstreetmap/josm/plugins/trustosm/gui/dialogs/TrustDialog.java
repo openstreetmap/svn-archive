@@ -1,35 +1,30 @@
 package org.openstreetmap.josm.plugins.trustosm.gui.dialogs;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.geom.GeneralPath;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -43,6 +38,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -67,13 +63,7 @@ import org.openstreetmap.josm.plugins.trustosm.util.TrustAnalyzer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class TrustDialog extends ToggleDialog implements ActionListener, SelectionChangedListener, MapViewPaintable {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3324984194315776740L;
-
+public class TrustDialog extends ToggleDialog implements SelectionChangedListener, MapViewPaintable {
 
     public final static Color BGCOLOR_NO_SIG = new Color(234, 234, 234);
     //    public final static Color BGCOLOR_VALID_SIG = new Color(235,255,177);
@@ -81,7 +71,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
     public final static Color BGCOLOR_BROKEN_SIG = new Color(255, 197, 197);
     public final static Color BGCOLOR_REMOVED_ITEM = new Color(255, 100, 100);
     public final static Color BGCOLOR_UPDATED_ITEM = new Color(249,221,95);
-
 
     /** Use a TrustGPGPreparer to sign or validate signatures */
     //private final TrustGPGPreparer gpg;
@@ -100,22 +89,16 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
     /** The selected osmData */
     private Collection<? extends OsmPrimitive> osmData;
 
-
     private final List<WaySegment> selectedSegments = new ArrayList<>();
     private final List<OsmPrimitive> selectedPrimitives = new ArrayList<>();
 
     /** The JTree for showing the geometry */
     private final JTree geomTree;
 
-
     /**
      * The property data.
      */
     private final DefaultTableModel propertyData = new DefaultTableModel() {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -1252801283184909691L;
         @Override public boolean isCellEditable(int row, int column) {
             return false;
         }
@@ -124,10 +107,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         }
     };
     private final JTable propertyTable = new JTable(propertyData) {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1L;
 
         @Override
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -145,12 +124,8 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
     };
 
     /** The JTable for members of a relation */
-    private final DefaultTableModel memberData = new DefaultTableModel() {
+    /*private final DefaultTableModel memberData = new DefaultTableModel() {
 
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1L;
         @Override public boolean isCellEditable(int row, int column) {
             return false;
         }
@@ -159,10 +134,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         }
     };
     private final JTable memberTable = new JTable(memberData) {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1L;
 
         @Override
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -177,8 +148,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                 }
             return c;
         }
-    };
-
+    };*/
 
     /**
      * Constructor
@@ -197,7 +167,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
 
         propertyTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer(){
             /**
-             * 
+             *
              */
             private static final long serialVersionUID = 8003207668070727861L;
 
@@ -231,11 +201,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         geomTree.setRootVisible(false);
         geomTree.setCellRenderer(new DefaultTreeCellRenderer(){
 
-            /**
-             * 
-             */
-            private static final long serialVersionUID = -3070210847060314196L;
-
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value,
                     boolean selected, boolean expanded, boolean leaf, int row,
@@ -252,9 +217,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                     setIcon(ImageProvider.get(OsmPrimitiveType.from(osm)));
                     setText(osm.getDisplayName(DefaultNameFormatter.getInstance()));
 
-
                     if (osm instanceof Node) {
-                        Node osmNode = (Node) osm;
                         TrustSignatures sigs;
                         String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
                         if (TrustOSMplugin.signedItems.containsKey(id) && (sigs = ((TrustNode)TrustOSMplugin.signedItems.get(id)).getNodeSigs()) != null) {
@@ -288,11 +251,10 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                 }
                 return this;
             }
-
-
         });
 
         geomTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
             public void valueChanged(TreeSelectionEvent e) {
                 // unhighlight everything
                 for (OsmPrimitive p : selectedPrimitives) {
@@ -327,7 +289,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
             public void focusLost(FocusEvent fe) {
 
             }
-
         });
 
         geomTree.addFocusListener(new FocusListener(){
@@ -342,7 +303,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
             public void focusLost(FocusEvent fe) {
 
             }
-
         });
 
         JPanel dataPanel = new JPanel();
@@ -352,12 +312,9 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         geomTree.setAlignmentX(LEFT_ALIGNMENT);
         dataPanel.add(geomTree);
 
-        checkButton = new SideButton(marktr("Check"), "checksignatures", "TrustOSM",
-                tr("Check all available signatures for selected object."), this);
-        signButton = new SideButton(marktr("Sign"), "sign", "TrustOSM",
-                tr("Digital sign selected Tags, if you believe they are correct."), this);
-        showButton = new SideButton(marktr("Show"), "showsig", "TrustOSM",
-                tr("Show all available signatures for selected attribute."), this);
+        checkButton = new SideButton(new CheckAction());
+        signButton = new SideButton(new SignAction());
+        showButton = new SideButton(new ShowAction());
 
         createLayout(dataPanel, true, Arrays.asList(new SideButton[] {
             checkButton, signButton, showButton
@@ -365,10 +322,14 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         DataSet.addSelectionListener(this);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String actionCommand = e.getActionCommand();
-        if (actionCommand.equals("Check")) {
+    private class CheckAction extends JosmAction {
+
+        public CheckAction() {
+            super(tr("Check"), "checksignatures", tr("Check all available signatures for selected object."), null, false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
             for (OsmPrimitive osm : osmData) {
                 String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
                 if (TrustOSMplugin.signedItems.containsKey(id))
@@ -377,7 +338,17 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
             }
             updateTable();
             geomTree.repaint();
-        } else if (actionCommand.equals("Sign")) {
+        }
+    }
+
+    private class SignAction extends JosmAction {
+
+        public SignAction() {
+            super(tr("Sign"), "sign", tr("Digital sign selected Tags, if you believe they are correct."), null, false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
             for (int i : propertyTable.getSelectedRows()) {
                 String key = (String)propertyTable.getValueAt(i, 0);
                 for (OsmPrimitive osm : osmData) {
@@ -438,7 +409,17 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                 }
             updateTable();
             geomTree.repaint();
-        } else if (actionCommand.equals("Show")) {
+        }
+    }
+
+    private class ShowAction extends JosmAction {
+
+        public ShowAction() {
+            super(tr("Show"), "showsig", tr("Show all available signatures for selected attribute."), null, false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
             for (int i : propertyTable.getSelectedRows()) {
                 String key = (String)propertyTable.getValueAt(i, 0);
                 for (OsmPrimitive osm : osmData) {
@@ -448,7 +429,7 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                     }
                 }
             }
-            if (geomTree.getSelectionPaths()!=null)
+            if (geomTree.getSelectionPaths()!=null) {
                 for (TreePath tp : geomTree.getSelectionPaths()) {
                     Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
                     if (o instanceof OsmPrimitive) {
@@ -472,9 +453,10 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                         }
                     }
                 }
-
+            }
         }
     }
+
     /*
     public void showSignaturesDialog(TrustOSMItem trust, String key) {
         TrustSignatures sigs;
@@ -556,11 +538,9 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
                 } else if(osm instanceof Relation) {
 
                 }
-
             }
 
         return new DefaultTreeModel(root);
-
     }
 
     public void updateTable() {
@@ -662,7 +642,6 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         // sanity checks
         if (Main.map.mapView == null) return;
 
-
         Graphics2D g2 = g;
         g2.setColor(PaintColors.HIGHLIGHT.get());
         g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
@@ -679,5 +658,4 @@ public class TrustDialog extends ToggleDialog implements ActionListener, Selecti
         }
         g2.setStroke(new BasicStroke(1));
     }
-
 }

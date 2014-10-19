@@ -280,13 +280,13 @@ public class TrustGPG {
     }
 
     public void writeGpgFiles() throws FileNotFoundException, IOException {
-    	String path = Main.pref.getPluginsDirectory().getPath();
+        String path = Main.pref.getPluginsDirectory().getPath();
         try (FileOutputStream pubOut = new FileOutputStream(path + "/trustosm/gnupg/pubring.gpg");
              FileOutputStream secOut = new FileOutputStream(path + "/trustosm/gnupg/secring.gpg")) {
-	        pgpSec.encode(secOut);
-	        pgpPub.encode(pubOut);
-	        pubOut.flush();
-	        secOut.flush();
+            pgpSec.encode(secOut);
+            pgpPub.encode(pubOut);
+            pubOut.flush();
+            secOut.flush();
         }
     }
 

@@ -134,9 +134,9 @@ public class TrustSignatures {
                 aOut.endClearText();
 
                 try (BCPGOutputStream bOut = new BCPGOutputStream(aOut)) {
-		            for (PGPSignature sig : l) {
-		                sig.encode(bOut);
-		            }
+                    for (PGPSignature sig : l) {
+                        sig.encode(bOut);
+                    }
                 }
 
                 return baos.toString("UTF-8");
@@ -158,7 +158,7 @@ public class TrustSignatures {
             aOut.endClearText();
 
             try (BCPGOutputStream bOut = new BCPGOutputStream(aOut)) {
-            	sig.encode(bOut);
+                sig.encode(bOut);
             }
 
             return baos.toString("UTF-8");

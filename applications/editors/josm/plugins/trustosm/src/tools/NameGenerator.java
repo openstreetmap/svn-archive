@@ -85,23 +85,23 @@ public class NameGenerator {
      */
     public void refresh() throws IOException{
         try (
-    		FileReader input = new FileReader(fileName);
-    		BufferedReader bufRead = new BufferedReader(input);
+            FileReader input = new FileReader(fileName);
+            BufferedReader bufRead = new BufferedReader(input);
         ) {
-        	String line="";
+            String line="";
 
-	        while (line != null) {
-	            line = bufRead.readLine();
-	            if (line != null && !line.equals("")) {
-	                if (line.charAt(0) == '-') {
-	                    pre.add(line.substring(1).toLowerCase());
-	                } else if (line.charAt(0) == '+') {
-	                    sur.add(line.substring(1).toLowerCase());
-	                } else{
-	                    mid.add(line.toLowerCase());
-	                }
-	            }
-	        }
+            while (line != null) {
+                line = bufRead.readLine();
+                if (line != null && !line.equals("")) {
+                    if (line.charAt(0) == '-') {
+                        pre.add(line.substring(1).toLowerCase());
+                    } else if (line.charAt(0) == '+') {
+                        sur.add(line.substring(1).toLowerCase());
+                    } else{
+                        mid.add(line.toLowerCase());
+                    }
+                }
+            }
         }
     }
 

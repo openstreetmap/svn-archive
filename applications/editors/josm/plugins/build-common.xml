@@ -36,6 +36,9 @@
         <property name="xjc" value="${java.home}/../bin/xjc" />
     </target>
 
+    <!-- To be overriden in plugin build file before inclusion if other plugins are required -->
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}" includes="nothing"/>
+
     <!--
     **********************************************************
     ** init - initializes the build
@@ -59,6 +62,7 @@
                 <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
                     <include name="**/*.jar"/>
                 </fileset>
+                <fileset refid="plugin.requires.jars"/>
             </classpath>
         </javac>
     </target>
@@ -379,9 +383,6 @@
         <pathelement path="${plugin.jar}"/>
         <pathelement path="${groovy.jar}"/>
     </path>
-    <condition property="plugin.requires.jars.set">
-        <isreference refid="plugin.requires.jars"/>
-    </condition>
     <macrodef name="init-test-preferences">
         <sequential>
             <copy file="${plugin.test.dir}/config/preferences.template.xml" tofile="${plugin.test.dir}/config/unit-josm.home/preferences.xml"/>
@@ -402,12 +403,12 @@
         <delete file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" />
         <delete dir="${plugin.test.dir}/config/unit-josm.home/cache" failonerror="false"/>
     </target>
-    <macrodef name="call-groovyc">
-        <element name="cp-elements"/>
+    <target name="test-compile" depends="test-init,dist">
+        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${groovy.jar}"/>
         <sequential>
             <groovyc srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
                 <classpath>
-                    <cp-elements/>
+                    <fileset refid="plugin.requires.jars"/>
                     <path refid="test.classpath"/>
                 </classpath>
                 <javac target="1.7" source="1.7" debug="on" encoding="UTF-8">
@@ -416,26 +417,10 @@
                 </javac>
             </groovyc>
         </sequential>
-    </macrodef>
-    <target name="call-groovyc-extended" if="plugin.requires.jars.set">
-        <call-groovyc>
-            <cp-elements>
-                <fileset refid="plugin.requires.jars"/>
-            </cp-elements>
-        </call-groovyc>
     </target>
-    <target name="call-groovyc-base" unless="plugin.requires.jars.set">
-        <call-groovyc>
-            <cp-elements/>
-        </call-groovyc>
-    </target>
-    <target name="test-compile" depends="test-init,dist">
-        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${groovy.jar}"/>
-        <antcall target="call-groovyc-base"/>
-        <antcall target="call-groovyc-extended"/>
-    </target>
-    <macrodef name="call-junit">
-        <element name="cp-elements"/>
+    <target name="test" depends="dist, test-compile" 
+        description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>
             <echo message="Running unit tests with JUnit"/>
             <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec">
@@ -446,7 +431,7 @@
                     <sysproperty key="java.awt.headless" value="true"/>
                     <sysproperty key="suppressPermanentFailure" value="${suppressPermanentFailure}"/>
                     <classpath>
-                        <cp-elements/>
+                        <fileset refid="plugin.requires.jars"/>
                         <path refid="test.classpath"/>
                         <pathelement path="${plugin.test.dir}/build/unit"/>
                     </classpath>
@@ -458,24 +443,6 @@
                 </junit>
             </jacoco:coverage>
         </sequential>
-    </macrodef>
-    <target name="call-junit-extended" if="plugin.requires.jars.set">
-        <call-junit>
-            <cp-elements>
-                <fileset refid="plugin.requires.jars"/>
-            </cp-elements>
-        </call-junit>
-    </target>
-    <target name="call-junit-base" unless="plugin.requires.jars.set">
-        <call-junit>
-            <cp-elements/>
-        </call-junit>
-    </target>
-    <target name="test" depends="dist, test-compile" 
-        description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
-        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
-        <antcall target="call-junit-base"/>
-        <antcall target="call-junit-extended"/>
     </target>
 	
     <target name="runjosm" depends="install">

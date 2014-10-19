@@ -7,17 +7,16 @@
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
     <property name="plugin.requires" value="jts;geotools;utilsplugin2"/>
-	<!-- plugin.dist.dir is usually defined in build-common.xml but we need to define plugin.requires.jars before including it -->
-	<property name="plugin.dist.dir" location="../../dist"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+    
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="jts.jar"/>
         <include name="geotools.jar"/>
         <include name="opendata.jar"/>
     </fileset>
 
-    <!-- ** include targets that all plugins have in common ** -->
-    <import file="../build-common.xml"/>
-    
     <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
     <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
     

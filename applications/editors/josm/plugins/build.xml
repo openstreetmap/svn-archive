@@ -97,6 +97,7 @@
         <ant target="dist" dir="touchscreenhelper"/>
         <ant target="dist" dir="tracer"/>
         <ant target="dist" dir="tracer2"/>
+        <ant target="dist" dir="trustosm"/>
         <ant target="dist" dir="turnlanes"/>
         <ant target="dist" dir="turnrestrictions"/>
         <ant target="dist" dir="undelete"/>
@@ -109,7 +110,6 @@
         <ant target="dist" dir="wms-turbo-challenge2"/>
     </target>
     <target name="build_defect" depends="compile">
-        <ant target="dist" dir="trustosm"/>
     </target>
     <target name="clean">
         <ant target="clean" dir="00_plugin_dir_template"/>

@@ -8,13 +8,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JMenu;
@@ -56,10 +61,12 @@ public class TrustOSMplugin extends Plugin {
         // init the plugin
         super(info);
         // check if the jarlibs are already extracted or not and extract them if not
-        if (!Main.pref.getBoolean("trustosm.jarLibsExtracted")) {
+        /*if (!Main.pref.getBoolean("trustosm.jarLibsExtracted")) {
             Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","lib"));
             Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","resources"));
-        }
+        }*/
+        extractFiles("trustosm","lib");
+        extractFiles("trustosm","resources");
 
         refreshMenu();
         checkForUnrestrictedPolicyFiles();
@@ -92,11 +99,13 @@ public class TrustOSMplugin extends Plugin {
 
             c.init(Cipher.ENCRYPT_MODE, key192);
             c.doFinal(data);
-        } catch (Exception e) {
-            //e.printStackTrace();
-            System.err.println("Warning: It seems that the Unrestricted Policy Files are not available in this JVM. So high level crypto is not allowed. Problems may occure.");
+        } catch (InvalidKeyException e) {
+            Main.warn("It seems that the Unrestricted Policy Files are not available in this JVM. "+
+                      "So high level crypto is not allowed. Problems may occur.");
             //extractFiles("trustosm","jce");
             installUnrestrictedPolicyFiles();
+        } catch (BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException e) {
+            Main.error(e);
         }
     }
 

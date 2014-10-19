@@ -41,15 +41,17 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
 
     public KeyTreeTableModel(Collection<PGPSignature> sigs) {
         root = new SignatureTreeNode();
-        for (PGPSignature s : sigs){
-            SignatureTreeNode sn = new SignatureTreeNode(s);
-            PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
-            Iterator<?> iter = pub.getSignatures();
-            while (iter.hasNext()){
-                PGPSignature ks = (PGPSignature)iter.next();
-                sn.getChildren().add(new SignatureTreeNode(ks));
+        for (PGPSignature s : sigs) {
+            if (s != null) {
+                SignatureTreeNode sn = new SignatureTreeNode(s);
+                PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
+                Iterator<?> iter = pub.getSignatures();
+                while (iter.hasNext()){
+                    PGPSignature ks = (PGPSignature)iter.next();
+                    sn.getChildren().add(new SignatureTreeNode(ks));
+                }
+                root.getChildren().add(sn);
             }
-            root.getChildren().add(sn);
         }
     }
 

@@ -88,9 +88,9 @@ public class TrustSignaturesDialog {
                     }
                 }
             });
-            t.setLeafIcon(ImageProvider.get("dialogs/sign"));
-            t.setOpenIcon(ImageProvider.get("dialogs/sign_color"));
-            t.setClosedIcon(ImageProvider.get("dialogs/sign_color"));
+            t.setLeafIcon(ImageProvider.get("sign"));
+            t.setOpenIcon(ImageProvider.get("sign_color"));
+            t.setClosedIcon(ImageProvider.get("sign_color"));
             t.expandAll();
             t.packAll();
             t.collapseAll();

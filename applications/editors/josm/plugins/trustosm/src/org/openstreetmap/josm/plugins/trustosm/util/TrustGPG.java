@@ -135,7 +135,9 @@ public class TrustGPG {
             try {
                 generateKey();
             } catch (Exception e) {
-                System.err.println("GPG Key Ring File could not be created in: "+Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
+                Main.error(e);
+                Main.error("GPG Key Ring File could not be created in: "+
+                        Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
             }
         }
         //

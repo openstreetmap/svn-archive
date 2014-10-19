@@ -126,24 +126,27 @@ public class TrustSignatures {
     public String getArmoredFulltextSignatureAll(String plain) {
         if (textsigs.containsKey(plain)){
             List<PGPSignature> l = textsigs.get(plain);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try (ArmoredOutputStream aOut = new ArmoredOutputStream(baos)) {
-                aOut.beginClearText(l.get(0).getHashAlgorithm());
-                aOut.write(plain.getBytes(Charset.forName("UTF-8")));
-                aOut.write('\n');
-                aOut.endClearText();
+            PGPSignature first = l.get(0);
+            if (first != null) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                try (ArmoredOutputStream aOut = new ArmoredOutputStream(baos)) {
+                    aOut.beginClearText(first.getHashAlgorithm());
+                    aOut.write(plain.getBytes(Charset.forName("UTF-8")));
+                    aOut.write('\n');
+                    aOut.endClearText();
 
-                try (BCPGOutputStream bOut = new BCPGOutputStream(aOut)) {
-                    for (PGPSignature sig : l) {
-                        sig.encode(bOut);
+                    try (BCPGOutputStream bOut = new BCPGOutputStream(aOut)) {
+                        for (PGPSignature sig : l) {
+                            sig.encode(bOut);
+                        }
                     }
+
+                    return baos.toString("UTF-8");
+
+                } catch (Exception e) {
+                    Main.error(e);
+                    return "Error - read console Output";
                 }
-
-                return baos.toString("UTF-8");
-
-            } catch (Exception e) {
-                Main.error(e);
-                return "Error - read console Output";
             }
         }
         return "No sigs available";

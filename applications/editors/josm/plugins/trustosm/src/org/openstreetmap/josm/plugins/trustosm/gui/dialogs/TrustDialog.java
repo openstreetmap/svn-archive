@@ -330,11 +330,13 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (OsmPrimitive osm : osmData) {
-                String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-                if (TrustOSMplugin.signedItems.containsKey(id))
-                    TrustAnalyzer.checkEverything(TrustOSMplugin.signedItems.get(id));
-                //checkedItems.put(osm, TrustOSMplugin.gpg.check(checkedItems.containsKey(osm)? checkedItems.get(osm) : new TrustOSMItem(osm)));
+            if (osmData != null) {
+                for (OsmPrimitive osm : osmData) {
+                    String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+                    if (TrustOSMplugin.signedItems.containsKey(id))
+                        TrustAnalyzer.checkEverything(TrustOSMplugin.signedItems.get(id));
+                    //checkedItems.put(osm, TrustOSMplugin.gpg.check(checkedItems.containsKey(osm)? checkedItems.get(osm) : new TrustOSMItem(osm)));
+                }
             }
             updateTable();
             geomTree.repaint();
@@ -349,14 +351,16 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (int i : propertyTable.getSelectedRows()) {
-                String key = (String)propertyTable.getValueAt(i, 0);
-                for (OsmPrimitive osm : osmData) {
-                    if (osm.keySet().contains(key)) {
-                        String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-                        TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
-                        if (TrustOSMplugin.gpg.signTag(trust, key))
-                            TrustOSMplugin.signedItems.put(id, trust);
+            if (osmData != null) {
+                for (int i : propertyTable.getSelectedRows()) {
+                    String key = (String)propertyTable.getValueAt(i, 0);
+                    for (OsmPrimitive osm : osmData) {
+                        if (osm.keySet().contains(key)) {
+                            String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+                            TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+                            if (TrustOSMplugin.gpg.signTag(trust, key))
+                                TrustOSMplugin.signedItems.put(id, trust);
+                        }
                     }
                 }
             }
@@ -420,12 +424,14 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            for (int i : propertyTable.getSelectedRows()) {
-                String key = (String)propertyTable.getValueAt(i, 0);
-                for (OsmPrimitive osm : osmData) {
-                    String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-                    if (osm.keySet().contains(key) && TrustOSMplugin.signedItems.containsKey(id)) {
-                        TrustSignaturesDialog.showSignaturesDialog(TrustOSMplugin.signedItems.get(id), key);
+            if (osmData != null) {
+                for (int i : propertyTable.getSelectedRows()) {
+                    String key = (String)propertyTable.getValueAt(i, 0);
+                    for (OsmPrimitive osm : osmData) {
+                        String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+                        if (osm.keySet().contains(key) && TrustOSMplugin.signedItems.containsKey(id)) {
+                            TrustSignaturesDialog.showSignaturesDialog(TrustOSMplugin.signedItems.get(id), key);
+                        }
                     }
                 }
             }
@@ -555,68 +561,69 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         rowStatus.clear();
         boolean sigsAvailable = false;
 
-        for (OsmPrimitive osm : osmData) {
-            String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-            if (TrustOSMplugin.signedItems.containsKey(id)) {
-                trust = TrustOSMplugin.signedItems.get(id);
-                sigsAvailable = true;
-                /*
-                Map<String,String> tags = osm.getKeys();
-                Map<String, TrustSignatures>  signedTags = trust.getTagSigs();
-                HashSet<String> removedKeys = new HashSet<String>(signedTags.keySet());
-                removedKeys.removeAll(tags.keySet());
-                for (String removedKey: removedKeys) {
-                    TrustSignatures sigs = signedTags.get(removedKey);
-                    sigs.setStatus( TrustSignatures.ITEM_REMOVED );
-                    String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(sigs.getOnePlainText());
-                    tags.put(kv[0],kv[1]);
-                }
-                 */
-            } else {
-                trust = TrustOsmPrimitive.createTrustOsmPrimitive(osm);
-                sigsAvailable = false;
-            }
-
-            //        trust = TrustOSMplugin.signedItems.containsKey(osm) ? TrustOSMplugin.signedItems.get(osm) : new TrustOSMItem(osm);
-
-            for (String key: osm.keySet()) {
-                String value = osm.get(key);
-                //keyCount.put(key, keyCount.containsKey(key) ? keyCount.get(key) + 1 : 1);
-
-                byte status = sigsAvailable && trust.getTagSigs().containsKey(key) ? trust.getTagSigs().get(key).getStatus() : TrustSignatures.SIG_UNKNOWN ;
-                Byte oldstatus = rowStatus.containsKey(key)? rowStatus.get(key) : new Byte(TrustSignatures.SIG_VALID);
-                Byte sigstatus = new Byte(status);
-                Byte newstatus;
-                if (sigstatus.equals(new Byte(TrustSignatures.SIG_BROKEN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_BROKEN))) {
-                    newstatus = new Byte(TrustSignatures.SIG_BROKEN);
-                } else if (sigstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))) {
-                    newstatus = new Byte(TrustSignatures.SIG_UNKNOWN);
-                } else newstatus = new Byte(TrustSignatures.SIG_VALID);
-
-                rowStatus.put(key, newstatus );
-                if (valueCount.containsKey(key)) {
-                    Map<String, Integer> v = valueCount.get(key);
-                    v.put(value, v.containsKey(value)? v.get(value) + 1 : 1 );
+        if (osmData != null) {
+            for (OsmPrimitive osm : osmData) {
+                String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
+                if (TrustOSMplugin.signedItems.containsKey(id)) {
+                    trust = TrustOSMplugin.signedItems.get(id);
+                    sigsAvailable = true;
+                    /*
+                    Map<String,String> tags = osm.getKeys();
+                    Map<String, TrustSignatures>  signedTags = trust.getTagSigs();
+                    HashSet<String> removedKeys = new HashSet<String>(signedTags.keySet());
+                    removedKeys.removeAll(tags.keySet());
+                    for (String removedKey: removedKeys) {
+                        TrustSignatures sigs = signedTags.get(removedKey);
+                        sigs.setStatus( TrustSignatures.ITEM_REMOVED );
+                        String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(sigs.getOnePlainText());
+                        tags.put(kv[0],kv[1]);
+                    }
+                     */
                 } else {
-                    TreeMap<String,Integer> v = new TreeMap<>();
-                    v.put(value, 1);
-                    valueCount.put(key, v);
+                    trust = TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+                    sigsAvailable = false;
+                }
+
+                //        trust = TrustOSMplugin.signedItems.containsKey(osm) ? TrustOSMplugin.signedItems.get(osm) : new TrustOSMItem(osm);
+
+                for (String key: osm.keySet()) {
+                    String value = osm.get(key);
+                    //keyCount.put(key, keyCount.containsKey(key) ? keyCount.get(key) + 1 : 1);
+
+                    byte status = sigsAvailable && trust.getTagSigs().containsKey(key) ? trust.getTagSigs().get(key).getStatus() : TrustSignatures.SIG_UNKNOWN ;
+                    Byte oldstatus = rowStatus.containsKey(key)? rowStatus.get(key) : new Byte(TrustSignatures.SIG_VALID);
+                    Byte sigstatus = new Byte(status);
+                    Byte newstatus;
+                    if (sigstatus.equals(new Byte(TrustSignatures.SIG_BROKEN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_BROKEN))) {
+                        newstatus = new Byte(TrustSignatures.SIG_BROKEN);
+                    } else if (sigstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))) {
+                        newstatus = new Byte(TrustSignatures.SIG_UNKNOWN);
+                    } else newstatus = new Byte(TrustSignatures.SIG_VALID);
+
+                    rowStatus.put(key, newstatus );
+                    if (valueCount.containsKey(key)) {
+                        Map<String, Integer> v = valueCount.get(key);
+                        v.put(value, v.containsKey(value)? v.get(value) + 1 : 1 );
+                    } else {
+                        TreeMap<String,Integer> v = new TreeMap<>();
+                        v.put(value, 1);
+                        valueCount.put(key, v);
+                    }
                 }
             }
-        }
-        for (Entry<String, Map<String, Integer>> e : valueCount.entrySet()) {
-            int count=0;
-            for (Entry<String, Integer> e1: e.getValue().entrySet()) {
-                count+=e1.getValue();
+            for (Entry<String, Map<String, Integer>> e : valueCount.entrySet()) {
+                int count=0;
+                for (Entry<String, Integer> e1: e.getValue().entrySet()) {
+                    count+=e1.getValue();
+                }
+                if (count < osmData.size()) {
+                    e.getValue().put("", osmData.size()-count);
+                }
+                propertyData.addRow(new Object[]{e.getKey(), e.getValue()});
             }
-            if (count < osmData.size()) {
-                e.getValue().put("", osmData.size()-count);
-            }
-            propertyData.addRow(new Object[]{e.getKey(), e.getValue()});
         }
 
-
-        boolean hasSelection = !osmData.isEmpty();
+        boolean hasSelection = osmData != null && !osmData.isEmpty();
         boolean hasTags = hasSelection && propertyData.getRowCount() > 0;
 
         propertyTable.setVisible(hasTags);

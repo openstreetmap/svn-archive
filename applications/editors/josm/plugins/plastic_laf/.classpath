@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
-	<classpathentry kind="lib" path="lib/looks-2.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/jgoodies-common-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/jgoodies-looks-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

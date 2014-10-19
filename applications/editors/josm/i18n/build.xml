@@ -86,7 +86,7 @@
         <antcall target="coretrans"/>
         <foreach param="path" target="plugintrans">
             <path>
-                <dirset dir="${plugin.dir}" includes="*"/>
+                <dirset dir="${plugin.dir}" includes="*" excludes="00_*" />
             </path>
         </foreach>
     </target>

@@ -46,7 +46,12 @@ public class GeoToolsPlugin extends Plugin {
         } else {
             // Update registry with com.sun.media.jai.imageioimpl.ImageReadWriteSpi (only class listed javax.media.jai.OperationRegistrySpi)
             // it would be safer to parse this file instead, but a JAI update is very unlikely as it has not been modified since 2005
-            new ImageReadWriteSpi().updateRegistry(registry);
+            try {
+                new ImageReadWriteSpi().updateRegistry(registry);
+            } catch (IllegalArgumentException e) {
+                // See #10652: IllegalArgumentException: A descriptor is already registered against the name "ImageRead" under registry mode "rendered"
+                Main.warn("geotools: error in JAI/ImageReadWriteSpi initialization: "+e.getMessage());
+            }
 
             // Update registry with GeoTools registry file
             try (InputStream in = GeoToolsPlugin.class.getResourceAsStream("/META-INF/registryFile.jai")) {
@@ -55,8 +60,8 @@ public class GeoToolsPlugin extends Plugin {
                 } else {
                     registry.updateFromStream(in);
                 }
-            } catch (IOException e) {
-                Main.error("geotools: error in JAI initialization: "+e.getMessage());
+            } catch (IOException | IllegalArgumentException e) {
+                Main.error("geotools: error in JAI/GeoTools initialization: "+e.getMessage());
             }
         }
     }

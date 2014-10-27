@@ -42,10 +42,12 @@ import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.conflict.tags.MultiValueResolutionDecision;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecision;
 import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictDecisionType;
+import org.openstreetmap.josm.gui.conflict.tags.RelationMemberConflictResolver;
 import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolver;
 import org.openstreetmap.josm.gui.conflict.tags.TagConflictResolverModel;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.help.HelpUtil;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
@@ -54,11 +56,11 @@ import org.openstreetmap.josm.tools.WindowGeometry;
  * nodes are merged.
  *
  * There is a singleton instance of this dialog which can be retrieved using
- * {@see #getInstance()}.
+ * {@link #getInstance()}.
  *
  * The dialog uses two models: one  for resolving tag conflicts, the other
  * for resolving conflicts in relation memberships. For both models there are accessors,
- * i.e {@see #getTagConflictResolverModel()} and {@see #getRelationMemberConflictResolverModel()}.
+ * i.e {@link #getTagConflictResolverModel()} and {@link #getRelationMemberConflictResolverModel()}.
  *
  * Models have to be <strong>populated</strong> before the dialog is launched. Example:
  * <pre>
@@ -69,19 +71,17 @@ import org.openstreetmap.josm.tools.WindowGeometry;
  * </pre>
  *
  * You should also set the target primitive which other primitives (ways or nodes) are
- * merged to, see {@see #setTargetPrimitive(OsmPrimitive)}.
+ * merged to, see {@link #setTargetPrimitive(OsmPrimitive)}.
  *
- * After the dialog is closed use {@see #isCancelled()} to check whether the user canceled
- * the dialog. If it wasn't canceled you may build a collection of {@see Command} objects
+ * After the dialog is closed use {@link #isCanceled()} to check whether the user canceled
+ * the dialog. If it wasn't canceled you may build a collection of {@link Command} objects
  * which reflect the conflict resolution decisions the user made in the dialog:
- * see {@see #buildResolutionCommands()}
- *
- *
+ * see {@link #buildResolutionCommands()}
  */
 public class MyCombinePrimitiveResolverDialog extends JDialog {
 
     /** the unique instance of the dialog */
-    static private MyCombinePrimitiveResolverDialog instance;
+    private static MyCombinePrimitiveResolverDialog instance;
 
     /**
      * Replies the unique instance of the dialog
@@ -90,15 +90,19 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
      */
     public static MyCombinePrimitiveResolverDialog getInstance() {
         if (instance == null) {
-            instance = new MyCombinePrimitiveResolverDialog(Main.parent);
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override public void run() {
+                    instance = new MyCombinePrimitiveResolverDialog(Main.parent);
+                }
+            });
         }
         return instance;
     }
 
     private AutoAdjustingSplitPane spTagConflictTypes;
     private TagConflictResolver pnlTagConflictResolver;
-    private MyRelationMemberConflictResolver pnlRelationMemberConflictResolver;
-    private boolean cancelled;
+    private RelationMemberConflictResolver pnlRelationMemberConflictResolver;
+    private boolean canceled;
     private JPanel pnlButtons;
     private OsmPrimitive targetPrimitive;
 
@@ -118,19 +122,22 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
 
     /**
-     * Sets the primitive the collection of primitives is merged or combined
-     * to.
+     * Sets the primitive the collection of primitives is merged or combined to.
      *
      * @param primitive the target primitive
      */
-    public void setTargetPrimitive(OsmPrimitive primitive) {
+    public void setTargetPrimitive(final OsmPrimitive primitive) {
         this.targetPrimitive = primitive;
-        updateTitle();
-        if (primitive instanceof Way) {
-            pnlRelationMemberConflictResolver.initForWayCombining();
-        } else if (primitive instanceof Node) {
-            pnlRelationMemberConflictResolver.initForNodeMerging();
-        }
+        GuiHelper.runInEDTAndWait(new Runnable() {
+            @Override public void run() {
+                updateTitle();
+                if (primitive instanceof Way) {
+                    pnlRelationMemberConflictResolver.initForWayCombining();
+                } else if (primitive instanceof Node) {
+                    pnlRelationMemberConflictResolver.initForNodeMerging();
+                }
+            }
+        });
     }
 
     protected void updateTitle() {
@@ -151,7 +158,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         }
     }
 
-    protected void build() {
+    protected final void build() {
         getContentPane().setLayout(new BorderLayout());
         updateTitle();
         spTagConflictTypes = new AutoAdjustingSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -168,13 +175,12 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
     }
 
     protected JPanel buildRelationMemberConflictResolverPanel() {
-        pnlRelationMemberConflictResolver = new MyRelationMemberConflictResolver();
+        pnlRelationMemberConflictResolver = new RelationMemberConflictResolver(new MyRelationMemberConflictResolverModel());
         return pnlRelationMemberConflictResolver;
     }
 
     protected JPanel buildButtonPanel() {
-        JPanel pnl = new JPanel();
-        pnl.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel pnl = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         // -- apply button
         ApplyAction applyAction = new ApplyAction();
@@ -195,17 +201,29 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         return pnl;
     }
 
-    public MyCombinePrimitiveResolverDialog(Component owner) {
-        super(JOptionPane.getFrameForComponent(owner), ModalityType.DOCUMENT_MODAL);
+    /**
+     * Constructs a new {@code MyCombinePrimitiveResolverDialog}.
+     * @param parent The parent component in which this dialog will be displayed.
+     */
+    public MyCombinePrimitiveResolverDialog(Component parent) {
+        super(JOptionPane.getFrameForComponent(parent), ModalityType.DOCUMENT_MODAL);
         build();
     }
 
+    /**
+     * Replies the tag conflict resolver model.
+     * @return The tag conflict resolver model.
+     */
     public TagConflictResolverModel getTagConflictResolverModel() {
         return pnlTagConflictResolver.getModel();
     }
 
+    /**
+     * Replies the relation membership conflict resolver model.
+     * @return The relation membership conflict resolver model.
+     */
     public MyRelationMemberConflictResolverModel getRelationMemberConflictResolverModel() {
-        return pnlRelationMemberConflictResolver.getModel();
+        return (MyRelationMemberConflictResolverModel) pnlRelationMemberConflictResolver.getModel();
     }
 
     protected List<Command> buildTagChangeCommand(OsmPrimitive primitive, TagCollection tc) {
@@ -229,7 +247,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         List<Command> cmds = new LinkedList<>();
 
         TagCollection allResolutions = getTagConflictResolverModel().getAllResolutions();
-        if (allResolutions.size() > 0) {
+        if (!allResolutions.isEmpty()) {
             cmds.addAll(buildTagChangeCommand(targetPrimitive, allResolutions));
         }
         if (targetPrimitive.get("created_by") != null) {
@@ -278,14 +296,16 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         model.refresh();
     }
 
+    /**
+     * Prepares the default decisions for populated tag and relation membership conflicts.
+     */
     public void prepareDefaultDecisions() {
         prepareDefaultTagDecisions();
         prepareDefaultRelationDecisions();
     }
 
     protected JPanel buildEmptyConflictsPanel() {
-        JPanel pnl = new JPanel();
-        pnl.setLayout(new BorderLayout());
+        JPanel pnl = new JPanel(new BorderLayout());
         pnl.add(new JLabel(tr("No conflicts to resolve")));
         return pnl;
     }
@@ -296,18 +316,15 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         getContentPane().removeAll();
 
         if (relModel.getNumDecisions() > 0 && tagModel.getNumDecisions() > 0) {
-            // display both, the dialog for resolving relation conflicts and for resolving
-            // tag conflicts
+            // display both, the dialog for resolving relation conflicts and for resolving tag conflicts
             spTagConflictTypes.setTopComponent(pnlTagConflictResolver);
             spTagConflictTypes.setBottomComponent(pnlRelationMemberConflictResolver);
             getContentPane().add(spTagConflictTypes, BorderLayout.CENTER);
         } else if (relModel.getNumDecisions() > 0) {
             // relation conflicts only
-            //
             getContentPane().add(pnlRelationMemberConflictResolver, BorderLayout.CENTER);
         } else if (tagModel.getNumDecisions() > 0) {
             // tag conflicts only
-            //
             getContentPane().add(pnlTagConflictResolver, BorderLayout.CENTER);
         } else {
             getContentPane().add(buildEmptyConflictsPanel(), BorderLayout.CENTER);
@@ -323,12 +340,16 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
         pnlRelationMemberConflictResolver.prepareForEditing();
     }
 
-    protected void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    protected void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
-    public boolean isCancelled() {
-        return cancelled;
+    /**
+     * Determines if this dialog has been cancelled.
+     * @return true if this dialog has been cancelled, false otherwise.
+     */
+    public boolean isCanceled() {
+        return canceled;
     }
 
     @Override
@@ -337,7 +358,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             prepareGUIBeforeConflictResolutionStarts();
             new WindowGeometry(getClass().getName() + ".geometry", WindowGeometry.centerInWindow(Main.parent,
                     new Dimension(600, 400))).applySafe(this);
-            setCancelled(false);
+            setCanceled(false);
             btnApply.requestFocusInWindow();
         } else if (isShowing()) { // Avoid IllegalComponentStateException like in #8775
             new WindowGeometry(this).remember(getClass().getName() + ".geometry");
@@ -356,7 +377,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            setCancelled(true);
+            setCanceled(true);
             setVisible(false);
         }
     }
@@ -376,7 +397,7 @@ public class MyCombinePrimitiveResolverDialog extends JDialog {
             pnlTagConflictResolver.rememberPreferences();
         }
 
-        protected void updateEnabledState() {
+        protected final void updateEnabledState() {
             setEnabled(pnlTagConflictResolver.getModel().getNumConflicts() == 0
                     && pnlRelationMemberConflictResolver.getModel().getNumConflicts() == 0);
         }

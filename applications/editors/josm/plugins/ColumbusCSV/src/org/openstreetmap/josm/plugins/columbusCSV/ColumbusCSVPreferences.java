@@ -76,7 +76,7 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
         Main.pref.put(ZOOM_AFTER_IMPORT, colCSVDontZoomAfterImport.isSelected());
         Main.pref.put(IGNORE_VDOP, colCSVIgnoreVDOP.isSelected());
         Main.pref.put(WARN_CONVERSION_ERRORS, colCSVWarnConversionErrors.isSelected());
-        Main.pref.put(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());		
+        Main.pref.put(WARN_MISSING_AUDIO, colCSVWarnMissingAudio.isSelected());        
         return false;
     }
     
@@ -85,7 +85,7 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
      * @return
      */
     public static boolean showSummary() {
-	    return Main.pref.getBoolean(SHOW_SUMMARY, true);
+        return Main.pref.getBoolean(SHOW_SUMMARY, true);
     }
     
     /**
@@ -93,7 +93,7 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
      * @return
      */
     public static boolean zoomAfterImport() {
-	    return Main.pref.getBoolean(ZOOM_AFTER_IMPORT, true);
+        return Main.pref.getBoolean(ZOOM_AFTER_IMPORT, true);
     }
     
     /**
@@ -149,8 +149,8 @@ public class ColumbusCSVPreferences extends DefaultTabPreferenceSetting {
         colCSVWarnMissingAudio.setSelected(Main.pref.getBoolean(WARN_MISSING_AUDIO, true));
     }
 
-	public boolean isExpert() {
-		return false;
-	}
+    public boolean isExpert() {
+        return false;
+    }
     
 }

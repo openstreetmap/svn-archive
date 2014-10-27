@@ -29,9 +29,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.zip.DataFormatException;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxLink;
@@ -95,10 +97,10 @@ public class ColumbusCSVReader {
 
     private int firstVoxNumber = -1, lastVoxNumber = -1;
 
-    private HashMap<String, WayPoint> voxFiles = new HashMap<String, WayPoint>();
-    private Collection<Collection<WayPoint>> allTrackPts = new ArrayList<Collection<WayPoint>>();
-    private List<WayPoint> trackPts = new ArrayList<WayPoint>();
-    private List<WayPoint> allWpts = new ArrayList<WayPoint>();
+    private final Map<String, WayPoint> voxFiles = new HashMap<>();
+    private final Collection<Collection<WayPoint>> allTrackPts = new ArrayList<>();
+    private final List<WayPoint> trackPts = new ArrayList<>();
+    private final List<WayPoint> allWpts = new ArrayList<>();
     private String fileDir;
 
     /**
@@ -109,117 +111,115 @@ public class ColumbusCSVReader {
      * @throws IOException
      * @throws DataFormatException
      */
-    public GpxData transformColumbusCSV(String fileName) throws IOException,
-	    IllegalDataException {
-	if (fileName == null || fileName.length() == 0) {
-	    throw new IllegalArgumentException(
-		    "File name must not be null or empty");
-	}
-
-	// GPX data structures
-	GpxData gpxData = new GpxData();
-
-	File f = new File(fileName);
-	fileDir = f.getParent();
-	FileInputStream fstream = new FileInputStream(fileName);
-	// Get the object of DataInputStream
-	DataInputStream in = new DataInputStream(fstream);
-	BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	String strLine;
-	// Initial values
-	int line = 1;
-	initImport();
-	dropBufferLists();
-
-	int waypts = 0, trkpts = 0, audiopts = 0, missaudio = 0, rescaudio = 0;
-	try {
-	    // Read File Line By Line
-	    while ((strLine = br.readLine()) != null) {
-		String[] csvFields = getCSVLine(strLine); // Get the columns of
-							  // the current line
-		if (csvFields.length == 0 || line <= 1) { // Skip, if line is
-							  // header or contains
-							  // no data
-		    ++line;
-		    continue;
-		}
-
-		try {
-		    WayPoint wpt = createWayPoint(csvFields, fileDir);
-		    String wptType = (String) wpt.attr.get(TYPE_TAG);
-		    String oldWptType = csvFields[1];
-
-		    if ("T".equals(wptType)) { // point of track (T)
-			trackPts.add(wpt);
-			trkpts++;
-		    } else { // way point (C) / have voice file: V)
-			if (!wptType.equals(oldWptType)) { // type changed?
-			    if ("V".equals(oldWptType)) { // missing audiofile
-				missaudio++;
-			    }
-			    if ("C".equals(oldWptType)) { // rescued audiofile
-				rescaudio++;
-			    }
-			} else {
-			    if ("V".equals(wptType)) { // wpt with vox
-				audiopts++;
-			    }
-			}
-
-			gpxData.waypoints.add(wpt); // add the waypoint to the
-						    // track
-			waypts++;
-		    }
-
-		    allWpts.add(wpt);
-
-		    wpt.attr.remove(TYPE_TAG);
-		} catch (Exception ex) {
-		    br.close();
-		    throw new IllegalDataException(tr("Error in line " + line
-			    + ": " + ex.toString()));
-		}
-		++line;
-	    }
-	} finally {
-	    // Close the input stream
-	    br.close();
-	}
-
-	// do some sanity checks
-	assert (trackPts.size() == trkpts);
-	assert (gpxData.waypoints.size() == waypts);
-	assert (firstVoxNumber <= lastVoxNumber);
-
-	rescaudio += searchForLostAudioFiles(gpxData);
-
-	// compose the track
-	allTrackPts.add(trackPts);
-	GpxTrack trk = new ImmutableGpxTrack(allTrackPts,
-		Collections.<String, Object> emptyMap());
-	gpxData.tracks.add(trk);
-
-	assert (gpxData.routes.size() == 1);
-
-	// Issue conversion warning, if needed
-	if (ColumbusCSVPreferences.warnConversion()
-		&& (dateConversionErrors > 0 || dopConversionErrors > 0)) {
-	    String message = String.format(
-		    "%d date conversion faults and %d DOP conversion errors",
-		    dateConversionErrors, dopConversionErrors);
-	    ColumbusCSVUtils.showWarningMessage(tr(message));
-	}
-	// Show summary
-	if (ColumbusCSVPreferences.showSummary()) {
-	    showSummary(waypts, trkpts, audiopts, missaudio, rescaudio);
-	}
-
-	String desc = String.format(
-		"Converted by ColumbusCSV plugin from track file '%s'",
-		f.getName());
-	gpxData.attr.put(GpxData.META_DESC, desc);
-	gpxData.storageFile = f;
-	return gpxData;
+    public GpxData transformColumbusCSV(String fileName) throws IOException, IllegalDataException {
+        if (fileName == null || fileName.length() == 0) {
+            throw new IllegalArgumentException(
+                "File name must not be null or empty");
+        }
+    
+        // GPX data structures
+        GpxData gpxData = new GpxData();
+    
+        File f = new File(fileName);
+        fileDir = f.getParent();
+        FileInputStream fstream = new FileInputStream(fileName);
+        // Get the object of DataInputStream
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String strLine;
+        // Initial values
+        int line = 1;
+        initImport();
+        dropBufferLists();
+    
+        int waypts = 0, trkpts = 0, audiopts = 0, missaudio = 0, rescaudio = 0;
+        try {
+            // Read File Line By Line
+            while ((strLine = br.readLine()) != null) {
+                String[] csvFields = getCSVLine(strLine); // Get the columns of
+                                      // the current line
+                if (csvFields.length == 0 || line <= 1) { // Skip, if line is
+                                      // header or contains
+                                      // no data
+                    ++line;
+                    continue;
+                }
+    
+                try {
+                    WayPoint wpt = createWayPoint(csvFields, fileDir);
+                    String wptType = (String) wpt.attr.get(TYPE_TAG);
+                    String oldWptType = csvFields[1];
+        
+                    if ("T".equals(wptType)) { // point of track (T)
+                        trackPts.add(wpt);
+                        trkpts++;
+                    } else { // way point (C) / have voice file: V)
+                        if (!wptType.equals(oldWptType)) { // type changed?
+                            if ("V".equals(oldWptType)) { // missing audiofile
+                                missaudio++;
+                            }
+                            if ("C".equals(oldWptType)) { // rescued audiofile
+                                rescaudio++;
+                            }
+                        } else {
+                            if ("V".equals(wptType)) { // wpt with vox
+                                audiopts++;
+                            }
+                        }
+            
+                        gpxData.waypoints.add(wpt); // add the waypoint to the track
+                        waypts++;
+                    }
+        
+                    allWpts.add(wpt);
+        
+                    wpt.attr.remove(TYPE_TAG);
+                } catch (Exception ex) {
+                    br.close();
+                    throw new IllegalDataException(tr("Error in line " + line
+                        + ": " + ex.toString()), ex);
+                }
+                ++line;
+            }
+        } finally {
+            // Close the input stream
+            br.close();
+        }
+    
+        // do some sanity checks
+        assert trackPts.size() == trkpts;
+        assert gpxData.waypoints.size() == waypts;
+        assert firstVoxNumber <= lastVoxNumber;
+    
+        rescaudio += searchForLostAudioFiles(gpxData);
+    
+        // compose the track
+        allTrackPts.add(trackPts);
+        GpxTrack trk = new ImmutableGpxTrack(allTrackPts,
+            Collections.<String, Object> emptyMap());
+        gpxData.tracks.add(trk);
+    
+        assert gpxData.routes.size() == 1;
+    
+        // Issue conversion warning, if needed
+        if (ColumbusCSVPreferences.warnConversion()
+            && (dateConversionErrors > 0 || dopConversionErrors > 0)) {
+            String message = String.format(
+                "%d date conversion faults and %d DOP conversion errors",
+                dateConversionErrors, dopConversionErrors);
+            ColumbusCSVUtils.showWarningMessage(tr(message));
+        }
+        // Show summary
+        if (ColumbusCSVPreferences.showSummary()) {
+            showSummary(waypts, trkpts, audiopts, missaudio, rescaudio);
+        }
+    
+        String desc = String.format(
+            "Converted by ColumbusCSV plugin from track file '%s'",
+            f.getName());
+        gpxData.attr.put(GpxData.META_DESC, desc);
+        gpxData.storageFile = f;
+        return gpxData;
     }
 
     /**
@@ -231,44 +231,44 @@ public class ColumbusCSVReader {
      * @return true, if given file is a Columbus file; otherwise false.
      */
     public static boolean isColumbusFile(File file) throws IOException {
-	if (file == null) return false; 
-	
-	FileInputStream fstream = new FileInputStream(file);
-	// Get the object of DataInputStream
-	DataInputStream in = new DataInputStream(fstream);
-	BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	String strLine;
-	// Initial values
-	int line = 0;
-	int columbusLines = 0;
-	try {
-	    // Read File Line By Line until we either exceed the maximum scan
-	    // lines or we are sure that we have a columbus file
-	    while ((strLine = br.readLine()) != null
-		    && (line < MAX_SCAN_LINES || columbusLines > MIN_SCAN_LINES)) {
-		String[] csvFields = getCSVLine(strLine); // Get the columns of
-							  // the current line
-		++line;
-		if (csvFields.length == 0 || line <= 1) { // Skip, if line is
-							  // header or contains
-							  // no data
-		    continue;
-		}
-
-		String wptType = csvFields[1];
-		// Check for columbus tag
-		if ("T".equals(wptType) || "V".equals(wptType)
-			|| "C".equals(wptType)) {
-		    // ok, we found one line but still not convinced ;-)
-		    columbusLines++;
-		}
-	    }
-	} finally {
-	    // Close the input stream
-	    br.close();
-	}
-
-	return columbusLines > MIN_SCAN_LINES;
+        if (file == null) return false; 
+        
+        FileInputStream fstream = new FileInputStream(file);
+        // Get the object of DataInputStream
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String strLine;
+        // Initial values
+        int line = 0;
+        int columbusLines = 0;
+        try {
+            // Read File Line By Line until we either exceed the maximum scan
+            // lines or we are sure that we have a columbus file
+            while ((strLine = br.readLine()) != null
+                && (line < MAX_SCAN_LINES || columbusLines > MIN_SCAN_LINES)) {
+                String[] csvFields = getCSVLine(strLine); // Get the columns of
+                                      // the current line
+                ++line;
+                if (csvFields.length == 0 || line <= 1) { // Skip, if line is
+                                      // header or contains
+                                      // no data
+                    continue;
+                }
+        
+                String wptType = csvFields[1];
+                // Check for columbus tag
+                if ("T".equals(wptType) || "V".equals(wptType)
+                    || "C".equals(wptType)) {
+                    // ok, we found one line but still not convinced ;-)
+                    columbusLines++;
+                }
+            }
+        } finally {
+            // Close the input stream
+            br.close();
+        }
+    
+        return columbusLines > MIN_SCAN_LINES;
     }
 
     /**
@@ -280,78 +280,73 @@ public class ColumbusCSVReader {
      * @return
      */
     private int searchForLostAudioFiles(GpxData gpx) {
-	HashMap<String, WayPoint> voxFiles = getVoxFileMap();
-
-	int first, last;
-	first = getFirstVoxNumber();
-	last = getLastVoxNumber();
-
-	int rescuedFiles = 0;
-
-	for (int i = first; i < last; i++) {
-	    String voxFile = String.format("vox%05d.wav", i);
-	    String nextVoxFile = String.format("vox%05d.wav", i + 1);
-	    if (!voxFiles.containsKey(voxFile)) {
-		System.out.println("Found lost vox file " + voxFile);
-
-		File f = getVoxFilePath(voxFile);
-		WayPoint nearestWpt = null;
-		List<WayPoint> wpts = getAllWayPoints();
-		// Attach recording to the way point right before the next vox
-		// file
-		if (voxFiles.containsKey(nextVoxFile)) {
-		    WayPoint nextWpt = voxFiles.get(nextVoxFile);
-		    int idx = getAllWayPoints().indexOf(nextWpt) - 5;
-		    if (idx >= 0) {
-			nearestWpt = wpts.get(idx);
-		    } else {
-			nearestWpt = wpts.get(0);
-		    }
-		} else { // attach to last way point
-		    nearestWpt = wpts.get(wpts.size() - 1);
-		}
-
-		// Add link to found way point
-		if (nearestWpt != null) {
-		    if (addLinkToWayPoint(nearestWpt, "*" + voxFile + "*", f)) {
-			System.out.println(String.format(
-				"Linked file %s to position %s", voxFile,
-				nearestWpt.getCoor().toDisplayString()));
-			// Add linked way point to way point list of GPX;
-			// otherwise
-			// it would not be shown correctly
-			gpx.waypoints.add(nearestWpt);
-			rescuedFiles++;
-		    } else {
-			System.err
-				.println(String
-					.format("Could not link vox file %s due to invalid parameters.",
-						voxFile));
-		    }
-		}
-	    }
-	}
-
-	return rescuedFiles;
+        Map<String, WayPoint> voxFiles = getVoxFileMap();
+    
+        int first, last;
+        first = getFirstVoxNumber();
+        last = getLastVoxNumber();
+    
+        int rescuedFiles = 0;
+    
+        for (int i = first; i < last; i++) {
+            String voxFile = String.format("vox%05d.wav", i);
+            String nextVoxFile = String.format("vox%05d.wav", i + 1);
+            if (!voxFiles.containsKey(voxFile)) {
+                Main.info("Found lost vox file " + voxFile);
+        
+                File f = getVoxFilePath(voxFile);
+                WayPoint nearestWpt = null;
+                List<WayPoint> wpts = getAllWayPoints();
+                // Attach recording to the way point right before the next vox
+                // file
+                if (voxFiles.containsKey(nextVoxFile)) {
+                    WayPoint nextWpt = voxFiles.get(nextVoxFile);
+                    int idx = getAllWayPoints().indexOf(nextWpt) - 5;
+                    if (idx >= 0) {
+                        nearestWpt = wpts.get(idx);
+                    } else {
+                        nearestWpt = wpts.get(0);
+                    }
+                } else { // attach to last way point
+                    nearestWpt = wpts.get(wpts.size() - 1);
+                }
+        
+                // Add link to found way point
+                if (nearestWpt != null) {
+                    if (addLinkToWayPoint(nearestWpt, "*" + voxFile + "*", f)) {
+                        Main.info(String.format(
+                            "Linked file %s to position %s", voxFile,
+                            nearestWpt.getCoor().toDisplayString()));
+                        // Add linked way point to way point list of GPX; otherwise it would not be shown correctly
+                        gpx.waypoints.add(nearestWpt);
+                        rescuedFiles++;
+                    } else {
+                        Main.error(String.format("Could not link vox file %s due to invalid parameters.", voxFile));
+                    }
+                }
+            }
+        }
+    
+        return rescuedFiles;
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     private void initImport() {
-	dateConversionErrors = 0;
-	dopConversionErrors = 0;
-	firstVoxNumber = Integer.MAX_VALUE;
-	lastVoxNumber = Integer.MIN_VALUE;
+        dateConversionErrors = 0;
+        dopConversionErrors = 0;
+        firstVoxNumber = Integer.MAX_VALUE;
+        lastVoxNumber = Integer.MIN_VALUE;
     }
 
     /**
      * Clears all temporary buffers.
      */
     void dropBufferLists() {
-	allTrackPts.clear();
-	trackPts.clear();
-	voxFiles.clear();
+        allTrackPts.clear();
+        trackPts.clear();
+        voxFiles.clear();
     }
 
     /**
@@ -369,18 +364,19 @@ public class ColumbusCSVReader {
      *            The number of rescued audio files
      */
     private void showSummary(int waypts, int trkpts, int audiopts,
-	    int missaudio, int rescaudio) {
-	String message = "";
-	if (missaudio > 0) {
-	    message = String
-		    .format("Imported %d track points and %d way points (%d with audio, %d rescued).\nNote: %d audio files could not be found, please check marker comments!",
-			    trkpts, waypts, audiopts, rescaudio, missaudio);
-	} else {
-	    message = String
-		    .format("Imported %d track points and %d way points (%d with audio, %d rescued).",
-			    trkpts, waypts, audiopts, rescaudio);
-	}
-	ColumbusCSVUtils.showInfoMessage(tr(message));
+        int missaudio, int rescaudio) {
+        String message = "";
+        if (missaudio > 0) {
+            message = String
+                .format("Imported %d track points and %d way points (%d with audio, %d rescued).%n"+
+                        "Note: %d audio files could not be found, please check marker comments!",
+                    trkpts, waypts, audiopts, rescaudio, missaudio);
+        } else {
+            message = String
+                .format("Imported %d track points and %d way points (%d with audio, %d rescued).",
+                    trkpts, waypts, audiopts, rescaudio);
+        }
+        ColumbusCSVUtils.showInfoMessage(tr(message));
     }
 
     /**
@@ -393,108 +389,104 @@ public class ColumbusCSVReader {
      * @return The corresponding way point instance.
      * @throws DataFormatException
      */
-    private WayPoint createWayPoint(String[] csvLine, String fileDir)
-	    throws IOException {
-	// Sample line in simple mode
-	// INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE
-	// E/W,HEIGHT,SPEED,HEADING,VOX
-	// 1,T,090430,194134,48.856330N,009.089779E,318,20,0,
-
-	// Sample line in extended mode
-	// INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE
-	// E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX
-	// 1,T,090508,191448,48.856928N,009.091153E,330,3,0,3D,SPS ,1.4,1.2,0.8,
-	if (csvLine.length != 10 && csvLine.length != 15)
-	    throw new IOException("Invalid number of tokens: " + csvLine.length);
-	boolean isExtMode = csvLine.length > 10;
-
-	// Extract latitude/longitude first
-	String lat = csvLine[4];
-	double latVal = Double.parseDouble(lat.substring(0, lat.length() - 1));
-	if (lat.endsWith("S")) {
-	    latVal = -latVal;
-	}
-
-	String lon = csvLine[5];
-	double lonVal = Double.parseDouble(lon.substring(0, lon.length() - 1));
-	if (lon.endsWith("W")) {
-	    lonVal = -lonVal;
-	}
-	LatLon pos = new LatLon(latVal, lonVal);
-	WayPoint wpt = new WayPoint(pos);
-
-	// set wpt type
-	wpt.attr.put(TYPE_TAG, csvLine[1]);
-
-	// Check for audio file and link it, if present
-	String voxFile = null;
-	if (isExtMode) {
-	    voxFile = csvLine[14];
-	} else {
-	    voxFile = csvLine[9];
-	}
-
-	if (!ColumbusCSVUtils.isStringNullOrEmpty(voxFile)) {
-	    voxFile = voxFile + ".wav";
-	    File file = getVoxFilePath(fileDir, voxFile);
-	    if (file != null && file.exists()) {
-		// link vox file
-		int voxNum = getNumberOfVoxfile(voxFile);
-		lastVoxNumber = Math.max(voxNum, lastVoxNumber);
-		firstVoxNumber = Math.min(voxNum, firstVoxNumber);
-
-		addLinkToWayPoint(wpt, voxFile, file);
-
-		if (!"V".equals(csvLine[1])) {
-		    System.out
-			    .println("Rescued unlinked audio file " + voxFile);
-		}
-		voxFiles.put(voxFile, wpt);
-
-		// set type to way point with vox
-		wpt.attr.put(TYPE_TAG, "V");
-	    } else { // audio file not found -> issue warning
-		System.err.println("File " + voxFile + " not found!");
-		String warnMsg = tr("Missing audio file") + ": " + voxFile;
-		System.err.println(warnMsg);
-		if (ColumbusCSVPreferences.warnMissingAudio()) {
-		    ColumbusCSVUtils.showInfoMessage(warnMsg);
-		}
-		wpt.attr.put(ColumbusCSVReader.COMMENT_TAG, warnMsg);
-		// set type to ordinary way point
-		wpt.attr.put(TYPE_TAG, "C");
-	    }
-
-	}
-
-	// Extract date/time
-	SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyMMdd/HHmmss");
-	Date d = null;
-
-	try {
-
-	    d = sdf.parse(csvLine[2] + "/" + csvLine[3]);
-	    // format date according to GPX
-	    SimpleDateFormat f = new SimpleDateFormat(
-		    "yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-	    wpt.attr.put(ColumbusCSVReader.TIME_TAG, f.format(d).toString());
-	    wpt.setTime();
-	} catch (ParseException ex) {
-	    dateConversionErrors++;
-	    System.err.println(ex);
-	}
-
-	// Add further attributes
-	// Elevation height (altitude provided by GPS signal)
-	wpt.attr.put(ColumbusCSVReader.ELEVATIONHEIGHT_TAG, csvLine[6]);
-
-	// Add data of extended mode, if applicable
-	if (isExtMode && !ColumbusCSVPreferences.ignoreDOP()) {
-	    addExtendedGPSData(csvLine, wpt);
-	}
-
-	return wpt;
+    private WayPoint createWayPoint(String[] csvLine, String fileDir) throws IOException {
+        // Sample line in simple mode
+        // INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE
+        // E/W,HEIGHT,SPEED,HEADING,VOX
+        // 1,T,090430,194134,48.856330N,009.089779E,318,20,0,
+    
+        // Sample line in extended mode
+        // INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE
+        // E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX
+        // 1,T,090508,191448,48.856928N,009.091153E,330,3,0,3D,SPS ,1.4,1.2,0.8,
+        if (csvLine.length != 10 && csvLine.length != 15)
+            throw new IOException("Invalid number of tokens: " + csvLine.length);
+        boolean isExtMode = csvLine.length > 10;
+    
+        // Extract latitude/longitude first
+        String lat = csvLine[4];
+        double latVal = Double.parseDouble(lat.substring(0, lat.length() - 1));
+        if (lat.endsWith("S")) {
+            latVal = -latVal;
+        }
+    
+        String lon = csvLine[5];
+        double lonVal = Double.parseDouble(lon.substring(0, lon.length() - 1));
+        if (lon.endsWith("W")) {
+            lonVal = -lonVal;
+        }
+        LatLon pos = new LatLon(latVal, lonVal);
+        WayPoint wpt = new WayPoint(pos);
+    
+        // set wpt type
+        wpt.attr.put(TYPE_TAG, csvLine[1]);
+    
+        // Check for audio file and link it, if present
+        String voxFile = null;
+        if (isExtMode) {
+            voxFile = csvLine[14];
+        } else {
+            voxFile = csvLine[9];
+        }
+    
+        if (!ColumbusCSVUtils.isStringNullOrEmpty(voxFile)) {
+            voxFile = voxFile + ".wav";
+            File file = getVoxFilePath(fileDir, voxFile);
+            if (file != null && file.exists()) {
+                // link vox file
+                int voxNum = getNumberOfVoxfile(voxFile);
+                lastVoxNumber = Math.max(voxNum, lastVoxNumber);
+                firstVoxNumber = Math.min(voxNum, firstVoxNumber);
+        
+                addLinkToWayPoint(wpt, voxFile, file);
+        
+                if (!"V".equals(csvLine[1])) {
+                    Main.info("Rescued unlinked audio file " + voxFile);
+                }
+                voxFiles.put(voxFile, wpt);
+        
+                // set type to way point with vox
+                wpt.attr.put(TYPE_TAG, "V");
+            } else { // audio file not found -> issue warning
+                Main.error("File " + voxFile + " not found!");
+                String warnMsg = tr("Missing audio file") + ": " + voxFile;
+                Main.error(warnMsg);
+                if (ColumbusCSVPreferences.warnMissingAudio()) {
+                    ColumbusCSVUtils.showInfoMessage(warnMsg);
+                }
+                wpt.attr.put(ColumbusCSVReader.COMMENT_TAG, warnMsg);
+                // set type to ordinary way point
+                wpt.attr.put(TYPE_TAG, "C");
+            }
+        }
+    
+        // Extract date/time
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyMMdd/HHmmss");
+        Date d = null;
+    
+        try {
+            d = sdf.parse(csvLine[2] + "/" + csvLine[3]);
+            // format date according to GPX
+            SimpleDateFormat f = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    
+            wpt.attr.put(ColumbusCSVReader.TIME_TAG, f.format(d).toString());
+            wpt.setTime();
+        } catch (ParseException ex) {
+            dateConversionErrors++;
+            Main.error(ex);
+        }
+    
+        // Add further attributes
+        // Elevation height (altitude provided by GPS signal)
+        wpt.attr.put(ColumbusCSVReader.ELEVATIONHEIGHT_TAG, csvLine[6]);
+    
+        // Add data of extended mode, if applicable
+        if (isExtMode && !ColumbusCSVPreferences.ignoreDOP()) {
+            addExtendedGPSData(csvLine, wpt);
+        }
+    
+        return wpt;
     }
 
     /**
@@ -507,7 +499,7 @@ public class ColumbusCSVReader {
      * 
      */
     public File getVoxFilePath(String voxFile) {
-	return getVoxFilePath(getWorkingDirOfImport(), voxFile);
+        return getVoxFilePath(getWorkingDirOfImport(), voxFile);
     }
 
     /**
@@ -520,20 +512,19 @@ public class ColumbusCSVReader {
      * @return
      */
     public File getVoxFilePath(String fileDir, String voxFile) {
-	// The FAT16 file name is interpreted differently from case-sensitive
-	// file systems, so we
-	// have to test several variants
-	String[] fileNameVariants = new String[] { voxFile,
-		voxFile.toLowerCase(), voxFile.toUpperCase() };
-
-	for (int i = 0; i < fileNameVariants.length; i++) {
-	    File file = new File(fileDir + File.separator + fileNameVariants[i]);
-	    if (file.exists()) {
-		return file;
-	    }
-	}
-	return null; // give up...
-
+        // The FAT16 file name is interpreted differently from case-sensitive
+        // file systems, so we
+        // have to test several variants
+        String[] fileNameVariants = new String[] { voxFile,
+            voxFile.toLowerCase(), voxFile.toUpperCase() };
+    
+        for (int i = 0; i < fileNameVariants.length; i++) {
+            File file = new File(fileDir + File.separator + fileNameVariants[i]);
+            if (file.exists()) {
+                return file;
+            }
+        }
+        return null; // give up...
     }
 
     /**
@@ -543,31 +534,31 @@ public class ColumbusCSVReader {
      * @param wpt
      */
     private void addExtendedGPSData(String[] csvLine, WayPoint wpt) {
-	// Fix mode
-	wpt.attr.put(FIX_TAG, csvLine[9].toLowerCase());
-
-	Float f;
-	// Position errors (dop = dilution of position)
-	f = ColumbusCSVUtils.floatFromString(csvLine[11]);
-	if (f != Float.NaN) {
-	    wpt.attr.put(ColumbusCSVReader.PDOP_TAG, f);
-	} else {
-	    dopConversionErrors++;
-	}
-
-	f = ColumbusCSVUtils.floatFromString(csvLine[12]);
-	if (f != Float.NaN) {
-	    wpt.attr.put(ColumbusCSVReader.HDOP_TAG, f);
-	} else {
-	    dopConversionErrors++;
-	}
-
-	f = ColumbusCSVUtils.floatFromString(csvLine[13]);
-	if (f != Float.NaN) {
-	    wpt.attr.put(ColumbusCSVReader.VDOP_TAG, f);
-	} else {
-	    dopConversionErrors++;
-	}
+        // Fix mode
+        wpt.attr.put(FIX_TAG, csvLine[9].toLowerCase());
+    
+        Float f;
+        // Position errors (dop = dilution of position)
+        f = ColumbusCSVUtils.floatFromString(csvLine[11]);
+        if (f != Float.NaN) {
+            wpt.attr.put(ColumbusCSVReader.PDOP_TAG, f);
+        } else {
+            dopConversionErrors++;
+        }
+    
+        f = ColumbusCSVUtils.floatFromString(csvLine[12]);
+        if (f != Float.NaN) {
+            wpt.attr.put(ColumbusCSVReader.HDOP_TAG, f);
+        } else {
+            dopConversionErrors++;
+        }
+    
+        f = ColumbusCSVUtils.floatFromString(csvLine[13]);
+        if (f != Float.NaN) {
+            wpt.attr.put(ColumbusCSVReader.VDOP_TAG, f);
+        } else {
+            dopConversionErrors++;
+        }
     }
 
     /**
@@ -580,21 +571,21 @@ public class ColumbusCSVReader {
      * @return True, if link has been added; otherwise false
      */
     public boolean addLinkToWayPoint(WayPoint wpt, String voxFile, File file) {
-	if (file == null || wpt == null || voxFile == null)
-	    return false;
-
-	GpxLink lnk = new GpxLink(file.toURI().toString());
-	lnk.type = ColumbusCSVReader.AUDIO_WAV_LINK;
-	lnk.text = voxFile;
-
-	// JOSM expects a collection of links here...
-	Collection<GpxLink> linkList = new ArrayList<GpxLink>(1);
-	linkList.add(lnk);
-
-	wpt.attr.put(GpxData.META_LINKS, linkList);
-	wpt.attr.put(ColumbusCSVReader.COMMENT_TAG, "Audio recording");
-	wpt.attr.put(ColumbusCSVReader.DESC_TAG, voxFile);
-	return true;
+        if (file == null || wpt == null || voxFile == null)
+            return false;
+    
+        GpxLink lnk = new GpxLink(file.toURI().toString());
+        lnk.type = ColumbusCSVReader.AUDIO_WAV_LINK;
+        lnk.text = voxFile;
+    
+        // JOSM expects a collection of links here...
+        Collection<GpxLink> linkList = new ArrayList<>(1);
+        linkList.add(lnk);
+    
+        wpt.attr.put(GpxData.META_LINKS, linkList);
+        wpt.attr.put(ColumbusCSVReader.COMMENT_TAG, "Audio recording");
+        wpt.attr.put(ColumbusCSVReader.DESC_TAG, voxFile);
+        return true;
     }
 
     /**
@@ -604,17 +595,17 @@ public class ColumbusCSVReader {
      * @return Array containing the tokens of the CSV file.
      */
     private static String[] getCSVLine(String line) {
-	if (line == null || line.length() == 0)
-	    return EMPTY_LINE;
-
-	StringTokenizer st = new StringTokenizer(line, SEPS, false);
-	int n = st.countTokens();
-
-	String[] res = new String[n];
-	for (int i = 0; i < n; i++) {
-	    res[i] = st.nextToken().trim();
-	}
-	return res;
+        if (line == null || line.length() == 0)
+            return EMPTY_LINE;
+    
+        StringTokenizer st = new StringTokenizer(line, SEPS, false);
+        int n = st.countTokens();
+    
+        String[] res = new String[n];
+        for (int i = 0; i < n; i++) {
+            res[i] = st.nextToken().trim();
+        }
+        return res;
     }
 
     /**
@@ -627,16 +618,15 @@ public class ColumbusCSVReader {
      *         valid.
      */
     private int getNumberOfVoxfile(String fileName) {
-	if (fileName == null)
-	    return -1;
-
-	try {
-	    String num = fileName.substring(3);
-	    int val = Integer.parseInt(num);
-	    return val;
-	} catch (NumberFormatException e) {
-	    return -1;
-	}
+        if (fileName == null)
+            return -1;
+    
+        try {
+            String num = fileName.substring(3);
+            return Integer.parseInt(num);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     /**
@@ -645,7 +635,7 @@ public class ColumbusCSVReader {
      * @return
      */
     public int getNumberOfDateConversionErrors() {
-	return dateConversionErrors;
+        return dateConversionErrors;
     }
 
     /**
@@ -654,7 +644,7 @@ public class ColumbusCSVReader {
      * @return
      */
     public int getNumberOfDOPConversionErrors() {
-	return dopConversionErrors;
+        return dopConversionErrors;
     }
 
     /**
@@ -663,7 +653,7 @@ public class ColumbusCSVReader {
      * @return
      */
     public int getFirstVoxNumber() {
-	return firstVoxNumber;
+        return firstVoxNumber;
     }
 
     /**
@@ -672,7 +662,7 @@ public class ColumbusCSVReader {
      * @return
      */
     public int getLastVoxNumber() {
-	return lastVoxNumber;
+        return lastVoxNumber;
     }
 
     /**
@@ -680,8 +670,8 @@ public class ColumbusCSVReader {
      * 
      * @return
      */
-    public HashMap<String, WayPoint> getVoxFileMap() {
-	return voxFiles;
+    public Map<String, WayPoint> getVoxFileMap() {
+        return voxFiles;
     }
 
     /**
@@ -690,7 +680,7 @@ public class ColumbusCSVReader {
      * @return
      */
     public List<WayPoint> getAllWayPoints() {
-	return allWpts;
+        return allWpts;
     }
 
     /**
@@ -699,6 +689,6 @@ public class ColumbusCSVReader {
      * @return
      */
     public String getWorkingDirOfImport() {
-	return fileDir;
+        return fileDir;
     }
 }

@@ -26,24 +26,24 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * 
  */
 public class ColumbusCSVPlugin extends Plugin {
-	private static PreferenceSetting columbusSettings;
-	/*
-	 * Plugin constructor (adds menu entry to file menu).
-	 */
-	public ColumbusCSVPlugin(PluginInformation info) {
-		super(info);
-		
-		ExtensionFileFilter.importers.add(new ColumbusCSVImporter());
-	}
-	
-	/**
+    private static PreferenceSetting columbusSettings;
+    /*
+     * Plugin constructor (adds menu entry to file menu).
+     */
+    public ColumbusCSVPlugin(PluginInformation info) {
+        super(info);
+        
+        ExtensionFileFilter.importers.add(new ColumbusCSVImporter());
+    }
+    
+    /**
      * Called in the preferences dialog to create a preferences page for the plugin,
      * if any available.
      */
     public PreferenceSetting getPreferenceSetting() {
-    	if (columbusSettings == null) {
-    		columbusSettings = new ColumbusCSVPreferences();
-    	}
-    	return columbusSettings;
+        if (columbusSettings == null) {
+            columbusSettings = new ColumbusCSVPreferences();
+        }
+        return columbusSettings;
     } 
 }

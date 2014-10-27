@@ -6,7 +6,7 @@ import java.io.StringWriter;
 import java.util.Collection;
 
 import org.openstreetmap.hot.sds.SeparateDataStorePlugin.QueueItem;
-import org.openstreetmap.josm.data.osm.IPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmServerWritePostprocessor;
 
@@ -19,14 +19,14 @@ public class WritePostprocessor implements OsmServerWritePostprocessor {
     }
 
     @Override
-    public void postprocessUploadedPrimitives(Collection<IPrimitive> primitives, ProgressMonitor progress) {
+    public void postprocessUploadedPrimitives(Collection<OsmPrimitive> primitives, ProgressMonitor progress) {
 
         StringWriter swriter = new StringWriter();
         try (SdsWriter sdsWriter = new SdsWriter(new PrintWriter(swriter))) {
             sdsWriter.header();
             boolean somethingWritten = false;
 
-            for (IPrimitive p : primitives) {
+            for (OsmPrimitive p : primitives) {
                 for (QueueItem q : plugin.uploadQueue) {
                     if (q.primitive.equals(p) && !q.sdsOnly) {
                         sdsWriter.write(q.primitive, q.tags);
@@ -54,7 +54,7 @@ public class WritePostprocessor implements OsmServerWritePostprocessor {
             }
         }
 
-        for (IPrimitive p : primitives) {
+        for (OsmPrimitive p : primitives) {
             plugin.learn(p);
         }
 

@@ -3,7 +3,7 @@ package org.openstreetmap.josm.plugins.photoadjust;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Cursor;
-//import java.awt.event.KeyEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -19,7 +19,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
-//import org.openstreetmap.josm.tools.Shortcut;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Map mode version of the plug-in.  The associated button is shown
@@ -43,10 +43,10 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
         super(tr("Adjust photos"), "photoadjust.png",
               tr("Move and position photos"),
               // It is almost impossible to find an unused shortcut.
-              //Shortcut.registerShortcut("mapmode:photoadjust",
-              //                          tr("Mode: {0}", tr("Adjust photos")),
-              //                          KeyEvent.VK_P,
-              //                          Shortcut.DIRECT),
+              Shortcut.registerShortcut("mapmode:photoadjust",
+                                        tr("Mode: {0}", tr("Adjust photos")),
+                                        KeyEvent.CHAR_UNDEFINED,
+                                        Shortcut.NONE),
               mapFrame, Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         GeoImageLayer.registerSupportedMapMode(this);
         initAdapters();

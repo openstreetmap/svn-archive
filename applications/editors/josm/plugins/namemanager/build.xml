@@ -8,7 +8,7 @@
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-    <property name="plugin.author" value="Rafal Jachowicz: rjachow@gmail.com"/>
+    <property name="plugin.author" value="Rafal Jachowicz &lt;rjachow@gmail.com&gt;"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.namemanager.NameManagerPlugin"/>
     <property name="plugin.description" value="Allows to attribute tags to all objects in any selected area at once"/>
     <property name="plugin.pl_description" value="Pozwala na dodawanie, edycję i usuwanie tagów znajdujących się we wskazanym obszarze na raz"/>

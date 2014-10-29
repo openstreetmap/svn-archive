@@ -16,16 +16,15 @@ import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.tools.Shortcut;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-public class SelectWaypointDialog extends ToggleDialog implements KeyListener, MouseListener {
+class SelectWaypointDialog extends ToggleDialog implements KeyListener, MouseListener {
 
     private JTextField searchPattern = new JTextField(20);
     private DefaultListModel<String> listModel = new DefaultListModel<>();
     private JList<String> searchResult = new JList<>(listModel);
-    private List<Marker> SearchResultObjectCache = new ArrayList<>();
-    private boolean first_time_search = true;
-    private Engine engine = new Engine();
+    private List<Marker> searchResultObjectCache = new ArrayList<>();
+    private boolean firstTimeSearch = true;
     
-    public SelectWaypointDialog(String name, String iconName, String tooltip,
+    SelectWaypointDialog(String name, String iconName, String tooltip,
             Shortcut shortcut, int preferredHeight) {
         super(name, iconName, tooltip, shortcut, preferredHeight);
         build();
@@ -57,41 +56,40 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
         createLayout(panel, false, null);
     }
     
-    public void updateSearchResults(){
+    void updateSearchResults() {
         String searchfor = "";
         listModel.clear();
-        SearchResultObjectCache.clear();
-        if (!first_time_search) {
+        searchResultObjectCache.clear();
+        if (!firstTimeSearch) {
             searchfor = searchPattern.getText();
         }
-        for (Iterator<Marker> i = engine.searchGpxWaypoints(searchfor).iterator(); i.hasNext();) {
+        for (Iterator<Marker> i = Engine.searchGpxWaypoints(searchfor).iterator(); i.hasNext();) {
             Marker marker = i.next();
             listModel.addElement(marker.getText());
-            SearchResultObjectCache.add(marker);
+            searchResultObjectCache.add(marker);
         }
     }
 
     @Override
     public void keyPressed(KeyEvent arg0) {
-        // TODO Auto-generated method stub
+        // Do nothing
     }
 
     @Override
     public void keyReleased(KeyEvent arg0) {
-        // TODO Auto-generated method stub
         updateSearchResults();
     }
 
     @Override
     public void keyTyped(KeyEvent arg0) {
-        first_time_search = false;
+        firstTimeSearch = false;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource()==searchResult) {
             //click on the search result box
-            Marker marker = SearchResultObjectCache.get(searchResult.getSelectedIndex());
+            Marker marker = searchResultObjectCache.get(searchResult.getSelectedIndex());
             Main.map.mapView.zoomTo(marker.getCoor());
         } else {
             //click on the text field (input search expression)
@@ -100,10 +98,12 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
 
     @Override
     public void mouseEntered(MouseEvent arg0) {
+        // Do nothing
     }
 
     @Override
     public void mouseExited(MouseEvent arg0) {
+        // Do nothing
     }
 
     @Override
@@ -115,5 +115,6 @@ public class SelectWaypointDialog extends ToggleDialog implements KeyListener, M
 
     @Override
     public void mouseReleased(MouseEvent arg0) {
+        // Do nothing
     }
 }

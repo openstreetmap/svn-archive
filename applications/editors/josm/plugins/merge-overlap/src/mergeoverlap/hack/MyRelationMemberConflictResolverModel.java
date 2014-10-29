@@ -52,7 +52,8 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
 
     @Override
     public void populate(Collection<Relation> relations, Collection<? extends OsmPrimitive> memberPrimitives) {
-        throw new UnsupportedOperationException("Use populate(Collection<Relation>, Collection<? extends OsmPrimitive>, Map<Way, Way>) instead");
+        throw new UnsupportedOperationException(
+                "Use populate(Collection<Relation>, Collection<? extends OsmPrimitive>, Map<Way, Way>) instead");
     }
 
     /**
@@ -77,28 +78,30 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
 
     @Override
     protected Command buildResolveCommand(Relation relation, OsmPrimitive newPrimitive) {
-        throw new UnsupportedOperationException("Use buildResolveCorrespondance(Relation, OsmPrimitive, Map<Relation, Relation>, Map<Way, Way>) instead");
+        throw new UnsupportedOperationException(
+                "Use buildResolveCorrespondance(Relation, OsmPrimitive, Map<Relation, Relation>, Map<Way, Way>) instead");
     }
 
-    protected void buildResolveCorrespondance(Relation relation, OsmPrimitive newPrimitive, Map<Relation, Relation> newRelations, Map<Way, Way> oldWays) {
+    protected void buildResolveCorrespondance(
+            Relation relation, OsmPrimitive newPrimitive, Map<Relation, Relation> newRelations, Map<Way, Way> oldWays) {
 
-    	List<RelationMember> relationsMembers = relation.getMembers();
-    	Relation modifiedRelation = MergeOverlapAction.getNew(relation, newRelations);
+        List<RelationMember> relationsMembers = relation.getMembers();
+        Relation modifiedRelation = MergeOverlapAction.getNew(relation, newRelations);
         modifiedRelation.setMembers(null);
         for (int i=0; i < relationsMembers.size(); i++) {
-        	RelationMember rm = relationsMembers.get(i);
+            RelationMember rm = relationsMembers.get(i);
             RelationMemberConflictDecision decision = getDecision(relation, i);
             if (decision == null) {
                 modifiedRelation.addMember(rm);
             } else {
                 switch(decision.getDecision()) {
                 case KEEP:
-                	if (newPrimitive instanceof Way) {
-                        modifiedRelation.addMember(new RelationMember(decision.getRole(), MergeOverlapAction.getOld((Way)newPrimitive, oldWays)));
-                	}
-                	else {
-                		modifiedRelation.addMember(new RelationMember(decision.getRole(), newPrimitive));
-                	}
+                    if (newPrimitive instanceof Way) {
+                        modifiedRelation.addMember(new RelationMember(decision.getRole(), 
+                                MergeOverlapAction.getOld((Way)newPrimitive, oldWays)));
+                    } else {
+                        modifiedRelation.addMember(new RelationMember(decision.getRole(), newPrimitive));
+                    }
                     break;
                 case REMOVE:
                     // do nothing
@@ -113,7 +116,8 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
 
     @Override
     public List<Command> buildResolutionCommands(OsmPrimitive newPrimitive) {
-        throw new UnsupportedOperationException("Use buildRelationCorrespondance(OsmPrimitive, Map<Relation, Relation>, Map<Way, Way>) instead");
+        throw new UnsupportedOperationException(
+                "Use buildRelationCorrespondance(OsmPrimitive, Map<Relation, Relation>, Map<Way, Way>) instead");
     }
 
     /**
@@ -124,7 +128,7 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
      */
     public void buildRelationCorrespondance(OsmPrimitive newPrimitive, Map<Relation, Relation> newRelations, Map<Way, Way> oldWays) {
         for (Relation relation : relations) {
-        	buildResolveCorrespondance(relation, newPrimitive, newRelations, oldWays);
+            buildResolveCorrespondance(relation, newPrimitive, newRelations, oldWays);
         }
     }
 }

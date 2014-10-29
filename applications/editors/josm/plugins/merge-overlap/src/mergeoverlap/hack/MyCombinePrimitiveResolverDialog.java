@@ -128,6 +128,6 @@ public class MyCombinePrimitiveResolverDialog extends CombinePrimitiveResolverDi
     }
 
     public void buildRelationCorrespondance(Map<Relation, Relation> newRelations, Map<Way, Way> oldWays) {
-    	getRelationMemberConflictResolverModel().buildRelationCorrespondance(targetPrimitive, newRelations, oldWays);
+        getRelationMemberConflictResolverModel().buildRelationCorrespondance(targetPrimitive, newRelations, oldWays);
     }
 }

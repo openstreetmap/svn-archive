@@ -226,7 +226,7 @@ public class MergeOverlapAction extends JosmAction {
 
         List<Way> del = new LinkedList<>();
         for (Way w : deletes) {
-            if (!w.isDeleted()) {
+            if (w.getDataSet() != null && !w.isDeleted()) {
                 del.add(w);
             }
         }

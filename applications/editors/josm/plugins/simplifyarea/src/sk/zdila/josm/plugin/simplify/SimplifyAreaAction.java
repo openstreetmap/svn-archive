@@ -31,13 +31,14 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class SimplifyAreaAction extends JosmAction {
+public final class SimplifyAreaAction extends JosmAction {
 
     public SimplifyAreaAction() {
         super(tr("Simplify Area"), "simplify", tr("Delete unnecessary nodes from an area."),
@@ -49,7 +50,7 @@ public class SimplifyAreaAction extends JosmAction {
         return Main.main.getEditLayer().data.getDataSourceBounds();
     }
 
-    private boolean isInBounds(final Node node, final List<Bounds> bounds) {
+    private static boolean isInBounds(final Node node, final List<Bounds> bounds) {
         for (final Bounds b : bounds) {
             if (b.contains(node.getCoor())) {
                 return true;
@@ -58,7 +59,7 @@ public class SimplifyAreaAction extends JosmAction {
         return false;
     }
 
-    private boolean confirmWayWithNodesOutsideBoundingBox() {
+    private static boolean confirmWayWithNodesOutsideBoundingBox() {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes, delete nodes"), ImageProvider.get("ok"), tr("Delete nodes outside of downloaded data regions"), null),
                 new ButtonSpec(tr("No, abort"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
         return 0 == HelpAwareOptionPane.showOptionDialog(
@@ -174,8 +175,25 @@ public class SimplifyAreaAction extends JosmAction {
         }
     }
 
+    private static boolean nodeGluesWays(final Node node) {
+        Set<Node> referenceNeighbours = null;
+        for (final OsmPrimitive ref : node.getReferrers()) {
+            if (ref.getType() == OsmPrimitiveType.WAY) {
+                final Way way = ((Way) ref);
+                final Set<Node> neighbours = way.getNeighbours(node);
+                if (referenceNeighbours == null) {
+                    referenceNeighbours = neighbours;
+                } else if (!referenceNeighbours.containsAll(neighbours)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
     // average nearby nodes
-    private Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
+    private static Collection<Command> averageNearbyNodes(final Collection<Way> ways, final Collection<Node> nodesAlreadyDeleted) {
         final double mergeThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.MERGE_THRESHOLD, 0.2);
 
         final Map<Node, LatLon> coordMap = new HashMap<>();
@@ -199,7 +217,7 @@ public class SimplifyAreaAction extends JosmAction {
             nodes.retainAll(coordMap.keySet()); // removes already deleted nodes
 
             while (true) {
-                double minDist = Double.MAX_VALUE;
+                double minDist = Double.POSITIVE_INFINITY;
                 Node node1 = null;
                 Node node2 = null;
 
@@ -298,7 +316,7 @@ public class SimplifyAreaAction extends JosmAction {
         return commands;
     }
 
-    private void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
+    private static void addNodesToDelete(final Collection<Node> nodesToDelete, final Way w) {
         final double angleThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_THRESHOLD, 10);
         final double angleFactor = Main.pref.getDouble(SimplifyAreaPreferenceSetting.ANGLE_FACTOR, 1.0);
         final double areaThreshold = Main.pref.getDouble(SimplifyAreaPreferenceSetting.AREA_THRESHOLD, 5.0);
@@ -332,7 +350,7 @@ public class SimplifyAreaAction extends JosmAction {
             LatLon coord2 = null;
             int prevIndex = -1;
 
-            double minWeight = Double.MAX_VALUE;
+            double minWeight = Double.POSITIVE_INFINITY;
             Node bestMatch = null;
 
             final int size2 = nodes.size();
@@ -356,7 +374,8 @@ public class SimplifyAreaAction extends JosmAction {
                         final double distanceWeight = Math.abs(crossTrackError(coord1, coord2, coord3)) / distanceThreshold;
 
                         weight = !closed && i == len - 1 || // don't remove last node of the not closed way
-                                angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.MAX_VALUE :
+                                nodeGluesWays(prevNode) ||
+                                angleWeight > 1.0 || areaWeight > 1.0 || distanceWeight > 1.0 ? Double.POSITIVE_INFINITY :
                                 angleWeight * angleFactor + areaWeight * areaFactor + distanceWeight * distanceFactor;
 
                         weightList.set(prevIndex, weight);

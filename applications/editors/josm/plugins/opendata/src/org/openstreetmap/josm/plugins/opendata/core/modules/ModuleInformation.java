@@ -114,8 +114,7 @@ public class ModuleInformation {
      * module information in a module information object retrieved from a module
      * update site.
      *
-     * @param other the module information object retrieved from the update
-     * site
+     * @param other the module information object retrieved from the update site
      */
     public void updateFromModuleSite(ModuleInformation other) {
         this.className = other.className;
@@ -148,14 +147,13 @@ public class ModuleInformation {
                 @SuppressWarnings("unused")
                 URL url = new URL(s);
             } catch (MalformedURLException e) {
-                System.out.println(tr("Invalid URL ''{0}'' in module {1}", s, name));
+                Main.error(tr("Invalid URL ''{0}'' in module {1}", s, name));
                 s = null;
             }
         }
         link = s;
         s = attr.getValue(lang+"Module-Description");
-        if(s == null)
-        {
+        if(s == null) {
             s = attr.getValue("Module-Description");
             if(s != null) {
                 s = tr(s);
@@ -171,6 +169,9 @@ public class ModuleInformation {
             // if not found, extract icon from the plugin jar file
             if (icon == null) {
                 icon = extractIcon(iconPath, OdPlugin.getInstance().getPluginInformation().file, true);
+            }
+            if (icon == null) {
+                Main.error("Unable to load module icon: "+iconPath);
             }
         }
 

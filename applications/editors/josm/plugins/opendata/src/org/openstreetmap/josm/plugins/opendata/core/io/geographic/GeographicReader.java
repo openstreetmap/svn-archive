@@ -151,7 +151,7 @@ public abstract class GeographicReader extends AbstractReader {
                 try {
                     w.addNode(createOrGetNode(ls.getPointN(i)));
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                    Main.error(e.getMessage());
                 }
             }
         }
@@ -277,7 +277,6 @@ public abstract class GeographicReader extends AbstractReader {
                         }
                     } catch (FactoryException ex) {
                         // Silently ignore exceptions
-                        //System.err.println("Warning: cannot decode "+code+". "+ex.getMessage());
                     }
                 }
                 
@@ -291,7 +290,7 @@ public abstract class GeographicReader extends AbstractReader {
                     try {
                         transform = CRS.findMathTransform(newCRS, wgs84, false);
                     } catch (OperationNotFoundException ex) {
-                        System.err.println(newCRS.getName()+": "+e.getMessage());
+                        Main.warn(newCRS.getName()+": "+e.getMessage());
                     }
                 }
             }

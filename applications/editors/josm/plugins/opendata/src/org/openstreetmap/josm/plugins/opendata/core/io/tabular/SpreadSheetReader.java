@@ -202,7 +202,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
                         }
                     }
                 } catch (ParseException e) {
-                    System.err.println("Warning: Parsing error on line "+lineNumber+": "+e.getMessage());
+                    Main.warn("Parsing error on line "+lineNumber+": "+e.getMessage());
                 }
             }
             Node firstNode = null;
@@ -212,7 +212,7 @@ public abstract class SpreadSheetReader extends AbstractReader {
                 if (en.isValid()) {
                     n.setCoor(c.proj != null && !handlerOK ? c.proj.eastNorth2latlon(en) : handler.getCoor(en, fields));
                 } else {
-                    System.err.println("Warning: Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
+                    Main.warn("Skipping line "+lineNumber+" because no valid coordinates have been found at columns "+c);
                 }
                 if (n.getCoor() != null) {
                     if (firstNode == null) {

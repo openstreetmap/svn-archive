@@ -119,7 +119,7 @@ public abstract class ArchiveReader extends AbstractReader {
                 ds = from;
             }
         } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            Main.error(e.getMessage());
         } finally {
             OdUtils.deleteDir(temp);
             if (progressMonitor != null) {
@@ -167,11 +167,10 @@ public abstract class ArchiveReader extends AbstractReader {
                 if (OdPlugin.getInstance().xmlImporter.acceptFile(f)) {
                     from = NeptuneReader.parseDataSet(in, handler, instance);
                 } else {
-                    System.err.println("Unsupported XML file: "+f.getName());
+                    Main.warn("Unsupported XML file: "+f.getName());
                 }
-                
             } else {
-                System.err.println("Unsupported file extension: "+f.getName());
+                Main.warn("Unsupported file extension: "+f.getName());
             }
             return from;
         }

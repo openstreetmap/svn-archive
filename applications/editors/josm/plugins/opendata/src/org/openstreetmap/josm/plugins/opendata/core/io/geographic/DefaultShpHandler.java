@@ -101,7 +101,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
                                         try {
                                             result.add(CRS.findMathTransform(CRS.decode(p.toCode()), targetCRS, lenient));
                                         } catch (FactoryException e) {
-                                            System.err.println(e.getMessage());
+                                            Main.error(e.getMessage());
                                         }
                                     }
                                 }
@@ -112,7 +112,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
             }
             if (!result.isEmpty()) {
                 if (result.size() > 1) {
-                    System.err.println("Found multiple projections !"); // TODO: something
+                    Main.warn("Found multiple projections !"); // TODO: something
                 }
                 return result.get(0);
             }

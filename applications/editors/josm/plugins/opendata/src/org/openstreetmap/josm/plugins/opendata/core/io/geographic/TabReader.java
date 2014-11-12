@@ -15,6 +15,7 @@ import java.util.List;
 import org.geotools.data.shapefile.dbf.DbaseFileReader;
 import org.geotools.data.shapefile.dbf.DbaseFileReader.Row;
 import org.geotools.data.shapefile.files.TabFiles;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -81,7 +82,7 @@ public class TabReader extends AbstractMapInfoReader {
             ds = new TabOsmReader(handler != null ? handler.getSpreadSheetHandler() : null, new TabFiles(file, dataFile)).
                     doParse(columns.toArray(new String[0]), instance);
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            Main.error(e.getMessage());
         }
         return ds;
     }
@@ -103,7 +104,7 @@ public class TabReader extends AbstractMapInfoReader {
         } else if (words[0].equalsIgnoreCase("Fields")) {
             parseColumns(words);
         } else if (!line.isEmpty()) {
-            System.err.println("Line "+lineNum+". Unknown clause in header: "+line);
+            Main.warn("Line "+lineNum+". Unknown clause in header: "+line);
         }
     }
 
@@ -116,7 +117,7 @@ public class TabReader extends AbstractMapInfoReader {
         if (words[1].equalsIgnoreCase("NATIVE") && words[2].equalsIgnoreCase("Charset")) {
             datCharset = parseCharset(words, 3);
         } else {
-            System.err.println("Line "+lineNum+". Unknown Type clause in header: "+line);
+            Main.warn("Line "+lineNum+". Unknown Type clause in header: "+line);
         }
     }
 }

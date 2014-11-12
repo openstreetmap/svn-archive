@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
@@ -66,7 +67,7 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
         } else if (words[index].equalsIgnoreCase(CHARSET_MAC)) {
             return Charset.forName(OdConstants.MAC_ROMAN);
         } else {
-            System.err.println("Line "+lineNum+". Unknown charset detected: "+line);
+            Main.error("Line "+lineNum+". Unknown charset detected: "+line);
             return Charset.forName(words[index]);
         }
     }

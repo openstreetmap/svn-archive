@@ -37,7 +37,6 @@ public class OdOsmDataLayer extends OsmDataLayer implements OdLayer {
                             if (p instanceof Way) {
                                 nodes = ((Way) p).getNodes();
                             }
-                            //data.removePrimitive(p);
                             if (nodes != null) {
                                 for (Node n : nodes) {
                                     List<OsmPrimitive> refferingAllowedWays = new ArrayList<>();
@@ -48,14 +47,10 @@ public class OdOsmDataLayer extends OsmDataLayer implements OdLayer {
                                     }
                                     
                                     if (refferingAllowedWays.isEmpty()) {
-                                        //data.removePrimitive(n);
                                         data.addSelected(n);
                                     }
                                 }
                             }
-                            /*for (OsmPrimitive referrer : p.getReferrers()) {
-                                System.out.println(referrer);
-                            }*/
                         }
                     }
                     Collection<OsmPrimitive> sel = data.getSelected();

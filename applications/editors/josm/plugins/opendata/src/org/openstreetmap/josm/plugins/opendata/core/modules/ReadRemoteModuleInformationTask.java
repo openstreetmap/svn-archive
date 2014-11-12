@@ -277,10 +277,10 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             InputStream in = new ByteArrayInputStream(doc.getBytes("UTF-8"));
             availableModules.addAll(new ModuleListParser().parse(in));
         } catch(UnsupportedEncodingException e) {
-            System.err.println(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
+            Main.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
             e.printStackTrace();
         } catch(ModuleListParseException e) {
-            System.err.println(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
+            Main.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
             e.printStackTrace();
         }
     }

@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Version;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
@@ -93,7 +94,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
         try {
             if (pi.downloadlink == null) {
                 String msg = tr("Warning: Cannot download module ''{0}''. Its download link is not known. Skipping download.", pi.name);
-                System.err.println(msg);
+                Main.warn(msg);
                 throw new ModuleDownloadException(msg);
             }
             URL url = new URL(pi.downloadlink);
@@ -115,7 +116,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
             }
         } catch(MalformedURLException e) {
             String msg = tr("Warning: Cannot download module ''{0}''. Its download link ''{1}'' is not a valid URL. Skipping download.", pi.name, pi.downloadlink);
-            System.err.println(msg);
+            Main.warn(msg);
             throw new ModuleDownloadException(msg);
         } catch (IOException e) {
             if (canceled)

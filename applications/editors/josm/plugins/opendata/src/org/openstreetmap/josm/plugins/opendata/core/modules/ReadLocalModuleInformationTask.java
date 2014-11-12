@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -77,6 +78,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     protected void scanSiteCacheFiles(ProgressMonitor monitor, File modulesDirectory) {
         File[] siteCacheFiles = modulesDirectory.listFiles(
                 new FilenameFilter() {
+                    @Override
                     public boolean accept(File dir, String name) {
                         return name.matches("^([0-9]+-)?site.*\\.txt$");
                     }
@@ -92,7 +94,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
             try {
                 processLocalModuleInformationFile(f);
             } catch (ModuleListParseException e) {
-                System.err.println(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
+                Main.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
                 e.printStackTrace();
             }
             monitor.worked(1);
@@ -102,6 +104,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     protected void scanIconCacheFiles(ProgressMonitor monitor, File modulesDirectory) {
         File[] siteCacheFiles = modulesDirectory.listFiles(
                 new FilenameFilter() {
+                    @Override
                     public boolean accept(File dir, String name) {
                         return name.matches("^([0-9]+-)?site.*modules-icons\\.zip$");
                     }
@@ -130,6 +133,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     protected void scanModuleFiles(ProgressMonitor monitor, File modulesDirectory) {
         File[] moduleFiles = modulesDirectory.listFiles(
                 new FilenameFilter() {
+                    @Override
                     public boolean accept(File dir, String name) {
                         return name.endsWith(".jar") || name.endsWith(".jar.new");
                     }
@@ -151,7 +155,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                     processJarFile(f, moduleName);
                 }
             } catch(ModuleException e){
-                System.err.println(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
+                Main.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
                 e.printStackTrace();
             }
             monitor.worked(1);

@@ -9,12 +9,12 @@ import java.net.URLEncoder;
 
 import javax.swing.Action;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
-@SuppressWarnings("serial")
 public class OpenLinkAction extends JosmAction {
 
     private URL url;
@@ -28,21 +28,21 @@ public class OpenLinkAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            System.out.println("Opening "+url);
+            Main.info("Opening "+url);
             OpenBrowser.displayUrl(url.toURI());
         } catch (URISyntaxException e1) {
             try {
-                System.err.println(e1.getLocalizedMessage());
+                Main.error(e1.getLocalizedMessage());
                 int index = e1.getIndex();
                 if (index > -1) {
                     String s = url.toString().substring(index, index+1);
                     s = url.toString().replace(s, URLEncoder.encode(s, OdConstants.UTF8));
                     URI uri = new URI(s);
-                    System.out.println("Opening "+uri);
+                    Main.info("Opening "+uri);
                     OpenBrowser.displayUrl(uri);
                 }
             } catch (Exception e2) {
-                e2.printStackTrace();
+                Main.error(e2);
             }
         }
     }

@@ -123,7 +123,7 @@ public class ShpReader extends GeographicReader {
                 GeometryCollection mp = (GeometryCollection) geometry.getValue();
                 int nGeometries = mp.getNumGeometries(); 
                 if (nGeometries < 1) {
-                    System.err.println("Error: empty geometry collection found");
+                    Main.error("empty geometry collection found");
                 } else {
                     Relation r = null;
                     Way w = null;
@@ -150,7 +150,7 @@ public class ShpReader extends GeographicReader {
                             // Some belgian data sets hold points into collections ?!
                             readNonGeometricAttributes(feature, createOrGetNode((Point) g));
                         } else {
-                            System.err.println("Error: unsupported geometry : "+g);
+                            Main.error("unsupported geometry : "+g);
                         }
                     }
                     primitive = r != null ? r : w;

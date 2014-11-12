@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.AbstractReader;
@@ -108,7 +109,7 @@ public class NetworkReader extends OsmServerReader {
         } else if (contentType.startsWith("tdyn/html")) {
             //return CsvReader.class;//FIXME, can also be .tar.gz
         } else {
-            System.err.println("Unsupported content type: "+contentType);
+            Main.warn("Unsupported content type: "+contentType);
         }
         return null;
     }

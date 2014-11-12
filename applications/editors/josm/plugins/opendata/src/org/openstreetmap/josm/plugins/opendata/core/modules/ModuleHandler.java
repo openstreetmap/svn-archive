@@ -133,20 +133,20 @@ public class ModuleHandler {
         policy = policy.trim().toLowerCase();
         if (policy.equals("never")) {
             if ("opendata.modulemanager.time-based-update.policy".equals(togglePreferenceKey)) {
-                System.out.println(tr("Skipping module update after elapsed update interval. Automatic update at startup is disabled."));
+                Main.info(tr("Skipping module update after elapsed update interval. Automatic update at startup is disabled."));
             }
             return false;
         }
 
         if (policy.equals("always")) {
             if ("opendata.modulemanager.time-based-update.policy".equals(togglePreferenceKey)) {
-                System.out.println(tr("Running module update after elapsed update interval. Automatic update at startup is disabled."));
+                Main.info(tr("Running module update after elapsed update interval. Automatic update at startup is disabled."));
             }
             return true;
         }
 
         if (!policy.equals("ask")) {
-            System.err.println(tr("Unexpected value ''{0}'' for preference ''{1}''. Assuming value ''ask''.", policy, togglePreferenceKey));
+            Main.warn(tr("Unexpected value ''{0}'' for preference ''{1}''. Assuming value ''ask''.", policy, togglePreferenceKey));
         }
         int ret = HelpAwareOptionPane.showOptionDialog(
                 parent,
@@ -226,7 +226,7 @@ public class ModuleHandler {
         try {
             Class<? extends Module> klass = module.loadClass(moduleClassLoader);
             if (klass != null) {
-                System.out.println(tr("loading module ''{0}'' (version {1})", module.name, module.localversion));
+                Main.info(tr("loading module ''{0}'' (version {1})", module.name, module.localversion));
                 Module mod = module.load(klass);
                 if (moduleList.add(mod)) {
                     SourceProvider styleProvider = mod.getMapPaintStyleSourceProvider();
@@ -436,11 +436,11 @@ public class ModuleHandler {
                 future.get();
                 modules = buildListOfModulesToLoad(parent);
             } catch(ExecutionException e) {
-                System.out.println(tr("Warning: failed to download module information list"));
+                Main.warn(tr("Warning: failed to download module information list"));
                 e.printStackTrace();
                 // don't abort in case of error, continue with downloading modules below
             } catch(InterruptedException e) {
-                System.out.println(tr("Warning: failed to download module information list"));
+                Main.warn(tr("Warning: failed to download module information list"));
                 e.printStackTrace();
                 // don't abort in case of error, continue with downloading modules below
             }
@@ -560,14 +560,14 @@ public class ModuleHandler {
             String moduleName = updatedModule.getName().substring(0, updatedModule.getName().length() - 8);
             if (module.exists()) {
                 if (!module.delete() && dowarn) {
-                    System.err.println(tr("Warning: failed to delete outdated module ''{0}''.", module.toString()));
-                    System.err.println(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
+                    Main.warn(tr("Warning: failed to delete outdated module ''{0}''.", module.toString()));
+                    Main.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
                     continue;
                 }
             }
             if (!updatedModule.renameTo(module) && dowarn) {
-                System.err.println(tr("Warning: failed to install module ''{0}'' from temporary download file ''{1}''. Renaming failed.", module.toString(), updatedModule.toString()));
-                System.err.println(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
+                Main.warn(tr("Warning: failed to install module ''{0}'' from temporary download file ''{1}''. Renaming failed.", module.toString(), updatedModule.toString()));
+                Main.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
             }
         }
         return;

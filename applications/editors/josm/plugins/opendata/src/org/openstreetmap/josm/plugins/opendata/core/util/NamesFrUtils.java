@@ -157,7 +157,7 @@ public abstract class NamesFrUtils {
         } else if (label.equals("Zone")) {
             return label;
         } else {
-            System.err.println("Warning: unknown street label: "+label);
+            Main.warn("unknown street label: "+label);
             return label;
         }
     }

@@ -43,7 +43,7 @@ public class XlsReader extends SpreadSheetReader {
         } catch (ExceptionInInitializerError e) {
             Throwable ex = e.getException();
             if (ex != null && ex.getMessage() != null) {
-                System.err.println(ex.getClass()+": "+ex.getMessage());
+                Main.error(ex.getClass()+": "+ex.getMessage());
             }
             throw new IOException(e);
         } catch (Throwable t) {

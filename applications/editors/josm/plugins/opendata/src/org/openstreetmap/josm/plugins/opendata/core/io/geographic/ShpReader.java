@@ -137,15 +137,15 @@ public class ShpReader extends GeographicReader {
                             if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 || (handler != null && handler.preferMultipolygonToSimpleWay()))) {
                                 r = createMultipolygon();
                             }
-                            w = createWay(p.getExteriorRing());
+                            w = createOrGetWay(p.getExteriorRing());
                             if (r != null) {
                                 addWayToMp(r, "outer", w);
                                 for (int j=0; j<p.getNumInteriorRing(); j++) {
-                                    addWayToMp(r, "inner", createWay(p.getInteriorRingN(j)));
+                                    addWayToMp(r, "inner", createOrGetWay(p.getInteriorRingN(j)));
                                 }
                             }
                         } else if (g instanceof LineString) {
-                            w = createWay((LineString) g);
+                            w = createOrGetWay((LineString) g);
                         } else if (g instanceof Point) {
                             // Some belgian data sets hold points into collections ?!
                             readNonGeometricAttributes(feature, createOrGetNode((Point) g));

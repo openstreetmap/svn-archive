@@ -8,6 +8,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.validation.tests.DuplicateWay;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
@@ -115,25 +117,25 @@ public abstract class GeographicReader extends AbstractReader {
         return n;
     }
     
-        protected Node createOrGetEmptyNode(Point p) throws MismatchedDimensionException, TransformException {
-                Point p2 = (Point) JTS.transform(p, transform);
-                LatLon key = new LatLon(p2.getY(), p2.getX());
-                Node n = getNode(p2, key);
-                if(n != null && n.hasKeys()) {
-                        n = null;
-                }
-                if (n == null) {
-                        n = new Node(key);
-                        if (handler == null || handler.useNodeMap()) {
-                                nodes.put(key, n);
-                        }
-                        ds.addPrimitive(n);
-                } else if (n.getDataSet() == null) {
-                    // handler may have removed the node from DataSet (see Paris public light handler for example)
-                    ds.addPrimitive(n);
-                }
-                return n;
+    protected Node createOrGetEmptyNode(Point p) throws MismatchedDimensionException, TransformException {
+        Point p2 = (Point) JTS.transform(p, transform);
+        LatLon key = new LatLon(p2.getY(), p2.getX());
+        Node n = getNode(p2, key);
+        if (n != null && n.hasKeys()) {
+            n = null;
         }
+        if (n == null) {
+            n = new Node(key);
+            if (handler == null || handler.useNodeMap()) {
+                nodes.put(key, n);
+            }
+            ds.addPrimitive(n);
+        } else if (n.getDataSet() == null) {
+            // handler may have removed the node from DataSet (see Paris public light handler for example)
+            ds.addPrimitive(n);
+        }
+        return n;
+    }
         
     protected <T extends OsmPrimitive> T addOsmPrimitive(T p) {
         ds.addPrimitive(p);
@@ -144,16 +146,38 @@ public abstract class GeographicReader extends AbstractReader {
         return addOsmPrimitive(new Way());
     }
 
-    protected final Way createWay(LineString ls) {
-        Way w = createWay();
+    protected final Way createOrGetWay(LineString ls) {
+        Way w = null;
+        Way tempWay = new Way();
         if (ls != null) {
+            // Build list of nodes 
             for (int i=0; i<ls.getNumPoints(); i++) {
                 try {
-                    w.addNode(createOrGetNode(ls.getPointN(i)));
+                    tempWay.addNode(createOrGetNode(ls.getPointN(i)));
                 } catch (Exception e) {
                     Main.error(e.getMessage());
                 }
             }
+            // Find possible duplicated ways
+            if (tempWay.getNodesCount() > 0) {
+                List<Way> candidates = OsmPrimitive.getFilteredList(tempWay.firstNode().getReferrers(), Way.class);
+                candidates.remove(tempWay);
+                List<LatLon> tempNodes = DuplicateWay.getOrderedNodes(tempWay);
+                for (Way candidate : candidates) {
+                    List<LatLon> candNodesA = DuplicateWay.getOrderedNodes(candidate);
+                    List<LatLon> candNodesB = new ArrayList<>(candNodesA);
+                    Collections.reverse(candNodesB);
+                    if (tempNodes.equals(candNodesA) || tempNodes.equals(candNodesB)) {
+                        w = candidate;
+                        break;
+                    }
+                }
+            }
+        }
+        // If no duplicate way found, create new one
+        if (w == null) {
+            w = createWay();
+            w.setNodes(tempWay.getNodes());
         }
         return w;
     }

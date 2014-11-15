@@ -12,18 +12,17 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.ImageWriteException;
-import org.apache.sanselan.Sanselan;
-import org.apache.sanselan.common.IImageMetadata;
-import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
-import org.apache.sanselan.formats.jpeg.exifRewrite.ExifRewriter;
-import org.apache.sanselan.formats.tiff.TiffImageMetadata;
-import org.apache.sanselan.formats.tiff.constants.GPSTagConstants;
-import org.apache.sanselan.formats.tiff.fieldtypes.FieldType;
-import org.apache.sanselan.formats.tiff.write.TiffOutputDirectory;
-import org.apache.sanselan.formats.tiff.write.TiffOutputField;
-import org.apache.sanselan.formats.tiff.write.TiffOutputSet;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.common.IImageMetadata;
+import org.apache.commons.imaging.common.RationalNumber;
+import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
+import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
+import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
+import org.apache.commons.imaging.formats.tiff.constants.GpsTagConstants;
+import org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory;
+import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
 
 public class ExifGPSTagger {
     /**
@@ -51,7 +50,7 @@ public class ExifGPSTagger {
             throws IOException, ImageReadException, ImageWriteException {
         TiffOutputSet outputSet = null;
 
-        IImageMetadata metadata = Sanselan.getMetadata(jpegImageFile);
+        IImageMetadata metadata = Imaging.getMetadata(jpegImageFile);
         JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
         if (null != jpegMetadata) {
             TiffImageMetadata exif = jpegMetadata.getExif();
@@ -65,8 +64,11 @@ public class ExifGPSTagger {
             outputSet = new TiffOutputSet();
         }
 
-        Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        TiffOutputDirectory gpsDirectory = outputSet.getOrCreateGPSDirectory();
+        gpsDirectory.removeField(GpsTagConstants.GPS_TAG_GPS_VERSION_ID);
+        gpsDirectory.add(GpsTagConstants.GPS_TAG_GPS_VERSION_ID, (byte)2, (byte)3, (byte)0, (byte)0);
 
+        Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         calendar.setTimeInMillis(gpsTime);
 
         final int year =   calendar.get(Calendar.YEAR);
@@ -86,41 +88,28 @@ public class ExifGPSTagger {
         final String dateStamp = yearStr+":"+monthStr+":"+dayStr;
         //System.err.println("date: "+dateStamp+"  h/m/s: "+hour+"/"+minute+"/"+second);
 
-        Double[] timeStamp = {new Double(hour), new Double(minute), new Double(second)};
-        TiffOutputField gpsTimeStamp = TiffOutputField.create(
-                GPSTagConstants.GPS_TAG_GPS_TIME_STAMP,
-                outputSet.byteOrder, timeStamp);
-        TiffOutputDirectory exifDirectory = outputSet.getOrCreateGPSDirectory();
         // make sure to remove old value if present (this method will
         // not fail if the tag does not exist).
-        exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_TIME_STAMP);
-        exifDirectory.add(gpsTimeStamp);
+        gpsDirectory.removeField(GpsTagConstants.GPS_TAG_GPS_TIME_STAMP);
+        gpsDirectory.add(GpsTagConstants.GPS_TAG_GPS_TIME_STAMP, 
+                RationalNumber.valueOf(hour),
+                RationalNumber.valueOf(minute),
+                RationalNumber.valueOf(second));
 
-        TiffOutputField gpsDateStamp = SanselanFixes.create(
-                GPSTagConstants.GPS_TAG_GPS_DATE_STAMP,
-                outputSet.byteOrder, dateStamp);
         // make sure to remove old value if present (this method will
         // not fail if the tag does not exist).
-        exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_DATE_STAMP);
-        exifDirectory.add(gpsDateStamp);
+        gpsDirectory.removeField(GpsTagConstants.GPS_TAG_GPS_DATE_STAMP);
+        gpsDirectory.add(GpsTagConstants.GPS_TAG_GPS_DATE_STAMP, dateStamp);
 
-        SanselanFixes.setGPSInDegrees(outputSet, lon, lat);
+        outputSet.setGPSInDegrees(lon, lat);
 
         if (ele != null) {
             byte eleRef =  ele >= 0 ? (byte) 0 : (byte) 1;
-            TiffOutputField gpsAltitudeRef = new TiffOutputField(
-                    GPSTagConstants.GPS_TAG_GPS_ALTITUDE_REF,
-                    FieldType.FIELD_TYPE_BYTE, 1, new byte[] { eleRef });
-            exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_ALTITUDE_REF);
-            exifDirectory.add(gpsAltitudeRef);
+            gpsDirectory.removeField(GpsTagConstants.GPS_TAG_GPS_ALTITUDE_REF);
+            gpsDirectory.add(GpsTagConstants.GPS_TAG_GPS_ALTITUDE_REF, eleRef);
 
-            Number[] val = new Number[] { Math.abs(ele) };
-            byte[] bytes = FieldType.FIELD_TYPE_RATIONAL.writeData(val, outputSet.byteOrder);
-            TiffOutputField gpsAltitude = new TiffOutputField(
-                    GPSTagConstants.GPS_TAG_GPS_ALTITUDE,
-                    FieldType.FIELD_TYPE_RATIONAL, 1, bytes);
-            exifDirectory.removeField(GPSTagConstants.GPS_TAG_GPS_ALTITUDE);
-            exifDirectory.add(gpsAltitude);
+            gpsDirectory.removeField(GpsTagConstants.GPS_TAG_GPS_ALTITUDE);
+            gpsDirectory.add(GpsTagConstants.GPS_TAG_GPS_ALTITUDE, RationalNumber.valueOf(Math.abs(ele)));
         }
         try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(dst))) {
             new ExifRewriter().updateExifMetadataLossless(jpegImageFile, os, outputSet);

@@ -4,7 +4,6 @@
  *      Copyright 2011 Hind <foxhind@gmail.com>
  *
  */
-
 package CommandLine;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -23,21 +22,19 @@ public class CommandAction extends JosmAction {
         super(tr(parentCommand.name), "blankmenu", tr(parentCommand.name), null, true, parentCommand.name, true);
         if (!parentCommand.icon.equals("")) {
             try {
-                putValue(Action.SMALL_ICON, ImageProvider.get(CommandLine.pluginDir, parentCommand.icon));
-                putValue(Action.LARGE_ICON_KEY, ImageProvider.get(CommandLine.pluginDir, parentCommand.icon));
-            }
-            catch (NullPointerException e) {
-                putValue(Action.SMALL_ICON, ImageProvider.get("blankmenu"));
-                putValue(Action.LARGE_ICON_KEY, ImageProvider.get("blankmenu"));
-            }
-            catch (RuntimeException e) {
-                putValue(Action.SMALL_ICON, ImageProvider.get("blankmenu"));
-                putValue(Action.LARGE_ICON_KEY, ImageProvider.get("blankmenu"));
+                putIcons(CommandLine.pluginDir, parentCommand.icon);
+            } catch (RuntimeException e) {
+                putIcons(null, "blankmenu");
             }
         }
 
         this.parentCommand = parentCommand;
         this.parentPlugin = parentPlugin;
+    }
+
+    private void putIcons(String subdir, String name) {
+        putValue(Action.SMALL_ICON, new ImageProvider(subdir, name).setSize(ImageProvider.ImageSizes.SMALLICON).get());
+        putValue(Action.LARGE_ICON_KEY, new ImageProvider(subdir, name).setSize(ImageProvider.ImageSizes.LARGEICON).get());
     }
 
     @Override

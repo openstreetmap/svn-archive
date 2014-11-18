@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.opendata.core.modules;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +28,7 @@ import org.openstreetmap.josm.plugins.opendata.OdPlugin;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 import org.openstreetmap.josm.tools.LanguageInfo;
 
 /**
@@ -327,8 +329,8 @@ public class ModuleInformation {
     }
 
     public ImageIcon getScaledIcon() {
-        if (icon == null)
-            return OdUtils.getImageIcon(OdConstants.ICON_EMPTY_24);
-        return new ImageIcon(icon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+        Dimension dim = ImageProvider.getImageSizes(ImageSizes.MENU);
+        ImageIcon iconToScale = icon != null ? icon : OdUtils.getImageIcon(OdConstants.ICON_EMPTY_24);
+        return new ImageIcon(iconToScale.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH));
     }
 }

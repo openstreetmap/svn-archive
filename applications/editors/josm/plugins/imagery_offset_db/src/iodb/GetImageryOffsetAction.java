@@ -37,8 +37,8 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
         super(tr("Get Imagery Offset..."), "getoffset", tr("Download offsets for current imagery from a server"),
                 Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")),
                 KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
-        iconOffsetOk = ImageProvider.get("getoffset");
-        iconOffsetBad = ImageProvider.get("getoffsetnow");
+        iconOffsetOk = new ImageProvider("getoffset").setSize(ImageProvider.ImageSizes.MENU).get();
+        iconOffsetBad = new ImageProvider("getoffsetnow").setSize(ImageProvider.ImageSizes.MENU).get();
         ImageryOffsetWatcher.getInstance().register(this);
     }
 

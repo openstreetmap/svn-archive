@@ -4,10 +4,11 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Added a field to specify the map scale."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="7676"/>
 
     <property name="plugin.author" value="Kai Pastor"/>
     <property name="plugin.class"  value="org.openstreetmap.josm.plugins.print.PrintPlugin"/>
+    <property name="plugin.icon"  value="images/printer.svg"/>
     <property name="plugin.description" value="Adds map printing to JOSM"/>
 
     <!-- ** include targets that all plugins have in common ** -->

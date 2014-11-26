@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
@@ -20,7 +19,6 @@ import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -50,7 +48,6 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
      *.
      */
     private void initializePlugin() {
-    	System.out.println("Initialized Plugin...");
         Shortcut.registerShortcut("OsmInspector", tr("Toggle: {0}", tr("Open OsmInspector")),
                 KeyEvent.VK_1, Shortcut.ALT_SHIFT);
         //String name = "Osm Inspector error reports";
@@ -65,11 +62,9 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
     }
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		System.out.println("In map frame initialized");
 		Main.toolbar.register( new ImportOsmInspectorBugsAction( this ) );
 		if (newFrame == null) {
             /* if new MapFrame is null, remove listener */
-			System.out.println("newFrame is null");
             MapView.removeLayerChangeListener(this);
             NavigatableComponent.removeZoomChangeListener(this);
         } else {
@@ -87,21 +82,8 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
                 Main.pref.put("osmInspector.josmUserName",
                         userIdentityManager.getUserName());
                 Main.toolbar.control.add( new ImportOsmInspectorBugsAction( this ) );
-                System.out.println("Action added to control....");
             }
         }
-	}
-	
-	@Override
-	public PreferenceSetting getPreferenceSetting() {
-		// TODO Auto-generated method stub
-		return super.getPreferenceSetting();
-	}
-	
-	@Override
-	public void addDownloadSelection(List<DownloadSelection> list) {
-		// TODO Auto-generated method stub
-		super.addDownloadSelection(list);
 	}
 
 	@Override

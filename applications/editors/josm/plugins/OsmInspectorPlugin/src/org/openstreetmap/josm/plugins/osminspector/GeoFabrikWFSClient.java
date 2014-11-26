@@ -50,8 +50,8 @@ public class GeoFabrikWFSClient {
 		// Step 4 - target
 		FeatureSource<SimpleFeatureType, SimpleFeature> source = data
 				.getFeatureSource(typeName);
-		System.out.println("Source Metadata Bounds:" + source.getBounds());
-		System.out.println("Source schema: " + source.getSchema());
+		Main.info("Source Metadata Bounds:" + source.getBounds());
+		Main.info("Source schema: " + source.getSchema());
 
 		progressMonitor.setProgress(40);
 		
@@ -72,7 +72,7 @@ public class GeoFabrikWFSClient {
 
 		ReferencedEnvelope bboxRef = new ReferencedEnvelope(minLon, maxLon,
 				minLat, maxLat, targetCRS);
-		System.out.println("Reference Bounds:" + bboxRef);
+		Main.info("Reference Bounds:" + bboxRef);
 
 		progressMonitor.setProgress(50);
 		//
@@ -143,7 +143,7 @@ public class GeoFabrikWFSClient {
 		// Feature feature = iterator.next();
 		// bounds.include(feature.getBounds());
 		// }
-		// System.out.println("Calculated Bounds:" + bounds);
+		// Main.info("Calculated Bounds:" + bounds);
 		// } finally {
 		// features.close(iterator);
 		// }

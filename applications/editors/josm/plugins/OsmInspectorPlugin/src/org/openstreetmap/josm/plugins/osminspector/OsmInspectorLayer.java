@@ -321,7 +321,7 @@ public class OsmInspectorLayer extends Layer {
 
 	private enum GeomType {
 		POINT, LINE, POLYGON
-	};
+	}
 
 	private static final Color SELECTED_COLOUR = Color.ORANGE;
 	private static final float SELECTED_POINT_SIZE = 15.0f;
@@ -365,8 +365,7 @@ public class OsmInspectorLayer extends Layer {
 					.getFeatures(typeName, monitor);
 			setGeometry(selectGeomType, typeName);
 
-			System.out.println("Osm Inspector Features size: "
-					+ features.size());
+			Main.info("Osm Inspector Features size: " + features.size());
 			Style style = createDefaultStyle(idx, selectedFeatures);
 
 			OSMIFeatureTracker tracker = new OSMIFeatureTracker(features);
@@ -423,14 +422,12 @@ public class OsmInspectorLayer extends Layer {
 					.getFeatures(typeName, monitor);
 			setGeometry(selectGeomType, typeName);
 
-			System.out.println("Osm Inspector Features size: "
-					+ features.size());
+			Main.info("Osm Inspector Features size: " + features.size());
 
 			OSMIFeatureTracker tracker = arrFeatures.get(idx - layerOffset);
 			tracker.mergeFeatures(features);
 
-			FeatureIterator<SimpleFeature> it = tracker.getFeatures()
-					.features();
+			FeatureIterator<SimpleFeature> it = tracker.getFeatures().features();
 
 			while (it.hasNext()) {
 				BugInfo theInfo = new BugInfo(it.next(), osmiBugInfo.size());
@@ -515,7 +512,7 @@ public class OsmInspectorLayer extends Layer {
 	}
 
 	private void setGeometry(ArrayList<GeomType> selectedTypes, String typename) {
-		System.out.println("Passed type is" + typename);
+	    Main.info("Passed type is" + typename);
 		if (typename.compareTo("duplicate_ways") == 0) {
 			geometryType = GeomType.LINE;
 		} else
@@ -618,12 +615,10 @@ public class OsmInspectorLayer extends Layer {
 			try {
 				selectedFeatures = tempfs.getFeatures(filter);
 
-				FeatureIterator<SimpleFeature> iter = selectedFeatures
-						.features();
+				FeatureIterator<SimpleFeature> iter = selectedFeatures.features();
 				Set<FeatureId> IDs = new HashSet<>();
 
-				System.out.println("Selected features "
-						+ selectedFeatures.size());
+				Main.info("Selected features " + selectedFeatures.size());
 
 				while (iter.hasNext()) {
 					SimpleFeature feature = iter.next();

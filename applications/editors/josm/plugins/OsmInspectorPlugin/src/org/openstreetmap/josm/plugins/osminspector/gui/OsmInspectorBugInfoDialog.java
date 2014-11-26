@@ -23,7 +23,6 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 		ListSelectionListener, LayerChangeListener, MouseListener {
 
-    //private OsmInspectorLayer layer;
 	private JTextPane bugTextArea;
 
 	/**
@@ -47,23 +46,16 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 																			// height
 				true // default is "show dialog"
 		);
-		//this.layer = layer;
 		buildContentPanel();
 	}
 
 	public void updateDialog(OsmInspectorLayer l) {
-		//this.layer = l;
 	}
 	
 	public void setBugDescription(BugInfo i){
 	    bugTextArea.setText(i.getContentString());
 	}
 	
-	/*@Override
-	public void showNotify() {
-		super.showNotify();
-	}*/
-
 	@Override
 	public void hideNotify() {
 		if (dialogsPanel != null) {
@@ -93,9 +85,6 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 
 	@Override
 	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		/*if(newLayer instanceof OsmInspectorLayer) {
-			this.layer = (OsmInspectorLayer) newLayer;
-		}*/
 	}
 
 	@Override
@@ -108,6 +97,5 @@ public class OsmInspectorBugInfoDialog extends ToggleDialog implements
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		//System.out.println(e.getFirstIndex());
 	}
 }

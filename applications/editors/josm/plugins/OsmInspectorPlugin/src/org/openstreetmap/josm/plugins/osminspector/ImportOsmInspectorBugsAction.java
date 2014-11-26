@@ -35,12 +35,11 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 			ProgressMonitor monitor = new ProgressMonitor(Main.map.mapView,
 					"Querying WFS Geofabrik", "Dowloading features", 0, 100);
 
-			System.out.println("enabled event...");
 			try {
 				Bounds bounds = Main.map.mapView
 						.getLatLonBounds(Main.map.mapView.getBounds());
 
-				System.out.println("OSMI View bounds" + bounds);
+				Main.info("OSMI View bounds" + bounds);
 
 				monitor.setProgress(10);
 
@@ -66,10 +65,8 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 					plugin.getLayer().updateView();
 				}
 			}
-		}
-		if (!isEnabled()) {
-			System.out.println("Osm Inspector Action not enanbled");
-
+		} else {
+		    Main.warn("Osm Inspector Action not enabled");
 		}
 	}
 

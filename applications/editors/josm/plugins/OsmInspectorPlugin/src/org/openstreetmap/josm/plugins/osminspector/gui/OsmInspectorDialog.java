@@ -71,7 +71,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 				layer.setOsmiIndex(e.getFirstIndex());
 				BugInfo next = layer.getOsmiIndex().getItemPointedByNext();
 				layer.setOsmiIndex((e.getFirstIndex() + 1) % layer.getOsmiBugInfo().size());
-				System.out.println(next);
 				Geometry geom = next.getGeom();
 				Point centroid = geom.getCentroid();
 				LatLon center = new LatLon(centroid.getY(), centroid.getX());
@@ -102,7 +101,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 				actPrev = new OsmInspectorPrevAction(layer));
 		prevButton.createArrow(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(e);
 			}
 		});
 
@@ -176,7 +174,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		public void actionPerformed(ActionEvent e) {
 			layer.getOsmiIndex().next();
 			BugInfo next = layer.getOsmiIndex().getItemPointedByNext();
-			System.out.println(next);
 			Geometry geom = next.getGeom();
 			Point centroid = geom.getCentroid();
 			LatLon center = new LatLon(centroid.getY(), centroid.getX());
@@ -212,7 +209,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		public void actionPerformed(ActionEvent e) {
 			layer.getOsmiIndex().prev();
 			BugInfo prev = layer.getOsmiIndex().getItemPointedByPrev();
-			System.out.println(prev);
 			Geometry geom = prev.getGeom();
 			Point centroid = geom.getCentroid();
 			LatLon center = new LatLon(centroid.getY(), centroid.getX());

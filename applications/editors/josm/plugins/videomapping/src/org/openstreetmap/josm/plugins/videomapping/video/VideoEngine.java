@@ -406,4 +406,24 @@ public class VideoEngine implements MediaPlayerEventListener {
     public void endOfSubItems(MediaPlayer mediaPlayer) {
         // TODO Auto-generated method stub
     }
+
+    @Override
+    public void scrambledChanged(MediaPlayer mediaPlayer, int newScrambled) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void elementaryStreamAdded(MediaPlayer mediaPlayer, int type, int id) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void elementaryStreamDeleted(MediaPlayer mediaPlayer, int type, int id) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void elementaryStreamSelected(MediaPlayer mediaPlayer, int type, int id) {
+        // TODO Auto-generated method stub
+    }
 }

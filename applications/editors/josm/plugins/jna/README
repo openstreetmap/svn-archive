@@ -1,0 +1,4 @@
+README 
+======
+This plugin provides the Java Native Access (JNA) library for JOSM plugins.
+    * Licensed under GPL v3 (see LICENSE)

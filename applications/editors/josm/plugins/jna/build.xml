@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="jna" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="Commit message"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="7001"/>
+    
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.jna.JNAPlugin"/>
+    <property name="plugin.description" value="Provides Java Native Access (JNA) library. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
+    <property name="plugin.icon" value="images/jnalogo.jpg"/>
+    <!--<property name="plugin.link" value="..."/>-->
+    <!--<property name="plugin.early" value="..."/>-->
+    <!-- <property name="plugin.requires" value=""/> -->
+    <property name="plugin.stage" value="10"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>

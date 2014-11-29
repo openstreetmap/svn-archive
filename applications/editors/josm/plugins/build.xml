@@ -11,6 +11,7 @@
     <target name="dist" depends="compile">
         <mkdir dir="../dist"/>
         <!-- order important ! -->
+        <ant target="dist" dir="jna"/>
         <ant target="dist" dir="jts"/>
         <ant target="dist" dir="geotools"/>
         <ant target="dist" dir="utilsplugin2"/>
@@ -151,6 +152,7 @@
         <ant target="clean" dir="importvec"/>
         <ant target="clean" dir="infomode"/>
         <ant target="clean" dir="irsrectify"/>
+        <ant target="clean" dir="jna"/>
         <ant target="clean" dir="jts"/>
         <ant target="clean" dir="junctionchecking"/>
         <ant target="clean" dir="lakewalker"/>

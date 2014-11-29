@@ -18,6 +18,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Provider;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.text.NumberFormat;
@@ -46,6 +47,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.bouncycastle.bcpg.HashAlgorithmTags;
 import org.bouncycastle.bcpg.sig.NotationData;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPEncryptedData;
@@ -64,6 +66,18 @@ import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.PGPSignatureSubpacketGenerator;
 import org.bouncycastle.openpgp.PGPSignatureSubpacketVector;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
+import org.bouncycastle.openpgp.operator.PBESecretKeyEncryptor;
+import org.bouncycastle.openpgp.operator.PGPContentSignerBuilder;
+import org.bouncycastle.openpgp.operator.PGPContentVerifierBuilderProvider;
+import org.bouncycastle.openpgp.operator.PGPDigestCalculator;
+import org.bouncycastle.openpgp.operator.PGPDigestCalculatorProvider;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentVerifierBuilderProvider;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPDigestCalculatorProviderBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
 import org.bouncycastle.util.encoders.Hex;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
@@ -533,9 +547,14 @@ public class TrustGPG {
                 getPasswordfromUser();
             }
 
-            PGPPrivateKey pgpPrivKey = pgpSecKey.extractPrivateKey(password, "BC");
-            PGPSignatureGenerator sGen = new PGPSignatureGenerator(pgpSecKey.getPublicKey().getAlgorithm(), digest, "BC");
-            sGen.initSign(PGPSignature.CANONICAL_TEXT_DOCUMENT, pgpPrivKey);
+            Provider provider = Security.getProvider("BC");
+            PGPDigestCalculatorProvider digestCalculatorProvider = new JcaPGPDigestCalculatorProviderBuilder().setProvider(provider).build();
+            PBESecretKeyDecryptor secretKeyDecryptor = new JcePBESecretKeyDecryptorBuilder(digestCalculatorProvider).setProvider(provider).build(password);
+            PGPPrivateKey pgpPrivKey = pgpSecKey.extractPrivateKey(secretKeyDecryptor);
+            int keyAlgorithm = pgpSecKey.getPublicKey().getAlgorithm();
+            PGPContentSignerBuilder contentSignerBuilder = new JcaPGPContentSignerBuilder(keyAlgorithm, digest).setProvider(provider).setDigestProvider(provider);
+            PGPSignatureGenerator sGen = new PGPSignatureGenerator(contentSignerBuilder);
+            sGen.init(PGPSignature.CANONICAL_TEXT_DOCUMENT, pgpPrivKey);
 
             Iterator<?> it = pgpSecKey.getPublicKey().getUserIDs();
             if (it.hasNext()) {
@@ -574,7 +593,9 @@ public class TrustGPG {
         success = trust.updateSigStatus(key, gpg.getResult().equals(sigtext)? TrustSignatures.SIG_VALID : TrustSignatures.SIG_BROKEN);
     }*/
         try {
-            sig.initVerify(pgpPub.getPublicKey(sig.getKeyID()), "BC");
+            Provider provider = Security.getProvider("BC");
+            PGPContentVerifierBuilderProvider contentVerifierBuilderProvider = new JcaPGPContentVerifierBuilderProvider().setProvider(provider);
+            sig.init(contentVerifierBuilderProvider, pgpPub.getPublicKey(sig.getKeyID()));
             sig.update(sigtext.getBytes(Charset.forName("UTF-8")));
             return sig.verify();
         }catch (Exception e){//Catch exception if any
@@ -811,7 +832,7 @@ public class TrustGPG {
         KeyPair kp = Kpg.generateKeyPair();
 
         Date now = new Date();
-        PGPKeyPair pgpKp = new PGPKeyPair(al, kp, now);
+        PGPKeyPair pgpKp = new JcaPGPKeyPair(al, kp, now);
 
         getPasswordfromUser();
 
@@ -824,8 +845,15 @@ public class TrustGPG {
             subPck = spGen.generate();
         }
 
-        PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(PGPSignature.POSITIVE_CERTIFICATION, pgpKp,
-                userId.getText(), protAl[protectBox.getSelectedIndex()], password, true, subPck, null, new SecureRandom(), "BC");
+        Provider provider = Security.getProvider("BC");
+        int encAlgorithm = protAl[protectBox.getSelectedIndex()];
+        PGPDigestCalculator checksumCalculator = new JcaPGPDigestCalculatorProviderBuilder().build().get(HashAlgorithmTags.SHA1);
+        PGPContentSignerBuilder signerBuilder = new JcaPGPContentSignerBuilder(pgpKp.getPublicKey().getAlgorithm(), HashAlgorithmTags.SHA1);
+        PBESecretKeyEncryptor encryptor = new JcePBESecretKeyEncryptorBuilder(encAlgorithm).setProvider(provider).
+                setSecureRandom(new SecureRandom()).build(password);
+        
+        PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(PGPSignature.POSITIVE_CERTIFICATION, pgpKp, userId.getText(),
+                checksumCalculator, subPck, null, signerBuilder, encryptor);
 
         if (pgpPub == null) {
             Vector<PGPPublicKeyRing> pubKeyRing = new Vector<>(1);

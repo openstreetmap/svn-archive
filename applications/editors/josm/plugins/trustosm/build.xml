@@ -5,10 +5,6 @@
     <property name="commit.message" value="New plugin for digital signing osm data"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001" />
-
-    <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
-    -->
     <property name="plugin.author" value="Christoph Wagner" />
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin" />
     <property name="plugin.description" value="Plugin to digital sign OSM-Data" />
@@ -39,6 +35,8 @@
             <!-- plugin.lib.dir contains all jar files -->
             <fileset dir="${plugin.lib.dir}">
                 <include name="**/*.jar"/>
+                <exclude name="**/*-sources.jar"/>
+                <exclude name="**/*-javadoc.jar"/>
             </fileset>
         </path>
     </pathconvert>

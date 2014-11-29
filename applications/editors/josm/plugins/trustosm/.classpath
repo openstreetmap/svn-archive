@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/bcpg-jdk15on-1.50.jar" sourcepath="bcpg-jdk15on-1.50-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-trustosm/bcpg-jdk15on-1.50-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/bcprov-jdk15on-1.50.jar" sourcepath="bcprov-jdk15on-1.50-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-trustosm/bcprov-jdk15on-1.50-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/swingx-core-1.6.5-1.jar"/>
+	<classpathentry kind="lib" path="lib/bcpg-jdk15on-151.jar" sourcepath="lib/bcpg-jdk15on-1.51-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-trustosm/lib/bcpg-jdk15on-1.51-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/bcprov-jdk15on-151.jar" sourcepath="lib/bcprov-jdk15on-1.51-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JOSM-trustosm/lib/bcprov-jdk15on-1.51-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="output" path="bin"/>

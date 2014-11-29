@@ -61,6 +61,8 @@
                 <pathelement location="${josm}"/>
                 <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
                     <include name="**/*.jar"/>
+                    <exclude name="**/*-sources.jar"/>
+                    <exclude name="**/*-javadoc.jar"/>
                 </fileset>
                 <fileset refid="plugin.requires.jars"/>
             </classpath>
@@ -136,7 +138,7 @@
         </antcall>
         <antcall target="additional-manifest" />
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST">
-            <zipgroupfileset dir="${plugin.lib.dir}" includes="*.jar" erroronmissingdir="no"/>
+            <zipgroupfileset dir="${plugin.lib.dir}" includes="*.jar" excludes="*-sources.jar, *-javadoc.jar" erroronmissingdir="no"/>
         </jar>
         <delete file="MANIFEST" failonerror="no"/>
         <antcall target="post-dist" />
@@ -374,9 +376,13 @@
         </fileset>
         <fileset dir="${plugin.test.dir}/lib" erroronmissingdir="no">
             <include name="**/*.jar"/>
+            <exclude name="**/*-sources.jar"/>
+            <exclude name="**/*-javadoc.jar"/>
         </fileset>
         <fileset dir="lib" erroronmissingdir="no">
             <include name="**/*.jar"/>
+            <exclude name="**/*-sources.jar"/>
+            <exclude name="**/*-javadoc.jar"/>
         </fileset>
         <pathelement path="${josm.test.build.dir}/unit"/>
         <pathelement path="${josm}"/>

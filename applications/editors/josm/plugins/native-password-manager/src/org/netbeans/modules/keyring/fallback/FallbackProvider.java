@@ -42,9 +42,10 @@
 
 package org.netbeans.modules.keyring.fallback;
 
-import java.util.UUID;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.modules.keyring.spi.EncryptionProvider;
 import org.netbeans.spi.keyring.KeyringProvider;
 
@@ -72,6 +73,7 @@ public class FallbackProvider implements KeyringProvider {
         this.prefs = prefs;
     }
 
+    @Override
     public boolean enabled() {
         if (encryption.enabled()) {
             if (testSampleKey()) {
@@ -85,7 +87,9 @@ public class FallbackProvider implements KeyringProvider {
     
     private boolean testSampleKey() {
         encryption.freshKeyring(true);
-        if (_save(SAMPLE_KEY, (SAMPLE_KEY + UUID.randomUUID()).toCharArray(),
+        byte[] randomArray = new byte[36];
+        new SecureRandom().nextBytes(randomArray);
+        if (_save(SAMPLE_KEY, (SAMPLE_KEY + new String(randomArray)).toCharArray(),
                 "Sample value ensuring that decryption is working.")) {
             LOG.fine("saved sample key");
             return true;

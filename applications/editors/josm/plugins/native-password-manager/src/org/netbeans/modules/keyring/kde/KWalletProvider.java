@@ -69,16 +69,16 @@ public class KWalletProvider implements KeyringProvider{
             return false;
         }
         CommandResult result = runCommand("isEnabled");
-        if(new String(result.retVal).equals("true")) {
+        if(new String(result.retVal).equals("true")) {        
             return updateHandler();
-        }
+        }                   
         return false;
-    };
+    }
 
     @Override
     public char[] read(String key){
         if (updateHandler()){
-            CommandResult result = runCommand("readPassword", handler, getApplicationName(), key.toCharArray(), getApplicationName(true));
+            CommandResult result = runCommand("readPassword", handler, getApplicationName(), key.toCharArray(), getApplicationName());
             if (result.exitCode != 0){
                 warning("read action returned not 0 exitCode");
             }
@@ -86,7 +86,7 @@ public class KWalletProvider implements KeyringProvider{
         }
         return null;
         //throw new KwalletException("read");
-    };
+    }
 
     @Override
     public void save(String key, char[] password, String description){
@@ -94,65 +94,65 @@ public class KWalletProvider implements KeyringProvider{
         //it by default and I don't want to do it by adding new fields to kwallet
         if (updateHandler()){
             CommandResult result = runCommand("writePassword", handler , getApplicationName()
-                    , key.toCharArray(), password , getApplicationName(true));
+                    , key.toCharArray(), password , getApplicationName());
             if (result.exitCode != 0 || (new String(result.retVal)).equals("-1")){
                 warning("save action failed");
             }
             return;
         }
         //throw new KwalletException("save");
-    };
+    }
 
     @Override
     public void delete(String key){
         if (updateHandler()){
             CommandResult result = runCommand("removeEntry" ,handler,
-            getApplicationName() , key.toCharArray() , getApplicationName(true));
+            getApplicationName() , key.toCharArray() , getApplicationName());
              if (result.exitCode != 0  || (new String(result.retVal)).equals("-1")){
                 warning("delete action failed");
             }
             return;
         }
         //throw new KwalletException("delete");
-    };
+    }
 
     private boolean updateHandler(){
         if(timeoutHappened) {
             return false;
         }
         handler = new String(handler).equals("")? "0".toCharArray() : handler;
-        CommandResult result = runCommand("isOpen",handler);
+        CommandResult result = runCommand("isOpen",handler);          
         if(new String(result.retVal).equals("true")){
             return true;
         }
         char[] localWallet = defaultLocalWallet;
-        result = runCommand("localWallet");
-        if(result.exitCode == 0) {
+        result = runCommand("localWallet");                      
+        if(result.exitCode == 0) {                    
             localWallet = result.retVal;
         }
-
-        if(new String(localWallet).contains(".service")) {
+            
+        if(new String(localWallet).contains(".service")) {            
             //Temporary workaround for the bug in kdelibs/kdeui/util/kwallet.cpp
             //The bug was fixed http://svn.reviewboard.kde.org/r/5885/diff/
             //but many people currently use buggy kwallet
             return false;
         }
-        result = runCommand("open", localWallet , "0".toCharArray(), getApplicationName(true));
-        if(result.exitCode == 2) {
+        result = runCommand("open", localWallet , "0".toCharArray(), getApplicationName());
+        if(result.exitCode == 2) { 
             warning("time out happened while accessing KWallet");
             //don't try to open KWallet anymore until bug https://bugs.kde.org/show_bug.cgi?id=259229 is fixed
             timeoutHappened = true;
             return false;
-        }
+        }      
         if(result.exitCode != 0 || new String(result.retVal).equals("-1")) {
             warning("failed to access KWallet");
             return false;
-        }
+        }         
         handler = result.retVal;
         return true;
     }
-
-
+          
+    
 
     private CommandResult runCommand(String command,char[]... commandArgs) {
         String[] argv = new String[commandArgs.length+4];
@@ -174,18 +174,20 @@ public class KWalletProvider implements KeyringProvider{
                 logger.log(Level.FINE, "executing {0}", Arrays.toString(argv));
             }
             Process pr = rt.exec(argv);
-            String line;
-
+            
             try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+
+                String line;
                 while((line = input.readLine()) != null) {
                     if (!retVal.equals("")){
                         retVal = retVal.concat("\n");
                     }
                     retVal = retVal.concat(line);
-                }
+                }            
             }
-
             try (BufferedReader input = new BufferedReader(new InputStreamReader(pr.getErrorStream()))) {
+
+                String line;
                 while((line = input.readLine()) != null) {
                     if (!errVal.equals("")){
                         errVal = errVal.concat("\n");
@@ -198,7 +200,7 @@ public class KWalletProvider implements KeyringProvider{
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "application exit with code {0} for commandString: {1}; errVal: {2}",
                             new Object[]{exitCode, Arrays.toString(argv), errVal});
-            }
+            }       
         } catch (InterruptedException ex) {
             logger.log(Level.FINE,
                     "exception thrown while invoking the command \""+Arrays.toString(argv)+"\"",
@@ -209,20 +211,16 @@ public class KWalletProvider implements KeyringProvider{
                     ex);
         }
         return new CommandResult(exitCode, retVal.trim().toCharArray(), errVal.trim());
-    }
+    }    
 
     private char[] getApplicationName(){
-        return getApplicationName(false);
-    }
-
-    private char[] getApplicationName(boolean version){
-        return "JOSM".toCharArray();
+        return "JOSM".toCharArray(); // NOI18N
     }
 
     private void warning(String descr) {
         logger.log(Level.WARNING, "Something went wrong: {0}", descr);
-    }
-
+    }      
+  
     private class CommandResult {
         private int exitCode;
         private char[] retVal;
@@ -230,7 +228,7 @@ public class KWalletProvider implements KeyringProvider{
         public CommandResult(int exitCode, char[] retVal, String errVal) {
             this.exitCode = exitCode;
             this.retVal = retVal;
-        }
+        }                        
     }
 
 }

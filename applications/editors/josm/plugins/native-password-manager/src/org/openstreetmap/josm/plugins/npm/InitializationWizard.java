@@ -459,6 +459,9 @@ public class InitializationWizard extends JDialog {
         this.canceled = canceled;
     }
 
+    /**
+     * Close the dialog and discard all changes.
+     */
     class CancelAction extends AbstractAction {
         public CancelAction() {
             putValue(NAME, tr("Cancel"));
@@ -477,6 +480,9 @@ public class InitializationWizard extends JDialog {
         }
     }
 
+    /**
+     * Go to the previous page.
+     */
     class BackAction extends AbstractAction {
         public BackAction() {
             putValue(NAME, tr("Back"));

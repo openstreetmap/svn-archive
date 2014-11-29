@@ -42,11 +42,17 @@
 
 package org.netbeans.modules.keyring.gnome;
 
-import com.sun.jna.Pointer;
+import static org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.GNOME_KEYRING_ITEM_GENERIC_SECRET;
+import static org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.GnomeKeyringAttribute_SIZE;
+import static org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.LIBRARY;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.*;
+
+import org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.GnomeKeyringFound;
 import org.netbeans.spi.keyring.KeyringProvider;
+
+import com.sun.jna.Pointer;
 
 public class GnomeProvider implements KeyringProvider {
 

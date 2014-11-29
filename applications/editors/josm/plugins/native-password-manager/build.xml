@@ -5,6 +5,12 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.author" value="Paul Hartmann"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.npm.NPMPlugin"/>
+    <property name="plugin.description" value="Use your system''s password manager to store the API username and password. (KWallet and gnome-keyring are supported.)"/>
+    <property name="plugin.icon" value="images/lock24x24.png"/>
+    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Native_Password_Manager"/>
+    <property name="plugin.requires" value="jna"/>
 
     <!--
     **********************************************************
@@ -13,67 +19,8 @@
     -->
     <import file="../build-common.xml"/>
 
-    <!-- classpath -->
-    <path id="classpath">
-        <fileset dir="${plugin.lib.dir}" includes="**/*.jar"/>
-        <pathelement path="${josm}"/>
-    </path>
-    <!--
-    **********************************************************
-    ** compile - complies the source tree
-    ** Overrides the target from build-common.xml
-    **********************************************************
-    -->
-    <target name="compile" depends="init">
-        <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-    </target>
-
-    <!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
-    <target name="dist" depends="compile,revision">
-        <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/images">
-            <fileset dir="images"/>
-        </copy>
-        <copy todir="${plugin.build.dir}/data">
-            <fileset dir="data"/>
-        </copy>
-        <copy todir="${plugin.build.dir}">
-            <fileset dir=".">
-                <include name="README"/>
-                <include name="LICENSE"/>
-                <include name="gpl-2-cp.txt"/>
-                <include name="gpl-3.txt"/>
-            </fileset>
-        </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-        <!--
-        ************************************************
-        ** configure these properties. Most of them will be copied to the plugins
-        ** manifest file. Property values will also show up in the list available
-        ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
-        **
-        ************************************************
-        -->
-            <manifest>
-                <attribute name="Author" value="Paul Hartmann"/>
-                <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.npm.NPMPlugin"/>
-                <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.npm.NPMPlugin"/>
-                <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Use your system''s password manager to store the API username and password. (KWallet and gnome-keyring are supported.)"/>
-                <attribute name="Plugin-Icon" value="images/lock24x24.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Native_Password_Manager"/>
-                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
-                <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-            </manifest>
-            <zipfileset src="${plugin.lib.dir}/jna.jar"/>
-        </jar>
-    </target>
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="jna.jar"/>
+    </fileset>
+    
 </project>

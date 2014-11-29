@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureIterator;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -33,25 +34,31 @@ public class OSMIFeatureTracker {
 			}
 		}
 
-		features.addAll(featuresIn);
+		try (FeatureIterator<SimpleFeature> it = featuresIn.features()) {
+		    while (it.hasNext()) {
+		        features.add(it.next());
+		    }
+		}
 	}
 
 	public boolean mergeFeatures(
 			FeatureCollection<SimpleFeatureType, SimpleFeature> newFeatures) {
-		for (Iterator<SimpleFeature> it = newFeatures.iterator(); it.hasNext();) {
-			SimpleFeature element = (SimpleFeature) it.next();
-			try {
-				Long ID = (Long.parseLong((String) element
-						.getAttribute("problem_id")));
-
-				if (!hashFeatures.containsKey(ID)) {
-					hashFeatures.put(ID, element);
-					features.add(element);
-				}
-			} catch (NumberFormatException e) {
-				continue;
-			}
-		}
+	    try (FeatureIterator<SimpleFeature> it = newFeatures.features()) {
+	        while (it.hasNext()) {
+    			SimpleFeature element = (SimpleFeature) it.next();
+    			try {
+    				Long ID = (Long.parseLong((String) element
+    						.getAttribute("problem_id")));
+    
+    				if (!hashFeatures.containsKey(ID)) {
+    					hashFeatures.put(ID, element);
+    					features.add(element);
+    				}
+    			} catch (NumberFormatException e) {
+    				continue;
+    			}
+    		}
+	    }
 
 		return true;
 	}

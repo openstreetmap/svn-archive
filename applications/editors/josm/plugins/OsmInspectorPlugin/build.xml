@@ -10,9 +10,15 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.osminspector.OsmInspectorPlugin"/>
     <property name="plugin.description" value="Bring in errors from Osm Inspector and display it on the current JOSM bounding box"/>
     <property name="plugin.icon" value="images/osmInspector.jpg"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
+    <!--<property name="plugin.link" value=""/>-->
+    <property name="plugin.requires" value="jts;geotools"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
+
+	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="jts.jar"/>
+        <include name="geotools.jar"/>
+    </fileset>
 
 </project>

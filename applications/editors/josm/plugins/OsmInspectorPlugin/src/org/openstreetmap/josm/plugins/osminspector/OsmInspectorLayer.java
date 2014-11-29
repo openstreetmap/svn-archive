@@ -24,10 +24,9 @@ import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.filter.Filter;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.geotools.map.DefaultMapContext;
-import org.geotools.map.MapContext;
+import org.geotools.map.FeatureLayer;
+import org.geotools.map.MapContent;
 import org.geotools.referencing.CRS;
 import org.geotools.renderer.lite.StreamingRenderer;
 import org.geotools.styling.FeatureTypeStyle;
@@ -45,6 +44,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.identity.FeatureId;
+import org.opengis.filter.spatial.Intersects;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -72,7 +72,7 @@ public class OsmInspectorLayer extends Layer {
 	private String geometryAttributeName;
 
 	private SimpleFeatureSource featureSource;
-	private MapContext context;
+	private MapContent content;
 	private boolean bIsChanged;
 
 	private int layerOffset = 1;
@@ -354,7 +354,7 @@ public class OsmInspectorLayer extends Layer {
 		renderer = new StreamingRenderer();
 		CRS.decode(Main.getProjection().toCode());
 		crsOSMI = CRS.decode("EPSG:4326");
-		context = new DefaultMapContext(crsOSMI);
+		content = new MapContent(crsOSMI);
 
 		selectGeomType.add(GeomType.POINT);
 		for (int idx = 1; idx < typeNames.length; ++idx) {
@@ -370,20 +370,19 @@ public class OsmInspectorLayer extends Layer {
 
 			OSMIFeatureTracker tracker = new OSMIFeatureTracker(features);
 			arrFeatures.add(tracker);
-			FeatureIterator<SimpleFeature> it = tracker.getFeatures()
-					.features();
+			FeatureIterator<SimpleFeature> it = tracker.getFeatures().features();
 
 			while (it.hasNext()) {
 				BugInfo theInfo = new BugInfo(it.next(), osmiBugInfo.size());
 				osmiBugInfo.put(theInfo, theInfo.bugId);
 			}
 
-			context.addLayer(tracker.getFeatures(), style);
+			content.addLayer(new FeatureLayer(tracker.getFeatures(), style));
 		}
 
 		osmiIndex = new BugIndex(osmiBugInfo);
-		context.setTitle("Osm Inspector Errors");
-		renderer.setContext(context);
+		content.setTitle("Osm Inspector Errors");
+		renderer.setMapContent(content);
 		bIsChanged = true;
 
 		// finally initialize the dialog
@@ -406,7 +405,7 @@ public class OsmInspectorLayer extends Layer {
 			IndexOutOfBoundsException, NoSuchElementException, ParseException {
 		String typeNames[] = wfsClient.getTypeNames();
 
-		context.clearLayerList();
+		content.layers().clear();
 		selectGeomType.clear();
 		selectGeomType.add(GeomType.POINT);
 
@@ -437,7 +436,7 @@ public class OsmInspectorLayer extends Layer {
 			}
 
 			Style style = createDefaultStyle(idx, selectedFeatures);
-			context.addLayer(tracker.getFeatures(), style);
+			content.addLayer(new FeatureLayer(tracker.getFeatures(), style));
 		}
 
 		osmiIndex.append(osmiBugInfo);
@@ -595,12 +594,12 @@ public class OsmInspectorLayer extends Layer {
 
 		ReferencedEnvelope mapArea = new ReferencedEnvelope(envelope, crsOSMI);
 
-		Filter filter = (Filter) ff.intersects(ff.property("msGeometry"),
+		Intersects filter = ff.intersects(ff.property("msGeometry"),
 				ff.literal(mapArea));
 		//
 		// Select features in all layers
 		//
-		context.clearLayerList();
+		content.layers().clear();
 
 		// Iterate through features and build a list that intersects the above
 		// envelope
@@ -614,25 +613,23 @@ public class OsmInspectorLayer extends Layer {
 
 			try {
 				selectedFeatures = tempfs.getFeatures(filter);
+                Set<FeatureId> IDs = new HashSet<>();
 
-				FeatureIterator<SimpleFeature> iter = selectedFeatures.features();
-				Set<FeatureId> IDs = new HashSet<>();
-
-				Main.info("Selected features " + selectedFeatures.size());
-
-				while (iter.hasNext()) {
-					SimpleFeature feature = iter.next();
-					IDs.add(feature.getIdentifier());
+				try (FeatureIterator<SimpleFeature> iter = selectedFeatures.features()) {
+    
+    				Main.info("Selected features " + selectedFeatures.size());
+    
+    				while (iter.hasNext()) {
+    					SimpleFeature feature = iter.next();
+    					IDs.add(feature.getIdentifier());
+    				}
 				}
-
-				iter.close();
 
 				geometryType = selectGeomType.get(idx + layerOffset);
 				Style style = createDefaultStyle(idx + layerOffset, IDs);
-				context.addLayer(features, style);
+				content.addLayer(new FeatureLayer(features, style));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Main.error(e);
 			}
 		}
 

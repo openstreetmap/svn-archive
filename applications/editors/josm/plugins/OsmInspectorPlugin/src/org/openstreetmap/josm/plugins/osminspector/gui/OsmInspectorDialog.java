@@ -43,8 +43,8 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	private OsmInspectorBugInfoDialog bugInfoDialog;
 	
 	public void updateNextPrevAction(OsmInspectorLayer l) {
-		this.actNext.layer = l;
-		this.actPrev.layer = l;
+		this.actNext.inspectlayer = l;
+		this.actPrev.inspectlayer = l;
 	}
 	
 	/**
@@ -163,22 +163,22 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	public class OsmInspectorNextAction extends AbstractAction implements
 			ListSelectionListener {
 
-		private OsmInspectorLayer layer;
+		private OsmInspectorLayer inspectlayer;
 
 		public OsmInspectorNextAction(Layer inspector) {
 			super("next");
-			layer = (OsmInspectorLayer) inspector;
+			inspectlayer = (OsmInspectorLayer) inspector;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			layer.getOsmiIndex().next();
-			BugInfo next = layer.getOsmiIndex().getItemPointedByNext();
+			inspectlayer.getOsmiIndex().next();
+			BugInfo next = inspectlayer.getOsmiIndex().getItemPointedByNext();
 			Geometry geom = next.getGeom();
 			Point centroid = geom.getCentroid();
 			LatLon center = new LatLon(centroid.getY(), centroid.getX());
 			Main.map.mapView.zoomTo(center);
-			layer.selectFeatures(center);
+			inspectlayer.selectFeatures(center);
 			bugInfoDialog.setBugDescription(next);
 			updateSelection(next);
 		}
@@ -198,22 +198,22 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	private class OsmInspectorPrevAction extends AbstractAction implements
 			ListSelectionListener {
 
-		private OsmInspectorLayer layer;
+		private OsmInspectorLayer inspectlayer;
 
 		public OsmInspectorPrevAction(Layer inspector) {
 			super("prev");
-			layer = (OsmInspectorLayer) inspector;
+			inspectlayer = (OsmInspectorLayer) inspector;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			layer.getOsmiIndex().prev();
-			BugInfo prev = layer.getOsmiIndex().getItemPointedByPrev();
+			inspectlayer.getOsmiIndex().prev();
+			BugInfo prev = inspectlayer.getOsmiIndex().getItemPointedByPrev();
 			Geometry geom = prev.getGeom();
 			Point centroid = geom.getCentroid();
 			LatLon center = new LatLon(centroid.getY(), centroid.getX());
 			Main.map.mapView.zoomTo(center);
-			layer.selectFeatures(center);
+			inspectlayer.selectFeatures(center);
 			bugInfoDialog.setBugDescription(prev);
 			updateSelection(prev);
 		}

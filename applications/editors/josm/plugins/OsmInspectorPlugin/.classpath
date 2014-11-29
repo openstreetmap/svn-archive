@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/gt-api-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-data-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-main-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-opengis-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-referencing-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-referencing3D-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-render-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/jts-1.12.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="lib/gt-wfs-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-epsg-extension-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-epsg-hsql-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-metadata-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/gt-coverage-8.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-jts"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-jxpath-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-app-schema-resolver-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-cql-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-render-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-referencing3D-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-wfs-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-xml-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-xsd-core-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gt-xsd-wfs-12.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://docs.geotools.org/stable/javadocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

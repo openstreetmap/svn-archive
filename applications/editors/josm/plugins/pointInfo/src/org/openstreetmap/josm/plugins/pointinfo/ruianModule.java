@@ -905,6 +905,8 @@ class ruianRecord {
       String icon_create_addr = "<img src=" +getClass().getResource("/images/dialogs/create-addr.png")+" border=0 alt=\"Zobrazit na stránkách RUIAN\"/>";
       String icon_create_addr_ruian = "<img src=" +getClass().getResource("/images/dialogs/create-addr-ruian.png")+" border=0 alt=\"Zobrazit na stránkách RUIAN\"/>";
 
+      String icon_ruian_error = "<img src=" +getClass().getResource("/images/dialogs/create-bug-report.png")+" border=0 alt=\"Nahlásit problém v datech\"/>";
+
       String url_cpost = "http://www.postaonline.cz/vyhledani-psc?p_p_id=psc_WAR_pcpvpp&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_psc_WAR_pcpvpp_struts.portlet.action=%2Fview%2FdetailPost&_psc_WAR_pcpvpp_struts.portlet.mode=view&_psc_WAR_pcpvpp_zipCode=";
       String url_stavebni_objekt = "http://vdp.cuzk.cz/vdp/ruian/stavebniobjekty/";
       String url_adresni_misto = "http://vdp.cuzk.cz/vdp/ruian/adresnimista/";
@@ -917,6 +919,8 @@ class ruianRecord {
       String url_okres = "http://vdp.cuzk.cz/vdp/ruian/okresy/";
       String url_kraj = "http://vdp.cuzk.cz/vdp/ruian/vusc/";
 
+      String url_ruian_error = "http://ruian.poloha.net/building.php?kod=";
+
       StringBuilder r = new StringBuilder();
 
       if (m_objekt_ruian_id == 0 &&
@@ -926,12 +930,13 @@ class ruianRecord {
           m_katastr_ruian_id == 0 )
         return "";
 
-      r.append("<html>");
+      r.append("<html><body bgcolor=\"white\" color=\"black\" topmargin=\"2\" leftmargin=\"2\" >");
       r.append("<br/>");
       if (m_objekt_ruian_id > 0) {
         r.append("<i><u>Informace o budově</u></i><br/>");
         r.append("<b>RUIAN id: </b>"+ m_objekt_ruian_id +"&nbsp;&nbsp;<a href="+ url_stavebni_objekt + m_objekt_ruian_id +">" + icon_ext_link + "</a>");
-        r.append("&nbsp;&nbsp;<a href=file://tags.copy/building>"+ icon_copy_tags +"</a><br/>");
+        r.append("&nbsp;&nbsp;<a href=file://tags.copy/building>"+ icon_copy_tags +"</a>");
+        r.append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ruian_error +"</a><br/>");
         if (m_adresni_mista.size() == 0 ) r.append("<b>Budova: </b> bez č.p./č.e<br/>");
         else if (m_adresni_mista.get(0).getCisloTyp().equals("Číslo popisné")) r.append("<b>Budova: </b>s číslem popisným<br/>");
           else r.append("<b>Budova: </b>s číslem evidenčním<br/>");
@@ -1136,7 +1141,7 @@ class ruianRecord {
 
       r.append("<hr/>");
       r.append("<center><i><small>Zdroj: <a href=\"http://www.ruian.cz/\">" + m_source + "</a></small></i></center>");
-      r.append("</html>");
+      r.append("</body></html>");
 
       return r.toString();
     }

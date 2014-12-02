@@ -2,7 +2,7 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Add an initial support for Ruian error reporting."/>
+    <property name="commit.message" value="PointInfo: Show issues reported on Ruian buildings."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
 

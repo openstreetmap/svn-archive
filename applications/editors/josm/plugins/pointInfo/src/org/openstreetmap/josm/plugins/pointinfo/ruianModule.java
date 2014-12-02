@@ -399,6 +399,11 @@ class ruianRecord {
     private String   m_objekt_dokonceni;
     private String   m_objekt_plati_od;
 
+    private String  m_err_user;
+    private String  m_err_date;
+    private String  m_err_type;
+    private String  m_err_note;
+
     private ArrayList <objectWithoutGeometry> m_so_bez_geometrie;
 
     private ArrayList <addrPlaces> m_adresni_mista;
@@ -448,6 +453,11 @@ class ruianRecord {
       m_objekt_zpusob_vyuziti_val = "";
       m_objekt_dokonceni = "";
       m_objekt_plati_od = "";
+
+      m_err_user = "";
+      m_err_date = "";
+      m_err_type = "";
+      m_err_note = "";
 
       m_so_bez_geometrie = new ArrayList<objectWithoutGeometry> ();
       m_adresni_mista = new ArrayList<addrPlaces> ();
@@ -569,6 +579,38 @@ class ruianRecord {
 
       } catch (Exception e) {
         System.out.println("stavebni_objekt: " + e.getMessage());
+      }
+
+// =========================================================================
+      try {
+        JsonObject errObjekt = obj.getJsonObject("nahlaseny_problem");
+
+        try {
+          m_err_user = errObjekt.getString("uzivatel");
+        } catch (Exception e) {
+          System.out.println("nahlaseny_problem.uzivatel: " + e.getMessage());
+        }
+
+        try {
+          m_err_date = errObjekt.getString("datum");
+        } catch (Exception e) {
+          System.out.println("nahlaseny_problem.datum: " + e.getMessage());
+        }
+
+        try {
+          m_err_type = errObjekt.getString("duvod");
+        } catch (Exception e) {
+          System.out.println("nahlaseny_problem.duvod: " + e.getMessage());
+        }
+
+        try {
+          m_err_note = errObjekt.getString("poznamka");
+        } catch (Exception e) {
+          System.out.println("nahlaseny_problem.poznamka: " + e.getMessage());
+        }
+
+      } catch (Exception e) {
+        System.out.println("nahlaseny_problem: " + e.getMessage());
       }
 
 // =========================================================================
@@ -930,7 +972,7 @@ class ruianRecord {
           m_katastr_ruian_id == 0 )
         return "";
 
-      r.append("<html><body bgcolor=\"white\" color=\"black\" topmargin=\"2\" leftmargin=\"2\" >");
+        r.append("<html><body bgcolor=\"white\" color=\"black\" ><table><tr><td>");
       r.append("<br/>");
       if (m_objekt_ruian_id > 0) {
         r.append("<i><u>Informace o budově</u></i><br/>");
@@ -945,12 +987,12 @@ class ruianRecord {
         r.append("<b>Způsob využití: </b>" + m_objekt_zpusob_vyuziti + "<br/>");
         r.append("<b>Datum dokončení: </b>" + m_objekt_dokonceni + "<br/>");
         r.append("<b>Platí od: </b>" + m_objekt_plati_od + "<br/>");
-        r.append("<br/>");
 
         if (m_adresni_mista.size() > 1) {
           r.append("<i><u>Informace o adrese</u></i><br/>");
           // More address places
           int i = 0;
+          r.append("<br/>");
           r.append("<b>" + m_adresni_mista.get(i).getCisloTyp() + "</b> (více adres)<b>: </b>" + m_adresni_mista.get(i).getCisloDomovni() + "<br/>");
           r.append("<b>Část obce: </b>" + m_adresni_mista.get(i).getCastObce());
             r.append("&nbsp;&nbsp;<a href="+ url_mistni_cast + m_adresni_mista.get(i).getCastObceID() +">" + icon_ext_link + "</a><br/>");
@@ -968,6 +1010,7 @@ class ruianRecord {
         } else if (m_adresni_mista.size() == 1 && (m_adresni_mista.get(0).getCisloDomovni() == null || m_adresni_mista.get(0).getCisloDomovni().isEmpty())) {
           // Without building number
           int i = 0;
+          r.append("<br/>");
           r.append("<i><u>Informace o adrese</u></i><br/>");
           r.append("<b>Budova: </b>" + m_adresni_mista.get(i).getCisloTyp() + "<br/>");
           if (m_adresni_mista.get(i).getMestskaCast().length() > 0) {
@@ -990,6 +1033,7 @@ class ruianRecord {
             x = "/" + m_adresni_mista.get(i).getCisloOrientacni();
             x_name = "/orientační";
           }
+          r.append("<br/>");
           r.append("<i><u>Informace o adrese</u></i><br/>");
           r.append("<b>RUIAN id: </b>"+ m_adresni_mista.get(i).getRuianID() +"&nbsp;&nbsp;<a href="+ url_adresni_misto + m_adresni_mista.get(i).getRuianID() +">" + icon_ext_link + "</a>");
           r.append("&nbsp;&nbsp;<a href=file://tags.copy/address:"+i+">"+ icon_copy_tags +"</a>");
@@ -1017,8 +1061,27 @@ class ruianRecord {
             r.append("&nbsp;&nbsp;<a href="+ url_cpost + m_adresni_mista.get(i).getPsc() +">" + icon_ext_link + "</a><br/>");
 
         }
+         r.append("<br/>");
+      }
+
+      // Reported errors
+      if (m_objekt_ruian_id > 0 && !m_err_user.equals("")) {
+          r.append("<i><u>Nahlášený problém</u></i>");
+          r.append("&nbsp;&nbsp;<a href=" + url_ruian_error + m_objekt_ruian_id + ">"+ icon_ext_link +"</a><br/>");
+          r.append("<b>Nahlásil: </b>" + m_err_user);
+          r.append("<br/>");
+          r.append("<b>Dne: </b>" + m_err_date);
+          r.append("<br/>");
+          r.append("<b>Typ problému: </b>" + m_err_type);
+          r.append("<br/>");
+          if (!m_err_note.equals("")) {
+            r.append("<b>Poznámka: </b>" + m_err_note);
+            r.append("<br/>");
+          }
         r.append("<br/>");
       }
+
+      // Address places
       if (m_adresni_mista.size() > 1 && m_objekt_ruian_id > 0) {
         String x = "";
         if (m_adresni_mista.get(0).getCisloTyp().equals("Číslo evidenční")) {
@@ -1026,7 +1089,6 @@ class ruianRecord {
         }
         r.append("<i><u>Adresní místa</u></i><br/>");
         for (int i=0; i<m_adresni_mista.size(); i++) {
-//           r.append(m_adresni_mista.get(i).getRuianID());
           r.append(m_adresni_mista.get(i).getUlice() + " " + x + m_adresni_mista.get(i).getCisloDomovni());
           if (!m_adresni_mista.get(i).getCisloOrientacni().isEmpty()) {
             r.append("/" + m_adresni_mista.get(i).getCisloOrientacni());
@@ -1141,7 +1203,7 @@ class ruianRecord {
 
       r.append("<hr/>");
       r.append("<center><i><small>Zdroj: <a href=\"http://www.ruian.cz/\">" + m_source + "</a></small></i></center>");
-      r.append("</body></html>");
+      r.append("</td></tr></table></body></html>");
 
       return r.toString();
     }
@@ -1394,7 +1456,7 @@ class ruianRecord {
 public class ruianModule {
 
     private String m_text = "";
-    private String URL = "http://josm.poloha.net/pointInfo/v3/index.php";
+    private String URL = "http://josm.poloha.net/pointInfo/v4/index.php";
     protected PointInfoServer server = new PointInfoServer();
 
     private ruianRecord m_record = new ruianRecord();

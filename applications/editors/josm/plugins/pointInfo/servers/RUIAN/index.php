@@ -72,8 +72,39 @@ if (pg_num_rows($result) > 0)
            "dokonceni" => $row["dokonceni"],
            "plati_od" => $row["plati_od"]
            );
+
+  // Reported issues on building
+  $query="
+    select nb.user_nick, nb.datum, nbd.popis, nb.poznamka
+    from neplatne_budovy nb, neplatne_budovy_duvod nbd
+    where nb.duvod = nbd.id and nb.kod = ".$row["kod"]."
+    ;
+  ";
+  $result=pg_query($CONNECT,$query);
+
+  if (pg_num_rows($result) > 0)
+  {
+    $row = pg_fetch_array($result, 0);
+
+
+    $data["nahlaseny_problem"] =
+      array( "uzivatel" => $row["user_nick"],
+             "datum" => $row["datum"],
+             "duvod" => $row["popis"],
+             "poznamka" => $row["poznamka"]
+            );
+  } else
+  {
+    $data["nahlaseny_problem"] = array();
+  }
 } else
+{
     $data["stavebni_objekt"] = array();
+    $data["nahlaseny_problem"] = array();
+}
+
+
+
 
 // Ghosts: Buildings without geometry in close neighbourhood
 $query="

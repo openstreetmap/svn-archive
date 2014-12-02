@@ -107,10 +107,14 @@ class PointInfoAction extends MapMode implements MouseListener {
 
                 @Override
                 protected void finish() {
+
+                }
+
+                @Override
+                protected void afterFinish() {
                   if (htmlText.length() > 0) {
 
                     // Show result
-                    System.out.println("htmlText: " + htmlText);
                     JEditorPane msgLabel = new JEditorPane("text/html", htmlText);
                     msgLabel.setEditable(false);
                     msgLabel.setOpaque(false);

@@ -233,7 +233,7 @@ public class Correlator {
                                 EastNorth c1 = Main.getProjection().latlon2eastNorth(prevWp.getCoor());
                                 EastNorth c2 = Main.getProjection().latlon2eastNorth(curWp.getCoor());
                                 if( !c1.equals(c2) ) {
-                                    EastNorth middle = Geometry.getSegmentAltituteIntersection(c1, c2, en);
+                                    EastNorth middle = getSegmentAltitudeIntersection(c1, c2, en);
                                     if( middle != null && en.distance(middle) < 1 ) {
                                         // found our point, no further search is neccessary
                                         double prop = c1.east() == c2.east()
@@ -263,4 +263,35 @@ public class Correlator {
         }
         return 0;
     }
+
+    /**
+     * Returns the coordinate of intersection of segment p1-p2 and an altitude
+     * to it starting at point p. If the line defined with p1-p2 intersects
+     * its altitude out of p1-p2, null is returned.
+     * @param p1
+     * @param p2
+     * @param point
+     * @return Intersection coordinate or null
+     **/
+     public static EastNorth getSegmentAltitudeIntersection(EastNorth p1, EastNorth p2, EastNorth point) {
+        double ldx = p2.getX() - p1.getX();
+        double ldy = p2.getY() - p1.getY();
+
+        if (ldx == 0 && ldy == 0) //segment zero length
+            return p1;
+
+        double pdx = point.getX() - p1.getX();
+        double pdy = point.getY() - p1.getY();
+
+        double offset = (pdx * ldx + pdy * ldy) / (ldx * ldx + ldy * ldy);
+
+        if (offset < -1e-8 || offset > 1+1e-8) return null;
+        if (offset < 1e-8)
+            return p1;
+        else if (offset > 1-1e-8)
+            return p2;
+        else
+            return new EastNorth(p1.getX() + ldx * offset, p1.getY() + ldy * offset);
+     }
+
 }

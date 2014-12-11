@@ -21,6 +21,7 @@ import relcontext.relationfix.AssociatedStreetFixer;
 import relcontext.relationfix.BoundaryFixer;
 import relcontext.relationfix.MultipolygonFixer;
 import relcontext.relationfix.NothingFixer;
+import relcontext.relationfix.PublicTransportFixer;
 import relcontext.relationfix.RelationFixer;
 
 public class SortAndFixAction extends AbstractAction implements ChosenRelationListener {
@@ -43,6 +44,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
         fixers.add(new BoundaryFixer()); // boundary, multipolygon, boundary=administrative
         fixers.add(new MultipolygonFixer()); // multipolygon
         fixers.add(new AssociatedStreetFixer()); //associatedStreet
+        fixers.add(new PublicTransportFixer()); //public_transport
 
         for(RelationFixer fix : fixers) {
             fix.setFixAction(this);

@@ -88,6 +88,7 @@ import relcontext.actions.DuplicateChosenRelationAction;
 import relcontext.actions.EditChosenRelationAction;
 import relcontext.actions.FindRelationAction;
 import relcontext.actions.ReconstructPolygonAction;
+import relcontext.actions.ReconstructRouteAction;
 import relcontext.actions.RelationHelpAction;
 import relcontext.actions.SelectInRelationPanelAction;
 import relcontext.actions.SelectMembersAction;
@@ -423,6 +424,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     private static Map<String, List<String>> loadRoles() {
         Map<String, List<String>> result = new HashMap<>();
+
         ClassLoader classLoader = RelContextDialog.class.getClassLoader();
         try (
             InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
@@ -525,6 +527,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             add(new DeleteChosenRelationAction(chosenRelation));
             add(new DownloadParentsAction(chosenRelation));
             add(new ReconstructPolygonAction(chosenRelation));
+            add(new ReconstructRouteAction(chosenRelation));
             addSeparator();
             add(new SelectInRelationPanelAction(chosenRelation));
             add(new RelationHelpAction(chosenRelation));

@@ -11,8 +11,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
  */
 public class ElevationGridTileSource extends AbstractTMSTileSource {
     public ElevationGridTileSource(String name) {
-        super(name, "");
-        // TODO Auto-generated constructor stub
+        super(name, "", "eg");
     }
 
     @Override

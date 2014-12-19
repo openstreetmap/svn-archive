@@ -37,12 +37,9 @@ public class LakewalkerWMS {
 
     private String wmslayer;
 
-    private File working_dir;
-
-    public LakewalkerWMS(int resolution, int tilesize, String wmslayer, File workdir){
+    public LakewalkerWMS(int resolution, int tilesize, String wmslayer){
         this.resolution = resolution;
         this.tilesize = tilesize;
-        this.working_dir = workdir;
         this.wmslayer = wmslayer;
     }
 
@@ -77,7 +74,7 @@ public class LakewalkerWMS {
             ","+df.format(topright_geo[1])+","+df.format(topright_geo[0])+
             "&width="+this.tilesize+"&height="+this.tilesize;
 
-            File file = new File(this.working_dir,filename);
+            File file = new File(LakewalkerPlugin.getLakewalkerCacheDir(), filename);
 
             // Calculate the hashmap key
             String hashkey = Integer.toString(bottom_left_xy[0])+":"+Integer.toString(bottom_left_xy[1]);

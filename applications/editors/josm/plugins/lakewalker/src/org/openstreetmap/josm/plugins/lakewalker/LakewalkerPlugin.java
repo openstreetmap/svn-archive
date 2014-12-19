@@ -2,6 +2,8 @@ package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.io.File;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -20,9 +22,11 @@ public class LakewalkerPlugin extends Plugin {
     }
 
     @Override
-    public PreferenceSetting getPreferenceSetting()
-    {
+    public PreferenceSetting getPreferenceSetting() {
         return new LakewalkerPreferences();
     }
 
+    public static File getLakewalkerCacheDir() {
+    	return new File(Main.pref.getCacheDirectory(), "lakewalkerwms");
+    }
 }

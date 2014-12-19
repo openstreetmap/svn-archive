@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.lakewalker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,23 +17,19 @@ public class Lakewalker {
     private String startdir;
     private String wmslayer;
 
-    private File workingdir;
-
     private int[] dirslat = new int[] {0,1,1,1,0,-1,-1,-1};
     private int[] dirslon = new int[] {1,1,0,-1,-1,-1,0,1};
 
     double start_radius_big = 0.001;
     double start_radius_small = 0.0002;
 
-    public Lakewalker(int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer, File workingdir){
+    public Lakewalker(int waylen, int maxnode, int threshold, double epsilon, int resolution, int tilesize, String startdir, String wmslayer){
         this.maxnode = maxnode;
         this.threshold = threshold;
         this.resolution = resolution;
         this.tilesize = tilesize;
         this.startdir = startdir;
         this.wmslayer = wmslayer;
-
-        this.workingdir = workingdir;
     }
 
     /**
@@ -87,7 +82,7 @@ public class Lakewalker {
 
         try {
 
-            LakewalkerWMS wms = new LakewalkerWMS(this.resolution, this.tilesize, this.wmslayer, this.workingdir);
+            LakewalkerWMS wms = new LakewalkerWMS(this.resolution, this.tilesize, this.wmslayer);
             LakewalkerBBox bbox = new LakewalkerBBox(tl_lat,tl_lon,br_lat,br_lon);
 
             Boolean detect_loop = false;

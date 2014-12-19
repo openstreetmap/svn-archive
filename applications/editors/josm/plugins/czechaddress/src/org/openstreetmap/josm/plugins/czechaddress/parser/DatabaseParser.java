@@ -51,7 +51,7 @@ public abstract class DatabaseParser {
         assert target != null;
 
         if (!(new File(getDatabasePath())).exists()) {
-            System.err.println("CzechAddress: Soubor s databází českých adres na disku nenalazen. Pokusím se jej stáhnout.");
+            Main.info("CzechAddress: Soubor s databází českých adres na disku nenalazen. Pokusím se jej stáhnout.");
             downloadDatabase();
         }
 
@@ -97,12 +97,12 @@ public abstract class DatabaseParser {
             URL url = new URL(getDatabaseUrl());
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
 
-            //Set timeout for 10 seconds.
-            con.setReadTimeout(10000);
+            //Set timeout for 30 seconds.
+            con.setReadTimeout(30000);
             con.connect();
 
-            System.err.println("CzechAddress: Stahuji: " + url.toString());
-            System.err.println("CzechAddress: Server vrátil: " + con.getResponseMessage());
+            Main.info("CzechAddress: Stahuji: " + url.toString());
+            Main.info("CzechAddress: Server vrátil: " + con.getResponseMessage());
 
             // Check the status error code from server
             if (con.getResponseCode() != 200)
@@ -115,7 +115,7 @@ public abstract class DatabaseParser {
                 while ((count = con.getInputStream().read(buffer)) >= 0) {
                     bos.write(buffer, 0, count);
                     total += count;
-                    Main.error("CzechAddress: MVČR database: " + String.valueOf(total/1024) + " kb downloaded.");
+                    Main.info("CzechAddress: MVČR database: " + String.valueOf(total/1024) + " kb downloaded.");
                 }
             }
 

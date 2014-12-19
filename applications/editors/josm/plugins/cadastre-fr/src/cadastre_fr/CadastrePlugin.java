@@ -2,10 +2,10 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
+import static org.openstreetmap.josm.io.session.SessionReader.registerSessionLayerImporter;
+import static org.openstreetmap.josm.io.session.SessionWriter.registerSessionLayerExporter;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
-import static org.openstreetmap.josm.io.session.SessionWriter.registerSessionLayerExporter;
-import static org.openstreetmap.josm.io.session.SessionReader.registerSessionLayerImporter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,9 +27,9 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.data.projection.AbstractProjection;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -39,111 +39,112 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 /**
- *
- * Plugin to access the French Cadastre WMS server at www.cadastre.gouv.fr This
- * WMS server requires some specific handling like retrieving a cookie for a
+ * Plugin to access the French Cadastre WMS server at <a href="http://www.cadastre.gouv.fr">
+ * www.cadastre.gouv.fr</a>.<br>
+ * This WMS server requires some specific handling like retrieving a cookie for a
  * limitation in case of no activity, or the request to the server shall provide
  * a city/town/village code.
  *
  * @author Pieren <pieren3@gmail.com>,
- * @author <matthieu.lochegnies@gmail.com> for the extension to codeCommune
- * @version 0.8
- * History:
- * 0.1 17-Jun-2008 first prototype using a first Lambert projection impl. in core
- * 0.2 22-Jun-2008 first stable version
- * 0.3 24-Jun-2008 add code departement
- * 0.4 06-Jul-2008 - add images scales, icons, menu items disabling
- *                 - remove dependencies of wmsplugin
- *                 - add option to force a Lambert zone (for median locations)
- *                 - add auto-sourcing
- * 0.5 16-Aug-2008 - add transparency in layer (allowing multiple wms layers displayed together)
- *                 - no overlapping of grabbed images if transparency is enabled
- *                 - set one layer per location
- *                 - use utf-8 charset in POST request to server
- *                 - improve the preferences setting dialog
- *                 - cancel the current download is now possible
- *                 - add automatic images caching and load on request (+ manage cache directory size)
- *                 - enable auto-sourcing only if a WMS layer is used
- * 0.6 18-Aug-2008 - suppress the null-exception message after the dialog 'open a layer first'
- *                 - process the overlapping images when cache is loaded from disk
- *                 - save the last 'new location request' text again in preferences
- *                 - avoid duplicate layers with same name
- *                 - set text input for new locations in upper case
- *                 - the cache directory is configurable in "cadastrewms.cacheDir"
- *                 - improve configuration change updates
- * 0.7 24-Aug-2008 - mask images only if transparency enabled
- *                 - validate projection name by Lambert.toString() method
- * 0.8 25-Jan-2009 - display returned list of communes if direct name is not recognized by server
- *                 - new possible grab factor of 100 square meters fixed size
- *                 - minor fixes due to changes in JOSM core classes
- *                 - first draft of raster image support
- * 0.9 05-Feb-2009 - grab vectorized full commune bbox, save in file, convert to OSM way
- *                   and simplify
- * 1.0 18-Feb-2009 - fix various bugs in color management and preference dialog
- *                 - increase PNG picture size requested to WMS (800x1000)
- *                 - set 4th grab scale fixed size configurable (from 25 to 1000 meters)
- * 1.1 11-Jun-2009 - fixed a null exception error when trying to displace a vectorized layer
- *                 - propose to use shortcut F11 for grabbing
- * 1.2 16-Aug-2009 - implementation of raster image grabbing, cropping and georeferencing (not the
- *                   overview rasters (Tableau d'assemblage) but directly small units (Feuille)
- * 1.3 23-Aug-2009 - improve georeferencing action cancellation
- *                 - fixed bug of raster image loaded from cache not working on Java1.6
- *                 - improve mouse click bounce detection during georeferencing process
- * 1.4 25-Oct-2009 - add support for new Lambert CC 9 Zones projection
- *                 - add optional crosspieces display on raster image layers
- *                 - add automatic raster images georeferencing when WMS provides data
- *                 - re-implement manual adjustment mode in raster image layer
- * 1.5 21-Nov-2009 - major changes in projection in core : no magical zone prediction anymore for
- *                   Lambert 4 and 9 zones; grid translation implemented for Lambert 4 zones;
- *                   support of subprojections in preferences for zones setting and UTM20N
- *                 - removed autosourcing of empty new nodes
- * 1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
- * 1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes
- * 1.8 11-Mar-2010 - filter the mouse button 1 during georeferencing
- *                 - retry if getting a new cookie failed (10 times during 30 seconds)
- *                 - cookie expiration automatically detected and renewed (after 30 minutes)
- *                 - proper WMS layer cleanup at destruction (workaround for memory leak)
- *                 - new cache format (v3) storing original image and cropped image bbox + angle
- *                 - new cache format (v4) storing original image size for later rotation
- *                 - cache files read compatible with previous formats
- *                 - raster image rotation issues fixed, now using shift+ctrl key instead of ctrl
- *                 - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
- *                 - image resolution configurable (high, medium, low) like the online interface
- *                 - layer selection configurable for vectorized images
- *                 - improved download cancellation
- *                 - from Erik Amzallag:
- *                 -     possibility to modify the auto-sourcing text just before upload
- *                 - from Clément Ménier:
- *                 -     new option allowing an auto-selection of the first cadastre layer for grab
- *                 -     non-modal JDialog in MenuActionGrabPlanImage
- *                 -     new options in the image filter (bilinear, bicubic)
- * 1.9 05-Apr-2010 - added a scroll bar in preferences
- *                 - download cancellation improved
- *                 - last deployment for Java1.5 compatibility
- * 2.0 07-Jul-2010 - update projection for "La Reunion" departement to RGR92, UTM40S.
- *                 - add 'departement' as option in the municipality selection
- *                 - fixed bug in cache directory size control (and disabled by default)
- *                 - add map mode for addressing
- *                 - from Nicolas Dumoulin:
- *                 -     add "tableau d'assemblage" in raster images for georeferencing (as option)
- * 2.1 14-Jan-2011 - add GrabThread moving the grab to a separate thread
- *                 - the divided BBox mode starts from the central square and loads the next in a spiral
- *                 - move the grabber from CadastrPlugin singleton to each wmsLayer instance to allow grabbing
- *                   of multiple municipalities in parallel.
- * 2.2 01-Jul-2011 - replace deprecated Main.proj by newest Main.getProjection()
- *                 - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance
- * 2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626.
- * 2.4 27-Jun-2013 - fix raster image georeferencing issues. Add new MenuActionRefineGeoRef for a new georeferencing
- *                   of already referenced plan image.
- * 2.5 06-Aug-2013 - fix transparency issue on new raster images. Temporary disable georeferences parsing not
- *                   working on new cadastre WMS.
- *                 - workaround on address help tool when switching to full screen
- *                 - improvement when clicking on existing node address street in mode relation
- *                 - option to simplify raster images in 2 bits colors (like images served in the past).
- * 2.6 10-Sep-2013 - add JOSM "sessions" feature support (list of layers stored in a file)                   
+ *         <matthieu.lochegnies@gmail.com> for the extension to codeCommune
+ *
+ * @version 2.6
+ * <br>History:
+ * <br>0.1 17-Jun-2008 first prototype using a first Lambert projection impl. in core
+ * <br>0.2 22-Jun-2008 first stable version
+ * <br>0.3 24-Jun-2008 add code departement
+ * <br>0.4 06-Jul-2008 - add images scales, icons, menu items disabling
+ * <br>                - remove dependencies of wmsplugin
+ * <br>                - add option to force a Lambert zone (for median locations)
+ * <br>                - add auto-sourcing
+ * <br>0.5 16-Aug-2008 - add transparency in layer (allowing multiple wms layers displayed together)
+ * <br>                - no overlapping of grabbed images if transparency is enabled
+ * <br>                - set one layer per location
+ * <br>                - use utf-8 charset in POST request to server
+ * <br>                - improve the preferences setting dialog
+ * <br>                - cancel the current download is now possible
+ * <br>                - add automatic images caching and load on request (+ manage cache directory size)
+ * <br>                - enable auto-sourcing only if a WMS layer is used
+ * <br>0.6 18-Aug-2008 - suppress the null-exception message after the dialog 'open a layer first'
+ * <br>                - process the overlapping images when cache is loaded from disk
+ * <br>                - save the last 'new location request' text again in preferences
+ * <br>                - avoid duplicate layers with same name
+ * <br>                - set text input for new locations in upper case
+ * <br>                - the cache directory is configurable in "cadastrewms.cacheDir"
+ * <br>                - improve configuration change updates
+ * <br>0.7 24-Aug-2008 - mask images only if transparency enabled
+ * <br>                - validate projection name by Lambert.toString() method
+ * <br>0.8 25-Jan-2009 - display returned list of communes if direct name is not recognized by server
+ * <br>                - new possible grab factor of 100 square meters fixed size
+ * <br>                - minor fixes due to changes in JOSM core classes
+ * <br>                - first draft of raster image support
+ * <br>0.9 05-Feb-2009 - grab vectorized full commune bbox, save in file, convert to OSM way
+ *                       and simplify
+ * <br>1.0 18-Feb-2009 - fix various bugs in color management and preference dialog
+ * <br>                - increase PNG picture size requested to WMS (800x1000)
+ * <br>                - set 4th grab scale fixed size configurable (from 25 to 1000 meters)
+ * <br>1.1 11-Jun-2009 - fixed a null exception error when trying to displace a vectorized layer
+ * <br>                - propose to use shortcut F11 for grabbing
+ * <br>1.2 16-Aug-2009 - implementation of raster image grabbing, cropping and georeferencing (not the
+ * <br>                  overview rasters (Tableau d'assemblage) but directly small units (Feuille)
+ * <br>1.3 23-Aug-2009 - improve georeferencing action cancellation
+ * <br>                - fixed bug of raster image loaded from cache not working on Java1.6
+ * <br>                - improve mouse click bounce detection during georeferencing process
+ * <br>1.4 25-Oct-2009 - add support for new Lambert CC 9 Zones projection
+ * <br>                - add optional crosspieces display on raster image layers
+ * <br>                - add automatic raster images georeferencing when WMS provides data
+ * <br>                - re-implement manual adjustment mode in raster image layer
+ * <br>1.5 21-Nov-2009 - major changes in projection in core : no magical zone prediction anymore for
+ *                       Lambert 4 and 9 zones; grid translation implemented for Lambert 4 zones;
+ *                       support of subprojections in preferences for zones setting and UTM20N
+ * <br>                - removed autosourcing of empty new nodes
+ * <br>1.6 28-Nov-2009 - Fix minor issues if Grab is called without layer (possible since projection rework)
+ * <br>1.7 12-Dec-2009 - Change URL's changes for cookie and downgrade imgs resolution due to WMS changes
+ * <br>1.8 11-Mar-2010 - filter the mouse button 1 during georeferencing
+ * <br>                - retry if getting a new cookie failed (10 times during 30 seconds)
+ * <br>                - cookie expiration automatically detected and renewed (after 30 minutes)
+ * <br>                - proper WMS layer cleanup at destruction (workaround for memory leak)
+ * <br>                - new cache format (v3) storing original image and cropped image bbox + angle
+ * <br>                - new cache format (v4) storing original image size for later rotation
+ * <br>                - cache files read compatible with previous formats
+ * <br>                - raster image rotation issues fixed, now using shift+ctrl key instead of ctrl
+ * <br>                - raster image adjustment using default system menu modifier (ctrl for windows) for Mac support
+ * <br>                - image resolution configurable (high, medium, low) like the online interface
+ * <br>                - layer selection configurable for vectorized images
+ * <br>                - improved download cancellation
+ * <br>                - from Erik Amzallag:
+ * <br>                -     possibility to modify the auto-sourcing text just before upload
+ * <br>                - from Clément Ménier:
+ * <br>                -     new option allowing an auto-selection of the first cadastre layer for grab
+ * <br>                -     non-modal JDialog in MenuActionGrabPlanImage
+ * <br>                -     new options in the image filter (bilinear, bicubic)
+ * <br>1.9 05-Apr-2010 - added a scroll bar in preferences
+ * <br>                - download cancellation improved
+ * <br>                - last deployment for Java1.5 compatibility
+ * <br>2.0 07-Jul-2010 - update projection for "La Reunion" departement to RGR92, UTM40S.
+ * <br>                - add 'departement' as option in the municipality selection
+ * <br>                - fixed bug in cache directory size control (and disabled by default)
+ * <br>                - add map mode for addressing
+ * <br>                - from Nicolas Dumoulin:
+ * <br>                -     add "tableau d'assemblage" in raster images for georeferencing (as option)
+ * <br>2.1 14-Jan-2011 - add GrabThread moving the grab to a separate thread
+ * <br>                - the divided BBox mode starts from the central square and loads the next in a spiral
+ * <br>                - move the grabber from CadastrPlugin singleton to each wmsLayer instance to allow grabbing
+ *                       of multiple municipalities in parallel.
+ * <br>2.2 01-Jul-2011 - replace deprecated Main.proj by newest Main.getProjection()
+ * <br>                - fix list of raster images (Feuilles) parsing failing after a Cadastre server change/maintenance
+ * <br>2.3 11-Jan-2013 - add various improvements from Don-Vip (Vincent Privat) trac #8175, #8229 and #5626.
+ * <br>2.4 27-Jun-2013 - fix raster image georeferencing issues. Add new MenuActionRefineGeoRef for a new georeferencing
+ *                       of already referenced plan image.
+ * <br>2.5 06-Aug-2013 - fix transparency issue on new raster images. Temporary disable georeferences parsing not
+ *                       working on new cadastre WMS.
+ * <br>                - workaround on address help tool when switching to full screen
+ * <br>                - improvement when clicking on existing node address street in mode relation
+ * <br>                - option to simplify raster images in 2 bits colors (like images served in the past).
+ * <br>2.6 10-Sep-2013 - add JOSM "sessions" feature support (list of layers stored in a file)
  */
 public class CadastrePlugin extends Plugin {
-    static String VERSION = "2.5";
+    static String VERSION = "2.6";
 
     static JMenu cadastreJMenu;
 
@@ -189,31 +190,29 @@ public class CadastrePlugin extends Plugin {
     private static String STYLE_SECTION = "SUBSECTION_90,SECTION_90";
     private static String LAYER_COMMUNE = "CDIF:COMMUNE";
     private static String STYLE_COMMUNE = "COMMUNE_90";
-    
+
     /**
-     * Creates the plugin and setup the default settings if necessary
-     *
-     * @throws Exception
+     * Creates the plugin and setup the default settings if necessary.
+     * @param info plugin information
      */
-    public CadastrePlugin(PluginInformation info) throws Exception {
+    public CadastrePlugin(PluginInformation info) {
         super(info);
-        System.out.println("Pluging cadastre-fr v"+VERSION+" started...");
-        if (Main.pref.get("cadastrewms.cacheDir").equals(""))
-            cacheDir = Main.pref.getPreferencesDir()+"plugins"+File.separatorChar+"cadastrewms"+File.separatorChar;
-        else {
+        Main.info("Pluging cadastre-fr v"+VERSION+" started...");
+        if (Main.pref.get("cadastrewms.cacheDir").isEmpty()) {
+            cacheDir = new File(Main.pref.getCacheDirectory(), "cadastrewms").getAbsolutePath();
+        } else {
             cacheDir = Main.pref.get("cadastrewms.cacheDir");
-            if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar )
-                cacheDir += File.separatorChar;
         }
-        System.out.println("current cache directory: "+cacheDir);
+        if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar )
+            cacheDir += File.separatorChar;
+        Main.info("current cache directory: "+cacheDir);
 
         refreshConfiguration();
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
-        
+
         registerSessionLayerExporter(WMSLayer.class , CadastreSessionExporter.class);
         registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
-
     }
 
     public static void refreshMenu() {
@@ -232,7 +231,8 @@ public class CadastrePlugin extends Plugin {
             final JCheckBoxMenuItem menuSource = new JCheckBoxMenuItem(tr("Auto sourcing"));
             menuSource.setSelected(autoSourcing);
             menuSource.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ev) {
+                @Override
+				public void actionPerformed(ActionEvent ev) {
                     Main.pref.put("cadastrewms.autosourcing", menuSource.isSelected());
                     autoSourcing = menuSource.isSelected();
                 }
@@ -349,7 +349,7 @@ public class CadastrePlugin extends Plugin {
             grabLayers = grabLayers.substring(0, grabLayers.length()-1);
             grabStyles = grabStyles.substring(0, grabStyles.length()-1);
         } else {
-            JOptionPane.showMessageDialog(Main.parent,tr("Please enable at least two WMS layers in the cadastre-fr " 
+            JOptionPane.showMessageDialog(Main.parent,tr("Please enable at least two WMS layers in the cadastre-fr "
                     + "plugin configuration.\nLayers ''Building'' and ''Parcel'' added by default."));
             Main.pref.put("cadastrewms.layerBuilding", true);
             Main.pref.put("cadastrewms.layerParcel", true);
@@ -377,7 +377,8 @@ public class CadastrePlugin extends Plugin {
         menuEnabled = isEnabled;
     }
 
-    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+    @Override
+	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (cadastreJMenu != null) {
             if (oldFrame == null && newFrame != null) {
                 setEnabledAll(true);
@@ -495,17 +496,17 @@ public class CadastrePlugin extends Plugin {
         return src;
     }
 
-    public static void askToChangeProjection() { 
-        if (JOptionPane.showConfirmDialog(Main.parent, 
-                tr("To enable the cadastre WMS plugin, change\n" 
-                        + "the current projection to one of the cadastre\n" 
-                        + "projections and retry"),  
-                        tr("Change the current projection"), JOptionPane.OK_CANCEL_OPTION)  
-            == JOptionPane.OK_OPTION) { 
-            PreferenceDialog p = new PreferenceDialog(Main.parent); 
-            p.selectPreferencesTabByClass(MapPreference.class); 
-            p.getTabbedPane().getSetting(ProjectionPreference.class).selectProjection(ProjectionPreference.lambert_cc9); 
-            p.setVisible(true); 
-        } 
-        } 
+    public static void askToChangeProjection() {
+        if (JOptionPane.showConfirmDialog(Main.parent,
+                tr("To enable the cadastre WMS plugin, change\n"
+                        + "the current projection to one of the cadastre\n"
+                        + "projections and retry"),
+                        tr("Change the current projection"), JOptionPane.OK_CANCEL_OPTION)
+            == JOptionPane.OK_OPTION) {
+            PreferenceDialog p = new PreferenceDialog(Main.parent);
+            p.selectPreferencesTabByClass(MapPreference.class);
+            p.getTabbedPane().getSetting(ProjectionPreference.class).selectProjection(ProjectionPreference.lambert_cc9);
+            p.setVisible(true);
+        }
+    }
 }

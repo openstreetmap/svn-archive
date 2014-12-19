@@ -80,6 +80,7 @@ public class URLList {
         File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
         PrintWriter fw=null;
         try {
+            f.getParentFile().mkdirs();
 	        fw=new PrintWriter(f);
 	        for (String s : items) {
 	            fw.println(s);

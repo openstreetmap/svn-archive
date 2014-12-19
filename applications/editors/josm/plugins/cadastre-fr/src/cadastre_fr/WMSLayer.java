@@ -92,8 +92,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     private Action saveAsPng;
 
     private Action cancelGrab;
-    
-    private Action refineGeoRef; 
+
+    private Action refineGeoRef;
 
     @SuppressWarnings("serial")
     class ResetOffsetActionMenu extends JosmAction {
@@ -106,13 +106,13 @@ public class WMSLayer extends Layer implements ImageObserver {
             deltaNorth = 0;
             Main.map.mapView.repaint();
         }
-        
+
     }
-    
+
     public boolean adjustModeEnabled;
 
     public GrabThread grabThread;
-    
+
     public WMSLayer() {
         this(tr("Blank Layer"), "", -1);
     }
@@ -137,7 +137,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         super.destroy();
         images = null;
         dividedBbox = null;
-        System.out.println("Layer "+location+" destroyed");
+        Main.info("Layer "+location+" destroyed");
     }
 
     private static String buildName(String location, String codeCommune) {
@@ -172,7 +172,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     /**
      * Divides the bounding box in smaller squares. Their size (and quantity) is configurable in Preferences.
-     * 
+     *
      * @param b      the original bbox, usually the current bbox on screen
      * @param factor 1 = source bbox 1:1
      *               2 = source bbox divided by 2x2 smaller boxes
@@ -325,7 +325,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 saveAsPng,
                 cancelGrab,
                 refineGeoRef,
-                resetOffset, 
+                resetOffset,
                 new LayerListPopup.InfoAction(this),
 
         };
@@ -526,7 +526,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 // expected exception when all images are read
             }
         }
-        System.out.println("Cache loaded for location "+location+" with "+images.size()+" images");
+        Main.info("Cache loaded for location "+location+" with "+images.size()+" images");
         return true;
     }
 
@@ -592,7 +592,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     public EastNorthBound getCommuneBBox() {
         return communeBBox;
     }
-    
+
     public EastNorthBound getFirstViewFromCacheBBox() {
         if (isRaster) {
             return communeBBox;
@@ -603,9 +603,9 @@ public class WMSLayer extends Layer implements ImageObserver {
         double max_y = Double.MIN_VALUE;
         for (GeorefImage image:images){
             min_x = image.min.east() < min_x ? image.min.east() : min_x;
-            max_x = image.max.east() > max_x ? image.max.east() : max_x; 
+            max_x = image.max.east() > max_x ? image.max.east() : max_x;
             min_y = image.min.north() < min_y ? image.min.north() : min_y;
-            max_y = image.max.north() > max_y ? image.max.north() : max_y; 
+            max_y = image.max.north() > max_y ? image.max.north() : max_y;
         }
         EastNorthBound maxGrabbedBBox = new EastNorthBound(new EastNorth(min_x, min_y), new EastNorth(max_x, max_y));
         return maxGrabbedBBox;
@@ -618,7 +618,8 @@ public class WMSLayer extends Layer implements ImageObserver {
     /**
      * Method required by ImageObserver when drawing an image
      */
-    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+    @Override
+	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         return false;
     }
 
@@ -689,28 +690,28 @@ public class WMSLayer extends Layer implements ImageObserver {
         try {
             img = this.images.get(index);
         } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace(System.out);
+            Main.error(e);
         }
         imagesLock.unlock();
         return img;
     }
-    
+
     public Vector<GeorefImage> getImages() {
         return this.images;
     }
-    
+
     public void addImage(GeorefImage img) {
         imagesLock.lock();
         this.images.add(img);
         imagesLock.unlock();
     }
-    
+
     public void setImages(Vector<GeorefImage> images) {
         imagesLock.lock();
         this.images = images;
         imagesLock.unlock();
     }
-    
+
     public void clearImages() {
         imagesLock.lock();
         this.images.clear();

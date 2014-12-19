@@ -12,6 +12,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.OsmTransferException;
@@ -54,7 +55,7 @@ public class CadastreGrabber {
         str += "&width="+cRasterX+"&height="; // maximum allowed by wms server (576/345, 800/378, 1000/634)
         str += (int)(cRasterX*(wmsLayer.communeBBox.max.getY() - wmsLayer.communeBBox.min.getY())/(wmsLayer.communeBBox.max.getX() - wmsLayer.communeBBox.min.getX()));
         str += "&exception=application/vnd.ogc.se_inimage&styles="; // required for raster images
-        System.out.println("URL="+str);
+        Main.info("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }
 
@@ -72,7 +73,7 @@ public class CadastreGrabber {
         str += "&width="+width+"&height="+height;
         str += "&exception=application/vnd.ogc.se_inimage"; // works also without (but slower ?)
         str += "&styles=" + styles;
-        System.out.println("URL="+str);
+        Main.info("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }
 

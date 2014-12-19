@@ -27,13 +27,13 @@ public class GrabThread extends Thread {
     private ArrayList<EastNorthBound> imagesToGrab = new ArrayList<>();
 
     private CacheControl cacheControl = null;
-    
+
     private EastNorthBound currentGrabImage;
 
     private Lock lockCurrentGrabImage = new ReentrantLock();
 
     /**
-     * Call directly grabber for raster images or prepare thread for vector images 
+     * Call directly grabber for raster images or prepare thread for vector images
      * @param moreImages
      */
     public void addImages(ArrayList<EastNorthBound> moreImages) {
@@ -43,7 +43,7 @@ public class GrabThread extends Thread {
         synchronized(this) {
             this.notify();
         }
-        System.out.println("Added " + moreImages.size() + " to the grab thread");
+        Main.info("Added " + moreImages.size() + " to the grab thread");
         if (wmsLayer.isRaster()) {
             waitNotification();
         }
@@ -55,9 +55,9 @@ public class GrabThread extends Thread {
         lockImagesToGrag.unlock();
         return size;
     }
-    
+
     public ArrayList<EastNorthBound> getImagesToGrabCopy() {
-        ArrayList<EastNorthBound> copyList = new ArrayList<>(); 
+        ArrayList<EastNorthBound> copyList = new ArrayList<>();
         lockImagesToGrag.lock();
         for (EastNorthBound img : imagesToGrab) {
             EastNorthBound imgCpy = new EastNorthBound(img.min, img.max);
@@ -66,13 +66,13 @@ public class GrabThread extends Thread {
         lockImagesToGrag.unlock();
         return copyList;
     }
-    
-    public void clearImagesToGrab() {        
+
+    public void clearImagesToGrab() {
         lockImagesToGrag.lock();
         imagesToGrab.clear();
         lockImagesToGrag.unlock();
     }
-    
+
     @Override
     public void run() {
         for (;;) {
@@ -91,44 +91,43 @@ public class GrabThread extends Thread {
                         Main.map.repaint(); // paint the current grab box
                         newImage = grabber.grab(wmsLayer, currentGrabImage.min, currentGrabImage.max);
                     } catch (IOException e) {
-                        System.out
-                                .println("Download action canceled by user or server did not respond");
+                    	Main.warn("Download action canceled by user or server did not respond");
                         setCanceled(true);
                         break;
                     } catch (OsmTransferException e) {
-                        System.out.println("OSM transfer failed");
+                        Main.error("OSM transfer failed");
                         setCanceled(true);
                         break;
                     }
                     if (grabber.getWmsInterface().downloadCanceled) {
-                        System.out.println("Download action canceled by user");
+                        Main.info("Download action canceled by user");
                         setCanceled(true);
                         break;
                     }
                     try {
-                    if (CadastrePlugin.backgroundTransparent) {
-                        wmsLayer.imagesLock.lock();
-                        for (GeorefImage img : wmsLayer.getImages()) {
-                            if (img.overlap(newImage))
-                                // mask overlapping zone in already grabbed image
-                                img.withdraw(newImage);
-                            else
-                                // mask overlapping zone in new image only when new image covers completely the 
-                                // existing image
-                                newImage.withdraw(img);
-                        }
-                        wmsLayer.imagesLock.unlock();
-                    }
-                    wmsLayer.addImage(newImage);
-                    Main.map.mapView.repaint();
-                    saveToCache(newImage);
+	                    if (CadastrePlugin.backgroundTransparent) {
+	                        wmsLayer.imagesLock.lock();
+	                        for (GeorefImage img : wmsLayer.getImages()) {
+	                            if (img.overlap(newImage))
+	                                // mask overlapping zone in already grabbed image
+	                                img.withdraw(newImage);
+	                            else
+	                                // mask overlapping zone in new image only when new image covers completely the
+	                                // existing image
+	                                newImage.withdraw(img);
+	                        }
+	                        wmsLayer.imagesLock.unlock();
+	                    }
+	                    wmsLayer.addImage(newImage);
+	                    Main.map.mapView.repaint();
+	                    saveToCache(newImage);
                     } catch (NullPointerException e) {
-                        System.out.println("Layer destroyed. Cancel grab thread");
+                        Main.info("Layer destroyed. Cancel grab thread");
                         setCanceled(true);
                     }
                 }
             }
-            System.out.println("grab thread list empty");
+            Main.info("grab thread list empty");
             lockCurrentGrabImage.lock();
             currentGrabImage = null;
             lockCurrentGrabImage.unlock();
@@ -162,8 +161,7 @@ public class GrabThread extends Thread {
         clearImagesToGrab();
         if (cacheControl != null) {
             while (!cacheControl.isCachePipeEmpty()) {
-                System.out
-                        .println("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
+                Main.info("Try to close a WMSLayer which is currently saving in cache : wait 1 sec.");
                 CadastrePlugin.safeSleep(1000);
             }
         }
@@ -192,7 +190,7 @@ public class GrabThread extends Thread {
         }
         lockCurrentGrabImage.unlock();
     }
-    
+
     private void paintBox(Graphics g, MapView mv, EastNorthBound img, Color color) {
         Point[] croppedPoint = new Point[5];
         croppedPoint[0] = mv.getPoint(img.min);
@@ -205,7 +203,7 @@ public class GrabThread extends Thread {
             g.drawLine(croppedPoint[i].x, croppedPoint[i].y, croppedPoint[i+1].x, croppedPoint[i+1].y);
         }
     }
-    
+
     public boolean isCanceled() {
         return canceled;
     }
@@ -230,8 +228,7 @@ public class GrabThread extends Thread {
         try {
             wait();
         } catch (InterruptedException e) {
-            e.printStackTrace(System.out);
+            Main.error(e);
         }
     }
-
 }

@@ -90,15 +90,16 @@ public class RasterImageGeoreferencer implements MouseListener {
       return true;
   }
 
- 
+
   public boolean isRunning()
   {
       return (countMouseClicked != 0 || mode != 0);
   }
 
-  public void mouseClicked(MouseEvent e) {
+  @Override
+public void mouseClicked(MouseEvent e) {
       if (System.currentTimeMillis() - mouseClickedTime < initialClickDelay) {
-          System.out.println("mouse click bounce detected");
+          Main.info("mouse click bounce detected");
           return; // mouse click anti-bounce
       }
       else
@@ -107,7 +108,7 @@ public class RasterImageGeoreferencer implements MouseListener {
           return;
       if (ignoreMouseClick) return; // In case we are currently just allowing zooming to read lambert coordinates
       EastNorth ea = Main.getProjection().latlon2eastNorth(Main.map.mapView.getLatLon(e.getX(), e.getY()));
-      System.out.println("clic:"+countMouseClicked+" ,"+ea+", mode:"+mode);
+      Main.info("click:"+countMouseClicked+" ,"+ea+", mode:"+mode);
       if (clickOnTheMap) {
           clickOnTheMap = false;
           handleNewCoordinates(ea.east(), ea.north());
@@ -116,7 +117,7 @@ public class RasterImageGeoreferencer implements MouseListener {
           if (ea.east() < wmsLayer.getImage(0).min.east() || ea.east() > wmsLayer.getImage(0).max.east()
                   || ea.north() < wmsLayer.getImage(0).min.north() || ea.north() > wmsLayer.getImage(0).max.north())
           {
-              System.out.println("ignore clic outside the image");
+              Main.info("ignore click outside the image");
               return;
           }
           countMouseClicked++;
@@ -181,7 +182,7 @@ public class RasterImageGeoreferencer implements MouseListener {
          JOptionPane.showMessageDialog(Main.parent,
                  tr("Ooops. I failed to catch all coordinates\n"+
                     "correctly. Retry please."));
-         System.out.println("failed to transform: one coordinate missing:"
+         Main.warn("failed to transform: one coordinate missing:"
                     +"org1="+org1+", org2="+org2+", dst1="+dst1+", dst2="+dst2);
          return;
      }
@@ -248,7 +249,8 @@ public class RasterImageGeoreferencer implements MouseListener {
      dialog.setAlwaysOnTop(true);
      dialog.setVisible(true);
      pane.addPropertyChangeListener(new PropertyChangeListener() {
-         public void propertyChange(PropertyChangeEvent evt) {
+         @Override
+		public void propertyChange(PropertyChangeEvent evt) {
              if (JOptionPane.VALUE_PROPERTY.equals(evt.getPropertyName())) {
                  ignoreMouseClick = false;
                  // Cancel
@@ -351,16 +353,20 @@ private boolean continueGeoreferencing() {
      }
  }
 
- public void mouseEntered(MouseEvent arg0) {
+ @Override
+public void mouseEntered(MouseEvent arg0) {
  }
 
- public void mouseExited(MouseEvent arg0) {
+ @Override
+public void mouseExited(MouseEvent arg0) {
  }
 
- public void mousePressed(MouseEvent arg0) {
+ @Override
+public void mousePressed(MouseEvent arg0) {
  }
 
- public void mouseReleased(MouseEvent arg0) {
+ @Override
+public void mouseReleased(MouseEvent arg0) {
  }
 
 }

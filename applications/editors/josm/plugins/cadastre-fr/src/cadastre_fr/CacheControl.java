@@ -91,7 +91,7 @@ public class CacheControl implements Runnable {
                 }
             }
             if (size > (long)cacheSize*1024*1024) {
-                System.out.println("Delete oldest file  \""+ files[oldestFile].getName()
+            	Main.info("Delete oldest file  \""+ files[oldestFile].getName()
                         + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
                 files[oldestFile].delete();
                 checkDirSize(path);
@@ -125,7 +125,7 @@ public class CacheControl implements Runnable {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            Main.error(e);
         }
         return false;
     }
@@ -134,12 +134,12 @@ public class CacheControl implements Runnable {
         try {
             delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension()));
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+        	Main.error(e);
         }
     }
 
     private void delete(File file) {
-        System.out.println("Delete file "+file);
+        Main.info("Delete file "+file);
         if (file.exists())
             file.delete();
         while (file.exists()) // wait until file is really gone (otherwise appends to existing one)
@@ -154,7 +154,7 @@ public class CacheControl implements Runnable {
         ) {
             successfulRead = wmsLayer.read(file, ois, currentLambertZone);
         } catch (Exception ex) {
-            ex.printStackTrace(System.out);
+            Main.error(ex);
             JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), tr("Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -210,7 +210,7 @@ public class CacheControl implements Runnable {
                 imagesLock.unlock();
             }
             try {wait();} catch (InterruptedException e) {
-                e.printStackTrace(System.out);
+                Main.error(e);
             }
         }
     }

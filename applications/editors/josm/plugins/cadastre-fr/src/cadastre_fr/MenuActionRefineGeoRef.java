@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 
 public class MenuActionRefineGeoRef extends JosmAction {
@@ -22,9 +23,8 @@ public class MenuActionRefineGeoRef extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        if(!wmsLayer.isRaster())
-        {
-            System.out.println("MenuActionRefineGeoRef called for unexpected layer type");
+        if(!wmsLayer.isRaster()) {
+            Main.info("MenuActionRefineGeoRef called for unexpected layer type");
             return;
         }
         if (CadastrePlugin.isCadastreProjection()) {
@@ -35,5 +35,4 @@ public class MenuActionRefineGeoRef extends JosmAction {
         rasterImageGeoreferencer.addListener();
         rasterImageGeoreferencer.startGeoreferencing(wmsLayer);
     }
-
 }

@@ -1,11 +1,12 @@
 // License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
 package cadastre_fr;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -22,7 +23,8 @@ public class MenuActionLoadFromCache extends JosmAction {
         super(tr(name), "cadastre_small", tr("Load location from cache (only if cache is enabled)"), null, false, "cadastrefr/loadfromcache", true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         JFileChooser fc = createAndOpenFileChooser();
         if (fc == null)
             return;
@@ -55,7 +57,7 @@ public class MenuActionLoadFromCache extends JosmAction {
                                 JOptionPane.showMessageDialog(Main.parent, tr("Cannot load cache {0} which is not compatible with current projection zone", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
                             } else
-                                System.out.println("Load cache " + filename);
+                                Main.info("Load cache " + filename);
                         }
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(Main.parent, tr("Selected file {0} is not a cache file from this plugin (invalid extension)", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);

@@ -42,12 +42,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -64,7 +64,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class Address extends MapMode implements MouseListener, MouseMotionListener, ActionListener {
     private static final long serialVersionUID = 1L;
-    
+
     // perhaps make all these tags configurable in the future
     private String tagHighway = "highway";
     private String tagHighwayName = "name";
@@ -75,7 +75,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     private String relationAddrName = "name";
     private String relationAddrStreetRole = "street";
     private String relationMemberHouse = "house";
-    
+
     private JRadioButton plus_one = new JRadioButton("+1", false);
     private JRadioButton plus_two = new JRadioButton("+2", true); // enable this by default
     private JRadioButton minus_one = new JRadioButton("-1", false);
@@ -92,7 +92,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     private boolean ctrl;
 
     public Address(MapFrame mapFrame) {
-        super(tr("Add address"), "buildings", 
+        super(tr("Add address"), "buildings",
                 tr("Helping tool for tag address"),
                 Shortcut.registerShortcut("mapmode:cadastre-fr-buildings", tr("Mode: {0}", tr("CadastreFR - Buildings")), KeyEvent.VK_E, Shortcut.DIRECT),
                 mapFrame, getCursor());
@@ -152,11 +152,11 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 if (num != null) {
                     try {
                         // add new address
-                        Integer.parseInt(num); 
+                        Integer.parseInt(num);
                         inputNumber.setText(num);
                         applyInputNumberChange();
                     } catch (NumberFormatException en) {
-                        System.out.println("Unable to parse house number \"" + num + "\"");
+                        Main.warn("Unable to parse house number \"" + num + "\"");
                     }
                 }
                 if (currentMouseNode.get(tagHouseStreet) != null) {
@@ -201,7 +201,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 inputNumber.setText("");
                 setNewSelection(mouseOnExistingWays.get(0));
             } else if (mouseOnExistingWays.size() == 0) {
-                // clicked a non highway and not a node => add the new address 
+                // clicked a non highway and not a node => add the new address
                 if (inputStreet.getText().equals("") || inputNumber.getText().equals("")) {
                     Toolkit.getDefaultToolkit().beep();
                 } else {
@@ -220,7 +220,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
 
     }
-    
+
     private Way findWayInRelationAddr(Node n) {
         List<OsmPrimitive> l = n.getReferrers();
         for (OsmPrimitive osm : l) {
@@ -237,20 +237,20 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
         return null;
     }
-    
+
     private void addAddrToPolygon(List<Way> mouseOnExistingBuildingWays, Collection<Command> cmds) {
         for (Way w:mouseOnExistingBuildingWays) {
             addAddrToPrimitive(w, cmds);
         }
     }
-    
+
     private void addAddrToPrimitive(OsmPrimitive osm, Collection<Command> cmds) {
         // add the current tag addr:housenumber in node and member in relation (if so configured)
         if (shift) {
             try {
                 revertInputNumberChange();
             } catch (NumberFormatException en) {
-                System.out.println("Unable to parse house number \"" + inputNumber.getText() + "\"");
+            	Main.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
             }
 
         }
@@ -262,10 +262,10 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             Main.main.undoRedo.add(c);
             setNewSelection(osm);
         } catch (NumberFormatException en) {
-            System.out.println("Unable to parse house number \"" + inputNumber.getText() + "\"");
+        	Main.warn("Unable to parse house number \"" + inputNumber.getText() + "\"");
         }
     }
-    
+
     private Relation findRelationAddr(Way w) {
         List<OsmPrimitive> l = w.getReferrers();
         for (OsmPrimitive osm : l) {
@@ -275,7 +275,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
         return null;
     }
-    
+
     private void addStreetNameOrRelation(OsmPrimitive osm, Collection<Command> cmds) {
         if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
             cmds.add(new ChangePropertyCommand(osm, tagHouseStreet, inputStreet.getText()));
@@ -338,7 +338,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
 
         return n;
     }
-    
+
     private static void adjustNode(Collection<Pair<Node,Node>> segs, Node n) {
 
         switch (segs.size()) {
@@ -394,7 +394,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             n.setEastNorth(new EastNorth(B.east() + q * (A.east() - B.east()), B.north() + q * (A.north() - B.north())));
         }
     }
-    
+
     static double det(double a, double b, double c, double d) {
         return a * d - b * c;
     }
@@ -421,7 +421,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
         return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
     }
-    
+
     private void applyInputNumberChange() {
         Integer num = Integer.parseInt(inputNumber.getText());
         if (plus_one.isSelected())
@@ -434,7 +434,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             num = num - 2;
         inputNumber.setText(num.toString());
     }
-    
+
     private void revertInputNumberChange() {
         Integer num = Integer.parseInt(inputNumber.getText());
         if (plus_one.isSelected())
@@ -447,7 +447,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             num = num + 2;
         inputNumber.setText(num.toString());
     }
-    
+
     private void createDialog() {
         ImageIcon iconLink = ImageProvider.get(null, "Mf_relation.png");
         link.setIcon(iconLink);
@@ -465,7 +465,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         p.add(p2, GBC.eol().fill(GBC.HORIZONTAL));
         clearButton = new JButton("Clear");
         clearButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 inputNumber.setText("");
                 inputStreet.setText("");
                 setSelectedWay((Way)null);
@@ -490,7 +491,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         p.add(minus_two, GBC.std().insets(10, 0, 10, 0));
         p.add(plus_two, GBC.std().insets(0, 0, 10, 0));
         p.add(clearButton, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
-    
+
         final Object[] options = {};
         final JOptionPane pane = new JOptionPane(p,
                 JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
@@ -515,12 +516,18 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 exitMode();
                 Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
             }
-            public void windowClosed(WindowEvent e) {}
-            public void windowActivated(WindowEvent arg0) {}
-            public void windowDeactivated(WindowEvent arg0) {}
-            public void windowDeiconified(WindowEvent arg0) {}
-            public void windowIconified(WindowEvent arg0) {}
-            public void windowOpened(WindowEvent arg0) {}
+            @Override
+			public void windowClosed(WindowEvent e) {}
+            @Override
+			public void windowActivated(WindowEvent arg0) {}
+            @Override
+			public void windowDeactivated(WindowEvent arg0) {}
+            @Override
+			public void windowDeiconified(WindowEvent arg0) {}
+            @Override
+			public void windowIconified(WindowEvent arg0) {}
+            @Override
+			public void windowOpened(WindowEvent arg0) {}
         });
         String bounds = Main.pref.get("cadastrewms.addr.bounds",null);
         if (bounds != null) {
@@ -529,7 +536,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                     Integer.parseInt(b[0]),Integer.parseInt(b[1]),Integer.parseInt(b[2]),Integer.parseInt(b[3])));
         }
 }
-    
+
     private void setSelectedWay(Way w) {
         this.selectedWay = w;
         if (w == null) {
@@ -538,7 +545,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             link.setEnabled(true);
         link.repaint();
     }
-    
+
     private void setNewSelection(OsmPrimitive osm) {
         Collection<OsmPrimitive> newSelection = new LinkedList<>(Main.main.getCurrentDataSet().getSelected());
         newSelection.clear();

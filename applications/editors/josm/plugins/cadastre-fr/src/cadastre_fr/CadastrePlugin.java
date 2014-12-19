@@ -450,7 +450,7 @@ public class CadastrePlugin extends Plugin {
             try {
                 dialog.setAlwaysOnTop(true);
             } catch(SecurityException e) {
-                System.out.println(tr("Warning: failed to put option pane dialog always on top. Exception was: {0}", e.toString()));
+            	Main.warn(tr("Warning: failed to put option pane dialog always on top. Exception was: {0}", e.toString()));
             }
         }
         dialog.setModal(true);
@@ -489,7 +489,7 @@ public class CadastrePlugin extends Plugin {
             year = Integer.decode(srcYear);
         } catch (NumberFormatException e) {}
         if (srcYear.equals("AAAA") || (year != null && year < currentYear)) {
-            System.out.println("Replace source year "+srcYear+" by current year "+currentYear);
+        	Main.info("Replace source year "+srcYear+" by current year "+currentYear);
             src = src.substring(0, src.lastIndexOf(" ")+1)+currentYear;
             Main.pref.put("cadastrewms.source", src);
         }

@@ -15,13 +15,13 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 
 public class DownloadWMSPlanImage {
-    
+
     private Future<Task> task = null;
     private WMSLayer wmsLayer;
     private Bounds bounds;
     private static boolean dontGeoreference = false;
     private static String errorMessage;
-    
+
     private class Task extends PleaseWaitRunnable {
         public Task(WMSLayer wmsLayer, Bounds bounds) {
             super(tr("Downloading {0}", wmsLayer.getName()));
@@ -84,13 +84,13 @@ public class DownloadWMSPlanImage {
                 }
             } catch (DuplicateLayerException e) {
                 // we tried to grab onto a duplicated layer (removed)
-                System.err.println("removed a duplicated layer");
+            	Main.warn("removed a duplicated layer");
             } catch (WMSException e) {
                 errorMessage = e.getMessage();
                 wmsLayer.grabber.getWmsInterface().resetCookie();
             }
         }
-        
+
         @Override
         protected void cancel() {
             wmsLayer.grabber.getWmsInterface().cancel();
@@ -101,7 +101,7 @@ public class DownloadWMSPlanImage {
         protected void finish() {
         }
     }
-    
+
     public void download(WMSLayer wmsLayer) {
         MapView mv = Main.map.mapView;
         Bounds bounds = new Bounds(mv.getLatLon(0, mv.getHeight()), mv.getLatLon(mv.getWidth(), 0));

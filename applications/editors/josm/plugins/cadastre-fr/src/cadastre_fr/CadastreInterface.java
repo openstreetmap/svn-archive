@@ -114,7 +114,7 @@ public class CadastreInterface {
                 urlConn.setRequestMethod("GET");
                 urlConn.connect();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    System.out.println("GET "+searchFormURL);
+                    Main.info("GET "+searchFormURL);
                     BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
                     while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
                     String headerName=null;
@@ -123,19 +123,18 @@ public class CadastreInterface {
                             cookie = urlConn.getHeaderField(i);
                             cookie = cookie.substring(0, cookie.indexOf(";"));
                             cookieTimestamp = new Date().getTime();
-                            System.out.println("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
+                            Main.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
                             cookied = true;
                         }
                     }
                 } else {
-                    System.out.println("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
+                    Main.warn("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
                     CadastrePlugin.safeSleep(3000);
                     retries --;
                 }
             }
         } catch (MalformedURLException e) {
-            throw (IOException) new IOException(
-                "Illegal url.").initCause(e);
+            throw new IOException("Illegal url.", e);
         }
     }
 
@@ -147,7 +146,7 @@ public class CadastreInterface {
     public boolean isCookieExpired() {
         long now = new Date().getTime();
         if ((now - cookieTimestamp) > cCookieExpiration) {
-            System.out.println("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
+            Main.info("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
             return true;
         }
         return false;
@@ -221,7 +220,7 @@ public class CadastreInterface {
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
             }
-            System.out.println("GET "+interfaceURL);
+            Main.info("GET "+interfaceURL);
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
             // read the buffer otherwise we sent POST too early
             while ((ln = in.readLine()) != null) {
@@ -304,7 +303,7 @@ public class CadastreInterface {
                     // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
                     lines = lines.substring(lines.indexOf(cInterfaceVector),lines.length());
                     lines = lines.substring(0, lines.indexOf("'"));
-                    System.out.println("interface ref.:"+lines);
+                    Main.info("interface ref.:"+lines);
                     return lines;
                 } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
                     // list of values parsed in listOfFeuilles (list all non-georeferenced images)
@@ -319,7 +318,7 @@ public class CadastreInterface {
                                 interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
                                 wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
                                 lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
-                                System.out.println("interface ref.:"+lines);
+                                Main.info("interface ref.:"+lines);
                                 return lines;
                             }
                         }
@@ -350,10 +349,10 @@ public class CadastreInterface {
                 if (j != -1 && k > (i + c0ptionListStart.length())) {
                     String lov = new String(input.substring(i+c0ptionListStart.length()-1, j));
                     if (lov.indexOf(">") != -1) {
-                        System.out.println("parse "+lov);
+                    	Main.info("parse "+lov);
                         listOfCommunes.add(lov);
                     } else
-                        System.err.println("unable to parse commune string:"+lov);
+                        Main.error("unable to parse commune string:"+lov);
                 }
                 input = input.substring(j+cOptionListEnd.length());
             }
@@ -480,7 +479,7 @@ public class CadastreInterface {
         if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException("Cannot get Cadastre response.");
         }
-        System.out.println("GET "+searchFormURL);
+        Main.info("GET "+searchFormURL);
         try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()))) {
             while ((ln = in.readLine()) != null) {
                 line += ln;
@@ -540,7 +539,7 @@ public class CadastreInterface {
 //                wmsLayer.X0 = X0;
 //                wmsLayer.Y0 = Y0;
 //            }
-//            System.out.println("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
+//            Main.info("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
 //                    fY+","+X0+","+Y0);
 //        }
     }
@@ -549,7 +548,7 @@ public class CadastreInterface {
         if (Main.map != null) {
             for (Layer l : Main.map.mapView.getAllLayers()) {
                 if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (l != wmsLayer)) {
-                    System.out.println("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
+                	Main.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
                     Main.main.removeLayer(wmsLayer);
                     throw new DuplicateLayerException();

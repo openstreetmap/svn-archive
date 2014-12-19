@@ -73,7 +73,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                 createWay(svg);
             }
         } catch (DuplicateLayerException e) {
-            System.err.println("removed a duplicated layer");
+        	Main.warn("removed a duplicated layer");
         } catch (WMSException e) {
             errorMessage = e.getMessage();
             wmsLayer.grabber.getWmsInterface().resetCookie();
@@ -96,7 +96,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                     new EastNorth(box[0]+box[2], box[1]+box[3]));
             return true;
         }
-        System.out.println("Unable to parse SVG data (viewBox)");
+        Main.warn("Unable to parse SVG data (viewBox)");
         return false;
     }
 
@@ -187,7 +187,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         str += "&width="+CadastrePlugin.imageWidth+"&height="+CadastrePlugin.imageHeight;
         str += "&styles=";
         str += "COMMUNE_90";
-        System.out.println("URL="+str);
+        Main.info("URL="+str);
         return new URL(str.replace(" ", "%20"));
     }
 

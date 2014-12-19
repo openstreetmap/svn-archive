@@ -46,6 +46,9 @@ import org.openstreetmap.josm.plugins.utilsplugin2.selection.UndoSelectionAction
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.UnselectNodesAction;
 
 public class UtilsPlugin2 extends Plugin {
+
+	private static UtilsPlugin2 instance;
+
     JMenuItem unglueRelation;
     JMenuItem symmetry;
     JMenuItem addIntersections;
@@ -64,7 +67,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem wiki;
     JMenuItem latlon;
     JMenuItem multiTag;
-    
+
     JMenuItem replaceGeometry;
     JMenuItem tagBuffer;
     JMenuItem sourceTag;
@@ -75,17 +78,19 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem selModifiedWays;
     JMenuItem selectHighway;
     JMenuItem selectAreaBoundary;
-    
+
     JMenuItem selectURL;
 
     JMenuItem drawArc;
-    
+
     public UtilsPlugin2(PluginInformation info) {
         super(info);
+        instance = this;
+
         JMenu toolsMenu = Main.main.menu.moreToolsMenu;
         JMenu dataMenu = Main.main.menu.dataMenu;
         JMenu selectionMenu = Main.main.menu.selectionMenu;
-                
+
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
         alignWayNodes = MainMenu.add(toolsMenu, new AlignWayNodesAction());
@@ -103,7 +108,7 @@ public class UtilsPlugin2 extends Plugin {
         drawArc = MainMenu.add(toolsMenu, new CurveAction());
 
         selectionMenu.addSeparator();
-           
+
         selectWayNodes = MainMenu.add(selectionMenu, new SelectWayNodesAction());
         adjNodes = MainMenu.add(selectionMenu, new AdjacentNodesAction());
         unsNodes = MainMenu.add(selectionMenu, new UnselectNodesAction());
@@ -118,10 +123,10 @@ public class UtilsPlugin2 extends Plugin {
         undoSelection = MainMenu.add(selectionMenu, new UndoSelectionAction());
         selectHighway = MainMenu.add(selectionMenu, new SelectHighwayAction());
         selectAreaBoundary = MainMenu.add(selectionMenu, new SelectBoundaryAction());
-        
+
         selectURL = MainMenu.add(dataMenu, new ChooseURLAction());
         multiTag = MainMenu.add(dataMenu, new MultiTagAction());
-        
+
         // register search operators
         SearchCompiler.addMatchFactory(new UtilsUnaryMatchFactory());
         SearchCompiler.addMatchFactory(new UtilsSimpleMatchFactory());
@@ -160,12 +165,13 @@ public class UtilsPlugin2 extends Plugin {
         drawArc.setEnabled(enabled);
         multiTag.setEnabled(enabled);
     }
-    
+
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return new UtilsPluginPreferences();
     }
-    
-       
-    
+
+    public static final UtilsPlugin2 getInstance() {
+    	return instance;
+    }
 }

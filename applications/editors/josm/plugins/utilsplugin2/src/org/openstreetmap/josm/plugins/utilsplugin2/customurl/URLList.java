@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.utilsplugin2.UtilsPlugin2;
 
 public class URLList {
     public static final String defaultURL = "http://osm.mapki.com/history/{#type}.php?id={#id}";
@@ -20,7 +22,7 @@ public class URLList {
     }
     public static void select(String url) {
         Main.pref.put("utilsplugin2.customurl",url);
-    }    
+    }
     public static List<String> resetURLList() {
         List<String> items=new ArrayList<>();
         items.add("Wikipedia");
@@ -39,7 +41,7 @@ public class URLList {
         Main.pref.put("utilsplugin2.customurl",items.get(9));
         return items;
     }
-    
+
     public static List<String> getURLList() {
         List<String> items = (List<String>) Main.pref.getCollection("utilsplugin2.urlHistory");
         if (items==null || items.isEmpty()) {
@@ -48,7 +50,7 @@ public class URLList {
         }
         return items;
     }
-    
+
     public static void updateURLList(List<String> lst) {
         Main.pref.putCollection("utilsplugin2.urlHistory",lst);
         try {
@@ -57,39 +59,35 @@ public class URLList {
             Logger.getLogger(UtilsPluginPreferences.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static  List<String> loadURLList() {
+
+    public static List<String> loadURLList() {
         ArrayList<String> items=new ArrayList<>();
         BufferedReader fr=null;
         try {
-        File f = new File (Main.pref.getPreferencesDir(),"customurl.txt");
-        fr = new BufferedReader(new FileReader(f));
-        String s;
-        while ((s = fr.readLine()) !=null ) items.add(s);
+	        File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
+	        fr = new BufferedReader(new FileReader(f));
+	        String s;
+	        while ((s = fr.readLine()) !=null ) items.add(s);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try { if (fr!=null) fr.close(); } catch (Exception e) {}
         }
         return items;
-        
     }
-    
-    public static  void saveURLList(List<String> items) {
-        File f = new File (Main.pref.getPreferencesDir(),"customurl.txt");
+
+    public static void saveURLList(List<String> items) {
+        File f = new File(UtilsPlugin2.getInstance().getPluginDir(), "customurl.txt");
         PrintWriter fw=null;
         try {
-        fw=new PrintWriter(f);
-        for (String s : items) {
-            fw.println(s);
-        }
+	        fw=new PrintWriter(f);
+	        for (String s : items) {
+	            fw.println(s);
+	        }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try { if (fw!=null) fw.close(); } catch (Exception e) {}
         }
     }
-
-
 }
-

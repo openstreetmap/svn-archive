@@ -110,13 +110,13 @@ public abstract class DatabaseParser {
                         "Požadavek na server selhal, číslo chyby: " + String.valueOf( con.getResponseCode() ));
 
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getDatabasePath()))) {
-	            int total = 0, count;
-	            byte[] buffer = new byte[1024*512];
-	            while ((count = con.getInputStream().read(buffer)) >= 0) {
-	                bos.write(buffer, 0, count);
-	                total += count;
-	                Main.error("CzechAddress: MVČR database: " + String.valueOf(total/1024) + " kb downloaded.");
-	            }
+                int total = 0, count;
+                byte[] buffer = new byte[1024*512];
+                while ((count = con.getInputStream().read(buffer)) >= 0) {
+                    bos.write(buffer, 0, count);
+                    total += count;
+                    Main.error("CzechAddress: MVČR database: " + String.valueOf(total/1024) + " kb downloaded.");
+                }
             }
 
             // Look for a detailed error message from the server
@@ -127,8 +127,7 @@ public abstract class DatabaseParser {
             con.disconnect();
 
         } catch (IOException ioexp) {
-            ioexp.printStackTrace();
-            throw new DatabaseLoadException("Chyba při načítání databáze");
+            throw new DatabaseLoadException("Chyba při načítání databáze", ioexp);
         }
     }
 }

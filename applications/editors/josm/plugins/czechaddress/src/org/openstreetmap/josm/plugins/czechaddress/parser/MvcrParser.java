@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.czechaddress.DatabaseLoadException;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ElementWithHouses;
@@ -37,6 +38,7 @@ public class MvcrParser extends XMLParser {
 //  IMPLEMENTING THE ContentHandler
 //==============================================================================
 
+    @Override
     public void startElement(String uri, String localName, String name,
                                 Attributes attributes) throws SAXException {
 
@@ -175,14 +177,23 @@ public class MvcrParser extends XMLParser {
         }
     }
 
+    @Override
     public void setDocumentLocator(Locator locator) {}
+    @Override
     public void startDocument() throws SAXException {}
+    @Override
     public void endDocument() throws SAXException {}
+    @Override
     public void startPrefixMapping(String prefix, String uri) throws SAXException {}
+    @Override
     public void endPrefixMapping(String prefix) throws SAXException {}
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {}
+    @Override
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {}
+    @Override
     public void processingInstruction(String target, String data) throws SAXException {}
+    @Override
     public void skippedEntity(String name) throws SAXException {}
 
 //==============================================================================
@@ -236,22 +247,23 @@ public class MvcrParser extends XMLParser {
         return storageDir + "-adresy.zip";
     }
 
+    @Override
     protected InputStream getDatabaseStream() throws DatabaseLoadException {
         ZipInputStream zis;
         ZipEntry zipEntry = null;
         try {
-        zis = new ZipInputStream(new FileInputStream(getDatabasePath()));
+            zis = new ZipInputStream(new FileInputStream(getDatabasePath()));
 
-        while ((zipEntry = zis.getNextEntry()) != null)
-            if (zipEntry.getName().equals("adresy.xml"))
-                break;
+            while ((zipEntry = zis.getNextEntry()) != null)
+                if (zipEntry.getName().equals("adresy.xml"))
+                    break;
 
         } catch (IOException ioexp) {
-            throw new DatabaseLoadException("Chyba při čtení archivu s databází.");
+            throw new DatabaseLoadException("Chyba při čtení archivu s databází.", ioexp);
         }
 
         if (zipEntry == null)
-        throw new DatabaseLoadException(
+            throw new DatabaseLoadException(
                     "ZIP archiv s databází neobsahuje soubor 'adresy.xml'.");
 
         return zis;

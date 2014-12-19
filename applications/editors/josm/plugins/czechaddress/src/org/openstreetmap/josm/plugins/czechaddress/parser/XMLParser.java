@@ -1,7 +1,9 @@
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
 import java.io.IOException;
+
 import org.openstreetmap.josm.plugins.czechaddress.DatabaseLoadException;
+import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -21,6 +23,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public abstract class XMLParser extends DatabaseParser
                                 implements ContentHandler {
 
+    @Override
     protected void parseDatabase() throws DatabaseLoadException {
 
         try {
@@ -30,9 +33,9 @@ public abstract class XMLParser extends DatabaseParser
             xr.parse(new InputSource(getDatabaseStream()));
 
         } catch (IOException ioexp) {
-            throw new DatabaseLoadException("Chyba při čtení archivu s databází.");
+            throw new DatabaseLoadException("Chyba při čtení archivu s databází.", ioexp);
         } catch (SAXException saxexp) {
-            throw new DatabaseLoadException("Selhaho parsování XML souboru s databází adres.");
+            throw new DatabaseLoadException("Selhaho parsování XML souboru s databází adres.", saxexp);
         }
     }
 }

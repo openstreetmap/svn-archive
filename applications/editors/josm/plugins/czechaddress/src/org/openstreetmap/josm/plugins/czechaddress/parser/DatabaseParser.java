@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
 public abstract class DatabaseParser {
 
     /** Directory, where the parser can store cache data. */
-    protected String storageDir = Main.pref.getPreferencesDir();
+    protected String storageDir;
 
     /**
      * Sets the storage directory.

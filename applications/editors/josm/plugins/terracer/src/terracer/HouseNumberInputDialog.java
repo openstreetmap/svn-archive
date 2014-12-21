@@ -54,7 +54,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     */
     final static String DEFAULT_SEGMENTS = "plugins.terracer.segments";
     final static String HANDLE_RELATION = "plugins.terracer.handle_relation";
-    final static String DELETE_OUTLINE = "plugins.terracer.delete_outline";
+    final static String KEEP_OUTLINE = "plugins.terracer.keep_outline";
     final static String INTERPOLATION = "plugins.terracer.interpolation";
 
     //final private Way street;
@@ -82,7 +82,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private JLabel interpolationLabel;
     Choice interpolation;
     JCheckBox handleRelationCheckBox;
-    JCheckBox deleteOutlineCheckBox;
+    JCheckBox keepOutlineCheckBox;
 
     HouseNumberInputHandler inputHandler;
 
@@ -181,7 +181,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             final String txt = relationExists ? tr("add to existing associatedStreet relation") : tr("create an associatedStreet relation");
 
             handleRelationCheckBox = new JCheckBox(txt, relationExists ? Main.pref.getBoolean(HANDLE_RELATION, true) : false);
-            deleteOutlineCheckBox = new JCheckBox(tr("delete outline way"), Main.pref.getBoolean(DELETE_OUTLINE, true));
+            keepOutlineCheckBox = new JCheckBox(tr("keep outline way"), Main.pref.getBoolean(KEEP_OUTLINE, false));
 
             inputPanel = new JPanel();
             inputPanel.setLayout(new GridBagLayout());
@@ -208,8 +208,8 @@ public class HouseNumberInputDialog extends ExtendedDialog {
             inputPanel.add(buildingLabel, GBC.std().insets(3,3,0,0));
             inputPanel.add(getBuilding(), GBC.eol().insets(5,3,0,0));
             inputPanel.add(handleRelationCheckBox, GBC.eol().insets(3,3,0,0));
-            inputPanel.add(deleteOutlineCheckBox, GBC.eol().insets(3,3,0,0));
-            
+            inputPanel.add(keepOutlineCheckBox, GBC.eol().insets(3,3,0,0));
+
             if (numbers.isVisible()) {
                 loLabel.setVisible(false);
                 lo.setVisible(false);
@@ -260,7 +260,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         }
         return hi;
     }
-    
+
     /**
      * This method initializes numbers
      *
@@ -269,7 +269,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private JTextField getNumbers() {
         if (numbers == null) {
             numbers = new JTextField();
-            
+
             Iterator<Node> it = housenumbers.iterator();
             StringBuilder s = new StringBuilder(256);
             if (it.hasNext()) {
@@ -281,7 +281,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
                 numbersLabel.setVisible(false);
                 numbers.setVisible(false);
             }
-            
+
             numbers.setText(s.toString());
             numbers.setEditable(false);
         }
@@ -305,7 +305,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
         }
         return streetComboBox;
     }
-    
+
     /**
      * This method initializes building
      *

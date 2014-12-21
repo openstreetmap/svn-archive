@@ -303,7 +303,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
                             housenumbers,
                             streetName(),
                             doHandleRelation(),
-                            doDeleteOutline(), buildingType());
+                            doKeepOutline(), buildingType());
                     } catch (UserCancelException ex) {
                         // Ignore
                     }
@@ -379,7 +379,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
 
         return getItemText(dialog.streetComboBox);
     }
-    
+
     /**
      * Gets the building type.
      *
@@ -388,7 +388,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
     public String buildingType() {
         return getItemText(dialog.buildingComboBox);
     }
-    
+
     private static String getItemText(AutoCompletingComboBox box) {
         Object selected = box.getSelectedItem();
         if (selected == null) {
@@ -429,10 +429,10 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
     }
 
     /**
-     * Whether the user likes to delete the outline way.
+     * Whether the user likes to keep the outline way.
      */
-    public boolean doDeleteOutline() {
-        return dialog.deleteOutlineCheckBox.isSelected();
+    public boolean doKeepOutline() {
+        return dialog.keepOutlineCheckBox.isSelected();
     }
 
     @Override
@@ -453,7 +453,7 @@ public class HouseNumberInputHandler extends JosmAction implements ActionListene
      */
     public void saveValues() {
         Main.pref.put(HouseNumberInputDialog.HANDLE_RELATION, doHandleRelation());
-        Main.pref.put(HouseNumberInputDialog.DELETE_OUTLINE, doDeleteOutline());
+        Main.pref.put(HouseNumberInputDialog.KEEP_OUTLINE, doKeepOutline());
         Main.pref.put(HouseNumberInputDialog.INTERPOLATION, stepSize().toString());
     }
 }

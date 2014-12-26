@@ -17,7 +17,7 @@ $pwd = '';
 my %lang = map {$_ => 1} (
 "bg", "ca", "cs", "da", "de", "el", "en_AU", "en_GB",
 "es", "et", "fi", "fr", "gl", "hu", "id",
-"it", "ja", "nl", "pl", "pt", "pt_BR", "ru", "sk",
+"it", "ja", "km", "nl", "pl", "pt", "pt_BR", "ru", "sk",
 "sv", "uk", "zh_CN", "zh_TW"
 );
 

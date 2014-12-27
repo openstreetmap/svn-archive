@@ -5,7 +5,7 @@
 -->
 <project name="plugin_i18n" basedir=".">
     <property name="gettexttasks.jar" value="../../i18n/lib/gettext-ant-tasks-0.9.7.jar"/>
-    <property name="plugin.po.dir" location="po"/>
+    <property name="plugin.po.dir" value="po"/>
     <property name="poimport.tarball" value="latest"/>
     <property name="plugin.manifest" location="MANIFEST"/>
 
@@ -15,7 +15,7 @@
     <target name="pot" description="Extract translatable strings from source." depends="gettext-init">
         <mkdir dir="${plugin.po.dir}"/>
         <gettext-extract keysFile="${ant.project.name}.pot" poDirectory="${plugin.po.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <fileset dir="src" includes="**/*.java"/>
+            <fileset dir="${plugin.src.dir}" includes="**/*.java"/>
         </gettext-extract>
         <echo file="${plugin.po.dir}/${ant.project.name}.pot" append="true">
 #. Plugin ${ant.project.name}

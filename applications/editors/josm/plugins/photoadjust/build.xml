@@ -27,6 +27,19 @@
     <!-- ** internationalization ** -->
     <import file="i18n/build-i18n.xml"/>
 
+    <target name="pot" description="Extract translatable strings from source." depends="gettext-init">
+        <mkdir dir="${plugin.po.dir}"/>
+        <gettext-extract keysFile="${ant.project.name}.pot" poDirectory="${plugin.po.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${plugin.src.dir}" includes="**/*.java"/>
+        </gettext-extract>
+        <echo file="${plugin.po.dir}/${ant.project.name}.pot" append="true">
+#. Plugin ${ant.project.name}
+#: build.xml:1
+msgid "${plugin.description}"
+msgstr ""
+</echo>
+    </target>
+
     <!--
     **********************************************************
     ** javadoc - create the plugin documentation

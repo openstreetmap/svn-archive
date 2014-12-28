@@ -152,7 +152,7 @@ public class PhotoAdjustWorker {
         layer.updateBufferAndRepaint();
         // Need to re-display the photo because the OSD data might change (new
         // coordinates).
-        ImageViewerDialog.showImage(viewerLayer, img);
+        ImageViewerDialog.showImage(layer, photo);
     }
 
     /**

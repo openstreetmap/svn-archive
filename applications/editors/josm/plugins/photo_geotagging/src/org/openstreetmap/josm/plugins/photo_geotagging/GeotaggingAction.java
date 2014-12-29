@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,8 +66,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         final List<ImageEntry> images = new ArrayList<>();
         for (ImageEntry e : layer.getImages()) {
              /* Only write lat/lon to the file, if the position is known and
-                we have a time from the correlation to the gpx track. */
-            if (e.getPos() != null && e.hasGpsTime()) {
+                the GPS data changed. */
+            if (e.getPos() != null && (e.hasNewGpsData() || e.hasGpsTime())) {
                 images.add(e);
             }
         }
@@ -204,7 +205,22 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                     }
 
                     Long mTime = null;
-                    if (mTimeMode == MTIME_MODE_PREVIOUS_VALUE) {
+                    if (mTimeMode == MTIME_MODE_GPS) {
+                        // check GPS time fields, do nothing if all fails
+                        Date time;
+                        if (e.hasGpsTime()) {
+                            time = e.getGpsTime();
+                        } else {
+                            time = e.getExifGpsTime();
+                        }
+                        if (time != null) {
+                            mTime = time.getTime();
+                        }
+                    }
+                    if ( mTimeMode == MTIME_MODE_PREVIOUS_VALUE
+                         // this is also the fallback if one of the other
+                         // modes failed to determine the modification time
+                         || (mTimeMode != 0 && mTime == null)) {
                         mTime = e.getFile().lastModified();
                         if (mTime.equals(0L))
                             throw new IOException(tr("Could not read mtime."));
@@ -212,11 +228,8 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
 
                     chooseFiles(e.getFile());
                     if (canceled) return;
-                    ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(), e.getGpsTime().getTime(), e.getElevation());
-
-                    if (mTimeMode == MTIME_MODE_GPS) {
-                        mTime = e.getGpsTime().getTime();
-                    }
+                    ExifGPSTagger.setExifGPSTag(fileFrom, fileTo, e.getPos().lat(), e.getPos().lon(),
+                            e.getGpsTime(), e.getSpeed(), e.getElevation(), e.getExifImgDir());
 
                     if (mTime != null) {
                         if (!fileTo.setLastModified(mTime))
@@ -377,7 +390,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
      */
     private boolean enabled(GeoImageLayer layer) {
         for (ImageEntry e : layer.getImages()) {
-            if (e.getPos() != null && e.hasGpsTime())
+            if (e.getPos() != null && (e.hasNewGpsData() || e.hasGpsTime()))
                 return true;
         }
         return false;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="SeaChart" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="New release"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="7001"/>
+
+    <property name="plugin.author" value="Malcolm Herring"/>
+    <property name="plugin.class" value="seachart.Seachart"/>
+    <property name="plugin.description" value="Imagery Layer for Sea Charts"/>
+    <property name="plugin.icon" value="images/SC.png"/>
+    <property name="plugin.link" value="http://openseamap.org/"/>
+
+    <property name="josm" location="../../core/dist/josm-custom.jar"/>
+    <property name="plugin.dist.dir" value="../../dist"/>
+    
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>                
+
+</project>
+

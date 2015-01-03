@@ -266,9 +266,20 @@
     -->
     <target name="install" depends="dist">
         <property environment="env"/>
-        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+        <condition property="josm.plugins.dir" value="${env.LOCALAPPDATA}/JOSM/plugins">
             <and>
                 <os family="windows"/>
+            </and>
+        </condition>
+        <condition property="josm.plugins.dir" value="${user.home}/Library/JOSM/plugins">
+            <and>
+                <os family="mac"/>
+            </and>
+        </condition>
+        <condition property="josm.plugins.dir" value="${user.home}/.josm/plugins">
+            <and>
+                <not><os family="windows"/></not>
+                <not><os family="mac"/></not>
             </and>
         </condition>
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>

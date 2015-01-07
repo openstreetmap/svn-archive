@@ -193,6 +193,7 @@ public class Rules {
 		if ((objects = Renderer.map.features.get(Obj.SMCFAC)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) marinas(feature);
 		if ((objects = Renderer.map.features.get(Obj.BRIDGE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) bridges(feature);
 		if ((objects = Renderer.map.features.get(Obj.PILPNT)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) lights(feature);
+		if ((objects = Renderer.map.features.get(Obj.RDOCAL)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) callpoint(feature);
 		if ((objects = Renderer.map.features.get(Obj.LITMIN)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) lights(feature);
 		if ((objects = Renderer.map.features.get(Obj.LITMAJ)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) lights(feature);
 		if ((objects = Renderer.map.features.get(Obj.LIGHTS)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) lights(feature);
@@ -466,6 +467,23 @@ public class Rules {
 					}
 				}
 			}
+		}
+	}
+	
+	private static void callpoint(Feature feature) {
+		if (Renderer.zoom >= 14) {
+			Symbol symb = Harbours.CallPoint2;
+			TrfTRF trf;
+			if ((trf = (TrfTRF) getAttVal(feature, feature.type, 0, Att.TRAFIC)) != null) {
+				if (trf != TrfTRF.TRF_TWOW) {
+					symb = Harbours.CallPoint1;
+				}
+			}
+			Double orient = 0.0;
+			if ((orient = (Double) getAttVal(feature, feature.type, 0, Att.ORIENT)) == null) {
+				orient = 0.0;
+			}
+			Renderer.symbol(feature, symb, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(orient))));
 		}
 	}
 	

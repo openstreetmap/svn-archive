@@ -49,6 +49,22 @@ public class Harbours {
 		Bollard.add(new Instr(Form.FILL, Color.black));
 		Bollard.add(new Instr(Form.ELPS, s));
 	}
+	public static final Symbol CallPoint1 = new Symbol();
+	static {
+		CallPoint1.add(new Instr(Form.BBOX, new Rectangle2D.Double(-50,-50,100,100)));
+		CallPoint1.add(new Instr(Form.STRK, new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		CallPoint1.add(new Instr(Form.FILL, Rules.Msymb));
+		CallPoint1.add(new Instr(Form.ELPS, new Ellipse2D.Double(-25,-25,50,50)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-16.0,-20.0); p.lineTo(0.0,-50.0); p.lineTo(16.0,-20.0);
+		CallPoint1.add(new Instr(Form.PLIN, p));
+	}
+	public static final Symbol CallPoint2 = new Symbol();
+	static {
+		CallPoint2.add(new Instr(Form.BBOX, new Rectangle2D.Double(-50,-50,100,100)));
+		CallPoint2.add(new Instr(Form.SYMB, new Symbols.SubSymbol(CallPoint1, 1.0, 0, 0, null, null)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-16.0,20.0); p.lineTo(0.0,50.0); p.lineTo(16.0,20.0);
+		CallPoint2.add(new Instr(Form.PLIN, p));
+	}
 	public static final Symbol ContainerCrane = new Symbol();
 	static {
 		ContainerCrane.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));

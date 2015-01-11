@@ -34,10 +34,10 @@ fr.datagouvfr.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins
 	Ant-Version: Apache Ant 1.9.2
 	Module-Description: data.gouv.fr
 	Manifest-Version: 1.0
-	Module-Version: 30563
-	Created-By: 1.7.0_65-b19 (Oracle Corporation)
+	Module-Version: 30908
+	Created-By: 1.7.0_72-b14 (Oracle Corporation)
 	Module-Link: http://wiki.openstreetmap.org/wiki/WikiProject_France/data.gouv.fr
-	Module-Date: 2014-08-05T11:53:46.368212Z
+	Module-Date: 2015-01-11T20:50:45.605290Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.datagouvfr.DataGouvFrModule
 fr.lemans.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.lemans.jar
 	Author: Don-vip

@@ -32,7 +32,7 @@ import org.openstreetmap.josm.tools.Utils;
 public class SevenZipReader extends ArchiveReader {
 
     private final IInArchive archive = new Handler();
-
+    
     public SevenZipReader(InputStream in, AbstractDataSetHandler handler, boolean promptUser) throws IOException {
         super(handler, handler != null ? handler.getArchiveHandler() : null, promptUser);
         // Write entire 7z file as a temp file on disk as we need random access later, and "in" can be a network stream
@@ -40,24 +40,26 @@ public class SevenZipReader extends ArchiveReader {
         try (OutputStream out = new FileOutputStream(tmpFile)) {
             Utils.copyStream(in, out);
         }
-        try (IInStream random = new MyRandomAccessFile(tmpFile.getPath(), "r")) {
-            if (archive.Open(random) != 0) {
-                String message = "Unable to open 7z archive: "+tmpFile.getPath();
-                Main.warn(message);
-                if (!tmpFile.delete()) {
-                    tmpFile.deleteOnExit();
-                }
-                throw new IOException(message);
+        // random must be kept open for later extracting
+        @SuppressWarnings("resource")
+        IInStream random = new MyRandomAccessFile(tmpFile.getPath(), "r");
+        if (archive.Open(random) != 0) {
+            String message = "Unable to open 7z archive: "+tmpFile.getPath();
+            Main.warn(message);
+            random.close();
+            if (!tmpFile.delete()) {
+                tmpFile.deleteOnExit();
             }
+            throw new IOException(message);
         }
     }
-
-    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
+    
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
             throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         return new SevenZipReader(in, handler, promptUser).parseDoc(instance);
     }
 
-    public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser)
+    public static Map<File, DataSet> parseDataSets(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance, boolean promptUser) 
             throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         return new SevenZipReader(in, handler, promptUser).parseDocs(instance);
     }
@@ -67,20 +69,22 @@ public class SevenZipReader extends ArchiveReader {
         return tr("Reading 7Zip file...");
     }
 
-    @Override protected void extractArchive(File temp, List<File> candidates) throws IOException, FileNotFoundException {
+    @Override
+    protected void extractArchive(File temp, List<File> candidates) throws IOException, FileNotFoundException {
         archive.Extract(null, -1, IInArchive.NExtract_NAskMode_kExtract, new ExtractCallback(archive, temp, candidates));
+        archive.close();
     }
-
+    
     private class ExtractCallback extends ArchiveExtractCallback {
         private final List<File> candidates;
-
+        
         public ExtractCallback(IInArchive archive, File tempDir, List<File> candidates) {
             Init(archive);
             super.outputDir = tempDir.getPath();
             this.candidates = candidates;
         }
 
-        @Override
+        @Override 
         public int GetStream(int index, OutputStream[] outStream, int askExtractMode) throws IOException {
             int res = super.GetStream(index, outStream, askExtractMode);
             if (res == HRESULT.S_OK) {

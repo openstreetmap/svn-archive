@@ -14,8 +14,6 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.openstreetmap.josm.Main;
-
 public class ModuleListGenerator {
 
 	/**
@@ -39,7 +37,7 @@ public class ModuleListGenerator {
 			})) {
 				try {
 					String filename = file.getName();
-					Main.info("Processing "+filename);
+					System.out.println("Processing "+filename);
 					list.write(filename+";"+url+filename); list.newLine();
 					Manifest mf = new JarFile(file).getManifest();
 					for (Object att : mf.getMainAttributes().keySet()) {
@@ -79,20 +77,20 @@ public class ModuleListGenerator {
 										in.close();
 									}
 								} catch (IOException e) {
-									Main.error("Cannot load Image-Icon: "+value.toString());
+									System.err.println("Cannot load Image-Icon: "+value.toString());
 								} finally {
 									zip.closeEntry();
 								}
 							}
 						}
 					}
-
+					
 				} catch (IOException e) {
-				    Main.error(e);
+					e.printStackTrace();
 				}
 			}
 		} catch (IOException e) {
-			Main.error(e);
+			e.printStackTrace();
 		}
 	}
 }

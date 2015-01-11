@@ -266,7 +266,7 @@
     -->
     <target name="install" depends="dist">
         <property environment="env"/>
-        <condition property="josm.plugins.dir" value="${env.LOCALAPPDATA}/JOSM/plugins">
+        <condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins">
             <and>
                 <os family="windows"/>
             </and>

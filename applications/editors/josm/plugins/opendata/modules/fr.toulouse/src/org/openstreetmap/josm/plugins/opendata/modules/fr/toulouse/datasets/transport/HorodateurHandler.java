@@ -15,7 +15,7 @@ public class HorodateurHandler extends ToulouseDataSetHandler {
         super(12540, "vending=parking_tickets");
         setWikiPage("Horodateurs");
         setCategory(CAT_TRANSPORT);
-        setMenuIcon("presets/vending_machine.png");
+        setMenuIcon("styles/standard/transport/ticket-machine.png");
     }
 
     @Override

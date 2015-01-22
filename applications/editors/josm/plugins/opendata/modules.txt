@@ -74,8 +74,8 @@ fr.toulouse.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/o
 	Ant-Version: Apache Ant 1.9.2
 	Module-Description: Toulouse
 	Manifest-Version: 1.0
-	Module-Version: 30563
-	Created-By: 1.7.0_65-b19 (Oracle Corporation)
+	Module-Version: 30920
+	Created-By: 1.7.0_76-b13 (Oracle Corporation)
 	Module-Link: http://wiki.openstreetmap.org/wiki/Toulouse/ToulouseMetropoleData
-	Module-Date: 2014-08-05T11:53:46.368212Z
+	Module-Date: 2015-01-22T23:55:14.701991Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseModule

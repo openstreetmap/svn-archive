@@ -163,4 +163,21 @@ public abstract class FrenchAdministrativeUnit {
         new FrenchRegion("04", "La Réunion"),
         new FrenchRegion("05", "Mayotte")
     };
+
+    private static <T extends FrenchAdministrativeUnit> T getUnitFor(String code, T[]units) {
+        for (T u : units) {
+            if (u.getCode().equals(code)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    public static FrenchDepartment getDepartmentFor(String dptCode) {
+        return getUnitFor(dptCode, allDepartments);
+    }
+    
+    public static FrenchRegion getRegionFor(String regCode) {
+        return getUnitFor(regCode, allRegions);
+    }
 }

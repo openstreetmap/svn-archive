@@ -152,6 +152,8 @@ public class ConnectWays {
         s_bCtrl = ctrl;
         s_bAlt = alt;
         
+        boolean bAddWay = false;
+        
         calcDistance();
         getNodes(newWay);
         getWays(newWay);
@@ -160,7 +162,8 @@ public class ConnectWays {
         
         if (s_oWayOld == null) {
         	s_bAddNewWay = true;
-        	cmds.add(new AddCommand(newWay));
+        	//cmds.add(new AddCommand(newWay));
+        	bAddWay = true;
         	s_oWayOld = newWay;
         	s_oWay = new Way( newWay );
         } else {
@@ -194,6 +197,38 @@ public class ConnectWays {
         {
         	cmds2.addAll(connectTo());
 
+        	// add new Node
+        	Node firstNode = null;
+        	Way way = new Way(s_oWay);
+        	for (Node node : s_oWay.getNodes()) {
+        		if ( node.getDataSet() != null )
+        		{
+        			way.removeNode(node);
+        		}
+        	}
+        	if ( way.getNodes().size() > 0 )
+            {
+                if (way.firstNode() != way.lastNode() )
+                {
+                	way.addNode(way.firstNode());
+                }
+        		for (Node node : way.getNodes())
+        		{
+        			if (firstNode == null || firstNode != node) {
+        				cmds.add(new AddCommand(node));
+        			}
+        			if (firstNode == null) {
+        				firstNode = node;
+        			}
+        		}
+            }
+        	
+        	// add new way
+    		if ( bAddWay == true )
+    		{
+    			cmds.add(new AddCommand(s_oWay));
+    		}
+            
         	cmds.add(new ChangeCommand(s_oWayOld, trySplitWayByAnyNodes(s_oWay)));
         }
         cmds.addAll(cmds2);
@@ -287,9 +322,14 @@ public class ConnectWays {
         
         newWay.removeNode(n1);
  //       cmds.add(new ChangeCommand(m_way, newWay));
+        
+        if (newWay.firstNode() != newWay.lastNode() )
+        {
+        	newWay.addNode(newWay.firstNode());
+        }
         s_oWay = new Way(newWay);
         
-        cmds.add(new DeleteCommand(n1));
+        //cmds.add(new DeleteCommand(n1));
         return cmds;
     }
 

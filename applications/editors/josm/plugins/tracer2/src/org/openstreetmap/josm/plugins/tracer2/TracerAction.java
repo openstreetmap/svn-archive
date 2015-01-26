@@ -319,7 +319,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
                 if (firstNode == null) {
                     firstNode = node;
                 }
-                commands.add(new AddCommand(node));
+                //commands.add(new AddCommand(node));
                 way.addNode(node);
             }
             way.addNode(firstNode);

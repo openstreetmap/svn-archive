@@ -2,7 +2,7 @@
 <project name="Tracer2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Add link to wiki"/>
+    <property name="commit.message" value="Fix Bug #10834"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
 

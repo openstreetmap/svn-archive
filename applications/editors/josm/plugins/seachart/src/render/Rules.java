@@ -484,6 +484,10 @@ public class Rules {
 				orient = 0.0;
 			}
 			Renderer.symbol(feature, symb, new Delta(Handle.CC, AffineTransform.getRotateInstance(Math.toRadians(orient))));
+			String chn;
+			if ((chn = (String) getAttVal(feature, feature.type, 0, Att.COMCHA)) != null) {
+				Renderer.labelText(feature, ("Ch." + chn), new Font("Arial", Font.PLAIN, 50), Color.black, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0,50)));
+			}
 		}
 	}
 	

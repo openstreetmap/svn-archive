@@ -23,14 +23,6 @@ Resources:
         License: GPL v2 or any later version
       self made text (CC0)
     License: GPL v2 or later
-  images/togglegit.png:
-    combination of:
-      JOSM images/dialogs/geoimage/gpx2img.png
-           images/dialogs/geoimage/photo-marker.png
-        Author: JOSM contributors and others, see JOSM CONTRIBUTION
-        License: GNU General Public License v2 or later
-      self made arrows (CC0)
-    License: GPL v2 or later
   images/photoadjust.png:
     combination of:
       JOSM images/dialogs/geoimage/gpx2img.png

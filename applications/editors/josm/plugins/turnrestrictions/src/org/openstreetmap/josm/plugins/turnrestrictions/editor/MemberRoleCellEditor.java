@@ -28,7 +28,7 @@ public class MemberRoleCellEditor extends AbstractCellEditor implements TableCel
      * constructor
      */
     public MemberRoleCellEditor() {
-        editor = new AutoCompletingTextField();
+        editor = new AutoCompletingTextField(0, false);
         autoCompletionList = new AutoCompletionList();
         editor.setAutoCompletionList(autoCompletionList);
         autoCompletionList.add(new AutoCompletionListItem("from", AutoCompletionItemPriority.IS_IN_STANDARD));

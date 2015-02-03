@@ -57,13 +57,13 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 /**
- * Dialog fo redinitg multible object tags
+ * Dialog for editing multiple object tags
  */
 public class MultiTagDialog extends ExtendedDialog implements SelectionChangedListener {
 
     private final MultiTaggerTableModel tableModel = new MultiTaggerTableModel();
     private final JTable tbl;
-    //
+
     private final HighlightHelper highlightHelper = new HighlightHelper();
     private final HistoryComboBox cbTagSet = new HistoryComboBox();
     private List<OsmPrimitive> currentSelection;
@@ -210,7 +210,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         AutoCompletionManager autocomplete = l.data.getAutoCompletionManager();
         for (int i=0; i<tableModel.mainTags.length; i++) {
                 if (tableModel.isSpecialTag[i]) continue;
-                AutoCompletingTextField tf = new AutoCompletingTextField();
+                AutoCompletingTextField tf = new AutoCompletingTextField(0, false);
                 AutoCompletionList acList = new AutoCompletionList();
                 autocomplete.populateWithTagValues(acList, tableModel.mainTags[i]);
                 tf.setAutoCompletionList(acList);

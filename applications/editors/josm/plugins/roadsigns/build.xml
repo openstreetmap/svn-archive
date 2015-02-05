@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="RoadSigns" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="preset maintenance (Fahrradstraße)"/>
+    <property name="commit.message" value=""/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7248"/>
 
@@ -44,7 +44,7 @@
                 <attribute name="Author" value="Paul Hartmann"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="Plugin for tagging of objects based on a selection of road signs. The dialog can be opened by clicking a small icon in the upper right corner of the properties window. Available country presets: Germany, Poland, Slovakia, Spain."/>
+                <attribute name="Plugin-Description" value="Plugin for tagging of objects based on a selection of road signs. The dialog can be opened by clicking a small icon in the upper right corner of the properties window. Available country presets: Belgium, Germany, Poland, Slovakia, Spain."/>
                 <attribute name="Plugin-Icon" value="images/pref/roadsigns.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/RoadSigns"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>

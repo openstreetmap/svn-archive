@@ -144,6 +144,12 @@
     <tag key="highway" value="crossing"/>
   </sign>
 
+  <sign ref="BE:B0"
+    name="Priority on turning main road"
+    nl.name="Voorrang op afdraaiende hoofdweg"
+    wiki="Key:give_way">
+    <tag key="highway" value="give_way"/>
+  </sign>
   <sign ref="BE:B1"
     name="Give way"
     nl.name="Voorrang verlenen"
@@ -151,8 +157,10 @@
     <tag key="highway" value="give_way"/>
     <supplementary id="BE:M1"/> <!--only_applies_to_bicycles"-->
     <supplementary id="BE:M8"/> <!--only_applies_to_bicycles_and_mofas"-->
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
+    <supplementary id="BE:Type_Ib"/> <!--STOP signs coming up in x m"-->
   </sign>
-  <sign ref="BE:B3"
+  <!--<sign ref="BE:B3"
     useful="no"
     name="Give way"
     nl.name="Voorrang verlenen verderop"
@@ -166,7 +174,7 @@
         suffix="m"
         field_width="3"
       />
-  </sign>
+  </sign> -->
   <sign ref="BE:B5"
     name="Stop sign"
     nl.name="Stopbord"
@@ -175,7 +183,7 @@
     <supplementary id="BE:M1"/> <!--only_applies_to_bicycles"-->
     <supplementary id="BE:M8"/> <!--only_applies_to_bicycles_and_mofas"-->
   </sign>
-  <sign ref="BE:B7"
+  <!--<sign ref="BE:B7"
     useful="no"
     name="Give way"
     nl.name="Stopbord verderop"
@@ -189,7 +197,7 @@
         suffix="m"
         field_width="3"
       />
-  </sign>
+  </sign> -->
   <sign ref="BE:B9"
     name="Priority road"
     nl.name="Voorrangsweg"
@@ -229,6 +237,7 @@
     <supplementary id="BE:M2_fr"/> <!--except_for_bicycles_fr-->
     <supplementary id="BE:M3_nl"/> <!--except_for_bicycles_and_mofas_nl-->
     <supplementary id="BE:M3_fr"/> <!--except_for_bicycles_and_mofas_fr-->
+    <supplementary id="BE:Type_IV"/> <!--except for vehicle type"-->
   </sign>
   <sign ref="BE:C3"
     name="All vehicles prohibited"
@@ -257,7 +266,7 @@
     <tag key="motorcycle" value="no" ident="mode"/>
   </sign>
   <sign ref="BE:C9"
-    name="Motorcycles prohibited"
+    name="Motorcycles A prohibited"
     nl.name="Verboden voor motorfietsen">
     <tag key="mofa" value="no" ident="mode"/>
   </sign>
@@ -295,18 +304,43 @@
     nl.name="Vrachtwagens verboden"
     wiki="Key:hgv">
     <tag key="hgv" value="no" ident="mode"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
+    <supplementary id="BE:Type_VIIa"/> <!--Max weight specification"-->
   </sign>
   <sign ref="BE:C24a"
     name="Hazardous cargo prohibited"
     nl.name="Voertuigen die gevaarlijke goederen vervoeren verboden"
     wiki="Key:hazmat">
     <tag key="hazmat" value="no" ident="mode"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
+  </sign>
+  <sign ref="BE:C24b"
+    name="Hazardous explosive cargo prohibited"
+    nl.name="Verboden toegang voor bestuurders van voertuigen die gevaarlijke ontvlambare of ontplofbare stoffen vervoeren"
+    wiki="Key:hazmat">
+    <tag key="hazmat" value="no" ident="mode"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
   </sign>
   <sign ref="BE:C24c"
     name="Water polluting cargo prohibited"
     nl.name="Verbod voor cargo die gevaar oplevert voor het grondwater"
     wiki="Key:hazmat" nl.wiki="BE:Key:hazmat">
     <tag key="hazmat:water" value="no" ident="mode"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
+  </sign>
+  <sign id="BE:Hazmat_ADR_Tunnel"
+    ref="BE:Hazmat_ADR_Tunnel[$val]"
+    name="Hazardous materials of ADR Class A B C D E forbidden in tunnel"
+    nl.name="Verbod voor gevaarlijke cargo van ADR-klasse A B C D E in tunnel"
+    wiki="Key:hazmat" nl.wiki="BE:Key:hazmat">
+    <tag key="hazmat:$val" value="no" ident="mode"/>
+      <parameter
+        ident="val"
+        input="textfield"
+        default="E"
+        field_width="5"
+      />
+    <supplementary id="BE:Type_Ia"/> <!--coming up in x m"-->
   </sign>
   <sign ref="BE:C25"
     name="Length limit"
@@ -320,6 +354,7 @@
         suffix="m"
         field_width="3"
       />
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
   </sign>
   <sign ref="BE:C27"
     name="Width limit"
@@ -333,6 +368,7 @@
         suffix="m"
         field_width="3"
       />
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
   </sign>
   <sign ref="BE:C29"
     name="Height limit"
@@ -346,6 +382,7 @@
         suffix="m"
         field_width="3"
       />
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
   </sign>
   <sign ref="BE:C31d"
     name="Forbidden to turn right"
@@ -381,6 +418,7 @@
     nl.name="Voorbijsteken verboden"
     wiki="Key:overtaking">
     <tag key="overtaking" value="no"/>
+    <supplementary id="BE:Type_II"/> <!--Over the following x m"-->
   </sign>
   <sign ref="BE:C37"
     name="End of overtaking prohibition"
@@ -393,6 +431,7 @@
     nl.name="Voorbijsteken verboden voor vrachtwagens +3.5t"
     wiki="Key:overtaking">
     <tag key="overtaking:hgv" value="no"/>
+    <supplementary id="BE:Type_II"/> <!--Over the following x m"-->
   </sign>
   <sign ref="BE:C41"
     name="End of overtaking prohibition for trucks"
@@ -439,17 +478,27 @@
         field_width="3"
       />
   </sign>
+  <sign ref="BE:C46"
+    name="All limitations suspended"
+    nl.name="Alle beperkingen vervallen">
+  </sign>
   <sign ref="BE:C47_nl"
     name="Toll booth. No driving through without stopping"
     nl.name="Grensovergang. Niet voorbijrijden zonder te stoppen"
     wiki="Key:barrier=toll_booth">
     <tag key="barrier" value="toll_booth"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
   </sign>
   <sign ref="BE:C47_fr"
     name="Toll booth. No driving through without stopping"
     nl.name="Grensovergang. Niet voorbijrijden zonder te stoppen"
     wiki="Key:barrier=toll_booth">
     <tag key="barrier" value="toll_booth"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
+  </sign>
+  <sign ref="BE:C48"
+    name="Cruise control prohibited"
+    nl.name="Gebruik van cruise control verboden">
   </sign>
 
   <sign ref="BE:D01a"
@@ -606,8 +655,8 @@
     nl.name="Loopt door voor en na"
     supplementary="yes">
   </sign>
-  <sign ref="BE:E9a"
-    name="Parking"
+  <sign ref="BE:E1"
+    name="No Parking"
     wiki="Key:parking">
     <supplementary id="BE:M1"/> <!--only_applies_to_bicycles"-->
     <supplementary id="BE:M8"/> <!--only_applies_to_bicycles_and_mofas"-->
@@ -615,6 +664,203 @@
     <supplementary id="BE:E0b"/> <!--Up to this point"-->
     <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
     <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+  </sign>
+  <sign ref="BE:E5"
+    name="Parking from 1 till 15th of month"
+    name.nl="Beurtelings parkeren 1/15"
+    help="These signs go on the side with even housenumbers"
+    wiki="Key:parking">
+    <supplementary id="BE:Type_VIIb"/>
+  </sign>
+  <sign ref="BE:E7"
+    name="Parking from 16 till 31th of month"
+    name.nl="Beurtelings parkeren 16/31"
+    help="These signs go on the side with odd housenumbers"
+    wiki="Key:parking">
+    <supplementary id="BE:Type_VIIb"/>
+  </sign>
+  <sign ref="BE:E9a"
+    name="Parking"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private disabled charging"/>
+    <supplementary id="BE:M1"/> <!--only_applies_to_bicycles"-->
+    <supplementary id="BE:M8"/> <!--only_applies_to_bicycles_and_mofas"-->
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_fee"/>
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIb"/>
+    <supplementary id="BE:Type_VIIb_except_for_residential_parking_permit"/>
+    <supplementary id="BE:Type_VIIc"/>
+    <supplementary id="BE:Type_VIId"/>
+    <supplementary id="BE:Type_VII_disabled"/>
+    <supplementary id="BE:Type_VII_bewoners"/>
+    <supplementary id="BE:Type_VII_parkeerkaart"/>
+    <supplementary id="BE:Type_VII_autodelen"/>
+    <supplementary id="BE:Type_VII_charging_station"/>
+    <supplementary id="BE:Type_VII_charging_station_car"/>
+  </sign>
+  <sign ref="BE:E9a_disabled"
+    name="Parking reserved for disabled"
+    wiki="Key:parking">
+    <tag key="parking:lane:right" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:right" value="disabled"/>
+    <tag key="amenity" value="parking"/>
+    <tag key="access" value="no"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+  </sign>
+  <sign ref="BE:E9a_disc"
+    name="Parking with disc"
+    wiki="Key:parking">
+    <tag key="parking:lane:right" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:right" value="disc"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+  </sign>
+  <sign ref="BE:E9b"
+    name="Parking for cars only"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private charging"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIb"/>
+    <supplementary id="BE:Type_VIIb_except_for_residential_parking_permit"/>
+    <supplementary id="BE:Type_VIIc"/>
+    <supplementary id="BE:Type_VIId"/>
+    <supplementary id="BE:Type_VII_charging_station_car"/>
+  </sign>
+  <sign ref="BE:E9c"
+    name="Parking only for trucks"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private"/>
+    <tag key="amenity" value="parking"/>
+    <tag key="access" value="no"/>
+    <tag key="hgv" value="yes"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIc"/>
+  </sign>
+  <sign ref="BE:E9d"
+    name="Parking only for autocars"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private"/>
+    <tag key="amenity" value="parking"/>
+    <tag key="access" value="no"/>
+    <tag key="bus" value="yes"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIc"/>
+
+  </sign>
+  <sign ref="BE:E9e"
+    name="Parking only next to the road"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIb"/>
+    <supplementary id="BE:Type_VIIb_except_for_residential_parking_permit"/>
+    <supplementary id="BE:Type_VIIc"/>
+  </sign>
+  <sign ref="BE:E9f"
+    name="Parking halfway on road and halfway next to it"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIb"/>
+    <supplementary id="BE:Type_VIIb_except_for_residential_parking_permit"/>
+    <supplementary id="BE:Type_VIIc"/>
+  </sign>
+  <sign ref="BE:E9g"
+    name="Parking forbidden on sidewalk"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel"/>
+    <tag key="parking:condition:left right both" value="free ticket disc residents customers private"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIb"/>
+    <supplementary id="BE:Type_VIIb_except_for_residential_parking_permit"/>
+    <supplementary id="BE:Type_VIIc"/>
+    <supplementary id="BE:Type_VII_charging_station"/>
+    <supplementary id="BE:Type_VII_charging_station_car"/>
+  </sign>
+  <sign ref="BE:E9h"
+    name="Parking only for campingcars/mobilhomes"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:left right both" value="free ticket disc"/>
+    <tag key="amenity" value="parking"/>
+    <tag key="access" value="no"/>
+    <tag key="mobilhome" value="yes"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIc"/>
+
+  </sign>
+  <sign ref="BE:E9i"
+    name="Parking only for motorcycles"
+    wiki="Key:parking">
+    <tag key="parking:lane:left right both" value="parallel diagonal perpendicular"/>
+    <tag key="parking:condition:left right both" value="free ticket disc"/>
+    <tag key="amenity" value="parking"/>
+    <tag key="access" value="no"/>
+    <tag key="motorcycle" value="yes"/>
+    <supplementary id="BE:E0a"/> <!--From this point on"-->
+    <supplementary id="BE:E0b"/> <!--Up to this point"-->
+    <supplementary id="BE:E0c"/> <!--From this point till x m further"-->
+    <supplementary id="BE:E0d"/> <!--Continuation"-->
+    <supplementary id="BE:Type_V_hours"/>
+    <supplementary id="BE:Type_V_weekdays"/>
+    <supplementary id="BE:Type_VIIc"/>
   </sign>
 
   <sign ref="BE:F1"
@@ -623,6 +869,7 @@
     fr.name="Agglomération">
     <tag key="maxspeed" value="50"/>
     <tag key="zone:traffic" value="BE:urban"/>
+    <supplementary id="BE:E11"/>
   </sign>
   <sign ref="BE:F1bh"
     name="Built-up area / City Limits"
@@ -630,6 +877,7 @@
     fr.name="Agglomération">
     <tag key="maxspeed" value="50"/>
     <tag key="zone:traffic" value="BE:urban"/>
+    <supplementary id="BE:E11"/>
   </sign>
   <sign ref="BE:F1bv"
     name="Built-up area / City Limits"
@@ -637,6 +885,7 @@
     fr.name="Agglomération">
     <tag key="maxspeed" value="50"/>
     <tag key="zone:traffic" value="BE:urban"/>
+    <supplementary id="BE:E11"/>
   </sign>
   <sign ref="BE:F3"
     name="End of Built-up area / City Limits"
@@ -711,6 +960,8 @@
     nl.name="Tunnel"
     wiki="Key:tunnel">
     <tag key="tunnel" value="yes"/>
+    <supplementary id="BE:Type_Ia"/> <!--Coming up in x m"-->
+    <supplementary id="BE:Type_II"/> <!--Over the following x m"-->
   </sign>
   <sign ref="BE:F9"
     name="Trunk road"
@@ -750,6 +1001,26 @@
     name="End of Living street"
     nl.name="Einde woonerf"
     wiki="Tag:highway%3Dliving_street">
+  </sign>
+  <sign ref="BE:F17"
+    name="Bus lane"
+    nl.name="Busbaan"
+    wiki="Key:Bus_lanes"
+    help="Remove the tags which don't apply">
+    <tag key="lanes" value="3"/>
+    <tag key="lanes:psv" value="1"/>
+    <tag key="psv:lanes" value="no|no|yes"/>
+    <tag key="lanes:psv:forward:conditional" value="1 @ (Mo-Fr 06:00-09:00)"/>
+    <tag key="lanes:psv:backward" value="1"/>
+  </sign>
+  <sign ref="BE:F18"
+    name="Bus/tram lane inbetween dual carriage way"
+    nl.name="Rijvak voor lijnbus of tram tussen de rijstroken"
+    wiki="Key:Bus_lanes"
+    help="Remove the tags which don't apply, map the tram tracks as separate ways and the bus as a separate service way in between. Then all the :lanes: tags aren't needed.">
+    <tag key="lanes" value="3"/>
+    <tag key="lanes:psv" value="1"/>
+    <tag key="psv:lanes" value="no|yes|no"/>
   </sign>
   <sign ref="BE:F19"
     name="One-way street"
@@ -887,7 +1158,8 @@
     nl.name="Geldt enkel voor afrit"
     supplementary="yes">
   </sign>
-  <sign ref="BE:Type_Ia"
+  <sign id="BE:Type_Ia"
+     ref="BE:Type_Ia[$val]"
     supplementary="yes"
     name="Coming up in x m"
     nl.name="Binnen x m">
@@ -899,7 +1171,21 @@
         default="50"
         field_width="3"/>
   </sign>
-  <sign ref="BE:Type_II"
+  <sign id="BE:Type_Ib"
+     ref="BE:Type_Ia[$val]"
+    supplementary="yes"
+    name="STOP signing coming up in x m"
+    nl.name="STOP-bord op x m">
+      <parameter
+        ident="val"
+        type="int"
+        input="textfield" editable="yes" text="Distance" nl.text="Afstand"
+        suffix="m" values="50, 100, 150, 200"
+        default="50"
+        field_width="3"/>
+  </sign>
+  <sign id="BE:Type_II"
+    ref="BE:Type_II[$val]"
     supplementary="yes"
     name="Over a distance of the next x m"
     nl.name="Over een astand van x m">
@@ -907,27 +1193,136 @@
         ident="val"
         type="int"
         input="textfield" editable="yes" text="Distance" nl.text="Afstand"
-        suffix="m" values="50, 100, 150, 200"
+        suffix="m" values="50, 100, 150, 200, 1000, 2000, 3000"
         default="50"
         field_width="4"/>
   </sign>
-  <sign ref="BE:Type_III_nl"
+  <sign id="BE:Type_III_nl"
+    ref="BE:Type_III"
     supplementary="yes"
     name="Slippery when road is wet"
     nl.name="Bij nat wegdek"
     wiki="Key:Proposed_features/hazard">
     <tag key="hazard" value="slippery_when_wet"/>
   </sign>
-  <sign ref="BE:Type_VI_nl"
+  <sign id="BE:Type_IV"
+    ref="BE:Type_IV"
+    supplementary="yes"
+    name="Except for"
+    nl.name="Uitgezonderd voor"
+    fr.name="Excepté">
+      <parameter
+        ident="val"
+        input="textfield" editable="yes" text="Vehicle type"
+        default="bus, bewoners"
+        field_width="20"/>
+  </sign>
+  <sign id="BE:Type_VI_nl"
+    ref="BE:Type_VI"
     supplementary="yes"
     name="Reminder"
     nl.name="HERHALING"
     fr.name="RAPPEL">
   </sign>
+  <sign id="BE:Type_VIIa"
+    ref="BE:Type_VIIa[$val]"
+    supplementary="yes"
+    name="Max weight indication"
+    nl.name="Specificatie van maximum toegelaten">
+      <parameter
+        ident="val"
+        input="textfield" editable="yes" text="Weight"
+        suffix="t" values="3.5, 7.5, 10, 20, 30, 40"
+        default="3.5"
+        field_width="3"/>
+  </sign>
+  <sign ref="BE:Type_V_fee"
+    supplementary="yes"
+    help=""
+    name="Parking fee"
+    nl.name="Parking betalend"
+    fr.name="Parking payant">
+  </sign>
+  <sign id="BE:Type_V_hours"
+    ref="BE:Type_V[$val]"
+    icon="BE_Type_V_hours"
+    supplementary="yes"
+    help="Van 7 tot 19u / De 7 à 19h"
+    name="From/till hours"
+    nl.name="Van/tot in uren">
+      <parameter
+        ident="val"
+        input="textfield" editable="yes" text="hours"
+        default="Van maandag tot vrijdag van 7 tot 19u / De lundi à vendredi de 7 à 19h"
+        field_width="100"/>
+  </sign>
+  <sign id="BE:Type_V_weekdays"
+    ref="BE:Type_V[$val]"
+    icon="BE_Type_V_weekdays"
+    supplementary="yes"
+    help="Van maandag tot vrijdag / De lundi à vendredi"
+    name="From/till weekdays"
+    nl.name="Op welke weekdagen">
+      <parameter
+        ident="val"
+        input="textfield" editable="yes" text="hours"
+        default="Van maandag tot vrijdag van 7 tot 19u / De lundi à vendredi de 7 à 19h"
+        field_width="100"/>
+  </sign>
   <sign ref="BE:Type_VIIb"
     supplementary="yes"
     name="Parking disc"
-    nl.name="Parkeerschijf">
+    nl.name="Parkeerschijf verplicht">
+  </sign>
+  <sign ref="BE:Type_VIIb_except_for_residential_parking_permit"
+    supplementary="yes"
+    name="Parking disc except for residential parking permit holders"
+    nl.name="Parkeerschijf verplicht, uitgezonderd voor houders van bewonerskaart">
+  </sign>
+  <sign ref="BE:Type_VIIc"
+    supplementary="yes"
+    name="Maximum parking duration"
+    nl.name="Maximale parkeerduur">
+      <parameter
+        ident="val"
+        input="textfield" editable="yes" text="hours / minutes"
+        default="1 uur 30 minuten"
+        field_width="40"/>
+  </sign>
+  <sign ref="BE:Type_VIId"
+    supplementary="yes"
+    name="Reserved for taxis"
+    nl.name="Voorbehouden voor taxi's">
+  </sign>
+  <sign ref="BE:Type_VII_disabled"
+    supplementary="yes"
+    name="Reserved for disabled"
+    nl.name="Voorbehouden voor mensen met handicap">
+  </sign>
+  <sign ref="BE:Type_VII_bewoners"
+    supplementary="yes"
+    name="Reserved for holders of residential parking permit"
+    nl.name="Voorbehouden voor mensen met bewonerskaart">
+  </sign>
+  <sign ref="BE:Type_VII_parkeerkaart"
+    supplementary="yes"
+    name="Reserved for holders of residential parking permit"
+    nl.name="Voorbehouden voor mensen met parkeerkaart">
+  </sign>
+  <sign ref="BE:Type_VII_autodelen"
+    supplementary="yes"
+    name="Reserved for car sharing"
+    nl.name="Voorbehouden voor car sharing">
+  </sign>
+  <sign ref="BE:Type_VII_charging_station"
+    supplementary="yes"
+    name="Reserved for electric vehicles"
+    nl.name="Voorbehouden voor elektrische voertuigen">
+  </sign>
+  <sign ref="BE:Type_VII_charging_station_car"
+    supplementary="yes"
+    name="Reserved for electric cars"
+    nl.name="Voorbehouden voor elektrische wagens">
   </sign>
   <sign ref="BE:A15a"
     supplementary="yes"
@@ -935,5 +1330,11 @@
     nl.name="Glad bij bevroren wegdek"
     wiki="Key:Proposed_features/hazard">
     <tag key="hazard" value="icy_road"/>
+  </sign>
+  <sign ref="BE:E11"
+    supplementary="yes"
+    name="Parking alternates in this built-up area"
+    name.nl="Beurtelings parkeren in deze bebouwde kom"
+    wiki="Key:parking">
   </sign>
  </roadsignpreset>

@@ -74,8 +74,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         // Add menu items
         MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromFileAction);
         MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromClipboardAction);
-        newLayerFromFileAction.setEnabled(false);
-        newLayerFromClipboardAction.setEnabled(false);
+        layerRemoved(null); // update enabled status
         // Listen to layers
         MapView.addLayerChangeListener(this);
     }

@@ -71,6 +71,7 @@ public class RoadSignsPlugin extends Plugin {
         btn.setPreferredSize(new Dimension(18,18));
         PropertiesDialog.pluginHook.add(btn);
         PropertiesDialog.pluginHook.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        PropertiesDialog.pluginHook.revalidate();
     }
 
     private static class RoadSignAction extends JosmAction {

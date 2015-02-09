@@ -10,6 +10,7 @@
     <property name="plugin.description" value="extended options for editing opening_hours"/>
     <property name="plugin.icon" value="images/opening_hours.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpeningHoursEditor"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

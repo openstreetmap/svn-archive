@@ -11,6 +11,7 @@
     <property name="plugin.description" value="Write gps position info to the image file header. Run this feature from the right click menu of the image layer."/>
     <property name="plugin.icon" value="images/geotagging.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Photo_Geotagging"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

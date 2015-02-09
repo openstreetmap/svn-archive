@@ -14,6 +14,7 @@
     <property name="plugin.description" value="Simplifies download from different read-only APIs."/>
     <property name="plugin.icon" value="images/download_mirror.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/mirrored_download"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
 	<!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

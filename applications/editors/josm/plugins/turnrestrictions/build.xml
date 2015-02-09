@@ -13,6 +13,7 @@
     <property name="plugin.description" value="The turnrestrictions plugin allows to enter maintain information about turn restrictions in the OpenStreetMap database."/>
     <property name="plugin.icon" value="images/preferences/turnrestrictions.png"/>
     <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/TurnRestrictions"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

@@ -68,7 +68,7 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            MapView.addLayerChangeListener(this);
+            MapView.addLayerChangeListener(this, true);
             PhotoAdjustMapMode adjustMode = new PhotoAdjustMapMode(newFrame, worker);
             adjustMode.installMapMode(newFrame);
         } 

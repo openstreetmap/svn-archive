@@ -12,6 +12,7 @@
     <property name="plugin.description" value="This plugin allows to display any picture as a background in the editor and align it with the map."/>
     <property name="plugin.icon" value="images/layericon.png"/>
     <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/PicLayer"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

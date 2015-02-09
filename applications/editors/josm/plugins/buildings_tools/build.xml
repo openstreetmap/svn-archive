@@ -13,6 +13,7 @@
     <property name="plugin.description" value="Tools for drawing buildings."/>
     <property name="plugin.icon" value="images/mapmode/building.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/BuildingsTools"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

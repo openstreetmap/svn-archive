@@ -13,6 +13,7 @@
     <property name="plugin.description" value="Plugin for reverting changesets"/>
     <property name="plugin.icon" value="images/revert-changeset.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Reverter"/>
+    <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.stage" value="5"/>
 
     <!-- ** include targets that all plugins have in common ** -->

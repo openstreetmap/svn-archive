@@ -136,6 +136,11 @@
             <param name="property.name" value="plugin.stage"/>
             <param name="property.value" value="${plugin.stage}"/>
         </antcall>
+        <antcall target="add-manifest-attribute">
+            <param name="manifest.attribute" value="Plugin-Canloadatruntime"/>
+            <param name="property.name" value="plugin.canloadatruntime"/>
+            <param name="property.value" value="${plugin.canloadatruntime}"/>
+        </antcall>
         <antcall target="additional-manifest" />
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST">
             <zipgroupfileset dir="${plugin.lib.dir}" includes="*.jar" excludes="*-sources.jar, *-javadoc.jar" erroronmissingdir="no"/>

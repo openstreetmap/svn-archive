@@ -67,7 +67,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
         for (ImageEntry e : layer.getImages()) {
              /* Only write lat/lon to the file, if the position is known and
                 the GPS data changed. */
-            if (e.getPos() != null && (e.hasNewGpsData() || e.hasGpsTime())) {
+            if (e.getPos() != null && e.hasNewGpsData()) {
                 images.add(e);
             }
         }
@@ -237,6 +237,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
                     }
 
                     cleanupFiles();
+                    e.unflagNewGpsData();
 
                 } catch (final IOException ioe) {
                     ioe.printStackTrace();
@@ -390,7 +391,7 @@ class GeotaggingAction extends AbstractAction implements LayerAction {
      */
     private boolean enabled(GeoImageLayer layer) {
         for (ImageEntry e : layer.getImages()) {
-            if (e.getPos() != null && (e.hasNewGpsData() || e.hasGpsTime()))
+            if (e.getPos() != null && e.hasNewGpsData())
                 return true;
         }
         return false;

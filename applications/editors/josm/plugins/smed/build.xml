@@ -13,7 +13,7 @@
     <property name="plugin.description" value="Edit features for OpenSeaMap"/>
     <property name="plugin.icon" value="images/Smed.png"/>
     <property name="plugin.link" value="http://openseamap.org/"/>
-
+    <property name="plugin.canloadatruntime" value="true"/>
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>                
 

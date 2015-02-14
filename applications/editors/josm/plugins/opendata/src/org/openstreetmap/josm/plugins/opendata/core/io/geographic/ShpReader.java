@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,7 +60,7 @@ public class ShpReader extends GeographicReader {
 
     private final ShpHandler handler;
     private final Set<OsmPrimitive> featurePrimitives = new HashSet<>();
-    
+
     public ShpReader(ShpHandler handler) {
         super(handler, NationalHandlers.DEFAULT_SHP_HANDLERS);
         this.handler = handler;
@@ -77,15 +79,15 @@ public class ShpReader extends GeographicReader {
             throw new IOException(t);
         }
     }
-    
-    private void parseFeature(Feature feature, final Component parent) 
+
+    private void parseFeature(Feature feature, final Component parent)
             throws UserCancelException, GeoMathTransformException, FactoryException, GeoCrsException, MismatchedDimensionException, TransformException {
         featurePrimitives.clear();
         GeometryAttribute geometry = feature.getDefaultGeometryProperty();
         if (geometry != null) {
 
             GeometryDescriptor desc = geometry.getDescriptor();
-            
+
             if (crs == null) {
                 if (desc != null && desc.getCoordinateReferenceSystem() != null) {
                     crs = desc.getCoordinateReferenceSystem();
@@ -113,21 +115,21 @@ public class ShpReader extends GeographicReader {
                     throw new GeoCrsException(tr("Unable to detect CRS !"));
                 }
             }
-            
+
             OsmPrimitive primitive = null;
-            
+
             if (geometry.getValue() instanceof Point) {
                 primitive = createOrGetEmptyNode((Point) geometry.getValue());
-                
+
             } else if (geometry.getValue() instanceof GeometryCollection) { // Deals with both MultiLineString and MultiPolygon
                 GeometryCollection mp = (GeometryCollection) geometry.getValue();
-                int nGeometries = mp.getNumGeometries(); 
+                int nGeometries = mp.getNumGeometries();
                 if (nGeometries < 1) {
                     Main.error("empty geometry collection found");
                 } else {
                     Relation r = null;
                     Way w = null;
-                    
+
                     for (int i=0; i<nGeometries; i++) {
                         Geometry g = mp.getGeometryN(i);
                         if (g instanceof Polygon) {
@@ -165,7 +167,7 @@ public class ShpReader extends GeographicReader {
                 Main.debug("\tid: "+geometry.getIdentifier());
                 Main.debug("-------------------------------------------------------------");
             }
-            
+
             if (primitive != null) {
                 // Read primitive non geometric attributes
                 readNonGeometricAttributes(feature, primitive);
@@ -177,7 +179,7 @@ public class ShpReader extends GeographicReader {
         crs = null;
         transform = null;
         try {
-            if (file != null) { 
+            if (file != null) {
                 Map<String, Serializable> params = new HashMap<>();
                 Charset charset = null;
                 params.put(ShapefileDataStoreFactory.URLP.key, file.toURI().toURL());
@@ -204,22 +206,22 @@ public class ShpReader extends GeographicReader {
                 if (dataStore == null) {
                     throw new IOException(tr("Unable to find a data store for file {0}", file.getName()));
                 }
-                
+
                 String[] typeNames = dataStore.getTypeNames();
                 String typeName = typeNames[0];
-    
+
                 FeatureSource<?,?> featureSource = dataStore.getFeatureSource(typeName);
                 FeatureCollection<?,?> collection = featureSource.getFeatures();
                 FeatureIterator<?> iterator = collection.features();
-                
+
                 if (instance != null) {
                     instance.beginTask(tr("Loading shapefile ({0} features)", collection.size()), collection.size());
                 }
-                
+
                 int n = 0;
-                
+
                 Component parent = instance != null ? instance.getWindowParent() : Main.parent;
-                
+
                 try {
                     while (iterator.hasNext()) {
                         n++;
@@ -257,25 +259,28 @@ public class ShpReader extends GeographicReader {
         }
         return ds;
     }
-    
+
     private static final void readNonGeometricAttributes(Feature feature, OsmPrimitive primitive) {
-            try {
-        for (Property prop : feature.getProperties()) {
-            if (!(prop instanceof GeometryAttribute)) {
-                Name name = prop.getName();
-                Object value = prop.getValue();
-                if (name != null && value != null) {
-                    String sName = name.toString();
-                    String sValue = value.toString();
-                    if (!sName.isEmpty() && !sValue.isEmpty()) {
-                                               primitive.put(sName, sValue);
+        try {
+            for (Property prop : feature.getProperties()) {
+                if (!(prop instanceof GeometryAttribute)) {
+                    Name name = prop.getName();
+                    Object value = prop.getValue();
+                    if (name != null && value != null) {
+                        String sName = name.toString();
+                        String sValue = value.toString();
+                        if (value instanceof Date) {
+                            sValue = new SimpleDateFormat("yyyy-MM-dd").format(value);
+                        }
+                        if (!sName.isEmpty() && !sValue.isEmpty()) {
+                            primitive.put(sName, sValue);
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            Main.error(e);
         }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
     }
 
     @Override
@@ -284,7 +289,7 @@ public class ShpReader extends GeographicReader {
         featurePrimitives.add(n);
         return n;
     }
-    
+
     @Override
     protected <T extends OsmPrimitive> T addOsmPrimitive(T p) {
         featurePrimitives.add(p);

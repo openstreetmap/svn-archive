@@ -2,7 +2,7 @@
     NAME "RABA"
     METADATA
      "wms_title"  "Raba kmetijskih zemljišč 2015-01-13"
-     "wms_extent" "13.3 45.4 16.6 48.9"
+     "wms_extent" "13.3 45.4 16.6 46.9"
      "wms_srs"    "EPSG:4326"
      "copyright"  "raba © MKGP"
      "wiki"       "http://wiki.openstreetmap.org/wiki/Slovenia_Landcover_Import_-_RABA-KGZ"

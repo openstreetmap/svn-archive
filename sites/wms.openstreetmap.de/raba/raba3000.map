@@ -1,0 +1,25 @@
+  LAYER
+    NAME "RABA3000"
+    METADATA
+     "wms_title"  "Raba kmetijskih zemljišč 2015-01-13 - pozidano"
+     "wms_extent" "13.3 45.4 16.6 48.9"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "raba3000 © MKGP"
+     "wiki"       "http://wiki.openstreetmap.org/wiki/Slovenia_Landcover_Import_-_RABA-KGZ"
+     END
+    STATUS ON
+    TYPE LINE
+    DATA "raba/RABA_20150113_EPSG3035/RABA_20150113_EPSG3035.shp"
+    PROJECTION
+          "init=epsg:3035"
+    END
+    CLASS
+      EXPRESSION ([RABA_ID] = 3000)
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 255 0 255
+        ANTIALIAS true
+      END
+    END
+
+  END

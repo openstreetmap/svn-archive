@@ -1,0 +1,117 @@
+  LAYER
+    NAME "RABA"
+    METADATA
+     "wms_title"  "Raba kmetijskih zemljišč 2015-01-13"
+     "wms_extent" "13.3 45.4 16.6 48.9"
+     "wms_srs"    "EPSG:4326"
+     "copyright"  "raba © MKGP"
+     "wiki"       "http://wiki.openstreetmap.org/wiki/Slovenia_Landcover_Import_-_RABA-KGZ"
+    END
+    STATUS ON
+    TYPE POLYGON
+    DATA "raba/RABA_20150113_EPSG3035/RABA_20150113_EPSG3035.shp"
+    PROJECTION
+          "init=epsg:3035"
+    END
+    CLASS
+      # Pozidano
+      EXPRESSION ([RABA_ID] = 3000)
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 255 0 255
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Gozd
+      EXPRESSION ([RABA_ID] IN "1800,1420,2000")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 0 115 62
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Drevesa in grmičevje - natural=scrub
+      EXPRESSION ([RABA_ID] IN "1500")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 33 132 87
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Kmetijsko zemljisce v zarascanju - natural=heath
+      EXPRESSION ([RABA_ID] IN "1410")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 54 216 142
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Njiva
+      EXPRESSION ([RABA_ID] IN "1100")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 137 165 78
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Hmelj
+      EXPRESSION ([RABA_ID] IN "1160")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 186 193 61
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Vinograd
+      EXPRESSION ([RABA_ID] IN "1211")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 213 172 221
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Sadovnjak
+      EXPRESSION ([RABA_ID] IN "1221,1222")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 86 176 135
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Oljcnik
+      EXPRESSION ([RABA_ID] IN "1230")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 76 126 103
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Travnik
+      EXPRESSION ([RABA_ID] IN "1300")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 97 216 98
+        ANTIALIAS true
+      END
+    END
+    CLASS
+      # Voda
+      EXPRESSION ([RABA_ID] IN "7000")
+      STYLE
+        #OUTLINEWIDTH 1
+        COLOR 146 95 253
+        ANTIALIAS true
+      END
+    END
+
+  END
+

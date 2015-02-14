@@ -652,6 +652,9 @@ LAYER
 
   END
 
+  INCLUDE "raba/raba3000.map"
+  INCLUDE "raba/raba.map"
+
 
 ###################
 # COPYRIGHT LAYER

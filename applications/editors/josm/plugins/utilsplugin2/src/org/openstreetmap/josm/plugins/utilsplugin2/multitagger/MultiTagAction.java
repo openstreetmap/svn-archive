@@ -16,8 +16,9 @@ public final class MultiTagAction extends JosmAction {
     MultiTagDialog dlg;
 
     public MultiTagAction() {
-        super(tr("Tag multiple objects [alpha]"), null, tr("Edit tags of object list in table"),
-                Shortcut.registerShortcut("multitag", tr("Edit: {0}", tr("Tag multiple objects")), KeyEvent.VK_T, Shortcut.CTRL), true, true);
+        super(tr("Tag multiple objects [alpha]"), (String)null, tr("Edit tags of object list in table"),
+                Shortcut.registerShortcut("multitag", tr("Edit: {0}", tr("Tag multiple objects")), KeyEvent.VK_T, Shortcut.CTRL),
+                true, "multitag", true);
         putValue("help", ht("/Action/MultiTag"));
     }
 
@@ -43,5 +44,4 @@ public final class MultiTagAction extends JosmAction {
             dlg.selectionChanged(selection);
         }
     }
-
 }

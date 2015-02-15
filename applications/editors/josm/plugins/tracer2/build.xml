@@ -2,7 +2,7 @@
 <project name="Tracer2" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Fix Bug #10834"/>
+    <property name="commit.message" value="see #josm11090"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
 
@@ -17,7 +17,8 @@
     <property name="plugin.description" value="Traces buildings and other shapes from a map. Needs Tracer2Server to be running."/>
     <property name="plugin.icon" value="images/mapmode/tracer2-sml.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer2"/>
-    <!--<property name="plugin.early" value="..."/>-->
+    <property name="plugin.canloadatruntime" value="true"/>
+	<!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->
     

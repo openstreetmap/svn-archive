@@ -9,17 +9,18 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.OsmServerReader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.xml.sax.SAXException;
 
 public class OsmServerMultiObjectReader extends OsmServerReader {
     private final MultiOsmReader rdr = new MultiOsmReader();
-    
+
     public void readObject(PrimitiveId id, int version, ProgressMonitor progressMonitor) throws OsmTransferException {
         readObject(id.getUniqueId(), version, id.getType(), progressMonitor);
     }
-    
+
     public void readObject(long id,int version,OsmPrimitiveType type,ProgressMonitor progressMonitor) throws OsmTransferException {
         StringBuffer sb = new StringBuffer();
         sb.append(type.getAPIName());
@@ -30,7 +31,7 @@ public class OsmServerMultiObjectReader extends OsmServerReader {
         progressMonitor.beginTask("", 1);
         try (InputStream in = getInputStream(sb.toString(), progressMonitor.createSubTaskMonitor(1, true))) {
             rdr.addData(in);
-        } catch (Exception e) {
+        } catch (IOException | IllegalDataException e) {
             throw new OsmTransferException(e);
         } finally {
             progressMonitor.finishTask();

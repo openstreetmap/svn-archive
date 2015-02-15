@@ -29,7 +29,7 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
     protected String getProperty() {
         return NUM_CONFLICTS_PROP;
     }
-    
+
     @Override
     protected void populate(Relation relation, OsmPrimitive primitive) {
         throw new UnsupportedOperationException("Use populate(Relation, OsmPrimitive, Map<Way, Way>) instead");
@@ -37,14 +37,15 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
 
     /**
      * Populates the model with the members of the relation <code>relation</code>
-     * referring to <code>primitive</code>.
+     * referring to <code>way</code>.
      *
      * @param relation the parent relation
-     * @param primitive the child primitive
+     * @param way the child way
      */
-    protected void populate(Relation relation, OsmPrimitive primitive, Map<Way, Way> oldWays) {
+    protected void populate(Relation relation, Way way, Map<Way, Way> oldWays) {
         for (int i =0; i<relation.getMembersCount();i++) {
-            if (MergeOverlapAction.getOld(relation.getMember(i).getWay(), oldWays) == MergeOverlapAction.getOld((Way)primitive, oldWays)) {
+        	RelationMember mb = relation.getMember(i);
+            if (mb.isWay() && MergeOverlapAction.getOld(mb.getWay(), oldWays) == MergeOverlapAction.getOld(way, oldWays)) {
                 decisions.add(new RelationMemberConflictDecision(relation, i));
             }
         }
@@ -61,15 +62,15 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
      * and referring to one of the primitives in <code>memberPrimitives</code>.
      *
      * @param relations  the parent relations. Empty list assumed if null.
-     * @param memberPrimitives the child primitives. Empty list assumed if null.
+     * @param memberWays the child ways. Empty list assumed if null.
      */
-    public void populate(Collection<Relation> relations, Collection<? extends OsmPrimitive> memberPrimitives, Map<Way, Way> oldWays) {
+    public void populate(Collection<Relation> relations, Collection<Way> memberWays, Map<Way, Way> oldWays) {
         decisions.clear();
         relations = relations == null ? new LinkedList<Relation>() : relations;
-        memberPrimitives = memberPrimitives == null ? new LinkedList<OsmPrimitive>() : memberPrimitives;
+        memberWays = memberWays == null ? new LinkedList<Way>() : memberWays;
         for (Relation r : relations) {
-            for (OsmPrimitive p: memberPrimitives) {
-                populate(r, p, oldWays);
+            for (Way w : memberWays) {
+                populate(r, w, oldWays);
             }
         }
         this.relations = relations;
@@ -97,7 +98,7 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
                 switch(decision.getDecision()) {
                 case KEEP:
                     if (newPrimitive instanceof Way) {
-                        modifiedRelation.addMember(new RelationMember(decision.getRole(), 
+                        modifiedRelation.addMember(new RelationMember(decision.getRole(),
                                 MergeOverlapAction.getOld((Way)newPrimitive, oldWays)));
                     } else {
                         modifiedRelation.addMember(new RelationMember(decision.getRole(), newPrimitive));

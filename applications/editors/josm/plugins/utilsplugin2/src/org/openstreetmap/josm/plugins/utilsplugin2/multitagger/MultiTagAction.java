@@ -6,16 +6,17 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import org.openstreetmap.josm.tools.Shortcut;
+
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.tools.Shortcut;
 
 public final class MultiTagAction extends JosmAction {
 
     MultiTagDialog dlg;
-    
+
     public MultiTagAction() {
-        super(tr("Tag multiple objects [alpha]"), "bug", tr("Edit tags of object list in table"),
+        super(tr("Tag multiple objects [alpha]"), null, tr("Edit tags of object list in table"),
                 Shortcut.registerShortcut("multitag", tr("Edit: {0}", tr("Tag multiple objects")), KeyEvent.VK_T, Shortcut.CTRL), true, true);
         putValue("help", ht("/Action/MultiTag"));
     }
@@ -34,7 +35,7 @@ public final class MultiTagAction extends JosmAction {
     protected void updateEnabledState() {
         setEnabled(getEditLayer()!=null);
     }
-    
+
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         setEnabled(getEditLayer()!=null);
@@ -42,5 +43,5 @@ public final class MultiTagAction extends JosmAction {
             dlg.selectionChanged(selection);
         }
     }
-    
+
 }

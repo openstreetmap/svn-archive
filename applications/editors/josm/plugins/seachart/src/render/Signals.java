@@ -106,7 +106,7 @@ public class Signals {
 		AttMap atts = feature.objs.get(Obj.FOGSIG).get(0);
 		String str = "";
 		if (atts.containsKey(Att.CATFOG)) {
-			str += fogSignals.get(atts.get(Att.CATFOG).val);
+			str += fogSignals.get(((ArrayList<?>)(atts.get(Att.CATFOG).val)).get(0));
 		}
 		if (atts.containsKey(Att.SIGGRP)) {
 			str += "(" + atts.get(Att.SIGGRP).val + ")";
@@ -127,30 +127,30 @@ public class Signals {
 	public static void radarStations(Feature feature) {
 		Renderer.symbol(feature, Beacons.RadarStation);
 		String bstr = "";
-		CatRTB cat = (CatRTB) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.CATRTB);
-		String wal = (String) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.RADWAL);
+		CatRTB cat = (CatRTB) Rules.getAttEnum(feature, Obj.RTPBCN, 0, Att.CATRTB);
+		String wal = Rules.getAttStr(feature, Obj.RTPBCN, 0, Att.RADWAL);
 		switch (cat) {
 		case RTB_RAMK:
 			bstr += " Ramark";
 			break;
 		case RTB_RACN:
 			bstr += " Racon";
-			String astr = (String) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.SIGGRP);
+			String astr = Rules.getAttStr(feature, Obj.RTPBCN, 0, Att.SIGGRP);
 			if (!astr.isEmpty()) {
 				bstr += "(" + astr + ")";
 			}
 			Double per = (Double) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.SIGPER);
 			Double mxr = (Double) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.VALMXR);
-			if ((per != 0) || (mxr != 0)) {
+			if ((per != null) || (mxr != null)) {
 				bstr += (astr.isEmpty() ? " " : "");
-				bstr += (per != 0) ? per.toString() + "s" : "";
-				bstr += (mxr != 0) ? mxr.toString() + "M" : "";
+				if (per != null) bstr += (per != 0) ? per.toString() + "s" : "";
+				if (mxr != null) bstr += (mxr != 0) ? mxr.toString() + "M" : "";
 			}
 			break;
 		default:
 			break;
 		}
-		if (wal!= null) {
+		if (!wal.isEmpty()) {
 			switch (wal) {
 			case "0.03-X":
 				bstr += "(3cm)";
@@ -167,7 +167,7 @@ public class Signals {
 
 	public static void radioStations(Feature feature) {
 		Renderer.symbol(feature, Beacons.RadarStation);
-		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttVal(feature, Obj.RDOSTA, 0, Att.CATROS);
+		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttList(feature, Obj.RDOSTA, 0, Att.CATROS);
 		boolean vais = false;
 		String bstr = "";
 		for (CatROS ros : cats) {

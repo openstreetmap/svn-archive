@@ -29,6 +29,7 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
 import render.ChartContext;
 import render.Renderer;
+import render.Rules;
 import s57.S57map.*;
 
 public class ChartImage extends ImageryLayer implements ZoomChangeListener, ChartContext {
@@ -64,7 +65,7 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 	@Override
 	public void paint(Graphics2D g2, MapView mv, Bounds bb) {
 		Rectangle rect = Main.map.mapView.getBounds();
-		g2.setBackground(new Color(0xb5d0d0));
+		g2.setBackground(Rules.Bwater);
 		g2.clearRect(rect.x, rect.y, rect.width, rect.height);
 		g2.setPaint(Color.black);
 		g2.setFont(new Font("Arial", Font.BOLD, 20));

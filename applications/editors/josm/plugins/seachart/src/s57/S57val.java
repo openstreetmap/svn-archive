@@ -1104,7 +1104,7 @@ public class S57val {
 		keys.put(Att.LC_WD2, new S57key(Conv.F, null));	keys.put(Att.LITRAD, new S57key(Conv.A, null));	keys.put(Att.CATCVR, new S57key(Conv.E, Catcvr));
 	}
 	
-	public static Enum<?> s57Enum(String val, Att att) { // Convert S57 attribute value string to OSeaM enumeration
+	public static Enum<?> s57Enum(String val, Att att) {	// Convert S57 attribute value string to SCM enumeration
 		EnumMap<?, ?> map = keys.get(att).map;
 		Enum<?> unkn = null;
 		int i = 0;
@@ -1124,16 +1124,18 @@ public class S57val {
 		return unkn;
 	}
 
-	public static AttVal<?> decodeValue(String val, Att att) {          // Convert S57 attribute value string to OSeaM attribute value
+	public static AttVal<?> decodeValue(String val, Att att) {	// Convert S57 attribute value string to SCM attribute value
 		Conv conv = keys.get(att).conv;
 		switch (conv) {
 		case A:
 		case S:
 			return new AttVal<String>(att, conv, val);
 		case E:
-			return new AttVal<Enum<?>>(att, Conv.E, s57Enum(val, att));
-		case L:
 			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
+			list.add(s57Enum(val, att));
+			return new AttVal<ArrayList<?>>(att, Conv.E, list);
+		case L:
+			list = new ArrayList<Enum<?>>();
 			for (String item : val.split(",")) {
 				list.add(s57Enum(item, att));
 			}
@@ -1154,7 +1156,7 @@ public class S57val {
 		return null;
 	}
 
-	public static Integer encodeValue(String val, Att att) {        // Convert OSeaM attribute value string to S57 attribute value
+	public static Integer encodeValue(String val, Att att) {	// Convert OSM attribute value string to S57 attribute value
 		EnumMap<?, ?> map = keys.get(att).map;
 		for (Object item : map.keySet()) {
 			if (((S57enum)map.get(item)).val.equals(val))
@@ -1164,7 +1166,7 @@ public class S57val {
 	}
 
 	
-	public static String stringValue(AttVal<?> attval) {                  // Convert OSeaM value object to OSeaM attribute value string
+	public static String stringValue(AttVal<?> attval) {	// Convert SCM value object to OSM attribute value string
 		if (attval != null) {
 			switch (attval.conv) {
 			case A:
@@ -1172,7 +1174,7 @@ public class S57val {
 				return (String) attval.val;
 			case E:
 				EnumMap<?, ?> map = keys.get(attval.att).map;
-				return ((S57enum) map.get(attval.val)).val;
+				return ((S57enum) map.get(((ArrayList<?>) attval.val).get(0))).val;
 			case L:
 				String str = "";
 				map = keys.get(attval.att).map;
@@ -1191,7 +1193,7 @@ public class S57val {
 		return "";
 	}
 
-	public static Enum<?> osmEnum(String val, Att att) { // Convert OSeaM attribute value string to OSeaM enumeration
+	public static Enum<?> osmEnum(String val, Att att) {	// Convert OSM attribute value string to SCM enumeration
 		EnumMap<?, ?> map = keys.get(att).map;
 		Enum<?> unkn = null;
 		if (map != null) {
@@ -1205,15 +1207,17 @@ public class S57val {
 		return unkn;
 	}
 
-	public static AttVal<?> convertValue(String val, Att att) { 				// Convert OSeaM attribute value string to OSeaM value object
+	public static AttVal<?> convertValue(String val, Att att) {	// Convert OSM attribute value string to SCM attribute value
 		switch (keys.get(att).conv) {
 		case A:
 		case S:
 			return new AttVal<String>(att, Conv.S, val);
 		case E:
-			return new AttVal<Enum<?>>(att, Conv.E, osmEnum(val, att));
-		case L:
 			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
+			list.add(osmEnum(val, att));
+			return new AttVal<ArrayList<?>>(att, Conv.E, list);
+		case L:
+			list = new ArrayList<Enum<?>>();
 			for (String item : val.split(";")) {
 				list.add(osmEnum(item, att));
 			}
@@ -1232,6 +1236,10 @@ public class S57val {
 			}
 		}
 		return new AttVal<Object>(att, keys.get(att).conv, null);
+	}
+	
+	public static Enum<?> unknAtt(Att att) {
+		return (Enum<?>)(keys.get(att).map.keySet().toArray()[0]);
 	}
 
 }

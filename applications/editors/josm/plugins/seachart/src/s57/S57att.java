@@ -362,12 +362,12 @@ public class S57att {
 		StrAtt.put("visibility", Visibility); StrAtt.put("water_level", Water_level); StrAtt.put("wavelength", Wavelength); StrAtt.put("width", Width); StrAtt.put("year", Year);
 	}
 
-	public static Att decodeAttribute(long attribute) {	// Convert S57 attribute code to OSeaM attribute enumeration
+	public static Att decodeAttribute(long attribute) {	// Convert S57 attribute code to SCM attribute enumeration
 		Att att = S57Att.get((int)attribute);
 		return (att != null) ? att : Att.UNKATT;
 	}
 	
-	public static Integer encodeAttribute(String attribute) {	// Convert OSeaM attribute enumeration to S57 attribute code
+	public static Integer encodeAttribute(String attribute) {	// Convert SCM attribute enumeration to S57 attribute code
 		if (AttS57.containsKey(attribute))
 			return AttS57.get(attribute);
 		else if (AttIENC.containsKey(attribute))
@@ -375,16 +375,16 @@ public class S57att {
 		return 0;
 	}
 
-	public static Integer encodeAttribute(Att attribute) {	// Convert OSeaM attribute enumeration to S57 attribute code
+	public static Integer encodeAttribute(Att attribute) {	// Convert SCM attribute enumeration to S57 attribute code
 	  return AttS57.get(attribute) != 0 ? AttS57.get(attribute) : AttIENC.get(attribute);
 	}
 
-	public static String stringAttribute(Att attribute) {	// Convert OSeaM enumeration to OSeaM attribute string
+	public static String stringAttribute(Att attribute) {	// Convert SCM enumeration to OSM attribute string
 		String str = AttStr.get(attribute);
 		return str != null ? str : "";
 	}
 	
-	public static Att enumAttribute(String attribute, Obj obj) {	// Convert OSeaM attribute string to OSeaM enumeration
+	public static Att enumAttribute(String attribute, Obj obj) {	// Convert OSM attribute string to SCM enumeration
 	  if ((attribute != null) && !attribute.isEmpty()) {
 			EnumMap<Obj, Att> map = StrAtt.get(attribute);
 			if (map != null) {

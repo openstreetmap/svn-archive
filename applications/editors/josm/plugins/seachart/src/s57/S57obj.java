@@ -103,7 +103,7 @@ public class S57obj {
 		ObjStr.put(Obj.BOYCAR, "buoy_cardinal"); ObjStr.put(Obj.BOYINB, "buoy_installation");	ObjStr.put(Obj.BOYISD, "buoy_isolated_danger");
 		ObjStr.put(Obj.BOYLAT, "buoy_lateral");	ObjStr.put(Obj.BOYSAW, "buoy_safe_water"); ObjStr.put(Obj.BOYSPP, "buoy_special_purpose");
 		ObjStr.put(Obj.CBLARE, "cable_area");	ObjStr.put(Obj.CBLOHD, "cable_overhead");	ObjStr.put(Obj.CBLSUB, "cable_submarine"); ObjStr.put(Obj.CANALS, "canal");
-		ObjStr.put(Obj.CANBNK, "canal_bank");	ObjStr.put(Obj.CTSARE, "cargo_area");	ObjStr.put(Obj.CAUSWY, "causeway");	ObjStr.put(Obj.CTNARE, "caution_area");
+		ObjStr.put(Obj.CANBNK, "canalbank");	ObjStr.put(Obj.CTSARE, "cargo_area");	ObjStr.put(Obj.CAUSWY, "causeway");	ObjStr.put(Obj.CTNARE, "caution_area");
 		ObjStr.put(Obj.CHKPNT, "checkpoint");	ObjStr.put(Obj.CGUSTA, "coastguard_station");	ObjStr.put(Obj.COALNE, "coastline"); ObjStr.put(Obj.CONZNE, "contiguous_zone");
 		ObjStr.put(Obj.COSARE, "continental_shelf"); ObjStr.put(Obj.CTRPNT, "control_point");	ObjStr.put(Obj.CONVYR, "conveyor");	ObjStr.put(Obj.CRANES, "crane");
 		ObjStr.put(Obj.CURENT, "current"); ObjStr.put(Obj.CUSZNE, "custom_zone");	ObjStr.put(Obj.DAMCON, "dam"); ObjStr.put(Obj.DAYMAR, "daymark");
@@ -126,7 +126,7 @@ public class S57obj {
 		ObjStr.put(Obj.RTPBCN, "radar_transponder"); ObjStr.put(Obj.RDOCAL, "calling-in_point"); ObjStr.put(Obj.RDOSTA, "radio_station");	ObjStr.put(Obj.RAILWY, "railway");
 		ObjStr.put(Obj.RAPIDS, "rapids");	ObjStr.put(Obj.RCRTCL, "recommended_route_centreline");	ObjStr.put(Obj.RECTRC, "recommended_track");
 		ObjStr.put(Obj.RCTLPT, "recommended_traffic_lane");	ObjStr.put(Obj.RSCSTA, "rescue_station");	ObjStr.put(Obj.RESARE, "restricted_area");
-		ObjStr.put(Obj.RETRFL, "retro_reflector"); ObjStr.put(Obj.RIVERS, "river");	ObjStr.put(Obj.RIVBNK, "river_bank");	ObjStr.put(Obj.ROADWY, "road");
+		ObjStr.put(Obj.RETRFL, "retro_reflector"); ObjStr.put(Obj.RIVERS, "river");	ObjStr.put(Obj.RIVBNK, "riverbank");	ObjStr.put(Obj.ROADWY, "road");
 		ObjStr.put(Obj.RUNWAY, "runway");	ObjStr.put(Obj.SNDWAV, "sand_waves");	ObjStr.put(Obj.SEAARE, "sea_area");	ObjStr.put(Obj.SPLARE, "seaplane_landing_area");
 		ObjStr.put(Obj.SBDARE, "seabed_area"); ObjStr.put(Obj.SLCONS, "shoreline_construction"); ObjStr.put(Obj.SISTAT, "signal_station_traffic");
 		ObjStr.put(Obj.SISTAW, "signal_station_warning");	ObjStr.put(Obj.SILTNK, "tank");	ObjStr.put(Obj.SLOTOP, "slope_topline"); ObjStr.put(Obj.SLOGRD, "sloping_ground");
@@ -154,12 +154,12 @@ public class S57obj {
 		}
 	}
 	
-	public static Obj decodeType(long objl) { // Convert S57 feature code to OSeaM object enumeration
+	public static Obj decodeType(long objl) { // Convert S57 feature code to SCM object enumeration
 		Obj obj = S57Obj.get((int)objl);
 		return (obj != null) ? obj : Obj.UNKOBJ;
 	}
 
-	public static long encodeType(Obj type) { // Convert OSM object enumeration to S57 feature code
+	public static long encodeType(Obj type) { // Convert SCM object enumeration to S57 feature code
 		if (ObjS57.containsKey(type))
 			return ObjS57.get(type);
 		else if (ObjIENC.containsKey(type))
@@ -167,12 +167,12 @@ public class S57obj {
 		return 0;
 	}
 
-	public static String stringType(Obj type) { // Convert OSeaM object enumeration to OSeaM object string
+	public static String stringType(Obj type) { // Convert SCM object enumeration to OSM object string
 		String str = ObjStr.get(type);
 			return str != null ? str : "";
 	}
 
-	public static Obj enumType(String type) { // Convert OSeaM object string to OSeaM object enumeration
+	public static Obj enumType(String type) { // Convert OSM object string to SCM object enumeration
 		if ((type != null) && !type.isEmpty() && (StrObj.containsKey(type)))
 			return StrObj.get(type);
 		else

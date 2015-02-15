@@ -756,12 +756,14 @@ public class S57map {
 			while (git.hasEdge()) {
 				git.nextEdge();
 				while (git.hasNode()) {
-					llon = lon;
-					llat = lat;
 					node = git.next();
-					lat = node.lat;
-					lon = node.lon;
-					sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+					if (node != null) {
+						llon = lon;
+						llat = lat;
+						lat = node.lat;
+						lon = node.lon;
+						sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+					}
 				}
 			}
 		}
@@ -793,7 +795,7 @@ public class S57map {
 						first = false;
 						lat = node.lat;
 						lon = node.lon;
-					} else {
+					} else if (node != null) {
 						llat = lat;
 						llon = lon;
 						lat = node.lat;

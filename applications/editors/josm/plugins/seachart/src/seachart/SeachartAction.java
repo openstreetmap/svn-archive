@@ -148,7 +148,7 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 			for (Node node : data.getNodes()) {
 				LatLon coor = node.getCoor();
 				if (coor != null) {
-					map.addNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());
+					map.addNode(node.getUniqueId(), coor.lat(), coor.lon());
 					for (Entry<String, String> entry : node.getKeys().entrySet()) {
 						map.addTag(entry.getKey(), entry.getValue());
 					}

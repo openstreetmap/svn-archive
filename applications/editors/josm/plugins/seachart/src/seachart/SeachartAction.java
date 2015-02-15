@@ -10,6 +10,7 @@
 package seachart;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import java.util.Map.Entry;
@@ -19,6 +20,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.*;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.event.*;
@@ -144,11 +146,14 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 		map = new S57map();
 		if (data != null) {
 			for (Node node : data.getNodes()) {
-				map.addNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());
-				for (Entry<String, String> entry : node.getKeys().entrySet()) {
-					map.addTag(entry.getKey(), entry.getValue());
+				LatLon coor = node.getCoor();
+				if (coor != null) {
+					map.addNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());
+					for (Entry<String, String> entry : node.getKeys().entrySet()) {
+						map.addTag(entry.getKey(), entry.getValue());
+					}
+					map.tagsDone(node.getUniqueId());
 				}
-				map.tagsDone(node.getUniqueId());
 			}
 			for (Way way : data.getWays()) {
 				if (way.getNodesCount() > 0) {

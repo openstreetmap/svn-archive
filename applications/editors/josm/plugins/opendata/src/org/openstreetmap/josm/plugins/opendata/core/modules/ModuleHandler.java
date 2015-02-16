@@ -304,7 +304,8 @@ public class ModuleHandler {
         }
         try {
             ReadLocalModuleInformationTask task = new ReadLocalModuleInformationTask(monitor);
-            Future<?> future = Main.worker.submit(task);
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            Future<?> future = service.submit(task);
             try {
                 future.get();
             } catch(ExecutionException | InterruptedException e) {

@@ -304,15 +304,11 @@ public class ModuleHandler {
         }
         try {
             ReadLocalModuleInformationTask task = new ReadLocalModuleInformationTask(monitor);
-            ExecutorService service = Executors.newSingleThreadExecutor();
-            Future<?> future = service.submit(task);
+            Future<?> future = Main.worker.submit(task);
             try {
                 future.get();
-            } catch(ExecutionException e) {
-                e.printStackTrace();
-                return null;
-            } catch(InterruptedException e) {
-                e.printStackTrace();
+            } catch(ExecutionException | InterruptedException e) {
+                Main.error(e);
                 return null;
             }
             HashMap<String, ModuleInformation> ret = new HashMap<>();

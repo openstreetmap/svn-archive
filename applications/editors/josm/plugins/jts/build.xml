@@ -9,6 +9,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.jts.JTSPlugin"/>
     <property name="plugin.description" value="Provides Java Topology Suite (JTS) library and related utilities. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
     <property name="plugin.icon" value="images/jts.png"/>
+    <property name="plugin.canloadatruntime" value="true"/>
     <!--<property name="plugin.link" value="..."/>-->
     <!--<property name="plugin.early" value="..."/>-->
     <!-- <property name="plugin.requires" value=""/> -->

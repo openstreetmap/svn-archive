@@ -9,9 +9,7 @@
 
 package s57;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class S57obj {
 	
@@ -177,6 +175,21 @@ public class S57obj {
 			return StrObj.get(type);
 		else
 			return Obj.UNKOBJ;
+	}
+	
+	private static final HashMap<String, Obj> OSMtags = new HashMap<String, Obj>();
+	static {
+		OSMtags.put("natural=coastline", Obj.COALNE); OSMtags.put("natural=water", Obj.LAKARE);
+		OSMtags.put("waterway=riverbank", Obj.RIVBNK); OSMtags.put("waterway=river", Obj.RIVERS); OSMtags.put("waterway=canal", Obj.CANALS); 
+		OSMtags.put("wetland=tidalflat", Obj.DEPARE);
+	}
+	
+	public static Obj OSMobj(String key, String val) {
+		Obj obj = OSMtags.get(key + "=" + val);
+		if (obj != null) {
+			return obj;
+		}
+		return Obj.UNKOBJ;
 	}
 
 }

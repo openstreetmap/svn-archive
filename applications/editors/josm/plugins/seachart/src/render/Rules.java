@@ -27,8 +27,9 @@ import symbols.Symbols.*;
 
 public class Rules {
 
-	public static final Color Yland = new Color(0xeca818);
-	public static final Color Bwater = new Color(0x2ea8d8);
+	public static final Color Yland = new Color(0xdcb820);
+	public static final Color Bwater = new Color(0x3ea8c8);
+	public static final Color Gdries = new Color(0x50b050);
 	public static final Color Mline = new Color(0xc480ff);
 	public static final Color Msymb = new Color(0xa30075);
 	
@@ -175,6 +176,13 @@ public class Rules {
 	
 	public static void rules () {
 		ArrayList<Feature> objects;
+		if ((objects = Renderer.map.features.get(Obj.LNDARE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
+		if ((objects = Renderer.map.features.get(Obj.LAKARE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
+		if ((objects = Renderer.map.features.get(Obj.RIVBNK)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
+		if ((objects = Renderer.map.features.get(Obj.RIVERS)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) waterways(feature);
+		if ((objects = Renderer.map.features.get(Obj.CANALS)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) waterways(feature);
+		if ((objects = Renderer.map.features.get(Obj.DOCARE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
+		if ((objects = Renderer.map.features.get(Obj.DEPARE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
 		if ((objects = Renderer.map.features.get(Obj.COALNE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
 		if ((objects = Renderer.map.features.get(Obj.SLCONS)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) shoreline(feature);
 		if ((objects = Renderer.map.features.get(Obj.PIPSOL)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) pipelines(feature);
@@ -198,7 +206,6 @@ public class Rules {
 		if ((objects = Renderer.map.features.get(Obj.OBSTRN)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) obstructions(feature);
 		if ((objects = Renderer.map.features.get(Obj.UWTROC)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) obstructions(feature);
 		if ((objects = Renderer.map.features.get(Obj.MARCUL)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) areas(feature);
-		if ((objects = Renderer.map.features.get(Obj.WTWAXS)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) waterways(feature);
 		if ((objects = Renderer.map.features.get(Obj.RECTRC)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) transits(feature);
 		if ((objects = Renderer.map.features.get(Obj.NAVLNE)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) transits(feature);
 		if ((objects = Renderer.map.features.get(Obj.HRBFAC)) != null) for (Feature feature : objects) if (feature.reln == Rflag.MASTER) harbours(feature);
@@ -254,7 +261,18 @@ public class Rules {
 		String name = getName(feature);
 		switch (feature.type) {
 		case COALNE:
-			Renderer.lineVector(feature, new LineStyle(Color.black, 8, Yland));
+			Renderer.lineVector(feature, new LineStyle(Color.black, 10));
+			break;
+		case DEPARE:
+			Double depmax = 0.0;
+			if (((depmax = (Double) getAttVal(feature, feature.type, 0, Att.DRVAL2)) != null) && (depmax <= 0.0)) {
+				Renderer.lineVector(feature, new LineStyle(Gdries));
+			}
+			break;
+		case DOCARE:
+		case LAKARE:
+		case RIVBNK:
+			Renderer.lineVector(feature, new LineStyle(Bwater));
 			break;
 		case DRGARE:
 			if (Renderer.zoom < 16)
@@ -271,8 +289,11 @@ public class Rules {
 					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }));
 			} else {
 				if (Renderer.zoom >= 14)
-					Renderer.lineVector(feature, new LineStyle(null, 0, new Color(0x40ffffff, true)));
+					Renderer.lineVector(feature, new LineStyle(new Color(0x40ffffff, true)));
 			}
+			break;
+		case LNDARE:
+			Renderer.lineVector(feature, new LineStyle(Yland));
 			break;
 		case MARCUL:
 			if (Renderer.zoom >= 12) {
@@ -929,7 +950,7 @@ public class Rules {
 		case TSSCRS:
 		case TSSRON:
 			if (Renderer.zoom <= 15)
-				Renderer.lineVector(feature, new LineStyle(null, 0, null, new Color(0x80c48080, true)));
+				Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true)));
 			else
 				Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
 			addName(feature, 10, new Font("Arial", Font.BOLD, 150), new Color(0x80c48080, true));
@@ -1107,7 +1128,7 @@ public class Rules {
 	}
 
 	private static void waterways(Feature feature) {
-		
+		Renderer.lineVector(feature, new LineStyle(Bwater, 20));
 	}
 
 	private static void wrecks(Feature feature) {

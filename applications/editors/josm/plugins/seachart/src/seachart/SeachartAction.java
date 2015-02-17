@@ -20,6 +20,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.*;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
 import org.openstreetmap.josm.data.osm.*;
@@ -145,6 +146,32 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 	void makeChart() {
 		map = new S57map();
 		if (data != null) {
+			double minlat = 90;
+			double maxlat = -90;
+			double minlon = 180;
+			double maxlon = -180;
+			for (Bounds bounds : data.getDataSourceBounds()) {
+				if (bounds.getMinLat() < minlat) {
+					minlat = bounds.getMinLat();
+				}
+				if (bounds.getMaxLat() > maxlat) {
+					maxlat = bounds.getMaxLat();
+				}
+				if (bounds.getMinLon() < minlon) {
+					minlon = bounds.getMinLon();
+				}
+				if (bounds.getMaxLon() > maxlon) {
+					maxlon = bounds.getMaxLon();
+				}
+			}
+			map.addNode(1, maxlat, minlon);
+			map.addNode(2, minlat, minlon);
+			map.addNode(3, minlat, maxlon);
+			map.addNode(4, maxlat, maxlon);
+			map.bounds.minlat = Math.toRadians(minlat);
+			map.bounds.maxlat = Math.toRadians(maxlat);
+			map.bounds.minlon = Math.toRadians(minlon);
+			map.bounds.maxlon = Math.toRadians(maxlon);
 			for (Node node : data.getNodes()) {
 				LatLon coor = node.getCoor();
 				if (coor != null) {
@@ -180,6 +207,7 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 					map.tagsDone(rel.getUniqueId());
 				}
 			}
+			map.mapDone();
 			if (rendering != null) rendering.zoomChanged();
 		}
 	}

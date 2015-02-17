@@ -250,10 +250,16 @@ public class Renderer {
 		GeomIterator git = map.new GeomIterator(feature.geom);
 		while (git.hasComp()) {
 			git.nextComp();
+			boolean first = true;
 			while (git.hasEdge()) {
 				git.nextEdge();
 				point = context.getPoint(git.next());
-				p.moveTo(point.getX(), point.getY());
+				if (first) {
+					p.moveTo(point.getX(), point.getY());
+					first = false;
+				} else {
+					p.lineTo(point.getX(), point.getY());
+				}
 				while (git.hasNode()) {
 					point = context.getPoint(git.next());
 					p.lineTo(point.getX(), point.getY());

@@ -94,6 +94,12 @@ public class Symbols {
 		public float[] dash;
 		public Color fill;
 
+		public LineStyle(Color ifill) {
+			line = null;
+			width = 0;
+			dash = null;
+			fill = ifill;
+		}
 		public LineStyle(Color iline, float iwidth) {
 			line = iline;
 			width = iwidth;

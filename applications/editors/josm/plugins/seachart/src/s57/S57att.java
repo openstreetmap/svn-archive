@@ -9,9 +9,7 @@
 
 package s57;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import s57.S57obj.*;
 

@@ -12,6 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.fr.epci.EpciPlugin"/>
     <property name="plugin.description" value="Handling of French EPCIs (boundary=local_authority)"/>
     <!--<property name="plugin.icon" value="..."/>-->
+    <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/EPCI-fr"/>
     <property name="plugin.early" value="true"/>
     <!--<property name="plugin.requires" value="..."/>-->

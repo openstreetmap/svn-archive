@@ -72,12 +72,19 @@ public final class OdPlugin extends Plugin {
         })) {
             ExtensionFileFilter.importers.add(0, importer);
         }
-        // Load modules
-        loadModules();
-        // Add menu
-        
+
         menu = Main.main.menu.dataMenu;
-        buildMenu();
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Load modules
+                loadModules();
+                // Add menu
+                buildMenu();
+            }
+        }).start();
+
         // Add download task
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadDataTask.class);
         // Delete previous temp dirs if any (old plugin versions did not remove them correctly)

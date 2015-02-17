@@ -2,9 +2,12 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: Show issues reported on Ruian buildings."/>
+    <property name="commit.message" value="PointInfo: can load at runtime."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
+
+    <!-- plugin can load at runtime -->
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

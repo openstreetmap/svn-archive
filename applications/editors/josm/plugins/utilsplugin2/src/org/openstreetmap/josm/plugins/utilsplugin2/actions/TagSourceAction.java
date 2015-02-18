@@ -24,8 +24,9 @@ public class TagSourceAction extends JosmAction {
     public TagSourceAction() {
         super(TITLE, "dumbutils/sourcetag", tr("Add remembered source tag"),
                 Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", tr("Add Source Tag")), KeyEvent.VK_S, Shortcut.ALT_CTRL)
-                , true);
+                , true, false);
         source = Main.pref.get("sourcetag.value");
+        installAdapters();
     }
 
     @Override

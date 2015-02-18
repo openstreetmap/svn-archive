@@ -11,7 +11,7 @@
     <property name="plugin.description" value="Several utilities that make your life easier."/>
     <property name="plugin.icon" value="images/utils.png"/>
     <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/UtilsPlugin2"/>
-    <property name="plugin.canloadatruntime" value="true"/>
+    <property name="plugin.canloadatruntime" value="false"/>
     <property name="plugin.stage" value="40"/>
     
     <!-- ** include targets that all plugins have in common ** -->

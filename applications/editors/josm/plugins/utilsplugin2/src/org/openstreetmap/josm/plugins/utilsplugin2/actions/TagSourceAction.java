@@ -26,6 +26,7 @@ public class TagSourceAction extends JosmAction {
                 Shortcut.registerShortcut("tools:sourcetag", tr("Tool: {0}", tr("Add Source Tag")), KeyEvent.VK_S, Shortcut.ALT_CTRL)
                 , true, false);
         source = Main.pref.get("sourcetag.value");
+        // The fields are not initialized while the super constructor is running, so we have to call this afterwards:
         installAdapters();
     }
 

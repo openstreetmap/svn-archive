@@ -32,6 +32,7 @@ import org.w3c.dom.Document;
 
 import render.ChartContext;
 import render.Renderer;
+import render.Rules;
 import s57.S57map;
 import s57.S57map.Feature;
 import s57.S57map.Snode;
@@ -153,6 +154,7 @@ public class Jrender {
 						inWay = true;
 					}
 				} else if (ln.contains("</osm")) {
+					map.mapDone();
 					inOsm = false;
 					break;
 				} else if (inRel) {
@@ -166,7 +168,10 @@ public class Jrender {
 							} else if (token.matches("^type=.+")) {
 								type = (token.split("[\"\']")[1]);
 							} else if (token.matches("^role=.+")) {
-								role = (token.split("[\"\']")[1]);
+								String str[] = token.split("[\"\']");
+								if (str.length > 1) {
+									role = (token.split("[\"\']")[1]);
+								}
 							}
 						}
 						if ((role.equals("outer") || role.equals("inner")) && type.equals("way"))
@@ -192,26 +197,37 @@ public class Jrender {
 			} else if (ln.contains("<osm")) {
 				inOsm = true;
 				map = new S57map();
+				map.addNode(1, maxlat, minlon);
+				map.addNode(2, minlat, minlon);
+				map.addNode(3, minlat, maxlon);
+				map.addNode(4, maxlat, maxlon);
+				map.bounds.minlat = Math.toRadians(minlat);
+				map.bounds.maxlat = Math.toRadians(maxlat);
+				map.bounds.minlon = Math.toRadians(minlon);
+				map.bounds.maxlon = Math.toRadians(maxlon);
 			}
 		}
 		
-		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+/*		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 		Renderer.reRender(img.createGraphics(), 12, 1, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 		empty = bos.size();
 		tile(zoom, 1, 0, 0);
-
-		for (int z = 12; z <= 18; z++) {
+*/
+//		for (int z = 12; z <= 18; z++) {
+int z = 9;
 			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
 			Document document = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
 			SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-			svgGenerator.setSVGCanvasSize(new Dimension(256, 256));
-			svgGenerator.setClip(0, 0, 256, 256);
-			svgGenerator.translate(-256, -256);
-			Renderer.reRender(svgGenerator, z, 1, map, context);
+			svgGenerator.setBackground(Rules.Bwater);
+			svgGenerator.clearRect(0, 0, 2048, 2048);
+			svgGenerator.setSVGCanvasSize(new Dimension(2048, 2048));
+			svgGenerator.setClip(0, 0, 2048, 2048);
+//			svgGenerator.translate(-2048, -2048);
+			Renderer.reRender(svgGenerator, z, 0.05, map, context);
 			svgGenerator.stream(dstdir + "tst_" + z + ".svg");
-		}
+//		}
 	}
 	
 	static void tile(int zoom, int s, int xn, int yn) throws IOException {
@@ -280,7 +296,7 @@ public class Jrender {
 		buf = new ArrayList<String>();
 		send = new ArrayList<String>();
 		deletes = new HashMap<String, Boolean>();
-		BufferedReader in = new BufferedReader(new FileReader(srcdir + xtile + "-" + ytile + "-" + zoom + ".osm"));
+		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
 		String ln;
 		while ((ln = in.readLine()) != null) {
 			if (ln.contains("<bounds")) {

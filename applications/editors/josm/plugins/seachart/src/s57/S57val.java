@@ -1241,26 +1241,4 @@ public class S57val {
 		return (Enum<?>)(keys.get(att).map.keySet().toArray()[0]);
 	}
 
-	static class KeyVal {
-		Att key;
-		Object val;
-		KeyVal(Att k, Object v) {
-			key = k;
-			val = v;
-		}
-	}
-	
-	private static final HashMap<String, KeyVal> OSMtags = new HashMap<String, KeyVal>();
-	static {
-		OSMtags.put("wetland=tidalflat", new KeyVal(Att.DRVAL2, (double)0));
-	}
-	
-	public static AttVal OSMatt(String key, String val) {
-		KeyVal att = OSMtags.get(key + "=" + val);
-		if (att != null) {
-			return new AttVal(att.key, Conv.F, att.val);
-		}
-		return new AttVal(Att.UNKATT, Conv.A, null);
-	}
-
 }

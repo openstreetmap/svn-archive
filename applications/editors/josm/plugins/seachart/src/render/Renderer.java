@@ -15,8 +15,10 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import java.util.*;
 
+import render.Rules.*;
 import s57.S57val.*;
 import s57.S57map;
+import s57.S57obj.Obj;
 import s57.S57map.*;
 import symbols.Areas;
 import symbols.Symbols;
@@ -44,7 +46,7 @@ public class Renderer {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 			g2.setStroke(new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-			Rules.rules();
+			Rules.rules(RuleSet.BASE);
 		}
 	}
 
@@ -266,6 +268,10 @@ public class Renderer {
 				}
 			}
 		}
+		if ((style.fill != null) && (feature.geom.prim == Pflag.AREA)) {
+			g2.setPaint(style.fill);
+			g2.fill(p);
+		}
 		if (style.line != null) {
 			if (style.dash != null) {
 				float[] dash = new float[style.dash.length];
@@ -275,14 +281,10 @@ public class Renderer {
 				}
 				g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, dash, 0));
 			} else {
-				g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+				g2.setStroke(new BasicStroke((float) (style.width * sScale), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 			}
 			g2.setPaint(style.line);
 			g2.draw(p);
-		}
-		if (style.fill != null) {
-			g2.setPaint(style.fill);
-			g2.fill(p);
 		}
 	}
 	

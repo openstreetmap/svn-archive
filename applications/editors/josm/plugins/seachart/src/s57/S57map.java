@@ -17,6 +17,8 @@ import s57.S57att;
 import s57.S57att.*;
 import s57.S57val;
 import s57.S57val.*;
+import s57.S57osm;
+import s57.S57osm.*;
 
 public class S57map {
 	
@@ -481,27 +483,26 @@ public class S57map {
 	}
 
 	public void tagsDone(long id) {
-		if (feature.type == Obj.UNKOBJ) {
-			for (OSMtag tag : osmtags) {
-				Obj obj = S57obj.OSMobj(tag.key, tag.val);
-				if (obj != Obj.UNKOBJ) {
-					feature.type = obj;
-					ObjTab objs = feature.objs.get(obj);
-					if (objs == null) {
-						objs = new ObjTab();
-						feature.objs.put(obj, objs);
-					}
-					AttMap atts = objs.get(0);
-					if (atts == null) {
-						atts = new AttMap();
-						objs.put(0, atts);
-					}
-					AttVal<?> attval = S57val.OSMatt(tag.key, tag.val);
-					if (attval.att != Att.UNKATT) {
-						atts.put(attval.att, attval);
-					}
-					break;
+		for (OSMtag tag : osmtags) {
+			KeyVal kv = S57osm.OSMtag(tag.key, tag.val);
+			if (kv.obj != Obj.UNKOBJ) {
+				if (feature.type == Obj.UNKOBJ) {
+					feature.type = kv.obj;
 				}
+				ObjTab objs = feature.objs.get(kv.obj);
+				if (objs == null) {
+					objs = new ObjTab();
+					feature.objs.put(kv.obj, objs);
+				}
+				AttMap atts = objs.get(0);
+				if (atts == null) {
+					atts = new AttMap();
+					objs.put(0, atts);
+				}
+				if (kv.att != Att.UNKATT) {
+					atts.put(kv.att, new AttVal(kv.att, kv.conv, kv.val));
+				}
+				break;
 			}
 		}
 		switch (feature.geom.prim) {
@@ -593,60 +594,56 @@ public class S57map {
 			nedge.first = last;
 			nedge.last = first;
 			switch (lext) {
-			case NE:
 			case N:
-				if ((fext != Ext.NE) && (fext != Ext.N)) {
+				if ((lext == fext) || (fext != Ext.N)) {
 					nedge.nodes.add(1L);
-					if ((fext != Ext.NW) && (fext != Ext.W)) {
+					if ((fext != Ext.W)) {
 						nedge.nodes.add(2L);
-						if ((fext != Ext.SW) && (fext != Ext.S)) {
+						if ((fext != Ext.S)) {
 							nedge.nodes.add(3L);
-							if ((fext != Ext.SE) && (fext != Ext.W)) {
+							if ((fext != Ext.W)) {
 								nedge.nodes.add(4L);
 							}
 						}
 					}
 				}
 				break;
-			case NW:
 			case W:
-				if ((fext != Ext.NW) && (fext != Ext.W)) {
+				if ((lext == fext) || (fext != Ext.W)) {
 					nedge.nodes.add(2L);
-					if ((fext != Ext.SW) && (fext != Ext.S)) {
+					if ((fext != Ext.S)) {
 						nedge.nodes.add(3L);
-						if ((fext != Ext.SE) && (fext != Ext.E)) {
+						if ((fext != Ext.E)) {
 							nedge.nodes.add(4L);
-							if ((fext != Ext.NE) && (fext != Ext.N)) {
+							if ( (fext != Ext.N)) {
 								nedge.nodes.add(1L);
 							}
 						}
 					}
 				}
 				break;
-			case SW:
 			case S:
-				if ((fext != Ext.SW) && (fext != Ext.S)) {
+				if ((lext == fext) || (fext != Ext.S)) {
 					nedge.nodes.add(3L);
-					if ((fext != Ext.SE) && (fext != Ext.E)) {
+					if ((fext != Ext.E)) {
 						nedge.nodes.add(4L);
-						if ((fext != Ext.NE) && (fext != Ext.N)) {
+						if ((fext != Ext.N)) {
 							nedge.nodes.add(1L);
-							if ((fext != Ext.NW) && (fext != Ext.W)) {
+							if ((fext != Ext.W)) {
 								nedge.nodes.add(2L);
 							}
 						}
 					}
 				}
 				break;
-			case SE:
 			case E:
-				if ((fext != Ext.SE) && (fext != Ext.E)) {
+				if ((lext == fext) || (fext != Ext.E)) {
 					nedge.nodes.add(4L);
-					if ((fext != Ext.NE) && (fext != Ext.N)) {
+					if ((fext != Ext.N)) {
 						nedge.nodes.add(1L);
-						if ((fext != Ext.NW) && (fext != Ext.W)) {
+						if ((fext != Ext.W)) {
 							nedge.nodes.add(2L);
-							if ((fext != Ext.SW) && (fext != Ext.S)) {
+							if ((fext != Ext.S)) {
 								nedge.nodes.add(3L);
 							}
 						}
@@ -660,43 +657,29 @@ public class S57map {
 			sortGeom(land);
 			features.get(Obj.LNDARE).add(land);
 		}
+		return;
 	}
 
 	// Utility methods
 	
-	enum Ext {I, N, NW, W, SW, S, SE, E, NE }
+	enum Ext {I, N, W, S, E }
+	class Xnode {
+		double lat;
+		double lon;
+		Ext ext;
+	}
 	Ext outsideBounds(long ref) {
 		Snode node = nodes.get(ref);
 		if (node.lat >= bounds.maxlat) {
-			if (node.lon <= bounds.minlon) {
-				return Ext.NW;
-			} else if (node.lon >= bounds.maxlon) {
-				return Ext.NE;
-			}
 			return Ext.N;
 		}
 		if (node.lat <= bounds.minlat) {
-			if (node.lon <= bounds.minlon) {
-				return Ext.SW;
-			} else if (node.lon >= bounds.maxlon) {
-				return Ext.SE;
-			}
 			return Ext.S;
 		}
 		if (node.lon >= bounds.maxlon) {
-			if (node.lat <= bounds.minlat) {
-				return Ext.SE;
-			} else if (node.lat >= bounds.maxlat) {
-				return Ext.NE;
-			}
 			return Ext.E;
 		}
 		if (node.lon <= bounds.minlon) {
-			if (node.lat <= bounds.minlat) {
-				return Ext.SW;
-			} else if (node.lat >= bounds.maxlat) {
-				return Ext.NW;
-			}
 			return Ext.W;
 		}
 		return Ext.I;
@@ -903,7 +886,7 @@ public class S57map {
 		Comp comp;
 		int ec;
 		long lastref;
-		
+
 		public GeomIterator(Geom g) {
 			geom = g;
 			lastref = 0;

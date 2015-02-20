@@ -209,15 +209,16 @@ public class Jrender {
 			}
 		}
 		
-//		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-		Rectangle rect = new Rectangle(2048, 2048);
+		int size = 256;
+		for (int i = 0; i < (12 - zoom); i++) size *= 2;
+		Rectangle rect = new Rectangle(size, size);
 		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
 		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 //		empty = bos.size();
 //		tile(zoom, 1, 0, 0);
-		FileOutputStream fos = new FileOutputStream(dstdir + "tst_" + zoom + ".png");
+		FileOutputStream fos = new FileOutputStream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".png");
 		bos.writeTo(fos);
 		fos.close();
 
@@ -231,7 +232,7 @@ public class Jrender {
 			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
 //			svgGenerator.translate(-256, -256);
 			Renderer.reRender(svgGenerator, rect, zoom, 0.05, map, context);
-			svgGenerator.stream(dstdir + "tst_" + zoom + ".svg");
+			svgGenerator.stream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".svg");
 //		}
 	}
 	

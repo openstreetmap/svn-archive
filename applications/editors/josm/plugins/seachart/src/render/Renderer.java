@@ -194,8 +194,10 @@ public class Renderer {
 				while (git.hasEdge()) {
 					git.nextEdge();
 					while (git.hasNode()) {
+						Snode node = git.next();
+						if (node == null) continue;
 						prev = next;
-						next = context.getPoint(git.next());
+						next = context.getPoint(node);
 						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 						piv = true;
 						if (first) {
@@ -264,7 +266,9 @@ public class Renderer {
 					p.lineTo(point.getX(), point.getY());
 				}
 				while (git.hasNode()) {
-					point = context.getPoint(git.next());
+					Snode node = git.next();
+					if (node == null) continue;
+					point = context.getPoint(node);
 					p.lineTo(point.getX(), point.getY());
 				}
 			}
@@ -342,7 +346,9 @@ public class Renderer {
 					point = context.getPoint(git.next());
 					p.moveTo(point.getX(), point.getY());
 					while (git.hasNode()) {
-						point = context.getPoint(git.next());
+						Snode node = git.next();
+						if (node == null) continue;
+						point = context.getPoint(node);
 						p.lineTo(point.getX(), point.getY());
 					}
 				}
@@ -491,8 +497,10 @@ public class Renderer {
 				while (git.hasEdge()) {
 					git.nextEdge();
 					while (git.hasNode()) {
+						Snode node = git.next();
+						if (node == null) continue;
 						prev = next;
-						next = context.getPoint(git.next());
+						next = context.getPoint(node);
 						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
 						piv = true;
 						if (first) {

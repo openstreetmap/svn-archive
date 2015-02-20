@@ -941,13 +941,12 @@ public class S57map {
 				git.nextEdge();
 				while (git.hasNode()) {
 					node = git.next();
-					if (node != null) {
-						llon = lon;
-						llat = lat;
-						lat = node.lat;
-						lon = node.lon;
-						sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
-					}
+					if (node == null) continue;
+					llon = lon;
+					llat = lat;
+					lat = node.lat;
+					lon = node.lon;
+					sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
 				}
 			}
 		}
@@ -1008,6 +1007,7 @@ public class S57map {
 					git.nextEdge();
 					while (git.hasNode()) {
 						Snode node = git.next();
+						if (node == null) continue;
 						lat = node.lat;
 						lon = node.lon;
 						if (first) {
@@ -1030,6 +1030,7 @@ public class S57map {
 					git.nextEdge();
 					while (git.hasNode()) {
 						Snode node = git.next();
+						if (node == null) continue;
 						lat = node.lat;
 						lon = node.lon;
 						if (first) {

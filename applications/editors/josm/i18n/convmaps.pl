@@ -15,7 +15,7 @@ my $comment = 0;
 
 # Print a header to write valid Java code.  No line break,
 # so that the input and output line numbers will match.
-print "class trans_wms { void tr(String s){} void f() {";
+print "class trans_maps { void tr(String s){} void f() {";
 
 my @lines;
 if($ARGV[0] && $ARGV[0] =~ /^http:\/\//)
@@ -35,6 +35,12 @@ for my $line (@lines)
   chomp($line);
   print "tr(\"\"); ";
   if($line =~ /<name>(.*)<\/name>/)
+  {
+    my $val = $1;
+    $val =~ s/&amp;/&/g;
+    print "tr(\"$val\"); /* $line */\n";
+  }
+  if($line =~ /<description +lang=['"]en['"]>(.*)<\/description>/)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;

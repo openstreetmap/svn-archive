@@ -6,7 +6,7 @@
     <!--<property name="josm.style" value="${josm.build.dir}/styles/standard/elemstyles.xml"/>-->
     <property name="plugin.dir" value="../plugins"/>
     <property name="validator.tagfile" value="${josm.build.dir}/data/validator/tagchecker.cfg"/>
-    <property name="wms.srcfile" value="http://josm.openstreetmap.de/maps"/>
+    <property name="maps.srcfile" value="http://josm.openstreetmap.de/maps"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
     <property name="i18n.build.dir" value="build"/>
     <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
@@ -33,8 +33,8 @@
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_validator.java">
             <arg line="convvalidator.pl ${validator.tagfile}"/>
         </exec>
-        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_wms.java">
-            <arg line="convwms.pl ${wms.srcfile}"/>
+        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_maps.java">
+            <arg line="convmaps.pl ${maps.srcfile}"/>
         </exec>
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_surveyor.java">
             <arg line="convsurveyor.pl ${surveyor.srcfile}"/>

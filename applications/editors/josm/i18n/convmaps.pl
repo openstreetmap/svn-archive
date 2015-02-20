@@ -34,7 +34,7 @@ for my $line (@lines)
   $line =~ s/\r//g;
   chomp($line);
   print "tr(\"\"); ";
-  if($line =~ /<name>(.*)<\/name>/)
+  if($line =~ /<name(?: +lang=['"]en['"])?>(.*)<\/name>/)
   {
     my $val = $1;
     $val =~ s/&amp;/&/g;

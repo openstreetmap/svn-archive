@@ -232,8 +232,6 @@ public class S57map {
 		}
 	}
 	
-	ArrayList<OSMtag> osmtags;
-
 	public NodeTab nodes;
 	public EdgeTab edges;
 
@@ -388,7 +386,6 @@ public class S57map {
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.POINT;
 		feature.geom.elems.add(new Prim(id));
-		osmtags = new ArrayList<OSMtag>();
 		edge = null;
 	}
 
@@ -397,7 +394,6 @@ public class S57map {
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.LINE;
 		feature.geom.elems.add(new Prim(id));
-		osmtags = new ArrayList<OSMtag>();
 		edge = new Edge();
 	}
 
@@ -417,7 +413,6 @@ public class S57map {
 		feature = new Feature();
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.AREA;
-		osmtags = new ArrayList<OSMtag>();
 		edge = null;
 	}
 
@@ -478,13 +473,7 @@ public class S57map {
 				}
 			}
 		} else {
-			osmtags.add(new OSMtag(key, val));
-		}
-	}
-
-	public void tagsDone(long id) {
-		for (OSMtag tag : osmtags) {
-			KeyVal kv = S57osm.OSMtag(tag.key, tag.val);
+			KeyVal kv = S57osm.OSMtag(key, val);
 			if (kv.obj != Obj.UNKOBJ) {
 				if (feature.type == Obj.UNKOBJ) {
 					feature.type = kv.obj;
@@ -502,9 +491,11 @@ public class S57map {
 				if (kv.att != Att.UNKATT) {
 					atts.put(kv.att, new AttVal(kv.att, kv.conv, kv.val));
 				}
-				break;
 			}
 		}
+	}
+
+	public void tagsDone(long id) {
 		switch (feature.geom.prim) {
 		case POINT:
 			Snode node = nodes.get(id);

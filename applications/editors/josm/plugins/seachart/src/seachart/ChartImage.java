@@ -65,9 +65,7 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 	@Override
 	public void paint(Graphics2D g2, MapView mv, Bounds bb) {
 		Rectangle rect = Main.map.mapView.getBounds();
-		g2.setBackground(Rules.Bwater);
-		g2.clearRect(rect.x, rect.y, rect.width, rect.height);
-		Renderer.reRender(g2, zoom, Math.pow(2, (zoom-12)), SeachartAction.map, this);
+		Renderer.reRender(g2, rect, zoom, Math.pow(2, (zoom-12)), SeachartAction.map, this);
 		g2.setPaint(Color.black);
 		g2.setFont(new Font("Arial", Font.BOLD, 20));
 		g2.drawString(("Z" + zoom), (rect.x + rect.width - 40), (rect.y + rect.height - 10));

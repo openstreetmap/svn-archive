@@ -281,14 +281,14 @@ public class Rules {
 		String name = getName();
 		switch (feature.type) {
 		case BUAARE:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x40000000, true)));
+			Renderer.lineVector(feature, new LineStyle(new Color(0x20000000, true)));
 			break;
 		case COALNE:
 			Renderer.lineVector(feature, new LineStyle(Color.black, 10));
 			break;
 		case DEPARE:
 			Double depmax = 0.0;
-			if (((depmax = (Double) getAttVal(feature, feature.type, 0, Att.DRVAL2)) != null) && (depmax <= 0.0)) {
+			if (((depmax = (Double) getAttVal(feature, Obj.DEPARE, 0, Att.DRVAL2)) != null) && (depmax <= 0.0)) {
 				Renderer.lineVector(feature, new LineStyle(Gdries));
 			}
 			break;

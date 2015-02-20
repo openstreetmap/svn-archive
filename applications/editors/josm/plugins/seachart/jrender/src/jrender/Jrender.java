@@ -11,6 +11,7 @@ package jrender;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -208,25 +209,29 @@ public class Jrender {
 			}
 		}
 		
-/*		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-		Renderer.reRender(img.createGraphics(), 12, 1, map, context);
+//		img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+		Rectangle rect = new Rectangle(2048, 2048);
+		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
+		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
-		empty = bos.size();
-		tile(zoom, 1, 0, 0);
-*/
+//		empty = bos.size();
+//		tile(zoom, 1, 0, 0);
+		FileOutputStream fos = new FileOutputStream(dstdir + "tst_" + zoom + ".png");
+		bos.writeTo(fos);
+		fos.close();
+
 //		for (int z = 12; z <= 18; z++) {
-int z = 9;
 			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
 			Document document = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
 			SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 			svgGenerator.setBackground(Rules.Bwater);
-			svgGenerator.clearRect(0, 0, 2048, 2048);
-			svgGenerator.setSVGCanvasSize(new Dimension(2048, 2048));
-			svgGenerator.setClip(0, 0, 2048, 2048);
-//			svgGenerator.translate(-2048, -2048);
-			Renderer.reRender(svgGenerator, z, 0.05, map, context);
-			svgGenerator.stream(dstdir + "tst_" + z + ".svg");
+			svgGenerator.clearRect(rect.x, rect.y, rect.width, rect.height);
+			svgGenerator.setSVGCanvasSize(rect.getSize());
+			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
+//			svgGenerator.translate(-256, -256);
+			Renderer.reRender(svgGenerator, rect, zoom, 0.05, map, context);
+			svgGenerator.stream(dstdir + "tst_" + zoom + ".svg");
 //		}
 	}
 	
@@ -238,7 +243,7 @@ int z = 9;
 		Graphics2D g2 = img.createGraphics();
 		g2.scale(s, s);
 		g2.translate(-(256 + (xn * 256 / s)), -(256 + (yn * 256 / s)));
-		Renderer.reRender(g2, zoom, 1, map, context);
+		Renderer.reRender(g2, new Rectangle(256, 256), zoom, 1, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 		if (bos.size() > empty) {

@@ -18,7 +18,6 @@ import java.util.*;
 import render.Rules.*;
 import s57.S57val.*;
 import s57.S57map;
-import s57.S57obj.Obj;
 import s57.S57map.*;
 import symbols.Areas;
 import symbols.Symbols;
@@ -36,13 +35,15 @@ public class Renderer {
 	static Graphics2D g2;
 	static int zoom;
 
-	public static void reRender(Graphics2D g, int z, double factor, S57map m, ChartContext c) {
+	public static void reRender(Graphics2D g, Rectangle rect, int z, double factor, S57map m, ChartContext c) {
 		g2 = g;
 		zoom = z;
 		context = c;
 		map = m;
 		sScale = symbolScale[zoom] * factor;
 		if (map != null) {
+			g2.setBackground(Rules.Bwater);
+			g2.clearRect(rect.x, rect.y, rect.width, rect.height);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 			g2.setStroke(new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));

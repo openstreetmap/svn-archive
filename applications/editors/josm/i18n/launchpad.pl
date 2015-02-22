@@ -191,7 +191,7 @@ sub dologin
     $mech->submit_form(form_number => 1);
     getcredits();
       #print $mech->status() ." - ". $mech->uri()."\n"; 
-    $mech->submit_form(with_fields => {"email" => $user, "password" => $pwd});
+    $mech->submit_form(form_id => "login-form", fields => {"email" => $user, "password" => $pwd});
       #$mech->dump_headers();
       #print $mech->status() ." - ". $mech->uri()."\n"; 
       #print $mech->content();

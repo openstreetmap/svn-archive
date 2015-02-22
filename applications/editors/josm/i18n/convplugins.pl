@@ -23,8 +23,10 @@ foreach my $arg (@ARGV)
       chomp($line);
       if($line =~ /name=\"[Pp]lugin.[Dd]escription\" +value=\"(.*)\"/)
       {
+        my $descr = $1;
+        next if $descr eq '${plugin.description}';
         $printed = 1;
-        print "/* Plugin $plugin */\ntr(\"$1\");\n" if($plugin ne "myPluginName");
+        print "/* Plugin $plugin */\ntr(\"$descr\");\n" if($plugin ne "myPluginName");
       }
       elsif($line =~ /project name=\"(.*?)\"/)
       {

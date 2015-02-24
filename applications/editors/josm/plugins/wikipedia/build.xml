@@ -5,6 +5,7 @@
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7521"/>
+    <property name="plugin.canloadatruntime" value="true"/>
 
     <property name="plugin.author" value="simon04"/>
     <property name="plugin.class" value="org.wikipedia.WikipediaPlugin"/>

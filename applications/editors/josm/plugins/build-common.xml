@@ -440,7 +440,7 @@
             </groovyc>
         </sequential>
     </target>
-    <target name="test" depends="dist, test-compile" 
+    <target name="test" depends="dist, test-clean, test-compile" 
         description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>

@@ -115,9 +115,6 @@ usable for standard osm style):
     sudo -u postgres psql osm < ./mapnik-german/views/view-polygon.sql
     sudo -u postgres psql osm < ./mapnik-german/views/view-roads.sql
     sudo -u postgres psql osm < ./mapnik-german/views/get_localized_name.sql
-   
-    sudo -u postgres psql -d osm
-    SELECT populate_geometry_columns();
 
 
 Generate XML file

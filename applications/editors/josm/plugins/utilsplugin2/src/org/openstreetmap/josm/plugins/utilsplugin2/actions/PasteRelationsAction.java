@@ -1,14 +1,25 @@
 package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.*;
-import java.util.*;
-import java.awt.event.KeyEvent;
-import org.openstreetmap.josm.tools.Shortcut;
-import java.awt.event.ActionEvent;
-import org.openstreetmap.josm.actions.JosmAction;
 import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.PrimitiveData;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Pastes relation membership from objects in the paste buffer onto selected object(s).
@@ -32,20 +43,22 @@ public class PasteRelationsAction extends JosmAction {
         Map<Relation, String> relations = new HashMap<>();
         for( PrimitiveData pdata : Main.pasteBuffer.getDirectlyAdded() ) {
             OsmPrimitive p = getCurrentDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
-            for( Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
-                String role = relations.get(r);
-                for( RelationMember m : r.getMembers() ) {
-                    if( m.getMember().equals(p) ) {
-                        String newRole = m.getRole();
-                        if( newRole != null && role == null )
-                            role = newRole;
-                        else if( newRole != null ? !newRole.equals(role) : role != null ) {
-                            role = "";
-                            break;
-                        }
-                    }
-                }
-                relations.put(r, role);
+            if (p != null) {
+	            for( Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
+	                String role = relations.get(r);
+	                for( RelationMember m : r.getMembers() ) {
+	                    if( m.getMember().equals(p) ) {
+	                        String newRole = m.getRole();
+	                        if( newRole != null && role == null )
+	                            role = newRole;
+	                        else if( newRole != null ? !newRole.equals(role) : role != null ) {
+	                            role = "";
+	                            break;
+	                        }
+	                    }
+	                }
+	                relations.put(r, role);
+	            }
             }
         }
 
@@ -55,7 +68,7 @@ public class PasteRelationsAction extends JosmAction {
             boolean changed = false;
             for( OsmPrimitive p : selection ) {
                 if( !r.getMemberPrimitives().contains(p) && !r.equals(p) ) {
-                    String role = relations.get(rel);              
+                    String role = relations.get(rel);
                     if ("associatedStreet".equals(r.get("type"))) {
                         if (p.get("highway") != null) {
                             role="street";

@@ -58,6 +58,7 @@
         <ant target="dist" dir="lakewalker"/>
         <ant target="dist" dir="livegps"/>
         <ant target="dist" dir="mapdust"/>
+        <ant target="dist" dir="mapillary"/>
         <ant target="dist" dir="measurement"/>
         <ant target="dist" dir="merge-overlap"/>
         <ant target="dist" dir="michigan_left"/>
@@ -159,6 +160,7 @@
         <ant target="clean" dir="livegps"/>
         <ant target="clean" dir="log4j"/>
         <ant target="clean" dir="mapdust"/>
+        <ant target="clean" dir="mapillary"/>
         <ant target="clean" dir="measurement"/>
         <ant target="clean" dir="merge-overlap"/>
         <ant target="clean" dir="michigan_left"/>

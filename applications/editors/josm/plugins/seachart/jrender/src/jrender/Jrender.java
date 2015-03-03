@@ -9,7 +9,6 @@
 
 package jrender;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -31,12 +30,12 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
-import render.ChartContext;
-import render.Renderer;
-import render.Rules;
 import s57.S57map;
 import s57.S57map.Feature;
 import s57.S57map.Snode;
+import symbols.*;
+import render.*;
+import render.Rules.RuleSet;
 
 public class Jrender {
 
@@ -213,7 +212,7 @@ public class Jrender {
 		for (int i = 0; i < (12 - zoom); i++) size *= 2;
 		Rectangle rect = new Rectangle(size, size);
 		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
-		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
+		Renderer.reRender(img.createGraphics(), RuleSet.BASE, rect, zoom, 0.05, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 //		empty = bos.size();
@@ -226,12 +225,12 @@ public class Jrender {
 			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
 			Document document = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
 			SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-			svgGenerator.setBackground(Rules.Bwater);
+			svgGenerator.setBackground(Symbols.Bwater);
 			svgGenerator.clearRect(rect.x, rect.y, rect.width, rect.height);
 			svgGenerator.setSVGCanvasSize(rect.getSize());
 			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
 //			svgGenerator.translate(-256, -256);
-			Renderer.reRender(svgGenerator, rect, zoom, 0.05, map, context);
+			Renderer.reRender(svgGenerator, RuleSet.BASE, rect, zoom, 0.05, map, context);
 			svgGenerator.stream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".svg");
 //		}
 	}
@@ -244,7 +243,7 @@ public class Jrender {
 		Graphics2D g2 = img.createGraphics();
 		g2.scale(s, s);
 		g2.translate(-(256 + (xn * 256 / s)), -(256 + (yn * 256 / s)));
-		Renderer.reRender(g2, new Rectangle(256, 256), zoom, 1, map, context);
+		Renderer.reRender(g2, RuleSet.BASE, new Rectangle(256, 256), zoom, 1, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 		if (bos.size() > empty) {

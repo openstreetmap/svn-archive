@@ -145,7 +145,7 @@ public class Js57toosm {
 							}
 							out.format("  </way>%n");
 						}
-						out.format("  <relation id='%d' version='1'>%n", -map.ref++);
+						out.format("  <relation id='%d' version='1'>%n", -map.xref++);
 						out.format("    <tag k='type' v='multipolygon'/>%n");
 						git = map.new GeomIterator(feature.geom);
 						int outers = feature.geom.outers;

@@ -19,6 +19,12 @@ import java.util.ArrayList;
 
 public class Symbols {
 
+	public static final Color Yland = new Color(0xf1c010);
+	public static final Color Bwater = new Color(0x78acd2);
+	public static final Color Gdries = new Color(0x689868);
+	public static final Color Mline = new Color(0x9a6078);
+	public static final Color Msymb = new Color(0xa30075);
+	
 	public enum Form {
 		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, V3, D2, D3, D4, B1, S2, S3, S4, C2, X2
 	}

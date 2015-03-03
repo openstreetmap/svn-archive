@@ -20,6 +20,7 @@ import s57.S57obj.*;
 import s57.S57val.*;
 import s57.S57map.*;
 import symbols.Beacons;
+import symbols.Symbols;
 import symbols.Topmarks;
 import symbols.Symbols.*;
 
@@ -161,7 +162,7 @@ public class Signals {
 			}
 		}
 		if ((Renderer.zoom >= 15) && !bstr.isEmpty()) {
-			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Rules.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
+			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
 		}
 	}
 
@@ -272,10 +273,10 @@ public class Signals {
 		}
 		if (Renderer.zoom >= 15) {
 			if (vais) {
-				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), Rules.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 			}
 			if (!bstr.isEmpty()) {
-				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Rules.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -110)));
+				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -110)));
 			}
 		}
 	}

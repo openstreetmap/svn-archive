@@ -29,12 +29,6 @@ public class Rules {
 	
 	public enum RuleSet { ALL, BASE, SEAMARK }
 
-	public static final Color Yland = new Color(0xdcb820);
-	public static final Color Bwater = new Color(0x3ea8c8);
-	public static final Color Gdries = new Color(0x50b050);
-	public static final Color Mline = new Color(0xc480ff);
-	public static final Color Msymb = new Color(0xa30075);
-	
 	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
 	static {
 		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
@@ -128,7 +122,7 @@ public class Rules {
 	public static Enum<?> getAttEnum(Feature feature, Obj obj, int idx, Att att) {
 		ArrayList<?> list = (ArrayList<?>)getAttVal(feature, obj, idx, att);
 		if (list != null) {
-			return ((ArrayList<Enum>)list).get(0);
+			return ((ArrayList<Enum<?>>)list).get(0);
 		}
 		return S57val.unknAtt(att);
 	}
@@ -178,7 +172,8 @@ public class Rules {
 	
 	static Feature feature;
 	static ArrayList<Feature> objects;
-	static RuleSet ruleset;	
+	static RuleSet ruleset;
+	
 	static boolean testObject(Obj obj) {
 		return ((objects = Renderer.map.features.get(obj)) != null);
 	}
@@ -289,12 +284,12 @@ public class Rules {
 		case DEPARE:
 			Double depmax = 0.0;
 			if (((depmax = (Double) getAttVal(feature, Obj.DEPARE, 0, Att.DRVAL2)) != null) && (depmax <= 0.0)) {
-				Renderer.lineVector(feature, new LineStyle(Gdries));
+				Renderer.lineVector(feature, new LineStyle(Symbols.Gdries));
 			}
 			break;
 		case LAKARE:
 		case RIVBNK:
-			Renderer.lineVector(feature, new LineStyle(Bwater, 10, Bwater));
+			Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 10, Symbols.Bwater));
 			break;
 		case DRGARE:
 			if (Renderer.zoom < 16)
@@ -306,9 +301,9 @@ public class Rules {
 		case FAIRWY:
 			if (feature.geom.area > 2.0) {
 				if (Renderer.zoom < 16)
-					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
+					Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 8, new float[] { 50, 50 }, new Color(0x40ffffff, true)));
 				else
-					Renderer.lineVector(feature, new LineStyle(Mline, 8, new float[] { 50, 50 }));
+					Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 8, new float[] { 50, 50 }));
 			} else {
 				if (Renderer.zoom >= 14)
 					Renderer.lineVector(feature, new LineStyle(new Color(0x40ffffff, true)));
@@ -317,15 +312,15 @@ public class Rules {
 		case LKBSPT:
 		case LOKBSN:
 		case HRBBSN:
-			Renderer.lineVector(feature, new LineStyle(Color.black, 10, Bwater));
+			Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Bwater));
 			break;
 		case HRBFAC:
 			if (feature.objs.get(Obj.HRBBSN) != null) {
-				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Bwater));
+				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Bwater));
 			}
 			break;
 		case LNDARE:
-			Renderer.lineVector(feature, new LineStyle(Yland));
+			Renderer.lineVector(feature, new LineStyle(Symbols.Yland));
 			break;
 		case MARCUL:
 			if (Renderer.zoom >= 12) {
@@ -347,7 +342,7 @@ public class Rules {
 		case RESARE:
 		case MIPARE:
 			if (Renderer.zoom >= 12) {
-				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, null, 0, Mline);
+				Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, null, 0, Symbols.Mline);
 				if (testAttribute(feature, feature.type, 0, Att.CATREA, CatREA.REA_NWAK)) {
 					Renderer.symbol(feature, Areas.NoWake);
 				}
@@ -405,8 +400,8 @@ public class Rules {
 			break;
 		case SPLARE:
 			if (Renderer.zoom >= 12) {
-				Renderer.symbol(feature, Areas.Plane, new Scheme(Msymb));
-				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, null, 10, Mline);
+				Renderer.symbol(feature, Areas.Plane, new Scheme(Symbols.Msymb));
+				Renderer.lineSymbols(feature, Areas.Restricted, 0.5, Areas.LinePlane, null, 10, Symbols.Mline);
 			}
 			addName(feature, 15, new Font("Arial", Font.BOLD, 80), new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 			break;
@@ -524,7 +519,7 @@ public class Rules {
 	private static void cables() {
 		if ((Renderer.zoom >= 16) && (feature.geom.length < 2)) {
 			if (feature.type == Obj.CBLSUB) {
-				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, null, 0, Mline);
+				Renderer.lineSymbols(feature, Areas.Cable, 0.0, null, null, 0, Symbols.Mline);
 			} else if (feature.type == Obj.CBLOHD) {
 				AttMap atts = feature.objs.get(Obj.CBLOHD).get(0);
 				if ((atts != null) && (atts.containsKey(Att.CATCBL)) && (atts.get(Att.CATCBL).val == CatCBL.CBL_POWR)) {
@@ -636,9 +631,9 @@ public class Rules {
 		switch (feature.type) {
 		case ACHBRT:
 			if (Renderer.zoom >= 14) {
-				Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Mline));
+				Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Symbols.Mline));
 				if (Renderer.zoom >= 15) {
-					Renderer.labelText(feature, name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Msymb, LabelStyle.RRCT, Mline, Color.white, new Delta(Handle.BC));
+					Renderer.labelText(feature, name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Symbols.Msymb, LabelStyle.RRCT, Symbols.Mline, Color.white, new Delta(Handle.BC));
 				}
 			}
 			if (getAttVal(feature, Obj.ACHBRT, 0, Att.RADIUS) != null) {
@@ -648,7 +643,7 @@ public class Rules {
 					if (units == UniHLU.HLU_UNKN) {
 						units = UniHLU.HLU_METR;
 					}
-					Renderer.lineCircle(feature, new LineStyle(Mline, 4, new float[] { 10, 10 }, null), radius, units);
+					Renderer.lineCircle(feature, new LineStyle(Symbols.Mline, 4, new float[] { 10, 10 }, null), radius, units);
 				}
 			}
 			break;
@@ -657,13 +652,13 @@ public class Rules {
 				if (feature.geom.prim != Pflag.AREA) {
 					Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Color.black));
 				} else {
-					Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Mline));
-					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, null, 10, Mline);
+					Renderer.symbol(feature, Harbours.Anchorage, new Scheme(Symbols.Mline));
+					Renderer.lineSymbols(feature, Areas.Restricted, 1.0, Areas.LineAnchor, null, 10, Symbols.Mline);
 				}
-				addName(feature, 15, new Font("Arial", Font.BOLD, 60), Mline, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
+				addName(feature, 15, new Font("Arial", Font.BOLD, 60), Symbols.Mline, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
 				ArrayList<StsSTS> sts = (ArrayList<StsSTS>)getAttList(feature, Obj.ACHARE, 0, Att.STATUS);
 				if ((Renderer.zoom >= 15) && (sts.contains(StsSTS.STS_RESV))) {
-					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.PLAIN, 50), Mline, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
+					Renderer.labelText(feature, "Reserved", new Font("Arial", Font.PLAIN, 50), Symbols.Mline, new Delta(Handle.TC, AffineTransform.getTranslateInstance(0, 60)));
 				}
 			}
 			ArrayList<CatACH> cats = (ArrayList<CatACH>) getAttList(feature, Obj.ACHARE, 0, Att.CATACH);
@@ -671,27 +666,27 @@ public class Rules {
 			for (CatACH cat : cats) {
 				switch (cat) {
 				case ACH_DEEP:
-					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "DW", new Font("Arial", Font.BOLD, 50), Symbols.Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_TANK:
-					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "Tanker", new Font("Arial", Font.BOLD, 50), Symbols.Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_H24P:
-					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.labelText(feature, "24h", new Font("Arial", Font.BOLD, 50), Symbols.Msymb, new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_EXPL:
-					Renderer.symbol(feature, Harbours.Explosives, new Scheme(Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.symbol(feature, Harbours.Explosives, new Scheme(Symbols.Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_QUAR:
-					Renderer.symbol(feature, Harbours.Hospital, new Scheme(Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.symbol(feature, Harbours.Hospital, new Scheme(Symbols.Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				case ACH_SEAP:
-					Renderer.symbol(feature, Areas.Seaplane, new Scheme(Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
+					Renderer.symbol(feature, Areas.Seaplane, new Scheme(Symbols.Msymb), new Delta(Handle.RC, AffineTransform.getTranslateInstance(-60, dy)));
 					dy += 60;
 					break;
 				default:
@@ -700,8 +695,8 @@ public class Rules {
 			break;
 		case BERTHS:
 			if (Renderer.zoom >= 14) {
-				Renderer.lineVector(feature, new LineStyle(Mline, 6, new float[] { 20, 20 }));
-				Renderer.labelText(feature, name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), Msymb, LabelStyle.RRCT, Mline, Color.white);
+				Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 6, new float[] { 20, 20 }));
+				Renderer.labelText(feature, name == null ? " " : name, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, LabelStyle.RRCT, Symbols.Mline, Color.white);
 			}
 			break;
 		case BUISGL:
@@ -960,7 +955,7 @@ public class Rules {
 	private static void pipelines() {
 		if ((Renderer.zoom >= 16) && (feature.geom.length < 2)) {
 			if (feature.type == Obj.PIPSOL) {
-				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, null, 0, Mline);
+				Renderer.lineSymbols(feature, Areas.Pipeline, 1.0, null, null, 0, Symbols.Mline);
 			} else if (feature.type == Obj.PIPOHD) {
 				Renderer.lineVector(feature, new LineStyle(Color.black, 8));
 				AttMap atts = feature.atts;
@@ -1009,22 +1004,22 @@ public class Rules {
 		case TSSCRS:
 		case TSSRON:
 			if (Renderer.zoom <= 15)
-				Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true)));
+				Renderer.lineVector(feature, new LineStyle(Symbols.Mline));
 			else
-				Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
-			addName(feature, 10, new Font("Arial", Font.BOLD, 150), new Color(0x80c48080, true));
+				Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 20, null, null));
+			addName(feature, 10, new Font("Arial", Font.BOLD, 150), Symbols.Mline);
 			break;
 		case TSELNE:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, null, null));
+			Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 20, null, null));
 			break;
 		case TSSLPT:
-			Renderer.lineSymbols(feature, Areas.LaneArrow, 0.5, null, null, 0, new Color(0x80c48080, true));
+			Renderer.lineSymbols(feature, Areas.LaneArrow, 0.5, null, null, 0, Symbols.Mline);
 			break;
 		case TSSBND:
-			Renderer.lineVector(feature, new LineStyle(new Color(0x80c48080, true), 20, new float[] { 40, 40 }, null));
+			Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 20, new float[] { 40, 40 }, null));
 			break;
 		case ISTZNE:
-			Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, null, 0, new Color(0x80c48080, true));
+			Renderer.lineSymbols(feature, Areas.Restricted, 1.0, null, null, 0, Symbols.Mline);
 			break;
 		default:
 			break;
@@ -1032,12 +1027,15 @@ public class Rules {
 	}
 
 	private static void shoreline() {
+		CatSLC cat = (CatSLC) getAttEnum(feature, feature.type, 0, Att.CATSLC);
 		if ((ruleset == RuleSet.ALL) || (ruleset == RuleSet.BASE)) {
-			Renderer.lineVector(feature, new LineStyle(Color.black, 10, Yland));
+			if ((cat != CatSLC.SLC_SWAY) && (cat != CatSLC.SLC_TWAL)) {
+				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Yland));
+			}
 		}
 		if ((ruleset == RuleSet.ALL) || (ruleset == RuleSet.SEAMARK)) {
 			if (Renderer.zoom >= 12) {
-				switch ((CatSLC) getAttEnum(feature, feature.type, 0, Att.CATSLC)) {
+				switch (cat) {
 				case SLC_TWAL:
 					WatLEV lev = (WatLEV) getAttEnum(feature, feature.type, 0, Att.WATLEV);
 					if (lev == WatLEV.LEV_CVRS) {
@@ -1144,14 +1142,14 @@ public class Rules {
 			case RADSTA:
 				Renderer.symbol(feature, Harbours.SignalStation);
 				Renderer.symbol(feature, Beacons.RadarStation);
-				Renderer.labelText(feature, "Ra", new Font("Arial", Font.PLAIN, 40), Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
+				Renderer.labelText(feature, "Ra", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
 				break;
 			case PILBOP:
 				Renderer.symbol(feature, Harbours.Pilot);
-				addName(feature, 15, new Font("Arial", Font.BOLD, 50), Msymb , new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, -40)));
+				addName(feature, 15, new Font("Arial", Font.BOLD, 50), Symbols.Msymb , new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, -40)));
 				CatPIL cat = (CatPIL) getAttEnum(feature, feature.type, 0, Att.CATPIL);
 				if (cat == CatPIL.PIL_HELI) {
-					Renderer.labelText(feature, "H", new Font("Arial", Font.PLAIN, 40), Msymb, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
+					Renderer.labelText(feature, "H", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));
 				}
 				break;
 			case CGUSTA:
@@ -1192,7 +1190,7 @@ public class Rules {
 	}
 
 	private static void waterways() {
-		Renderer.lineVector(feature, new LineStyle(Bwater, 20));
+		Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 20));
 	}
 
 	private static void wrecks() {

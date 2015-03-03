@@ -52,7 +52,7 @@ public class Areas {
 	static {
 		LaneArrow.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-240,40,240)));
 		LaneArrow.add(new Instr(Form.STRK, new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
-		LaneArrow.add(new Instr(Form.FILL, new Color(0x80c480ff, true)));
+		LaneArrow.add(new Instr(Form.FILL, Symbols.Mline));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(15,0); p.lineTo(15,-195); p.lineTo(40,-195);
 		p.lineTo(0,-240); p.lineTo(-40,-195); p.lineTo(-15,-195); p.lineTo(-15,0); p.closePath();
 		LaneArrow.add(new Instr(Form.PLIN, p));

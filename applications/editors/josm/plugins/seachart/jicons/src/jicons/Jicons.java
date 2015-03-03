@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -30,9 +31,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.DOMImplementation;
 
 import s57.S57map;
-import s57.S57map.Feature;
-import s57.S57map.Snode;
+import s57.S57map.*;
 import render.*;
+import render.Rules.RuleSet;
 
 public class Jicons {
 	
@@ -77,7 +78,7 @@ public class Jicons {
 						case "PNG":
 							img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 							g2 = img.createGraphics();
-							Renderer.reRender(g2, 16, s / Renderer.symbolScale[16], map, context);
+							Renderer.reRender(g2, RuleSet.SEAMARK, new Rectangle(x, y, w, h), 16, s / Renderer.symbolScale[16], map, context);
 							try {
 								ImageIO.write(img, "png", new File(args[1] + file + ".png"));
 							} catch (Exception e) {
@@ -91,7 +92,7 @@ public class Jicons {
 							Document document = domImpl.createDocument(svgNS, "svg", null);
 							SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 							svgGenerator.setSVGCanvasSize(new Dimension(w, h));
-							Renderer.reRender(svgGenerator, 16, s / Renderer.symbolScale[16], map, context);
+							Renderer.reRender(svgGenerator, RuleSet.SEAMARK, new Rectangle(x, y, w, h), 16, s / Renderer.symbolScale[16], map, context);
 							boolean useCSS = true;
 							Writer out = null;
 							try {

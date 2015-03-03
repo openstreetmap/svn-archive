@@ -190,7 +190,7 @@ public class S57map {
 		public ArrayList<Prim> elems;	// Ordered list of elements
 		public int outers;						// Number of outers
 		public int inners;						// Number of inners
-		public ArrayList<Comp> refs;	// Ordered list of compounds
+		public ArrayList<Comp> comps;	// Ordered list of compounds
 		public double area;						// Area of feature
 		public double length;					// Length of feature
 		public Snode centre;					// Centre of feature
@@ -198,7 +198,7 @@ public class S57map {
 			prim = p;
 			elems = new ArrayList<Prim>();
 			outers = inners = 0;
-			refs = new ArrayList<Comp>();
+			comps = new ArrayList<Comp>();
 			area = 0;
 			length = 0;
 			centre = new Snode();
@@ -244,6 +244,7 @@ public class S57map {
 	public long xref;
 	private Feature feature;
 	private Edge edge;
+	private KeyVal<?> osm = S57osm.OSMtag("", "");
 
 	public S57map() {
 		nodes = new NodeTab();		// All nodes in map
@@ -387,6 +388,7 @@ public class S57map {
 		feature.geom.prim = Pflag.POINT;
 		feature.geom.elems.add(new Prim(id));
 		edge = null;
+		osm = S57osm.OSMtag("", "");
 	}
 
 	public void addEdge(long id) {
@@ -395,6 +397,7 @@ public class S57map {
 		feature.geom.prim = Pflag.LINE;
 		feature.geom.elems.add(new Prim(id));
 		edge = new Edge();
+		osm = S57osm.OSMtag("", "");
 	}
 
 	public void addToEdge(long node) {
@@ -414,6 +417,7 @@ public class S57map {
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.AREA;
 		edge = null;
+		osm = S57osm.OSMtag("", "");
 	}
 
 	public void addToArea(long id, boolean outer) {
@@ -473,23 +477,11 @@ public class S57map {
 				}
 			}
 		} else {
-			KeyVal kv = S57osm.OSMtag(key, val);
+			KeyVal<?> kv = S57osm.OSMtag(key, val);
 			if (kv.obj != Obj.UNKOBJ) {
-				if (feature.type == Obj.UNKOBJ) {
-					feature.type = kv.obj;
-				}
-				ObjTab objs = feature.objs.get(kv.obj);
-				if (objs == null) {
-					objs = new ObjTab();
-					feature.objs.put(kv.obj, objs);
-				}
-				AttMap atts = objs.get(0);
-				if (atts == null) {
-					atts = new AttMap();
-					objs.put(0, atts);
-				}
+				osm.obj = kv.obj;
 				if (kv.att != Att.UNKATT) {
-					atts.put(kv.att, new AttVal(kv.att, kv.conv, kv.val));
+					osm = kv;
 				}
 			}
 		}
@@ -516,165 +508,261 @@ public class S57map {
 		default:
 			break;
 		}
-		if ((sortGeom(feature)) && (feature.type != Obj.UNKOBJ) && !((edge != null) && (edge.last == 0))) {
-			index.put(id, feature);
-			if (features.get(feature.type) == null) {
-				features.put(feature.type, new ArrayList<Feature>());
+		if (sortGeom(feature) && !((edge != null) && (edge.last == 0))) {
+			if (osm.obj != Obj.UNKOBJ) {
+				if (feature.type == Obj.UNKOBJ) {
+					feature.type = osm.obj;
+					ObjTab objs = feature.objs.get(osm.obj);
+					if (objs == null) {
+						objs = new ObjTab();
+						feature.objs.put(osm.obj, objs);
+					}
+					AttMap atts = objs.get(0);
+					if (atts == null) {
+						atts = new AttMap();
+						objs.put(0, atts);
+					}
+					if (osm.att != Att.UNKATT) {
+						atts.put(osm.att, new AttVal<>(osm.att, osm.conv, osm.val));
+					}
+				} else {
+					Feature base = new Feature();
+					base.reln = Rflag.MASTER;
+					base.geom = feature.geom;
+					base.type = osm.obj;
+					ObjTab objs = new ObjTab();
+					base.objs.put(osm.obj, objs);
+					AttMap atts = new AttMap();
+					objs.put(0, atts);
+					if (osm.att != Att.UNKATT) {
+						atts.put(osm.att, new AttVal<>(osm.att, osm.conv, osm.val));
+					}
+					index.put(++xref, base);
+					if (features.get(osm.obj) == null) {
+						features.put(osm.obj, new ArrayList<Feature>());
+					}
+					features.get(osm.obj).add(base);
+				}
 			}
-			features.get(feature.type).add(feature);
-			feature.geom.centre = findCentroid(feature);
+			if (feature.type != Obj.UNKOBJ) {
+				index.put(id, feature);
+				if (features.get(feature.type) == null) {
+					features.put(feature.type, new ArrayList<Feature>());
+				}
+				features.get(feature.type).add(feature);
+			}
 		}
 	}
 	
+	enum Ext {I, N, W, S, E }
 	public void mapDone() {
-		ArrayList<Feature> coasts = new ArrayList<Feature>();
-		ArrayList<Feature> lands = new ArrayList<Feature>();
-		if (features.get(Obj.LNDARE) == null) {
-			features.put(Obj.LNDARE, new ArrayList<Feature>());
-		}
-		for (Feature feature : features.get(Obj.COALNE)) {
-			Feature land = new Feature();
-			land.type = Obj.LNDARE;
-			land.reln = Rflag.MASTER;
-			land.objs.put(Obj.LNDARE, new ObjTab());
-			if (feature.geom.prim == Pflag.AREA) {
-				land.geom = feature.geom;
-				features.get(Obj.LNDARE).add(land);
-			} else if (feature.geom.prim == Pflag.LINE) {
-				land.geom.prim = Pflag.LINE;
-				for (int i = 0; i < feature.geom.elems.size(); i++) {
-					land.geom.elems.add(feature.geom.elems.get(i));
-				}
-				coasts.add(land);
+		class Land {
+			long first;
+			Snode start;
+			Ext sbound;
+			long last;
+			Snode end;
+			Ext ebound;
+			Feature land;
+			Land (Feature l) {
+				land = l;
+				first = last = 0;
+				start = end = null;
+				sbound = ebound = Ext.I;
 			}
 		}
-		while (coasts.size() > 0) {
-			Feature land = coasts.remove(0);
-			Edge fedge = edges.get(land.geom.elems.get(0).id);
-			long first = fedge.first;
-			long last = edges.get(land.geom.elems.get(land.geom.elems.size() - 1).id).last;
-			if (coasts.size() > 0) {
-				boolean added = true;
-				while (added) {
-					added = false;
-					for (int i = 0; i < coasts.size(); i++) {
-						Feature coast = coasts.get(i);
-						Edge edge = edges.get(coast.geom.elems.get(0).id);
-						if (edge.first == last) {
-							land.geom.elems.add(coast.geom.elems.get(0));
-							last = edge.last;
-							coasts.remove(i--);
-							added = true;
-						} else if (edge.last == first) {
-							land.geom.elems.add(0, coast.geom.elems.get(0));
-							first = edge.first;
-							coasts.remove(i--);
-							added = true;
+		if (features.get(Obj.COALNE) != null) {
+			ArrayList<Feature> coasts = new ArrayList<Feature>();
+			ArrayList<Land> lands = new ArrayList<Land>();
+			if (features.get(Obj.LNDARE) == null) {
+				features.put(Obj.LNDARE, new ArrayList<Feature>());
+			}
+			for (Feature feature : features.get(Obj.COALNE)) {
+				Feature land = new Feature();
+				land.type = Obj.LNDARE;
+				land.reln = Rflag.MASTER;
+				land.objs.put(Obj.LNDARE, new ObjTab());
+				if (feature.geom.prim == Pflag.AREA) {
+					land.geom = feature.geom;
+					features.get(Obj.LNDARE).add(land);
+				} else if (feature.geom.prim == Pflag.LINE) {
+					land.geom.prim = Pflag.LINE;
+					for (int i = 0; i < feature.geom.elems.size(); i++) {
+						land.geom.elems.add(feature.geom.elems.get(i));
+					}
+					coasts.add(land);
+				}
+			}
+			while (coasts.size() > 0) {
+				Feature land = coasts.remove(0);
+				Edge fedge = edges.get(land.geom.elems.get(0).id);
+				long first = fedge.first;
+				long last = edges.get(land.geom.elems.get(land.geom.elems.size() - 1).id).last;
+				if (coasts.size() > 0) {
+					boolean added = true;
+					while (added) {
+						added = false;
+						for (int i = 0; i < coasts.size(); i++) {
+							Feature coast = coasts.get(i);
+							Edge edge = edges.get(coast.geom.elems.get(0).id);
+							if (edge.first == last) {
+								land.geom.elems.add(coast.geom.elems.get(0));
+								last = edge.last;
+								coasts.remove(i--);
+								added = true;
+							} else if (edge.last == first) {
+								land.geom.elems.add(0, coast.geom.elems.get(0));
+								first = edge.first;
+								coasts.remove(i--);
+								added = true;
+							}
+						}
+					}
+				}
+				lands.add(new Land(land));
+			}
+			ArrayList<Land> islands = new ArrayList<Land>();
+			for (Land land : lands) {
+				sortGeom(land.land);
+				if (land.land.geom.prim == Pflag.AREA) {
+					islands.add(land);
+					features.get(Obj.LNDARE).add(land.land);
+				}
+			}
+			for (Land island : islands) {
+				lands.remove(island);
+			}
+			for (Land land : lands) {
+				GeomIterator git = new GeomIterator(land.land.geom);
+				Snode prev = null;
+				Ext bprev = Ext.I;
+				Ext ext;
+				land.ebound = land.sbound = Ext.I;
+				while (git.hasComp()) {
+					git.nextComp();
+					while (git.hasEdge()) {
+						git.nextEdge();
+						while (git.hasNode()) {
+							long ref = git.nextRef(false);
+							Snode node = nodes.get(ref);
+							if (node == null) continue;
+							if (land.first == 0) {
+								land.first = ref;
+							}
+							if (prev == null) {
+								prev = node;
+							}
+							if ((node.lat >= bounds.maxlat) && (node.lon < bounds.maxlon)) {
+								ext = Ext.N;
+							} else if (node.lon <= bounds.minlon) {
+								ext = Ext.W;
+							} else if (node.lat <= bounds.minlat) {
+								ext = Ext.S;
+							} else if (node.lon >= bounds.maxlon) {
+								ext = Ext.E;
+							} else {
+								ext = Ext.I;
+							}
+							if (ext == Ext.I) {
+								if (land.start == null) {
+									land.start = prev;
+									land.sbound = bprev;
+								}
+								land.end = null;
+								land.ebound = Ext.I;
+							} else {
+								if ((land.start != null) && (land.end == null)) {
+									land.end = node;
+									land.ebound = ext;
+								}
+							}
+							prev = node;
+							bprev = ext;
+							land.last = ref;
 						}
 					}
 				}
 			}
-			lands.add(land);
-		}
-		for (Feature land : lands) {
-			long first = edges.get(land.geom.elems.get(0).id).first;
-			long last = edges.get(land.geom.elems.get(land.geom.elems.size()-1).id).last;
-			Ext fext = outsideBounds(first);
-			Ext lext = outsideBounds(last);
-			Edge nedge = new Edge();
-			nedge.first = last;
-			nedge.last = first;
-			switch (lext) {
-			case N:
-				if ((lext == fext) || (fext != Ext.N)) {
-					nedge.nodes.add(1L);
-					if ((fext != Ext.W)) {
-						nedge.nodes.add(2L);
-						if ((fext != Ext.S)) {
-							nedge.nodes.add(3L);
-							if ((fext != Ext.W)) {
-								nedge.nodes.add(4L);
-							}
-						}
-					}
+			islands = new ArrayList<Land>();
+			for (Land land : lands) {
+				if ((land.sbound == Ext.I) || (land.ebound == Ext.I)) {
+					islands.add(land);
 				}
-				break;
-			case W:
-				if ((lext == fext) || (fext != Ext.W)) {
-					nedge.nodes.add(2L);
-					if ((fext != Ext.S)) {
-						nedge.nodes.add(3L);
-						if ((fext != Ext.E)) {
-							nedge.nodes.add(4L);
-							if ( (fext != Ext.N)) {
-								nedge.nodes.add(1L);
-							}
-						}
-					}
-				}
-				break;
-			case S:
-				if ((lext == fext) || (fext != Ext.S)) {
-					nedge.nodes.add(3L);
-					if ((fext != Ext.E)) {
-						nedge.nodes.add(4L);
-						if ((fext != Ext.N)) {
-							nedge.nodes.add(1L);
-							if ((fext != Ext.W)) {
-								nedge.nodes.add(2L);
-							}
-						}
-					}
-				}
-				break;
-			case E:
-				if ((lext == fext) || (fext != Ext.E)) {
-					nedge.nodes.add(4L);
-					if ((fext != Ext.N)) {
-						nedge.nodes.add(1L);
-						if ((fext != Ext.W)) {
-							nedge.nodes.add(2L);
-							if ((fext != Ext.S)) {
-								nedge.nodes.add(3L);
-							}
-						}
-					}
-				}
-				break;
-			default:
 			}
-			edges.put(++xref, nedge);
-			land.geom.elems.add(new Prim(xref));
-			sortGeom(land);
-			features.get(Obj.LNDARE).add(land);
+			for (Land island : islands) {
+				lands.remove(island);
+			}
+			while (lands.size() > 0) {
+				Land land = lands.get(0);
+				Edge nedge = new Edge();
+				nedge.first = land.last;
+				Ext bound = land.ebound;
+				Snode last = land.end;
+				double delta = Math.PI;
+				int idx = -1;
+				Land next = null;
+				while (idx < 0) {
+					for (int i = 0; i < lands.size(); i++) {
+						next = lands.get(i);
+						if (next.sbound == bound) {
+							double diff = -Math.PI;
+							switch (bound) {
+							case N:
+								diff = last.lon - next.start.lon;
+								break;
+							case W:
+								diff = last.lat - next.start.lat;
+								break;
+							case S:
+								diff = next.start.lon - last.lon;
+								break;
+							case E:
+								diff = next.start.lat - last.lat;
+								break;
+							default:
+								continue;
+							}
+							if ((diff >= 0.0) && (diff < delta)) {
+								delta = diff;
+								idx = i;
+							}
+						}
+					}
+					if (idx < 0) {
+						long ref = (long)bound.ordinal();
+						last = nodes.get(ref);
+						nedge.nodes.add(ref);
+						ref = ref < 4 ? ++ref : 1;
+						for (Ext e : Ext.values()) {
+							if (ref == e.ordinal()) {
+								bound = e;
+								break;
+							}
+						}
+					}
+				}
+				next = lands.get(idx);
+				nedge.last = next.first;
+				edges.put(++xref, nedge);
+				land.land.geom.elems.add(new Prim(xref));
+				if (next != land) {
+					land.land.geom.elems.addAll(next.land.geom.elems);
+					land.ebound = next.ebound;
+					land.end = next.end;
+					land.last = next.last;
+					lands.remove(idx);
+				}
+				sortGeom(land.land);
+				if (land.land.geom.prim == Pflag.AREA) {
+					features.get(Obj.LNDARE).add(land.land);
+					lands.remove(land);
+				}
+			}
 		}
 		return;
 	}
 
 	// Utility methods
-	
-	enum Ext {I, N, W, S, E }
-	class Xnode {
-		double lat;
-		double lon;
-		Ext ext;
-	}
-	Ext outsideBounds(long ref) {
-		Snode node = nodes.get(ref);
-		if (node.lat >= bounds.maxlat) {
-			return Ext.N;
-		}
-		if (node.lat <= bounds.minlat) {
-			return Ext.S;
-		}
-		if (node.lon >= bounds.maxlon) {
-			return Ext.E;
-		}
-		if (node.lon <= bounds.minlon) {
-			return Ext.W;
-		}
-		return Ext.I;
-	}
 	
 	public boolean sortGeom(Feature feature) {
 		Geom sort = new Geom(feature.geom.prim);
@@ -685,6 +773,7 @@ public class S57map {
 		feature.geom.length = 0;
 		feature.geom.area = 0;
 		if (feature.geom.prim == Pflag.POINT) { 
+			feature.geom.centre = findCentroid(feature);
 			return true;
 		}	else {
 			int sweep = feature.geom.elems.size();
@@ -696,13 +785,9 @@ public class S57map {
 				}
 				if (next == true) {
 					next = false;
-					if (prim.forward) {
-						first = edge.first;
-						last = edge.last;
-					} else {
-						first = edge.last;
-						last = edge.first;
-					}
+					first = edge.first;
+					last = edge.last;
+					prim.forward = true;
 					sort.elems.add(prim);
 					if (prim.outer) {
 						sort.outers++;
@@ -710,32 +795,30 @@ public class S57map {
 						sort.inners++;
 					}
 					comp = new Comp(cref++, 1);
-					sort.refs.add(comp);
+					sort.comps.add(comp);
 				} else {
-					if (prim.forward) {
-						if (edge.first == last) {
-							sort.elems.add(prim);
-							last = edge.last;
-							comp.size++;
-						} else if (edge.last == first) {
-							sort.elems.add(0, prim);
-							first = edge.first;
-							comp.size++;
-						} else {
-							feature.geom.elems.add(prim);
-						}
+					if (edge.first == last) {
+						sort.elems.add(prim);
+						last = edge.last;
+						prim.forward = true;
+						comp.size++;
+					} else if (edge.last == first) {
+						sort.elems.add(0, prim);
+						first = edge.first;
+						prim.forward = true;
+						comp.size++;
+					} else if (edge.last == last) {
+						sort.elems.add(prim);
+						last = edge.first;
+						prim.forward = false;
+						comp.size++;
+					} else if (edge.first == first) {
+						sort.elems.add(0, prim);
+						first = edge.last;
+						prim.forward = false;
+						comp.size++;
 					} else {
-						if (edge.last == last) {
-							sort.elems.add(prim);
-							last = edge.first;
-							comp.size++;
-						} else if (edge.first == first) {
-							sort.elems.add(0, prim);
-							first = edge.last;
-							comp.size++;
-						} else {
-							feature.geom.elems.add(prim);
-						}
+						feature.geom.elems.add(prim);
 					}
 				}
 				if (--sweep == 0) {
@@ -749,68 +832,13 @@ public class S57map {
 			feature.geom = sort;
 		}
 		if (feature.geom.prim == Pflag.AREA) {
-			ArrayList<Prim> outers = new ArrayList<Prim>();
-			ArrayList<Prim> inners = new ArrayList<Prim>();
-			for (Prim prim : feature.geom.elems) {
-				if (prim.outer) {
-					outers.add(prim);
-				} else {
-					inners.add(prim);
-				}
-			}
-			ArrayList<Prim> sorting = outers.size() > 0 ? outers : inners;
-			ArrayList<Prim> closed = null;
-			sort = new Geom(feature.geom.prim);
-			sort.outers = feature.geom.outers;
-			sort.inners = feature.geom.inners;
-			sort.refs = feature.geom.refs;
-			next = true;
-			while (!sorting.isEmpty()) {
-				Prim prim = sorting.remove(0);
-				Edge edge = edges.get(prim.id);
-				if (next == true) {
-					next = false;
-					closed = new ArrayList<Prim>();
-					closed.add(prim);
-					if (prim.forward) {
-						first = edge.first;
-						last = edge.last;
-					} else {
-						first = edge.last;
-						last = edge.first;
-					}
-				} else {
-					if (prim.forward) {
-						if (edge.first == last) {
-							last = edge.last;
-							closed.add(prim);
-						} else {
-							sorting.add(0, prim);
-							next = true;
-						}
-					} else {
-						if (edge.last == last) {
-							last = edge.first;
-							closed.add(prim);
-						} else {
-							sorting.add(0, prim);
-							next = true;
-						}
-					}
-				}
-				if (first == last) {
-					sort.elems.addAll(closed);
-					next = true;
-				}
-				if (sorting.isEmpty() && sorting == outers) {
-					sorting = inners;
-					next = true;
-				}
-			}
-			feature.geom = sort;
+			if (signedArea(feature.geom) < 0.0) {
+				
+			};
+			feature.geom.area = calcArea(feature.geom);
 		}
 		feature.geom.length = calcLength(feature.geom);
-		feature.geom.area = calcArea(feature.geom);
+		feature.geom.centre = findCentroid(feature);
 		return true;
 	}
 	
@@ -882,7 +910,7 @@ public class S57map {
 			geom = g;
 			lastref = 0;
 			ite = geom.elems.listIterator();
-			itc = geom.refs.listIterator();
+			itc = geom.comps.listIterator();
 		}
 		
 		public boolean hasComp() {

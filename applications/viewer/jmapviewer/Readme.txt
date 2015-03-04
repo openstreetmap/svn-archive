@@ -2,15 +2,15 @@ JMapViewer
 
 (c) 2007, Tim Haussmann
 (c) 2008-2012, Jan Peter Stotz
-(c) 2009-2013, Dirk Stöcker
+(c) 2009-2015, Dirk Stöcker
 (c) 2009, Stefan Zeller
 (c) 2009, Karl Guggisberg
 (c) 2009, Dave Hansen
 (c) 2010-2011, Ian Dees
 (c) 2010-2011, Michael Vigovsky
-(c) 2011-2013, Paul Hartmann
+(c) 2011-2015, Paul Hartmann
 (c) 2011-2014, Gleb Smirnoff
-(c) 2011-2014, Vincent Privat
+(c) 2011-2015, Vincent Privat
 (c) 2011, Jason Huntley
 (c) 2012, Simon Legner
 (c) 2012, Teemu Koskinen

@@ -36,7 +36,7 @@ import org.openstreetmap.josm.plugins.opendata.modules.fr.toulouse.ToulouseModul
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
 
 public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implements ToulouseConstants {
-    
+
     /**
      * Categories
      */
@@ -47,20 +47,20 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     public static final DataSetCategory CAT_ENVIRONNEMENT = new DataSetCategory("Environnement", "presets/recycling.png");
     public static final DataSetCategory CAT_PATRIMOINE = new DataSetCategory("Patrimoine", "presets/ruins.png");
     public static final DataSetCategory CAT_SERVICES = new DataSetCategory("Services", "styles/standard/vehicle/services.png");
-    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "presets/soccer.png");
+    public static final DataSetCategory CAT_SPORT = new DataSetCategory("Sport", "styles/standard/sport/soccer.png");
     public static final DataSetCategory CAT_TOPOGRAPHIE = new DataSetCategory("Topographie", "presets/peak.svg");
     public static final DataSetCategory CAT_TRANSPORT = new DataSetCategory("Transport", "presets/bus.png");
-    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "presets/places.png");
+    public static final DataSetCategory CAT_URBANISME = new DataSetCategory("Urbanisme", "styles/standard/place/settlement/city.png");
 
     public ToulouseDataSetHandler(int portalId) {
         init(portalId);
     }
-    
+
     public ToulouseDataSetHandler(int portalId, String relevantTag) {
         super(relevantTag);
         init(portalId);
     }
-    
+
     public ToulouseDataSetHandler(int portalId, boolean relevantUnion, String ... relevantTags) {
         super(relevantUnion, relevantTags);
         init(portalId);
@@ -74,7 +74,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         super(relevantTag);
         init(portalId);
     }*/
-    
+
     public ToulouseDataSetHandler(int portalId, boolean relevantUnion, Tag ... relevantTags) {
         super(relevantUnion, relevantTags);
         init(portalId);
@@ -83,7 +83,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     /*public ToulouseDataSetHandler(int portalId, Tag ... relevantTags) {
         this(portalId, false, relevantTags);
     }*/
-    
+
     private final void init(int portalId) {
         try {
             setLicense(new ToulouseLicense());
@@ -115,7 +115,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
     public String getDataLayerIconName() {
         return ICON_CROIX_16;
     }
-    
+
     protected final void setWikiPage(String wikiPage) {
         if (wikiPage != null && !wikiPage.isEmpty()) {
             setName(wikiPage.replace("_", " "));
@@ -126,17 +126,17 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
             }
         }
     }
-    
+
     protected abstract class SplitAction extends JosmAction implements DataSetListener {
-        
+
         public SplitAction(String name, String desc) {
             super(name, null, desc, null, false);
             setEnabled(false);
             ToulouseModule.data.addDataSetListener(this);
         }
-        
+
         protected abstract Collection<Relation> getBoundaries();
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             final String baseName = OdPlugin.getInstance().getDialog().getDataLayer().getName();
@@ -190,7 +190,7 @@ public abstract class ToulouseDataSetHandler extends FrenchDataSetHandler implem
         public void otherDatasetChange(AbstractDatasetChangedEvent event) {
         }
     }
-    
+
     protected class SplitByMunicipality extends SplitAction {
         public SplitByMunicipality() {
             super(marktr("Split by municipality"), tr("Split this data by municipality (admin_level=8)."));

@@ -61,7 +61,7 @@ public class ModulePreference implements SubPreferenceSetting {
             return new ModulePreference();
         }
     }*/
-    
+
     public static String buildDownloadSummary(ModuleDownloadTask task) {
         Collection<ModuleInformation> downloaded = task.getDownloadedModules();
         Collection<ModuleInformation> failed = task.getFailedModules();
@@ -160,6 +160,7 @@ public class ModulePreference implements SubPreferenceSetting {
         return pnl;
     }
 
+    @Override
     public void addGui(final PreferenceTabbedPane gui) {
         GridBagConstraints gc = new GridBagConstraints();
         gc.weightx = 1.0;
@@ -214,6 +215,7 @@ public class ModulePreference implements SubPreferenceSetting {
         return model != null ? model.getModulesScheduledForUpdateOrDownload() : null;
     }
 
+    @Override
     public boolean ok() {
         if (! modulePreferencesActivated)
             return false;
@@ -235,9 +237,11 @@ public class ModulePreference implements SubPreferenceSetting {
     public void readLocalModuleInformation() {
         final ReadLocalModuleInformationTask task = new ReadLocalModuleInformationTask();
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 if (task.isCanceled()) return;
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         model.setAvailableModules(task.getAvailableModules());
                         pnlModulePreferences.refreshView();
@@ -261,12 +265,15 @@ public class ModulePreference implements SubPreferenceSetting {
             putValue(SMALL_ICON, ImageProvider.get("download"));
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             final ReadRemoteModuleInformationTask task = new ReadRemoteModuleInformationTask(OdPreferenceSetting.getModuleSites());
             Runnable continuation = new Runnable() {
+                @Override
                 public void run() {
                     if (task.isCanceled()) return;
                     SwingUtilities.invokeLater(new Runnable() {
+                        @Override
                         public void run() {
                             model.updateAvailableModules(task.getAvailableModules());
                             pnlModulePreferences.refreshView();
@@ -324,6 +331,7 @@ public class ModulePreference implements SubPreferenceSetting {
             });
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             final List<ModuleInformation> toUpdate = model.getSelectedModules();
             // the async task for downloading modules
@@ -338,19 +346,26 @@ public class ModulePreference implements SubPreferenceSetting {
             // to be run asynchronously after the module download
             //
             final Runnable moduleDownloadContinuation = new Runnable() {
+                @Override
                 public void run() {
                     if (moduleDownloadTask.isCanceled())
                         return;
                     notifyDownloadResults(moduleDownloadTask);
                     model.refreshLocalModuleVersion(moduleDownloadTask.getDownloadedModules());
                     model.clearPendingModules(moduleDownloadTask.getDownloadedModules());
-                    pnlModulePreferences.refreshView();
+                    GuiHelper.runInEDT(new Runnable() {
+                        @Override
+                        public void run() {
+                            pnlModulePreferences.refreshView();
+                        }
+                    });
                 }
             };
 
             // to be run asynchronously after the module list download
             //
             final Runnable moduleInfoDownloadContinuation = new Runnable() {
+                @Override
                 public void run() {
                     if (moduleInfoDownloadTask.isCanceled())
                         return;
@@ -391,6 +406,7 @@ public class ModulePreference implements SubPreferenceSetting {
             putValue(SMALL_ICON, ImageProvider.get("dialogs", "settings"));
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             configureSites();
         }
@@ -407,6 +423,7 @@ public class ModulePreference implements SubPreferenceSetting {
             pane = preferencesPane;
         }
 
+        @Override
         public void stateChanged(ChangeEvent e) {
             JTabbedPane tp = (JTabbedPane)e.getSource();
             if (tp.getSelectedComponent() == pane) {
@@ -430,14 +447,17 @@ public class ModulePreference implements SubPreferenceSetting {
             pnlModulePreferences.refreshView();
         }
 
+        @Override
         public void changedUpdate(DocumentEvent arg0) {
             filter();
         }
 
+        @Override
         public void insertUpdate(DocumentEvent arg0) {
             filter();
         }
 
+        @Override
         public void removeUpdate(DocumentEvent arg0) {
             filter();
         }
@@ -458,6 +478,7 @@ public class ModulePreference implements SubPreferenceSetting {
             add(new JScrollPane(list), GBC.std().fill());
             JPanel buttons = new JPanel(new GridBagLayout());
             buttons.add(new JButton(new AbstractAction(tr("Add")){
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     String s = JOptionPane.showInputDialog(
                             JOptionPane.getFrameForComponent(ModuleConfigurationSitesPanel.this),
@@ -471,6 +492,7 @@ public class ModulePreference implements SubPreferenceSetting {
                 }
             }), GBC.eol().fill(GBC.HORIZONTAL));
             buttons.add(new JButton(new AbstractAction(tr("Edit")){
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     if (list.getSelectedValue() == null) {
                         JOptionPane.showMessageDialog(
@@ -496,6 +518,7 @@ public class ModulePreference implements SubPreferenceSetting {
                 }
             }), GBC.eol().fill(GBC.HORIZONTAL));
             buttons.add(new JButton(new AbstractAction(tr("Delete")){
+                @Override
                 public void actionPerformed(ActionEvent event) {
                     if (list.getSelectedValue() == null) {
                         JOptionPane.showMessageDialog(

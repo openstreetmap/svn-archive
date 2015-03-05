@@ -19,6 +19,7 @@ import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MenuScroller;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.opendata.core.actions.DownloadDataAction;
@@ -48,13 +49,13 @@ import org.openstreetmap.josm.tools.Pair;
 public final class OdPlugin extends Plugin {
 
     private static OdPlugin instance;
-    
+
     public final XmlImporter xmlImporter = new XmlImporter();
-    
+
     private final JMenu menu;
-    
+
     private OdDialog dialog;
-    
+
     public OdPlugin(PluginInformation info) {
         super(info);
         if (instance == null) {
@@ -74,14 +75,19 @@ public final class OdPlugin extends Plugin {
         }
 
         menu = Main.main.menu.dataMenu;
-        
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // Load modules
+                // Load modules in new thread
                 loadModules();
-                // Add menu
-                buildMenu();
+                // Add menu in EDT
+                GuiHelper.runInEDT(new Runnable() {
+                    @Override
+                    public void run() {
+                        buildMenu();
+                    }
+                });
             }
         }).start();
 
@@ -90,11 +96,11 @@ public final class OdPlugin extends Plugin {
         // Delete previous temp dirs if any (old plugin versions did not remove them correctly)
         OdUtils.deletePreviousTempDirs();
     }
-    
+
     public static final OdPlugin getInstance() {
         return instance;
     }
-    
+
     private JMenu getModuleMenu(Module module) {
         String moduleName = module.getDisplayedName();
         if (moduleName == null || moduleName.isEmpty()) {
@@ -104,7 +110,7 @@ public final class OdPlugin extends Plugin {
         moduleMenu.setIcon(module.getModuleInformation().getScaledIcon());
         return moduleMenu;
     }
-    
+
     private void buildMenu() {
         for (Module module : ModuleHandler.moduleList) {
             Map<DataSetCategory, JMenu> catMenus = new HashMap<>();
@@ -160,10 +166,10 @@ public final class OdPlugin extends Plugin {
         menu.addSeparator();
         MainMenu.add(menu, new OpenPreferencesActions());
     }
-    
+
     private void setMenuItemIcon(ImageIcon icon, JMenuItem menuItem) {
         if (icon != null) {
-            if (icon.getIconHeight() != 16 || icon.getIconWidth() != 16) { 
+            if (icon.getIconHeight() != 16 || icon.getIconWidth() != 16) {
                 icon = new ImageIcon(icon.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT));
             }
             menuItem.setIcon(icon);
@@ -178,12 +184,12 @@ public final class OdPlugin extends Plugin {
             dialog = null;
         }
     }
-    
+
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return new OdPreferenceSetting();
     }
-    
+
     private final void loadModules() {
         List<ModuleInformation> modulesToLoad = ModuleHandler.buildListOfModulesToLoad(Main.parent);
         if (!modulesToLoad.isEmpty() && ModuleHandler.checkAndConfirmModuleUpdate(Main.parent)) {
@@ -193,7 +199,7 @@ public final class OdPlugin extends Plugin {
         ModuleHandler.installDownloadedModules(true);
         ModuleHandler.loadModules(Main.parent, modulesToLoad, null);
     }
-    
+
     private final File getSubDirectory(String name) {
         File dir = new File(getPluginDir()+File.separator+name);
         if (!dir.exists()) {
@@ -201,7 +207,7 @@ public final class OdPlugin extends Plugin {
         }
         return dir;
     }
-    
+
     public final File getModulesDirectory() {
         return getSubDirectory("modules");
     }

@@ -11,6 +11,7 @@
     <property name="plugin.icon" value="images/reltoolbox.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Relation_Toolbox"/>
     <property name="plugin.stage" value="10"/>
+	<property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

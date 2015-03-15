@@ -5,6 +5,7 @@
     <property name="commit.message" value="Imagery Offset Database"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7687"/>
+	<property name="plugin.canloadatruntime" value="true"/>
 
     <property name="plugin.author" value="Ilya Zverev"/>
     <property name="plugin.class" value="iodb.ImageryOffsetPlugin"/>

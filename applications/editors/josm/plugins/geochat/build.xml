@@ -11,6 +11,7 @@
     <property name="plugin.description" value="Talk with users editing the map nearby, be notified when someone comes close."/>
     <property name="plugin.icon" value="images/dialogs/geochat.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/GeoChat"/>
+	<property name="plugin.canloadatruntime" value="true"/>
 
     <target name="additional-manifest">
         <manifest file="MANIFEST" mode="update">

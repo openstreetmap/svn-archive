@@ -167,7 +167,7 @@ public class PanelMain extends JPanel {
 						AttVal<?> item = atts.get(att);
 						switch (item.conv) {
 						case E:
-							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + Messages.getString(((Enum<?>)item.val).name()) + "\n");
+							decode.append("\t\t\t" + Messages.getString(att.name()) + ": " + Messages.getString(((Enum<?>)((ArrayList<?>)item.val).get(0)).name()) + "\n");
 							break;
 						case L:
 							decode.append("\t\t\t" + Messages.getString(att.name()) + ": ");

@@ -34,7 +34,7 @@ import panels.PanelMain;
 import panels.ShowFrame;
 
 public class SCeditAction extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
-	private static String title = tr("SeaMap Editor");
+	private static String title = tr("SeaChart Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;
 	private boolean isOpen = false;
@@ -87,7 +87,7 @@ public class SCeditAction extends JosmAction implements EditLayerChangeListener,
 	};
 
 	public SCeditAction() {
-		super(title, "SCedit", title, null, true);
+		super(title, "SC", title, null, true);
 	}
 
 	@Override

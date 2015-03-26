@@ -203,7 +203,7 @@ public class PanelS57 extends JPanel {
 		}
 		for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
 			String attstr = S57att.stringAttribute(item.getKey());
-			String valstr = S57val.stringValue(item.getValue());
+			String valstr = S57val.stringValue(item.getValue(), item.getKey());
 			if (!attstr.isEmpty() && !valstr.isEmpty()) {
 					keys.put(("seamark:" + type + ":" + attstr), valstr);
 			}
@@ -215,7 +215,7 @@ public class PanelS57 extends JPanel {
 				AttMap atts = tab.get(ix);
 				for (Map.Entry<Att, AttVal<?>> item : atts.entrySet()) {
 					String attstr = S57att.stringAttribute(item.getKey());
-					String valstr = S57val.stringValue(item.getValue());
+					String valstr = S57val.stringValue(item.getValue(), item.getKey());
 					if (!attstr.isEmpty() && !valstr.isEmpty()) {
 						if ((ix == 0) && (tab.size() == 1)) {
 							keys.put(("seamark:" + type + ":" + attstr), valstr);

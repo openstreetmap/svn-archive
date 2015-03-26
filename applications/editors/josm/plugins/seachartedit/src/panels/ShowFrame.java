@@ -12,6 +12,7 @@ package panels;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import render.ChartContext;
 import render.Renderer;
+import render.Rules.RuleSet;
 import s57.S57map;
 import s57.S57map.*;
 
@@ -52,8 +54,9 @@ public class ShowFrame extends JFrame {
 		public void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setBackground(new Color(0xb5d0d0));
-			g2.clearRect(0, 0, 300, 300);
-			Renderer.reRender(g2, 16, 32, showMap, this);
+			Rectangle rect =  new Rectangle(0, 0, 300, 300);
+			g2.clearRect(rect.x, rect.y, rect.width, rect.height);
+			Renderer.reRender(g2, RuleSet.ALL, rect, 16, 32, showMap, this);
 		}
 
 		public Point2D getPoint(Snode coord) {

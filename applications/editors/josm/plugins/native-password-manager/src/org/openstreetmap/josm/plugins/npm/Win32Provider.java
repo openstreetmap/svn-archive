@@ -1,7 +1,7 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.npm;
 
-import org.apache.commons.codec.binary.Base64;
+import javax.xml.bind.DatatypeConverter;
 
 import org.netbeans.modules.keyring.fallback.FallbackProvider;
 import org.netbeans.modules.keyring.win32.Win32Protect;
@@ -13,11 +13,11 @@ public class Win32Provider extends FallbackProvider {
     
         @Override public byte[] getByteArray(String key, byte[] def) {
             String p = Main.pref.get(key, null);
-            return p == null ? def : Base64.decodeBase64(p);
+            return p == null ? def : DatatypeConverter.parseBase64Binary(p);
         }
 
         @Override public void putByteArray(String key, byte[] val) {
-            Main.pref.put(key, val == null ? null : Base64.encodeBase64String(val));
+            Main.pref.put(key, val == null ? null : DatatypeConverter.printBase64Binary(val));
         }
 
         @Override public void remove(String key) {

@@ -21,8 +21,8 @@ public class S57dec {
 		S57dat.rnum = 0;
 		byte[] leader = new byte[24];
 		boolean ddr = false;
-		int length;
-		int fields;
+		int length = 0;
+		int fields = 0;;
 		int mapfl, mapfp, mapts, entry;
 		String tag;
 		int len;
@@ -38,9 +38,14 @@ public class S57dec {
 		MapBounds bounds = map.new MapBounds();
 		
 		while (in.read(leader) == 24) {
+			try {
 			length = Integer.parseInt(new String(leader, 0, 5)) - 24;
 			ddr = (leader[6] == 'L');
 			fields = Integer.parseInt(new String(leader, 12, 5)) - 24;
+			} catch (Exception e) {
+				System.err.println("Invalid file format - Encrypted/compressed ENC file?");
+				System.exit(-1);
+			}
 			mapfl = leader[20] - '0';
 			mapfp = leader[21] - '0';
 			mapts = leader[23] - '0';

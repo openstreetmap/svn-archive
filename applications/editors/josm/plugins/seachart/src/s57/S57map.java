@@ -523,7 +523,7 @@ public class S57map {
 						objs.put(0, atts);
 					}
 					if (osm.att != Att.UNKATT) {
-						atts.put(osm.att, new AttVal<>(osm.att, osm.conv, osm.val));
+						atts.put(osm.att, new AttVal<>(osm.conv, osm.val));
 					}
 				} else {
 					Feature base = new Feature();
@@ -535,7 +535,7 @@ public class S57map {
 					AttMap atts = new AttMap();
 					objs.put(0, atts);
 					if (osm.att != Att.UNKATT) {
-						atts.put(osm.att, new AttVal<>(osm.att, osm.conv, osm.val));
+						atts.put(osm.att, new AttVal<>(osm.conv, osm.val));
 					}
 					index.put(++xref, base);
 					if (features.get(osm.obj) == null) {

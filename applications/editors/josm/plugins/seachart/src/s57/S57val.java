@@ -34,11 +34,14 @@ public class S57val {
 	}
 	
 	public static class AttVal<V> {
-		public Att att;
+//		public Att att;
 		public Conv conv;
 		public V val;
-		AttVal(Att a, Conv c, V v) {
-			att = a; conv = c; val = v;
+//		AttVal(Att a, Conv c, V v) {
+//			att = a; conv = c; val = v;
+//		}
+		AttVal(Conv c, V v) {
+			conv = c; val = v;
 		}
 	}
 	
@@ -1128,26 +1131,26 @@ public class S57val {
 		switch (conv) {
 		case A:
 		case S:
-			return new AttVal<String>(att, conv, val);
+			return new AttVal<String>(conv, val);
 		case E:
 			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
 			list.add(s57Enum(val, att));
-			return new AttVal<ArrayList<?>>(att, Conv.E, list);
+			return new AttVal<ArrayList<?>>(Conv.E, list);
 		case L:
 			list = new ArrayList<Enum<?>>();
 			for (String item : val.split(",")) {
 				list.add(s57Enum(item, att));
 			}
-			return new AttVal<ArrayList<?>>(att, Conv.L, list);
+			return new AttVal<ArrayList<?>>(Conv.L, list);
 		case I:
 			try {
-				return new AttVal<Long>(att, Conv.I, Long.parseLong(val));
+				return new AttVal<Long>(Conv.I, Long.parseLong(val));
 			} catch (Exception e) {
 				break;
 			}
 		case F:
 			try {
-				return new AttVal<Double>(att, Conv.F, Double.parseDouble(val));
+				return new AttVal<Double>(Conv.F, Double.parseDouble(val));
 			} catch (Exception e) {
 				break;
 			}
@@ -1164,19 +1167,18 @@ public class S57val {
 		return 0;
 	}
 
-	
-	public static String stringValue(AttVal<?> attval) {	// Convert SCM value object to OSM attribute value string
+	public static String stringValue(AttVal<?> attval, Att att) {	// Convert SCM value object to OSM attribute value string
 		if (attval != null) {
 			switch (attval.conv) {
 			case A:
 			case S:
 				return (String) attval.val;
 			case E:
-				EnumMap<?, ?> map = keys.get(attval.att).map;
+				EnumMap<?, ?> map = keys.get(att).map;
 				return ((S57enum) map.get(((ArrayList<?>) attval.val).get(0))).val;
 			case L:
 				String str = "";
-				map = keys.get(attval.att).map;
+				map = keys.get(att).map;
 				for (Object item : (ArrayList<?>) attval.val) {
 					if (!str.isEmpty())
 						str += ";";
@@ -1210,31 +1212,31 @@ public class S57val {
 		switch (keys.get(att).conv) {
 		case A:
 		case S:
-			return new AttVal<String>(att, Conv.S, val);
+			return new AttVal<String>(Conv.S, val);
 		case E:
 			ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
 			list.add(osmEnum(val, att));
-			return new AttVal<ArrayList<?>>(att, Conv.E, list);
+			return new AttVal<ArrayList<?>>(Conv.E, list);
 		case L:
 			list = new ArrayList<Enum<?>>();
 			for (String item : val.split(";")) {
 				list.add(osmEnum(item, att));
 			}
-			return new AttVal<ArrayList<?>>(att, Conv.L, list);
+			return new AttVal<ArrayList<?>>(Conv.L, list);
 		case I:
 			try {
-				return new AttVal<Long>(att, Conv.I, Long.parseLong(val));
+				return new AttVal<Long>(Conv.I, Long.parseLong(val));
 			} catch (Exception e) {
 				break;
 			}
 		case F:
 			try {
-				return new AttVal<Double>(att, Conv.F, Double.parseDouble(val));
+				return new AttVal<Double>(Conv.F, Double.parseDouble(val));
 			} catch (Exception e) {
 				break;
 			}
 		}
-		return new AttVal<Object>(att, keys.get(att).conv, null);
+		return new AttVal<Object>(keys.get(att).conv, null);
 	}
 	
 	public static Enum<?> unknAtt(Att att) {

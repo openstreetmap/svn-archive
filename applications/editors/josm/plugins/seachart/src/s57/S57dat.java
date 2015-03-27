@@ -10,9 +10,7 @@
 package s57;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.*;
 
 public class S57dat {
 	

@@ -172,7 +172,7 @@ public class Js57toosm {
 	static void writeAtts(Feature feature, String type) {
 		for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
 			String attstr = S57att.stringAttribute(item.getKey());
-			String valstr = S57val.stringValue(item.getValue());
+			String valstr = S57val.stringValue(item.getValue(), item.getKey());
 			if (!attstr.isEmpty() && !valstr.isEmpty())
 				out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, valstr);
 		}
@@ -183,7 +183,7 @@ public class Js57toosm {
 				AttMap atts = tab.get(ix);
 				for (Map.Entry<Att, AttVal<?>> item : atts.entrySet()) {
 					String attstr = S57att.stringAttribute(item.getKey());
-					String valstr = S57val.stringValue(item.getValue());
+					String valstr = S57val.stringValue(item.getValue(), item.getKey());
 					if (!attstr.isEmpty() && !valstr.isEmpty()) {
 						if ((ix == 0) && (tab.size() == 1)) {
 							out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, valstr);

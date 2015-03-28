@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 //    JOSM tag2link plugin.
-//    Copyright (C) 2011-2014 Don-vip & FrViPofm
+//    Copyright (C) 2011-2015 Don-vip & FrViPofm
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -52,7 +52,14 @@
             <link name="View UNESCO sheet" href="http://whc.unesco.org/%lang(en,fr):en%/list/%v.1%" />
         </rule>
     </src>
-    
+
+    <src name="Mapillary">
+        <rule>
+            <condition k="((ref|source):)?mapillary" v="[0-9a-zA-Z]+" />
+            <link name="View %name% image" href="http://www.mapillary.com/map/im/%v%" />
+        </rule>
+    </src>
+
     <!-- Only for France --> 
     
     <src name="SANDRE" country-code="FR">
@@ -180,7 +187,7 @@
 
     <src name="MemorialGenWeb" country-code="FR">
         <rule>
-            <condition k="ref:(FR:)?MemorialGenWeb" v="[0-9]*" />
+            <condition k="ref:(FR:)?MemorialGenWeb" v="[0-9]+" />
             <link name="View %name% sheet of memorial" href="http://www.memorial-genweb.org/~memorial2/html/fr/resultcommune.php?idsource=%v%" />
         </rule>
     </src>

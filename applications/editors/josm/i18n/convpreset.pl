@@ -24,6 +24,9 @@ sub fix($)
 {
   my ($val) = @_;
   $val =~ s/'/''/g;
+  $val =~ s/&lt;/</g;
+  $val =~ s/&gt;/>/g;
+  $val =~ s/&amp;/&/g;
   return $val;
 }
 

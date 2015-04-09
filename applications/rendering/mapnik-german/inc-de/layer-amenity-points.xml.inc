@@ -242,6 +242,11 @@
     </Rule>
     <Rule>
       &maxscale_zoom17;
+      <Filter>[amenity]='ice_cream'</Filter>
+      <PointSymbolizer file="&symbols;/food_ice_cream.p.16.png" placement="interior"/>
+    </Rule>
+    <Rule>
+      &maxscale_zoom17;
       <Filter>[amenity]='fast_food'</Filter>
       <PointSymbolizer file="&symbols;/fast_food.png" placement="interior"/>
     </Rule>

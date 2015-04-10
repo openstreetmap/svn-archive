@@ -1,7 +1,10 @@
 package org.openstreetmap.josm.plugins.imagerycache;
 
 import java.io.File;
+import java.util.Map;
+
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.josm.gui.layer.TMSLayer;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -26,6 +29,12 @@ public class ImageryCachePlugin extends Plugin {
                 return new OsmDBTilesLoader(listener, new File(cachePath));
             }
             return null;
+        }
+
+        @Override
+        public TileLoader makeTileLoader(TileLoaderListener listener,
+                Map<String, String> headers) {
+            return makeTileLoader(listener);
         }
     };
 

@@ -96,7 +96,6 @@
         </antcall>
     </target>
     <target name="buildcore" depends="po/josm.pot,init">
-        <gettext-merge keysFile="josm.pot" poDirectory="po"/>
         <antcall target="coretrans"/>
     </target>
     <target name="coretrans">

@@ -7,6 +7,7 @@ use Encode;
 
 my $waswarn = 0;
 my $maxcount = 0;
+my $lang_pattern = '(.._..|...?|ca\@valencia)';
 
 main();
 
@@ -28,7 +29,7 @@ sub loadfiles($@)
     my $linenum = 0;
 
     my $cnt = -1; # don't count translators info
-    if($file =~ /\/(.._..)\.po$/ || $file =~ /\/(...?)\.po$/)
+    if($file =~ /\/$lang_pattern\.po$/)
     {
       my $l = $1;
       ++$lang->{$l};
@@ -260,8 +261,7 @@ sub createlang($@)
   {
     my $la;
     my $cnt = 0;
-    if($file =~ /[-_](.._..)\.lang$/ || $file =~ /^(?:.*\/)?(.._..)\.lang$/ ||
-    $file =~ /[-_](...?)\.lang$/ || $file =~ /^(?:.*\/)?(...?)\.lang$/)
+    if($file =~ /[-_]$lang_pattern\.lang$/ || $file =~ /^(?:.*\/)?$lang_pattern\.lang$/)
     {
       $la = $1;
     }

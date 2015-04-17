@@ -15,7 +15,7 @@ $pwd = '';
 
 # list of supported languages
 my %lang = map {$_ => 1} (
-"ast", "bg", "ca", "cs", "da", "de", "el", "en_AU", "en_GB",
+"ast", "bg", "ca", "ca\@valencia", "cs", "da", "de", "el", "en_AU", "en_GB",
 "es", "et", "fi", "fr", "gl", "hu", "id",
 "it", "ja", "km", "lt", "nl", "pl", "pt", "pt_BR", "ru", "sk",
 "sv", "uk", "zh_CN", "zh_TW"
@@ -156,10 +156,10 @@ sub copypo
     my ($path) = @_;
     foreach my $name (split("\n", `find $path -name "*.po"`))
     {
-        $name =~ /([a-zA-Z_]+)\.po/;
+        $name =~ /([a-zA-Z_@]+)\.po/;
         if($lang{$1})
         {
-            system "cp -v $name po/$1.po";
+            system("cp", "-v", $name, "po/$1.po");
         }
         elsif($cleanall)
         {

@@ -8,6 +8,7 @@ use Encode;
 my $waswarn = 0;
 my $maxcount = 0;
 my $lang_pattern = '([a-z]{2}_[A-Z]{2}|[a-z]{2,3}|[a-z]{2}\@[a-z]+)';
+my $lang_pattern_file = '([a-z]{2}_[A-Z]{2}|[a-z]{2,3}|[a-z]{2}-[a-z]+)';
 
 main();
 
@@ -261,9 +262,10 @@ sub createlang($@)
   {
     my $la;
     my $cnt = 0;
-    if($file =~ /^(?:.*\/)?$lang_pattern\.lang$/)
+    if($file =~ /^(?:.*\/)?$lang_pattern_file\.lang$/)
     {
       $la = $1;
+      $la =~ s/-/\@/;
     }
     else
     {
@@ -369,6 +371,7 @@ sub main
   my @clang;
   foreach my $la (sort keys %lang)
   {
+    $la =~ s/\@/-/;
     push(@clang, "${basename}$la.lang");
   }
   push(@clang, "${basename}en.lang");

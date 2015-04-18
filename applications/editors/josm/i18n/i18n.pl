@@ -7,7 +7,7 @@ use Encode;
 
 my $waswarn = 0;
 my $maxcount = 0;
-my $lang_pattern = '(.._..|...?|ca\@valencia)';
+my $lang_pattern = '([a-z]{2}_[A-Z]{2}|[a-z]{2,3}|[a-z]{2}\@[a-z]+)';
 
 main();
 
@@ -35,7 +35,7 @@ sub loadfiles($@)
       ++$lang->{$l};
       my %postate = (last => "", type => "");
       my $linenum = 0;
-      print "Reading file $file\n";
+      print "Reading file $file (lang $l)\n";
       while(<FILE>)
       {
         ++$linenum;
@@ -261,7 +261,7 @@ sub createlang($@)
   {
     my $la;
     my $cnt = 0;
-    if($file =~ /[-_]$lang_pattern\.lang$/ || $file =~ /^(?:.*\/)?$lang_pattern\.lang$/)
+    if($file =~ /^(?:.*\/)?$lang_pattern\.lang$/)
     {
       $la = $1;
     }

@@ -299,7 +299,6 @@ class Building {
             if (created[i])
                 cmds.add(new AddCommand(nodes[i]));
         }
-        w.setKeys(ToolSettings.getTags());
         cmds.add(new AddCommand(w));
 
         if (ToolSettings.PROP_USE_ADDR_NODE.get()) {

@@ -308,11 +308,15 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
     private void drawingFinish() {
         if (building.getLength() != 0) {
             Way w = building.create();
-            if (w != null && ToolSettings.isUsingAddr())
-                showAddrDialog(w);
-            if (ToolSettings.isAutoSelect()
-                 && (Main.main.getCurrentDataSet().getSelected().isEmpty() || isShiftDown)) {
-                Main.main.getCurrentDataSet().setSelected(w);
+            if (w != null) {
+                if (!isAltDown || ToolSettings.isUsingAddr())
+                    w.setKeys(ToolSettings.getTags());
+                if (ToolSettings.isUsingAddr())
+                    showAddrDialog(w);
+                if (ToolSettings.isAutoSelect()
+                        && (Main.main.getCurrentDataSet().getSelected().isEmpty() || isShiftDown)) {
+                    Main.main.getCurrentDataSet().setSelected(w);
+                }
             }
         }
         cancelDrawing();

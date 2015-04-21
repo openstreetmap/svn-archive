@@ -36,7 +36,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class MergeAddrPointsAction extends JosmAction {
 
     public MergeAddrPointsAction() {
-        super(tr("Merge address points"), null,
+        super(tr("Merge address points"), "mergeaddr",
                 tr("Move tags from address nodes inside buildings to building ways"),
                 Shortcut.registerShortcut("edit:mergeaddrpoints", tr("Edit: {0}", tr("Merge address points")),
                         KeyEvent.CHAR_UNDEFINED, Shortcut.NONE),

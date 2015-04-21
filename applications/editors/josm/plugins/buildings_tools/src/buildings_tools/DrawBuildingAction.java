@@ -418,6 +418,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
                 case WAY:
                     ways.add((Way) p);
                     break;
+                default:
+                    break;
                 }
             }
 

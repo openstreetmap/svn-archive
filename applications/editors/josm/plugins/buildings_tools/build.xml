@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="buildings_tools" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="BuildingTools: update to current JOSM"/>
+    <property name="commit.message" value="BuildingTools: Add merge address points function"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7128"/>
     

@@ -25,7 +25,6 @@ public class BuildingsToolsPlugin extends Plugin {
 
     public BuildingsToolsPlugin(PluginInformation info) {
         super(info);
-        Main.main.menu.editMenu.addSeparator();
         MainMenu.add(Main.main.menu.dataMenu, new BuildingSizeAction());
         MainMenu.add(Main.main.menu.dataMenu, new MergeAddrPointsAction());
     }

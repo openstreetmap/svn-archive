@@ -2,6 +2,7 @@
 package buildings_tools;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -130,10 +131,10 @@ public class MergeAddrPointsAction extends JosmAction {
             }
         }
         if (multi != 0)
-            new Notification(tr("There are {0} buildings with multiple address nodes inside", multi))
+            new Notification(trn("There is {0} building with multiple address nodes inside", "There are {0} buildings with multiple address nodes inside", multi, multi))
                     .setIcon(JOptionPane.WARNING_MESSAGE).show();
         if (conflicts != 0)
-            new Notification(tr("There are {0} buildings with address conflicts", conflicts))
+            new Notification(trn("There is {0} building with address conflicts", "There are {0} buildings with address conflicts", conflicts, conflicts))
                     .setIcon(JOptionPane.WARNING_MESSAGE).show();
         if (cmds.isEmpty() && multi == 0 && conflicts == 0)
             new Notification(tr("No address nodes inside buildings found"))

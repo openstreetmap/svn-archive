@@ -5,7 +5,6 @@ import static buildings_tools.BuildingsToolsPlugin.latlon2eastNorth;
 import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.AWTEvent;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,13 +13,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -36,11 +36,14 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.util.KeyPressReleaseListener;
+import org.openstreetmap.josm.gui.util.ModifierListener;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
-public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWTEventListener, SelectionChangedListener {
+public class DrawBuildingAction extends MapMode implements MapViewPaintable, SelectionChangedListener,
+        KeyPressReleaseListener, ModifierListener {
     private enum Mode {
         None, Drawing, DrawingWidth, DrawingAngFix
     }
@@ -53,12 +56,9 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
     private Mode mode = Mode.None;
     private Mode nextMode = Mode.None;
 
-    private final Color selectedColor;
+    private Color selectedColor = Color.red;
     private Point drawStartPos;
     private Point mousePos;
-    private boolean isCtrlDown;
-    private boolean isShiftDown;
-    private boolean isAltDown;
 
     final Building building = new Building();
 
@@ -72,8 +72,6 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         cursorCrosshair = getCursor();
         cursorJoinNode = ImageProvider.getCursor("crosshair", "joinnode");
         currCursor = cursorCrosshair;
-
-        selectedColor = Main.pref.getColor(marktr("selected"), Color.red);
     }
 
     private static Cursor getCursor() {
@@ -112,7 +110,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
 
     private void showAddrDialog(Way w) {
         AddressDialog dlg = new AddressDialog();
-        if (!isAltDown) {
+        if (!alt) {
             dlg.showDialog();
             if (dlg.getValue() != 1)
                 return;
@@ -133,17 +131,15 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
             Main.map.selectSelectTool(false);
             return;
         }
+        selectedColor = Main.pref.getColor(marktr("selected"), selectedColor);
         currCursor = cursorCrosshair;
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
         Main.map.mapView.addTemporaryLayer(this);
+        Main.map.keyDetector.addKeyListener(this);
+        Main.map.keyDetector.addModifierListener(this);
         DataSet.addSelectionListener(this);
         updateSnap(getCurrentDataSet().getSelected());
-        try {
-            Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
-        } catch (SecurityException ex) {
-            Main.error(ex);
-        }
     }
 
     @Override
@@ -152,12 +148,9 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
         Main.map.mapView.removeTemporaryLayer(this);
+        Main.map.keyDetector.removeKeyListener(this);
+        Main.map.keyDetector.removeModifierListener(this);
         DataSet.removeSelectionListener(this);
-        try {
-            Toolkit.getDefaultToolkit().removeAWTEventListener(this);
-        } catch (SecurityException ex) {
-            Main.error(ex);
-        }
         if (mode != Mode.None)
             Main.map.mapView.repaint();
         mode = Mode.None;
@@ -175,35 +168,35 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
     }
 
     @Override
-    public void eventDispatched(AWTEvent arg0) {
-        if (!(arg0 instanceof KeyEvent))
-            return;
-        KeyEvent ev = (KeyEvent) arg0;
-        int modifiers = ev.getModifiersEx();
-        boolean isCtrlDown = (modifiers & KeyEvent.CTRL_DOWN_MASK) != 0;
-        boolean isShiftDown = (modifiers & KeyEvent.SHIFT_DOWN_MASK) != 0;
-        if (this.isCtrlDown != isCtrlDown || this.isShiftDown != isShiftDown) {
-            this.isCtrlDown = isCtrlDown;
-            this.isShiftDown = isShiftDown;
+    public void modifiersChanged(int modifiers) {
+        boolean oldCtrl = ctrl;
+        boolean oldShift = shift;
+        updateKeyModifiers(modifiers);
+        if (ctrl != oldCtrl || shift != oldShift) {
             processMouseEvent(null);
             updCursor();
             if (mode != Mode.None)
                 Main.map.mapView.repaint();
         }
-        isAltDown = (modifiers & KeyEvent.ALT_DOWN_MASK) != 0;
+    }
 
-        if (ev.getKeyCode() == KeyEvent.VK_ESCAPE && ev.getID() == KeyEvent.KEY_PRESSED) {
-            if (mode != Mode.None) {
-                ev.consume();
-            }
+    @Override
+    public void doKeyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (mode != Mode.None)
+                e.consume();
 
             cancelDrawing();
         }
     }
 
+    @Override
+    public void doKeyReleased(KeyEvent e) {
+    }
+
     private EastNorth getEastNorth() {
         Node n;
-        if (isCtrlDown) {
+        if (ctrl) {
             n = null;
         } else {
             n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
@@ -216,16 +209,16 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
     }
 
     private boolean isRectDrawing() {
-        return building.isRectDrawing() && (!isShiftDown || ToolSettings.isBBMode());
+        return building.isRectDrawing() && (!shift || ToolSettings.isBBMode());
     }
 
     private Mode modeDrawing() {
         EastNorth p = getEastNorth();
         if (isRectDrawing()) {
             building.setPlaceRect(p);
-            return isShiftDown ? Mode.DrawingAngFix : Mode.None;
+            return shift ? Mode.DrawingAngFix : Mode.None;
         } else {
-            building.setPlace(p, ToolSettings.getWidth(), ToolSettings.getLenStep(), isShiftDown);
+            building.setPlace(p, ToolSettings.getWidth(), ToolSettings.getLenStep(), shift);
             Main.map.statusLine.setDist(building.getLength());
             this.nextMode = ToolSettings.getWidth() == 0 ? Mode.DrawingWidth : Mode.None;
             return this.nextMode;
@@ -246,9 +239,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
     private void processMouseEvent(MouseEvent e) {
         if (e != null) {
             mousePos = e.getPoint();
-            isCtrlDown = e.isControlDown();
-            isShiftDown = e.isShiftDown();
-            isAltDown = e.isAltDown();
+            updateKeyModifiers(e);
         }
         if (mode == Mode.None) {
             nextMode = Mode.None;
@@ -309,12 +300,13 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         if (building.getLength() != 0) {
             Way w = building.create();
             if (w != null) {
-                if (!isAltDown || ToolSettings.isUsingAddr())
-                    w.setKeys(ToolSettings.getTags());
+                if (!alt || ToolSettings.isUsingAddr())
+                    for (Entry<String, String> kv : ToolSettings.getTags().entrySet())
+                        w.put(kv.getKey(), kv.getValue());
                 if (ToolSettings.isUsingAddr())
                     showAddrDialog(w);
                 if (ToolSettings.isAutoSelect()
-                        && (Main.main.getCurrentDataSet().getSelected().isEmpty() || isShiftDown)) {
+                        && (Main.main.getCurrentDataSet().getSelected().isEmpty() || shift)) {
                     Main.main.getCurrentDataSet().setSelected(w);
                 }
             }
@@ -368,12 +360,12 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, AWT
         if (!Main.isDisplayingMapView())
             return;
         Node n = null;
-        if (!isCtrlDown)
+        if (!ctrl)
             n = Main.map.mapView.getNearestNode(mousePos, OsmPrimitive.isUsablePredicate);
         if (n != null) {
             setCursor(cursorJoinNode);
         } else {
-            if (customCursor != null && (!isShiftDown || isRectDrawing()))
+            if (customCursor != null && (!ctrl || isRectDrawing()))
                 setCursor(customCursor);
             else
                 setCursor(cursorCrosshair);

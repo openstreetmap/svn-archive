@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <!-- Do not use Project Properties customizer when editing this file manually. 
+ To prevent the customizer from showing, create nbproject/project.properties file and enter 
+auxiliary.show.customizer=false 
+property there. Adding 
+auxiliary.show.customizer.message=<message>
+ will show your customized message when someone attempts to open the customizer.  -->
+            <name>OSMRecPlugin</name>
+            <properties/>
+            <folders>
+                <source-folder>
+                    <label>src</label>
+                    <type>java</type>
+                    <location>src</location>
+                </source-folder>
+                <build-folder>
+                    <location>../../dist</location>
+                </build-folder>
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <target>compile</target>
+                </action>
+                <action name="clean">
+                    <target>clean</target>
+                </action>
+                <action name="run">
+                    <target>runjosm</target>
+                </action>
+                <action name="test">
+                    <target>test</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>compile</target>
+                </action>
+                <action name="run.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>run-selected-file-in-src</target>
+                    <context>
+                        <property>run.class</property>
+                        <folder>src</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+            </ide-actions>
+            <export>
+                <type>folder</type>
+                <location>../../dist</location>
+                <build-target>compile</build-target>
+            </export>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>src</label>
+                        <location>src</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="run"/>
+                    <ide-action name="test"/>
+                </context-menu>
+            </view>
+            <subprojects/>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
+            <compilation-unit>
+                <package-root>src</package-root>
+                <classpath mode="compile">../../core/dist/josm-custom.jar:lib/log4j-1.2.17.jar:lib/liblinear-java-1.95.jar:lib/jena-core-2.12.0.jar:lib/jts-1.13.jar:lib/gt-api-9.3.jar:lib/gt-referencing-9.3.jar:lib/gt-opengis-9.3.jar:lib/gt-metadata-9.3.jar:lib/slf4j-api-1.7.6.jar:lib/xercesImpl-2.11.0.jar:lib/commons-lang3-3.3.2.jar:lib/commons-pool-1.5.4.jar:lib/gt-api-9.3.jar:lib/gt-metadata-9.3.jar:lib/gt-opengis-9.3.jar:lib/gt-referencing-9.3.jar:lib/jai_core-1.1.3.jar:lib/jena-core-2.12.0.jar:lib/jena-iri-1.1.0.jar:lib/jgridshift-1.0.jar:lib/jsonic-1.2.7.jar:lib/jsr-275-1.0-beta-2.jar:lib/jts-1.13.jar:lib/langdetect-1.1-20120112.jar:lib/liblinear-1.95.jar:lib/liblinear-java-1.95.jar:lib/lucene-analyzers-3.6.0.jar:lib/lucene-core-3.6.0.jar:lib/slf4j-api-1.7.6.jar:lib/slf4j-log4j12-1.7.6.jar:lib/vecmath-1.3.2.jar:lib/xercesImpl-2.11.0.jar:lib/xml-apis-1.4.01.jar</classpath>
+                <built-to>../../dist</built-to>
+                <source-level>1.7</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>

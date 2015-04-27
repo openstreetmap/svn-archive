@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="OSMRecPlugin-IDE">
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) -->
+    <target name="run-selected-file-in-src">
+        <fail unless="run.class">Must set property 'run.class'</fail>
+        <java classname="${run.class}" failonerror="true" fork="true">
+            <classpath>
+                <pathelement path="../../core/dist/josm-custom.jar:lib/log4j-1.2.17.jar:lib/liblinear-java-1.95.jar"/>
+                <pathelement location="../../dist"/>
+            </classpath>
+        </java>
+    </target>
+</project>

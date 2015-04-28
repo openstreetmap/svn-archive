@@ -404,8 +404,8 @@ class OSMRecPluginHelper {
         //public TrainWorker trainWorker;
         
         private TrainingDialog(String key, int row, Map<String, Integer> map, final boolean initialFocusOnKey) {
-            //super(Main.parent, trn("Training process configuration", "Training process configuration", map.size()), new String[] {tr("Start Training"),tr("Cancel")});
-            super(Main.parent, trn("Training process configuration", "Training process configuration", map.size()), 
+            //super(Main.parent, tr("Training process configuration"), new String[] {tr("Start Training"),tr("Cancel")});
+            super(Main.parent, tr("Training process configuration"), 
                     new String[] {tr("Cancel")});
 
             setButtonIcons(new String[] {"ok","cancel"});

@@ -139,7 +139,7 @@ while(my $line = <>)
     print "/* item $item $type $n */" . ($tctx ? " trc($tctx, $n);" : " tr($n);");
     # display_values / values
     my $sp = ($line =~ /delimiter="(.*?)"/) ? $1 : ($type eq "combo" ? ",":";");
-    my $vals = ($line =~ /display_values="(.*?)"/) ? $1 : ($line =~ /values="(.*?)"/) ? $1 : undef;
+    my $vals = ($line =~ / display_values="(.*?)"/) ? $1 : ($line =~ /values="(.*?)"/) ? $1 : undef;
     if($vals)
     {
       my @combo_values = split "\Q$sp\E" ,$vals;
@@ -183,7 +183,7 @@ while(my $line = <>)
     $item = "";
     print "\n";
   }
-  elsif($line =~ /<\/combo/)
+  elsif($line =~ /<\/(combo|multiselect)/)
   {
     $combo_n = "";
     print "\n";
@@ -211,7 +211,8 @@ while(my $line = <>)
      || $line =~ /<preset_link/
      || $comment)
   {
-    print "// $line\n";
+    $line =~ s/[ \t]+((?:short)?description) *= *"([^"]+)/*\/ \/* $1 *\/ tr("$2"); \/*/g;
+    print "/* $line */\n";
   }
   else
   {

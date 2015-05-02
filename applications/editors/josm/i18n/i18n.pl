@@ -1,12 +1,12 @@
 #! /usr/bin/perl -w
 
 use utf8;
+use strict;
 use open qw/:std :encoding(utf8)/;
 use Term::ReadKey;
 use Encode;
 
 my $waswarn = 0;
-my $maxcount = 0;
 my $lang_pattern = '([a-z]{2}_[A-Z]{2}|[a-z]{2,3}|[a-z]{2}\@[a-z]+)';
 my $lang_pattern_file = '([a-z]{2}_[A-Z]{2}|[a-z]{2,3}|[a-z]{2}-[a-z]+)';
 
@@ -19,17 +19,55 @@ sub getdate
   1900+$t[5],$t[4]+1,$t[3],$t[2],$t[1]);
 }
 
-sub loadfiles($@)
+sub loadpot($)
+{
+  my ($file) = @_;
+  my %all = ();
+  my %keys = ();
+  die "Could not open file $file." if(!open FILE,"<:utf8",$file);
+  my %postate = (last => "", type => "");
+  my $linenum = 0;
+  print "Reading file $file\n";
+  while(<FILE>)
+  {
+    ++$linenum;
+    my $fn = "$file:$linenum";
+    chomp;
+    if($_ =~ /^#/ || !$_)
+    {
+      checkpo(\%postate, \%all, "pot", "line $linenum in $file", \%keys, 1, undef);
+      $postate{fuzzy} = 1 if ($_ =~ /fuzzy/);
+    }
+    elsif($_ =~ /^"(.*)"$/) {$postate{last} .= $1;}
+    elsif($_ =~ /^(msg.+) "(.*)"$/)
+    {
+      my ($n, $d) = ($1, $2);
+      my $new = !${postate}{fuzzy} && (($n eq "msgid" && $postate{type} ne "msgctxt") || ($n eq "msgctxt"));
+      checkpo(\%postate, \%all, "pot", "line $linenum in $file", \%keys, $new, undef);
+      $postate{last} = $d;
+      $postate{type} = $n;
+      $postate{src} = $fn if $new;
+    }
+    else
+    {
+      die "Strange line $linenum in $file: $_.";
+    }
+  }
+  checkpo(\%postate, \%all, "pot", "line $linenum in $file", \%keys, 1, undef);
+  close(FILE);
+  return \%all;
+}
+
+sub loadfiles($$@)
 {
   my $desc;
-  my $all;
-  my ($lang,@files) = @_;
+  my %all = ();
+  my %keys = ();
+  my ($lang,$use,@files) = @_;
   foreach my $file (@files)
   {
     die "Could not open file $file." if(!open FILE,"<:utf8",$file);
-    my $linenum = 0;
 
-    my $cnt = -1; # don't count translators info
     if($file =~ /\/$lang_pattern\.po$/)
     {
       my $l = $1;
@@ -44,16 +82,15 @@ sub loadfiles($@)
         chomp;
         if($_ =~ /^#/ || !$_)
         {
-          checkpo(\%postate, \%all, $l, "line $linenum in $file", $keys, 1);
+          checkpo(\%postate, \%all, $l, "line $linenum in $file", \%keys, 1, $use);
           $postate{fuzzy} = 1 if ($_ =~ /fuzzy/);
         }
         elsif($_ =~ /^"(.*)"$/) {$postate{last} .= $1;}
         elsif($_ =~ /^(msg.+) "(.*)"$/)
         {
           my ($n, $d) = ($1, $2);
-          ++$cnt if $n eq "msgid";
           my $new = !${postate}{fuzzy} && (($n eq "msgid" && $postate{type} ne "msgctxt") || ($n eq "msgctxt"));
-          checkpo(\%postate, \%all, $l, "line $linenum in $file", $keys, $new);
+          checkpo(\%postate, \%all, $l, "line $linenum in $file", \%keys, $new, $use);
           $postate{last} = $d;
           $postate{type} = $n;
           $postate{src} = $fn if $new;
@@ -63,13 +100,12 @@ sub loadfiles($@)
           die "Strange line $linenum in $file: $_.";
         }
       }
-      checkpo(\%postate, \%all, $l, "line $linenum in $file", $keys, 1);
+      checkpo(\%postate, \%all, $l, "line $linenum in $file", \%keys, 1, $use);
     }
     else
     {
       die "File format not supported for file $file.";
     }
-    $maxcount = $cnt if $cnt > $maxcount;
     close(FILE);
   }
   return %all;
@@ -78,7 +114,7 @@ sub loadfiles($@)
 my $alwayspo = 0;
 my $alwaysup = 0;
 my $noask = 0;
-my $conflicts;
+my %conflicts;
 sub copystring($$$$$$$)
 {
   my ($data, $en, $l, $str, $txt, $context, $ispo) = @_;
@@ -98,7 +134,6 @@ sub copystring($$$$$$$)
     }
     else
     {
-
       my $f = $data->{$en}{_file} || "";
       $f = ($f ? "$f;".$data->{$en}{"_src.$l"} : $data->{$en}{"_src.$l"}) if $data->{$en}{"_src.$l"};
       my $isotherpo = ($f =~ /\.po\:/);
@@ -153,9 +188,19 @@ sub copystring($$$$$$$)
   }
 }
 
-sub checkpo($$$$$$)
+# Check a current state for new data
+#
+# @param postate Pointer to current status hash
+# @param data    Pointer to final data array
+# @param l       current language
+# @param txt     output text in case of error, usually file and line number
+# @param keys    pointer to hash for info keys extracted from the first msgid "" entry
+# @param new     whether a data set is finish or not yet complete
+# @param use     hash to strings to use or undef for all strings
+#
+sub checkpo($$$$$$$)
 {
-  my ($postate, $data, $l, $txt, $keys, $new) = @_;
+  my ($postate, $data, $l, $txt, $keys, $new, $use) = @_;
 
   if($postate->{type} eq "msgid") {$postate->{msgid} = $postate->{last};}
   elsif($postate->{type} eq "msgid_plural") {$postate->{msgid_1} = $postate->{last};}
@@ -166,13 +211,18 @@ sub checkpo($$$$$$)
 
   if($new)
   {
-    if((!$postate->{fuzzy}) && $postate->{msgstr} && $postate->{msgid})
+    my $en = $postate->{context} ?  "___$postate->{context}___$postate->{msgid}" : $postate->{msgid};
+    if((!$postate->{fuzzy}) && ($l eq "pot" || $postate->{msgstr}) && $postate->{msgid}
+    && (!$use || $use->{$en}))
     {
       copystring($data, $postate->{msgid}, $l, $postate->{msgstr},$txt,$postate->{context}, 1);
-      for($i = 1; exists($postate->{"msgstr_$i"}); ++$i)
-      { copystring($data, $postate->{msgid}, "$l.$i", $postate->{"msgstr_$i"},$txt,$postate->{context}, 1); }
-      if($postate->{msgid_1})
-      { copystring($data, $postate->{msgid}, "en.1", $postate->{msgid_1},$txt,$postate->{context}, 1); }
+      if(!$use || $use->{$en}{"en.1"})
+      {
+        for(my $i = 1; exists($postate->{"msgstr_$i"}); ++$i)
+        { copystring($data, $postate->{msgid}, "$l.$i", $postate->{"msgstr_$i"},$txt,$postate->{context}, 1); }
+        if($postate->{msgid_1})
+        { copystring($data, $postate->{msgid}, "en.1", $postate->{msgid_1},$txt,$postate->{context}, 1); }
+      }
       copystring($data, $postate->{msgid}, "_src.$l", $postate->{src},$txt,$postate->{context}, 1);
     }
     elsif($postate->{msgstr} && !$postate->{msgid})
@@ -258,6 +308,7 @@ sub createlang($@)
     my $len = length($file);
     $maxlen = $len if $len > $maxlen;
   }
+  my $maxcount = keys(%{$data});
   foreach my $file (@files)
   {
     my $la;
@@ -305,7 +356,7 @@ sub createlang($@)
       for($num = 1; exists($data->{$en}{"$la.$num"}); ++$num)
       { }
       my $val;
-      $eq = 0;
+      my $eq = 0;
       if($la eq "en")
       {
         ++$cnt;
@@ -356,10 +407,28 @@ sub main
 {
   my %lang;
   my @po;
-  my $basename = shift @ARGV;
+  my $potfile;
+  my $basename = "./";
+  foreach my $arg (@ARGV)
+  {
+    next if $arg !~ /^--/;
+    if($arg =~ /^--basedir=(.+)$/)
+    {
+      $basename = $1;
+    }
+    elsif($arg =~ /^--potfile=(.+)$/)
+    {
+      $potfile = $1;
+    }
+    else
+    {
+      die "Unknown argument $arg.";
+    }
+  }
   $basename .= "/" if !($basename =~ /[\/\\:]$/);
   foreach my $arg (@ARGV)
   {
+    next if $arg =~ /^--/;
     foreach my $f (glob $arg)
     {
       if($f =~ /\*/) { printf "Skipping $f\n"; }
@@ -367,7 +436,8 @@ sub main
       else { die "unknown file extension."; }
     }
   }
-  my %data = loadfiles(\%lang,@po);
+  my %data = loadfiles(\%lang,$potfile ? loadpot($potfile) : undef, @po);
+
   my @clang;
   foreach my $la (sort keys %lang)
   {

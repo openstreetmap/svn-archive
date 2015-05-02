@@ -64,6 +64,7 @@ while(my $line = <>)
   }
   else
   {
+    $line =~ s/[ \t]+((?:short)?description) *= *"([^"]+)/*\/ \/* $1 *\/ tr("$2"); \/*/g;
     print "/* $line */\n";
   }
 }

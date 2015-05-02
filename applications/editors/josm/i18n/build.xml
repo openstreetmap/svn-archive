@@ -3,21 +3,20 @@
     <!-- compilation properties -->
     <property name="josm.build.dir" value="../core"/>
     <property name="josm.presets" value="${josm.build.dir}/data/defaultpresets.xml"/>
-    <!--<property name="josm.style" value="${josm.build.dir}/styles/standard/elemstyles.xml"/>-->
     <property name="plugin.dir" value="../plugins"/>
-    <!--<property name="validator.tagfile" value="${josm.build.dir}/data/validator/tagchecker.cfg"/>-->
     <property name="maps.srcfile" value="http://josm.openstreetmap.de/maps"/>
+    <property name="wiki.srcfile" value="http://josm.openstreetmap.de/josmfile?mode=en"/>
     <property name="surveyor.srcfile" value="${plugin.dir}/surveyor/resources/surveyor.xml"/>
     <property name="i18n.build.dir" value="build"/>
     <property name="i18n.install.dir" value="${josm.build.dir}/data"/>
+    <property name="i18n_data.install.dir" value="${josm.build.dir}/data_nodist/trans"/>
     <property name="po.build.dir" value="${i18n.build.dir}"/>
     <property name="ant.build.javac.target" value="1.5"/>
     <property name="gettexttasks.jar" value="lib/gettext-ant-tasks-0.9.7.jar"/>
     <property name="antcontrib.jar" value="lib/ant-contrib-1.0b3.jar"/>
     <target name="init" description="Loads the Ant gettext and contrib tasks">
         <taskdef name="gettext-extract" classname="org.xnap.commons.ant.gettext.GettextExtractKeysTask" classpath="${gettexttasks.jar}"/>
-        <taskdef name="gettext-merge" classname="org.xnap.commons.ant.gettext.GettextMergeKeysTask" classpath="${gettexttasks.jar}"/>
-        <taskdef name="gettext-dist" classname="org.xnap.commons.ant.gettext.GettextDistTask" classpath="${gettexttasks.jar}"/>
+        <!-- for the <foreach> possibility -->
         <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${antcontrib.jar}"/>
     </target>
     <target name="builddir">
@@ -27,12 +26,6 @@
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
             <arg line="convpreset.pl ${josm.presets}"/>
         </exec>
-        <!--<exec executable="perl" output="${i18n.build.dir}/trans_style.java">
-            <arg line="convstyle.pl ${josm.style}"/>
-        </exec>-->
-        <!--<exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_validator.java">
-            <arg line="convvalidator.pl ${validator.tagfile}"/>
-        </exec>-->
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_maps.java">
             <arg line="convmaps.pl ${maps.srcfile}"/>
         </exec>
@@ -42,6 +35,9 @@
         <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_plugins.java">
             <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
         </exec>
+        <exec executable="perl" failonerror="true">
+            <arg line="convwiki.pl ${wiki.srcfile} ${i18n.build.dir}/josmfiles ${i18n.build.dir}/josmfiles.zip"/>
+        </exec>
         <copy file="specialmessages.java" todir="${i18n.build.dir}"/>
     </target>
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
@@ -49,72 +45,82 @@
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
+            <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> disable for now -->
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
             <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
         </gettext-extract>
     </target>
-    <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="builddir,init">
+    <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="trans_.java,init">
         <gettext-extract keysFile="core.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
-        </gettext-extract>
-    </target>
-    <target name="${i18n.build.dir}/core.2.pot" depends="builddir,po/core.pot" description="Duplicates core.pot for de-duplication in data.pot and plugins.pot">
-        <copy file="po/core.pot" tofile="${i18n.build.dir}/core.2.pot"/>
-    </target>
-    <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,${i18n.build.dir}/core.2.pot,init">
-        <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_presets.java"/>
+            <!-- maps should be in data instead, but that requires language file loading support in trac python code -->
+            <fileset dir="${i18n.build.dir}" includes="trans_maps.java"/>
             <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
             <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
         </gettext-extract>
-        <exec executable="msgcomm" failonerror="true" output="po/data.pot">
-            <arg line="--unique po/core.pot ${i18n.build.dir}/core.2.pot ${i18n.build.dir}/data.raw.pot"/>
-        </exec>
     </target>
-    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core strings)" depends="po/core.pot,${i18n.build.dir}/core.2.pot,init">
+    <target name="po/data.pot" description="Extracts message keys from data files, e.g., presets, imagery (minus core strings)" depends="trans_.java,po/core.pot,init">
+        <gettext-extract keysFile="data.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+            <fileset dir="${i18n.build.dir}" includes="trans_plugins.java"/>
+            <!-- <fileset dir="${i18n.build.dir}/josmfiles" includes="trans_*.*"/> -->
+        </gettext-extract>
+        <copy todir="${po.build.dir}">
+            <fileset dir="po" includes="core.pot"/>
+        </copy>
+        <exec executable="msgcomm" failonerror="true" output="po/data.pot">
+            <arg line="--unique po/core.pot ${po.build.dir}/core.pot ${i18n.build.dir}/data.raw.pot"/>
+        </exec>
+        <delete file="${po.build.dir}/core.pot"/>
+        <delete file="${po.build.dir}/data.raw.pot"/>
+    </target>
+    <target name="po/plugins.pot" description="Extracts message keys from the plugins source code (minus core and data strings)" depends="trans_.java,po/core.pot,po/data.pot,init">
         <gettext-extract keysFile="plugins.raw.pot" poDirectory="${i18n.build.dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_surveyor.java"/>
         </gettext-extract>
+        <copy todir="${po.build.dir}">
+            <fileset dir="po" includes="core.pot"/>
+            <fileset dir="po" includes="data.pot"/>
+        </copy>
         <exec executable="msgcomm" failonerror="true" output="po/plugins.pot">
-            <arg line="--unique po/core.pot ${i18n.build.dir}/core.2.pot ${i18n.build.dir}/plugins.raw.pot"/>
+            <arg line="--unique po/core.pot ${po.build.dir}/core.pot po/data.pot ${po.build.dir}/data.pot ${i18n.build.dir}/plugins.raw.pot"/>
         </exec>
+        <delete file="${po.build.dir}/core.pot"/>
+        <delete file="${po.build.dir}/data.pot"/>
+        <delete file="${po.build.dir}/plugins.raw.pot"/>
     </target>
-    <target name="build" depends="po/josm.pot,init">
-        <gettext-merge keysFile="josm.pot" poDirectory="po"/>
+    <target name="build" depends="pot,allpot">
         <antcall target="coretrans"/>
+        <antcall target="datatrans"/>
         <foreach param="path" target="plugintrans">
             <path>
                 <dirset dir="${plugin.dir}" includes="*" excludes="00_*" />
             </path>
         </foreach>
     </target>
-    <target name="singleplugintrans" depends="po/josm.pot,init">
+    <target name="singleplugintrans" depends="init">
         <antcall target="plugintrans">
             <param name="path" value="${plugin}"/>
         </antcall>
     </target>
-    <target name="buildcore" depends="po/josm.pot,init">
+    <target name="buildcore" depends="po/core.pot,po/data.pot">
         <antcall target="coretrans"/>
+        <antcall target="datatrans"/>
     </target>
     <target name="coretrans">
-        <mkdir dir="${po.build.dir}/core"/>
-        <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/core" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
-            <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
-            <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
-            <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
-            <fileset dir="${josm.build.dir}/data/validator" includes="*.mapcss"/>
-        </gettext-extract>
-        <copy todir="${po.build.dir}/core">
-            <fileset dir="po"/>
-        </copy>
-        <gettext-merge keysFile="josm.pot" poDirectory="${po.build.dir}/core"/>
         <exec executable="perl" failonerror="true">
-            <arg line="i18n.pl ${i18n.install.dir}/ ${po.build.dir}/core/*.po"/>
+            <arg line="i18n.pl --potfile=po/core.pot --basedir=${i18n.install.dir}/ po/*.po"/>
         </exec>
     </target>
-    <target name="plugintrans" depends="init">
+    <target name="datatrans">
+        <exec executable="perl" failonerror="true">
+            <arg line="i18n.pl --potfile=po/data.pot --basedir=${i18n_data.install.dir}/ po/*.po"/>
+        </exec>
+    </target>
+    <target name="plugintrans">
         <basename file="${path}" property="dir"/>
         <mkdir dir="${po.build.dir}/plugin_${dir}"/>
         <exec executable="perl" failonerror="true" output="${po.build.dir}/plugin_${dir}/trans_plugin.java">
@@ -123,20 +129,17 @@
         <gettext-extract keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${plugin.dir}/${dir}" includes="**/*.java"/>
             <fileset dir="${po.build.dir}/plugin_${dir}" includes="trans_*.java"/>
+            <fileset dir="${i18n.build.dir}" includes="trans_${dir}.java"/>
         </gettext-extract>
         <if>
             <available file="${po.build.dir}/plugin_${dir}/josm.pot"/>
             <then>
-                <copy todir="${po.build.dir}/plugin_${dir}">
-                    <fileset dir="po"/>
-                </copy>
-                <gettext-merge keysFile="josm.pot" poDirectory="${po.build.dir}/plugin_${dir}"/>
                 <exec executable="perl" failonerror="true">
-                    <arg line="i18n.pl ${plugin.dir}/${dir}/data/ ${po.build.dir}/plugin_${dir}/*.po"/>
+                    <arg line="i18n.pl --potfile=${po.build.dir}/plugin_${dir}/josm.pot --basedir=${plugin.dir}/${dir}/data/ po/*.po"/>
                 </exec>
             </then>
         </if>
-        <delete dir="${po.build.dir}/plugin_${dir}"/>
+        <delete dir="${po.build.dir}/plugin_${dir}ss"/>
     </target>
     <target name="clean">
         <delete dir="${i18n.build.dir}"/>
@@ -148,14 +151,14 @@
             <fileset dir="po" includes="*.po" defaultexcludes="false"/>
         </delete>
     </target>
-    <target name="test">
+    <target name="test" depends="pot">
         <mkdir dir="${i18n.build.dir}/test"/>
         <exec executable="perl" failonerror="true">
-            <arg line="i18n.pl ${i18n.build.dir}/test/ po/*.po"/>
+            <arg line="i18n.pl --potfile=po/josm.pot --basedir=${i18n.build.dir}/test/ po/*.po"/>
         </exec>
     </target>
     <target name="pot" depends="po/josm.pot" />
-    <target name="transifex" depends="po/core.pot,po/plugins.pot,po/data.pot" />
+    <target name="allpot" depends="po/core.pot,po/data.pot,po/plugins.pot" />
     <target name="update">
         <exec executable="perl" failonerror="true">
             <arg line="launchpad.pl bzronly"/>

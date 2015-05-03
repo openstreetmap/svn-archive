@@ -66,7 +66,8 @@ public class GTFSImporterAction extends JosmAction
     return currentTrack;
   }
 
-  public void actionPerformed(ActionEvent event) {
+  @Override
+public void actionPerformed(ActionEvent event) {
 
     if (dialog == null)
       dialog = new GTFSImporterDialog(this);
@@ -315,7 +316,7 @@ public class GTFSImporterAction extends JosmAction
     if (box.getBounds() == null)
       return;
     box.enlargeBoundingBox();
-    Main.map.mapView.recalculateCenterScale(box);
+    Main.map.mapView.zoomTo(box);
   }
 
   /* marks the nodes that correspond to the marked lines in the table.
@@ -356,6 +357,7 @@ public class GTFSImporterAction extends JosmAction
 
   private class FocusAddAction extends AbstractAction
   {
+    @Override
     public void actionPerformed(ActionEvent e)
     {
       Main.main.undoRedo.add(new GTFSAddCommand(GTFSImporterAction.this));

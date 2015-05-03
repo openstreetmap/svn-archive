@@ -171,7 +171,7 @@ public class NewLayerFromFileAction extends JosmAction {
             // if we are loading a single picture file, zoom on it, so that the user can see something
             BoundingXYVisitor v = new BoundingXYVisitor();
             layer.visitBoundingBox(v);
-            Main.map.mapView.recalculateCenterScale(v);
+            Main.map.mapView.zoomTo(v);
         }
     }
     private void addNewLayerFromKML(File root, KMLGroundOverlay overlay, int newLayerPos) {

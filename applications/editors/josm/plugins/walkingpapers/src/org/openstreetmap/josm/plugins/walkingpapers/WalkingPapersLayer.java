@@ -78,7 +78,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
                 if (newLayer != WalkingPapersLayer.this) return;
                 BoundingXYVisitor bbox = new BoundingXYVisitor();
                 bbox.visit(printBounds);
-                Main.map.mapView.recalculateCenterScale(bbox);
+                Main.map.mapView.zoomTo(bbox);
                 needRedraw = true;
             }
 

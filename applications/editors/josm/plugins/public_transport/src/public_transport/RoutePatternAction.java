@@ -63,6 +63,7 @@ public class RoutePatternAction extends JosmAction {
       root = rpa;
     }
 
+    @Override
     public void valueChanged(ListSelectionEvent e) {
       root.routesSelectionChanged();
     }
@@ -75,6 +76,7 @@ public class RoutePatternAction extends JosmAction {
       this.route = route;
     }
 
+    @Override
     public int compareTo(RouteReference rr) {
       if (route.get("route") != null)
       {
@@ -123,6 +125,7 @@ public class RoutePatternAction extends JosmAction {
       return 0;
     }
 
+    @Override
     public String toString() {
       String buf = route.get("route");
       if ((route.get("ref") != null) && (route.get("ref") != ""))
@@ -161,6 +164,7 @@ public class RoutePatternAction extends JosmAction {
       this.hasFixedKeys = hasFixedKeys;
     }
 
+    @Override
     public boolean isCellEditable(int row, int column) {
       if ((column == 0) && (hasFixedKeys))
         return false;
@@ -206,6 +210,7 @@ public class RoutePatternAction extends JosmAction {
       }
     }
 
+    @Override
     public void tableChanged(TableModelEvent e)
     {
       if (e.getType() == TableModelEvent.UPDATE)
@@ -241,6 +246,7 @@ public class RoutePatternAction extends JosmAction {
       col2 = new TreeMap< Integer, TableCellEditor >();
     }
 
+    @Override
     public TableCellEditor getCellEditor(int row, int column) {
       TableCellEditor editor = null;
       if (column == 0)
@@ -265,16 +271,19 @@ public class RoutePatternAction extends JosmAction {
 
     public Vector<Node> nodes = new Vector<Node>();
 
+    @Override
     public boolean isCellEditable(int row, int column) {
       if (column != STOPLIST_ROLE_COLUMN)
         return false;
       return true;
     }
 
+    @Override
     public void addRow(Object[] obj) {
       throw new UnsupportedOperationException();
     }
 
+    @Override
     public void insertRow(int insPos, Object[] obj) {
       throw new UnsupportedOperationException();
     }
@@ -322,6 +331,7 @@ public class RoutePatternAction extends JosmAction {
   };
 
   private class StoplistTableModelListener implements TableModelListener {
+    @Override
     public void tableChanged(TableModelEvent e)
     {
       if (e.getType() == TableModelEvent.UPDATE)
@@ -382,6 +392,7 @@ public class RoutePatternAction extends JosmAction {
       node = inNode;
     }
 
+    @Override
     public int compareTo(StopReference sr) {
       if (this.index < sr.index)
     return -1;
@@ -425,7 +436,8 @@ public class RoutePatternAction extends JosmAction {
     Main.toolbar.register(this);
   }
 
-  public void actionPerformed(ActionEvent event) {
+  @Override
+public void actionPerformed(ActionEvent event) {
     Frame frame = JOptionPane.getFrameForComponent(Main.parent);
     DataSet mainDataSet = Main.main.getCurrentDataSet();
 
@@ -1077,7 +1089,7 @@ public class RoutePatternAction extends JosmAction {
 
       for (int i = 0; i < relsListModel.size(); ++i)
       {
-    if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
+    if (currentRoute == relsListModel.elementAt(i).route)
       relsList.setSelectedIndex(i);
       }
     }
@@ -1092,7 +1104,7 @@ public class RoutePatternAction extends JosmAction {
 
       for (int i = 0; i < relsListModel.size(); ++i)
       {
-    if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
+    if (currentRoute == relsListModel.elementAt(i).route)
       relsList.setSelectedIndex(i);
       }
     }
@@ -1150,7 +1162,7 @@ public class RoutePatternAction extends JosmAction {
 
       for (int i = 0; i < relsListModel.size(); ++i)
       {
-        if (currentRoute == ((RouteReference)relsListModel.elementAt(i)).route)
+        if (currentRoute == relsListModel.elementAt(i).route)
           relsList.setSelectedIndex(i);
       }
 
@@ -1230,7 +1242,7 @@ public class RoutePatternAction extends JosmAction {
       if (box.getBounds() == null)
         return;
       box.enlargeBoundingBox();
-      Main.map.mapView.recalculateCenterScale(box);
+      Main.map.mapView.zoomTo(box);
     }
     else if ("routePattern.itineraryMark".equals(event.getActionCommand()))
     {
@@ -1513,7 +1525,7 @@ public class RoutePatternAction extends JosmAction {
       if (box.getBounds() == null)
         return;
       box.enlargeBoundingBox();
-      Main.map.mapView.recalculateCenterScale(box);
+      Main.map.mapView.zoomTo(box);
     }
     else if ("routePattern.stoplistMark".equals(event.getActionCommand()))
     {
@@ -2063,7 +2075,7 @@ public class RoutePatternAction extends JosmAction {
     int selectedPos = relsList.getAnchorSelectionIndex();
     if (relsList.isSelectedIndex(selectedPos))
     {
-      currentRoute = ((RouteReference)relsListModel.elementAt(selectedPos)).route;
+      currentRoute = relsListModel.elementAt(selectedPos).route;
       tabbedPane.setEnabledAt(1, true);
       tabbedPane.setEnabledAt(2, true);
       tabbedPane.setEnabledAt(3, true);
@@ -2162,7 +2174,7 @@ public class RoutePatternAction extends JosmAction {
         Way way = itineraryData.ways.elementAt(i);
         if (!(way.isIncomplete()))
         {
-          if ("backward".equals((String)(itineraryData.getValueAt(i, 1))))
+          if ("backward".equals((itineraryData.getValueAt(i, 1))))
           {
             for (int j = way.getNodesCount()-2; j >= 0; --j)
             {

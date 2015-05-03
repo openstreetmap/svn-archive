@@ -304,7 +304,7 @@ public class ImageLayer extends Layer {
         // repaint and zoom to new bbox
         BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
         visitBoundingBox(boundingXYVisitor);
-        Main.map.mapView.recalculateCenterScale(boundingXYVisitor);
+        Main.map.mapView.zoomTo(boundingXYVisitor);
     }
 
     /**

@@ -73,7 +73,8 @@ public class StopImporterAction extends JosmAction
     return currentTrack;
   }
 
-  public void actionPerformed(ActionEvent event)
+  @Override
+public void actionPerformed(ActionEvent event)
   {
     if (dialog == null)
       dialog = new StopImporterDialog(this);
@@ -245,7 +246,7 @@ public class StopImporterAction extends JosmAction
   {
     if (selectedPos >= 0)
     {
-      currentTrack = ((TrackReference)tracksListModel.elementAt(selectedPos));
+      currentTrack = (tracksListModel.elementAt(selectedPos));
       dialog.setTrackValid(true);
 
       //Prepare Settings
@@ -255,7 +256,7 @@ public class StopImporterAction extends JosmAction
 
       //Prepare Stoplist
       dialog.setStoplistTableModel
-          (((TrackReference)tracksListModel.elementAt(selectedPos)).stoplistTM);
+          (tracksListModel.elementAt(selectedPos).stoplistTM);
     }
     else
     {
@@ -353,7 +354,7 @@ public class StopImporterAction extends JosmAction
     if (box.getBounds() == null)
       return;
     box.enlargeBoundingBox();
-    Main.map.mapView.recalculateCenterScale(box);
+    Main.map.mapView.zoomTo(box);
   }
 
   /* marks the nodes that correspond to the marked lines in the table.
@@ -401,7 +402,8 @@ public class StopImporterAction extends JosmAction
   {
     return new AbstractAction()
     {
-      public void actionPerformed(ActionEvent e)
+      @Override
+    public void actionPerformed(ActionEvent e)
       {
         JTable table = dialog.getWaypointsTable();
         int row = table.getEditingRow();
@@ -429,7 +431,8 @@ public class StopImporterAction extends JosmAction
   {
     return new AbstractAction()
     {
-      public void actionPerformed(ActionEvent e)
+      @Override
+    public void actionPerformed(ActionEvent e)
       {
         JTable table = dialog.getStoplistTable();
         int row = table.getEditingRow();
@@ -445,6 +448,7 @@ public class StopImporterAction extends JosmAction
 
   private class FocusWaypointNameAction extends AbstractAction
   {
+    @Override
     public void actionPerformed(ActionEvent e)
     {
       JTable table = dialog.getWaypointsTable();
@@ -475,6 +479,7 @@ public class StopImporterAction extends JosmAction
       this.defaultShelter = defaultShelter;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e)
     {
       JTable table = dialog.getWaypointsTable();
@@ -498,6 +503,7 @@ public class StopImporterAction extends JosmAction
 
   private class FocusTrackStoplistNameAction extends AbstractAction
   {
+    @Override
     public void actionPerformed(ActionEvent e)
     {
       JTable table = dialog.getStoplistTable();
@@ -528,6 +534,7 @@ public class StopImporterAction extends JosmAction
       this.defaultShelter = defaultShelter;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e)
     {
       JTable table = dialog.getStoplistTable();

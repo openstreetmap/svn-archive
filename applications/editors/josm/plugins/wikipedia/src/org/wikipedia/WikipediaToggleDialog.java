@@ -73,7 +73,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                         if (entry.coordinate != null) {
                             BoundingXYVisitor bbox = new BoundingXYVisitor();
                             bbox.visit(entry.coordinate);
-                            Main.map.mapView.recalculateCenterScale(bbox);
+                            Main.map.mapView.zoomTo(bbox);
                         }
                         SearchAction.search(entry.name.replaceAll("\\(.*\\)", ""), SearchAction.SearchMode.replace);
                     }

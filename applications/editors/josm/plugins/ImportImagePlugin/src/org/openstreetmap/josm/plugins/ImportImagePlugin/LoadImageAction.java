@@ -59,7 +59,7 @@ public class LoadImageAction extends JosmAction {
             Main.main.addLayer(layer);
             BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
             layer.visitBoundingBox(boundingXYVisitor);
-            Main.map.mapView.recalculateCenterScale(boundingXYVisitor);
+            Main.map.mapView.zoomTo(boundingXYVisitor);
         }
     }
 }

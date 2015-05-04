@@ -19,6 +19,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.actions.OpenLinkAction;
 import org.openstreetmap.josm.plugins.opendata.core.actions.ViewLicenseAction;
@@ -50,8 +51,8 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
         MapView.addLayerChangeListener(this);
     }
     
-    @Override public Icon getBaseIcon() {
-        return OdUtils.getImageIcon(handler != null ? handler.getDataLayerIconName() : OdConstants.ICON_CORE_16);
+    @Override public ImageProvider getBaseIconProvider() {
+        return OdUtils.getImageProvider(handler != null ? handler.getDataLayerIconName() : OdConstants.ICON_CORE_16);
     }
 
     public void addOsmLayer(OdOsmDataLayer layer) {

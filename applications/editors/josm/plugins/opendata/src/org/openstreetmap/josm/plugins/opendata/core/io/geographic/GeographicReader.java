@@ -48,7 +48,9 @@ import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
+import org.openstreetmap.josm.tools.ImageOverlay;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -208,12 +210,10 @@ public abstract class GeographicReader extends AbstractReader {
                                 "Do you want to try a <i>lenient</i> method, which will perform a non-precise transformation (<b>with location errors up to 1 km</b>) ?<br/><br/>"+
                                 "If so, <b>do NOT upload</b> such data to OSM !", crs.getName())+
                         "</html>");
-                dlg.setButtonIcons(new Icon[] {
-                        ImageProvider.get("cancel"),
-                        ImageProvider.overlay(
-                                ImageProvider.get("ok"),
-                                new ImageIcon(ImageProvider.get("warning-small").getImage().getScaledInstance(10 , 10, Image.SCALE_SMOOTH)),
-                                ImageProvider.OverlayPosition.SOUTHEAST)});
+               dlg.setButtonIcons(new Icon[] {
+                        new ImageProvider("cancel").setMaxSize(ImageSizes.LARGEICON).get(),
+                        new ImageProvider("ok").setMaxSize(ImageSizes.LARGEICON).addOverlay(
+                                new ImageOverlay(new ImageProvider("warning-small"), 0.5,0.5,1.0,1.0)).get()});
                 dlg.setToolTipTexts(new String[] {
                         tr("Cancel"),
                         tr("Try lenient method")});

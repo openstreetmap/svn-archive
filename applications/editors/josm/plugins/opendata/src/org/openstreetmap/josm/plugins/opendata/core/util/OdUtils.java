@@ -58,7 +58,15 @@ public abstract class OdUtils {
     }
     
     public static final ImageIcon getImageIcon(String iconName, boolean optional) {
-        return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders()).get();
+        return getImageProvider(iconName, optional).get();
+    }
+    
+    public static final ImageProvider getImageProvider(String iconName) {
+        return getImageProvider(iconName, false);
+    }
+    
+    public static final ImageProvider getImageProvider(String iconName, boolean optional) {
+        return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
     }
     
     public static final String getJosmLanguage() {

@@ -2,19 +2,19 @@
 host = https://www.transifex.com
 
 [josm.core]
-file_filter = po/<lang>.po
+file_filter = po/<lang>/core.po
 source_file = po/core.pot
 source_lang = en
 type = PO
 
 [josm.data]
-file_filter = po/<lang>.po
+file_filter = po/<lang>/data.po
 source_file = po/data.pot
 source_lang = en
 type = PO
 
 [josm.plugins]
-file_filter = po/<lang>.po
+file_filter = po/<lang>/plugins.po
 source_file = po/plugins.pot
 source_lang = en
 type = PO

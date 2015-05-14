@@ -139,7 +139,7 @@
                 </exec>
             </then>
         </if>
-        <delete dir="${po.build.dir}/plugin_${dir}ss"/>
+        <delete dir="${po.build.dir}/plugin_${dir}"/>
     </target>
     <target name="clean">
         <delete dir="${i18n.build.dir}"/>

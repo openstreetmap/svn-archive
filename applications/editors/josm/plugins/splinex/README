@@ -1,0 +1,14 @@
+README 
+======
+
+Readme for your plugin 
+
+* Plugin author is Upliner
+* License: GPL v2 or later.
+
+Based on Spline-drawing-tool by Burlaca Segiu and fully rewritten.
+
+Only code left from original plugin is the parts copied from
+JOSM's DrawAction.java and generally known Bezier curve algorithm.
+
+Git repository: https://github.com/Upliner/splinex

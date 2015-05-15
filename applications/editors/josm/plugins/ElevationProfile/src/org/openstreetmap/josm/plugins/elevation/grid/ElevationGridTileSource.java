@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.elevation.grid;
 import java.io.IOException;
 
 import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.TileSourceInfo;
 
 /**
  * @author Olli
@@ -11,7 +12,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.AbstractTMSTileSource;
  */
 public class ElevationGridTileSource extends AbstractTMSTileSource {
     public ElevationGridTileSource(String name) {
-        super(name, "", "eg");
+        super(new TileSourceInfo(name, "", "eg"));
     }
 
     @Override

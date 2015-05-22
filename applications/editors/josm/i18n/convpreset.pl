@@ -209,6 +209,7 @@ while(my $line = <>)
      || $line =~ /<\/?chunk/
      || $line =~ /<reference/
      || $line =~ /<preset_link/
+     || $line =~ /<item_separator\/>/
      || $comment)
   {
     $line =~ s/[ \t]+((?:short)?description) *= *"([^"]+)/*\/ \/* $1 *\/ tr("$2"); \/*/g;

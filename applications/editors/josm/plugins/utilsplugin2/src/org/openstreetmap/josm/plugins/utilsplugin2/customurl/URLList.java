@@ -30,9 +30,9 @@ public class URLList {
         items.add("Wikipedia RU");
         items.add(defaultURL);
         items.add("Who Dit It?");
-        items.add("http://simon04.dev.openstreetmap.org/whodidit/?zoom=12&lat={#lat}&lon={#lat}&layers=BTT");
+        items.add("http://simon04.dev.openstreetmap.org/whodidit/?zoom=12&lat={#lat}&lon={#lon}&layers=BTT");
         items.add("Keep Right validator");
-        items.add("http://keepright.ipax.at/report_map.php?zoom=14&lat={#lat}&lon={#lat}&layers=B0T");
+        items.add("http://keepright.ipax.at/report_map.php?zoom=14&lat={#lat}&lon={#lon}&layers=B0T");
         items.add("Element history [demo, =Ctrl-Shift-H]");
         items.add("https://www.openstreetmap.org/{#type}/{#id}/history");
         items.add("Browse element [demo, =Ctrl-Shift-I]");

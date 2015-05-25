@@ -483,7 +483,7 @@ public class SdsApi extends SdsConnection {
                     throw new OsmApiException(HttpURLConnection.HTTP_UNAUTHORIZED,null,null);
 
                 if (activeConnection.getResponseCode() == HttpURLConnection.HTTP_PROXY_AUTH)
-                    throw new OsmTransferCanceledException();
+                    throw new OsmTransferCanceledException(tr("Proxy Authentication Required"));
 
                 String encoding = activeConnection.getContentEncoding();
                 if (activeConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {

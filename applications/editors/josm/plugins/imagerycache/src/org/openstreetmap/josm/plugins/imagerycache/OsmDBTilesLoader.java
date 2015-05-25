@@ -104,6 +104,11 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
                     run();
 
                 }
+				@Override
+				public void submit(boolean force) {
+					submit();
+					
+				}
             };
             JobDispatcher.getInstance().addJob(job);
         }
@@ -344,5 +349,11 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
             run();
             
         }
+
+		@Override
+		public void submit(boolean force) {
+			submit();
+			
+		}
     }
 }

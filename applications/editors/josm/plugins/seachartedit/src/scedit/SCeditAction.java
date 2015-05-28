@@ -22,7 +22,9 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.*;
+import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
@@ -197,14 +199,43 @@ public class SCeditAction extends JosmAction implements EditLayerChangeListener,
 	}
 
 	void makeMap() {
-		map = new S57map();
+		map = new S57map(true);
 		if (data != null) {
-			for (Node node : data.getNodes()) {
-				map.addNode(node.getUniqueId(), node.getCoor().lat(), node.getCoor().lon());
-				for (Entry<String, String> entry : node.getKeys().entrySet()) {
-					map.addTag(entry.getKey(), entry.getValue());
+			double minlat = 90;
+			double maxlat = -90;
+			double minlon = 180;
+			double maxlon = -180;
+			for (Bounds bounds : data.getDataSourceBounds()) {
+				if (bounds.getMinLat() < minlat) {
+					minlat = bounds.getMinLat();
 				}
-				map.tagsDone(node.getUniqueId());
+				if (bounds.getMaxLat() > maxlat) {
+					maxlat = bounds.getMaxLat();
+				}
+				if (bounds.getMinLon() < minlon) {
+					minlon = bounds.getMinLon();
+				}
+				if (bounds.getMaxLon() > maxlon) {
+					maxlon = bounds.getMaxLon();
+				}
+			}
+			map.addNode(1, maxlat, minlon);
+			map.addNode(2, minlat, minlon);
+			map.addNode(3, minlat, maxlon);
+			map.addNode(4, maxlat, maxlon);
+			map.bounds.minlat = Math.toRadians(minlat);
+			map.bounds.maxlat = Math.toRadians(maxlat);
+			map.bounds.minlon = Math.toRadians(minlon);
+			map.bounds.maxlon = Math.toRadians(maxlon);
+			for (Node node : data.getNodes()) {
+				LatLon coor = node.getCoor();
+				if (coor != null) {
+					map.addNode(node.getUniqueId(), coor.lat(), coor.lon());
+					for (Entry<String, String> entry : node.getKeys().entrySet()) {
+						map.addTag(entry.getKey(), entry.getValue());
+					}
+					map.tagsDone(node.getUniqueId());
+				}
 			}
 			for (Way way : data.getWays()) {
 				if (way.getNodesCount() > 0) {
@@ -231,6 +262,7 @@ public class SCeditAction extends JosmAction implements EditLayerChangeListener,
 					map.tagsDone(rel.getUniqueId());
 				}
 			}
+			map.mapDone();
 		}
 	}
 }

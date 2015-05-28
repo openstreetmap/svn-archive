@@ -40,7 +40,7 @@ public class ShowFrame extends JFrame {
 			
 			id = osm.getUniqueId();
 			feature = map.index.get(id);
-			showMap = new S57map();
+			showMap = new S57map(true);
 			showMap.nodes = map.nodes;
 			showMap.edges = map.edges;
 			showMap.index = map.index;

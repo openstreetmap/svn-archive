@@ -110,7 +110,6 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 	}
 
 	protected void createChartLayer() {
-		// System.out.println("hello");
 		rendering = new ChartImage(new ImageryInfo("SeaChart"));
 		rendering.setBackgroundLayer(true);
 		Main.main.addLayer(rendering);
@@ -144,7 +143,7 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 	}
 
 	void makeChart() {
-		map = new S57map();
+		map = new S57map(false);
 		if (data != null) {
 			double minlat = 90;
 			double maxlat = -90;

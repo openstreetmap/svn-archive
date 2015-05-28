@@ -223,15 +223,6 @@ public class S57map {
 		}
 	}
 	
-	class OSMtag {
-		String key;
-		String val;
-		OSMtag(String k, String v) {
-			key = k;
-			val = v;
-		}
-	}
-	
 	public NodeTab nodes;
 	public EdgeTab edges;
 
@@ -245,8 +236,10 @@ public class S57map {
 	private Feature feature;
 	private Edge edge;
 	private KeyVal<?> osm = S57osm.OSMtag("", "");
+	boolean sea;
 
-	public S57map() {
+	public S57map(boolean s) {
+		sea = s;
 		nodes = new NodeTab();		// All nodes in map
 		edges = new EdgeTab();		// All edges in map
 		feature = new Feature();	// Current feature being built
@@ -476,7 +469,7 @@ public class S57map {
 					}
 				}
 			}
-		} else {
+		} else if (!sea) {
 			KeyVal<?> kv = S57osm.OSMtag(key, val);
 			if (kv.obj != Obj.UNKOBJ) {
 				osm.obj = kv.obj;

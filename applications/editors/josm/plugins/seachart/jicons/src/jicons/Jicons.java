@@ -129,7 +129,7 @@ public class Jicons {
 					h = w = x = y = -1;
 					s = 0;
 					file = format = "";
-					map = new S57map();
+					map = new S57map(true);
 					map.addNode(0, 0, 0);
 					for (String token : ln.split("[ ]+")) {
 						if (token.matches("^width=.+")) {

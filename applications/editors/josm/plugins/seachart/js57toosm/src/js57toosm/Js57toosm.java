@@ -47,7 +47,7 @@ public class Js57toosm {
 			}
 			tin.close();
 		
-		map = new S57map();
+		map = new S57map(true);
 		MapBounds bounds = S57dec.decodeFile(in, map);
 
 		out.format("<?xml version='1.0' encoding='UTF-8'?>%n");

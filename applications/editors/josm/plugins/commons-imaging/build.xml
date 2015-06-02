@@ -24,7 +24,7 @@
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="nokutu"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.commons-imaging.CommonsImagingPlugin"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.commons.imaging.CommonsImagingPlugin"/>
     <property name="plugin.description" value="Provides Commons Imaging library. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
    
     

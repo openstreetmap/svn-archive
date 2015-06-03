@@ -16,7 +16,7 @@ import java.util.TimeZone;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.common.IImageMetadata;
+import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.RationalNumber;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
@@ -53,7 +53,7 @@ public class ExifGPSTagger {
             throws IOException, ImageReadException, ImageWriteException {
         TiffOutputSet outputSet = null;
 
-        IImageMetadata metadata = Imaging.getMetadata(jpegImageFile);
+        ImageMetadata metadata = Imaging.getMetadata(jpegImageFile);
         JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
         if (null != jpegMetadata) {
             TiffImageMetadata exif = jpegMetadata.getExif();

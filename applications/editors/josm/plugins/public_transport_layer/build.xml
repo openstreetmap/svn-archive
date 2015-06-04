@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** Usage
+** =====
+** Call "ant help" to get possible build targets.
+-->
+<project name="public_transport_layer" default="dist" basedir=".">
+
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="8339"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="simon04"/>
+    <property name="plugin.class" value="ptl.Plugin"/>
+    <property name="plugin.description" value="Displays stops of selected public transport routes as graph"/>
+    <!--<property name="plugin.icon" value="..."/>-->
+    <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/PublicTransportLayer"/>
+    <property name="plugin.canloadatruntime" value="true"/>
+    <!--<property name="plugin.early" value="..."/>-->
+    <!--<property name="plugin.requires" value="..."/>-->
+    <!--<property name="plugin.stage" value="..."/>-->
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+  
+</project>

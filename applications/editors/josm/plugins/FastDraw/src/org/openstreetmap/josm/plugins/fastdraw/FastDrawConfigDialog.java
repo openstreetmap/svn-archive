@@ -40,6 +40,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
     private final JCheckBox snapCb=new JCheckBox(tr("Snap to nodes"));
     private final JCheckBox fixedClickCb = new JCheckBox(tr("Add fixed points on click"));
     private final JCheckBox fixedSpaceCb = new JCheckBox(tr("Add fixed points on spacebar"));
+    private final JCheckBox allowEditExistingWaysCb = new JCheckBox(tr("Allow edit existing ways"));
     private final JCheckBox drawClosedCb = new JCheckBox(tr("Draw closed polygons only"));
     private final HistoryComboBox addTags = new HistoryComboBox();
     private final FDSettings settings;
@@ -86,6 +87,8 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         all.add(fixedSpaceCb,GBC.eop().insets(20,0,0,0));
         all.add(drawClosedCb,GBC.eop().insets(20,0,0,0));
         
+        all.add(allowEditExistingWaysCb,GBC.eop().insets(20,0,0,0));
+        
         addTags.setText(settings.autoTags);
         text1.setValue(settings.epsilonMult);
         text2.setValue(settings.startingEps);
@@ -94,6 +97,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
         fixedClickCb.setSelected(settings.fixedClick);
         fixedSpaceCb.setSelected(settings.fixedSpacebar);
         drawClosedCb.setSelected(settings.drawClosed);
+        allowEditExistingWaysCb.setSelected(settings.allowEditExistingWays);
         combo1.setSelectedIndex(settings.simplifyMode);
         
         setContent(all, false);
@@ -109,7 +113,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
     @Override
     public ExtendedDialog showDialog() {
         ExtendedDialog result = super.showDialog();
-        if (getValue() == 0) {
+        if (getValue() == 1) {
             try {
                 settings.epsilonMult=NumberFormat.getInstance().parse(text1.getText()).doubleValue();
                 settings.startingEps=NumberFormat.getInstance().parse(text2.getText()).doubleValue();
@@ -117,6 +121,7 @@ public class FastDrawConfigDialog extends ExtendedDialog {
                 settings.snapNodes=snapCb.isSelected();
                 settings.fixedClick=fixedClickCb.isSelected();
                 settings.fixedSpacebar=fixedSpaceCb.isSelected();
+                settings.allowEditExistingWays=allowEditExistingWaysCb.isSelected();
                 settings.drawClosed=drawClosedCb.isSelected();
                 settings.simplifyMode=combo1.getSelectedIndex();
                 settings.autoTags=addTags.getText();

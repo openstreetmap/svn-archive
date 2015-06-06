@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.PasteTagsAction.TagPaster;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.command.AddCommand;
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -72,11 +74,11 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     private LatLon highlightedFragmentStart;
     private int nearestPointIndex;
     private int dragNode=-1;
-    private SequenceCommand delCmd;
     private List<Node> oldNodes;
     
     private boolean lineWasSaved;
     private boolean deltaChanged;
+    private Way oldWay;
     
     FastDrawingMode(MapFrame mapFrame) {
         super(tr("FastDrawing"), "turbopen.png", tr("Fast drawing mode"), 
@@ -510,8 +512,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
 // <editor-fold defaultstate="collapsed" desc="Different action helper methods">
     public void newDrawing() {
-        if (delCmd!=null) delCmd.undoCommand();
-        delCmd=null; oldNodes=null;
+        oldWay=null; oldNodes=null;
         eps=settings.startingEps;
         line.clear();
     }
@@ -525,7 +526,15 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
         Collection<Command> cmds = new LinkedList<>();
         int i = 0;
-        Way w = new Way();
+        
+        Way w;
+        if (oldWay==null) {
+            w = new Way();
+        } else {
+            w = new Way(oldWay);
+            w.setNodes(new ArrayList<Node>()); // nodes will be created frosm scratch
+        }
+        
         LatLon first=pts.get(0);
         Node firstNode=null;
 
@@ -569,18 +578,18 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
                 w.put(k, tags.get(k));
             }
         }
-        if (delCmd!=null) {
+        if (oldWay!=null) {
             List<Node> nodes = w.getNodes();
+            cmds.add(new ChangeCommand(oldWay, w));
             for (Node nd: oldNodes) {
                 // node from old way but not in new way 
                 if (!nodes.contains(nd)) {
                     List<OsmPrimitive> refs = nd.getReferrers();
                     // does someone need this node? if no-delete it.
-                    if (refs.isEmpty() && !nd.isDeleted() && nd.isUsable()) cmds.add(new DeleteCommand(nd));                                       
+                    if (refs.size()==1 && !nd.isDeleted() && nd.isUsable() && !nd.isTagged()) cmds.add(new DeleteCommand(nd));
                 }
             }
-            delCmd = null; // that is all with this command
-            cmds.add(new AddCommand(w));
+            oldWay = null; // that is all with this command
         } else cmds.add(new AddCommand(w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
         if (!Main.main.hasEditLayer()) return;
@@ -637,23 +646,22 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     }*/
 
     private void loadFromWay(Way w) {
-        Collection<Command> cmds = new LinkedList<>();
         
         Object[] nodes = w.getNodes().toArray();
         int n=nodes.length;
         if (w.isClosed()) n--;
         for (int i=0;i<n;i++) {
             Node nd=(Node) nodes[i];
-            line.addLast(nd.getCoor());
+            List<OsmPrimitive> refs = nd.getReferrers();
+            if (refs.size()>1 || nd.isTagged()) {
+                line.addFixed(nd.getCoor());
+            } else {
+                line.addLast(nd.getCoor());
+            }
         }
         if (w.isClosed()) line.closeLine();
         oldNodes = w.getNodes();
-        List <OsmPrimitive> wl = new ArrayList<>(); wl.add(w);
-        
-        Command c = DeleteCommand.delete(getEditLayer(), wl, false);
-        if (c != null) cmds.add(c);
-        delCmd = new SequenceCommand(tr("Convert way to FastDraw line"), cmds);
-        Main.main.undoRedo.add(delCmd);
+        oldWay = w;
     }
 
     private void setStatusLine(String tr) {
@@ -689,7 +697,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             // we can start drawing new way starting from old one
             Way w = selectedWays.iterator().next();
             
-            if (w.isNew()) loadFromWay(w);
+            if (w.isNew() || settings.allowEditExistingWays) loadFromWay(w);
         }
     }
 

@@ -6,22 +6,33 @@
             <name>FastDraw</name>
         </general-data>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
-            <!-- Не используйте диалоговое окно свойств проекта при редактировании данного файла вручную. -->
+            <!-- Не используйте средство настройки свойств проекта при редактировании файла вручную. 
+ Чтобы средство настройки не отображалось, создайте файл nbproject/project.properties и добавьте в него свойство 
+auxiliary.show.customizer=false. 
+Если добавлено свойство 
+auxiliary.show.customizer.message=<message>,
+ при попытке открытия средства настройки любым пользователем будет отображаться заданное сообщение.  -->
             <name>FastDraw</name>
             <properties/>
             <folders>
                 <source-folder>
+                    <label>FastDraw</label>
+                    <location>.</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
+                <source-folder>
                     <label>src</label>
                     <type>java</type>
                     <location>src</location>
+                    <encoding>UTF-8</encoding>
                 </source-folder>
                 <build-file>
-                    <location>../../dist/FastDraw.jar</location>
+                    <location>F:\josm\core\dist\josm-custom.jar</location>
                 </build-file>
             </folders>
             <ide-actions>
                 <action name="build">
-                    <target>compile</target>
+                    <target>install</target>
                 </action>
                 <action name="clean">
                     <target>clean</target>
@@ -29,19 +40,22 @@
                 <action name="run">
                     <target>runjosm</target>
                 </action>
+                <action name="test">
+                    <target>test</target>
+                </action>
                 <action name="rebuild">
                     <target>clean</target>
-                    <target>compile</target>
+                    <target>install</target>
                 </action>
                 <action name="debug">
-                    <script>nbproject/ide-targets.xml</script>
+                    <script>nbproject/ide-file-targets.xml</script>
                     <target>debug-nb</target>
                 </action>
             </ide-actions>
             <export>
                 <type>jar</type>
-                <location>../../dist/FastDraw.jar</location>
-                <build-target>compile</build-target>
+                <location>F:\josm\core\dist\josm-custom.jar</location>
+                <build-target>install</build-target>
             </export>
             <view>
                 <items>
@@ -58,6 +72,7 @@
                     <ide-action name="rebuild"/>
                     <ide-action name="clean"/>
                     <ide-action name="run"/>
+                    <ide-action name="test"/>
                     <ide-action name="debug"/>
                 </context-menu>
             </view>
@@ -66,8 +81,8 @@
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
                 <package-root>src</package-root>
-                <classpath mode="compile">../../core/src;../../core/dist/josm-custom.jar</classpath>
-                <built-to>../../dist/FastDraw.jar</built-to>
+                <classpath mode="compile">../../core/src</classpath>
+                <built-to>F:\josm\core\dist\josm-custom.jar</built-to>
                 <source-level>1.7</source-level>
             </compilation-unit>
         </java-data>

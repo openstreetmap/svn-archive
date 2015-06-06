@@ -35,6 +35,8 @@ public class FDSettings {
     // option for simplifiction: 0="Autosimplify and wait",
     //1="Simplify and wait", 2="Save as is"
 
+    public boolean allowEditExistingWays;
+
     public boolean drawClosed;
     public int simplifyMode;
     public String autoTags;
@@ -72,6 +74,8 @@ public class FDSettings {
         fixedSpacebar = Main.pref.getBoolean("fastdraw.fixedspacebar", false);
         drawClosed =  Main.pref.getBoolean("fastdraw.drawclosed", false);
         simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0);
+        allowEditExistingWays = Main.pref.getBoolean("fastdraw.alloweditexisting", false);
+
         autoTags = Main.pref.get("fastdraw.autotags");
     }
 
@@ -90,6 +94,7 @@ public class FDSettings {
          Main.pref.put("fastdraw.drawclosed", drawClosed);
          Main.pref.putInteger("fastdraw.simplifymode", simplifyMode);
          Main.pref.put("fastdraw.autotags", autoTags);
+         Main.pref.put("fastdraw.alloweditexisting", allowEditExistingWays);
          try {Main.pref.save();} catch (IOException e) {
              System.err.println(tr("Can not save preferences"));
          }

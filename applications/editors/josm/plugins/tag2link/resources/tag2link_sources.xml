@@ -55,7 +55,7 @@
 
     <src name="Mapillary">
         <rule>
-            <condition k="((ref|source):)?mapillary" v="[0-9a-zA-Z]+" />
+            <condition k="((ref|source):)?mapillary" v="[0-9a-zA-Z-_]+" />
             <link name="View %name% image" href="http://www.mapillary.com/map/im/%v%" />
         </rule>
     </src>

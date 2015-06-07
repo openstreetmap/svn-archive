@@ -73,7 +73,7 @@ public class FDSettings {
         fixedClick = Main.pref.getBoolean("fastdraw.fixedclick", false);
         fixedSpacebar = Main.pref.getBoolean("fastdraw.fixedspacebar", false);
         drawClosed =  Main.pref.getBoolean("fastdraw.drawclosed", false);
-        simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0);
+        simplifyMode = Main.pref.getInteger("fastdraw.simplifymode", 0) % 2;
         allowEditExistingWays = Main.pref.getBoolean("fastdraw.alloweditexisting", false);
 
         autoTags = Main.pref.get("fastdraw.autotags");

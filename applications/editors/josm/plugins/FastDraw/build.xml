@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="FastDraw" default="dist" basedir=".">
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="[josm_fastdraw] Fix settings saving, allow edit existing ways (Q)"/>
+    <property name="commit.message" value="[josm_fastdraw] Fix for incorrect settings case"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7609"/>
     

@@ -1,7 +1,5 @@
 package ptl;
 
-import javax.swing.JMenu;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.PluginInformation;

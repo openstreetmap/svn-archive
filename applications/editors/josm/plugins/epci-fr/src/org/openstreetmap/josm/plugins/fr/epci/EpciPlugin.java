@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2011 by Don-vip
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fr.epci;
 
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
@@ -15,7 +15,8 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 public class EpciPlugin extends Plugin {
 
     /**
-     * @param info
+     * Constructs a new {@code EpciPlugin}.
+     * @param info plugin info
      */
     public EpciPlugin(PluginInformation info) {
         super(info);

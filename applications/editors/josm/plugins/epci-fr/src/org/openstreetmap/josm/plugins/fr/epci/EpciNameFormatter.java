@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2011 by Don-vip
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fr.epci;
 
 import org.openstreetmap.josm.data.osm.INode;

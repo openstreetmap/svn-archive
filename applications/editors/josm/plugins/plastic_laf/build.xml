@@ -8,8 +8,8 @@
 	<!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-	<property name="plugin.author" value="Imi" />
-	<property name="plugin.class" value="plastic_laf.Plugin" />
+	<property name="plugin.author" value="Imi, Don-vip" />
+	<property name="plugin.class" value="org.openstreetmap.josm.plugins.plasticlaf.PlasticLafPlugin" />
 	<property name="plugin.description" value="The great JGoodies Plastic Look and Feel." />
 	<!--<property name="plugin.icon" value="" />-->
 	<property name="plugin.early" value="true" />

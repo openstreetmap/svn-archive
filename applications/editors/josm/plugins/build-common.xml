@@ -143,13 +143,25 @@
         </antcall>
         <antcall target="additional-manifest" />
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST">
-            <zipgroupfileset dir="${plugin.lib.dir}" includes="*.jar" excludes="*-sources.jar, *-javadoc.jar" erroronmissingdir="no"/>
+            <restrict>
+                <not><or>
+                    <name name="META-INF/maven/*"/>
+                    <name name="META-INF/DEPENDENCIES"/>
+                    <name name="META-INF/LICENSE"/>
+                    <name name="META-INF/NOTICE"/>
+                </or></not>
+                <archives>
+                    <zips>
+                        <fileset dir="${plugin.lib.dir}" includes="*.jar" excludes="*-sources.jar, *-javadoc.jar" erroronmissingdir="no"/>
+                    </zips>
+                </archives>
+            </restrict>
         </jar>
         <delete file="MANIFEST" failonerror="no"/>
         <antcall target="post-dist" />
     </target>
     <target name="post-dist">
-    	<!-- to be overidden by plugins that need to perform additional tasks on resulting jar -->
+        <!-- to be overidden by plugins that need to perform additional tasks on resulting jar -->
     </target>
     <target name="add-manifest-attribute" depends="check-manifest-attribute" if="have-${property.name}">
         <manifest file="MANIFEST" mode="update">
@@ -385,7 +397,7 @@
 
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
     </target>
-	
+
     <path id="test.classpath">
         <fileset dir="../00_core_test_lib">
             <include name="**/*.jar"/>
@@ -466,7 +478,7 @@
             </jacoco:coverage>
         </sequential>
     </target>
-	
+
     <target name="runjosm" depends="install">
         <java jar="${josm}" fork="true">
         </java>
@@ -487,7 +499,7 @@
     You can use following targets:
     * dist        This default target builds the plugin jar file
     * clean       Cleanup automatical created files
-	* test        Run unit tests (if any)
+    * test        Run unit tests (if any)
     * publish     Checkin source code, build jar and checkin plugin jar
                   (requires proper entry for SVN commit message!)
     * install     Install the plugin in current system

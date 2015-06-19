@@ -122,8 +122,12 @@ public class MirroredDownloadAction extends JosmAction {
 
         private MirroredDownloadDialog(Component parent) {
             super(parent);
+            cbDownloadOsmData.setSelected(true);
+            cbDownloadGpxData.setSelected(false);
+            cbDownloadNotes.setSelected(false);
             cbDownloadOsmData.setEnabled(false);
             cbDownloadGpxData.setEnabled(false);
+            cbDownloadNotes.setEnabled(false);
             cbStartup.setEnabled(false);
         }
 

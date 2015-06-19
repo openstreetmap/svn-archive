@@ -69,6 +69,11 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     protected JLabel selectAreaLabel;
 
     /**
+     * The measurement label for radius if the currently selected loop is a circle.
+     */
+    protected JLabel selectRadiusLabel;
+
+    /**
      * The measurement label for the segment angle, actually updated, if 2 nodes are selected
      */
     protected JLabel segAngleLabel;
@@ -118,6 +123,11 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         selectAreaLabel = new JLabel(getAreaText(0));
         valuePanel.add(selectAreaLabel);
 
+        valuePanel.add(new JLabel(tr("Selection Radius")));
+
+        selectRadiusLabel = new JLabel(getRadiusText(0));
+        valuePanel.add(selectRadiusLabel);
+
         JLabel angle = new JLabel(tr("Angle"));
         angle.setToolTipText(tr("Angle between two selected Nodes"));
         valuePanel.add(angle);
@@ -143,6 +153,10 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         return NavigatableComponent.getSystemOfMeasurement().getAreaText(v, new DecimalFormat("#0.000"), 1e-3);
     }
 
+    protected String getRadiusText(double v) {
+        return NavigatableComponent.getSystemOfMeasurement().getDistText(v, new DecimalFormat("#0.000"), 1e-3);
+    }
+
     protected String getAngleText(double v) {
         return new DecimalFormat("#0.0").format(v) + " \u00b0";
     }
@@ -159,6 +173,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         double length = 0.0;
         double segAngle = 0.0;
         double area = 0.0;
+        double radius = 0.0;
         Node lastNode = null;
         // Don't mix up way and nodes computation (fix #6872). Priority given to ways
         ways = new SubclassFilteredCollection<>(newSelection, OsmPrimitive.wayPredicate);
@@ -180,9 +195,18 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
             for (Way w : ways) {
                 Node lastN = null;
                 double wayArea = 0.0;
+                Double firstSegLength = null;
+                boolean isCircle = true;
                 for (Node n: w.getNodes()) {
                     if (lastN != null && lastN.getCoor() != null && n.getCoor() != null) {
-                        length += lastN.getCoor().greatCircleDistance(n.getCoor());
+                        final double segLength = lastN.getCoor().greatCircleDistance(n.getCoor());
+                        if (firstSegLength == null) {
+                            firstSegLength = segLength;
+                        }
+                        if (isCircle && Math.abs(firstSegLength - segLength) > 0.000001) {
+                            isCircle = false;
+                        }
+                        length += segLength;
                         //http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/
                         wayArea += (MeasurementLayer.calcX(n.getCoor()) * MeasurementLayer.calcY(lastN.getCoor()))
                                  - (MeasurementLayer.calcY(n.getCoor()) * MeasurementLayer.calcX(lastN.getCoor()));
@@ -196,11 +220,15 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                     wayArea = 0;
                 area += wayArea;
             }
+            if (ways.size() == 1 && area > 0.0) {
+                radius = length / (2 * Math.PI);
+            }
         }
 
         final String lengthLabel = getDistText(length);
         final String angleLabel = getAngleText(segAngle);
         final String areaLabel = getAreaText(area);
+        final String radiusLabel = getRadiusText(radius);
 
         GuiHelper.runInEDT(new Runnable() {
             @Override
@@ -208,6 +236,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
                 selectLengthLabel.setText(lengthLabel);
                 segAngleLabel.setText(angleLabel);
                 selectAreaLabel.setText(areaLabel);
+                selectRadiusLabel.setText(radiusLabel);
             }
         });
 

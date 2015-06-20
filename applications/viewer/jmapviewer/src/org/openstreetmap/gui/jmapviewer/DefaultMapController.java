@@ -86,7 +86,7 @@ MouseWheelListener {
     /**
      * Enables or disables that the map pane can be moved using the mouse.
      *
-     * @param movementEnabled
+     * @param movementEnabled {@code true} to allow the map pane to be moved using the mouse
      */
     public void setMovementEnabled(boolean movementEnabled) {
         this.movementEnabled = movementEnabled;
@@ -97,15 +97,14 @@ MouseWheelListener {
     }
 
     /**
-     * Sets the mouse button that is used for moving the map. Possible values
-     * are:
+     * Sets the mouse button that is used for moving the map. Possible values are:
      * <ul>
      * <li>{@link MouseEvent#BUTTON1} (left mouse button)</li>
      * <li>{@link MouseEvent#BUTTON2} (middle mouse button)</li>
      * <li>{@link MouseEvent#BUTTON3} (right mouse button)</li>
      * </ul>
      *
-     * @param movementMouseButton
+     * @param movementMouseButton the mouse button that is used for moving the map
      */
     public void setMovementMouseButton(int movementMouseButton) {
         this.movementMouseButton = movementMouseButton;

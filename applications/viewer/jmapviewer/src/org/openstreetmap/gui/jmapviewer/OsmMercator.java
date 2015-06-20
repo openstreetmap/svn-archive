@@ -7,6 +7,8 @@ package org.openstreetmap.gui.jmapviewer;
  * into latitude and longitude (on the WGS84 ellipsoid) and vice versa. Map
  * space is measured in pixels. The origin of the map space is the top left
  * corner. The map space origin (0,0) has latitude ~85 and longitude -180.
+ * @author Jan Peter Stotz
+ * @author Jason Huntley
  */
 public class OsmMercator {
 
@@ -37,7 +39,7 @@ public class OsmMercator {
 
     /**
      * Creates instance with provided tile size.
-     * @param tileSize
+     * @param tileSize tile size in pixels
      */
     public OsmMercator(int tileSize) {
         this.tileSize = tileSize;
@@ -76,7 +78,6 @@ public class OsmMercator {
      *
      * @param zoomLevel the zoom level
      * @return the distance
-     * @author Jason Huntley
      */
     public double getDistance(int x1, int y1, int x2, int y2, int zoomLevel) {
         double la1 = YToLat(y1, zoomLevel);
@@ -95,7 +96,6 @@ public class OsmMercator {
      * @param la2 the Latitude from 2nd coordinate in degrees
      * @param lo2 the Longitude from 2nd coordinate in degrees
      * @return the distance
-     * @author Jason Huntley
      */
     public double getDistance(double la1, double lo1, double la2, double lo2) {
         double aStartLat = Math.toRadians(la1);
@@ -126,7 +126,6 @@ public class OsmMercator {
      * @param aLongitude
      *            [-180..180]
      * @return [0..2^Zoomlevel*TILE_SIZE[
-     * @author Jan Peter Stotz
      */
     public double LonToX(double aLongitude, int aZoomlevel) {
         int mp = getMaxPixels(aZoomlevel);
@@ -150,7 +149,6 @@ public class OsmMercator {
      * @param aLat
      *            [-90...90]
      * @return [0..2^Zoomlevel*TILE_SIZE[
-     * @author Jan Peter Stotz
      */
     public double LatToY(double aLat, int aZoomlevel) {
         if (aLat < MIN_LAT)
@@ -180,7 +178,6 @@ public class OsmMercator {
      * @param aX
      *            [0..2^Zoomlevel*TILE_WIDTH[
      * @return ]-180..180[
-     * @author Jan Peter Stotz
      */
     public double XToLon(int aX, int aZoomlevel) {
         return ((360d * aX) / getMaxPixels(aZoomlevel)) - 180.0;

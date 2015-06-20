@@ -39,7 +39,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
  * OpenStreetMap project.
  *
  * @author Jan Peter Stotz
- *
+ * @author Jason Huntley
  */
 public class JMapViewer extends JPanel implements TileLoaderListener {
 
@@ -390,8 +390,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * Converts the relative pixel coordinate (regarding the top left corner of
      * the displayed map) into a latitude / longitude coordinate
      *
-     * @param mapPointX
-     * @param mapPointY
+     * @param mapPointX X coordinate
+     * @param mapPointY Y coordinate
      * @return latitude / longitude
      */
     public Coordinate getPosition(int mapPointX, int mapPointY) {
@@ -405,9 +405,9 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Calculates the position on the map of a given coordinate
      *
-     * @param lat
-     * @param lon
-     * @param checkOutside
+     * @param lat latitude
+     * @param lon longitude
+     * @param checkOutside check if the point is outside the displayed area
      * @return point on the map or <code>null</code> if the point is not visible
      *         and checkOutside set to <code>true</code>
      */
@@ -428,7 +428,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      *
      * @param lat Latitude
      * @param offset Offset respect Latitude
-     * @param checkOutside
+     * @param checkOutside check if the point is outside the displayed area
      * @return Integer the radius in pixels
      */
     public Integer getLatOffset(double lat, double offset, boolean checkOutside) {
@@ -444,8 +444,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Calculates the position on the map of a given coordinate
      *
-     * @param lat
-     * @param lon
+     * @param lat latitude
+     * @param lon longitude
      * @return point on the map or <code>null</code> if the point is not visible
      */
     public Point getMapPosition(double lat, double lon) {
@@ -472,7 +472,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Calculates the position on the map of a given coordinate
      *
-     * @param coord
+     * @param coord coordinate
      * @return point on the map or <code>null</code> if the point is not visible
      */
     public Point getMapPosition(Coordinate coord) {
@@ -485,7 +485,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Calculates the position on the map of a given coordinate
      *
-     * @param coord
+     * @param coord coordinate
+     * @param checkOutside check if the point is outside the displayed area
      * @return point on the map or <code>null</code> if the point is not visible
      *         and checkOutside set to <code>true</code>
      */
@@ -500,7 +501,6 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * Gets the meter per pixel.
      *
      * @return the meter per pixel
-     * @author Jason Huntley
      */
     public double getMeterPerPixel() {
         Point origin = new Point(5, 5);
@@ -874,7 +874,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Enables or disables painting of the {@link MapMarker}
      *
-     * @param mapMarkersVisible
+     * @param mapMarkersVisible {@code true} to enable painting of markers
      * @see #addMapMarker(MapMarker)
      * @see #getMapMarkerList()
      */
@@ -996,7 +996,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Enables or disables painting of the {@link MapRectangle}
      *
-     * @param mapRectanglesVisible
+     * @param mapRectanglesVisible {@code true} to enable painting of rectangles
      * @see #addMapRectangle(MapRectangle)
      * @see #getMapRectangleList()
      */
@@ -1012,7 +1012,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     /**
      * Enables or disables painting of the {@link MapPolygon}
      *
-     * @param mapPolygonsVisible
+     * @param mapPolygonsVisible {@code true} to enable painting of polygons
      * @see #addMapPolygon(MapPolygon)
      * @see #getMapPolygonList()
      */

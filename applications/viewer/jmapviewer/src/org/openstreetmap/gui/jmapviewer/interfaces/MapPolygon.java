@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Interface to be implemented by polygons that can be displayed on the map.
  *
- * @author Vincent
+ * @author Vincent Privat
  */
 public interface MapPolygon extends MapObject{
 
@@ -19,20 +19,20 @@ public interface MapPolygon extends MapObject{
     public List<? extends ICoordinate> getPoints();
 
     /**
-     * Paints the map rectangle on the map. The <code>points</code>
+     * Paints the map polygon on the map. The <code>points</code>
      * are specifying the coordinates within <code>g</code>
      *
-     * @param g
-     * @param points
+     * @param g graphics
+     * @param points list of points defining the polygon to draw
      */
     public void paint(Graphics g, List<Point> points);
 
     /**
-     * Paints the map rectangle on the map. The <code>polygon</code>
+     * Paints the map polygon on the map. The <code>polygon</code>
      * is specifying the coordinates within <code>g</code>
      *
-     * @param g
-     * @param polygon
+     * @param g graphics
+     * @param polygon polygon to draw
      */
     public void paint(Graphics g, Polygon polygon);
 }

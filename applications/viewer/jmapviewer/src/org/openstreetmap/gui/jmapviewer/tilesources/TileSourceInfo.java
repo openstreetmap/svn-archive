@@ -34,15 +34,15 @@ public class TileSourceInfo {
     /** tile size of the displayed tiles */
     private int tileSize = OsmMercator.DEFAUL_TILE_SIZE;
 
-    /** mapping <header key, metadata key> */
+    /** mapping &lt;header key, metadata key&gt; */
     protected Map<String, String> metadataHeaders;
 
     /**
      * Create a TileSourceInfo class
      *
-     * @param name
-     * @param base_url
-     * @param id
+     * @param name name
+     * @param base_url base URL
+     * @param id unique id
      */
     public TileSourceInfo(String name, String base_url, String id) {
         this(name);
@@ -53,7 +53,7 @@ public class TileSourceInfo {
     /**
      * Create a TileSourceInfo class
      *
-     * @param name
+     * @param name name
      */
     public TileSourceInfo(String name) {
         this.name = name;
@@ -123,7 +123,7 @@ public class TileSourceInfo {
 
     /**
      * Sets the tile size provided by this tile source
-     * @param tileSize
+     * @param tileSize tile size in pixels
      */
     public void setTileSize(int tileSize) {
         if (tileSize <= 0) {
@@ -134,7 +134,7 @@ public class TileSourceInfo {
 
     /**
      *
-     * @return mapping <HTTP header name, Metadata key name> for copying HTTP headers to Tile metadata
+     * @return mapping &lt;HTTP header name, Metadata key name&gt; for copying HTTP headers to Tile metadata
      * @since 31125
      */
     public Map<String, String> getMetadataHeaders() {

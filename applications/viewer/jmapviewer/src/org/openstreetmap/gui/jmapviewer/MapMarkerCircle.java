@@ -68,8 +68,8 @@ public class MapMarkerCircle extends MapObjectImpl implements MapMarker {
         return markerStyle;
     }
 
-    public void paint(Graphics g, Point position, int radio) {
-        int size_h = radio;
+    public void paint(Graphics g, Point position, int radius) {
+        int size_h = radius;
         int size = size_h * 2;
 
         if (g instanceof Graphics2D && getBackColor()!=null) {

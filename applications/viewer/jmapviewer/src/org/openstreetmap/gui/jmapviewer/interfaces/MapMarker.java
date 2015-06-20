@@ -46,9 +46,9 @@ public interface MapMarker extends MapObject, ICoordinate{
      * Paints the map marker on the map. The <code>position</code> specifies the
      * coordinates within <code>g</code>
      *
-     * @param g
-     * @param position
-     * @param radio
+     * @param g graphics
+     * @param position coordinates
+     * @param radius radius
      */
-    public void paint(Graphics g, Point position, int radio);
+    public void paint(Graphics g, Point position, int radius);
 }

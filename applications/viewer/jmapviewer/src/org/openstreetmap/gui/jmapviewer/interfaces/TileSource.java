@@ -83,10 +83,11 @@ public interface TileSource extends Attributed {
     /**
      * Constructs the tile url.
      *
-     * @param zoom
-     * @param tilex
-     * @param tiley
+     * @param zoom zoom level
+     * @param tilex X coordinate
+     * @param tiley Y coordinate
      * @return fully qualified url for downloading the specified tile image
+     * @throws IOException if any I/O error occurs
      */
     String getTileUrl(int zoom, int tilex, int tiley) throws IOException;
 

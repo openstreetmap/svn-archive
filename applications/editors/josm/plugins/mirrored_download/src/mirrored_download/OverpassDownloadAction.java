@@ -61,8 +61,17 @@ public class OverpassDownloadAction extends JosmAction {
 
         private OverpassDownloadDialog(Component parent) {
             super(parent);
+        }
+
+        @Override
+        public void restoreSettings() {
+            super.restoreSettings();
+            cbDownloadOsmData.setSelected(true);
+            cbDownloadGpxData.setSelected(false);
+            cbDownloadNotes.setSelected(false);
             cbDownloadOsmData.setEnabled(false);
             cbDownloadGpxData.setEnabled(false);
+            cbDownloadNotes.setEnabled(false);
             cbStartup.setEnabled(false);
         }
 

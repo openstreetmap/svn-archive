@@ -122,13 +122,6 @@ public class MirroredDownloadAction extends JosmAction {
 
         private MirroredDownloadDialog(Component parent) {
             super(parent);
-            cbDownloadOsmData.setSelected(true);
-            cbDownloadGpxData.setSelected(false);
-            cbDownloadNotes.setSelected(false);
-            cbDownloadOsmData.setEnabled(false);
-            cbDownloadGpxData.setEnabled(false);
-            cbDownloadNotes.setEnabled(false);
-            cbStartup.setEnabled(false);
         }
 
         static public MirroredDownloadDialog getInstance() {
@@ -162,6 +155,13 @@ public class MirroredDownloadAction extends JosmAction {
         @Override
         public void restoreSettings() {
             super.restoreSettings();
+            cbDownloadOsmData.setSelected(true);
+            cbDownloadGpxData.setSelected(false);
+            cbDownloadNotes.setSelected(false);
+            cbDownloadOsmData.setEnabled(false);
+            cbDownloadGpxData.setEnabled(false);
+            cbDownloadNotes.setEnabled(false);
+            cbStartup.setEnabled(false);
             overpassQuery.setPossibleItems(
                     Main.pref.getCollection(XAPI_QUERY_HISTORY_KEY, new LinkedList<String>()));
         }

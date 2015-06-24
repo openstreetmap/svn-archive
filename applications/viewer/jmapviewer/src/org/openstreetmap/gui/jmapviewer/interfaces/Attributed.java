@@ -3,8 +3,6 @@ package org.openstreetmap.gui.jmapviewer.interfaces;
 
 import java.awt.Image;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-
 public interface Attributed {
     /**
      * @return True if the tile source requires attribution in text or image form.
@@ -17,7 +15,7 @@ public interface Attributed {
      * @param topLeft The top left of the bounding box for attribution.
      * @return Attribution text for the image source.
      */
-    String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight);
+    String getAttributionText(int zoom, ICoordinate topLeft, ICoordinate botRight);
 
     /**
      * @return The URL to open when the user clicks the attribution text.

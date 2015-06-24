@@ -1,7 +1,7 @@
 // License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
 public class MapQuestOpenAerialTileSource extends AbstractMapQuestTileSource {
 
@@ -12,7 +12,7 @@ public class MapQuestOpenAerialTileSource extends AbstractMapQuestTileSource {
     }
 
     @Override
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
+    public String getAttributionText(int zoom, ICoordinate topLeft, ICoordinate botRight) {
         return "Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency - "+MAPQUEST_ATTRIBUTION;
     }
 

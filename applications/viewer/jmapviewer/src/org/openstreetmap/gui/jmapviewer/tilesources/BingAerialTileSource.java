@@ -29,6 +29,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -262,7 +263,7 @@ public class BingAerialTileSource extends AbstractTMSTileSource {
     }
 
     @Override
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
+    public String getAttributionText(int zoom, ICoordinate topLeft, ICoordinate botRight) {
         try {
             final List<Attribution> data = getAttribution();
             if (data == null)

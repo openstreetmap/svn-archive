@@ -1,7 +1,7 @@
 // License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
 public class MapQuestOsmTileSource extends AbstractMapQuestTileSource {
 
@@ -12,8 +12,8 @@ public class MapQuestOsmTileSource extends AbstractMapQuestTileSource {
     }
     
     @Override
-    public String getAttributionText(int zoom, Coordinate topLeft,
-            Coordinate botRight) {
+    public String getAttributionText(int zoom, ICoordinate topLeft,
+            ICoordinate botRight) {
         return super.getAttributionText(zoom, topLeft, botRight)+" - "+MAPQUEST_ATTRIBUTION;
     }
 }

@@ -3,7 +3,7 @@ package org.openstreetmap.gui.jmapviewer.tilesources;
 
 import java.awt.Image;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
 /**
  * Abstract class for OSM Tile sources
@@ -38,7 +38,7 @@ public abstract class AbstractOsmTileSource extends AbstractTMSTileSource {
     }
 
     @Override
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
+    public String getAttributionText(int zoom, ICoordinate topLeft, ICoordinate botRight) {
         return DEFAULT_OSM_ATTRIBUTION;
     }
 

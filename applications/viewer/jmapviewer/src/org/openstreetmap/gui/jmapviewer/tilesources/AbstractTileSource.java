@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 abstract public class AbstractTileSource implements TileSource {
@@ -23,7 +23,7 @@ abstract public class AbstractTileSource implements TileSource {
     }
 
     @Override
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
+    public String getAttributionText(int zoom, ICoordinate topLeft, ICoordinate botRight) {
         return attributionText;
     }
 

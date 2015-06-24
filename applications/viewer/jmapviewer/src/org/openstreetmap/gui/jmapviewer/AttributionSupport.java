@@ -15,6 +15,7 @@ import java.awt.image.ImageObserver;
 import java.util.HashMap;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.Attributed;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
 public class AttributionSupport {
 
@@ -52,7 +53,7 @@ public class AttributionSupport {
         }
     }
 
-    public void paintAttribution(Graphics g, int width, int height, Coordinate topLeft, Coordinate bottomRight, int zoom, ImageObserver observer) {
+    public void paintAttribution(Graphics g, int width, int height, ICoordinate topLeft, ICoordinate bottomRight, int zoom, ImageObserver observer) {
         if (source == null || !source.requiresAttribution()) {
             attrToUBounds = null;
             attrImageBounds = null;

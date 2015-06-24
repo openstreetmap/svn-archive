@@ -32,7 +32,7 @@ public class TileSourceInfo {
     protected String cookies;
 
     /** tile size of the displayed tiles */
-    private int tileSize = OsmMercator.DEFAUL_TILE_SIZE;
+    private int tileSize = OsmMercator.DEFAUL_TILE_SIZE; // FIXME: set to -1 for next release
 
     /** mapping &lt;header key, metadata key&gt; */
     protected Map<String, String> metadataHeaders;
@@ -115,7 +115,7 @@ public class TileSourceInfo {
 
     /**
      * Request tile size of this tile source
-     * @return tile size provided by this tile source
+     * @return tile size provided by this tile source, or -1 when default value should be used
      */
     public int getTileSize() {
         return tileSize;
@@ -126,7 +126,7 @@ public class TileSourceInfo {
      * @param tileSize tile size in pixels
      */
     public void setTileSize(int tileSize) {
-        if (tileSize <= 0) {
+        if (tileSize == 0 || tileSize < -1) {
             throw new AssertionError("Invalid tile size: " + tileSize);
         }
         this.tileSize = tileSize;

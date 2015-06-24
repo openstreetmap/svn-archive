@@ -6,6 +6,8 @@ import java.util.Map;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
+import org.openstreetmap.josm.data.imagery.CachedTileLoaderFactory;
+import org.openstreetmap.josm.data.imagery.TileLoaderFactory;
 import org.openstreetmap.josm.gui.layer.TMSLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -15,10 +17,10 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class ImageryCachePlugin extends Plugin {
     
-    TMSLayer.TileLoaderFactory factory = new TMSLayer.TileLoaderFactory() {
+    TileLoaderFactory factory = new TileLoaderFactory() {
         @Override
         public OsmTileLoader makeTileLoader(TileLoaderListener listener) {
-            String cachePath = TMSLayer.PROP_TILECACHE_DIR.get();
+            String cachePath = CachedTileLoaderFactory.PROP_TILECACHE_DIR.get();
             try {
                 new File(cachePath).mkdirs();
             } catch (Exception e) {
@@ -40,7 +42,7 @@ public class ImageryCachePlugin extends Plugin {
 
     public ImageryCachePlugin(PluginInformation info) {
         super(info);
-        TMSLayer.setCustomTileLoaderFactory(factory);
+        TMSLayer.setTileLoaderFactory(factory);
     }
     
     public static void main(String[] args) {

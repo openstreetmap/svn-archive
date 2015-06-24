@@ -446,7 +446,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      */
     @Deprecated
     public Integer getLatOffset(double lat, double offset, boolean checkOutside) {
-        int y = tileSource.LatToY(lat + offset, zoom);
+        int y = tileSource.latToY(lat + offset, zoom);
         y -= center.y - getHeight() / 2;
         if (checkOutside) {
             if (y < 0 || y > getHeight())

@@ -7,7 +7,7 @@ import java.util.Map;
  * Interface for template tile sources, @see TemplatedTMSTileSource
  *
  * @author Wiktor Niesiobędzki
- * @since TODO
+ * @since 1.10
  */
 public interface TemplatedTileSource extends TileSource {
     /**

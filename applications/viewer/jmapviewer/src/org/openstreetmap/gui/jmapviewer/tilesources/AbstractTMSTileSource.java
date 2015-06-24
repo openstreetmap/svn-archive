@@ -127,12 +127,12 @@ public abstract class AbstractTMSTileSource extends AbstractTileSource {
     }
 
     @Override
-    public int LonToX(double lon, int zoom) {
+    public int lonToX(double lon, int zoom) {
         return (int )osmMercator.LonToX(lon, zoom);
     }
 
     @Override
-    public int LatToY(double lat, int zoom) {
+    public int latToY(double lat, int zoom) {
         return (int )osmMercator.LatToY(lat, zoom);
     }
 

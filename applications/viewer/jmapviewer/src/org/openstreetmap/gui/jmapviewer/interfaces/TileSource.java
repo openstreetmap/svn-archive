@@ -124,7 +124,7 @@ public interface TileSource extends Attributed {
      * @return [0..2^Zoomlevel*TILE_SIZE[
      */
     @Deprecated
-    int LonToX(double aLongitude, int aZoomlevel);
+    int lonToX(double aLongitude, int aZoomlevel);
 
     /**
      * Transforms latitude to pixelspace.
@@ -134,7 +134,7 @@ public interface TileSource extends Attributed {
      * @deprecated use lonLatToXY instead
      */
     @Deprecated
-    int LatToY(double aLat, int aZoomlevel);
+    int latToY(double aLat, int aZoomlevel);
 
     /**
      * @param lon

@@ -92,7 +92,7 @@ public class ScanexTileSource extends TMSTileSource {
     private static double E = 0.0818191908426;  /* eccentricity of Earth's ellipsoid */
 
     @Override
-    public int LatToY(double lat, int zoom) {
+    public int latToY(double lat, int zoom) {
         return (int )(latToTileY(lat, zoom) * tileSize);
     }
 

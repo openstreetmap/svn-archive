@@ -54,11 +54,6 @@ public class ElevationGridTileSource extends AbstractTMSTileSource {
     }
 
     @Override
-    public String getTileType() {
-        return "";
-    }
-
-    @Override
     public int getTileSize() {
         // TODO
         return 256;

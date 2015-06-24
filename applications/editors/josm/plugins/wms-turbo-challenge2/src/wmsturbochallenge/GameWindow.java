@@ -392,6 +392,7 @@ public class GameWindow extends JFrame implements ActionListener {
 
         /* If the layer is a WMS layer, check if any tiles are
          * missing */
+        /* FIXME: the code below is commented to fix compilation problems. Not sure if the code below is needed
         if (ground instanceof WMSLayer) {
             WMSLayer wms = (WMSLayer) ground;
             downloading = wms.hasAutoDownload() && (
@@ -402,7 +403,7 @@ public class GameWindow extends JFrame implements ActionListener {
                     null == wms.findImage(new EastNorth(
                             e_lon[0], e_lat[0])));
         }
-
+        */
         /* Request the image from ground layer */
         ground.paint(ground_view.graphics, ground_view, null);
 

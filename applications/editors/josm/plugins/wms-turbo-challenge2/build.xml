@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Commit message"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="8526"/>
 
     <property name="plugin.author" value="Andrzej Zaborowski"/>
     <property name="plugin.class"  value="wmsturbochallenge.WMSRacer"/>

@@ -251,7 +251,7 @@ public class PrintableMapView extends MapView implements Printable {
      * @param pageFormat the size and orientation of the page being drawn
      */
     public void paintMapScale(Graphics2D g2d, PageFormat pageFormat) {
-        SystemOfMeasurement som = getSystemOfMeasurement();
+        SystemOfMeasurement som = SystemOfMeasurement.getSystemOfMeasurement();
         double dist100px = getDist100Pixel() / g2dFactor;
         double dist = dist100px / som.aValue;
         //String unit  = som.aName;
@@ -410,7 +410,7 @@ public class PrintableMapView extends MapView implements Printable {
      * The algorithm is slightly modified.
      */
     @Override
-    protected List<Layer> getVisibleLayersInZOrder() {
+    public List<Layer> getVisibleLayersInZOrder() {
         ArrayList<Layer> layers = new ArrayList<>();
         for (Layer l: mapView.getAllLayersAsList()) {
             if (l.isVisible()) {

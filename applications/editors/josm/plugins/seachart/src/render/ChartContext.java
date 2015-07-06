@@ -9,6 +9,7 @@
 
 package render;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import s57.S57map.*;
@@ -16,4 +17,6 @@ import s57.S57map.*;
 public interface ChartContext {
 	Point2D getPoint(Snode coord);
 	double mile(Feature feature);
+	boolean clip();
+	Color background();
 }

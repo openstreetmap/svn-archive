@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -32,6 +33,7 @@ import org.w3c.dom.DOMImplementation;
 
 import s57.S57map;
 import s57.S57map.*;
+import symbols.Symbols;
 import render.*;
 import render.Rules.RuleSet;
 
@@ -198,6 +200,16 @@ public class Jicons {
 		@Override
 		public double mile(Feature feature) {
 			return Math.min(w, h);
+		}
+
+		@Override
+		public boolean clip() {
+			return false;
+		}
+
+		@Override
+		public Color background() {
+			return new Color(0, true);
 		}
 	}
 }

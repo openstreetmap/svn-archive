@@ -34,12 +34,8 @@ public class S57val {
 	}
 	
 	public static class AttVal<V> {
-//		public Att att;
 		public Conv conv;
 		public V val;
-//		AttVal(Att a, Conv c, V v) {
-//			att = a; conv = c; val = v;
-//		}
 		AttVal(Conv c, V v) {
 			conv = c; val = v;
 		}

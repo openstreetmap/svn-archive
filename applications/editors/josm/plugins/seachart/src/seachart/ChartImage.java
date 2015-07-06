@@ -31,6 +31,7 @@ import render.ChartContext;
 import render.Renderer;
 import render.Rules.RuleSet;
 import s57.S57map.*;
+import symbols.Symbols;
 
 public class ChartImage extends ImageryLayer implements ZoomChangeListener, ChartContext {
 
@@ -91,5 +92,13 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 
 	public double mile(Feature feature) {
 		return 185000 / Main.map.mapView.getDist100Pixel();
+	}
+	
+	public boolean clip() {
+		return true;
+	}
+	
+	public Color background() {
+		return (Symbols.Bwater);
 	}
 }

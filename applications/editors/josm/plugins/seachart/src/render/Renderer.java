@@ -42,10 +42,12 @@ public class Renderer {
 		map = m;
 		sScale = symbolScale[zoom] * factor;
 		if (map != null) {
-			Point2D tl = context.getPoint(map.new Snode(map.bounds.maxlat, map.bounds.minlon));
-			Point2D br = context.getPoint(map.new Snode(map.bounds.minlat, map.bounds.maxlon));
-			g2.clip(new Rectangle2D.Double(tl.getX(), tl.getY(), (br.getX() - tl.getX()), (br.getY() - tl.getY())));
-			g2.setBackground(Symbols.Bwater);
+			if (context.clip()) {
+				Point2D tl = context.getPoint(map.new Snode(map.bounds.maxlat, map.bounds.minlon));
+				Point2D br = context.getPoint(map.new Snode(map.bounds.minlat, map.bounds.maxlon));
+				g2.clip(new Rectangle2D.Double(tl.getX(), tl.getY(), (br.getX() - tl.getX()), (br.getY() - tl.getY())));
+			}
+			g2.setBackground(context.background());
 			g2.clearRect(rect.x, rect.y, rect.width, rect.height);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);

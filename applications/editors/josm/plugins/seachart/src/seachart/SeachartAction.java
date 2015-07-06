@@ -111,11 +111,11 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 
 	protected void createChartLayer() {
 		rendering = new ChartImage(new ImageryInfo("SeaChart"));
-		rendering.setBackgroundLayer(true);
 		Main.main.addLayer(rendering);
 		MapView.addEditLayerChangeListener(this);
 		MapView.addLayerChangeListener(this);
 		editLayerChanged(Main.main.getEditLayer(), Main.main.getEditLayer());
+		rendering.setBackgroundLayer(true);
 	}
 
 	public void closeChartLayer() {

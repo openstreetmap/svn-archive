@@ -282,7 +282,7 @@ public class Signals {
 	}
 
 	public static void lights(Feature feature) {
-		Enum<ColCOL> col = null;
+/*		Enum<ColCOL> col = null;
 		Enum<ColCOL> tcol = null;
 		ObjTab lights = feature.objs.get(Obj.LIGHTS);
 		for (AttMap atts : lights.values()) {
@@ -411,7 +411,7 @@ public class Signals {
 				for (int i = 0; i < group.size()-1; i ++) {
 					AttMap m0 = group.get(i);
 					AttMap m1 = group.get(i+1);
-					if (((m0.containsKey(Att.VALNMR) && m1.containsKey(Att.VALNMR) && ((int)m0.get(Att.VALNMR).val < (int)m1.get(Att.VALNMR).val)))
+					if (((m0.containsKey(Att.VALNMR) && m1.containsKey(Att.VALNMR) && ((int)(m0.get(Att.VALNMR).val) < (int)(m1.get(Att.VALNMR).val))))
 							|| (!m0.containsKey(Att.VALNMR) && m1.containsKey(Att.VALNMR))) {
 						AttMap tmp = group.remove(i);
 						group.add(i+1, tmp);
@@ -420,6 +420,6 @@ public class Signals {
 				}
 			}
 		}
-	}
+*/	}
 
 }

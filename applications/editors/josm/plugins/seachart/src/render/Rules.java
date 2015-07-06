@@ -886,9 +886,9 @@ public class Rules {
 			} else {
 				int i = 0;
 				for (AttMap atts : objs.values()) {
-					if (atts.get(Att.MARSYS) != null) sys = (MarSYS)atts.get(Att.MARSYS).val;
+					if (atts.get(Att.MARSYS) != null) sys = (MarSYS)(atts.get(Att.MARSYS).val);
 					CatNMK cat = CatNMK.NMK_UNKN;
-					if (atts.get(Att.CATNMK) != null) cat = (CatNMK)atts.get(Att.CATNMK).val;
+					if (atts.get(Att.CATNMK) != null) cat = (CatNMK)(atts.get(Att.CATNMK).val);
 					Symbol sym = Notices.getNotice(cat, sys);
 					Handle h = Handle.CC;
 					switch (i) {

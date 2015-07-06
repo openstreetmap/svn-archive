@@ -33,7 +33,6 @@ import org.w3c.dom.DOMImplementation;
 
 import s57.S57map;
 import s57.S57map.*;
-import symbols.Symbols;
 import render.*;
 import render.Rules.RuleSet;
 

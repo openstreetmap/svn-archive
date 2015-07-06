@@ -440,13 +440,19 @@ public class Rules {
 			} else {
 				Renderer.symbol(feature, Beacons.Shapes.get(shape), getScheme(feature, feature.type));
 				if (feature.objs.containsKey(Obj.TOPMAR)) {
-					Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val);
-					if (topmark != null)
-						Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.TOPMAR), Topmarks.BeaconDelta);
+					AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
+					if (topmap.containsKey(Att.TOPSHP)) {
+						Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
+						if (topmark != null)
+							Renderer.symbol(feature, topmark, getScheme(feature, Obj.TOPMAR), Topmarks.BeaconDelta);
+					}
 				} else if (feature.objs.containsKey(Obj.DAYMAR)) {
-					Symbol topmark = Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val);
-					if (topmark != null)
-						Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.DAYMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.DAYMAR), Topmarks.BeaconDelta);
+					AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
+					if (topmap.containsKey(Att.TOPSHP)) {
+						Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
+						if (topmark != null)
+							Renderer.symbol(feature, topmark, getScheme(feature, Obj.DAYMAR), Topmarks.BeaconDelta);
+					}
 				}
 			}
 			Signals.addSignals(feature);
@@ -461,14 +467,14 @@ public class Rules {
 			if (feature.objs.containsKey(Obj.TOPMAR)) {
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Symbol topmark = Topmarks.Shapes.get(topmap.get(Att.TOPSHP).val);
+					Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
 					if (topmark != null)
 						Renderer.symbol(feature, topmark, getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Symbol topmark = Topmarks.Shapes.get(topmap.get(Att.TOPSHP).val);
+					Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
 					if (topmark != null)
 						Renderer.symbol(feature, topmark, getScheme(feature, Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
 				}

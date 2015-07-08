@@ -94,4 +94,15 @@ public class Proj4JProjection implements Projection {
         return new Bounds(min, max, true);
     }
 
+	@Override
+	public double getMetersPerUnit() {		
+		return 1.0 / proj4jCRS.getProjection().getFromMetres();
+	}
+
+	@Override
+	public boolean switchXY() {
+		// FIXME: once PROJ4J exposes interface to this information - expose it
+		return false;
+	}
+
 }

@@ -215,7 +215,7 @@ public class ChangesetReverter {
     public void downloadObjectsHistory(ProgressMonitor progressMonitor) throws OsmTransferException {
         final OsmServerMultiObjectReader rdr = new OsmServerMultiObjectReader();
 
-        progressMonitor.beginTask("Downloading objects history",updated.size()+deleted.size()+1);
+        progressMonitor.beginTask(tr("Downloading objects history"),updated.size()+deleted.size()+1);
         try {
             for (HashSet<HistoryOsmPrimitive> collection : Arrays.asList(new HashSet[]{updated, deleted})) {
                 for (HistoryOsmPrimitive entry : collection) {

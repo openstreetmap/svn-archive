@@ -52,7 +52,9 @@ public final class ToolSettings {
         return TAGS;
     }
 
-    public static void saveTags() {
+    public static void saveTags(Map<String, String> tags) {
+        TAGS.clear();
+        TAGS.putAll(tags);
         ArrayList<String> values = new ArrayList<>(TAGS.size() * 2);
         for (Entry<String, String> entry : TAGS.entrySet()) {
             values.add(entry.getKey());

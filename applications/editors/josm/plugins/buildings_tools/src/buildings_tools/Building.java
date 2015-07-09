@@ -107,7 +107,7 @@ class Building {
      * @param p The point to project
      */
     private double projection1(EastNorth p) {
-        final EastNorth vec = en[0].sub(p);
+        final EastNorth vec = p.subtract(en[0]);
         return (Math.sin(heading) * vec.east() + Math.cos(heading) * vec.north()) / meter;
     }
 
@@ -117,7 +117,7 @@ class Building {
      * @param p The point to project
      */
     private double projection2(EastNorth p) {
-        final EastNorth vec = en[0].sub(p);
+        final EastNorth vec = p.subtract(en[0]);
         return (Math.cos(heading) * vec.east() - Math.sin(heading) * vec.north()) / meter;
     }
 

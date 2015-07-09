@@ -46,6 +46,8 @@ public abstract class DefaultGeographicHandler implements GeographicHandler {
     public CoordinateReferenceSystem getCrsFor(String crsName) throws NoSuchAuthorityCodeException, FactoryException {
         if (crsName.equalsIgnoreCase("GCS_ETRS_1989")) {
             return CRS.decode("EPSG:4258");
+        } else if (crsName.startsWith("EPSG:")) {
+            return CRS.decode(crsName);
         }
         return null;
     }

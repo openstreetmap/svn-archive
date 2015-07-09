@@ -42,19 +42,21 @@ public class GmlReader extends GeographicReader {
     public static final String GML_FEATURE_MEMBER = "featureMember";
     public static final String GML_LINE_STRING = "LineString";
     public static final String GML_LINEAR_RING = "LinearRing";
+    public static final String GML_POINT = "Point";
     public static final String GML_SURFACE = "Surface";
     public static final String GML_SRS_NAME = "srsName";
     public static final String GML_SRS_DIMENSION = "srsDimension";
     public static final String GML_POS_LIST = "posList";
+    public static final String GML_COORDINATES = "coordinates";
 
     private final GeometryFactory geometryFactory = new GeometryFactory();
-    
+
     private final GmlHandler gmlHandler;
-    
+
     private XMLStreamReader parser;
-    
+
     private int dim;
-    
+
     private final class CrsData {
         public CoordinateReferenceSystem crs;
         public MathTransform transform;
@@ -67,7 +69,7 @@ public class GmlReader extends GeographicReader {
     }
 
     private final Map<String, CrsData> crsDataMap = new HashMap<>();
-    
+
     public GmlReader(XMLStreamReader parser, GmlHandler handler) {
         super(handler, NationalHandlers.DEFAULT_GML_HANDLERS);
         this.parser = parser;
@@ -83,7 +85,7 @@ public class GmlReader extends GeographicReader {
             throw new IOException(e);
         }
     }
-    
+
     private final boolean isElement(String element) {
         return parser.getLocalName().matches("(gml:)?"+element);
     }
@@ -104,7 +106,7 @@ public class GmlReader extends GeographicReader {
         }
         return ds;
     }
-    
+
     private void findCRS(String srs) throws NoSuchAuthorityCodeException, FactoryException {
         Main.info("Finding CRS for "+srs);
         if (gmlHandler != null) {
@@ -117,10 +119,11 @@ public class GmlReader extends GeographicReader {
             }
         }
     }
-    
+
     private void parseSrs(Component parent) throws GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException {
         String srs = parser.getAttributeValue(null, GML_SRS_NAME);
-        dim = Integer.parseInt(parser.getAttributeValue(null, GML_SRS_DIMENSION));
+        String sdim = parser.getAttributeValue(null, GML_SRS_DIMENSION);
+        dim = sdim != null ? Integer.parseInt(sdim) : 2;
         CrsData crsData = crsDataMap.get(srs);
         if (crsData == null) {
             try {
@@ -142,7 +145,7 @@ public class GmlReader extends GeographicReader {
             dim = crsData.dim;
         }
     }
-    
+
     private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
         List<OsmPrimitive> list = new ArrayList<>();
         Way way = null;
@@ -156,6 +159,8 @@ public class GmlReader extends GeographicReader {
                     parseSrs(parent);
                 } else if (isElement(GML_LINEAR_RING)) {
                     list.add(way = createWay());
+                } else if (isElement(GML_POINT)) {
+                    parseSrs(parent);
                 } else if (isElement(GML_SURFACE)) {
                     parseSrs(parent);
                 } else if (isElement(GML_POS_LIST)) {
@@ -167,6 +172,10 @@ public class GmlReader extends GeographicReader {
                             way.addNode(node);
                         }
                     }
+                } else if (isElement(GML_COORDINATES)) {
+                    String[] tab = parser.getElementText().trim().split(",");
+                    Point p = geometryFactory.createPoint(new Coordinate(Double.valueOf(tab[0]), Double.valueOf(tab[1])));
+                    list.add(node = createOrGetNode(p));
                 }
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (isElement(GML_FEATURE_MEMBER)) {

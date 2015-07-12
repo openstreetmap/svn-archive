@@ -43,6 +43,8 @@ public class GetTrace extends Request {
     * Thread that get a shape from the Server.
     */
     public void run() {
+    	m_listLatLon = new ArrayList<>();
+    	
         try {
             String strResponse = callServer("traceOrder=GetTrace"
             		+ "&traceLat=" + m_oLatLon.lat()
@@ -65,24 +67,49 @@ public class GetTrace extends Request {
             	return;
             }
             
-            if (!strResponse.startsWith("(") || !strResponse.endsWith(")")){
+            if (strResponse.startsWith("(")) {
+            	GetPoints(strResponse);
             	return;
             }
-            strResponse = strResponse.substring(1, strResponse.length()-1);
-            
-            ArrayList<LatLon> nodelist = new ArrayList<>();
-            
-            String[] astrPoints = strResponse.split("\\)\\(");
-            for (String strPoint : astrPoints) {
-                String[] astrParts = strPoint.split(":");
-                double x = Double.parseDouble(astrParts[0]);
-                double y = Double.parseDouble(astrParts[1]);
-                nodelist.add(new LatLon(x, y));
+            String[] astrParts = strResponse.split("&");
+
+            for (String strPart : astrParts) {
+            	if (strPart.contains("tracePoints="))
+            	{
+            		String strPoints = strPart.replace("tracePoints=", "");
+            		GetPoints(strPoints);
+            		return;
+            	}
             }
-            m_listLatLon = nodelist;
         } catch (Exception e) {
-        	m_listLatLon = new ArrayList<>();
+        	//m_listLatLon = new ArrayList<>();
         }
     }
+    
+    
+    /**
+     * Get points from string
+     */
+     public void GetPoints(String strResponse) {
+         try {
+             if (!strResponse.startsWith("(") || !strResponse.endsWith(")")){
+             	return;
+             }
+             strResponse = strResponse.substring(1, strResponse.length()-1);
+             
+             ArrayList<LatLon> nodelist = new ArrayList<>();
+             
+             String[] astrPoints = strResponse.split("\\)\\(");
+             for (String strPoint : astrPoints) {
+                 String[] astrParts = strPoint.split(":");
+                 double x = Double.parseDouble(astrParts[0]);
+                 double y = Double.parseDouble(astrParts[1]);
+                 nodelist.add(new LatLon(x, y));
+             }
+             m_listLatLon = nodelist;
+         } catch (Exception e) {
+         	//m_listLatLon = new ArrayList<>();
+         }
+     }
     
 }

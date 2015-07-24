@@ -125,6 +125,7 @@ import org.openstreetmap.josm.io.XmlWriter;
 import org.openstreetmap.josm.plugins.container.OSMWay;
 import org.openstreetmap.josm.plugins.core.TrainWorker;
 import org.openstreetmap.josm.plugins.extractor.LanguageDetector;
+import org.openstreetmap.josm.plugins.extractor.SampleModelsExtractor;
 import org.openstreetmap.josm.plugins.features.ClassFeatures;
 import org.openstreetmap.josm.plugins.features.GeometryFeatures;
 import org.openstreetmap.josm.plugins.features.OSMClassification;
@@ -158,7 +159,13 @@ class OSMRecPluginHelper {
     //private static final String MODEL_PATH = MAIN_PATH.substring(0, MAIN_PATH.lastIndexOf("/")) + "OSMRec_models/";
     private static String MODEL_PATH;
     private static String TEXTUAL_LIST_PATH;
-
+    private static Map<String, List<String>> indirectClasses;
+    private static Map<String, Integer> indirectClassesWithIDs;
+    private static LanguageDetector languageDetector;
+    private static String bestModelPath;
+    private final String modelWithClassesPath;
+    
+    
     // Selection that we are editing by using both dialogs
     Collection<OsmPrimitive> sel;
 
@@ -185,11 +192,8 @@ class OSMRecPluginHelper {
             return size() > MAX_LRU_TAGS_NUMBER;
         }
     };
-    
-    private static Map<String, List<String>> indirectClasses;
-    private static Map<String, Integer> indirectClassesWithIDs;
-    private static LanguageDetector languageDetector;
 
+    
     OSMRecPluginHelper(DefaultTableModel propertyData, Map<String, Map<String, Integer>> valueCount) {
         this.tagData = propertyData;
         this.valueCount = valueCount;
@@ -202,7 +206,15 @@ class OSMRecPluginHelper {
         }
         MODEL_PATH = new File(MAIN_PATH).getParentFile() + "/OSMRec_models";
         TEXTUAL_LIST_PATH = MODEL_PATH + "/textualList.txt";
+        bestModelPath = MODEL_PATH + "/best_model";
+        modelWithClassesPath = MODEL_PATH + "/model_with_classes";
         languageDetector = LanguageDetector.getInstance(MODEL_PATH + "/profiles");
+
+        SampleModelsExtractor sa = new SampleModelsExtractor();
+        
+        sa.extractSampleSVMmodel("best_model", bestModelPath);
+        sa.extractSampleSVMmodel("model_with_classes", modelWithClassesPath);
+        
     }
 
     /**
@@ -1482,6 +1494,7 @@ class OSMRecPluginHelper {
             setCancelButton(2);
             configureContextsensitiveHelp("/Dialog/AddValue", true /* show help button */);
             final AddTagsDialog lala = this;
+
             
             loadOntology();
             //if the user did not train a model by running the training process
@@ -1496,7 +1509,9 @@ class OSMRecPluginHelper {
                 loadDefaultTextualList(); 
             }
             
-           
+            //if training process has not been performed, we use two sample SVM models, extracted from the jar
+            //File bestModelFile = new File(bestModelPath);
+            //File bestModelWithClassesFile = new File(modelWithClassesPath);
 
             JPanel splitPanel = new JPanel(new BorderLayout(10,10));            
             JPanel mainPanel = new JPanel(new GridBagLayout()); //original panel, will be wrapped by the splitPanel                   
@@ -1628,8 +1643,11 @@ class OSMRecPluginHelper {
             OsmPrimitive s;
             //get a simple selection
             if(!osmPrimitiveSelection.isEmpty()){
-                s = osmPrimitiveSelection.get(0);                       
-                if(s.getInterestingTags().isEmpty()){
+                s = osmPrimitiveSelection.get(0);     
+                File modelDirectory = new File(MODEL_PATH);
+                String modelWithClassesPath = modelDirectory.getAbsolutePath() + "/model_with_classes";
+                File modelWithClassesFile = new File(modelWithClassesPath); 
+                if(s.getInterestingTags().isEmpty() || !modelWithClassesFile.exists()){
                     loadSVMmodel(false);//load original model
                     createOSMObject(sel, false); //create object without class features
                     
@@ -1649,7 +1667,7 @@ class OSMRecPluginHelper {
                 @Override
                 public void valueChanged(ListSelectionEvent listSelectionEvent) {
                     if (!listSelectionEvent.getValueIsAdjusting()) {//This prevents double events
-                        System.out.println("tag selected: " + categoryList.getSelectedValue());
+                        //System.out.println("tag selected: " + categoryList.getSelectedValue());
                         
                         String selectedClass = categoryList.getSelectedValue();
 
@@ -2093,7 +2111,7 @@ class OSMRecPluginHelper {
                     for(int h =0; h < modelSVMLabelSize; h++){
 
                         mapLabelsToIDs.put(modelSVMLabels[h], h);
-                        System.out.println(h + "   <->    " + modelSVMLabels[h]);
+                        //System.out.println(h + "   <->    " + modelSVMLabels[h]);
 
                     } 
                     double[] scores = new double[modelSVMLabelSize];
@@ -2210,7 +2228,7 @@ class OSMRecPluginHelper {
                         }
                     }
                 }
-                System.out.println("final list:" + scoreMap);
+                //System.out.println("final list:" + scoreMap);
             }           
         }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//import org.apache.log4j.Logger;
 
 /**
  * Provides functionality for parsing the names file
@@ -17,7 +18,8 @@ import java.util.logging.Logger;
 
 public class TextualListLoader {
     
-    private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(TextualListLoader.class);
+    //private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(TextualListLoader.class);
+    //private static final Logger LOG = Logger.getLogger(TextualListLoader.class);
     private List<String> namesList;
     
         public void parseNamesFile(File file){
@@ -35,7 +37,7 @@ public class TextualListLoader {
                 String nextLine = input.nextLine();
                 namesList.add(nextLine);
             }
-        LOG.info("Name occurences parsed successfully!");
+        //LOG.info("Name occurences parsed successfully!");
         }
         
         public List<String> getNamesList(){

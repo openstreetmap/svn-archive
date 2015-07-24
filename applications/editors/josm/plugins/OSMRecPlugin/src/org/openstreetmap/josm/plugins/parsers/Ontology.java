@@ -49,17 +49,17 @@ public class Ontology {
         //create the ontology model using the base
         ontologyModel = ModelFactory.createOntologyModel();                
         
-        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.ERROR); 
+        //org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.ERROR); 
         ontologyModel.read(owlFile, null);    //Hide RDFDefaultErrorHandler from terminal to keep clear output.
-        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.INFO);
+        //org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.INFO);
    
         listHierarchy = ontologyModel.listHierarchyRootClasses().toList();
         setListHierarchy(listHierarchy);  
         
-        ExtendedIterator classes = ontologyModel.listClasses();
+        ExtendedIterator<OntClass> classes = ontologyModel.listClasses();
         while (classes.hasNext()) {
             String className;
-            OntClass obj = (OntClass) classes.next();           
+            OntClass obj = classes.next();           
             
             //compare localname with class name from map and call getSuperclass     
             if (obj.hasSubClass()) {

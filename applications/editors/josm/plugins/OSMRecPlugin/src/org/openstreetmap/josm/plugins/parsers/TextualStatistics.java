@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.parsers;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,7 +30,7 @@ public class TextualStatistics {
         }
         
         public List<String> getTextualList(){
-            return textualList;
+            return Collections.unmodifiableList(textualList);
         }
 }
 

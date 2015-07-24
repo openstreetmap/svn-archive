@@ -42,10 +42,25 @@ public class LanguageDetector {
         //languageProfilesInputStream.
 
         if(!new File(languageProfilesPath).exists()){
-            new File(languageProfilesPath).mkdir();
+            //new File(languageProfilesPath).mkdir();
+            new File(languageProfilesPath).mkdirs();
         }
-        File languageProfilesOutputFile1 = new File(languageProfilesPath + "/el");
+        File languageProfilesOutputFile1 = new File(languageProfilesPath + "/el");        
         File languageProfilesOutputFile2 = new File(languageProfilesPath +"/en");
+        
+        try {
+            System.out.println("languageProfilesOutputFile1.exists: " + languageProfilesOutputFile1.exists());
+            System.out.println("languageProfilesOutputFile1.getAbsolutePath(): " + languageProfilesOutputFile1.getAbsolutePath());
+            System.out.println("languageProfilesOutputFile1.canRead(): " + languageProfilesOutputFile1.canRead());
+            System.out.println("languageProfilesOutputFile1.canWrite(): " + languageProfilesOutputFile1.canWrite());
+            //System.out.println("languageProfilesOutputFile1.canRead(): " + languageProfilesOutputFile1.);
+            
+            languageProfilesOutputFile1.createNewFile();
+            languageProfilesOutputFile2.createNewFile();
+        } catch (IOException ex) {
+            Logger.getLogger(LanguageDetector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         //languageProfilesOutputFile.mkdirs();
 
         FileOutputStream outputStream = null;
@@ -56,7 +71,7 @@ public class LanguageDetector {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LanguageDetector.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("deb1");
+        //System.out.println("deb1");
 
         FileOutputStream outputStream2 = null;
         //FileOutputStream outputStream2 = null;

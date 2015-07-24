@@ -3,7 +3,9 @@ package org.openstreetmap.josm.plugins.parsers;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -16,13 +18,13 @@ import java.util.Scanner;
  */
 
 public class Mapper {
-    private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(Mapper.class);
+    //private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(Mapper.class);
     private final HashMap<String, String> mappings;
     private final HashMap<String, Integer> mappingsWithIDs;
     
     public Mapper(){    
     
-       mappings = new HashMap<>();
+       mappings = new LinkedHashMap<>();
        mappingsWithIDs = new HashMap<>();
     
     }
@@ -44,8 +46,8 @@ public class Mapper {
              mappings.put(key, value);
         }
         constructMappingsWithIDs();
-         
-    LOG.info("Mappings file parsed successfully!");     
+        System.out.println("Mappings file parsed successfully!");
+        //LOG.info("Mappings file parsed successfully!");     
     } 
     
     private void constructMappingsWithIDs(){
@@ -57,10 +59,10 @@ public class Mapper {
     }
     
     public Map<String,Integer> getMappingsWithIDs(){
-        return this.mappingsWithIDs;
+        return Collections.unmodifiableMap(mappingsWithIDs);
     }
     
     public Map<String,String> getMappings(){
-        return this.mappings;
+        return Collections.unmodifiableMap(mappings);
     }        
 }

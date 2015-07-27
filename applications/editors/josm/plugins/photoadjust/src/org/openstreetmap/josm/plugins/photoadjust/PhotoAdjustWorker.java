@@ -165,6 +165,10 @@ public class PhotoAdjustWorker {
     private void changeDirection(ImageEntry photo, GeoImageLayer layer,
                                 MouseEvent evt) {
         final LatLon photoLL = photo.getPos();
+        if (photoLL == null) {
+            // Direction cannot be set if image doesn't have a position.
+            return;
+        }
         final LatLon mouseLL = Main.map.mapView.getLatLon(evt.getX(), evt.getY());
         // The projection doesn't matter here.
         double direction = 360.0 - photoLL.heading(mouseLL) * 360.0 / 2.0 / Math.PI;

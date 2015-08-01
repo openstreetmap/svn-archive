@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Compile and build java classes plus jar archives">
 
-	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,create_release_zip,create_source_release_zip" />
+	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,create_release_zip,create_source_release_zip,findbugs,checkstyle" />
 
 	<target name="clean">
 		<mkdir dir="bin" />
@@ -33,7 +33,7 @@
         </exec>
     </target>
 	
-	<target name="pack">
+	<target name="pack" depends="build">
 		<!-- Create the JAR file containing the compiled class files -->
 		<jar destfile="JMapViewer.jar" filesetmanifest="mergewithoutmain">
 			<fileset dir="bin" includes="**/jmapviewer/**" />
@@ -74,5 +74,33 @@
 			<zipfileset dir="src" includes="**/jmapviewer/**" prefix="jmapviewer-${svnReleaseVersion}/src"/>
 		</zip>
 	</target>
+
+    <target name="checkstyle">
+        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" 
+        	classpath="tools/checkstyle/checkstyle-6.8.1-all.jar"/>
+        <checkstyle config="tools/checkstyle/jmapviewer_checks.xml">
+            <fileset dir="${basedir}/src" includes="**/*.java" />
+            <formatter type="xml" toFile="checkstyle-jmapviewer.xml"/>
+        </checkstyle>
+    </target>
+
+    <target name="findbugs" depends="pack">
+        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" 
+        	classpath="tools/findbugs/findbugs-ant.jar"/>
+        <path id="findbugs-classpath">
+            <fileset dir="tools/findbugs/">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+        <property name="findbugs-classpath" refid="findbugs-classpath"/>
+        <findbugs output="xml"
+                outputFile="findbugs-jmapviewer.xml"
+                classpath="${findbugs-classpath}"
+                effort="max"
+                >
+            <sourcePath path="${basedir}/src" />
+            <class location="JMapViewer.jar" />
+        </findbugs>
+    </target>
 
 </project>

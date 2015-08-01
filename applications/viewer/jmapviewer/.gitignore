@@ -4,3 +4,5 @@
 /bin
 /tiles
 /JMapViewer.zip
+/checkstyle-jmapviewer.xml
+/findbugs-jmapviewer.xml

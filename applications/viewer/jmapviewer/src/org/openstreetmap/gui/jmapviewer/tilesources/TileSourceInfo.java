@@ -12,13 +12,13 @@ import org.openstreetmap.gui.jmapviewer.OsmMercator;
  */
 public class TileSourceInfo {
     /** id for this imagery entry, optional at the moment */
-    private final String id;
+    protected final String id;
 
     /** URL of the imagery service */
-    private final String url;
+    protected final String url;
 
     /** name of the imagery layer */
-    private final String name;
+    protected final String name;
 
     /** headers meaning, that there is no tile at this zoom level */
     protected Map<String, String> noTileHeaders;

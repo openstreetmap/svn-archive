@@ -43,7 +43,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
  */
 public class JMapViewer extends JPanel implements TileLoaderListener {
 
-    public static final boolean DEBUG = false;
+    public static boolean debug = false;
 
     /**
      * Vectors for clock-wise tile painting

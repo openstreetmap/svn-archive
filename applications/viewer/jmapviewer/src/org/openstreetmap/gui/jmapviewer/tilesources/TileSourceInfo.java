@@ -12,12 +12,13 @@ import org.openstreetmap.gui.jmapviewer.OsmMercator;
  */
 public class TileSourceInfo {
     /** id for this imagery entry, optional at the moment */
-    protected String id;
+    private final String id;
+
     /** URL of the imagery service */
-    protected  String url = null;
+    private final String url;
 
     /** name of the imagery layer */
-    protected String name;
+    private final String name;
 
     /** headers meaning, that there is no tile at this zoom level */
     protected Map<String, String> noTileHeaders;
@@ -45,7 +46,7 @@ public class TileSourceInfo {
      * @param id unique id
      */
     public TileSourceInfo(String name, String base_url, String id) {
-        this(name);
+        this.name = name;
         this.url = base_url;
         this.id = id;
     }
@@ -56,20 +57,21 @@ public class TileSourceInfo {
      * @param name name
      */
     public TileSourceInfo(String name) {
-        this.name = name;
+        this(name, null, null);
     }
 
     /**
      * Creates empty TileSourceInfo class
      */
     public TileSourceInfo() {
+        this(null, null, null);
     }
 
     /**
      * Request name of the tile source
      * @return name of the tile source
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -77,8 +79,16 @@ public class TileSourceInfo {
      * Request URL of the tile source
      * @return url of the tile source
      */
-    public String getUrl() {
+    public final String getUrl() {
         return url;
+    }
+
+    /**
+     * Request ID of the tile source
+     * @return id of the tile source
+     */
+    public final String getId() {
+        return id;
     }
 
     /**

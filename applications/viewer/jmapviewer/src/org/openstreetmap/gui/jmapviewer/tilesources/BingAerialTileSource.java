@@ -195,7 +195,7 @@ public class BingAerialTileSource extends AbstractTMSTileSource {
                 // Some Linux distributions (like Debian) will remove Bing logo from sources, so get it at runtime
                 for (int i = 0; i < 5 && getAttribution() == null; i++) {
                     // Makes sure attribution is loaded
-                    if (JMapViewer.debug) {
+                    if (JMapViewer.DEBUG) {
                         System.out.println("Bing attribution attempt " + (i+1));
                     }
                 }

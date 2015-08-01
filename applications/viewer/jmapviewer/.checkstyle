@@ -7,4 +7,7 @@
   <fileset name="all" enabled="true" check-config-name="JMapViewer" local="true">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
+  <filter name="FilesFromPackage" enabled="true">
+    <filter-data value="src/org/openstreetmap/gui/jmapviewer/images"/>
+  </filter>
 </fileset-config>

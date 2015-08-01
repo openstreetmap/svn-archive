@@ -96,7 +96,7 @@ JMapViewer Checkstyle rules
     <module name="HideUtilityClassConstructor"/>
   </module>
   <module name="Header">
-    <property name="header" value="// License: GPL. For details, see LICENSE file."/>
+    <property name="header" value="// License: GPL. For details, see Readme.txt file."/>
     <property name="fileExtensions" value=".java"/>
   </module>
   <module name="FileLength">

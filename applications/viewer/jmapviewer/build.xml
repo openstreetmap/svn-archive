@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Compile and build java classes plus jar archives">
 
-	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,create_release_zip,create_source_release_zip,findbugs,checkstyle" />
+	<target name="all" depends="clean,build,svn_info,pack,create_run_jar,create_release_zip,create_source_release_zip,findbugs,checkstyle,javadoc" />
 
 	<target name="clean">
 		<mkdir dir="bin" />

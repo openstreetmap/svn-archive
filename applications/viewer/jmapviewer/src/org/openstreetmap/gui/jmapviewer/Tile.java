@@ -89,6 +89,7 @@ public class Tile {
     /**
      * Tries to get tiles of a lower or higher zoom level (one or two level
      * difference) from cache and use it as a placeholder until the tile has been loaded.
+     * @param cache Tile cache
      */
     public void loadPlaceholderFromCache(TileCache cache) {
         BufferedImage tmpImage = new BufferedImage(source.getTileSize(), source.getTileSize(), BufferedImage.TYPE_INT_RGB);

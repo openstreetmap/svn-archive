@@ -372,7 +372,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      * @return latitude / longitude
      */
     public ICoordinate getPosition() {
-        return tileSource.XYToLatLon(center, zoom);
+        return tileSource.xyToLatLon(center, zoom);
     }
 
     /**
@@ -399,7 +399,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     public ICoordinate getPosition(int mapPointX, int mapPointY) {
         int x = center.x + mapPointX - getWidth() / 2;
         int y = center.y + mapPointY - getHeight() / 2;
-        return tileSource.XYToLatLon(x, y, zoom);
+        return tileSource.xyToLatLon(x, y, zoom);
     }
 
     /**
@@ -546,8 +546,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         int tilesize = tileSource.getTileSize();
         int tilex = center.x / tilesize;
         int tiley = center.y / tilesize;
-        int off_x = (center.x % tilesize);
-        int off_y = (center.y % tilesize);
+        int off_x = center.x % tilesize;
+        int off_y = center.y % tilesize;
 
         int w2 = getWidth() / 2;
         int h2 = getHeight() / 2;
@@ -598,7 +598,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                         Tile tile;
                         if (scrollWrapEnabled) {
                             // in case tilex is out of bounds, grab the tile to use for wrapping
-                            int tilexWrap = (((tilex % gridLength) + gridLength) % gridLength);
+                            int tilexWrap = ((tilex % gridLength) + gridLength) % gridLength;
                             tile = tileController.getTile(tilexWrap, tiley, zoom);
                         } else {
                             tile = tileController.getTile(tilex, tiley, zoom);

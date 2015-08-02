@@ -33,15 +33,6 @@ public class Tile {
      */
     public static final BufferedImage ERROR_IMAGE = loadImage("images/error.png");
 
-    private static BufferedImage loadImage(String path) {
-        try {
-            return ImageIO.read(JMapViewer.class.getResourceAsStream(path));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     protected TileSource source;
     protected int xtile;
     protected int ytile;
@@ -84,6 +75,15 @@ public class Tile {
         this.zoom = zoom;
         this.image = image;
         this.key = getTileKey(source, xtile, ytile, zoom);
+    }
+
+    private static BufferedImage loadImage(String path) {
+        try {
+            return ImageIO.read(JMapViewer.class.getResourceAsStream(path));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /**

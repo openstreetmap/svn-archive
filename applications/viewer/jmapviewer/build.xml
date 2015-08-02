@@ -103,4 +103,20 @@
         </findbugs>
     </target>
 
+	<target name="javadoc">
+        <javadoc destdir="javadoc" 
+                sourcepath="src"
+                encoding="UTF-8"    
+                packagenames="org.openstreetmap.gui.jmapviewer.*"
+                windowtitle="JMapViewer"
+                use="true"
+                private="true"
+                linksource="true"
+                author="false">
+            <link href="http://docs.oracle.com/javase/7/docs/api"/>
+            <doctitle><![CDATA[<h2>JMapViewer - Javadoc</h2>]]></doctitle>
+            <bottom><![CDATA[<a href="https://josm.openstreetmap.de/">JMapViewer</a>]]></bottom>
+        </javadoc>
+    </target>
+
 </project>

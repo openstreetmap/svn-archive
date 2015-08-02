@@ -42,19 +42,17 @@ public class ScanexTileSource extends TMSTileSource {
         }
     }
 
-    /* IRS by default */
+    /** IRS by default */
     private ScanexLayer layer = ScanexLayer.IRS;
 
     public ScanexTileSource(TileSourceInfo info) {
         super(info);
         String url = info.getUrl();
 
-        for (ScanexLayer layer : ScanexLayer.values()) {
-            if (url.equalsIgnoreCase(layer.getName())) {
-                this.layer = layer;
-                /*
-                 * Override baseUrl and maxZoom in base class.
-                 */
+        for (ScanexLayer slayer : ScanexLayer.values()) {
+            if (url.equalsIgnoreCase(slayer.getName())) {
+                this.layer = slayer;
+                // Override baseUrl and maxZoom in base class.
                 this.baseUrl = DEFAULT_URL;
                 if (maxZoom == 0)
                     this.maxZoom = DEFAULT_MAXZOOM;

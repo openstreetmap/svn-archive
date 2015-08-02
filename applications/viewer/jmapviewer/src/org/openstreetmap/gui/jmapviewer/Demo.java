@@ -38,13 +38,13 @@ public class Demo extends JFrame implements JMapViewerEventListener  {
 
     private static final long serialVersionUID = 1L;
 
-    private JMapViewerTree treeMap = null;
+    private final JMapViewerTree treeMap;
 
-    private JLabel zoomLabel = null;
-    private JLabel zoomValue = null;
+    private final JLabel zoomLabel;
+    private final JLabel zoomValue;
 
-    private JLabel mperpLabelName = null;
-    private JLabel mperpLabelValue = null;
+    private final JLabel mperpLabelName;
+    private final JLabel mperpLabelValue;
 
     /**
      * Constructs the {@code Demo}.

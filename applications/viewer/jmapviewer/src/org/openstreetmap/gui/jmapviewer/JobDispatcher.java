@@ -22,7 +22,7 @@ public final class JobDispatcher {
 
     private static int workerThreadMaxCount = 8;
 
-    private BlockingDeque<TileJob> jobQueue = new LinkedBlockingDeque<>();
+    private final BlockingDeque<TileJob> jobQueue = new LinkedBlockingDeque<>();
 
     private JobDispatcher() {
         addWorkerThread().firstThread = true;
@@ -112,7 +112,7 @@ public final class JobDispatcher {
         }
     }
 
-    protected JobThread addWorkerThread() {
+    private JobThread addWorkerThread() {
         JobThread jobThread = new JobThread(++workerThreadId);
         synchronized (this) {
             workerThreadCount++;

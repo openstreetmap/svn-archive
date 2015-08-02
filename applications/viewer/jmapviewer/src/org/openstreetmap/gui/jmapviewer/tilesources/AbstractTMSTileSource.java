@@ -282,7 +282,7 @@ public abstract class AbstractTMSTileSource extends AbstractTileSource {
         return this.baseUrl + "/" + zoom + "/" + tilex + "/" + tiley;
     }
 
-    private int getTileMax(int zoom) {
+    private static int getTileMax(int zoom) {
         return (int) Math.pow(2.0, zoom) - 1;
     }
 }

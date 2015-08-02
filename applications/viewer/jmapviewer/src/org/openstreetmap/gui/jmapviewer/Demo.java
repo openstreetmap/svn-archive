@@ -201,7 +201,7 @@ public class Demo extends JFrame implements JMapViewerEventListener  {
         map().addMapMarker(new MapMarkerCircle(germanyWestLayer, "North of Suisse", new Coordinate(48, 7), .5));
         Layer spain = treeMap.addLayer("Spain");
         map().addMapMarker(new MapMarkerCircle(spain, "La Garena", new Coordinate(40.4838, -3.39), .002));
-        spain.setVisible(false);
+        spain.setVisible(Boolean.FALSE);
 
         Layer wales = treeMap.addLayer("UK");
         map().addMapRectangle(new MapRectangleImpl(wales, "Wales", c(53.35, -4.57), c(51.64, -2.63)));

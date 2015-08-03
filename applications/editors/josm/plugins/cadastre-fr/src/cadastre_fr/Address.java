@@ -449,7 +449,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     }
 
     private void createDialog() {
-        ImageIcon iconLink = ImageProvider.get(null, "Mf_relation.png");
+        ImageIcon iconLink = ImageProvider.get(null, "Mf_relation");
         link.setIcon(iconLink);
         link.setEnabled(false);
         JPanel p = new JPanel(new GridBagLayout());

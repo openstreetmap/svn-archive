@@ -3,8 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/extractor/FrequenceExtractor.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/build.xml</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/extractor/LanguageDetector.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/parsers/Mapper.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/parsers/Ontology.java</file>
             <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/osmrec/OSMRecPlugin.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/osmrec/OSMRecToggleDialog.java</file>
             <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/osmrec/MenuExportAction.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/resources/log4j.properties</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/osmrec/OSMRecPluginHelper.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/osmrec/personalization/TrainByUser.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/core/TrainWorker.java</file>
+            <file>file:/home/imis-nkarag/software/josm_svn/josm/plugins/OSMRecPlugin/src/org/openstreetmap/josm/plugins/extractor/SampleModelsExtractor.java</file>
         </group>
     </open-files>
 </project-private>

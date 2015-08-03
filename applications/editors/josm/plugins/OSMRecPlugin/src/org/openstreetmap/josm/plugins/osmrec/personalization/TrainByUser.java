@@ -7,6 +7,8 @@ import de.bwaldvogel.liblinear.Model;
 import de.bwaldvogel.liblinear.Parameter;
 import de.bwaldvogel.liblinear.Problem;
 import de.bwaldvogel.liblinear.SolverType;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,8 +25,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingWorker;
 import org.openstreetmap.josm.plugins.container.OSMRelation;
 import org.openstreetmap.josm.plugins.container.OSMWay;
 import org.openstreetmap.josm.plugins.extractor.Analyzer;
@@ -44,7 +48,7 @@ import org.openstreetmap.josm.plugins.parsers.TextualStatistics;
  *  @author imis-nkarag
  */
 
-public class TrainByUser {
+public class TrainByUser extends SwingWorker<Void, Void> implements ActionListener{
     
     private final String inputFilePath;
     private static Map<String,String> mappings;
@@ -66,7 +70,7 @@ public class TrainByUser {
     private static double foldScore5 = 0;
     private static double foldScore10 = 0;
     private static double bestScore = 0;
-    int trainProgress = 0;
+    //int trainProgress = 0;
     private final boolean validateFlag;
     private final double cParameterFromUser;
     private double bestConfParam;
@@ -74,9 +78,9 @@ public class TrainByUser {
     private final int frequency;
     private final boolean topKIsSelected;
     private String textualListFilePath;    
-    private static boolean USE_CLASS_FEATURES = false;
-    private static boolean USE_RELATION_FEATURES = false;
-    private static boolean USE_TEXTUAL_FEATURES = true;
+    private static final boolean USE_CLASS_FEATURES = false;
+    private static final boolean USE_RELATION_FEATURES = false;
+    private static final boolean USE_TEXTUAL_FEATURES = true;
     private static int numberOfFeatures;
     private static LanguageDetector languageDetector;
     private final String username;
@@ -107,28 +111,48 @@ public class TrainByUser {
         }   
         TrainByUser.wayList = wayList;
     }
-    
-    
-    public void executeTraining(){        
+        
+    @Override
+    public Void doInBackground() throws Exception {         
         extractTextualList();
         parseFiles();
-        if(validateFlag){            
+        if(validateFlag){   
+            firePropertyChange("progress", getProgress(), 5);
+            //setProgress(5);
             validateLoop();
+            firePropertyChange("progress", getProgress(), 40);
+            //setProgress(40);
             System.out.println("Training model with the best c: " + bestConfParam);
             clearDataset();
             trainModel(bestConfParam);
+            firePropertyChange("progress", getProgress(), 60);
+            //setProgress(80);
             clearDataset();
             trainModelWithClasses(bestConfParam);
-            
+            firePropertyChange("progress", getProgress(), 100);
+            setProgress(100);
         }
         else{
+
+            //firePropertyChange("progress", getProgress(), 5);
+            //setProgress(5);
             clearDataset();
+            firePropertyChange("progress", getProgress(), 10);
+            //setProgress(10);
             trainModel(cParameterFromUser);
+            //setProgress(60);   
+            firePropertyChange("progress", getProgress(), 60);
             clearDataset();
-            trainModelWithClasses(cParameterFromUser);
+            firePropertyChange("progress", getProgress(), 65);
+            //setProgress(65);
+            trainModelWithClasses(cParameterFromUser);          
+            
+            firePropertyChange("progress", getProgress(), 100);
+            setProgress(100);
             System.out.println("done.");
         }
-        System.out.println("Train by user process complete.");       
+        System.out.println("Train by user process complete.");    
+        return null;
     }
     
     private void extractTextualList(){
@@ -231,13 +255,13 @@ public class TrainByUser {
         double bestC = Math.pow(2, -10);
         
         for(Double param : confParams){
-            
+            //setProgress(4*((5*(trainProgress++))/confParams.length)); 
             foldScore1 = 0;
             foldScore5 = 0;
             foldScore10 = 0;
             System.out.println("\n\n\nrunning for C = " + param);
             clearDataset();
-            System.out.println("fold1");
+            System.out.println("fold1");            
             //crossValidateFold(0, 3, 3, 4, false, param);
             crossValidateFold(0, 4, 4, 5, false, param); //4-1
             //setProgress(4*((5*(trainProgress++))/confParams.length)); 
@@ -293,7 +317,7 @@ public class TrainByUser {
             }
             
         }
-        System.out.println(4*((5*(trainProgress++))/confParams.length));
+        //System.out.println(4*((5*(trainProgress++))/confParams.length));
         //setProgress(100);
         bestConfParam = bestC;
         System.out.println("best c param= " + bestC + ", score: " + bestScore/5 );
@@ -318,14 +342,13 @@ public class TrainByUser {
         
         //set classes for each osm instance
         int sizeToBeAddedToArray = 0; //this will be used to proper init the features array, adding the multiple vectors size 
-        int lalala = 0;
         for(OSMWay way : trainList){
 
             OSMClassification classifyInstances = new OSMClassification();
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
 
             if(way.getClassIDs().isEmpty()){
-                wayListSizeWithoutUnclassified = wayListSizeWithoutUnclassified-1;
+                wayListSizeWithoutUnclassified -= 1;
                 u++;
             }
             else {
@@ -381,7 +404,6 @@ public class TrainByUser {
                     i++;
                 }               
                 for(int classID : way.getClassIDs()){
-                    lalala++;
                     trainingSetWithUnknown2[k] = featureNodeArray;
                     GROUPS_ARRAY2[k] = classID;
                     k++;                    
@@ -471,7 +493,7 @@ public class TrainByUser {
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
             if(way.getClassIDs().isEmpty()){
                 //System.out.println("found unclassified" + way.getClassIDs() + "class: " +way.getClassID());
-                wayListSizeWithoutUnclassified2 = wayListSizeWithoutUnclassified2-1;
+                wayListSizeWithoutUnclassified2 -= 1;
                 //u++;
             }
         }         
@@ -581,17 +603,17 @@ public class TrainByUser {
         }        
         
         System.out.println("Succeeded " + succededInstances + " of " + testList.size() + " total (1 class prediction)");
-        double precision1 = (double)succededInstances/(double)wayListSizeWithoutUnclassified2;
+        double precision1 = succededInstances/(double)wayListSizeWithoutUnclassified2;
         score1 = precision1;
         System.out.println(precision1);
         
         System.out.println("Succeeded " + succededInstances5 + " of " + testList.size()+ " total (5 class prediction)");
-        double precision5 = (double)succededInstances5/(double)wayListSizeWithoutUnclassified2;
+        double precision5 = succededInstances5/(double)wayListSizeWithoutUnclassified2;
         score5 = precision5;
         System.out.println(precision5);
         
         System.out.println("Succeeded " + succededInstances10 + " of " + testList.size()+ " total (10 class prediction)");
-        double precision10 = (double)succededInstances10/(double)wayListSizeWithoutUnclassified2;
+        double precision10 = succededInstances10/(double)wayListSizeWithoutUnclassified2;
         score10 = precision10;
         System.out.println(precision10);               
     }  
@@ -601,10 +623,8 @@ public class TrainByUser {
         int wayListSizeWithoutUnclassified = wayList.size();
         int u = 0;
         System.out.println("trainList size: " + wayListSizeWithoutUnclassified);
-        
         //set classes for each osm instance
         int sizeToBeAddedToArray = 0; //this will be used to proper init the features array, adding the multiple vectors size 
-        int lalala = 0;
 
         //System.out.println("starting classify instances");
         for(OSMWay way : wayList){
@@ -613,7 +633,7 @@ public class TrainByUser {
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
 
             if(way.getClassIDs().isEmpty()){
-                wayListSizeWithoutUnclassified = wayListSizeWithoutUnclassified-1;
+                wayListSizeWithoutUnclassified -= 1;
                 u++;
             }
             else {
@@ -671,7 +691,6 @@ public class TrainByUser {
                     i++;
                 }               
                 for(int classID : way.getClassIDs()){
-                    lalala++;
                     trainingSetWithUnknown2[k] = featureNodeArray;
                     GROUPS_ARRAY2[k] = classID;
                     k++;                    
@@ -743,7 +762,7 @@ public class TrainByUser {
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
 
             if(way.getClassIDs().isEmpty()){
-                wayListSizeWithoutUnclassified = wayListSizeWithoutUnclassified-1;
+                wayListSizeWithoutUnclassified -= 1;
                 u++;
             }
             else {
@@ -887,4 +906,21 @@ public class TrainByUser {
             Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
         }       
     }
+    
+    @Override
+    protected void done() {
+        try {
+            System.out.println("Training process complete! - > " + get());
+            firePropertyChange("progress", getProgress(), 100);
+            setProgress(100);
+        } 
+        catch (InterruptedException | ExecutionException ignore) {
+            System.out.println("Exception: " + ignore);
+        }
+    }     
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        //cancel button, end process after clearing Dataset
+    }    
 }

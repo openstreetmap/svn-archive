@@ -1,17 +1,17 @@
 package org.openstreetmap.josm.plugins.osmrec.personalization;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
-import org.opengis.referencing.FactoryException;
 import org.openstreetmap.josm.plugins.container.OSMWay;
-import org.openstreetmap.josm.plugins.core.TrainWorker;
 import org.openstreetmap.josm.plugins.extractor.LanguageDetector;
 import org.openstreetmap.josm.plugins.parsers.OSMParser;
 
@@ -21,13 +21,13 @@ import org.openstreetmap.josm.plugins.parsers.OSMParser;
  * @author imis-nkarag
  */
 
-public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> {
+public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> implements ActionListener{
     
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final ArrayList<String> timeIntervals = new ArrayList<>();
     private final String username;
     private final Integer days;
-    private List<OSMWay> wayList;
+    private List<OSMWay> wayList = new ArrayList<>();
     private final boolean byArea;
     private final String inputFilePath;
     private final boolean validateFlag;
@@ -36,6 +36,7 @@ public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> {
     private final int frequency;
     private final boolean topKIsSelected;
     private final LanguageDetector languageDetector;
+    private int userTrainProgress = 0;
     
     public UserDataExtractAndTrainWorker(String inputFilePath, String username, Integer days, boolean byArea, boolean validateFlag, 
             double cParameterFromUser, int topK, int frequency, boolean topKIsSelected, LanguageDetector languageDetector){
@@ -55,6 +56,8 @@ public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> {
     
     @Override
     protected Void doInBackground() throws Exception {
+        
+        System.out.println("UserDataExtractAndTrainWorker doInBackground initiating..");
         if(byArea){
            extractByArea(); 
         }
@@ -65,12 +68,34 @@ public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> {
         TrainByUser trainByUser = new TrainByUser(inputFilePath, username, validateFlag, 
                 cParameterFromUser, topK, frequency, topKIsSelected, languageDetector, wayList);
 
-        trainByUser.executeTraining();
+        System.out.println("trainByUser executing..");
+        trainByUser.addPropertyChangeListener(new PropertyChangeListener() {
+                            
+            @Override 
+            public void propertyChange(PropertyChangeEvent evt) {
+                if("progress".equals(evt.getPropertyName())) {
+                    int progress = (Integer) evt.getNewValue();
+                    System.out.println("progress++ from property change listener, progress: " + progress);
+                    setProgress(progress);
+                    
+                }
+            }                                                 
+        }); 
+        
+        
+        
+        
+        
+        trainByUser.doInBackground();
+        setProgress(100);
         return null;
     }
     
     private void extractHistory() {
-        wayList.clear();
+        if(wayList != null){
+            wayList.clear();
+        }
+        
         produceTimeIntervals(days);
         HistoryParser historyParser = new HistoryParser(username);
         
@@ -82,21 +107,35 @@ public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> {
     }
     
     private void extractByArea() {
-        wayList.clear();
-        OSMParser osmParser = null;
-        try {
-            osmParser = new OSMParser(inputFilePath);
-            
-        } catch (FactoryException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        System.out.println("Extracting by Area..");
+
+        if(wayList != null){
+            wayList.clear();
+        }
+        //System.out.println("wayList cleared.");
+        
+        OSMParser osmParser = new OSMParser(inputFilePath);
+        osmParser.parseDocument();
+
+        //System.out.println("OSMParser done.");
         
         List<OSMWay> completeWayList = osmParser.getWayList();
+        System.out.println("completeWayList size: " + completeWayList.size());
+        System.out.println("populating wayList with edits from username: " + username);
         for(OSMWay way : completeWayList){
+            //System.out.println("current way user: " + way.getUser());
             if(way.getUser().equals(username)){
+                System.out.println("found user edit!");
                 wayList.add(way);
             }            
         } 
+        System.out.println("weeding wayList by user done.");
+        if(wayList.isEmpty()){
+            System.out.println("User has not edited this Area. Try \"By time\" option.");
+        }
+        else{
+            System.out.println("User has edited " + wayList.size() + " OSM entities in this area.");
+        }
     }   
     
     private void produceTimeIntervals(Integer days) {
@@ -140,5 +179,14 @@ public class UserDataExtractAndTrainWorker extends SwingWorker<Void, Void> {
             nextIntervalTime = intervalTimeString;
             System.out.println(" ti: " + timeOsmApiArgument);
         } while(cal.getTime().before(currentDate));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        //this.firePropertyChange("progress", userTrainProgress, userTrainProgress+10);
+//        if(userTrainProgress <100){
+//            setProgress(userTrainProgress+10);
+//        }
+        
     }
 }

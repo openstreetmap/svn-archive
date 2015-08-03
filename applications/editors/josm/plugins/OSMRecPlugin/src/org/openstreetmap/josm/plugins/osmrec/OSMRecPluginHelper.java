@@ -163,7 +163,10 @@ class OSMRecPluginHelper {
     private static Map<String, Integer> indirectClassesWithIDs;
     private static LanguageDetector languageDetector;
     private static String bestModelPath;
+    private boolean modelWithClasses;// = false;
     private final String modelWithClassesPath;
+    private boolean useCustomSVMModel = false;
+    private String customSVMModelPath;
     
     
     // Selection that we are editing by using both dialogs
@@ -467,6 +470,7 @@ class OSMRecPluginHelper {
             daysLabel = new javax.swing.JLabel("Days: ");
             daysField = new javax.swing.JTextField();
             
+            cParameterCheckBox.setSelected(true);
             userHistoryPanel.setEnabled(false);
             byAreaRadioButton.setEnabled(false);
             byAreaRadioButton.setSelected(true);
@@ -489,6 +493,9 @@ class OSMRecPluginHelper {
             inputFileLabel.setText("OSM filepath: ");
             inputFileErrorMessageLabel.setForeground(Color.RED);
             inputFileErrorMessageLabel.setText("");
+            topKField.setText("50");
+            frequencyField.setText("200");
+            cParameterField.setText("0.01");
             
             cParameterField.setColumns(FIELD_COLUMNS);
             cParameterField.setEditable(false);
@@ -925,6 +932,7 @@ class OSMRecPluginHelper {
             frequencyButton.setEnabled(true);
             acceptConfigButton.setEnabled(true);          
             fileBrowseButton.setEnabled(true);
+            trainFromUserCheckBox.setEnabled(true);
             
             if(trainFromUserCheckBox.isSelected()){
                 userHistoryPanel.setEnabled(true);
@@ -966,6 +974,7 @@ class OSMRecPluginHelper {
                         });                                                  
 
                         try {
+                            System.out.println("executing userDataExtractAndTrainWorker Thread..");
                             userDataExtractAndTrainWorker.execute();
                         } catch (Exception ex) {
                             Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
@@ -1196,8 +1205,8 @@ class OSMRecPluginHelper {
         private final JLabel chooseModelLabel;
         private final JButton chooseModelButton;
         private final JTextField chooseModelTextField;
-        private final JList modelCombinationList;
-        private final DefaultListModel<String> combinationDefaultListModel = new DefaultListModel<>();;
+        private final JList<String> modelCombinationList;
+        private final DefaultListModel<String> combinationDefaultListModel = new DefaultListModel<>();
         private final JPanel modelCombinationPanel;
         //private final JTextField weightTextField;
         private final JPanel weightsPanel;
@@ -1335,10 +1344,14 @@ class OSMRecPluginHelper {
             if(buttonValue == 0 && useCombinedModel && useModelCombinationCheckbox.isSelected()){
                 System.out.println("\n\nUSE COMBINED MODEL\n\n");
                 //recompute predictions with combination
-                addDialog.loadSVMmodel(false); //maybe ask user about if the model contains classes                
+                modelWithClasses = false;
+                addDialog.loadSVMmodel(); 
+                addDialog.createOSMObject(sel);
             }
             else {
                 useCombinedModel = false;
+                addDialog.loadSVMmodel();
+                addDialog.createOSMObject(sel);
             }            
         }
         
@@ -1350,7 +1363,10 @@ class OSMRecPluginHelper {
                 final int returnVal = fileChooser.showOpenDialog(this);
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                     chooseModelTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                    useCustomSVMModel = true;
+                    customSVMModelPath = fileChooser.getSelectedFile().getAbsolutePath();
                 }
+                
                 
                 if(useModelCombinationCheckbox.isSelected()){
                     String svmModelPath = fileChooser.getSelectedFile().getAbsolutePath();
@@ -1390,7 +1406,7 @@ class OSMRecPluginHelper {
                 for (Component weightPanelComponent : weightPanelComponents) {
                     weightPanelComponent.setEnabled(true);
                 }
-                
+                useCustomSVMModel = false; //reseting the selected custom SVM model only here
             }
             else{
                 removeSelectedModelButton.setEnabled(false);
@@ -1415,7 +1431,7 @@ class OSMRecPluginHelper {
                     Double weightValue = Double.parseDouble(weightField.getText());
 
                     weightValue = Math.abs(weightValue);
-                    weightSum = weightSum + weightValue;
+                    weightSum += weightValue;
                 }    
                 catch (NumberFormatException ex){
                     Main.warn(ex);
@@ -1542,19 +1558,22 @@ class OSMRecPluginHelper {
                         s = osmPrimitiveSelection.get(0);                       
                         if(s.getInterestingTags().isEmpty()){
                             //load original model
-                            loadSVMmodel(false);
-                            createOSMObject(sel, false); //create object without class features
+                            modelWithClasses = false;
+                            loadSVMmodel();
+                            createOSMObject(sel); //create object without class features
                         }
                         else{
                             //useTagsCheckBox
                             if(useTagsCheckBox.isSelected()){
                                 //load model with classes
-                                loadSVMmodel(true);
-                                createOSMObject(sel, true); //create object including class features
+                                modelWithClasses = true;
+                                loadSVMmodel();
+                                createOSMObject(sel); //create object including class features
                             }
                             else{
-                                loadSVMmodel(false);
-                                createOSMObject(sel, false); //create object including class features    
+                                modelWithClasses = false;
+                                loadSVMmodel();
+                                createOSMObject(sel); //create object including class features    
                             }
                         }                        
                     }
@@ -1578,19 +1597,22 @@ class OSMRecPluginHelper {
                         s = osmPrimitiveSelection.get(0);                       
                         if(s.getInterestingTags().isEmpty()){
                             //load original model
-                            loadSVMmodel(false);
-                            createOSMObject(sel, false); //create object without class features
+                            modelWithClasses = false;
+                            loadSVMmodel();
+                            createOSMObject(sel); //create object without class features
                         }
                         else{
                             //useTagsCheckBox
                             if(useTagsCheckBox.isSelected()){
                                 //load model with classes
-                                loadSVMmodel(true);
-                                createOSMObject(sel, true); //create object including class features
+                                modelWithClasses = true;
+                                loadSVMmodel();
+                                createOSMObject(sel); //create object including class features
                             }
                             else{
-                                loadSVMmodel(false);
-                                createOSMObject(sel, false); //create object including class features    
+                                modelWithClasses = false;
+                                loadSVMmodel();
+                                createOSMObject(sel); //create object including class features    
                             }
                         }                        
                     }                    
@@ -1648,14 +1670,16 @@ class OSMRecPluginHelper {
                 String modelWithClassesPath = modelDirectory.getAbsolutePath() + "/model_with_classes";
                 File modelWithClassesFile = new File(modelWithClassesPath); 
                 if(s.getInterestingTags().isEmpty() || !modelWithClassesFile.exists()){
-                    loadSVMmodel(false);//load original model
-                    createOSMObject(sel, false); //create object without class features
+                    modelWithClasses = false;
+                    loadSVMmodel();//load original model
+                    createOSMObject(sel); //create object without class features
                     
                     
                 }
                 else{
-                    loadSVMmodel(true);//load model with classes          
-                    createOSMObject(sel, true); //create object including class features                              
+                    modelWithClasses = true;
+                    loadSVMmodel();//load model with classes          
+                    createOSMObject(sel); //create object including class features                              
                 }                        
             } 
             
@@ -1937,7 +1961,7 @@ class OSMRecPluginHelper {
             }
         }
 
-        private void loadSVMmodel(boolean modelWithClasses) {
+        private void loadSVMmodel() {
             if(useCombinedModel){
                 System.out.println("Using combined model.");
                 useCombinedSVMmodels(sel, false);
@@ -1947,17 +1971,26 @@ class OSMRecPluginHelper {
             File modelDirectory = new File(MODEL_PATH);
             
             File modelFile;
-            if(modelWithClasses){
-                modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
+            if(useCustomSVMModel){
+                System.out.println("using custom model: " + customSVMModelPath);
+                modelFile = new File(customSVMModelPath);
             }
-            else {
-                modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
+            else{
+                if(modelWithClasses){
+                    System.out.println("using model with classes: " + modelDirectory.getAbsolutePath() + "/model_with_classes");
+                    modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
+                }
+                else {
+                    System.out.println("using best model: " + modelDirectory.getAbsolutePath() + "/best_model");
+                    modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
+                }                
             }
+
 
             
             try {
                 modelSVM = Model.load(modelFile);
-                System.out.println("model loaded: " + modelFile.getAbsolutePath());
+                //System.out.println("model loaded: " + modelFile.getAbsolutePath());
             } catch (IOException ex) {
                 Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2232,7 +2265,7 @@ class OSMRecPluginHelper {
             }           
         }
 
-        private void createOSMObject(Collection<OsmPrimitive> sel, boolean useClassFeatures) {
+        private void createOSMObject(Collection<OsmPrimitive> sel) {
                         
             MathTransform transform = null;
             GeometryFactory geometryFactory = new GeometryFactory();
@@ -2269,7 +2302,7 @@ class OSMRecPluginHelper {
                 List<Node> selectedWayNodes = selectedWay.getNodes();
                 for(Node node : selectedWayNodes){
                     node.getCoor();
-                    System.out.println(node.getCoor()); 
+                    //System.out.println(node.getCoor()); 
                     if(node.isLatLonKnown()){
                         //LatLon coord = nod.getCoor();
                         double lat = node.getCoor().lat();
@@ -2338,7 +2371,7 @@ class OSMRecPluginHelper {
                 OSMClassification classifier = new OSMClassification();
                 classifier.calculateClasses(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
                 
-                if(useClassFeatures){
+                if(modelWithClasses){
                     ClassFeatures classFeatures = new ClassFeatures();
                     classFeatures.createClassFeatures(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
                     id = 1422;
@@ -2372,7 +2405,7 @@ class OSMRecPluginHelper {
                 for(int h =0; h < modelSVMLabelSize; h++){
                     
                     mapLabelsToIDs.put(modelSVMLabels[h], h);
-                    System.out.println(h + "   <->    " + modelSVMLabels[h]);
+                    //System.out.println(h + "   <->    " + modelSVMLabels[h]);
                     
                 }               
                 

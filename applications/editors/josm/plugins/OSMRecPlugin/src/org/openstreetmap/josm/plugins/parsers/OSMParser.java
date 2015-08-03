@@ -47,7 +47,7 @@ public class OSMParser extends DefaultHandler {
     private static final CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
     private static final CoordinateReferenceSystem targetCRS = DefaultGeocentricCRS.CARTESIAN;
     private final GeometryFactory geometryFactory = new GeometryFactory();
-    private final MathTransform transform;
+    private static MathTransform transform = null;
     private final List<OSMNode> nodeList; //will be populated with nodes 
     private final List<OSMRelation> relationList;
     private final Map<String, OSMNode> nodesWithIDs; //map containing IDs as Strings and the corresponding OSMNode objects     
@@ -60,13 +60,19 @@ public class OSMParser extends DefaultHandler {
     private boolean inNode = false; //becomes true when the parser is in a simple node        
     private boolean inRelation = false; //becomes true when the parser is in a relarion node
     
-    public OSMParser(String osmXmlFileName) throws FactoryException {
+    public OSMParser(String osmXmlFileName)  {
+        //System.out.println("creating osmParser..");
         this.osmXmlFileName = osmXmlFileName;       
         nodeList = new ArrayList<>();
         wayList = new ArrayList<>();
         relationList = new ArrayList<>();
         nodesWithIDs = new HashMap<>(); 
-        transform = CRS.findMathTransform(sourceCRS, targetCRS, true);
+        try {
+            transform = CRS.findMathTransform(sourceCRS, targetCRS, true);
+        } catch (FactoryException ex) {
+            Logger.getLogger(OSMParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("osmParser created!");
     }
 
     public void parseDocument() {
@@ -116,7 +122,15 @@ public class OSMParser extends DefaultHandler {
         } else if (elementName.equalsIgnoreCase("way")) {
             wayTmp = new OSMWay();
             wayTmp.setID(attributes.getValue("id"));
-            wayTmp.setUser(attributes.getValue("user"));
+            
+            if(attributes.getValue("user") != null){
+                wayTmp.setUser(attributes.getValue("user"));
+            }
+            else{
+                wayTmp.setUser("undefined");
+            }
+            //System.out.println("way user: " + attributes.getValue("user"));
+                    
             inWay = true;
             inNode = false;
             inRelation = false;

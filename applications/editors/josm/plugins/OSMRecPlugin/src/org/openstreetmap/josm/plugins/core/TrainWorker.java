@@ -29,7 +29,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
-import org.opengis.referencing.FactoryException;
 import org.openstreetmap.josm.plugins.container.OSMRelation;
 import org.openstreetmap.josm.plugins.container.OSMWay;
 import org.openstreetmap.josm.plugins.extractor.Analyzer;
@@ -77,7 +76,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
     private static double foldScore5 = 0;
     private static double foldScore10 = 0;
     private static double bestScore = 0;
-    int trainProgress = 0;
+    private int trainProgress = 0;
     private final boolean validateFlag;
     private final double cParameterFromUser;
     private double bestConfParam;
@@ -86,9 +85,9 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
     private final boolean topKIsSelected;
     private String textualListFilePath;
     
-    private static boolean USE_CLASS_FEATURES = false;
-    private static boolean USE_RELATION_FEATURES = false;
-    private static boolean USE_TEXTUAL_FEATURES = true;
+    private static final boolean USE_CLASS_FEATURES = false;
+    private static final boolean USE_RELATION_FEATURES = false;
+    private static final boolean USE_TEXTUAL_FEATURES = true;
     private static int numberOfFeatures;
     private static LanguageDetector languageDetector;
     
@@ -172,11 +171,11 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         List<Map.Entry<String, Integer>> textualList;
         if(topKIsSelected){
             textualList = anal.getTopKMostFrequent(topK);
-            System.out.println(textualList);
+            //System.out.println(textualList);
         }
         else{
             textualList = anal.getWithFrequency(frequency);
-            System.out.println(textualList);
+            //System.out.println(textualList);
         }
 
         writeTextualListToFile(textualListFilePath, textualList);
@@ -229,13 +228,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         
         readTextualFromDefaultList(textualFileStream);
       
-        OSMParser osmParser = null;
-        try {
-            osmParser = new OSMParser(inputFilePath);
-            
-        } catch (FactoryException ex) {
-            Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        OSMParser osmParser = new OSMParser(inputFilePath);     
         
         osmParser.parseDocument();
         relationList = osmParser.getRelationList();
@@ -353,7 +346,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
 
             if(way.getClassIDs().isEmpty()){
-                wayListSizeWithoutUnclassified = wayListSizeWithoutUnclassified-1;
+                wayListSizeWithoutUnclassified -= 1;
                 u++;
             }
             else {
@@ -464,7 +457,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         try {
             //System.out.println("file created");
             model.save(modelFile);
-            //System.out.println("saved"); 
+            System.out.println("model saved at: " + modelFile); 
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -503,7 +496,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
             if(way.getClassIDs().isEmpty()){
                 //System.out.println("found unclassified" + way.getClassIDs() + "class: " +way.getClassID());
-                wayListSizeWithoutUnclassified2 = wayListSizeWithoutUnclassified2-1;
+                wayListSizeWithoutUnclassified2 -= 1;
                 //u++;
             }
         }         
@@ -613,17 +606,17 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         }        
         
         System.out.println("Succeeded " + succededInstances + " of " + testList.size() + " total (1 class prediction)");
-        double precision1 = (double)succededInstances/(double)wayListSizeWithoutUnclassified2;
+        double precision1 = succededInstances/(double)wayListSizeWithoutUnclassified2;
         score1 = precision1;
         System.out.println(precision1);
         
         System.out.println("Succeeded " + succededInstances5 + " of " + testList.size()+ " total (5 class prediction)");
-        double precision5 = (double)succededInstances5/(double)wayListSizeWithoutUnclassified2;
+        double precision5 = succededInstances5/(double)wayListSizeWithoutUnclassified2;
         score5 = precision5;
         System.out.println(precision5);
         
         System.out.println("Succeeded " + succededInstances10 + " of " + testList.size()+ " total (10 class prediction)");
-        double precision10 = (double)succededInstances10/(double)wayListSizeWithoutUnclassified2;
+        double precision10 = succededInstances10/(double)wayListSizeWithoutUnclassified2;
         score10 = precision10;
         System.out.println(precision10);               
     }  
@@ -650,7 +643,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
 
             if(way.getClassIDs().isEmpty()){
-                wayListSizeWithoutUnclassified = wayListSizeWithoutUnclassified-1;
+                wayListSizeWithoutUnclassified -= 1;
                 u++;
             }
             else {
@@ -780,7 +773,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             classifyInstances.calculateClasses(way, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
 
             if(way.getClassIDs().isEmpty()){
-                wayListSizeWithoutUnclassified = wayListSizeWithoutUnclassified-1;
+                wayListSizeWithoutUnclassified -= 1;
                 u++;
             }
             else {
@@ -887,7 +880,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         try {
             //System.out.println("file created");
             model.save(modelFile);
-            //System.out.println("saved"); 
+            System.out.println("model saved at: " + modelFile); 
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         } 
@@ -931,7 +924,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             for(Map.Entry<String, Integer> entry : textualList){
                 writer.write(entry.getKey());
                 writer.newLine();
-                System.out.println(entry.getKey());
+                //System.out.println(entry.getKey());
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);

@@ -152,8 +152,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         anal.runAnalysis();
         //System.out.println(anal.getFrequencies());
         //System.out.println(anal.getTopKMostFrequent(15));
-        //System.out.println(anal.getWithFrequency(100));
-        
+        //System.out.println(anal.getWithFrequency(100));        
 
         textualListFilePath = modelDirectory.getAbsolutePath()+"/textualList.txt";
         File textualFile = new File(textualListFilePath); //decide path of models
@@ -164,8 +163,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
             textualFile.createNewFile();
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
-        }   
-        
+        }          
         
         //writeTextualListToFile(textualFilePath, anal.getTopKMostFrequent(15));
         List<Map.Entry<String, Integer>> textualList;
@@ -751,7 +749,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         try {
             //System.out.println("file created");
             model.save(modelFile);
-            //System.out.println("saved"); 
+            System.out.println("best model saved at: " + modelFile); 
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         }        
@@ -880,7 +878,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         try {
             //System.out.println("file created");
             model.save(modelFile);
-            System.out.println("model saved at: " + modelFile); 
+            System.out.println("model with classes saved at: " + modelFile); 
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         } 
@@ -917,9 +915,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
     }
     
     
-    private static void writeTextualListToFile(String filePath, List<Map.Entry<String, Integer>> textualList) 
-    {
-        
+    private static void writeTextualListToFile(String filePath, List<Map.Entry<String, Integer>> textualList) {        
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath, true), "UTF-8"))) {            
             for(Map.Entry<String, Integer> entry : textualList){
                 writer.write(entry.getKey());

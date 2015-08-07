@@ -241,9 +241,8 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
         super(tr("Tags/Memberships"), "propertiesdialog", tr("Tags for selected objects."),
                 Shortcut.registerShortcut("subwindow:properties", tr("Toggle: {0}", tr("Tags/Memberships")), KeyEvent.VK_P,
                         Shortcut.ALT_SHIFT), 150, true);
-
         HelpUtil.setHelpContext(this, HelpUtil.ht("/Dialog/TagsMembership"));
-
+        
         setupTagsMenu();
         buildTagsTable(); //my
 
@@ -698,7 +697,8 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
         //temp commenting out to fix enable button bug
         
         addAction.setEnabled(hasSelection);
-        editAction.setEnabled(hasTags || hasMemberships);
+        //editAction.setEnabled(hasTags || hasMemberships);
+        editAction.setEnabled(true);
         deleteAction.setEnabled(hasTags || hasMemberships);
         tagTable.setVisible(hasTags);
         tagTable.getTableHeader().setVisible(hasTags);
@@ -820,7 +820,7 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
                 }
             }
             // double click, edit or add tag
-            else if (e.getSource() == tagTable) {
+            else if (e.getSource() == tagTable ) {
                 int row = tagTable.rowAtPoint(e.getPoint());
                 if (row > -1) {
                     boolean focusOnKey = (tagTable.columnAtPoint(e.getPoint()) == 0);
@@ -1040,11 +1040,8 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("clicked recommend");
-            
-            
             editHelper.addTag();
-            btnAdd.requestFocusInWindow();
-            
+            btnAdd.requestFocusInWindow();            
         }
     }
 
@@ -1064,7 +1061,7 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
             
             //images/dialogs/train.png
             //System.out.println("icon");
-            
+            setEnabled(true);
             updateEnabledState(); 
         }
 
@@ -1077,16 +1074,23 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
                 editHelper.editTag(row, false);
             } else if (membershipTable.getSelectedRowCount() == 1) {
                 int row = membershipTable.getSelectedRow();
-                editMembership(row);
+                //System.out.println("tagTable: " + tagTable);
+                //System.out.println("membershipTable: " + membershipTable);                
+                editHelper.editTag(row, false);
+                //editMembership(row);
+            }
+            else{
+                editHelper.editTag(1, false);
             }
         }
 
         @Override
-        protected void updateEnabledState() {     
-            setEnabled(
-                    (tagTable != null && tagTable.getSelectedRowCount() == 1)
-                    ^ (membershipTable != null && membershipTable.getSelectedRowCount() == 1)
-                    );            
+        protected void updateEnabledState() {
+            setEnabled(true);
+//            setEnabled(
+//                    (tagTable != null && tagTable.getSelectedRowCount() == 1)
+//                    ^ (membershipTable != null && membershipTable.getSelectedRowCount() == 1)
+//                    );            
         }
 
         @Override

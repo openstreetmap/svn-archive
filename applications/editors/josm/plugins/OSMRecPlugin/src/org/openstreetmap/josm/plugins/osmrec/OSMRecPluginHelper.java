@@ -26,7 +26,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -42,7 +41,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -105,8 +103,6 @@ import org.opengis.referencing.operation.TransformException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
@@ -167,8 +163,7 @@ class OSMRecPluginHelper {
     private final String modelWithClassesPath;
     private boolean useCustomSVMModel = false;
     private String customSVMModelPath;
-    
-    
+       
     // Selection that we are editing by using both dialogs
     Collection<OsmPrimitive> sel;
 
@@ -249,17 +244,19 @@ class OSMRecPluginHelper {
     public void editTag(final int row, boolean focusOnKey) {
         changedKey = null;
         sel = Main.main.getInProgressSelection();
-        if (sel == null || sel.isEmpty()) return;
-
-        String key = tagData.getValueAt(row, 0).toString();
-        objKey=key;
+        //if (sel == null || sel.isEmpty()) return;
+//        String key = tagData.getValueAt(row, 0).toString();
+        String key = "";
+//        objKey=key;
 
         @SuppressWarnings("unchecked")
+        Map<String, Integer> dumPar = new HashMap<>();
+        dumPar.put(" ", -1);
         final TrainingDialog editDialog = new TrainingDialog(key, row,
-                (Map<String, Integer>) tagData.getValueAt(row, 1), focusOnKey);
+                dumPar, focusOnKey);                
         editDialog.showDialog();
-        if (editDialog.getValue() !=1 ) return;
-        editDialog.performTagEdit();
+        //if (editDialog.getValue() !=1 ) return;
+        //editDialog.performTagEdit();
     }
 
     /**
@@ -340,23 +337,23 @@ class OSMRecPluginHelper {
     }
 
     public final class TrainingDialog extends AbstractTagsDialog {
-        final String key;
-        final Map<String, Integer> m;
-        final int row;
+//        final String key;
+//        final Map<String, Integer> m;
+//        final int row;
 
-        Comparator<AutoCompletionListItem> usedValuesAwareComparator = new Comparator<AutoCompletionListItem>() {
-                @Override
-                public int compare(AutoCompletionListItem o1, AutoCompletionListItem o2) {
-                    boolean c1 = m.containsKey(o1.getValue());
-                    boolean c2 = m.containsKey(o2.getValue());
-                    if (c1 == c2)
-                        return String.CASE_INSENSITIVE_ORDER.compare(o1.getValue(), o2.getValue());
-                    else if (c1)
-                        return -1;
-                    else
-                        return +1;
-                }
-            };
+//        Comparator<AutoCompletionListItem> usedValuesAwareComparator = new Comparator<AutoCompletionListItem>() {
+//                @Override
+//                public int compare(AutoCompletionListItem o1, AutoCompletionListItem o2) {
+//                    boolean c1 = m.containsKey(o1.getValue());
+//                    boolean c2 = m.containsKey(o2.getValue());
+//                    if (c1 == c2)
+//                        return String.CASE_INSENSITIVE_ORDER.compare(o1.getValue(), o2.getValue());
+//                    else if (c1)
+//                        return -1;
+//                    else
+//                        return +1;
+//                }
+//            };
 
         ListCellRenderer<AutoCompletionListItem> cellRenderer = new ListCellRenderer<AutoCompletionListItem>() {
             final DefaultListCellRenderer def = new DefaultListCellRenderer();
@@ -416,8 +413,6 @@ class OSMRecPluginHelper {
         private TrainWorker trainWorker;
         private UserDataExtractAndTrainWorker userDataExtractAndTrainWorker;
         
-        //public TrainWorker trainWorker;
-        
         private TrainingDialog(String key, int row, Map<String, Integer> map, final boolean initialFocusOnKey) {
             //super(Main.parent, tr("Training process configuration"), new String[] {tr("Start Training"),tr("Cancel")});
             super(Main.parent, tr("Training process configuration"), 
@@ -426,9 +421,9 @@ class OSMRecPluginHelper {
             setButtonIcons(new String[] {"ok","cancel"});
             setCancelButton(2);
             //configureContextsensitiveHelp("/Dialog/EditValue", true /* show help button */);
-            this.key = key;
-            this.row = row;
-            this.m = map;
+//            this.key = key;
+//            this.row = row;
+//            this.m = map;
             
             JPanel mainPanel = new JPanel(new BorderLayout(10,10));   //6,6
             JPanel configPanel = new JPanel(new BorderLayout(10,10));  //6,6    //at NORTH of mainPanel
@@ -696,11 +691,7 @@ class OSMRecPluginHelper {
             southPanel.add(acceptConfigButton);
             southPanel.add(resetConfigButton);
             southPanel.add(trainFromUserCheckBox);
-            
-            //Border checkBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE);           
-            //trainFromUserCheckBox.setBorder(checkBorder); 
-            //trainFromUserCheckBox.setBorderPainted(true);
-            
+
             userGroup.add(byAreaRadioButton);
             userGroup.add(byTimeRadioButton);
             userHistoryPanel.add(byAreaRadioButton);
@@ -762,27 +753,27 @@ class OSMRecPluginHelper {
             List<AutoCompletionListItem> keyList = autocomplete.getKeys();
             Collections.sort(keyList, defaultACItemComparator);
 
-            keys = new AutoCompletingComboBox(key);
-            keys.setPossibleACItems(keyList);
-            keys.setEditable(true);
-            keys.setSelectedItem(key);
+//            keys = new AutoCompletingComboBox(key);
+//            keys.setPossibleACItems(keyList);
+//            keys.setEditable(true);
+//            keys.setSelectedItem(key);
 
-            List<AutoCompletionListItem> valueList = autocomplete.getValues(getAutocompletionKeys(key));
-            Collections.sort(valueList, usedValuesAwareComparator);
-            final String selection= m.size()!=1?tr("<different>"):m.entrySet().iterator().next().getKey();
-            values = new AutoCompletingComboBox(selection);
-            values.setRenderer(cellRenderer);
-            values.setEditable(true);
-            values.setPossibleACItems(valueList);
-            values.setSelectedItem(selection);
-            values.getEditor().setItem(selection);
-            values.getEditor().addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    buttonAction(0, null); // emulate OK button click
-                }
-            });
-            addFocusAdapter(autocomplete, usedValuesAwareComparator);
+//            List<AutoCompletionListItem> valueList = autocomplete.getValues(getAutocompletionKeys(key));
+//            Collections.sort(valueList, usedValuesAwareComparator);
+//            final String selection= m.size()!=1?tr("<different>"):m.entrySet().iterator().next().getKey();
+//            values = new AutoCompletingComboBox(selection);
+//            values.setRenderer(cellRenderer);
+//            values.setEditable(true);
+//            values.setPossibleACItems(valueList);
+//            values.setSelectedItem(selection);
+//            values.getEditor().setItem(selection);
+//            values.getEditor().addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    buttonAction(0, null); // emulate OK button click
+//                }
+//            });
+//            addFocusAdapter(autocomplete, usedValuesAwareComparator);
 
             setContent(mainPanel, false);
 
@@ -1019,68 +1010,68 @@ class OSMRecPluginHelper {
             }
         }
         
-         /**
-         * Edit tags of multiple selected objects according to selected ComboBox values
-         * If value == "", tag will be deleted
-         * Confirmations may be needed.
-         */
-        private void performTagEdit() {
-            String value = Tag.removeWhiteSpaces(values.getEditor().getItem().toString());
-            value = Normalizer.normalize(value, java.text.Normalizer.Form.NFC);
-            if (value.isEmpty()) {
-                value = null; // delete the key
-            }
-            String newkey = Tag.removeWhiteSpaces(keys.getEditor().getItem().toString());
-            newkey = Normalizer.normalize(newkey, java.text.Normalizer.Form.NFC);
-            if (newkey.isEmpty()) {
-                newkey = key;
-                value = null; // delete the key instead
-            }
-            if (key.equals(newkey) && tr("<different>").equals(value))
-                return;
-            if (key.equals(newkey) || value == null) {
-                Main.main.undoRedo.add(new ChangePropertyCommand(sel, newkey, value));
-                AutoCompletionManager.rememberUserInput(newkey, value, true);
-            } else {
-                for (OsmPrimitive osm: sel) {
-                    if (osm.get(newkey) != null) {
-                        if (!warnOverwriteKey(tr("You changed the key from ''{0}'' to ''{1}''.", key, newkey),
-                                "overwriteEditKey"))
-                            return;
-                        break;
-                    }
-                }
-                Collection<Command> commands = new ArrayList<>();
-                commands.add(new ChangePropertyCommand(sel, key, null));
-                if (value.equals(tr("<different>"))) {
-                    Map<String, List<OsmPrimitive>> map = new HashMap<>();
-                    for (OsmPrimitive osm: sel) {
-                        String val = osm.get(key);
-                        if (val != null) {
-                            if (map.containsKey(val)) {
-                                map.get(val).add(osm);
-                            } else {
-                                List<OsmPrimitive> v = new ArrayList<>();
-                                v.add(osm);
-                                map.put(val, v);
-                            }
-                        }
-                    }
-                    for (Map.Entry<String, List<OsmPrimitive>> e: map.entrySet()) {
-                        commands.add(new ChangePropertyCommand(e.getValue(), newkey, e.getKey()));
-                    }
-                } else {
-                    commands.add(new ChangePropertyCommand(sel, newkey, value));
-                    AutoCompletionManager.rememberUserInput(newkey, value, false);
-                }
-                Main.main.undoRedo.add(new SequenceCommand(
-                        trn("Change properties of up to {0} object",
-                                "Change properties of up to {0} objects", sel.size(), sel.size()),
-                                commands));
-            }
-
-            changedKey = newkey;
-        }
+//         /**
+//         * Edit tags of multiple selected objects according to selected ComboBox values
+//         * If value == "", tag will be deleted
+//         * Confirmations may be needed.
+//         */
+//        private void performTagEdit() {
+//            String value = Tag.removeWhiteSpaces(values.getEditor().getItem().toString());
+//            value = Normalizer.normalize(value, java.text.Normalizer.Form.NFC);
+//            if (value.isEmpty()) {
+//                value = null; // delete the key
+//            }
+//            String newkey = Tag.removeWhiteSpaces(keys.getEditor().getItem().toString());
+//            newkey = Normalizer.normalize(newkey, java.text.Normalizer.Form.NFC);
+//            if (newkey.isEmpty()) {
+//                newkey = key;
+//                value = null; // delete the key instead
+//            }
+//            if (key.equals(newkey) && tr("<different>").equals(value))
+//                return;
+//            if (key.equals(newkey) || value == null) {
+//                Main.main.undoRedo.add(new ChangePropertyCommand(sel, newkey, value));
+//                AutoCompletionManager.rememberUserInput(newkey, value, true);
+//            } else {
+//                for (OsmPrimitive osm: sel) {
+//                    if (osm.get(newkey) != null) {
+//                        if (!warnOverwriteKey(tr("You changed the key from ''{0}'' to ''{1}''.", key, newkey),
+//                                "overwriteEditKey"))
+//                            return;
+//                        break;
+//                    }
+//                }
+//                Collection<Command> commands = new ArrayList<>();
+//                commands.add(new ChangePropertyCommand(sel, key, null));
+//                if (value.equals(tr("<different>"))) {
+//                    Map<String, List<OsmPrimitive>> map = new HashMap<>();
+//                    for (OsmPrimitive osm: sel) {
+//                        String val = osm.get(key);
+//                        if (val != null) {
+//                            if (map.containsKey(val)) {
+//                                map.get(val).add(osm);
+//                            } else {
+//                                List<OsmPrimitive> v = new ArrayList<>();
+//                                v.add(osm);
+//                                map.put(val, v);
+//                            }
+//                        }
+//                    }
+//                    for (Map.Entry<String, List<OsmPrimitive>> e: map.entrySet()) {
+//                        commands.add(new ChangePropertyCommand(e.getValue(), newkey, e.getKey()));
+//                    }
+//                } else {
+//                    commands.add(new ChangePropertyCommand(sel, newkey, value));
+//                    AutoCompletionManager.rememberUserInput(newkey, value, false);
+//                }
+//                Main.main.undoRedo.add(new SequenceCommand(
+//                        trn("Change properties of up to {0} object",
+//                                "Change properties of up to {0} objects", sel.size(), sel.size()),
+//                                commands));
+//            }
+//
+//            changedKey = newkey;
+//        }
     }
 
     public static final BooleanProperty PROPERTY_FIX_TAG_LOCALE = new BooleanProperty("properties.fix-tag-combobox-locale", false);
@@ -1129,7 +1120,9 @@ class OSMRecPluginHelper {
                     }
                     rememberWindowGeometry(geometry);
                 }
-                keys.setFixedLocale(PROPERTY_FIX_TAG_LOCALE.get());
+                if(keys != null){
+                   keys.setFixedLocale(PROPERTY_FIX_TAG_LOCALE.get()); 
+                }               
             }
             super.setVisible(visible);
         }
@@ -1149,11 +1142,11 @@ class OSMRecPluginHelper {
         }
 
         public void selectKeysComboBox() {
-            selectACComboBoxSavingUnixBuffer(keys);
+            //selectACComboBoxSavingUnixBuffer(keys);
         }
 
         public void selectValuesCombobox()   {
-            selectACComboBoxSavingUnixBuffer(values);
+            //selectACComboBoxSavingUnixBuffer(values);
         }
 
         /**
@@ -1326,11 +1319,8 @@ class OSMRecPluginHelper {
 
             this.add(mainPanel);
             
-            //JOptionPane pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_OPTION);
             JOptionPane pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            //pane.
-            JDialog dlg = pane.createDialog(Main.parent, tr("Model Settings"));
-            
+            JDialog dlg = pane.createDialog(Main.parent, tr("Model Settings"));            
             dlg.setVisible(true);
             //JButton ok = dlg.getRootPane().getDefaultButton();
             
@@ -1366,8 +1356,7 @@ class OSMRecPluginHelper {
                     useCustomSVMModel = true;
                     customSVMModelPath = fileChooser.getSelectedFile().getAbsolutePath();
                 }
-                
-                
+                               
                 if(useModelCombinationCheckbox.isSelected()){
                     String svmModelPath = fileChooser.getSelectedFile().getAbsolutePath();
                     String svmModelText;
@@ -1477,11 +1466,6 @@ class OSMRecPluginHelper {
             weightsPanel.revalidate();
             weightsPanel.repaint();
         }
-        
-//        private static List<Double> normalizeWeights(){
-//              divide by their sum, all elements should sum to 1.
-//            return weightsList;
-//        }
     }
     
     class AddTagsDialog extends  AbstractTagsDialog {
@@ -1501,8 +1485,7 @@ class OSMRecPluginHelper {
         private Map<String, Integer> mapperWithIDs;
         private List<String> textualList = new ArrayList<>();
         //private boolean useClassFeatures = false;
-        private final JCheckBox useTagsCheckBox;
-        
+        private final JCheckBox useTagsCheckBox;       
 
         public AddTagsDialog() {
             super(Main.parent, tr("Add value?"), new String[] {tr("OK"),tr("Cancel")});
@@ -1510,7 +1493,6 @@ class OSMRecPluginHelper {
             setCancelButton(2);
             configureContextsensitiveHelp("/Dialog/AddValue", true /* show help button */);
             final AddTagsDialog lala = this;
-
             
             loadOntology();
             //if the user did not train a model by running the training process
@@ -1538,8 +1520,7 @@ class OSMRecPluginHelper {
             addAndContinueButton = new javax.swing.JButton("Add and continue");
             modelSettingsButton = new javax.swing.JButton("Model Settings"); 
             useTagsCheckBox = new javax.swing.JCheckBox("Predict using tags");
-            recommendedClassesLabel = new javax.swing.JLabel("Recommended Classes:");
-            
+            recommendedClassesLabel = new javax.swing.JLabel("Recommended Classes:");           
             
             addAndContinueButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
@@ -1563,12 +1544,14 @@ class OSMRecPluginHelper {
                             createOSMObject(sel); //create object without class features
                         }
                         else{
-                            //useTagsCheckBox
+                            //recommend using tags: set the checkbox selected to avoid confusing the user
+                            useTagsCheckBox.setSelected(true);
+                            
                             if(useTagsCheckBox.isSelected()){
                                 //load model with classes
                                 modelWithClasses = true;
                                 loadSVMmodel();
-                                createOSMObject(sel); //create object including class features
+                                createOSMObject(sel); //create object including class features                              
                             }
                             else{
                                 modelWithClasses = false;
@@ -1607,7 +1590,7 @@ class OSMRecPluginHelper {
                                 //load model with classes
                                 modelWithClasses = true;
                                 loadSVMmodel();
-                                createOSMObject(sel); //create object including class features
+                                createOSMObject(sel); //create object including class features                               
                             }
                             else{
                                 modelWithClasses = false;
@@ -1653,9 +1636,7 @@ class OSMRecPluginHelper {
             keys.setEditable(true);
 
             mainPanel.add(keys, GBC.eop().fill());
-
-            mainPanel.add(new JLabel(tr("Please select a value")), GBC.eol());
-            
+            mainPanel.add(new JLabel(tr("Please select a value")), GBC.eol());            
  
             model = new DefaultListModel<>();
             
@@ -1672,19 +1653,17 @@ class OSMRecPluginHelper {
                 if(s.getInterestingTags().isEmpty() || !modelWithClassesFile.exists()){
                     modelWithClasses = false;
                     loadSVMmodel();//load original model
-                    createOSMObject(sel); //create object without class features
-                    
-                    
+                    createOSMObject(sel); //create object without class features                                   
                 }
                 else{
+                    //recommend using tags: set the checkbox selected to avoid confusing the user
+                    useTagsCheckBox.setSelected(true);                   
                     modelWithClasses = true;
                     loadSVMmodel();//load model with classes          
                     createOSMObject(sel); //create object including class features                              
                 }                        
             } 
             
-            //createOSMObject(sel, false);
-
             categoryList = new JList<>(model);
 
             ListSelectionListener listSelectionListener = new ListSelectionListener() {       
@@ -1719,8 +1698,6 @@ class OSMRecPluginHelper {
             categoryList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             categoryList.setModel(model);
 
-            //System.out.println("components: \n" + mainPanel.getBounds());
-
             values.setEditable(true);
             mainPanel.add(values, GBC.eop().fill());
             if (itemToSelect != null) {
@@ -1752,8 +1729,6 @@ class OSMRecPluginHelper {
 
             suggestRecentlyAddedTags(mainPanel, recentTagsToShow, focus);
 
-            //mainPanel.add(listPanel,GBC.eop().fill());
-            
             mainPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             listPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             splitPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
@@ -1985,8 +1960,6 @@ class OSMRecPluginHelper {
                     modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
                 }                
             }
-
-
             
             try {
                 modelSVM = Model.load(modelFile);
@@ -2000,8 +1973,7 @@ class OSMRecPluginHelper {
         }
         
         private void useCombinedSVMmodels(Collection<OsmPrimitive> sel, boolean useClassFeatures){
-            System.out.println("The system will combine " + filesAndWeights.size() + " SVM models.");
-            
+            System.out.println("The system will combine " + filesAndWeights.size() + " SVM models.");           
             
             MathTransform transform = null;
             GeometryFactory geometryFactory = new GeometryFactory();
@@ -2240,8 +2212,7 @@ class OSMRecPluginHelper {
                         }
                         else{
                             scoreMap.put(predictedTag, finalRank);
-                        }
-                        
+                        }                     
                         //add final weight - predicted tag
                     }                    
                 } //files iter  

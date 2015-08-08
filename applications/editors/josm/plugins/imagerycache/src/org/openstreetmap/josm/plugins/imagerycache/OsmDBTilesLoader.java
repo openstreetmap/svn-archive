@@ -39,8 +39,8 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
     protected long maxCacheFileAge = FILE_AGE_ONE_WEEK;
     protected long recheckAfter = FILE_AGE_ONE_DAY;
 
-    public OsmDBTilesLoader(TileLoaderListener smap, File cacheFolder) {
-        super(smap);
+    public OsmDBTilesLoader(TileLoaderListener smap, File cacheFolder, Map<String, String> headers) {
+        super(smap, headers);
         dao = TileDAOMapDB.getInstance();
         dao.setCacheFolder(cacheFolder);
     }

@@ -19,7 +19,7 @@ public class ImageryCachePlugin extends Plugin {
     
     TileLoaderFactory factory = new TileLoaderFactory() {
         @Override
-        public OsmTileLoader makeTileLoader(TileLoaderListener listener) {
+        public OsmTileLoader makeTileLoader(TileLoaderListener listener, Map<String, String> headers) {
             String cachePath = CachedTileLoaderFactory.PROP_TILECACHE_DIR.get();
             try {
                 new File(cachePath).mkdirs();
@@ -28,15 +28,14 @@ public class ImageryCachePlugin extends Plugin {
             }
             
             if (cachePath != null && !cachePath.isEmpty()) {
-                return new OsmDBTilesLoader(listener, new File(cachePath));
+                return new OsmDBTilesLoader(listener, new File(cachePath), headers);
             }
             return null;
         }
 
         @Override
-        public TileLoader makeTileLoader(TileLoaderListener listener,
-                Map<String, String> headers) {
-            return makeTileLoader(listener);
+        public TileLoader makeTileLoader(TileLoaderListener listener) {
+            return makeTileLoader(listener, null);
         }
     };
 

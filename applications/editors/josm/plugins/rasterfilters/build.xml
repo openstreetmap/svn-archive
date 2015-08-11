@@ -15,6 +15,6 @@
     <property name="plugin.icon" value="images/josm_filters_48.png"/>
 	<property name="plugin.author" value="Vadim Varnavsky" />
 	<property name="plugin.class" value="org.openstreetmap.josm.plugins.rasterfilters.RasterFiltersPlugin" />
-	<property name="plugin.description" value="The RasterFiltersPlugin allows to choose and apply some images' filters to some layers" />
+	<property name="plugin.description" value="The RasterFiltersPlugin allows to choose and apply some images'' filters to some layers" />
 
 </project>

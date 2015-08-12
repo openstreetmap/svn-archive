@@ -241,7 +241,7 @@ public class FilterPanel extends JPanel {
 
 				 JOptionPane.showMessageDialog(
 						 Main.parent,
-						 tr("JSlider initialization's error. Make sure your meta-inf is correct."),
+						 tr("JSlider initialization error. Make sure your meta-inf is correct."),
 						 tr("Error"),
 						 JOptionPane.ERROR_MESSAGE);
 			}

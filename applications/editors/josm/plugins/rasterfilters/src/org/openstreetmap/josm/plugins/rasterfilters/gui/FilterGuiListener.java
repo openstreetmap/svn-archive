@@ -135,7 +135,8 @@ public class FilterGuiListener implements ChangeListener, ItemListener,
 		value.setValue(selectedItem);
 
 		// notify about state is changed now so send msg to FiltersManager
-		handler.filterStateChanged(filterId, filterState);
+		if (handler != null)
+			handler.filterStateChanged(filterId, filterState);
 
 	}
 

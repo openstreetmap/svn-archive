@@ -22,6 +22,12 @@ import org.openstreetmap.josm.gui.preferences.TabPreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.map.MapPreference;
 import org.openstreetmap.josm.tools.GBC;
 
+/**
+ * This class draws subtab 'Image Filters' in the Preferences menu.
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public class RasterFiltersPreferences implements SubPreferenceSetting {
 
 	private FiltersDownloader downloader = new FiltersDownloader();

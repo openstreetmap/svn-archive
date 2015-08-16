@@ -25,6 +25,13 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 
+/**
+ * This filters is responsible for creating filter's dialog where user can
+ * choose and add new filter at this dialog.
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public class FiltersDialog {
 
 	public JFrame frame;
@@ -122,7 +129,7 @@ public class FiltersDialog {
 
 			JLabel label = new JLabel("Add filter");
 			labelPanel.add(label);
-//			pane.add(labelPanel);
+			// pane.add(labelPanel);
 
 			// TODO why after add clicked the top panel is resized???
 
@@ -145,32 +152,34 @@ public class FiltersDialog {
 			addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			addButton.setMaximumSize(new Dimension(90, 30));
 			addButton.addActionListener(new AddFilterToPanelListener());
-//
-//			// check if there is no meta information
-//			Main.debug("Empty " + String.valueOf(FiltersDownloader.filterTitles.isEmpty()));
-//			if (FiltersDownloader.filterTitles.isEmpty() || listModel.getSize() == 0) {
-//				addButton.setEnabled(false);
-//				filterChooser.setEnabled(false);
-//			} else {
-//				addButton.setEnabled(true);
-//				filterChooser.setEnabled(true);
-//			}
+			//
+			// // check if there is no meta information
+			// Main.debug("Empty " +
+			// String.valueOf(FiltersDownloader.filterTitles.isEmpty()));
+			// if (FiltersDownloader.filterTitles.isEmpty() ||
+			// listModel.getSize() == 0) {
+			// addButton.setEnabled(false);
+			// filterChooser.setEnabled(false);
+			// } else {
+			// addButton.setEnabled(true);
+			// filterChooser.setEnabled(true);
+			// }
 
 			chooseFilterPanel.add(getAddButton());
 
 			topPanel.add(labelPanel);
 			topPanel.add(chooseFilterPanel);
 			pane.add(topPanel);
-//			pane.add(chooseFilterPanel);
-//			pane.add(Box.createRigidArea(new Dimension(0, 20)));
+			// pane.add(chooseFilterPanel);
+			// pane.add(Box.createRigidArea(new Dimension(0, 20)));
 
 			frame.setContentPane(pane);
 			frame.pack();
 			frame.setVisible(true);
 		}
 
-
-		if (FiltersDownloader.filterTitles.isEmpty() || listModel.getSize() == 0) {
+		if (FiltersDownloader.filterTitles.isEmpty()
+				|| listModel.getSize() == 0) {
 			addButton.setEnabled(false);
 			filterChooser.setEnabled(false);
 		} else {
@@ -191,26 +200,6 @@ public class FiltersDialog {
 				frame.dispose();
 			}
 		}
-	}
-
-	public Layer getLayer() {
-		return layer;
-	}
-
-	public JPanel getFilterContainer() {
-		return filterContainer;
-	}
-
-	public DefaultComboBoxModel<String> getListModel() {
-		return listModel;
-	}
-
-	public JComboBox<String> getFilterChooser() {
-		return filterChooser;
-	}
-
-	public JButton getAddButton() {
-		return addButton;
 	}
 
 	public FiltersManager getFiltersManager() {
@@ -245,5 +234,25 @@ public class FiltersDialog {
 
 	public Set<String> getShowedFiltersTitles() {
 		return showedFiltersTitles;
+	}
+
+	public Layer getLayer() {
+		return layer;
+	}
+
+	public JPanel getFilterContainer() {
+		return filterContainer;
+	}
+
+	public DefaultComboBoxModel<String> getListModel() {
+		return listModel;
+	}
+
+	public JComboBox<String> getFilterChooser() {
+		return filterChooser;
+	}
+
+	public JButton getAddButton() {
+		return addButton;
 	}
 }

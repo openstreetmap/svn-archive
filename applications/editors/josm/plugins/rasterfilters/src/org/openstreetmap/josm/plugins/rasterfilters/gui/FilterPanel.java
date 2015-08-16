@@ -34,6 +34,14 @@ import org.openstreetmap.josm.plugins.rasterfilters.model.FiltersManager;
 
 import com.bric.swing.ColorPicker;
 
+/**
+ * FilterPanel is usual JPanel with its
+ * own GUI elements which is added according to
+ * meta-information of filter.
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public class FilterPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -46,6 +54,14 @@ public class FilterPanel extends JPanel {
 		setBackground(Color.white);
 	}
 
+	/**
+	 * Methods adds GUI element on filter's panel according to meta-information and
+	 * automatically resizes the given filter's panel.
+	 *
+	 * @param json filter's meta-information
+	 *
+	 * @return added GUI element
+	 */
 	public JComponent addGuiElement(JsonObject json) {
 		String type = json.getString("type");
 
@@ -270,9 +286,6 @@ public class FilterPanel extends JPanel {
 
 				}
 			}
-			Main.debug("minValue: " + String.valueOf(minValue) +
-					"\nmaxValue: " + String.valueOf(maxValue) +
-					"\ninitValue: " + new Double(initValue).intValue());
 
 			try {
 

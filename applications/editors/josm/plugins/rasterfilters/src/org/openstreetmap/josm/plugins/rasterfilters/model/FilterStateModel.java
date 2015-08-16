@@ -14,7 +14,15 @@ import org.openstreetmap.josm.plugins.rasterfilters.values.ColorValue;
 import org.openstreetmap.josm.plugins.rasterfilters.values.SelectValue;
 import org.openstreetmap.josm.plugins.rasterfilters.values.SliderValue;
 import org.openstreetmap.josm.plugins.rasterfilters.values.Value;
-
+/**
+ * Filter state's model which stores all parameters of
+ * the filter according to its meta-information.
+ * The usual values from meta-information are converted
+ * into subtypes of the generic interface {@link Value}
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public class FilterStateModel {
 
 	private Map<String, Value<?>> params = new HashMap<>();
@@ -95,6 +103,11 @@ public class FilterStateModel {
 		}
 	}
 
+	/**
+	 * Method generates json from the current filter's model state.
+	 *
+	 * @return encoded json which describes current filter's state
+	 */
 	public JsonObject encodeJson() {
 
 		JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();

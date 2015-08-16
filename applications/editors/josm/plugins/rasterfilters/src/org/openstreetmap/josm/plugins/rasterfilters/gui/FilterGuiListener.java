@@ -27,8 +27,14 @@ import org.openstreetmap.josm.plugins.rasterfilters.values.SliderValue;
 
 import com.bric.swing.ColorPicker;
 
+/**
+ * This class is GUI listener which tracks all changes of GUI controls
+ * elements: sliders, checkboxes, color pickers and select lists.
+ * @author Nipel-Crumple
+ *
+ */
 public class FilterGuiListener implements ChangeListener, ItemListener,
-ActionListener, PropertyChangeListener, FilterStateOwner {
+		ActionListener, PropertyChangeListener, FilterStateOwner {
 
 	private StateChangeListener handler;
 	private FilterStateModel filterState;
@@ -43,6 +49,9 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 		this.filterState = state;
 	}
 
+	/**
+	 * Listener which responds on any changes of sliders values.
+	 */
 	@Override
 	public void stateChanged(ChangeEvent e) {
 
@@ -56,7 +65,8 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 
 		if (filterState.getParams().containsKey(parameterName)) {
 
-			SliderValue<Number> value = (SliderValue<Number>) filterState.getParams().get(parameterName);
+			SliderValue<Number> value = (SliderValue<Number>) filterState
+					.getParams().get(parameterName);
 
 			if (value.isDouble()) {
 				value.setValue((double) slider.getValue() / 100);
@@ -67,7 +77,7 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 			filterState.getParams().put(parameterName, value);
 		}
 
-		// notify about state is changed now so send msg to FiltersManager
+		// notifies about state is changed now and sends msg to FiltersManager
 		handler.filterStateChanged(filterId, filterState);
 	}
 
@@ -89,6 +99,9 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 		return filterId;
 	}
 
+	/**
+	 * Method reacts on changes of checkbox GUI elements.
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 
@@ -104,13 +117,17 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 
 	}
 
+	/**
+	 * Methods tracks all changes of select lists
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		JComboBox<String> box = (JComboBox<String>) e.getSource();
 
 		String parameterName = box.getName();
-		SelectValue<String> value = (SelectValue<String>) filterState.getParams().get(parameterName);
+		SelectValue<String> value = (SelectValue<String>) filterState
+				.getParams().get(parameterName);
 
 		ComboBoxModel<String> model = box.getModel();
 		String selectedItem = (String) model.getSelectedItem();
@@ -122,6 +139,10 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 
 	}
 
+	/**
+	 * This listener's method is for responding on some
+	 * color pick changes.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		ColorPicker picker = (ColorPicker) evt.getSource();
@@ -132,7 +153,8 @@ ActionListener, PropertyChangeListener, FilterStateOwner {
 
 		String parameterName = picker.getName();
 
-		ColorValue<Color> value = (ColorValue<Color>) filterState.getParams().get(parameterName);
+		ColorValue<Color> value = (ColorValue<Color>) filterState.getParams()
+				.get(parameterName);
 		value.setValue(new Color(r, g, b));
 
 		handler.filterStateChanged(filterId, filterState);

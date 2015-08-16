@@ -21,7 +21,13 @@ import org.openstreetmap.josm.plugins.rasterfilters.actions.ShowLayerFiltersDial
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPreferences;
-
+/**
+ * Main Plugin class. This class embed new plugin button for adding filter and
+ * subtab in Preferences menu
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 
 	private SideButton filterButton;
@@ -34,6 +40,8 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 
 		File file = new File(getPluginDir());
 		if (file.mkdir()) {
+
+			// opening file with last user's settings
 			file = new File(file.getAbsoluteFile() + "\\urls.map");
 			if (!file.exists()) {
 				try {
@@ -92,8 +100,6 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 			JPanel buttonRowPanel = (JPanel) ((JPanel) dialog.getComponent(2))
 					.getComponent(0);
 			buttonRowPanel.add(filterButton);
-
-			Main.debug("Layer " + newLayer.getName() + "was added");
 		}
 
 		if (newLayer instanceof ImageryLayer) {
@@ -105,7 +111,6 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 
 	@Override
 	public void layerRemoved(Layer oldLayer) {
-		Main.debug("Layer " + oldLayer.getName() + "was removed");
 
 		if (oldLayer instanceof ImageryLayer) {
 			FiltersDialog dialog = action.getDialogByLayer(oldLayer);

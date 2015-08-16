@@ -32,7 +32,13 @@ import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 
 import com.bric.swing.ColorPicker;
-
+/**
+ * This class adds filter to the dialog and can also remove
+ * or disable it from the filters chain.
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public class FiltersManager implements StateChangeListener, ImageProcessor,
 ActionListener, ItemListener {
 
@@ -141,7 +147,7 @@ ActionListener, ItemListener {
 	}
 
 	/**
-	 * The method notifies about changes in the filter's status
+	 * The method notifies about changes in the filter's status.
 	 *
 	 * @param filterState
 	 *            - model that contains info about filter which was changed
@@ -152,7 +158,9 @@ ActionListener, ItemListener {
 		if (filtersMap.get(filterId) != null)
 			filtersMap.get(filterId).changeFilterState(filterState.encodeJson());
 
-		Main.map.mapView.getActiveLayer().setFilterStateChanged();
+		if (Main.map.mapView.getActiveLayer() != null) {
+			Main.map.mapView.getActiveLayer().setFilterStateChanged();
+		}
 
 	}
 

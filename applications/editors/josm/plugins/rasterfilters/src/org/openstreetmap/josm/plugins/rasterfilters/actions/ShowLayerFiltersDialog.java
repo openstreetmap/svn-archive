@@ -19,6 +19,14 @@ import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+/**
+ * The action that is called when user click on 'Choose filters' button
+ *
+ * and sets image on that button
+ *
+ * @author Nipel-Crumple
+ *
+ */
 public final class ShowLayerFiltersDialog extends AbstractAction implements LayerAction {
 
 	private List<FiltersDialog> dialogs = new ArrayList<FiltersDialog>();

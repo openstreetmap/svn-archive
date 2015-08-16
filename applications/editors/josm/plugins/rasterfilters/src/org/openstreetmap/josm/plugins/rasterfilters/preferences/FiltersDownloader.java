@@ -40,7 +40,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openstreetmap.josm.Main;
-
+/**
+ * This class is responsible for downloading jars which contains
+ * filters implementations, for loading meta from the
+ * <a href="https://josm.openstreetmap.de/wiki/ImageFilters">filter's page</a>.
+ * Also it stores the downloaded information for creating filter's GUI and etc.
+ *
+ * @author Nipel-Crumple
+ */
 public class FiltersDownloader implements ActionListener {
 	private static volatile String pluginDir;
 

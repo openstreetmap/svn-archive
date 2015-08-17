@@ -247,6 +247,9 @@ public class FilterPanel extends JPanel {
 			int maxValue = array.getInt(1);
 			int initValue = json.getInt("default");
 
+			Main.debug("Slider is integer\n");
+			Main.debug("minValue: " + String.valueOf(minValue) +
+					"maxValue: " + String.valueOf(maxValue));
 			try {
 				slider = new JSlider(JSlider.HORIZONTAL, minValue, maxValue,
 						initValue);
@@ -264,6 +267,7 @@ public class FilterPanel extends JPanel {
 
 		} else if (valueType.equals("float")) {
 
+			Main.debug("Slider is float\n");
 			// every value is supplied by 10 to be integer for slider
 			double minValueDouble = array.getJsonNumber(0).doubleValue();
 			double maxValueDouble = array.getJsonNumber(1).doubleValue();
@@ -294,11 +298,7 @@ public class FilterPanel extends JPanel {
 				slider.setMinorTickSpacing(maxValue / 4);
 				slider.setName(json.getString("name"));
 				slider.setToolTipText(String.valueOf((double) slider.getValue() / 100));
-				slider.setBackground(this.getBackground());
-				slider.setBorder(sliderBorder);
-				slider.setPaintTicks(true);
-				slider.setPaintLabels(true);
-				this.add(slider);
+
 
 			} catch (IllegalArgumentException e) {
 
@@ -309,6 +309,12 @@ public class FilterPanel extends JPanel {
 						 JOptionPane.ERROR_MESSAGE);
 			}
 		}
+
+		slider.setBackground(this.getBackground());
+		slider.setBorder(sliderBorder);
+		slider.setPaintTicks(true);
+		slider.setPaintLabels(true);
+		this.add(slider);
 
 		return slider;
 	}

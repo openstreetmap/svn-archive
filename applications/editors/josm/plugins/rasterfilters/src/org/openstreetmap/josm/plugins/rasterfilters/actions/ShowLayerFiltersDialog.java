@@ -27,7 +27,8 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Nipel-Crumple
  *
  */
-public final class ShowLayerFiltersDialog extends AbstractAction implements LayerAction {
+public final class ShowLayerFiltersDialog extends AbstractAction implements
+		LayerAction {
 
 	private List<FiltersDialog> dialogs = new ArrayList<FiltersDialog>();
 
@@ -60,13 +61,10 @@ public final class ShowLayerFiltersDialog extends AbstractAction implements Laye
 
 				if (temp.getLayer().equals(layer)) {
 					try {
-
 						temp.createAndShowGUI();
-
 					} catch (MalformedURLException e1) {
 						e1.printStackTrace();
 					}
-
 					break;
 				}
 

@@ -12,8 +12,8 @@
 -->
 <project name="plugin_common" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 
-    <property name="josm"                   location="../../dist/josm-custom.jar"/>
-    <property name="josm.test.build.dir"    location="../../test/build"/>
+    <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
+    <property name="josm.test.build.dir"    location="../../core/test/build"/>
     <property name="groovy.jar"             location="../00_core_tools/groovy-all-2.4.3.jar"/>
     <property name="plugin.build.dir"       location="build"/>
     <property name="plugin.test.dir"        location="test"/>

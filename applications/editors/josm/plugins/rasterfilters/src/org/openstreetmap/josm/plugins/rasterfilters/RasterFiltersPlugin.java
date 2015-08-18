@@ -42,7 +42,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 		if (file.mkdir()) {
 
 			// opening file with last user's settings
-			file = new File(file.getAbsoluteFile() + "\\urls.map");
+			file = new File(file.getAbsoluteFile(), "urls.map");
 			if (!file.exists()) {
 				try {
 					file.createNewFile();

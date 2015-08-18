@@ -219,7 +219,7 @@ public class FiltersDownloader implements ActionListener {
 	}
 
 	public static void initFilters() {
-		File file = new File(pluginDir + "\\urls.map");
+		File file = new File(pluginDir, "urls.map");
 		Main.debug("EXIST FILE? " + file.exists());
 
 		try {
@@ -285,7 +285,7 @@ public class FiltersDownloader implements ActionListener {
 
 	public static void loadBinariesFromMeta(Set<JsonObject> metaList) {
 
-		File file = new File(pluginDir + "\\urls.map");
+		File file = new File(pluginDir, "urls.map");
 
 		FileWriter fileWriter = null;
 		BufferedWriter writer = null;
@@ -337,14 +337,13 @@ public class FiltersDownloader implements ActionListener {
 		Matcher m = p.matcher(fromUrl);
 
 		String localFile = null;
+		File plugin = new File(pluginDir);
 
 		if (m.find()) {
 
-			File plugin = new File(pluginDir);
 			if (plugin.exists()) {
 
-				String plugDir = plugin.getAbsolutePath();
-				localFile = plugDir + "\\" + fromUrl.substring(m.end());
+				localFile = fromUrl.substring(m.end());
 
 			}
 		}
@@ -352,7 +351,8 @@ public class FiltersDownloader implements ActionListener {
 		try {
 			url = new URL(fromUrl);
 			con = url.openConnection();
-			File file = new File(localFile);
+			String plugDir = plugin.getAbsolutePath();
+			File file = new File(plugDir, localFile);
 
 			if (file.exists()) {
 				Main.debug("File " + localFile + " already exists");

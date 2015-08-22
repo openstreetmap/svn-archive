@@ -10,8 +10,7 @@ public class MirroredDownloadPlugin extends Plugin {
 
     public MirroredDownloadPlugin(PluginInformation info) {
         super(info);
-        MainMenu.addAfter(Main.main.menu.fileMenu, new OverpassDownloadAction(), false, Main.main.menu.download);
-        MainMenu.addAfter(Main.main.menu.fileMenu, new MirroredDownloadAction(), false, Main.main.menu.download);
+        MainMenu.addAfter(Main.main.menu.fileMenu, new MirroredDownloadAction(), false, Main.main.menu.overpassDownload);
         MainMenu.add(Main.main.menu.editMenu, new UrlSelectionAction());
     }
     private static String downloadUrl = null;
@@ -23,13 +22,13 @@ public class MirroredDownloadPlugin extends Plugin {
             if (downloadUrl == null || downloadUrl.isEmpty()) {
                 downloadUrl = "http://overpass-api.de/api/xapi?";
             }
-                
+
             String metaFlag = Main.pref.get("plugin.mirrored_download.preferred-meta-flag");
             addMeta = !("void".equals(metaFlag));
         }
         return downloadUrl;
     }
-    
+
     public static boolean getAddMeta() {
         return addMeta;
     }

@@ -286,6 +286,7 @@ public class FiltersDownloader implements ActionListener {
 	public static void loadBinariesFromMeta(Set<JsonObject> metaList) {
 
 		File file = new File(pluginDir, "urls.map");
+		Main.debug("pluginDir and urls map" + file.getAbsoluteFile());
 
 		FileWriter fileWriter = null;
 		BufferedWriter writer = null;
@@ -338,13 +339,14 @@ public class FiltersDownloader implements ActionListener {
 
 		String localFile = null;
 		File plugin = new File(pluginDir);
+		Main.debug("plugin dir" + plugin.getAbsolutePath());
 
 		if (m.find()) {
 
 			if (plugin.exists()) {
 
 				localFile = fromUrl.substring(m.end());
-
+				Main.debug("localFile: " + localFile);
 			}
 		}
 
@@ -353,11 +355,12 @@ public class FiltersDownloader implements ActionListener {
 			con = url.openConnection();
 			String plugDir = plugin.getAbsolutePath();
 			File file = new File(plugDir, localFile);
+			Main.debug("Binary file: " + file.getAbsolutePath());
 
 			if (file.exists()) {
 				Main.debug("File " + localFile + " already exists");
 
-				return localFile;
+				return file.getAbsolutePath();
 			} else {
 
 				BufferedInputStream in = new BufferedInputStream(

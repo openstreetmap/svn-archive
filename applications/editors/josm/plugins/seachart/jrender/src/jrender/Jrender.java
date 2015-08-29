@@ -9,6 +9,7 @@
 
 package jrender;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -35,7 +36,7 @@ import s57.S57map.Feature;
 import s57.S57map.Snode;
 import symbols.*;
 import render.*;
-import render.Rules.RuleSet;
+import render.ChartContext.RuleSet;
 
 public class Jrender {
 
@@ -65,16 +66,26 @@ public class Jrender {
 			mile = 768 / ((maxlat - minlat) * 60);
 	  }
 	  
-		@Override
 		public Point2D getPoint(Snode coord) {
 			double x = (Math.toDegrees(coord.lon) - minlon) * 256.0 * 2048.0 / 180.0;
 			double y = ((1.0 - Math.log(Math.tan(coord.lat) + 1.0 / Math.cos(coord.lat)) / Math.PI) / 2.0 * 256.0 * 4096.0) - top;
 			return new Point2D.Double(x, y);
 		}
 
-		@Override
 		public double mile(Feature feature) {
 			return mile;
+		}
+
+		public boolean clip() {
+			return false;
+		}
+
+		public Color background() {
+			return new Color(0, true);
+		}
+
+		public RuleSet ruleset() {
+			return RuleSet.ALL;
 		}
 	}
 	
@@ -196,7 +207,7 @@ public class Jrender {
 				}
 			} else if (ln.contains("<osm")) {
 				inOsm = true;
-				map = new S57map();
+				map = new S57map(context.ruleset() == RuleSet.SEAMARK);
 				map.addNode(1, maxlat, minlon);
 				map.addNode(2, minlat, minlon);
 				map.addNode(3, minlat, maxlon);
@@ -212,7 +223,7 @@ public class Jrender {
 		for (int i = 0; i < (12 - zoom); i++) size *= 2;
 		Rectangle rect = new Rectangle(size, size);
 		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
-		Renderer.reRender(img.createGraphics(), RuleSet.BASE, rect, zoom, 0.05, map, context);
+		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 //		empty = bos.size();
@@ -230,7 +241,7 @@ public class Jrender {
 			svgGenerator.setSVGCanvasSize(rect.getSize());
 			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
 //			svgGenerator.translate(-256, -256);
-			Renderer.reRender(svgGenerator, RuleSet.BASE, rect, zoom, 0.05, map, context);
+			Renderer.reRender(svgGenerator, rect, zoom, 0.05, map, context);
 			svgGenerator.stream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".svg");
 //		}
 	}
@@ -243,7 +254,7 @@ public class Jrender {
 		Graphics2D g2 = img.createGraphics();
 		g2.scale(s, s);
 		g2.translate(-(256 + (xn * 256 / s)), -(256 + (yn * 256 / s)));
-		Renderer.reRender(g2, RuleSet.BASE, new Rectangle(256, 256), zoom, 1, map, context);
+		Renderer.reRender(g2, new Rectangle(256, 256), zoom, 1, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(img, "png", bos);
 		if (bos.size() > empty) {

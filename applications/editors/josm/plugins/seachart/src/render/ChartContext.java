@@ -15,8 +15,11 @@ import java.awt.geom.Point2D;
 import s57.S57map.*;
 
 public interface ChartContext {
+	public enum RuleSet { ALL, BASE, SEAMARK }
+
 	Point2D getPoint(Snode coord);
 	double mile(Feature feature);
 	boolean clip();
 	Color background();
+	RuleSet ruleset();
 }

@@ -34,7 +34,6 @@ import org.w3c.dom.DOMImplementation;
 import s57.S57map;
 import s57.S57map.*;
 import render.*;
-import render.Rules.RuleSet;
 
 public class Jicons {
 	
@@ -79,7 +78,7 @@ public class Jicons {
 						case "PNG":
 							img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 							g2 = img.createGraphics();
-							Renderer.reRender(g2, RuleSet.SEAMARK, new Rectangle(x, y, w, h), 16, s / Renderer.symbolScale[16], map, context);
+							Renderer.reRender(g2, new Rectangle(x, y, w, h), 16, s / Renderer.symbolScale[16], map, context);
 							try {
 								ImageIO.write(img, "png", new File(args[1] + file + ".png"));
 							} catch (Exception e) {
@@ -93,7 +92,7 @@ public class Jicons {
 							Document document = domImpl.createDocument(svgNS, "svg", null);
 							SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 							svgGenerator.setSVGCanvasSize(new Dimension(w, h));
-							Renderer.reRender(svgGenerator, RuleSet.SEAMARK, new Rectangle(x, y, w, h), 16, s / Renderer.symbolScale[16], map, context);
+							Renderer.reRender(svgGenerator, new Rectangle(x, y, w, h), 16, s / Renderer.symbolScale[16], map, context);
 							boolean useCSS = true;
 							Writer out = null;
 							try {
@@ -191,24 +190,24 @@ public class Jicons {
 	
 	static class Context implements ChartContext {
 		
-		@Override
 		public Point2D getPoint(Snode coord) {
 			return new Point2D.Double(x, y);
 		}
 
-		@Override
 		public double mile(Feature feature) {
 			return Math.min(w, h);
 		}
 
-		@Override
 		public boolean clip() {
 			return false;
 		}
 
-		@Override
 		public Color background() {
 			return new Color(0, true);
+		}
+
+		public RuleSet ruleset() {
+			return RuleSet.SEAMARK;
 		}
 	}
 }

@@ -15,7 +15,6 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import java.util.*;
 
-import render.Rules.*;
 import s57.S57val.*;
 import s57.S57map;
 import s57.S57map.*;
@@ -35,7 +34,7 @@ public class Renderer {
 	static Graphics2D g2;
 	static int zoom;
 
-	public static void reRender(Graphics2D g, RuleSet set, Rectangle rect, int z, double factor, S57map m, ChartContext c) {
+	public static void reRender(Graphics2D g, Rectangle rect, int z, double factor, S57map m, ChartContext c) {
 		g2 = g;
 		zoom = z;
 		context = c;
@@ -52,7 +51,7 @@ public class Renderer {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 			g2.setStroke(new BasicStroke(0, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-			Rules.rules(set);
+			Rules.rules();
 		}
 	}
 

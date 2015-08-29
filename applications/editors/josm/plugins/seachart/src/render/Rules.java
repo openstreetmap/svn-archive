@@ -21,14 +21,13 @@ import s57.S57val.*;
 import s57.S57att.*;
 import s57.S57obj.*;
 import s57.S57map.*;
+import render.ChartContext.RuleSet;
 import render.Renderer.*;
 import symbols.*;
 import symbols.Symbols.*;
 
 public class Rules {
 	
-	public enum RuleSet { ALL, BASE, SEAMARK }
-
 	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
 	static {
 		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
@@ -172,7 +171,6 @@ public class Rules {
 	
 	static Feature feature;
 	static ArrayList<Feature> objects;
-	static RuleSet ruleset;
 	
 	static boolean testObject(Obj obj) {
 		return ((objects = Renderer.map.features.get(obj)) != null);
@@ -182,9 +180,8 @@ public class Rules {
 		return ((feature = f).reln == Rflag.MASTER);
 	}
 	
-	public static void rules (RuleSet set) {
-		ruleset = set;
-		if ((set == RuleSet.ALL) || (set == RuleSet.BASE)) {
+	public static void rules () {
+		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
 			if (testObject(Obj.LNDARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.BUAARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.HRBFAC)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -201,7 +198,7 @@ public class Rules {
 			if (testObject(Obj.RAILWY)) for (Feature f : objects) if (testFeature(f)) highways();
 		}
 		if (testObject(Obj.SLCONS)) for (Feature f : objects) if (testFeature(f)) shoreline();
-		if ((set == RuleSet.ALL) || (set == RuleSet.SEAMARK)) {
+		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.SEAMARK)) {
 			if (testObject(Obj.PIPSOL)) for (Feature f : objects) if (testFeature(f)) pipelines();
 			if (testObject(Obj.CBLSUB)) for (Feature f : objects) if (testFeature(f)) cables();
 			if (testObject(Obj.PIPOHD)) for (Feature f : objects) if (testFeature(f)) pipelines();
@@ -442,16 +439,12 @@ public class Rules {
 				if (feature.objs.containsKey(Obj.TOPMAR)) {
 					AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 					if (topmap.containsKey(Att.TOPSHP)) {
-						Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
-						if (topmark != null)
-							Renderer.symbol(feature, topmark, getScheme(feature, Obj.TOPMAR), Topmarks.BeaconDelta);
+						Renderer.symbol(feature, Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(feature, Obj.TOPMAR), Topmarks.BeaconDelta);
 					}
 				} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 					AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 					if (topmap.containsKey(Att.TOPSHP)) {
-						Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
-						if (topmark != null)
-							Renderer.symbol(feature, topmark, getScheme(feature, Obj.DAYMAR), Topmarks.BeaconDelta);
+						Renderer.symbol(feature, Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(feature, Obj.DAYMAR), Topmarks.BeaconDelta);
 					}
 				}
 			}
@@ -467,16 +460,12 @@ public class Rules {
 			if (feature.objs.containsKey(Obj.TOPMAR)) {
 				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
-					if (topmark != null)
-						Renderer.symbol(feature, topmark, getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
+					Renderer.symbol(feature, Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(feature, Obj.TOPMAR), Topmarks.BuoyDeltas.get(shape));
 				}
 			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
 				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
 				if (topmap.containsKey(Att.TOPSHP)) {
-					Symbol topmark = Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0));
-					if (topmark != null)
-						Renderer.symbol(feature, topmark, getScheme(feature, Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
+					Renderer.symbol(feature, Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(feature, Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
 				}
 			}
 			Signals.addSignals(feature);
@@ -1034,12 +1023,12 @@ public class Rules {
 
 	private static void shoreline() {
 		CatSLC cat = (CatSLC) getAttEnum(feature, feature.type, 0, Att.CATSLC);
-		if ((ruleset == RuleSet.ALL) || (ruleset == RuleSet.BASE)) {
+		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
 			if ((cat != CatSLC.SLC_SWAY) && (cat != CatSLC.SLC_TWAL)) {
 				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Yland));
 			}
 		}
-		if ((ruleset == RuleSet.ALL) || (ruleset == RuleSet.SEAMARK)) {
+		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.SEAMARK)) {
 			if (Renderer.zoom >= 12) {
 				switch (cat) {
 				case SLC_TWAL:

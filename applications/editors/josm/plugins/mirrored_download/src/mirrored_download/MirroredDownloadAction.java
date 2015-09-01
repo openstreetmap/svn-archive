@@ -7,7 +7,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedList;
@@ -33,7 +32,6 @@ import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.io.BoundingBoxDownloader;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.Shortcut;
 
 public class MirroredDownloadAction extends JosmAction {
 
@@ -42,7 +40,7 @@ public class MirroredDownloadAction extends JosmAction {
 
     public MirroredDownloadAction() {
         super(tr("Download from OSM mirror..."), "download_mirror", tr("Download map data from the OSM server."),
-                Shortcut.registerShortcut("mirror:download", tr("File: {0}", tr("Download from OSM mirror...")), KeyEvent.VK_DOWN, Shortcut.ALT_SHIFT),
+                null,
                 true, "mirroreddownload/download", true);
         putValue("help", ht("/Action/MirroredDownload"));
     }

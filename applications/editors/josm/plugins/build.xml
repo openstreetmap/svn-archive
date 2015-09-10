@@ -63,7 +63,6 @@
         <ant target="dist" dir="measurement"/>
         <ant target="dist" dir="merge-overlap"/>
         <ant target="dist" dir="michigan_left"/>
-        <ant target="dist" dir="mirrored_download"/>
         <ant target="dist" dir="namemanager"/>
         <ant target="dist" dir="NanoLog"/>
         <ant target="dist" dir="native-password-manager"/>
@@ -166,7 +165,6 @@
         <ant target="clean" dir="measurement"/>
         <ant target="clean" dir="merge-overlap"/>
         <ant target="clean" dir="michigan_left"/>
-        <ant target="clean" dir="mirrored_download"/>
         <ant target="clean" dir="namemanager"/>
         <ant target="clean" dir="no_more_mapping"/>
         <ant target="clean" dir="NanoLog"/>

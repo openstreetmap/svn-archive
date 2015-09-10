@@ -109,7 +109,6 @@
         <ant target="dist" dir="walkingpapers"/>
         <ant target="dist" dir="waydownloader"/>
         <ant target="dist" dir="waypoint_search"/>
-        <ant target="dist" dir="wayselector"/>
         <ant target="dist" dir="wikipedia"/>
         <ant target="dist" dir="wms-turbo-challenge2"/>
     </target>
@@ -214,7 +213,6 @@
         <ant target="clean" dir="walkingpapers"/>
         <ant target="clean" dir="waydownloader"/>
         <ant target="clean" dir="waypoint_search"/>
-        <ant target="clean" dir="wayselector"/>
         <ant target="clean" dir="wikipedia"/>
         <ant target="clean" dir="wms-turbo-challenge2"/>
     </target>

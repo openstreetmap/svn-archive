@@ -62,4 +62,9 @@ public class ElevationGridTileLoader implements TileLoader {
 		};
 	}
 
+	@Override
+	public void cancelOutstandingTasks() {
+		// intentionally left blank
+	}
+
 }

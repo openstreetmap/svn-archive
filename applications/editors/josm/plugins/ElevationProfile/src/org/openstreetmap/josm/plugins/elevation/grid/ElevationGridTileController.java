@@ -1,7 +1,6 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.elevation.grid;
 
-import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.TileController;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
@@ -15,49 +14,42 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  *
  */
 public class ElevationGridTileController extends TileController {
-    private final JobDispatcher jobDispatcher; // is private and no getter
 
-    /**
-     * @param source
-     * @param tileCache
-     * @param listener
-     */
-    public ElevationGridTileController(TileSource source, TileCache tileCache,
-            TileLoaderListener listener, TileLoader loader) {
-        super(source, tileCache, listener);
+	/**
+	 * @param source
+	 * @param tileCache
+	 * @param listener
+	 */
+	public ElevationGridTileController(TileSource source, TileCache tileCache,
+			TileLoaderListener listener, TileLoader loader) {
+		super(source, tileCache, listener);
 
-        tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!
-        tileLoader = loader; // FIXME: hard-coded in base class!
-        jobDispatcher = JobDispatcher.getInstance();
-    }
+		tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!
+		tileLoader = loader; // FIXME: hard-coded in base class!
+	}
 
-    @Override
-    public Tile getTile(int tilex, int tiley, int zoom) {
-        int max = (1 << zoom);
-        if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
-            return null;
-        Tile tile = tileCache.getTile(tileSource, tilex, tiley, zoom);
-        if (tile == null) {
-            // FIXME: Provide/use a factory method here
-            tile = new ElevationGridTile(tileSource, tilex, tiley, zoom);
-            tileCache.addTile(tile);
-            tile.loadPlaceholderFromCache(tileCache);
-        }
-        if (tile.hasError()) {
-            tile.loadPlaceholderFromCache(tileCache);
-        }
-        if (!tile.isLoaded()) {
-            jobDispatcher.addJob(tileLoader.createTileLoaderJob(tile));
-        }
-        return tile;
-    }
+	@Override
+	public Tile getTile(int tilex, int tiley, int zoom) {
+		int max = (1 << zoom);
+		if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
+			return null;
+		Tile tile = tileCache.getTile(tileSource, tilex, tiley, zoom);
+		if (tile == null) {
+			// FIXME: Provide/use a factory method here
+			tile = new ElevationGridTile(tileSource, tilex, tiley, zoom);
+			tileCache.addTile(tile);
+			tile.loadPlaceholderFromCache(tileCache);
+		}
+		if (tile.hasError()) {
+			tile.loadPlaceholderFromCache(tileCache);
+		}
+		if (!tile.isLoaded()) {
+			tileLoader.createTileLoaderJob(tile).submit();
+		}
+		return tile;
+	}
 
-    /**
-     *
-     */
-    @Override
-    public void cancelOutstandingJobs() {
-        super.cancelOutstandingJobs(); // should not make a difference but you never know...
-        jobDispatcher.cancelOutstandingJobs();
-    }
+	/**
+	 *
+	 */
 }

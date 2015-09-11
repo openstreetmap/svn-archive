@@ -23,10 +23,7 @@ import org.openstreetmap.josm.tools.Utils;
  * @author Jan Peter Stotz
  */
 public class OsmTileLoader implements TileLoader {
-    private final static Executor jobDispatcher =
-            Executors.newSingleThreadExecutor(
-                    Utils.newThreadFactory("OsmTileLoader-%d", Thread.NORM_PRIORITY)
-                    );
+    private final static Executor jobDispatcher = Executors.newSingleThreadExecutor();
 
     private final class OsmTileJob implements TileJob {
         private final Tile tile;

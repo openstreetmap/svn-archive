@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
-import org.openstreetmap.josm.tools.Utils;
 
 /**
  * A {@link TileLoader} implementation that loads tiles from OSM.

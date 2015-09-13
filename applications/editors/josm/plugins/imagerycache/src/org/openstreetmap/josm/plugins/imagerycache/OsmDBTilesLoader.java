@@ -11,7 +11,6 @@ import java.net.URLConnection;
 import java.util.Map;
 import java.util.Random;
 
-import org.openstreetmap.gui.jmapviewer.JobDispatcher;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.interfaces.CachedTileLoader;
@@ -110,7 +109,7 @@ class OsmDBTilesLoader extends OsmTileLoader implements CachedTileLoader {
 					
 				}
             };
-            JobDispatcher.getInstance().addJob(job);
+            job.submit();
         }
 
         /**

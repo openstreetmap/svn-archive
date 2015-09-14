@@ -72,6 +72,7 @@
         <ant target="dist" dir="openvisible"/>
         <ant target="dist" dir="osmarender"/>
         <ant target="dist" dir="OsmInspectorPlugin"/>
+        <ant target="dist" dir="OSMRecPlugin"/>
         <ant target="dist" dir="pbf"/>
         <ant target="dist" dir="pdfimport"/>
         <ant target="dist" dir="photoadjust"/>
@@ -174,6 +175,7 @@
         <ant target="clean" dir="openvisible"/>
         <ant target="clean" dir="osmarender"/>
         <ant target="clean" dir="OsmInspectorPlugin"/>
+        <ant target="clean" dir="OSMRecPlugin"/>
         <ant target="clean" dir="pbf"/>
         <ant target="clean" dir="pdfimport"/>
         <ant target="clean" dir="photoadjust"/>

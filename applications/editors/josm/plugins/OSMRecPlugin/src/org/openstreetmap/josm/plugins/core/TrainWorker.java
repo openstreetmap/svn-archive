@@ -90,6 +90,7 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
     private static final boolean USE_TEXTUAL_FEATURES = true;
     private static int numberOfFeatures;
     private static LanguageDetector languageDetector;
+    private final String inputFileName;
     
     
     
@@ -103,6 +104,8 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         this.topK = topK;
         this.frequency = frequency;
         this.topKIsSelected = topKIsSelected;
+        
+        inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("/"));
         System.out.println("find parent directory, create osmrec dir for models: " + new File(inputFilePath).getParentFile());
         modelDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models";
         //textualDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models/textualList.txt";
@@ -743,13 +746,29 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         //File inFile = new File(inputFilePath).getParentFile();
         
         File modelFile = new File(modelDirectory.getAbsolutePath()+"/best_model"); //decide path of models
+        
+        File customModelFile;
+        if(topKIsSelected){
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_topK" + topK + ".0");
+        }
+        else{
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_maxF" + frequency + ".0");
+        }
+        
+        
         if(modelFile.exists()){
             modelFile.delete();
-        }        
+        }       
+        if(customModelFile.exists()){
+            customModelFile.delete();
+        }         
+        
         try {
             //System.out.println("file created");
             model.save(modelFile);
+            model.save(customModelFile);
             System.out.println("best model saved at: " + modelFile); 
+            System.out.println("custom model saved at: " + customModelFile);
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         }        
@@ -872,13 +891,30 @@ public class TrainWorker extends SwingWorker<Void, Void> implements ActionListen
         //File inFile = new File(inputFilePath).getParentFile();
         
         File modelFile = new File(modelDirectory.getAbsolutePath()+"/model_with_classes"); 
+        
+                
+        File customModelFile;
+        if(topKIsSelected){
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model" + "_c" + param + "_topK" + topK + ".1");
+        }
+        else{
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_maxF" + frequency + ".1");
+        }               
+              
+        if(customModelFile.exists()){
+            customModelFile.delete();
+        }                 
+                
         if(modelFile.exists()){
             modelFile.delete();
-        }        
+        } 
+   
         try {
             //System.out.println("file created");
             model.save(modelFile);
+            model.save(customModelFile);
             System.out.println("model with classes saved at: " + modelFile); 
+            System.out.println("custom model with classes saved at: " + modelFile);
         } catch (IOException ex) {
             Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
         } 

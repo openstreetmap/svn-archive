@@ -5,7 +5,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog;
+//import org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog;
 
 /** 
  * 

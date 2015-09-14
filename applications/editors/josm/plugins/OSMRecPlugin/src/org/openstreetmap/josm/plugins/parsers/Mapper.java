@@ -21,11 +21,13 @@ public class Mapper {
     //private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(Mapper.class);
     private final HashMap<String, String> mappings;
     private final HashMap<String, Integer> mappingsWithIDs;
+    private final Map<Integer, String> idsWithMappings;
     
     public Mapper(){    
     
        mappings = new LinkedHashMap<>();
        mappingsWithIDs = new HashMap<>();
+       idsWithMappings = new HashMap<>();
     
     }
         
@@ -46,6 +48,7 @@ public class Mapper {
              mappings.put(key, value);
         }
         constructMappingsWithIDs();
+        constructIDsWithMappings();
         System.out.println("Mappings file parsed successfully!");
         //LOG.info("Mappings file parsed successfully!");     
     } 
@@ -64,5 +67,18 @@ public class Mapper {
     
     public Map<String,String> getMappings(){
         return Collections.unmodifiableMap(mappings);
-    }        
+    }   
+    
+    private void constructIDsWithMappings(){
+        int i = 1; //starting ID is 1: SVM multiclass does not accept 0 as a class ID
+ 
+        for (String ontologyClass : mappings.values()){  
+            idsWithMappings.put(i, ontologyClass);
+            i++;
+        }
+    }  
+    
+    public Map<Integer, String> getIDsWithMappings(){
+        return Collections.unmodifiableMap(idsWithMappings);
+    }    
 }

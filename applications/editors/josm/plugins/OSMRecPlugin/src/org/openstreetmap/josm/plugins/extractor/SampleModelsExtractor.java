@@ -28,6 +28,10 @@ public class SampleModelsExtractor {
 
         //File modelFile = new File(bestModelPath);
         File targetFile = new File(modelPath);
+        
+        if(targetFile.exists()){
+            return;
+        }
         try {
             targetFile.createNewFile();
         } catch (IOException ex) {
@@ -37,23 +41,7 @@ public class SampleModelsExtractor {
         //svmModelStream = SampleModelsExtractor.class.getResourceAsStream("/resources/profiles/el");
         System.out.println("trying to get stream.. for " + "/resources/files/" + modelName);
         svmModelStream = SampleModelsExtractor.class.getResourceAsStream("/resources/files/" + modelName);
-        
-        
-        //Scanner input = new Scanner(svmModelStream);
-        //svmModelStream.
-        
-        
-//            while (input.hasNext()) {
-//                String nextLine = input.nextLine();
-//
-//                //outputStream.write(nextLine.getBytes(Charset.forName("UTF-8")));
-//                System.out.println(nextLine);
-//                //outputStream.write(nextLine);
-//                //textualList.add(nextLine);
-//
-//            }       
-//            System.out.println("GER RESOURCE SUCCESS");
-            
+           
         try {
             outputStream = new FileOutputStream(targetFile);
             //Scanner input = new Scanner(svmModelStream);

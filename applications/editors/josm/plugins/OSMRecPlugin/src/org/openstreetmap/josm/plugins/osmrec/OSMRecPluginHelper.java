@@ -36,10 +36,15 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +57,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
@@ -73,6 +79,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -163,6 +170,8 @@ class OSMRecPluginHelper {
     private final String modelWithClassesPath;
     private boolean useCustomSVMModel = false;
     private String customSVMModelPath;
+    private final String combinedModelClasses;
+    private final String combinedModel;
        
     // Selection that we are editing by using both dialogs
     Collection<OsmPrimitive> sel;
@@ -204,14 +213,17 @@ class OSMRecPluginHelper {
         }
         MODEL_PATH = new File(MAIN_PATH).getParentFile() + "/OSMRec_models";
         TEXTUAL_LIST_PATH = MODEL_PATH + "/textualList.txt";
+        combinedModelClasses = MODEL_PATH + "/combinedModel.1";
+        combinedModel = MODEL_PATH + "/combinedModel.0";
         bestModelPath = MODEL_PATH + "/best_model";
+        customSVMModelPath = bestModelPath;
         modelWithClassesPath = MODEL_PATH + "/model_with_classes";
         languageDetector = LanguageDetector.getInstance(MODEL_PATH + "/profiles");
 
-        SampleModelsExtractor sa = new SampleModelsExtractor();
-        
-        sa.extractSampleSVMmodel("best_model", bestModelPath);
-        sa.extractSampleSVMmodel("model_with_classes", modelWithClassesPath);
+        SampleModelsExtractor sampleModelsExtractor = new SampleModelsExtractor();
+                
+        sampleModelsExtractor.extractSampleSVMmodel("best_model", bestModelPath);
+        sampleModelsExtractor.extractSampleSVMmodel("model_with_classes", modelWithClassesPath);
         
     }
 
@@ -1198,8 +1210,9 @@ class OSMRecPluginHelper {
         private final JLabel chooseModelLabel;
         private final JButton chooseModelButton;
         private final JTextField chooseModelTextField;
-        private final JList<String> modelCombinationList;
+        
         private final DefaultListModel<String> combinationDefaultListModel = new DefaultListModel<>();
+        private final JList<String> modelCombinationList = new javax.swing.JList<>(combinationDefaultListModel);
         private final JPanel modelCombinationPanel;
         //private final JTextField weightTextField;
         private final JPanel weightsPanel;
@@ -1209,17 +1222,37 @@ class OSMRecPluginHelper {
         private final JButton acceptWeightsButton;
         private final JButton resetWeightsButton;
         private final JButton removeSelectedModelButton;
-        private final Map<JTextField, String> weightFieldsAndPaths = new HashMap<>();
+        private Map<JTextField, String> weightFieldsAndPaths = new HashMap<>();
         private final Map<String, Double> normalizedPathsAndWeights = new HashMap<>();
+        private final JOptionPane pane;
+        private final JDialog dlg;
+        private final JPanel mainPanel;
+        private final JPanel singleSelectionPanel;
+        private final JPanel setResetWeightsPanel;
+        private final JScrollPane combinationScrollPane;
+        private final JScrollPane singleSelectionScrollPane;
+        private final TitledBorder modelTitle;
+        private final TitledBorder weightTitle;
+        private final TitledBorder combineTitle;
+        //private final BorderLayout mainBorderLayout;
+        //private final BorderLayout mainBorderLayoutDefault;
+        //private final Dimension combinationPanelDimension;
+        private final Dimension singleSelectionDimension;
+        private final Dimension modelCombinationDimension;
+        private final Dimension mainPanelDimension;
         
-        public ModelSettingsDialog(Collection<OsmPrimitive> sel, AddTagsDialog addDialog){  
-            //checkbox: use combined models
-            //button: remove selected model
+        
+        public ModelSettingsDialog(Collection<OsmPrimitive> sel1, final AddTagsDialog addDialog){ 
+            
+            loadPreviousCombinedSVMModel();
+            singleSelectionDimension = new Dimension(470,70);
+            modelCombinationDimension = new Dimension(450,250);
+            mainPanelDimension = new Dimension(600,350);
             
             //------- <NORTH of main> ---------//
-            JPanel mainPanel = new JPanel(new BorderLayout(10,10));
-            JPanel singleSelectionPanel = new JPanel(new BorderLayout(10,10));
-            JPanel setResetWeightsPanel = new JPanel();
+            mainPanel = new JPanel(new BorderLayout(10,10));
+            singleSelectionPanel = new JPanel(new BorderLayout(10,10));
+            setResetWeightsPanel = new JPanel();
             
             chooseModelLabel = new javax.swing.JLabel("Choose a Model:");
             chooseModelTextField = new javax.swing.JTextField();
@@ -1229,13 +1262,18 @@ class OSMRecPluginHelper {
             singleSelectionPanel.add(chooseModelLabel, BorderLayout.NORTH);  
             singleSelectionPanel.add(chooseModelTextField, BorderLayout.WEST);
             singleSelectionPanel.add(chooseModelButton, BorderLayout.EAST); 
+            
+            singleSelectionScrollPane = new JScrollPane(singleSelectionPanel);
+            singleSelectionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            singleSelectionScrollPane.setPreferredSize(singleSelectionDimension);
+            
             //------- </NORTH of main> ---------//
 
             //------- <WEST of main> ---------//
-            modelCombinationList = new javax.swing.JList<>(combinationDefaultListModel);
+            //modelCombinationList = new javax.swing.JList<>(combinationDefaultListModel);
             modelCombinationList.setFixedCellHeight(20);  
             modelCombinationList.setEnabled(false);
-            modelCombinationPanel = new JPanel(new BorderLayout()); 
+            modelCombinationPanel = new JPanel(new BorderLayout(10,10)); //new BorderLayout() 
 
             weightsPanel = new JPanel();
             weightsPanel.setLayout(new BoxLayout(weightsPanel, BoxLayout.Y_AXIS)); 
@@ -1256,24 +1294,36 @@ class OSMRecPluginHelper {
             modelCombinationPanel.add(weightsPanel, BorderLayout.EAST);
             modelCombinationPanel.add(setResetWeightsPanel, BorderLayout.SOUTH); 
 
-            JScrollPane combinationScrollPane = new JScrollPane(modelCombinationPanel);
+            combinationScrollPane = new JScrollPane(modelCombinationPanel);
             
             combinationScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            combinationScrollPane.setPreferredSize(new Dimension(450,250));    // w/h        
+            combinationScrollPane.setPreferredSize(modelCombinationDimension);   //new Dimension(450,250) // w/h  
+
             //------- </WEST of main> ---------//
 
-            
             //------- <SOUTH of main> ---------//
             useModelCombinationCheckbox = new JCheckBox("Combine different models?");
             
             //------- </SOUTH of main> ---------//
             
             //------- <Borders> ---------//
-            TitledBorder modelTitle = BorderFactory.createTitledBorder("Models");
-            TitledBorder weightTitle = BorderFactory.createTitledBorder("W");
-            TitledBorder combineTitle = BorderFactory.createTitledBorder("Combine Models");
+            modelTitle = BorderFactory.createTitledBorder("Models");
+            weightTitle = BorderFactory.createTitledBorder("W");
+            combineTitle = BorderFactory.createTitledBorder("Combine Models");
             modelCombinationList.setBorder(modelTitle);
             weightsPanel.setBorder(weightTitle);
+            
+            for(Entry<JTextField, String> entry : weightFieldsAndPaths.entrySet()){
+                //modelCombinationList.add(entry.getValue());
+                combinationDefaultListModel.addElement(entry.getValue());
+                
+                JTextField weightTextField = new javax.swing.JTextField("0.00");                   
+                weightTextField.setMaximumSize(new Dimension(80,20));
+                weightsPanel.add(entry.getKey());               
+
+                //entry.getKey().setText("0.00");
+            }            
+            
             //modelCombinationPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             modelCombinationPanel.setBorder(combineTitle);
             singleSelectionPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
@@ -1313,39 +1363,123 @@ class OSMRecPluginHelper {
                     removeSelectedModelButtonActionPerformed(evt);
                 }
             });            
-            mainPanel.add(singleSelectionPanel, BorderLayout.NORTH);
-            mainPanel.add(combinationScrollPane, BorderLayout.CENTER);
+            mainPanel.add(singleSelectionScrollPane, BorderLayout.NORTH);
+            mainPanel.add(combinationScrollPane, BorderLayout.CENTER);  
             mainPanel.add(useModelCombinationCheckbox,BorderLayout.SOUTH);
 
+            mainPanel.setPreferredSize(mainPanelDimension);
+            
             this.add(mainPanel);
+            //pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
             
-            JOptionPane pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            JDialog dlg = pane.createDialog(Main.parent, tr("Model Settings"));            
-            dlg.setVisible(true);
-            //JButton ok = dlg.getRootPane().getDefaultButton();
+            //final JFrame frame = new JFrame();
+            pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
+                @Override
+                public void setValue(Object newValue) {
+                    super.setValue(newValue);
+                    if(newValue instanceof Integer && (int) newValue == 0 && useModelCombinationCheckbox.isSelected()){
+                        System.out.println("model settings button value: " + newValue);
+                        System.out.println("\nUSE COMBINED MODEL\n");
+                        useCombinedModel = true;
+                        useCustomSVMModel = false;
+                        
+                        addDialog.loadSVMmodel(); 
+                        addDialog.createOSMObject(sel);                              
+                        saveCombinedModel();
+                        dlg.setVisible(false);
+                        //this.setVisible(false);
+                    }
+                    else if(newValue instanceof Integer && (int) newValue == -1 && useModelCombinationCheckbox.isSelected()){
+                        System.out.println("model settings button value: " + newValue);
+                        useCombinedModel = false;
+                        useCustomSVMModel = false;
+                        System.out.println("Use combined model");
+
+                        addDialog.loadSVMmodel();
+                        addDialog.createOSMObject(sel);
+                        dlg.setVisible(false);
+                    } 
+                    else if(newValue instanceof Integer && (int) newValue == 0 && !useModelCombinationCheckbox.isSelected() ){
+                        System.out.println("model settings button value: " + newValue);
+                        System.out.println("Don t use combined model, use custom model");
+                        useCombinedModel = false;
+                        useCustomSVMModel = true;
+                        addDialog.loadSVMmodel();
+                        addDialog.createOSMObject(sel);
+                        dlg.setVisible(false);
+                    } 
+                    else if(newValue instanceof Integer && (int) newValue == -1 && !useModelCombinationCheckbox.isSelected() ){
+                        System.out.println("model settings button value: " + newValue);
+                        System.out.println("Don t use combined model, use custom model");
+                        useCombinedModel = false;
+                        useCustomSVMModel = false;
+                        addDialog.loadSVMmodel();
+                        addDialog.createOSMObject(sel);
+                        dlg.setVisible(false);
+                    }      
+                    else if(newValue == null || newValue.equals("uninitializedValue")){
+                        System.out.println("uninitializedValue, do nothing");
+                    }
+                    //JOptionPane.showMessageDialog(frame.getContentPane(), "You have hit " + newValue);
+                }
+            };            
             
+            
+            //pane.showConfirmDialog();
+            //pane.addPropertyChangeListener(JOptionPane.VALUE_PROPERTY);
+            
+            
+             //JButton ok = dlg.getRootPane().getDefaultButton();
+            dlg = pane.createDialog(Main.parent, tr("Model Settings"));
+            dlg.setVisible(true);  
+            
+            /*
             //returned value of pane.getValue indicates the key pressed by the user. "0" is for the OK button
             int buttonValue = -1;
             if(pane.getValue() != null){
+                //System.out.println("type? " + pane.getValue());
                 buttonValue = (int) pane.getValue();
             }
-            
-            System.out.println("value of model sel button: " + pane.getValue());
-            if(buttonValue == 0 && useCombinedModel && useModelCombinationCheckbox.isSelected()){
-                System.out.println("\n\nUSE COMBINED MODEL\n\n");
+
+            System.out.println("value of model sel button: " + pane.getValue());           
+           
+            if(buttonValue == 0 && useModelCombinationCheckbox.isSelected()){
+                useCombinedModel = true;
+                System.out.println("\nold - USE COMBINED MODEL\n");
                 //recompute predictions with combination
-                modelWithClasses = false;
+                
+                //modelWithClasses = false;
                 addDialog.loadSVMmodel(); 
-                addDialog.createOSMObject(sel);
+                addDialog.createOSMObject(sel);                               
+                saveCombinedModel();
+                dlg.setVisible(false);
+                //this.setVisible(false);
             }
-            else {
-                useCombinedModel = false;
+            else if(useModelCombinationCheckbox.isSelected()){
+                useCombinedModel = true;
+                System.out.println("old - use combined model");
+                
                 addDialog.loadSVMmodel();
                 addDialog.createOSMObject(sel);
-            }            
+                dlg.setVisible(false);
+            } 
+            else{
+                System.out.println("old - don t use combined model, use custom model");
+                useCombinedModel = false;
+                useCustomSVMModel = true;
+                addDialog.loadSVMmodel();
+                addDialog.createOSMObject(sel);
+                dlg.setVisible(false);
+            }
+            */
         }
         
-        private void modelChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {     
+        public void makeVisible(boolean visible){ 
+            dlg.setVisible(true);
+        }
+        
+        private void modelChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {   
+            
             try {
                 final File file = new File(chooseModelTextField.getText());
                 final JFileChooser fileChooser = new JFileChooser(file);
@@ -1383,7 +1517,10 @@ class OSMRecPluginHelper {
         }
         
         private void userCombinationCheckboxActionPerformed(java.awt.event.ActionEvent evt) {
+
             if(useModelCombinationCheckbox.isSelected()){
+                useCombinedModel = true;
+                useCustomSVMModel = false; //reseting the selected custom SVM model only here
                 removeSelectedModelButton.setEnabled(true);
                 acceptWeightsButton.setEnabled(true);
                 resetWeightsButton.setEnabled(true);
@@ -1395,9 +1532,11 @@ class OSMRecPluginHelper {
                 for (Component weightPanelComponent : weightPanelComponents) {
                     weightPanelComponent.setEnabled(true);
                 }
-                useCustomSVMModel = false; //reseting the selected custom SVM model only here
+                
             }
             else{
+                useCombinedModel = false;
+                useCustomSVMModel = true;
                 removeSelectedModelButton.setEnabled(false);
                 acceptWeightsButton.setEnabled(false);
                 resetWeightsButton.setEnabled(false);
@@ -1413,9 +1552,14 @@ class OSMRecPluginHelper {
         }
         
         private void acceptWeightsButtonActionPerformed(ActionEvent evt) {
+            int weightsCount = 0;
             removeSelectedModelButton.setEnabled(false);
             double weightSum = 0;            
             for(JTextField weightField : weightFieldsAndPaths.keySet()){
+                if(weightField.getText().equals("")){
+                    weightField.setText("0.00");
+                }
+                
                 try{
                     Double weightValue = Double.parseDouble(weightField.getText());
 
@@ -1425,6 +1569,7 @@ class OSMRecPluginHelper {
                 catch (NumberFormatException ex){
                     Main.warn(ex);
                 }
+                weightsCount++;
             }  
             
             if(!filesAndWeights.isEmpty()){
@@ -1436,6 +1581,12 @@ class OSMRecPluginHelper {
                     Double weightValue = Double.parseDouble(weightField.getText());
 
                     weightValue = Math.abs(weightValue)/weightSum; //normalize
+                    
+                    if(weightSum == 0){
+                        //System.out.println("Zero weights");
+                        weightValue = 1.0/weightsCount;
+                    }                    
+                    
                     weightField.setText(new DecimalFormat("#.##").format(weightValue));
                     normalizedPathsAndWeights.put(weightFieldsAndPaths.get(weightField), weightValue);                   
                     filesAndWeights.put(new File(weightFieldsAndPaths.get(weightField)), weightValue);
@@ -1449,6 +1600,8 @@ class OSMRecPluginHelper {
             }
 
             useCombinedModel = true;
+            useCustomSVMModel = false;
+            
             //filesAndWeights.putAll(normalizedPathsAndWeights);
         }
         
@@ -1461,10 +1614,63 @@ class OSMRecPluginHelper {
         
         private void removeSelectedModelButtonActionPerformed(ActionEvent evt) {
             int index  = modelCombinationList.getSelectedIndex();
-            combinationDefaultListModel.remove(index);
+            String modelToBeRemoved = combinationDefaultListModel.get(index);
+            combinationDefaultListModel.remove(index); 
+            System.out.println("model to be removed: " + modelToBeRemoved);
+
+            Iterator<Entry<JTextField, String>> it = weightFieldsAndPaths.entrySet().iterator();               
+            while (it.hasNext()) {
+                Entry<JTextField, String> en = it.next();
+                if(en.getValue().equals(modelToBeRemoved)){
+                    it.remove();
+                }
+            }
+            System.out.println("model to be removed: " + modelToBeRemoved);
+
             weightsPanel.remove(index); 
             weightsPanel.revalidate();
             weightsPanel.repaint();
+        }
+
+        @SuppressWarnings("unchecked")
+        private void loadPreviousCombinedSVMModel() {
+            File combinedModelClassesFile = new File(combinedModelClasses);
+
+            if (combinedModelClassesFile.exists()) {
+                FileInputStream fileIn = null;
+                ObjectInputStream in = null;
+                try {
+                    fileIn = new FileInputStream(combinedModelClassesFile);
+                    in = new ObjectInputStream(fileIn);
+                    weightFieldsAndPaths = (Map<JTextField, String>) in.readObject();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        in.close();
+                        fileIn.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } else {
+                try {
+                    combinedModelClassesFile.createNewFile();
+                } catch (IOException ex) {
+                    Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        private void saveCombinedModel() {
+            try (FileOutputStream fileOut = new FileOutputStream(combinedModelClasses);
+                ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+                out.writeObject(weightFieldsAndPaths);
+            } catch (IOException e) {
+                System.out.println("serialize error" + e);
+            }
         }
     }
     
@@ -1483,16 +1689,19 @@ class OSMRecPluginHelper {
         private int[] modelSVMLabels;
         private Map<String, String> mappings;
         private Map<String, Integer> mapperWithIDs;
+        private Map<Integer, String> idsWithMappings;
         private List<String> textualList = new ArrayList<>();
         //private boolean useClassFeatures = false;
-        private final JCheckBox useTagsCheckBox;       
+        private final JCheckBox useTagsCheckBox;  
+        private ModelSettingsDialog modelSettingsDialog;
+        private static final int RECOMMENDATIONS_SIZE = 10;
 
         public AddTagsDialog() {
             super(Main.parent, tr("Add value?"), new String[] {tr("OK"),tr("Cancel")});
             setButtonIcons(new String[] {"ok","cancel"});
             setCancelButton(2);
             configureContextsensitiveHelp("/Dialog/AddValue", true /* show help button */);
-            final AddTagsDialog lala = this;
+            final AddTagsDialog addTagsDialog = this;
             
             loadOntology();
             //if the user did not train a model by running the training process
@@ -1566,10 +1775,20 @@ class OSMRecPluginHelper {
             modelSettingsButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-
-                    ModelSettingsDialog modelSettingsDialog = new ModelSettingsDialog(sel, lala);  
+                    if(modelSettingsDialog == null){
+                        System.out.println("new modelSettingsDialog");
+                        modelSettingsDialog = new ModelSettingsDialog(sel, addTagsDialog);  
+                        
+                        //modelSettingsDialog.makeVisible(true);
+                        //modelSettingsDialog.setVisible(true);
+                    }
+                    else{
+                        System.out.println("set modelSettingsDialog visible");
+                        modelSettingsDialog.makeVisible(true);
+                        //modelSettingsDialog.setVisible(true);
+                    } 
                 }
-            });            
+            });         
 
             useTagsCheckBox.addActionListener(new java.awt.event.ActionListener() {                
                 @Override
@@ -1937,15 +2156,133 @@ class OSMRecPluginHelper {
         }
 
         private void loadSVMmodel() {
+            File modelDirectory = new File(MODEL_PATH);
+            File modelFile = null;
+            if(useCombinedModel){
+                if(filesAndWeights.isEmpty()){
+                    System.out.println("No models selected! Loading defaults..");
+                    if(modelWithClasses){
+                        System.out.println("Using default/last model with classes: " + modelDirectory.getAbsolutePath() + "/model_with_classes");
+                        modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
+                    }
+                    else{
+                        System.out.println("Using default/last model without classes: " + modelDirectory.getAbsolutePath() + "/best_model");
+                        modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
+                    } 
+                }               
+                if(modelWithClasses){ //check filenames to define if model with classes is selected
+                    System.out.println("Using combined model with classes");
+                    useCombinedSVMmodels(sel, true);
+                }
+                else{
+                    System.out.println("Using combined model without classes");
+                    useCombinedSVMmodels(sel, false);
+                }               
+                                
+            }
+            else if(useCustomSVMModel){
+                System.out.println("custom path: " + customSVMModelPath);
+                File checkExistance = new File(customSVMModelPath);             
+                if(checkExistance.exists() && checkExistance.isFile()){
+                    if (modelWithClasses) {
+                        System.out.println("Using custom model with classes: ");
+                        if (customSVMModelPath.endsWith(".0")) {
+                            //String customSVMModelPathWithClasses = customSVMModelPath.replace(".0", ".1");
+                            String customSVMModelPathWithClasses = customSVMModelPath.substring(0, customSVMModelPath.length() - 2) + ".1";
+
+                            modelFile = new File(customSVMModelPathWithClasses);
+                            System.out.println(customSVMModelPathWithClasses);
+                        } 
+                        else {
+                            modelFile = new File(customSVMModelPath);
+                        }
+                    } else {
+                        System.out.println("Using custom model without classes");
+                        if (customSVMModelPath.endsWith(".1")) {
+                            String customSVMModelPathWithoutClasses = customSVMModelPath.substring(0, customSVMModelPath.length() - 2) + ".0";
+                            modelFile = new File(customSVMModelPathWithoutClasses);
+                            System.out.println(customSVMModelPathWithoutClasses);
+                        } else {
+                            modelFile = new File(customSVMModelPath);
+                        }
+                    }
+                    try {
+                        System.out.println("try to load model: " + modelFile.getAbsolutePath());
+                        modelSVM = Model.load(modelFile);
+                        System.out.println("model loaded!");
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    modelSVMLabelSize = modelSVM.getLabels().length;
+                    modelSVMLabels = modelSVM.getLabels();                    
+
+                } 
+                else {
+                    //user chose to use a custom model, but did not provide a path to a model:
+                    if(modelWithClasses){
+                        System.out.println("Using default/last model with classes");
+                        modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
+                    }
+                    else{
+                        System.out.println("Using default/last model without classes");
+                        modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
+                    }
+
+                    try {
+                        System.out.println("try to load model: " + modelFile.getAbsolutePath());
+                        modelSVM = Model.load(modelFile);
+                        System.out.println("model loaded!");
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    modelSVMLabelSize = modelSVM.getLabels().length;
+                    modelSVMLabels = modelSVM.getLabels();                    
+                    
+                }
+            } 
+            else {
+                if(modelWithClasses){
+                    System.out.println("Using default/last model with classes");
+                    modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
+                }
+                else{
+                    System.out.println("Using default/last model without classes");
+                    modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
+                }  
+                
+                try {
+                    System.out.println("try to load model: " + modelFile.getAbsolutePath());
+                    modelSVM = Model.load(modelFile);
+                    System.out.println("model loaded!");
+
+                } catch (IOException ex) {
+                    Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                modelSVMLabelSize = modelSVM.getLabels().length;
+                modelSVMLabels = modelSVM.getLabels();                
+            }
+            
+
+            
+            //try to use last SVM model
+            /*
             if(useCombinedModel){
                 System.out.println("Using combined model.");
-                useCombinedSVMmodels(sel, false);
+                if(modelWithClasses){ //check filenames to define if model with classes is selected
+                    useCombinedSVMmodels(sel, true);
+                }
+                else{
+                    useCombinedSVMmodels(sel, false);
+                }
+                
                 return;        
             }
             //String modelDirectoryPath = new File(MAIN_PATH).getParentFile() + "/OSMRec_models";
-            File modelDirectory = new File(MODEL_PATH);
+            //File modelDirectory = new File(MODEL_PATH);
             
-            File modelFile;
+            //File modelFile;
             if(useCustomSVMModel){
                 System.out.println("using custom model: " + customSVMModelPath);
                 modelFile = new File(customSVMModelPath);
@@ -1970,6 +2307,7 @@ class OSMRecPluginHelper {
             modelSVMLabelSize = modelSVM.getLabels().length;
             modelSVMLabels = modelSVM.getLabels();
             //System.out.println("is model path same as this? " + MODEL_PATH + "\n" + modelDirectoryPath);
+            */        
         }
         
         private void useCombinedSVMmodels(Collection<OsmPrimitive> sel, boolean useClassFeatures){
@@ -2053,9 +2391,6 @@ class OSMRecPluginHelper {
             //construct vector
             if(selectedInstance != null){
                 int id;
-                if(mappings == null){
-                   System.out.println("null mappings ERROR");
-                }
                 
                 OSMClassification classifier = new OSMClassification();
                 classifier.calculateClasses(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
@@ -2098,13 +2433,15 @@ class OSMRecPluginHelper {
                 }
                 
                 Map<String, Double> scoreMap = new HashMap<>();
+
+                Map<File, Double> alignedFilesAndWeights = getAlignedModels(filesAndWeights);
                 
-                for(File modelFile : filesAndWeights.keySet()){
-                    //filessAndweights
+                for(File modelFile : alignedFilesAndWeights.keySet()){
+                    
 
                     try {
                         modelSVM = Model.load(modelFile);
-                        System.out.println("model loaded: " + modelFile.getAbsolutePath());
+                        //System.out.println("model loaded: " + modelFile.getAbsolutePath());
                     } catch (IOException ex) {
                         Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -2195,11 +2532,11 @@ class OSMRecPluginHelper {
                             }
                         }
                     }
-                    System.out.println("predicted classes: " + Arrays.toString(predictedTags));
+                    System.out.println("combined, predicted classes: " + Arrays.toString(predictedTags));
                     
                     for(int r = 0; r<ranks.length; r++){
                         String predictedTag = predictedTags[r];
-                        Double currentWeight = filesAndWeights.get(modelFile);
+                        Double currentWeight = alignedFilesAndWeights.get(modelFile);
                         double finalRank = ranks[r]*currentWeight;
                         //String roundedWeight = new DecimalFormat("##.###").format(finalRank);
                         //double finalRounded = Double.parseDouble(roundedWeight);
@@ -2390,7 +2727,21 @@ class OSMRecPluginHelper {
                 }
 
                 Arrays.sort(scores);
-                    
+                
+                int[] preds = new int[RECOMMENDATIONS_SIZE];
+                for(int p=0; p < RECOMMENDATIONS_SIZE; p++){
+                    preds[p] = modelSVMLabels[scoresValues.get(scores[scores.length-(p+1)])];
+                }
+                String[] predictedTags2 = new String[RECOMMENDATIONS_SIZE];
+                
+                for(int p=0; p<RECOMMENDATIONS_SIZE; p++){
+                    if(idsWithMappings.containsKey(preds[p])){
+                        predictedTags2[p] = idsWithMappings.get(preds[p]);
+                    }
+
+                }                
+                
+                /*
                 int predicted1 = modelSVMLabels[scoresValues.get(scores[scores.length-1])];  
                 int predicted2 = modelSVMLabels[scoresValues.get(scores[scores.length-2])];
                 int predicted3 = modelSVMLabels[scoresValues.get(scores[scores.length-3])];
@@ -2447,18 +2798,20 @@ class OSMRecPluginHelper {
                         //System.out.println("3rd predicted class: " +entry.getKey()); 
                     }                     
                 }
+                */
                 //clearing model, to add the new computed classes in jlist
                 model.clear();
                 for(Map.Entry<String, String> tag : mappings.entrySet()){
                     
                     for(int k=0; k<10; k++){
-                        if(tag.getValue().equals(predictedTags[k])){
-                            predictedTags[k] = tag.getKey();
+                        if(tag.getValue().equals(predictedTags2[k])){
+                            predictedTags2[k] = tag.getKey();
                             model.addElement(tag.getKey());
                         }
                     }
                 }
-                System.out.println("predicted classes: " + Arrays.toString(predictedTags));
+                //System.out.println("createdOSM object, predicted classes: " + Arrays.toString(predictedTags));
+                System.out.println("Optimized - create OSMObject, predicted classes: " + Arrays.toString(predictedTags2));
             }
         }
 
@@ -2474,6 +2827,7 @@ class OSMRecPluginHelper {
             }
             mappings = mapper.getMappings();
             mapperWithIDs = mapper.getMappingsWithIDs(); 
+            idsWithMappings = mapper.getIDsWithMappings();
             //System.out.println("mappings " + mappings);
             //System.out.println("mapperWithIDs " + mapperWithIDs);
         }
@@ -2509,6 +2863,41 @@ class OSMRecPluginHelper {
             Ontology ontology = new Ontology(ontologyStream);
             indirectClasses = ontology.getIndirectClasses();
             indirectClassesWithIDs = ontology.getIndirectClassesIDs();
+        }
+
+        private Map<File, Double> getAlignedModels(Map<File, Double> filesAndWeights) {
+            Map<File, Double> alignedFilesAndWeights = new HashMap<>();
+            if(modelWithClasses){
+                for(Entry<File, Double> entry : filesAndWeights.entrySet()){
+                    String absolutePath = entry.getKey().getAbsolutePath();
+                    if(absolutePath.endsWith(".0")){
+                        String newPath = absolutePath.substring(0, absolutePath.length()-2) + ".1";
+                        File alignedFile = new File(newPath);
+                        if(alignedFile.exists()){
+                            alignedFilesAndWeights.put(alignedFile, entry.getValue());
+                        }                        
+                    }                    
+                    else{
+                        alignedFilesAndWeights.put(entry.getKey(), entry.getValue());
+                    }                    
+                }
+            }
+            else{
+                for(Entry<File, Double> entry : filesAndWeights.entrySet()){
+                    String absolutePath = entry.getKey().getAbsolutePath();
+                    if(absolutePath.endsWith(".1")){
+                        String newPath = absolutePath.substring(0, absolutePath.length()-2) + ".0";
+                        File alignedFile = new File(newPath);
+                        if(alignedFile.exists()){
+                            alignedFilesAndWeights.put(alignedFile, entry.getValue());
+                        }                       
+                    }
+                    else{
+                        alignedFilesAndWeights.put(entry.getKey(), entry.getValue());
+                    }                    
+                }                
+            }
+            return alignedFilesAndWeights;
         }
     }
 }

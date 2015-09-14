@@ -84,6 +84,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
     private static int numberOfFeatures;
     private static LanguageDetector languageDetector;
     private final String username;
+    private final String inputFileName;
         
     public TrainByUser(String inputFilePath, String username, boolean validateFlag, double cParameterFromUser, 
             int topK, int frequency, boolean topKIsSelected, LanguageDetector languageDetector, List<OSMWay> wayList) {
@@ -97,6 +98,8 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         this.frequency = frequency;
         this.topKIsSelected = topKIsSelected;
         System.out.println("find parent directory, create osmrec dir for models: " + new File(inputFilePath).getParentFile());
+        
+        inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("/"));
         modelDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models";
         //textualDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models/textualList.txt";
         
@@ -242,7 +245,9 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         numberOfTrainingInstances = wayList.size();
         System.out.println("number of instances: " + numberOfTrainingInstances);   
         System.out.println("end of parsing files."); 
-        
+        if(numberOfTrainingInstances == 0){
+            System.out.println("This user has not edited the loaded area. Cannot train a model!");            
+        }        
     }
 
     private void validateLoop(){
@@ -449,7 +454,7 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
             modelFile = new File(modelDirectory.getAbsolutePath()+"/user_" + username + "_model_with_classes_c=" + param);
         }
         else{
-            modelFile = new File(modelDirectory.getAbsolutePath()+"/user__" + username + "_model_geometries_textual_c=" + param);
+            modelFile = new File(modelDirectory.getAbsolutePath()+"/user_" + username + "_model_geometries_textual_c=" + param);
         }
   
         if(modelFile.exists()){
@@ -623,6 +628,10 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         int wayListSizeWithoutUnclassified = wayList.size();
         int u = 0;
         System.out.println("trainList size: " + wayListSizeWithoutUnclassified);
+        if(wayListSizeWithoutUnclassified == 0){
+            System.out.println("aborting training process..");
+            return;
+        }
         //set classes for each osm instance
         int sizeToBeAddedToArray = 0; //this will be used to proper init the features array, adding the multiple vectors size 
 
@@ -734,13 +743,27 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         //File inFile = new File(inputFilePath).getParentFile();
         
         File modelFile = new File(modelDirectory.getAbsolutePath()+"/best_model"); //decide path of models
+        
+        File customModelFile;
+        if(topKIsSelected){
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_topK" + topK + "user" + username + ".0");
+        }
+        else{
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_maxF" + frequency + "user" + username + ".0");
+        }
+        
         if(modelFile.exists()){
             modelFile.delete();
-        }        
+        }  
+        if(customModelFile.exists()){
+            customModelFile.delete();
+        }         
         try {
             //System.out.println("file created");
             model.save(modelFile);
-            //System.out.println("saved"); 
+            model.save(customModelFile);
+            System.out.println("model saved at: " + modelFile); 
+            System.out.println("custom model saved at: " + customModelFile);
         } catch (IOException ex) {
             Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
         }        
@@ -752,6 +775,10 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         int u = 0;
         System.out.println("trainList size: " + wayListSizeWithoutUnclassified);
         
+        if(wayListSizeWithoutUnclassified == 0){
+            System.out.println("aborting training process with classes..");
+            return;
+        }
         //set classes for each osm instance
         int sizeToBeAddedToArray = 0; //this will be used to proper init the features array, adding the multiple vectors size 
         //int lalala = 0;
@@ -863,13 +890,26 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         //File inFile = new File(inputFilePath).getParentFile();
         
         File modelFile = new File(modelDirectory.getAbsolutePath()+"/model_with_classes"); 
+        File customModelFile;
+        if(topKIsSelected){
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_topK" + topK + "user" + username + ".1");
+        }
+        else{
+            customModelFile = new File(modelDirectory.getAbsolutePath()+"/" + inputFileName + "_model_c" + param + "_maxF" + frequency + "user" + username + ".1");
+        }
+
+        if(customModelFile.exists()){
+            customModelFile.delete();
+        }        
         if(modelFile.exists()){
             modelFile.delete();
         }        
         try {
             //System.out.println("file created");
             model.save(modelFile);
-            //System.out.println("saved"); 
+            model.save(customModelFile);
+            System.out.println("model with classes saved at: " + modelFile); 
+            System.out.println("custom model with classes saved at: " + customModelFile);
         } catch (IOException ex) {
             Logger.getLogger(TrainByUser.class.getName()).log(Level.SEVERE, null, ex);
         } 

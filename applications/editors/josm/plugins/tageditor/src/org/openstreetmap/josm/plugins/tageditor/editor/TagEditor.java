@@ -100,7 +100,7 @@ public class TagEditor extends JPanel implements IAutoCompletionListListener {
         
         // build the scrollable table for editing tag names and tag values
         //
-        tblTagEditor = new TagTable(tagEditorModel);
+        tblTagEditor = new TagTable(tagEditorModel, 0);
         tblTagEditor.setTagCellEditor(new TagSpecificationAwareTagCellEditor());
         TagTableCellRenderer renderer = new TagTableCellRenderer();
         tblTagEditor.getColumnModel().getColumn(0).setCellRenderer(renderer);

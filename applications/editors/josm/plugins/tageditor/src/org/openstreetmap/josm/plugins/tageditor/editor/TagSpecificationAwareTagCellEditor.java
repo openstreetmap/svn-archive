@@ -14,7 +14,11 @@ import org.openstreetmap.josm.plugins.tageditor.tagspec.TagSpecifications;
 public class TagSpecificationAwareTagCellEditor extends TagCellEditor {
     private static final Logger logger = Logger.getLogger(TagCellEditor.class.getName());
 
-    /**
+    public TagSpecificationAwareTagCellEditor() {
+		super(0);
+	}
+
+	/**
      * initializes  the auto completion list when the table cell editor starts
      * to edit the key of a tag. In this case the auto completion list is
      * initialized with the set of standard key values and the set of current key

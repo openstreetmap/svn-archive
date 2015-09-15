@@ -42,7 +42,7 @@ public class AdvancedEditorPanel extends JPanel {
               + "</body></html>"
         );
         pnl.add(msg, BorderLayout.NORTH);
-        pnlTagEditor = new TagEditorPanel(model.getTagEditorModel(), null);
+        pnlTagEditor = new TagEditorPanel(model.getTagEditorModel(), null, 0);
         pnlTagEditor.initAutoCompletion(model.getLayer());
         pnl.add(pnlTagEditor, BorderLayout.CENTER);
         return pnl;

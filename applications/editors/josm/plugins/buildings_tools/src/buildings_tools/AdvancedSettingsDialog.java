@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
+import org.openstreetmap.josm.data.osm.Changeset;
 import org.openstreetmap.josm.gui.tagging.TagEditorModel;
 import org.openstreetmap.josm.gui.tagging.TagEditorPanel;
 import org.openstreetmap.josm.tools.GBC;
@@ -26,7 +27,7 @@ public class AdvancedSettingsDialog extends MyDialog {
         for (Entry<String, String> entry : ToolSettings.getTags().entrySet()) {
             tagsModel.add(entry.getKey(), entry.getValue());
         }
-        panel.add(new TagEditorPanel(tagsModel, null), GBC.eop().fill(GBC.BOTH));
+        panel.add(new TagEditorPanel(tagsModel, null, Changeset.MAX_CHANGESET_TAG_LENGTH), GBC.eop().fill(GBC.BOTH));
 
         panel.add(cBigMode, GBC.eol().fill(GBC.HORIZONTAL));
         panel.add(cSoftCur, GBC.eol().fill(GBC.HORIZONTAL));

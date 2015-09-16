@@ -1494,11 +1494,21 @@ class OSMRecPluginHelper {
                 if(useModelCombinationCheckbox.isSelected()){
                     String svmModelPath = fileChooser.getSelectedFile().getAbsolutePath();
                     String svmModelText;
-                    if(svmModelPath.contains("/")){
-                        svmModelText = svmModelPath.substring(svmModelPath.lastIndexOf("/"));
+                    if(System.getProperty("os.name").contains("ux")){
+                        if(svmModelPath.contains("/")){
+                            svmModelText = svmModelPath.substring(svmModelPath.lastIndexOf("/"));
+                        }
+                        else{
+                            svmModelText = svmModelPath;
+                        }
                     }
                     else{
-                        svmModelText = svmModelPath;
+                         if(svmModelPath.contains("\\")){
+                            svmModelText = svmModelPath.substring(svmModelPath.lastIndexOf("/"));
+                        }
+                        else{
+                            svmModelText = svmModelPath;
+                        }                       
                     }
                     combinationDefaultListModel.addElement(svmModelText);
                     JTextField weightTextField = new javax.swing.JTextField("0.00");

@@ -99,7 +99,13 @@ public class TrainByUser extends SwingWorker<Void, Void> implements ActionListen
         this.topKIsSelected = topKIsSelected;
         System.out.println("find parent directory, create osmrec dir for models: " + new File(inputFilePath).getParentFile());
         
-        inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("/"));
+        if(System.getProperty("os.name").contains("ux")){
+            inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("/"));
+        }
+        else{
+            inputFileName = inputFilePath.substring(inputFilePath.lastIndexOf("\\"));
+        }
+        
         modelDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models";
         //textualDirectoryPath = new File(inputFilePath).getParentFile() + "/OSMRec_models/textualList.txt";
         

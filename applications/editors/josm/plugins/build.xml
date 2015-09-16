@@ -85,6 +85,7 @@
         <ant target="dist" dir="proj4j"/>
         <ant target="dist" dir="public_transport"/>
         <ant target="dist" dir="public_transport_layer"/>
+        <ant target="dist" dir="rasterfilters"/>
         <ant target="dist" dir="reltoolbox"/>
         <ant target="dist" dir="reverter"/>
         <ant target="dist" dir="roadsigns"/>
@@ -188,6 +189,7 @@
         <ant target="clean" dir="proj4j"/>
         <ant target="clean" dir="public_transport"/>
         <ant target="clean" dir="public_transport_layer"/>
+        <ant target="clean" dir="rasterfilters"/>
         <ant target="clean" dir="reltoolbox"/>
         <ant target="clean" dir="reverter"/>
         <ant target="clean" dir="roadsigns"/>

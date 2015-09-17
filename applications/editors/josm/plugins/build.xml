@@ -92,9 +92,12 @@
         <ant target="dist" dir="routes"/>
         <ant target="dist" dir="routing"/>
         <ant target="dist" dir="seachart"/>
+        <ant target="dist" dir="seachartedit"/>
         <ant target="dist" dir="sds"/>
         <ant target="dist" dir="simplifyarea"/>
         <ant target="dist" dir="smed"/>
+        <ant target="dist" dir="splinex"/>
+        <ant target="dist" dir="sumoconvert"/>
         <ant target="dist" dir="surveyor"/>
         <ant target="dist" dir="tag2link"/>
         <ant target="dist" dir="tageditor"/>
@@ -197,9 +200,12 @@
         <ant target="clean" dir="routes"/>
         <ant target="clean" dir="routing"/>
         <ant target="clean" dir="seachart"/>
+        <ant target="clean" dir="seachartedit"/>
         <ant target="clean" dir="sds"/>
         <ant target="clean" dir="simplifyarea"/>
         <ant target="clean" dir="smed"/>
+        <ant target="clean" dir="splinex"/>
+        <ant target="clean" dir="sumoconvert"/>
         <ant target="clean" dir="surveyor"/>
         <ant target="clean" dir="tag2link"/>
         <ant target="clean" dir="tageditor"/>

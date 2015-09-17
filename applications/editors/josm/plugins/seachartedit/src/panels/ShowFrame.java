@@ -23,7 +23,6 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import render.ChartContext;
 import render.Renderer;
-import render.Rules.RuleSet;
 import s57.S57map;
 import s57.S57map.*;
 
@@ -56,7 +55,7 @@ public class ShowFrame extends JFrame {
 			g2.setBackground(new Color(0xb5d0d0));
 			Rectangle rect =  new Rectangle(0, 0, 300, 300);
 			g2.clearRect(rect.x, rect.y, rect.width, rect.height);
-			Renderer.reRender(g2, RuleSet.ALL, rect, 16, 32, showMap, this);
+			Renderer.reRender(g2, rect, 16, 32, showMap, this);
 		}
 
 		public Point2D getPoint(Snode coord) {
@@ -66,19 +65,35 @@ public class ShowFrame extends JFrame {
 		public double mile(Feature feature) {
 			return 1000;
 		}
+
+		@Override
+		public boolean clip() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public Color background() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public RuleSet ruleset() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	public ShowFrame(String title) {
 		super(title);
 		picture = new Picture();
-    picture.setVisible(true);
+		picture.setVisible(true);
 		add(picture);
-    pack();
+		pack();
 	}
 	
 	public void showFeature(OsmPrimitive osm, S57map map) {
 		picture.drawPicture(osm, map);
 	}
-	
-	
 }

@@ -13,11 +13,16 @@
     <property name="plugin.description" value="Edit features for Sea Charts"/>
     <property name="plugin.icon" value="images/SC.png"/>
     <property name="plugin.link" value="http://openseamap.org/"/>
+    <property name="plugin.requires" value="seachart"/>
 
     <property name="josm" location="../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../dist"/>
 
       <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>                
+
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="SeaChart.jar"/>
+    </fileset>
 
 </project>

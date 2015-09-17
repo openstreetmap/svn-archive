@@ -91,6 +91,7 @@
         <ant target="dist" dir="roadsigns"/>
         <ant target="dist" dir="routes"/>
         <ant target="dist" dir="routing"/>
+        <ant target="dist" dir="seachart"/>
         <ant target="dist" dir="sds"/>
         <ant target="dist" dir="simplifyarea"/>
         <ant target="dist" dir="smed"/>
@@ -195,6 +196,7 @@
         <ant target="clean" dir="roadsigns"/>
         <ant target="clean" dir="routes"/>
         <ant target="clean" dir="routing"/>
+        <ant target="clean" dir="seachart"/>
         <ant target="clean" dir="sds"/>
         <ant target="clean" dir="simplifyarea"/>
         <ant target="clean" dir="smed"/>

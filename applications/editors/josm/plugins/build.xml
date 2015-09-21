@@ -47,7 +47,6 @@
         <ant target="dist" dir="graphview"/>
         <ant target="dist" dir="HouseNumberTaggingTool"/>
         <ant target="dist" dir="imageryadjust"/>
-        <ant target="dist" dir="imagerycache"/>
         <ant target="dist" dir="imagery_offset_db"/>
         <ant target="dist" dir="imagery-xml-bounds"/>
         <ant target="dist" dir="imagewaypoint"/>
@@ -152,7 +151,6 @@
         <ant target="clean" dir="graphview"/>
         <ant target="clean" dir="HouseNumberTaggingTool"/>
         <ant target="clean" dir="imageryadjust"/>
-        <ant target="clean" dir="imagerycache"/>
         <ant target="clean" dir="imagery_offset_db"/>
         <ant target="clean" dir="imagery-xml-bounds"/>
         <ant target="clean" dir="imagewaypoint"/>

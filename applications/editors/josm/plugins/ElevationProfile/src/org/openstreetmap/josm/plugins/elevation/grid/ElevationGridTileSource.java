@@ -16,11 +16,6 @@ public class ElevationGridTileSource extends AbstractTMSTileSource {
     }
 
     @Override
-    public TileUpdate getTileUpdate() {
-        return TileUpdate.None;
-    }
-
-    @Override
     public String getName() {
         return "eg";
     }

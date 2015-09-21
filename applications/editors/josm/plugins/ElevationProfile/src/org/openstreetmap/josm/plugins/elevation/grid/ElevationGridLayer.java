@@ -14,6 +14,7 @@ import javax.swing.Icon;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.TileController;
+import org.openstreetmap.gui.jmapviewer.TileXY;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.josm.Main;
@@ -86,9 +87,7 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
 					((ElevationGridTile)t).paintTile(g, mv, vertexRenderer);
 				} else {
 					// give some consolation...
-					Point topLeft = mv.getPoint(
-							new LatLon(tileSource.tileYToLat(y, ELE_ZOOM_LEVEL),
-									tileSource.tileXToLon(x, ELE_ZOOM_LEVEL)));
+					Point topLeft = mv.getPoint(new LatLon(tileSource.tileXYToLatLon(x, y, ELE_ZOOM_LEVEL)));
 					t.paint(g, topLeft.x, topLeft.y);
 				}
 			}
@@ -169,10 +168,13 @@ public class ElevationGridLayer extends Layer implements TileLoaderListener {
 			if (zoom == 0)
 				return;
 
-			x0 = (int)tileSource.lonToTileX(topLeft.lon(),  zoom);
-			y0 = (int)tileSource.latToTileY(topLeft.lat(),  zoom);
-			x1 = (int)tileSource.lonToTileX(botRight.lon(), zoom);
-			y1 = (int)tileSource.latToTileY(botRight.lat(), zoom);
+			TileXY p0 = tileSource.latLonToTileXY(topLeft.lat(), topLeft.lon(), zoom);
+			TileXY p1 = tileSource.latLonToTileXY(botRight.lat(), botRight.lon(), zoom);
+
+			x0 = p0.getXIndex();
+			y0 = p0.getYIndex();
+			x1 = p1.getXIndex();
+			y1 = p1.getYIndex();
 			if (x0 > x1) {
 				int tmp = x0;
 				x0 = x1;

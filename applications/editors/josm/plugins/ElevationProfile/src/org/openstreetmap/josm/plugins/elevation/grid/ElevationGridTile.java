@@ -125,11 +125,9 @@ public class ElevationGridTile extends Tile {
 	 * @return the bounds
 	 */
 	private Bounds tile2Bounds(final int x, final int y, final int zoom) {
-		Bounds bb = new Bounds(
-				new LatLon(source.tileYToLat(y, zoom), source.tileXToLon(x, zoom)),
-				new LatLon(source.tileYToLat(y + 1, zoom), source.tileXToLon(x + 1, zoom)));
-
-		return bb;
+		return new Bounds(
+				new LatLon(source.tileXYToLatLon(x, y, zoom)),
+				new LatLon(source.tileXYToLatLon(x + 1, y + 1, zoom)));
 	}
 
 	/**

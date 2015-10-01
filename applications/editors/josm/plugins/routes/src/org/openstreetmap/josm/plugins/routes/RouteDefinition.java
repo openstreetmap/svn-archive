@@ -19,7 +19,7 @@ public class RouteDefinition {
         this.matchString = expression;
         this.index = index;
         try {
-            match = SearchCompiler.compile(expression, false, false);
+            match = SearchCompiler.compile(expression);
         } catch (ParseError e) {
             match = new SearchCompiler.Never();
             e.printStackTrace();

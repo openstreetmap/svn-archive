@@ -1334,7 +1334,10 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
                 sep = " OR ";
             }
 
-            SearchSetting ss = new SearchSetting(s.toString(), SearchMode.replace, true, false, false);
+            SearchSetting ss = new SearchSetting();
+            ss.text = s.toString();
+            ss.mode = SearchMode.replace;
+            ss.caseSensitive = true;
             org.openstreetmap.josm.actions.search.SearchAction.searchWithoutHistory(ss);
         }
     }

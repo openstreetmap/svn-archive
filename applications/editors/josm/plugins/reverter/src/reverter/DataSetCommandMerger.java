@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,8 +97,9 @@ final class DataSetCommandMerger {
         if (source.isIncomplete()) return;
         if (!source.isVisible()) return;
         Way target = (Way)getMergeTarget(source);
-        
-        Collection<Conflict<OsmPrimitive>> localConflicts = new ArrayList<>();
+
+        // use a set to avoid conflicts being added twice for closed ways, fixes #11811
+        Collection<Conflict<OsmPrimitive>> localConflicts = new LinkedHashSet<>();
 
         List<Node> newNodes = new ArrayList<>(source.getNodesCount());
         for (Node sourceNode : source.getNodes()) {

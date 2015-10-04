@@ -133,7 +133,7 @@ public class ChangesetReverter {
         this.changesetId = changesetId;
         if (newLayer) {
             this.ds = new DataSet();
-            this.layer = new OsmDataLayer(this.ds, tr("Reverted changeset") + tr(" [id: {0}]", changesetId), null);
+            this.layer = new OsmDataLayer(this.ds, tr("Reverted changeset") + tr(" [id: {0}]", String.valueOf(changesetId)), null);
         } else {
             this.layer = Main.main.getEditLayer();
             this.ds = layer.data;

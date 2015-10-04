@@ -3,6 +3,7 @@ package reverter;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.swing.JOptionPane;
 
@@ -15,7 +16,6 @@ import org.openstreetmap.josm.gui.progress.PleaseWaitProgressMonitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
-
 import reverter.ChangesetReverter.RevertType;
 
 public class RevertChangesetTask extends PleaseWaitRunnable {
@@ -45,10 +45,16 @@ public class RevertChangesetTask extends PleaseWaitRunnable {
     private boolean checkAndDownloadMissing() throws OsmTransferException {
         if (!rev.hasMissingObjects()) return true;
         if (!downloadConfirmed) {
-            downloadConfirmed = JOptionPane.showConfirmDialog(Main.parent,
-                    tr("This changeset has objects that are not present in current dataset.\n" +
-                            "It is needed to download them before reverting. Do you want to continue?"),
-                    tr("Confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            final Integer selectedOption = GuiHelper.runInEDTAndWaitAndReturn(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return JOptionPane.showConfirmDialog(Main.parent,
+                            tr("This changeset has objects that are not present in current dataset.\n" +
+                                    "It is needed to download them before reverting. Do you want to continue?"),
+                            tr("Confirm"), JOptionPane.YES_NO_OPTION);
+                }
+            });
+            downloadConfirmed = selectedOption != null && selectedOption == JOptionPane.YES_OPTION;
             if (!downloadConfirmed) return false;
         }
         final PleaseWaitProgressMonitor monitor =

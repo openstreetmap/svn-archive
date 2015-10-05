@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -26,12 +27,14 @@ public class RevertChangesetAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0)  {
         final ChangesetIdQuery dlg = new ChangesetIdQuery();
         if (dlg.showDialog().getValue() != 1) return;
-        final int changesetId = dlg.getChangesetId();
+        final Collection<Integer> changesetIds = dlg.getIdsInReverseOrder();
         final RevertType revertType = dlg.getRevertType();
-        if (changesetId == 0) return;
         if (revertType == null) return;
 
-        boolean newLayer = dlg.isNewLayerRequired();
-        Main.worker.submit(new RevertChangesetTask(changesetId, revertType, newLayer, newLayer));
+        final boolean newLayer = dlg.isNewLayerRequired();
+        final boolean autoConfirmDownload = newLayer || changesetIds.size() > 1;
+        for (Integer changesetId : changesetIds) {
+            Main.worker.submit(new RevertChangesetTask(changesetId, revertType, autoConfirmDownload, newLayer));
+        }
     }
 }

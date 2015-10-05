@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,6 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.ExtendedDialog;
-import org.openstreetmap.josm.gui.widgets.ChangesetIdTextField;
 import org.openstreetmap.josm.gui.widgets.HistoryComboBox;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -34,7 +34,7 @@ import reverter.ChangesetReverter.RevertType;
 @SuppressWarnings("serial")
 public class ChangesetIdQuery extends ExtendedDialog {
     private final JPanel panel = new JPanel(new GridBagLayout());
-    private final ChangesetIdTextField tcid = new ChangesetIdTextField();
+    private final ChangesetIdsTextField tcid = new ChangesetIdsTextField();
     private final HistoryComboBox cbId = new HistoryComboBox();
     private final ButtonGroup bgRevertType = new ButtonGroup();
     private final JRadioButton rbFull = new JRadioButton(tr("Revert changeset fully"));
@@ -42,8 +42,8 @@ public class ChangesetIdQuery extends ExtendedDialog {
     private final JRadioButton rbSelectionUndelete = new JRadioButton(tr("Revert selection and restore deleted objects"));
     private final JCheckBox cbNewLayer = new JCheckBox(tr("Download as new layer"));
     
-    public int getChangesetId() {
-        return tcid.getChangesetId();
+    public Collection<Integer> getIdsInReverseOrder() {
+        return tcid.getIdsInReverseOrder();
     }
     
     /**

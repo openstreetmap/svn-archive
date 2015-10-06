@@ -4,7 +4,8 @@
   <property name="jarfile" location="./js57toosm.jar"/>
   <property name="ant.build.javac.target" value="1.7"/>
   <property name="ant.build.javac.source" value="1.7"/>
-    
+  <property name="lang.dir" value="/usr/local/bin/commons-lang3-3.4/"/>
+      
   <target name="init">
     <mkdir dir="${build}"/>
   </target>
@@ -19,6 +20,7 @@
         <attribute name="Main-Class" value="js57toosm.Js57toosm"/>
         <attribute name="Class-Path" value="$jarfile"/>
       </manifest>
+      <zipgroupfileset dir="${lang.dir}" includes="**/commons-lang3-3.4.jar" />
     </jar>
   </target>
 

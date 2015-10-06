@@ -12,6 +12,8 @@ package js57toosm;
 import java.io.*;
 import java.util.*;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import s57.S57obj;
 import s57.S57obj.*;
 import s57.S57att;
@@ -174,7 +176,7 @@ public class Js57toosm {
 			String attstr = S57att.stringAttribute(item.getKey());
 			String valstr = S57val.stringValue(item.getValue(), item.getKey());
 			if (!attstr.isEmpty() && !valstr.isEmpty())
-				out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, valstr);
+				out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, StringEscapeUtils.escapeXml10(valstr));
 		}
 		for (Obj obj : feature.objs.keySet()) {
 			ObjTab tab = feature.objs.get(obj);
@@ -186,9 +188,9 @@ public class Js57toosm {
 					String valstr = S57val.stringValue(item.getValue(), item.getKey());
 					if (!attstr.isEmpty() && !valstr.isEmpty()) {
 						if ((ix == 0) && (tab.size() == 1)) {
-							out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, valstr);
+							out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, StringEscapeUtils.escapeXml10(valstr));
 						} else {
-							out.format("    <tag k='seamark:%s:%d:%s' v='%s'/>%n", type, ix + 1, attstr, valstr);
+							out.format("    <tag k='seamark:%s:%d:%s' v='%s'/>%n", type, ix + 1, attstr, StringEscapeUtils.escapeXml10(valstr));
 						}
 					}
 				}

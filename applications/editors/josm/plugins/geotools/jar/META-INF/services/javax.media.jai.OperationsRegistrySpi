@@ -1,0 +1,5 @@
+org.jaitools.media.jai.contour.ContourSpi
+org.jaitools.media.jai.rangelookup.RangeLookupSpi
+org.jaitools.media.jai.vectorbinarize.VectorBinarizeSpi
+org.jaitools.media.jai.vectorize.VectorizeSpi
+org.jaitools.media.jai.zonalstats.ZonalStatsSpi

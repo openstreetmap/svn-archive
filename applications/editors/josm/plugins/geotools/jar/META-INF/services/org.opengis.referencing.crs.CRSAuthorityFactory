@@ -1,5 +1,5 @@
 #############################
-# FROM gt-referencing-8.3.jar
+# FROM gt-referencing-14.0.jar
 #############################
 org.geotools.referencing.factory.epsg.DefaultFactory
 org.geotools.referencing.factory.epsg.FactoryUsingWKT
@@ -14,14 +14,14 @@ org.geotools.referencing.factory.HTTP_URI_AuthorityFactory
 org.geotools.referencing.factory.epsg.LongitudeFirstEpsgDecorator
 
 ###########################
-# FROM gt-epsg-hsql-8.3.jar
+# FROM gt-epsg-hsql-14.0.jar
 ###########################
 org.geotools.referencing.factory.epsg.ThreadedHsqlEpsgFactory
 # pending review
 # org.geotools.referencing.factory.epsg.HsqlDialectEpsgMediator
 
 ################################
-# FROM gt-epsg-extension-8.3.jar
+# FROM gt-epsg-extension-14.0.jar
 ################################
 org.geotools.referencing.factory.epsg.UnnamedExtension
 org.geotools.referencing.factory.epsg.EsriExtension

@@ -10,8 +10,6 @@
     <property name="plugin.description" value="Provides parts of the GeoTools library for other JOSM plugins. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
     <property name="plugin.icon" value="images/compass.png"/>
     <property name="plugin.canloadatruntime" value="true"/>
-    <!--<property name="plugin.link" value="..."/>-->
-    <!--<property name="plugin.early" value="..."/>-->
     <property name="plugin.requires" value="jts"/>
     <property name="plugin.stage" value="20"/>
 
@@ -35,7 +33,7 @@
             </zipfileset>
             <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
                 <include name="META-INF/MANIFEST.MF"/>
-                <include name="META-INF/*.jai"/>
+                <include name="META-INF/javax.media.jai.registryFile.jai"/>
             </zipfileset>
         </jar>
         <delete file="${plugin.build.dir}/${ant.project.name}.jar" />

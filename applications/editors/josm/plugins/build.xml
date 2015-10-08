@@ -21,10 +21,12 @@
         <!-- to update, run $ ls -F | grep '/$' | tr -d '/' | grep -v '00_plugin_dir_template\|jna\|jts\|geotools\|utilsplugin2\|log4j\|commons-imaging' | sed 's/^/<ant target="dist" dir="/' | sed 's/$/"\/>/' -->
         <ant target="dist" dir="addrinterpolation"/>
         <ant target="dist" dir="alignways"/>
+        <ant target="dist" dir="areaselector"/>
         <ant target="dist" dir="buildings_tools"/>
         <ant target="dist" dir="cadastre-fr"/>
         <ant target="dist" dir="canvec_helper"/>
         <ant target="dist" dir="colorscheme"/>
+        <ant target="dist" dir="conflation"/>
         <ant target="dist" dir="ColumbusCSV"/>
         <ant target="dist" dir="CommandLine"/>
         <ant target="dist" dir="Create_grid_of_ways"/>
@@ -121,11 +123,13 @@
         <ant target="clean" dir="00_plugin_dir_template"/>
         <ant target="clean" dir="addrinterpolation"/>
         <ant target="clean" dir="alignways"/>
+        <ant target="clean" dir="areaselector"/>
         <ant target="clean" dir="buildings_tools"/>
         <ant target="clean" dir="cadastre-fr"/>
         <ant target="clean" dir="canvec_helper"/>
         <ant target="clean" dir="colorscheme"/>
         <ant target="clean" dir="commons-imaging"/>
+        <ant target="clean" dir="conflation"/>
         <ant target="clean" dir="ColumbusCSV"/>
         <ant target="clean" dir="CommandLine"/>
         <ant target="clean" dir="Create_grid_of_ways"/>

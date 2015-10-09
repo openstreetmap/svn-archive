@@ -1178,7 +1178,8 @@ public class S57val {
 				for (Object item : (ArrayList<?>) attval.val) {
 					if (!str.isEmpty())
 						str += ";";
-					str += ((S57enum) map.get(item)).val;
+					if (item != null)
+						str += ((S57enum) map.get(item)).val;
 				}
 				return str;
 			case I:

@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetReader;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetReader;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 

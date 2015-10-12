@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public class PresetManager extends JPanel {
 

@@ -14,7 +14,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.tagging.TagModel;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 import org.openstreetmap.josm.plugins.tageditor.preset.AdvancedTag;
 import org.openstreetmap.josm.plugins.tageditor.tagspec.KeyValuePair;
 

@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public class NameIconCellRenderer extends JLabel implements TableCellRenderer {
 

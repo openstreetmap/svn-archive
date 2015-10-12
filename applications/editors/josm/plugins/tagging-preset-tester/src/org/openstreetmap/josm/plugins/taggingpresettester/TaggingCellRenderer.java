@@ -11,7 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 final public class TaggingCellRenderer extends DefaultListCellRenderer {

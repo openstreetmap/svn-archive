@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.openstreetmap.josm.data.osm.Tag;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetItem;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetItems.KeyedItem;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetItems.Optional;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetItem;
+import org.openstreetmap.josm.gui.tagging.presets.items.KeyedItem;
+import org.openstreetmap.josm.gui.tagging.presets.items.Optional;
 
 public class AdvancedTag extends Tag {
     private String displayName;

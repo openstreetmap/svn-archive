@@ -7,7 +7,7 @@ import java.util.Collection;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public class PresetsTableModel extends AbstractTableModel  {
 

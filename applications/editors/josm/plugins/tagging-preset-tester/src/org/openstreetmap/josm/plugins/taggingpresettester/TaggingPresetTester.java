@@ -26,10 +26,10 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetReader;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetSelector;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetType;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetReader;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetSelector;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetType;
 import org.openstreetmap.josm.tools.GBC;
 
 /**

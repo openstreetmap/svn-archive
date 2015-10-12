@@ -89,9 +89,9 @@ import org.openstreetmap.josm.gui.dialogs.properties.PropertiesCellRenderer;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.help.HelpUtil;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.tagging.PresetHandler;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
-import org.openstreetmap.josm.gui.tagging.TaggingPresetType;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetHandler;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresetType;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.util.HighlightHelper;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
@@ -220,7 +220,7 @@ public class OSMRecToggleDialog extends ToggleDialog implements SelectionChanged
     private final JLabel selectSth = new JLabel("<html><p>"
             + tr("Select objects or create new objects and get recommendation.") + "</p></html>");
 
-    private final PresetHandler presetHandler = new PresetHandler() {
+    private final TaggingPresetHandler presetHandler = new TaggingPresetHandler() {
         @Override public void updateTags(List<Tag> tags) {
             Command command = TaggingPreset.createCommand(getSelection(), tags);
             if (command != null) Main.main.undoRedo.add(command);

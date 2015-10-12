@@ -9,8 +9,8 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
-import org.openstreetmap.josm.gui.tagging.TaggingPresets;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPresets;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorAction;

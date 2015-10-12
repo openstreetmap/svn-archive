@@ -10,7 +10,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
-import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.presets.TaggingPreset;
 
 public class PresetItemListCellRenderer extends JLabel implements ListCellRenderer<TaggingPreset> {
     //private static final Logger logger = Logger.getLogger(PresetItemListCellRenderer.class.getName());

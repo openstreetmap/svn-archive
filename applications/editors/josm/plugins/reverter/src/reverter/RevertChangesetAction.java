@@ -31,10 +31,11 @@ public class RevertChangesetAction extends JosmAction {
         final RevertType revertType = dlg.getRevertType();
         if (revertType == null) return;
 
-        final boolean newLayer = dlg.isNewLayerRequired();
+        boolean newLayer = dlg.isNewLayerRequired();
         final boolean autoConfirmDownload = newLayer || changesetIds.size() > 1;
         for (Integer changesetId : changesetIds) {
             Main.worker.submit(new RevertChangesetTask(changesetId, revertType, autoConfirmDownload, newLayer));
+            newLayer = false; // reuse layer for subsequent reverts
         }
     }
 }

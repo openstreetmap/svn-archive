@@ -132,8 +132,8 @@ public class TofixTask {
     public void task_complete(Item item, AccessToTask accessToTask) {
         DecimalFormat myFormatter = new DecimalFormat("#,###");
         String num = myFormatter.format(item.getTaskCompleteBean().getTotal());
-        String message = "Task : " + accessToTask.getTask_name() + " was completed\n"
-                + "Total items : " + num;
+        String message = "Task " + accessToTask.getTask_name() + " is complete\n"
+                +  num + " issues fixed";
         JOptionPane.showMessageDialog(Main.panel, tr(message));
     }
 

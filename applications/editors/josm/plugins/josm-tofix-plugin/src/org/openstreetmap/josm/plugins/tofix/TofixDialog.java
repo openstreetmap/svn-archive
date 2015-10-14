@@ -143,7 +143,7 @@ public class TofixDialog extends ToggleDialog implements ActionListener {
 
         //add tittle for To-fix task
         JLabel title_tasks = new javax.swing.JLabel();
-        title_tasks.setText("<html><a href=\"\">List of To-fix tasks</a></html>");
+        title_tasks.setText("<html><a href=\"\">List of tasks</a></html>");
         title_tasks.setCursor(new Cursor(Cursor.HAND_CURSOR));
         title_tasks.addMouseListener(new MouseAdapter() {
             @Override
@@ -169,7 +169,7 @@ public class TofixDialog extends ToggleDialog implements ActionListener {
             jcontenTasks.add(valuePanel);
 
             //add title to download
-            jcontenConfig.add(new Label(tr("Size to download in Sq.m")));
+            jcontenConfig.add(new Label(tr("Set download area (m²)")));
 
             //Add Slider to download
             slider.setMinorTickSpacing(2);
@@ -334,7 +334,7 @@ public class TofixDialog extends ToggleDialog implements ActionListener {
             case 520:
                 mainAccessToTask.setAccess(false);
                 JLabel text = new javax.swing.JLabel();
-                text.setText(tr("<html>Somethig went wrong, please update Tofix plugin  or open a ticket in <a href=\"\">josm-tofix-plugin/issues</a></html>"));
+                text.setText(tr("<html>Something went wrong, please update the plugin or report an issue at <a href=\"\">josm-tofix-plugin/issues</a></html>"));
                 text.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 text.addMouseListener(new MouseAdapter() {
                     @Override
@@ -346,7 +346,7 @@ public class TofixDialog extends ToggleDialog implements ActionListener {
                 break;
             default:
                 mainAccessToTask.setAccess(false);
-                JOptionPane.showMessageDialog(Main.panel, tr("Somethig went wrong, try to again.,"), tr("Warning"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(Main.panel, tr("Something went wrong, try again"), tr("Warning"), JOptionPane.WARNING_MESSAGE);
         }
     }
 

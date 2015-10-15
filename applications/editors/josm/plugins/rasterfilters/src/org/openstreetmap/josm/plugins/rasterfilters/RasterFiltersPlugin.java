@@ -82,9 +82,6 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 			FiltersDownloader.downloadFiltersInfoList();
 			FiltersDownloader.initFilters();
 
-			LayerListDialog dialog = Main.map
-					.getToggleDialog(LayerListDialog.class);
-
 			if (action == null) {
 				action = new ShowLayerFiltersDialog();
 			}
@@ -96,6 +93,8 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 				filterButton = new SideButton(action, false);
 				filterButton.setEnabled(false);
 			}
+
+			LayerListDialog dialog = LayerListDialog.getInstance();
 
 			JPanel buttonRowPanel = (JPanel) ((JPanel) dialog.getComponent(2))
 					.getComponent(0);
@@ -122,7 +121,9 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 		if (Main.map.mapView.getAllLayersAsList().size() == 0) {
 
 			Container container = filterButton.getParent();
-			container.remove(filterButton);
+			if (container != null)
+				container.remove(filterButton);
+			
 			FiltersDownloader.destroyFilters();
 			filterButton = null;
 

@@ -3,7 +3,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="BuildingTools: Alt key to disable tags"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="8760"/>
+    <property name="plugin.main.version" value="8863"/>
     
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

@@ -103,6 +103,7 @@
         <ant target="dist" dir="tageditor"/>
         <ant target="dist" dir="tagging-preset-tester"/>
         <ant target="dist" dir="terracer"/>
+        <ant target="dist" dir="tofix"/>
         <ant target="dist" dir="touchscreenhelper"/>
         <ant target="dist" dir="tracer"/>
         <ant target="dist" dir="tracer2"/>
@@ -210,6 +211,7 @@
         <ant target="clean" dir="tageditor"/>
         <ant target="clean" dir="tagging-preset-tester"/>
         <ant target="clean" dir="terracer"/>
+        <ant target="clean" dir="tofix"/>
         <ant target="clean" dir="touchscreenhelper"/>
         <ant target="clean" dir="tracer"/>
         <ant target="clean" dir="tracer2"/>

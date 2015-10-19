@@ -20,6 +20,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.tools.OpenBrowser;
+import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -71,6 +72,8 @@ public final class OpenPageAction extends JosmAction {
                 val = Double.toString(center.lat());
             } else if (key.equals("#lon")) {
                 val = Double.toString(center.lon());
+            } else if (key.equals("#zoom")) {
+                val = Integer.toString(OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds()));
             }
             else {
                 if (p!=null) {

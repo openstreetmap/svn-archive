@@ -170,10 +170,10 @@ public class Spline {
                 sn.node.setEastNorth(en);
                 return;
             case CONTROL_PREV:
-                sn.cprev = sn.node.getEastNorth().sub(en);
+                sn.cprev = en.subtract(sn.node.getEastNorth());
                 return;
             case CONTROL_NEXT:
-                sn.cnext = sn.node.getEastNorth().sub(en);
+                sn.cnext = en.subtract(sn.node.getEastNorth());
                 return;
             }
             throw new AssertionError();

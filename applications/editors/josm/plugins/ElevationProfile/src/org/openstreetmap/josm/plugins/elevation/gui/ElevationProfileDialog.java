@@ -25,10 +25,10 @@ import javax.swing.JPanel;
 import javax.swing.event.ListDataListener;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -285,7 +285,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 			double dist = profile.getDistance();
 
 			totalTimeLabel.setText(String.format("%d:%02d h", hours, minutes));
-			distLabel.setText(NavigatableComponent.getSystemOfMeasurement().getDistText(dist));
+			distLabel.setText(SystemOfMeasurement.getSystemOfMeasurement().getDistText(dist));
 			trackCombo.setEnabled(model.profileCount() > 1);
 			trackCombo.setModel(new TrackModel());
 			zoomButton.setEnabled(true);

@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.SystemOfMeasurement;
+import org.openstreetmap.josm.data.SystemOfMeasurement.SoMChangeListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -30,8 +32,6 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
-import org.openstreetmap.josm.gui.NavigatableComponent;
-import org.openstreetmap.josm.gui.NavigatableComponent.SoMChangeListener;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.help.HelpUtil;
@@ -142,19 +142,19 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         }));
 
         DataSet.addSelectionListener(this);
-        NavigatableComponent.addSoMChangeListener(this);
+        SystemOfMeasurement.addSoMChangeListener(this);
     }
 
     protected String getDistText(double v) {
-        return NavigatableComponent.getSystemOfMeasurement().getDistText(v, new DecimalFormat("#0.000"), 1e-3);
+        return SystemOfMeasurement.getSystemOfMeasurement().getDistText(v, new DecimalFormat("#0.000"), 1e-3);
     }
 
     protected String getAreaText(double v) {
-        return NavigatableComponent.getSystemOfMeasurement().getAreaText(v, new DecimalFormat("#0.000"), 1e-3);
+        return SystemOfMeasurement.getSystemOfMeasurement().getAreaText(v, new DecimalFormat("#0.000"), 1e-3);
     }
 
     protected String getRadiusText(double v) {
-        return NavigatableComponent.getSystemOfMeasurement().getDistText(v, new DecimalFormat("#0.000"), 1e-3);
+        return SystemOfMeasurement.getSystemOfMeasurement().getDistText(v, new DecimalFormat("#0.000"), 1e-3);
     }
 
     protected String getAngleText(double v) {
@@ -256,7 +256,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     @Override
     public void destroy() {
         super.destroy();
-        NavigatableComponent.removeSoMChangeListener(this);
+        SystemOfMeasurement.removeSoMChangeListener(this);
         DataSet.removeSelectionListener(this);
         if (ds != null) {
             ds.removeDataSetListener(this);

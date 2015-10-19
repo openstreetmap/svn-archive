@@ -4,10 +4,12 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.*;
 import java.util.*;
 import java.awt.event.KeyEvent;
+import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Shortcut;
 import java.awt.event.ActionEvent;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.tools.Utils;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
@@ -17,6 +19,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class TagBufferAction extends JosmAction {
     private static final String TITLE = tr("Copy tags from previous selection");
+    private static final Predicate<OsmPrimitive> IS_TAGGED_PREDICATE = new Predicate<OsmPrimitive>() {
+        @Override
+        public boolean evaluate(OsmPrimitive object) {
+            return object.isTagged();
+        }
+    };
     private Map<String, String> tags = new HashMap<>();
     private Map<String, String> currentTags = new HashMap<>();
     private Set<OsmPrimitive> selectionBuf = new HashSet<>();
@@ -93,12 +101,7 @@ public class TagBufferAction extends JosmAction {
 
     private void rememberSelectionTags() {
         // Fix #8350 - only care about tagged objects
-        Collection<OsmPrimitive> selectedTaggedObjects = new ArrayList<>(getCurrentDataSet().getSelected());
-        for (Iterator<OsmPrimitive> it = selectedTaggedObjects.iterator(); it.hasNext(); ) {
-            if (!it.next().isTagged()) {
-                it.remove();
-            }
-        }
+        final Collection<OsmPrimitive> selectedTaggedObjects = Utils.filter(getCurrentDataSet().getSelected(), IS_TAGGED_PREDICATE);
         if( !selectedTaggedObjects.isEmpty() ) {
             currentTags.clear();
             Set<String> bad = new HashSet<>();

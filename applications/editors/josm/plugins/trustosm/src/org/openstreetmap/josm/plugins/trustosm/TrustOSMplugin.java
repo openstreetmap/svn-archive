@@ -1,7 +1,7 @@
 package org.openstreetmap.josm.plugins.trustosm;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -256,7 +256,7 @@ public class TrustOSMplugin extends Plugin {
         MainMenu menu = Main.main.menu;
 
         if (gpgJMenu == null) {
-            gpgJMenu = menu.addMenu(marktr("GPG"), KeyEvent.VK_B, menu.getDefaultMenuPos(), ht("/Plugin/TrustOSM"));
+            gpgJMenu = menu.addMenu("GPG", tr("GPG"), KeyEvent.VK_B, menu.getDefaultMenuPos(), ht("/Plugin/TrustOSM"));
             gpgJMenu.add(new JMenuItem(new ExportSigsAction()));
         }
 

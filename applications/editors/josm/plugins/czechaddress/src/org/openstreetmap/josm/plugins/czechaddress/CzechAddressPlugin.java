@@ -1,7 +1,7 @@
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -185,7 +185,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         if (message == MESSAGE_DATABASE_LOADED) {
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override public void run() {
-                    czechMenu = Main.main.menu.addMenu(marktr("Address"), KeyEvent.VK_Z, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CzechAddress"));
+                    czechMenu = Main.main.menu.addMenu("Address", tr("Address"), KeyEvent.VK_Z, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CzechAddress"));
                     menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
                     menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
                     menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));

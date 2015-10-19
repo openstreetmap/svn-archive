@@ -2,7 +2,6 @@
 package org.openstreetmap.hot.sds;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Dimension;
@@ -38,7 +37,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener {
 
     public SdsMenu(final SeparateDataStorePlugin thePlugin) {
         MainMenu mm = Main.main.menu;
-        menu = mm.addMenu(marktr("SDS"), KeyEvent.VK_S, mm.getDefaultMenuPos(), null);
+        menu = mm.addMenu("SDS", tr("SDS"), KeyEvent.VK_S, mm.getDefaultMenuPos(), null);
         saveItem = new JMenuItem(new SdsSaveAction());
         menu.add(saveItem);
         loadItem = new JMenuItem(new SdsLoadAction(thePlugin));

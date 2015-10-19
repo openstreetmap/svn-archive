@@ -1,6 +1,6 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
 
@@ -27,7 +27,7 @@ public class PublicTransportPlugin extends Plugin {
     MainMenu menu = Main.main.menu;
 
     if (jMenu == null)
-      jMenu = menu.addMenu(marktr("Public Transport"), KeyEvent.VK_COMMA, menu.getDefaultMenuPos(), "help");
+      jMenu = menu.addMenu("Public Transport", tr("Public Transport"), KeyEvent.VK_COMMA, menu.getDefaultMenuPos(), "help");
     else
       jMenu.removeAll();
 

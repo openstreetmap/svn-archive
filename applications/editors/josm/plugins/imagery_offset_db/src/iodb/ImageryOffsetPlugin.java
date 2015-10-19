@@ -1,6 +1,6 @@
 package iodb;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.KeyEvent;
 import java.util.Collection;
@@ -40,7 +40,7 @@ public class ImageryOffsetPlugin extends Plugin {
         // before 5729 it was regenerated only when the imagery list was modified (also bad)
         int version = Version.getInstance().getVersion();
         JMenu offsetMenu = version < 5803
-                ? Main.main.menu.addMenu(marktr("Offset"), KeyEvent.VK_O, 6, "help")
+                ? Main.main.menu.addMenu("Offset", tr("Offset"), KeyEvent.VK_O, 6, "help")
                 : Main.main.menu.imageryMenu;
         offsetMenu.add(getAction);
         offsetMenu.add(storeAction);

@@ -16,13 +16,13 @@ import java.util.Set;
 import org.openstreetmap.josm.actions.CombineWayAction.NodeGraph;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.corrector.ReverseWayTagCorrector;
-import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
+import org.openstreetmap.josm.tools.UserCancelException;
 
 // FIXME: Try to refactor CombineWayAction instead of using this class
 public class WayCombiner {

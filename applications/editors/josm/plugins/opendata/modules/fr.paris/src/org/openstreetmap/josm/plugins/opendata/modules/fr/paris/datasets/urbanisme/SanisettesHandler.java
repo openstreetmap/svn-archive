@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.WayCombiner;
 import org.openstreetmap.josm.plugins.opendata.modules.fr.paris.datasets.ParisDataSetHandler;
+import org.openstreetmap.josm.tools.UserCancelException;
 
 public class SanisettesHandler extends ParisDataSetHandler {
 

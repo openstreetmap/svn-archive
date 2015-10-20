@@ -36,7 +36,6 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.OperationNotFoundException;
 import org.opengis.referencing.operation.TransformException;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.corrector.UserCancelException;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -50,6 +49,7 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.gui.DialogPrompter;
 import org.openstreetmap.josm.tools.ImageOverlay;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.UserCancelException;
 import org.openstreetmap.josm.tools.ImageProvider.ImageSizes;
 
 import com.vividsolutions.jts.geom.LineString;

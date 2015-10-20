@@ -305,10 +305,10 @@ public class MifReader extends AbstractMapInfoReader {
     private void parseBounds(String[] words, int index) {
         if (index < words.length && "Bounds".equals(words[index])) {
             // Useless parenthesis... "(minx, miny) (maxx, maxy)"
-            minx = Double.parseDouble(words[index+1].substring(1));
-            miny = Double.parseDouble(words[index+2].substring(0, words[index+2].length()-1));
-            maxx = Double.parseDouble(words[index+3].substring(1));
-            maxy = Double.parseDouble(words[index+4].substring(0, words[index+4].length()-1));
+            minx = Double.valueOf(words[index+1].substring(1));
+            miny = Double.valueOf(words[index+2].substring(0, words[index+2].length()-1));
+            maxx = Double.valueOf(words[index+3].substring(1));
+            maxy = Double.valueOf(words[index+4].substring(0, words[index+4].length()-1));
             if (Main.isTraceEnabled()) {
                 Main.trace(Arrays.toString(words) + " -> "+minx+","+miny+","+maxx+","+maxy);
             }

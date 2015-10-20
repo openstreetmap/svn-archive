@@ -51,12 +51,12 @@ fr.lemans.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/ope
 fr.paris.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.paris.jar
 	Module-Icon: images/data.fr.paris_24.png
 	Author: Don-vip
-	Ant-Version: Apache Ant 1.9.2
+	Ant-Version: Apache Ant 1.9.4
 	Module-Description: Paris
 	Manifest-Version: 1.0
-	Module-Version: 30563
-	Created-By: 1.7.0_65-b19 (Oracle Corporation)
-	Module-Date: 2014-08-05T11:53:46.368212Z
+	Module-Version: 31655
+	Created-By: 1.7.0_80-b15 (Oracle Corporation)
+	Module-Date: 2015-10-20T14:57:35.440183Z
 	Module-Class: org.openstreetmap.josm.plugins.opendata.modules.fr.paris.ParisModule
 fr.sncf.jar;http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/dist/fr.sncf.jar
 	Module-Icon: images/data.fr.sncf_24.png

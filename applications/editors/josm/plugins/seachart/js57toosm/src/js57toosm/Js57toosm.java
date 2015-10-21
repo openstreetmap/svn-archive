@@ -29,6 +29,10 @@ public class Js57toosm {
 	static FileInputStream in;
 	static PrintStream out;
 	static S57map map;
+	static final ArrayList<Att> typatts = new ArrayList<Att>(); static {
+		typatts.add(Att.OBJNAM); typatts.add(Att.NOBJNM); typatts.add(Att.STATUS); typatts.add(Att.INFORM); typatts.add(Att.NINFOM);
+		typatts.add(Att.PEREND); typatts.add(Att.PERSTA); typatts.add(Att.CONDTN); typatts.add(Att.CONRAD); typatts.add(Att.CONVIS);
+	}
 	
 	public static void main(String[] args) throws IOException {
 
@@ -38,9 +42,21 @@ public class Js57toosm {
 			System.err.println("Usage: java -jar js57toosm.jar S57_filename types_filename OSM_filename");
 			System.exit(-1);
 		}
-		in = new FileInputStream(args[0]);
-		out = new PrintStream(args[2]);
+		try {
+			in = new FileInputStream(args[0]);
+		} catch (IOException e) {
+			System.err.println("Input file: " + e.getMessage());
+			System.exit(-1);
+		}
+		try {
+			out = new PrintStream(args[2]);
+		} catch (IOException e) {
+			System.err.println("Output file: " + e.getMessage());
+			in.close();
+			System.exit(-1);
+		}
 		ArrayList<Obj> types = new ArrayList<Obj>();
+		try {
 			Scanner tin = new Scanner(new FileInputStream(args[1]));
 			while (tin.hasNext()) {
 				Obj type = S57obj.enumType(tin.next());
@@ -48,6 +64,12 @@ public class Js57toosm {
 					types.add(type);
 			}
 			tin.close();
+		} catch (IOException e) {
+			System.err.println("Types file: " + e.getMessage());
+			in.close();
+			out.close();
+			System.exit(-1);
+		}
 		
 		map = new S57map(true);
 		MapBounds bounds = S57dec.decodeFile(in, map);
@@ -71,7 +93,7 @@ public class Js57toosm {
 									out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
 									if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
 										out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
-									writeAtts(feature, type);
+									writeAtts(feature);
 									out.format("  </node>%n");
 									done.add(ref);
 								}
@@ -115,7 +137,7 @@ public class Js57toosm {
 								}
 							}
 							out.format("    <tag k='seamark:type' v='%s'/>%n", type);
-							writeAtts(feature, type);
+							writeAtts(feature);
 							out.format("  </way>%n");
 						}
 					} else if (feature.geom.prim == Pflag.AREA) {
@@ -160,7 +182,7 @@ public class Js57toosm {
 							}
 						}
 						out.format("    <tag k='seamark:type' v='%s'/>%n", type);
-						writeAtts(feature, type);
+						writeAtts(feature);
 						out.format("  </relation>%n");
 					}
 				}
@@ -171,26 +193,30 @@ public class Js57toosm {
 		System.err.println("Finished");
 	}
 	
-	static void writeAtts(Feature feature, String type) {
+	static void writeAtts(Feature feature) {
 		for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {
 			String attstr = S57att.stringAttribute(item.getKey());
 			String valstr = S57val.stringValue(item.getValue(), item.getKey());
-			if (!attstr.isEmpty() && !valstr.isEmpty())
-				out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, StringEscapeUtils.escapeXml10(valstr));
+			if (!attstr.isEmpty() && !valstr.isEmpty()) {
+				if (typatts.contains(item.getKey())) {
+					out.format("    <tag k='seamark:%s' v='%s'/>%n", attstr, StringEscapeUtils.escapeXml10(valstr));
+				} else {
+					out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", S57obj.stringType(feature.type), attstr, StringEscapeUtils.escapeXml10(valstr));
+				}
+			}
 		}
 		for (Obj obj : feature.objs.keySet()) {
 			ObjTab tab = feature.objs.get(obj);
 			for (int ix : tab.keySet()) {
-				type = S57obj.stringType(obj);
 				AttMap atts = tab.get(ix);
 				for (Map.Entry<Att, AttVal<?>> item : atts.entrySet()) {
 					String attstr = S57att.stringAttribute(item.getKey());
 					String valstr = S57val.stringValue(item.getValue(), item.getKey());
 					if (!attstr.isEmpty() && !valstr.isEmpty()) {
 						if ((ix == 0) && (tab.size() == 1)) {
-							out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", type, attstr, StringEscapeUtils.escapeXml10(valstr));
+							out.format("    <tag k='seamark:%s:%s' v='%s'/>%n", S57obj.stringType(obj), attstr, StringEscapeUtils.escapeXml10(valstr));
 						} else {
-							out.format("    <tag k='seamark:%s:%d:%s' v='%s'/>%n", type, ix + 1, attstr, StringEscapeUtils.escapeXml10(valstr));
+							out.format("    <tag k='seamark:%s:%d:%s' v='%s'/>%n", S57obj.stringType(obj), ix + 1, attstr, StringEscapeUtils.escapeXml10(valstr));
 						}
 					}
 				}

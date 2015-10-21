@@ -766,7 +766,7 @@ public class S57map {
 		feature.geom.length = 0;
 		feature.geom.area = 0;
 		if (feature.geom.prim == Pflag.POINT) { 
-			feature.geom.centre = findCentroid(feature);
+			feature.geom.centre = nodes.get(feature.geom.elems.get(0).id);
 			return true;
 		}	else {
 			int sweep = feature.geom.elems.size();
@@ -825,13 +825,26 @@ public class S57map {
 			feature.geom = sort;
 		}
 		if (feature.geom.prim == Pflag.AREA) {
-			if (signedArea(feature.geom) < 0.0) {
-				
-			};
-			feature.geom.area = calcArea(feature.geom);
+			int ie = 0;
+			int ic = 0;
+			while (ie < feature.geom.elems.size()) {
+				double area = calcArea(feature.geom, ic);
+				if (ie == 0) feature.geom.area = Math.abs(area) * 3444 * 3444;
+				if (((ie == 0) && (area < 0.0)) || ((ie > 0) && (area >= 0.0))) {
+					ArrayList<Prim> tmp = new ArrayList<Prim>();
+					for (int i = 0; i < feature.geom.comps.get(ic).size; i++) {
+						Prim p = feature.geom.elems.remove(ie);
+						p.forward = !p.forward;
+						tmp.add(0, p);
+					}
+					feature.geom.elems.addAll(ie, tmp);
+				}
+				ie += feature.geom.comps.get(ic).size;
+				ic++;
+			}
 		}
 		feature.geom.length = calcLength(feature.geom);
-		feature.geom.centre = findCentroid(feature);
+		feature.geom.centre = calcCentroid(feature);
 		return true;
 	}
 	
@@ -950,39 +963,36 @@ public class S57map {
 		}
 	}
 	
-	double signedArea(Geom geom) {
+	double calcArea(Geom geom, int comp) {
 		Snode node;
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
 		double sigma = 0;
 		GeomIterator git = new GeomIterator(geom);
-		if (git.hasComp()) {
-			git.nextComp();
-			while (git.hasEdge()) {
-				git.nextEdge();
-				while (git.hasNode()) {
-					node = git.next();
-					if (node == null) continue;
-					llon = lon;
-					llat = lat;
-					lat = node.lat;
-					lon = node.lon;
-					sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+		for (int i = 0; i <= comp; i++) {
+			if (git.hasComp()) {
+				git.nextComp();
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						node = git.next();
+						if (node == null)
+							continue;
+						llon = lon;
+						llat = lat;
+						lat = node.lat;
+						lon = node.lon;
+						sigma += (lon * Math.sin(llat)) - (llon * Math.sin(lat));
+					}
 				}
+				if (i != comp)
+					sigma = lat = lon = llon = llat = 0;
 			}
 		}
 		return sigma / 2.0;
 	}
 
-	public boolean handOfArea(Geom geom) {
-		return (signedArea(geom) < 0);
-	}
-
-	public double calcArea(Geom geom) {
-		return Math.abs(signedArea(geom)) * 3444 * 3444;
-	}
-
-	public double calcLength(Geom geom) {
+	double calcLength(Geom geom) {
 		Snode node;
 		double lat, lon, llon, llat;
 		lat = lon = llon = llat = 0;
@@ -1012,7 +1022,7 @@ public class S57map {
 		return sigma * 3444;
 	}
 
-	public Snode findCentroid(Feature feature) {
+	Snode calcCentroid(Feature feature) {
 		double lat, lon, slat, slon, llat, llon;
 		llat = llon = lat = lon = slat = slon = 0;
 		double sarc = 0;

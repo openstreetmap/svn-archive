@@ -128,11 +128,10 @@ public class OsmInspectorDialog extends ToggleDialog implements
 
 	public OsmInspectorDialog(OsmInspectorLayer layer) {
 
-		super(tr("Osm Inspector Bugs"), "selectionlist",
+		super(tr("OSM Inspector Bugs"), "selectionlist",
 				tr("Open a OSM Inspector selection list window."), Shortcut.registerShortcut("subwindow:osminspector",
 								tr("Toggle: {0}", tr("OSM Inspector Bugs")),
-								KeyEvent.VK_W, Shortcut.ALT_SHIFT), 150, // default
-																			// height
+								KeyEvent.VK_W, Shortcut.ALT_SHIFT), 150, // default height
 				true // default is "show dialog"
 		);
 		this.layer = layer;

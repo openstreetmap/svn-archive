@@ -15,7 +15,7 @@ import java.io.IOException;
 import s57.S57dat.*;
 import s57.S57map.*;
 
-public class S57dec {
+public class S57dec { // S57 ENC file input & map conversion
 
 	public static MapBounds decodeFile(FileInputStream in, S57map map) throws IOException {
 		S57dat.rnum = 0;

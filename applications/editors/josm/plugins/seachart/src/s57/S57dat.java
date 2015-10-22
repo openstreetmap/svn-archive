@@ -12,7 +12,7 @@ package s57;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
-public class S57dat {
+public class S57dat { // S57 ENC file fields lookup tables & methods
 	
 	public enum Dom { BT, GT, DG, DATE, INT, REAL, AN, HEX, CL }
 	

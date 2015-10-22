@@ -16,7 +16,7 @@ import s57.S57obj.*;
 import s57.S57att.*;
 import s57.S57val.*;
 
-public class S57osm {
+public class S57osm { // OSM to S57 Object/Attribute conversions
 
 	static class KeyVal<V> {
 		Obj obj;

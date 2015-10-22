@@ -13,7 +13,7 @@ import java.util.*;
 
 import s57.S57att.*;
 
-public class S57val {
+public class S57val { // S57 Attribute values lookup tables & methods
 
 	static class S57enum {
 		Integer atvl;

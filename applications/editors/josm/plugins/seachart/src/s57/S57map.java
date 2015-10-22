@@ -20,7 +20,7 @@ import s57.S57val.*;
 import s57.S57osm;
 import s57.S57osm.*;
 
-public class S57map {
+public class S57map { // S57/OSM map generation methods
 	
 	public class MapBounds {
 		public double minlat;

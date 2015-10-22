@@ -13,7 +13,7 @@ import java.util.*;
 
 import s57.S57obj.*;
 
-public class S57att {
+public class S57att { // S57 Attribute lookup tables & methods
 	
 	public enum Att {
 	  UNKATT, AGENCY, BCNSHP, BUISHP, BOYSHP, BURDEP, CALSGN, CATAIR, CATACH, CATBRG, CATBUA, CATCBL, CATCAN, CATCAM, CATCHP, CATCOA, CATCTR, CATCON, CATCRN, CATDAM,

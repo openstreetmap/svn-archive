@@ -11,7 +11,7 @@ package s57;
 
 import java.util.*;
 
-public class S57obj {
+public class S57obj { // S57 Object lookup tables & methods
 	
 	public enum Obj {
 		UNKOBJ, AIRARE, ACHBRT, ACHARE, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BERTHS, BRIDGE, BUISGL, BUAARE, BOYCAR, BOYINB,

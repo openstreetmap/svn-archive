@@ -153,11 +153,11 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 //        putValue(Action.NAME, name);
                 if (state == 0) {
 //            putValue(NAME, "?");
-                    putValue(SMALL_ICON, ImageProvider.get("relcontext", "addremove"));
+                    putValue(LARGE_ICON_KEY, ImageProvider.get("relcontext", "addremove"));
                 } else {
                     String iconName = state == 1 ? "add" : state == 2 ? "remove" : "addremove";
                     putValue(NAME, null);
-                    putValue(SMALL_ICON, ImageProvider.get("relcontext", iconName));
+                    putValue(LARGE_ICON_KEY, ImageProvider.get("relcontext", iconName));
                 }
             }
         });

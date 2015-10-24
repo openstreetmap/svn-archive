@@ -28,7 +28,7 @@
     -->
     <target name="compile_lang3" depends="init">
         <echo message="compiling Apache Commons Lang 3 ... "/>
-        <javac srcdir="src" includes="org/apache/commons/lang3" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
+        <javac srcdir="src" includes="org/apache/commons/lang3/**" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
     </target>
 
     <!--

@@ -4,7 +4,6 @@ package cadastre_fr;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.io.session.SessionReader.registerSessionLayerImporter;
 import static org.openstreetmap.josm.io.session.SessionWriter.registerSessionLayerExporter;
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
@@ -282,17 +281,6 @@ public class CadastrePlugin extends Plugin {
             imageWidth = 600; imageHeight = 400;
         }
         refreshLayersURL();
-
-        /* TODO: remove in july 2012 */
-        if(!Main.pref.getBoolean("cadastregrab.shortcut.warn", false))
-        {
-            Main.pref.put("cadastregrab.shortcut.warn", true);
-            JOptionPane.showMessageDialog(Main.parent,
-                tr("Plugin cadastre-fr used the key shortcut F11 for grabbing,\n"+
-                "which is now allocated for full-screen switch.\n"+
-                "The new grabbing key is F10, but you can change the key\n" +
-                "in the shortcut settings if you want."));
-        }
         refreshMenu();
     }
 

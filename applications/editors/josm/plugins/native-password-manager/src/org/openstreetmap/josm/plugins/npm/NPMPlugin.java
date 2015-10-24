@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.npm;
 
+import java.awt.GraphicsEnvironment;
+
 import javax.swing.SwingUtilities;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.auth.CredentialsManager;
@@ -25,7 +27,7 @@ public class NPMPlugin extends Plugin {
             CredentialsManager.registerCredentialsAgentFactory(
                     new NPMCredentialsAgentFactory(sel)
             );
-        } else {
+        } else if (!GraphicsEnvironment.isHeadless()) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {

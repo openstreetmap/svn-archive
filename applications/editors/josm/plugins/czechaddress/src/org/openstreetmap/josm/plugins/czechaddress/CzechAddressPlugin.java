@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.czechaddress;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +90,9 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
 
         addStatusListener(this);
 
-        ConflictResolver.getInstance();
+        if (!GraphicsEnvironment.isHeadless()) {
+        	ConflictResolver.getInstance();
+        }
         SelectionMonitor.getInstance();
         Reasoner.getInstance();
 

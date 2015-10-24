@@ -25,6 +25,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -252,7 +253,7 @@ public class CommandLine extends Plugin {
 	private void loadCommands() {
 		commands = (new Loader(getPluginDir())).load();
 		if (commands.isEmpty()) {
-			if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Main.parent,
+			if (!GraphicsEnvironment.isHeadless() && JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Main.parent,
 					tr("No command has been found. Would you like to download and install default commands now?"),
 					tr("No command found"), JOptionPane.YES_NO_CANCEL_OPTION)) {
 				try {

@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.globalsat;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import gnu.io.CommPortIdentifier;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -88,13 +89,17 @@ public class GlobalsatPlugin extends Plugin {
     public GlobalsatPlugin(PluginInformation info) {
         super(info);
         boolean error = false;
-        try{
+        try {
             CommPortIdentifier.getPortIdentifiers();
-        }catch(java.lang.UnsatisfiedLinkError e){
+        } catch (UnsatisfiedLinkError e) {
             error = true;
-            JOptionPane.showMessageDialog(Main.parent, "<html>" + tr("Cannot load library rxtxSerial. If you need support to install it try Globalsat homepage at http://www.raphael-mack.de/josm-globalsat-gpx-import-plugin/") + "</html>");
+            String msg = tr("Cannot load library rxtxSerial. If you need support to install it try Globalsat homepage at http://www.raphael-mack.de/josm-globalsat-gpx-import-plugin/");
+            Main.error(msg);
+            if (!GraphicsEnvironment.isHeadless()) {
+            	JOptionPane.showMessageDialog(Main.parent, "<html>" + msg + "</html>");
+            }
         }
-        if(!error){
+        if (!error) {
             importAction = new GlobalsatImportAction();
             Main.main.menu.toolsMenu.add(importAction);
         }

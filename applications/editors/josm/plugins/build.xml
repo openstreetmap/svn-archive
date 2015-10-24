@@ -16,7 +16,7 @@
         <ant target="dist" dir="geotools"/>
         <ant target="dist" dir="utilsplugin2"/>
         <ant target="dist" dir="log4j"/>
-        <ant target="dist" dir="commons-imaging"/>
+        <ant target="dist" dir="apache-commons"/>
         <!-- order not important -->
         <!-- to update, run $ ls -F | grep '/$' | tr -d '/' | grep -v '00_plugin_dir_template\|jna\|jts\|geotools\|utilsplugin2\|log4j\|commons-imaging' | sed 's/^/<ant target="dist" dir="/' | sed 's/$/"\/>/' -->
         <ant target="dist" dir="addrinterpolation"/>
@@ -129,7 +129,7 @@
         <ant target="clean" dir="cadastre-fr"/>
         <ant target="clean" dir="canvec_helper"/>
         <ant target="clean" dir="colorscheme"/>
-        <ant target="clean" dir="commons-imaging"/>
+        <ant target="clean" dir="apache-commons"/>
         <ant target="clean" dir="conflation"/>
         <ant target="clean" dir="ColumbusCSV"/>
         <ant target="clean" dir="CommandLine"/>

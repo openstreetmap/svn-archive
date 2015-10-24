@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="commons-imaging" default="dist" basedir=".">
+<project name="apache-commons" default="dist" basedir=".">
 
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7777"/>
@@ -7,9 +7,9 @@
     <!-- Configure these properties (replace "..." accordingly).
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
-    <property name="plugin.author" value="nokutu"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.commons.imaging.CommonsImagingPlugin"/>
-    <property name="plugin.description" value="Provides Commons Imaging library. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
+    <property name="plugin.author" value="nokutu; Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.commons.CommonsPlugin"/>
+    <property name="plugin.description" value="Provides Apache Commons library components. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
     
 	<property name="josm" location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir" value="../../dist"/>

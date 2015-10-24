@@ -13,6 +13,7 @@
     <property name="plugin.description" value="Import PDF file and convert to ways."/>
     <property name="plugin.icon" value="images/pdf_import.png"/>
     <property name="plugin.link" value="http://svn.openstreetmap.org/applications/editors/josm/plugins/pdfimport/"/>
+    <property name="plugin.requires" value="apache-commons"/>
     
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

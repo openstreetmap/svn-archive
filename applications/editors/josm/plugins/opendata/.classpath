@@ -15,11 +15,16 @@
 	<classpathentry kind="src" path="modules/fr.toulouse/resources"/>
 	<classpathentry kind="src" path="util"/>
 	<classpathentry kind="src" path="test/unit"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-utilsplugin2"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-GeoTools"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-jts"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-apache-commons"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

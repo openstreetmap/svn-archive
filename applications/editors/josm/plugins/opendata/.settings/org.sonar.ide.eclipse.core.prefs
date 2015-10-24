@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
 extraProperties=sonar.sources\=src,modules/*/src\r\nsonar.tests\=test/functional,test/performance,test/unit\r\nsonar.exclusions\=includes/**/*.java
-lastAnalysisDate=1413638065029
+lastAnalysisDate=1438388786000
 projectKey=josm-plugins
-serverUrl=http\://donvip.fr/sonar
+serverUrl=https\://josm.openstreetmap.de/sonar
 version=2

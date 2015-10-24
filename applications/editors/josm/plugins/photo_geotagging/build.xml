@@ -12,13 +12,13 @@
     <property name="plugin.icon" value="images/geotagging.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Photo_Geotagging"/>
     <property name="plugin.canloadatruntime" value="true"/>
-    <property name="plugin.requires" value="commons-imaging"/>
+    <property name="plugin.requires" value="apache-commons"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
-        <include name="commons-imaging.jar"/>
+        <include name="apache-commons.jar"/>
     </fileset>
 
 </project>

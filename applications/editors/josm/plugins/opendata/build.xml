@@ -7,29 +7,22 @@
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
-    <property name="plugin.requires" value="jts;geotools;utilsplugin2"/>
+    <property name="plugin.requires" value="apache-commons;jts;geotools;utilsplugin2"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
     
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="apache-commons.jar"/>
         <include name="jts.jar"/>
         <include name="geotools.jar"/>
         <include name="opendata.jar"/>
     </fileset>
 
+    <property name="apache-commons" location="${plugin.dist.dir}/apache-commons.jar"/>
     <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
     <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
     
-    <!--
-    **********************************************************
-    ** compile_lang3 - compiles Apache Commons Lang 3 needed classes
-    **********************************************************
-    -->
-    <target name="compile_lang3" depends="init">
-        <echo message="compiling Apache Commons Lang 3 ... "/>
-        <javac srcdir="includes/org/apache/commons/lang3" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
-    </target>
     <!--
     **********************************************************
     ** compile_poi - compiles Apache POI needed classes
@@ -85,12 +78,13 @@
     ** compile - compiles the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init, compile_lang3, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
+    <target name="compile" depends="init, compile_poi, compile_jopendoc, compile_neptune, compile_j7zip">
         <echo message="compiling sources for ${plugin.jar} ... "/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
             <classpath>
                 <pathelement path="${plugin.build.dir}"/>
                 <pathelement location="${josm}"/>
+                <pathelement location="${apache-commons}"/>
                 <pathelement location="${jts}"/>
                 <pathelement location="${geotools}"/>
             </classpath>

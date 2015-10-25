@@ -67,10 +67,6 @@
         **
         ************************************************
     -->
-            <zipfileset src="lib/jsr173-1.0_api.jar" includes="**/*.class"/>
-            <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
-            <zipfileset src="lib/jaxb-api.jar" includes="**/*.properties"/>
-            <zipfileset src="lib/jaxb-impl.jar" includes="**/*.class"/>
             <manifest>
                 <attribute name="Author" value="Dieter Muecke"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.dataimport.DataImportPlugin"/>

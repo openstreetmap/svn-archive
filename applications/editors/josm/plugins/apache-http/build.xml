@@ -19,6 +19,4 @@
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-	<property name="apache-commons" location="${plugin.dist.dir}/apache-commons.jar"/>
-
 </project>

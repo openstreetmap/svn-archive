@@ -1,4 +1,8 @@
-package utils;
+package touchscreenhelper;
+
+// Thanks to http://www.arco.in-berlin.de/keyevent.html
+// (code simplified here)
+
 
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
@@ -10,7 +14,7 @@ import java.util.TreeSet;
 import javax.swing.Timer;
 
 public class TimedKeyReleaseListener implements AWTEventListener {
-    private final TreeSet<Integer> set = new TreeSet<>();
+    private final TreeSet<Integer> set = new TreeSet<Integer>();
     private Timer timer;
     protected KeyEvent releaseEvent;
     
@@ -31,7 +35,6 @@ public class TimedKeyReleaseListener implements AWTEventListener {
         } catch (SecurityException ex) {
         }
     }
-
     @Override
     public void eventDispatched(AWTEvent event) {
         if (!(event instanceof KeyEvent)) return;
@@ -53,6 +56,7 @@ public class TimedKeyReleaseListener implements AWTEventListener {
             }
         }
     }
+    
 
     public void stop() {
         try {
@@ -60,6 +64,7 @@ public class TimedKeyReleaseListener implements AWTEventListener {
         } catch (SecurityException ex) {
         }
     }
+
     
     protected void doKeyReleaseEvent(KeyEvent evt) {
     }

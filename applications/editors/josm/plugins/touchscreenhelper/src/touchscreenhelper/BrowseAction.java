@@ -13,7 +13,6 @@ import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.tools.Shortcut;
-import utils.TimedKeyReleaseListener;
 
 public class BrowseAction extends MapMode implements MouseListener,
     MouseMotionListener, MapFrame.MapModeChangeListener {

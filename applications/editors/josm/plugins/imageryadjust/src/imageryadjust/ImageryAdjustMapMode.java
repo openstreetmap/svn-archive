@@ -34,8 +34,6 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
-import utils.TimedKeyReleaseListener;
-
 
 public class ImageryAdjustMapMode extends MapMode implements MouseListener, MouseMotionListener, MapFrame.MapModeChangeListener{
     boolean mouseDown;

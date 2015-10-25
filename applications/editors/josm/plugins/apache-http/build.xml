@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="apache-http" default="dist" basedir=".">
+
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="7777"/>
+
+    <!-- Configure these properties (replace "..." accordingly).
+         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+    -->
+    <property name="plugin.author" value="Don-vip"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.http.HttpPlugin"/>
+    <property name="plugin.description" value="Provides Apache HTTP library. Not meant to be installed directly by users, but rather as a dependency for other plugins."/>
+    
+	<property name="josm" location="../../core/dist/josm-custom.jar"/>
+	<property name="plugin.dist.dir" value="../../dist"/>
+    <property name="plugin.requires" value="apache-commons"/>
+    <property name="plugin.stage" value="15"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+
+	<property name="apache-commons" location="${plugin.dist.dir}/apache-commons.jar"/>
+
+</project>

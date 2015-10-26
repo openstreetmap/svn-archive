@@ -70,11 +70,6 @@ public class OSMRecToggleDialog extends ToggleDialog
 implements SelectionChangedListener, DataSetListenerAdapter.Listener {
 
     /**
-     * hook for roadsigns plugin to display a small button in the upper right corner of this dialog
-     */
-    public static final JPanel pluginHook = new JPanel();
-
-    /**
      * The tag data of selected objects.
      */
     private final DefaultTableModel tagData = new ReadOnlyTableModel();
@@ -272,7 +267,6 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         tagTable.setVisible(hasTags);
         tagTable.getTableHeader().setVisible(hasTags);
         selectSth.setVisible(!hasSelection);
-        pluginHook.setVisible(hasSelection);          
         
         int selectedIndex;
         if (selectedTag != null && (selectedIndex = findRow(tagData, selectedTag)) != -1) {

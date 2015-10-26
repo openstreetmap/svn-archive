@@ -1,11 +1,13 @@
 CLEAR_CONSOLE=true
-JAVACC_OPTIONS=-GRAMMAR_ENCODING\=UTF-8
+JAVACC_OPTIONS=-JDK_VERSION\=1.7 -GRAMMAR_ENCODING\=UTF-8
 JJDOC_OPTIONS=
 JJTREE_OPTIONS=
 JJ_NATURE=true
 JTB_OPTIONS=-ia -jd -tk
+KEEP_DEL_FILES_IN_HISTORY=false
 MARK_GEN_FILES_AS_DERIVED=true
 RUNTIME_JJJAR=${project_loc}\\..\\..\\core\\tools\\javacc.jar
 RUNTIME_JTBJAR=C\:/eclipse/plugins/sf.eclipse.javacc_1.5.27/jtb-1.4.7.jar
+RUNTIME_JVMOPTIONS=
 SUPPRESS_WARNINGS=false
 eclipse.preferences.version=1

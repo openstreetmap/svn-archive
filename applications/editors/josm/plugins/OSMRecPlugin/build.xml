@@ -13,7 +13,16 @@
     <property name="plugin.description" value="Recommends categories/tags on newly created OSM entities by analysing spatial entities into training features and using SVM classification"/>
     <property name="plugin.icon" value="images/dialogs/logo-osmrec.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OSMRec"/>
+    <property name="plugin.requires" value="log4j;apache-commons;jts;geotools"/>
     
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
+       
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="log4j.jar"/>
+        <include name="apache-commons.jar"/>
+        <include name="jts.jar"/>
+        <include name="geotools.jar"/>
+    </fileset>
+    
 </project>

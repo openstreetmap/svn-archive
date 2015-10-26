@@ -14,14 +14,11 @@ import java.util.*;
 
 public class S57dat { // S57 ENC file fields lookup tables & methods
 	
-	public enum Dom { BT, GT, DG, DATE, INT, REAL, AN, HEX, CL }
-	
 	public static class S57conv {
 		int asc;	// 0=A(), 1+=A(n)
-		int bin;	// 0=ASCII, +ve=b1n, -ve=b2n
-		Dom dom;	// S57 data domain
-		S57conv(int a, int b, Dom d) {
-			asc = a; bin = b; dom = d;
+		int bin;	// 0=ASCII, +ve=b1n(unsigned LE), -ve=b2n(signed LE), n>8=b1(n/8)(unsigned BE) 
+		S57conv(int a, int b) {
+			asc = a; bin = b;
 		}
 	}
 	
@@ -33,50 +30,50 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 
 	private static final EnumMap<S57subf, S57conv> convs = new EnumMap<S57subf, S57conv>(S57subf.class);
 	static {
-		convs.put(S57subf.I8RN, new S57conv(5,2,Dom.INT));
-		convs.put(S57subf.RCNM, new S57conv(2,1,Dom.AN)); convs.put(S57subf.RCID, new S57conv(10,32,Dom.INT)); convs.put(S57subf.EXPP, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.INTU, new S57conv(1,1,Dom.INT)); convs.put(S57subf.DSNM, new S57conv(0,0,Dom.BT)); convs.put(S57subf.EDTN, new S57conv(0,0,Dom.BT));
-		convs.put(S57subf.UPDN, new S57conv(0,0,Dom.BT)); convs.put(S57subf.UADT, new S57conv(8,0,Dom.DATE)); convs.put(S57subf.ISDT, new S57conv(8,0,Dom.DATE));
-		convs.put(S57subf.STED, new S57conv(4,0,Dom.REAL)); convs.put(S57subf.PRSP, new S57conv(3,1,Dom.AN)); convs.put(S57subf.PSDN, new S57conv(0,0,Dom.BT));
-		convs.put(S57subf.PRED, new S57conv(0,0,Dom.BT)); convs.put(S57subf.PROF, new S57conv(2,1,Dom.AN)); convs.put(S57subf.AGEN, new S57conv(2,2,Dom.AN));
-		convs.put(S57subf.COMT, new S57conv(0,0,Dom.BT)); convs.put(S57subf.DSTR, new S57conv(2,1,Dom.AN)); convs.put(S57subf.AALL, new S57conv(1,1,Dom.INT));
-		convs.put(S57subf.NALL, new S57conv(1,1,Dom.INT)); convs.put(S57subf.NOMR, new S57conv(0,4,Dom.INT)); convs.put(S57subf.NOCR, new S57conv(0,4,Dom.INT));
-		convs.put(S57subf.NOGR, new S57conv(0,4,Dom.INT)); convs.put(S57subf.NOLR, new S57conv(0,4,Dom.INT)); convs.put(S57subf.NOIN, new S57conv(0,4,Dom.INT));
-		convs.put(S57subf.NOCN, new S57conv(0,4,Dom.INT)); convs.put(S57subf.NOED, new S57conv(0,4,Dom.INT)); convs.put(S57subf.NOFA, new S57conv(0,4,Dom.INT));
-		convs.put(S57subf.HDAT, new S57conv(3,1,Dom.INT)); convs.put(S57subf.VDAT, new S57conv(2,1,Dom.INT)); convs.put(S57subf.SDAT, new S57conv(2,1,Dom.INT));
-		convs.put(S57subf.CSCL, new S57conv(0,4,Dom.INT)); convs.put(S57subf.DUNI, new S57conv(2,1,Dom.INT)); convs.put(S57subf.HUNI, new S57conv(2,1,Dom.INT));
-		convs.put(S57subf.PUNI, new S57conv(2,1,Dom.INT)); convs.put(S57subf.COUN, new S57conv(2,1,Dom.AN)); convs.put(S57subf.COMF, new S57conv(0,4,Dom.INT));
-		convs.put(S57subf.SOMF, new S57conv(0,4,Dom.INT)); convs.put(S57subf.PROJ, new S57conv(3,1,Dom.AN)); convs.put(S57subf.PRP1, new S57conv(0,-4,Dom.REAL));
-		convs.put(S57subf.PRP2, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.PRP3, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.PRP4, new S57conv(0,-4,Dom.REAL));
-		convs.put(S57subf.FEAS, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.FNOR, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.FPMF, new S57conv(0,4,Dom.INT));
-		convs.put(S57subf.RPID, new S57conv(1,1,Dom.DG)); convs.put(S57subf.RYCO, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.RXCO, new S57conv(0,-4,Dom.REAL));
-		convs.put(S57subf.CURP, new S57conv(2,1,Dom.AN)); convs.put(S57subf.RXVL, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.RYVL, new S57conv(0,-4,Dom.REAL));
-		convs.put(S57subf.PRCO, new S57conv(2,2,Dom.AN)); convs.put(S57subf.ESDT, new S57conv(8,0,Dom.DATE)); convs.put(S57subf.LSDT, new S57conv(8,0,Dom.DATE));
-		convs.put(S57subf.DCRT, new S57conv(0,0,Dom.BT)); convs.put(S57subf.CODT, new S57conv(8,0,Dom.DATE)); convs.put(S57subf.PACC, new S57conv(0,4,Dom.REAL));
-		convs.put(S57subf.HACC, new S57conv(0,4,Dom.REAL)); convs.put(S57subf.SACC, new S57conv(0,4,Dom.REAL)); convs.put(S57subf.FILE, new S57conv(0,0,Dom.BT));
-		convs.put(S57subf.LFIL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.VOLM, new S57conv(0,0,Dom.BT)); convs.put(S57subf.IMPL, new S57conv(3,0,Dom.AN));
-		convs.put(S57subf.SLAT, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.WLON, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.NLAT, new S57conv(0,0,Dom.REAL));
-		convs.put(S57subf.ELON, new S57conv(0,0,Dom.REAL)); convs.put(S57subf.CRCS, new S57conv(0,0,Dom.HEX)); convs.put(S57subf.NAM1, new S57conv(12,40,Dom.AN));
-		convs.put(S57subf.NAM2, new S57conv(12,40,Dom.AN)); convs.put(S57subf.OORA, new S57conv(1,1,Dom.AN)); convs.put(S57subf.OAAC, new S57conv(6,0,Dom.BT));
-		convs.put(S57subf.OACO, new S57conv(5,2,Dom.INT)); convs.put(S57subf.OALL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.OATY, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.DEFN, new S57conv(0,0,Dom.BT)); convs.put(S57subf.AUTH, new S57conv(2,2,Dom.AN)); convs.put(S57subf.RFTP, new S57conv(2,1,Dom.AN));
-		convs.put(S57subf.RFVL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.ATLB, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATDO, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.ADMU, new S57conv(0,0,Dom.BT)); convs.put(S57subf.ADFT, new S57conv(0,0,Dom.BT)); convs.put(S57subf.RAVA, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.DVAL, new S57conv(0,0,Dom.BT)); convs.put(S57subf.DVSD, new S57conv(0,0,Dom.BT)); convs.put(S57subf.OBLB, new S57conv(5,2,Dom.INT));
-		convs.put(S57subf.ASET, new S57conv(1,1,Dom.AN)); convs.put(S57subf.PRIM, new S57conv(1,1,Dom.AN)); convs.put(S57subf.GRUP, new S57conv(3,1,Dom.INT));
-		convs.put(S57subf.OBJL, new S57conv(5,2,Dom.INT)); convs.put(S57subf.RVER, new S57conv(3,2,Dom.INT)); convs.put(S57subf.RUIN, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.FIDN, new S57conv(10,4,Dom.INT)); convs.put(S57subf.FIDS, new S57conv(5,2,Dom.INT)); convs.put(S57subf.ATTL, new S57conv(5,2,Dom.INT));
-		convs.put(S57subf.ATVL, new S57conv(0,0,Dom.GT)); convs.put(S57subf.FFUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FFIX, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.NFPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.LNAM, new S57conv(17,64,Dom.AN)); convs.put(S57subf.RIND, new S57conv(0,1,Dom.AN));
-		convs.put(S57subf.FSUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.FSIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.NSPT, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.NAME, new S57conv(12,40,Dom.AN)); convs.put(S57subf.ORNT, new S57conv(1,1,Dom.AN)); convs.put(S57subf.USAG, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.MASK, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPUI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.VPIX, new S57conv(0,2,Dom.INT));
-		convs.put(S57subf.NVPT, new S57conv(0,2,Dom.INT)); convs.put(S57subf.TOPI, new S57conv(1,1,Dom.AN)); convs.put(S57subf.CCUI, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.CCIX, new S57conv(0,2,Dom.INT)); convs.put(S57subf.CCNC, new S57conv(0,2,Dom.INT)); convs.put(S57subf.YCOO, new S57conv(0,-4,Dom.REAL));
-		convs.put(S57subf.XCOO, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.VE3D, new S57conv(0,-4,Dom.REAL)); convs.put(S57subf.ATYP, new S57conv(1,1,Dom.AN));
-		convs.put(S57subf.SURF, new S57conv(1,1,Dom.AN)); convs.put(S57subf.ORDR, new S57conv(1,1,Dom.INT)); convs.put(S57subf.RESO, new S57conv(0,4,Dom.REAL));
-		convs.put(S57subf.STPT, new S57conv(0,0,Dom.CL)); convs.put(S57subf.CTPT, new S57conv(0,0,Dom.CL)); convs.put(S57subf.ENPT, new S57conv(0,0,Dom.CL));
-		convs.put(S57subf.CDPM, new S57conv(0,0,Dom.CL)); convs.put(S57subf.CDPR, new S57conv(0,0,Dom.CL));
+		convs.put(S57subf.I8RN, new S57conv(5,2));
+		convs.put(S57subf.RCNM, new S57conv(2,1)); convs.put(S57subf.RCID, new S57conv(10,32)); convs.put(S57subf.EXPP, new S57conv(1,1));
+		convs.put(S57subf.INTU, new S57conv(1,1)); convs.put(S57subf.DSNM, new S57conv(0,0)); convs.put(S57subf.EDTN, new S57conv(0,0));
+		convs.put(S57subf.UPDN, new S57conv(0,0)); convs.put(S57subf.UADT, new S57conv(8,0)); convs.put(S57subf.ISDT, new S57conv(8,0));
+		convs.put(S57subf.STED, new S57conv(4,0)); convs.put(S57subf.PRSP, new S57conv(3,1)); convs.put(S57subf.PSDN, new S57conv(0,0));
+		convs.put(S57subf.PRED, new S57conv(0,0)); convs.put(S57subf.PROF, new S57conv(2,1)); convs.put(S57subf.AGEN, new S57conv(2,2));
+		convs.put(S57subf.COMT, new S57conv(0,0)); convs.put(S57subf.DSTR, new S57conv(2,1)); convs.put(S57subf.AALL, new S57conv(1,1));
+		convs.put(S57subf.NALL, new S57conv(1,1)); convs.put(S57subf.NOMR, new S57conv(0,4)); convs.put(S57subf.NOCR, new S57conv(0,4));
+		convs.put(S57subf.NOGR, new S57conv(0,4)); convs.put(S57subf.NOLR, new S57conv(0,4)); convs.put(S57subf.NOIN, new S57conv(0,4));
+		convs.put(S57subf.NOCN, new S57conv(0,4)); convs.put(S57subf.NOED, new S57conv(0,4)); convs.put(S57subf.NOFA, new S57conv(0,4));
+		convs.put(S57subf.HDAT, new S57conv(3,1)); convs.put(S57subf.VDAT, new S57conv(2,1)); convs.put(S57subf.SDAT, new S57conv(2,1));
+		convs.put(S57subf.CSCL, new S57conv(0,4)); convs.put(S57subf.DUNI, new S57conv(2,1)); convs.put(S57subf.HUNI, new S57conv(2,1));
+		convs.put(S57subf.PUNI, new S57conv(2,1)); convs.put(S57subf.COUN, new S57conv(2,1)); convs.put(S57subf.COMF, new S57conv(0,4));
+		convs.put(S57subf.SOMF, new S57conv(0,4)); convs.put(S57subf.PROJ, new S57conv(3,1)); convs.put(S57subf.PRP1, new S57conv(0,-4));
+		convs.put(S57subf.PRP2, new S57conv(0,-4)); convs.put(S57subf.PRP3, new S57conv(0,-4)); convs.put(S57subf.PRP4, new S57conv(0,-4));
+		convs.put(S57subf.FEAS, new S57conv(0,-4)); convs.put(S57subf.FNOR, new S57conv(0,-4)); convs.put(S57subf.FPMF, new S57conv(0,4));
+		convs.put(S57subf.RPID, new S57conv(1,1)); convs.put(S57subf.RYCO, new S57conv(0,-4)); convs.put(S57subf.RXCO, new S57conv(0,-4));
+		convs.put(S57subf.CURP, new S57conv(2,1)); convs.put(S57subf.RXVL, new S57conv(0,-4)); convs.put(S57subf.RYVL, new S57conv(0,-4));
+		convs.put(S57subf.PRCO, new S57conv(2,2)); convs.put(S57subf.ESDT, new S57conv(8,0)); convs.put(S57subf.LSDT, new S57conv(8,0));
+		convs.put(S57subf.DCRT, new S57conv(0,0)); convs.put(S57subf.CODT, new S57conv(8,0)); convs.put(S57subf.PACC, new S57conv(0,4));
+		convs.put(S57subf.HACC, new S57conv(0,4)); convs.put(S57subf.SACC, new S57conv(0,4)); convs.put(S57subf.FILE, new S57conv(0,0));
+		convs.put(S57subf.LFIL, new S57conv(0,0)); convs.put(S57subf.VOLM, new S57conv(0,0)); convs.put(S57subf.IMPL, new S57conv(3,0));
+		convs.put(S57subf.SLAT, new S57conv(0,0)); convs.put(S57subf.WLON, new S57conv(0,0)); convs.put(S57subf.NLAT, new S57conv(0,0));
+		convs.put(S57subf.ELON, new S57conv(0,0)); convs.put(S57subf.CRCS, new S57conv(0,0)); convs.put(S57subf.NAM1, new S57conv(12,40));
+		convs.put(S57subf.NAM2, new S57conv(12,40)); convs.put(S57subf.OORA, new S57conv(1,1)); convs.put(S57subf.OAAC, new S57conv(6,0));
+		convs.put(S57subf.OACO, new S57conv(5,2)); convs.put(S57subf.OALL, new S57conv(0,0)); convs.put(S57subf.OATY, new S57conv(1,1));
+		convs.put(S57subf.DEFN, new S57conv(0,0)); convs.put(S57subf.AUTH, new S57conv(2,2)); convs.put(S57subf.RFTP, new S57conv(2,1));
+		convs.put(S57subf.RFVL, new S57conv(0,0)); convs.put(S57subf.ATLB, new S57conv(5,2)); convs.put(S57subf.ATDO, new S57conv(1,1));
+		convs.put(S57subf.ADMU, new S57conv(0,0)); convs.put(S57subf.ADFT, new S57conv(0,0)); convs.put(S57subf.RAVA, new S57conv(1,1));
+		convs.put(S57subf.DVAL, new S57conv(0,0)); convs.put(S57subf.DVSD, new S57conv(0,0)); convs.put(S57subf.OBLB, new S57conv(5,2));
+		convs.put(S57subf.ASET, new S57conv(1,1)); convs.put(S57subf.PRIM, new S57conv(1,1)); convs.put(S57subf.GRUP, new S57conv(3,1));
+		convs.put(S57subf.OBJL, new S57conv(5,2)); convs.put(S57subf.RVER, new S57conv(3,2)); convs.put(S57subf.RUIN, new S57conv(1,1));
+		convs.put(S57subf.FIDN, new S57conv(10,4)); convs.put(S57subf.FIDS, new S57conv(5,2)); convs.put(S57subf.ATTL, new S57conv(5,2));
+		convs.put(S57subf.ATVL, new S57conv(0,0)); convs.put(S57subf.FFUI, new S57conv(1,1)); convs.put(S57subf.FFIX, new S57conv(0,2));
+		convs.put(S57subf.NFPT, new S57conv(0,2)); convs.put(S57subf.LNAM, new S57conv(17,64)); convs.put(S57subf.RIND, new S57conv(0,1));
+		convs.put(S57subf.FSUI, new S57conv(1,1)); convs.put(S57subf.FSIX, new S57conv(0,2)); convs.put(S57subf.NSPT, new S57conv(0,2));
+		convs.put(S57subf.NAME, new S57conv(12,40)); convs.put(S57subf.ORNT, new S57conv(1,1)); convs.put(S57subf.USAG, new S57conv(1,1));
+		convs.put(S57subf.MASK, new S57conv(1,1)); convs.put(S57subf.VPUI, new S57conv(1,1)); convs.put(S57subf.VPIX, new S57conv(0,2));
+		convs.put(S57subf.NVPT, new S57conv(0,2)); convs.put(S57subf.TOPI, new S57conv(1,1)); convs.put(S57subf.CCUI, new S57conv(1,1));
+		convs.put(S57subf.CCIX, new S57conv(0,2)); convs.put(S57subf.CCNC, new S57conv(0,2)); convs.put(S57subf.YCOO, new S57conv(0,-4));
+		convs.put(S57subf.XCOO, new S57conv(0,-4)); convs.put(S57subf.VE3D, new S57conv(0,-4)); convs.put(S57subf.ATYP, new S57conv(1,1));
+		convs.put(S57subf.SURF, new S57conv(1,1)); convs.put(S57subf.ORDR, new S57conv(1,1)); convs.put(S57subf.RESO, new S57conv(0,4));
+		convs.put(S57subf.STPT, new S57conv(0,0)); convs.put(S57subf.CTPT, new S57conv(0,0)); convs.put(S57subf.ENPT, new S57conv(0,0));
+		convs.put(S57subf.CDPM, new S57conv(0,0)); convs.put(S57subf.CDPR, new S57conv(0,0));
 	}
 	
 	public enum S57field { I8RI, DSID, DSSI, DSPM, DSPR, DSRC, DSHT, DSAC, CATD, CATX, DDDF, DDDR, DDDI, DDOM, DDRF, DDSI, DDSC,
@@ -141,32 +138,6 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		fields.put(S57field.AR2D, S57ar2d); fields.put(S57field.EL2D, S57el2d); fields.put(S57field.CT2D, S57ct2d); 
 	}
 
-	private static final EnumMap<S57field, String> FldStr = new EnumMap<S57field, String>(S57field.class);
-	static {
-		FldStr.put(S57field.I8RI, "0001");
-		FldStr.put(S57field.DSID, "DSID"); FldStr.put(S57field.DSSI, "DSSI"); FldStr.put(S57field.DSPM, "DSPM"); FldStr.put(S57field.DSPR, "DSPR");
-		FldStr.put(S57field.DSRC, "DSRC"); FldStr.put(S57field.DSHT, "DSHT"); FldStr.put(S57field.DSAC, "DSAC"); FldStr.put(S57field.CATD, "CATD");
-		FldStr.put(S57field.CATX, "CATX"); FldStr.put(S57field.DDDF, "DDDF"); FldStr.put(S57field.DDDR, "DDDR"); FldStr.put(S57field.DDDI, "DDDI");
-		FldStr.put(S57field.DDOM, "DDOM"); FldStr.put(S57field.DDRF, "DDRF"); FldStr.put(S57field.DDSI, "DDSI"); FldStr.put(S57field.DDSC, "DDSC");
-		FldStr.put(S57field.FRID, "FRID"); FldStr.put(S57field.FOID, "FOID"); FldStr.put(S57field.ATTF, "ATTF"); FldStr.put(S57field.NATF, "NATF");
-		FldStr.put(S57field.FFPC, "FFPC"); FldStr.put(S57field.FFPT, "FFPT"); FldStr.put(S57field.FFPC, "FFPC"); FldStr.put(S57field.FSPT, "FSPT");
-		FldStr.put(S57field.VRID, "VRID"); FldStr.put(S57field.ATTV, "ATTV"); FldStr.put(S57field.VRPC, "VRPC"); FldStr.put(S57field.VRPT, "VRPT");
-		FldStr.put(S57field.SGCC, "SGCC"); FldStr.put(S57field.SG2D, "SG2D"); FldStr.put(S57field.SG3D, "SG3D"); FldStr.put(S57field.ARCC, "ARCC");
-		FldStr.put(S57field.AR2D, "AR2D"); FldStr.put(S57field.EL2D, "EL2D"); FldStr.put(S57field.CT2D, "CT2D"); 
-	}
-	
-	public static String stringField (S57field field) {
-		return FldStr.get(field);
-	}
-	
-	public static S57field enumField (String field) {
-		for (S57field fld : FldStr.keySet()) {
-			if (FldStr.get(fld).equals(field))
-				return fld;
-		}
-		return null;
-	}
-
 	private static byte[] buffer;
 	private static int offset;
 	private static int maxoff;
@@ -211,20 +182,20 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		return (offset < maxoff);
 	}
 	
-	public static Object getSubf(byte[] buf, int off, S57field fld, S57subf subf) {
+	public static Object decSubf(byte[] buf, int off, S57field fld, S57subf subf) {
 		buffer = buf;
 		offset = off;
 		index = 0;
-		return getSubf(fld, subf);
+		return decSubf(fld, subf);
 	}
 	
-	public static Object getSubf(S57field fld, S57subf subf) {
+	public static Object decSubf(S57field fld, S57subf subf) {
 		field = fld;
 		index = 0;
-		return getSubf(subf);
+		return decSubf(subf);
 	}
 
-	public static Object getSubf(S57subf subf) {
+	public static Object decSubf(S57subf subf) {
 		S57conv conv = findSubf(subf);
 		if (conv.bin == 0) {
 			String str = "";
@@ -287,23 +258,38 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		}
 	}
 
-	public static void putSubf(byte[] buf, int off, S57field fld, S57subf subf, Object val) {
-		buffer = buf;
-		offset = off;
-		index = 0;
-		putSubf(fld, subf, val);
+	public static byte[] encSubf(S57subf subf, Object val) throws UnsupportedEncodingException {
+		S57conv conv = findSubf(subf);
+		if ((conv.bin == 0) && (val instanceof String)) {
+			index = ((String)val).length();
+			buffer = ((String)val + " ").getBytes("ISO-8859-1");
+			if (conv.asc == 0) {
+				buffer[index] = 0x01f;
+			} else {
+				buffer = Arrays.copyOf(buffer, conv.asc);
+				while (index < buffer.length) {
+					buffer[index++] = ' ';
+				}
+			}
+		} else {
+			int f = Math.abs(conv.bin);
+			long lval = (long) val;
+			if (f < 8) {
+				buffer = new byte[f];
+				for (int i = 0; i < f; i++) {
+					buffer[i] = (byte) (lval & 0xff);
+					lval >>= 8;
+				}
+			} else {
+				f /= 8;
+				buffer = new byte[f];
+				for (int i = f-1; i <= 0; i++) {
+					buffer[i] = (byte) (lval & 0xff);
+					lval >>= 8;
+				}
+			}
+		}
+		return buffer;
 	}
 	
-	public static void putSubf(S57field fld, S57subf subf, Object val) {
-		field = fld;
-		index = 0;
-		putSubf(subf, val);
-	}
-
-	public static void putSubf(S57subf subf, Object val) {
-		S57conv conv = findSubf(subf);
-		if (conv.bin == 0) {
-		} else {
-		}
-	}
 }

@@ -72,11 +72,12 @@ public class Js57toosm {
 		}
 		
 		map = new S57map(true);
-		MapBounds bounds = S57dec.decodeFile(in, map);
+		S57dec.decodeChart(in, map);
 
 		out.format("<?xml version='1.0' encoding='UTF-8'?>%n");
 		out.format("<osm version='0.6' upload='false' generator='js57toosm'>%n");
-		out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>%n", bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon);
+		out.format("<bounds minlat='%.8f' minlon='%.8f' maxlat='%.8f' maxlon='%.8f'/>%n",
+				Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon), Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon));
 
 		for (long id : map.index.keySet()) {
 			Feature feature = map.index.get(id);

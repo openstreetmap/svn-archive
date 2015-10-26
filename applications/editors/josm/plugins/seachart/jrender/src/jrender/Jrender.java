@@ -32,11 +32,10 @@ import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
 import s57.S57map;
-import s57.S57map.Feature;
-import s57.S57map.Snode;
+import s57.S57osm;
+import s57.S57map.*;
 import symbols.*;
 import render.*;
-import render.ChartContext.RuleSet;
 
 public class Jrender {
 
@@ -45,11 +44,6 @@ public class Jrender {
 	static int xtile;
 	static int ytile;
 	static int zoom;
-	static double minlat;
-	static double minlon;
-	static double maxlat;
-	static double maxlon;
-	static ArrayList<String> buf;
 	static ArrayList<String> send;
 	static HashMap<String, Boolean> deletes;
 	static Context context;
@@ -62,12 +56,12 @@ public class Jrender {
 	  static double mile = 0;
 	  
 	  public Context () {
-			top = (1.0 - Math.log(Math.tan(Math.toRadians(maxlat)) + 1.0 / Math.cos(Math.toRadians(maxlat))) / Math.PI) / 2.0 * 256.0 * 4096.0;
-			mile = 768 / ((maxlat - minlat) * 60);
+			top = (1.0 - Math.log(Math.tan(map.bounds.maxlat) + 1.0 / Math.cos(map.bounds.maxlat)) / Math.PI) / 2.0 * 256.0 * 4096.0;
+			mile = 768 / ((Math.toDegrees(map.bounds.maxlat) - Math.toDegrees(map.bounds.minlat)) * 60);
 	  }
 	  
 		public Point2D getPoint(Snode coord) {
-			double x = (Math.toDegrees(coord.lon) - minlon) * 256.0 * 2048.0 / 180.0;
+			double x = (Math.toDegrees(coord.lon) - Math.toDegrees(map.bounds.minlon)) * 256.0 * 2048.0 / 180.0;
 			double y = ((1.0 - Math.log(Math.tan(coord.lat) + 1.0 / Math.cos(coord.lat)) / Math.PI) / 2.0 * 256.0 * 4096.0) - top;
 			return new Point2D.Double(x, y);
 		}
@@ -89,136 +83,10 @@ public class Jrender {
 		}
 	}
 	
-	public static void tileMap(ArrayList<String> buf, String idir, int zoom) throws IOException {
-		String k = "";
-		String v = "";
-		
-		double lat = 0;
-		double lon = 0;
-		long id = 0;
-
+	public static void tileMap(String idir, int zoom) throws IOException {
 		BufferedImage img;
-		boolean inOsm = false;
-		boolean inNode = false;
-		boolean inWay = false;
-		boolean inRel = false;
-		
 		context = new Context();
 
-		for (String ln : buf) {
-			if (inOsm) {
-				if ((inNode || inWay || inRel) && (ln.contains("<tag"))) {
-					k = v = "";
-					String[] token = ln.split("k=");
-					k = token[1].split("[\"\']")[1];
-					token = token[1].split("v=");
-					v = token[1].split("[\"\']")[1];
-					if (!k.isEmpty() && !v.isEmpty()) {
-						map.addTag(k, v);
-					}
-				}
-				if (inNode) {
-					if (ln.contains("</node")) {
-						inNode = false;
-						map.tagsDone(id);
-					}
-				} else if (ln.contains("<node")) {
-					for (String token : ln.split("[ ]+")) {
-						if (token.matches("^id=.+")) {
-							id = Long.parseLong(token.split("[\"\']")[1]);
-						} else if (token.matches("^lat=.+")) {
-							lat = Double.parseDouble(token.split("[\"\']")[1]);
-						} else if (token.matches("^lon=.+")) {
-							lon = Double.parseDouble(token.split("[\"\']")[1]);
-						}
-					}
-					map.addNode(id, lat, lon);
-					if (ln.contains("/>")) {
-						map.tagsDone(id);
-					} else {
-						inNode = true;
-					}
-				} else if (inWay) {
-					if (ln.contains("<nd")) {
-						long ref = 0;
-						for (String token : ln.split("[ ]+")) {
-							if (token.matches("^ref=.+")) {
-								ref = Long.parseLong(token.split("[\"\']")[1]);
-							}
-						}
-						map.addToEdge(ref);
-					}
-					if (ln.contains("</way")) {
-						inWay = false;
-						map.tagsDone(id);
-					}
-				} else if (ln.contains("<way")) {
-					for (String token : ln.split("[ ]+")) {
-						if (token.matches("^id=.+")) {
-							id = Long.parseLong(token.split("[\"\']")[1]);
-						}
-					}
-					map.addEdge(id);
-					if (ln.contains("/>")) {
-						map.tagsDone(0);
-					} else {
-						inWay = true;
-					}
-				} else if (ln.contains("</osm")) {
-					map.mapDone();
-					inOsm = false;
-					break;
-				} else if (inRel) {
-					if (ln.contains("<member")) {
-						String type = "";
-						String role = "";
-						long ref = 0;
-						for (String token : ln.split("[ ]+")) {
-							if (token.matches("^ref=.+")) {
-								ref = Long.parseLong(token.split("[\"\']")[1]);
-							} else if (token.matches("^type=.+")) {
-								type = (token.split("[\"\']")[1]);
-							} else if (token.matches("^role=.+")) {
-								String str[] = token.split("[\"\']");
-								if (str.length > 1) {
-									role = (token.split("[\"\']")[1]);
-								}
-							}
-						}
-						if ((role.equals("outer") || role.equals("inner")) && type.equals("way"))
-							map.addToArea(ref, role.equals("outer"));
-					}
-					if (ln.contains("</relation")) {
-						inRel = false;
-						map.tagsDone(id);
-					}
-				} else if (ln.contains("<relation")) {
-					for (String token : ln.split("[ ]+")) {
-						if (token.matches("^id=.+")) {
-							id = Long.parseLong(token.split("[\"\']")[1]);
-						}
-					}
-					map.addArea(id);
-					if (ln.contains("/>")) {
-						map.tagsDone(id);
-					} else {
-						inRel = true;
-					}
-				}
-			} else if (ln.contains("<osm")) {
-				inOsm = true;
-				map = new S57map(context.ruleset() == RuleSet.SEAMARK);
-				map.addNode(1, maxlat, minlon);
-				map.addNode(2, minlat, minlon);
-				map.addNode(3, minlat, maxlon);
-				map.addNode(4, maxlat, maxlon);
-				map.bounds.minlat = Math.toRadians(minlat);
-				map.bounds.maxlat = Math.toRadians(maxlat);
-				map.bounds.minlon = Math.toRadians(minlon);
-				map.bounds.maxlon = Math.toRadians(maxlon);
-			}
-		}
-		
 		int size = 256;
 		for (int i = 0; i < (12 - zoom); i++) size *= 2;
 		Rectangle rect = new Rectangle(size, size);
@@ -309,33 +177,15 @@ public class Jrender {
 		zoom = Integer.parseInt(args[2]);
 		xtile = Integer.parseInt(args[3]);
 		ytile = Integer.parseInt(args[4]);
-		buf = new ArrayList<String>();
 		send = new ArrayList<String>();
 		deletes = new HashMap<String, Boolean>();
 		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
-		String ln;
-		while ((ln = in.readLine()) != null) {
-			if (ln.contains("<bounds")) {
-				for (String token : ln.split("[ ]+")) {
-					if (token.matches("^minlat=.+")) {
-						minlat = Double.parseDouble(token.split("[\"\']")[1]);
-					} else if (token.matches("^minlon=.+")) {
-						minlon = Double.parseDouble(token.split("[\"\']")[1]);
-					} else if (token.matches("^maxlat=.+")) {
-						maxlat = Double.parseDouble(token.split("[\"\']")[1]);
-					} else if (token.matches("^maxlon=.+")) {
-						maxlon = Double.parseDouble(token.split("[\"\']")[1]);
-					}
-				}
-			} else {
-				buf.add(ln);
-			}
-		}
+		S57osm.OSMmap(in, map);
 		in.close();
 		if (zoom == 12) {
 			clean(12, 0, 0);
 		}
-		tileMap(buf, dstdir, zoom);
+		tileMap(dstdir, zoom);
 		if ((send.size() + deletes.size()) > 0) {
 			PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");
 			for (String str : send) {

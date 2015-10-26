@@ -9,6 +9,8 @@
 
 package s57;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,7 +36,7 @@ public class S57osm { // OSM to S57 Object/Attribute conversions
 	private static final HashMap<String, KeyVal<?>> OSMtags = new HashMap<String, KeyVal<?>>();
 	static {
 		OSMtags.put("natural=coastline", new KeyVal<>(Obj.COALNE, Att.UNKATT, null, null)); OSMtags.put("natural=water", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
-		OSMtags.put("waterway=riverbank", new KeyVal<>(Obj.RIVBNK, Att.UNKATT, null, null)); OSMtags.put("waterway=river", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null));
+		OSMtags.put("waterway=river", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null));
 		OSMtags.put("waterway=canal", new KeyVal<>(Obj.CANALS, Att.UNKATT, null, null)); OSMtags.put("waterway=dock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null));
 		OSMtags.put("waterway=lock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null)); OSMtags.put("landuse=basin", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
 		OSMtags.put("wetland=tidalflat", new KeyVal<Double>(Obj.DEPARE, Att.DRVAL2, Conv.F, (Double)0.0)); OSMtags.put("tidal=yes", new KeyVal<Double>(Obj.DEPARE, Att.DRVAL2, Conv.F, (Double)0.0));
@@ -60,6 +62,141 @@ public class S57osm { // OSM to S57 Object/Attribute conversions
 			return kv;
 		}
 		return new KeyVal<>(Obj.UNKOBJ, Att.UNKATT, null, null);
+	}
+	
+	public static void OSMmap(BufferedReader in, S57map map) throws IOException {
+		String k = "";
+		String v = "";
+
+		double lat = 0;
+		double lon = 0;
+		long id = 0;
+
+		boolean inOsm = false;
+		boolean inNode = false;
+		boolean inWay = false;
+		boolean inRel = false;
+
+		String ln;
+		while ((ln = in.readLine()) != null) {
+			if (inOsm) {
+				if (ln.contains("<bounds")) {
+					for (String token : ln.split("[ ]+")) {
+						if (token.matches("^minlat=.+")) {
+							map.bounds.minlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+						} else if (token.matches("^minlon=.+")) {
+							map.bounds.minlon = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+						} else if (token.matches("^maxlat=.+")) {
+							map.bounds.maxlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+						} else if (token.matches("^maxlon=.+")) {
+							map.bounds.maxlon = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+						}
+					}
+				} else {
+					if ((inNode || inWay || inRel) && (ln.contains("<tag"))) {
+						k = v = "";
+						String[] token = ln.split("k=");
+						k = token[1].split("[\"\']")[1];
+						token = token[1].split("v=");
+						v = token[1].split("[\"\']")[1];
+						if (!k.isEmpty() && !v.isEmpty()) {
+							map.addTag(k, v);
+						}
+					}
+					if (inNode) {
+						if (ln.contains("</node")) {
+							inNode = false;
+							map.tagsDone(id);
+						}
+					} else if (ln.contains("<node")) {
+						for (String token : ln.split("[ ]+")) {
+							if (token.matches("^id=.+")) {
+								id = Long.parseLong(token.split("[\"\']")[1]);
+							} else if (token.matches("^lat=.+")) {
+								lat = Double.parseDouble(token.split("[\"\']")[1]);
+							} else if (token.matches("^lon=.+")) {
+								lon = Double.parseDouble(token.split("[\"\']")[1]);
+							}
+						}
+						map.addNode(id, lat, lon);
+						if (ln.contains("/>")) {
+							map.tagsDone(id);
+						} else {
+							inNode = true;
+						}
+					} else if (inWay) {
+						if (ln.contains("<nd")) {
+							long ref = 0;
+							for (String token : ln.split("[ ]+")) {
+								if (token.matches("^ref=.+")) {
+									ref = Long.parseLong(token.split("[\"\']")[1]);
+								}
+							}
+							map.addToEdge(ref);
+						}
+						if (ln.contains("</way")) {
+							inWay = false;
+							map.tagsDone(id);
+						}
+					} else if (ln.contains("<way")) {
+						for (String token : ln.split("[ ]+")) {
+							if (token.matches("^id=.+")) {
+								id = Long.parseLong(token.split("[\"\']")[1]);
+							}
+						}
+						map.addEdge(id);
+						if (ln.contains("/>")) {
+							map.tagsDone(0);
+						} else {
+							inWay = true;
+						}
+					} else if (ln.contains("</osm")) {
+						map.mapDone();
+						inOsm = false;
+						break;
+					} else if (inRel) {
+						if (ln.contains("<member")) {
+							String type = "";
+							String role = "";
+							long ref = 0;
+							for (String token : ln.split("[ ]+")) {
+								if (token.matches("^ref=.+")) {
+									ref = Long.parseLong(token.split("[\"\']")[1]);
+								} else if (token.matches("^type=.+")) {
+									type = (token.split("[\"\']")[1]);
+								} else if (token.matches("^role=.+")) {
+									String str[] = token.split("[\"\']");
+									if (str.length > 1) {
+										role = (token.split("[\"\']")[1]);
+									}
+								}
+							}
+							if ((role.equals("outer") || role.equals("inner")) && type.equals("way"))
+								map.addToArea(ref, role.equals("outer"));
+						}
+						if (ln.contains("</relation")) {
+							inRel = false;
+							map.tagsDone(id);
+						}
+					} else if (ln.contains("<relation")) {
+						for (String token : ln.split("[ ]+")) {
+							if (token.matches("^id=.+")) {
+								id = Long.parseLong(token.split("[\"\']")[1]);
+							}
+						}
+						map.addArea(id);
+						if (ln.contains("/>")) {
+							map.tagsDone(id);
+						} else {
+							inRel = true;
+						}
+					}
+				}
+			} else if (ln.contains("<osm")) {
+				inOsm = true;
+			}
+		}
+		return;
 	}
 
 }

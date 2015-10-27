@@ -65,7 +65,7 @@ public class PanelS57 extends JPanel {
 			tin.close();
 		}
 		map = new S57map(true);
-		MapBounds bounds = S57dec.decodeFile(in, map);
+		S57dec.decodeChart(in, map);
 
 		in.close();
 		
@@ -185,7 +185,7 @@ public class PanelS57 extends JPanel {
 
 		OsmDataLayer layer = new OsmDataLayer(data, "S-57 Import", null);
 		Main.map.mapView.addLayer(layer);
-		Main.map.mapView.zoomTo(new Bounds(bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon));
+//		Main.map.mapView.zoomTo(new Bounds(bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon));
 		PanelMain.setStatus("Import done", Color.green);
 	}
 

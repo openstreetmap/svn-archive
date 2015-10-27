@@ -13,13 +13,11 @@
     
 	<property name="josm" location="../../core/dist/josm-custom.jar"/>
 	<property name="plugin.dist.dir" value="../../dist"/>
-    <property name="plugin.requires" value="log4j"/>
+    <!--<property name="plugin.requires" value=""/>-->
     <property name="plugin.stage" value="10"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-
-	<property name="log4j" location="${plugin.dist.dir}/log4j.jar"/>
 
     <!--
     ***************************************************************
@@ -40,14 +38,9 @@
         <echo message="compiling sources for ${plugin.jar} ... "/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="UTF-8">
             <exclude name="**/org/apache/commons/lang3/**" />
-            <exclude name="**/org/apache/commons/logging/impl/AvalonLogger.java" />
-            <exclude name="**/org/apache/commons/logging/impl/Jdk13LumberjackLogger.java" />
-            <exclude name="**/org/apache/commons/logging/impl/LogKitLogger.java" />
-            <exclude name="**/org/apache/commons/logging/impl/ServletContextCleaner.java" />
             <classpath>
                 <pathelement path="${plugin.build.dir}"/>
                 <pathelement location="${josm}"/>
-                <pathelement location="${log4j}"/>
             </classpath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>

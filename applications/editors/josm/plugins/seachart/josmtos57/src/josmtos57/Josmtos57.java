@@ -19,6 +19,13 @@ import s57.S57osm;
 
 public class Josmtos57 {
 
+	// http://opendatacommons.org/licenses/odbl/1-0/
+	
+	/*
+	URL website = new URL("http://www.website.com/information.asp");
+	try (InputStream in = website.openStream()) { Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING); }
+	 */
+	
 	static byte[] header = {
 		'0', '0', '2', '6', '2', '3', 'L', 'E', '1', ' ', '0', '9', '0', '0', '0', '7', '3', ' ', ' ', ' ', '6', '6', '0', '4', '0', '0', '0', '0', '0', '0', '0', '0',
 		'1', '9', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '4', '8', '0', '0', '0', '0', '1', '9', 'C', 'A', 'T', 'D', '0', '0', '0', '1',
@@ -93,7 +100,7 @@ public class Josmtos57 {
 		crc.reset();
 		crc.update(buf, 0, idx);
 		try {
-			File file = new File(args[2] + "/" + args[3]);
+			File file = new File(args[2] + args[3]);
 			if (file.exists()) file.delete();
 			out = new FileOutputStream(file, false);
 			out.write(buf, 0, idx);
@@ -104,7 +111,7 @@ public class Josmtos57 {
 		out.close();
 		
 		try {
-			File file = new File(args[2] + "/CATALOG.031");
+			File file = new File(args[2] + "CATALOG.031");
 			if (file.exists()) file.delete();
 			out = new FileOutputStream(file, false);
 		} catch (IOException e) {

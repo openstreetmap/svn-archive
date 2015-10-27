@@ -189,7 +189,6 @@ public class Rules {
 			if (testObject(Obj.LOKBSN)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.LKBSPT)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.LAKARE)) for (Feature f : objects) if (testFeature(f)) areas();
-			if (testObject(Obj.RIVBNK)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.RIVERS)) for (Feature f : objects) if (testFeature(f)) waterways();
 			if (testObject(Obj.CANALS)) for (Feature f : objects) if (testFeature(f)) waterways();
 			if (testObject(Obj.DEPARE)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -285,7 +284,6 @@ public class Rules {
 			}
 			break;
 		case LAKARE:
-		case RIVBNK:
 			Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 10, Symbols.Bwater));
 			break;
 		case DRGARE:

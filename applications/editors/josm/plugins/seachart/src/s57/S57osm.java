@@ -36,7 +36,7 @@ public class S57osm { // OSM to S57 Object/Attribute conversions
 	private static final HashMap<String, KeyVal<?>> OSMtags = new HashMap<String, KeyVal<?>>();
 	static {
 		OSMtags.put("natural=coastline", new KeyVal<>(Obj.COALNE, Att.UNKATT, null, null)); OSMtags.put("natural=water", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
-		OSMtags.put("waterway=river", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null));
+		OSMtags.put("waterway=river", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null)); OSMtags.put("waterway=riverbank", new KeyVal<>(Obj.COALNE, Att.UNKATT, null, null));
 		OSMtags.put("waterway=canal", new KeyVal<>(Obj.CANALS, Att.UNKATT, null, null)); OSMtags.put("waterway=dock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null));
 		OSMtags.put("waterway=lock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null)); OSMtags.put("landuse=basin", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
 		OSMtags.put("wetland=tidalflat", new KeyVal<Double>(Obj.DEPARE, Att.DRVAL2, Conv.F, (Double)0.0)); OSMtags.put("tidal=yes", new KeyVal<Double>(Obj.DEPARE, Att.DRVAL2, Conv.F, (Double)0.0));

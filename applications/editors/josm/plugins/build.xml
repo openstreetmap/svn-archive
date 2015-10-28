@@ -19,7 +19,7 @@
         <ant target="dist" dir="apache-commons"/>
         <ant target="dist" dir="apache-http"/>
         <!-- order not important -->
-        <!-- to update, run $ ls -F | grep '/$' | tr -d '/' | grep -v '00_plugin_dir_template\|jna\|jts\|geotools\|utilsplugin2\|log4j\|commons-imaging' | sed 's/^/<ant target="dist" dir="/' | sed 's/$/"\/>/' -->
+        <!-- to update, run $ ls -F | grep '/$' | tr -d '/' | grep -v '00_plugin_dir_template\|jna\|jts\|geotools\|utilsplugin2\|log4j\|apache-commons\|apache-http' | sed 's/^/<ant target="dist" dir="/' | sed 's/$/"\/>/' -->
         <ant target="dist" dir="addrinterpolation"/>
         <ant target="dist" dir="alignways"/>
         <ant target="dist" dir="areaselector"/>
@@ -30,6 +30,7 @@
         <ant target="dist" dir="conflation"/>
         <ant target="dist" dir="ColumbusCSV"/>
         <ant target="dist" dir="CommandLine"/>
+        <ant target="dist" dir="continuosDownload"/>
         <ant target="dist" dir="Create_grid_of_ways"/>
         <ant target="dist" dir="czechaddress"/>
         <ant target="dist" dir="dataimport"/>
@@ -135,6 +136,7 @@
         <ant target="clean" dir="conflation"/>
         <ant target="clean" dir="ColumbusCSV"/>
         <ant target="clean" dir="CommandLine"/>
+        <ant target="clean" dir="continuosDownload"/>
         <ant target="clean" dir="Create_grid_of_ways"/>
         <ant target="clean" dir="czechaddress"/>
         <ant target="clean" dir="dataimport"/>
@@ -233,6 +235,7 @@
     <target name="install" depends="dist"/>
     <target name="test" depends="compile_josm_test">
         <ant target="test" dir="alignways"/>
+        <ant target="test" dir="continuosDownload"/>
         <ant target="test" dir="ElevationProfile"/>
         <ant target="test" dir="graphview"/>
         <ant target="test" dir="opendata"/>

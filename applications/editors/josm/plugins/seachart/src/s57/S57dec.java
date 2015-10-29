@@ -92,7 +92,7 @@ public class S57dec { // S57 ENC file input & map conversion
 						objl = (Long)S57dat.decSubf(S57subf.OBJL);
 						break;
 					case "FOID":
-						name = (Long) S57dat.decSubf(record, fields + pos, S57field.FOID, S57subf.LNAM);
+						name = (Long) S57dat.decSubf(record, fields + pos, S57field.LNAM, S57subf.LNAM);
 						map.newFeature(name, pflag, objl);
 						break;
 					case "ATTF":

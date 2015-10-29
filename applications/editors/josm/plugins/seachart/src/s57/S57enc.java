@@ -9,6 +9,13 @@
 
 package s57;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
+import s57.S57dat.*;
+import s57.S57map.*;
+
 public class S57enc { // S57 ENC file generation
 	
 	private static byte[] header = {
@@ -119,19 +126,19 @@ public class S57enc { // S57 ENC file generation
 		0x00, '0', 'S', '0', '0', '0', '0', '0', '0', '.', '0', '0', '0', 0x1f, // INTU & Filename
 		'1', 0x1f, '0', 0x1f,
 		//*** 2035
-		'0', '0', '0', '0', '0', '0', '0', '0',   '0', '0', '0', '0', '0', '0', '0', '0', // Date x2
+		'0', '0', '0', '0', '0', '0', '0', '0',   '0', '0', '0', '0', '0', '0', '0', '0', // Date x2 (from system)
 		'0', '3', '.', '1', 0x14, 0x1f, 0x1f, 0x01, 0x26, 0x0f, 'G', 'e', 'n', 'e', 'r', 'a', 't', 'e', 'd', ' ', 'b', 'y', ' ', 
 		'O', 'p', 'e', 'n', 'S', 'e', 'a', 'M', 'a', 'p', '.', 'o', 'r', 'g', 0x1f, 0x1e,
 		// Field DSSI
 		0x02, 0x01, 0x02,
 		//*** 2093
-		0x02, 0x00, 0x00, 0x00, // # of meta records
+		0x00, 0x00, 0x00, 0x00, // # of meta records (from metas counter)
 		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, // # of geo records
+		0x00, 0x00, 0x00, 0x00, // # of geo records (from geos counter)
 		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, // # of isolated node records
-		0x00, 0x00, 0x00, 0x00, // # of connected node records
-		0x00, 0x00, 0x00, 0x00, // # of edge records
+		0x00, 0x00, 0x00, 0x00, // # of isolated node records (from isols counter)
+		0x00, 0x00, 0x00, 0x00, // # of connected node records (from conns counter)
+		0x00, 0x00, 0x00, 0x00, // # of edge records (from edges counter)
 		0x00, 0x00, 0x00, 0x00, 0x1e,
 
 		// Record 2
@@ -142,20 +149,55 @@ public class S57enc { // S57 ENC file generation
 		// Field DSPM
 		0x14, 0x01, 0x00, 0x00, 0x00, 0x02, 0x17, 0x17,
 		//*** 2176
-		0x00, 0x00, 0x00, 0x00, // Scale
-		0x01, // Depth units
-		0x01, // Height units
-		0x01, 0x01,	(byte)0x80, (byte)0x96, (byte)0x98, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x1f, 0x1e
+		0x00, 0x00, 0x00, 0x00, // Scale (from meta list)
+		0x01, // Depth units (from meta list)
+		0x01, // Height units (from meta list)
+		0x01, 0x01,
+		(byte)0x80, (byte)0x96, (byte)0x98, 0x00, // COMF=10000000
+		0x0a, // SOMF=10
+		0x00, 0x00, 0x00, 0x1f, 0x1e
 	};
 	
-	private static byte[] leader = {'0', '0', '0', '0', '0', ' ', 'D', ' ', ' ', ' ', ' ', ' ', '0', '0', '0', '0', '0', ' ', ' ', ' ', '0', '0', '0', '0'};
+	static final double COMF=10000000;
+	static final double SOMF=10;
+	
 	static int idx;
+	static int recs;
+	static int isols;
+	static int conns;
+	static int metas;
+	static int geos;
+	static int rcid;
 
-	public static int encodeChart(S57map map, byte[] buf) throws IndexOutOfBoundsException {
+	public static int encodeChart(S57map map, HashMap<String, String> meta, byte[] buf) throws IndexOutOfBoundsException, UnsupportedEncodingException {
+
+		/*
+		 * Encoding order:
+		 * 1. Copy records 0-3 & fill in meta attributes.
+		 * 2. Depth isolated nodes.
+		 * 3. All other isolated nodes.
+		 * 4. Connected nodes.
+		 * 5. Edges.
+		 * 6. Meta objects.
+		 * 7. Geo objects.
+		 */
 		
-		int idx = leader.length;
+		recs = rcid = 3;
+		isols = conns = metas = geos = 0;
 		for (idx = 0; idx < header.length; idx++) {
 			buf[idx] = header[idx];
+		}
+//		byte[] file = S57dat.encSubf(S57subf.FILE, meta.get("FILE"));
+		
+		for (Map.Entry<Long, S57map.Snode> entry : map.nodes.entrySet()) {
+			S57map.Snode node = entry.getValue();
+			if (node.flg == Nflag.ISOL) {
+				byte[] record = S57dat.encRecord(recs++, S57record.VI, rcid++, 1, 1, (Math.toDegrees(node.lat) * COMF), (Math.toDegrees(node.lon) * COMF));
+				System.arraycopy(record, 0, buf, idx, record.length);
+				idx += record.length;
+				isols++;
+				recs++;
+			}
 		}
 
 	return idx;
@@ -163,12 +205,6 @@ public class S57enc { // S57 ENC file generation
 
 	public static int encodeCatalogue(S57map map, byte[] buf) throws IndexOutOfBoundsException {
 		
-		
-		int idx = leader.length;
-		for (int i = 0; i < idx; i++) {
-			buf[i] = leader[i];
-		}
-
 	return idx;
 }
 

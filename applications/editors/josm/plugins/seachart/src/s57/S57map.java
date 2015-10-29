@@ -43,8 +43,8 @@ public class S57map { // S57/OSM map generation methods
 	}
 
 	public class Snode {	// All coordinates in map
-		public double lat;	// Latitude
-		public double lon;	// Longitude
+		public double lat;	// Latitude in radians
+		public double lon;	// Longitude in radians
 		public Nflag flg;		// Role of node
 
 		public Snode() {

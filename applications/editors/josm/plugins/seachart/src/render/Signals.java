@@ -166,6 +166,7 @@ public class Signals {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void radioStations(Feature feature) {
 		Renderer.symbol(feature, Beacons.RadarStation);
 		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttList(feature, Obj.RDOSTA, 0, Att.CATROS);

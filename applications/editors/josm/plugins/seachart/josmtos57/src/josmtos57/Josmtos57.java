@@ -10,6 +10,7 @@
 package josmtos57;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.zip.CRC32;
 
@@ -59,6 +60,7 @@ public class Josmtos57 {
 	static FileOutputStream out;
 	static S57map map;
 	static byte[] buf;
+	static HashMap<String, String> meta;
 	
 	public static void main(String[] args) throws IOException {
 
@@ -71,9 +73,12 @@ public class Josmtos57 {
 		}
 		try {
 			Scanner min = new Scanner(new FileInputStream(args[1]));
-			while (min.hasNext()) {
-				min.next();
-			}
+			meta = new HashMap<String, String>();
+			meta.put("FILE", args[3]);
+//			while (min.hasNext()) {
+//				String[] tokens = min.next().split("=");
+//				meta.put(tokens[0], tokens[1]);
+//			}
 			min.close();
 		} catch (IOException e) {
 			System.err.println("Meta data file: " + e.getMessage());
@@ -90,9 +95,12 @@ public class Josmtos57 {
 		
 		try {
 			buf = new byte[5242880];
-			idx = S57enc.encodeChart(map, buf);
+			idx = S57enc.encodeChart(map, meta, buf);
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("Output file too big (limit 5 MB)");
+			System.err.println("Output file too big (limit 5 MB) - try smaller areas");
+			System.exit(-1);
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("Input data error" + e.getMessage());
 			System.exit(-1);
 		}
 		

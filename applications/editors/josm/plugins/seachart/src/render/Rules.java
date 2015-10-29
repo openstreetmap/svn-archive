@@ -118,6 +118,7 @@ public class Rules {
 		return ""; 
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static Enum<?> getAttEnum(Feature feature, Obj obj, int idx, Att att) {
 		ArrayList<?> list = (ArrayList<?>)getAttVal(feature, obj, idx, att);
 		if (list != null) {
@@ -126,6 +127,7 @@ public class Rules {
 		return S57val.unknAtt(att);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<?> getAttList(Feature feature, Obj obj, int idx, Att att) {
 		ArrayList<Enum<?>> list = (ArrayList<Enum<?>>)getAttVal(feature, obj, idx, att);
 		if (list != null) {
@@ -136,6 +138,7 @@ public class Rules {
 		return list; 
 	}
 	
+	@SuppressWarnings("unchecked")
 	static Scheme getScheme(Feature feature, Obj obj) {
 		ArrayList<Color> colours = new ArrayList<Color>();
 		for (ColCOL col : (ArrayList<ColCOL>) getAttList(feature, obj, 0, Att.COLOUR)) {
@@ -405,6 +408,7 @@ public class Rules {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void beacons() {
 		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR)))) {
 			BcnSHP shape = (BcnSHP)getAttEnum(feature, feature.type, 0, Att.BCNSHP);
@@ -450,6 +454,7 @@ public class Rules {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void buoys() {
 		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BOYLAT) || (feature.type == Obj.BOYCAR)))) {
 			BoySHP shape = (BoySHP) getAttEnum(feature, feature.type, 0, Att.BOYSHP);
@@ -619,6 +624,7 @@ public class Rules {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void harbours() {
 		String name = getName();
 		switch (feature.type) {
@@ -736,6 +742,7 @@ public class Rules {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void highways() {
 		switch (feature.type) {
 		case ROADWY:
@@ -766,6 +773,7 @@ public class Rules {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void landmarks() {
 		ArrayList<CatLMK> cats = (ArrayList<CatLMK>) getAttList(feature, feature.type, 0, Att.CATLMK);
 		Symbol catSym = Landmarks.Shapes.get(cats.get(0));
@@ -813,6 +821,7 @@ public class Rules {
 		Signals.addSignals(feature);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void marinas() {
 		if (Renderer.zoom >= 16) {
 			ArrayList<Symbol> symbols = new ArrayList<Symbol>();
@@ -869,8 +878,8 @@ public class Rules {
 				return;
 			}
 			MarSYS sys = MarSYS.SYS_CEVN;
-			BnkWTW bnk = BnkWTW.BWW_UNKN;
-			AttVal att = feature.atts.get(Att.MARSYS);
+//			BnkWTW bnk = BnkWTW.BWW_UNKN;
+			AttVal<?> att = feature.atts.get(Att.MARSYS);
 			if (att != null) sys = (MarSYS)att.val;
 			ObjTab objs = feature.objs.get(Obj.NOTMRK);
 			int n = objs.size();
@@ -967,6 +976,7 @@ public class Rules {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void platforms() {
 		ArrayList<CatOFP> cats = (ArrayList<CatOFP>) getAttList(feature, Obj.OFSPLF, 0, Att.CATOFP);
 		if ((CatOFP) cats.get(0) == CatOFP.OFP_FPSO)
@@ -1019,6 +1029,7 @@ public class Rules {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void shoreline() {
 		CatSLC cat = (CatSLC) getAttEnum(feature, feature.type, 0, Att.CATSLC);
 		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
@@ -1059,6 +1070,7 @@ public class Rules {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void stations() {
 		if (Renderer.zoom >= 14) {
 			String str = "";

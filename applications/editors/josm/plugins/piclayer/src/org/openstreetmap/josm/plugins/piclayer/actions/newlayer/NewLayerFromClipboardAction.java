@@ -59,7 +59,7 @@ public class NewLayerFromClipboardAction extends JosmAction {
         catch (IOException e) {
             // Failed
             System.out.println( "NewLayerFromClipboardAction::actionPerformed - " + e.getMessage() );
-            JOptionPane.showMessageDialog(null, e.getMessage() );
+            JOptionPane.showMessageDialog(null, e.getMessage(), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             return;
         }
         // Add layer

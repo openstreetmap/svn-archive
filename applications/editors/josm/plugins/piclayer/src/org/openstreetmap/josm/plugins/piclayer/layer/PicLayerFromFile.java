@@ -215,7 +215,7 @@ public class PicLayerFromFile extends PicLayerAbstract {
             msg += "\n" + tr("Set \"{0}\" to yes/no/ask in the preferences\n"+
                             "to control the autoloading of calibration files.", prefkey);
             msg += "\n" + tr("Do you want to apply it ?");
-            int answer = JOptionPane.showConfirmDialog(Main.parent, msg, tr("Load calibration file ?"), JOptionPane.YES_NO_OPTION);
+            int answer = JOptionPane.showConfirmDialog(Main.parent, msg, tr("Load calibration file?"), JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.YES_OPTION) {
                 loadcal = true;
             }

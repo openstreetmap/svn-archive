@@ -135,7 +135,7 @@ public class NewLayerFromFileAction extends JosmAction {
                     kml.process();
                     JOptionPane.showMessageDialog(null, tr("KML calibration is in beta stage and may produce incorrectly calibrated layers!\n"+
                     "Please use {0} to upload your KMLs that were calibrated incorrectly.",
-                    "https://josm.openstreetmap.de/ticket/5451"));
+                    "https://josm.openstreetmap.de/ticket/5451"), tr("Notification"), JOptionPane.INFORMATION_MESSAGE);
                     for (KMLGroundOverlay overlay : kml.getGroundOverlays()) {
                         //TODO: zoom to whole picture, not only the last
                         addNewLayerFromKML(file, overlay, newLayerPos);
@@ -157,7 +157,7 @@ public class NewLayerFromFileAction extends JosmAction {
         catch (IOException e) {
             // Failed
             System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
-            JOptionPane.showMessageDialog(null, e.getMessage() );
+            JOptionPane.showMessageDialog(null, e.getMessage(), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -183,7 +183,7 @@ public class NewLayerFromFileAction extends JosmAction {
         } catch (IOException e) {
             // Failed
             System.out.println( "NewLayerFromFileAction::actionPerformed - " + e.getMessage() );
-            JOptionPane.showMessageDialog(null, e.getMessage() );
+            JOptionPane.showMessageDialog(null, e.getMessage(), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
         }
     }
 }

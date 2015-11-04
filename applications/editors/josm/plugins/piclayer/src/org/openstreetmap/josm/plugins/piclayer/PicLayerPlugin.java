@@ -20,14 +20,9 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
@@ -52,6 +47,7 @@ import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePoin
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.RemovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Main Plugin class.
@@ -157,7 +153,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         if (arg0 instanceof PicLayerAbstract && ((PicLayerAbstract) arg0).getTransformer().isModified()) {
             if (JOptionPane.showConfirmDialog(Main.parent, tr("Do you want to save current calibration of layer {0}?",
                     ((PicLayerAbstract)arg0).getPicLayerName()),
-                    UIManager.getString("OptionPane.titleText"),
+                    tr("Select an option"),
                     JOptionPane.YES_NO_OPTION) == 0)
                 new SavePictureCalibrationAction((PicLayerAbstract) arg0).actionPerformed(null);
         }

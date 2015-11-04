@@ -76,7 +76,7 @@ public class LoadPictureCalibrationAction extends JosmAction {
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", e.getMessage()));
+                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", e.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }
     }

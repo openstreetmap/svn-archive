@@ -38,7 +38,7 @@ public class LoadPictureCalibrationFromWorldAction extends JosmAction {
             } catch (Exception ex) {
                 // Error
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", ex.getMessage()));
+                JOptionPane.showMessageDialog(Main.parent , tr("Loading file failed: {0}", ex.getMessage()), tr("Problem occurred"), JOptionPane.WARNING_MESSAGE);
             }
         }
     }

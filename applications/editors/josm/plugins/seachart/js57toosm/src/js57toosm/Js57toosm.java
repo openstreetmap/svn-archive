@@ -93,7 +93,7 @@ public class Js57toosm {
 									out.format("  <node id='%d' lat='%.8f' lon='%.8f' version='1'>%n", -ref, Math.toDegrees(node.lat), Math.toDegrees(node.lon));
 									out.format("    <tag k='seamark:type' v=\"%s\"/>%n", type);
 									if ((feature.type == Obj.SOUNDG) && (node.flg == S57map.Nflag.DPTH))
-										out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Dnode) node).val);
+										out.format("    <tag k='seamark:sounding:depth' v='%.1f'/>%n", ((Snode) node).val);
 									writeAtts(feature);
 									out.format("  </node>%n");
 									done.add(ref);

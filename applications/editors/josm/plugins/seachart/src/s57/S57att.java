@@ -87,16 +87,6 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttIENC.put(Att.LC_WD2, 18027); AttIENC.put(Att.SHPTYP, 33066); AttIENC.put(Att.UPDMSG, 40000); AttIENC.put(Att.BNKWTW, 17999);
  }
  
- private static final HashMap<Integer, Att> S57Att = new HashMap<Integer, Att>();
- static {
-  for (Map.Entry<Att, Integer> entry : AttS57.entrySet()) {
-   S57Att.put(entry.getValue(), entry.getKey());
-  }
-  for (Map.Entry<Att, Integer> entry : AttIENC.entrySet()) {
-   S57Att.put(entry.getValue(), entry.getKey());
-  }
- }
- 
  private static final EnumMap<Att, String> AttStr = new EnumMap<Att, String>(Att.class);
  static {
   AttStr.put(Att.UNKATT, ""); AttStr.put(Att.AGENCY, "agency"); AttStr.put(Att.BCNSHP, "shape"); AttStr.put(Att.BUISHP, "shape"); AttStr.put(Att.BOYSHP, "shape");
@@ -353,9 +343,14 @@ public class S57att { // S57 Attribute lookup tables & methods
   StrAtt.put("visibility", Visibility); StrAtt.put("water_level", Water_level); StrAtt.put("wavelength", Wavelength); StrAtt.put("width", Width); StrAtt.put("year", Year);
  }
 
- public static Att decodeAttribute(long attribute) { // Convert S57 attribute code to SCM attribute enumeration
-  Att att = S57Att.get((int)attribute);
-  return (att != null) ? att : Att.UNKATT;
+ public static Att decodeAttribute(long attl) { // Convert S57 attribute code to SCM attribute enumeration
+		for (Att att : AttS57.keySet()) {
+			if (AttS57.get(att) == attl) return att;
+		}
+		for (Att att : AttIENC.keySet()) {
+			if (AttIENC.get(att) == attl) return att;
+		}
+  return Att.UNKATT;
  }
  
  public static Integer encodeAttribute(String attribute) { // Convert SCM attribute enumeration to S57 attribute code

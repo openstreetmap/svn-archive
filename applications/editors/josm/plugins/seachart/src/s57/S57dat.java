@@ -53,8 +53,8 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		convs.put(S57subf.HACC, new S57conv(0,4)); convs.put(S57subf.SACC, new S57conv(0,4)); convs.put(S57subf.FILE, new S57conv(0,0));
 		convs.put(S57subf.LFIL, new S57conv(0,0)); convs.put(S57subf.VOLM, new S57conv(0,0)); convs.put(S57subf.IMPL, new S57conv(3,0));
 		convs.put(S57subf.SLAT, new S57conv(0,0)); convs.put(S57subf.WLON, new S57conv(0,0)); convs.put(S57subf.NLAT, new S57conv(0,0));
-		convs.put(S57subf.ELON, new S57conv(0,0)); convs.put(S57subf.CRCS, new S57conv(0,0)); convs.put(S57subf.NAM1, new S57conv(12,40));
-		convs.put(S57subf.NAM2, new S57conv(12,40)); convs.put(S57subf.OORA, new S57conv(1,1)); convs.put(S57subf.OAAC, new S57conv(6,0));
+		convs.put(S57subf.ELON, new S57conv(0,0)); convs.put(S57subf.CRCS, new S57conv(0,0)); convs.put(S57subf.NAM1, new S57conv(12,5));
+		convs.put(S57subf.NAM2, new S57conv(12,5)); convs.put(S57subf.OORA, new S57conv(1,1)); convs.put(S57subf.OAAC, new S57conv(6,0));
 		convs.put(S57subf.OACO, new S57conv(5,2)); convs.put(S57subf.OALL, new S57conv(0,0)); convs.put(S57subf.OATY, new S57conv(1,1));
 		convs.put(S57subf.DEFN, new S57conv(0,0)); convs.put(S57subf.AUTH, new S57conv(2,2)); convs.put(S57subf.RFTP, new S57conv(2,1));
 		convs.put(S57subf.RFVL, new S57conv(0,0)); convs.put(S57subf.ATLB, new S57conv(5,2)); convs.put(S57subf.ATDO, new S57conv(1,1));
@@ -64,9 +64,9 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		convs.put(S57subf.OBJL, new S57conv(5,2)); convs.put(S57subf.RVER, new S57conv(3,2)); convs.put(S57subf.RUIN, new S57conv(1,1));
 		convs.put(S57subf.FIDN, new S57conv(10,4)); convs.put(S57subf.FIDS, new S57conv(5,2)); convs.put(S57subf.ATTL, new S57conv(5,2));
 		convs.put(S57subf.ATVL, new S57conv(0,0)); convs.put(S57subf.FFUI, new S57conv(1,1)); convs.put(S57subf.FFIX, new S57conv(0,2));
-		convs.put(S57subf.NFPT, new S57conv(0,2)); convs.put(S57subf.LNAM, new S57conv(17,64)); convs.put(S57subf.RIND, new S57conv(0,1));
+		convs.put(S57subf.NFPT, new S57conv(0,2)); convs.put(S57subf.LNAM, new S57conv(17,8)); convs.put(S57subf.RIND, new S57conv(0,1));
 		convs.put(S57subf.FSUI, new S57conv(1,1)); convs.put(S57subf.FSIX, new S57conv(0,2)); convs.put(S57subf.NSPT, new S57conv(0,2));
-		convs.put(S57subf.NAME, new S57conv(12,40)); convs.put(S57subf.ORNT, new S57conv(1,1)); convs.put(S57subf.USAG, new S57conv(1,1));
+		convs.put(S57subf.NAME, new S57conv(12,5)); convs.put(S57subf.ORNT, new S57conv(1,1)); convs.put(S57subf.USAG, new S57conv(1,1));
 		convs.put(S57subf.MASK, new S57conv(1,1)); convs.put(S57subf.VPUI, new S57conv(1,1)); convs.put(S57subf.VPIX, new S57conv(0,2));
 		convs.put(S57subf.NVPT, new S57conv(0,2)); convs.put(S57subf.TOPI, new S57conv(1,1)); convs.put(S57subf.CCUI, new S57conv(1,1));
 		convs.put(S57subf.CCIX, new S57conv(0,2)); convs.put(S57subf.CCNC, new S57conv(0,2)); convs.put(S57subf.YCOO, new S57conv(0,-4));
@@ -136,38 +136,6 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		fields.put(S57field.FSPT, S57fspt); fields.put(S57field.VRID, S57vrid); fields.put(S57field.ATTV, S57attv); fields.put(S57field.VRPC, S57vrpc);
 		fields.put(S57field.VRPT, S57vrpt); fields.put(S57field.SGCC, S57sgcc); fields.put(S57field.SG2D, S57sg2d); fields.put(S57field.SG3D, S57sg3d);
 		fields.put(S57field.ARCC, S57arcc); fields.put(S57field.AR2D, S57ar2d); fields.put(S57field.EL2D, S57el2d); fields.put(S57field.CT2D, S57ct2d); 
-	}
-
-	public enum S57record { DS, DP, DH, DA, CD, CR, ID, IO, IS, FE, VS, VI, VC, VE }
-	
-	private static ArrayList<S57field> S57ds = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DSID, S57field.DSSI ));
-	private static ArrayList<S57field> S57dp = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DSPM, S57field.DSPR, S57field.DSRC ));
-	private static ArrayList<S57field> S57dh = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DSHT ));
-	private static ArrayList<S57field> S57da = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DSAC ));
-	private static ArrayList<S57field> S57cd = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.CATD ));
-	private static ArrayList<S57field> S57cr = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.CATX ));
-	private static ArrayList<S57field> S57id = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DDDF, S57field.DDDR ));
-	private static ArrayList<S57field> S57io = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DDDI, null, S57field.DDOM, S57field.DDRF, null ));
-	private static ArrayList<S57field> S57is = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.DDSI, S57field.DDSC ));
-	private static ArrayList<S57field> S57fe = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.FRID, S57field.FOID, null, S57field.ATTF, null,
-			null, S57field.NATF, null, null, S57field.FFPT, null, null, S57field.FSPT, null ));
-	private static ArrayList<S57field> S57vs = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.VRID, null, S57field.SG3D, null));
-	private static ArrayList<S57field> S57vi = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.VRID, S57field.SG2D));
-	private static ArrayList<S57field> S57vc = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.VRID, S57field.SG2D));
-	private static ArrayList<S57field> S57ve = new ArrayList<S57field>(Arrays.asList(S57field.I8RI, S57field.VRID, null, S57field.VRPT, null, null, S57field.SG3D, null));
-	
-	private static final EnumMap<S57record, ArrayList<S57field>> records = new EnumMap<S57record, ArrayList<S57field>>(S57record.class);
-	static {
-		records.put(S57record.DS, S57ds); records.put(S57record.DP, S57dp); records.put(S57record.DH, S57dh); records.put(S57record.DA, S57da); records.put(S57record.CD, S57cd);
-		records.put(S57record.CR, S57cr); records.put(S57record.ID, S57id); records.put(S57record.IO, S57io); records.put(S57record.IS, S57is); records.put(S57record.FE, S57fe);
-		records.put(S57record.VS, S57vs); records.put(S57record.VI, S57vi); records.put(S57record.VC, S57vc); records.put(S57record.VE, S57ve);
-	}
-	
-	private static final EnumMap<S57record, Integer> rcnms = new EnumMap<S57record, Integer>(S57record.class);
-	static {
-		rcnms.put(S57record.DS, 10); rcnms.put(S57record.DP, 20); rcnms.put(S57record.DH, 30); rcnms.put(S57record.DA, 40); rcnms.put(S57record.CD, 50);
-		rcnms.put(S57record.CR, 60); rcnms.put(S57record.ID, 70); rcnms.put(S57record.IO, 80); rcnms.put(S57record.IS, 90); rcnms.put(S57record.FE, 100);
-		rcnms.put(S57record.VS, 110); rcnms.put(S57record.VI, 110); rcnms.put(S57record.VC, 120); rcnms.put(S57record.VE, 130);
 	}
 	
 	private static byte[] leader = {'0', '0', '0', '0', '0', ' ', 'D', ' ', ' ', ' ', ' ', ' ', '0', '0', '0', '0', '0', ' ', ' ', ' ', '0', '0', '0', '4'};
@@ -292,7 +260,6 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 	}
 
 	public static byte[] encSubf(S57subf subf, Object val) {
-		if (val instanceof S57record) val = rcnms.get(val);
 		S57conv conv = convs.get(subf);
 		if (conv.bin == 0) {
 			String sval = "";
@@ -331,19 +298,10 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 			} else {
 				lval = (long) val;
 			}
-			if (f < 8) {
-				buffer = new byte[f];
-				for (int i = 0; i < f; i++) {
-					buffer[i] = (byte) (lval & 0xff);
-					lval >>= 8;
-				}
-			} else {
-				f /= 8;
-				buffer = new byte[f];
-				for (int i = f-1; i >= 0; i--) {
-					buffer[i] = (byte) (lval & 0xff);
-					lval >>= 8;
-				}
+			buffer = new byte[f];
+			for (int i = 0; i < f; i++) {
+				buffer[i] = (byte) (lval & 0xff);
+				lval >>= 8;
 			}
 		}
 		return buffer;
@@ -360,29 +318,35 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		}
 	}
 	
-	public static byte[] encRecord(Object...params) {
+	public static class Fparams {
+		public S57field field;
+		public Object[] params;
+		public Fparams(S57field f, Object[] p) {
+			field = f;
+			params = p;
+		}
+	};
+
+	public static byte[] encRecord(int i8rn, ArrayList<Fparams> fparams) {
 		ArrayList<Index> index = new ArrayList<Index>();
-		offset = 0;
-		int maxlen = 0;
-		ArrayList<S57field> record = records.get(params[1]);
-		byte[] buf = new byte[0];
-		int ip = 0;
-		for (S57field field : record) {
-			for (S57subf subf : fields.get(field)) {
-				byte[] next = encSubf(subf, params[ip++]);
-				buf = Arrays.copyOf(buf, (buf.length + next.length));
-				System.arraycopy(next, 0, buf, (buf.length - next.length), next.length);
-				if (ip >= params.length)
-					break;
+		int offset = 3;
+		int maxlen = 3;
+		byte[] buf = encSubf(S57subf.I8RN, i8rn);
+		buf = Arrays.copyOf(buf, 3);
+		buf[2] = 0x1e;
+		index.add(new Index("0001".getBytes(), 3, 0));
+		for (Fparams sfparams : fparams) {
+			for (int ip = 0; ip < sfparams.params.length; ) {
+				for (S57subf subf : fields.get(sfparams.field)) {
+					byte[] next = encSubf(subf, sfparams.params[ip++]);
+					buf = Arrays.copyOf(buf, (buf.length + next.length));
+					System.arraycopy(next, 0, buf, (buf.length - next.length), next.length);
+				}
 			}
 			buf = Arrays.copyOf(buf, (buf.length + 1));
 			buf[buf.length-1] = 0x1e;
 			int flen = buf.length - offset;
-			if (field == S57field.I8RI) {
-				index.add(new Index("0001".getBytes(), flen, offset));
-			} else {
-				index.add(new Index(field.toString().getBytes(), flen, offset));
-			}
+			index.add(new Index(sfparams.field.toString().getBytes(), flen, offset));
 			maxlen = (flen > maxlen) ? flen : maxlen;
 			offset += flen;
 		}

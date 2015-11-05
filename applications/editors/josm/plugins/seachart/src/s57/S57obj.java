@@ -14,18 +14,18 @@ import java.util.*;
 public class S57obj { // S57 Object lookup tables & methods
 	
 	public enum Obj {
-		UNKOBJ, AIRARE, ACHBRT, ACHARE, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BERTHS, BRIDGE, BUISGL, BUAARE, BOYCAR, BOYINB, BOYISD,
-		BOYLAT, BOYSAW, BOYSPP, CBLARE, CBLOHD, CBLSUB, CANALS, CTSARE, CAUSWY, CTNARE, CHKPNT, CGUSTA, COALNE, CONZNE, COSARE, CTRPNT,
-		CONVYR, CRANES, CURENT, CUSZNE, DAMCON, DAYMAR, DWRTCL, DWRTPT, DEPARE, DEPCNT, DISMAR, DOCARE, DRGARE, DRYDOC, DMPGRD, DYKCON,
-		EXEZNE, FAIRWY, FNCLNE, FERYRT, FSHZNE, FSHFAC, FSHGRD, FLODOC, FOGSIG, FORSTC, FRPARE, GATCON, GRIDRN, HRBARE, HRBFAC, HULKES,
-		ICEARE, ICNARE, ISTZNE, LAKARE, LNDARE, LNDELV, LNDRGN, LNDMRK, LIGHTS, LITFLT, LITVES, LOCMAG, LOKBSN, LOGPON, MAGVAR, MARCUL,
-		MIPARE, MORFAC, MPAARE, NAVLNE, OBSTRN, OFSPLF, OSPARE, OILBAR, PILPNT, PILBOP, PIPARE, PIPOHD, PIPSOL, PONTON, PRCARE, PRDARE,
-		PYLONS, RADLNE, RADRNG, RADRFL, RADSTA, RTPBCN, RDOCAL, RDOSTA, RAILWY, RAPIDS, RCRTCL, RECTRC, RCTLPT, RSCSTA, RESARE, RETRFL,
-		RIVERS, ROADWY, RUNWAY, SNDWAV, SEAARE, SPLARE, SBDARE, SLCONS, SISTAT, SISTAW, SILTNK, SLOTOP, SLOGRD, SMCFAC, SOUNDG, SPRING,
-		STSLNE, SUBTLN, SWPARE, TESARE, TS_PRH, TS_PNH, TS_PAD, TS_TIS, T_HMON, T_NHMN, T_TIMS, TIDEWY, TOPMAR, TSELNE, TSSBND, TSSCRS,
-		TSSLPT, TSSRON, TSEZNE, TUNNEL, TWRTPT, UWTROC, UNSARE, VEGATN, WATTUR, WATFAL, WEDKLP, WRECKS, TS_FEB, NOTMRK, WTWAXS, WTWPRF,
-		BRGARE, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, BCNWTW, BOYWTW, REFDMP, RTPLPT, TERMNL, TRNBSN, WTWARE, WTWGAG, TISDGE,
-		VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ, C_AGGR, M_COVR, M_NSYS
+		UNKOBJ, M_COVR, M_NSYS, AIRARE, ACHBRT, ACHARE, BCNCAR, BCNISD, BCNLAT, BCNSAW, BCNSPP, BERTHS, BRIDGE, BUISGL, BUAARE, BOYCAR,
+		BOYINB, BOYISD, BOYLAT, BOYSAW, BOYSPP, CBLARE, CBLOHD, CBLSUB, CANALS, CTSARE, CAUSWY, CTNARE, CHKPNT, CGUSTA, COALNE, CONZNE,
+		COSARE, CTRPNT, CONVYR, CRANES, CURENT, CUSZNE, DAMCON, DAYMAR, DWRTCL, DWRTPT, DEPARE, DEPCNT, DISMAR, DOCARE, DRGARE, DRYDOC,
+		DMPGRD, DYKCON, EXEZNE, FAIRWY, FNCLNE, FERYRT, FSHZNE, FSHFAC, FSHGRD, FLODOC, FOGSIG, FORSTC, FRPARE, GATCON, GRIDRN, HRBARE,
+		HRBFAC, HULKES, ICEARE, ICNARE, ISTZNE, LAKARE, LNDARE, LNDELV, LNDRGN, LNDMRK, LIGHTS, LITFLT, LITVES, LOCMAG, LOKBSN, LOGPON,
+		MAGVAR, MARCUL, MIPARE, MORFAC, MPAARE, NAVLNE, OBSTRN, OFSPLF, OSPARE, OILBAR, PILPNT, PILBOP, PIPARE, PIPOHD, PIPSOL, PONTON,
+		PRCARE, PRDARE, PYLONS, RADLNE, RADRNG, RADRFL, RADSTA, RTPBCN, RDOCAL, RDOSTA, RAILWY, RAPIDS, RCRTCL, RECTRC, RCTLPT, RSCSTA,
+		RESARE, RETRFL, RIVERS, ROADWY, RUNWAY, SNDWAV, SEAARE, SPLARE, SBDARE, SLCONS, SISTAT, SISTAW, SILTNK, SLOTOP, SLOGRD, SMCFAC,
+		SOUNDG, SPRING, STSLNE, SUBTLN, SWPARE, TESARE, TS_PRH, TS_PNH, TS_PAD, TS_TIS, T_HMON, T_NHMN, T_TIMS, TIDEWY, TOPMAR, TSELNE,
+		TSSBND, TSSCRS, TSSLPT, TSSRON, TSEZNE, TUNNEL, TWRTPT, UWTROC, UNSARE, VEGATN, WATTUR, WATFAL, WEDKLP, WRECKS, TS_FEB, NOTMRK,
+		WTWAXS, WTWPRF, BRGARE, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, BCNWTW, BOYWTW, REFDMP, RTPLPT, TERMNL, TRNBSN, WTWARE,
+		WTWGAG, TISDGE, VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ
 	}
 
 	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<Obj, Integer>(Obj.class);
@@ -62,7 +62,7 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjS57.put(Obj.TSSBND,146);	ObjS57.put(Obj.TSSCRS,147);	ObjS57.put(Obj.TSSLPT,148);	ObjS57.put(Obj.TSSRON,149); ObjS57.put(Obj.TSEZNE,150);
 		ObjS57.put(Obj.TUNNEL,151);	ObjS57.put(Obj.TWRTPT,152);	ObjS57.put(Obj.UWTROC,153);	ObjS57.put(Obj.UNSARE,154); ObjS57.put(Obj.VEGATN,155);
 		ObjS57.put(Obj.WATTUR,156);	ObjS57.put(Obj.WATFAL,157);	ObjS57.put(Obj.WEDKLP,158);	ObjS57.put(Obj.WRECKS,159); ObjS57.put(Obj.TS_FEB,160);
-		ObjS57.put(Obj.MPAARE,199); ObjS57.put(Obj.C_AGGR,400); ObjS57.put(Obj.M_COVR,302); ObjS57.put(Obj.M_NSYS,306);
+		ObjS57.put(Obj.MPAARE,199); ObjS57.put(Obj.M_COVR,302); ObjS57.put(Obj.M_NSYS,306); ObjS57.put(Obj.LITMAJ,74); ObjS57.put(Obj.LITMIN,90);
 	}
 
 	private static final EnumMap<Obj, Integer> ObjIENC = new EnumMap<Obj, Integer>(Obj.class);
@@ -81,16 +81,6 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
 	}
 
-	private static final HashMap<Integer, Obj> S57Obj = new HashMap<Integer, Obj>();
-	static {
-		for (Map.Entry<Obj, Integer> entry : ObjS57.entrySet()) {
-			S57Obj.put(entry.getValue(), entry.getKey());
-		}
-		for (Map.Entry<Obj, Integer> entry : ObjIENC.entrySet()) {
-			S57Obj.put(entry.getValue(), entry.getKey());
-		}
-	}
-	
 	private static final EnumMap<Obj, String> ObjStr = new EnumMap<Obj, String>(Obj.class);
 	static {
 		ObjStr.put(Obj.UNKOBJ, "");	ObjStr.put(Obj.AIRARE, "airfield");	ObjStr.put(Obj.ACHBRT, "anchor_berth"); ObjStr.put(Obj.ACHARE, "anchorage");
@@ -138,7 +128,7 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjStr.put(Obj.BOYWTW, "buoy_waterway"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
 		ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");
 		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.MPAARE, "protected_area");
-		ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage"); ObjStr.put(Obj.M_NSYS, "navigational_system");
+		ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage"); ObjStr.put(Obj.M_NSYS, "system");
 	}
 	
 	private static final HashMap<String, Obj> StrObj = new HashMap<String, Obj>();
@@ -150,8 +140,13 @@ public class S57obj { // S57 Object lookup tables & methods
 	}
 	
 	public static Obj decodeType(long objl) { // Convert S57 feature code to SCM object enumeration
-		Obj obj = S57Obj.get((int)objl);
-		return (obj != null) ? obj : Obj.UNKOBJ;
+		for (Obj obj : ObjS57.keySet()) {
+			if (ObjS57.get(obj) == objl) return obj;
+		}
+		for (Obj obj : ObjIENC.keySet()) {
+			if (ObjIENC.get(obj) == objl) return obj;
+		}
+		return Obj.UNKOBJ;
 	}
 
 	public static long encodeType(Obj type) { // Convert SCM object enumeration to S57 feature code

@@ -10,156 +10,104 @@
 package s57;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.CRC32;
 
+import s57.S57obj.*;
+import s57.S57val.AttVal;
+import s57.S57att.Att;
 import s57.S57dat.*;
 import s57.S57map.*;
 
 public class S57enc { // S57 ENC file generation
-	
-	private static byte[] header = {
-		// Record 0
-		'0', '1', '9', '5', '9', '3', 'L', 'E', '1', ' ', '0', '9', '0', '0', '2', '4', '5', ' ', '!', ' ', '3', '4', '0', '4', // Leader
-		'0', '0', '0', '0', '1', '6', '7', '0', '0', '0', '0',    '0', '0', '0', '1', '0', '4', '3', '0', '1', '6', '7', // Directory
-		'D', 'S', 'I', 'D', '1', '6', '5', '0', '2', '1', '0',    'D', 'S', 'S', 'I', '1', '1', '3', '0', '3', '7', '5',
-		'D', 'S', 'P', 'M', '1', '3', '0', '0', '4', '8', '8',    'F', 'R', 'I', 'D', '1', '0', '0', '0', '6', '1', '8',
-		'F', 'O', 'I', 'D', '0', '7', '0', '0', '7', '1', '8',    'A', 'T', 'T', 'F', '0', '5', '9', '0', '7', '8', '8',
-		'N', 'A', 'T', 'F', '0', '6', '8', '0', '8', '4', '7',    'F', 'F', 'P', 'C', '0', '9', '0', '0', '9', '1', '5',
-		'F', 'F', 'P', 'T', '0', '8', '6', '1', '0', '0', '5',    'F', 'S', 'P', 'C', '0', '9', '0', '1', '0', '9', '1',
-		'F', 'S', 'P', 'T', '0', '8', '9', '1', '1', '8', '1',    'V', 'R', 'I', 'D', '0', '7', '8', '1', '2', '7', '0',
-		'A', 'T', 'T', 'V', '0', '5', '8', '1', '3', '4', '8',    'V', 'R', 'P', 'C', '0', '7', '1', '1', '4', '0', '6',
-		'V', 'R', 'P', 'T', '0', '7', '6', '1', '4', '7', '7',    'S', 'G', 'C', 'C', '0', '6', '0', '1', '5', '5', '3',
-		'S', 'G', '2', 'D', '0', '4', '8', '1', '6', '1', '3',    'S', 'G', '3', 'D', '0', '5', '3', '1', '6', '6', '1', 0x1e,
-		 // File control field
-		'0', '0', '0', '0', ';', '&', ' ', ' ', ' ',
-		//*** 254
-		'0', 'S', '0', '0', '0', '0', '0', '0', '.', '0', '0', '0', 0x1f, // Filename
-		'0', '0', '0', '1', 'D', 'S', 'I', 'D',  'D', 'S', 'I', 'D', 'D', 'S', 'S', 'I',  '0', '0', '0', '1', 'D', 'S', 'P', 'M',
-		'0', '0', '0', '1', 'F', 'R', 'I', 'D',  'F', 'R', 'I', 'D', 'F', 'O', 'I', 'D',  'F', 'R', 'I', 'D', 'A', 'T', 'T', 'F',
-		'F', 'R', 'I', 'D', 'N', 'A', 'T', 'F',  'F', 'R', 'I', 'D', 'F', 'F', 'P', 'C',  'F', 'R', 'I', 'D', 'F', 'F', 'P', 'T',
-		'F', 'R', 'I', 'D', 'F', 'S', 'P', 'C',  'F', 'R', 'I', 'D', 'F', 'S', 'P', 'T',  '0', '0', '0', '1', 'V', 'R', 'I', 'D',
-		'V', 'R', 'I', 'D', 'A', 'T', 'T', 'V',  'V', 'R', 'I', 'D', 'V', 'R', 'P', 'C',  'V', 'R', 'I', 'D', 'V', 'R', 'P', 'T',
-		'V', 'R', 'I', 'D', 'S', 'G', 'C', 'C',  'V', 'R', 'I', 'D', 'S', 'G', '2', 'D',  'V', 'R', 'I', 'D', 'S', 'G', '3', 'D', 0x1e,
-		 // Record identifier fields
-		'0', '5', '0', '0', ';', '&', ' ', ' ', ' ', 'I', 'S', 'O', ' ', '8', '2', '1', '1', ' ', 'R', 'e', 'c', 'o', 'r', 'd',
-		' ', 'I', 'd', 'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', 0x1f, 0x1f, '(', 'b', '1', '2', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'D', 'a', 't', 'a', ' ', 'S', 'e', 't', ' ', 'I', 'd', 'e', 'n', 't', 'i', 'f',
-		'i', 'c', 'a', 't', 'i', 'o', 'n', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!', 'E',
-		'X', 'P', 'P', '!', 'I', 'N', 'T', 'U', '!', 'D', 'S', 'N', 'M', '!', 'E', 'D', 'T', 'N', '!', 'U', 'P', 'D', 'N', '!', 'U',
-		'A', 'D', 'T', '!', 'I', 'S', 'D', 'T', '!', 'S', 'T', 'E', 'D', '!', 'P', 'R', 'S', 'P', '!', 'P', 'S', 'D', 'N', '!', 'P',
-		'R', 'E', 'D', '!', 'P', 'R', 'O', 'F', '!', 'A', 'G', 'E', 'N', '!', 'C', 'O', 'M', 'T', 0x1f, '(', 'b', '1', '1', ',', 'b',
-		'1', '4', ',', '2', 'b', '1', '1', ',', '3', 'A', ',', '2', 'A', '(', '8', ')', ',', 'R', '(', '4', ')', ',', 'b', '1', '1',
+
+	private static final byte[] header = {
+		'0', '1', '5', '7', '6', '3', 'L', 'E', '1', ' ', '0', '9', '0', '0', '2', '0', '1', ' ', '!', ' ', '3', '4', '0', '4', // Leader
+		'0', '0', '0', '0', '1', '2', '3', '0', '0', '0', '0', '0', '0', '0', '1', '0', '4', '7', '0', '1', '2', '3',
+		'D', 'S', 'I', 'D', '1', '5', '9', '0', '1', '7', '0', 'D', 'S', 'S', 'I', '1', '1', '3', '0', '3', '2', '9',
+		'D', 'S', 'P', 'M', '1', '3', '0', '0', '4', '4', '2', 'F', 'R', 'I', 'D', '1', '0', '0', '0', '5', '7', '2',
+		'F', 'O', 'I', 'D', '0', '7', '0', '0', '6', '7', '2', 'A', 'T', 'T', 'F', '0', '5', '9', '0', '7', '4', '2',
+		'N', 'A', 'T', 'F', '0', '6', '8', '0', '8', '0', '1', 'F', 'F', 'P', 'T', '0', '8', '6', '0', '8', '6', '9',
+		'F', 'S', 'P', 'T', '0', '9', '0', '0', '9', '5', '5', 'V', 'R', 'I', 'D', '0', '7', '8', '1', '0', '4', '5',
+		'A', 'T', 'T', 'V', '0', '5', '8', '1', '1', '2', '3', 'V', 'R', 'P', 'T', '0', '7', '6', '1', '1', '8', '1',
+		'S', 'G', '2', 'D', '0', '4', '8', '1', '2', '5', '7', 'S', 'G', '3', 'D', '0', '7', '0', '1', '3', '0', '5', 0x1e,
+		// File control field
+		'0', '0', '0', '0', ';', '&', ' ', ' ', ' ', 0x1f,
+		'0', '0', '0', '1', 'D', 'S', 'I', 'D', 'D', 'S', 'I', 'D', 'D', 'S', 'S', 'I', '0', '0', '0', '1', 'D', 'S', 'P', 'M',
+		'0', '0', '0', '1', 'F', 'R', 'I', 'D', 'F', 'R', 'I', 'D', 'F', 'O', 'I', 'D', 'F', 'R', 'I', 'D', 'A', 'T', 'T', 'F',
+		'F', 'R', 'I', 'D', 'N', 'A', 'T', 'F', 'F', 'R', 'I', 'D', 'F', 'F', 'P', 'T', 'F', 'R', 'I', 'D', 'F', 'S', 'P', 'T',
+		'0', '0', '0', '1', 'V', 'R', 'I', 'D', 'V', 'R', 'I', 'D', 'A', 'T', 'T', 'V', 'V', 'R', 'I', 'D', 'V', 'R', 'P', 'T',
+		'V', 'R', 'I', 'D', 'S', 'G', '2', 'D', 'V', 'R', 'I', 'D', 'S', 'G', '3', 'D', 0x1e,
+		// Record identifier fields
+		'0', '5', '0', '0', ';', '&', ' ', ' ', ' ', 'I', 'S', 'O', '/', 'I', 'E', 'C', ' ', '8', '2', '1', '1', ' ',
+		'R', 'e', 'c', 'o', 'r', 'd', ' ', 'I', 'd', 'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', 0x1f, 0x1f, '(', 'b', '1', '2', ')', 0x1e,
+		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'D', 'a', 't', 'a', ' ', 'S', 'e', 't', ' ', 'I', 'd', 'e', 'n', 't', 'i',
+		'f', 'i', 'c', 'a', 't', 'i', 'o', 'n', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!', 'E', 'X', 'P', 'P', '!',
+		'I', 'N', 'T', 'U', '!', 'D', 'S', 'N', 'M', '!', 'E', 'D', 'T', 'N', '!', 'U', 'P', 'D', 'N', '!', 'U', 'A', 'D', 'T',
+		'!', 'I', 'S', 'D', 'T', '!', 'S', 'T', 'E', 'D', '!', 'P', 'R', 'S', 'P', '!', 'P', 'S', 'D', 'N', '!', 'P', 'R', 'E',
+		'D', '!', 'P', 'R', 'O', 'F', '!', 'A', 'G', 'E', 'N', '!', 'C', 'O', 'M', 'T', 0x1f, '(', 'b', '1', '1', ',', 'b', '1',
+		'4', ',', '2', 'b', '1', '1', ',', '3', 'A', ',', '2', 'A', '(', '8', ')', ',', 'R', '(', '4', ')', ',', 'b', '1', '1',
 		',', '2', 'A', ',', 'b', '1', '1', ',', 'b', '1', '2', ',', 'A', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'D', 'a', 't', 'a', ' ', 'S', 'e', 't', ' ', 'S', 't', 'r', 'u', 'c', 't', 'u',
-		'r', 'e', ' ', 'I', 'n', 'f', 'o', 'r', 'm', 'a', 't', 'i', 'o', 'n', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'D', 'S', 'T', 'R',
-		'!', 'A', 'A', 'L', 'L', '!', 'N', 'A', 'L', 'L', '!', 'N', 'O', 'M', 'R', '!', 'N', 'O', 'C', 'R', '!', 'N', 'O', 'G', 'R',
-		'!', 'N', 'O', 'L', 'R', '!', 'N', 'O', 'I', 'N', '!', 'N', 'O', 'C', 'N', '!', 'N', 'O', 'E', 'D', '!', 'N', 'O', 'F', 'A', 0x1f,
-		'(', '3', 'b', '1', '1', ',', '8', 'b', '1', '4', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'D', 'a', 't', 'a', ' ', 'S', 'e', 't', ' ', 'P', 'a', 'r', 'a', 'm', 'e', 't',
-		'e', 'r', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!', 'H', 'D', 'A', 'T', '!', 'V',
-		'D', 'A', 'T', '!', 'S', 'D', 'A', 'T', '!', 'C', 'S', 'C', 'L', '!', 'D', 'U', 'N', 'I', '!', 'H', 'U', 'N', 'I', '!', 'P',
-		'U', 'N', 'I', '!', 'C', 'O', 'U', 'N', '!', 'C', 'O', 'M', 'F', '!', 'S', 'O', 'M', 'F', '!', 'C', 'O', 'M', 'T', 0x1f,
-		'(', 'b', '1', '1', ',', 'b', '1', '4', ',', '3', 'b', '1', '1', ',', 'b', '1', '4', ',', '4', 'b', '1', '1', ',', '2', 'b',
-		'1', '4', ',', 'A', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'I',
-		'd', 'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D',
+		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'D', 'a', 't', 'a', ' ', 's', 'e', 't', ' ', 's', 't', 'r', 'u', 'c', 't',
+		'u', 'r', 'e', ' ', 'i', 'n', 'f', 'o', 'r', 'm', 'a', 't', 'i', 'o', 'n', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f,
+		'D', 'S', 'T', 'R', '!', 'A', 'A', 'L', 'L', '!', 'N', 'A', 'L', 'L', '!', 'N', 'O', 'M', 'R', '!', 'N', 'O', 'C', 'R',
+		'!', 'N', 'O', 'G', 'R', '!', 'N', 'O', 'L', 'R', '!', 'N', 'O', 'I', 'N', '!', 'N', 'O', 'C', 'N', '!', 'N', 'O', 'E',
+		'D', '!', 'N', 'O', 'F', 'A', 0x1f, '(', '3', 'b', '1', '1', ',', '8', 'b', '1', '4', ')', 0x1e,
+		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'D', 'a', 't', 'a', ' ', 's', 'e', 't', ' ', 'p', 'a', 'r', 'a', 'm', 'e',
+		't', 'e', 'r', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!', 'H', 'D', 'A', 'T',
+		'!', 'V', 'D', 'A', 'T', '!', 'S', 'D', 'A', 'T', '!', 'C', 'S', 'C', 'L', '!', 'D', 'U', 'N', 'I', '!', 'H', 'U', 'N',
+		'I', '!', 'P', 'U', 'N', 'I', '!', 'C', 'O', 'U', 'N', '!', 'C', 'O', 'M', 'F', '!', 'S', 'O', 'M', 'F', '!', 'C', 'O',
+		'M', 'T', 0x1f, '(', 'b', '1', '1', ',', 'b', '1', '4', ',', '3', 'b', '1', '1', ',', 'b', '1', '4', ',', '4', 'b', '1',
+		'1', ',', '2', 'b', '1', '4', ',', 'A', ')', 0x1e,
+		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'i',
+		'd', 'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D',
 		'!', 'P', 'R', 'I', 'M', '!', 'G', 'R', 'U', 'P', '!', 'O', 'B', 'J', 'L', '!', 'R', 'V', 'E', 'R', '!', 'R', 'U', 'I', 'N', 0x1f,
 		'(', 'b', '1', '1', ',', 'b', '1', '4', ',', '2', 'b', '1', '1', ',', '2', 'b', '1', '2', ',', 'b', '1', '1', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'O', 'b', 'j', 'e', 'c', 't', ' ', 'I',
-		'd', 'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'A', 'G', 'E', 'N', '!', 'F', 'I', 'D', 'N',
+		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'o', 'b', 'j', 'e', 'c', 't', ' ', 'i',
+		'd', 'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, 'A', 'G', 'E', 'N', '!', 'F', 'I', 'D', 'N',
 		'!', 'F', 'I', 'D', 'S', 0x1f, '(', 'b', '1', '2', ',', 'b', '1', '4', ',', 'b', '1', '2', ')', 0x1e,
-		'2', '6', '0', '0', ';', '&', '-', 'A', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'A',
-		't', 't', 'r', 'i', 'b', 'u', 't', 'e', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, '*', 'A', 'T', 'T', 'L', '!', 'A', 'T', 'V', 'L', 0x1f,
+		'2', '6', '0', '0', ';', '&', '-', 'A', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'a',
+		't', 't', 'r', 'i', 'b', 'u', 't', 'e', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, '*', 'A', 'T', 'T', 'L', '!', 'A', 'T', 'V', 'L', 0x1f,
 		'(', 'b', '1', '2', ',', 'A', ')', 0x1e,
-		'2', '6', '0', '0', ';', '&', '-', 'A', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'N',
-		'a', 't', 'i', 'o', 'n', 'a', 'l', ' ', 'A', 't', 't', 'r', 'i', 'b', 'u', 't', 'e', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f,
-		'*', 'A', 'T', 'T', 'L', '!', 'A', 'T', 'V', 'L', 0x1f, '(', 'b', '1', '2', ',', 'A', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'T',
-		'o', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'O', 'b', 'j', 'e', 'c', 't', ' ', 'P', 'o', 'i', 'n', 't', 'e', 'r', ' ',
-		'C', 'o', 'n', 't', 'r', 'o', 'l', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'F', 'F', 'U', 'I', '!', 'F', 'F', 'I', 'X', '!', 'N',
-		'F', 'P', 'T', 0x1f, '(', 'b', '1', '1', ',', '2', 'b', '1', '2', ')', 0x1e,
-		'2', '0', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'T',
-		'o', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'O', 'b', 'j', 'e', 'c', 't', ' ', 'P', 'o', 'i', 'n', 't', 'e', 'r', ' ', 
-		'F', 'i', 'e', 'l', 'd', 0x1f, '*', 'L', 'N', 'A', 'M', '!', 'R', 'I', 'N', 'D', '!', 'C', 'O', 'M', 'T', 0x1f, '(', 'B', '(',
-		'6', '4', ')', ',', 'b', '1', '1', ',', 'A', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ',	' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'T',
-		'o', ' ', 'S', 'p', 'a', 't', 'i', 'a', 'l', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'P', 'o', 'i', 'n', 't', 'e', 'r', ' ',
-		'C', 'o', 'n', 't', 'r', 'o', 'l', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'F', 'S', 'U', 'I', '!', 'F', 'S', 'I', 'X', '!', 'N',
-		'S', 'P', 'T', 0x1f, '(', 'b', '1', '1', ',', '2', 'b', '1', '2', ')', 0x1e,
-		'2', '0', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'T', 
-		'o', ' ', 'S', 'p', 'a', 't', 'i', 'a', 'l', ' ', 'R', 'e', 'c', 'o', 'r', ' ', 'P', 'o', 'i', 'n', 't', 'e', 'r', ' ', 'F',
-		'i', 'e', 'l', 'd', 0x1f, '*', 'N', 'A', 'M', 'E', '!', 'O', 'R', 'N', 'T', '!', 'U', 'S', 'A', 'G', '!', 'M', 'A', 'S', 'K', 0x1f,
+		'2', '6', '0', '0', ';', '&', '-', 'A', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'n', 'a',
+		't', 'i', 'o', 'n', 'a', 'l', ' ', 'a', 't', 't', 'r', 'i', 'b', 'u', 't', 'e', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, '*', 'A', 'T',
+		'T', 'L', '!', 'A', 'T', 'V', 'L', 0x1f, '(', 'b', '1', '2', ',', 'A', ')', 0x1e,
+		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 't', 'o',
+		' ', 'f', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'o', 'b', 'j', 'e', 'c', 't', ' ', 'p', 'o', 'i', 'n', 't', 'e', 'r', ' ', 'f', 'i',
+		'e', 'l', 'd', 0x1f, '*', 'L', 'N', 'A', 'M', '!', 'R', 'I', 'N', 'D', '!', 'C', 'O', 'M', 'T', 0x1f, '(', 'B', '(', '6', '4',
+		')', ',', 'b', '1', '1', ',', 'A', ')', 0x1e,
+		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'F', 'e', 'a', 't', 'u', 'r', 'e', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 't', 'o',
+		' ', 's', 'p', 'a', 't', 'i', 'a', 'l', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'p', 'o', 'i', 'n', 't', 'e', 'r', ' ', 'f', 'i',
+		'e', 'l', 'd', 0x1f, '*', 'N', 'A', 'M', 'E', '!', 'O', 'R', 'N', 'T', '!', 'U', 'S', 'A', 'G', '!', 'M', 'A', 'S', 'K', 0x1f,
 		'(', 'B', '(', '4', '0', ')', ',', '3', 'b', '1', '1', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'I', 'd',
-		'e', 'n', 't', 'i', 'f', 'i', 'e', 'r', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!',
-		'R', 'V', 'E', 'R', '!', 'R', 'U', 'I', 'N', 0x1f, '(', 'b', '1', '1', ',', 'b', '1', '4', ',', 'b', '1', '2', ',', 'b', '1',
-		'1', ')', 0x1e,
-		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'A', 't',
-		't', 'r', 'i', 'b', 'u', 't', 'e', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, '*', 'A', 'T', 'T', 'L', '!', 'A', 'T', 'V', 'L', 0x1f,
-		'(', 'b', '1', '2', ',', 'A', ')', 0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'P', 'o',
-		'i', 'n', 't', 'e', 'r', ' ', 'C', 'o', 'n', 't', 'r', 'o', 'l', ' ', 'F', 'i', 'e', 'l', 's', 0x1f, 'V', 'P', 'U', 'I', '!',
-		'V', 'P', 'I', 'X', '!', 'N', 'V', 'P', 'T', 0x1f, '(', 'b', '1', '1', ',', '2', 'b', '1', '2', ')', 0x1e,
-		'2', '0', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'R', 'e', 'c', 'o', 'r', 'd', ' ', 'P', 'o',
-		'i', 'n', 't', 'e', 'r', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, '*', 'N', 'A', 'M', 'E', '!', 'O', 'R', 'N', 'T', '!', 'U', 'S',
-		'A', 'G', '!', 'T', 'O', 'P', 'I', '!', 'M', 'A', 'S', 'K', 0x1f, '(', 'B', '(', '4', '0', ')', ',', '4', 'b', '1', '1', ')',
-		0x1e,
-		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'C', 'o', 'o', 'r', 'd', 'i', 'n', 'a', 't', 'e', ' ', 'C', 'o', 'n', 't', 'r',
-		'o', 'l', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'C', 'C', 'U', 'I', '!', 'C', 'C', 'I', 'X', '!', 'C', 'C', 'N', 'C', 0x1f, '(',
-		'b', '1', '1', ',', '2', 'b', '1', '2', ')', 0x1e,
-		'2', '2', '0', '0', ';', '&', ' ', ' ', ' ', '2', '-', 'D', ' ', 'C', 'o', 'o', 'r', 'd', 'i', 'n', 'a', 't', 'e', ' ', 'F', 
-		'i', 'e', 'l', 'd', 0x1f, '*', 'Y', 'C', 'O', 'O', '!', 'X', 'C', 'O', 'O', 0x1f, '(', '2', 'b', '2', '4', ')',
-		0x1e,
-		'2', '2', '0', '0', ';', '&', ' ', ' ', ' ', '3', '-', 'D', ' ', 'C', 'o', 'o', 'r', 'd', 'i', 'n', 'a', 't', 'e', ' ', 'F',
-		'i', 'e', 'l', 'd', 0x1f, '*', 'Y', 'C', 'O', 'O', '!', 'X', 'C', 'O', 'O', '!', 'V', 'E', '3', 'D', 0x1f, '(', '3', 'b', '2',
-		'4', ')', 0x1e,
-
-		// Record 1
-		'0', '0', '1', '6', '7', ' ', 'D', ' ', ' ', ' ', ' ', ' ', '0', '0', '0', '4', '9', ' ', ' ', ' ', '2', '2', '0', '4', // Leader
-		// Directory
-		'0', '0', '0', '1', '0', '3', '0', '0',   'D', 'S', 'I', 'D', '7', '9', '0', '3',   'D', 'S', 'S', 'I', '3', '6', '8', '2', 0x1e,
-		'1', '0', 0x1e, // Field 0001
-		// Field DSID
-		0x0a, 0x01, 0x00, 0x00, 0x00, 0x01,
-		//*** 2017
-		0x00, '0', 'S', '0', '0', '0', '0', '0', '0', '.', '0', '0', '0', 0x1f, // INTU & Filename
-		'1', 0x1f, '0', 0x1f,
-		//*** 2035
-		'0', '0', '0', '0', '0', '0', '0', '0',   '0', '0', '0', '0', '0', '0', '0', '0', // Date x2 (from system)
-		'0', '3', '.', '1', 0x14, 0x1f, 0x1f, 0x01, 0x26, 0x0f, 'G', 'e', 'n', 'e', 'r', 'a', 't', 'e', 'd', ' ', 'b', 'y', ' ', 
-		'O', 'p', 'e', 'n', 'S', 'e', 'a', 'M', 'a', 'p', '.', 'o', 'r', 'g', 0x1f, 0x1e,
-		// Field DSSI
-		0x02, 0x01, 0x02,
-		//*** 2093
-		0x00, 0x00, 0x00, 0x00, // # of meta records (from metas counter)
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, // # of geo records (from geos counter)
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00, // # of isolated node records (from isols counter)
-		0x00, 0x00, 0x00, 0x00, // # of connected node records (from conns counter)
-		0x00, 0x00, 0x00, 0x00, // # of edge records (from edges counter)
-		0x00, 0x00, 0x00, 0x00, 0x1e,
-
-		// Record 2
-		'0', '0', '0', '6', '8', ' ', 'D', ' ', ' ', ' ', ' ', ' ', '0', '0', '0', '3', '9', ' ', ' ', ' ', '2', '1', '0', '4',
-		'0', '0', '0', '1', '0', '3', '0', 'D', 'S', 'P', 'M', '2', '6', '3', 0x1e,
-		// Field 0001
-		0x02, 0x00, 0x1e,
-		// Field DSPM
-		0x14, 0x01, 0x00, 0x00, 0x00, 0x02, 0x17, 0x17,
-		//*** 2176
-		0x00, 0x00, 0x00, 0x00, // Scale (from meta list)
-		0x01, // Depth units (from meta list)
-		0x01, // Height units (from meta list)
-		0x01, 0x01,
-		(byte)0x80, (byte)0x96, (byte)0x98, 0x00, // COMF=10000000
-		0x0a, // SOMF=10
-		0x00, 0x00, 0x00, 0x1f, 0x1e
+		'1', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'i', 'd', 'e',
+		'n', 't', 'i', 'f', 'i', 'e', 'r', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!', 'R', 'V',
+		'E', 'R', '!', 'R', 'U', 'I', 'N', 0x1f, '(', 'b', '1', '1', ',', 'b', '1', '4', ',', 'b', '1', '2', ',', 'b', '1', '1', ')', 0x1e,
+		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'a', 't', 't',
+		'r', 'i', 'b', 'u', 't', 'e', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, '*', 'A', 'T', 'T', 'L', '!', 'A', 'T', 'V', 'L', 0x1f, '(', 'b',
+		'1', '2', ',', 'A', ')', 0x1e,
+		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', 'V', 'e', 'c', 't', 'o', 'r', ' ', 'r', 'e', 'c', 'o', 'r', 'd', ' ', 'p', 'o', 'i',
+		'n', 't', 'e', 'r', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, '*', 'N', 'A', 'M', 'E', '!', 'O', 'R', 'N', 'T', '!', 'U', 'S', 'A', 'G',
+		'!', 'T', 'O', 'P', 'I', '!', 'M', 'A', 'S', 'K', 0x1f, '(', 'B', '(', '4', '0', ')', ',', '4', 'b', '1', '1', ')', 0x1e,
+		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', '2', '-', 'D', ' ', 'c', 'o', 'o', 'r', 'd', 'i', 'n', 'a', 't', 'e', ' ', 'f', 'i',
+		'e', 'l', 'd', 0x1f, '*', 'Y', 'C', 'O', 'O', '!', 'X', 'C', 'O', 'O', 0x1f, '(', '2', 'b', '2', '4', ')', 0x1e,
+		'2', '6', '0', '0', ';', '&', ' ', ' ', ' ', '3', '-', 'D', ' ', 'c', 'o', 'o', 'r', 'd', 'i', 'n', 'a', 't', 'e', ' ', '(', 's',
+		'o', 'u', 'n', 'd', 'i', 'n', 'g', ' ', 'a', 'r', 'r', 'a', 'y', ')', ' ', 'f', 'i', 'e', 'l', 'd', 0x1f, '*', 'Y', 'C', 'O', 'O',
+		'!', 'X', 'C', 'O', 'O', '!', 'V', 'E', '3', 'D', 0x1f, '(', '3', 'b', '2', '4', ')', 0x1e
 	};
 	
 	static final double COMF=10000000;
 	static final double SOMF=10;
+	
+	static int agen = 3878;
+	static int cscl = 10000;
 	
 	static int idx;
 	static int recs;
@@ -167,39 +115,201 @@ public class S57enc { // S57 ENC file generation
 	static int conns;
 	static int metas;
 	static int geos;
-	static int rcid;
+	static int edges;
+	
+	static long hash(long val) {
+		byte[] bval = ByteBuffer.allocate(Long.SIZE).putLong(val).array();
+		CRC32 crc = new CRC32();
+		crc.update(bval);
+		return crc.getValue();
+	}
 
 	public static int encodeChart(S57map map, HashMap<String, String> meta, byte[] buf) throws IndexOutOfBoundsException, UnsupportedEncodingException {
 
-		/*
-		 * Encoding order:
-		 * 1. Copy records 0-3 & fill in meta attributes.
-		 * 2. Depth isolated nodes.
-		 * 3. All other isolated nodes.
-		 * 4. Connected nodes.
-		 * 5. Edges.
-		 * 6. Meta objects.
-		 * 7. Geo objects.
-		 */
+		byte[] record;
+		ArrayList<Fparams> fields;
+
+		String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
+		ArrayList<Fparams> ds = new ArrayList<Fparams>();
+		ds.add(new Fparams(S57field.DSID, new Object[]{ 10, 1, 1, 4, "0S000000.000", 1, 0, date, date, "03.1", 1, "ENC", "", 1, agen, "Generated by OpenSeaMap.org" }));
+		ds.add(new Fparams(S57field.DSSI, new Object[]{ 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0 }));
+		ArrayList<Fparams> dp = new ArrayList<Fparams>();
+		dp.add(new Fparams(S57field.DSPM, new Object[]{ 20, 2, 2, 23, 23, cscl, 1, 1, 1, 1, 10000000, 10, "" }));
 		
-		recs = rcid = 3;
-		isols = conns = metas = geos = 0;
-		for (idx = 0; idx < header.length; idx++) {
-			buf[idx] = header[idx];
+		isols = conns = metas = geos = edges = 0;
+		System.arraycopy(header, 0, buf, 0, header.length);
+		idx = header.length;
+		record = S57dat.encRecord(1, ds);
+		System.arraycopy(record, 0, buf, idx, record.length);
+		idx += record.length;
+		record = S57dat.encRecord(2, dp);
+		System.arraycopy(record, 0, buf, idx, record.length);
+		idx += record.length;
+		recs = 3;
+		
+		// Depths
+		Object[] depths = new Object[0];
+		for (Map.Entry<Long, S57map.Snode> entry : map.nodes.entrySet()) {
+			S57map.Snode node = entry.getValue();
+			if (node.flg == Nflag.DPTH) {
+				Object[] dval = new Object[]{ (Math.toDegrees(node.lat) * COMF), (Math.toDegrees(node.lon) * COMF), (node.val * SOMF) };
+				depths = Arrays.copyOf(depths, (depths.length + dval.length));
+				System.arraycopy(dval, 0, depths, (depths.length - dval.length), dval.length);
+			}
 		}
-//		byte[] file = S57dat.encSubf(S57subf.FILE, meta.get("FILE"));
-		
+		if (depths.length > 0) {
+			fields = new ArrayList<Fparams>();
+			fields.add(new Fparams(S57field.VRID, new Object[]{ 110, -2, 1, 1 }));
+			fields.add(new Fparams(S57field.SG3D, depths));
+			record = S57dat.encRecord(recs++, fields);
+			System.arraycopy(record, 0, buf, idx, record.length);
+			idx += record.length;
+			isols++;
+		}
+
+		// Isolated nodes
 		for (Map.Entry<Long, S57map.Snode> entry : map.nodes.entrySet()) {
 			S57map.Snode node = entry.getValue();
 			if (node.flg == Nflag.ISOL) {
-				byte[] record = S57dat.encRecord(recs++, S57record.VI, rcid++, 1, 1, (Math.toDegrees(node.lat) * COMF), (Math.toDegrees(node.lon) * COMF));
+				fields = new ArrayList<Fparams>();
+				fields.add(new Fparams(S57field.VRID, new Object[]{ 110, hash(entry.getKey()), 1, 1 }));
+				fields.add(new Fparams(S57field.SG2D, new Object[]{ (Math.toDegrees(node.lat) * COMF), (Math.toDegrees(node.lon) * COMF) }));
+				record = S57dat.encRecord(recs++, fields);
 				System.arraycopy(record, 0, buf, idx, record.length);
 				idx += record.length;
 				isols++;
-				recs++;
 			}
 		}
+		
+		// Connected nodes
+		for (Map.Entry<Long, S57map.Snode> entry : map.nodes.entrySet()) {
+			S57map.Snode node = entry.getValue();
+			if (node.flg == Nflag.CONN) {
+				fields = new ArrayList<Fparams>();
+				fields.add(new Fparams(S57field.VRID, new Object[]{ 120, hash(entry.getKey()), 1, 1 }));
+				fields.add(new Fparams(S57field.SG2D, new Object[]{ (Math.toDegrees(node.lat) * COMF), (Math.toDegrees(node.lon) * COMF) }));
+				record = S57dat.encRecord(recs++, fields);
+				System.arraycopy(record, 0, buf, idx, record.length);
+				idx += record.length;
+				conns++;
+			}
+		}
+		
+		// Edges
+		for (Map.Entry<Long, S57map.Edge> entry : map.edges.entrySet()) {
+			S57map.Edge edge = entry.getValue();
+			fields = new ArrayList<Fparams>();
+			fields.add(new Fparams(S57field.VRID, new Object[]{ 130, hash(entry.getKey()), 1, 1 }));
+			fields.add(new Fparams(S57field.VRPT, new Object[]{ (((hash(edge.first) & 0xffffffff) << 8) + 120l), 255, 255, 1, 255, (((hash(edge.last) & 0xffffffff) << 8) + 120l), 255, 255, 2, 255 }));
+			Object[] nodes = new Object[0];
+			for (long ref : edge.nodes) {
+				Object[] nval = new Object[]{ (Math.toDegrees(map.nodes.get(ref).lat) * COMF), (Math.toDegrees(map.nodes.get(ref).lon) * COMF) };
+				nodes = Arrays.copyOf(nodes, (nodes.length + nval.length));
+				System.arraycopy(nval, 0, nodes, (nodes.length - nval.length), nval.length);
+			}
+			if (nodes.length > 0) {
+				fields.add(new Fparams(S57field.SG2D, nodes));
+			}
+			record = S57dat.encRecord(recs++, fields);
+			System.arraycopy(record, 0, buf, idx, record.length);
+			idx += record.length;
+			edges++;
+		}
+		
+		// Meta & Geo objects
+		for (Entry<Obj, ArrayList<Feature>> entry : map.features.entrySet()) {
+			Obj obj = entry.getKey();
+			for (Feature feature : entry.getValue()) {
+				int prim = feature.geom.prim.ordinal();
+				prim = (prim == 0) ? 255 : prim;
+				int grup = ((obj == Obj.DEPARE) || (obj == Obj.DRGARE) || (obj == Obj.FLODOC) || (obj == Obj.HULKES) || (obj == Obj.LNDARE) || (obj == Obj.PONTON) || (obj == Obj.UNSARE)) ? 1 : 2;
+				
+				ArrayList<Fparams> geom = new ArrayList<Fparams>();
+				int outers = feature.geom.outers;
+				for (Prim elem : feature.geom.elems) {
+					if (feature.geom.prim == Pflag.POINT) {
+						geom.add(new Fparams(S57field.FSPT, new Object[] { ((hash(elem.id) << 8) + ((map.nodes.get(elem.id).flg == Nflag.CONN) ? 120l : 110l)), 255, 255, 255 }));
+					} else {
+						geom.add(new Fparams(S57field.FSPT, new Object[] { ((hash(elem.id) << 8) + 130l), (elem.forward ? 1 : 2), ((outers-- > 0) ? 1 : 2), 2 }));
+					}
+				}
 
+				ArrayList<ArrayList<Fparams>> objects = new ArrayList<ArrayList<Fparams>>();
+				ArrayList<Long> slaves = new ArrayList<Long>();
+				long slaveid = feature.id & 0x01ffffffffffffffl;
+				for (Entry<Obj, ObjTab> objs : feature.objs.entrySet()) {
+					Obj objobj = objs.getKey();
+					for (Entry<Integer, AttMap> object : objs.getValue().entrySet()) {
+						ArrayList<Fparams> objatts = new ArrayList<Fparams>();
+						boolean master = (feature.type == objobj) && ((object.getKey() == 0) || (object.getKey() == 1));
+						long id = hash(master ? feature.id : slaveid);
+						objatts.add(new Fparams(S57field.FRID, new Object[] { 100, id, prim, grup, S57obj.encodeType(objobj), 1, 1 }));
+						objatts.add(new Fparams(S57field.FOID, new Object[] { agen, id, 1 }));
+						Object[] attf = new Object[0];
+						Object[] natf = new Object[0];
+						for (Entry<Att, AttVal<?>> att : object.getValue().entrySet()) {
+							if (!((obj == Obj.SOUNDG) && (att.getKey() == Att.VALSOU))) {
+								long attl = S57att.encodeAttribute(att.getKey());
+								Object[] next = new Object[] { attl, S57val.encodeValue(att.getValue(), att.getKey()) };
+								if ((attl < 300) || (attl > 304)) {
+									attf = Arrays.copyOf(attf, (attf.length + next.length));
+									System.arraycopy(next, 0, attf, (attf.length - next.length), next.length);
+								} else {
+									natf = Arrays.copyOf(natf, (natf.length + next.length));
+									System.arraycopy(next, 0, natf, (natf.length - next.length), next.length);
+								}
+							}
+						}
+						if (attf.length > 0) {
+							objatts.add(new Fparams(S57field.ATTF, attf));
+						}
+						if (natf.length > 0) {
+							objatts.add(new Fparams(S57field.NATF, attf));
+						}
+						if (master) {
+							objects.add(objatts);
+						} else {
+							slaves.add(id);
+							objects.add(0, objatts);
+							slaveid += 0x0100000000000000l;
+						}
+					}
+				}
+
+				if (!slaves.isEmpty()) {
+					ArrayList<Fparams> refs = new ArrayList<Fparams>();
+					Object[] params = new Object[0];
+					while (!slaves.isEmpty()) {
+						long id = slaves.remove(0);
+						Object[] next = new Object[]{ (long)((((id & 0xffffffff) + 0x100000000l) << 16) + (agen & 0xffff)) , 2, "" };
+						params = Arrays.copyOf(params, (params.length + next.length));
+						System.arraycopy(next, 0, params, (params.length - next.length), next.length);
+					}
+					refs.add(new Fparams(S57field.FFPT, params));
+					objects.get(objects.size() - 1).addAll(refs);
+				}
+				
+				for (ArrayList<Fparams> object : objects) {
+					object.addAll(geom);
+					record = S57dat.encRecord(recs++, object);
+					System.arraycopy(record, 0, buf, idx, record.length);
+					idx += record.length;
+					if ((obj == Obj.M_COVR) || (obj == Obj.M_NSYS)) {
+						metas++;
+					} else {
+						geos++;
+					}
+				}
+			}
+		}
+		
+		// Re-write DSID/DSSI with final totals
+		ds = new ArrayList<Fparams>();
+		ds.add(new Fparams(S57field.DSID, new Object[]{ 10, 1, 1, 4, "0S000000.000", 1, 0, date, date, "03.1", 1, "ENC", "", 1, agen, "Generated by OpenSeaMap.org" }));
+		ds.add(new Fparams(S57field.DSSI, new Object[]{ 2, 1, 2, metas, 0, geos, 0, isols, conns, edges, 0 }));
+		record = S57dat.encRecord(1, ds);
+		System.arraycopy(record, 0, buf, header.length, record.length);
+		
 	return idx;
 }
 

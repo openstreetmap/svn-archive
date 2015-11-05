@@ -46,41 +46,34 @@ public class S57map { // S57/OSM map generation methods
 		public double lat;	// Latitude in radians
 		public double lon;	// Longitude in radians
 		public Nflag flg;		// Role of node
+		public double val;	// Optional value
 
 		public Snode() {
 			flg = Nflag.ANON;
 			lat = 0;
 			lon = 0;
+			val = 0;
 		}
 		public Snode(double ilat, double ilon) {
 			flg = Nflag.ANON;
 			lat = ilat;
 			lon = ilon;
+			val = 0;
 		}
 		public Snode(double ilat, double ilon, Nflag iflg) {
 			lat = ilat;
 			lon = ilon;
 			flg = iflg;
-		}
-	}
-
-	public class Dnode extends Snode {	// All depth soundings
-		public double val;	// Sounding value
-
-		public Dnode() {
-			flg = Nflag.DPTH;
-			lat = 0;
-			lon = 0;
 			val = 0;
 		}
-		public Dnode(double ilat, double ilon, double ival) {
+		public Snode(double ilat, double ilon, double ival) {
 			flg = Nflag.DPTH;
 			lat = ilat;
 			lon = ilon;
 			val = ival;
 		}
 	}
-	
+
 	public class Edge {		// A polyline segment
 		public long first;	// First CONN node
 		public long last;		// Last CONN node
@@ -206,6 +199,7 @@ public class S57map { // S57/OSM map generation methods
 	}
 	
 	public class Feature {
+		public long id;				// Ref for this feature
 		public Rflag reln;		// Relationship status
 		public Geom geom;			// Geometry data
 		public Obj type;			// Feature type
@@ -214,6 +208,7 @@ public class S57map { // S57/OSM map generation methods
 		public ObjMap objs;		// Slave object attributes
 
 		Feature() {
+			id = 0;
 			reln = Rflag.UNKN;
 			geom = new Geom(Pflag.NOSP);
 			type = Obj.UNKOBJ;
@@ -260,7 +255,7 @@ public class S57map { // S57/OSM map generation methods
 	}
 
 	public void newNode(long id, double lat, double lon, double depth) {
-		nodes.put(id, new Dnode(Math.toRadians(lat), Math.toRadians(lon), depth));
+		nodes.put(id, new Snode(Math.toRadians(lat), Math.toRadians(lon), depth));
 	}
 
 	public void newFeature(long id, Pflag p, long objl) {
@@ -270,12 +265,11 @@ public class S57map { // S57/OSM map generation methods
 			obj = Obj.BCNLAT;
 		if (obj == Obj.BOYWTW)
 			obj = Obj.BOYLAT;
-		if (obj == Obj.C_AGGR)
-			feature.reln = Rflag.UNKN;
 		feature.geom = new Geom(p);
 		feature.type = obj;
 		if (obj != Obj.UNKOBJ) {
 			index.put(id, feature);
+			feature.id = id;
 		}
 	}
 	
@@ -377,6 +371,7 @@ public class S57map { // S57/OSM map generation methods
 		Snode node = new Snode(Math.toRadians(lat), Math.toRadians(lon));
 		nodes.put(id, node);
 		feature = new Feature();
+		feature.id = id;
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.POINT;
 		feature.geom.elems.add(new Prim(id));
@@ -386,6 +381,7 @@ public class S57map { // S57/OSM map generation methods
 
 	public void addEdge(long id) {
 		feature = new Feature();
+		feature.id = id;
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.LINE;
 		feature.geom.elems.add(new Prim(id));
@@ -407,6 +403,7 @@ public class S57map { // S57/OSM map generation methods
 
 	public void addArea(long id) {
 		feature = new Feature();
+		feature.id = id;
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.AREA;
 		edge = null;
@@ -444,8 +441,13 @@ public class S57map { // S57/OSM map generation methods
 					objs.put(idx, atts);
 				}
 				AttVal<?> attval = S57val.convertValue(val, att);
-				if (attval.val != null)
+				if (attval.val != null) {
+					if (att == Att.VALSOU) {
+						Snode node = nodes.get(feature.geom.elems.get(0).id);
+						node.val = (double) attval.val;
+					}
 					atts.put(att, attval);
+				}
 			} else {
 				if (subkeys[1].equals("type")) {
 					obj = S57obj.enumType(val);
@@ -459,6 +461,10 @@ public class S57map { // S57/OSM map generation methods
 					if (atts == null) {
 						atts = new AttMap();
 						objs.put(0, atts);
+					}
+					if ((obj == Obj.SOUNDG) && (feature.geom.prim == Pflag.POINT)) {
+						Snode node = nodes.get(feature.geom.elems.get(0).id);
+						node.flg = Nflag.DPTH;
 					}
 				} else {
 					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
@@ -484,7 +490,7 @@ public class S57map { // S57/OSM map generation methods
 		switch (feature.geom.prim) {
 		case POINT:
 			Snode node = nodes.get(id);
-			if (node.flg != Nflag.CONN) {
+			if ((node.flg != Nflag.CONN) && (node.flg != Nflag.DPTH) && (!feature.objs.isEmpty())) {
 				node.flg = Nflag.ISOL;
 			}
 			break;

@@ -1149,16 +1149,27 @@ public class S57val { // S57 Attribute values lookup tables & methods
   return null;
  }
 
- public static Integer encodeValue(String val, Att att) { // Convert OSM attribute value string to S57 attribute value
-  EnumMap<?, ?> map = keys.get(att).map;
-  for (Object item : map.keySet()) {
-   if (((S57enum)map.get(item)).val.equals(val))
-    return ((S57enum)map.get(item)).atvl;
-  }
-  return 0;
+ public static String encodeValue(AttVal<?> attval, Att att) { // Convert SCM attribute value to S57 attribute value string
+	  if (attval != null) {
+	  	String str = stringValue(attval, att);
+	  	if ((attval.conv == Conv.E) || (attval.conv == Conv.L)) {
+	  		String[] vals = str.split(";");
+	  		str = "";
+	  		for (String val : vals) {
+	  			if (!str.isEmpty()) str += ",";
+	  			EnumMap<?, ?> map = keys.get(att).map;
+	  			for (Object item : map.keySet()) {
+	  				if (((S57enum)map.get(item)).val.equals(val))
+		        str += ((S57enum)map.get(item)).atvl.toString();
+		      }
+	  		}
+	  	}
+  		return str;
+	  }
+  return "";
  }
 
- public static String stringValue(AttVal<?> attval, Att att) { // Convert SCM value object to OSM attribute value string
+ public static String stringValue(AttVal<?> attval, Att att) { // Convert SCM attribute value to OSM attribute value string
   if (attval != null) {
    switch (attval.conv) {
    case A:

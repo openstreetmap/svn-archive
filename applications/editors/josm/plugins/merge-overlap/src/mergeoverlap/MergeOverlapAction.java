@@ -558,7 +558,7 @@ public class MergeOverlapAction extends JosmAction {
         // resolve tag conflicts if necessary
         if (askForMergeTag(ways) || duplicateParentRelations(ways)) {
             dialog.setVisible(true);
-            if (dialog.isCanceled())
+            if (!dialog.isApplied())
                 throw new UserCancelException();
         }
 

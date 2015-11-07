@@ -444,7 +444,7 @@ public class S57map { // S57/OSM map generation methods
 				if (attval.val != null) {
 					if (att == Att.VALSOU) {
 						Snode node = nodes.get(feature.geom.elems.get(0).id);
-						node.val = (double) attval.val;
+						node.val = (Double) attval.val;
 					}
 					atts.put(att, attval);
 				}

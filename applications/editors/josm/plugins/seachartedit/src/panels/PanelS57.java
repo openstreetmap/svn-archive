@@ -185,7 +185,7 @@ public class PanelS57 extends JPanel {
 
 		OsmDataLayer layer = new OsmDataLayer(data, "S-57 Import", null);
 		Main.map.mapView.addLayer(layer);
-//		Main.map.mapView.zoomTo(new Bounds(bounds.minlat, bounds.minlon, bounds.maxlat, bounds.maxlon));
+		Main.map.mapView.zoomTo(new Bounds(Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon), Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon)));
 		PanelMain.setStatus("Import done", Color.green);
 	}
 
@@ -198,7 +198,7 @@ public class PanelS57 extends JPanel {
 		if (feature.type == Obj.SOUNDG) {
 			Snode snode = map.nodes.get(feature.geom.elems.get(0).id);
 			if (snode.flg == S57map.Nflag.DPTH) {
-				keys.put("seamark:sounding:depth", ((Double)((Dnode)snode).val).toString());
+				keys.put("seamark:sounding:depth", ((Double)((Snode)snode).val).toString());
 			}
 		}
 		for (Map.Entry<Att, AttVal<?>> item : feature.atts.entrySet()) {

@@ -11,8 +11,7 @@ package s57;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import s57.S57obj.*;
 import s57.S57att.*;
@@ -76,6 +75,10 @@ public class S57osm { // OSM to S57 Object/Attribute conversions
 		boolean inNode = false;
 		boolean inWay = false;
 		boolean inRel = false;
+		map.nodes.put(1l, map.new Snode());
+		map.nodes.put(2l, map.new Snode());
+		map.nodes.put(3l, map.new Snode());
+		map.nodes.put(4l, map.new Snode());
 
 		String ln;
 		while ((ln = in.readLine()) != null) {
@@ -84,12 +87,20 @@ public class S57osm { // OSM to S57 Object/Attribute conversions
 					for (String token : ln.split("[ ]+")) {
 						if (token.matches("^minlat=.+")) {
 							map.bounds.minlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+							map.nodes.get(2l).lat = map.bounds.minlat;
+							map.nodes.get(3l).lat = map.bounds.minlat;
 						} else if (token.matches("^minlon=.+")) {
 							map.bounds.minlon = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+							map.nodes.get(1l).lon = map.bounds.minlon;
+							map.nodes.get(2l).lon = map.bounds.minlon;
 						} else if (token.matches("^maxlat=.+")) {
 							map.bounds.maxlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+							map.nodes.get(1l).lat = map.bounds.maxlat;
+							map.nodes.get(4l).lat = map.bounds.maxlat;
 						} else if (token.matches("^maxlon=.+")) {
 							map.bounds.maxlon = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));
+							map.nodes.get(3l).lon = map.bounds.maxlon;
+							map.nodes.get(4l).lon = map.bounds.maxlon;
 						}
 					}
 				} else {
@@ -197,6 +208,16 @@ public class S57osm { // OSM to S57 Object/Attribute conversions
 			}
 		}
 		return;
+	}
+	
+	public static void OSMmeta(S57map map) {
+		map.addEdge(++map.xref);
+		for (long ref = 0; ref <= 4; ref++) {
+			map.addToEdge((ref == 0) ? 4 : ref);
+		}
+		map.addTag("seamark:type", "coverage");
+		map.addTag("seamark:coverage:category", "coverage");
+		map.tagsDone(map.xref);
 	}
 
 }

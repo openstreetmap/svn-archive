@@ -218,20 +218,18 @@ public class S57map { // S57/OSM map generation methods
 		}
 	}
 	
+	public MapBounds bounds;
 	public NodeTab nodes;
 	public EdgeTab edges;
-
 	public FtrMap features;
 	public FtrTab index;
-	
-	public MapBounds bounds;
-
-	public long cref;
 	public long xref;
+
+	private long cref;
 	private Feature feature;
 	private Edge edge;
 	private KeyVal<?> osm = S57osm.OSMtag("", "");
-	boolean sea;
+	private boolean sea;
 
 	public S57map(boolean s) {
 		sea = s;
@@ -366,10 +364,9 @@ public class S57map { // S57/OSM map generation methods
 	}
 
 	// OSM map building methods
-	
+
 	public void addNode(long id, double lat, double lon) {
-		Snode node = new Snode(Math.toRadians(lat), Math.toRadians(lon));
-		nodes.put(id, node);
+		nodes.put(id, new Snode(Math.toRadians(lat), Math.toRadians(lon)));
 		feature = new Feature();
 		feature.id = id;
 		feature.reln = Rflag.UNKN;
@@ -554,6 +551,7 @@ public class S57map { // S57/OSM map generation methods
 	}
 	
 	enum Ext {I, N, W, S, E }
+	
 	public void mapDone() {
 		class Land {
 			long first;
@@ -578,17 +576,17 @@ public class S57map { // S57/OSM map generation methods
 			}
 			for (Feature feature : features.get(Obj.COALNE)) {
 				Feature land = new Feature();
+				land.id = ++xref;
 				land.type = Obj.LNDARE;
 				land.reln = Rflag.MASTER;
 				land.objs.put(Obj.LNDARE, new ObjTab());
+				land.objs.get(Obj.LNDARE).put(0, new AttMap());
 				if (feature.geom.prim == Pflag.AREA) {
 					land.geom = feature.geom;
 					features.get(Obj.LNDARE).add(land);
 				} else if (feature.geom.prim == Pflag.LINE) {
 					land.geom.prim = Pflag.LINE;
-					for (int i = 0; i < feature.geom.elems.size(); i++) {
-						land.geom.elems.add(feature.geom.elems.get(i));
-					}
+					land.geom.elems.addAll(feature.geom.elems);
 					coasts.add(land);
 				}
 			}

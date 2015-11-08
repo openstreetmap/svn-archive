@@ -10,13 +10,14 @@
 package josmtos57;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 import java.util.zip.CRC32;
 
+import s57.S57dat;
 import s57.S57enc;
 import s57.S57map;
 import s57.S57osm;
+import s57.S57dat.*;
 
 public class Josmtos57 {
 
@@ -36,24 +37,11 @@ public class Josmtos57 {
 		'i', 'r', 'e', 'c', 't', 'o', 'r', 'y', ' ', 'F', 'i', 'e', 'l', 'd', 0x1f, 'R', 'C', 'N', 'M', '!', 'R', 'C', 'I', 'D', '!', 'F', 'I', 'L', 'E', '!', 'L', 'F',
 		'I', 'L', '!', 'V', 'O', 'L', 'M', '!', 'I', 'M', 'P', 'L', '!', 'S', 'L', 'A', 'T', '!', 'W', 'L', 'O', 'N', '!', 'N', 'L', 'A', 'T', '!', 'E', 'L', 'O', 'N',
 		'!', 'C', 'R', 'C', 'S', '!', 'C', 'O', 'M', 'T', 0x1f, '(', 'A', '(', '2', ')', ',', 'I', '(', '1', '0', ')', ',', '3', 'A', ',', 'A', '(', '3', ')', ',', '4',
-		'R', ',', '2', 'A', ')', 0x1e
-	};
-	
-	static byte[] entry = {
-		//*** 0
-		'0', '0', '1', '0', '1', ' ', 'D', ' ', ' ', ' ', ' ', ' ', '0', '0', '0', '5', '3', ' ', ' ', ' ', '5', '5', '0', '4', // Leader
-		'0', '0', '0', '1', '0', '0', '0', '0', '6', '0', '0', '0', '0', '0',   'C', 'A', 'T', 'D', '0', '0', '0', '4', '2', '0', '0', '0', '0', '6', 0x1e, // Directory
-		'0', '0', '0', '0', '0', 0x1e,
-		//*** 
-		'C', 'D', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', // Record name+number
-		//***
-		'C', 'A', 'T', 'A', 'L', 'O', 'G', '.', '0', '3', '1', 0x1f, // File name
-		0x1f, // File long name
-		'V', '0', '1', 'X', '0', '1', 0x1f, // Volume
-		'A', 'S', 'C', // Implementation
-		0x1f, 0x1f, 0x1f, 0x1f, // minlat, minlon, maxlat, maxlon
-		0x1f, // CRC32
-		0x1f, 0x1e // Comment
+		'R', ',', '2', 'A', ')', 0x1e, 
+		'0', '0', '1', '0', '1', ' ', 'D', ' ', ' ', ' ', ' ', ' ', '0', '0', '0', '5', '3', ' ', ' ', ' ', '5', '5', '0', '4',
+		'0', '0', '0', '1', '0', '0', '0', '0', '6', '0', '0', '0', '0', '0',   'C', 'A', 'T', 'D', '0', '0', '0', '4', '2', '0', '0', '0', '0', '6', 0x1e,
+		'0', '0', '0', '0', '0', 0x1e, 'C', 'D', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', 'C', 'A', 'T', 'A', 'L', 'O', 'G', '.', '0', '3', '1', 0x1f,
+		0x1f, 'V', '0', '1', 'X', '0', '1', 0x1f, 'A', 'S', 'C', 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1e
 	};
 	
 	static BufferedReader in;
@@ -61,10 +49,12 @@ public class Josmtos57 {
 	static S57map map;
 	static byte[] buf;
 	static HashMap<String, String> meta;
+	static ArrayList<Fparams> fields;
+	static byte[] record;
 	
 	public static void main(String[] args) throws IOException {
 
-		map = new S57map(true);
+		map = new S57map(false);
 		int idx = 0;
 		
 		if (args.length < 4) {
@@ -75,10 +65,11 @@ public class Josmtos57 {
 			Scanner min = new Scanner(new FileInputStream(args[1]));
 			meta = new HashMap<String, String>();
 			meta.put("FILE", args[3]);
-//			while (min.hasNext()) {
-//				String[] tokens = min.next().split("=");
-//				meta.put(tokens[0], tokens[1]);
-//			}
+			while (min.hasNext()) {
+				String[] tokens = min.next().split("=");
+				if (tokens.length >= 2)
+					meta.put(tokens[0], tokens[1].split("[ #]")[0]);
+			}
 			min.close();
 		} catch (IOException e) {
 			System.err.println("Meta data file: " + e.getMessage());
@@ -117,10 +108,23 @@ public class Josmtos57 {
 		}
 		out.close();
 		
+		buf = new byte[header.length];
+		System.arraycopy(header, 0, buf, 0, header.length);
+		idx = header.length;
+		int recs = 2;
+		fields = new ArrayList<Fparams>();
+		fields.add(new Fparams(S57field.CATD, new Object[]{ "CD", recs, args[3], "", "V01X01", "BIN", Math.toDegrees(map.bounds.minlat),
+				Math.toDegrees(map.bounds.minlon), Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon), String.format("%08X", crc.getValue()), "" }));
+		record = S57dat.encRecord(String.valueOf(recs++), fields);
+		buf = Arrays.copyOf(buf, (buf.length + record.length));
+		System.arraycopy(record, 0, buf, idx, record.length);
+		idx += record.length;
+
 		try {
 			File file = new File(args[2] + "CATALOG.031");
 			if (file.exists()) file.delete();
 			out = new FileOutputStream(file, false);
+			out.write(buf, 0, idx);
 		} catch (IOException e) {
 			System.err.println("Catalogue file: " + e.getMessage());
 			System.exit(-1);

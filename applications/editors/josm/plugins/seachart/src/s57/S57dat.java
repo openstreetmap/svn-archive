@@ -261,10 +261,12 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 
 	public static byte[] encSubf(S57subf subf, Object val) {
 		S57conv conv = convs.get(subf);
-		if (conv.bin == 0) {
+		if ((conv.bin == 0) || asc) {
 			String sval = "";
 			if (val instanceof String) {
 				sval = (String) val;
+			} else if (val instanceof Integer) {
+				sval = ((Integer)val).toString();
 			} else if (val instanceof Long) {
 				sval = ((Long)val).toString();
 			} else if (val instanceof Double) {
@@ -327,6 +329,13 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		}
 	};
 
+	static boolean asc = false;
+	
+	public static byte[] encRecord(String i8rn, ArrayList<Fparams> fparams) {
+		asc = true;
+		return encRecord(Integer.parseInt(i8rn), fparams);
+	}
+	
 	public static byte[] encRecord(int i8rn, ArrayList<Fparams> fparams) {
 		ArrayList<Index> index = new ArrayList<Index>();
 		int offset = 3;
@@ -379,6 +388,7 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		fbuf[21] = (byte)(olen + 0x30);
 		System.arraycopy(String.format("%05d", fbuf.length).getBytes(), 0, fbuf, 0, 5);
 		System.arraycopy(String.format("%05d", (leader.length + ibuf.length)).getBytes(), 0, fbuf, 12, 5);
+		asc = false;
 		return fbuf;
 	}
 

@@ -254,7 +254,7 @@ public class S57enc { // S57 ENC file generation
 
 				ArrayList<ArrayList<Fparams>> objects = new ArrayList<ArrayList<Fparams>>();
 				ArrayList<Long> slaves = new ArrayList<Long>();
-				long slaveid = feature.id & 0x01ffffffffffffffl;
+				long slaveid = feature.id + 0x0100000000000000l;
 				for (Entry<Obj, ObjTab> objs : feature.objs.entrySet()) {
 					Obj objobj = objs.getKey();
 					boolean master = true;
@@ -266,7 +266,12 @@ public class S57enc { // S57 ENC file generation
 						objatts.add(new Fparams(S57field.FOID, new Object[] { agen, id, 1 }));
 						Object[] attf = new Object[0];
 						Object[] natf = new Object[0];
-						for (Entry<Att, AttVal<?>> att : object.getValue().entrySet()) {
+						AttMap atts = map.new AttMap();
+						atts.putAll(object.getValue());
+						if (master) {
+							atts.putAll(feature.atts);
+						}
+						for (Entry<Att, AttVal<?>> att : atts.entrySet()) {
 							if (!((obj == Obj.SOUNDG) && (att.getKey() == Att.VALSOU))) {
 								long attl = S57att.encodeAttribute(att.getKey());
 								Object[] next = new Object[] { attl, S57val.encodeValue(att.getValue(), att.getKey()) };

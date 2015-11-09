@@ -17,7 +17,13 @@ import s57.S57obj.*;
 import s57.S57att.*;
 import s57.S57val.*;
 
-public class S57osm { // OSM to S57 Object/Attribute conversions
+public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conversions
+	
+	enum Prims { P, L, A, PA, PL, LA, PLA }
+	private static final EnumMap<Obj, Prims> S57prims = new EnumMap<Obj, Prims>(Obj.class);
+	static {
+		S57prims.put(Obj.UNKOBJ, Prims.PLA);
+	}
 
 	static class KeyVal<V> {
 		Obj obj;

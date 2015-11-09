@@ -39,6 +39,7 @@ public class S57map { // S57/OSM map generation methods
 		ANON,	// Edge inner nodes
 		ISOL,	// Node not part of Edge
 		CONN,	// Edge first and last nodes
+		TRNK, // Edge truncated polygon nodes
 		DPTH	// Sounding nodes
 	}
 

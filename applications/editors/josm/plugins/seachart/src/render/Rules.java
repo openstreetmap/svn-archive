@@ -261,13 +261,11 @@ public class Rules {
 			if (testObject(Obj.BOYISD)) for (Feature f : objects) if (testFeature(f)) buoys();
 			if (testObject(Obj.BOYSAW)) for (Feature f : objects) if (testFeature(f)) buoys();
 			if (testObject(Obj.BOYSPP)) for (Feature f : objects) if (testFeature(f)) buoys();
-			if (testObject(Obj.BOYWTW)) for (Feature f : objects) if (testFeature(f)) buoys();
 			if (testObject(Obj.BCNLAT)) for (Feature f : objects) if (testFeature(f)) beacons();
 			if (testObject(Obj.BCNCAR)) for (Feature f : objects) if (testFeature(f)) beacons();
 			if (testObject(Obj.BCNISD)) for (Feature f : objects) if (testFeature(f)) beacons();
 			if (testObject(Obj.BCNSAW)) for (Feature f : objects) if (testFeature(f)) beacons();
 			if (testObject(Obj.BCNSPP)) for (Feature f : objects) if (testFeature(f)) beacons();
-			if (testObject(Obj.BCNWTW)) for (Feature f : objects) if (testFeature(f)) beacons();
 		}
 	}
 	
@@ -868,7 +866,6 @@ public class Rules {
 			case BCNLAT:
 			case BCNSAW:
 			case BCNSPP:
-			case BCNWTW:
 				dy = 45.0;
 				break;
 			case NOTMRK:
@@ -1195,7 +1192,7 @@ public class Rules {
 	}
 
 	private static void waterways() {
-		Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 20));
+		Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 20, Symbols.Bwater));
 	}
 
 	private static void wrecks() {

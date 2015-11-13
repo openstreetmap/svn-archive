@@ -24,8 +24,8 @@ public class S57obj { // S57 Object lookup tables & methods
 		RESARE, RETRFL, RIVERS, ROADWY, RUNWAY, SNDWAV, SEAARE, SPLARE, SBDARE, SLCONS, SISTAT, SISTAW, SILTNK, SLOTOP, SLOGRD, SMCFAC,
 		SOUNDG, SPRING, STSLNE, SUBTLN, SWPARE, TESARE, TS_PRH, TS_PNH, TS_PAD, TS_TIS, T_HMON, T_NHMN, T_TIMS, TIDEWY, TOPMAR, TSELNE,
 		TSSBND, TSSCRS, TSSLPT, TSSRON, TSEZNE, TUNNEL, TWRTPT, UWTROC, UNSARE, VEGATN, WATTUR, WATFAL, WEDKLP, WRECKS, TS_FEB, NOTMRK,
-		WTWAXS, WTWPRF, BRGARE, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, BCNWTW, BOYWTW, REFDMP, RTPLPT, TERMNL, TRNBSN, WTWARE,
-		WTWGAG, TISDGE, VEHTRF, EXCNST, LG_SDM, LG_VSP, LITMIN, LITMAJ
+		WTWAXS, WTWPRF, BUNSTA, COMARE, HRBBSN, LOKARE, LKBSPT, PRTARE, REFDMP, TERMNL, TRNBSN, WTWARE, WTWGAG, TISDGE, VEHTRF, EXCNST,
+		LG_SDM, LG_VSP, LITMIN, LITMAJ
 	}
 
 	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<Obj, Integer>(Obj.class);
@@ -74,10 +74,9 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjIENC.put(Obj.RDOCAL, 17017); ObjIENC.put(Obj.CURENT, 17019); ObjIENC.put(Obj.HULKES, 17020); ObjIENC.put(Obj.PONTON, 17021);	ObjIENC.put(Obj.PIPOHD, 17024);
 		ObjIENC.put(Obj.FLODOC, 17025);	ObjIENC.put(Obj.CHKPNT, 17027); ObjIENC.put(Obj.BCNLAT, 17028); ObjIENC.put(Obj.BOYLAT, 17029);	ObjIENC.put(Obj.CRANES, 17030);
 		ObjIENC.put(Obj.GATCON, 17031);	ObjIENC.put(Obj.SLCONS, 17032); ObjIENC.put(Obj.UWTROC, 17033); ObjIENC.put(Obj.CONVYR, 17034);	ObjIENC.put(Obj.NOTMRK, 17050);
-		ObjIENC.put(Obj.WTWAXS, 17051);	ObjIENC.put(Obj.WTWPRF, 17052); ObjIENC.put(Obj.BRGARE, 17053); ObjIENC.put(Obj.BUNSTA, 17054);	ObjIENC.put(Obj.COMARE, 17055);
-		ObjIENC.put(Obj.HRBBSN, 17056);	ObjIENC.put(Obj.LOKARE, 17057); ObjIENC.put(Obj.LKBSPT, 17058); ObjIENC.put(Obj.PRTARE, 17059);	ObjIENC.put(Obj.BCNWTW, 17060);
-		ObjIENC.put(Obj.BOYWTW, 17061);	ObjIENC.put(Obj.REFDMP, 17062); ObjIENC.put(Obj.RTPLPT, 17063); ObjIENC.put(Obj.TERMNL, 17064);	ObjIENC.put(Obj.TRNBSN, 17065);
-		ObjIENC.put(Obj.WTWARE, 17066);	ObjIENC.put(Obj.WTWGAG, 17067); ObjIENC.put(Obj.TISDGE, 17068); ObjIENC.put(Obj.VEHTRF, 17069);	ObjIENC.put(Obj.EXCNST, 17070);
+		ObjIENC.put(Obj.WTWAXS, 17051);	ObjIENC.put(Obj.WTWPRF, 17052); ObjIENC.put(Obj.BUNSTA, 17054);	ObjIENC.put(Obj.COMARE, 17055); ObjIENC.put(Obj.HRBBSN, 17056);
+		ObjIENC.put(Obj.LKBSPT, 17058); ObjIENC.put(Obj.PRTARE, 17059); ObjIENC.put(Obj.REFDMP, 17062); ObjIENC.put(Obj.TERMNL, 17064); ObjIENC.put(Obj.TRNBSN, 17065);
+		ObjIENC.put(Obj.WTWARE, 17066); ObjIENC.put(Obj.WTWGAG, 17067); ObjIENC.put(Obj.TISDGE, 17068); ObjIENC.put(Obj.VEHTRF, 17069); ObjIENC.put(Obj.EXCNST, 17070);
 		ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
 	}
 
@@ -123,11 +122,10 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjStr.put(Obj.TWRTPT, "two-way_route"); ObjStr.put(Obj.UWTROC, "rock"); ObjStr.put(Obj.UNSARE, "unsurveyed_area");	ObjStr.put(Obj.VEGATN, "vegetation");
 		ObjStr.put(Obj.WATTUR, "water_turbulence");	ObjStr.put(Obj.WATFAL, "waterfall"); ObjStr.put(Obj.WEDKLP, "weed"); ObjStr.put(Obj.WRECKS, "wreck");
 		ObjStr.put(Obj.TS_FEB, "tidal_stream");	ObjStr.put(Obj.NOTMRK, "notice");	ObjStr.put(Obj.WTWAXS, "waterway_axis"); ObjStr.put(Obj.WTWPRF, "waterway_profile");
-		ObjStr.put(Obj.BRGARE, "bridge_area"); ObjStr.put(Obj.BUNSTA, "bunker_station");	ObjStr.put(Obj.COMARE, "communication_area");	ObjStr.put(Obj.HRBBSN, "harbour_basin");
-		ObjStr.put(Obj.LOKARE, "lock_area"); ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area");	ObjStr.put(Obj.BCNWTW, "beacon_waterway");
-		ObjStr.put(Obj.BOYWTW, "buoy_waterway"); ObjStr.put(Obj.REFDMP, "refuse_dump"); ObjStr.put(Obj.RTPLPT, "route_planning_point"); ObjStr.put(Obj.TERMNL, "terminal");
-		ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge"); ObjStr.put(Obj.TISDGE, "time_schedule");
-		ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.MPAARE, "protected_area");
+		ObjStr.put(Obj.BUNSTA, "bunker_station");	ObjStr.put(Obj.COMARE, "communication_area");	ObjStr.put(Obj.HRBBSN, "harbour_basin"); ObjStr.put(Obj.LOKARE, "lock_area");
+		ObjStr.put(Obj.LKBSPT, "lock_basin_part"); ObjStr.put(Obj.PRTARE, "port_area"); ObjStr.put(Obj.REFDMP, "refuse_dump");
+		ObjStr.put(Obj.TERMNL, "terminal"); ObjStr.put(Obj.TRNBSN, "turning_basin"); ObjStr.put(Obj.WTWARE, "waterway_area"); ObjStr.put(Obj.WTWGAG, "waterway_gauge");
+		ObjStr.put(Obj.TISDGE, "time_schedule"); ObjStr.put(Obj.VEHTRF, "vehicle_transfer"); ObjStr.put(Obj.EXCNST, "exceptional_structure"); ObjStr.put(Obj.MPAARE, "protected_area");
 		ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage"); ObjStr.put(Obj.M_NSYS, "system");
 	}
 	

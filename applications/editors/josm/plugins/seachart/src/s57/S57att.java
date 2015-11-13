@@ -157,7 +157,7 @@ public class S57att { // S57 Attribute lookup tables & methods
  private static final EnumMap<Obj, Att> Callsign = new EnumMap<Obj, Att>(Obj.class); static { Callsign.put(Obj.UNKOBJ, Att.CALSGN); }
  private static final EnumMap<Obj, Att> Category = new EnumMap<Obj, Att>(Obj.class); static {
   Category.put(Obj.ACHARE, Att.CATACH); Category.put(Obj.ACHBRT, Att.CATACH); Category.put(Obj.AIRARE, Att.CATAIR); Category.put(Obj.BCNCAR, Att.CATCAM); Category.put(Obj.BCNLAT, Att.CATLAM);
-  Category.put(Obj.BCNSPP, Att.CATSPM); Category.put(Obj.BCNWTW, Att.CATWWM); Category.put(Obj.BOYLAT, Att.CATLAM); Category.put(Obj.BOYINB, Att.CATINB); Category.put(Obj.BOYSPP, Att.CATSPM);
+  Category.put(Obj.BCNSPP, Att.CATSPM); Category.put(Obj.BOYLAT, Att.CATLAM); Category.put(Obj.BOYINB, Att.CATINB); Category.put(Obj.BOYSPP, Att.CATSPM);
   Category.put(Obj.BRIDGE, Att.CATBRG); Category.put(Obj.BUAARE, Att.CATBUA); Category.put(Obj.BUNSTA, Att.CATBUN); Category.put(Obj.CANALS, Att.CATCAN);
   Category.put(Obj.CBLARE, Att.CATCBL); Category.put(Obj.CBLOHD, Att.CATCBL); Category.put(Obj.CBLSUB, Att.CATCBL); Category.put(Obj.CHKPNT, Att.CATCHP); Category.put(Obj.COMARE, Att.CATCOM);
   Category.put(Obj.COALNE, Att.CATCOA); Category.put(Obj.CONVYR, Att.CATCON); Category.put(Obj.CRANES, Att.CATCRN); Category.put(Obj.CTRPNT, Att.CATCTR); Category.put(Obj.DAMCON, Att.CATDAM);
@@ -269,9 +269,9 @@ public class S57att { // S57 Attribute lookup tables & methods
  private static final EnumMap<Obj, Att> Restriction = new EnumMap<Obj, Att>(Obj.class); static { Restriction.put(Obj.UNKOBJ, Att.RESTRN); }
  private static final EnumMap<Obj, Att> Schedule = new EnumMap<Obj, Att>(Obj.class); static { Schedule.put(Obj.UNKOBJ, Att.SCHREF); }
  private static final EnumMap<Obj, Att> Shape = new EnumMap<Obj, Att>(Obj.class); static { Shape.put(Obj.BCNCAR, Att.BCNSHP); Shape.put(Obj.BCNISD, Att.BCNSHP);
-  Shape.put(Obj.BCNLAT, Att.BCNSHP); Shape.put(Obj.BCNSAW, Att.BCNSHP); Shape.put(Obj.BCNSPP, Att.BCNSHP); Shape.put(Obj.BCNWTW, Att.BCNSHP); Shape.put(Obj.BUISGL, Att.BUISHP);
+  Shape.put(Obj.BCNLAT, Att.BCNSHP); Shape.put(Obj.BCNSAW, Att.BCNSHP); Shape.put(Obj.BCNSPP, Att.BCNSHP); Shape.put(Obj.BUISGL, Att.BUISHP);
   Shape.put(Obj.BOYCAR, Att.BOYSHP); Shape.put(Obj.BOYISD, Att.BOYSHP); Shape.put(Obj.BOYLAT, Att.BOYSHP); Shape.put(Obj.BOYSAW, Att.BOYSHP); Shape.put(Obj.BOYSPP, Att.BOYSHP);
-  Shape.put(Obj.BOYWTW, Att.BOYSHP); Shape.put(Obj.BOYINB, Att.BOYSHP); Shape.put(Obj.DAYMAR, Att.TOPSHP); Shape.put(Obj.TOPMAR, Att.TOPSHP); Shape.put(Obj.MORFAC, Att.BOYSHP);
+  Shape.put(Obj.BOYINB, Att.BOYSHP); Shape.put(Obj.DAYMAR, Att.TOPSHP); Shape.put(Obj.TOPMAR, Att.TOPSHP); Shape.put(Obj.MORFAC, Att.BOYSHP);
   Shape.put(Obj.SILTNK, Att.BUISHP);
  }
  private static final EnumMap<Obj, Att> Sector_end = new EnumMap<Obj, Att>(Obj.class); static { Sector_end.put(Obj.UNKOBJ, Att.SECTR2); }

@@ -260,10 +260,6 @@ public class S57map { // S57/OSM map generation methods
 	public void newFeature(long id, Pflag p, long objl) {
 		feature = new Feature();
 		Obj obj = S57obj.decodeType(objl);
-		if (obj == Obj.BCNWTW)
-			obj = Obj.BCNLAT;
-		if (obj == Obj.BOYWTW)
-			obj = Obj.BOYLAT;
 		feature.geom = new Geom(p);
 		feature.type = obj;
 		if (obj != Obj.UNKOBJ) {
@@ -488,7 +484,7 @@ public class S57map { // S57/OSM map generation methods
 		switch (feature.geom.prim) {
 		case POINT:
 			Snode node = nodes.get(id);
-			if ((node.flg != Nflag.CONN) && (node.flg != Nflag.DPTH) && (!feature.objs.isEmpty())) {
+			if ((node.flg != Nflag.CONN) && (node.flg != Nflag.DPTH) && (!feature.objs.isEmpty() || (osm.obj != Obj.UNKOBJ))) {
 				node.flg = Nflag.ISOL;
 			}
 			break;
@@ -770,6 +766,9 @@ public class S57map { // S57/OSM map generation methods
 		boolean next = true;
 		feature.geom.length = 0;
 		feature.geom.area = 0;
+		if (feature.geom.elems.isEmpty()) {
+			return false;
+		}
 		if (feature.geom.prim == Pflag.POINT) { 
 			feature.geom.centre = nodes.get(feature.geom.elems.get(0).id);
 			return true;

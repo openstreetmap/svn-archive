@@ -38,4 +38,22 @@
         </jar>
         <delete file="${plugin.build.dir}/${ant.project.name}.jar" />
     </target>
+
+    <!--
+    **********************************************************
+    ** additional-manifest - add additional manifest entries 
+    **********************************************************
+    -->
+    <target name="additional-manifest">
+        <manifest file="MANIFEST" mode="update">
+        	<!-- JAI requires a vendor name for some of its deep internals, 
+        	     see http://stackoverflow.com/a/18495658/2257172 -->
+            <attribute name="Specification-Title" value="JOSM GeoTools plugin"/>
+            <attribute name="Specification-Version" value="14.0"/>
+            <attribute name="Specification-Vendor" value="JOSM developers" />
+            <attribute name="Implementation-Title" value="org.openstreetmap.josm.plugins.geotools" />
+            <attribute name="Implementation-Version" value="14.0" />
+            <attribute name="Implementation-Vendor" value="JOSM developers"/>
+        </manifest>
+    </target>
 </project>

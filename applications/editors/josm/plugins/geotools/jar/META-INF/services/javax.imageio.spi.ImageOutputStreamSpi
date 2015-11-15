@@ -1,3 +1,7 @@
+it.geosolutions.imageio.stream.output.spi.FileImageOutputStreamExtImplSpi
+it.geosolutions.imageio.stream.output.spi.URLImageOutputStreamSpi
+it.geosolutions.imageio.stream.output.spi.StringImageOutputStreamSpi
+
 #
 # $RCSfile: javax.imageio.spi.ImageOutputStreamSpi,v $
 #

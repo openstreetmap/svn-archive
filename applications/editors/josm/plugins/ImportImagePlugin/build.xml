@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ImportImagePlugin" default="dist" basedir=".">
 
-	<!-- enter the SVN commit message -->
-	<property name="commit.message" value="use consistent plugin name (don't mix up the words)" />
-	<!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-	<property name="plugin.main.version" value="7817" />
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="use consistent plugin name (don't mix up the words)" />
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="7817" />
 
     <property name="plugin.author" value="Christoph Beekmans, Fabian Kowitz, Anna Robaszkiewicz, Oliver Kuhn, Martin Ulitzny"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.ImportImagePlugin.ImportImagePlugin"/>
@@ -12,11 +12,11 @@
     <property name="plugin.icon" value="images/layericon.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
     <property name="plugin.requires" value="log4j;jts;geotools"/>
-	
+    
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
-	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+    <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="log4j.jar"/>
         <include name="jts.jar"/>
         <include name="geotools.jar"/>

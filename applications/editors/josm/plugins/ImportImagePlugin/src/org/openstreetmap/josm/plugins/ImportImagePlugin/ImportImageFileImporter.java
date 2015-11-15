@@ -16,14 +16,15 @@ import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCanceledException;
 
 /**
- * Calss to open georeferened image with standard file open dialog 
+ * Class to open georeferenced image with standard file open dialog 
  */
 public class ImportImageFileImporter extends FileImporter {
     
     private Logger logger = Logger.getLogger(LoadImageAction.class);
 
     public ImportImageFileImporter() {
-        super(new ExtensionFileFilter("tiff,tif,jpg,jpeg,bmp,png", "jpg", "Georeferened image file [by ImportImage plugin] (*.jpg, *.jpeg, *.tif, *.tiff, *.png, *.bmp)"));
+        super(new ExtensionFileFilter("tiff,tif,jpg,jpeg,bmp,png", "jpg", 
+                "Georeferenced image file [by ImportImage plugin] (*.jpg, *.jpeg, *.tif, *.tiff, *.png, *.bmp)"));
     }
 
     @Override

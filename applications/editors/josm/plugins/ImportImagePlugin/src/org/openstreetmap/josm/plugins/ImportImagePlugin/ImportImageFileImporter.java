@@ -13,7 +13,7 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.io.FileImporter;
-import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCancledException;
+import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCanceledException;
 
 /**
  * Calss to open georeferened image with standard file open dialog 
@@ -46,7 +46,7 @@ public class ImportImageFileImporter extends FileImporter {
             logger.info("File choosen:" + file);
             try {
                 layer = new ImageLayer(file);
-            } catch (LayerCreationCancledException e) {
+            } catch (LayerCreationCanceledException e) {
             // if user decides that layer should not be created just return.
                 continue;
             } catch (Exception e) {

@@ -110,7 +110,7 @@ public class ImageLayer extends Layer {
                 int val = ex.getValue();
                 if (val == 3) {
                     logger.debug("No projection and user declined un-projected use");
-                    throw new LayerCreationCancledException();
+                    throw new LayerCreationCanceledException();
                 }
                 CoordinateReferenceSystem src = null;
                 try {
@@ -326,15 +326,12 @@ public class ImageLayer extends Layer {
             layerProps.setLocation(Main.parent.getWidth() / 4 , Main.parent.getHeight() / 4);
             layerProps.setVisible(true);
         }
-
     }
 
     /**
-     * Exception which represents that the layer creation has been cancled by the
-     * user.
-     *
+     * Exception which represents that the layer creation has been canceled by the user.
      */
-    class LayerCreationCancledException extends IOException{
+    class LayerCreationCanceledException extends IOException{
     }
 
     public CoordinateReferenceSystem getSourceRefSys() {

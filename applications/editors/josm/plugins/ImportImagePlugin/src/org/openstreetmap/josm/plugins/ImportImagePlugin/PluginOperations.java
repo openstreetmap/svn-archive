@@ -153,6 +153,9 @@ public class PluginOperations {
             }
 
             BufferedImage img = ImageIO.read(file);
+            if (img == null) {
+                throw new IOException("Cannot read image file " + file.getAbsolutePath());
+            }
 
             // create Envelope
             double width = img.getWidth() * tfwReader.getXPixelSize();
@@ -335,14 +338,13 @@ public class PluginOperations {
     public static GridCoverage2D readGeoTiff(File file, CoordinateReferenceSystem refSys) throws IOException, FactoryException
     {
         GridCoverage2D coverage = null;
-        Hints hints = new Hints();
+        Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, true);
         if(refSys != null)
         {
             hints.put(Hints.DEFAULT_COORDINATE_REFERENCE_SYSTEM, refSys);
-
         }
-        // dont't use the EPSG-Factory because of wrong behaviour
-        hints.put(Hints.CRS_AUTHORITY_FACTORY, CRS.getAuthorityFactory(true));
+        // don't use the EPSG-Factory because of wrong behaviour
+        //hints.put(Hints.CRS_AUTHORITY_FACTORY, CRS.getAuthorityFactory(true));
 
         GeoTiffReader reader = new GeoTiffReader(file, hints);
 
@@ -351,9 +353,8 @@ public class PluginOperations {
         return coverage;
     }
 
-
     /**
-     * Loads CRS data from an EPSG database and creates descrptions for each one.
+     * Loads CRS data from an EPSG database and creates descriptions for each one.
      *
      * @param pluginProps
      * @throws Exception

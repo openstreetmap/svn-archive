@@ -1,0 +1,43 @@
+!
+!    GIS-GEOSPOT Header File
+!
+!    Image Information
+!
+DELTA_X_ORIGIN       0.0 FT
+DELTA_Y_ORIGIN       0.0 FT
+MAPUNITS             FEET
+ULXMAP               681451.44 FT
+ULYMAP               1913050.20 FT
+XDIM                 32.8 FT
+YDIM                 32.8 FT
+NCOLS                700
+NROWS                930
+NBANDS               1
+!
+!    Frame Corner Support
+!
+NW_X_PIXEL           1
+NW_Y_PIXEL           6
+NE_X_PIXEL           692
+NE_Y_PIXEL           1
+SW_X_PIXEL           8
+SW_Y_PIXEL           930
+SE_X_PIXEL           700
+SE_Y_PIXEL           926
+!
+!    File Encoding
+!
+NBITS                8
+BYTEORDER            I
+SKIPBYTES            0
+RECORDSKIPBYTES      0
+BANDROWBYTES         700
+TOTALROWBYTES        700
+LAYOUT               BIL
+BAND_RGB             1 1 1
+!
+!    Process Information
+!
+PRE_PROCESSING_LEVEL "2b"
+!
+! End of File

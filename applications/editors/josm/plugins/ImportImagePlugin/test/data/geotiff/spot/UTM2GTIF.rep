@@ -1,0 +1,91 @@
+!
+!    GIS-GEOSPOT Report File
+!
+!    Product Identification
+!
+MAP_NUMBER           "UTM27pan5"
+PRODUCTION_DATE      1995-09-06
+MAP_NAME             "Chicago Loop"
+LOCATION             "Chicago, IL"
+!
+!    Geospot Structure
+!
+GEOSPOT_N_FILES      8
+!
+FILE_NAME_001        UTM27.REP
+FILE_FORMAT_001      GEOSPOT 4.0
+FILE_THEME_001       "Geospot report file"
+!
+FILE_NAME_002        COPYRITE.T01
+FILE_FORMAT_002      TEXT 1.0
+FILE_THEME_002       "Copyright file"
+!
+FILE_NAME_003        UTM27.HDR
+FILE_FORMAT_003      GEOSPOT 4.0
+FILE_THEME_003       "Image header file"
+!
+FILE_NAME_004        UTM27.BIL
+FILE_FORMAT_004      GEOSPOT 4.0
+FILE_THEME_004       "Image file"
+!
+FILE_NAME_005        UTM27.STX
+FILE_FORMAT_005      GEOSPOT 4.0
+FILE_THEME_005       "Image statistics file"
+!
+FILE_NAME_006        UTM27.CLR
+FILE_FORMAT_006      GEOSPOT 4.0
+FILE_THEME_006       "Image palette file"
+!
+FILE_NAME_007        UTM27.RSC
+FILE_FORMAT_007      GEOSPOT 4.0
+FILE_THEME_007       "Image source file"
+!
+FILE_NAME_008        QCK_LOOK.TIF
+FILE_FORMAT_008      TIFF 6.0
+FILE_THEME_008       "Quick-look file"
+!
+!
+!    Cartographic Parameters
+!
+PROJ_ID              "Universal Transverse Mercator"
+PROJ_ZONE            16
+PROJ_CODE            1   USGS
+HORIZ_DATUM          "North American 1927"
+SPHEROID_NAME        "Clarke 1866"
+SPHEROID_MAJ_AXIS    6378206.4 M
+SPHEROID_FLAT        294.9786982
+!
+!    Framing Information
+!
+SHEET_RECT_TYPE      SINGLE
+SHEET_RECT_ELEVATION 50.0 M
+EASTING_SIZE         0.083333 DEG
+NORTHING_SIZE        0.083333 DEG
+NW_LON               -87.666667 DEG
+NW_LAT               41.916667 DEG
+NE_LON               -87.583333 DEG
+NE_LAT               41.916667 DEG
+SW_LON               -87.666667 DEG
+SW_LAT               41.833333 DEG
+SE_LON               -87.583333 DEG
+SE_LAT               41.833333 DEG
+NW_X_COORD           444714.62 M
+NW_Y_COORD           4640525.34 M
+NE_X_COORD           451625.32 M
+NE_Y_COORD           4640474.98 M
+SW_X_COORD           444642.75 M
+SW_Y_COORD           4631273.20 M
+SE_X_COORD           451562.44 M
+SE_Y_COORD           4631222.86 M
+GRID_DECLINATION     0.4172 DEG
+!
+!    Raster Frame Information
+!
+PIXEL_ROTATION_SIN   0.0
+PIXEL_ROTATION_COS   1.0
+RASTER_X_ORIGIN      444642.80 M
+RASTER_Y_ORIGIN      4640515.00 M
+RASTER_X_SIZE        6990.0 M
+RASTER_Y_SIZE        9290.0 M
+!
+! End of File

@@ -1,0 +1,91 @@
+!
+!    GIS-GEOSPOT Report File
+!
+!    Product Identification
+!
+MAP_NUMBER           "St27pan5"
+PRODUCTION_DATE      1995-09-06
+MAP_NAME             "Chicago Loop"
+LOCATION             "Chicago, IL"
+!
+!    Geospot Structure
+!
+GEOSPOT_N_FILES      8
+!
+FILE_NAME_001        SPCS27.REP
+FILE_FORMAT_001      GEOSPOT 4.0
+FILE_THEME_001       "Geospot report file"
+!
+FILE_NAME_002        COPYRITE.T01
+FILE_FORMAT_002      TEXT 1.0
+FILE_THEME_002       "Copyright file"
+!
+FILE_NAME_003        SPCS27.HDR
+FILE_FORMAT_003      GEOSPOT 4.0
+FILE_THEME_003       "Image header file"
+!
+FILE_NAME_004        SPCS27.BIL
+FILE_FORMAT_004      GEOSPOT 4.0
+FILE_THEME_004       "Image file"
+!
+FILE_NAME_005        SPCS27.STX
+FILE_FORMAT_005      GEOSPOT 4.0
+FILE_THEME_005       "Image statistics file"
+!
+FILE_NAME_006        SPCS27.CLR
+FILE_FORMAT_006      GEOSPOT 4.0
+FILE_THEME_006       "Image palette file"
+!
+FILE_NAME_007        SPCS27.RSC
+FILE_FORMAT_007      GEOSPOT 4.0
+FILE_THEME_007       "Image source file"
+!
+FILE_NAME_008        QCK_LOOK.TIF
+FILE_FORMAT_008      TIFF 6.0
+FILE_THEME_008       "Quick-look file"
+!
+!
+!    Cartographic Parameters
+!
+PROJ_ID              "State Plane Coordinate System 1927"
+PROJ_ZONE            1201
+PROJ_CODE            2   USGS
+HORIZ_DATUM          "North American 1927"
+SPHEROID_NAME        "Clarke 1866"
+SPHEROID_MAJ_AXIS    6378206.4 M
+SPHEROID_FLAT        294.9786982
+!
+!    Framing Information
+!
+SHEET_RECT_TYPE      SINGLE
+SHEET_RECT_ELEVATION 50.0 M
+EASTING_SIZE         0.083333 DEG
+NORTHING_SIZE        0.083333 DEG
+NW_LON               -87.666667 DEG
+NW_LAT               41.916667 DEG
+NE_LON               -87.583333 DEG
+NE_LAT               41.916667 DEG
+SW_LON               -87.666667 DEG
+SW_LAT               41.833333 DEG
+SE_LON               -87.583333 DEG
+SE_LAT               41.833333 DEG
+NW_X_COORD           681451.53 FT
+NW_Y_COORD           1912895.78 FT
+NE_X_COORD           704132.98 FT
+NE_Y_COORD           1913083.12 FT
+SW_X_COORD           681687.39 FT
+SW_Y_COORD           1882529.60 FT
+SE_X_COORD           704398.33 FT
+SE_Y_COORD           1882716.88 FT
+GRID_DECLINATION     -0.4728 DEG
+!
+!    Raster Frame Information
+!
+PIXEL_ROTATION_SIN   0.0
+PIXEL_ROTATION_COS   1.0
+RASTER_X_ORIGIN      681451.44 FT
+RASTER_Y_ORIGIN      1913050.20 FT
+RASTER_X_SIZE        22965.6 FT
+RASTER_Y_SIZE        30511.4 FT
+!
+! End of File

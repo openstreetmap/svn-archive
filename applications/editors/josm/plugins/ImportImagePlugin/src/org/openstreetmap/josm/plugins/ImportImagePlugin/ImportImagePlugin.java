@@ -90,12 +90,13 @@ public class ImportImagePlugin extends Plugin{
             // create new Action for menu entry
             loadFileAction = new LoadImageAction();
             loadFileAction.setEnabled(true);
-            MainMenu.add(Main.main.menu.imagerySubMenu, loadFileAction);
-
-            // add menu entries
-            //Main.main.menu.fileMenu.insert(loadFileAction, 8);
-
-            //Main.main.menu.fileMenu.insertSeparator(9);
+            if (Main.main != null) {
+                MainMenu.add(Main.main.menu.imagerySubMenu, loadFileAction);
+    
+                // add menu entries
+                //Main.main.menu.fileMenu.insert(loadFileAction, 8);
+                //Main.main.menu.fileMenu.insertSeparator(9);
+            }
 
             ExtensionFileFilter.importers.add(new ImportImageFileImporter());
 

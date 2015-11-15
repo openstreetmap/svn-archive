@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCancledException;
+import org.openstreetmap.josm.plugins.ImportImagePlugin.ImageLayer.LayerCreationCanceledException;
 
 
 /**
@@ -45,7 +45,7 @@ public class LoadImageAction extends JosmAction {
             logger.info("File choosen:" + fc.getSelectedFile());
             try {
                 layer = new ImageLayer(fc.getSelectedFile());
-            } catch (LayerCreationCancledException e) {
+            } catch (LayerCreationCanceledException e) {
                 // if user decides that layer should not be created just return.
                 return;
             } catch (Exception e) {

@@ -13,6 +13,7 @@
         <!-- order important ! -->
         <ant target="dist" dir="jna"/>
         <ant target="dist" dir="jts"/>
+        <ant target="dist" dir="gson"/>
         <ant target="dist" dir="ejml"/>
         <ant target="dist" dir="geotools"/>
         <ant target="dist" dir="utilsplugin2"/>
@@ -157,6 +158,7 @@
         <ant target="clean" dir="gpsblam"/>
         <ant target="clean" dir="gpxfilter"/>
         <ant target="clean" dir="graphview"/>
+        <ant target="clean" dir="gson"/>
         <ant target="clean" dir="HouseNumberTaggingTool"/>
         <ant target="clean" dir="imageryadjust"/>
         <ant target="clean" dir="imagery_offset_db"/>

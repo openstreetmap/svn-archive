@@ -72,8 +72,7 @@ public class PluginOperations {
     public static GridCoverage2D reprojectCoverage(GridCoverage2D coverage,
             CoordinateReferenceSystem targetCrs) throws NoSuchAuthorityCodeException, FactoryException {
 
-        // TODO: add category for NO_DATA values in coverage (transparency in
-        // image)
+        // TODO: add category for NO_DATA values in coverage (transparency in image)
 
         GridCoverage2D destination = null;
 
@@ -111,8 +110,7 @@ public class PluginOperations {
         fileNameWithoutExt = file.getAbsolutePath().substring(0, dotPos);
 
         /*------- switch for file type -----------*/
-        if (extension.equalsIgnoreCase(".tif")
-                || extension.equalsIgnoreCase(".tiff"))
+        if (extension.equalsIgnoreCase(".tif") || extension.equalsIgnoreCase(".tiff"))
         {
 
             // try to read GeoTIFF:

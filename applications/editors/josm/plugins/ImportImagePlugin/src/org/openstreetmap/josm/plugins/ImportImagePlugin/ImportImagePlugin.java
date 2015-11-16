@@ -47,11 +47,9 @@ public class ImportImagePlugin extends Plugin{
     static final String PLUGINPROPERTIES_FILENAME = "pluginProperties.properties";
     static final String LOGGING_PROPERTIES_FILEPATH = Main.pref.getPluginsDirectory().getAbsolutePath() + "/ImportImagePlugin/log4j.properties/";
 
-
     public Properties getPluginProps() {
         return pluginProps;
     }
-
 
     /**
      * constructor
@@ -61,12 +59,7 @@ public class ImportImagePlugin extends Plugin{
     public ImportImagePlugin(PluginInformation info){
         super(info);
 
-        // switch to x=lon and y=lat for EPSG:4326 as JOSM does
-        // (formally incorrect, but reasonable)
-        System.setProperty("org.geotools.referencing.forceXY", "true");
-
         try {
-
             // First create custom ClassLoader to load resources from the main JAR
             pluginClassLoader = createPluginClassLoader();
 

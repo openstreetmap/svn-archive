@@ -11,7 +11,7 @@
     <property name="plugin.description" value="Plugin for importing spatial referenced images"/>
     <property name="plugin.icon" value="images/layericon.png"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
-    <property name="plugin.requires" value="log4j;jts;geotools"/>
+    <property name="plugin.requires" value="log4j;jts;ejml;geotools"/>
     
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
@@ -19,6 +19,7 @@
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="log4j.jar"/>
         <include name="jts.jar"/>
+        <include name="ejml.jar"/>
         <include name="geotools.jar"/>
     </fileset>
 

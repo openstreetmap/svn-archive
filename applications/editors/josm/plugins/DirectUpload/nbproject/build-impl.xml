@@ -299,7 +299,7 @@ is divided into following sections:
     </target>
     <target name="-init-presetdef-jar">
         <presetdef name="jar" uri="http://www.netbeans.org/ns/j2se-project/1">
-            <jar compress="${jar.compress}" jarfile="${dist.jar}">
+            <jar compress="${jar.compress}" jarfile="${dist.jar}" manifestencoding="UTF-8">
                 <j2seproject1:fileset dir="${build.classes.dir}"/>
             </jar>
         </presetdef>

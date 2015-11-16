@@ -28,7 +28,7 @@
         <copy todir="${plugin.build.dir}/data">
             <fileset dir="data"/>
         </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
             <manifest>
                 <attribute name="Author" value="Imi"/>
                 <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester"/>

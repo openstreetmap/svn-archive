@@ -37,7 +37,7 @@
         </manifest>
     </target>
     <target name="dist" depends="compile">
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8" manifest="${plugin.build.dir}/org/openstreetmap/josm/plugins/czechaddress/MANIFEST.MF"/>
     </target>
     <target name="revision">
         <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">

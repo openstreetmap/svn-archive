@@ -101,7 +101,7 @@
                 <include name="gpl-3.0.txt"/>
             </fileset>
         </copy>
-        <jar destfile="${module.jar}" basedir="${module.build.dir}">
+        <jar destfile="${module.jar}" basedir="${module.build.dir}" manifestencoding="UTF-8">
             <!--
             ************************************************
             ** configure these properties. Most of them will

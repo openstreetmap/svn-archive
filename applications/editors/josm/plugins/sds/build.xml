@@ -20,7 +20,7 @@
         <copy todir="${plugin.build.dir}/data">
             <fileset dir="data"/>
         </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
             <manifest>
                 <attribute name="Author" value="Frederik Ramm"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.hot.sds.SeparateDataStorePlugin"/>

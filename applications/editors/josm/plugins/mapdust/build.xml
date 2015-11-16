@@ -51,7 +51,7 @@
                 <include name="LICENSE"/>
             </fileset>
         </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
             <manifest>
                 <attribute name="Author" value="Beata Jancso"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>

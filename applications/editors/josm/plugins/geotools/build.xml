@@ -28,7 +28,7 @@
     -->
     <target name="post-dist">
         <move file="${plugin.jar}" todir="${plugin.build.dir}" />
-        <jar destfile="${plugin.jar}" filesetmanifest="merge">
+        <jar destfile="${plugin.jar}" filesetmanifest="merge" manifestencoding="UTF-8">
             <fileset dir="jar"/>
             <zipfileset src="${plugin.build.dir}/${ant.project.name}.jar">
                 <exclude name="*.class"/>

@@ -35,7 +35,7 @@
                 <include name="LICENSE"/>
             </fileset>
         </copy>
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifestencoding="UTF-8">
             <!--
             ************************************************
             ** configure these properties. Most of them will be copied to the plugins

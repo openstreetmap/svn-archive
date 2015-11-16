@@ -12,7 +12,7 @@
   </target>
   
   <target name="dist" depends="compile" description="generate the distribution">
-    <jar jarfile="${jarfile}" basedir="${build}" >
+    <jar jarfile="${jarfile}" basedir="${build}" manifestencoding="UTF-8">
       <manifest>
         <attribute name="Main-Class" value="josmtos57.Josmtos57"/>
         <attribute name="Class-Path" value="${jarfile}"/>

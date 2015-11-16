@@ -100,7 +100,7 @@
             <param name="property.value" value="${plugin.stage}"/>
         </antcall>
         <antcall target="additional-manifest" />
-        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST"/>
+        <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}" manifest="MANIFEST" manifestencoding="UTF-8"/>
         <delete file="MANIFEST" failonerror="no"/>
         <antcall target="post-dist" />
     </target>

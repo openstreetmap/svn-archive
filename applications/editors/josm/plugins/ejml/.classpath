@@ -3,10 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-core-0.28.jar" sourcepath="lib/EJML-core-0.28-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-dense64-0.28.jar" sourcepath="lib/EJML-dense64-0.28-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-denseC64-0.28.jar" sourcepath="lib/EJML-denseC64-0.28-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-equation-0.28.jar" sourcepath="lib/EJML-equation-0.28-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/EJML-simple-0.28.jar" sourcepath="lib/EJML-simple-0.28-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/EJML-core-0.26.jar" sourcepath="lib/EJML-core-0.26-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/EJML-equation-0.26.jar" sourcepath="lib/EJML-equation-0.26-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/EJML-experimental-0.26.jar" sourcepath="lib/EJML-experimental-0.26-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

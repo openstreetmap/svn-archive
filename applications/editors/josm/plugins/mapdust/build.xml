@@ -3,7 +3,6 @@
     <!-- properties -->
     <property name="commit.message" value="MapDust bug reporter plugin"/>
     <property name="plugin.main.version" value="7001"/>
-
     <property name="apidoc.dir" value="doc"/>
 
     <!--
@@ -13,24 +12,9 @@
     -->
     <import file="../build-common.xml"/>
   
-    <!-- classpath -->
-    <path id="classpath">
-        <fileset dir="${plugin.lib.dir}" includes="**/*.jar"/>
-        <pathelement path="${josm}"/>
-    </path>
-
-    <!--
-    **********************************************************
-    ** compile - complies the source tree
-    **********************************************************
-    -->
-    <target name="compile" depends="init">
-        <echo message="compiling sources for ${plugin.jar} ..."/>
-        <javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="false">
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-    </target>
+	<fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
+        <include name="gson.jar"/>
+    </fileset>
 
     <target name="clean">
         <delete dir="${plugin.build.dir}"/>
@@ -68,7 +52,6 @@
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
-        	<zipfileset src="lib/gson-2.2.4.jar"/>
             <manifest>
                 <attribute name="Author" value="Beata Jancso"/>
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>
@@ -76,6 +59,7 @@
                 <attribute name="Plugin-Description" value="The MapDust Plug-In shows the MapDust bug reports on the map. You can create, close,invalidate, re-open and comment bug reports by using this plugin."/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Requires" value="gson"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Icon" value="images/dialogs/mapdust_icon25.png"/>
             </manifest>

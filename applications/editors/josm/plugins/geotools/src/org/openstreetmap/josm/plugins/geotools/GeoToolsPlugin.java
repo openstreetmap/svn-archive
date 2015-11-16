@@ -3,7 +3,11 @@ package org.openstreetmap.josm.plugins.geotools;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.IIOServiceProvider;
 import javax.media.jai.JAI;
 import javax.media.jai.OperationRegistry;
 
@@ -12,6 +16,7 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginHandler;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 import com.sun.media.jai.imageioimpl.ImageReadWriteSpi;
@@ -62,6 +67,19 @@ public class GeoToolsPlugin extends Plugin {
                 }
             } catch (IOException | IllegalArgumentException e) {
                 Main.error("geotools: error in JAI/GeoTools initialization: "+e.getMessage());
+            }
+        }
+
+        // Manual registering because plugin jar is not on application classpath
+        IIORegistry ioRegistry = IIORegistry.getDefaultInstance();
+        ClassLoader loader = PluginHandler.getPluginClassLoader();
+
+        Iterator<Class<?>> categories = ioRegistry.getCategories();
+        while (categories.hasNext()) {
+            @SuppressWarnings("unchecked")
+            Iterator<IIOServiceProvider> riter = ServiceLoader.load((Class<IIOServiceProvider>)categories.next(), loader).iterator();
+            while (riter.hasNext()) {
+                ioRegistry.registerServiceProvider(riter.next());
             }
         }
     }

@@ -1,0 +1,15 @@
+#
+# Image operation descriptors :
+#
+descriptor  it.geosolutions.jaiext.colorconvert.ColorConvertDescriptor
+descriptor  it.geosolutions.jaiext.warp.WarpDescriptor
+descriptor  it.geosolutions.jaiext.stats.StatisticsDescriptor
+descriptor  it.geosolutions.jaiext.zonal.ZonalStatsDescriptor
+
+#
+# "rendered" factory objects
+#
+rendered  it.geosolutions.jaiext.colorconvert.ColorConvertCRIF  it.geosolutions.jaiext  ColorConvert ColorConvert
+rendered  it.geosolutions.jaiext.warp.WarpRIF  it.geosolutions.jaiext  Warp Warp 
+rendered  it.geosolutions.jaiext.stats.StatisticsRIF  it.geosolutions.jaiext  Stats Stats
+rendered  it.geosolutions.jaiext.zonal.ZonalStatsRIF  it.geosolutions.jaiext  Zonal Zonal

@@ -7,7 +7,7 @@
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
-    <property name="plugin.requires" value="apache-commons;jts;geotools;utilsplugin2"/>
+    <property name="plugin.requires" value="apache-commons;jts;ejml;geotools;utilsplugin2"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
@@ -15,12 +15,14 @@
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="apache-commons.jar"/>
         <include name="jts.jar"/>
+        <include name="ejml.jar"/>
         <include name="geotools.jar"/>
         <include name="opendata.jar"/>
     </fileset>
 
     <property name="apache-commons" location="${plugin.dist.dir}/apache-commons.jar"/>
     <property name="jts" location="${plugin.dist.dir}/jts.jar"/>
+    <property name="ejml" location="${plugin.dist.dir}/ejml.jar"/>
     <property name="geotools" location="${plugin.dist.dir}/geotools.jar"/>
     
     <!--
@@ -86,6 +88,7 @@
                 <pathelement location="${josm}"/>
                 <pathelement location="${apache-commons}"/>
                 <pathelement location="${jts}"/>
+                <pathelement location="${ejml}"/>
                 <pathelement location="${geotools}"/>
             </classpath>
             <compilerarg value="-Xlint:deprecation"/>

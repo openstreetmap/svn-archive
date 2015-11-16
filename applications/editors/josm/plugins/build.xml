@@ -13,6 +13,7 @@
         <!-- order important ! -->
         <ant target="dist" dir="jna"/>
         <ant target="dist" dir="jts"/>
+        <ant target="dist" dir="ejml"/>
         <ant target="dist" dir="geotools"/>
         <ant target="dist" dir="utilsplugin2"/>
         <ant target="dist" dir="log4j"/>
@@ -144,6 +145,7 @@
         <ant target="clean" dir="DirectUpload"/>
         <ant target="clean" dir="download_along"/>
         <ant target="clean" dir="editgpx"/>
+        <ant target="clean" dir="ejml"/>
         <ant target="clean" dir="ElevationProfile"/>
         <ant target="clean" dir="epci-fr"/>
         <ant target="clean" dir="ext_tools"/>

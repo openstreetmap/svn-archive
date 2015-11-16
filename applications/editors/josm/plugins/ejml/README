@@ -1,0 +1,6 @@
+README 
+======
+This plugin provides the EJML library for JOSM plugins.
+    * Licensed under GPL v3 (see LICENSE)
+
+The current embedded version of EJML is 0.28.

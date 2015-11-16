@@ -1,0 +1,6 @@
+README 
+======
+This plugin provides the GSON library for JOSM plugins.
+    * Licensed under GPL v3 (see LICENSE)
+
+The current embedded version of GSON is 2.4.

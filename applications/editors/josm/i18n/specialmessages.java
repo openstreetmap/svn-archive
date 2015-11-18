@@ -19,6 +19,7 @@
 /* Landuse type used in multipolygons */ trc("landuse", "farmland");
 /* Landuse type used in multipolygons */ trc("landuse", "residential");
 /* Landuse type used in multipolygons */ trc("natural", "scrub");
+/* Landuse type used in multipolygons */ trc("natural", "wood");
 /* relation type */ trc("Relation type", "associatedStreet");
 /* relation type */ trc("Relation type", "boundary");
 /* relation type */ trc("Relation type", "bridge");

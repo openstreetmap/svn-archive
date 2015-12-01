@@ -243,6 +243,7 @@
         <ant target="test" dir="ElevationProfile"/>
         <ant target="test" dir="graphview"/>
         <ant target="test" dir="ImportImagePlugin"/>
+        <ant target="test" dir="mapillary"/>
         <ant target="test" dir="opendata"/>
         <ant target="test" dir="turnrestrictions"/>
         <ant target="test" dir="wikipedia"/>

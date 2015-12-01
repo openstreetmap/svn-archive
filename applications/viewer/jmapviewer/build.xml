@@ -77,7 +77,7 @@
 
     <target name="checkstyle">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" 
-        	classpath="tools/checkstyle/checkstyle-6.12.1-all.jar"/>
+        	classpath="tools/checkstyle/checkstyle-6.13-all.jar"/>
         <checkstyle config="tools/checkstyle/jmapviewer_checks.xml">
             <fileset dir="${basedir}/src" includes="**/*.java" />
             <formatter type="xml" toFile="checkstyle-jmapviewer.xml"/>

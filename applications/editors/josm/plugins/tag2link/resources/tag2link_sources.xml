@@ -33,6 +33,14 @@
             <condition k="(contact:)?email" v="[^@]+@[^@]+" />
             <link name="Send Email" href="mailto:%v%" />
         </rule>
+        <rule>
+            <condition k="image" v="^(http:|https:)"/>
+            <link name="View image" href="%v%" />
+        </rule>
+        <rule>
+            <condition k="image" v="^File:"/>
+            <link name="View image" href="https://commons.wikimedia.org/wiki/%v%" />
+        </rule>
     </src>
     
     <src name="Wikipedia">

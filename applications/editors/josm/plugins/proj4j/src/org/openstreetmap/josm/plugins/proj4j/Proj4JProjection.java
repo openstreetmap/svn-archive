@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.proj4j;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
@@ -19,7 +20,7 @@ public class Proj4JProjection implements Projection {
 
     public Proj4JProjection(String crsCode) {
         this.crsCode = crsCode;
-        
+
         org.osgeo.proj4j.CRSFactory crsFactory =
                 new org.osgeo.proj4j.CRSFactory();
         org.osgeo.proj4j.CoordinateTransformFactory transFactory =
@@ -85,6 +86,30 @@ public class Proj4JProjection implements Projection {
     }
 
     @Override
+    public ProjectionBounds getWorldBoundsBoxEastNorth() {
+      // TODO: Check if this method does, what it should do. For now it's just a workaround to fix the failing build.
+      // This code is a simplified version of org.openstreetmap.josm.data.projection.AbstractProjection.getWorldBoundsBoxEastNorth()
+      Bounds b = getWorldBoundsLatLon();
+      // add 4 corners
+      ProjectionBounds result = new ProjectionBounds(latlon2eastNorth(b.getMin()));
+      result.extend(latlon2eastNorth(b.getMax()));
+      result.extend(latlon2eastNorth(new LatLon(b.getMinLat(), b.getMaxLon())));
+      result.extend(latlon2eastNorth(new LatLon(b.getMaxLat(), b.getMinLon())));
+      // and trace along the outline
+      double dLon = (b.getMaxLon() - b.getMinLon()) / 1000;
+      double dLat = (b.getMaxLat() - b.getMinLat()) / 1000;
+      for (double lon=b.getMinLon(); lon<b.getMaxLon(); lon += dLon) {
+          result.extend(latlon2eastNorth(new LatLon(b.getMinLat(), lon)));
+          result.extend(latlon2eastNorth(new LatLon(b.getMaxLat(), lon)));
+      }
+      for (double lat=b.getMinLat(); lat<b.getMaxLat(); lat += dLat) {
+          result.extend(latlon2eastNorth(new LatLon(lat, b.getMinLon())));
+          result.extend(latlon2eastNorth(new LatLon(lat, b.getMaxLon())));
+      }
+      return result;
+    }
+
+    @Override
     public Bounds getWorldBoundsLatLon() {
         org.osgeo.proj4j.proj.Projection proj = proj4jCRS.getProjection();
 
@@ -95,7 +120,7 @@ public class Proj4JProjection implements Projection {
     }
 
 	@Override
-	public double getMetersPerUnit() {		
+	public double getMetersPerUnit() {
 		return 1.0 / proj4jCRS.getProjection().getFromMetres();
 	}
 

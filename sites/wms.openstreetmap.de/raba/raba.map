@@ -1,15 +1,15 @@
   LAYER
     NAME "RABA"
     METADATA
-     "wms_title"  "Raba kmetijskih zemljišč 2015-01-13"
+     "wms_title"  "Raba kmetijskih zemljišč 2015-11-30"
      "wms_extent" "13.3 45.4 16.6 46.9"
      "wms_srs"    "EPSG:4326"
-     "copyright"  "raba ©2015 MKGP"
+     "copyright"  "raba ©20151130 MKGP"
      "wiki"       "http://wiki.openstreetmap.org/wiki/Slovenia_Landcover_Import_-_RABA-KGZ"
     END
     STATUS ON
     TYPE POLYGON
-    DATA "raba/RABA_20150331_EPSG4326/RABA_20150331_EPSG4326.shp"
+    DATA "raba/RABA_20151130_EPSG4326/RABA_20151130_EPSG4326.shp"
     PROJECTION
           "init=epsg:4326"
     END

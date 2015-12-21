@@ -28,6 +28,7 @@ import org.openstreetmap.josm.data.osm.event.*;
 import org.openstreetmap.josm.Main;
 
 import s57.S57map;
+import s57.S57map.*;
 
 public class SeachartAction extends JosmAction implements EditLayerChangeListener, LayerChangeListener {
 	private static String title = "SeaChart";

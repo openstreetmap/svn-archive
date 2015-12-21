@@ -12,6 +12,9 @@ package s57;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+import s57.S57map.*;
+import s57.S57obj.*;
+
 public class S57dat { // S57 ENC file fields lookup tables & methods
 	
 	public static class S57conv {
@@ -28,7 +31,7 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		ADMU, ADFT, RAVA, DVAL, DVSD, OBLB, ASET, PRIM, GRUP, OBJL, RVER, RUIN, FIDN, FIDS, ATTL, ATVL, FFUI, FFIX, NFPT, LNAM, RIND, FSUI, FSIX, NSPT, NAME, ORNT, USAG, MASK,
 		VPUI, VPIX, NVPT, TOPI, CCUI, CCIX, CCNC, YCOO, XCOO, VE3D, ATYP, SURF, ORDR, RESO, STPT, CTPT, ENPT, CDPM, CDPR }
 
-	private static final EnumMap<S57subf, S57conv> convs = new EnumMap<S57subf, S57conv>(S57subf.class);
+	private static final EnumMap<S57subf, S57conv> convs = new EnumMap<>(S57subf.class);
 	static {
 		convs.put(S57subf.I8RN, new S57conv(5,2));
 		convs.put(S57subf.RCNM, new S57conv(2,1)); convs.put(S57subf.RCID, new S57conv(10,4)); convs.put(S57subf.EXPP, new S57conv(1,1));
@@ -79,52 +82,52 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 	public enum S57field { I8RI, DSID, DSSI, DSPM, DSPR, DSRC, DSHT, DSAC, CATD, CATX, DDDF, DDDR, DDDI, DDOM, DDRF, DDSI, DDSC,
 		FRID, FOID, LNAM, ATTF, NATF, FFPC, FFPT, FSPC, FSPT, VRID, ATTV, VRPC, VRPT, SGCC, SG2D, SG3D, ARCC, AR2D, EL2D, CT2D }
 	
-	private static ArrayList<S57subf> S57i8ri = new ArrayList<S57subf>(Arrays.asList(S57subf.I8RN));
-	private static ArrayList<S57subf> S57dsid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.EXPP, S57subf.INTU, S57subf.DSNM, S57subf.EDTN, S57subf.UPDN,
+	private static ArrayList<S57subf> S57i8ri = new ArrayList<>(Arrays.asList(S57subf.I8RN));
+	private static ArrayList<S57subf> S57dsid = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.EXPP, S57subf.INTU, S57subf.DSNM, S57subf.EDTN, S57subf.UPDN,
 			S57subf.UADT, S57subf.ISDT, S57subf.STED, S57subf.PRSP, S57subf.PSDN, S57subf.PRED, S57subf.PROF, S57subf.AGEN, S57subf.COMT));
-	private static ArrayList<S57subf> S57dssi = new ArrayList<S57subf>(Arrays.asList(S57subf.DSTR, S57subf.AALL, S57subf.NALL, S57subf.NOMR, S57subf.NOCR, S57subf.NOGR, S57subf.NOLR,
+	private static ArrayList<S57subf> S57dssi = new ArrayList<>(Arrays.asList(S57subf.DSTR, S57subf.AALL, S57subf.NALL, S57subf.NOMR, S57subf.NOCR, S57subf.NOGR, S57subf.NOLR,
 			S57subf.NOIN, S57subf.NOCN, S57subf.NOED, S57subf.NOFA ));
-	private static ArrayList<S57subf> S57dspm = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.HDAT, S57subf.VDAT, S57subf.SDAT, S57subf.CSCL, S57subf.DUNI,
+	private static ArrayList<S57subf> S57dspm = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.HDAT, S57subf.VDAT, S57subf.SDAT, S57subf.CSCL, S57subf.DUNI,
 			S57subf.HUNI, S57subf.PUNI, S57subf.COUN, S57subf.COMF, S57subf.SOMF, S57subf.COMT ));
-	private static ArrayList<S57subf> S57dspr = new ArrayList<S57subf>(Arrays.asList(S57subf.PROJ, S57subf.PRP1, S57subf.PRP2, S57subf.PRP3, S57subf.PRP4, S57subf.FEAS, S57subf.FNOR,
+	private static ArrayList<S57subf> S57dspr = new ArrayList<>(Arrays.asList(S57subf.PROJ, S57subf.PRP1, S57subf.PRP2, S57subf.PRP3, S57subf.PRP4, S57subf.FEAS, S57subf.FNOR,
 			S57subf.FPMF, S57subf.COMT ));
-	private static ArrayList<S57subf> S57dsrc = new ArrayList<S57subf>(Arrays.asList(S57subf.RPID, S57subf.RYCO, S57subf.RXCO, S57subf.CURP, S57subf.FPMF, S57subf.RXVL, S57subf.RYVL,
+	private static ArrayList<S57subf> S57dsrc = new ArrayList<>(Arrays.asList(S57subf.RPID, S57subf.RYCO, S57subf.RXCO, S57subf.CURP, S57subf.FPMF, S57subf.RXVL, S57subf.RYVL,
 			S57subf.COMT ));
-	private static ArrayList<S57subf> S57dsht = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRCO, S57subf.ESDT, S57subf.LSDT, S57subf.DCRT, S57subf.CODT, S57subf.COMT ));
-	private static ArrayList<S57subf> S57dsac = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PACC, S57subf.HACC, S57subf.SACC, S57subf.FPMF, S57subf.COMT ));
-	private static ArrayList<S57subf> S57catd = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.FILE, S57subf.LFIL, S57subf.VOLM, S57subf.IMPL, S57subf.SLAT,
+	private static ArrayList<S57subf> S57dsht = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRCO, S57subf.ESDT, S57subf.LSDT, S57subf.DCRT, S57subf.CODT, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dsac = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PACC, S57subf.HACC, S57subf.SACC, S57subf.FPMF, S57subf.COMT ));
+	private static ArrayList<S57subf> S57catd = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.FILE, S57subf.LFIL, S57subf.VOLM, S57subf.IMPL, S57subf.SLAT,
 			S57subf.WLON, S57subf.NLAT, S57subf.ELON, S57subf.CRCS, S57subf.COMT ));
-	private static ArrayList<S57subf> S57catx = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.NAM1, S57subf.NAM2, S57subf.COMT ));
-	private static ArrayList<S57subf> S57dddf = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OORA, S57subf.OAAC, S57subf.OACO, S57subf.OALL, S57subf.OATY,
+	private static ArrayList<S57subf> S57catx = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.NAM1, S57subf.NAM2, S57subf.COMT ));
+	private static ArrayList<S57subf> S57dddf = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OORA, S57subf.OAAC, S57subf.OACO, S57subf.OALL, S57subf.OATY,
 			S57subf.DEFN, S57subf.AUTH, S57subf.COMT ));
-	private static ArrayList<S57subf> S57dddr = new ArrayList<S57subf>(Arrays.asList(S57subf.RFTP, S57subf.RFVL ));
-	private static ArrayList<S57subf> S57dddi = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.ATLB, S57subf.ATDO, S57subf.ADMU, S57subf.ADFT, S57subf.AUTH, S57subf.COMT ));
-	private static ArrayList<S57subf> S57ddom = new ArrayList<S57subf>(Arrays.asList(S57subf.RAVA, S57subf.DVAL, S57subf.DVSD, S57subf.DEFN, S57subf.AUTH ));
-	private static ArrayList<S57subf> S57ddrf = new ArrayList<S57subf>(Arrays.asList(S57subf.RFTP, S57subf.RFVL ));
-	private static ArrayList<S57subf> S57ddsi = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OBLB ));
-	private static ArrayList<S57subf> S57ddsc = new ArrayList<S57subf>(Arrays.asList(S57subf.ATLB, S57subf.ASET, S57subf.AUTH ));
-	private static ArrayList<S57subf> S57frid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRIM, S57subf.GRUP, S57subf.OBJL, S57subf.RVER, S57subf.RUIN ));
-	private static ArrayList<S57subf> S57foid = new ArrayList<S57subf>(Arrays.asList(S57subf.AGEN, S57subf.FIDN, S57subf.FIDS ));
-	private static ArrayList<S57subf> S57lnam = new ArrayList<S57subf>(Arrays.asList(S57subf.LNAM));
-	private static ArrayList<S57subf> S57attf = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
-	private static ArrayList<S57subf> S57natf = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
-	private static ArrayList<S57subf> S57ffpc = new ArrayList<S57subf>(Arrays.asList(S57subf.FFUI, S57subf.FFIX, S57subf.NFPT ));
-	private static ArrayList<S57subf> S57ffpt = new ArrayList<S57subf>(Arrays.asList(S57subf.LNAM, S57subf.RIND, S57subf.COMT ));
-	private static ArrayList<S57subf> S57fspc = new ArrayList<S57subf>(Arrays.asList(S57subf.FSUI, S57subf.FSIX, S57subf.NSPT ));
-	private static ArrayList<S57subf> S57fspt = new ArrayList<S57subf>(Arrays.asList(S57subf.NAME, S57subf.ORNT, S57subf.USAG, S57subf.MASK ));
-	private static ArrayList<S57subf> S57vrid = new ArrayList<S57subf>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.RVER, S57subf.RUIN ));
-	private static ArrayList<S57subf> S57attv = new ArrayList<S57subf>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
-	private static ArrayList<S57subf> S57vrpc = new ArrayList<S57subf>(Arrays.asList(S57subf.VPUI, S57subf.VPIX, S57subf.NVPT ));
-	private static ArrayList<S57subf> S57vrpt = new ArrayList<S57subf>(Arrays.asList(S57subf.NAME, S57subf.ORNT, S57subf.USAG, S57subf.TOPI, S57subf.MASK ));
-	private static ArrayList<S57subf> S57sgcc = new ArrayList<S57subf>(Arrays.asList(S57subf.CCUI, S57subf.CCIX, S57subf.CCNC ));
-	private static ArrayList<S57subf> S57sg2d = new ArrayList<S57subf>(Arrays.asList(S57subf.YCOO, S57subf.XCOO ));
-	private static ArrayList<S57subf> S57sg3d = new ArrayList<S57subf>(Arrays.asList(S57subf.YCOO, S57subf.XCOO, S57subf.VE3D ));
-	private static ArrayList<S57subf> S57arcc = new ArrayList<S57subf>(Arrays.asList(S57subf.ATYP, S57subf.SURF, S57subf.ORDR, S57subf.RESO, S57subf.FPMF ));
-	private static ArrayList<S57subf> S57ar2d = new ArrayList<S57subf>(Arrays.asList(S57subf.STPT, S57subf.CTPT, S57subf.ENPT, S57subf.YCOO, S57subf.XCOO ));
-	private static ArrayList<S57subf> S57el2d = new ArrayList<S57subf>(Arrays.asList(S57subf.STPT, S57subf.CTPT, S57subf.ENPT, S57subf.CDPM, S57subf.CDPR, S57subf.YCOO, S57subf.XCOO ));
-	private static ArrayList<S57subf> S57ct2d = new ArrayList<S57subf>(Arrays.asList(S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57dddr = new ArrayList<>(Arrays.asList(S57subf.RFTP, S57subf.RFVL ));
+	private static ArrayList<S57subf> S57dddi = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.ATLB, S57subf.ATDO, S57subf.ADMU, S57subf.ADFT, S57subf.AUTH, S57subf.COMT ));
+	private static ArrayList<S57subf> S57ddom = new ArrayList<>(Arrays.asList(S57subf.RAVA, S57subf.DVAL, S57subf.DVSD, S57subf.DEFN, S57subf.AUTH ));
+	private static ArrayList<S57subf> S57ddrf = new ArrayList<>(Arrays.asList(S57subf.RFTP, S57subf.RFVL ));
+	private static ArrayList<S57subf> S57ddsi = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.OBLB ));
+	private static ArrayList<S57subf> S57ddsc = new ArrayList<>(Arrays.asList(S57subf.ATLB, S57subf.ASET, S57subf.AUTH ));
+	private static ArrayList<S57subf> S57frid = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.PRIM, S57subf.GRUP, S57subf.OBJL, S57subf.RVER, S57subf.RUIN ));
+	private static ArrayList<S57subf> S57foid = new ArrayList<>(Arrays.asList(S57subf.AGEN, S57subf.FIDN, S57subf.FIDS ));
+	private static ArrayList<S57subf> S57lnam = new ArrayList<>(Arrays.asList(S57subf.LNAM));
+	private static ArrayList<S57subf> S57attf = new ArrayList<>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
+	private static ArrayList<S57subf> S57natf = new ArrayList<>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
+	private static ArrayList<S57subf> S57ffpc = new ArrayList<>(Arrays.asList(S57subf.FFUI, S57subf.FFIX, S57subf.NFPT ));
+	private static ArrayList<S57subf> S57ffpt = new ArrayList<>(Arrays.asList(S57subf.LNAM, S57subf.RIND, S57subf.COMT ));
+	private static ArrayList<S57subf> S57fspc = new ArrayList<>(Arrays.asList(S57subf.FSUI, S57subf.FSIX, S57subf.NSPT ));
+	private static ArrayList<S57subf> S57fspt = new ArrayList<>(Arrays.asList(S57subf.NAME, S57subf.ORNT, S57subf.USAG, S57subf.MASK ));
+	private static ArrayList<S57subf> S57vrid = new ArrayList<>(Arrays.asList(S57subf.RCNM, S57subf.RCID, S57subf.RVER, S57subf.RUIN ));
+	private static ArrayList<S57subf> S57attv = new ArrayList<>(Arrays.asList(S57subf.ATTL, S57subf.ATVL ));
+	private static ArrayList<S57subf> S57vrpc = new ArrayList<>(Arrays.asList(S57subf.VPUI, S57subf.VPIX, S57subf.NVPT ));
+	private static ArrayList<S57subf> S57vrpt = new ArrayList<>(Arrays.asList(S57subf.NAME, S57subf.ORNT, S57subf.USAG, S57subf.TOPI, S57subf.MASK ));
+	private static ArrayList<S57subf> S57sgcc = new ArrayList<>(Arrays.asList(S57subf.CCUI, S57subf.CCIX, S57subf.CCNC ));
+	private static ArrayList<S57subf> S57sg2d = new ArrayList<>(Arrays.asList(S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57sg3d = new ArrayList<>(Arrays.asList(S57subf.YCOO, S57subf.XCOO, S57subf.VE3D ));
+	private static ArrayList<S57subf> S57arcc = new ArrayList<>(Arrays.asList(S57subf.ATYP, S57subf.SURF, S57subf.ORDR, S57subf.RESO, S57subf.FPMF ));
+	private static ArrayList<S57subf> S57ar2d = new ArrayList<>(Arrays.asList(S57subf.STPT, S57subf.CTPT, S57subf.ENPT, S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57el2d = new ArrayList<>(Arrays.asList(S57subf.STPT, S57subf.CTPT, S57subf.ENPT, S57subf.CDPM, S57subf.CDPR, S57subf.YCOO, S57subf.XCOO ));
+	private static ArrayList<S57subf> S57ct2d = new ArrayList<>(Arrays.asList(S57subf.YCOO, S57subf.XCOO ));
 	
-	private static final EnumMap<S57field, ArrayList<S57subf>> fields = new EnumMap<S57field, ArrayList<S57subf>>(S57field.class);
+	private static final EnumMap<S57field, ArrayList<S57subf>> fields = new EnumMap<>(S57field.class);
 	static {
 		fields.put(S57field.I8RI, S57i8ri);
 		fields.put(S57field.DSID, S57dsid); fields.put(S57field.DSSI, S57dssi); fields.put(S57field.DSPM, S57dspm); fields.put(S57field.DSPR, S57dspr);
@@ -337,7 +340,7 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 	}
 	
 	public static byte[] encRecord(int i8rn, ArrayList<Fparams> fparams) {
-		ArrayList<Index> index = new ArrayList<Index>();
+		ArrayList<Index> index = new ArrayList<>();
 		int offset = 3;
 		int maxlen = 3;
 		byte[] buf = encSubf(S57subf.I8RN, i8rn);
@@ -392,4 +395,90 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 		return fbuf;
 	}
 
+	enum Prims { N, P, L, A, PA, PL, LA, PLA }
+	private static final EnumMap<Obj, Prims> S57prims = new EnumMap<>(Obj.class);
+	static {
+		S57prims.put(Obj.UNKOBJ, Prims.PLA); S57prims.put(Obj.M_COVR, Prims.A); S57prims.put(Obj.M_NSYS, Prims.A); S57prims.put(Obj.AIRARE, Prims.PA);
+		S57prims.put(Obj.ACHBRT, Prims.PA); S57prims.put(Obj.ACHARE, Prims.PA); S57prims.put(Obj.BCNCAR, Prims.P); S57prims.put(Obj.BCNISD, Prims.P);
+		S57prims.put(Obj.BCNLAT, Prims.P); S57prims.put(Obj.BCNSAW, Prims.P); S57prims.put(Obj.BCNSPP, Prims.P); S57prims.put(Obj.BERTHS, Prims.PLA);
+		S57prims.put(Obj.BRIDGE, Prims.PLA); S57prims.put(Obj.BUISGL, Prims.PA); S57prims.put(Obj.BUAARE, Prims.PA); S57prims.put(Obj.BOYCAR, Prims.P);
+		S57prims.put(Obj.BOYINB, Prims.P); S57prims.put(Obj.BOYISD, Prims.P); S57prims.put(Obj.BOYLAT, Prims.P); S57prims.put(Obj.BOYSAW, Prims.P);
+		S57prims.put(Obj.BOYSPP, Prims.P); S57prims.put(Obj.CBLARE, Prims.A); S57prims.put(Obj.CBLOHD, Prims.L); S57prims.put(Obj.CBLSUB, Prims.L);
+		S57prims.put(Obj.CANALS, Prims.A); S57prims.put(Obj.CTSARE, Prims.PA); S57prims.put(Obj.CAUSWY, Prims.LA); S57prims.put(Obj.CTNARE, Prims.PA);
+		S57prims.put(Obj.CHKPNT, Prims.PA); S57prims.put(Obj.CGUSTA, Prims.P); S57prims.put(Obj.COALNE, Prims.L); S57prims.put(Obj.CONZNE, Prims.A);
+		S57prims.put(Obj.COSARE, Prims.A); S57prims.put(Obj.CTRPNT, Prims.P); S57prims.put(Obj.CONVYR, Prims.LA); S57prims.put(Obj.CRANES, Prims.PA);
+		S57prims.put(Obj.CURENT, Prims.P); S57prims.put(Obj.CUSZNE, Prims.A); S57prims.put(Obj.DAMCON, Prims.LA); S57prims.put(Obj.DAYMAR, Prims.P);
+		S57prims.put(Obj.DWRTCL, Prims.L); S57prims.put(Obj.DWRTPT, Prims.A); S57prims.put(Obj.DEPARE, Prims.A); S57prims.put(Obj.DEPCNT, Prims.L);
+		S57prims.put(Obj.DISMAR, Prims.P); S57prims.put(Obj.DOCARE, Prims.A); S57prims.put(Obj.DRGARE, Prims.A); S57prims.put(Obj.DRYDOC, Prims.A);
+		S57prims.put(Obj.DMPGRD, Prims.PA); S57prims.put(Obj.DYKCON, Prims.L); S57prims.put(Obj.EXEZNE, Prims.A); S57prims.put(Obj.FAIRWY, Prims.A);
+		S57prims.put(Obj.FNCLNE, Prims.L); S57prims.put(Obj.FERYRT, Prims.LA); S57prims.put(Obj.FSHZNE, Prims.A); S57prims.put(Obj.FSHFAC, Prims.PLA);
+		S57prims.put(Obj.FSHGRD, Prims.A); S57prims.put(Obj.FLODOC, Prims.A); S57prims.put(Obj.FOGSIG, Prims.P); S57prims.put(Obj.FORSTC, Prims.PLA);
+		S57prims.put(Obj.FRPARE, Prims.A); S57prims.put(Obj.GATCON, Prims.PLA); S57prims.put(Obj.GRIDRN, Prims.PA); S57prims.put(Obj.HRBARE, Prims.A);
+		S57prims.put(Obj.HRBFAC, Prims.PA); S57prims.put(Obj.HULKES, Prims.PA); S57prims.put(Obj.ICEARE, Prims.A); S57prims.put(Obj.ICNARE, Prims.PA);
+		S57prims.put(Obj.ISTZNE, Prims.A); S57prims.put(Obj.LAKARE, Prims.A); S57prims.put(Obj.LNDARE, Prims.PLA); S57prims.put(Obj.LNDELV, Prims.PL);
+		S57prims.put(Obj.LNDRGN, Prims.PA); S57prims.put(Obj.LNDMRK, Prims.PLA); S57prims.put(Obj.LIGHTS, Prims.P); S57prims.put(Obj.LITFLT, Prims.P);
+		S57prims.put(Obj.LITVES, Prims.P); S57prims.put(Obj.LOCMAG, Prims.PLA); S57prims.put(Obj.LOKBSN, Prims.A); S57prims.put(Obj.LOGPON, Prims.PA);
+		S57prims.put(Obj.MAGVAR, Prims.PLA); S57prims.put(Obj.MARCUL, Prims.PLA); S57prims.put(Obj.MIPARE, Prims.PA); S57prims.put(Obj.MORFAC, Prims.PLA);
+		S57prims.put(Obj.MPAARE, Prims.PA); S57prims.put(Obj.NAVLNE, Prims.L); S57prims.put(Obj.OBSTRN, Prims.PLA); S57prims.put(Obj.OFSPLF, Prims.PA);
+		S57prims.put(Obj.OSPARE, Prims.A); S57prims.put(Obj.OILBAR, Prims.L); S57prims.put(Obj.PILPNT, Prims.P); S57prims.put(Obj.PILBOP, Prims.PA);
+		S57prims.put(Obj.PIPARE, Prims.PA); S57prims.put(Obj.PIPOHD, Prims.L); S57prims.put(Obj.PIPSOL, Prims.PL); S57prims.put(Obj.PONTON, Prims.LA);
+		S57prims.put(Obj.PRCARE, Prims.PA); S57prims.put(Obj.PRDARE, Prims.PA); S57prims.put(Obj.PYLONS, Prims.PA); S57prims.put(Obj.RADLNE, Prims.L);
+		S57prims.put(Obj.RADRNG, Prims.A); S57prims.put(Obj.RADRFL, Prims.P); S57prims.put(Obj.RADSTA, Prims.P); S57prims.put(Obj.RTPBCN, Prims.P);
+		S57prims.put(Obj.RDOCAL, Prims.PL); S57prims.put(Obj.RDOSTA, Prims.P); S57prims.put(Obj.RAILWY, Prims.L); S57prims.put(Obj.RAPIDS, Prims.PLA);
+		S57prims.put(Obj.RCRTCL, Prims.L); S57prims.put(Obj.RECTRC, Prims.LA); S57prims.put(Obj.RCTLPT, Prims.PA); S57prims.put(Obj.RSCSTA, Prims.P);
+		S57prims.put(Obj.RESARE, Prims.A); S57prims.put(Obj.RETRFL, Prims.P); S57prims.put(Obj.RIVERS, Prims.LA); S57prims.put(Obj.ROADWY, Prims.PLA);
+		S57prims.put(Obj.RUNWAY, Prims.PLA); S57prims.put(Obj.SNDWAV, Prims.PLA); S57prims.put(Obj.SEAARE, Prims.PA); S57prims.put(Obj.SPLARE, Prims.PA);
+		S57prims.put(Obj.SBDARE, Prims.PLA); S57prims.put(Obj.SLCONS, Prims.PLA); S57prims.put(Obj.SISTAT, Prims.P); S57prims.put(Obj.SISTAW, Prims.P);
+		S57prims.put(Obj.SILTNK, Prims.PA); S57prims.put(Obj.SLOTOP, Prims.L); S57prims.put(Obj.SLOGRD, Prims.PA); S57prims.put(Obj.SMCFAC, Prims.PA);
+		S57prims.put(Obj.SOUNDG, Prims.P); S57prims.put(Obj.SPRING, Prims.P); S57prims.put(Obj.STSLNE, Prims.L); S57prims.put(Obj.SUBTLN, Prims.A);
+		S57prims.put(Obj.SWPARE, Prims.A); S57prims.put(Obj.TESARE, Prims.A); S57prims.put(Obj.TS_PRH, Prims.PA); S57prims.put(Obj.TS_PNH, Prims.PA);
+		S57prims.put(Obj.TS_PAD, Prims.PA); S57prims.put(Obj.TS_TIS, Prims.PA); S57prims.put(Obj.T_HMON, Prims.PA); S57prims.put(Obj.T_NHMN, Prims.PA);
+		S57prims.put(Obj.T_TIMS, Prims.PA); S57prims.put(Obj.TIDEWY, Prims.LA); S57prims.put(Obj.TOPMAR, Prims.P); S57prims.put(Obj.TSELNE, Prims.LA);
+		S57prims.put(Obj.TSSBND, Prims.L); S57prims.put(Obj.TSSCRS, Prims.A); S57prims.put(Obj.TSSLPT, Prims.A); S57prims.put(Obj.TSSRON, Prims.A);
+		S57prims.put(Obj.TSEZNE, Prims.A); S57prims.put(Obj.TUNNEL, Prims.LA); S57prims.put(Obj.TWRTPT, Prims.A); S57prims.put(Obj.UWTROC, Prims.P);
+		S57prims.put(Obj.UNSARE, Prims.A); S57prims.put(Obj.VEGATN, Prims.PLA); S57prims.put(Obj.WATTUR, Prims.PLA); S57prims.put(Obj.WATFAL, Prims.PL);
+		S57prims.put(Obj.WEDKLP, Prims.PA); S57prims.put(Obj.WRECKS, Prims.PA); S57prims.put(Obj.TS_FEB, Prims.PA);
+		S57prims.put(Obj.NOTMRK, Prims.P); S57prims.put(Obj.WTWAXS, Prims.L); S57prims.put(Obj.WTWPRF, Prims.L); S57prims.put(Obj.BUNSTA, Prims.PA);
+		S57prims.put(Obj.COMARE, Prims.A); S57prims.put(Obj.HRBBSN, Prims.A); S57prims.put(Obj.LKBSPT, Prims.A); S57prims.put(Obj.PRTARE, Prims.A);
+		S57prims.put(Obj.REFDMP, Prims.P); S57prims.put(Obj.TERMNL, Prims.PA); S57prims.put(Obj.TRNBSN, Prims.PA); S57prims.put(Obj.WTWARE, Prims.A);
+		S57prims.put(Obj.WTWGAG, Prims.PA); S57prims.put(Obj.TISDGE, Prims.N); S57prims.put(Obj.VEHTRF, Prims.PA); S57prims.put(Obj.EXCNST, Prims.PA);
+		S57prims.put(Obj.LG_SDM, Prims.A); S57prims.put(Obj.LG_VSP, Prims.A); S57prims.put(Obj.LITMAJ, Prims.P);  S57prims.put(Obj.LITMIN, Prims.P); 
+	}
+
+	public static void S57geoms(S57map map) {
+		for (ArrayList<Feature> list : map.features.values()) {
+			for (Feature feature : list) {
+				switch (S57prims.get(feature.type)) {
+				case N:
+					break;
+				case P:
+					if (feature.geom.prim != Pflag.POINT) {
+//						Snode node = feature.geom.centre;
+//						node.flg = Nflag.ISOL;
+//						map.nodes.put(++map.xref, node);
+//						feature.geom = map.new Geom(Pflag.POINT);
+//						feature.geom.centre = node;
+//						feature.geom.elems.add(map.new Prim(map.xref));
+					}
+					break;
+				case L:
+					break;
+				case A:
+					break;
+				case PA:
+					break;
+				case PL:
+					break;
+				case LA:
+					if (feature.geom.prim == Pflag.POINT) {
+//						list.remove(feature);
+					}
+					break;
+				case PLA:
+					// No changes needed
+					break;
+				}
+			}
+		}
+	}
 }

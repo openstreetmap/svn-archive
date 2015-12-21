@@ -27,8 +27,8 @@ public class S57att { // S57 Attribute lookup tables & methods
    VALMXR, VALNMR, VALSOU, VERACC, VERCLR, VERCCL, VERCOP, VERCSA, VERDAT, VERLEN, WATLEV, CAT_TS, NINFOM, NOBJNM, NPLDST, NTXTDS, HORDAT, POSACC, QUAPOS, CLSDNG,
    DIRIMP, DISBK1, DISBK2, DISIPU, DISIPD, ELEVA1, ELEVA2, FNCTNM, WTWDIS, BUNVES, BNKWTW, COMCTN, HORCLL, HORCLW, TRSHGD, UNLOCD, HIGWAT, HIGNAM, LOWWAT, LOWNAM,
    MEAWAT, MEANAM, OTHWAT, OTHNAM, REFLEV, SDRLEV, VCRLEV, SCHREF, USESHP, CURVHW, CURVLW, CURVMW, CURVOW, APTREF, SHPTYP, UPDMSG, ADDMRK, CATNMK, CATBRT, CATBUN,
-   CATCCL, CATCOM, CATHBR, CATRFD, CATTML, CATGAG, CATVTR, CATTAB, CATEXS, CATWWM, LG_SPD, LG_SPR, LG_BME, LG_LGS, LG_DRT, LG_WDP, LG_WDU, LG_REL, LG_FNC, LG_DES,
-   LG_PBR, LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, LITRAD, CATCVR, HUNITS
+   CATCCL, CATCOM, CATHBR, CATRFD, CATTML, CATGAG, CATVTR, CATTAB, CATEXS, LG_SPD, LG_SPR, LG_BME, LG_LGS, LG_DRT, LG_WDP, LG_WDU, LG_REL, LG_FNC, LG_DES, LG_PBR,
+   LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, LITRAD, CATCVR, HUNITS
  }
 
  private static final EnumMap<Att, Integer> AttS57 = new EnumMap<Att, Integer>(Att.class);
@@ -78,13 +78,13 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttIENC.put(Att.OTHNAM, 17087); AttIENC.put(Att.REFLEV, 17088); AttIENC.put(Att.SDRLEV, 17089); AttIENC.put(Att.VCRLEV, 17090); AttIENC.put(Att.CATVTR, 17091);
   AttIENC.put(Att.CATTAB, 17092); AttIENC.put(Att.SCHREF, 17093); AttIENC.put(Att.USESHP, 17094); AttIENC.put(Att.CURVHW, 17095); AttIENC.put(Att.CURVLW, 17096);
   AttIENC.put(Att.CURVMW, 17097); AttIENC.put(Att.CURVOW, 17098); AttIENC.put(Att.APTREF, 17099); AttIENC.put(Att.CATEXS, 17100); AttIENC.put(Att.CATCBL, 17101);
-  AttIENC.put(Att.CATHLK, 17102); AttIENC.put(Att.HUNITS, 17103); AttIENC.put(Att.WATLEV, 17104); AttIENC.put(Att.CATWWM, 17112); AttIENC.put(Att.LG_SPD, 18001);
-  AttIENC.put(Att.LG_SPR, 18002); AttIENC.put(Att.LG_BME, 18003); AttIENC.put(Att.LG_LGS, 18004); AttIENC.put(Att.LG_DRT, 18005); AttIENC.put(Att.LG_WDP, 18006);
-  AttIENC.put(Att.LG_WDU, 18007); AttIENC.put(Att.LG_REL, 18008); AttIENC.put(Att.LG_FNC, 18009); AttIENC.put(Att.LG_DES, 18010); AttIENC.put(Att.LG_PBR, 18011);
-  AttIENC.put(Att.LC_CSI, 18012); AttIENC.put(Att.LC_CSE, 18013); AttIENC.put(Att.LC_ASI, 18014); AttIENC.put(Att.LC_ASE, 18015); AttIENC.put(Att.LC_CCI, 18016);
-  AttIENC.put(Att.LC_CCE, 18017); AttIENC.put(Att.LC_BM1, 18018); AttIENC.put(Att.LC_BM2, 18019); AttIENC.put(Att.LC_LG1, 18020); AttIENC.put(Att.LC_LG2, 18021);
-  AttIENC.put(Att.LC_DR1, 18022); AttIENC.put(Att.LC_DR2, 18023); AttIENC.put(Att.LC_SP1, 18024); AttIENC.put(Att.LC_SP2, 18025); AttIENC.put(Att.LC_WD1, 18026);
-  AttIENC.put(Att.LC_WD2, 18027); AttIENC.put(Att.SHPTYP, 33066); AttIENC.put(Att.UPDMSG, 40000); AttIENC.put(Att.BNKWTW, 17999);
+  AttIENC.put(Att.CATHLK, 17102); AttIENC.put(Att.HUNITS, 17103); AttIENC.put(Att.WATLEV, 17104); AttIENC.put(Att.LG_SPD, 18001); AttIENC.put(Att.LG_SPR, 18002);
+  AttIENC.put(Att.LG_BME, 18003); AttIENC.put(Att.LG_LGS, 18004); AttIENC.put(Att.LG_DRT, 18005); AttIENC.put(Att.LG_WDP, 18006); AttIENC.put(Att.LG_WDU, 18007);
+  AttIENC.put(Att.LG_REL, 18008); AttIENC.put(Att.LG_FNC, 18009); AttIENC.put(Att.LG_DES, 18010); AttIENC.put(Att.LG_PBR, 18011); AttIENC.put(Att.LC_CSI, 18012);
+  AttIENC.put(Att.LC_CSE, 18013); AttIENC.put(Att.LC_ASI, 18014); AttIENC.put(Att.LC_ASE, 18015); AttIENC.put(Att.LC_CCI, 18016); AttIENC.put(Att.LC_CCE, 18017);
+  AttIENC.put(Att.LC_BM1, 18018); AttIENC.put(Att.LC_BM2, 18019); AttIENC.put(Att.LC_LG1, 18020); AttIENC.put(Att.LC_LG2, 18021); AttIENC.put(Att.LC_DR1, 18022);
+  AttIENC.put(Att.LC_DR2, 18023); AttIENC.put(Att.LC_SP1, 18024); AttIENC.put(Att.LC_SP2, 18025); AttIENC.put(Att.LC_WD1, 18026); AttIENC.put(Att.LC_WD2, 18027);
+  AttIENC.put(Att.SHPTYP, 33066); AttIENC.put(Att.UPDMSG, 40000); AttIENC.put(Att.BNKWTW, 17999);
  }
  
  private static final EnumMap<Att, String> AttStr = new EnumMap<Att, String>(Att.class);
@@ -143,19 +143,19 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttStr.put(Att.REFLEV, "gravity_reference"); AttStr.put(Att.SDRLEV, "sounding_name"); AttStr.put(Att.VCRLEV, "vertical_name"); AttStr.put(Att.CATVTR, "category");
   AttStr.put(Att.CATTAB, "operation"); AttStr.put(Att.SCHREF, "schedule"); AttStr.put(Att.USESHP, "use"); AttStr.put(Att.CURVHW, "high_velocity");
   AttStr.put(Att.CURVLW, "low_velocity"); AttStr.put(Att.CURVMW, "mean_velocity"); AttStr.put(Att.CURVOW, "other_velocity"); AttStr.put(Att.APTREF, "passing_time");
-  AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category"); AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.CATWWM, "category"); AttStr.put(Att.SHPTYP, "ship");
+  AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category"); AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.SHPTYP, "ship");
   AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
  }
  
- private static final EnumMap<Obj, Att> Accuracy = new EnumMap<Obj, Att>(Obj.class); static { Accuracy.put(Obj.UNKOBJ, Att.HORACC); }
- private static final EnumMap<Obj, Att> Addition = new EnumMap<Obj, Att>(Obj.class); static { Addition.put(Obj.UNKOBJ, Att.ADDMRK); }
- private static final EnumMap<Obj, Att> Agency = new EnumMap<Obj, Att>(Obj.class); static { Agency.put(Obj.UNKOBJ, Att.AGENCY); }
- private static final EnumMap<Obj, Att> Anomaly = new EnumMap<Obj, Att>(Obj.class); static { Anomaly.put(Obj.UNKOBJ, Att.VALLMA); }
- private static final EnumMap<Obj, Att> Authority = new EnumMap<Obj, Att>(Obj.class); static { Authority.put(Obj.UNKOBJ, Att.SURATH); }
- private static final EnumMap<Obj, Att> Availability = new EnumMap<Obj, Att>(Obj.class); static { Availability.put(Obj.UNKOBJ, Att.BUNVES); }
- private static final EnumMap<Obj, Att> Bank = new EnumMap<Obj, Att>(Obj.class); static { Bank.put(Obj.UNKOBJ, Att.BNKWTW); }
- private static final EnumMap<Obj, Att> Callsign = new EnumMap<Obj, Att>(Obj.class); static { Callsign.put(Obj.UNKOBJ, Att.CALSGN); }
- private static final EnumMap<Obj, Att> Category = new EnumMap<Obj, Att>(Obj.class); static {
+ private static final EnumMap<Obj, Att> Accuracy = new EnumMap<>(Obj.class); static { Accuracy.put(Obj.UNKOBJ, Att.HORACC); }
+ private static final EnumMap<Obj, Att> Addition = new EnumMap<>(Obj.class); static { Addition.put(Obj.UNKOBJ, Att.ADDMRK); }
+ private static final EnumMap<Obj, Att> Agency = new EnumMap<>(Obj.class); static { Agency.put(Obj.UNKOBJ, Att.AGENCY); }
+ private static final EnumMap<Obj, Att> Anomaly = new EnumMap<>(Obj.class); static { Anomaly.put(Obj.UNKOBJ, Att.VALLMA); }
+ private static final EnumMap<Obj, Att> Authority = new EnumMap<>(Obj.class); static { Authority.put(Obj.UNKOBJ, Att.SURATH); }
+ private static final EnumMap<Obj, Att> Availability = new EnumMap<>(Obj.class); static { Availability.put(Obj.UNKOBJ, Att.BUNVES); }
+ private static final EnumMap<Obj, Att> Bank = new EnumMap<>(Obj.class); static { Bank.put(Obj.UNKOBJ, Att.BNKWTW); }
+ private static final EnumMap<Obj, Att> Callsign = new EnumMap<>(Obj.class); static { Callsign.put(Obj.UNKOBJ, Att.CALSGN); }
+ private static final EnumMap<Obj, Att> Category = new EnumMap<>(Obj.class); static {
   Category.put(Obj.ACHARE, Att.CATACH); Category.put(Obj.ACHBRT, Att.CATACH); Category.put(Obj.AIRARE, Att.CATAIR); Category.put(Obj.BCNCAR, Att.CATCAM); Category.put(Obj.BCNLAT, Att.CATLAM);
   Category.put(Obj.BCNSPP, Att.CATSPM); Category.put(Obj.BOYLAT, Att.CATLAM); Category.put(Obj.BOYINB, Att.CATINB); Category.put(Obj.BOYSPP, Att.CATSPM);
   Category.put(Obj.BRIDGE, Att.CATBRG); Category.put(Obj.BUAARE, Att.CATBUA); Category.put(Obj.BUNSTA, Att.CATBUN); Category.put(Obj.CANALS, Att.CATCAN);
@@ -178,134 +178,134 @@ public class S57att { // S57 Attribute lookup tables & methods
   Category.put(Obj.WTWAXS, Att.CATCCL); Category.put(Obj.WTWARE, Att.CATCCL); Category.put(Obj.WTWGAG, Att.CATGAG); Category.put(Obj.BERTHS, Att.CATBRT);
  }
  
- private static final EnumMap<Obj, Att> Channel = new EnumMap<Obj, Att>(Obj.class); static { Channel.put(Obj.UNKOBJ, Att.COMCHA); }
- private static final EnumMap<Obj, Att> Character = new EnumMap<Obj, Att>(Obj.class); static { Character.put(Obj.UNKOBJ, Att.LITCHR); }
- private static final EnumMap<Obj, Att> Clearance_height = new EnumMap<Obj, Att>(Obj.class); static { Clearance_height.put(Obj.UNKOBJ, Att.VERCLR); }
- private static final EnumMap<Obj, Att> Clearance_height_closed = new EnumMap<Obj, Att>(Obj.class); static { Clearance_height_closed.put(Obj.UNKOBJ, Att.VERCCL); }
- private static final EnumMap<Obj, Att> Clearance_height_open = new EnumMap<Obj, Att>(Obj.class); static { Clearance_height_open.put(Obj.UNKOBJ, Att.VERCOP); }
- private static final EnumMap<Obj, Att> Clearance_height_safe = new EnumMap<Obj, Att>(Obj.class); static { Clearance_height_safe.put(Obj.UNKOBJ, Att.VERCSA); }
- private static final EnumMap<Obj, Att> Clearance_width = new EnumMap<Obj, Att>(Obj.class); static { Clearance_width.put(Obj.UNKOBJ, Att.HORCLR); }
- private static final EnumMap<Obj, Att> Colour = new EnumMap<Obj, Att>(Obj.class); static { Colour.put(Obj.UNKOBJ, Att.COLOUR); }
- private static final EnumMap<Obj, Att> Colour_pattern = new EnumMap<Obj, Att>(Obj.class); static { Colour_pattern.put(Obj.UNKOBJ, Att.COLPAT); }
- private static final EnumMap<Obj, Att> Communication = new EnumMap<Obj, Att>(Obj.class); static { Communication.put(Obj.UNKOBJ, Att.COMCTN); }
- private static final EnumMap<Obj, Att> Condition = new EnumMap<Obj, Att>(Obj.class); static { Condition.put(Obj.UNKOBJ, Att.CONDTN); }
- private static final EnumMap<Obj, Att> Conspicuity = new EnumMap<Obj, Att>(Obj.class); static { Conspicuity.put(Obj.UNKOBJ, Att.CONVIS); }
- private static final EnumMap<Obj, Att> Construction = new EnumMap<Obj, Att>(Obj.class); static { Construction.put(Obj.UNKOBJ, Att.NATCON); }
- private static final EnumMap<Obj, Att> Danger_class = new EnumMap<Obj, Att>(Obj.class); static { Danger_class.put(Obj.UNKOBJ, Att.CLSDNG); }
- private static final EnumMap<Obj, Att> Depth = new EnumMap<Obj, Att>(Obj.class); static { Depth.put(Obj.UNKOBJ, Att.VALDCO); Depth.put(Obj.SOUNDG, Att.VALSOU); }
- private static final EnumMap<Obj, Att> Depth_buried = new EnumMap<Obj, Att>(Obj.class); static { Depth_buried.put(Obj.UNKOBJ, Att.BURDEP); }
- private static final EnumMap<Obj, Att> Description = new EnumMap<Obj, Att>(Obj.class); static { Description.put(Obj.UNKOBJ, Att.TXTDSC); }
- private static final EnumMap<Obj, Att> Distance = new EnumMap<Obj, Att>(Obj.class); static { Distance.put(Obj.UNKOBJ, Att.WTWDIS); }
- private static final EnumMap<Obj, Att> Distance_down = new EnumMap<Obj, Att>(Obj.class); static { Distance_down.put(Obj.UNKOBJ, Att.DISIPD); }
- private static final EnumMap<Obj, Att> Distance_end = new EnumMap<Obj, Att>(Obj.class); static { Distance_end.put(Obj.UNKOBJ, Att.DISBK2); }
- private static final EnumMap<Obj, Att> Distance_start = new EnumMap<Obj, Att>(Obj.class); static { Distance_start.put(Obj.UNKOBJ, Att.DISBK1); }
- private static final EnumMap<Obj, Att> Distance_up = new EnumMap<Obj, Att>(Obj.class); static { Distance_up.put(Obj.UNKOBJ, Att.DISIPU); }
- private static final EnumMap<Obj, Att> Elevation = new EnumMap<Obj, Att>(Obj.class); static { Elevation.put(Obj.UNKOBJ, Att.ELEVAT); }
- private static final EnumMap<Obj, Att> End_date = new EnumMap<Obj, Att>(Obj.class); static { End_date.put(Obj.UNKOBJ, Att.DATEND); }
- private static final EnumMap<Obj, Att> End_time = new EnumMap<Obj, Att>(Obj.class); static { End_time.put(Obj.UNKOBJ, Att.TIMEND); }
- private static final EnumMap<Obj, Att> Estimated_range = new EnumMap<Obj, Att>(Obj.class); static { Estimated_range.put(Obj.UNKOBJ, Att.ESTRNG); }
- private static final EnumMap<Obj, Att> Exhibition = new EnumMap<Obj, Att>(Obj.class); static { Exhibition.put(Obj.UNKOBJ, Att.EXCLIT); }
- private static final EnumMap<Obj, Att> Exposition = new EnumMap<Obj, Att>(Obj.class); static { Exposition.put(Obj.UNKOBJ, Att.EXPSOU); }
- private static final EnumMap<Obj, Att> Factor = new EnumMap<Obj, Att>(Obj.class); static { Factor.put(Obj.UNKOBJ, Att.ICEFAC); }
- private static final EnumMap<Obj, Att> Frequency = new EnumMap<Obj, Att>(Obj.class); static { Frequency.put(Obj.UNKOBJ, Att.SIGFRQ); }
- private static final EnumMap<Obj, Att> Function = new EnumMap<Obj, Att>(Obj.class); static { Function.put(Obj.BUISGL, Att.FUNCTN); Function.put(Obj.LNDMRK, Att.FUNCTN); Function.put(Obj.NOTMRK, Att.FNCTNM); }
- private static final EnumMap<Obj, Att> Generation = new EnumMap<Obj, Att>(Obj.class); static { Generation.put(Obj.UNKOBJ, Att.SIGGEN); }
- private static final EnumMap<Obj, Att> Goods = new EnumMap<Obj, Att>(Obj.class); static { Goods.put(Obj.UNKOBJ, Att.TRSHGD); }
- private static final EnumMap<Obj, Att> Gravity_reference = new EnumMap<Obj, Att>(Obj.class); static { Gravity_reference.put(Obj.UNKOBJ, Att.REFLEV); }
- private static final EnumMap<Obj, Att> Group = new EnumMap<Obj, Att>(Obj.class); static { Group.put(Obj.UNKOBJ, Att.SIGGRP); }
- private static final EnumMap<Obj, Att> Height = new EnumMap<Obj, Att>(Obj.class); static { Height.put(Obj.UNKOBJ, Att.HEIGHT); }
- private static final EnumMap<Obj, Att> High_name = new EnumMap<Obj, Att>(Obj.class); static { High_name.put(Obj.UNKOBJ, Att.HIGNAM); }
- private static final EnumMap<Obj, Att> High_value = new EnumMap<Obj, Att>(Obj.class); static { High_value.put(Obj.UNKOBJ, Att.HIGWAT); }
- private static final EnumMap<Obj, Att> High_velocity = new EnumMap<Obj, Att>(Obj.class); static { High_velocity.put(Obj.UNKOBJ, Att.CURVHW); }
- private static final EnumMap<Obj, Att> Horizontal_clearance_length = new EnumMap<Obj, Att>(Obj.class); static { Horizontal_clearance_length.put(Obj.UNKOBJ, Att.HORCLL); }
- private static final EnumMap<Obj, Att> Horizontal_clearance_width = new EnumMap<Obj, Att>(Obj.class); static { Horizontal_clearance_width.put(Obj.UNKOBJ, Att.HORCLW); }
- private static final EnumMap<Obj, Att> Horizontal_datum = new EnumMap<Obj, Att>(Obj.class); static { Horizontal_datum.put(Obj.UNKOBJ, Att.HORDAT); }
- private static final EnumMap<Obj, Att> Impact = new EnumMap<Obj, Att>(Obj.class); static { Impact.put(Obj.UNKOBJ, Att.DIRIMP); }
- private static final EnumMap<Obj, Att> Information = new EnumMap<Obj, Att>(Obj.class); static { Information.put(Obj.UNKOBJ, Att.INFORM); }
- private static final EnumMap<Obj, Att> Jurisdiction = new EnumMap<Obj, Att>(Obj.class); static { Jurisdiction.put(Obj.UNKOBJ, Att.JRSDTN); }
- private static final EnumMap<Obj, Att> Length = new EnumMap<Obj, Att>(Obj.class); static { Length.put(Obj.UNKOBJ, Att.HORLEN); }
- private static final EnumMap<Obj, Att> Local_name = new EnumMap<Obj, Att>(Obj.class); static { Local_name.put(Obj.UNKOBJ, Att.OTHNAM); }
- private static final EnumMap<Obj, Att> Local_value = new EnumMap<Obj, Att>(Obj.class); static { Local_value.put(Obj.UNKOBJ, Att.OTHWAT); }
- private static final EnumMap<Obj, Att> Low_name = new EnumMap<Obj, Att>(Obj.class); static { Low_name.put(Obj.UNKOBJ, Att.LOWNAM); }
- private static final EnumMap<Obj, Att> Low_value = new EnumMap<Obj, Att>(Obj.class); static { Low_value.put(Obj.UNKOBJ, Att.LOWWAT); }
- private static final EnumMap<Obj, Att> Low_velocity = new EnumMap<Obj, Att>(Obj.class); static { Low_velocity.put(Obj.UNKOBJ, Att.CURVLW); }
- private static final EnumMap<Obj, Att> Maximum_depth = new EnumMap<Obj, Att>(Obj.class); static { Maximum_depth.put(Obj.UNKOBJ, Att.DRVAL2); }
- private static final EnumMap<Obj, Att> Maximum_elevation = new EnumMap<Obj, Att>(Obj.class); static { Maximum_elevation.put(Obj.UNKOBJ, Att.ELEVA2); }
- private static final EnumMap<Obj, Att> Maximum_load = new EnumMap<Obj, Att>(Obj.class); static { Maximum_load.put(Obj.UNKOBJ, Att.LIFCAP); }
- private static final EnumMap<Obj, Att> Maximum_range = new EnumMap<Obj, Att>(Obj.class); static { Maximum_range.put(Obj.UNKOBJ, Att.VALMXR); }
- private static final EnumMap<Obj, Att> Maximum_sounding = new EnumMap<Obj, Att>(Obj.class); static { Maximum_sounding.put(Obj.UNKOBJ, Att.SDISMX); }
- private static final EnumMap<Obj, Att> Mean_name = new EnumMap<Obj, Att>(Obj.class); static { Mean_name.put(Obj.UNKOBJ, Att.MEANAM); }
- private static final EnumMap<Obj, Att> Mean_value = new EnumMap<Obj, Att>(Obj.class); static { Mean_value.put(Obj.UNKOBJ, Att.MEAWAT); }
- private static final EnumMap<Obj, Att> Mean_velocity = new EnumMap<Obj, Att>(Obj.class); static { Mean_velocity.put(Obj.UNKOBJ, Att.CURVMW); }
- private static final EnumMap<Obj, Att> Message = new EnumMap<Obj, Att>(Obj.class); static { Message.put(Obj.UNKOBJ, Att.UPDMSG); }
- private static final EnumMap<Obj, Att> Minimum_depth = new EnumMap<Obj, Att>(Obj.class); static { Minimum_depth.put(Obj.UNKOBJ, Att.DRVAL1); }
- private static final EnumMap<Obj, Att> Minimum_elevation = new EnumMap<Obj, Att>(Obj.class); static { Minimum_elevation.put(Obj.UNKOBJ, Att.ELEVA1); }
- private static final EnumMap<Obj, Att> Minimum_sounding = new EnumMap<Obj, Att>(Obj.class); static { Minimum_sounding.put(Obj.UNKOBJ, Att.SDISMN); }
- private static final EnumMap<Obj, Att> Multiple = new EnumMap<Obj, Att>(Obj.class); static { Multiple.put(Obj.UNKOBJ, Att.MLTYLT); }
- private static final EnumMap<Obj, Att> Name = new EnumMap<Obj, Att>(Obj.class); static { Name.put(Obj.UNKOBJ, Att.OBJNAM); }
- private static final EnumMap<Obj, Att> National_information = new EnumMap<Obj, Att>(Obj.class); static { National_information.put(Obj.UNKOBJ, Att.NINFOM); }
- private static final EnumMap<Obj, Att> Nationality = new EnumMap<Obj, Att>(Obj.class); static { Nationality.put(Obj.UNKOBJ, Att.NATION); }
- private static final EnumMap<Obj, Att> National_description = new EnumMap<Obj, Att>(Obj.class); static { National_description.put(Obj.UNKOBJ, Att.NTXTDS); }
- private static final EnumMap<Obj, Att> National_name = new EnumMap<Obj, Att>(Obj.class); static { National_name.put(Obj.UNKOBJ, Att.NOBJNM); }
- private static final EnumMap<Obj, Att> National_pilot_district = new EnumMap<Obj, Att>(Obj.class); static { National_pilot_district.put(Obj.UNKOBJ, Att.NPLDST); }
- private static final EnumMap<Obj, Att> Nm_date = new EnumMap<Obj, Att>(Obj.class); static { Nm_date.put(Obj.UNKOBJ, Att.NMDATE); }
- private static final EnumMap<Obj, Att> Other_velocity = new EnumMap<Obj, Att>(Obj.class); static { Other_velocity.put(Obj.UNKOBJ, Att.CURVOW); }
- private static final EnumMap<Obj, Att> Operation = new EnumMap<Obj, Att>(Obj.class); static { Operation.put(Obj.UNKOBJ, Att.CATTAB); }
- private static final EnumMap<Obj, Att> Orientation = new EnumMap<Obj, Att>(Obj.class); static { Orientation.put(Obj.UNKOBJ, Att.ORIENT); }
- private static final EnumMap<Obj, Att> Passing_time = new EnumMap<Obj, Att>(Obj.class); static { Passing_time.put(Obj.UNKOBJ, Att.APTREF); }
- private static final EnumMap<Obj, Att> Period = new EnumMap<Obj, Att>(Obj.class); static { Period.put(Obj.UNKOBJ, Att.SIGPER); }
- private static final EnumMap<Obj, Att> Period_end = new EnumMap<Obj, Att>(Obj.class); static { Period_end.put(Obj.UNKOBJ, Att.PEREND); }
- private static final EnumMap<Obj, Att> Period_start = new EnumMap<Obj, Att>(Obj.class); static { Period_start.put(Obj.UNKOBJ, Att.PERSTA); }
- private static final EnumMap<Obj, Att> Pilot_district = new EnumMap<Obj, Att>(Obj.class); static { Pilot_district.put(Obj.UNKOBJ, Att.PILDST); }
- private static final EnumMap<Obj, Att> Position_quality = new EnumMap<Obj, Att>(Obj.class); static { Position_quality.put(Obj.UNKOBJ, Att.QUAPOS); }
- private static final EnumMap<Obj, Att> Positional_accuracy = new EnumMap<Obj, Att>(Obj.class); static { Positional_accuracy.put(Obj.UNKOBJ, Att.POSACC); }
- private static final EnumMap<Obj, Att> Producing_country = new EnumMap<Obj, Att>(Obj.class); static { Producing_country.put(Obj.UNKOBJ, Att.PRCTRY); }
- private static final EnumMap<Obj, Att> Product = new EnumMap<Obj, Att>(Obj.class); static { Product.put(Obj.UNKOBJ, Att.PRODCT); }
- private static final EnumMap<Obj, Att> Quality = new EnumMap<Obj, Att>(Obj.class); static { Quality.put(Obj.UNKOBJ, Att.QUASOU); }
- private static final EnumMap<Obj, Att> Radius = new EnumMap<Obj, Att>(Obj.class); static { Radius.put(Obj.UNKOBJ, Att.RADIUS); Radius.put(Obj.LIGHTS, Att.LITRAD); }
- private static final EnumMap<Obj, Att> Range = new EnumMap<Obj, Att>(Obj.class); static { Range.put(Obj.UNKOBJ, Att.VALNMR); }
- private static final EnumMap<Obj, Att> Reference = new EnumMap<Obj, Att>(Obj.class); static { Reference.put(Obj.UNKOBJ, Att.PUBREF); }
- private static final EnumMap<Obj, Att> Reflectivity = new EnumMap<Obj, Att>(Obj.class); static { Reflectivity.put(Obj.UNKOBJ, Att.CONRAD); }
- private static final EnumMap<Obj, Att> Restriction = new EnumMap<Obj, Att>(Obj.class); static { Restriction.put(Obj.UNKOBJ, Att.RESTRN); }
- private static final EnumMap<Obj, Att> Schedule = new EnumMap<Obj, Att>(Obj.class); static { Schedule.put(Obj.UNKOBJ, Att.SCHREF); }
- private static final EnumMap<Obj, Att> Shape = new EnumMap<Obj, Att>(Obj.class); static { Shape.put(Obj.BCNCAR, Att.BCNSHP); Shape.put(Obj.BCNISD, Att.BCNSHP);
+ private static final EnumMap<Obj, Att> Channel = new EnumMap<>(Obj.class); static { Channel.put(Obj.UNKOBJ, Att.COMCHA); }
+ private static final EnumMap<Obj, Att> Character = new EnumMap<>(Obj.class); static { Character.put(Obj.UNKOBJ, Att.LITCHR); }
+ private static final EnumMap<Obj, Att> Clearance_height = new EnumMap<>(Obj.class); static { Clearance_height.put(Obj.UNKOBJ, Att.VERCLR); }
+ private static final EnumMap<Obj, Att> Clearance_height_closed = new EnumMap<>(Obj.class); static { Clearance_height_closed.put(Obj.UNKOBJ, Att.VERCCL); }
+ private static final EnumMap<Obj, Att> Clearance_height_open = new EnumMap<>(Obj.class); static { Clearance_height_open.put(Obj.UNKOBJ, Att.VERCOP); }
+ private static final EnumMap<Obj, Att> Clearance_height_safe = new EnumMap<>(Obj.class); static { Clearance_height_safe.put(Obj.UNKOBJ, Att.VERCSA); }
+ private static final EnumMap<Obj, Att> Clearance_width = new EnumMap<>(Obj.class); static { Clearance_width.put(Obj.UNKOBJ, Att.HORCLR); }
+ private static final EnumMap<Obj, Att> Colour = new EnumMap<>(Obj.class); static { Colour.put(Obj.UNKOBJ, Att.COLOUR); }
+ private static final EnumMap<Obj, Att> Colour_pattern = new EnumMap<>(Obj.class); static { Colour_pattern.put(Obj.UNKOBJ, Att.COLPAT); }
+ private static final EnumMap<Obj, Att> Communication = new EnumMap<>(Obj.class); static { Communication.put(Obj.UNKOBJ, Att.COMCTN); }
+ private static final EnumMap<Obj, Att> Condition = new EnumMap<>(Obj.class); static { Condition.put(Obj.UNKOBJ, Att.CONDTN); }
+ private static final EnumMap<Obj, Att> Conspicuity = new EnumMap<>(Obj.class); static { Conspicuity.put(Obj.UNKOBJ, Att.CONVIS); }
+ private static final EnumMap<Obj, Att> Construction = new EnumMap<>(Obj.class); static { Construction.put(Obj.UNKOBJ, Att.NATCON); }
+ private static final EnumMap<Obj, Att> Danger_class = new EnumMap<>(Obj.class); static { Danger_class.put(Obj.UNKOBJ, Att.CLSDNG); }
+ private static final EnumMap<Obj, Att> Depth = new EnumMap<>(Obj.class); static { Depth.put(Obj.UNKOBJ, Att.VALDCO); Depth.put(Obj.SOUNDG, Att.VALSOU); }
+ private static final EnumMap<Obj, Att> Depth_buried = new EnumMap<>(Obj.class); static { Depth_buried.put(Obj.UNKOBJ, Att.BURDEP); }
+ private static final EnumMap<Obj, Att> Description = new EnumMap<>(Obj.class); static { Description.put(Obj.UNKOBJ, Att.TXTDSC); }
+ private static final EnumMap<Obj, Att> Distance = new EnumMap<>(Obj.class); static { Distance.put(Obj.UNKOBJ, Att.WTWDIS); }
+ private static final EnumMap<Obj, Att> Distance_down = new EnumMap<>(Obj.class); static { Distance_down.put(Obj.UNKOBJ, Att.DISIPD); }
+ private static final EnumMap<Obj, Att> Distance_end = new EnumMap<>(Obj.class); static { Distance_end.put(Obj.UNKOBJ, Att.DISBK2); }
+ private static final EnumMap<Obj, Att> Distance_start = new EnumMap<>(Obj.class); static { Distance_start.put(Obj.UNKOBJ, Att.DISBK1); }
+ private static final EnumMap<Obj, Att> Distance_up = new EnumMap<>(Obj.class); static { Distance_up.put(Obj.UNKOBJ, Att.DISIPU); }
+ private static final EnumMap<Obj, Att> Elevation = new EnumMap<>(Obj.class); static { Elevation.put(Obj.UNKOBJ, Att.ELEVAT); }
+ private static final EnumMap<Obj, Att> End_date = new EnumMap<>(Obj.class); static { End_date.put(Obj.UNKOBJ, Att.DATEND); }
+ private static final EnumMap<Obj, Att> End_time = new EnumMap<>(Obj.class); static { End_time.put(Obj.UNKOBJ, Att.TIMEND); }
+ private static final EnumMap<Obj, Att> Estimated_range = new EnumMap<>(Obj.class); static { Estimated_range.put(Obj.UNKOBJ, Att.ESTRNG); }
+ private static final EnumMap<Obj, Att> Exhibition = new EnumMap<>(Obj.class); static { Exhibition.put(Obj.UNKOBJ, Att.EXCLIT); }
+ private static final EnumMap<Obj, Att> Exposition = new EnumMap<>(Obj.class); static { Exposition.put(Obj.UNKOBJ, Att.EXPSOU); }
+ private static final EnumMap<Obj, Att> Factor = new EnumMap<>(Obj.class); static { Factor.put(Obj.UNKOBJ, Att.ICEFAC); }
+ private static final EnumMap<Obj, Att> Frequency = new EnumMap<>(Obj.class); static { Frequency.put(Obj.UNKOBJ, Att.SIGFRQ); }
+ private static final EnumMap<Obj, Att> Function = new EnumMap<>(Obj.class); static { Function.put(Obj.BUISGL, Att.FUNCTN); Function.put(Obj.LNDMRK, Att.FUNCTN); Function.put(Obj.NOTMRK, Att.FNCTNM); }
+ private static final EnumMap<Obj, Att> Generation = new EnumMap<>(Obj.class); static { Generation.put(Obj.UNKOBJ, Att.SIGGEN); }
+ private static final EnumMap<Obj, Att> Goods = new EnumMap<>(Obj.class); static { Goods.put(Obj.UNKOBJ, Att.TRSHGD); }
+ private static final EnumMap<Obj, Att> Gravity_reference = new EnumMap<>(Obj.class); static { Gravity_reference.put(Obj.UNKOBJ, Att.REFLEV); }
+ private static final EnumMap<Obj, Att> Group = new EnumMap<>(Obj.class); static { Group.put(Obj.UNKOBJ, Att.SIGGRP); }
+ private static final EnumMap<Obj, Att> Height = new EnumMap<>(Obj.class); static { Height.put(Obj.UNKOBJ, Att.HEIGHT); }
+ private static final EnumMap<Obj, Att> High_name = new EnumMap<>(Obj.class); static { High_name.put(Obj.UNKOBJ, Att.HIGNAM); }
+ private static final EnumMap<Obj, Att> High_value = new EnumMap<>(Obj.class); static { High_value.put(Obj.UNKOBJ, Att.HIGWAT); }
+ private static final EnumMap<Obj, Att> High_velocity = new EnumMap<>(Obj.class); static { High_velocity.put(Obj.UNKOBJ, Att.CURVHW); }
+ private static final EnumMap<Obj, Att> Horizontal_clearance_length = new EnumMap<>(Obj.class); static { Horizontal_clearance_length.put(Obj.UNKOBJ, Att.HORCLL); }
+ private static final EnumMap<Obj, Att> Horizontal_clearance_width = new EnumMap<>(Obj.class); static { Horizontal_clearance_width.put(Obj.UNKOBJ, Att.HORCLW); }
+ private static final EnumMap<Obj, Att> Horizontal_datum = new EnumMap<>(Obj.class); static { Horizontal_datum.put(Obj.UNKOBJ, Att.HORDAT); }
+ private static final EnumMap<Obj, Att> Impact = new EnumMap<>(Obj.class); static { Impact.put(Obj.UNKOBJ, Att.DIRIMP); }
+ private static final EnumMap<Obj, Att> Information = new EnumMap<>(Obj.class); static { Information.put(Obj.UNKOBJ, Att.INFORM); }
+ private static final EnumMap<Obj, Att> Jurisdiction = new EnumMap<>(Obj.class); static { Jurisdiction.put(Obj.UNKOBJ, Att.JRSDTN); }
+ private static final EnumMap<Obj, Att> Length = new EnumMap<>(Obj.class); static { Length.put(Obj.UNKOBJ, Att.HORLEN); }
+ private static final EnumMap<Obj, Att> Local_name = new EnumMap<>(Obj.class); static { Local_name.put(Obj.UNKOBJ, Att.OTHNAM); }
+ private static final EnumMap<Obj, Att> Local_value = new EnumMap<>(Obj.class); static { Local_value.put(Obj.UNKOBJ, Att.OTHWAT); }
+ private static final EnumMap<Obj, Att> Low_name = new EnumMap<>(Obj.class); static { Low_name.put(Obj.UNKOBJ, Att.LOWNAM); }
+ private static final EnumMap<Obj, Att> Low_value = new EnumMap<>(Obj.class); static { Low_value.put(Obj.UNKOBJ, Att.LOWWAT); }
+ private static final EnumMap<Obj, Att> Low_velocity = new EnumMap<>(Obj.class); static { Low_velocity.put(Obj.UNKOBJ, Att.CURVLW); }
+ private static final EnumMap<Obj, Att> Maximum_depth = new EnumMap<>(Obj.class); static { Maximum_depth.put(Obj.UNKOBJ, Att.DRVAL2); }
+ private static final EnumMap<Obj, Att> Maximum_elevation = new EnumMap<>(Obj.class); static { Maximum_elevation.put(Obj.UNKOBJ, Att.ELEVA2); }
+ private static final EnumMap<Obj, Att> Maximum_load = new EnumMap<>(Obj.class); static { Maximum_load.put(Obj.UNKOBJ, Att.LIFCAP); }
+ private static final EnumMap<Obj, Att> Maximum_range = new EnumMap<>(Obj.class); static { Maximum_range.put(Obj.UNKOBJ, Att.VALMXR); }
+ private static final EnumMap<Obj, Att> Maximum_sounding = new EnumMap<>(Obj.class); static { Maximum_sounding.put(Obj.UNKOBJ, Att.SDISMX); }
+ private static final EnumMap<Obj, Att> Mean_name = new EnumMap<>(Obj.class); static { Mean_name.put(Obj.UNKOBJ, Att.MEANAM); }
+ private static final EnumMap<Obj, Att> Mean_value = new EnumMap<>(Obj.class); static { Mean_value.put(Obj.UNKOBJ, Att.MEAWAT); }
+ private static final EnumMap<Obj, Att> Mean_velocity = new EnumMap<>(Obj.class); static { Mean_velocity.put(Obj.UNKOBJ, Att.CURVMW); }
+ private static final EnumMap<Obj, Att> Message = new EnumMap<>(Obj.class); static { Message.put(Obj.UNKOBJ, Att.UPDMSG); }
+ private static final EnumMap<Obj, Att> Minimum_depth = new EnumMap<>(Obj.class); static { Minimum_depth.put(Obj.UNKOBJ, Att.DRVAL1); }
+ private static final EnumMap<Obj, Att> Minimum_elevation = new EnumMap<>(Obj.class); static { Minimum_elevation.put(Obj.UNKOBJ, Att.ELEVA1); }
+ private static final EnumMap<Obj, Att> Minimum_sounding = new EnumMap<>(Obj.class); static { Minimum_sounding.put(Obj.UNKOBJ, Att.SDISMN); }
+ private static final EnumMap<Obj, Att> Multiple = new EnumMap<>(Obj.class); static { Multiple.put(Obj.UNKOBJ, Att.MLTYLT); }
+ private static final EnumMap<Obj, Att> Name = new EnumMap<>(Obj.class); static { Name.put(Obj.UNKOBJ, Att.OBJNAM); }
+ private static final EnumMap<Obj, Att> National_information = new EnumMap<>(Obj.class); static { National_information.put(Obj.UNKOBJ, Att.NINFOM); }
+ private static final EnumMap<Obj, Att> Nationality = new EnumMap<>(Obj.class); static { Nationality.put(Obj.UNKOBJ, Att.NATION); }
+ private static final EnumMap<Obj, Att> National_description = new EnumMap<>(Obj.class); static { National_description.put(Obj.UNKOBJ, Att.NTXTDS); }
+ private static final EnumMap<Obj, Att> National_name = new EnumMap<>(Obj.class); static { National_name.put(Obj.UNKOBJ, Att.NOBJNM); }
+ private static final EnumMap<Obj, Att> National_pilot_district = new EnumMap<>(Obj.class); static { National_pilot_district.put(Obj.UNKOBJ, Att.NPLDST); }
+ private static final EnumMap<Obj, Att> Nm_date = new EnumMap<>(Obj.class); static { Nm_date.put(Obj.UNKOBJ, Att.NMDATE); }
+ private static final EnumMap<Obj, Att> Other_velocity = new EnumMap<>(Obj.class); static { Other_velocity.put(Obj.UNKOBJ, Att.CURVOW); }
+ private static final EnumMap<Obj, Att> Operation = new EnumMap<>(Obj.class); static { Operation.put(Obj.UNKOBJ, Att.CATTAB); }
+ private static final EnumMap<Obj, Att> Orientation = new EnumMap<>(Obj.class); static { Orientation.put(Obj.UNKOBJ, Att.ORIENT); }
+ private static final EnumMap<Obj, Att> Passing_time = new EnumMap<>(Obj.class); static { Passing_time.put(Obj.UNKOBJ, Att.APTREF); }
+ private static final EnumMap<Obj, Att> Period = new EnumMap<>(Obj.class); static { Period.put(Obj.UNKOBJ, Att.SIGPER); }
+ private static final EnumMap<Obj, Att> Period_end = new EnumMap<>(Obj.class); static { Period_end.put(Obj.UNKOBJ, Att.PEREND); }
+ private static final EnumMap<Obj, Att> Period_start = new EnumMap<>(Obj.class); static { Period_start.put(Obj.UNKOBJ, Att.PERSTA); }
+ private static final EnumMap<Obj, Att> Pilot_district = new EnumMap<>(Obj.class); static { Pilot_district.put(Obj.UNKOBJ, Att.PILDST); }
+ private static final EnumMap<Obj, Att> Position_quality = new EnumMap<>(Obj.class); static { Position_quality.put(Obj.UNKOBJ, Att.QUAPOS); }
+ private static final EnumMap<Obj, Att> Positional_accuracy = new EnumMap<>(Obj.class); static { Positional_accuracy.put(Obj.UNKOBJ, Att.POSACC); }
+ private static final EnumMap<Obj, Att> Producing_country = new EnumMap<>(Obj.class); static { Producing_country.put(Obj.UNKOBJ, Att.PRCTRY); }
+ private static final EnumMap<Obj, Att> Product = new EnumMap<>(Obj.class); static { Product.put(Obj.UNKOBJ, Att.PRODCT); }
+ private static final EnumMap<Obj, Att> Quality = new EnumMap<>(Obj.class); static { Quality.put(Obj.UNKOBJ, Att.QUASOU); }
+ private static final EnumMap<Obj, Att> Radius = new EnumMap<>(Obj.class); static { Radius.put(Obj.UNKOBJ, Att.RADIUS); Radius.put(Obj.LIGHTS, Att.LITRAD); }
+ private static final EnumMap<Obj, Att> Range = new EnumMap<>(Obj.class); static { Range.put(Obj.UNKOBJ, Att.VALNMR); }
+ private static final EnumMap<Obj, Att> Reference = new EnumMap<>(Obj.class); static { Reference.put(Obj.UNKOBJ, Att.PUBREF); }
+ private static final EnumMap<Obj, Att> Reflectivity = new EnumMap<>(Obj.class); static { Reflectivity.put(Obj.UNKOBJ, Att.CONRAD); }
+ private static final EnumMap<Obj, Att> Restriction = new EnumMap<>(Obj.class); static { Restriction.put(Obj.UNKOBJ, Att.RESTRN); }
+ private static final EnumMap<Obj, Att> Schedule = new EnumMap<>(Obj.class); static { Schedule.put(Obj.UNKOBJ, Att.SCHREF); }
+ private static final EnumMap<Obj, Att> Shape = new EnumMap<>(Obj.class); static { Shape.put(Obj.BCNCAR, Att.BCNSHP); Shape.put(Obj.BCNISD, Att.BCNSHP);
   Shape.put(Obj.BCNLAT, Att.BCNSHP); Shape.put(Obj.BCNSAW, Att.BCNSHP); Shape.put(Obj.BCNSPP, Att.BCNSHP); Shape.put(Obj.BUISGL, Att.BUISHP);
   Shape.put(Obj.BOYCAR, Att.BOYSHP); Shape.put(Obj.BOYISD, Att.BOYSHP); Shape.put(Obj.BOYLAT, Att.BOYSHP); Shape.put(Obj.BOYSAW, Att.BOYSHP); Shape.put(Obj.BOYSPP, Att.BOYSHP);
   Shape.put(Obj.BOYINB, Att.BOYSHP); Shape.put(Obj.DAYMAR, Att.TOPSHP); Shape.put(Obj.TOPMAR, Att.TOPSHP); Shape.put(Obj.MORFAC, Att.BOYSHP);
   Shape.put(Obj.SILTNK, Att.BUISHP);
  }
- private static final EnumMap<Obj, Att> Sector_end = new EnumMap<Obj, Att>(Obj.class); static { Sector_end.put(Obj.UNKOBJ, Att.SECTR2); }
- private static final EnumMap<Obj, Att> Sector_start = new EnumMap<Obj, Att>(Obj.class); static { Sector_start.put(Obj.UNKOBJ, Att.SECTR1); }
- private static final EnumMap<Obj, Att> Sequence = new EnumMap<Obj, Att>(Obj.class); static { Sequence.put(Obj.UNKOBJ, Att.SIGSEQ); }
- private static final EnumMap<Obj, Att> Shift = new EnumMap<Obj, Att>(Obj.class); static { Shift.put(Obj.UNKOBJ, Att.SHIPAM); }
- private static final EnumMap<Obj, Att> Ship = new EnumMap<Obj, Att>(Obj.class); static { Ship.put(Obj.UNKOBJ, Att.SHPTYP); }
- private static final EnumMap<Obj, Att> Sounding_accuracy = new EnumMap<Obj, Att>(Obj.class); static { Sounding_accuracy.put(Obj.UNKOBJ, Att.SOUACC); }
- private static final EnumMap<Obj, Att> Sounding_name = new EnumMap<Obj, Att>(Obj.class); static { Sounding_name.put(Obj.UNKOBJ, Att.SDRLEV); }
- private static final EnumMap<Obj, Att> Start_date = new EnumMap<Obj, Att>(Obj.class); static { Start_date.put(Obj.UNKOBJ, Att.DATSTA); }
- private static final EnumMap<Obj, Att> Start_time = new EnumMap<Obj, Att>(Obj.class); static { Start_time.put(Obj.UNKOBJ, Att.TIMSTA); }
- private static final EnumMap<Obj, Att> Status = new EnumMap<Obj, Att>(Obj.class); static { Status.put(Obj.UNKOBJ, Att.STATUS); }
- private static final EnumMap<Obj, Att> Surface = new EnumMap<Obj, Att>(Obj.class); static { Surface.put(Obj.UNKOBJ, Att.NATSUR); }
- private static final EnumMap<Obj, Att> Surface_qualification = new EnumMap<Obj, Att>(Obj.class); static { Surface_qualification.put(Obj.UNKOBJ, Att.NATQUA); }
- private static final EnumMap<Obj, Att> Survey = new EnumMap<Obj, Att>(Obj.class); static { Survey.put(Obj.UNKOBJ, Att.SURTYP); }
- private static final EnumMap<Obj, Att> Survey_end = new EnumMap<Obj, Att>(Obj.class); static { Survey_end.put(Obj.UNKOBJ, Att.SUREND); }
- private static final EnumMap<Obj, Att> Survey_start = new EnumMap<Obj, Att>(Obj.class); static { Survey_start.put(Obj.UNKOBJ, Att.SURSTA); }
- private static final EnumMap<Obj, Att> System = new EnumMap<Obj, Att>(Obj.class); static { System.put(Obj.UNKOBJ, Att.MARSYS); }
- private static final EnumMap<Obj, Att> Technique = new EnumMap<Obj, Att>(Obj.class); static { Technique.put(Obj.UNKOBJ, Att.TECSOU); }
- private static final EnumMap<Obj, Att> Traffic_flow = new EnumMap<Obj, Att>(Obj.class); static { Traffic_flow.put(Obj.UNKOBJ, Att.TRAFIC); }
- private static final EnumMap<Obj, Att> Units = new EnumMap<Obj, Att>(Obj.class); static { Units.put(Obj.UNKOBJ, Att.HUNITS); }
- private static final EnumMap<Obj, Att> Use = new EnumMap<Obj, Att>(Obj.class); static { Use.put(Obj.UNKOBJ, Att.USESHP); }
- private static final EnumMap<Obj, Att> Variation = new EnumMap<Obj, Att>(Obj.class); static { Variation.put(Obj.UNKOBJ, Att.VALMAG); }
- private static final EnumMap<Obj, Att> Variation_change = new EnumMap<Obj, Att>(Obj.class); static { Variation_change.put(Obj.UNKOBJ, Att.VALACM); }
- private static final EnumMap<Obj, Att> Velocity = new EnumMap<Obj, Att>(Obj.class); static { Velocity.put(Obj.UNKOBJ, Att.CURVEL); }
- private static final EnumMap<Obj, Att> Vertical_accuracy = new EnumMap<Obj, Att>(Obj.class); static { Vertical_accuracy.put(Obj.UNKOBJ, Att.VERACC); }
- private static final EnumMap<Obj, Att> Vertical_datum = new EnumMap<Obj, Att>(Obj.class); static { Vertical_datum.put(Obj.UNKOBJ, Att.VERDAT); }
- private static final EnumMap<Obj, Att> Vertical_length = new EnumMap<Obj, Att>(Obj.class); static { Vertical_length.put(Obj.UNKOBJ, Att.VERLEN); }
- private static final EnumMap<Obj, Att> Vertical_name = new EnumMap<Obj, Att>(Obj.class); static { Vertical_name.put(Obj.UNKOBJ, Att.VCRLEV); }
- private static final EnumMap<Obj, Att> Visibility = new EnumMap<Obj, Att>(Obj.class); static { Visibility.put(Obj.UNKOBJ, Att.LITVIS); }
- private static final EnumMap<Obj, Att> Water_level = new EnumMap<Obj, Att>(Obj.class); static { Water_level.put(Obj.UNKOBJ, Att.WATLEV); }
- private static final EnumMap<Obj, Att> Wavelength = new EnumMap<Obj, Att>(Obj.class); static { Wavelength.put(Obj.UNKOBJ, Att.RADWAL); }
- private static final EnumMap<Obj, Att> Width = new EnumMap<Obj, Att>(Obj.class); static { Width.put(Obj.UNKOBJ, Att.HORWID); }
- private static final EnumMap<Obj, Att> Year = new EnumMap<Obj, Att>(Obj.class); static { Year.put(Obj.UNKOBJ, Att.RYRMGV); }
+ private static final EnumMap<Obj, Att> Sector_end = new EnumMap<>(Obj.class); static { Sector_end.put(Obj.UNKOBJ, Att.SECTR2); }
+ private static final EnumMap<Obj, Att> Sector_start = new EnumMap<>(Obj.class); static { Sector_start.put(Obj.UNKOBJ, Att.SECTR1); }
+ private static final EnumMap<Obj, Att> Sequence = new EnumMap<>(Obj.class); static { Sequence.put(Obj.UNKOBJ, Att.SIGSEQ); }
+ private static final EnumMap<Obj, Att> Shift = new EnumMap<>(Obj.class); static { Shift.put(Obj.UNKOBJ, Att.SHIPAM); }
+ private static final EnumMap<Obj, Att> Ship = new EnumMap<>(Obj.class); static { Ship.put(Obj.UNKOBJ, Att.SHPTYP); }
+ private static final EnumMap<Obj, Att> Sounding_accuracy = new EnumMap<>(Obj.class); static { Sounding_accuracy.put(Obj.UNKOBJ, Att.SOUACC); }
+ private static final EnumMap<Obj, Att> Sounding_name = new EnumMap<>(Obj.class); static { Sounding_name.put(Obj.UNKOBJ, Att.SDRLEV); }
+ private static final EnumMap<Obj, Att> Start_date = new EnumMap<>(Obj.class); static { Start_date.put(Obj.UNKOBJ, Att.DATSTA); }
+ private static final EnumMap<Obj, Att> Start_time = new EnumMap<>(Obj.class); static { Start_time.put(Obj.UNKOBJ, Att.TIMSTA); }
+ private static final EnumMap<Obj, Att> Status = new EnumMap<>(Obj.class); static { Status.put(Obj.UNKOBJ, Att.STATUS); }
+ private static final EnumMap<Obj, Att> Surface = new EnumMap<>(Obj.class); static { Surface.put(Obj.UNKOBJ, Att.NATSUR); }
+ private static final EnumMap<Obj, Att> Surface_qualification = new EnumMap<>(Obj.class); static { Surface_qualification.put(Obj.UNKOBJ, Att.NATQUA); }
+ private static final EnumMap<Obj, Att> Survey = new EnumMap<>(Obj.class); static { Survey.put(Obj.UNKOBJ, Att.SURTYP); }
+ private static final EnumMap<Obj, Att> Survey_end = new EnumMap<>(Obj.class); static { Survey_end.put(Obj.UNKOBJ, Att.SUREND); }
+ private static final EnumMap<Obj, Att> Survey_start = new EnumMap<>(Obj.class); static { Survey_start.put(Obj.UNKOBJ, Att.SURSTA); }
+ private static final EnumMap<Obj, Att> System = new EnumMap<>(Obj.class); static { System.put(Obj.UNKOBJ, Att.MARSYS); }
+ private static final EnumMap<Obj, Att> Technique = new EnumMap<>(Obj.class); static { Technique.put(Obj.UNKOBJ, Att.TECSOU); }
+ private static final EnumMap<Obj, Att> Traffic_flow = new EnumMap<>(Obj.class); static { Traffic_flow.put(Obj.UNKOBJ, Att.TRAFIC); }
+ private static final EnumMap<Obj, Att> Units = new EnumMap<>(Obj.class); static { Units.put(Obj.UNKOBJ, Att.HUNITS); }
+ private static final EnumMap<Obj, Att> Use = new EnumMap<>(Obj.class); static { Use.put(Obj.UNKOBJ, Att.USESHP); }
+ private static final EnumMap<Obj, Att> Variation = new EnumMap<>(Obj.class); static { Variation.put(Obj.UNKOBJ, Att.VALMAG); }
+ private static final EnumMap<Obj, Att> Variation_change = new EnumMap<>(Obj.class); static { Variation_change.put(Obj.UNKOBJ, Att.VALACM); }
+ private static final EnumMap<Obj, Att> Velocity = new EnumMap<>(Obj.class); static { Velocity.put(Obj.UNKOBJ, Att.CURVEL); }
+ private static final EnumMap<Obj, Att> Vertical_accuracy = new EnumMap<>(Obj.class); static { Vertical_accuracy.put(Obj.UNKOBJ, Att.VERACC); }
+ private static final EnumMap<Obj, Att> Vertical_datum = new EnumMap<>(Obj.class); static { Vertical_datum.put(Obj.UNKOBJ, Att.VERDAT); }
+ private static final EnumMap<Obj, Att> Vertical_length = new EnumMap<>(Obj.class); static { Vertical_length.put(Obj.UNKOBJ, Att.VERLEN); }
+ private static final EnumMap<Obj, Att> Vertical_name = new EnumMap<>(Obj.class); static { Vertical_name.put(Obj.UNKOBJ, Att.VCRLEV); }
+ private static final EnumMap<Obj, Att> Visibility = new EnumMap<>(Obj.class); static { Visibility.put(Obj.UNKOBJ, Att.LITVIS); }
+ private static final EnumMap<Obj, Att> Water_level = new EnumMap<>(Obj.class); static { Water_level.put(Obj.UNKOBJ, Att.WATLEV); }
+ private static final EnumMap<Obj, Att> Wavelength = new EnumMap<>(Obj.class); static { Wavelength.put(Obj.UNKOBJ, Att.RADWAL); }
+ private static final EnumMap<Obj, Att> Width = new EnumMap<>(Obj.class); static { Width.put(Obj.UNKOBJ, Att.HORWID); }
+ private static final EnumMap<Obj, Att> Year = new EnumMap<>(Obj.class); static { Year.put(Obj.UNKOBJ, Att.RYRMGV); }
  
  private static final HashMap<String, EnumMap<Obj, Att>> StrAtt = new HashMap<String, EnumMap<Obj, Att>>();
  static {

@@ -10,66 +10,14 @@
 package s57;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.*;
 
-import s57.S57map.Feature;
 import s57.S57obj.*;
 import s57.S57att.*;
 import s57.S57val.*;
 
 public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conversions
 	
-	enum Prims { N, P, L, A, PA, PL, LA, PLA }
-	private static final EnumMap<Obj, Prims> S57prims = new EnumMap<Obj, Prims>(Obj.class);
-	static {
-		S57prims.put(Obj.UNKOBJ, Prims.PLA); S57prims.put(Obj.M_COVR, Prims.A); S57prims.put(Obj.M_NSYS, Prims.A); S57prims.put(Obj.AIRARE, Prims.PA);
-		S57prims.put(Obj.ACHBRT, Prims.PA); S57prims.put(Obj.ACHARE, Prims.PA); S57prims.put(Obj.BCNCAR, Prims.P); S57prims.put(Obj.BCNISD, Prims.P);
-		S57prims.put(Obj.BCNLAT, Prims.P); S57prims.put(Obj.BCNSAW, Prims.P); S57prims.put(Obj.BCNSPP, Prims.P); S57prims.put(Obj.BERTHS, Prims.PLA);
-		S57prims.put(Obj.BRIDGE, Prims.PLA); S57prims.put(Obj.BUISGL, Prims.PA); S57prims.put(Obj.BUAARE, Prims.PA); S57prims.put(Obj.BOYCAR, Prims.P);
-		S57prims.put(Obj.BOYINB, Prims.P); S57prims.put(Obj.BOYISD, Prims.P); S57prims.put(Obj.BOYLAT, Prims.P); S57prims.put(Obj.BOYSAW, Prims.P);
-		S57prims.put(Obj.BOYSPP, Prims.P); S57prims.put(Obj.CBLARE, Prims.A); S57prims.put(Obj.CBLOHD, Prims.L); S57prims.put(Obj.CBLSUB, Prims.L);
-		S57prims.put(Obj.CANALS, Prims.A); S57prims.put(Obj.CTSARE, Prims.PA); S57prims.put(Obj.CAUSWY, Prims.LA); S57prims.put(Obj.CTNARE, Prims.PA);
-		S57prims.put(Obj.CHKPNT, Prims.PA); S57prims.put(Obj.CGUSTA, Prims.P); S57prims.put(Obj.COALNE, Prims.L); S57prims.put(Obj.CONZNE, Prims.A);
-		S57prims.put(Obj.COSARE, Prims.A); S57prims.put(Obj.CTRPNT, Prims.P); S57prims.put(Obj.CONVYR, Prims.LA); S57prims.put(Obj.CRANES, Prims.PA);
-		S57prims.put(Obj.CURENT, Prims.P); S57prims.put(Obj.CUSZNE, Prims.A); S57prims.put(Obj.DAMCON, Prims.LA); S57prims.put(Obj.DAYMAR, Prims.P);
-		S57prims.put(Obj.DWRTCL, Prims.L); S57prims.put(Obj.DWRTPT, Prims.A); S57prims.put(Obj.DEPARE, Prims.A); S57prims.put(Obj.DEPCNT, Prims.L);
-		S57prims.put(Obj.DISMAR, Prims.P); S57prims.put(Obj.DOCARE, Prims.A); S57prims.put(Obj.DRGARE, Prims.A); S57prims.put(Obj.DRYDOC, Prims.A);
-		S57prims.put(Obj.DMPGRD, Prims.PA); S57prims.put(Obj.DYKCON, Prims.L); S57prims.put(Obj.EXEZNE, Prims.A); S57prims.put(Obj.FAIRWY, Prims.A);
-		S57prims.put(Obj.FNCLNE, Prims.L); S57prims.put(Obj.FERYRT, Prims.LA); S57prims.put(Obj.FSHZNE, Prims.A); S57prims.put(Obj.FSHFAC, Prims.PLA);
-		S57prims.put(Obj.FSHGRD, Prims.A); S57prims.put(Obj.FLODOC, Prims.A); S57prims.put(Obj.FOGSIG, Prims.P); S57prims.put(Obj.FORSTC, Prims.PLA);
-		S57prims.put(Obj.FRPARE, Prims.A); S57prims.put(Obj.GATCON, Prims.PLA); S57prims.put(Obj.GRIDRN, Prims.PA); S57prims.put(Obj.HRBARE, Prims.A);
-		S57prims.put(Obj.HRBFAC, Prims.PA); S57prims.put(Obj.HULKES, Prims.PA); S57prims.put(Obj.ICEARE, Prims.A); S57prims.put(Obj.ICNARE, Prims.PA);
-		S57prims.put(Obj.ISTZNE, Prims.A); S57prims.put(Obj.LAKARE, Prims.A); S57prims.put(Obj.LNDARE, Prims.PLA); S57prims.put(Obj.LNDELV, Prims.PL);
-		S57prims.put(Obj.LNDRGN, Prims.PA); S57prims.put(Obj.LNDMRK, Prims.PLA); S57prims.put(Obj.LIGHTS, Prims.P); S57prims.put(Obj.LITFLT, Prims.P);
-		S57prims.put(Obj.LITVES, Prims.P); S57prims.put(Obj.LOCMAG, Prims.PLA); S57prims.put(Obj.LOKBSN, Prims.A); S57prims.put(Obj.LOGPON, Prims.PA);
-		S57prims.put(Obj.MAGVAR, Prims.PLA); S57prims.put(Obj.MARCUL, Prims.PLA); S57prims.put(Obj.MIPARE, Prims.PA); S57prims.put(Obj.MORFAC, Prims.PLA);
-		S57prims.put(Obj.MPAARE, Prims.PA); S57prims.put(Obj.NAVLNE, Prims.L); S57prims.put(Obj.OBSTRN, Prims.PLA); S57prims.put(Obj.OFSPLF, Prims.PA);
-		S57prims.put(Obj.OSPARE, Prims.A); S57prims.put(Obj.OILBAR, Prims.L); S57prims.put(Obj.PILPNT, Prims.P); S57prims.put(Obj.PILBOP, Prims.PA);
-		S57prims.put(Obj.PIPARE, Prims.PA); S57prims.put(Obj.PIPOHD, Prims.L); S57prims.put(Obj.PIPSOL, Prims.PL); S57prims.put(Obj.PONTON, Prims.LA);
-		S57prims.put(Obj.PRCARE, Prims.PA); S57prims.put(Obj.PRDARE, Prims.PA); S57prims.put(Obj.PYLONS, Prims.PA); S57prims.put(Obj.RADLNE, Prims.L);
-		S57prims.put(Obj.RADRNG, Prims.A); S57prims.put(Obj.RADRFL, Prims.P); S57prims.put(Obj.RADSTA, Prims.P); S57prims.put(Obj.RTPBCN, Prims.P);
-		S57prims.put(Obj.RDOCAL, Prims.PL); S57prims.put(Obj.RDOSTA, Prims.P); S57prims.put(Obj.RAILWY, Prims.L); S57prims.put(Obj.RAPIDS, Prims.PLA);
-		S57prims.put(Obj.RCRTCL, Prims.L); S57prims.put(Obj.RECTRC, Prims.LA); S57prims.put(Obj.RCTLPT, Prims.PA); S57prims.put(Obj.RSCSTA, Prims.P);
-		S57prims.put(Obj.RESARE, Prims.A); S57prims.put(Obj.RETRFL, Prims.P); S57prims.put(Obj.RIVERS, Prims.LA); S57prims.put(Obj.ROADWY, Prims.PLA);
-		S57prims.put(Obj.RUNWAY, Prims.PLA); S57prims.put(Obj.SNDWAV, Prims.PLA); S57prims.put(Obj.SEAARE, Prims.PA); S57prims.put(Obj.SPLARE, Prims.PA);
-		S57prims.put(Obj.SBDARE, Prims.PLA); S57prims.put(Obj.SLCONS, Prims.PLA); S57prims.put(Obj.SISTAT, Prims.P); S57prims.put(Obj.SISTAW, Prims.P);
-		S57prims.put(Obj.SILTNK, Prims.PA); S57prims.put(Obj.SLOTOP, Prims.L); S57prims.put(Obj.SLOGRD, Prims.PA); S57prims.put(Obj.SMCFAC, Prims.PA);
-		S57prims.put(Obj.SOUNDG, Prims.P); S57prims.put(Obj.SPRING, Prims.P); S57prims.put(Obj.STSLNE, Prims.L); S57prims.put(Obj.SUBTLN, Prims.A);
-		S57prims.put(Obj.SWPARE, Prims.A); S57prims.put(Obj.TESARE, Prims.A); S57prims.put(Obj.TS_PRH, Prims.PA); S57prims.put(Obj.TS_PNH, Prims.PA);
-		S57prims.put(Obj.TS_PAD, Prims.PA); S57prims.put(Obj.TS_TIS, Prims.PA); S57prims.put(Obj.T_HMON, Prims.PA); S57prims.put(Obj.T_NHMN, Prims.PA);
-		S57prims.put(Obj.T_TIMS, Prims.PA); S57prims.put(Obj.TIDEWY, Prims.LA); S57prims.put(Obj.TOPMAR, Prims.P); S57prims.put(Obj.TSELNE, Prims.LA);
-		S57prims.put(Obj.TSSBND, Prims.L); S57prims.put(Obj.TSSCRS, Prims.A); S57prims.put(Obj.TSSLPT, Prims.A); S57prims.put(Obj.TSSRON, Prims.A);
-		S57prims.put(Obj.TSEZNE, Prims.A); S57prims.put(Obj.TUNNEL, Prims.LA); S57prims.put(Obj.TWRTPT, Prims.A); S57prims.put(Obj.UWTROC, Prims.P);
-		S57prims.put(Obj.UNSARE, Prims.A); S57prims.put(Obj.VEGATN, Prims.PLA); S57prims.put(Obj.WATTUR, Prims.PLA); S57prims.put(Obj.WATFAL, Prims.PL);
-		S57prims.put(Obj.WEDKLP, Prims.PA); S57prims.put(Obj.WRECKS, Prims.PA); S57prims.put(Obj.TS_FEB, Prims.PA);
-		S57prims.put(Obj.NOTMRK, Prims.P); S57prims.put(Obj.WTWAXS, Prims.L); S57prims.put(Obj.WTWPRF, Prims.L); S57prims.put(Obj.BUNSTA, Prims.PA);
-		S57prims.put(Obj.COMARE, Prims.A); S57prims.put(Obj.HRBBSN, Prims.A); S57prims.put(Obj.LKBSPT, Prims.A); S57prims.put(Obj.PRTARE, Prims.A);
-		S57prims.put(Obj.REFDMP, Prims.P); S57prims.put(Obj.TERMNL, Prims.PA); S57prims.put(Obj.TRNBSN, Prims.PA); S57prims.put(Obj.WTWARE, Prims.A);
-		S57prims.put(Obj.WTWGAG, Prims.PA); S57prims.put(Obj.TISDGE, Prims.N); S57prims.put(Obj.VEHTRF, Prims.PA); S57prims.put(Obj.EXCNST, Prims.PA);
-		S57prims.put(Obj.LG_SDM, Prims.A); S57prims.put(Obj.LG_VSP, Prims.A);
-	}
-
 	static class KeyVal<V> {
 		Obj obj;
 		Att att;
@@ -83,7 +31,7 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 		}
 	}
 	
-	private static final HashMap<String, KeyVal<?>> OSMtags = new HashMap<String, KeyVal<?>>();
+	private static final HashMap<String, KeyVal<?>> OSMtags = new HashMap<>();
 	static {
 		OSMtags.put("natural=coastline", new KeyVal<>(Obj.COALNE, Att.UNKATT, null, null)); OSMtags.put("natural=water", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
 		OSMtags.put("waterway=riverbank", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null)); OSMtags.put("waterway=dock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null));
@@ -113,7 +61,7 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 		return new KeyVal<>(Obj.UNKOBJ, Att.UNKATT, null, null);
 	}
 	
-	public static void OSMmap(BufferedReader in, S57map map) throws IOException {
+	public static void OSMmap(BufferedReader in, S57map map) throws Exception {
 		String k = "";
 		String v = "";
 
@@ -270,18 +218,4 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 		map.tagsDone(map.xref);
 	}
 	
-	public static void OSMgeom(Feature feature, S57map map) {
-		switch (S57prims.get(feature.type)) {
-		case N:
-		case P:
-		case L:
-		case A:
-		case PA:
-		case PL:
-		case LA:
-		case PLA:
-		}
-	}
-
-
 }

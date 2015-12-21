@@ -28,7 +28,7 @@ public class S57obj { // S57 Object lookup tables & methods
 		LG_SDM, LG_VSP, LITMIN, LITMAJ
 	}
 
-	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<Obj, Integer>(Obj.class);
+	private static final EnumMap<Obj, Integer> ObjS57 = new EnumMap<>(Obj.class);
 	static {
 		ObjS57.put(Obj.UNKOBJ,0);
 		ObjS57.put(Obj.AIRARE,2); ObjS57.put(Obj.ACHBRT,3); ObjS57.put(Obj.ACHARE,4); ObjS57.put(Obj.BCNCAR,5); ObjS57.put(Obj.BCNISD,6);
@@ -65,7 +65,7 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjS57.put(Obj.MPAARE,199); ObjS57.put(Obj.M_COVR,302); ObjS57.put(Obj.M_NSYS,306); ObjS57.put(Obj.LITMAJ,74); ObjS57.put(Obj.LITMIN,90);
 	}
 
-	private static final EnumMap<Obj, Integer> ObjIENC = new EnumMap<Obj, Integer>(Obj.class);
+	private static final EnumMap<Obj, Integer> ObjIENC = new EnumMap<>(Obj.class);
 	static {
 		ObjIENC.put(Obj.UNKOBJ, 0);
 		ObjIENC.put(Obj.ACHBRT, 17000);	ObjIENC.put(Obj.ACHARE, 17001);	ObjIENC.put(Obj.DEPARE, 17003); ObjIENC.put(Obj.DISMAR, 17004); ObjIENC.put(Obj.RESARE, 17005);
@@ -80,7 +80,7 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjIENC.put(Obj.LG_SDM, 18001);	ObjIENC.put(Obj.LG_VSP, 18002);
 	}
 
-	private static final EnumMap<Obj, String> ObjStr = new EnumMap<Obj, String>(Obj.class);
+	private static final EnumMap<Obj, String> ObjStr = new EnumMap<>(Obj.class);
 	static {
 		ObjStr.put(Obj.UNKOBJ, "");	ObjStr.put(Obj.AIRARE, "airfield");	ObjStr.put(Obj.ACHBRT, "anchor_berth"); ObjStr.put(Obj.ACHARE, "anchorage");
 		ObjStr.put(Obj.BCNCAR, "beacon_cardinal");	ObjStr.put(Obj.BCNISD, "beacon_isolated_danger"); ObjStr.put(Obj.BCNLAT, "beacon_lateral");
@@ -129,7 +129,7 @@ public class S57obj { // S57 Object lookup tables & methods
 		ObjStr.put(Obj.LITMAJ, "light_major"); ObjStr.put(Obj.LITMIN, "light_minor"); ObjStr.put(Obj.M_COVR, "coverage"); ObjStr.put(Obj.M_NSYS, "system");
 	}
 	
-	private static final HashMap<String, Obj> StrObj = new HashMap<String, Obj>();
+	private static final HashMap<String, Obj> StrObj = new HashMap<>();
 	static {
 		for (Map.Entry<Obj, String> entry : ObjStr.entrySet()) {
 			if (!entry.getValue().isEmpty())

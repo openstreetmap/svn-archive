@@ -217,6 +217,7 @@ public class Rules {
 			if (testObject(Obj.FAIRWY)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.DRGARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.RESARE)) for (Feature f : objects) if (testFeature(f)) areas();
+			if (testObject(Obj.PRCARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.SPLARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.SEAARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.OBSTRN)) for (Feature f : objects) if (testFeature(f)) obstructions();
@@ -342,6 +343,11 @@ public class Rules {
 				if (testAttribute(feature, feature.type, 0, Att.CATREA, CatREA.REA_NWAK)) {
 					Renderer.symbol(feature, Areas.NoWake);
 				}
+			}
+			break;
+		case PRCARE:
+			if (Renderer.zoom >= 12) {
+				Renderer.lineVector(feature, new LineStyle(Symbols.Mline, 10, new float[] { 40, 40 }));
 			}
 			break;
 		case SEAARE:

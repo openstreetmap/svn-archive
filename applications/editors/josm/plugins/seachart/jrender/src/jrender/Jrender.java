@@ -79,7 +79,7 @@ public class Jrender {
 		}
 
 		public RuleSet ruleset() {
-			return RuleSet.ALL;
+			return RuleSet.SEAMARK;
 		}
 	}
 	
@@ -104,7 +104,7 @@ public class Jrender {
 			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
 			Document document = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
 			SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-			svgGenerator.setBackground(Symbols.Bwater);
+//			svgGenerator.setBackground(Symbols.Bwater);
 			svgGenerator.clearRect(rect.x, rect.y, rect.width, rect.height);
 			svgGenerator.setSVGCanvasSize(rect.getSize());
 			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
@@ -180,6 +180,7 @@ public class Jrender {
 		send = new ArrayList<String>();
 		deletes = new HashMap<String, Boolean>();
 		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
+		map = new S57map(true);
 		S57osm.OSMmap(in, map);
 		in.close();
 		if (zoom == 12) {

@@ -28,6 +28,13 @@ public class Josmtos57 {
 	try (InputStream in = website.openStream()) { Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING); }
 	 */
 	
+	/*
+	 * To do:
+	 * 1. Geometry truncation at cell boundary.
+	 * 2. Geometry validation/correction to comply with S57 limitations.
+	 * 3. Improvements in mapping of OSM features to S57 objects.
+	 */
+
 	static byte[] header = {
 		'0', '0', '2', '6', '2', '3', 'L', 'E', '1', ' ', '0', '9', '0', '0', '0', '7', '3', ' ', ' ', ' ', '6', '6', '0', '4', '0', '0', '0', '0', '0', '0', '0', '0',
 		'1', '9', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '4', '8', '0', '0', '0', '0', '1', '9', 'C', 'A', 'T', 'D', '0', '0', '0', '1',
@@ -63,7 +70,7 @@ public class Josmtos57 {
 		}
 		try {
 			Scanner min = new Scanner(new FileInputStream(args[1]));
-			meta = new HashMap<String, String>();
+			meta = new HashMap<>();
 			meta.put("FILE", args[3]);
 			while (min.hasNext()) {
 				String[] tokens = min.next().split("=");
@@ -77,7 +84,12 @@ public class Josmtos57 {
 		}
 		try {
 			in = new BufferedReader(new FileReader(new File(args[0])));
-			S57osm.OSMmap(in, map);
+			try {
+				S57osm.OSMmap(in, map);
+			} catch (Exception e) {
+				System.err.println("Input data error");
+				System.exit(-1);
+			}
 			in.close();
 		} catch (IOException e) {
 			System.err.println("Input file: " + e.getMessage());
@@ -112,7 +124,7 @@ public class Josmtos57 {
 		System.arraycopy(header, 0, buf, 0, header.length);
 		idx = header.length;
 		int recs = 2;
-		fields = new ArrayList<Fparams>();
+		fields = new ArrayList<>();
 		fields.add(new Fparams(S57field.CATD, new Object[]{ "CD", recs, args[3], "", "V01X01", "BIN", Math.toDegrees(map.bounds.minlat),
 				Math.toDegrees(map.bounds.minlon), Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon), String.format("%08X", crc.getValue()), "" }));
 		record = S57dat.encRecord(String.valueOf(recs++), fields);

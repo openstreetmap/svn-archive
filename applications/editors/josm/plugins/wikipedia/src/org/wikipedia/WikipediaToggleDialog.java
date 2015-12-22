@@ -227,7 +227,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
         public void actionPerformed(ActionEvent e) {
             if (list.getSelectedValue() != null) {
                 final String url = ((WikipediaEntry) list.getSelectedValue()).getBrowserUrl();
-                System.out.println("Wikipedia: opening " + url);
+                Main.info("Wikipedia: opening " + url);
                 OpenBrowser.displayUrl(url);
             }
         }

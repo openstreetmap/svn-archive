@@ -46,7 +46,7 @@ public final class WikipediaApp {
             // construct url
             final String url = "https://tools.wmflabs.org/wp-world/marks.php?"
                     + "bbox=" + bbox + "&LANG=" + wikipediaLang;
-            System.out.println("Wikipedia: GET " + url);
+            Main.info("Wikipedia: GET " + url);
             // parse XML document
             final XPathExpression xpathPlacemark = XPathFactory.newInstance().newXPath().compile("//Placemark");
             final XPathExpression xpathName = XPathFactory.newInstance().newXPath().compile("name/text()");
@@ -80,7 +80,7 @@ public final class WikipediaApp {
                     + "?lang=" + wikipediaLang
                     + "&depth=" + depth
                     + "&cat=" + encodeURL(category);
-            System.out.println("Wikipedia: GET " + url);
+            Main.info("Wikipedia: GET " + url);
             try (final InputStream in = Utils.openURL(new URL(url));
                  final Scanner scanner = new Scanner(in, "UTF-8").useDelimiter("\n")) {
                 final List<WikipediaEntry> entries = new ArrayList<>();
@@ -115,7 +115,7 @@ public final class WikipediaApp {
         if (!articleNames.isEmpty()) {
             final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
                     + "&lang=" + wikipediaLang;
-            System.out.println("Wikipedia: POST " + url + " " + articleNames);
+            Main.info("Wikipedia: POST " + url + " " + articleNames);
 
             try {
                 final HttpURLConnection connection = Utils.openHttpConnection(new URL(url));
@@ -174,7 +174,7 @@ public final class WikipediaApp {
                     "&titles=" + URLEncoder.encode(article, "UTF-8") +
                     "&lllimit=500" +
                     "&format=xml";
-            System.out.println("Wikipedia: GET " + url);
+            Main.info("Wikipedia: GET " + url);
             try (final InputStream in = Utils.openURL(new URL(url))) {
                 final Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
                 final NodeList nodes = (NodeList) XPathFactory.newInstance().newXPath().compile("//ll").evaluate(xml, XPathConstants.NODESET);
@@ -269,7 +269,7 @@ public final class WikipediaApp {
 
             final WikipediaLangArticle wp = WikipediaLangArticle.parseFromUrl(getHrefFromDescription(description));
             if (wp == null) {
-                System.err.println("Could not extract Wikipedia tag from: " + getHrefFromDescription(description));
+                Main.warn("Could not extract Wikipedia tag from: " + getHrefFromDescription(description));
             }
             this.wikipediaLang = wp == null ? null : wp.lang;
             this.wikipediaArticle = wp == null ? null : wp.article;
@@ -290,7 +290,7 @@ public final class WikipediaApp {
             if (m.matches()) {
                 return m.group(1);
             } else {
-                System.err.println("Could not parse URL from: " + description);
+                Main.warn("Could not parse URL from: " + description);
                 return null;
             }
         }
@@ -304,7 +304,7 @@ public final class WikipediaApp {
                 final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
                         + "&lang=" + wikipediaLang
                         + "&article=" + encodeURL(wikipediaArticle);
-                System.out.println("Wikipedia: GET " + url);
+                Main.info("Wikipedia: GET " + url);
                 try (final InputStream in = Utils.openURL(new URL(url));
                      final Scanner scanner = new Scanner(in, "UTF-8")) {
                     wiwosmStatus = scanner.hasNextInt() && scanner.nextInt() == 1;

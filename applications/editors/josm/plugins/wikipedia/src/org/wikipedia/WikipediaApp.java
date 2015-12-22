@@ -4,11 +4,8 @@ package org.wikipedia;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -172,7 +169,7 @@ public final class WikipediaApp {
             final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php" +
                     "?action=query" +
                     "&prop=langlinks" +
-                    "&titles=" + URLEncoder.encode(article, "UTF-8") +
+                    "&titles=" + Utils.encodeUrl(article) +
                     "&lllimit=500" +
                     "&format=xml";
             Main.info("Wikipedia: GET " + url);
@@ -205,7 +202,7 @@ public final class WikipediaApp {
                 return null;
             }
             // decode URL for nicer value
-            url = decodeURL(url);
+            url = Utils.decodeUrl(url);
             // extract Wikipedia language and
             final Matcher m = Pattern.compile("(https?:)?//(\\w*)\\.wikipedia\\.org/wiki/(.*)").matcher(url);
             if (!m.matches()) {
@@ -223,14 +220,14 @@ public final class WikipediaApp {
             } else if (value.contains(":")) {
                 //wikipedia=[lang]:[article]
                 //wikipedia:[lang]=[lang]:[article]
-                final String[] item = decodeURL(value).split(":", 2);
+                final String[] item = Utils.decodeUrl(value).split(":", 2);
                 final String article = item[1].replace("_", " ");
                 return new WikipediaLangArticle(item[0], article);
             } else if (key.startsWith("wikipedia:")) {
                 //wikipedia:[lang]=[lang]:[article]
                 //wikipedia:[lang]=[article]
                 final String lang = key.split(":", 2)[1];
-                final String[] item = decodeURL(value).split(":", 2);
+                final String[] item = Utils.decodeUrl(value).split(":", 2);
                 final String article = item[item.length == 2 ? 1 : 0].replace("_", " ");
                 return new WikipediaLangArticle(lang, article);
             } else {
@@ -337,14 +334,6 @@ public final class WikipediaApp {
         @Override
         public int compareTo(WikipediaEntry o) {
             return name.compareTo(o.name);
-        }
-    }
-
-    public static String decodeURL(String url) {
-        try {
-            return URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
         }
     }
 

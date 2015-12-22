@@ -79,7 +79,7 @@ public final class WikipediaApp {
             final String url = "https://tools.wmflabs.org/cats-php/"
                     + "?lang=" + wikipediaLang
                     + "&depth=" + depth
-                    + "&cat=" + encodeURL(category);
+                    + "&cat=" + Utils.encodeUrl(category);
             Main.info("Wikipedia: GET " + url);
             try (final InputStream in = Utils.openURL(new URL(url));
                  final Scanner scanner = new Scanner(in, "UTF-8").useDelimiter("\n")) {
@@ -122,7 +122,7 @@ public final class WikipediaApp {
                 connection.setDoOutput(true);
 
                 try (final OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8")) {
-                	out.write("articles=" + encodeURL(Utils.join(",", articleNames)));
+                    out.write("articles=" + Utils.encodeUrl(Utils.join(",", articleNames)));
                 }
 
                 try (final Scanner scanner = new Scanner(connection.getInputStream(), "UTF-8").useDelimiter("\n")) {
@@ -303,7 +303,7 @@ public final class WikipediaApp {
             try {
                 final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
                         + "&lang=" + wikipediaLang
-                        + "&article=" + encodeURL(wikipediaArticle);
+                        + "&article=" + Utils.encodeUrl(wikipediaArticle);
                 Main.info("Wikipedia: GET " + url);
                 try (final InputStream in = Utils.openURL(new URL(url));
                      final Scanner scanner = new Scanner(in, "UTF-8")) {
@@ -324,7 +324,7 @@ public final class WikipediaApp {
 
         public String getBrowserUrl() {
             return "https://" + wikipediaLang + ".wikipedia.org/wiki/"
-                    + encodeURL(wikipediaArticle.replace(" ", "_"));
+                    + Utils.encodeUrl(wikipediaArticle.replace(" ", "_"));
         }
 
         @Override
@@ -341,14 +341,6 @@ public final class WikipediaApp {
     public static String decodeURL(String url) {
         try {
             return URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    public static String encodeURL(String url) {
-        try {
-            return URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }

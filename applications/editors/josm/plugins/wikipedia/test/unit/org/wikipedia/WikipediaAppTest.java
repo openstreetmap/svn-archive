@@ -1,6 +1,8 @@
 package org.wikipedia;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Utils;
@@ -18,6 +20,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class WikipediaAppTest {
+    @Before
+    public void setUp() throws Exception {
+        Main.initApplicationPreferences();
+    }
 
     @Test
     public void testPartitionList() {

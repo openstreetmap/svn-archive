@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -246,13 +247,14 @@ public final class WikipediaApp {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
+            final WikipediaLangArticle that = (WikipediaLangArticle) o;
+            return Objects.equals(lang, that.lang) &&
+                    Objects.equals(article, that.article);
+        }
 
-            WikipediaLangArticle that = (WikipediaLangArticle) o;
-
-            if (article != null ? !article.equals(that.article) : that.article != null) return false;
-            if (lang != null ? !lang.equals(that.lang) : that.lang != null) return false;
-
-            return true;
+        @Override
+        public int hashCode() {
+            return Objects.hash(lang, article);
         }
     }
 

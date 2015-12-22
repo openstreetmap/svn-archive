@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,7 @@ import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Utils;
 import org.openstreetmap.josm.tools.Utils.Function;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public final class WikipediaApp {
@@ -161,6 +163,41 @@ public final class WikipediaApp {
                 return wp.article;
             }
         });
+    }
+
+    /**
+     * Returns a map mapping wikipedia articles to wikidata ids.
+     */
+    static Map<String, String> getWikidataForArticles(String wikipediaLang, Collection<String> articles) {
+        try {
+            final String url = "https://www.wikidata.org/w/api.php" +
+                    "?action=wbgetentities" +
+                    "&props=sitelinks" +
+                    "&sites=" + wikipediaLang + "wiki" +
+                    "&sitefilter=" + wikipediaLang + "wiki" +
+                    "&format=xml" +
+                    "&titles=" + Utils.join("|", Utils.transform(articles, new Function<String, String>() {
+                @Override
+                public String apply(String x) {
+                    return Utils.encodeUrl(x);
+                }
+            }));
+            Main.info("Wikipedia: GET " + url);
+            final Map<String, String> r = new TreeMap<>();
+            try (final InputStream in = Utils.openURL(new URL(url))) {
+                final Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+                final NodeList nodes = (NodeList) XPathFactory.newInstance().newXPath().compile("//entity").evaluate(xml, XPathConstants.NODESET);
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    final Node node = nodes.item(i);
+                    final String wikidata = (String) XPathFactory.newInstance().newXPath().compile("./@id").evaluate(node, XPathConstants.STRING);
+                    final String wikipedia = (String) XPathFactory.newInstance().newXPath().compile("./sitelinks/sitelink/@title").evaluate(node, XPathConstants.STRING);
+                    r.put(wikipedia, wikidata);
+                }
+            }
+            return r;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     static Collection<WikipediaLangArticle> getInterwikiArticles(String wikipediaLang, String article) {

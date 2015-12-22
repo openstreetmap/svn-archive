@@ -12,6 +12,7 @@ import org.wikipedia.WikipediaApp.WikipediaLangArticle;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -129,5 +130,16 @@ public class WikipediaAppTest {
                 return "Deutscher Bundestag".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang);
             }
         }));
+    }
+
+    @Test
+    public void testGetWikidataForArticles() throws Exception {
+        final Map<String, String> map = WikipediaApp.getWikidataForArticles("en",
+                Arrays.asList("London", "Vienna", "Völs, Tyrol", "a-non-existing-article"));
+        assertThat(map.get("London"), is("Q84"));
+        assertThat(map.get("Vienna"), is("Q1741"));
+        assertThat(map.get("Völs, Tyrol"), is("Q278250"));
+        assertThat(map.get("a-non-existing-article"), nullValue());
+        assertThat(map.size(), is(4));
     }
 }

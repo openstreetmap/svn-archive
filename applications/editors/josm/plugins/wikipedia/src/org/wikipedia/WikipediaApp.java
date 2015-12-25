@@ -28,6 +28,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Utils;
 import org.openstreetmap.josm.tools.Utils.Function;
@@ -36,6 +37,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public final class WikipediaApp {
+
+    public static Pattern WIKIDATA_PATTERN = Pattern.compile("Q\\d+");
 
     private WikipediaApp() {
     }
@@ -195,6 +198,31 @@ public final class WikipediaApp {
                 }
             }
             return r;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    static String getLabelForWikidata(String wikidataId, String preferredLanguage) {
+        try {
+            CheckParameterUtil.ensureThat(WIKIDATA_PATTERN.matcher(wikidataId).matches(), "Invalid Wikidata ID given");
+            final String url = "https://www.wikidata.org/w/api.php" +
+                    "?action=wbgetentities" +
+                    "&props=labels" +
+                    "&ids=" + wikidataId +
+                    "&languages=" + preferredLanguage +
+                    "&languagefallback=en" +
+                    "&format=xml";
+            Main.info("Wikipedia: GET " + url);
+            try (final InputStream in = Utils.openURL(new URL(url))) {
+                final Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+                final Node label = (Node) XPathFactory.newInstance().newXPath().compile("//label").evaluate(xml, XPathConstants.NODE);
+                if (label == null) {
+                    return null;
+                } else {
+                    return (String) XPathFactory.newInstance().newXPath().compile("./@value").evaluate(label, XPathConstants.STRING);
+                }
+            }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }

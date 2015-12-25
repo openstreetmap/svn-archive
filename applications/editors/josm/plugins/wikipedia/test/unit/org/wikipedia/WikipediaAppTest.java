@@ -142,4 +142,16 @@ public class WikipediaAppTest {
         assertThat(map.get("a-non-existing-article"), nullValue());
         assertThat(map.size(), is(4));
     }
+
+    @Test
+    public void testGetLabelForWikidata() throws Exception {
+        assertThat(WikipediaApp.getLabelForWikidata("Q1741", "de"), is("Wien"));
+        assertThat(WikipediaApp.getLabelForWikidata("Q1741", "en"), is("Vienna"));
+        assertThat(WikipediaApp.getLabelForWikidata("Q" + Long.MAX_VALUE, "en"), nullValue());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetLabelForWikidataInvalidId() throws Exception {
+        WikipediaApp.getLabelForWikidata("Qxyz", "en");
+    }
 }

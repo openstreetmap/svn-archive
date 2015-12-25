@@ -20,6 +20,7 @@ public class WikipediaPlugin extends Plugin {
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
             newFrame.addToggleDialog(new WikipediaToggleDialog());
+            newFrame.propertiesDialog.addCustomPropertiesCellRenderer(new WikidataTagCellRenderer());
         }
     }
 }

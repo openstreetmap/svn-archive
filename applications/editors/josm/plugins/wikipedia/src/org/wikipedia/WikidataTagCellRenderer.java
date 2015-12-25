@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.LanguageInfo;
-import org.testng.internal.Utils;
+import org.openstreetmap.josm.tools.Utils;
 
 public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
@@ -55,8 +55,8 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
         try {
             final String label = labelCache.get(id).isDone() ? labelCache.get(id).get() : null;
             final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            component.setText("<html>" + Utils.escapeHtml(id) + (label != null
-                    ? " <span color='gray'>" + Utils.escapeHtml(label) + "</span>"
+            component.setText("<html>" + Utils.escapeReservedCharactersHTML(id) + (label != null
+                    ? " <span color='gray'>" + Utils.escapeReservedCharactersHTML(label) + "</span>"
                     : ""));
             component.setToolTipText(label);
             return component;

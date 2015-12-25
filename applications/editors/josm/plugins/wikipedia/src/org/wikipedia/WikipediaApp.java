@@ -210,14 +210,15 @@ public final class WikipediaApp {
                     "?action=wbgetentities" +
                     "&props=labels" +
                     "&ids=" + wikidataId +
-                    "&languages=" + preferredLanguage +
-                    "&languagefallback=en" +
-                    "&format=xml";
+                    "&format=xml" +
+                    (preferredLanguage != null ? "&languages=" + preferredLanguage + "&languagefallback=en" : "");
             Main.info("Wikipedia: GET " + url);
             try (final InputStream in = Utils.openURL(new URL(url))) {
                 final Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
                 final Node label = (Node) XPathFactory.newInstance().newXPath().compile("//label").evaluate(xml, XPathConstants.NODE);
-                if (label == null) {
+                if (label == null && preferredLanguage != null) {
+                    return getLabelForWikidata(wikidataId, null);
+                } else if (label == null) {
                     return null;
                 } else {
                     return (String) XPathFactory.newInstance().newXPath().compile("./@value").evaluate(label, XPathConstants.STRING);

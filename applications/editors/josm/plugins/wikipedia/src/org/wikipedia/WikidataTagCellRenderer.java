@@ -40,10 +40,14 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (column != 1
-                || !(value instanceof Map<?, ?> && ((Map<?, ?>) value).size() == 1)
-                || !"wikidata".equals(table.getValueAt(row, 0).toString())) {
+                || !(value instanceof Map<?, ?> && ((Map<?, ?>) value).size() == 1)) {
             return null;
         }
+        final String key = table.getValueAt(row, 0).toString();
+        if (!("wikidata".equals(key) || key != null && key.endsWith(":wikidata"))) {
+            return null;
+        }
+
         final String id = ((Map<?, ?>) value).keySet().iterator().next().toString();
         if (!WikipediaApp.WIKIDATA_PATTERN.matcher(id).matches()) {
             return null;

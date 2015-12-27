@@ -71,6 +71,7 @@ import org.openstreetmap.josm.io.OsmWriter;
 import org.openstreetmap.josm.io.OsmWriterFactory;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.SubclassFilteredCollection;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -277,7 +278,7 @@ public class CommandLine extends Plugin {
 	private void downloadAndInstallDefaultCommands() throws IOException {
 		String url = Main.pref.get("commandline.default.commands.url",
 				"https://github.com/Foxhind/JOSM-CommandLine-commands/archive/master.zip");
-		try (ZipInputStream zis = new ZipInputStream(Utils.openURL(new URL(url)), StandardCharsets.UTF_8)) {
+		try (ZipInputStream zis = new ZipInputStream(HttpClient.create(new URL(url)).connect().getContent(), StandardCharsets.UTF_8)) {
 			File dir = new File(getPluginDir());
 			if (!dir.exists()) {
 				dir.mkdirs();

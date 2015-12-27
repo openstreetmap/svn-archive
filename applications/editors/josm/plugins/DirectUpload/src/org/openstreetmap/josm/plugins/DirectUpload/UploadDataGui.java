@@ -12,12 +12,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +40,8 @@ import org.openstreetmap.josm.gui.widgets.UrlLabel;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.tools.GBC;
-import org.openstreetmap.josm.tools.Utils;
+import org.openstreetmap.josm.tools.HttpClient;
+import org.openstreetmap.josm.tools.HttpClient.Response;
 
 /**
  *
@@ -235,16 +232,17 @@ public class UploadDataGui extends ExtendedDialog {
             writeField(baos, "visibility", visi);
             writeString(baos, "--" + BOUNDARY + "--" + LINE_END);
 
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            HttpURLConnection conn = setupConnection(baos.size());
+            HttpClient conn = setupConnection(baos.size());
 
             progressMonitor.setTicksCount(baos.size());
             progressMonitor.subTask(null);
 
-            flushToServer(bais, conn.getOutputStream(), progressMonitor);
+            // FIXME previous method allowed to see real % progress (each 10 Kb of data)
+            //flushToServer(bais, conn.getOutputStream(), progressMonitor);
+            Response response = conn.setRequestBody(baos.toByteArray()).connect(progressMonitor);
 
             if (canceled) {
-                conn.disconnect();
+            	response.disconnect();
                 GuiHelper.runInEDT(new Runnable() {
                     @Override public void run() {
                         outputDisplay.setText(tr("Upload canceled"));
@@ -254,7 +252,7 @@ public class UploadDataGui extends ExtendedDialog {
                 canceled = false;
             }
             else {
-                final boolean success = finishUpConnection(conn);
+                final boolean success = finishUpConnection(response);
                 GuiHelper.runInEDT(new Runnable() {
                     @Override public void run() {
                         buttons.get(0).setEnabled(!success);
@@ -284,25 +282,20 @@ public class UploadDataGui extends ExtendedDialog {
      * @param int The length of the content to be sent to the server
      * @return HttpURLConnection The set up conenction
      */
-    private HttpURLConnection setupConnection(int contentLength) throws Exception {
+    private HttpClient setupConnection(int contentLength) throws Exception {
 
         // Upload URL
         URL url = new URL(OsmApi.getOsmApi().getBaseUrl() + "gpx/create");
 
         // Set up connection and log in
-        HttpURLConnection c = Utils.openHttpConnection(url);
-        c.setFixedLengthStreamingMode(contentLength);
-        c.setConnectTimeout(15000);
-        c.setRequestMethod("POST");
-        c.setDoOutput(true);
+        HttpClient c = HttpClient.create(url, "POST").setFixedLengthStreamingMode(contentLength).setConnectTimeout(15000);
         // unfortunately, addAuth() is protected, so we need to subclass OsmConnection
         // XXX make addAuth public.
         UploadOsmConnection.getInstance().addAuthHack(c);
 
-        c.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-        c.addRequestProperty("Connection", "close"); // counterpart of keep-alive
-        c.addRequestProperty("Expect", "");
-        c.connect();
+        c.setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+        c.setHeader("Connection", "close"); // counterpart of keep-alive
+        c.setHeader("Expect", "");
 
         return c;
     }
@@ -313,7 +306,7 @@ public class UploadDataGui extends ExtendedDialog {
 
      * @param HttpURLConnection The connection to check/finish up
      */
-    private boolean finishUpConnection(HttpURLConnection c) throws Exception {
+    private boolean finishUpConnection(Response c) throws Exception {
         String returnMsg = c.getResponseMessage();
         final boolean success = returnMsg.equals("OK");
 
@@ -341,7 +334,7 @@ public class UploadDataGui extends ExtendedDialog {
      * @param InputSteam
      * @param OutputStream
      */
-    private void flushToServer(InputStream in, OutputStream out, ProgressMonitor progressMonitor) throws Exception {
+/*    private void flushToServer(InputStream in, OutputStream out, ProgressMonitor progressMonitor) throws Exception {
         // Upload in 10 kB chunks
         byte[] buffer = new byte[10000];
         int nread;
@@ -363,7 +356,7 @@ public class UploadDataGui extends ExtendedDialog {
         progressMonitor.subTask("Waiting for server reply...");
         buffer = null;
     }
-
+*/
     /**
      * Generates the output string displayed in the PleaseWaitDialog.
      * @param int Bytes already uploaded
@@ -372,6 +365,7 @@ public class UploadDataGui extends ExtendedDialog {
     private String getProgressText(int cur, ProgressMonitor progressMonitor) {
         int max = progressMonitor.getTicksCount();
         int percent = Math.round(cur * 100 / max);
+        // FIXME method kept because of translated string
         return tr("Uploading GPX track: {0}% ({1} of {2})",
                         percent, formatBytes(cur), formatBytes(max));
     }

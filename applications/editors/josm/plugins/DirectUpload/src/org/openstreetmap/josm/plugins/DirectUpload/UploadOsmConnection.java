@@ -2,7 +2,6 @@
 
 package org.openstreetmap.josm.plugins.DirectUpload;
 
-import java.net.HttpURLConnection;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
@@ -13,10 +12,11 @@ import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.io.OsmConnection;
 import org.openstreetmap.josm.io.OsmTransferException;
+import org.openstreetmap.josm.tools.HttpClient;
 
 /**
  * Work-around and utility class for DirectUpload.
- * 
+ *
  * @author ax
  */
 public class UploadOsmConnection extends OsmConnection {
@@ -33,15 +33,15 @@ public class UploadOsmConnection extends OsmConnection {
     }
 
     // make protected OsmConnection::addAuth() available to others
-    public void addAuthHack(HttpURLConnection connection) throws OsmTransferException {
+    public void addAuthHack(HttpClient connection) throws OsmTransferException {
         addAuth(connection);
     }
 
     /**
      * find which gpx layer holds the trace to upload. layers are tried in this order:
-     * 
+     *
      * 1. selected (*not* active - think "zoom to layer"), from first to last
-     * 2. not selectd - if there is only one 
+     * 2. not selectd - if there is only one
      * 3. active
      *
      * @return data of the selected gpx layer, or null if there is none
@@ -64,11 +64,11 @@ public class UploadOsmConnection extends OsmConnection {
             if (traceLayer == null) {
                 // if there is none, try the none selected gpx layers. if there is only one, use it.
                 if (gpxLayersRemaining.size() == 1) {
-                    traceLayer = gpxLayersRemaining.get(0); 
+                    traceLayer = gpxLayersRemaining.get(0);
                 }
                 // active layer
                 else if (mv.getActiveLayer() instanceof GpxLayer) {
-                    traceLayer = (GpxLayer) mv.getActiveLayer(); 
+                    traceLayer = (GpxLayer) mv.getActiveLayer();
                 }
             }
 
@@ -77,7 +77,7 @@ public class UploadOsmConnection extends OsmConnection {
                 return data;
             }
         }
-        
+
         return null;
     }
 }

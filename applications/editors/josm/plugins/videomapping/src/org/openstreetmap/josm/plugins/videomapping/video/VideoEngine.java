@@ -35,18 +35,18 @@ public class VideoEngine implements MediaPlayerEventListener {
     //private final float initialCanvasFactor = 0.5f;
 	private boolean singleVideoMode; //commands will only affect the last added video
 	private Video lastAddedVideo;
-	
+
 	//called at plugin start to setup library
 	public static void setupPlayer() {
 	    String vlcInstallDir = null;
-	    
+
 	    if (RuntimeUtil.isWindows()) {
 	        vlcInstallDir = WindowsRuntimeUtil.getVlcInstallDir();
 	        String arch = System.getProperty("os.arch");
 	        if (vlcInstallDir == null && arch.equals("amd64")) {
 	            try {
-	                vlcInstallDir = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, 
-	                        WindowsRuntimeUtil.VLC_REGISTRY_KEY.replaceFirst("\\\\", "\\\\Wow6432Node\\\\"), 
+	                vlcInstallDir = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE,
+	                        WindowsRuntimeUtil.VLC_REGISTRY_KEY.replaceFirst("\\\\", "\\\\Wow6432Node\\\\"),
 	                        WindowsRuntimeUtil.VLC_INSTALL_DIR_KEY);
 	            } catch (RuntimeException e) {
 	                Main.error(e);
@@ -57,7 +57,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 	    } else if (RuntimeUtil.isNix()) {
             // TODO
 	    }
-	    
+
         if (vlcInstallDir != null) {
             Main.info("videomapping: found VLC install dir: "+vlcInstallDir);
             NativeLibrary.addSearchPath("libvlc", vlcInstallDir);
@@ -65,7 +65,7 @@ public class VideoEngine implements MediaPlayerEventListener {
             Main.error("videomapping: unable to locate VLC install dir");
         }
 	}
-	
+
 	public VideoEngine(Window parent) {
 		System.setProperty("logj4.configuration","file:log4j.xml"); //TODO still unsure if we can't link this to the JOSM log4j instance
 		videos = new LinkedList<>();
@@ -81,7 +81,7 @@ public class VideoEngine implements MediaPlayerEventListener {
             Main.error(t);
         }
 	}
-	
+
 	public void add(Video video) {
 		try {
 			EmbeddedMediaPlayer mp = mediaPlayerFactory.newEmbeddedMediaPlayer(fullScreenStrategy);
@@ -92,8 +92,8 @@ public class VideoEngine implements MediaPlayerEventListener {
 			mp.setVideoSurface(video.videoSurface);
 	        mp.addMediaPlayerEventListener(this);
 	        String mediaPath = video.filename.getAbsoluteFile().toString();
-	        mp.playMedia(mediaPath); 
-	        //now fetching and playback starts automatically			
+	        mp.playMedia(mediaPath);
+	        //now fetching and playback starts automatically
 		} catch (NoClassDefFoundError e) {
 		    Main.error(tr("Unable to find JNA Java library!"));
         } catch (UnsatisfiedLinkError e) {
@@ -109,7 +109,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 		return null;
 	}
 */
-	public List<Video> getVideos() {		
+	public List<Video> getVideos() {
 		return videos;
 	}
 
@@ -122,8 +122,8 @@ public class VideoEngine implements MediaPlayerEventListener {
 			}
 		}
 	}
-	
-	//toggles pause and play 
+
+	//toggles pause and play
 	public void pause() {
 		if (singleVideoMode) {
 			lastAddedVideo.player.pause();
@@ -133,13 +133,13 @@ public class VideoEngine implements MediaPlayerEventListener {
 			}
 		}
 	}
-	
+
 	//ensures that all stop
 	public void pauseAll() {
 		for (Video video : videos) {
 			if (video.player.isPlaying())
 				video.player.pause();
-		}	
+		}
 	}
 
 	//jumps relative for ms in all videos
@@ -153,7 +153,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 				video.player.setTime(start+ms);
 			}
 		}
-		notifyObservers(VideoObserversEvents.jumping);		
+		notifyObservers(VideoObserversEvents.jumping);
 	}
 
 	//jumps in all videos to this absolute video time
@@ -167,15 +167,15 @@ public class VideoEngine implements MediaPlayerEventListener {
 		}
 		notifyObservers(VideoObserversEvents.jumping);
 	}
-			
+
 	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
 	public long getVideoTime() {
 		return videos.get(0).player.getTime();
 	}
-	
+
 	//jumps in all videos to this absolute video time percentage
 	public void jumpToPosition(int percent) {
-		float position = ((float)percent/100f);
+		float position = (percent/100f);
 		if (singleVideoMode) {
 			lastAddedVideo.player.setPosition(position);
 		} else {
@@ -185,27 +185,27 @@ public class VideoEngine implements MediaPlayerEventListener {
 		}
 		notifyObservers(VideoObserversEvents.jumping);
 	}
-	
+
 	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
 	public int getPosition() {
 		return (int) (videos.get(0).player.getPosition()*100);
-	}	
-	
+	}
+
 	public void setSpeed(int percent) {
 		if (singleVideoMode) {
-			lastAddedVideo.player.setRate((float)(percent/100f));
+			lastAddedVideo.player.setRate(percent/100f);
 		}
 		for (Video video : videos) {
-			video.player.setRate((float)(percent/100f));
+			video.player.setRate(percent/100f);
 		}
 		notifyObservers(VideoObserversEvents.speeding);
 	}
-	
+
 	//TODO muss evtl. auf Rückgabe für alle Videos erweitert werden
 	public int getSpeed() {
 		return (int) (videos.get(0).player.getRate()*100);
 	}
-	
+
 	//returns if at least one video has subtitles
 	public boolean hasSubtitles() {
 		for (Video video : videos) {
@@ -213,7 +213,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 		}
 		return false;
 	}
-	
+
 	public void setSubtitles (boolean enabled) {
 		if (enabled) {
 			//VLC uses a list of sub picture units
@@ -226,7 +226,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 			}
 		}
 	}
-	
+
 	public void setDeinterlacer (DeinterlaceMode deinterlacer) {
 		if (singleVideoMode) {
 			lastAddedVideo.player.setDeinterlace(deinterlacer);
@@ -236,11 +236,11 @@ public class VideoEngine implements MediaPlayerEventListener {
 			}
 		}
 	}
-	
+
 	public static String[] getDeinterlacers() {
 		return deinterlacers;
 	}
-	
+
 	public void mute() {
 		if (singleVideoMode) {
 			lastAddedVideo.player.mute();
@@ -249,7 +249,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 			video.player.mute();
 		}
 	}
-	
+
 	public void unload() {
 		for (Video video : videos) {
 			video.player.stop();
@@ -258,7 +258,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 			video.videoSurface=null;
 			video.canvas=null;
 		}
-		mediaPlayerFactory.release();        
+		mediaPlayerFactory.release();
 	}
 
 	public void addObserver(VideosObserver observer) {
@@ -275,7 +275,7 @@ public class VideoEngine implements MediaPlayerEventListener {
 	public void backward(MediaPlayer arg0) { }
 /*
 	public void buffering(MediaPlayer arg0) {
-		
+
 	}
 */
     @Override
@@ -291,13 +291,13 @@ public class VideoEngine implements MediaPlayerEventListener {
 	public void lengthChanged(MediaPlayer arg0, long arg1) { }
 /*
 	public void mediaChanged(MediaPlayer arg0) {
-		
+
 	}
 
 	public void metaDataAvailable(MediaPlayer mp, VideoMetaData data) {
 		Dimension org=data.getVideoDimension();
 		getVideo(mp).canvas.setSize(new Dimension((int)(org.width*initialCanvasFactor), (int)(org.height*initialCanvasFactor)));
-		notifyObservers(VideoObserversEvents.resizing);		
+		notifyObservers(VideoObserversEvents.resizing);
 	}
 */
     @Override
@@ -426,4 +426,40 @@ public class VideoEngine implements MediaPlayerEventListener {
     public void elementaryStreamSelected(MediaPlayer mediaPlayer, int type, int id) {
         // TODO Auto-generated method stub
     }
+
+	@Override
+	public void corked(MediaPlayer mediaPlayer, boolean corked) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void muted(MediaPlayer mediaPlayer, boolean muted) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void volumeChanged(MediaPlayer mediaPlayer, float volume) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void audioDeviceChanged(MediaPlayer mediaPlayer, String audioDevice) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void chapterChanged(MediaPlayer mediaPlayer, int newChapter) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mediaSubItemTreeAdded(MediaPlayer mediaPlayer, libvlc_media_t item) {
+		// TODO Auto-generated method stub
+
+	}
 }

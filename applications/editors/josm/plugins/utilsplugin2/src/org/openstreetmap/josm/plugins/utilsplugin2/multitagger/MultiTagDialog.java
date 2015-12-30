@@ -33,6 +33,7 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -67,24 +68,24 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private final HighlightHelper highlightHelper = new HighlightHelper();
     private final HistoryComboBox cbTagSet = new HistoryComboBox();
     private List<OsmPrimitive> currentSelection;
-    
+
     private static final String HISTORY_KEY = "utilsplugin2.multitaghistory";
     String defaultHistory[] = {"addr:street, addr:housenumber, building, ${area}",
         "highway, name, ${id}, ${length}",
         "name name:en name:ru name:de"};
-    
+
     public MultiTagDialog() {
         super(Main.parent,  tr("Edit tags"), new String[]{tr("Ok"), tr("Cancel")}, false);
         JPanel pnl = new JPanel(new GridBagLayout());
         tbl = createTable();
-        
+
         cbTagSet.addItemListener(tagSetChanger);
         cbTagSet.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
            .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "applyTagSet");
         cbTagSet.getActionMap().put("applyTagSet", tagSetChanger);
-        
+
         tbl.addMouseListener(new PopupMenuLauncher(createPopupMenu()));
-        
+
         pnl.add(cbTagSet,GBC.std().fill(GBC.HORIZONTAL));
         pnl.add(new JButton(new DeleteFromHistoryAction()),GBC.std());
         pnl.add(new JButton(new FindMatchingAction()),GBC.std());
@@ -96,16 +97,16 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             };
         });
         pnl.add(jt,GBC.eol());
-        
+
 
         pnl.add(createTypeFilterPanel(), GBC.eol().fill(GBC.HORIZONTAL));
         pnl.add(tbl.getTableHeader(),GBC.eop().fill(GBC.HORIZONTAL));
-        
+
         pnl.add(new JScrollPane(tbl), GBC.eol().fill(GBC.BOTH));
         setContent(pnl);
         setDefaultButton(-1);
         loadHistory();
-        
+
         WindowGeometry defaultGeometry = WindowGeometry.centerInWindow(Main.parent, new Dimension(500, 500));
         setRememberWindowGeometry(getClass().getName() + ".geometry", defaultGeometry);
     }
@@ -157,14 +158,14 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     protected void buttonAction(int buttonIndex, ActionEvent evt) {
         highlightHelper.clear();
         tbl.getSelectionModel().removeListSelectionListener(selectionListener);
-        super.buttonAction(buttonIndex, evt); 
+        super.buttonAction(buttonIndex, evt);
     }
-    
+
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         tableModel.selectionChanged(newSelection);
     }
-    
+
     /*private OsmPrimitive getSelectedPrimitive() {
         int idx = tbl.getSelectedRow();
         if (idx>=0) {
@@ -173,7 +174,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             return null;
         }
     }*/
-    
+
    private final MouseAdapter tableMouseAdapter = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -181,7 +182,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 AutoScaleAction.zoomTo(currentSelection);
             }
         }
-        
+
     };
     private final ListSelectionListener selectionListener = new ListSelectionListener() {
         @Override
@@ -194,7 +195,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             }
         }
     };
-    
+
     public List<OsmPrimitive> getSelectedPrimitives() {
         ArrayList<OsmPrimitive> sel = new ArrayList<>(100);
         for (int idx: tbl.getSelectedRows()) {
@@ -202,7 +203,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         }
         return sel;
     }
-    
+
     private final TagSetChanger tagSetChanger = new TagSetChanger();
 
     private void initAutocompletion() {
@@ -301,7 +302,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             loadHistory();
         }
     }
-   
+
     private class FindMatchingAction extends AbstractAction {
         public FindMatchingAction() {
             super("", ImageProvider.get("dialogs","search"));
@@ -313,11 +314,10 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
             SearchAction.search(tableModel.getSearchExpression(), SearchAction.SearchMode.replace);
         }
     }
-   
+
     private class TagSetChanger extends AbstractAction implements ItemListener {
         String oldTags;
-        
- 
+
         @Override
         public void itemStateChanged(ItemEvent e) {
             // skip text-changing enevts, we need only combobox-selecting ones
@@ -336,7 +336,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         }
 
     };
-    
+
     private void specifyTagSet(String s) {
         Main.info("Multitagger tags="+s);
         tableModel.setupColumnsFromText(s);
@@ -351,9 +351,9 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         initAutocompletion();
         tableModel.fireTableDataChanged();
     }
-    
+
     class ColoredRenderer extends DefaultTableCellRenderer {
-        private final Color highlightColor = 
+        private final Color highlightColor =
                 Main.pref.getColor( marktr("Multitag Background: highlight"),
                         new Color(255,255,200));
         @Override
@@ -366,9 +366,9 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 label.setBackground(highlightColor);
             } else {
                 if (isSelected) {
-                    label.setBackground(Main.pref.getUIColor("Table.selectionBackground"));
+                    label.setBackground(UIManager.getColor("Table.selectionBackground"));
                 } else {
-                    label.setBackground(Main.pref.getUIColor("Table.background"));
+                    label.setBackground(UIManager.getColor("Table.background"));
                 }
             }
             return label;

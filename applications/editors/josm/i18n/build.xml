@@ -93,8 +93,10 @@
         <delete file="${po.build.dir}/plugins.raw.pot"/>
     </target>
     <target name="build" depends="pot,allpot">
-        <antcall target="coretrans"/>
-        <antcall target="datatrans"/>
+        <antcall target="buildcore"/>
+        <antcall target="buildplugins"/>
+    </target>
+    <target name="buildplugins" depends="init">
         <foreach param="path" target="plugintrans">
             <path>
                 <dirset dir="${plugin.dir}" includes="*" excludes="00_*" />

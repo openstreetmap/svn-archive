@@ -33,7 +33,7 @@ for my $line (@lines)
 {
   $line =~ s/\r//g;
   chomp($line);
-  print "tr(\"\"); ";
+  print "tr(\"---DUMMY-MARKER---\"); ";
   if($line =~ /<name(?: +lang=['"]en['"])?>(.*)<\/name>/)
   {
     my $val = $1;

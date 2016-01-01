@@ -18,7 +18,7 @@ print "class trans_surveyor { void tr(String s){} void f() {";
 while(my $line = <>)
 {
   chomp($line);
-  print "tr(\"\"); ";
+  print "tr(\"---DUMMY-MARKER---\"); ";
   if($line =~ /^#(.*)$/)
   {
     print "/* $1 */\n";

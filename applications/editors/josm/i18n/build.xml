@@ -41,7 +41,7 @@
         <copy file="specialmessages.java" todir="${i18n.build.dir}"/>
     </target>
     <target name="po/josm.pot" description="Extracts message keys from the source code" depends="trans_.java,init">
-        <gettext-extract keysFile="josm.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
+        <gettext-extract keysFile="josm.raw.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">
             <fileset dir="${josm.build.dir}/src" includes="**/*.java"/>
             <fileset dir="${i18n.build.dir}" includes="specialmessages.java"/>
             <fileset dir="${i18n.build.dir}" includes="trans_*.java"/>
@@ -50,6 +50,10 @@
             <fileset dir="${josm.build.dir}/styles/standard" includes="*.mapcss"/>
             <fileset dir="${plugin.dir}" includes="**/*.java"/>
         </gettext-extract>
+        <exec executable="msggrep" failonerror="true">
+            <arg line="--msgid --regexp='---DUMMY-MARKER---' --invert-match --output-file=po/josm.pot po/josm.raw.pot"/>
+        </exec>
+        <delete file="po/josm.raw.pot"/>
     </target>
     <target name="po/core.pot" description="Extracts message keys from the JOSM core source code" depends="trans_.java,init">
         <gettext-extract keysFile="core.pot" poDirectory="po" keywords="-k -ktrc:1c,2 -kmarktrc:1c,2 -ktr -kmarktr -ktrn:1,2 -ktrnc:1c,2,3">

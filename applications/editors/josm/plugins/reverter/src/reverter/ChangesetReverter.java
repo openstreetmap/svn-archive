@@ -248,7 +248,7 @@ public class ChangesetReverter {
 
     public void downloadMissingPrimitives(ProgressMonitor monitor) throws OsmTransferException {
         if (!hasMissingObjects()) return;
-        MultiFetchServerObjectReader rdr = new MultiFetchServerObjectReader();
+        MultiFetchServerObjectReader rdr = MultiFetchServerObjectReader.create();
         for (PrimitiveId id : missing) {
             switch (id.getType()) {
             case NODE:

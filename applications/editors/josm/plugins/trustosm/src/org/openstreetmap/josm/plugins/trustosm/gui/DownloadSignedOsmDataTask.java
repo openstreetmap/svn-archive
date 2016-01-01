@@ -75,7 +75,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
         try {
             synchronized (this) {
                 if (canceled) return;
-                objectReader = new MultiFetchServerObjectReader();
+                objectReader = MultiFetchServerObjectReader.create();
             }
             objectReader.append(missing);
             progressMonitor.indeterminateSubTask(

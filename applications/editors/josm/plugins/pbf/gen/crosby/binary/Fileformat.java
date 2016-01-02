@@ -116,7 +116,8 @@ public final class Fileformat {
       return defaultInstance;
     }
 
-    public Blob getDefaultInstanceForType() {
+    @Override
+	public Blob getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -192,7 +193,8 @@ public final class Fileformat {
     }
     public static com.google.protobuf.Parser<Blob> PARSER =
         new com.google.protobuf.AbstractParser<Blob>() {
-      public Blob parsePartialFrom(
+      @Override
+	public Blob parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
@@ -215,7 +217,8 @@ public final class Fileformat {
      * No compression
      * </pre>
      */
-    public boolean hasRaw() {
+    @Override
+	public boolean hasRaw() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
@@ -225,7 +228,8 @@ public final class Fileformat {
      * No compression
      * </pre>
      */
-    public com.google.protobuf.ByteString getRaw() {
+    @Override
+	public com.google.protobuf.ByteString getRaw() {
       return raw_;
     }
 
@@ -238,7 +242,8 @@ public final class Fileformat {
      * When compressed, the uncompressed size
      * </pre>
      */
-    public boolean hasRawSize() {
+    @Override
+	public boolean hasRawSize() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
@@ -248,7 +253,8 @@ public final class Fileformat {
      * When compressed, the uncompressed size
      * </pre>
      */
-    public int getRawSize() {
+    @Override
+	public int getRawSize() {
       return rawSize_;
     }
 
@@ -261,7 +267,8 @@ public final class Fileformat {
      * Possible compressed versions of the data.
      * </pre>
      */
-    public boolean hasZlibData() {
+    @Override
+	public boolean hasZlibData() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
@@ -271,7 +278,8 @@ public final class Fileformat {
      * Possible compressed versions of the data.
      * </pre>
      */
-    public com.google.protobuf.ByteString getZlibData() {
+    @Override
+	public com.google.protobuf.ByteString getZlibData() {
       return zlibData_;
     }
 
@@ -284,7 +292,8 @@ public final class Fileformat {
      * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
      * </pre>
      */
-    public boolean hasLzmaData() {
+    @Override
+	public boolean hasLzmaData() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
@@ -294,7 +303,8 @@ public final class Fileformat {
      * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
      * </pre>
      */
-    public com.google.protobuf.ByteString getLzmaData() {
+    @Override
+	public com.google.protobuf.ByteString getLzmaData() {
       return lzmaData_;
     }
 
@@ -307,7 +317,8 @@ public final class Fileformat {
      * Formerly used for bzip2 compressed data. Depreciated in 2010.
      * </pre>
      */
-    @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
+    @Override
+	@java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
@@ -317,7 +328,8 @@ public final class Fileformat {
      * Formerly used for bzip2 compressed data. Depreciated in 2010.
      * </pre>
      */
-    @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
+    @Override
+	@java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
       return oBSOLETEBzip2Data_;
     }
 
@@ -329,7 +341,8 @@ public final class Fileformat {
       oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
@@ -338,7 +351,8 @@ public final class Fileformat {
       return true;
     }
 
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -360,7 +374,8 @@ public final class Fileformat {
     }
 
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
 
@@ -451,11 +466,13 @@ public final class Fileformat {
     }
 
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(crosby.binary.Fileformat.Blob prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code OSMPBF.Blob}
@@ -477,7 +494,8 @@ public final class Fileformat {
         return new Builder();
       }
 
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         raw_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -492,15 +510,18 @@ public final class Fileformat {
         return this;
       }
 
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
 
-      public crosby.binary.Fileformat.Blob getDefaultInstanceForType() {
+      @Override
+	public crosby.binary.Fileformat.Blob getDefaultInstanceForType() {
         return crosby.binary.Fileformat.Blob.getDefaultInstance();
       }
 
-      public crosby.binary.Fileformat.Blob build() {
+      @Override
+	public crosby.binary.Fileformat.Blob build() {
         crosby.binary.Fileformat.Blob result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -508,7 +529,8 @@ public final class Fileformat {
         return result;
       }
 
-      public crosby.binary.Fileformat.Blob buildPartial() {
+      @Override
+	public crosby.binary.Fileformat.Blob buildPartial() {
         crosby.binary.Fileformat.Blob result = new crosby.binary.Fileformat.Blob(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -536,7 +558,8 @@ public final class Fileformat {
         return result;
       }
 
-      public Builder mergeFrom(crosby.binary.Fileformat.Blob other) {
+      @Override
+	public Builder mergeFrom(crosby.binary.Fileformat.Blob other) {
         if (other == crosby.binary.Fileformat.Blob.getDefaultInstance()) return this;
         if (other.hasRaw()) {
           setRaw(other.getRaw());
@@ -558,11 +581,13 @@ public final class Fileformat {
         return this;
       }
 
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         return true;
       }
 
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -589,7 +614,8 @@ public final class Fileformat {
        * No compression
        * </pre>
        */
-      public boolean hasRaw() {
+      @Override
+	public boolean hasRaw() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
@@ -599,7 +625,8 @@ public final class Fileformat {
        * No compression
        * </pre>
        */
-      public com.google.protobuf.ByteString getRaw() {
+      @Override
+	public com.google.protobuf.ByteString getRaw() {
         return raw_;
       }
       /**
@@ -615,7 +642,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000001;
         raw_ = value;
-        
+
         return this;
       }
       /**
@@ -628,7 +655,7 @@ public final class Fileformat {
       public Builder clearRaw() {
         bitField0_ = (bitField0_ & ~0x00000001);
         raw_ = getDefaultInstance().getRaw();
-        
+
         return this;
       }
 
@@ -640,7 +667,8 @@ public final class Fileformat {
        * When compressed, the uncompressed size
        * </pre>
        */
-      public boolean hasRawSize() {
+      @Override
+	public boolean hasRawSize() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
@@ -650,7 +678,8 @@ public final class Fileformat {
        * When compressed, the uncompressed size
        * </pre>
        */
-      public int getRawSize() {
+      @Override
+	public int getRawSize() {
         return rawSize_;
       }
       /**
@@ -663,7 +692,7 @@ public final class Fileformat {
       public Builder setRawSize(int value) {
         bitField0_ |= 0x00000002;
         rawSize_ = value;
-        
+
         return this;
       }
       /**
@@ -676,7 +705,7 @@ public final class Fileformat {
       public Builder clearRawSize() {
         bitField0_ = (bitField0_ & ~0x00000002);
         rawSize_ = 0;
-        
+
         return this;
       }
 
@@ -688,7 +717,8 @@ public final class Fileformat {
        * Possible compressed versions of the data.
        * </pre>
        */
-      public boolean hasZlibData() {
+      @Override
+	public boolean hasZlibData() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
@@ -698,7 +728,8 @@ public final class Fileformat {
        * Possible compressed versions of the data.
        * </pre>
        */
-      public com.google.protobuf.ByteString getZlibData() {
+      @Override
+	public com.google.protobuf.ByteString getZlibData() {
         return zlibData_;
       }
       /**
@@ -714,7 +745,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000004;
         zlibData_ = value;
-        
+
         return this;
       }
       /**
@@ -727,7 +758,7 @@ public final class Fileformat {
       public Builder clearZlibData() {
         bitField0_ = (bitField0_ & ~0x00000004);
         zlibData_ = getDefaultInstance().getZlibData();
-        
+
         return this;
       }
 
@@ -739,7 +770,8 @@ public final class Fileformat {
        * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
        * </pre>
        */
-      public boolean hasLzmaData() {
+      @Override
+	public boolean hasLzmaData() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
@@ -749,7 +781,8 @@ public final class Fileformat {
        * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
        * </pre>
        */
-      public com.google.protobuf.ByteString getLzmaData() {
+      @Override
+	public com.google.protobuf.ByteString getLzmaData() {
         return lzmaData_;
       }
       /**
@@ -765,7 +798,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000008;
         lzmaData_ = value;
-        
+
         return this;
       }
       /**
@@ -778,7 +811,7 @@ public final class Fileformat {
       public Builder clearLzmaData() {
         bitField0_ = (bitField0_ & ~0x00000008);
         lzmaData_ = getDefaultInstance().getLzmaData();
-        
+
         return this;
       }
 
@@ -790,7 +823,8 @@ public final class Fileformat {
        * Formerly used for bzip2 compressed data. Depreciated in 2010.
        * </pre>
        */
-      @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
+      @Override
+	@java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
@@ -800,7 +834,8 @@ public final class Fileformat {
        * Formerly used for bzip2 compressed data. Depreciated in 2010.
        * </pre>
        */
-      @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
+      @Override
+	@java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
         return oBSOLETEBzip2Data_;
       }
       /**
@@ -816,7 +851,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000010;
         oBSOLETEBzip2Data_ = value;
-        
+
         return this;
       }
       /**
@@ -829,7 +864,7 @@ public final class Fileformat {
       @java.lang.Deprecated public Builder clearOBSOLETEBzip2Data() {
         bitField0_ = (bitField0_ & ~0x00000010);
         oBSOLETEBzip2Data_ = getDefaultInstance().getOBSOLETEBzip2Data();
-        
+
         return this;
       }
 
@@ -899,7 +934,8 @@ public final class Fileformat {
       return defaultInstance;
     }
 
-    public BlobHeader getDefaultInstanceForType() {
+    @Override
+	public BlobHeader getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -966,7 +1002,8 @@ public final class Fileformat {
     }
     public static com.google.protobuf.Parser<BlobHeader> PARSER =
         new com.google.protobuf.AbstractParser<BlobHeader>() {
-      public BlobHeader parsePartialFrom(
+      @Override
+	public BlobHeader parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
@@ -985,18 +1022,20 @@ public final class Fileformat {
     /**
      * <code>required string type = 1;</code>
      */
-    public boolean hasType() {
+    @Override
+	public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
      * <code>required string type = 1;</code>
      */
-    public java.lang.String getType() {
+    @Override
+	public java.lang.String getType() {
       java.lang.Object ref = type_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -1008,11 +1047,12 @@ public final class Fileformat {
     /**
      * <code>required string type = 1;</code>
      */
-    public com.google.protobuf.ByteString
+    @Override
+	public com.google.protobuf.ByteString
         getTypeBytes() {
       java.lang.Object ref = type_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         type_ = b;
@@ -1027,13 +1067,15 @@ public final class Fileformat {
     /**
      * <code>optional bytes indexdata = 2;</code>
      */
-    public boolean hasIndexdata() {
+    @Override
+	public boolean hasIndexdata() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional bytes indexdata = 2;</code>
      */
-    public com.google.protobuf.ByteString getIndexdata() {
+    @Override
+	public com.google.protobuf.ByteString getIndexdata() {
       return indexdata_;
     }
 
@@ -1042,13 +1084,15 @@ public final class Fileformat {
     /**
      * <code>required int32 datasize = 3;</code>
      */
-    public boolean hasDatasize() {
+    @Override
+	public boolean hasDatasize() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>required int32 datasize = 3;</code>
      */
-    public int getDatasize() {
+    @Override
+	public int getDatasize() {
       return datasize_;
     }
 
@@ -1058,7 +1102,8 @@ public final class Fileformat {
       datasize_ = 0;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
@@ -1075,7 +1120,8 @@ public final class Fileformat {
       return true;
     }
 
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1091,7 +1137,8 @@ public final class Fileformat {
     }
 
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
 
@@ -1174,11 +1221,13 @@ public final class Fileformat {
     }
 
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(crosby.binary.Fileformat.BlobHeader prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
 
     /**
      * Protobuf type {@code OSMPBF.BlobHeader}
@@ -1200,7 +1249,8 @@ public final class Fileformat {
         return new Builder();
       }
 
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         type_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -1211,15 +1261,18 @@ public final class Fileformat {
         return this;
       }
 
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
 
-      public crosby.binary.Fileformat.BlobHeader getDefaultInstanceForType() {
+      @Override
+	public crosby.binary.Fileformat.BlobHeader getDefaultInstanceForType() {
         return crosby.binary.Fileformat.BlobHeader.getDefaultInstance();
       }
 
-      public crosby.binary.Fileformat.BlobHeader build() {
+      @Override
+	public crosby.binary.Fileformat.BlobHeader build() {
         crosby.binary.Fileformat.BlobHeader result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -1227,7 +1280,8 @@ public final class Fileformat {
         return result;
       }
 
-      public crosby.binary.Fileformat.BlobHeader buildPartial() {
+      @Override
+	public crosby.binary.Fileformat.BlobHeader buildPartial() {
         crosby.binary.Fileformat.BlobHeader result = new crosby.binary.Fileformat.BlobHeader(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -1247,12 +1301,13 @@ public final class Fileformat {
         return result;
       }
 
-      public Builder mergeFrom(crosby.binary.Fileformat.BlobHeader other) {
+      @Override
+	public Builder mergeFrom(crosby.binary.Fileformat.BlobHeader other) {
         if (other == crosby.binary.Fileformat.BlobHeader.getDefaultInstance()) return this;
         if (other.hasType()) {
           bitField0_ |= 0x00000001;
           type_ = other.type_;
-          
+
         }
         if (other.hasIndexdata()) {
           setIndexdata(other.getIndexdata());
@@ -1265,19 +1320,21 @@ public final class Fileformat {
         return this;
       }
 
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasType()) {
-          
+
           return false;
         }
         if (!hasDatasize()) {
-          
+
           return false;
         }
         return true;
       }
 
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -1300,13 +1357,15 @@ public final class Fileformat {
       /**
        * <code>required string type = 1;</code>
        */
-      public boolean hasType() {
+      @Override
+	public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
        * <code>required string type = 1;</code>
        */
-      public java.lang.String getType() {
+      @Override
+	public java.lang.String getType() {
         java.lang.Object ref = type_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
@@ -1323,11 +1382,12 @@ public final class Fileformat {
       /**
        * <code>required string type = 1;</code>
        */
-      public com.google.protobuf.ByteString
+      @Override
+	public com.google.protobuf.ByteString
           getTypeBytes() {
         java.lang.Object ref = type_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           type_ = b;
@@ -1346,7 +1406,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000001;
         type_ = value;
-        
+
         return this;
       }
       /**
@@ -1355,7 +1415,7 @@ public final class Fileformat {
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = getDefaultInstance().getType();
-        
+
         return this;
       }
       /**
@@ -1368,7 +1428,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000001;
         type_ = value;
-        
+
         return this;
       }
 
@@ -1376,13 +1436,15 @@ public final class Fileformat {
       /**
        * <code>optional bytes indexdata = 2;</code>
        */
-      public boolean hasIndexdata() {
+      @Override
+	public boolean hasIndexdata() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional bytes indexdata = 2;</code>
        */
-      public com.google.protobuf.ByteString getIndexdata() {
+      @Override
+	public com.google.protobuf.ByteString getIndexdata() {
         return indexdata_;
       }
       /**
@@ -1394,7 +1456,7 @@ public final class Fileformat {
   }
   bitField0_ |= 0x00000002;
         indexdata_ = value;
-        
+
         return this;
       }
       /**
@@ -1403,7 +1465,7 @@ public final class Fileformat {
       public Builder clearIndexdata() {
         bitField0_ = (bitField0_ & ~0x00000002);
         indexdata_ = getDefaultInstance().getIndexdata();
-        
+
         return this;
       }
 
@@ -1411,13 +1473,15 @@ public final class Fileformat {
       /**
        * <code>required int32 datasize = 3;</code>
        */
-      public boolean hasDatasize() {
+      @Override
+	public boolean hasDatasize() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
        * <code>required int32 datasize = 3;</code>
        */
-      public int getDatasize() {
+      @Override
+	public int getDatasize() {
         return datasize_;
       }
       /**
@@ -1426,7 +1490,7 @@ public final class Fileformat {
       public Builder setDatasize(int value) {
         bitField0_ |= 0x00000004;
         datasize_ = value;
-        
+
         return this;
       }
       /**
@@ -1435,7 +1499,7 @@ public final class Fileformat {
       public Builder clearDatasize() {
         bitField0_ = (bitField0_ & ~0x00000004);
         datasize_ = 0;
-        
+
         return this;
       }
 

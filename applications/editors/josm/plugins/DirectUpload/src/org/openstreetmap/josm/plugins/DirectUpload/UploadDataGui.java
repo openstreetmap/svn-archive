@@ -221,9 +221,6 @@ public class UploadDataGui extends ExtendedDialog {
             description = description.replaceAll("[&?/\\\\]", " ");
             tags = tags.replaceAll("[&?/\\\\.;]", " ");
 
-            // Set progress dialog to indeterminate while connecting
-            progressMonitor.indeterminateSubTask(tr("Connecting..."));
-
             // Generate data for upload
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             writeGpxFile(baos, "file", gpxData);
@@ -234,12 +231,9 @@ public class UploadDataGui extends ExtendedDialog {
 
             HttpClient conn = setupConnection(baos.size());
 
-            progressMonitor.setTicksCount(baos.size());
-            progressMonitor.subTask(null);
-
             // FIXME previous method allowed to see real % progress (each 10 Kb of data)
             //flushToServer(bais, conn.getOutputStream(), progressMonitor);
-            Response response = conn.setRequestBody(baos.toByteArray()).connect(progressMonitor);
+            Response response = conn.setRequestBody(baos.toByteArray()).connect(progressMonitor.createSubTaskMonitor(1, false));
 
             if (canceled) {
             	response.disconnect();

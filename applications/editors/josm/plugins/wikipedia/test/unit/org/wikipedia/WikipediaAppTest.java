@@ -154,4 +154,15 @@ public class WikipediaAppTest {
     public void testGetLabelForWikidataInvalidId() throws Exception {
         WikipediaApp.getLabelForWikidata("Qxyz", "en");
     }
+
+    @Test
+    public void testWIWOSMStatus() throws Exception {
+        final WikipediaEntry entry1 = new WikipediaEntry(null, "en", "Vienna");
+        final WikipediaEntry entry2 = new WikipediaEntry(null, "en", "London");
+        final WikipediaEntry entry3 = new WikipediaEntry(null, "en", "a-non-existing-article");
+        WikipediaApp.updateWIWOSMStatus("en", Arrays.asList(entry1, entry2, entry3));
+        assertThat(entry1.getWiwosmStatus(), is(true));
+        assertThat(entry2.getWiwosmStatus(), is(true));
+        assertThat(entry3.getWiwosmStatus(), is(false));
+    }
 }

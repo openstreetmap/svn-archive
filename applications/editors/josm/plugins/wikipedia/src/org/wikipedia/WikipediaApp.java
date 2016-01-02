@@ -127,7 +127,8 @@ public final class WikipediaApp {
             try {
                 final String requestBody = "articles=" + Utils.encodeUrl(Utils.join(",", articleNames));
                 try (final Scanner scanner = new Scanner(
-                        HttpClient.create(new URL(url), "PUT").setReasonForRequest("Wikipedia")
+                        HttpClient.create(new URL(url), "POST").setReasonForRequest("Wikipedia")
+                                .setHeader("Content-Type", "application/x-www-form-urlencoded")
                                 .setRequestBody(requestBody.getBytes(StandardCharsets.UTF_8))
                                 .connect().getContentReader())
                         .useDelimiter("\n")) {

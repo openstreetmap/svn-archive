@@ -109,7 +109,7 @@ public class Tag2LinkRuleChecker implements Tag2LinkConstants {
             if (val != null) {
                 try {
                     // Special hack for Wikipedia that prevents spaces being replaced by "+" characters, but by "_"
-                    if (s.contains("wikipedia.")) {
+                    if (s.contains("wikipedia.") || s.contains("commons.wikimedia.org")) {
                         val = val.replaceAll(" ", "_");
                     }
                     // Encode param to be included in the URL, except if it is the URL itself !

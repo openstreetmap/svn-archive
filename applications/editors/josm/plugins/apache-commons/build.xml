@@ -42,8 +42,6 @@
                 <pathelement path="${plugin.build.dir}"/>
                 <pathelement location="${josm}"/>
             </classpath>
-            <compilerarg value="-Xlint:deprecation"/>
-            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 

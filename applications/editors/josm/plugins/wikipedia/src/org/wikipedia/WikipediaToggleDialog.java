@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -266,10 +267,12 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             if (list.getSelectedValue() != null) {
                 Tag tag = ((WikipediaEntry) list.getSelectedValue()).createWikipediaTag();
                 if (tag != null) {
+                    final Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
                     ChangePropertyCommand cmd = new ChangePropertyCommand(
-                            Main.main.getCurrentDataSet().getSelected(),
+                            selected,
                             tag.getKey(), tag.getValue());
                     Main.main.undoRedo.add(cmd);
+                    Main.worker.submit(new FetchWikidataAction.Fetcher(selected));
                 }
             }
         }

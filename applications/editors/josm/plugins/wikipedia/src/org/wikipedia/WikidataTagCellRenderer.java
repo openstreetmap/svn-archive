@@ -1,6 +1,11 @@
 package org.wikipedia;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.LanguageInfo;
+import org.openstreetmap.josm.tools.Predicates;
 import org.openstreetmap.josm.tools.Utils;
 
 public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
@@ -49,25 +55,47 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
         }
 
         final String id = ((Map<?, ?>) value).keySet().iterator().next().toString();
-        if (!WikipediaApp.WIKIDATA_PATTERN.matcher(id).matches()) {
-            return null;
+        final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        if (WikipediaApp.WIKIDATA_PATTERN.matcher(id).matches()) {
+            return renderValues(Collections.singleton(id), table, component);
+        } else if (id.contains(";")) {
+            final List<String> ids = Arrays.asList(id.split("\\s*;\\s*"));
+            if (Utils.forAll(ids, Predicates.stringMatchesPattern(WikipediaApp.WIKIDATA_PATTERN))) {
+                return renderValues(ids, table, component);
+            }
+        }
+        return null;
+    }
+
+    protected JLabel renderValues(Collection<String> ids, JTable table, JLabel component) {
+
+        for (String id : ids) {
+            if (!labelCache.containsKey(id)) {
+                labelCache.put(id, Main.worker.submit(new LabelLoader(id, table)));
+            }
         }
 
-        if (!labelCache.containsKey(id)) {
-            labelCache.put(id, Main.worker.submit(new LabelLoader(id, table)));
+        final Collection<String> texts = new ArrayList<>(ids.size());
+        for (String id : ids) {
+            if (!labelCache.get(id).isDone()) {
+                return null;
+            }
+            final String label;
+            try {
+                label = labelCache.get(id).get();
+            } catch (InterruptedException | ExecutionException e) {
+                Main.warn("Could not fetch Wikidata label for " + id);
+                Main.warn(e);
+                return null;
+            }
+            if (label == null) {
+                return null;
+            }
+            texts.add(Utils.escapeReservedCharactersHTML(id)
+                    + " <span color='gray'>" + Utils.escapeReservedCharactersHTML(label) + "</span>");
         }
-        try {
-            final String label = labelCache.get(id).isDone() ? labelCache.get(id).get() : null;
-            final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            component.setText("<html>" + Utils.escapeReservedCharactersHTML(id) + (label != null
-                    ? " <span color='gray'>" + Utils.escapeReservedCharactersHTML(label) + "</span>"
-                    : ""));
-            component.setToolTipText(label);
-            return component;
-        } catch (InterruptedException | ExecutionException e) {
-            Main.warn("Could not fetch Wikidata label for " + id);
-            Main.warn(e);
-            return null;
-        }
+        component.setText("<html>" + Utils.join("; ", texts));
+        component.setToolTipText("<html>" + Utils.joinAsHtmlUnorderedList(texts));
+        return component;
     }
 }

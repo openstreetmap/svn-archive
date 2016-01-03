@@ -10,7 +10,7 @@
 
 
 
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Jan Bilak, Petr Dlouhý, Dirk Brünig"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tracer2.TracerPlugin"/>

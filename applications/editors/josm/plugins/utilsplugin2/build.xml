@@ -10,7 +10,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.utilsplugin2.UtilsPlugin2"/>
     <property name="plugin.description" value="Several utilities that make your life easier."/>
     <property name="plugin.icon" value="images/utils.png"/>
-    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/UtilsPlugin2"/>
+    <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/UtilsPlugin2"/>
     <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.stage" value="40"/>
     

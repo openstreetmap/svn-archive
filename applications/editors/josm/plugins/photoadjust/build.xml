@@ -7,7 +7,7 @@
     <property name="plugin.main.version" value="9270"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="holgermappt"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.photoadjust.PhotoAdjustPlugin"/>
@@ -57,7 +57,7 @@ msgstr ""
             </classpath>
             <!-- Paths are relative to javadoc destdir (${plugin.javadoc.dir}). -->
             <link href="../../../core/javadoc/"/>
-            <link href="http://josm.openstreetmap.de/doc/"/>
+            <link href="https://josm.openstreetmap.de/doc/"/>
             <link href="http://docs.oracle.com/javase/7/docs/api/"/>
         </javadoc>
     </target>

@@ -6,7 +6,7 @@
     <property name="plugin.main.version" value="8772"/>
     
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Oliver Wieland"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.elevation.ElevationProfilePlugin"/>

@@ -6,7 +6,7 @@
     <property name="plugin.version" value="2.0"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Nikos Karagiannakis - Athena RC"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.osmrec.OSMRecPlugin"/>

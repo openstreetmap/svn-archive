@@ -7,7 +7,7 @@
     <property name="plugin.main.version" value="9179"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Subhodip Biswas"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.DirectUpload.UploadDataGuiPlugin"/>

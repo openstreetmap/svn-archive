@@ -63,7 +63,7 @@
         ************************************************
         ** configure these properties. Most of them will be copied to the plugins
         ** manifest file. Property values will also show up in the list available
-        ** plugins: http://josm.openstreetmap.de/wiki/Plugins.
+        ** plugins: https://josm.openstreetmap.de/wiki/Plugins.
         **
         ************************************************
     -->

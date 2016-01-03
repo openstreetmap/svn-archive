@@ -10,7 +10,7 @@
     <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Marian Kyral"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.pointinfo.PointInfoPlugin"/>

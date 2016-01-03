@@ -5,13 +5,13 @@
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
     <property name="plugin.main.version" value="7001"/>
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Oliver Raupach"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.housenumbertool.HouseNumberTaggingToolPlugin"/>
     <property name="plugin.description" value="Simple tool to tag house numbers."/>
     <property name="plugin.icon" value="images/home-icon32.png"/>
-    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/HouseNumberTaggingTool"/>
+    <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/HouseNumberTaggingTool"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

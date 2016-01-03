@@ -6,7 +6,7 @@
     <property name="plugin.main.version" value="8974"/>
     
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Stéphane Brunner"/>
     <property name="plugin.class" value="mergeoverlap.MergeOverlapPlugin"/>

@@ -11,7 +11,7 @@
     <property name="plugin.class" value="org.wikipedia.WikipediaPlugin"/>
     <property name="plugin.description" value="Simplifies linking OSM objects to Wikipedia articles"/>
     <property name="plugin.icon" value="images/dialogs/wikipedia.png"/>
-    <property name="plugin.link" value="http://josm.openstreetmap.de/wiki/Help/Plugin/Wikipedia"/>
+    <property name="plugin.link" value="https://josm.openstreetmap.de/wiki/Help/Plugin/Wikipedia"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

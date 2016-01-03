@@ -5,7 +5,7 @@
     <property name="plugin.main.version" value="7575"/>
     
     <!-- Configure these properties (replace "..." accordingly).
-         See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
+         See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Jörg Possin"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.JunctionChecker.JunctionCheckerPlugin"/>

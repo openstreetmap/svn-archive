@@ -22,6 +22,8 @@ public class PhotoAdjustWorker {
     // clicked.  This must be in pixels to maintain the same offset if
     // the photo is moved very far.
     private Point2D dragOffset = null;
+    private boolean centerViewIsDisabled = false;
+    private boolean centerViewNeedsEnable = false;
 
     /**
      * Reset the worker.
@@ -30,6 +32,33 @@ public class PhotoAdjustWorker {
         dragPhoto = null;
         dragLayer = null;
         dragOffset = null;
+    }
+
+    /**
+     * Disable the "center view" button.  The map is moved instead of the
+     * photo if the center view is enabled while a photo is moved.  The method
+     * disables the center view to avoid such behavior.  Call
+     * restoreCenterView() to restore the original state.
+     */
+    public void disableCenterView() {
+        if (!centerViewIsDisabled) {
+            centerViewIsDisabled = true;
+            centerViewNeedsEnable = ImageViewerDialog.setCentreEnabled(false);
+        }
+    }
+
+    /**
+     * Restore the center view state that was active before
+     * disableCenterView() was called.
+     */
+    public void restoreCenterView() {
+        if (centerViewIsDisabled) {
+            if (centerViewNeedsEnable) {
+                centerViewNeedsEnable = false;
+                ImageViewerDialog.setCentreEnabled(true);
+            }
+            centerViewIsDisabled = false;
+        }
     }
 
     /**
@@ -93,12 +122,22 @@ public class PhotoAdjustWorker {
                         if (dragPhoto != null) {
                             dragLayer = layer;
                             setDragOffset(dragPhoto, evt);
+                            disableCenterView();
                             break;
                         }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Mouse release handler.
+     *
+     * @param evt Mouse event from MouseAdapter mouseReleased().
+     */
+    public void doMouseReleased(MouseEvent evt) {
+        restoreCenterView();
     }
 
     /**
@@ -113,6 +152,7 @@ public class PhotoAdjustWorker {
                 changeDirection(dragPhoto, dragLayer, evt);
             }
             else {
+                disableCenterView();
                 movePhoto(dragPhoto, dragLayer, evt);
             }
         }

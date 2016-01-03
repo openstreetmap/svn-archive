@@ -35,6 +35,7 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
     public PhotoAdjustPlugin(PluginInformation info) {
 	super(info);
         GeoImageLayer.registerMenuAddition(new UntaggedGeoImageLayerAction());
+        //new PhotoPropertyEditor();
         worker = new PhotoAdjustWorker();
         initAdapters();
     }
@@ -50,6 +51,13 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
                     List<GeoImageLayer> layers = new ArrayList<>(1);
                     layers.add(imageLayer);
                     worker.doMousePressed(evt, layers);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                if (imageLayer != null) {
+                    worker.doMouseReleased(evt);
                 }
             }
         };

@@ -43,7 +43,7 @@ msgstr ""
     </target>
     <target name="lang" description="Prepare *.lang files in data directory.">
         <exec executable="perl">
-            <arg line="../../i18n/i18n.pl data ${plugin.po.dir}/*.po"/>
+            <arg line="../../i18n/i18n.pl --potfile=${plugin.po.dir}/${ant.project.name}.pot --basedir=data/ ${plugin.po.dir}/*.po"/>
         </exec>
     </target>
 

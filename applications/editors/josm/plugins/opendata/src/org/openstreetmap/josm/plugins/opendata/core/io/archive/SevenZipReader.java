@@ -5,10 +5,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,6 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
-import org.openstreetmap.josm.tools.Utils;
 
 public class SevenZipReader extends ArchiveReader {
 
@@ -37,9 +37,7 @@ public class SevenZipReader extends ArchiveReader {
         super(handler, handler != null ? handler.getArchiveHandler() : null, promptUser);
         // Write entire 7z file as a temp file on disk as we need random access later, and "in" can be a network stream
         File tmpFile = File.createTempFile("7z_", ".7z", OdUtils.createTempDir());
-        try (OutputStream out = new FileOutputStream(tmpFile)) {
-            Utils.copyStream(in, out);
-        }
+        Files.copy(in, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         // random must be kept open for later extracting
         @SuppressWarnings("resource")
         IInStream random = new MyRandomAccessFile(tmpFile.getPath(), "r");

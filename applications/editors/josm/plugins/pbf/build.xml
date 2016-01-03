@@ -9,7 +9,7 @@
     <property name="plugin.description" value="Import/export OSM data in PBF format"/>
     <!--<property name="plugin.icon" value="images/pbf_24.png"/>-->
     <property name="plugin.canloadatruntime" value="true"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PBF"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/PBF"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

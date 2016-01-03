@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.fixAddresses.FixAddressesPlugin"/>
     <property name="plugin.description" value="Finds and fixes invalid street addresses in a comfortable way."/>
     <property name="plugin.icon" value="images/fixaddresses.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FixAddresses"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/FixAddresses"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

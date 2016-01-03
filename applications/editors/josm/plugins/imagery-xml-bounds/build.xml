@@ -13,7 +13,7 @@
     <property name="plugin.description" value="Generate Imagery XML bounds from a multipolygon"/>
     <property name="plugin.canloadatruntime" value="true"/>
     <property name="plugin.icon" value="images/xml_24.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Imagery-XML-Bounds"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Imagery-XML-Bounds"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

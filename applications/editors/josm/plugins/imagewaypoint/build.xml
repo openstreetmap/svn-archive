@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.insignificant.josm.plugins.imagewaypoint.ImageWayPointPlugin"/>
     <property name="plugin.description" value="Another plugin to match images to the waypoints in a GPX file. A match is made when the ''name'', ''cmt'' or ''desc'' attribute of a waypoint tag matches the filename of an image."/>
     <property name="plugin.icon" value="images/dialogs/imagewaypoint.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImageWayPoint"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImageWayPoint"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

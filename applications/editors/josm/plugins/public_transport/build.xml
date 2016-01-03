@@ -10,7 +10,7 @@
     <property name="plugin.class" value="public_transport.PublicTransportPlugin"/>
     <property name="plugin.description" value="This plugin simplifies the mapping and editing of public transport routes."/>
     <!-- <property name="plugin.icon" value=""/> -->
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/public_transport"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/public_transport"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

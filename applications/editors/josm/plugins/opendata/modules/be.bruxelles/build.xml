@@ -92,7 +92,7 @@
                 <attribute name="Module-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Module-Description" value="Bruxelles"/>
                 <attribute name="Module-Icon" value="images/data.be.bruxelles_24.png"/>
-                <!--<attribute name="Module-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData/Bruxelles"/>-->
+                <!--<attribute name="Module-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData/Bruxelles"/>-->
                 <attribute name="Module-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

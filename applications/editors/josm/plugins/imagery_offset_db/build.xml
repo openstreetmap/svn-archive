@@ -11,13 +11,13 @@
     <property name="plugin.class" value="iodb.ImageryOffsetPlugin"/>
     <property name="plugin.description" value="Database of imagery offsets: share and aquire imagery offsets with one button."/>
     <property name="plugin.icon" value="images/iodb.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/Imagery_Offset_Database"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/Imagery_Offset_Database"/>
 
     <target name="additional-manifest">
         <manifest file="MANIFEST" mode="update">
             <attribute name="ru_Author" value="Илья Зверев"/>
             <attribute name="ru_Plugin-Description" value="База данных смещений подложек: загружайте и делитесь смещениями одной кнопкой."/>
-            <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:Imagery_Offset_Database"/>
+            <attribute name="ru_Plugin-Link" value="https://wiki.openstreetmap.org/wiki/RU:Imagery_Offset_Database"/>
         </manifest>
     </target>
 

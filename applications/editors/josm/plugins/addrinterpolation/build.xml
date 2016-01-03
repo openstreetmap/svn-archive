@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.AddrInterpolation.AddrInterpolationPlugin"/>
     <property name="plugin.description" value="Group common Address Interpolation inputs in a single dialog, as well as an option to automatically generate individual house number nodes from a Way."/>
     <property name="plugin.icon" value="images/AddrInterpolation.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddrInterpolation"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/AddrInterpolation"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

@@ -9,7 +9,7 @@
     <property name="plugin.class" value="relcontext.RelContextPlugin"/>
     <property name="plugin.description" value="Relation and multipolygon creating and editing panel."/>
     <property name="plugin.icon" value="images/reltoolbox.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Relation_Toolbox"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Relation_Toolbox"/>
     <property name="plugin.stage" value="10"/>
 	<property name="plugin.canloadatruntime" value="true"/>
 

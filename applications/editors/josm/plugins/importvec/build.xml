@@ -9,7 +9,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.importvec.ImportVecPlugin"/>
     <property name="plugin.description" value="Import vector graphics (SVG)"/>
     <!-- <property name="plugin.icon" value=""/> -->
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportVec"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportVec"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

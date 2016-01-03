@@ -10,7 +10,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tracer.TracerPlugin"/>
     <property name="plugin.description" value="Traces buildings from Czech cadastral map. Needs TracerServer (.NET or Mono) to be running."/>
     <property name="plugin.icon" value="images/mapmode/tracer-sml.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

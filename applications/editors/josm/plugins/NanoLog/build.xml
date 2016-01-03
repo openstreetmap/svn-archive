@@ -10,8 +10,8 @@
     <property name="plugin.description" value="NanoLog adjustment and browsing layer"/>
     <property name="plugin.icon" value="images/nanolog.png"/>
 	<property name="plugin.description.ru" value="Загрузчик слоя NanoLog"/>
-	<property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/NanoLog"/>
-	<property name="plugin.link.ru" value="http://wiki.openstreetmap.org/wiki/RU:NanoLog"/>
+	<property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/NanoLog"/>
+	<property name="plugin.link.ru" value="https://wiki.openstreetmap.org/wiki/RU:NanoLog"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

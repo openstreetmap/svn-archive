@@ -10,7 +10,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.ImportImagePlugin.ImportImagePlugin"/>
     <property name="plugin.description" value="Plugin for importing spatial referenced images"/>
     <property name="plugin.icon" value="images/layericon.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImportImagePlugin"/>
     <property name="plugin.requires" value="log4j;jts;ejml;geotools"/>
     
     <!-- ** include targets that all plugins have in common ** -->

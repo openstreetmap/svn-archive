@@ -46,7 +46,7 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Plugin for tagging of objects based on a selection of road signs. The dialog can be opened by clicking a small icon in the upper right corner of the properties window. Available country presets: Belgium, Germany, Poland, Slovakia, Spain."/>
                 <attribute name="Plugin-Icon" value="images/pref/roadsigns.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/RoadSigns"/>
+                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/RoadSigns"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
                 <attribute name="Plugin-Canloadatruntime" value="true"/>

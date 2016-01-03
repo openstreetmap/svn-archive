@@ -57,7 +57,7 @@
                 <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.mapdust.MapdustPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="The MapDust Plug-In shows the MapDust bug reports on the map. You can create, close,invalidate, re-open and comment bug reports by using this plugin."/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
+                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/MapDust"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Requires" value="gson"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>

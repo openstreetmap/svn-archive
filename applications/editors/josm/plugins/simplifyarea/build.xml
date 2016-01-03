@@ -12,7 +12,7 @@
     <property name="plugin.class" value="sk.zdila.josm.plugin.simplify.SimplifyAreaPlugin"/>
     <property name="plugin.description" value="Simplify area by removing nodes on very obtuse angles. This can be constrained by maximum removed area size. Also average nearby nodes."/>
     <property name="plugin.icon" value="images/preferences/simplifyArea.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/SimplifyArea"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/SimplifyArea"/>
     <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->

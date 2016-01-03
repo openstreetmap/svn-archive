@@ -59,7 +59,7 @@
 	<implications>
 			
 		<!-- implications based on 
-		     http://wiki.openstreetmap.org/wiki/OSM_tags_for_routing/Access-Restrictions
+		     https://wiki.openstreetmap.org/wiki/OSM_tags_for_routing/Access-Restrictions
 		     section Germany  -->
 	
 		<implication>

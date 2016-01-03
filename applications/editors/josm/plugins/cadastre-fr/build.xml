@@ -12,7 +12,7 @@
     <property name="plugin.class" value="cadastre_fr.CadastrePlugin"/>
     <property name="plugin.description" value="A special handler for the French land registry WMS server."/>
     <property name="plugin.icon" value="images/preferences/cadastrewms.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/Cadastre"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/FR:JOSM/Fr:Plugin/Cadastre"/>
     <property name="plugin.stage" value="60"/>
     <property name="plugin.requires" value="jts;geotools"/>
 

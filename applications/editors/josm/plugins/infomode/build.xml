@@ -70,8 +70,8 @@
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Plugin-Description" value="Extra information about current layer objects pop ups - currently GPX trackpoint info"/>
                 <attribute name="Plugin-Icon" value="images/mapmode/infomode.png"/>
-                <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/InfoMode"/>
-                <attribute name="ru_Plugin-Link" value="http://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/InfoMode"/>
+                <attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/InfoMode"/>
+                <attribute name="ru_Plugin-Link" value="https://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/InfoMode"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>

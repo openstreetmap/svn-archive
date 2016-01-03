@@ -12,7 +12,7 @@
     <property name="plugin.class" value="CommandLine.CommandLine"/>
     <property name="plugin.description" value="Implements a command line and enables to create your commands. See link for standard commands (arc, circle etc.)"/>
     <property name="plugin.icon" value="images/commandline.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/CommandLine"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/CommandLine"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

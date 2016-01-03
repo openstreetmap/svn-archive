@@ -9,7 +9,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.videomapping.VideoPlugin"/>
     <property name="plugin.description" value="(This Plugin is currently work in progress!!!) Links and syncs a georeferenced video against a GPS track, to use it for identify visible objects."/>
     <property name="plugin.icon" value="images/videomapping.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/VideoMapping"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/VideoMapping"/>
     <property name="plugin.requires" value="jna;log4j"/>
 
     <!--

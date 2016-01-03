@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.editgpx.EditGpxPlugin"/>
     <property name="plugin.description" value="Allows the user to anonymize timestamps and delete parts of huge GPX tracks very fast."/>
     <property name="plugin.icon" value="images/mapmode/editgpx_mode.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/EditGpx"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/EditGpx"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

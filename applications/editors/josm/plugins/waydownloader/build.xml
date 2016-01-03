@@ -10,7 +10,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.waydownloader.WayDownloaderPlugin"/>
     <property name="plugin.description" value="Easy downloading along a long set of interconnected ways"/>
     <property name="plugin.icon" value="images/way-download.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WayDownloaderPlugin"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/WayDownloaderPlugin"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

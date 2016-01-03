@@ -92,7 +92,7 @@
                 <attribute name="Module-Date" value="${version.entry.commit.date}"/>
                 <attribute name="Module-Description" value="Informations publiques du Mans Métropole."/>
                 <!--<attribute name="Module-Icon" value="images/dialogs/your_image_of_24_px.png"/>
-                <attribute name="Module-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData/YourModule"/>-->
+                <attribute name="Module-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData/YourModule"/>-->
                 <attribute name="Module-Version" value="${version.entry.commit.revision}"/>
             </manifest>
         </jar>

@@ -9,7 +9,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.npm.NPMPlugin"/>
     <property name="plugin.description" value="Use your system''s password manager to store the API username and password. (KWallet and gnome-keyring are supported.)"/>
     <property name="plugin.icon" value="images/lock24x24.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Native_Password_Manager"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Native_Password_Manager"/>
     <property name="plugin.requires" value="jna"/>
 
     <!--

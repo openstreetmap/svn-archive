@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.fastdraw.FastDrawingPlugin"/>
     <property name="plugin.description" value="Fast drawing ways by mouse"/>
     <property name="plugin.icon" value="images/favicon.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/FastDraw"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/FastDraw"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

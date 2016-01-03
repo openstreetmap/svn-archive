@@ -13,7 +13,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.photoadjust.PhotoAdjustPlugin"/>
     <property name="plugin.description" value="Make photos movable and position them on the map."/>
     <property name="plugin.icon" value="images/photoadjust.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/PhotoAdjust"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/PhotoAdjust"/>
     <!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->

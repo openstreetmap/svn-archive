@@ -8,6 +8,6 @@
     <property name="plugin.class" value="touchscreenhelper.TouchScreenHelperPlugin"/>
     <property name="plugin.description" value="Provides helper buttons to allow working with single button mouse (stylus). Activate by holding T and slip map with left mouse button"/>
     <property name="plugin.icon" value="images/mapmode/browse.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/TouchScreenHelper"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/TouchScreenHelper"/>
     <import file="../build-common.xml"/>
 </project>

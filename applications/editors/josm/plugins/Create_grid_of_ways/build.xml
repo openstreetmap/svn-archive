@@ -12,7 +12,7 @@
     <property name="plugin.class" value="CreateGridOfWaysPlugin.CreateGridOfWaysPlugin"/>
     <property name="plugin.description" value="Create a grid of ways."/>
     <property name="plugin.icon" value="images/creategridofways.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/Create_grid_of_ways"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/Create_grid_of_ways"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

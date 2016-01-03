@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugin.download_along.DownloadAlong"/>
     <property name="plugin.description" value="Downloads OSM data along a way"/>
     <property name="plugin.icon" value="images/download_along.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/DownloadAlong"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/DownloadAlong"/>
     <!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->

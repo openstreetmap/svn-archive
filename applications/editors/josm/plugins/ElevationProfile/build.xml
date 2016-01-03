@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.elevation.ElevationProfilePlugin"/>
     <property name="plugin.description" value="Shows the elevation profile and some statistical data of a GPX track."/>
     <property name="plugin.icon" value="images/elevation.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ElevationProfile"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

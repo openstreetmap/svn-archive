@@ -10,7 +10,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tag2link.Tag2LinkPlugin"/>
     <property name="plugin.description" value="Launch browser to a Web resource about a selected object having known tags, such as Wikipedia"/>
     <property name="plugin.icon" value="images/tag2linkv2_24x24.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tag2Link"/>
     <property name="plugin.canloadatruntime" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->

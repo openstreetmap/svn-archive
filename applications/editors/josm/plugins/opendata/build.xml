@@ -6,7 +6,7 @@
     <property name="plugin.description" value="Convert data from Open Data portals to OSM layer"/>
     <property name="plugin.icon" value="images/dialogs/o24.png"/>
     <property name="plugin.canloadatruntime" value="true"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/OpenData"/>
     <property name="plugin.requires" value="apache-commons;jts;ejml;geotools;utilsplugin2"/>
 
     <!-- ** include targets that all plugins have in common ** -->

@@ -7,7 +7,7 @@
     <property name="plugin.class" value="imageryadjust.ImageryAdjustPlugin"/>
     <property name="plugin.description" value="WMSPlugin-style imagery adjustment mapmode"/>
     <property name="plugin.icon" value="images/mapmode/adjustimg.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImageryAdjust"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ImageryAdjust"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

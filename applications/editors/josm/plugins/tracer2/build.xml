@@ -16,7 +16,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tracer2.TracerPlugin"/>
     <property name="plugin.description" value="Traces buildings and other shapes from a map. Needs Tracer2Server to be running."/>
     <property name="plugin.icon" value="images/mapmode/tracer2-sml.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer2"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Tracer2"/>
     <property name="plugin.canloadatruntime" value="true"/>
 	<!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->

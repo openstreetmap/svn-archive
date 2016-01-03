@@ -9,7 +9,7 @@
     <property name="plugin.class" value="gpxfilter.GpxFilterPlugin"/>
     <property name="plugin.description" value="Allows to filter out unnecessary GPS tracks"/>
 <!--    <property name="plugin.icon" value="images/preferences/walkingpapers.png"/>-->
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/GPXFilter"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/GPXFilter"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

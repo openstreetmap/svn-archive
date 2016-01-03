@@ -10,7 +10,7 @@
     <property name="plugin.class"  value="wmsturbochallenge.WMSRacer"/>
     <property name="plugin.description" value="Drive a race car from point A to point B over aerial imagery, leave cacti behind."/>
     <property name="plugin.icon" value="images/wmsracer.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMS_Racer"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/WMS_Racer"/>
         
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

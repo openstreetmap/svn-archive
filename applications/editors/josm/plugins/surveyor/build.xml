@@ -16,7 +16,7 @@
     <property name="plugin.class" value="at.dallermassl.josm.plugin.surveyor.SurveyorPlugin"/>
     <property name="plugin.description" value="Allow adding markers/nodes on current gps positions."/>
     <property name="plugin.icon" value="images/surveyormenu.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/Surveyor"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/index.php/JOSM/Plugins/Surveyor"/>
     <property name="plugin.requires" value="livegps"/>
     <property name="plugin.stage" value="60"/>
 	

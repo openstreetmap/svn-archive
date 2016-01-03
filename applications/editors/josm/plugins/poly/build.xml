@@ -13,7 +13,7 @@
     <property name="plugin.class" value="poly.PolyPlugin"/>
     <property name="plugin.description" value="Read and write osmosis poly filter files"/>
     <!--<property name="plugin.icon" value="images/..."/>-->
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format"/>
     <!--<property name="plugin.early" value="..."/>-->
     <!--<property name="plugin.requires" value="..."/>-->
     <!--<property name="plugin.stage" value="..."/>-->

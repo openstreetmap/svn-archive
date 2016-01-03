@@ -6,7 +6,7 @@
 	<property name="plugin.author" value="Karl Guggisberg"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.tageditor.TagEditorPlugin"/>
     <property name="plugin.description" value="Provides a dialog for editing tags in a tabular grid."/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/index.php/JOSM/Plugins/TagEditor"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/index.php/JOSM/Plugins/TagEditor"/>
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>

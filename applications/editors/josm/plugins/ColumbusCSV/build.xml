@@ -9,7 +9,7 @@
     <property name="plugin.author" value="Oliver Wieland"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.columbusCSV.ColumbusCSVPlugin"/>
     <property name="plugin.description" value="Imports proprietary CSV files of the Columbus/Visiontac V-900 GPS logger into a GPX layer."/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/ColumbusCSV"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ColumbusCSV"/>
     <!-- Plugin icon -->
     <property name="plugin.icon" value="images/colcsvicon.png"/>
     

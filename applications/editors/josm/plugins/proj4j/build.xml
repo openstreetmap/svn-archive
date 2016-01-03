@@ -8,7 +8,7 @@
     <property name="plugin.author" value="Josh Doe &lt;josh@joshdoe.com&gt;"/>
     <property name="plugin.class"  value="org.openstreetmap.josm.plugins.proj4j.Proj4J"/>
     <property name="plugin.description" value="adds projections from Proj4J"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/Proj4J"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Proj4J"/>
 	<property name="plugin.early" value="true"/>
 
     <!-- ** include targets that all plugins have in common ** -->

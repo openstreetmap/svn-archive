@@ -12,7 +12,7 @@
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.osmrec.OSMRecPlugin"/>
     <property name="plugin.description" value="Recommends categories/tags on newly created OSM entities by analysing spatial entities into training features and using SVM classification"/>
     <property name="plugin.icon" value="images/dialogs/logo-osmrec.png"/>
-    <property name="plugin.link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/OSMRec"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/OSMRec"/>
     <property name="plugin.requires" value="log4j;apache-commons;jts;geotools"/>
     
     <!-- ** include targets that all plugins have in common ** -->

@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
@@ -26,7 +27,7 @@ public class DirectDownload extends Plugin {
     /**
      * Will be invoked by JOSM to bootstrap the plugin
      *
-     * @param info  information about the plugin and its local installation    
+     * @param info  information about the plugin and its local installation
      */
     public DirectDownload(PluginInformation info) {
         super(info);
@@ -47,43 +48,24 @@ public class DirectDownload extends Plugin {
 
             UserTrack track = go.getSelectedUserTrack();
 
-            if ((go.getValue() == 1) && (track != null)) {
-                String urlString = OsmApi.getOsmApi().getBaseUrl() + "gpx/" + track.id + "/data";
+            if (!((go.getValue() == 1) && (track != null))) {
+                return;
+            }
 
-                try {
-                    URL trackDataUrl = new URL(urlString);
-                    InputStream is = Utils.openURLAndDecompress(trackDataUrl, true);
+            final GpxData data = new GpxServerReader().loadGpx(Long.parseLong(track.id));
+            if (data == null) {
+                return;
+            }
+            final GpxLayer gpxLayer = new GpxLayer(data);
 
-                    GpxReader r = new GpxReader(is);
-                    boolean parsedProperly = r.parse(true);
-                    GpxLayer gpxLayer = new GpxLayer(r.getGpxData(), track.filename, true);
+            if (data.hasRoutePoints() || data.hasTrackPoints()) {
+                Main.main.addLayer(gpxLayer);
+            }
 
-                    if (r.getGpxData().hasRoutePoints() || r.getGpxData().hasTrackPoints()) {
-                        Main.main.addLayer(gpxLayer);
-                    }
-
-                    if (Main.pref.getBoolean("marker.makeautomarkers", true) && !r.getGpxData().waypoints.isEmpty()) {
-                        MarkerLayer ml = new MarkerLayer(r.getGpxData(), tr("Markers from {0}", track.filename), null, gpxLayer);
-                        if (ml.data.size() > 0) {
-                            Main.main.addLayer(ml);
-                        }
-                    }
-                    if (!parsedProperly) {
-                        JOptionPane.showMessageDialog(Main.parent,
-                            tr("Error occurred while parsing gpx file {0}. Only a part of the file will be available.", urlString));
-                    }
-
-                } catch (java.net.MalformedURLException e) {
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr("Invalid URL {0}", urlString));
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr("Error fetching URL {0}", urlString));
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(Main.parent,
-                            tr("Error parsing data from URL {0}", urlString));
+            if (Main.pref.getBoolean("marker.makeautomarkers", true) && !data.waypoints.isEmpty()) {
+                MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", track.filename), null, gpxLayer);
+                if (ml.data.size() > 0) {
+                    Main.main.addLayer(ml);
                 }
             }
         }

@@ -63,86 +63,10 @@ public class DownloadDataGui extends ExtendedDialog {
         scrollPane.setPreferredSize(new Dimension(800,300));
         panel.add(scrollPane, BorderLayout.CENTER);
 
-    model.setData(getTrackList());
+    model.setData(new UserTrackReader().getTrackList());
 
     setContent(panel);
     setupDialog();
-    }
-
-    private static class TrackListHandler extends DefaultHandler {
-        private LinkedList<UserTrack> data = new LinkedList<>();
-
-        private String cdata = new String();
-
-        @Override
-        public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
-            if (qName.equals("gpx_file")) {
-            UserTrack track = new UserTrack();
-
-            track.id       = atts.getValue("id");
-            track.filename = atts.getValue("name");
-            track.datetime = atts.getValue("timestamp").replaceAll("[TZ]", " "); // TODO: do real parsing and time zone conversion
-
-            data.addFirst(track);
-            }
-            cdata = new String();
-        }
-
-        @Override
-		public void characters(char ch[], int start, int length)
-            throws SAXException {
-            cdata += new String(ch, start, length);
-        }
-
-        @Override
-		public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (qName.equals("description")) {
-            data.getFirst().description = cdata;
-            }
-            /*
-            else if (qName.equals("tag")) {
-            data.getFirst().tags = cdata;
-            cdata = new String();
-            }
-            */
-        }
-
-        public List<UserTrack> getResult() {
-            return data;
-        }
-    }
-
-    private List<UserTrack> getTrackList() {
-        String urlString = OsmApi.getOsmApi().getBaseUrl() + "user/gpx_files";
-
-        try {
-            URL userTracksUrl = new URL(urlString);
-
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            TrackListHandler handler = new TrackListHandler();
-
-            //get a new instance of parser
-            SAXParser sp = spf.newSAXParser();
-
-            //parse the file and also register this class for call backs
-            sp.parse(userTracksUrl.openStream(), handler);
-
-            return handler.getResult();
-        } catch (java.net.MalformedURLException e) {
-            Main.error(e);
-            JOptionPane.showMessageDialog(null, tr("Invalid URL {0}", urlString));
-        } catch (java.io.IOException e) {
-            Main.error(e);
-            JOptionPane.showMessageDialog(null, tr("Error fetching URL {0}", urlString));
-        } catch (SAXException e) {
-            Main.error(e);
-            JOptionPane.showMessageDialog(null, tr("Error parsing data from URL {0}", urlString));
-        } catch (ParserConfigurationException e) {
-            Main.error(e);
-            JOptionPane.showMessageDialog(null, tr("Error parsing data from URL {0}", urlString));
-        }
-
-        return new LinkedList<>();
     }
 
     static class NamedResultTableModel extends DefaultTableModel {

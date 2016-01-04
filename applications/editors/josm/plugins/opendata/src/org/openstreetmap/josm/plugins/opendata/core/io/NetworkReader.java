@@ -81,7 +81,7 @@ public class NetworkReader extends OsmServerReader {
     }
 
     private Class<? extends AbstractReader> findReaderByAttachment() {
-        String cdisp = this.activeConnection.getHeaderField("Content-disposition");
+        String cdisp = this.activeConnection.getResponse().getHeaderField("Content-disposition");
         if (cdisp != null) {
             Matcher m = Pattern.compile("attachment;.?filename=(.*)").matcher(cdisp);
             if (m.matches()) {
@@ -93,7 +93,7 @@ public class NetworkReader extends OsmServerReader {
     }
 
     private Class<? extends AbstractReader> findReaderByContentType() {
-        String contentType = this.activeConnection.getContentType();
+        String contentType = this.activeConnection.getResponse().getContentType();
         if (contentType.startsWith("application/zip")) {
             return ZipReader.class;
         } else if (contentType.startsWith("application/x-7z-compressed")) {

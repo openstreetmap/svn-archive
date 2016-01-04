@@ -26,8 +26,8 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.osm.visitor.paint.StyledMapRenderer;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.mappaint.LabelCompositionStrategy;
-import org.openstreetmap.josm.gui.mappaint.TextElement;
+import org.openstreetmap.josm.gui.mappaint.styleelement.LabelCompositionStrategy;
+import org.openstreetmap.josm.gui.mappaint.styleelement.TextLabel;
 import org.openstreetmap.josm.tools.ColorHelper;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.MultiMap;
@@ -86,7 +86,7 @@ public class PublicTransportLayer extends Layer {
     protected void drawRefLabels(StyledMapRenderer renderer, MultiMap<Pair<Node, Node>, String> segmentRefs) {
         for (Pair<Node, Node> nodePair : segmentRefs.keySet()) {
             final String label = Utils.join(tr(", "), new TreeSet<>(segmentRefs.get(nodePair)));
-            final TextElement text = new TextElement(new LabelCompositionStrategy.StaticLabelCompositionStrategy(label), new Font("SansSerif", Font.PLAIN, 16), 0, 0, new Color(0x80FFFFFF, true), 0f, null);
+            final TextLabel text = new TextLabel(new LabelCompositionStrategy.StaticLabelCompositionStrategy(label), new Font("SansSerif", Font.PLAIN, 16), 0, 0, new Color(0x80FFFFFF, true), 0f, null);
             final Way way = new Way();
             way.addNode(nodePair.a);
             way.addNode(nodePair.b);

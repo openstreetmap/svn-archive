@@ -20,14 +20,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 
-import org.jopendocument.util.cc.ITransformer;
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.TransformerUtils;
 
 /**
  * Une classe regroupant des méthodes utilitaires pour les collections.
  * 
  * @author ILM Informatique 30 sept. 2004
  */
-public class CollectionUtils extends org.apache.commons.collections.CollectionUtils {
+public class CollectionUtils {
 
     /**
      * Concatene une collection. Cette méthode va appliquer un transformation sur chaque élément
@@ -39,7 +40,7 @@ public class CollectionUtils extends org.apache.commons.collections.CollectionUt
      * @param tf la transformation à appliquer à chaque élément.
      * @return la chaine composée de chacun des éléments séparés par <code>sep</code>.
      */
-    static public final <E> String join(final Collection<E> c, final String sep, final ITransformer<? super E, ?> tf) {
+    static public final <E> String join(final Collection<E> c, final String sep, final Transformer<? super E, ?> tf) {
         if (c.size() == 0)
             return "";
 
@@ -48,16 +49,16 @@ public class CollectionUtils extends org.apache.commons.collections.CollectionUt
             final List<E> list = (List<E>) c;
             final int stop = c.size() - 1;
             for (int i = 0; i < stop; i++) {
-                res.append(tf.transformChecked(list.get(i)));
+                res.append(tf.transform(list.get(i)));
                 res.append(sep);
 
             }
-            res.append(tf.transformChecked(list.get(stop)));
+            res.append(tf.transform(list.get(stop)));
         } else {
             final Iterator<E> iter = c.iterator();
             while (iter.hasNext()) {
                 final E elem = iter.next();
-                res.append(tf.transformChecked(elem));
+                res.append(tf.transform(elem));
                 if (iter.hasNext())
                     res.append(sep);
             }
@@ -75,6 +76,6 @@ public class CollectionUtils extends org.apache.commons.collections.CollectionUt
      * @see #join(Collection, String, ITransformer)
      */
     static public <T> String join(Collection<T> c, String sep) {
-        return join(c, sep, org.jopendocument.util.cc.Transformer.<T> nopTransformer());
+        return join(c, sep, TransformerUtils.<T>nopTransformer());
     }
 }

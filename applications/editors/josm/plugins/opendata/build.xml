@@ -36,24 +36,16 @@
     </target>
     <!--
     **********************************************************
-    ** compile_collections - compiles Apache Collections needed classes
-    **********************************************************
-    -->
-    <target name="compile_collections" depends="init">
-        <echo message="compiling Apache Collections ... "/>
-        <javac srcdir="includes/org/apache/commons/collections" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" />
-    </target>
-    <!--
-    **********************************************************
     ** compile_jopendoc - compiles JOpenDocument needed classes
     **********************************************************
     -->
-    <target name="compile_jopendoc" depends="init, compile_collections">
+    <target name="compile_jopendoc" depends="init">
         <echo message="compiling JOpenDocument ... "/>
         <javac srcdir="includes/org/jopendocument" debug="false" destdir="${plugin.build.dir}" includeAntRuntime="false" encoding="ISO-8859-1" >
             <classpath>
                 <!-- JDOM is required and embedded in geotools jar -->
                 <pathelement location="${geotools}"/>
+                <pathelement location="${apache-commons}"/>
             </classpath>
         </javac>
     </target>

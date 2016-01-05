@@ -6,6 +6,7 @@
     <property name="josm" location="../../../../core/dist/josm-custom.jar"/>
     <property name="plugin.dist.dir" value="../../../../dist"/>
     <property name="opendata" location="${plugin.dist.dir}/opendata.jar"/>
+    <property name="apachecommons" location="${plugin.dist.dir}/apache-commons.jar"/>
     <property name="utilsplugin2" location="${plugin.dist.dir}/utilsplugin2.jar"/>
     <property name="module.build.dir" value="build"/>
     <property name="module.src.dir" value="src"/>
@@ -42,6 +43,7 @@
                 <pathelement location="${josm}"/>
                 <pathelement location="${opendata}"/>
                 <pathelement location="${utilsplugin2}"/>
+                <pathelement location="${apachecommons}"/>
             </classpath>
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>

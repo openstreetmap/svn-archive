@@ -24,7 +24,7 @@ public class VoirieHandler extends ToulouseDataSetHandler {
         this(12693, "lib_off", "highway");
         setName("Filaire de voirie");
         setCategory(CAT_URBANISME);
-        setMenuIcon("presets/way_secondary.png");
+        setMenuIcon("styles/standard/transport/way/way_secondary.svg");
     }
     
     protected VoirieHandler(int portalId, String streetField, String relevantTag) {

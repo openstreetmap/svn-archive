@@ -42,6 +42,9 @@ public class AssainissementHandler extends DataGouvDataSetHandler {
             result.add(new Pair<>("Données 2009", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2.php")));
             result.add(new Pair<>("Données 2010", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2010.php")));
             result.add(new Pair<>("Données 2011", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2011.php")));
+            result.add(new Pair<>("Données 2012", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2012.php")));
+            result.add(new Pair<>("Données 2013", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2013.php")));
+            result.add(new Pair<>("Données 2014", new URL("http://www.assainissement.developpement-durable.gouv.fr/telecharger2_2014.php")));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

@@ -65,6 +65,7 @@ public class FilterGuiListener implements ChangeListener, ItemListener,
 
 		if (filterState.getParams().containsKey(parameterName)) {
 
+			@SuppressWarnings("unchecked")
 			SliderValue<Number> value = (SliderValue<Number>) filterState
 					.getParams().get(parameterName);
 
@@ -120,6 +121,7 @@ public class FilterGuiListener implements ChangeListener, ItemListener,
 	/**
 	 * Methods tracks all changes of select lists
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -154,6 +156,7 @@ public class FilterGuiListener implements ChangeListener, ItemListener,
 
 		String parameterName = picker.getName();
 
+		@SuppressWarnings("unchecked")
 		ColorValue<Color> value = (ColorValue<Color>) filterState.getParams()
 				.get(parameterName);
 		value.setValue(new Color(r, g, b));

@@ -83,7 +83,7 @@ public class TurnRestrictionLegEditorTest extends JFrame {
                 List<PrimitiveId> ret = new ArrayList<>();
                 int [] sel = lstObjects.getSelectedIndices();
                 for (int i: sel){
-                    ret.add(((OsmPrimitive)lstObjects.getModel().getElementAt(i)).getPrimitiveId());
+                    ret.add((lstObjects.getModel().getElementAt(i)).getPrimitiveId());
                 }
                 return ret;
             }

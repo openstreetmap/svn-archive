@@ -50,6 +50,7 @@ ActionListener, ItemListener {
 		this.dialog = dialog;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JPanel createFilterWithPanel(JsonObject meta) {
 
 		FilterPanel fp = new FilterPanel();
@@ -80,13 +81,9 @@ ActionListener, ItemListener {
 			filter = (Filter) clazz.newInstance();
 
 		} catch (InstantiationException | IllegalAccessException e) {
-
 			e.printStackTrace();
-
 		} catch (ClassNotFoundException e) {
-
 			e.printStackTrace();
-
 		}
 
 		if (filter != null) {
@@ -126,7 +123,6 @@ ActionListener, ItemListener {
 				// adding parameters to the filter instance
 				filterState.addParams(temp);
 			}
-
 		}
 
 		fp.setNeededHeight(fp.getNeededHeight() + 60);

@@ -137,7 +137,7 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
         }
         public String getOsmCertificate() {
             String cert = "";
-            for (NotationData nd : s.getHashedSubPackets().getNotationDataOccurences()){
+            for (NotationData nd : s.getHashedSubPackets().getNotationDataOccurrences()){
                 if (nd.getNotationName().equals("trustosm@openstreetmap.org")) {
                     cert += nd.getNotationValue();
                 }

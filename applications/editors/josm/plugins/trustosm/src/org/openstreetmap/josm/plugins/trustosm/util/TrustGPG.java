@@ -66,6 +66,8 @@ import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.PGPSignatureSubpacketGenerator;
 import org.bouncycastle.openpgp.PGPSignatureSubpacketVector;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.bc.BcPGPPublicKeyRingCollection;
+import org.bouncycastle.openpgp.bc.BcPGPSecretKeyRingCollection;
 import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
 import org.bouncycastle.openpgp.operator.PBESecretKeyEncryptor;
 import org.bouncycastle.openpgp.operator.PGPContentSignerBuilder;
@@ -285,8 +287,8 @@ public class TrustGPG {
             secIn = new FileInputStream(Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/pubring.gpg");
             //pubIn = new FileInputStream("/tmp/secring.gpg");
             //secIn = new FileInputStream("/tmp/pubring.gpg");
-            pgpSec = new PGPSecretKeyRingCollection(PGPUtil.getDecoderStream(pubIn));
-            pgpPub = new PGPPublicKeyRingCollection(PGPUtil.getDecoderStream(secIn));
+            pgpSec = new BcPGPSecretKeyRingCollection(PGPUtil.getDecoderStream(pubIn));
+            pgpPub = new BcPGPPublicKeyRingCollection(PGPUtil.getDecoderStream(secIn));
         } catch (FileNotFoundException e) {
             System.err.println("No gpg files found in "+Main.pref.getPluginsDirectory().getPath() + "/trustosm/gnupg/secring.gpg");
             pgpSec = null;
@@ -461,10 +463,9 @@ public class TrustGPG {
      * @param sig
      * @return found tolerance as double or 0 if no Tolerance is given
      */
-
     public static double searchTolerance(PGPSignature sig) {
         /** Take the first NotationData packet that seems to have Tolerance information */
-        for (NotationData nd : sig.getHashedSubPackets().getNotationDataOccurences()){
+        for (NotationData nd : sig.getHashedSubPackets().getNotationDataOccurrences()){
             if (nd.getNotationName().equals(TrustGPG.NOTATION_DATA_KEY)) {
                 String notation = nd.getNotationValue();
                 Pattern p = Pattern.compile("^Tolerance:(\\d*\\.?\\d*)m");

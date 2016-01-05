@@ -282,7 +282,7 @@ public class UploadDataGui extends ExtendedDialog {
         URL url = new URL(OsmApi.getOsmApi().getBaseUrl() + "gpx/create");
 
         // Set up connection and log in
-        HttpClient c = HttpClient.create(url, "POST").setFixedLengthStreamingMode(contentLength).setConnectTimeout(15000);
+        HttpClient c = HttpClient.create(url, "POST").setConnectTimeout(15000);
         // unfortunately, addAuth() is protected, so we need to subclass OsmConnection
         // XXX make addAuth public.
         UploadOsmConnection.getInstance().addAuthHack(c);

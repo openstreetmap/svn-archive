@@ -46,7 +46,9 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 		OSMtags.put("man_made=pier", new KeyVal<>(Obj.SLCONS, Att.UNKATT, null, null)); OSMtags.put("man_made=jetty", new KeyVal<>(Obj.SLCONS, Att.UNKATT, null, null));
 		OSMtags.put("landuse=industrial", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null)); OSMtags.put("landuse=commercial", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null));
 		OSMtags.put("landuse=retail", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null)); OSMtags.put("landuse=residential", new KeyVal<>(Obj.BUAARE, Att.UNKATT, null, null));
-	}
+		OSMtags.put("place=city", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_CITY)); OSMtags.put("place=town", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_TOWN));
+		OSMtags.put("place=village", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_VLLG));
+		}
 	
 	public static KeyVal<?> OSMtag(String key, String val) {
 		KeyVal<?> kv = OSMtags.get(key + "=" + val);
@@ -141,7 +143,11 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 									ref = Long.parseLong(token.split("[\"\']")[1]);
 								}
 							}
-							map.addToEdge(ref);
+							try {
+								map.addToEdge(ref);
+							} catch (Exception e) {
+								inWay = false;
+							}
 						}
 						if (ln.contains("</way")) {
 							inWay = false;

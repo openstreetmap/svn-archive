@@ -146,7 +146,6 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttStr.put(Att.CATCOM, "category"); AttStr.put(Att.CATCVR, "category"); AttStr.put(Att.CATEXS, "category"); AttStr.put(Att.SHPTYP, "ship");
   AttStr.put(Att.UPDMSG, "message"); AttStr.put(Att.LITRAD, "radius");
  }
- 
  private static final EnumMap<Obj, Att> Accuracy = new EnumMap<>(Obj.class); static { Accuracy.put(Obj.UNKOBJ, Att.HORACC); }
  private static final EnumMap<Obj, Att> Addition = new EnumMap<>(Obj.class); static { Addition.put(Obj.UNKOBJ, Att.ADDMRK); }
  private static final EnumMap<Obj, Att> Agency = new EnumMap<>(Obj.class); static { Agency.put(Obj.UNKOBJ, Att.AGENCY); }
@@ -157,7 +156,7 @@ public class S57att { // S57 Attribute lookup tables & methods
  private static final EnumMap<Obj, Att> Callsign = new EnumMap<>(Obj.class); static { Callsign.put(Obj.UNKOBJ, Att.CALSGN); }
  private static final EnumMap<Obj, Att> Category = new EnumMap<>(Obj.class); static {
   Category.put(Obj.ACHARE, Att.CATACH); Category.put(Obj.ACHBRT, Att.CATACH); Category.put(Obj.AIRARE, Att.CATAIR); Category.put(Obj.BCNCAR, Att.CATCAM); Category.put(Obj.BCNLAT, Att.CATLAM);
-  Category.put(Obj.BCNSPP, Att.CATSPM); Category.put(Obj.BOYLAT, Att.CATLAM); Category.put(Obj.BOYINB, Att.CATINB); Category.put(Obj.BOYSPP, Att.CATSPM);
+  Category.put(Obj.BCNSPP, Att.CATSPM); Category.put(Obj.BOYLAT, Att.CATLAM); Category.put(Obj.BOYINB, Att.CATINB); Category.put(Obj.BOYSPP, Att.CATSPM); Category.put(Obj.DAYMAR, Att.CATSPM);
   Category.put(Obj.BRIDGE, Att.CATBRG); Category.put(Obj.BUAARE, Att.CATBUA); Category.put(Obj.BUNSTA, Att.CATBUN); Category.put(Obj.CANALS, Att.CATCAN);
   Category.put(Obj.CBLARE, Att.CATCBL); Category.put(Obj.CBLOHD, Att.CATCBL); Category.put(Obj.CBLSUB, Att.CATCBL); Category.put(Obj.CHKPNT, Att.CATCHP); Category.put(Obj.COMARE, Att.CATCOM);
   Category.put(Obj.COALNE, Att.CATCOA); Category.put(Obj.CONVYR, Att.CATCON); Category.put(Obj.CRANES, Att.CATCRN); Category.put(Obj.CTRPNT, Att.CATCTR); Category.put(Obj.DAMCON, Att.CATDAM);

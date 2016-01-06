@@ -558,99 +558,104 @@ public class S57map { // S57/OSM map generation methods
 	}
 	
 	// Utility methods
-	
+
 	public boolean sortGeom(Feature feature) {
-		Geom sort = new Geom(feature.geom.prim);
-		long first = 0;
-		long last = 0;
-		Comp comp = null;
-		boolean next = true;
-		feature.geom.length = 0;
-		feature.geom.area = 0;
-		if (feature.geom.elems.isEmpty()) {
-			return false;
-		}
-		if (feature.geom.prim == Pflag.POINT) { 
-			feature.geom.centre = nodes.get(feature.geom.elems.get(0).id);
-			return true;
-		}	else {
-			int sweep = feature.geom.elems.size();
-			while (!feature.geom.elems.isEmpty()) {
-				Prim prim = feature.geom.elems.remove(0);
-				Edge edge = edges.get(prim.id);
-				if (edge == null) {
-					return false;
-				}
-				if (next == true) {
-					next = false;
-					first = edge.first;
-					last = edge.last;
-					prim.forward = true;
-					sort.elems.add(prim);
-					if (prim.outer) {
-						sort.outers++;
-					} else {
-						sort.inners++;
+		try {
+			Geom sort = new Geom(feature.geom.prim);
+			long first = 0;
+			long last = 0;
+			Comp comp = null;
+			boolean next = true;
+			feature.geom.length = 0;
+			feature.geom.area = 0;
+			if (feature.geom.elems.isEmpty()) {
+				return false;
+			}
+			if (feature.geom.prim == Pflag.POINT) {
+				feature.geom.centre = nodes.get(feature.geom.elems.get(0).id);
+				return true;
+			} else {
+				int sweep = feature.geom.elems.size();
+				while (!feature.geom.elems.isEmpty()) {
+					Prim prim = feature.geom.elems.remove(0);
+					Edge edge = edges.get(prim.id);
+					if (edge == null) {
+						return false;
 					}
-					comp = new Comp(cref++, 1);
-					sort.comps.add(comp);
-				} else {
-					if (edge.first == last) {
-						sort.elems.add(prim);
+					if (next == true) {
+						next = false;
+						first = edge.first;
 						last = edge.last;
 						prim.forward = true;
-						comp.size++;
-					} else if (edge.last == first) {
-						sort.elems.add(0, prim);
-						first = edge.first;
-						prim.forward = true;
-						comp.size++;
-					} else if (edge.last == last) {
 						sort.elems.add(prim);
-						last = edge.first;
-						prim.forward = false;
-						comp.size++;
-					} else if (edge.first == first) {
-						sort.elems.add(0, prim);
-						first = edge.last;
-						prim.forward = false;
-						comp.size++;
+						if (prim.outer) {
+							sort.outers++;
+						} else {
+							sort.inners++;
+						}
+						comp = new Comp(cref++, 1);
+						sort.comps.add(comp);
 					} else {
-						feature.geom.elems.add(prim);
+						if (edge.first == last) {
+							sort.elems.add(prim);
+							last = edge.last;
+							prim.forward = true;
+							comp.size++;
+						} else if (edge.last == first) {
+							sort.elems.add(0, prim);
+							first = edge.first;
+							prim.forward = true;
+							comp.size++;
+						} else if (edge.last == last) {
+							sort.elems.add(prim);
+							last = edge.first;
+							prim.forward = false;
+							comp.size++;
+						} else if (edge.first == first) {
+							sort.elems.add(0, prim);
+							first = edge.last;
+							prim.forward = false;
+							comp.size++;
+						} else {
+							feature.geom.elems.add(prim);
+						}
+					}
+					if (--sweep == 0) {
+						next = true;
+						sweep = feature.geom.elems.size();
 					}
 				}
-				if (--sweep == 0) {
-					next = true;
-					sweep = feature.geom.elems.size();
+				if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
+					sort.prim = Pflag.AREA;
 				}
+				feature.geom = sort;
 			}
-			if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
-				sort.prim = Pflag.AREA;
-			}
-			feature.geom = sort;
-		}
-		if (feature.geom.prim == Pflag.AREA) {
-			int ie = 0;
-			int ic = 0;
-			while (ie < feature.geom.elems.size()) {
-				double area = calcArea(feature.geom, ic);
-				if (ie == 0) feature.geom.area = Math.abs(area) * 3444 * 3444;
-				if (((ie == 0) && (area < 0.0)) || ((ie > 0) && (area >= 0.0))) {
-					ArrayList<Prim> tmp = new ArrayList<>();
-					for (int i = 0; i < feature.geom.comps.get(ic).size; i++) {
-						Prim p = feature.geom.elems.remove(ie);
-						p.forward = !p.forward;
-						tmp.add(0, p);
+			if (feature.geom.prim == Pflag.AREA) {
+				int ie = 0;
+				int ic = 0;
+				while (ie < feature.geom.elems.size()) {
+					double area = calcArea(feature.geom, ic);
+					if (ie == 0)
+						feature.geom.area = Math.abs(area) * 3444 * 3444;
+					if (((ie == 0) && (area < 0.0)) || ((ie > 0) && (area >= 0.0))) {
+						ArrayList<Prim> tmp = new ArrayList<>();
+						for (int i = 0; i < feature.geom.comps.get(ic).size; i++) {
+							Prim p = feature.geom.elems.remove(ie);
+							p.forward = !p.forward;
+							tmp.add(0, p);
+						}
+						feature.geom.elems.addAll(ie, tmp);
 					}
-					feature.geom.elems.addAll(ie, tmp);
+					ie += feature.geom.comps.get(ic).size;
+					ic++;
 				}
-				ie += feature.geom.comps.get(ic).size;
-				ic++;
 			}
+			feature.geom.length = calcLength(feature.geom);
+			feature.geom.centre = calcCentroid(feature);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
-		feature.geom.length = calcLength(feature.geom);
-		feature.geom.centre = calcCentroid(feature);
-		return true;
 	}
 	
 	public boolean cmpGeoms (Geom g1, Geom g2) {

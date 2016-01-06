@@ -398,7 +398,7 @@ sub createlang($@)
     }
     else
     {
-      printf "Created file %-${maxlen}s: Added %5d strings out of %5d (%5.1f%%).\n",$file,$cnt,$maxcount,,$cnt*100.0/$maxcount;
+      printf "Created file %-${maxlen}s: Added %5d strings out of %5d (%5.1f%%).\n",$file,$cnt,$maxcount,,$cnt*100.0/$maxcount-5e-2;
     }
   }
 }

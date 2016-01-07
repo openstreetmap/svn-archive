@@ -3,9 +3,7 @@ package org.openstreetmap.josm.plugins.photoadjust;
 //import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 
@@ -18,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -32,7 +29,6 @@ import org.openstreetmap.josm.gui.dialogs.LatLonDialog;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageEntry;
 import org.openstreetmap.josm.gui.layer.geoimage.ImageViewerDialog;
-import org.openstreetmap.josm.gui.widgets.HtmlPanel;
 import org.openstreetmap.josm.gui.widgets.JosmTextField;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -138,7 +134,7 @@ public class PhotoPropertyEditor {
         // Image that is to be updated.
         private final ImageEntry image;
         private final GeoImageLayer layer;
-        private static final Color BG_COLOR_ERROR = new Color(255,224,224);
+        private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);
 
         public PropertyEditorDialog(String title, final ImageEntry image,
                                     final GeoImageLayer layer) {
@@ -147,14 +143,14 @@ public class PhotoPropertyEditor {
             this.layer = layer;
             setButtonIcons(new String[] {"ok", "cancel"});
             final JPanel content = new JPanel(new GridBagLayout());
-            //content.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            //content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             if (image.hasThumbnail() || image.getFile() != null) {
                 final JLabel header = new JLabel(image.getFile() != null
                                                  ? image.getFile().getName()
                                                  : "");
-                //if (!image.hasThumbnail()) {
-                //    image.loadThumbnail();
-                //}
+                if (!image.hasThumbnail()) {
+                    image.loadThumbnail();
+                }
                 if (image.hasThumbnail()) {
                     header.setIcon(new ImageIcon(image.getThumbnail()));
                 }

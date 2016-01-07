@@ -35,7 +35,7 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
     public PhotoAdjustPlugin(PluginInformation info) {
 	super(info);
         GeoImageLayer.registerMenuAddition(new UntaggedGeoImageLayerAction());
-        //new PhotoPropertyEditor();
+        new PhotoPropertyEditor();
         worker = new PhotoAdjustWorker();
         initAdapters();
     }

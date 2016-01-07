@@ -185,6 +185,11 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
             public void mousePressed(MouseEvent evt) {
                 worker.doMousePressed(evt, getVisibleGeoImageLayers());
             }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                worker.doMouseReleased(evt);
+            }
         };
 
         mouseMotionAdapter = new MouseMotionAdapter() {

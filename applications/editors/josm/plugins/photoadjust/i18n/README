@@ -49,3 +49,14 @@ ant -Dplugin=plugin singleplugintrans
   data directory.  Then it deletes to PO files.
 * It is not possible to add the translations of the plugin description
   to the manifest.
+
+See Language String Changes
+---------------------------
+To see what language strings changed in data/*.lang run this:
+svn diff --diff-cmd i18n/diff_lang.pl --force data
+
+To see just removed or modified strings:
+svn diff --diff-cmd i18n/diff_lang.pl --force data | grep ^- | grep -v '^--- data/'
+
+To display changes of a single file with tkdiff:
+svn diff --diff-cmd i18n/diff_lang.pl --extensions --tkdiff --force data/<lang>.lang

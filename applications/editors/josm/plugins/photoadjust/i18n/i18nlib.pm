@@ -181,4 +181,44 @@ sub checkpo($$$$$$)
   }
 }
 
+### Load a JOSM language file.  The format is two byte string length, then the
+### string.  Length 0x0000 means the string was not in the PO file, i.e. there
+### is no translation (there are no empty strings).  Length 0xfffe (65534)
+### means the string is the same as the original string.  Length 0xffff ends
+### the string list.
+###
+### Args:
+###     filename (str): Path to language file.
+###
+### Returns:
+###     array: List of decoded strings.
+sub loadLangFile {
+  my ($filename) = @_;
+  my @strings;
+  open(my $langFd, $filename) or die "Cannot open file $filename: $!";
+  binmode($langFd);
+  my $buffer;
+  my $length;
+  while (1) {
+    read($langFd, $buffer, 2);
+    $length = unpack("n", $buffer);
+    die "Unable to read string length" unless ($buffer);
+    if ($length == 0) {
+      push(@strings, "");
+    }
+    elsif ($length == 0xfffe) {
+      push(@strings, "(see original string)");
+    }
+    elsif ($length == 0xffff) {
+      last;
+    }
+    else {
+      read($langFd, $buffer, $length);
+      push(@strings, $buffer);
+    }
+  }
+  close($langFd);
+  return @strings;
+}
+
 1;

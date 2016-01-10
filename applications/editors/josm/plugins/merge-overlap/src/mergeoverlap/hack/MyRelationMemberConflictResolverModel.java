@@ -74,6 +74,7 @@ public class MyRelationMemberConflictResolverModel extends RelationMemberConflic
             }
         }
         this.relations = relations;
+        this.primitives = memberWays;
         refresh();
     }
 

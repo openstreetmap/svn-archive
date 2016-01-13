@@ -61,6 +61,9 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         log = new ArrayList<>(entries);
         selectedEntry = -1;
         mouseListener = new NLLMouseAdapter();
+    }
+
+    public void setupListeners() {
         Main.map.mapView.addMouseListener(mouseListener);
         Main.map.mapView.addMouseMotionListener(mouseListener);
     }

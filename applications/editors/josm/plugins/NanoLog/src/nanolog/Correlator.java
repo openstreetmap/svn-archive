@@ -2,7 +2,6 @@ package nanolog;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +15,8 @@ import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.data.gpx.GpxTrack;
 import org.openstreetmap.josm.data.gpx.GpxTrackSegment;
 import org.openstreetmap.josm.data.gpx.WayPoint;
-import org.openstreetmap.josm.tools.Geometry;
-import org.openstreetmap.josm.tools.date.PrimaryDateParser;
+import org.openstreetmap.josm.tools.UncheckedParseException;
+import org.openstreetmap.josm.tools.date.DateUtils;
 
 /**
  * A class that establishes correlation between GPS trace and NanoLog. Mostly copied from
@@ -32,7 +31,6 @@ public class Correlator {
      */
     public static long crudeMatch( List<NanoLogEntry> entries, GpxData data ) {
         List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
-        PrimaryDateParser dateParser = new PrimaryDateParser();
         Collections.sort(sortedEntries);
         long firstExifDate = sortedEntries.get(0).getTime().getTime();
         long firstGPXDate = -1;
@@ -46,7 +44,7 @@ public class Correlator {
                     }
 
                     try {
-                        firstGPXDate = dateParser.parse(curDateWpStr).getTime();
+                        firstGPXDate = DateUtils.fromString(curDateWpStr).getTime();
                         break outer;
                     } catch( Exception e ) {
                         Main.warn(e);
@@ -81,7 +79,6 @@ public class Correlator {
     public static void correlate( List<NanoLogEntry> entries, GpxData data, long offset ) {
         List<NanoLogEntry> sortedEntries = new ArrayList<>(entries);
         //int ret = 0;
-        PrimaryDateParser dateParser = new PrimaryDateParser();
         Collections.sort(sortedEntries);
         for( GpxTrack track : data.tracks ) {
             for( GpxTrackSegment segment : track.getSegments() ) {
@@ -93,13 +90,13 @@ public class Correlator {
                     String curWpTimeStr = (String)curWp.attr.get("time");
                     if( curWpTimeStr != null ) {
                         try {
-                            long curWpTime = dateParser.parse(curWpTimeStr).getTime() + offset;
+                            long curWpTime = DateUtils.fromString(curWpTimeStr).getTime() + offset;
                             /*ret +=*/ matchPoints(sortedEntries, prevWp, prevWpTime, curWp, curWpTime, offset);
 
                             prevWp = curWp;
                             prevWpTime = curWpTime;
 
-                        } catch( ParseException e ) {
+                        } catch( UncheckedParseException e ) {
                             Main.error("Error while parsing date \"" + curWpTimeStr + '"');
                             Main.error(e);
                             prevWp = null;
@@ -219,7 +216,6 @@ public class Correlator {
      */
     public static long getGpxDate( GpxData data, LatLon pos ) {
         EastNorth en = Main.getProjection().latlon2eastNorth(pos);
-        PrimaryDateParser dateParser = new PrimaryDateParser();
         for( GpxTrack track : data.tracks ) {
             for( GpxTrackSegment segment : track.getSegments() ) {
                 long prevWpTime = 0;
@@ -228,7 +224,7 @@ public class Correlator {
                     String curWpTimeStr = (String)curWp.attr.get("time");
                     if( curWpTimeStr != null ) {
                         try {
-                            long curWpTime = dateParser.parse(curWpTimeStr).getTime();
+                            long curWpTime = DateUtils.fromString(curWpTimeStr).getTime();
                             if( prevWp != null ) {
                                 EastNorth c1 = Main.getProjection().latlon2eastNorth(prevWp.getCoor());
                                 EastNorth c2 = Main.getProjection().latlon2eastNorth(curWp.getCoor());
@@ -248,7 +244,7 @@ public class Correlator {
 
                             prevWp = curWp;
                             prevWpTime = curWpTime;
-                        } catch( ParseException e ) {
+                        } catch( UncheckedParseException e ) {
                             Main.error("Error while parsing date \"" + curWpTimeStr + '"');
                             Main.error(e);
                             prevWp = null;

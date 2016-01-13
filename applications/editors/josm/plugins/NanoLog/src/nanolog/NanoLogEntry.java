@@ -24,7 +24,6 @@ public class NanoLogEntry implements Comparable<NanoLogEntry> {
         this.direction = baseDir;
         this.time = time;
         this.message = message;
-        this.direction = direction;
     }
 
     public NanoLogEntry( Date time, String message ) {

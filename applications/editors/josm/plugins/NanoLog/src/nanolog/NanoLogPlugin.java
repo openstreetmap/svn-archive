@@ -47,6 +47,7 @@ public class NanoLogPlugin extends Plugin {
                     if( !entries.isEmpty() ) {
                         NanoLogLayer layer = new NanoLogLayer(entries);
                         Main.main.addLayer(layer);
+                        layer.setupListeners();
                     }
                 } catch( IOException ex ) {
                     JOptionPane.showMessageDialog(Main.parent, tr("Could not read NanoLog file:") + "\n" + ex.getMessage());

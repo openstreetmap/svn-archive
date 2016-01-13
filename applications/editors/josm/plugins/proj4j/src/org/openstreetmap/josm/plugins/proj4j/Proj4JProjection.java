@@ -8,6 +8,7 @@ import org.openstreetmap.josm.data.ProjectionBounds;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
+import org.openstreetmap.josm.data.projection.proj.IPolar;
 
 public class Proj4JProjection implements Projection {
 
@@ -130,4 +131,20 @@ public class Proj4JProjection implements Projection {
 		return false;
 	}
 
+    @Override
+    public Bounds getLatLonBoundsBox(ProjectionBounds r) {
+        // Copied from JOSM AbstractProjection
+        Bounds result = new Bounds(eastNorth2latlon(r.getMin()));
+        result.extend(eastNorth2latlon(r.getMax()));
+        final int N = 40;
+        double dEast = (r.maxEast - r.minEast) / N;
+        double dNorth = (r.maxNorth - r.minNorth) / N;
+        for (int i = 0; i <= N; i++) {
+            result.extend(eastNorth2latlon(new EastNorth(r.minEast + i * dEast, r.minNorth)));
+            result.extend(eastNorth2latlon(new EastNorth(r.minEast + i * dEast, r.maxNorth)));
+            result.extend(eastNorth2latlon(new EastNorth(r.minEast, r.minNorth  + i * dNorth)));
+            result.extend(eastNorth2latlon(new EastNorth(r.maxEast, r.minNorth  + i * dNorth)));
+        }
+        return result;
+    }
 }

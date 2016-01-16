@@ -62,8 +62,7 @@ public class CsvReaderTest {
      */
     @Test
     public void testTicket10214() throws IOException, XMLStreamException, FactoryConfigurationError {
-        File file = new File(TestUtils.getRegressionDataFile(10214, "utf8_test.csv"));
-        try (InputStream is = new FileInputStream(file)) {
+        try (InputStream is = TestUtils.getRegressionDataStream(10214, "utf8_test.csv")) {
             NonRegFunctionalTests.testTicket10214(CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }
     }
@@ -74,8 +73,7 @@ public class CsvReaderTest {
      */
     @Test
     public void testTicket8805() throws IOException, XMLStreamException, FactoryConfigurationError {
-        File file = new File(TestUtils.getRegressionDataFile(8805, "XXX.csv"));
-        try (InputStream is = new FileInputStream(file)) {
+        try (InputStream is = TestUtils.getRegressionDataStream(8805, "XXX.csv")) {
             NonRegFunctionalTests.testGeneric("#8805", CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }
     }

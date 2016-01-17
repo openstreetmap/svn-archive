@@ -1,54 +1,35 @@
 package public_transport;
 
-import static org.openstreetmap.josm.tools.I18n.marktr;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
-
-public class GTFSImporterDialog
+public class GTFSImporterDialog extends AbstractImporterDialog<GTFSImporterAction>
 {
-  private JDialog jDialog = null;
-  private JTabbedPane tabbedPane = null;
-  private JComboBox<TransText> cbStoptype = null;
-  private JList tracksList = null;
-  private JTextField tfGPSTimeStart = null;
-  private JTextField tfStopwatchStart = null;
-  private JTextField tfTimeWindow = null;
-  private JTextField tfThreshold = null;
-  private JTable stoplistTable = null;
   private JTable gtfsStopTable = null;
-  private final String[] stoptypes = new String[]{marktr("bus"), marktr("tram"), marktr("light_rail"), marktr("subway"), marktr("rail")};
 
   public GTFSImporterDialog(GTFSImporterAction controller)
   {
-    Frame frame = JOptionPane.getFrameForComponent(Main.parent);
-    jDialog = new JDialog(frame, tr("Create Stops from GTFS"), false);
-    tabbedPane = new JTabbedPane();
+      super(controller, tr("Create Stops from GTFS"), "gtfsImporter");
+  }
+  
+  @Override
+  protected void initDialog(GTFSImporterAction controller) {
     JPanel tabSettings = new JPanel();
     tabbedPane.addTab(tr("Settings"), tabSettings);
     JPanel tabWaypoints = new JPanel();
     tabbedPane.addTab(tr("GTFS-Stops"), tabWaypoints);
     tabbedPane.setEnabledAt(0, false);
     tabbedPane.setEnabledAt(1, true);
-    jDialog.add(tabbedPane);
 
     //Settings Tab
     JPanel contentPane = tabSettings;
@@ -66,13 +47,6 @@ public class GTFSImporterDialog
     layoutCons.fill = GridBagConstraints.BOTH;
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
-
-    cbStoptype = new JComboBox<>();
-    cbStoptype.setEditable(false);
-    for(String type : stoptypes)
-        cbStoptype.addItem(new TransText(type));
-    cbStoptype.setActionCommand("gtfsImporter.settingsStoptype");
-    cbStoptype.addActionListener(controller);
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 1;
@@ -93,10 +67,6 @@ public class GTFSImporterDialog
     layoutCons.fill = GridBagConstraints.BOTH;
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
-
-    tfGPSTimeStart = new JTextField("00:00:00", 15);
-    tfGPSTimeStart.setActionCommand("gtfsImporter.settingsGPSTimeStart");
-    tfGPSTimeStart.addActionListener(controller);
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 3;
@@ -130,10 +100,6 @@ public class GTFSImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    tfStopwatchStart = new JTextField("00:00:00", 15);
-    tfStopwatchStart.setActionCommand("gtfsImporter.settingsStopwatchStart");
-    tfStopwatchStart.addActionListener(controller);
-
     layoutCons.gridx = 0;
     layoutCons.gridy = 5;
     layoutCons.gridwidth = 1;
@@ -166,10 +132,6 @@ public class GTFSImporterDialog
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
 
-    tfTimeWindow = new JTextField("15", 4);
-    tfTimeWindow.setActionCommand("gtfsImporter.settingsTimeWindow");
-    tfTimeWindow.addActionListener(controller);
-
     layoutCons.gridx = 0;
     layoutCons.gridy = 7;
     layoutCons.gridwidth = 1;
@@ -200,10 +162,6 @@ public class GTFSImporterDialog
     layoutCons.fill = GridBagConstraints.BOTH;
     gridbag.setConstraints(label, layoutCons);
     contentPane.add(label);
-
-    tfThreshold = new JTextField("20", 4);
-    tfThreshold.setActionCommand("gtfsImporter.settingsThreshold");
-    tfThreshold.addActionListener(controller);
 
     layoutCons.gridx = 0;
     layoutCons.gridy = 9;
@@ -374,94 +332,6 @@ public class GTFSImporterDialog
     layoutCons.fill = GridBagConstraints.BOTH;
     gridbag.setConstraints(bDelete, layoutCons);
     contentPane.add(bDelete);
-
-    jDialog.pack();
-    jDialog.setLocationRelativeTo(frame);
-  }
-
-  public void setTrackValid(boolean valid)
-  {
-    tabbedPane.setEnabledAt(2, valid);
-  }
-
-  public void setVisible(boolean visible)
-  {
-    jDialog.setVisible(visible);
-  }
-
-  public void setSettings
-      (String gpsSyncTime, String stopwatchStart,
-       double timeWindow, double threshold)
-  {
-    tfGPSTimeStart.setText(gpsSyncTime);
-    tfStopwatchStart.setText(stopwatchStart);
-    tfTimeWindow.setText(Double.toString(timeWindow));
-    tfThreshold.setText(Double.toString(threshold));
-  }
-
-  public String getStoptype()
-  {
-    return ((TransText)cbStoptype.getSelectedItem()).text;
-  }
-
-  public boolean gpsTimeStartValid()
-  {
-    if (parseTime(tfGPSTimeStart.getText()) >= 0)
-    {
-      return true;
-    }
-    else
-    {
-      JOptionPane.showMessageDialog
-      (null, tr("Can''t parse a time from this string."), tr("Invalid value"),
-       JOptionPane.ERROR_MESSAGE);
-      return false;
-    }
-  }
-
-  public String getGpsTimeStart()
-  {
-    return tfGPSTimeStart.getText();
-  }
-
-  public void setGpsTimeStart(String s)
-  {
-    tfGPSTimeStart.setText(s);
-  }
-
-  public boolean stopwatchStartValid()
-  {
-    if (parseTime(tfStopwatchStart.getText()) >= 0)
-    {
-      return true;
-    }
-    else
-    {
-      JOptionPane.showMessageDialog
-      (null, tr("Can''t parse a time from this string."), tr("Invalid value"),
-       JOptionPane.ERROR_MESSAGE);
-      return false;
-    }
-  }
-
-  public String getStopwatchStart()
-  {
-    return tfStopwatchStart.getText();
-  }
-
-  public void setStopwatchStart(String s)
-  {
-    tfStopwatchStart.setText(s);
-  }
-
-  public double getTimeWindow()
-  {
-    return Double.parseDouble(tfTimeWindow.getText());
-  }
-
-  public double getThreshold()
-  {
-    return Double.parseDouble(tfThreshold.getText());
   }
 
   public JTable getGTFSStopTable()
@@ -476,20 +346,6 @@ public class GTFSImporterDialog
     gtfsStopTable.getColumnModel().getColumn(0).setPreferredWidth((int)(width * 0.3));
     gtfsStopTable.getColumnModel().getColumn(1).setPreferredWidth((int)(width * 0.6));
     gtfsStopTable.getColumnModel().getColumn(2).setPreferredWidth((int)(width * 0.1));
-  }
-
-  public static double parseTime(String s)
-  {
-    if ((s.charAt(2) != ':') || (s.charAt(2) != ':')
-     || (s.length() < 8))
-      return -1;
-    int hour = Integer.parseInt(s.substring(0, 2));
-    int minute = Integer.parseInt(s.substring(3, 5));
-    double second = Double.parseDouble(s.substring(6, s.length()));
-    if ((hour < 0) || (hour > 23) || (minute < 0) || (minute > 59)
-     || (second < 0) || (second >= 60.0))
-      return -1;
-    return (second + minute*60 + hour*60*60);
   }
 
 /*  private class TracksLSL implements ListSelectionListener

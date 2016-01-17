@@ -66,6 +66,13 @@ public class CadastreInterface {
 
     final  int cRetriesGetCookie = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
 
+    /**
+     * Constructs a new {@code CadastreInterface}.
+     */
+    public CadastreInterface() {
+        // Constructor is needed to avoid https://jira.sonarsource.com/browse/SONARJAVA-1459
+    }
+
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
         if (wmsLayer.getName().equals(""))
             return false;

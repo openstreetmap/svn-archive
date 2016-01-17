@@ -66,13 +66,6 @@ public class CadastreInterface {
 
     final  int cRetriesGetCookie = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
 
-    /**
-     * Constructs a new {@code CadastreInterface}.
-     */
-    public CadastreInterface() {
-        // Constructor is needed to avoid https://jira.sonarsource.com/browse/SONARJAVA-1459
-    }
-
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
         if (wmsLayer.getName().equals(""))
             return false;
@@ -423,9 +416,7 @@ public class CadastreInterface {
         }
         JComboBox<String> inputCommuneList = new JComboBox<>(communeList);
         p.add(inputCommuneList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null) {
-            private static final long serialVersionUID = 1L;
-        };
+        JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
         //pane.createDialog(Main.parent, tr("Select commune")).setVisible(true);
         // this below is a temporary workaround to fix the "always on top" issue
         JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));

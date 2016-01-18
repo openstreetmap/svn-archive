@@ -12,6 +12,7 @@ import org.wikipedia.WikipediaApp.WikipediaLangArticle;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -24,6 +25,14 @@ public class WikipediaAppTest {
     @Before
     public void setUp() throws Exception {
         Main.initApplicationPreferences();
+    }
+
+    @Test
+    public void testMediawikiLocale() throws Exception {
+        assertThat(WikipediaApp.getMediawikiLocale(Locale.GERMANY), is("de-de"));
+        assertThat(WikipediaApp.getMediawikiLocale(Locale.GERMAN), is("de"));
+        assertThat(WikipediaApp.getMediawikiLocale(Locale.UK), is("en-gb"));
+        assertThat(WikipediaApp.getMediawikiLocale(Locale.CANADA), is("en-ca"));
     }
 
     @Test
@@ -145,14 +154,14 @@ public class WikipediaAppTest {
 
     @Test
     public void testGetLabelForWikidata() throws Exception {
-        assertThat(WikipediaApp.getLabelForWikidata("Q1741", "de"), is("Wien"));
-        assertThat(WikipediaApp.getLabelForWikidata("Q1741", "en"), is("Vienna"));
-        assertThat(WikipediaApp.getLabelForWikidata("Q" + Long.MAX_VALUE, "en"), nullValue());
+        assertThat(WikipediaApp.getLabelForWikidata("Q1741", Locale.GERMAN), is("Wien"));
+        assertThat(WikipediaApp.getLabelForWikidata("Q1741", Locale.ENGLISH), is("Vienna"));
+        assertThat(WikipediaApp.getLabelForWikidata("Q" + Long.MAX_VALUE, Locale.ENGLISH), nullValue());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetLabelForWikidataInvalidId() throws Exception {
-        WikipediaApp.getLabelForWikidata("Qxyz", "en");
+        WikipediaApp.getLabelForWikidata("Qxyz", Locale.ENGLISH);
     }
 
     @Test

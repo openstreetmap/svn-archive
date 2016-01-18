@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,7 @@ public class WikidataTagCellRenderer extends DefaultTableCellRenderer {
 
         @Override
         public String call() throws Exception {
-            final String label = WikipediaApp.getLabelForWikidata(id, LanguageInfo.getJOSMLocaleCode());
+            final String label = WikipediaApp.getLabelForWikidata(id, Locale.getDefault());
             table.repaint();
             table = null;
             return label;

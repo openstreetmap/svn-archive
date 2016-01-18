@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
@@ -46,6 +47,14 @@ public final class WikipediaApp {
     private static final XPath X_PATH = XPathFactory.newInstance().newXPath();
 
     private WikipediaApp() {
+    }
+
+    static String getMediawikiLocale(Locale locale) {
+        if (!locale.getCountry().isEmpty()) {
+            return locale.getLanguage() + "-" + locale.getCountry().toLowerCase();
+        } else {
+            return locale.getLanguage();
+        }
     }
 
     static List<WikipediaEntry> getEntriesFromCoordinates(String wikipediaLang, LatLon min, LatLon max) {
@@ -205,25 +214,31 @@ public final class WikipediaApp {
         }
     }
 
-    static String getLabelForWikidata(String wikidataId, String preferredLanguage) {
+    static String getLabelForWikidata(String wikidataId, Locale locale, String ... preferredLanguage) {
         try {
             CheckParameterUtil.ensureThat(WIKIDATA_PATTERN.matcher(wikidataId).matches(), "Invalid Wikidata ID given");
             final String url = "https://www.wikidata.org/w/api.php" +
                     "?action=wbgetentities" +
                     "&props=labels" +
                     "&ids=" + wikidataId +
-                    "&format=xml" +
-                    (preferredLanguage != null ? "&languages=" + preferredLanguage + "&languagefallback=en" : "");
+                    "&format=xml";
+            final Collection<String> languages = new ArrayList<>();
+            if (locale != null) {
+                languages.add(getMediawikiLocale(locale));
+                languages.add(getMediawikiLocale(new Locale(locale.getLanguage())));
+            }
+            languages.addAll(Arrays.asList(preferredLanguage));
+            languages.add("en");
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 final Document xml = DOCUMENT_BUILDER.parse(in);
-                final Node label = (Node) X_PATH.compile("//label").evaluate(xml, XPathConstants.NODE);
-                if (label == null && preferredLanguage != null) {
-                    return getLabelForWikidata(wikidataId, null);
-                } else if (label == null) {
-                    return null;
-                } else {
-                    return (String) X_PATH.compile("./@value").evaluate(label, XPathConstants.STRING);
+                for (String language : languages) {
+                    final String label = (String) X_PATH.compile("//label[@language='" + language + "']/@value")
+                            .evaluate(xml, XPathConstants.STRING);
+                    if (label != null && !label.isEmpty()) {
+                         return label;
+                    }
                 }
+                return null;
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);

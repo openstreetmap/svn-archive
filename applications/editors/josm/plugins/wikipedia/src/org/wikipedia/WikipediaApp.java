@@ -238,7 +238,8 @@ public final class WikipediaApp {
                          return label;
                     }
                 }
-                return null;
+                final String fallBackLabel = (String) X_PATH.compile("//label/@value").evaluate(xml, XPathConstants.STRING);
+                return fallBackLabel == null || fallBackLabel.isEmpty() ? null : fallBackLabel;
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);

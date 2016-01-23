@@ -13,6 +13,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.utilsplugin2.actions.AddIntersectionsAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.actions.AlignWayNodesAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.actions.CopyTagsAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.actions.ExtractPointAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.actions.PasteRelationsAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.actions.SplitObjectAction;
@@ -47,7 +48,9 @@ import org.openstreetmap.josm.plugins.utilsplugin2.selection.UnselectNodesAction
 
 public class UtilsPlugin2 extends Plugin {
 
-	private static UtilsPlugin2 instance;
+    private static UtilsPlugin2 instance;
+
+    JMenuItem copyTags;
 
     JMenuItem unglueRelation;
     JMenuItem symmetry;
@@ -87,9 +90,12 @@ public class UtilsPlugin2 extends Plugin {
         super(info);
         instance = this;
 
+        JMenu editMenu = Main.main.menu.editMenu;
         JMenu toolsMenu = Main.main.menu.moreToolsMenu;
         JMenu dataMenu = Main.main.menu.dataMenu;
         JMenu selectionMenu = Main.main.menu.selectionMenu;
+
+        copyTags = MainMenu.addAfter(editMenu, new CopyTagsAction(), false, Main.main.menu.copy);
 
         addIntersections = MainMenu.add(toolsMenu, new AddIntersectionsAction());
         splitObject = MainMenu.add(toolsMenu, new SplitObjectAction());
@@ -172,6 +178,6 @@ public class UtilsPlugin2 extends Plugin {
     }
 
     public static final UtilsPlugin2 getInstance() {
-    	return instance;
+        return instance;
     }
 }

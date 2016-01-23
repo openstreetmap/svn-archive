@@ -82,7 +82,6 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
         if (!isEnabled())
             return;
         super.enterMode();
-        readPreferences();
 
         Main.registerActionShortcut(backspaceAction, backspaceShortcut);
 
@@ -96,7 +95,8 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
 
     int initialMoveDelay, initialMoveThreshold;
 
-    private void readPreferences() {
+    @Override
+    protected void readPreferences() {
         rubberLineColor = Main.pref.getColor(marktr("helper line"), null);
         if (rubberLineColor == null)
             rubberLineColor = PaintColors.SELECTED.get();

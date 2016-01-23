@@ -41,7 +41,7 @@ public class PhotoAdjustWorker {
      * restoreCenterView() to restore the original state.
      */
     public synchronized void disableCenterView() {
-        if (!centerViewIsDisabled) {
+        if (!centerViewIsDisabled && ImageViewerDialog.isCenterView()) {
             centerViewIsDisabled = true;
             centerViewNeedsEnable = ImageViewerDialog.setCentreEnabled(false);
         }

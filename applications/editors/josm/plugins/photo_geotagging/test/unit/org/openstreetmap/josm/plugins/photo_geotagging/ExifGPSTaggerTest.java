@@ -1,8 +1,11 @@
 package org.openstreetmap.josm.plugins.photo_geotagging;
 
+import static junit.framework.Assert.assertFalse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Date;
+import java.util.Scanner;
 
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
@@ -31,5 +34,16 @@ public class ExifGPSTaggerTest {
         final TiffImageMetadata exif = ((JpegImageMetadata) Imaging.getMetadata(in)).getExif();
         final TiffOutputSet outputSet = exif.getOutputSet();
         new ExifRewriter().updateExifMetadataLossless(in, new ByteArrayOutputStream(), outputSet);
+    }
+
+    @Test
+    public void testTicket11902() throws Exception {
+        final File in = new File(TestUtils.getTestDataRoot(), "IMG_7250_small.JPG");
+        final File out = tempFolder.newFile();
+        ExifGPSTagger.setExifGPSTag(in, out, 12, 34, new Date(), 12.34, Math.E, Math.PI);
+        final Process jhead = Runtime.getRuntime().exec(new String[]{"jhead", out.getAbsolutePath()});
+        final String stdout = new Scanner(jhead.getErrorStream()).useDelimiter("\\A").next();
+        System.out.println(stdout);
+        assertFalse(stdout.contains("Suspicious offset of first Exif IFD value"));
     }
 }

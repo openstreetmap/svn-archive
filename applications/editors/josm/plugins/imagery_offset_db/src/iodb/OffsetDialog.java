@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,10 +39,10 @@ import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
+import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
-import org.openstreetmap.josm.tools.Utils;
 
 /**
  * The dialog which presents a choice between imagery align options.
@@ -93,7 +92,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         calibrationBox.setSelected(Main.pref.getBoolean(PREF_CALIBRATION, true));
         calibrationBox.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed( ActionEvent e ) {
                 Main.pref.put(PREF_CALIBRATION, calibrationBox.isSelected());
                 updateButtonPanel();
             }
@@ -102,7 +101,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         deprecatedBox.setSelected(Main.pref.getBoolean(PREF_DEPRECATED, false));
         deprecatedBox.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed( ActionEvent e ) {
                 Main.pref.put(PREF_DEPRECATED, deprecatedBox.isSelected());
                 updateButtonPanel();
             }
@@ -180,7 +179,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
      * It does nothing, only passes the event to all displayed offset buttons.
      */
     @Override
-	public void zoomChanged() {
+    public void zoomChanged() {
         for( Component c : buttonPanel.getComponents() ) {
             if( c instanceof OffsetDialogButton ) {
                 ((OffsetDialogButton)c).updateLocation();
@@ -193,7 +192,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
      * value, but looks nice.
      */
     @Override
-	public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
+    public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
         if( offsets == null )
             return;
 
@@ -236,7 +235,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
      * @see #applyOffset()
      */
     @Override
-	public void actionPerformed( ActionEvent e ) {
+    public void actionPerformed( ActionEvent e ) {
         if( e.getSource() instanceof OffsetDialogButton ) {
             selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
         } else
@@ -312,7 +311,7 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
          * Remove the deprecated offset from the offsets list. Then rebuild the button panel.
          */
         @Override
-		public void queryPassed() {
+        public void queryPassed() {
             offset.setDeprecated(new Date(), JosmUserIdentityManager.getInstance().getUserName(), "");
             updateButtonPanel();
         }
@@ -329,15 +328,14 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
         }
 
         @Override
-		public void actionPerformed( ActionEvent e ) {
+        public void actionPerformed( ActionEvent e ) {
             String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
             String lang = LanguageInfo.getWikiLanguagePrefix();
             String page = "Imagery_Offset_Database";
             try {
                 // this logic was snatched from {@link org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog.HelpAction}
-                HttpURLConnection conn = Utils.openHttpConnection(new URL(base + lang + page));
-                conn.setConnectTimeout(Main.pref.getInteger("socket.timeout.connect", 10) * 1000);
-                if( conn.getResponseCode() != 200 ) {
+                HttpClient.Response conn = HttpClient.create(new URL(base + lang + page), "HEAD").connect();
+                if (conn.getResponseCode() != 200) {
                     conn.disconnect();
                     lang = "";
                 }

@@ -53,7 +53,7 @@ public class Proj4Keyword
 
   private static Set<String> supportedParams = null;
   
-  public static synchronized Set supportedParameters()
+  public static synchronized Set<String> supportedParameters()
   {
     if (supportedParams == null) {
       supportedParams = new TreeSet<>();
@@ -109,7 +109,7 @@ public class Proj4Keyword
     }
   }
   
-  public static void checkUnsupported(Collection params)
+  public static void checkUnsupported(Collection<?> params)
   {
     for (Object s : params) {
       checkUnsupported((String) s);

@@ -33,15 +33,9 @@ public class MetaCRSTestFileReader
   public List<MetaCRSTestCase> readTests()
   throws IOException
   {
-    LineNumberReader lineReader = new LineNumberReader(new FileReader(file));
-    List<MetaCRSTestCase> tests = null;
-    try {
-       tests = parseFile(lineReader);
+    try (LineNumberReader lineReader = new LineNumberReader(new FileReader(file))) {
+       return parseFile(lineReader);
     } 
-    finally {
-      lineReader.close();
-    }
-    return tests;
   }
   
   private List<MetaCRSTestCase> parseFile(LineNumberReader lineReader)

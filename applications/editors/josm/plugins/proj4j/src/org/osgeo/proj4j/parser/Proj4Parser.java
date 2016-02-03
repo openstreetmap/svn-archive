@@ -26,7 +26,7 @@ public class Proj4Parser
     if (args == null)
       return null;
     
-    Map params = createParameterMap(args);
+    Map<String, String> params = createParameterMap(args);
     Proj4Keyword.checkUnsupported(params.keySet());
     DatumParameters datumParam = new DatumParameters();
     parseDatum(params, datumParam);
@@ -44,7 +44,7 @@ public class Proj4Parser
   * Creates a {@link Projection}
   * initialized from a PROJ.4 argument list.
   */
- private Projection parseProjection( Map params, Ellipsoid ellipsoid ) {
+ private Projection parseProjection( Map<String, String> params, Ellipsoid ellipsoid ) {
    Projection projection = null;
 
    String s;
@@ -135,7 +135,7 @@ public class Proj4Parser
    return projection;
  }
 
- private void parseDatum(Map params, DatumParameters datumParam) 
+ private void parseDatum(Map<String, String> params, DatumParameters datumParam) 
  {
    String towgs84 = (String) params.get(Proj4Keyword.towgs84);
    if (towgs84 != null) {
@@ -192,7 +192,7 @@ public class Proj4Parser
    return param;
  }
  
- private void parseEllipsoid(Map params, DatumParameters datumParam) 
+ private void parseEllipsoid(Map<String, String> params, DatumParameters datumParam) 
  {
    double b = 0;
    String s;
@@ -279,7 +279,7 @@ public class Proj4Parser
   * @param params
   * @param datumParam
   */
- private void parseEllipsoidModifiers(Map params, DatumParameters datumParam) 
+ private void parseEllipsoidModifiers(Map<String, String> params, DatumParameters datumParam) 
  {
    /**
     * Modifiers are mutually exclusive, so when one is detected method returns
@@ -291,8 +291,8 @@ public class Proj4Parser
 
  }
  
- private Map createParameterMap(String[] args) {
-   Map params = new HashMap();
+ private Map<String, String> createParameterMap(String[] args) {
+   Map<String, String> params = new HashMap<>();
    for (int i = 0; i < args.length; i++) {
      String arg = args[i];
      // strip leading "+" if any

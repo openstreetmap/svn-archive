@@ -27,17 +27,9 @@ public class Proj4FileReader
   	if (inStr == null) {
   		throw new IllegalStateException("Unable to access CRS file: " + filename);
   	}
-    BufferedReader reader = new BufferedReader( 
-          new InputStreamReader(inStr) );
-    String[] args;
-    try {
-      args = readFile(reader, name);
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStr))) {
+      return readFile(reader, name);
     }
-    finally {
-      if (reader != null)
-        reader.close();
-    }
-    return args;
   }
   
   private StreamTokenizer createTokenizer(BufferedReader reader)
@@ -75,7 +67,7 @@ public class Proj4FileReader
       if ( t.ttype != '>' )
         throw new IOException( t.lineno()+": '>' expected" );
       t.nextToken();
-      List v = new ArrayList();
+      List<String> v = new ArrayList<>();
 
       while ( t.ttype != '<' ) {
         if ( t.ttype == '+' )
@@ -115,7 +107,7 @@ public class Proj4FileReader
     return null;
   }
   
-  private static void addParam(List v, String key, String value)
+  private static void addParam(List<String> v, String key, String value)
   {
     String plusKey = key;
     if ( ! key.startsWith("+") )

@@ -1,0 +1,28 @@
+Customize stop
+Customize stop under osm public transit standard v2
+Stop customizing
+Stop area tag assign
+Name
+Name (en.)
+Network
+Operator
+Network level
+City transport
+Local
+Regional
+Long distance
+High speed
+Bus
+Share taxi
+Trolleybus
+Bus station
+Tram
+Railway station
+Railway stop
+Assign transport type to platform
+Shelder
+Bench
+Cover
+Area
+Save
+Cancel

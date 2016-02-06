@@ -69,7 +69,7 @@
                 <attribute name="Author" value="Rodion Scherbakov" />
                 <attribute name="Plugin-Class" value="ru.rodsoft.openstreetmap.josm.plugins.customizepublictransportstop.CustomizePublicTransportStopPlugin" />
                 <attribute name="Plugin-Date" value="${plugin.build.date}" />
-                <attribute name="Plugin-Description" value="(Warning: Experimental!) Customizing of public public transport stops." />
+                <attribute name="Plugin-Description" value="Customizing of public transport stops." />
                 <attribute name="Plugin-Icon" value="images/bus.png"/>
                 <attribute name="Plugin-Link" value="http://wiki.openstreetmap.org/wiki/JOSM/Plugins/CustomizePublicTransportStop" />
                 <attribute name="Plugin-Mainversion" value="${josm.required.version}" />

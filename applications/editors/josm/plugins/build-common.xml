@@ -302,10 +302,10 @@
         <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     </target>
     <!--
-    ************************** Publishing the plugin *********************************** 
+    ************************** Publishing the plugin ***********************************
     -->
     <!--
-    ** extracts the JOSM release for the JOSM version in ../core and saves it in the 
+    ** extracts the JOSM release for the JOSM version in ../core and saves it in the
     ** property ${coreversion.info.entry.revision}
     **
     -->
@@ -352,7 +352,7 @@
         </exec>
     </target>
     <!--
-    ** commits the plugin.jar 
+    ** commits the plugin.jar
     -->
     <target name="commit-dist">
         <echo>
@@ -412,6 +412,7 @@
             <exclude name="**/*-sources.jar"/>
             <exclude name="**/*-javadoc.jar"/>
         </fileset>
+        <pathelement path="${plugin.test.dir}/data"/>
         <pathelement path="${josm.test.build.dir}/unit"/>
         <pathelement path="${josm}"/>
         <pathelement path="${plugin.jar}"/>
@@ -452,7 +453,7 @@
             </groovyc>
         </sequential>
     </target>
-    <target name="test" depends="dist, test-clean, test-compile" 
+    <target name="test" depends="dist, test-clean, test-compile"
         description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>
@@ -492,7 +493,7 @@
         </java>
     </target>
     <!--
-    ** shows a help text 
+    ** shows a help text
     -->
     <target name="help">
         <echo>
@@ -505,9 +506,8 @@
     * install     Install the plugin in current system
     * runjosm     Install plugin and start josm
     * profilejosm Install plugin and start josm in profiling mode
-    
+
     There are other targets, which usually should not be called manually.
         </echo>
     </target>
 </project>
-

@@ -20,6 +20,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -123,17 +124,21 @@ public class FetchWikidataAction extends JosmAction {
                     "Fetching {0} Wikidata ID for language ''{1}''",
                     "Fetching {0} Wikidata IDs for language ''{1}''", size, size, lang));
             final Map<String, String> wikidataByWikipedia = WikipediaApp.getWikidataForArticles(lang, byArticle.keySet());
+            ConditionalOptionPaneUtil.startBulkOperation(GuiUtils.PREF_OVERWRITE);
             for (Map.Entry<String, Set<OsmPrimitive>> i : byArticle.entrySet()) {
                 final String wikipedia = i.getKey();
                 final String wikidata = wikidataByWikipedia.get(wikipedia);
                 if (wikidata != null) {
-                    commands.add(new ChangePropertyCommand(i.getValue(), "wikidata", wikidata));
+                    if (GuiUtils.confirmOverwrite("wikidata", wikidata, i.getValue())) {
+                        commands.add(new ChangePropertyCommand(i.getValue(), "wikidata", wikidata));
+                    }
                 } else {
                     final WikipediaApp.WikipediaLangArticle article = new WikipediaApp.WikipediaLangArticle(lang, wikipedia);
                     Main.warn(tr("No Wikidata ID found for: {0}", article));
                     notFound.add(article);
                 }
             }
+            ConditionalOptionPaneUtil.endBulkOperation(GuiUtils.PREF_OVERWRITE);
             monitor.finishTask();
         }
 

@@ -268,6 +268,9 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 Tag tag = ((WikipediaEntry) list.getSelectedValue()).createWikipediaTag();
                 if (tag != null) {
                     final Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+                    if (!GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
+                        return;
+                    }
                     ChangePropertyCommand cmd = new ChangePropertyCommand(
                             selected,
                             tag.getKey(), tag.getValue());

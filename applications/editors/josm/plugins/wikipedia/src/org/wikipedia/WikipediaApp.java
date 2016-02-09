@@ -31,6 +31,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Tag;
+import org.openstreetmap.josm.tools.AlphanumComparator;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Predicate;
@@ -414,7 +415,7 @@ public final class WikipediaApp {
 
         @Override
         public int compareTo(WikipediaEntry o) {
-            return name.compareTo(o.name);
+            return AlphanumComparator.getInstance().compare(name, o.name);
         }
     }
 

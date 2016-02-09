@@ -619,7 +619,7 @@ public class WMSLayer extends Layer implements ImageObserver {
      * Method required by ImageObserver when drawing an image
      */
     @Override
-	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         return false;
     }
 

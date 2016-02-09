@@ -67,9 +67,9 @@ public class RasterImageGeoreferencer implements MouseListener {
    }
 
    /**
-   *
-   * @return false if all operations are canceled
-   */
+    *
+    * @return false if all operations are canceled
+    */
   public boolean startGeoreferencing(WMSLayer wmsLayer) {
       this.wmsLayer = wmsLayer;
       countMouseClicked = 0;
@@ -90,14 +90,13 @@ public class RasterImageGeoreferencer implements MouseListener {
       return true;
   }
 
-
   public boolean isRunning()
   {
       return (countMouseClicked != 0 || mode != 0);
   }
 
   @Override
-public void mouseClicked(MouseEvent e) {
+  public void mouseClicked(MouseEvent e) {
       if (System.currentTimeMillis() - mouseClickedTime < initialClickDelay) {
           Main.info("mouse click bounce detected");
           return; // mouse click anti-bounce
@@ -146,9 +145,9 @@ public void mouseClicked(MouseEvent e) {
 
 
   /**
-  *
-  * @return false if all operations are canceled
-  */
+   *
+   * @return false if all operations are canceled
+   */
  private boolean canceledOrRestartCurrAction(String action) {
      Object[] options = { "Cancel", "Retry" };
      int selectedValue = JOptionPane.showOptionDialog( null,
@@ -250,7 +249,7 @@ public void mouseClicked(MouseEvent e) {
      dialog.setVisible(true);
      pane.addPropertyChangeListener(new PropertyChangeListener() {
          @Override
-		public void propertyChange(PropertyChangeEvent evt) {
+         public void propertyChange(PropertyChangeEvent evt) {
              if (JOptionPane.VALUE_PROPERTY.equals(evt.getPropertyName())) {
                  ignoreMouseClick = false;
                  // Cancel
@@ -354,19 +353,18 @@ private boolean continueGeoreferencing() {
  }
 
  @Override
-public void mouseEntered(MouseEvent arg0) {
+ public void mouseEntered(MouseEvent arg0) {
  }
 
  @Override
-public void mouseExited(MouseEvent arg0) {
+ public void mouseExited(MouseEvent arg0) {
  }
 
  @Override
-public void mousePressed(MouseEvent arg0) {
+ public void mousePressed(MouseEvent arg0) {
  }
 
  @Override
-public void mouseReleased(MouseEvent arg0) {
+ public void mouseReleased(MouseEvent arg0) {
  }
-
 }

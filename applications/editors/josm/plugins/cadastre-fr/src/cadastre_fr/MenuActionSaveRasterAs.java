@@ -71,7 +71,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
     }
 
     @Override
-	public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent arg0) {
         File file;
         JFileChooser fc = new JFileChooser();
         fc.addChoosableFileFilter(filtreTiff);

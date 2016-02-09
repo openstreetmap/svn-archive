@@ -84,7 +84,7 @@ public class DownloadWMSPlanImage {
                 }
             } catch (DuplicateLayerException e) {
                 // we tried to grab onto a duplicated layer (removed)
-            	Main.warn("removed a duplicated layer");
+                Main.warn("removed a duplicated layer");
             } catch (WMSException e) {
                 errorMessage = e.getMessage();
                 wmsLayer.grabber.getWmsInterface().resetCookie();

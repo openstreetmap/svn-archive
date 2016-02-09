@@ -349,7 +349,7 @@ public class CadastreInterface {
                 if (j != -1 && k > (i + c0ptionListStart.length())) {
                     String lov = new String(input.substring(i+c0ptionListStart.length()-1, j));
                     if (lov.indexOf(">") != -1) {
-                    	Main.info("parse "+lov);
+                        Main.info("parse "+lov);
                         listOfCommunes.add(lov);
                     } else
                         Main.error("unable to parse commune string:"+lov);
@@ -546,7 +546,7 @@ public class CadastreInterface {
         if (Main.map != null) {
             for (Layer l : Main.map.mapView.getAllLayers()) {
                 if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (l != wmsLayer)) {
-                	Main.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
+                    Main.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
                     Main.main.removeLayer(wmsLayer);
                     throw new DuplicateLayerException();
@@ -564,5 +564,4 @@ public class CadastreInterface {
         downloadCanceled = true;
         lastWMSLayerName = null;
     }
-
 }

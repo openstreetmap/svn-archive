@@ -24,7 +24,7 @@ public class MenuActionLoadFromCache extends JosmAction {
     }
 
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         JFileChooser fc = createAndOpenFileChooser();
         if (fc == null)
             return;

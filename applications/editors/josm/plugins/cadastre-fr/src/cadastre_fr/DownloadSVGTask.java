@@ -73,7 +73,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
                 createWay(svg);
             }
         } catch (DuplicateLayerException e) {
-        	Main.warn("removed a duplicated layer");
+            Main.warn("removed a duplicated layer");
         } catch (WMSException e) {
             errorMessage = e.getMessage();
             wmsLayer.grabber.getWmsInterface().resetCookie();

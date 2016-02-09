@@ -91,7 +91,7 @@ public class GrabThread extends Thread {
                         Main.map.repaint(); // paint the current grab box
                         newImage = grabber.grab(wmsLayer, currentGrabImage.min, currentGrabImage.max);
                     } catch (IOException e) {
-                    	Main.warn("Download action canceled by user or server did not respond");
+                        Main.warn("Download action canceled by user or server did not respond");
                         setCanceled(true);
                         break;
                     } catch (OsmTransferException e) {
@@ -105,22 +105,22 @@ public class GrabThread extends Thread {
                         break;
                     }
                     try {
-	                    if (CadastrePlugin.backgroundTransparent) {
-	                        wmsLayer.imagesLock.lock();
-	                        for (GeorefImage img : wmsLayer.getImages()) {
-	                            if (img.overlap(newImage))
-	                                // mask overlapping zone in already grabbed image
-	                                img.withdraw(newImage);
-	                            else
-	                                // mask overlapping zone in new image only when new image covers completely the
-	                                // existing image
-	                                newImage.withdraw(img);
-	                        }
-	                        wmsLayer.imagesLock.unlock();
-	                    }
-	                    wmsLayer.addImage(newImage);
-	                    Main.map.mapView.repaint();
-	                    saveToCache(newImage);
+                        if (CadastrePlugin.backgroundTransparent) {
+                            wmsLayer.imagesLock.lock();
+                            for (GeorefImage img : wmsLayer.getImages()) {
+                                if (img.overlap(newImage))
+                                    // mask overlapping zone in already grabbed image
+                                    img.withdraw(newImage);
+                                else
+                                    // mask overlapping zone in new image only when new image covers completely the
+                                    // existing image
+                                    newImage.withdraw(img);
+                            }
+                            wmsLayer.imagesLock.unlock();
+                        }
+                        wmsLayer.addImage(newImage);
+                        Main.map.mapView.repaint();
+                        saveToCache(newImage);
                     } catch (NullPointerException e) {
                         Main.info("Layer destroyed. Cancel grab thread");
                         setCanceled(true);

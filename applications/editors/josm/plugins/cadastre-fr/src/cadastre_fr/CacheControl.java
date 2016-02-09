@@ -91,7 +91,7 @@ public class CacheControl implements Runnable {
                 }
             }
             if (size > (long)cacheSize*1024*1024) {
-            	Main.info("Delete oldest file  \""+ files[oldestFile].getName()
+                Main.info("Delete oldest file  \""+ files[oldestFile].getName()
                         + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
                 files[oldestFile].delete();
                 checkDirSize(path);
@@ -134,7 +134,7 @@ public class CacheControl implements Runnable {
         try {
             delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension()));
         } catch (Exception e) {
-        	Main.error(e);
+            Main.error(e);
         }
     }
 
@@ -223,5 +223,4 @@ public class CacheControl implements Runnable {
             ext = cUTM20N + ext;
         return ext;
     }
-
 }

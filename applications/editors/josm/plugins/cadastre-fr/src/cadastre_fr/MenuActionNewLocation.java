@@ -52,7 +52,7 @@ public class MenuActionNewLocation extends JosmAction {
     }
 
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         WMSLayer wmsLayer = addNewLayer(new ArrayList<WMSLayer>());
         if (wmsLayer != null)
             DownloadWMSVectorImage.download(wmsLayer);

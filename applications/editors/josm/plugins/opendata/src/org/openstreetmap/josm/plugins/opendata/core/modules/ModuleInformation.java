@@ -329,7 +329,7 @@ public class ModuleInformation {
     }
 
     public ImageIcon getScaledIcon() {
-        Dimension dim = ImageProvider.getImageSizes(ImageSizes.MENU);
+        Dimension dim = ImageSizes.MENU.getImageDimension();
         ImageIcon iconToScale = icon != null ? icon : OdUtils.getImageIcon(OdConstants.ICON_EMPTY_24);
         return new ImageIcon(iconToScale.getImage().getScaledInstance(dim.width, dim.height, Image.SCALE_SMOOTH));
     }

@@ -322,7 +322,6 @@ public class Signals {
 			}
 		}
 		Renderer.symbol(feature, Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
-		if (Renderer.zoom >= 15) {
 			String str = "";
 			if (lights.get(1) != null) {
 				for (AttMap atts : lights.values()) {
@@ -374,6 +373,9 @@ public class Signals {
 						if (cols.size() > 1)
 							str += LightLetters.get(cols.get(1));
 					}
+					if (atts.containsKey(Att.SIGPER)) {
+						str += "." + df.format(atts.get(Att.SIGPER).val) + "s";
+					}
 					if (dir && atts.containsKey(Att.ORIENT)) {
 						double orient = (Double) atts.get(Att.ORIENT).val;
 						str += " " + orient + "°";
@@ -389,6 +391,7 @@ public class Signals {
 					}
 					Renderer.lightSector(feature, LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
 				}
+			if (Renderer.zoom >= 15) {
 				class LitSect {
 					boolean dir;
 					LitCHR chr;
@@ -403,7 +406,6 @@ public class Signals {
 				ArrayList<LitSect> litatts = new ArrayList<>();
 				for (AttMap atts : lights.values()) {
 					LitSect sect = new LitSect();
-					litatts.add(sect);
 					sect.dir = (atts.containsKey(Att.CATLIT)) && (atts.get(Att.CATLIT).val == CatLIT.LIT_DIR);
 					sect.chr = atts.containsKey(Att.LITCHR) ? ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0) : LitCHR.CHR_UNKN;
 					switch (sect.chr) {
@@ -432,6 +434,8 @@ public class Signals {
 					ArrayList<ColCOL> cols = (ArrayList<ColCOL>) (atts.containsKey(Att.COLOUR) ? atts.get(Att.COLOUR).val : new ArrayList<>());
 					sect.col = cols.size() > 0 ? cols.get(0) : ColCOL.COL_UNK;
 					sect.alt = cols.size() > 1 ? cols.get(1) : ColCOL.COL_UNK;
+					if ((sect.chr != LitCHR.CHR_UNKN) && (sect.col != null))
+						litatts.add(sect);
 				}
 				ArrayList<ArrayList<LitSect>> groupings = new ArrayList<>();
 				for (LitSect lit : litatts) {
@@ -506,6 +510,8 @@ public class Signals {
 					for (ColRng cr : colrng) {
 						str += LightLetters.get(cr.col);
 					}
+					if ((tmp.per > 0) || (tmp.hgt > 0) || (colrng.get(0).rng > 0))
+						str += ".";
 					if (tmp.per > 0)
 						str += df.format(tmp.per) + "s";
 					if (tmp.hgt > 0)
@@ -516,7 +522,9 @@ public class Signals {
 					y += 40;
 					str = "";
 				}
-			} else {
+			}
+		} else {
+			if (Renderer.zoom >= 15) {
 				AttMap atts = lights.get(0);
 				ArrayList<CatLIT> cats = new ArrayList<>();
 				if (atts.containsKey(Att.CATLIT)) {

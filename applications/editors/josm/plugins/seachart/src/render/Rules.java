@@ -464,6 +464,7 @@ public class Rules {
 					}
 				}
 			}
+			addName(feature, 15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 			Signals.addSignals(feature);
 		}
 	}
@@ -485,6 +486,7 @@ public class Rules {
 					Renderer.symbol(feature, Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(feature, Obj.DAYMAR), Topmarks.BuoyDeltas.get(shape));
 				}
 			}
+			addName(feature, 15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 			Signals.addSignals(feature);
 		}
 	}
@@ -628,12 +630,14 @@ public class Rules {
 		}
 		if (feature.objs.get(Obj.TOPMAR) != null)
 			Renderer.symbol(feature, Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(feature, Obj.TOPMAR), Topmarks.FloatDelta);
+		addName(feature, 15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
 		Signals.addSignals(feature);
 	}
 	
 	private static void gauges() {
 		if (Renderer.zoom >= 14) {
 			Renderer.symbol(feature, Harbours.TideGauge);
+			addName(feature, 15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
 			Signals.addSignals(feature);
 		}
 	}
@@ -801,7 +805,7 @@ public class Rules {
 			fncSym = Landmarks.RadioTV;
 		Renderer.symbol(feature, catSym);
 		Renderer.symbol(feature, fncSym);
-		addName(feature, 15, new Font("Arial", Font.BOLD, 80), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
+		addName(feature, 15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 		Signals.addSignals(feature);
 	}
 	
@@ -1009,7 +1013,7 @@ public class Rules {
 					Renderer.symbol(feature, Harbours.PortCrane);
 			} else if (feature.type == Obj.HULKES) {
 				Renderer.lineVector(feature, new LineStyle(Color.black, 4, null, new Color(0xffe000)));
-				addName(feature, 15, new Font("Arial", Font.BOLD, 80));
+				addName(feature, 15, new Font("Arial", Font.BOLD, 40));
 			}
 		}
 	}
@@ -1168,7 +1172,7 @@ public class Rules {
 				break;
 			case PILBOP:
 				Renderer.symbol(feature, Harbours.Pilot);
-				addName(feature, 15, new Font("Arial", Font.BOLD, 50), Symbols.Msymb , new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, -40)));
+				addName(feature, 15, new Font("Arial", Font.BOLD, 40), Symbols.Msymb , new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, -40)));
 				CatPIL cat = (CatPIL) getAttEnum(feature, feature.type, 0, Att.CATPIL);
 				if (cat == CatPIL.PIL_HELI) {
 					Renderer.labelText(feature, "H", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.LC, AffineTransform.getTranslateInstance(70, 0)));

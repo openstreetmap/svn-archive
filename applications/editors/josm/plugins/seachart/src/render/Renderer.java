@@ -567,10 +567,10 @@ public class Renderer {
 		double arcWidth =  10.0 * sScale;
 		g2.setStroke(new BasicStroke((float)arcWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1));
 		g2.setPaint(col1);
-		g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90), (s1 - s2), Arc2D.OPEN));
+		g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
 		if (col2 != null) {
 			g2.setPaint(col2);
-			g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), (s1 - s2), Arc2D.OPEN));
+			g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
 		}
 		if ((str != null) && (!str.isEmpty())) {
 			g2.setPaint(Color.black);
@@ -583,7 +583,6 @@ public class Renderer {
 			boolean hand = false;
 	    double offset = 0;
 	    Point2D origin;
-			double arc = (s2 - s1);
 			if (dir) {
 				radial += 10 * sScale;
 				if (mid < 180) {
@@ -603,6 +602,7 @@ public class Renderer {
 					g2.fill(path);
 		    }
 			} else {
+				double arc = (s2 > s1) ? (s2 - s1) : (s2 - s1 + 360);
 				double awidth = (Math.toRadians(arc) * radial);
 				if (gwidth < awidth) {
 					offset = 0;

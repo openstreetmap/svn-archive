@@ -202,7 +202,7 @@ public class Jicons {
 			return false;
 		}
 
-		public Color background() {
+		public Color background(S57map map) {
 			return new Color(0, true);
 		}
 

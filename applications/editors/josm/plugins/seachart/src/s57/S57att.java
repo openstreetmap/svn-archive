@@ -121,7 +121,7 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttStr.put(Att.RYRMGV, "year"); AttStr.put(Att.RESTRN, "restriction"); AttStr.put(Att.SECTR1, "sector_start"); AttStr.put(Att.SECTR2, "sector_end");
   AttStr.put(Att.SHIPAM, "shift"); AttStr.put(Att.SIGFRQ, "frequency"); AttStr.put(Att.SIGGEN, "generation"); AttStr.put(Att.SIGGRP, "group");
   AttStr.put(Att.SIGPER, "period"); AttStr.put(Att.SIGSEQ, "sequence"); AttStr.put(Att.SOUACC, "sounding_accuracy"); AttStr.put(Att.SDISMX, "maximum_sounding");
-  AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, ""); AttStr.put(Att.SORIND, ""); AttStr.put(Att.STATUS, "status");
+  AttStr.put(Att.SDISMN, "minimum_sounding"); AttStr.put(Att.SORDAT, "source_date"); AttStr.put(Att.SORIND, "source"); AttStr.put(Att.STATUS, "status");
   AttStr.put(Att.SURATH, "authority"); AttStr.put(Att.SUREND, "survey_end"); AttStr.put(Att.SURSTA, "survey_start"); AttStr.put(Att.SURTYP, "survey");
   AttStr.put(Att.TECSOU, "technique"); AttStr.put(Att.TXTDSC, "document"); AttStr.put(Att.TIMEND, "end_time"); AttStr.put(Att.TIMSTA, "start_time");
   AttStr.put(Att.TOPSHP, "shape"); AttStr.put(Att.TRAFIC, "traffic_flow"); AttStr.put(Att.VALACM, "variation_change"); AttStr.put(Att.VALDCO, "depth");

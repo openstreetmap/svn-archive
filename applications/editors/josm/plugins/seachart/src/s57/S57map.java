@@ -233,7 +233,7 @@ public class S57map { // S57/OSM map generation methods
 	private long cref;
 	private Feature feature;
 	private Edge edge;
-	private KeyVal<?> osm = S57osm.OSMtag("", "");
+	private ArrayList<KeyVal<?>> osm;
 	private boolean sea;
 
 	public S57map(boolean s) {
@@ -374,7 +374,7 @@ public class S57map { // S57/OSM map generation methods
 		feature.geom.prim = Pflag.POINT;
 		feature.geom.elems.add(new Prim(id));
 		edge = null;
-		osm = S57osm.OSMtag("", "");
+		osm =  new ArrayList<>();
 	}
 
 	public void addEdge(long id) {
@@ -384,7 +384,7 @@ public class S57map { // S57/OSM map generation methods
 		feature.geom.prim = Pflag.LINE;
 		feature.geom.elems.add(new Prim(id));
 		edge = new Edge();
-		osm = S57osm.OSMtag("", "");
+		osm = new ArrayList<>();
 	}
 
 	public void addToEdge(long node) {
@@ -405,7 +405,7 @@ public class S57map { // S57/OSM map generation methods
 		feature.reln = Rflag.UNKN;
 		feature.geom.prim = Pflag.AREA;
 		edge = null;
-		osm = S57osm.OSMtag("", "");
+		osm = new ArrayList<>();
 	}
 
 	public void addToArea(long id, boolean outer) {
@@ -474,13 +474,7 @@ public class S57map { // S57/OSM map generation methods
 				}
 			}
 		} else if (!sea) {
-			KeyVal<?> kv = S57osm.OSMtag(key, val);
-			if (kv.obj != Obj.UNKOBJ) {
-				osm.obj = kv.obj;
-				if (kv.att != Att.UNKATT) {
-					osm = kv;
-				}
-			}
+			S57osm.OSMtag(osm, key, val);
 		}
 	}
 
@@ -488,7 +482,7 @@ public class S57map { // S57/OSM map generation methods
 		switch (feature.geom.prim) {
 		case POINT:
 			Snode node = nodes.get(id);
-			if ((node.flg != Nflag.CONN) && (node.flg != Nflag.DPTH) && (!feature.objs.isEmpty() || (osm.obj != Obj.UNKOBJ))) {
+			if ((node.flg != Nflag.CONN) && (node.flg != Nflag.DPTH) && (!feature.objs.isEmpty() || !osm.isEmpty())) {
 				node.flg = Nflag.ISOL;
 			}
 			break;
@@ -506,7 +500,32 @@ public class S57map { // S57/OSM map generation methods
 			break;
 		}
 		if (sortGeom(feature) && !((edge != null) && (edge.last == 0))) {
-			if (osm.obj != Obj.UNKOBJ) {
+			if (feature.type != Obj.UNKOBJ) {
+				index.put(id, feature);
+				if (features.get(feature.type) == null) {
+					features.put(feature.type, new ArrayList<Feature>());
+				}
+				features.get(feature.type).add(feature);
+			}
+			for (KeyVal<?> kvx : osm) {
+				Feature base = new Feature();
+				base.reln = Rflag.MASTER;
+				base.geom = feature.geom;
+				base.type = kvx.obj;
+				ObjTab objs = new ObjTab();
+				base.objs.put(kvx.obj, objs);
+				AttMap atts = new AttMap();
+				objs.put(0, atts);
+				if (kvx.att != Att.UNKATT) {
+					atts.put(kvx.att, new AttVal<>(kvx.conv, kvx.val));
+				}
+				index.put(++xref, base);
+				if (features.get(kvx.obj) == null) {
+					features.put(kvx.obj, new ArrayList<Feature>());
+				}
+				features.get(kvx.obj).add(base);
+			}
+/*			if (!osm.isEmpty()) {
 				if (feature.type == Obj.UNKOBJ) {
 					feature.type = osm.obj;
 					ObjTab objs = feature.objs.get(osm.obj);
@@ -540,14 +559,7 @@ public class S57map { // S57/OSM map generation methods
 					}
 					features.get(osm.obj).add(base);
 				}
-			}
-			if (feature.type != Obj.UNKOBJ) {
-				index.put(id, feature);
-				if (features.get(feature.type) == null) {
-					features.put(feature.type, new ArrayList<Feature>());
-				}
-				features.get(feature.type).add(feature);
-			}
+			}*/
 		}
 	}
 	
@@ -574,62 +586,91 @@ public class S57map { // S57/OSM map generation methods
 			if (feature.geom.prim == Pflag.POINT) {
 				feature.geom.centre = nodes.get(feature.geom.elems.get(0).id);
 				return true;
-			} else {
-				int sweep = feature.geom.elems.size();
-				while (!feature.geom.elems.isEmpty()) {
-					Prim prim = feature.geom.elems.remove(0);
-					Edge edge = edges.get(prim.id);
-					if (edge == null) {
-						return false;
+			}
+			Geom outer = new Geom(feature.geom.prim);
+			Geom inner = new Geom(feature.geom.prim);
+			for (Prim prim : feature.geom.elems) {
+				if (prim.outer) {
+					outer.elems.add(prim);
+				} else {
+					inner.elems.add(prim);
+				}
+			}
+			boolean outin = true;
+			int sweep = outer.elems.size();
+			if (sweep == 0) {
+				return false;
+			}
+			int prev = sweep;
+			int top = 0;
+			while (!outer.elems.isEmpty()) {
+				Prim prim = outer.elems.remove(0);
+				Edge edge = edges.get(prim.id);
+				if (edge == null) {
+					return false;
+				}
+				if (next == true) {
+					next = false;
+					first = edge.first;
+					last = edge.last;
+					prim.forward = true;
+					sort.elems.add(prim);
+					if (prim.outer) {
+						sort.outers++;
+					} else {
+						sort.inners++;
 					}
-					if (next == true) {
-						next = false;
-						first = edge.first;
+					comp = new Comp(cref++, 1);
+					sort.comps.add(comp);
+				} else {
+					if (edge.first == last) {
+						sort.elems.add(prim);
 						last = edge.last;
 						prim.forward = true;
+						comp.size++;
+					} else if (edge.last == first) {
+						sort.elems.add(top, prim);
+						first = edge.first;
+						prim.forward = true;
+						comp.size++;
+					} else if (edge.last == last) {
 						sort.elems.add(prim);
-						if (prim.outer) {
-							sort.outers++;
-						} else {
-							sort.inners++;
-						}
-						comp = new Comp(cref++, 1);
-						sort.comps.add(comp);
+						last = edge.first;
+						prim.forward = false;
+						comp.size++;
+					} else if (edge.first == first) {
+						sort.elems.add(top, prim);
+						first = edge.last;
+						prim.forward = false;
+						comp.size++;
 					} else {
-						if (edge.first == last) {
-							sort.elems.add(prim);
-							last = edge.last;
-							prim.forward = true;
-							comp.size++;
-						} else if (edge.last == first) {
-							sort.elems.add(0, prim);
-							first = edge.first;
-							prim.forward = true;
-							comp.size++;
-						} else if (edge.last == last) {
-							sort.elems.add(prim);
-							last = edge.first;
-							prim.forward = false;
-							comp.size++;
-						} else if (edge.first == first) {
-							sort.elems.add(0, prim);
-							first = edge.last;
-							prim.forward = false;
-							comp.size++;
-						} else {
-							feature.geom.elems.add(prim);
+						outer.elems.add(prim);
+					}
+				}
+				if (--sweep == 0) {
+					sweep = outer.elems.size();
+					if ((sweep == 0) || (sweep == prev)) {
+						if ((sort.prim == Pflag.AREA) && (first != last)) {
+							return false;
 						}
-					}
-					if (--sweep == 0) {
+						if (outin) {
+							if (sweep != 0) {
+								return false;
+							}
+							outer = inner;
+							outin = false;
+							sweep = outer.elems.size();
+						}
 						next = true;
-						sweep = feature.geom.elems.size();
+						top = sort.elems.size();
 					}
+					prev = sweep;
 				}
-				if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
-					sort.prim = Pflag.AREA;
-				}
-				feature.geom = sort;
 			}
+			if ((sort.prim == Pflag.LINE) && (sort.outers == 1) && (sort.inners == 0) && (first == last)) {
+				sort.prim = Pflag.AREA;
+			}
+			feature.geom = sort;
 			if (feature.geom.prim == Pflag.AREA) {
 				int ie = 0;
 				int ic = 0;

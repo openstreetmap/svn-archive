@@ -615,10 +615,10 @@ public class S57val { // S57 Attribute values lookup tables & methods
  public enum NatSUR { SUR_UNKN, SUR_MUD, SUR_CLAY, SUR_SILT, SUR_SAND, SUR_STON, SUR_GRVL, SUR_PBBL, SUR_CBBL, SUR_ROCK, SUR_LAVA, SUR_CORL, SUR_SHEL, SUR_BLDR } 
  private static final EnumMap<NatSUR, S57enum> Natsur = new EnumMap<>(NatSUR.class); static { Natsur.put(NatSUR.SUR_UNKN, new S57enum(0, ""));
   Natsur.put(NatSUR.SUR_MUD, new S57enum(1, "mud")); Natsur.put(NatSUR.SUR_CLAY, new S57enum(2, "clay")); Natsur.put(NatSUR.SUR_SILT, new S57enum(3, "silt"));
-  Natsur.put(NatSUR.SUR_SAND, new S57enum(4, "sand")); Natsur.put(NatSUR.SUR_STON, new S57enum(5, "stone")); Natsur.put(NatSUR.SUR_GRVL, new S57enum(6, "gravel"));
-  Natsur.put(NatSUR.SUR_PBBL, new S57enum(7, "pebbles")); Natsur.put(NatSUR.SUR_CBBL, new S57enum(8, "cobbles")); Natsur.put(NatSUR.SUR_ROCK, new S57enum(9, "rock"));
+  Natsur.put(NatSUR.SUR_SAND, new S57enum(4, "sand")); Natsur.put(NatSUR.SUR_STON, new S57enum(5, "stones")); Natsur.put(NatSUR.SUR_GRVL, new S57enum(6, "gravel"));
+  Natsur.put(NatSUR.SUR_PBBL, new S57enum(7, "pebbles")); Natsur.put(NatSUR.SUR_CBBL, new S57enum(8, "cobbles")); Natsur.put(NatSUR.SUR_ROCK, new S57enum(9, "rocky"));
   Natsur.put(NatSUR.SUR_LAVA, new S57enum(11, "lava")); Natsur.put(NatSUR.SUR_CORL, new S57enum(14, "coral")); Natsur.put(NatSUR.SUR_SHEL, new S57enum(17, "shells"));
-  Natsur.put(NatSUR.SUR_BLDR, new S57enum(18, "boulder"));
+  Natsur.put(NatSUR.SUR_BLDR, new S57enum(18, "boulders"));
  }
  public enum NatQUA { QUA_UNKN, QUA_FINE, QUA_MEDM, QUA_CORS, QUA_BRKN, QUA_STKY, QUA_SOFT, QUA_STIF, QUA_VCNC, QUA_CALC, QUA_HARD } 
  private static final EnumMap<NatQUA, S57enum> Natqua = new EnumMap<>(NatQUA.class); static { Natqua.put(NatQUA.QUA_UNKN, new S57enum(0, ""));
@@ -1093,7 +1093,7 @@ public class S57val { // S57 Attribute values lookup tables & methods
   keys.put(Att.LC_BM2, new S57key(Conv.F, null)); keys.put(Att.LC_LG1, new S57key(Conv.F, null)); keys.put(Att.LC_LG2, new S57key(Conv.F, null));
   keys.put(Att.LC_DR1, new S57key(Conv.F, null)); keys.put(Att.LC_DR2, new S57key(Conv.F, null)); keys.put(Att.LC_SP1, new S57key(Conv.F, null));
   keys.put(Att.LC_SP2, new S57key(Conv.F, null)); keys.put(Att.LC_WD1, new S57key(Conv.F, null)); keys.put(Att.LC_WD2, new S57key(Conv.F, null));
-  keys.put(Att.LITRAD, new S57key(Conv.A, null)); keys.put(Att.CATCVR, new S57key(Conv.E, Catcvr));
+  keys.put(Att.LITRAD, new S57key(Conv.F, null)); keys.put(Att.CATCVR, new S57key(Conv.E, Catcvr));
  }
  
  public static Enum<?> s57Enum(String val, Att att) { // Convert S57 attribute value string to SCM enumeration

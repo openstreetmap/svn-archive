@@ -18,6 +18,18 @@ public class S57box { //S57 bounding box truncation
 	
 	enum Ext {I, N, W, S, E }
 	
+	static Ext getExt(S57map map, double lat, double lon) {
+		if ((lat >= map.bounds.maxlat) && (lon < map.bounds.maxlon)) {
+			return Ext.N;
+		} else if (lon <= map.bounds.minlon) {
+			return Ext.W;
+		} else if (lat <= map.bounds.minlat) {
+			return Ext.S;
+		} else if (lon >= map.bounds.maxlon) {
+			return Ext.E;
+		}		return Ext.I;
+	}
+	
 	public static void bBox(S57map map) {
 		/* Truncations
 		 * Points: delete point features outside BB
@@ -104,56 +116,12 @@ public class S57box { //S57 bounding box truncation
 				lands.remove(island);
 			}
 			for (Land land : lands) {
-				GeomIterator git = map.new GeomIterator(land.land.geom);
-				Snode prev = null;
-				Ext bprev = Ext.I;
-				Ext ext;
-				land.ebound = land.sbound = Ext.I;
-				while (git.hasComp()) {
-					git.nextComp();
-					while (git.hasEdge()) {
-						git.nextEdge();
-						while (git.hasNode()) {
-							long ref = git.nextRef(false);
-							Snode node = map.nodes.get(ref);
-							if (node == null)
-								continue;
-							if (land.first == 0) {
-								land.first = ref;
-							}
-							if (prev == null) {
-								prev = node;
-							}
-							if ((node.lat >= map.bounds.maxlat) && (node.lon < map.bounds.maxlon)) {
-								ext = Ext.N;
-							} else if (node.lon <= map.bounds.minlon) {
-								ext = Ext.W;
-							} else if (node.lat <= map.bounds.minlat) {
-								ext = Ext.S;
-							} else if (node.lon >= map.bounds.maxlon) {
-								ext = Ext.E;
-							} else {
-								ext = Ext.I;
-							}
-							if (ext == Ext.I) {
-								if (land.start == null) {
-									land.start = prev;
-									land.sbound = bprev;
-								}
-								land.end = null;
-								land.ebound = Ext.I;
-							} else {
-								if ((land.start != null) && (land.end == null)) {
-									land.end = node;
-									land.ebound = ext;
-								}
-							}
-							prev = node;
-							bprev = ext;
-							land.last = ref;
-						}
-					}
-				}
+				land.first = map.edges.get(land.land.geom.elems.get(0).id).first;
+				land.start = map.nodes.get(land.first);
+				land.sbound = getExt(map, land.start.lat, land.start.lon);
+				land.last = map.edges.get(land.land.geom.elems.get(land.land.geom.comps.get(0).size - 1).id).last;
+				land.end = map.nodes.get(land.last);
+				land.ebound = getExt(map, land.end.lat, land.end.lon);
 			}
 			islands = new ArrayList<>();
 			for (Land land : lands) {
@@ -164,71 +132,38 @@ public class S57box { //S57 bounding box truncation
 			for (Land island : islands) {
 				lands.remove(island);
 			}
-			while (lands.size() > 0) {
-				Land land = lands.get(0);
+			for (Land land : lands) {
 				Edge nedge = map.new Edge();
 				nedge.first = land.last;
+				nedge.last = land.first;
 				Ext bound = land.ebound;
-				Snode last = land.end;
-				double delta = Math.PI;
-				int idx = -1;
-				Land next = null;
-				while (idx < 0) {
-					for (int i = 0; i < lands.size(); i++) {
-						next = lands.get(i);
-						if (next.sbound == bound) {
-							double diff = -Math.PI;
-							switch (bound) {
-							case N:
-								diff = last.lon - next.start.lon;
-								break;
-							case W:
-								diff = last.lat - next.start.lat;
-								break;
-							case S:
-								diff = next.start.lon - last.lon;
-								break;
-							case E:
-								diff = next.start.lat - last.lat;
-								break;
-							default:
-								continue;
-							}
-							if ((diff >= 0.0) && (diff < delta)) {
-								delta = diff;
-								idx = i;
-							}
-						}
-					}
-					if (idx < 0) {
-						long ref = (long) bound.ordinal();
-						last = map.nodes.get(ref);
-						nedge.nodes.add(ref);
-						ref = ref < 4 ? ++ref : 1;
-						for (Ext e : Ext.values()) {
-							if (ref == e.ordinal()) {
-								bound = e;
-								break;
-							}
-						}
+				while (bound != land.sbound) {
+					switch (bound) {
+					case N:
+						nedge.nodes.add(1l);
+						bound = Ext.W;
+						break;
+					case W:
+						nedge.nodes.add(2l);
+						bound = Ext.S;
+						break;
+					case S:
+						nedge.nodes.add(3l);
+						bound = Ext.E;
+						break;
+					case E:
+						nedge.nodes.add(4l);
+						bound = Ext.N;
+						break;
+					default:
+						continue;
 					}
 				}
-				next = lands.get(idx);
-				nedge.last = next.first;
 				map.edges.put(++map.xref, nedge);
 				land.land.geom.elems.add(map.new Prim(map.xref));
-				if (next != land) {
-					land.land.geom.elems.addAll(next.land.geom.elems);
-					land.ebound = next.ebound;
-					land.end = next.end;
-					land.last = next.last;
-					lands.remove(idx);
-				}
-				map.sortGeom(land.land);
-				if (land.land.geom.prim == Pflag.AREA) {
-					map.features.get(Obj.LNDARE).add(land.land);
-					lands.remove(land);
-				}
+				land.land.geom.comps.get(0).size++;
+				land.land.geom.prim = Pflag.AREA;
+				map.features.get(Obj.LNDARE).add(land.land);
 			}
 		}
 		return;

@@ -277,7 +277,8 @@ public class Rules {
 			Renderer.lineVector(feature, new LineStyle(new Color(0x20000000, true)));
 			break;
 		case COALNE:
-			Renderer.lineVector(feature, new LineStyle(Color.black, 10));
+			if (Renderer.zoom >= 12)
+				Renderer.lineVector(feature, new LineStyle(Color.black, 10));
 			break;
 		case DEPARE:
 			Double depmax = 0.0;
@@ -286,7 +287,8 @@ public class Rules {
 			}
 			break;
 		case LAKARE:
-			Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 10, Symbols.Bwater));
+			if ((Renderer.zoom >= 12) || (feature.geom.area > 10.0))
+				Renderer.lineVector(feature, new LineStyle(Symbols.Bwater));
 			break;
 		case DRGARE:
 			if (Renderer.zoom < 16)
@@ -309,11 +311,19 @@ public class Rules {
 		case LKBSPT:
 		case LOKBSN:
 		case HRBBSN:
-			Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Bwater));
+			if (Renderer.zoom >= 12) {
+				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Bwater));
+			} else {
+				Renderer.lineVector(feature, new LineStyle(Symbols.Bwater));
+			}
 			break;
 		case HRBFAC:
 			if (feature.objs.get(Obj.HRBBSN) != null) {
-				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Bwater));
+				if (Renderer.zoom >= 12) {
+					Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Bwater));
+				} else {
+					Renderer.lineVector(feature, new LineStyle(Symbols.Bwater));
+				}
 			}
 			break;
 		case LNDARE:
@@ -1037,7 +1047,11 @@ public class Rules {
 		CatSLC cat = (CatSLC) getAttEnum(feature, feature.type, 0, Att.CATSLC);
 		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.BASE)) {
 			if ((cat != CatSLC.SLC_SWAY) && (cat != CatSLC.SLC_TWAL)) {
-				Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Yland));
+				if (Renderer.zoom >= 12) {
+					Renderer.lineVector(feature, new LineStyle(Color.black, 10, Symbols.Yland));
+				} else {
+					Renderer.lineVector(feature, new LineStyle(Symbols.Yland));
+				}
 			}
 		}
 		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.SEAMARK)) {
@@ -1048,12 +1062,12 @@ public class Rules {
 					if (lev == WatLEV.LEV_CVRS) {
 						Renderer.lineVector(feature, new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
 						if (Renderer.zoom >= 15)
-							Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, 80);
+							Renderer.lineText(feature, "(covers)", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, 80);
 					} else {
 						Renderer.lineVector(feature, new LineStyle(Color.black, 10, null, null));
 					}
 					if (Renderer.zoom >= 15)
-						Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -30);
+						Renderer.lineText(feature, "Training Wall", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, -30);
 					break;
 				case SLC_SWAY:
 					Renderer.lineVector(feature, new LineStyle(Color.black, 2, null, new Color(0xffe000)));
@@ -1198,7 +1212,7 @@ public class Rules {
 	}
 
 	private static void waterways() {
-		Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 20, Symbols.Bwater));
+		Renderer.lineVector(feature, new LineStyle(Symbols.Bwater, 20, (feature.geom.prim == Pflag.AREA) ? Symbols.Bwater : null));
 	}
 
 	private static void wrecks() {

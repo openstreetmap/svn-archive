@@ -34,6 +34,7 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 	private static final HashMap<String, KeyVal<?>> OSMtags = new HashMap<>();
 	static {
 		OSMtags.put("natural=coastline", new KeyVal<>(Obj.COALNE, Att.UNKATT, null, null)); OSMtags.put("natural=water", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
+		OSMtags.put("water=river", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null)); OSMtags.put("water=canal", new KeyVal<>(Obj.CANALS, Att.UNKATT, null, null));
 		OSMtags.put("waterway=riverbank", new KeyVal<>(Obj.RIVERS, Att.UNKATT, null, null)); OSMtags.put("waterway=dock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null));
 		OSMtags.put("waterway=lock", new KeyVal<>(Obj.HRBBSN, Att.UNKATT, null, null)); OSMtags.put("landuse=basin", new KeyVal<>(Obj.LAKARE, Att.UNKATT, null, null));
 		OSMtags.put("wetland=tidalflat", new KeyVal<Double>(Obj.DEPARE, Att.DRVAL2, Conv.F, (Double)0.0)); OSMtags.put("tidal=yes", new KeyVal<Double>(Obj.DEPARE, Att.DRVAL2, Conv.F, (Double)0.0));
@@ -50,20 +51,43 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 		OSMtags.put("place=village", new KeyVal<>(Obj.BUAARE, Att.CATBUA, Conv.E, CatBUA.BUA_VLLG));
 		}
 	
-	public static KeyVal<?> OSMtag(String key, String val) {
+	public static void OSMtag(ArrayList<KeyVal<?>> osm, String key, String val) {
 		KeyVal<?> kv = OSMtags.get(key + "=" + val);
 		if (kv != null) {
 			if (kv.conv == Conv.E) {
 				ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
 				list.add((Enum<?>)kv.val);
-				return new KeyVal<>(kv.obj, kv.att, kv.conv, list);
+				osm.add(new KeyVal<>(kv.obj, kv.att, kv.conv, list));
+			} else {
+				osm.add(kv);
 			}
-			return kv;
 		}
-		return new KeyVal<>(Obj.UNKOBJ, Att.UNKATT, null, null);
+		KeyVal<?> kvl = null;
+		KeyVal<?> kvd = null;
+		boolean rc = false;
+		boolean rcl = false;
+		for (KeyVal<?> kvx : osm) {
+			if (kvx.obj == Obj.LAKARE) {
+				kvl = kvx;
+			} else if ((kvx.obj == Obj.RIVERS) || (kvx.obj == Obj.CANALS)) {
+				rc = true;
+			}
+			if (kvx.obj == Obj.DEPARE) {
+				kvd = kvx;
+			} else if ((kvx.obj == Obj.RIVERS) || (kvx.obj == Obj.CANALS) || (kvx.obj == Obj.LAKARE)) {
+				rcl = true;
+			}
+		}
+		if (rc && (kvl != null)) {
+			osm.remove(kvl);
+		}
+		if (rcl && (kvd != null)) {
+			osm.remove(kvd);
+		}
+		return;
 	}
 	
-	public static void OSMmap(BufferedReader in, S57map map) throws Exception {
+	public static void OSMmap(BufferedReader in, S57map map, boolean bb) throws Exception {
 		String k = "";
 		String v = "";
 
@@ -83,7 +107,7 @@ public class S57osm { // OSM to S57 Object/Attribute and Object/Primitive conver
 		String ln;
 		while ((ln = in.readLine()) != null) {
 			if (inOsm) {
-				if (ln.contains("<bounds")) {
+				if (ln.contains("<bounds") && !bb) {
 					for (String token : ln.split("[ ]+")) {
 						if (token.matches("^minlat=.+")) {
 							map.bounds.minlat = Math.toRadians(Double.parseDouble(token.split("[\"\']")[1]));

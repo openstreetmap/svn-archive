@@ -29,7 +29,9 @@ import org.openstreetmap.josm.gui.layer.ImageryLayer;
 
 import render.ChartContext;
 import render.Renderer;
+import s57.S57map;
 import s57.S57map.*;
+import s57.S57obj.Obj;
 import symbols.Symbols;
 
 public class ChartImage extends ImageryLayer implements ZoomChangeListener, ChartContext {
@@ -97,8 +99,34 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 		return true;
 	}
 	
-	public Color background() {
-		return (Symbols.Bwater);
+	public Color background(S57map map) {
+		if (map.features.containsKey(Obj.COALNE)) {
+			for (Feature feature : map.features.get(Obj.COALNE)) {
+				if (feature.geom.prim == Pflag.POINT) {
+					break;
+				}
+				GeomIterator git = map.new GeomIterator(feature.geom);
+				git.nextComp();
+				while (git.hasEdge()) {
+					git.nextEdge();
+					while (git.hasNode()) {
+						Snode node = git.next();
+						if (node == null)
+							continue;
+						if ((node.lat >= map.bounds.minlat) && (node.lat <= map.bounds.maxlat) && (node.lon >= map.bounds.minlon) && (node.lon <= map.bounds.maxlon)) {
+							return Symbols.Bwater;
+						}
+					}
+				}
+			}
+			return Symbols.Yland;
+		} else {
+			if (map.features.containsKey(Obj.ROADWY) || map.features.containsKey(Obj.RAILWY) || map.features.containsKey(Obj.LAKARE) || map.features.containsKey(Obj.RIVERS) || map.features.containsKey(Obj.CANALS)) {
+				return Symbols.Yland;
+			} else {
+				return Symbols.Bwater;
+			}
+		}
 	}
 
 	public RuleSet ruleset() {

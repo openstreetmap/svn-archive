@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import s57.S57map;
 import s57.S57osm;
 import s57.S57map.*;
-import symbols.*;
 import render.*;
 
 public class Jrender {
@@ -52,8 +51,8 @@ public class Jrender {
 
 	static class Context implements ChartContext {
 		
-	  static double top = 0;
-	  static double mile = 0;
+	  static double top;
+	  static double mile;
 	  
 	  public Context () {
 			top = (1.0 - Math.log(Math.tan(map.bounds.maxlat) + 1.0 / Math.cos(map.bounds.maxlat)) / Math.PI) / 2.0 * 256.0 * 4096.0;
@@ -74,7 +73,7 @@ public class Jrender {
 			return false;
 		}
 
-		public Color background() {
+		public Color background(S57map map) {
 			return new Color(0, true);
 		}
 
@@ -87,18 +86,18 @@ public class Jrender {
 		BufferedImage img;
 		context = new Context();
 
-		int size = 256;
-		for (int i = 0; i < (12 - zoom); i++) size *= 2;
+		int size = 768;
+//		for (int i = 0; i < (12 - zoom); i++) size *= 2;
 		Rectangle rect = new Rectangle(size, size);
-		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
-		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ImageIO.write(img, "png", bos);
+//		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
+//		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
+//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//		ImageIO.write(img, "png", bos);
 //		empty = bos.size();
 //		tile(zoom, 1, 0, 0);
-		FileOutputStream fos = new FileOutputStream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".png");
-		bos.writeTo(fos);
-		fos.close();
+//		FileOutputStream fos = new FileOutputStream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".png");
+//		bos.writeTo(fos);
+//		fos.close();
 
 //		for (int z = 12; z <= 18; z++) {
 			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
@@ -109,8 +108,9 @@ public class Jrender {
 			svgGenerator.setSVGCanvasSize(rect.getSize());
 			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
 //			svgGenerator.translate(-256, -256);
-			Renderer.reRender(svgGenerator, rect, zoom, 0.05, map, context);
-			svgGenerator.stream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".svg");
+			Renderer.reRender(svgGenerator, rect, zoom, 1.0, map, context);
+//			svgGenerator.stream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".svg");
+svgGenerator.stream(dstdir);
 //		}
 	}
 	
@@ -179,24 +179,25 @@ public class Jrender {
 		ytile = Integer.parseInt(args[4]);
 		send = new ArrayList<String>();
 		deletes = new HashMap<String, Boolean>();
-		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
+//		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
+BufferedReader in = new BufferedReader(new FileReader(srcdir));
 		map = new S57map(true);
-		S57osm.OSMmap(in, map);
+		S57osm.OSMmap(in, map, false);
 		in.close();
-		if (zoom == 12) {
-			clean(12, 0, 0);
-		}
+//		if (zoom == 12) {
+//			clean(12, 0, 0);
+//		}
 		tileMap(dstdir, zoom);
-		if ((send.size() + deletes.size()) > 0) {
-			PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");
-			for (String str : send) {
-				writer.println(str);
-			}
-			for (String del : deletes.keySet()) {
-				writer.println("rm " + del);
-			}
-			writer.close();
-		}
+//		if ((send.size() + deletes.size()) > 0) {
+//			PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");
+//			for (String str : send) {
+//				writer.println(str);
+//			}
+//			for (String del : deletes.keySet()) {
+//				writer.println("rm " + del);
+//			}
+//			writer.close();
+//		}
 		System.exit(0);
 	}
 }

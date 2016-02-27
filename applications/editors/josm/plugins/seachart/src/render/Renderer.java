@@ -46,7 +46,7 @@ public class Renderer {
 				Point2D br = context.getPoint(map.new Snode(map.bounds.minlat, map.bounds.maxlon));
 				g2.clip(new Rectangle2D.Double(tl.getX(), tl.getY(), (br.getX() - tl.getX()), (br.getY() - tl.getY())));
 			}
-			g2.setBackground(context.background());
+			g2.setBackground(context.background(map));
 			g2.clearRect(rect.x, rect.y, rect.width, rect.height);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
@@ -483,7 +483,7 @@ public class Renderer {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    g2.setPaint(colour);
 	    FontRenderContext frc = g2.getFontRenderContext();
-	    GlyphVector gv = font.deriveFont((float)(font.getSize()*sScale)).createGlyphVector(frc, (" " + str));
+	    GlyphVector gv = font.deriveFont(font.getSize2D() * (float)sScale).createGlyphVector(frc, (" " + str));
 	    GeneralPath path = new GeneralPath();
 			Point2D prev = new Point2D.Double();
 			Point2D next = new Point2D.Double();
@@ -559,16 +559,18 @@ public class Renderer {
 		if (dir) {
 			g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(mid)), centre.y + radial * Math.cos(Math.toRadians(mid))));
 		} else {
-			g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s1)), centre.y + radial * Math.cos(Math.toRadians(s1))));
-			g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s2)), centre.y + radial * Math.cos(Math.toRadians(s2))));
+			if ((s1 != 0.0) || (s2 != 360.0)) {
+				g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s1)), centre.y + radial * Math.cos(Math.toRadians(s1))));
+				g2.draw(new Line2D.Double(centre.x, centre.y, centre.x - radial * Math.sin(Math.toRadians(s2)), centre.y + radial * Math.cos(Math.toRadians(s2))));
+			}
 		}
 		double arcWidth =  10.0 * sScale;
 		g2.setStroke(new BasicStroke((float)arcWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1));
 		g2.setPaint(col1);
-		g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90), (s1 - s2 - 360) % 360, Arc2D.OPEN));
+		g2.draw(new Arc2D.Double(centre.x - radial, centre.y - radial, 2 * radial, 2 * radial, -(s1 + 90), (s1 - s2), Arc2D.OPEN));
 		if (col2 != null) {
 			g2.setPaint(col2);
-			g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), (s1 - s2 - 360) % 360, Arc2D.OPEN));
+			g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), (s1 - s2), Arc2D.OPEN));
 		}
 		if ((str != null) && (!str.isEmpty())) {
 			g2.setPaint(Color.black);
@@ -576,12 +578,12 @@ public class Renderer {
 	    FontRenderContext frc = g2.getFontRenderContext();
 	    Font font = new Font("Arial", Font.PLAIN, 40);
 	    GeneralPath path = new GeneralPath();
-	    GlyphVector gv = font.deriveFont((float)(font.getSize()*sScale)).createGlyphVector(frc, (" " + str));
+	    GlyphVector gv = font.deriveFont(font.getSize2D() * (float)sScale).createGlyphVector(frc, (" " + str));
 			double gwidth = gv.getLogicalBounds().getWidth();
 			boolean hand = false;
 	    double offset = 0;
 	    Point2D origin;
-			double arc = (s2 - s1 + 360) % 360;
+			double arc = (s2 - s1);
 			if (dir) {
 				radial += 10 * sScale;
 				if (mid < 180) {

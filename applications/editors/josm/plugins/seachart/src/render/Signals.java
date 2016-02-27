@@ -12,9 +12,12 @@ package render;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EnumMap;
 
+import s57.S57val.CatLIT;
+import s57.S57val.ColCOL;
 import s57.S57att.*;
 import s57.S57obj.*;
 import s57.S57val.*;
@@ -26,58 +29,58 @@ import symbols.Symbols.*;
 
 public class Signals {
 
-	static final EnumMap<ColCOL, Color> lightColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static final EnumMap<ColCOL, Color> LightColours = new EnumMap<ColCOL, Color>(ColCOL.class);
 	static {
-		lightColours.put(ColCOL.COL_WHT, new Color(0xffff00));
-		lightColours.put(ColCOL.COL_RED, new Color(0xff0000));
-		lightColours.put(ColCOL.COL_GRN, new Color(0x00ff00));
-		lightColours.put(ColCOL.COL_BLU, new Color(0x0000ff));
-		lightColours.put(ColCOL.COL_YEL, new Color(0xffff00));
-		lightColours.put(ColCOL.COL_AMB, new Color(0xffc200));
-		lightColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
-		lightColours.put(ColCOL.COL_ORG, Color.orange);
-		lightColours.put(ColCOL.COL_MAG, Color.magenta);
+		LightColours.put(ColCOL.COL_WHT, new Color(0xffff00));
+		LightColours.put(ColCOL.COL_RED, new Color(0xff0000));
+		LightColours.put(ColCOL.COL_GRN, new Color(0x00ff00));
+		LightColours.put(ColCOL.COL_BLU, new Color(0x0000ff));
+		LightColours.put(ColCOL.COL_YEL, new Color(0xffff00));
+		LightColours.put(ColCOL.COL_AMB, new Color(0xffc200));
+		LightColours.put(ColCOL.COL_VIO, new Color(0xee82ee));
+		LightColours.put(ColCOL.COL_ORG, Color.orange);
+		LightColours.put(ColCOL.COL_MAG, Color.magenta);
 	}
 
-	static final EnumMap<ColCOL, String> lightLetters = new EnumMap<ColCOL, String>(ColCOL.class);
+	static final EnumMap<ColCOL, String> LightLetters = new EnumMap<ColCOL, String>(ColCOL.class);
 	static {
-		lightLetters.put(ColCOL.COL_WHT, "W");
-		lightLetters.put(ColCOL.COL_RED, "R");
-		lightLetters.put(ColCOL.COL_GRN, "G");
-		lightLetters.put(ColCOL.COL_BLU, "Bu");
-		lightLetters.put(ColCOL.COL_YEL, "Y");
-		lightLetters.put(ColCOL.COL_AMB, "Am");
-		lightLetters.put(ColCOL.COL_VIO, "Vi");
-		lightLetters.put(ColCOL.COL_ORG, "Or");
+		LightLetters.put(ColCOL.COL_WHT, "W");
+		LightLetters.put(ColCOL.COL_RED, "R");
+		LightLetters.put(ColCOL.COL_GRN, "G");
+		LightLetters.put(ColCOL.COL_BLU, "Bu");
+		LightLetters.put(ColCOL.COL_YEL, "Y");
+		LightLetters.put(ColCOL.COL_AMB, "Am");
+		LightLetters.put(ColCOL.COL_VIO, "Vi");
+		LightLetters.put(ColCOL.COL_ORG, "Or");
 	}
 
-	static final EnumMap<LitCHR, String> lightCharacters = new EnumMap<LitCHR, String>(LitCHR.class);
+	static final EnumMap<LitCHR, String> LightCharacters = new EnumMap<LitCHR, String>(LitCHR.class);
 	static {
-		lightCharacters.put(LitCHR.CHR_F, "F");
-		lightCharacters.put(LitCHR.CHR_FL, "Fl");
-		lightCharacters.put(LitCHR.CHR_LFL, "LFl");
-		lightCharacters.put(LitCHR.CHR_Q, "Q");
-		lightCharacters.put(LitCHR.CHR_VQ, "VQ");
-		lightCharacters.put(LitCHR.CHR_UQ, "UQ");
-		lightCharacters.put(LitCHR.CHR_ISO, "Iso");
-		lightCharacters.put(LitCHR.CHR_OC, "Oc");
-		lightCharacters.put(LitCHR.CHR_IQ, "IQ");
-		lightCharacters.put(LitCHR.CHR_IVQ, "IVQ");
-		lightCharacters.put(LitCHR.CHR_IUQ, "IUQ");
-		lightCharacters.put(LitCHR.CHR_MO, "Mo");
-		lightCharacters.put(LitCHR.CHR_FFL, "FFl");
-		lightCharacters.put(LitCHR.CHR_FLLFL, "FlLFl");
-		lightCharacters.put(LitCHR.CHR_OCFL, "OcFl");
-		lightCharacters.put(LitCHR.CHR_FLFL, "FLFl");
-		lightCharacters.put(LitCHR.CHR_ALOC, "Al.Oc");
-		lightCharacters.put(LitCHR.CHR_ALLFL, "Al.LFl");
-		lightCharacters.put(LitCHR.CHR_ALFL, "Al.Fl");
-		lightCharacters.put(LitCHR.CHR_ALGR, "Al.Gr");
-		lightCharacters.put(LitCHR.CHR_QLFL, "Q+LFl");
-		lightCharacters.put(LitCHR.CHR_VQLFL, "VQ+LFl");
-		lightCharacters.put(LitCHR.CHR_UQLFL, "UQ+LFl");
-		lightCharacters.put(LitCHR.CHR_AL, "Al");
-		lightCharacters.put(LitCHR.CHR_ALFFL, "Al.FFl");
+		LightCharacters.put(LitCHR.CHR_F, "F");
+		LightCharacters.put(LitCHR.CHR_FL, "Fl");
+		LightCharacters.put(LitCHR.CHR_LFL, "LFl");
+		LightCharacters.put(LitCHR.CHR_Q, "Q");
+		LightCharacters.put(LitCHR.CHR_VQ, "VQ");
+		LightCharacters.put(LitCHR.CHR_UQ, "UQ");
+		LightCharacters.put(LitCHR.CHR_ISO, "Iso");
+		LightCharacters.put(LitCHR.CHR_OC, "Oc");
+		LightCharacters.put(LitCHR.CHR_IQ, "IQ");
+		LightCharacters.put(LitCHR.CHR_IVQ, "IVQ");
+		LightCharacters.put(LitCHR.CHR_IUQ, "IUQ");
+		LightCharacters.put(LitCHR.CHR_MO, "Mo");
+		LightCharacters.put(LitCHR.CHR_FFL, "FFl");
+		LightCharacters.put(LitCHR.CHR_FLLFL, "FlLFl");
+		LightCharacters.put(LitCHR.CHR_OCFL, "OcFl");
+		LightCharacters.put(LitCHR.CHR_FLFL, "FLFl");
+		LightCharacters.put(LitCHR.CHR_ALOC, "Al.Oc");
+		LightCharacters.put(LitCHR.CHR_ALLFL, "Al.LFl");
+		LightCharacters.put(LitCHR.CHR_ALFL, "Al.Fl");
+		LightCharacters.put(LitCHR.CHR_ALGR, "Al.Gr");
+		LightCharacters.put(LitCHR.CHR_QLFL, "Q+LFl");
+		LightCharacters.put(LitCHR.CHR_VQLFL, "VQ+LFl");
+		LightCharacters.put(LitCHR.CHR_UQLFL, "UQ+LFl");
+		LightCharacters.put(LitCHR.CHR_AL, "Al");
+		LightCharacters.put(LitCHR.CHR_ALFFL, "Al.FFl");
 	}
 	
 	public static void addSignals(Feature feature) {
@@ -102,6 +105,8 @@ public class Signals {
 		fogSignals.put(CatFOG.FOG_HORN, "Horn");
 	}
 
+	static final DecimalFormat df = new DecimalFormat("#.#");
+	
 	public static void fogSignals(Feature feature) {
 		Renderer.symbol(feature, Beacons.FogSignal);
 		AttMap atts = feature.objs.get(Obj.FOGSIG).get(0);
@@ -115,10 +120,10 @@ public class Signals {
 			str += " ";
 		}
 		if (atts.containsKey(Att.SIGPER)) {
-			str += atts.get(Att.SIGPER).val + "s";
+			str += df.format(atts.get(Att.SIGPER).val) + "s";
 		}
 		if (atts.containsKey(Att.VALMXR)) {
-			str += atts.get(Att.VALMXR).val + "M";
+			str += df.format(atts.get(Att.VALMXR).val) + "M";
 		}
 		if ((Renderer.zoom >= 15) && !str.isEmpty()) {
 			Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40),Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -30)));
@@ -168,7 +173,6 @@ public class Signals {
 
 	@SuppressWarnings("unchecked")
 	public static void radioStations(Feature feature) {
-		Renderer.symbol(feature, Beacons.RadarStation);
 		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttList(feature, Obj.RDOSTA, 0, Att.CATROS);
 		boolean vais = false;
 		String bstr = "";
@@ -272,6 +276,9 @@ public class Signals {
 				break;
 			}
 		}
+		if (!vais) {
+			Renderer.symbol(feature, Beacons.RadarStation);
+		}
 		if (Renderer.zoom >= 15) {
 			if (vais) {
 				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
@@ -314,276 +321,254 @@ public class Signals {
 				}
 			}
 		}
-		Renderer.symbol(feature, Beacons.LightFlare, new Scheme(lightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
-		if (lights.get(1) != null) {
-			for (AttMap atts : lights.values()) {
-				Enum<ColCOL> col1 = null;
-				Enum<ColCOL> col2 = null;
-				double radius = 0.2;
-				double s1 = 0;
-				double s2 = 0;
-				boolean dir = false;
-				if (atts.containsKey(Att.COLOUR)) {
-					ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
-					col1 = cols.get(0);
-					if (cols.size() > 1) col2 = cols.get(1);
-				} else {
-					continue;
+		Renderer.symbol(feature, Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
+		if (Renderer.zoom >= 15) {
+			String str = "";
+			if (lights.get(1) != null) {
+				for (AttMap atts : lights.values()) {
+					Enum<ColCOL> col1 = null;
+					Enum<ColCOL> col2 = null;
+					double radius = 0.2;
+					double s1 = 0;
+					double s2 = 0;
+					boolean dir = false;
+					if (atts.containsKey(Att.COLOUR)) {
+						ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
+						col1 = cols.get(0);
+						if (cols.size() > 1)
+							col2 = cols.get(1);
+					} else {
+						continue;
+					}
+					if (atts.containsKey(Att.LITRAD)) {
+						radius = (Double) atts.get(Att.LITRAD).val;
+					}
+					if (atts.containsKey(Att.SECTR1)) {
+						s1 = (Double) atts.get(Att.SECTR1).val;
+					} else {
+						continue;
+					}
+					if (atts.containsKey(Att.SECTR2)) {
+						s2 = (Double) atts.get(Att.SECTR2).val;
+					} else {
+						continue;
+					}
+					if (atts.containsKey(Att.CATLIT)) {
+						ArrayList<CatLIT> cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
+						if (cats.contains(CatLIT.LIT_DIR)) {
+							dir = true;
+						}
+					}
+					str = "";
+					if (atts.containsKey(Att.LITCHR)) {
+						str += LightCharacters.get(((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0));
+					}
+					if (atts.containsKey(Att.SIGGRP)) {
+						str += "(" + atts.get(Att.SIGGRP).val + ")";
+					} else if (!str.isEmpty()) {
+						str += ".";
+					}
+					if (atts.containsKey(Att.COLOUR)) {
+						ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
+						str += LightLetters.get(cols.get(0));
+						if (cols.size() > 1)
+							str += LightLetters.get(cols.get(1));
+					}
+					if (dir && atts.containsKey(Att.ORIENT)) {
+						double orient = (Double) atts.get(Att.ORIENT).val;
+						str += " " + orient + "°";
+						s1 = (orient - 4 + 360) % 360;
+						s2 = (orient + 4) % 360;
+						double n1 = 360;
+						double n2 = 360;
+						for (AttMap sect : lights.values()) {
+							if (sect != atts) {
+
+							}
+						}
+					}
+					Renderer.lightSector(feature, LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
 				}
-				if (atts.containsKey(Att.RADIUS)) {
-					radius = (Double) atts.get(Att.RADIUS).val;
+				class LitSect {
+					boolean dir;
+					LitCHR chr;
+					ColCOL col;
+					ColCOL alt;
+					String grp;
+					double per;
+					double rng;
+					double hgt;
 				}
-				if (atts.containsKey(Att.SECTR1)) {
-					s1 = (Double) atts.get(Att.SECTR1).val;
-				} else {
-					continue;
+				str = "";
+				ArrayList<LitSect> litatts = new ArrayList<>();
+				for (AttMap atts : lights.values()) {
+					LitSect sect = new LitSect();
+					litatts.add(sect);
+					sect.dir = (atts.containsKey(Att.CATLIT)) && (atts.get(Att.CATLIT).val == CatLIT.LIT_DIR);
+					sect.chr = atts.containsKey(Att.LITCHR) ? ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0) : LitCHR.CHR_UNKN;
+					switch (sect.chr) {
+					case CHR_AL:
+						sect.chr = LitCHR.CHR_F;
+						break;
+					case CHR_ALOC:
+						sect.chr = LitCHR.CHR_OC;
+						break;
+					case CHR_ALLFL:
+						sect.chr = LitCHR.CHR_LFL;
+						break;
+					case CHR_ALFL:
+						sect.chr = LitCHR.CHR_FL;
+						break;
+					case CHR_ALFFL:
+						sect.chr = LitCHR.CHR_FFL;
+						break;
+					default:
+						break;
+					}
+					sect.grp = atts.containsKey(Att.SIGGRP) ? (String) atts.get(Att.SIGGRP).val : "";
+					sect.per = atts.containsKey(Att.SIGPER) ? (Double) atts.get(Att.SIGPER).val : 0.0;
+					sect.rng = atts.containsKey(Att.VALNMR) ? (Double) atts.get(Att.VALNMR).val : 0.0;
+					sect.hgt = atts.containsKey(Att.HEIGHT) ? (Double) atts.get(Att.HEIGHT).val : 0.0;
+					ArrayList<ColCOL> cols = (ArrayList<ColCOL>) (atts.containsKey(Att.COLOUR) ? atts.get(Att.COLOUR).val : new ArrayList<>());
+					sect.col = cols.size() > 0 ? cols.get(0) : ColCOL.COL_UNK;
+					sect.alt = cols.size() > 1 ? cols.get(1) : ColCOL.COL_UNK;
 				}
-				if (atts.containsKey(Att.SECTR2)) {
-					s2 = (Double) atts.get(Att.SECTR2).val;
-				} else {
-					continue;
-				}
-				if (atts.containsKey(Att.CATLIT)) {
-					ArrayList<CatLIT> cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
-					if (cats.contains(CatLIT.LIT_DIR)) {
-						dir = true;
+				ArrayList<ArrayList<LitSect>> groupings = new ArrayList<>();
+				for (LitSect lit : litatts) {
+					boolean found = false;
+					for (ArrayList<LitSect> group : groupings) {
+						LitSect mem = group.get(0);
+						if ((lit.dir == mem.dir) && (lit.chr == mem.chr) && (lit.grp.equals(mem.grp)) && (lit.per == mem.per) && (lit.hgt == mem.hgt)) {
+							group.add(lit);
+							found = true;
+						}
+					}
+					if (!found) {
+						ArrayList<LitSect> tmp = new ArrayList<LitSect>();
+						tmp.add(lit);
+						groupings.add(tmp);
 					}
 				}
-				String str = "";
-				if (atts.containsKey(Att.LITCHR)) {
-					str += lightCharacters.get(atts.get(Att.LITCHR).val);
-				}
-				if (atts.containsKey(Att.SIGGRP)) {
-					str += "(" + atts.get(Att.SIGGRP).val + ")";
-				} else if (!str.isEmpty()) {
-					str += ".";
-				}
-				if (atts.containsKey(Att.COLOUR)) {
-					ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
-					str += lightLetters.get(cols.get(0));
-					if (cols.size() > 1)
-						str += lightLetters.get(cols.get(1));
-				}
-				if (dir && atts.containsKey(Att.ORIENT)) {
-					double orient = (Double)atts.get(Att.ORIENT).val;
-					str += " " + orient + "°";
-					s1 = (orient - 4 + 360) % 360;
-					s2 = (orient + 4) % 360;
-					double n1 = 360;
-					double n2 = 360;
-					for (AttMap sect : lights.values()) {
-						if (sect != atts) {
-							
+				for (boolean moved = true; moved;) {
+					moved = false;
+					for (int i = 0; i < groupings.size() - 1; i++) {
+						if (groupings.get(i).size() < groupings.get(i + 1).size()) {
+							ArrayList<LitSect> tmp = groupings.remove(i);
+							groupings.add(i + 1, tmp);
+							moved = true;
 						}
 					}
 				}
-				Renderer.lightSector(feature, lightColours.get(col1), lightColours.get(col2), radius, s1, s2, dir, str);
+				class ColRng {
+					ColCOL col;
+					double rng;
+
+					public ColRng(ColCOL c, double r) {
+						col = c;
+						rng = r;
+					}
+				}
+				int y = -30;
+				for (ArrayList<LitSect> group : groupings) {
+					ArrayList<ColRng> colrng = new ArrayList<>();
+					for (LitSect lit : group) {
+						boolean found = false;
+						for (ColRng cr : colrng) {
+							if (cr.col == lit.col) {
+								if (lit.rng > cr.rng) {
+									cr.rng = lit.rng;
+								}
+								found = true;
+							}
+						}
+						if (!found) {
+							colrng.add(new ColRng(lit.col, lit.rng));
+						}
+					}
+					for (boolean moved = true; moved;) {
+						moved = false;
+						for (int i = 0; i < colrng.size() - 1; i++) {
+							if (colrng.get(i).rng < colrng.get(i + 1).rng) {
+								ColRng tmp = colrng.remove(i);
+								colrng.add(i + 1, tmp);
+								moved = true;
+							}
+						}
+					}
+					LitSect tmp = group.get(0);
+					if (tmp.dir)
+						str += "Dir";
+					str += LightCharacters.get(tmp.chr);
+					if (!tmp.grp.isEmpty())
+						str += "(" + tmp.grp + ")";
+					else
+						str += ".";
+					for (ColRng cr : colrng) {
+						str += LightLetters.get(cr.col);
+					}
+					if (tmp.per > 0)
+						str += df.format(tmp.per) + "s";
+					if (tmp.hgt > 0)
+						str += df.format(tmp.hgt) + "m";
+					if (colrng.get(0).rng > 0)
+						str += df.format(colrng.get(0).rng) + ((colrng.size() > 1) ? ((colrng.size() > 2) ? ("-" + df.format(colrng.get(colrng.size() - 1).rng)) : ("/" + df.format(colrng.get(1).rng))) : "") + "M";
+					Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, y)));
+					y += 40;
+					str = "";
+				}
+			} else {
+				AttMap atts = lights.get(0);
+				ArrayList<CatLIT> cats = new ArrayList<>();
+				if (atts.containsKey(Att.CATLIT)) {
+					cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
+				}
+				str += (cats.contains(CatLIT.LIT_DIR)) ? "Dir" : "";
+				str += (atts.containsKey(Att.MLTYLT)) ? atts.get(Att.MLTYLT).val : "";
+				if (atts.containsKey(Att.LITCHR)) {
+					LitCHR chr = ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0);
+					if (atts.containsKey(Att.SIGGRP)) {
+						String grp = (String) atts.get(Att.SIGGRP).val;
+						switch (chr) {
+						case CHR_QLFL:
+							str += String.format("Q(%s)+LFl", grp);
+							break;
+						case CHR_VQLFL:
+							str += String.format("VQ(%s)+LFl", grp);
+							break;
+						case CHR_UQLFL:
+							str += String.format("UQ(%s)+LFl", grp);
+							break;
+						default:
+							str += String.format("%s(%s)", LightCharacters.get(chr), grp);
+							break;
+						}
+					} else {
+						str += LightCharacters.get(chr);
+					}
+				}
+				if (atts.containsKey(Att.COLOUR)) {
+					ArrayList<ColCOL> cols = (ArrayList<ColCOL>) atts.get(Att.COLOUR).val;
+					if (!((cols.size() == 1) && (cols.get(0) == ColCOL.COL_WHT))) {
+						if (!str.isEmpty() && !str.endsWith(")")) {
+							str += ".";
+						}
+						for (ColCOL acol : cols) {
+							str += LightLetters.get(acol);
+						}
+					}
+				}
+				str += (cats.contains(CatLIT.LIT_VERT)) ? "(vert)" : "";
+				str += (cats.contains(CatLIT.LIT_HORI)) ? "(hor)" : "";
+				str += (!str.isEmpty() && (atts.containsKey(Att.SIGPER) || atts.containsKey(Att.HEIGHT) || atts.containsKey(Att.VALMXR)) && !str.endsWith(")")) ? "." : "";
+				str += (atts.containsKey(Att.SIGPER)) ? df.format(atts.get(Att.SIGPER).val) + "s" : "";
+				str += (atts.containsKey(Att.HEIGHT)) ? df.format(atts.get(Att.HEIGHT).val) + "m" : "";
+				str += (atts.containsKey(Att.VALNMR)) ? df.format(atts.get(Att.VALNMR).val) + "M" : "";
+				str += (cats.contains(CatLIT.LIT_FRNT)) ? "(Front)" : "";
+				str += (cats.contains(CatLIT.LIT_REAR)) ? "(Rear)" : "";
+				str += (cats.contains(CatLIT.LIT_UPPR)) ? "(Upper)" : "";
+				str += (cats.contains(CatLIT.LIT_LOWR)) ? "(Lower)" : "";
+				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, -30)));
 			}
 		}
-/*      int secmax = countObjects(item, "light");
-      if ((idx == 0) && (secmax > 0)) {
-        struct SECT {
-          struct SECT *next;
-          int dir;
-          LitCHR_t chr;
-          ColCOL_t col;
-          ColCOL_t alt;
-          char *grp;
-          double per;
-          double rng;
-        } *lights = NULL;
-        for (int i = secmax; i > 0; i--) {
-          struct SECT *tmp = calloc(1, sizeof(struct SECT));
-          tmp->next = lights;
-          lights = tmp;
-          obj = getObj(item, LIGHTS, i);
-          if ((att = getAtt(obj, CATLIT)) != NULL) {
-            lights->dir = testAtt(att, LIT_DIR);
-          }
-          if ((att = getAtt(obj, LITCHR)) != NULL) {
-            lights->chr = att->val.val.e;
-            switch (lights->chr) {
-              case CHR_AL:
-                lights->chr = CHR_F;
-                break;
-              case CHR_ALOC:
-                lights->chr = CHR_OC;
-                break;
-              case CHR_ALLFL:
-                lights->chr = CHR_LFL;
-                break;
-              case CHR_ALFL:
-                lights->chr = CHR_FL;
-                break;
-              case CHR_ALFFL:
-                lights->chr = CHR_FFL;
-                break;
-              default:
-                break;
-            }
-          }
-          if ((att = getAtt(obj, SIGGRP)) != NULL) {
-            lights->grp = att->val.val.a;
-          } else {
-            lights->grp = "";
-          }
-          if ((att = getAtt(obj, SIGPER)) != NULL) {
-            lights->per = att->val.val.f;
-          }
-          if ((att = getAtt(obj, VALNMR)) != NULL) {
-            lights->rng = att->val.val.f;
-          }
-          if ((att = getAtt(obj, COLOUR)) != NULL) {
-            lights->col = att->val.val.l->val;
-            if (att->val.val.l->next != NULL)
-              lights->alt = att->val.val.l->next->val;
-          }
-        }
-        struct COLRNG {
-          int col;
-          double rng;
-        } colrng[14];
-        while (lights != NULL) {
-          strcpy(string2, "");
-          bzero(colrng, 14*sizeof(struct COLRNG));
-          colrng[lights->col].col = 1;
-          colrng[lights->col].rng = lights->rng;
-          struct SECT *this = lights;
-          struct SECT *next = lights->next;
-          while (next != NULL) {
-            if ((this->dir == next->dir) && (this->chr == next->chr) &&
-                (strcmp(this->grp, next->grp) == 0) && (this->per == next->per)) {
-              colrng[next->col].col = 1;
-              if (next->rng > colrng[next->col].rng)
-                colrng[next->col].rng = next->rng;
-              struct SECT *tmp = lights;
-              while (tmp->next != next) tmp = tmp->next;
-              tmp->next = next->next;
-              free(next);
-              next = tmp->next;
-            } else {
-              next = next->next;
-            }
-          }
-          if (this->chr != CHR_UNKN) {
-            if (this->dir) strcpy(string2, "Dir.");
-            strcat(string2, light_characters[this->chr]);
-            if (strcmp(this->grp, "") != 0) {
-              if (this->grp[0] == '(')
-                sprintf(strchr(string2, 0), "%s", this->grp);
-              else
-                sprintf(strchr(string2, 0), "(%s)", this->grp);
-            } else {
-              if (strlen(string2) > 0) strcat(string2, ".");
-            }
-            int n = 0;
-            for (int i = 0; i < 14; i++) if (colrng[i].col) n++;
-            double max = 0.0;
-            for (int i = 0; i < 14; i++) if (colrng[i].col && (colrng[i].rng > max)) max = colrng[i].rng;
-            double min = max;
-            for (int i = 0; i < 14; i++) if (colrng[i].col && (colrng[i].rng > 0.0) && (colrng[i].rng < min)) min = colrng[i].rng;
-            if (min == max) {
-              for (int i = 0; i < 14; i++) if (colrng[i].col) strcat(string2, light_letters[i]);
-            } else {
-              for (int i = 0; i < 14; i++) if (colrng[i].col && (colrng[i].rng == max)) strcat(string2, light_letters[i]);
-              for (int i = 0; i < 14; i++) if (colrng[i].col && (colrng[i].rng < max) && (colrng[i].rng > min)) strcat(string2, light_letters[i]);
-              for (int i = 0; i < 14; i++) if (colrng[i].col && colrng[i].rng == min) strcat(string2, light_letters[i]);
-            }
-            strcat(string2, ".");
-            if (this->per > 0.0) sprintf(strchr(string2, 0), "%gs", this->per);
-            if (max > 0.0) {
-              sprintf(strchr(string2, 0), "%g", max);
-              if (min != max) {
-                if (n == 2) strcat(string2, "/");
-                else if (n > 2) strcat(string2, "-");
-                if (min < max) sprintf(strchr(string2, 0), "%g", min);
-              }
-              strcat(string2, "M");
-            }
-            if (strlen(string1) > 0) strcat(string1, "\n");
-            strcat(string1, string2);
-          }
-          lights = this->next;
-          free(this);
-          this = lights;
-        }
-      } else {
-        if ((att = getAtt(obj, CATLIT)) != NULL) {
-          if (testAtt(att, LIT_DIR))
-            strcat(string1, "Dir");
-        }
-        if ((att = getAtt(obj, MLTYLT)) != NULL)
-          sprintf(strchr(string1, 0), "%s", stringValue(att->val));
-        if ((att = getAtt(obj, LITCHR)) != NULL) {
-          char *chrstr = strdup(stringValue(att->val));
-          Att_t *grp = getAtt(obj, SIGGRP);
-          if (grp != NULL) {
-            char *strgrp = strdup(stringValue(grp->val));
-            char *grpstr = strtok(strgrp, "()");
-            switch (att->val.val.e) {
-              case CHR_QLFL:
-                sprintf(strchr(string1, 0), "Q(%s)+LFl", grpstr);
-                break;
-              case CHR_VQLFL:
-                sprintf(strchr(string1, 0), "VQ(%s)+LFl", grpstr);
-                break;
-              case CHR_UQLFL:
-                sprintf(strchr(string1, 0), "UQ(%s)+LFl", grpstr);
-                break;
-              default:
-                sprintf(strchr(string1, 0), "%s(%s)", chrstr, grpstr);
-                break;
-            }
-            free(strgrp);
-          } else {
-            sprintf(strchr(string1, 0), "%s", chrstr);
-          }
-          free(chrstr);
-        }
-        if ((att = getAtt(obj, COLOUR)) != NULL) {
-          int n = countValues(att);
-          if (!((n == 1) && (idx == 0) && (testAtt(att, COL_WHT)))) {
-            if ((strlen(string1) > 0) && ((string1[strlen(string1)-1] != ')')))
-              strcat(string1, ".");
-            Lst_t *lst = att->val.val.l;
-            while (lst != NULL) {
-              strcat(string1, light_letters[lst->val]);
-              lst = lst->next;
-            }
-          }
-        }
-        if ((idx == 0) && (att = getAtt(obj, CATLIT)) != NULL) {
-          if (testAtt(att, LIT_VERT))
-            strcat(string1, "(vert)");
-          if (testAtt(att, LIT_HORI))
-            strcat(string1, "(hor)");
-        }
-        if ((strlen(string1) > 0) &&
-            ((getAtt(obj, SIGPER) != NULL) ||
-             (getAtt(obj, HEIGHT) != NULL) ||
-             (getAtt(obj, VALMXR) != NULL)) &&
-            (string1[strlen(string1)-1] != ')'))
-          strcat(string1, ".");
-        if ((att = getAtt(obj, SIGPER)) != NULL)
-          sprintf(strchr(string1, 0), "%ss", stringValue(att->val));
-        if ((idx == 0) && (item->objs.obj != LITMIN)) {
-          if ((att = getAtt(obj, HEIGHT)) != NULL)
-            sprintf(strchr(string1, 0), "%sm", stringValue(att->val));
-          if ((att = getAtt(obj, VALNMR)) != NULL)
-            sprintf(strchr(string1, 0), "%sM", stringValue(att->val));
-        }
-        if ((idx == 0) && (att = getAtt(obj, CATLIT)) != NULL) {
-          if (testAtt(att, LIT_FRNT))
-            strcat(string1, "(Front)");
-          if (testAtt(att, LIT_REAR))
-            strcat(string1, "(Rear)");
-          if (testAtt(att, LIT_UPPR))
-            strcat(string1, "(Upper)");
-          if (testAtt(att, LIT_LOWR))
-            strcat(string1, "(Lower)");
-        }
-      }
-    }
-*/	}
-
+	}
 }

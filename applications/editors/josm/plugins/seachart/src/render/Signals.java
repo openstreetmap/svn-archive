@@ -328,9 +328,9 @@ public class Signals {
 					Enum<ColCOL> col1 = null;
 					Enum<ColCOL> col2 = null;
 					double radius = 0.2;
-					double s1 = 0;
-					double s2 = 0;
-					boolean dir = false;
+					double s1 = 361;
+					double s2 = 361;
+					Double dir = null;
 					if (atts.containsKey(Att.COLOUR)) {
 						ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
 						col1 = cols.get(0);
@@ -342,21 +342,68 @@ public class Signals {
 					if (atts.containsKey(Att.LITRAD)) {
 						radius = (Double) atts.get(Att.LITRAD).val;
 					}
-					if (atts.containsKey(Att.SECTR1)) {
-						s1 = (Double) atts.get(Att.SECTR1).val;
-					} else {
-						continue;
-					}
-					if (atts.containsKey(Att.SECTR2)) {
-						s2 = (Double) atts.get(Att.SECTR2).val;
-					} else {
-						continue;
-					}
 					if (atts.containsKey(Att.CATLIT)) {
 						ArrayList<CatLIT> cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
 						if (cats.contains(CatLIT.LIT_DIR)) {
-							dir = true;
+							if (atts.containsKey(Att.ORIENT)) {
+								dir = (Double) atts.get(Att.ORIENT).val;
+								s1 = ((dir - 4) + 360) % 360;
+								s2 = (dir + 4) % 360;
+								for (AttMap satts : lights.values()) {
+									double srad = 0.2;
+									double ss1 = 361;
+									double ss2 = 361;
+									Double sdir = null;
+									if (satts == atts) continue;
+									if (satts.containsKey(Att.LITRAD)) {
+										srad = (Double) satts.get(Att.LITRAD).val;
+									}
+									if (srad == radius) {
+										ArrayList<CatLIT> scats = (satts.containsKey(Att.CATLIT)) ? (ArrayList<CatLIT>) satts.get(Att.CATLIT).val : new ArrayList<CatLIT>();
+										if (scats.contains(CatLIT.LIT_DIR)) {
+											if (satts.containsKey(Att.ORIENT)) {
+												sdir = (Double) satts.get(Att.ORIENT).val;
+												ss1 = sdir;
+												ss2 = sdir;
+											}
+										} else {
+											if (satts.containsKey(Att.SECTR1)) {
+												ss1 = (Double) satts.get(Att.SECTR1).val;
+											}
+											if (satts.containsKey(Att.SECTR2)) {
+												ss2 = (Double) satts.get(Att.SECTR2).val;
+											}
+										}
+										if ((ss1 > 360) || (ss2 > 360)) continue;
+										if (sdir != null) {
+											if (((dir - sdir + 360) % 360) < 8) {
+												s1 = ((((sdir > dir) ? 360 : 0) + sdir + dir) / 2) % 360;
+											}
+											if (((sdir - dir + 360) % 360) < 8) {
+												s2 = ((((dir > sdir) ? 360 : 0) + sdir + dir) / 2) % 360;
+											}
+										} else {
+											if (((dir - ss2 + 360) % 360) < 4) {
+												s1 = ss2;
+											}
+											if (((ss1 - dir + 360) % 360) < 4) {
+												s2 = ss1;
+											}
+										}
+									}
+								}
+							}
 						}
+					}
+					if ((s1 > 360) && atts.containsKey(Att.SECTR1)) {
+						s1 = (Double) atts.get(Att.SECTR1).val;
+					} else if (dir == null) {
+						continue;
+					}
+					if ((s2 > 360) && atts.containsKey(Att.SECTR2)) {
+						s2 = (Double) atts.get(Att.SECTR2).val;
+					} else if (dir == null) {
+						continue;
 					}
 					str = "";
 					if (atts.containsKey(Att.LITCHR)) {
@@ -376,20 +423,8 @@ public class Signals {
 					if (atts.containsKey(Att.SIGPER)) {
 						str += "." + df.format(atts.get(Att.SIGPER).val) + "s";
 					}
-					if (dir && atts.containsKey(Att.ORIENT)) {
-						double orient = (Double) atts.get(Att.ORIENT).val;
-						str += " " + orient + "°";
-						s1 = (orient - 4 + 360) % 360;
-						s2 = (orient + 4) % 360;
-						double n1 = 360;
-						double n2 = 360;
-						for (AttMap sect : lights.values()) {
-							if (sect != atts) {
-
-							}
-						}
-					}
-					Renderer.lightSector(feature, LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
+					if ((s1 <= 360) && (s2 <= 360) && (s1 != s2))
+						Renderer.lightSector(feature, LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
 				}
 			if (Renderer.zoom >= 15) {
 				class LitSect {
@@ -402,11 +437,10 @@ public class Signals {
 					double rng;
 					double hgt;
 				}
-				str = "";
 				ArrayList<LitSect> litatts = new ArrayList<>();
 				for (AttMap atts : lights.values()) {
 					LitSect sect = new LitSect();
-					sect.dir = (atts.containsKey(Att.CATLIT)) && (atts.get(Att.CATLIT).val == CatLIT.LIT_DIR);
+					sect.dir = (atts.containsKey(Att.CATLIT) && ((ArrayList<CatLIT>)atts.get(Att.CATLIT).val).contains(CatLIT.LIT_DIR));
 					sect.chr = atts.containsKey(Att.LITCHR) ? ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0) : LitCHR.CHR_UNKN;
 					switch (sect.chr) {
 					case CHR_AL:
@@ -500,8 +534,7 @@ public class Signals {
 						}
 					}
 					LitSect tmp = group.get(0);
-					if (tmp.dir)
-						str += "Dir";
+					str = (tmp.dir) ? "Dir" : "";
 					str += LightCharacters.get(tmp.chr);
 					if (!tmp.grp.isEmpty())
 						str += "(" + tmp.grp + ")";
@@ -530,7 +563,7 @@ public class Signals {
 				if (atts.containsKey(Att.CATLIT)) {
 					cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
 				}
-				str += (cats.contains(CatLIT.LIT_DIR)) ? "Dir" : "";
+				str = (cats.contains(CatLIT.LIT_DIR)) ? "Dir" : "";
 				str += (atts.containsKey(Att.MLTYLT)) ? atts.get(Att.MLTYLT).val : "";
 				if (atts.containsKey(Att.LITCHR)) {
 					LitCHR chr = ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0);

@@ -82,36 +82,36 @@ public class Jrender {
 		}
 	}
 	
+	static final boolean test = true;
+	
 	public static void tileMap(String idir, int zoom) throws IOException {
 		BufferedImage img;
 		context = new Context();
 
-		int size = 768;
-//		for (int i = 0; i < (12 - zoom); i++) size *= 2;
+		int size = 256;
+		for (int i = 0; i < (12 - zoom); i++) size *= 2;
 		Rectangle rect = new Rectangle(size, size);
-//		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
-//		Renderer.reRender(img.createGraphics(), rect, zoom, 0.05, map, context);
-//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//		ImageIO.write(img, "png", bos);
-//		empty = bos.size();
-//		tile(zoom, 1, 0, 0);
-//		FileOutputStream fos = new FileOutputStream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".png");
-//		bos.writeTo(fos);
-//		fos.close();
+		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
+		Renderer.reRender(img.createGraphics(), rect, zoom, 1.0, map, context);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ImageIO.write(img, "png", bos);
+		empty = bos.size();
 
-//		for (int z = 12; z <= 18; z++) {
-			DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
-			Document document = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
-			SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-//			svgGenerator.setBackground(Symbols.Bwater);
-			svgGenerator.clearRect(rect.x, rect.y, rect.width, rect.height);
-			svgGenerator.setSVGCanvasSize(rect.getSize());
-			svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
-//			svgGenerator.translate(-256, -256);
-			Renderer.reRender(svgGenerator, rect, zoom, 1.0, map, context);
-//			svgGenerator.stream(dstdir + "tst_" + zoom + "-" + xtile + "-" + ytile + ".svg");
-svgGenerator.stream(dstdir);
-//		}
+		if (test) {
+			for (int z = 12; z <= 18; z++) {
+				DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
+				Document document = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
+				SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+				svgGenerator.clearRect(rect.x, rect.y, rect.width, rect.height);
+				svgGenerator.setSVGCanvasSize(rect.getSize());
+				svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
+				svgGenerator.translate(-256, -256);
+				Renderer.reRender(svgGenerator, rect, z, 1.0, map, context);
+				svgGenerator.stream(dstdir + "tst_" + z + "-" + xtile + "-" + ytile + ".svg");
+			}
+		} else {
+			tile(zoom, 1, 0, 0);
+		}
 	}
 	
 	static void tile(int zoom, int s, int xn, int yn) throws IOException {
@@ -179,14 +179,13 @@ svgGenerator.stream(dstdir);
 		ytile = Integer.parseInt(args[4]);
 		send = new ArrayList<String>();
 		deletes = new HashMap<String, Boolean>();
-//		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
-BufferedReader in = new BufferedReader(new FileReader(srcdir));
+		BufferedReader in = new BufferedReader(new FileReader(srcdir + zoom + "-" + xtile + "-" + ytile + ".osm"));
 		map = new S57map(true);
 		S57osm.OSMmap(in, map, false);
 		in.close();
-//		if (zoom == 12) {
-//			clean(12, 0, 0);
-//		}
+		if (zoom == 12) {
+			clean(12, 0, 0);
+		}
 		tileMap(dstdir, zoom);
 //		if ((send.size() + deletes.size()) > 0) {
 //			PrintWriter writer = new PrintWriter(srcdir + zoom + "-" + xtile + "-" + ytile + ".send", "UTF-8");

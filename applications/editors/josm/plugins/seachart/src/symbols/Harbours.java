@@ -37,7 +37,7 @@ public class Harbours {
 	}
 	public static final Symbol Anchorage = new Symbol();
 	static {
-		Anchorage.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 1.0, 0, 0, new Scheme(Symbols.Msymb), null)));
+		Anchorage.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.67, 0, 0, new Scheme(Symbols.Msymb), null)));
 	}
 	public static final Symbol Bollard = new Symbol();
 	static {

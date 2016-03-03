@@ -465,11 +465,21 @@ public class S57map { // S57/OSM map generation methods
 						node.flg = Nflag.DPTH;
 					}
 				} else {
-					Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
-					if (att != Att.UNKATT) {
-						AttVal<?> attval = S57val.convertValue(val, att);
-						if (attval.val != null)
-							feature.atts.put(att, attval);
+					if (obj != Obj.UNKOBJ) {
+						if (val.equals("yes")) {
+							ObjTab objs = feature.objs.get(obj);
+							if (objs == null) {
+								objs = new ObjTab();
+								feature.objs.put(obj, objs);
+							}
+						}
+					} else {
+						Att att = S57att.enumAttribute(subkeys[1], Obj.UNKOBJ);
+						if (att != Att.UNKATT) {
+							AttVal<?> attval = S57val.convertValue(val, att);
+							if (attval.val != null)
+								feature.atts.put(att, attval);
+						}
 					}
 				}
 			}

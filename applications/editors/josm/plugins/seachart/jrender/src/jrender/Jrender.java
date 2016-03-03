@@ -88,9 +88,10 @@ public class Jrender {
 		BufferedImage img;
 		context = new Context();
 
+		int border = 256 / (int)Math.pow(2, (12 - zoom));
 		int size = 256;
 		for (int i = 0; i < (12 - zoom); i++) size *= 2;
-		Rectangle rect = new Rectangle(size, size);
+		Rectangle rect = new Rectangle((size + (2 * border)), (size + (2 * border)));
 		img = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_ARGB);
 		Renderer.reRender(img.createGraphics(), rect, zoom, 1.0, map, context);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -105,7 +106,7 @@ public class Jrender {
 				svgGenerator.clearRect(rect.x, rect.y, rect.width, rect.height);
 				svgGenerator.setSVGCanvasSize(rect.getSize());
 				svgGenerator.setClip(rect.x, rect.y, rect.width, rect.height);
-				svgGenerator.translate(-256, -256);
+				svgGenerator.translate(-border, -border);
 				Renderer.reRender(svgGenerator, rect, z, 1.0, map, context);
 				svgGenerator.stream(dstdir + "tst_" + z + "-" + xtile + "-" + ytile + ".svg");
 			}
@@ -128,7 +129,7 @@ public class Jrender {
 		if (bos.size() > empty) {
 			String dstnam = dstdir + zoom + "/" + xdir + "/" + ynam + ".png";
 			deletes.remove(dstnam);
-			send.add("put " + dstnam + " cache/tiles-" + zoom + "-" + xdir + "-" + ynam + ".png");
+			send.add("put " + dstnam + " tiles/" + zoom + "/" + xdir + "/" + ynam + ".png");
 			File ofile = new File(dstdir + "/" + zoom + "/" + xdir + "/");
 			ofile.mkdirs();
 			FileOutputStream fos = new FileOutputStream(dstdir + "/" + zoom + "/" + xdir + "/" + ynam + ".png");

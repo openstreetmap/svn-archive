@@ -19,6 +19,15 @@ import symbols.Symbols.*;
 
 public class Topmarks {
 	
+	public static final Symbol RadarReflector = new Symbol();
+	static {
+		RadarReflector.add(new Instr(Form.BBOX, new Rectangle2D.Double(-50,-40,100,40)));
+		RadarReflector.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		RadarReflector.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-30,-3); p.quadTo(0, -40, 30, -3); p.moveTo(0,-20); p.lineTo(0,-37);
+		p.moveTo(-30, -3); p.lineTo(-43,-14); p.moveTo(30, -3); p.lineTo(44,-14); p.moveTo(-15, -14); p.lineTo(-25,-30); p.moveTo(15, -14); p.lineTo(25,-30);
+		RadarReflector.add(new Instr(Form.PLIN, p));
+	}
 	public static final Symbol TopBesom = new Symbol();
 	static {
 		TopBesom.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-80,40,80)));

@@ -83,14 +83,6 @@ public class Signals {
 		LightCharacters.put(LitCHR.CHR_ALFFL, "Al.FFl");
 	}
 	
-	public static void addSignals(Feature feature) {
-	  if (feature.objs.containsKey(Obj.FOGSIG)) fogSignals(feature);
-	  if (feature.objs.containsKey(Obj.RTPBCN)) radarStations(feature);
-	  if (feature.objs.containsKey(Obj.RADSTA)) radarStations(feature);
-	  if (feature.objs.containsKey(Obj.RDOSTA)) radioStations(feature);
-	  if (feature.objs.containsKey(Obj.LIGHTS)) lights(feature);
-	}
-	
 	static final EnumMap<CatFOG, String> fogSignals = new EnumMap<CatFOG, String>(CatFOG.class);
 	static {
 		fogSignals.put(CatFOG.FOG_EXPL, "Explos");
@@ -107,184 +99,253 @@ public class Signals {
 
 	static final DecimalFormat df = new DecimalFormat("#.#");
 	
-	public static void fogSignals(Feature feature) {
-		Renderer.symbol(feature, Beacons.FogSignal);
-		AttMap atts = feature.objs.get(Obj.FOGSIG).get(0);
-		String str = "";
-		if (atts.containsKey(Att.CATFOG)) {
-			str += fogSignals.get(((ArrayList<?>)(atts.get(Att.CATFOG).val)).get(0));
-		}
-		if (atts.containsKey(Att.SIGGRP)) {
-			str += "(" + atts.get(Att.SIGGRP).val + ")";
-		} else {
-			str += " ";
-		}
-		if (atts.containsKey(Att.SIGPER)) {
-			str += df.format(atts.get(Att.SIGPER).val) + "s";
-		}
-		if (atts.containsKey(Att.VALMXR)) {
-			str += df.format(atts.get(Att.VALMXR).val) + "M";
-		}
-		if ((Renderer.zoom >= 15) && !str.isEmpty()) {
-			Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40),Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -30)));
-		}
+	public static void addSignals() {
+	  if (Rules.feature.objs.containsKey(Obj.RADRFL)) reflectors();
+	  if (Rules.feature.objs.containsKey(Obj.FOGSIG)) fogSignals();
+	  if (Rules.feature.objs.containsKey(Obj.RTPBCN)) radarStations();
+	  if (Rules.feature.objs.containsKey(Obj.RADSTA)) radarStations();
+	  if (Rules.feature.objs.containsKey(Obj.RDOSTA)) radioStations();
+	  if (Rules.feature.objs.containsKey(Obj.LIGHTS)) lights();
 	}
 
-	public static void radarStations(Feature feature) {
-		Renderer.symbol(feature, Beacons.RadarStation);
-		String bstr = "";
-		CatRTB cat = (CatRTB) Rules.getAttEnum(feature, Obj.RTPBCN, 0, Att.CATRTB);
-		String wal = Rules.getAttStr(feature, Obj.RTPBCN, 0, Att.RADWAL);
-		switch (cat) {
-		case RTB_RAMK:
-			bstr += " Ramark";
-			break;
-		case RTB_RACN:
-			bstr += " Racon";
-			String astr = Rules.getAttStr(feature, Obj.RTPBCN, 0, Att.SIGGRP);
-			if (!astr.isEmpty()) {
-				bstr += "(" + astr + ")";
-			}
-			Double per = (Double) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.SIGPER);
-			Double mxr = (Double) Rules.getAttVal(feature, Obj.RTPBCN, 0, Att.VALMXR);
-			if ((per != null) || (mxr != null)) {
-				bstr += (astr.isEmpty() ? " " : "");
-				if (per != null) bstr += (per != 0) ? per.toString() + "s" : "";
-				if (mxr != null) bstr += (mxr != 0) ? mxr.toString() + "M" : "";
-			}
-			break;
-		default:
-			break;
-		}
-		if (!wal.isEmpty()) {
-			switch (wal) {
-			case "0.03-X":
-				bstr += "(3cm)";
+	public static void reflectors() {
+		if (Renderer.zoom >= 14) {
+			switch (Rules.feature.type) {
+			case BCNLAT:
+			case BCNCAR:
+			case BCNISD:
+			case BCNSAW:
+			case BCNSPP:
+			case LITFLT:
+			case LITVES:
+			case BOYINB:
+				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -140)));
+				} else {
+					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -80)));
+				}
 				break;
-			case "0.10-S":
-				bstr += "(10cm)";
+			case LITMAJ:
+			case LITMIN:
+				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
+				} else {
+					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -30)));
+				}
 				break;
-			}
-		}
-		if ((Renderer.zoom >= 15) && !bstr.isEmpty()) {
-			Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void radioStations(Feature feature) {
-		ArrayList<CatROS> cats = (ArrayList<CatROS>)Rules.getAttList(feature, Obj.RDOSTA, 0, Att.CATROS);
-		boolean vais = false;
-		String bstr = "";
-		for (CatROS ros : cats) {
-			switch (ros) {
-			case ROS_OMNI:
-				bstr += " RC";
-				break;
-			case ROS_DIRL:
-				bstr += " RD";
-				break;
-			case ROS_ROTP:
-				bstr += " RW";
-				break;
-			case ROS_CNSL:
-				bstr += " Consol";
-				break;
-			case ROS_RDF:
-				bstr += " RG";
-				break;
-			case ROS_QTA:
-				bstr += " R";
-				break;
-			case ROS_AERO:
-				bstr += " AeroRC";
-				break;
-			case ROS_DECA:
-				bstr += " Decca";
-				break;
-			case ROS_LORN:
-				bstr += " Loran";
-				break;
-			case ROS_DGPS:
-				bstr += " DGPS";
-				break;
-			case ROS_TORN:
-				bstr += " Toran";
-				break;
-			case ROS_OMGA:
-				bstr += " Omega";
-				break;
-			case ROS_SYLD:
-				bstr += " Syledis";
-				break;
-			case ROS_CHKA:
-				bstr += " Chiaka";
-				break;
-			case ROS_PCOM:
-			case ROS_COMB:
-			case ROS_FACS:
-			case ROS_TIME:
-				break;
-			case ROS_PAIS:
-			case ROS_SAIS:
-				bstr += " AIS";
-				break;
-			case ROS_VAIS:
-				vais = true;
-				break;
-			case ROS_VANC:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopNorth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VASC:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopSouth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VAEC:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopEast, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VAWC:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopWest, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VAPL:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopCan, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VASL:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopCone, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VAID:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopIsol, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VASW:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopSphere, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VASP:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopX, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
-				break;
-			case ROS_VAWK:
-				vais = true;
-				Renderer.symbol(feature, Topmarks.TopCross, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+			case BOYLAT:
+			case BOYCAR:
+			case BOYISD:
+			case BOYSAW:
+			case BOYSPP:
+				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR)) {
+						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(45, -140)));
+					} else {
+						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(25, -80)));
+					}
+				} else {
+					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR)) {
+						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(30, -100)));
+					} else {
+						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(10, -50)));
+					}
+				}
 				break;
 			default:
 				break;
 			}
 		}
-		if (!vais) {
-			Renderer.symbol(feature, Beacons.RadarStation);
+	}
+	
+	public static void fogSignals() {
+		if (Renderer.zoom >= 11)
+			Renderer.symbol(Beacons.FogSignal);
+		if (Renderer.zoom >= 15) {
+			AttMap atts = Rules.feature.objs.get(Obj.FOGSIG).get(0);
+			String str = "";
+			if (atts.containsKey(Att.CATFOG)) {
+				str += fogSignals.get(((ArrayList<?>) (atts.get(Att.CATFOG).val)).get(0));
+			}
+			if (atts.containsKey(Att.SIGGRP)) {
+				str += "(" + atts.get(Att.SIGGRP).val + ")";
+			} else {
+				str += " ";
+			}
+			if (atts.containsKey(Att.SIGPER)) {
+				str += df.format(atts.get(Att.SIGPER).val) + "s";
+			}
+			if (atts.containsKey(Att.VALMXR)) {
+				str += df.format(atts.get(Att.VALMXR).val) + "M";
+			}
+			if (!str.isEmpty()) {
+				Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -30)));
+			}
+		}
+	}
+
+	public static void radarStations() {
+		if (Renderer.zoom >= 11)
+			Renderer.symbol(Beacons.RadarStation);
+		if (Renderer.zoom >= 15) {
+			String bstr = "";
+			CatRTB cat = (CatRTB) Rules.getAttEnum(Obj.RTPBCN, Att.CATRTB);
+			String wal = Rules.getAttStr(Obj.RTPBCN, Att.RADWAL);
+			switch (cat) {
+			case RTB_RAMK:
+				bstr += " Ramark";
+				break;
+			case RTB_RACN:
+				bstr += " Racon";
+				String astr = Rules.getAttStr(Obj.RTPBCN, Att.SIGGRP);
+				if (!astr.isEmpty()) {
+					bstr += "(" + astr + ")";
+				}
+				Double per = (Double) Rules.getAttVal(Obj.RTPBCN, Att.SIGPER);
+				Double mxr = (Double) Rules.getAttVal(Obj.RTPBCN, Att.VALMXR);
+				if ((per != null) || (mxr != null)) {
+					bstr += (astr.isEmpty() ? " " : "");
+					if (per != null)
+						bstr += (per != 0) ? per.toString() + "s" : "";
+					if (mxr != null)
+						bstr += (mxr != 0) ? mxr.toString() + "M" : "";
+				}
+				break;
+			default:
+				break;
+			}
+			if (!wal.isEmpty()) {
+				switch (wal) {
+				case "0.03-X":
+					bstr += "(3cm)";
+					break;
+				case "0.10-S":
+					bstr += "(10cm)";
+					break;
+				}
+			}
+			if (!bstr.isEmpty()) {
+				Renderer.labelText(bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -70)));
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void radioStations() {
+		boolean vais = false;
+		String bstr = "";
+		if (Renderer.zoom >= 11) {
+			ArrayList<CatROS> cats = (ArrayList<CatROS>) Rules.getAttList(Obj.RDOSTA, Att.CATROS);
+			for (CatROS ros : cats) {
+				switch (ros) {
+				case ROS_OMNI:
+					bstr += " RC";
+					break;
+				case ROS_DIRL:
+					bstr += " RD";
+					break;
+				case ROS_ROTP:
+					bstr += " RW";
+					break;
+				case ROS_CNSL:
+					bstr += " Consol";
+					break;
+				case ROS_RDF:
+					bstr += " RG";
+					break;
+				case ROS_QTA:
+					bstr += " R";
+					break;
+				case ROS_AERO:
+					bstr += " AeroRC";
+					break;
+				case ROS_DECA:
+					bstr += " Decca";
+					break;
+				case ROS_LORN:
+					bstr += " Loran";
+					break;
+				case ROS_DGPS:
+					bstr += " DGPS";
+					break;
+				case ROS_TORN:
+					bstr += " Toran";
+					break;
+				case ROS_OMGA:
+					bstr += " Omega";
+					break;
+				case ROS_SYLD:
+					bstr += " Syledis";
+					break;
+				case ROS_CHKA:
+					bstr += " Chiaka";
+					break;
+				case ROS_PCOM:
+				case ROS_COMB:
+				case ROS_FACS:
+				case ROS_TIME:
+					break;
+				case ROS_PAIS:
+				case ROS_SAIS:
+					bstr += " AIS";
+					break;
+				case ROS_VAIS:
+					vais = true;
+					break;
+				case ROS_VANC:
+					vais = true;
+					Renderer.symbol(Topmarks.TopNorth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VASC:
+					vais = true;
+					Renderer.symbol(Topmarks.TopSouth, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VAEC:
+					vais = true;
+					Renderer.symbol(Topmarks.TopEast, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VAWC:
+					vais = true;
+					Renderer.symbol(Topmarks.TopWest, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VAPL:
+					vais = true;
+					Renderer.symbol(Topmarks.TopCan, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VASL:
+					vais = true;
+					Renderer.symbol(Topmarks.TopCone, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VAID:
+					vais = true;
+					Renderer.symbol(Topmarks.TopIsol, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VASW:
+					vais = true;
+					Renderer.symbol(Topmarks.TopSphere, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VASP:
+					vais = true;
+					Renderer.symbol(Topmarks.TopX, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				case ROS_VAWK:
+					vais = true;
+					Renderer.symbol(Topmarks.TopCross, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -25)));
+					break;
+				default:
+					break;
+				}
+			}
+			if (!vais) {
+				Renderer.symbol(Beacons.RadarStation);
+			}
 		}
 		if (Renderer.zoom >= 15) {
 			if (vais) {
-				Renderer.labelText(feature, "V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
+				Renderer.labelText("V-AIS", new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, 70)));
 			}
 			if (!bstr.isEmpty()) {
-				Renderer.labelText(feature, bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -110)));
+				Renderer.labelText(bstr, new Font("Arial", Font.PLAIN, 40), Symbols.Msymb, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-30, -110)));
 			}
 		}
 	}
@@ -300,10 +361,10 @@ public class Signals {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void lights(Feature feature) {
+	public static void lights() {
 		Enum<ColCOL> col = null;
 		Enum<ColCOL> tcol = null;
-		ObjTab lights = feature.objs.get(Obj.LIGHTS);
+		ObjTab lights = Rules.feature.objs.get(Obj.LIGHTS);
 		for (AttMap atts : lights.values()) {
 			if (atts.containsKey(Att.COLOUR)) {
 				ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
@@ -321,7 +382,7 @@ public class Signals {
 				}
 			}
 		}
-		Renderer.symbol(feature, Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
+		Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
 			String str = "";
 			if (lights.get(1) != null) {
 				for (AttMap atts : lights.values()) {
@@ -424,14 +485,13 @@ public class Signals {
 						str += "." + df.format(atts.get(Att.SIGPER).val) + "s";
 					}
 					if ((s1 <= 360) && (s2 <= 360) && (s1 != s2))
-						Renderer.lightSector(feature, LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
+						Renderer.lightSector(LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
 				}
 			if (Renderer.zoom >= 15) {
 				class LitSect {
 					boolean dir;
 					LitCHR chr;
 					ColCOL col;
-					ColCOL alt;
 					String grp;
 					double per;
 					double rng;
@@ -467,7 +527,6 @@ public class Signals {
 					sect.hgt = atts.containsKey(Att.HEIGHT) ? (Double) atts.get(Att.HEIGHT).val : 0.0;
 					ArrayList<ColCOL> cols = (ArrayList<ColCOL>) (atts.containsKey(Att.COLOUR) ? atts.get(Att.COLOUR).val : new ArrayList<>());
 					sect.col = cols.size() > 0 ? cols.get(0) : ColCOL.COL_UNK;
-					sect.alt = cols.size() > 1 ? cols.get(1) : ColCOL.COL_UNK;
 					if ((sect.chr != LitCHR.CHR_UNKN) && (sect.col != null))
 						litatts.add(sect);
 				}
@@ -551,7 +610,7 @@ public class Signals {
 						str += df.format(tmp.hgt) + "m";
 					if (colrng.get(0).rng > 0)
 						str += df.format(colrng.get(0).rng) + ((colrng.size() > 1) ? ((colrng.size() > 2) ? ("-" + df.format(colrng.get(colrng.size() - 1).rng)) : ("/" + df.format(colrng.get(1).rng))) : "") + "M";
-					Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, y)));
+					Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, y)));
 					y += 40;
 					str = "";
 				}
@@ -608,7 +667,7 @@ public class Signals {
 				str += (cats.contains(CatLIT.LIT_REAR)) ? "(Rear)" : "";
 				str += (cats.contains(CatLIT.LIT_UPPR)) ? "(Upper)" : "";
 				str += (cats.contains(CatLIT.LIT_LOWR)) ? "(Lower)" : "";
-				Renderer.labelText(feature, str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, -30)));
+				Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, -30)));
 			}
 		}
 	}

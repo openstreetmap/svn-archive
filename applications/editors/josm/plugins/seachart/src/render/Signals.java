@@ -116,13 +116,19 @@ public class Signals {
 			case BCNISD:
 			case BCNSAW:
 			case BCNSPP:
-			case LITFLT:
-			case LITVES:
-			case BOYINB:
 				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -140)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -80)));
+				}
+				break;
+			case LITFLT:
+			case LITVES:
+			case BOYINB:
+				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -110)));
+				} else {
+					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -60)));
 				}
 				break;
 			case LITMAJ:
@@ -139,13 +145,13 @@ public class Signals {
 			case BOYSAW:
 			case BOYSPP:
 				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
-					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR)) {
-						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(45, -140)));
+					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
+						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(50, -160)));
 					} else {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(25, -80)));
 					}
 				} else {
-					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR)) {
+					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(30, -100)));
 					} else {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(10, -50)));
@@ -163,23 +169,25 @@ public class Signals {
 			Renderer.symbol(Beacons.FogSignal);
 		if (Renderer.zoom >= 15) {
 			AttMap atts = Rules.feature.objs.get(Obj.FOGSIG).get(0);
-			String str = "";
-			if (atts.containsKey(Att.CATFOG)) {
-				str += fogSignals.get(((ArrayList<?>) (atts.get(Att.CATFOG).val)).get(0));
-			}
-			if (atts.containsKey(Att.SIGGRP)) {
-				str += "(" + atts.get(Att.SIGGRP).val + ")";
-			} else {
-				str += " ";
-			}
-			if (atts.containsKey(Att.SIGPER)) {
-				str += df.format(atts.get(Att.SIGPER).val) + "s";
-			}
-			if (atts.containsKey(Att.VALMXR)) {
-				str += df.format(atts.get(Att.VALMXR).val) + "M";
-			}
-			if (!str.isEmpty()) {
-				Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -30)));
+			if (atts != null) {
+				String str = "";
+				if (atts.containsKey(Att.CATFOG)) {
+					str += fogSignals.get(((ArrayList<?>) (atts.get(Att.CATFOG).val)).get(0));
+				}
+				if (atts.containsKey(Att.SIGGRP)) {
+					str += "(" + atts.get(Att.SIGGRP).val + ")";
+				} else {
+					str += " ";
+				}
+				if (atts.containsKey(Att.SIGPER)) {
+					str += df.format(atts.get(Att.SIGPER).val) + "s";
+				}
+				if (atts.containsKey(Att.VALMXR)) {
+					str += df.format(atts.get(Att.VALMXR).val) + "M";
+				}
+				if (!str.isEmpty()) {
+					Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TR, AffineTransform.getTranslateInstance(-60, -30)));
+				}
 			}
 		}
 	}

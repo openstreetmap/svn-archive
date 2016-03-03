@@ -627,6 +627,7 @@ public class Rules {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void floats() {
 		if (Renderer.zoom >= 12) {
 			switch (feature.type) {
@@ -642,8 +643,17 @@ public class Rules {
 			default:
 				break;
 			}
-			if (feature.objs.get(Obj.TOPMAR) != null)
-				Renderer.symbol(Topmarks.Shapes.get(feature.objs.get(Obj.TOPMAR).get(0).get(Att.TOPSHP).val), getScheme(Obj.TOPMAR), Topmarks.FloatDelta);
+			if (feature.objs.containsKey(Obj.TOPMAR)) {
+				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.FloatDelta);
+				}
+			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
+				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.FloatDelta);
+				}
+			}
 			addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(20, -50)));
 			Signals.addSignals();
 		}

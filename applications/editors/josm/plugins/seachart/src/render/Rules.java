@@ -184,6 +184,10 @@ public class Rules {
 		return false;
 	}
 	
+	static boolean hasObject(Obj obj) {
+		return (feature.objs.containsKey(obj));
+	}
+	
 	public static Feature feature;
 	static ArrayList<Feature> objects;
 	
@@ -245,6 +249,7 @@ public class Rules {
 			if (testObject(Obj.HULKES)) for (Feature f : objects) if (testFeature(f)) ports();
 			if (testObject(Obj.CRANES)) for (Feature f : objects) if (testFeature(f)) ports();
 			if (testObject(Obj.LNDMRK)) for (Feature f : objects) if (testFeature(f)) landmarks();
+			if (testObject(Obj.SILTNK)) for (Feature f : objects) if (testFeature(f)) landmarks();
 			if (testObject(Obj.BUISGL)) for (Feature f : objects) if (testFeature(f)) harbours();
 			if (testObject(Obj.MORFAC)) for (Feature f : objects) if (testFeature(f)) moorings();
 			if (testObject(Obj.NOTMRK)) for (Feature f : objects) if (testFeature(f)) notices();
@@ -437,7 +442,8 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	private static void beacons() {
-		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR)))) {
+		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BCNLAT) || (feature.type == Obj.BCNCAR)))
+				|| ((Renderer.zoom >= 11) && ((feature.type == Obj.BCNSAW) || hasObject(Obj.RTPBCN)))) {
 			BcnSHP shape = (BcnSHP)getAttEnum(feature.type, Att.BCNSHP);
 			if (shape == BcnSHP.BCN_UNKN)
 				shape = BcnSHP.BCN_PILE;
@@ -484,7 +490,8 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	private static void buoys() {
-		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BOYLAT) || (feature.type == Obj.BOYCAR)))) {
+		if ((Renderer.zoom >= 14) || ((Renderer.zoom >= 12) && ((feature.type == Obj.BOYLAT) || (feature.type == Obj.BOYCAR)))
+				|| ((Renderer.zoom >= 11) && ((feature.type == Obj.BOYSAW) || hasObject(Obj.RTPBCN)))) {
 			BoySHP shape = (BoySHP) getAttEnum(feature.type, Att.BOYSHP);
 			if (shape == BoySHP.BOY_UNKN) shape = BoySHP.BOY_PILR;
 			Renderer.symbol(Buoys.Shapes.get(shape), getScheme(feature.type));
@@ -629,7 +636,7 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	private static void floats() {
-		if (Renderer.zoom >= 12) {
+		if ((Renderer.zoom >= 12) || ((Renderer.zoom >= 11) && ((feature.type == Obj.LITVES) || (feature.type == Obj.BOYINB) || hasObject(Obj.RTPBCN)))) {
 			switch (feature.type) {
 			case LITVES:
 				Renderer.symbol(Buoys.Super, getScheme(feature.type));
@@ -818,19 +825,31 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	private static void landmarks() {
+		if (testAttribute(Obj.LNDMRK, Att.CATLMK, CatLMK.LMK_UNKN)
+				&& (testAttribute(Obj.LNDMRK, Att.CATLMK, FncFNC.FNC_UNKN) || testAttribute(Obj.LNDMRK, Att.CATLMK, FncFNC.FNC_LGHT))
+				&& hasObject(Obj.LIGHTS))
+			lights();
 		if (Renderer.zoom >= 12) {
+			switch (feature.type) {
+			case LNDMRK:
 			ArrayList<CatLMK> cats = (ArrayList<CatLMK>) getAttList(feature.type, Att.CATLMK);
 			Symbol catSym = Landmarks.Shapes.get(cats.get(0));
 			ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) getAttList(feature.type, Att.FUNCTN);
 			Symbol fncSym = Landmarks.Funcs.get(fncs.get(0));
 			if ((fncs.get(0) == FncFNC.FNC_CHCH) && (cats.get(0) == CatLMK.LMK_TOWR))
 				catSym = Landmarks.ChurchTower;
-			if ((cats.get(0) == CatLMK.LMK_UNKN) && (fncs.get(0) == FncFNC.FNC_UNKN) && (feature.objs.get(Obj.LIGHTS) != null))
-				catSym = Beacons.LightMajor;
 			if (cats.get(0) == CatLMK.LMK_RADR)
 				fncSym = Landmarks.RadioTV;
 			Renderer.symbol(catSym);
 			Renderer.symbol(fncSym);
+			break;
+			case SILTNK:
+				if (testAttribute(feature.type, Att.CATSIL, CatSIL.SIL_WTRT))
+					Renderer.symbol(Landmarks.WaterTower);
+				break;
+			default:
+				break;
+			}
 			if (Renderer.zoom >= 15)
 				addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 			Signals.addSignals();
@@ -839,35 +858,46 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	private static void lights() {
+		boolean ok = false;
 		switch (feature.type) {
 		case LITMAJ:
+		case LNDMRK:
 			Renderer.symbol(Beacons.LightMajor);
+			ok = true;
 			break;
 		case LITMIN:
 		case LIGHTS:
-			Renderer.symbol(Beacons.LightMinor);
+			if (Renderer.zoom >= 14) {
+				Renderer.symbol(Beacons.LightMinor);
+				ok = true;
+			}
 			break;
 		case PILPNT:
-			if (feature.objs.containsKey(Obj.LIGHTS))
-				Renderer.symbol(Beacons.LightMinor);
-			else
-				Renderer.symbol(Harbours.Post);
+			if (Renderer.zoom >= 14) {
+				if (feature.objs.containsKey(Obj.LIGHTS))
+					Renderer.symbol(Beacons.LightMinor);
+				else
+					Renderer.symbol(Harbours.Post);
+				ok = true;
+			}
 			break;
 		default:
 			break;
 		}
-		if (feature.objs.containsKey(Obj.TOPMAR)) {
-			AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
-			if (topmap.containsKey(Att.TOPSHP)) {
-				Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.LightDelta);
+		if (ok) {
+			if (feature.objs.containsKey(Obj.TOPMAR)) {
+				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), Topmarks.LightDelta);
+				}
+			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
+				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.LightDelta);
+				}
 			}
-		} else	if (feature.objs.containsKey(Obj.DAYMAR)) {
-			AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
-			if (topmap.containsKey(Att.TOPSHP)) {
-				Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>)(topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), Topmarks.LightDelta);
-			}
+			Signals.addSignals();
 		}
-		Signals.addSignals();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -215,7 +215,7 @@ public class S57val { // S57 Attribute values lookup tables & methods
   Catlnd.put(CatLND.LND_PINCL, new S57enum(19, "rock_pinnacle")); Catlnd.put(CatLND.LND_CAY, new S57enum(20, "cay"));
  }
  public enum CatLMK { LMK_UNKN, LMK_CARN, LMK_CMTY, LMK_CHMY, LMK_DISH, LMK_FLAG, LMK_FLAR, LMK_MAST, LMK_WNDS, LMK_MNMT, LMK_CLMN, LMK_MEML, LMK_OBLK, LMK_STAT, LMK_CROS,
-  LMK_DOME, LMK_RADR, LMK_TOWR, LMK_WNDM, LMK_WNDG, LMK_SPIR, LMK_BLDR, LMK_MNRT, LMK_WTRT }
+  LMK_DOME, LMK_RADR, LMK_TOWR, LMK_WNDM, LMK_WNDG, LMK_SPIR, LMK_BLDR }
  private static final EnumMap<CatLMK, S57enum> Catlmk = new EnumMap<>(CatLMK.class); static {Catlmk.put(CatLMK.LMK_UNKN, new S57enum(0, ""));
   Catlmk.put(CatLMK.LMK_CARN, new S57enum(1, "cairn")); Catlmk.put(CatLMK.LMK_CMTY, new S57enum(2, "cemetery")); Catlmk.put(CatLMK.LMK_CHMY, new S57enum(3, "chimney"));
   Catlmk.put(CatLMK.LMK_DISH, new S57enum(4, "dish_aerial")); Catlmk.put(CatLMK.LMK_FLAG, new S57enum(5, "flagstaff")); Catlmk.put(CatLMK.LMK_FLAR, new S57enum(6, "flare_stack"));

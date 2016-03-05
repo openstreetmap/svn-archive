@@ -70,7 +70,12 @@ public class ChartImage extends ImageryLayer implements ZoomChangeListener, Char
 		Renderer.reRender(g2, rect, zoom, Math.pow(2, (zoom-12)), SeachartAction.map, this);
 		g2.setPaint(Color.black);
 		g2.setFont(new Font("Arial", Font.BOLD, 20));
-		g2.drawString(("Z" + zoom), (rect.x + rect.width - 40), (rect.y + rect.height - 10));
+		Rectangle crect = g2.getClipBounds();
+		if ((crect.y + crect.height) < (rect.y + rect.height - 10)) {
+			g2.drawString(("Z" + zoom), (crect.x + crect.width - 40), (crect.y + crect.height - 10));
+		} else {
+			g2.drawString(("Z" + zoom), (rect.x + rect.width - 40), (rect.y + rect.height - 10));
+		}
 	}
 
 	@Override

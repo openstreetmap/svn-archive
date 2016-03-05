@@ -195,7 +195,6 @@ public class Landmarks {
 		Shapes.put(CatLMK.LMK_STAT, Landmarks.Monument); Shapes.put(CatLMK.LMK_CROS, Landmarks.Cross); Shapes.put(CatLMK.LMK_DOME, Landmarks.Dome);
 		Shapes.put(CatLMK.LMK_RADR, Landmarks.Mast); Shapes.put(CatLMK.LMK_TOWR, Landmarks.LandTower); Shapes.put(CatLMK.LMK_WNDM, Landmarks.Windmill);
 		Shapes.put(CatLMK.LMK_WNDG, Landmarks.WindMotor); Shapes.put(CatLMK.LMK_SPIR, Landmarks.Spire); Shapes.put(CatLMK.LMK_BLDR, Beacons.Cairn);
-		Shapes.put(CatLMK.LMK_MNRT, Landmarks.Minaret); Shapes.put(CatLMK.LMK_WTRT, Landmarks.WaterTower);
 	}
 
 	public static final EnumMap<FncFNC, Symbol> Funcs = new EnumMap<FncFNC, Symbol>(FncFNC.class);

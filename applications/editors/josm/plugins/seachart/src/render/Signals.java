@@ -27,7 +27,7 @@ import symbols.Symbols;
 import symbols.Topmarks;
 import symbols.Symbols.*;
 
-public class Signals {
+public class Signals extends Rules{
 
 	static final EnumMap<ColCOL, Color> LightColours = new EnumMap<ColCOL, Color>(ColCOL.class);
 	static {
@@ -100,23 +100,23 @@ public class Signals {
 	static final DecimalFormat df = new DecimalFormat("#.#");
 	
 	public static void addSignals() {
-	  if (Rules.feature.objs.containsKey(Obj.RADRFL)) reflectors();
-	  if (Rules.feature.objs.containsKey(Obj.FOGSIG)) fogSignals();
-	  if (Rules.feature.objs.containsKey(Obj.RTPBCN)) radarStations();
-	  if (Rules.feature.objs.containsKey(Obj.RADSTA)) radarStations();
-	  if (Rules.feature.objs.containsKey(Obj.RDOSTA)) radioStations();
-	  if (Rules.feature.objs.containsKey(Obj.LIGHTS)) lights();
+	  if (feature.objs.containsKey(Obj.RADRFL)) reflectors();
+	  if (feature.objs.containsKey(Obj.FOGSIG)) fogSignals();
+	  if (feature.objs.containsKey(Obj.RTPBCN)) radarStations();
+	  if (feature.objs.containsKey(Obj.RADSTA)) radarStations();
+	  if (feature.objs.containsKey(Obj.RDOSTA)) radioStations();
+	  if (feature.objs.containsKey(Obj.LIGHTS)) lights();
 	}
 
 	public static void reflectors() {
 		if (Renderer.zoom >= 14) {
-			switch (Rules.feature.type) {
+			switch (feature.type) {
 			case BCNLAT:
 			case BCNCAR:
 			case BCNISD:
 			case BCNSAW:
 			case BCNSPP:
-				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -140)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -80)));
@@ -125,7 +125,7 @@ public class Signals {
 			case LITFLT:
 			case LITVES:
 			case BOYINB:
-				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -110)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -60)));
@@ -133,7 +133,7 @@ public class Signals {
 				break;
 			case LITMAJ:
 			case LITMIN:
-				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
+				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -90)));
 				} else {
 					Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -30)));
@@ -144,14 +144,14 @@ public class Signals {
 			case BOYISD:
 			case BOYSAW:
 			case BOYSPP:
-				if ((Rules.feature.objs.containsKey(Obj.TOPMAR)) || (Rules.feature.objs.containsKey(Obj.DAYMAR))) {
-					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
+				if ((feature.objs.containsKey(Obj.TOPMAR)) || (feature.objs.containsKey(Obj.DAYMAR))) {
+					if (testAttribute(feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || testAttribute(feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(50, -160)));
 					} else {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(25, -80)));
 					}
 				} else {
-					if (Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || Rules.testAttribute(Rules.feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
+					if (testAttribute(feature.type, Att.BOYSHP, BoySHP.BOY_PILR) || testAttribute(feature.type, Att.BOYSHP, BoySHP.BOY_SPAR)) {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(30, -100)));
 					} else {
 						Renderer.symbol(Topmarks.RadarReflector, new Delta(Handle.BC, AffineTransform.getTranslateInstance(10, -50)));
@@ -168,7 +168,7 @@ public class Signals {
 		if (Renderer.zoom >= 11)
 			Renderer.symbol(Beacons.FogSignal);
 		if (Renderer.zoom >= 15) {
-			AttMap atts = Rules.feature.objs.get(Obj.FOGSIG).get(0);
+			AttMap atts = feature.objs.get(Obj.FOGSIG).get(0);
 			if (atts != null) {
 				String str = "";
 				if (atts.containsKey(Att.CATFOG)) {
@@ -197,20 +197,20 @@ public class Signals {
 			Renderer.symbol(Beacons.RadarStation);
 		if (Renderer.zoom >= 15) {
 			String bstr = "";
-			CatRTB cat = (CatRTB) Rules.getAttEnum(Obj.RTPBCN, Att.CATRTB);
-			String wal = Rules.getAttStr(Obj.RTPBCN, Att.RADWAL);
+			CatRTB cat = (CatRTB) getAttEnum(Obj.RTPBCN, Att.CATRTB);
+			String wal = getAttStr(Obj.RTPBCN, Att.RADWAL);
 			switch (cat) {
 			case RTB_RAMK:
 				bstr += " Ramark";
 				break;
 			case RTB_RACN:
 				bstr += " Racon";
-				String astr = Rules.getAttStr(Obj.RTPBCN, Att.SIGGRP);
+				String astr = getAttStr(Obj.RTPBCN, Att.SIGGRP);
 				if (!astr.isEmpty()) {
 					bstr += "(" + astr + ")";
 				}
-				Double per = (Double) Rules.getAttVal(Obj.RTPBCN, Att.SIGPER);
-				Double mxr = (Double) Rules.getAttVal(Obj.RTPBCN, Att.VALMXR);
+				Double per = (Double) getAttVal(Obj.RTPBCN, Att.SIGPER);
+				Double mxr = (Double) getAttVal(Obj.RTPBCN, Att.VALMXR);
 				if ((per != null) || (mxr != null)) {
 					bstr += (astr.isEmpty() ? " " : "");
 					if (per != null)
@@ -243,7 +243,7 @@ public class Signals {
 		boolean vais = false;
 		String bstr = "";
 		if (Renderer.zoom >= 11) {
-			ArrayList<CatROS> cats = (ArrayList<CatROS>) Rules.getAttList(Obj.RDOSTA, Att.CATROS);
+			ArrayList<CatROS> cats = (ArrayList<CatROS>) getAttList(Obj.RDOSTA, Att.CATROS);
 			for (CatROS ros : cats) {
 				switch (ros) {
 				case ROS_OMNI:
@@ -372,7 +372,7 @@ public class Signals {
 	public static void lights() {
 		Enum<ColCOL> col = null;
 		Enum<ColCOL> tcol = null;
-		ObjTab lights = Rules.feature.objs.get(Obj.LIGHTS);
+		ObjTab lights = feature.objs.get(Obj.LIGHTS);
 		for (AttMap atts : lights.values()) {
 			if (atts.containsKey(Att.COLOUR)) {
 				ArrayList<Enum<ColCOL>> cols = (ArrayList<Enum<ColCOL>>) atts.get(Att.COLOUR).val;
@@ -391,6 +391,7 @@ public class Signals {
 			}
 		}
 		Renderer.symbol(Beacons.LightFlare, new Scheme(LightColours.get(col)), new Delta(Handle.BC, AffineTransform.getRotateInstance(Math.toRadians(120))));
+		if (Renderer.zoom >= 12) {
 			String str = "";
 			if (lights.get(1) != null) {
 				for (AttMap atts : lights.values()) {
@@ -423,7 +424,8 @@ public class Signals {
 									double ss1 = 361;
 									double ss2 = 361;
 									Double sdir = null;
-									if (satts == atts) continue;
+									if (satts == atts)
+										continue;
 									if (satts.containsKey(Att.LITRAD)) {
 										srad = (Double) satts.get(Att.LITRAD).val;
 									}
@@ -443,7 +445,8 @@ public class Signals {
 												ss2 = (Double) satts.get(Att.SECTR2).val;
 											}
 										}
-										if ((ss1 > 360) || (ss2 > 360)) continue;
+										if ((ss1 > 360) || (ss2 > 360))
+											continue;
 										if (sdir != null) {
 											if (((dir - sdir + 360) % 360) < 8) {
 												s1 = ((((sdir > dir) ? 360 : 0) + sdir + dir) / 2) % 360;
@@ -495,187 +498,188 @@ public class Signals {
 					if ((s1 <= 360) && (s2 <= 360) && (s1 != s2))
 						Renderer.lightSector(LightColours.get(col1), LightColours.get(col2), radius, s1, s2, dir, (Renderer.zoom >= 15) ? str : "");
 				}
-			if (Renderer.zoom >= 15) {
-				class LitSect {
-					boolean dir;
-					LitCHR chr;
-					ColCOL col;
-					String grp;
-					double per;
-					double rng;
-					double hgt;
-				}
-				ArrayList<LitSect> litatts = new ArrayList<>();
-				for (AttMap atts : lights.values()) {
-					LitSect sect = new LitSect();
-					sect.dir = (atts.containsKey(Att.CATLIT) && ((ArrayList<CatLIT>)atts.get(Att.CATLIT).val).contains(CatLIT.LIT_DIR));
-					sect.chr = atts.containsKey(Att.LITCHR) ? ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0) : LitCHR.CHR_UNKN;
-					switch (sect.chr) {
-					case CHR_AL:
-						sect.chr = LitCHR.CHR_F;
-						break;
-					case CHR_ALOC:
-						sect.chr = LitCHR.CHR_OC;
-						break;
-					case CHR_ALLFL:
-						sect.chr = LitCHR.CHR_LFL;
-						break;
-					case CHR_ALFL:
-						sect.chr = LitCHR.CHR_FL;
-						break;
-					case CHR_ALFFL:
-						sect.chr = LitCHR.CHR_FFL;
-						break;
-					default:
-						break;
+				if (Renderer.zoom >= 15) {
+					class LitSect {
+						boolean dir;
+						LitCHR chr;
+						ColCOL col;
+						String grp;
+						double per;
+						double rng;
+						double hgt;
 					}
-					sect.grp = atts.containsKey(Att.SIGGRP) ? (String) atts.get(Att.SIGGRP).val : "";
-					sect.per = atts.containsKey(Att.SIGPER) ? (Double) atts.get(Att.SIGPER).val : 0.0;
-					sect.rng = atts.containsKey(Att.VALNMR) ? (Double) atts.get(Att.VALNMR).val : 0.0;
-					sect.hgt = atts.containsKey(Att.HEIGHT) ? (Double) atts.get(Att.HEIGHT).val : 0.0;
-					ArrayList<ColCOL> cols = (ArrayList<ColCOL>) (atts.containsKey(Att.COLOUR) ? atts.get(Att.COLOUR).val : new ArrayList<>());
-					sect.col = cols.size() > 0 ? cols.get(0) : ColCOL.COL_UNK;
-					if ((sect.chr != LitCHR.CHR_UNKN) && (sect.col != null))
-						litatts.add(sect);
-				}
-				ArrayList<ArrayList<LitSect>> groupings = new ArrayList<>();
-				for (LitSect lit : litatts) {
-					boolean found = false;
-					for (ArrayList<LitSect> group : groupings) {
-						LitSect mem = group.get(0);
-						if ((lit.dir == mem.dir) && (lit.chr == mem.chr) && (lit.grp.equals(mem.grp)) && (lit.per == mem.per) && (lit.hgt == mem.hgt)) {
-							group.add(lit);
-							found = true;
+					ArrayList<LitSect> litatts = new ArrayList<>();
+					for (AttMap atts : lights.values()) {
+						LitSect sect = new LitSect();
+						sect.dir = (atts.containsKey(Att.CATLIT) && ((ArrayList<CatLIT>) atts.get(Att.CATLIT).val).contains(CatLIT.LIT_DIR));
+						sect.chr = atts.containsKey(Att.LITCHR) ? ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0) : LitCHR.CHR_UNKN;
+						switch (sect.chr) {
+						case CHR_AL:
+							sect.chr = LitCHR.CHR_F;
+							break;
+						case CHR_ALOC:
+							sect.chr = LitCHR.CHR_OC;
+							break;
+						case CHR_ALLFL:
+							sect.chr = LitCHR.CHR_LFL;
+							break;
+						case CHR_ALFL:
+							sect.chr = LitCHR.CHR_FL;
+							break;
+						case CHR_ALFFL:
+							sect.chr = LitCHR.CHR_FFL;
+							break;
+						default:
+							break;
 						}
+						sect.grp = atts.containsKey(Att.SIGGRP) ? (String) atts.get(Att.SIGGRP).val : "";
+						sect.per = atts.containsKey(Att.SIGPER) ? (Double) atts.get(Att.SIGPER).val : 0.0;
+						sect.rng = atts.containsKey(Att.VALNMR) ? (Double) atts.get(Att.VALNMR).val : 0.0;
+						sect.hgt = atts.containsKey(Att.HEIGHT) ? (Double) atts.get(Att.HEIGHT).val : 0.0;
+						ArrayList<ColCOL> cols = (ArrayList<ColCOL>) (atts.containsKey(Att.COLOUR) ? atts.get(Att.COLOUR).val : new ArrayList<>());
+						sect.col = cols.size() > 0 ? cols.get(0) : ColCOL.COL_UNK;
+						if ((sect.chr != LitCHR.CHR_UNKN) && (sect.col != null))
+							litatts.add(sect);
 					}
-					if (!found) {
-						ArrayList<LitSect> tmp = new ArrayList<LitSect>();
-						tmp.add(lit);
-						groupings.add(tmp);
-					}
-				}
-				for (boolean moved = true; moved;) {
-					moved = false;
-					for (int i = 0; i < groupings.size() - 1; i++) {
-						if (groupings.get(i).size() < groupings.get(i + 1).size()) {
-							ArrayList<LitSect> tmp = groupings.remove(i);
-							groupings.add(i + 1, tmp);
-							moved = true;
-						}
-					}
-				}
-				class ColRng {
-					ColCOL col;
-					double rng;
-
-					public ColRng(ColCOL c, double r) {
-						col = c;
-						rng = r;
-					}
-				}
-				int y = -30;
-				for (ArrayList<LitSect> group : groupings) {
-					ArrayList<ColRng> colrng = new ArrayList<>();
-					for (LitSect lit : group) {
+					ArrayList<ArrayList<LitSect>> groupings = new ArrayList<>();
+					for (LitSect lit : litatts) {
 						boolean found = false;
-						for (ColRng cr : colrng) {
-							if (cr.col == lit.col) {
-								if (lit.rng > cr.rng) {
-									cr.rng = lit.rng;
-								}
+						for (ArrayList<LitSect> group : groupings) {
+							LitSect mem = group.get(0);
+							if ((lit.dir == mem.dir) && (lit.chr == mem.chr) && (lit.grp.equals(mem.grp)) && (lit.per == mem.per) && (lit.hgt == mem.hgt)) {
+								group.add(lit);
 								found = true;
 							}
 						}
 						if (!found) {
-							colrng.add(new ColRng(lit.col, lit.rng));
+							ArrayList<LitSect> tmp = new ArrayList<LitSect>();
+							tmp.add(lit);
+							groupings.add(tmp);
 						}
 					}
 					for (boolean moved = true; moved;) {
 						moved = false;
-						for (int i = 0; i < colrng.size() - 1; i++) {
-							if (colrng.get(i).rng < colrng.get(i + 1).rng) {
-								ColRng tmp = colrng.remove(i);
-								colrng.add(i + 1, tmp);
+						for (int i = 0; i < groupings.size() - 1; i++) {
+							if (groupings.get(i).size() < groupings.get(i + 1).size()) {
+								ArrayList<LitSect> tmp = groupings.remove(i);
+								groupings.add(i + 1, tmp);
 								moved = true;
 							}
 						}
 					}
-					LitSect tmp = group.get(0);
-					str = (tmp.dir) ? "Dir" : "";
-					str += LightCharacters.get(tmp.chr);
-					if (!tmp.grp.isEmpty())
-						str += "(" + tmp.grp + ")";
-					else
-						str += ".";
-					for (ColRng cr : colrng) {
-						str += LightLetters.get(cr.col);
-					}
-					if ((tmp.per > 0) || (tmp.hgt > 0) || (colrng.get(0).rng > 0))
-						str += ".";
-					if (tmp.per > 0)
-						str += df.format(tmp.per) + "s";
-					if (tmp.hgt > 0)
-						str += df.format(tmp.hgt) + "m";
-					if (colrng.get(0).rng > 0)
-						str += df.format(colrng.get(0).rng) + ((colrng.size() > 1) ? ((colrng.size() > 2) ? ("-" + df.format(colrng.get(colrng.size() - 1).rng)) : ("/" + df.format(colrng.get(1).rng))) : "") + "M";
-					Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, y)));
-					y += 40;
-					str = "";
-				}
-			}
-		} else {
-			if (Renderer.zoom >= 15) {
-				AttMap atts = lights.get(0);
-				ArrayList<CatLIT> cats = new ArrayList<>();
-				if (atts.containsKey(Att.CATLIT)) {
-					cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
-				}
-				str = (cats.contains(CatLIT.LIT_DIR)) ? "Dir" : "";
-				str += (atts.containsKey(Att.MLTYLT)) ? atts.get(Att.MLTYLT).val : "";
-				if (atts.containsKey(Att.LITCHR)) {
-					LitCHR chr = ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0);
-					if (atts.containsKey(Att.SIGGRP)) {
-						String grp = (String) atts.get(Att.SIGGRP).val;
-						switch (chr) {
-						case CHR_QLFL:
-							str += String.format("Q(%s)+LFl", grp);
-							break;
-						case CHR_VQLFL:
-							str += String.format("VQ(%s)+LFl", grp);
-							break;
-						case CHR_UQLFL:
-							str += String.format("UQ(%s)+LFl", grp);
-							break;
-						default:
-							str += String.format("%s(%s)", LightCharacters.get(chr), grp);
-							break;
+					class ColRng {
+						ColCOL col;
+						double rng;
+
+						public ColRng(ColCOL c, double r) {
+							col = c;
+							rng = r;
 						}
-					} else {
-						str += LightCharacters.get(chr);
 					}
-				}
-				if (atts.containsKey(Att.COLOUR)) {
-					ArrayList<ColCOL> cols = (ArrayList<ColCOL>) atts.get(Att.COLOUR).val;
-					if (!((cols.size() == 1) && (cols.get(0) == ColCOL.COL_WHT))) {
-						if (!str.isEmpty() && !str.endsWith(")")) {
+					int y = -30;
+					for (ArrayList<LitSect> group : groupings) {
+						ArrayList<ColRng> colrng = new ArrayList<>();
+						for (LitSect lit : group) {
+							boolean found = false;
+							for (ColRng cr : colrng) {
+								if (cr.col == lit.col) {
+									if (lit.rng > cr.rng) {
+										cr.rng = lit.rng;
+									}
+									found = true;
+								}
+							}
+							if (!found) {
+								colrng.add(new ColRng(lit.col, lit.rng));
+							}
+						}
+						for (boolean moved = true; moved;) {
+							moved = false;
+							for (int i = 0; i < colrng.size() - 1; i++) {
+								if (colrng.get(i).rng < colrng.get(i + 1).rng) {
+									ColRng tmp = colrng.remove(i);
+									colrng.add(i + 1, tmp);
+									moved = true;
+								}
+							}
+						}
+						LitSect tmp = group.get(0);
+						str = (tmp.dir) ? "Dir" : "";
+						str += LightCharacters.get(tmp.chr);
+						if (!tmp.grp.isEmpty())
+							str += "(" + tmp.grp + ")";
+						else
 							str += ".";
+						for (ColRng cr : colrng) {
+							str += LightLetters.get(cr.col);
 						}
-						for (ColCOL acol : cols) {
-							str += LightLetters.get(acol);
-						}
+						if ((tmp.per > 0) || (tmp.hgt > 0) || (colrng.get(0).rng > 0))
+							str += ".";
+						if (tmp.per > 0)
+							str += df.format(tmp.per) + "s";
+						if (tmp.hgt > 0)
+							str += df.format(tmp.hgt) + "m";
+						if (colrng.get(0).rng > 0)
+							str += df.format(colrng.get(0).rng) + ((colrng.size() > 1) ? ((colrng.size() > 2) ? ("-" + df.format(colrng.get(colrng.size() - 1).rng)) : ("/" + df.format(colrng.get(1).rng))) : "") + "M";
+						Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, y)));
+						y += 40;
+						str = "";
 					}
 				}
-				str += (cats.contains(CatLIT.LIT_VERT)) ? "(vert)" : "";
-				str += (cats.contains(CatLIT.LIT_HORI)) ? "(hor)" : "";
-				str += (!str.isEmpty() && (atts.containsKey(Att.SIGPER) || atts.containsKey(Att.HEIGHT) || atts.containsKey(Att.VALMXR)) && !str.endsWith(")")) ? "." : "";
-				str += (atts.containsKey(Att.SIGPER)) ? df.format(atts.get(Att.SIGPER).val) + "s" : "";
-				str += (atts.containsKey(Att.HEIGHT)) ? df.format(atts.get(Att.HEIGHT).val) + "m" : "";
-				str += (atts.containsKey(Att.VALNMR)) ? df.format(atts.get(Att.VALNMR).val) + "M" : "";
-				str += (cats.contains(CatLIT.LIT_FRNT)) ? "(Front)" : "";
-				str += (cats.contains(CatLIT.LIT_REAR)) ? "(Rear)" : "";
-				str += (cats.contains(CatLIT.LIT_UPPR)) ? "(Upper)" : "";
-				str += (cats.contains(CatLIT.LIT_LOWR)) ? "(Lower)" : "";
-				Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, -30)));
+			} else {
+				if (Renderer.zoom >= 15) {
+					AttMap atts = lights.get(0);
+					ArrayList<CatLIT> cats = new ArrayList<>();
+					if (atts.containsKey(Att.CATLIT)) {
+						cats = (ArrayList<CatLIT>) atts.get(Att.CATLIT).val;
+					}
+					str = (cats.contains(CatLIT.LIT_DIR)) ? "Dir" : "";
+					str += (atts.containsKey(Att.MLTYLT)) ? atts.get(Att.MLTYLT).val : "";
+					if (atts.containsKey(Att.LITCHR)) {
+						LitCHR chr = ((ArrayList<LitCHR>) atts.get(Att.LITCHR).val).get(0);
+						if (atts.containsKey(Att.SIGGRP)) {
+							String grp = (String) atts.get(Att.SIGGRP).val;
+							switch (chr) {
+							case CHR_QLFL:
+								str += String.format("Q(%s)+LFl", grp);
+								break;
+							case CHR_VQLFL:
+								str += String.format("VQ(%s)+LFl", grp);
+								break;
+							case CHR_UQLFL:
+								str += String.format("UQ(%s)+LFl", grp);
+								break;
+							default:
+								str += String.format("%s(%s)", LightCharacters.get(chr), grp);
+								break;
+							}
+						} else {
+							str += LightCharacters.get(chr);
+						}
+					}
+					if (atts.containsKey(Att.COLOUR)) {
+						ArrayList<ColCOL> cols = (ArrayList<ColCOL>) atts.get(Att.COLOUR).val;
+						if (!((cols.size() == 1) && (cols.get(0) == ColCOL.COL_WHT))) {
+							if (!str.isEmpty() && !str.endsWith(")")) {
+								str += ".";
+							}
+							for (ColCOL acol : cols) {
+								str += LightLetters.get(acol);
+							}
+						}
+					}
+					str += (cats.contains(CatLIT.LIT_VERT)) ? "(vert)" : "";
+					str += (cats.contains(CatLIT.LIT_HORI)) ? "(hor)" : "";
+					str += (!str.isEmpty() && (atts.containsKey(Att.SIGPER) || atts.containsKey(Att.HEIGHT) || atts.containsKey(Att.VALMXR)) && !str.endsWith(")")) ? "." : "";
+					str += (atts.containsKey(Att.SIGPER)) ? df.format(atts.get(Att.SIGPER).val) + "s" : "";
+					str += (atts.containsKey(Att.HEIGHT)) ? df.format(atts.get(Att.HEIGHT).val) + "m" : "";
+					str += (atts.containsKey(Att.VALNMR)) ? df.format(atts.get(Att.VALNMR).val) + "M" : "";
+					str += (cats.contains(CatLIT.LIT_FRNT)) ? "(Front)" : "";
+					str += (cats.contains(CatLIT.LIT_REAR)) ? "(Rear)" : "";
+					str += (cats.contains(CatLIT.LIT_UPPR)) ? "(Upper)" : "";
+					str += (cats.contains(CatLIT.LIT_LOWR)) ? "(Lower)" : "";
+					Renderer.labelText(str, new Font("Arial", Font.PLAIN, 40), Color.black, new Delta(Handle.TL, AffineTransform.getTranslateInstance(60, -30)));
+				}
 			}
 		}
 	}

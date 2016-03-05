@@ -29,6 +29,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.customurl.UtilsPluginPreferen
 import org.openstreetmap.josm.plugins.utilsplugin2.latlon.LatLonAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.multitagger.MultiTagAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryAction;
+import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceMembershipAction;
 import org.openstreetmap.josm.plugins.utilsplugin2.search.UtilsSimpleMatchFactory;
 import org.openstreetmap.josm.plugins.utilsplugin2.search.UtilsUnaryMatchFactory;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.AdjacentNodesAction;
@@ -72,6 +73,7 @@ public class UtilsPlugin2 extends Plugin {
     JMenuItem multiTag;
 
     JMenuItem replaceGeometry;
+    JMenuItem replaceMembership;
     JMenuItem tagBuffer;
     JMenuItem sourceTag;
     JMenuItem pasteRelations;
@@ -105,6 +107,7 @@ public class UtilsPlugin2 extends Plugin {
         unglueRelation = MainMenu.add(toolsMenu, new UnGlueRelationAction());
         toolsMenu.addSeparator();
         replaceGeometry = MainMenu.add(toolsMenu, new ReplaceGeometryAction());
+        replaceMembership = MainMenu.add(toolsMenu, new ReplaceMembershipAction());
         extractPoint = MainMenu.add(toolsMenu, new ExtractPointAction());
         tagBuffer = MainMenu.add(toolsMenu, new TagBufferAction());
         sourceTag = MainMenu.add(toolsMenu, new TagSourceAction());
@@ -147,6 +150,7 @@ public class UtilsPlugin2 extends Plugin {
         splitObject.setEnabled(enabled);
 
         replaceGeometry.setEnabled(enabled);
+        replaceMembership.setEnabled(enabled);
         tagBuffer.setEnabled(enabled);
         sourceTag.setEnabled(enabled);
         pasteRelations.setEnabled(enabled);

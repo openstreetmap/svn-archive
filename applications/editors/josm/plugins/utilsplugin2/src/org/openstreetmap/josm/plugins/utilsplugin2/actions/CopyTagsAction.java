@@ -33,7 +33,7 @@ public final class CopyTagsAction extends JosmAction {
     public CopyTagsAction() {
         super(tr("Copy Tags"), "copy",
                 tr("Copy all tags of selected objects to paste buffer."),
-                createShortcut(), true);
+                createShortcut(), true, CopyTagsAction.class.getName(), true);
         putValue("help", ht("/Action/CopyTags"));
     }
 

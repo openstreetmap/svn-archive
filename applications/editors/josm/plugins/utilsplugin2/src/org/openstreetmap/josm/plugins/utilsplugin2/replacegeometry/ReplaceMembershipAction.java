@@ -29,8 +29,9 @@ public class ReplaceMembershipAction extends JosmAction {
 
     public ReplaceMembershipAction() {
         super(
-                tr("Replace Membership"), null,
-                tr("In relations where the selected object is member of, replace it with a new one"), null, false);
+                tr("Replace Membership"), (String) null,
+                tr("In relations where the selected object is member of, replace it with a new one"), null, false,
+                ReplaceMembershipAction.class.getName(), true);
     }
 
     @Override

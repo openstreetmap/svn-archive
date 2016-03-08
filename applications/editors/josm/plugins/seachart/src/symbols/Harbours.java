@@ -158,8 +158,6 @@ public class Harbours {
 		p.lineTo(10,10); p.lineTo(10,0); p.lineTo(0,0); p.lineTo(0,-10); p.lineTo(-10,-10); p.lineTo(-10,-20); p.lineTo(-20,-20); p.closePath();
 		LandingSteps.add(new Instr(Form.PGON, p));
 	}
-	public static final Symbol Lock_Gate = new Symbol();
-	public static final Symbol Lock = new Symbol();
 	public static final Symbol Marina = new Symbol();
 	static {
 		Marina.add(new Instr(Form.STRK, new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));

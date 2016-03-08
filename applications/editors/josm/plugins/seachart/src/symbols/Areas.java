@@ -52,7 +52,7 @@ public class Areas {
 	static {
 		LaneArrow.add(new Instr(Form.BBOX, new Rectangle2D.Double(-20,-240,40,240)));
 		LaneArrow.add(new Instr(Form.STRK, new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
-		LaneArrow.add(new Instr(Form.FILL, Symbols.Mline));
+		LaneArrow.add(new Instr(Form.FILL, Symbols.Mtss));
 		Path2D.Double p = new Path2D.Double(); p.moveTo(15,0); p.lineTo(15,-195); p.lineTo(40,-195);
 		p.lineTo(0,-240); p.lineTo(-40,-195); p.lineTo(-15,-195); p.lineTo(-15,0); p.closePath();
 		LaneArrow.add(new Instr(Form.PLIN, p));
@@ -201,6 +201,28 @@ public class Areas {
 		p.moveTo(50.0,84.5); p.lineTo(53.3,80.8); p.lineTo(56.6,75.0); p.lineTo(59.9,69.3); p.lineTo(63.2,66.0); p.lineTo(66.5,66.1); p.lineTo(68.2,69.5); p.lineTo(69.9,75.0);
 		p.lineTo(71.6,80.3); p.lineTo(73.3,83.4); p.lineTo(75.0,83.3); p.lineTo(78.3,80.1); p.lineTo(81.6,75.0); p.lineTo(84.9,70.1); p.lineTo(88.2,67.2); p.lineTo(91.5,67.3);
 		p.lineTo(93.2,70.3); p.lineTo(94.9,75.0); p.lineTo(96.6,79.6); p.lineTo(98.3,82.2); p.lineTo(100.0,82.1);
+		g2.draw(p);
+	}
+	public static final Symbol KelpS = new Symbol();
+	static {
+		KelpS.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-60,0); p.curveTo(-20,-20,-24,40,24,20); p.moveTo(-60,0); p.quadTo(-48,20,-32,12);
+		p.moveTo(-36,-4); p.quadTo(-24,-24,-4,-16); p.quadTo(8,-32,20,-24); p.moveTo(-4,-16); p.quadTo(8,0,20,-8);
+		p.moveTo(-8,20); p.quadTo(12,0,36,8); p.quadTo(48,24,60,16); p.moveTo(36,8); p.quadTo(48,-8,60,0);
+		KelpS.add(new Instr(Form.PLIN, p));
+	}
+	public static final BufferedImage KelpA = new BufferedImage(240, 240, BufferedImage.TYPE_INT_ARGB);
+	static {
+		Graphics2D g2 = KelpA.createGraphics();
+		g2.setStroke(new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g2.setBackground(new Color(0, true));
+		g2.clearRect(0,  0, 240, 240);
+		g2.setPaint(Color.black);
+		Path2D.Double p = new Path2D.Double();
+			p.moveTo(0,60); p.curveTo(40,40,44,100,84,80); p.moveTo(0,60); p.quadTo(12,80,28,72); p.moveTo(24,56); p.quadTo(36,36,56,44); p.quadTo(68,28,80,36);
+      p.moveTo(56,44); p.quadTo(68,60,80,52); p.moveTo(52,76); p.quadTo(72,60,96,68); p.quadTo(108,84,120,76); p.moveTo(96,68); p.quadTo(108,52,120,60);
+      p.moveTo(120,180); p.curveTo(160,160,164,220,204,200); p.moveTo(120,180); p.quadTo(132,200,148,192); p.moveTo(144,176); p.quadTo(156,156,176,164); p.quadTo(188,148,200,156);
+      p.moveTo(176,164); p.quadTo(188,180,200,172); p.moveTo(172,196); p.quadTo(192,180,216,188); p.quadTo(228,204,240,196); p.moveTo(216,188); p.quadTo(228,172,240,180);
 		g2.draw(p);
 	}
 }

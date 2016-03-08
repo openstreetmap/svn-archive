@@ -1070,45 +1070,440 @@ public class Notices {
 		NmkCevni.put(CatNMK.NMK_LBGP, NoticeE22);
   };
 
+  private static final Symbol NoticeBB = new Symbol();
+  static {
+  	NoticeBB.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	NoticeBB.add(new Instr(Form.LINE, new Line2D.Double(-29,-29,-29,29)));
+  	NoticeBB.add(new Instr(Form.LINE, new Line2D.Double(29,-29,29,29)));
+  	NoticeBB.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	NoticeBB.add(new Instr(Form.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+  }
+  
+  private static final Symbol NoticeBP = new Symbol();
+	static {
+		NoticeBP.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeBP.add(new Instr(Form.FILL, Color.white));
+		NoticeBP.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		NoticeBP.add(new Instr(Form.FILL, Color.black));
+		NoticeBP.add(new Instr(Form.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+	}
+
+  private static final Symbol NoticeCR = new Symbol();
+	static {
+		NoticeCR.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeCR.add(new Instr(Form.FILL, Color.white));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0, -30); p.lineTo(-30, 0); p.lineTo(0, 30); p.lineTo(30, 0); p.closePath();
+		NoticeCR.add(new Instr(Form.PGON, p));
+		NoticeCR.add(new Instr(Form.FILL, Color.black));
+		NoticeCR.add(new Instr(Form.PLIN, p));
+	}
+
+  private static final Symbol NoticeKT = new Symbol();
+	static {
+		NoticeKT.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeKT.add(new Instr(Form.FILL, Color.white));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(-30,30); p.lineTo(30,30); p.closePath();
+		NoticeKT.add(new Instr(Form.PGON, p));
+		NoticeKT.add(new Instr(Form.FILL, Color.black));
+		NoticeKT.add(new Instr(Form.PLIN, p));
+	}
+
 	public static final Symbol NoticeBnank = new Symbol();
 	static {
 		NoticeBnank.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
 		Symbol colours = new Symbol();
-		Path2D.Double p = new Path2D.Double(); p.moveTo(0.0,-80.0); p.lineTo(-15.0,-47.0); p.lineTo(15.0,-47.0); p.closePath();
-		colours.add(new Instr(Form.P1, p));
-		p = new Path2D.Double(); p.moveTo(0.0,-10.0); p.lineTo(-15.0,-43.0); p.lineTo(15.0,-43.0); p.closePath();
-		colours.add(new Instr(Form.P2, p));
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.4, 0, 0, null, null)));
+		ss.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		ss.add(new Instr(Form.LINE, new Line2D.Double(-27,-27,27,27)));
+		ss.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		ss.add(new Instr(Form.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N2, ss));
 		NoticeBnank.add(new Instr(Form.COLR, colours));
 	}
 	public static final Symbol NoticeBlmhr = new Symbol();
-	public static final Symbol NoticeBwral = new Symbol();
-	public static final Symbol NoticeBwrar = new Symbol();
+	static {
+		NoticeBlmhr.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		ss.add(new Instr(Form.STRK, new BasicStroke(8, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-29,-29); p.lineTo(29,-29); p.lineTo(0,0); p.closePath();
+		ss.add(new Instr(Form.PGON, p));
+		ss.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		ss.add(new Instr(Form.RRCT, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBlmhr.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBktpm = new Symbol();
+	static {
+		NoticeBktpm.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-14,-26); p.lineTo(-20,-12); p.lineTo(-8,-12); p.closePath();
+		ss.add(new Instr(Form.PGON, p));
+  	ss.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	ss.add(new Instr(Form.LINE, new Line2D.Double(-14,-16,-14,25)));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBktpm.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBktsm = new Symbol();
+	static {
+		NoticeBktsm.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(14,-26); p.lineTo(20,-12); p.lineTo(8,-12); p.closePath();
+		ss.add(new Instr(Form.PGON, p));
+  	ss.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	ss.add(new Instr(Form.LINE, new Line2D.Double(14,-16,14,25)));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBktsm.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBktmr = new Symbol();
+	static {
+		NoticeBktmr.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-26); p.lineTo(-6,-12); p.lineTo(6,-12); p.closePath();
+		ss.add(new Instr(Form.PGON, p));
+  	ss.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	ss.add(new Instr(Form.LINE, new Line2D.Double(0,-16,0,25)));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBktmr.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBcrtp = new Symbol();
+	static {
+		NoticeBcrtp.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-14,-26); p.lineTo(-20,-12); p.lineTo(-8,-12); p.closePath();
+		ss.add(new Instr(Form.PGON, p));
+  	ss.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		p = new Path2D.Double(); p.moveTo(-14,-16); p.lineTo(-14,0); p.lineTo(14,10); p.lineTo(14,25);
+		ss.add(new Instr(Form.PLIN, p));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBcrtp.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBcrts = new Symbol();
+	static {
+		NoticeBcrts.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		Path2D.Double p = new Path2D.Double(); p.moveTo(14,-26); p.lineTo(20,-12); p.lineTo(8,-12); p.closePath();
+		ss.add(new Instr(Form.PGON, p));
+  	ss.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		p = new Path2D.Double(); p.moveTo(14,-16); p.lineTo(14,0); p.lineTo(-14,10); p.lineTo(-14,25);
+		ss.add(new Instr(Form.PLIN, p));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBcrts.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBtrbm = new Symbol();
+	static {
+		NoticeBtrbm.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+  	ss.add(new Instr(Form.STRK, new BasicStroke(15, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	ss.add(new Instr(Form.LINE, new Line2D.Double(0,-25,0,25)));
+  	ss.add(new Instr(Form.STRK, new BasicStroke(8, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+  	ss.add(new Instr(Form.LINE, new Line2D.Double(-20,0,20,0)));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBtrbm.add(new Instr(Form.COLR, colours));
+	}
 	public static final Symbol NoticeBrspd = new Symbol();
+	static {
+		NoticeBrspd.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		Symbol colours = new Symbol();
+		Symbol ss = new Symbol();
+		ss.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		colours.add(new Instr(Form.N1, ss));
+		ss = new Symbol();
+		ss.add(new Instr(Form.TEXT, new Caption("R", new Font("Arial", Font.BOLD, 60), null, new Delta(Handle.CC, null))));
+		ss.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBB, 1.0, 0, 0, null, null)));
+		colours.add(new Instr(Form.N2, ss));
+		NoticeBrspd.add(new Instr(Form.COLR, colours));
+	}
+	static final Symbol NoticePBwral = new Symbol();
+	static {
+		NoticePBwral.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePBwral.add(new Instr(Form.FILL, new Color(0xffff00)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-20,-25); p.lineTo(-8,-5); p.lineTo(-8,25); p.lineTo(8,25); p.lineTo(8,-5);
+		p.lineTo(20,-25); p.lineTo(5,-25); p.lineTo(-5,-10); p.lineTo(-15,-25); p.closePath();
+		NoticePBwral.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeBwral = new Symbol();
+	static {
+		NoticeBwral.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeBwral.add(new Instr(Form.FILL, Color.black));
+		NoticeBwral.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		NoticeBwral.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticePBwral, 1.0, 0, 0, null, null)));
+	}
+	public static final Symbol NoticeBwlar = new Symbol();
+	static {
+		NoticeBwlar.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeBwlar.add(new Instr(Form.FILL, Color.black));
+		NoticeBwlar.add(new Instr(Form.RSHP, new RoundRectangle2D.Double(-30,-30,60,60,4,4)));
+		NoticeBwlar.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticePBwral, 1.0, 0, 0, null, new Delta(Handle.CC, AffineTransform.getScaleInstance(-1, 1)))));
+	}
+	public static final Symbol NoticeBoptr = new Symbol();
+	static {
+		NoticeBoptr.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeBoptr.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBP, 1.0, 0, 0, null, null)));
+		NoticeBoptr.add(new Instr(Form.FILL, new Color(0x00a000)));
+		NoticeBoptr.add(new Instr(Form.RSHP, new Rectangle2D.Double(-20,-20,40,40)));
+	}
+	public static final Symbol NoticeBoptl = new Symbol();
+	static {
+		NoticeBoptl.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeBoptl.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBP, 1.0, 0, 0, null, null)));
+		NoticeBoptl.add(new Instr(Form.FILL, new Color(0xf00000)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-20); p.lineTo(-20,20); p.lineTo(20,20); p.closePath();
+		NoticeBoptl.add(new Instr(Form.PGON, p));
+	}
 	public static final EnumMap<CatNMK, Symbol> NmkBniwr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
 	static {
-		NmkBniwr.put(CatNMK.NMK_NANK, NoticeBnank); NmkBniwr.put(CatNMK.NMK_LMHR, NoticeBlmhr); NmkBniwr.put(CatNMK.NMK_OPTR, NoticeD2a); NmkBniwr.put(CatNMK.NMK_OPTL, NoticeD2b);
-		NmkBniwr.put(CatNMK.NMK_WRAL, NoticeBwral); NmkBniwr.put(CatNMK.NMK_WLAR, NoticeBwrar); NmkBniwr.put(CatNMK.NMK_KTPM, NoticeBktpm); NmkBniwr.put(CatNMK.NMK_KTSM, NoticeBktsm);
+		NmkBniwr.put(CatNMK.NMK_NANK, NoticeBnank); NmkBniwr.put(CatNMK.NMK_LMHR, NoticeBlmhr); NmkBniwr.put(CatNMK.NMK_OPTR, NoticeBoptr); NmkBniwr.put(CatNMK.NMK_OPTL, NoticeBoptl);
+		NmkBniwr.put(CatNMK.NMK_WRAL, NoticeBwral); NmkBniwr.put(CatNMK.NMK_WLAR, NoticeBwlar); NmkBniwr.put(CatNMK.NMK_KTPM, NoticeBktpm); NmkBniwr.put(CatNMK.NMK_KTSM, NoticeBktsm);
 		NmkBniwr.put(CatNMK.NMK_KTMR, NoticeBktmr); NmkBniwr.put(CatNMK.NMK_CRTP, NoticeBcrtp); NmkBniwr.put(CatNMK.NMK_CRTS, NoticeBcrts); NmkBniwr.put(CatNMK.NMK_TRBM, NoticeBtrbm);
 		NmkBniwr.put(CatNMK.NMK_RSPD, NoticeBrspd);
 	}
-
-	public static final EnumMap<CatNMK, Symbol> NmkPpwbc = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	public static final Symbol NoticePwralL = new Symbol();
 	static {
-		NmkPpwbc.put(CatNMK.NMK_WRAL, Notice); NmkPpwbc.put(CatNMK.NMK_WLAR, Notice); NmkPpwbc.put(CatNMK.NMK_KTPM, Notice); NmkPpwbc.put(CatNMK.NMK_KTSM, Notice);
-		NmkPpwbc.put(CatNMK.NMK_KTMR, Notice); NmkPpwbc.put(CatNMK.NMK_CRTP, Notice); NmkPpwbc.put(CatNMK.NMK_CRTS, Notice);
+		NoticePwralL.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePwralL.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(-30,30); p.lineTo(30,30); p.closePath();
+		NoticePwralL.add(new Instr(Form.PGON, p));
+		NoticePwralL.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticePBwral, 1.0, 0, 0, null, new Delta(Handle.TC, AffineTransform.getScaleInstance(0.5, 0.5)))));
+	}
+	public static final Symbol NoticePwralR = new Symbol();
+	static {
+		NoticePwralR.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePwralR.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBwral, 1.0, 0, 0, null, null)));
+	}
+	public static final Symbol NoticePwlarL = new Symbol();
+	static {
+		NoticePwlarL.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePwlarL.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-30); p.lineTo(-30,30); p.lineTo(30,30); p.closePath();
+		NoticePwlarL.add(new Instr(Form.PGON, p));
+		NoticePwlarL.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticePBwral, 1.0, 0, 0, null, new Delta(Handle.TC, AffineTransform.getScaleInstance(-0.5, 0.5)))));
+	}
+	public static final Symbol NoticePwlarR = new Symbol();
+	static {
+		NoticePwlarR.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePwlarR.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBwlar, 1.0, 0, 0, null, null)));
+	}
+	public static final Symbol NoticePktmR = new Symbol();
+	static {
+		NoticePktmR.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePktmR.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBP, 1.0, 0, 0, null, null)));
+		NoticePktmR.add(new Instr(Form.STRK, new BasicStroke(8, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticePktmR.add(new Instr(Form.FILL, new Color(0x00d400)));
+		NoticePktmR.add(new Instr(Form.RECT, new Rectangle2D.Double(-20,-20,40,40)));
+	}
+	public static final Symbol NoticePktmL = new Symbol();
+	static {
+		NoticePktmL.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePktmL.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeKT, 1.0, 0, 0, null, null)));
+		NoticePktmL.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticePktmL.add(new Instr(Form.FILL, new Color(0xd40000)));
+		NoticePktmL.add(new Instr(Form.RECT, new Rectangle2D.Double(-12,2,24,24)));
+	}
+	public static final Symbol NoticePktmrL = new Symbol();
+	static {
+		NoticePktmrL.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePktmrL.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeKT, 1.0, 0, 0, null, null)));
+		NoticePktmrL.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticePktmrL.add(new Instr(Form.FILL, new Color(0xd40000)));
+		NoticePktmrL.add(new Instr(Form.LINE, new Line2D.Double(-12,2,-12,28)));
+		NoticePktmrL.add(new Instr(Form.LINE, new Line2D.Double(12,2,12,28)));
+		NoticePktmrL.add(new Instr(Form.LINE, new Line2D.Double(-12,15,12,15)));
+	}
+	public static final Symbol NoticePktmrR = new Symbol();
+	static {
+		NoticePktmrR.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePktmrR.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeBP, 1.0, 0, 0, null, null)));
+		NoticePktmrR.add(new Instr(Form.STRK, new BasicStroke(8, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticePktmrR.add(new Instr(Form.FILL, new Color(0x00d400)));
+		NoticePktmrR.add(new Instr(Form.LINE, new Line2D.Double(-15,-20,-15,20)));
+		NoticePktmrR.add(new Instr(Form.LINE, new Line2D.Double(15,-20,15,20)));
+		NoticePktmrR.add(new Instr(Form.LINE, new Line2D.Double(-15,0,15,0)));
+	}
+	public static final Symbol NoticePcrL = new Symbol();
+	static {
+		NoticePcrL.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePcrL.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePcrL.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeCR, 1.0, 0, 0, null, null)));
+		NoticePcrL.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticePcrL.add(new Instr(Form.FILL, new Color(0xd40000)));
+		NoticePcrL.add(new Instr(Form.LINE, new Line2D.Double(-12,-12,12,12)));
+		NoticePcrL.add(new Instr(Form.LINE, new Line2D.Double(-12,12,12,-12)));
+	}
+	public static final Symbol NoticePcrR = new Symbol();
+	static {
+		NoticePcrR.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticePcrR.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeCR, 1.0, 0, 0, null, null)));
+		NoticePcrR.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticePcrR.add(new Instr(Form.FILL, new Color(0x00d400)));
+		NoticePcrR.add(new Instr(Form.LINE, new Line2D.Double(-12,-12,12,12)));
+		NoticePcrR.add(new Instr(Form.LINE, new Line2D.Double(-12,12,12,-12)));
+	}
+	static final Symbol NoticeRphib = new Symbol();
+	static {
+		NoticeRphib.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeRphib.add(new Instr(Form.FILL, new Color(0xd40000)));
+		NoticeRphib.add(new Instr(Form.ELPS, new Ellipse2D.Double(-30,-30,60,60)));
+		NoticeRphib.add(new Instr(Form.LINE, new Line2D.Double(-20,-20,20,20)));
+	}
+	static final Symbol NoticeRinfo = new Symbol();
+	static {
+		NoticeRinfo.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeRinfo.add(new Instr(Form.FILL, new Color(0xd40000)));
+		NoticeRinfo.add(new Instr(Form.RECT, new Rectangle2D.Double(-30,-30,60,60)));
+	}
+	public static final Symbol NoticeRnpas = new Symbol();
+	static {
+		NoticeRnpas.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRnpas.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRphib, 1.0, 0, 0, null, null)));
+		NoticeRnpas.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-10,-15); p.lineTo(-10,8); p.lineTo(-6,8); p.lineTo(-12.5,16); p.lineTo(-19,8); p.lineTo(-15,8); p.lineTo(-15,-15);
+		p.closePath(); p.moveTo(10,15); p.lineTo(10,-8); p.lineTo(6,-8); p.lineTo(12.5,-16); p.lineTo(19,-8); p.lineTo(15,-8); p.lineTo(15,15); p.closePath();
+		NoticeRnpas.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeRnank = new Symbol();
+	static {
+		NoticeRnank.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRnank.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRphib, 1.0, 0, 0, null, null)));
+		NoticeRnank.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Harbours.Anchor, 0.4, 0, 0, new Scheme(Color.black), null)));
+	}
+	public static final Symbol NoticeRnwsh = new Symbol();
+	static {
+		NoticeRnwsh.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRnwsh.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRphib, 1.0, 0, 0, null, null)));
+		NoticeRnwsh.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-23,10); p.curveTo(-11,10,-12,4,0,4); p.curveTo(12,4,11,10,23,10);
+		p.moveTo(-23,-3); p.curveTo(-11,-3,-12,-9,0,-9); p.curveTo(12,-9,11,-3,23,-3);
+		NoticeRnwsh.add(new Instr(Form.PLIN, p));
+	}
+	public static final Symbol NoticeRlmhr = new Symbol();
+	static {
+		NoticeRlmhr.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRlmhr.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRinfo, 1.0, 0, 0, null, null)));
+		NoticeRlmhr.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-10); p.lineTo(27,-27); p.lineTo(-27,-27); p.closePath();
+		NoticeRlmhr.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeRtrna = new Symbol();
+	static {
+		NoticeRtrna.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRtrna.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeCR, 1.0, 0, 0, null, null)));
+		NoticeRtrna.add(new Instr(Form.STRK, new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeRtrna.add(new Instr(Form.EARC, new Arc2D.Double(-15.0,-15.0,30.0,30.0,315.0,-280.0,Arc2D.OPEN)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(18.8,-2.0); p.lineTo(15.8,-13.2); p.lineTo(7.5,-5.0); p.closePath();
+		NoticeRtrna.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeRncps = new Symbol();
+	static {
+		NoticeRncps.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRncps.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRphib, 1.0, 0, 0, null, null)));
+		NoticeRncps.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-10,0); p.lineTo(-10,8); p.lineTo(-6,8); p.lineTo(-12.5,16); p.lineTo(-19,8); p.lineTo(-15,8); p.lineTo(-15,0);
+		p.closePath(); p.moveTo(10,0); p.lineTo(10,-8); p.lineTo(6,-8); p.lineTo(12.5,-16); p.lineTo(19,-8); p.lineTo(15,-8); p.lineTo(15,0); p.closePath();
+		NoticeRncps.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeRnsmc = new Symbol();
+	static {
+		NoticeRnsmc.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRnsmc.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRphib, 1.0, 0, 0, null, null)));
+		NoticeRnsmc.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-15,5); p.lineTo(15,5); p.lineTo(25,-10); p.lineTo(12,-5); p.lineTo(-18,-1); p.closePath();
+		p.moveTo(-23,2); p.lineTo(-21,10); p.lineTo(-18,8); p.lineTo(-20,0); p.closePath();
+		NoticeRnsmc.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeRattn = new Symbol();
+	static {
+		NoticeRattn.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRattn.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRinfo, 1.0, 0, 0, null, null)));
+		NoticeRattn.add(new Instr(Form.STRK, new BasicStroke(6, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		NoticeRattn.add(new Instr(Form.FILL, Color.black));
+		NoticeRattn.add(new Instr(Form.LINE, new Line2D.Double(0,-20,0,10)));
+		NoticeRattn.add(new Instr(Form.LINE, new Line2D.Double(0,15,0,20)));
+	}
+	public static final Symbol NoticeRfwcr = new Symbol();
+	static {
+		NoticeRfwcr.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRfwcr.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeRinfo, 1.0, 0, 0, null, null)));
+		NoticeRfwcr.add(new Instr(Form.FILL, Color.black));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-25); p.lineTo(-8,-15); p.lineTo(-8,5); p.lineTo(-20,5); p.lineTo(-20,15); p.lineTo(-8,15); p.lineTo(-8,25);
+		p.lineTo(8,25); p.lineTo(8,15); p.lineTo(20,15); p.lineTo(20,5); p.lineTo(8,5); p.lineTo(8,-15); p.closePath();
+		NoticeRfwcr.add(new Instr(Form.PGON, p));
+	}
+	public static final Symbol NoticeRship = new Symbol();
+	static {
+		NoticeRship.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,60)));
+		NoticeRship.add(new Instr(Form.SYMB, new Symbols.SubSymbol(NoticeCR, 1.0, 0, 0, null, null)));
+		NoticeRship.add(new Instr(Form.STRK, new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER)));
+		NoticeRship.add(new Instr(Form.FILL, Color.black));
+		NoticeRship.add(new Instr(Form.LINE, new Line2D.Double(-12,-12,10,10)));
+		NoticeRship.add(new Instr(Form.LINE, new Line2D.Double(-12,-8,-8,-12)));
+		NoticeRship.add(new Instr(Form.LINE, new Line2D.Double(12,-12,-10,10)));
+		NoticeRship.add(new Instr(Form.LINE, new Line2D.Double(12,-8,8,-12)));
+		NoticeRship.add(new Instr(Form.EARC, new Arc2D.Double(-17,-13,30,30,185,80,Arc2D.OPEN)));
+		NoticeRship.add(new Instr(Form.EARC, new Arc2D.Double(-13,-13,30,30,275,80,Arc2D.OPEN)));
+	}
+
+	public static final EnumMap<CatNMK, Symbol> NmkPpwbcl = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	static {
+		NmkPpwbcl.put(CatNMK.NMK_WRAL, NoticePwralL); NmkPpwbcl.put(CatNMK.NMK_WLAR, NoticePwlarL); NmkPpwbcl.put(CatNMK.NMK_KTPM, NoticePktmL); NmkPpwbcl.put(CatNMK.NMK_KTSM, NoticePktmL);
+		NmkPpwbcl.put(CatNMK.NMK_KTMR, NoticePktmrL); NmkPpwbcl.put(CatNMK.NMK_CRTP, NoticePcrL); NmkPpwbcl.put(CatNMK.NMK_CRTS, NoticePcrL);
+	}
+	
+	public static final EnumMap<CatNMK, Symbol> NmkPpwbcr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	static {
+		NmkPpwbcr.put(CatNMK.NMK_WRAL, NoticePwralR); NmkPpwbcr.put(CatNMK.NMK_WLAR, NoticePwlarR); NmkPpwbcr.put(CatNMK.NMK_KTPM, NoticePktmR); NmkPpwbcr.put(CatNMK.NMK_KTSM, NoticePktmR);
+		NmkPpwbcr.put(CatNMK.NMK_KTMR, NoticePktmrR); NmkPpwbcr.put(CatNMK.NMK_CRTP, NoticePcrR); NmkPpwbcr.put(CatNMK.NMK_CRTS, NoticePcrR);
+	}
+	
+	public static final EnumMap<CatNMK, Symbol> NmkRiwr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	static {
+		NmkRiwr.put(CatNMK.NMK_NPAS, NoticeRnpas); NmkRiwr.put(CatNMK.NMK_NANK, NoticeRnank); NmkRiwr.put(CatNMK.NMK_NWSH, NoticeRnwsh); NmkRiwr.put(CatNMK.NMK_LMHR, NoticeRlmhr); NmkRiwr.put(CatNMK.NMK_TRNA, NoticeRtrna);
+		NmkRiwr.put(CatNMK.NMK_NCPS, NoticeRncps); NmkRiwr.put(CatNMK.NMK_NSMC, NoticeRnsmc); NmkRiwr.put(CatNMK.NMK_ATTN, NoticeRattn); NmkRiwr.put(CatNMK.NMK_FWCR, NoticeRfwcr); NmkRiwr.put(CatNMK.NMK_SHIP, NoticeRship);
 	}
 	
 	public static Scheme getScheme(MarSYS sys, BnkWTW bank) {
 		ArrayList<Color> colours = new ArrayList<Color>();
-		Scheme scheme = new Scheme(null, colours);
+		Scheme scheme = new Scheme(colours);
 		switch (sys) {
 		case SYS_BNWR:
+		case SYS_BWR2:
 			switch (bank) {
 			case BWW_LEFT:
 				colours.add(Color.white);
@@ -1124,37 +1519,36 @@ public class Notices {
 				break;
 			}
 			break;
-		case SYS_PPWB:
-			switch (bank) {
-			case BWW_LEFT:
-				colours.add(Color.white);
-				colours.add(new Color(0xd40000));
-				break;
-			case BWW_RGHT:
-				colours.add(Color.white);
-				colours.add(new Color(0x00d400));
-				break;
-			default:
-				break;
-			}
-			break;
 		default:
 			break;
 		}
 		return scheme;
 	}
 	
-	public static Symbol getNotice(CatNMK cat, MarSYS sys) {
+	public static Symbol getNotice(CatNMK cat, MarSYS sys, BnkWTW bank) {
 		Symbol symbol = null;
 		switch (sys) {
 		case SYS_CEVN:
 			symbol = NmkCevni.get(cat);
 			break;
 		case SYS_BNWR:
+		case SYS_BWR2:
 			symbol = NmkBniwr.get(cat);
 			break;
 		case SYS_PPWB:
-			symbol = NmkPpwbc.get(cat);
+			switch (bank) {
+			case BWW_LEFT:
+				symbol = NmkPpwbcl.get(cat);
+				break;
+			case BWW_RGHT:
+				symbol = NmkPpwbcr.get(cat);
+				break;
+			default:
+				break;
+			}
+			break;
+		case SYS_RIWR:
+			symbol = NmkRiwr.get(cat);
 			break;
 		default:
 			break;

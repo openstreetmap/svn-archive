@@ -344,10 +344,16 @@ public class Renderer {
 			GeomIterator git = map.new GeomIterator(Rules.feature.geom);
 			while (git.hasComp()) {
 				git.nextComp();
+				boolean newComp = true;
 				while (git.hasEdge()) {
 					git.nextEdge();
 					point = context.getPoint(git.next());
-					p.moveTo(point.getX(), point.getY());
+					if (newComp) {
+						p.moveTo(point.getX(), point.getY());
+						newComp = false;
+					} else {
+						p.lineTo(point.getX(), point.getY());
+					}
 					while (git.hasNode()) {
 						Snode node = git.next();
 						if (node == null) continue;
@@ -356,7 +362,7 @@ public class Renderer {
 					}
 				}
 			}
-	    g2.setPaint(new TexturePaint(image, new Rectangle(0, 0, 1 + (int)(100 * sScale), 1 + (int)(100 * sScale))));
+	    g2.setPaint(new TexturePaint(image, new Rectangle(0, 0, 1 + (int)(300 * sScale), 1 + (int)(300 * sScale))));
 	    g2.fill(p);
 	    break;
 		default:

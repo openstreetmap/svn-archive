@@ -24,10 +24,10 @@ public class Symbols {
 	public static final Color Gdries = new Color(0x689868);
 	public static final Color Mline = new Color(0x9a6078);
 	public static final Color Msymb = new Color(0xa30075);
-	public static final Color Mtss = new Color(0x80c480ff, true);
+	public static final Color Mtss = new Color(0xc0c480ff, true);
 	
 	public enum Form {
-		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, P1, P2, H2, H3, H4, H5, V2, V3, D2, D3, D4, B1, S2, S3, S4, C2, X2
+		BBOX, STRK, COLR, FILL, LINE, RECT, RRCT, ELPS, EARC, PLIN, PGON, RSHP, TEXT, SYMB, N1, N2, P1, P2, H2, H3, H4, H5, V2, V3, D2, D3, D4, B1, S2, S3, S4, C2, X2
 	}
 
 	public enum Patt {
@@ -66,6 +66,10 @@ public class Symbols {
 		public ArrayList<Patt> pat;
 		public ArrayList<Color> col;
 
+		public Scheme(ArrayList<Color> icol) {
+			pat = new ArrayList<Patt>();
+			col = icol;
+		}
 		public Scheme(ArrayList<Patt> ipat, ArrayList<Color> icol) {
 			pat = ipat;
 			col = icol;
@@ -232,6 +236,18 @@ public class Symbols {
 					if ((cs != null) && (cs.col != null)) {
 						for (Instr patch : (Symbol) item.params) {
 							switch (patch.type) {
+							case N1:
+								if (cn > 0) {
+									Symbol s = (Symbol) patch.params;
+									drawSymbol(g2, s, 1.0, 0, 0, new Scheme(cs.col.get(0)), null);
+								}
+								break;
+							case N2:
+								if (cn > 0) {
+									Symbol s = (Symbol) patch.params;
+									drawSymbol(g2, s, 1.0, 0, 0, new Scheme((cn > 1) ? cs.col.get(1) : cs.col.get(0)), null);
+								}
+								break;
 							case P1:
 								if (cn > 0) {
 									g2.setPaint(cs.col.get(0));
@@ -287,6 +303,24 @@ public class Symbols {
 							case B1:
 								if (bpat == Patt.B) {
 									g2.setPaint(bcol);
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case S2:
+								if ((cn > 1) && (pn > 0) && (cs.pat.get(0) == Patt.S)) {
+									g2.setPaint(cs.col.get(1));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case S3:
+								if ((cn > 2) && (pn > 0) && (cs.pat.get(0) == Patt.S)) {
+									g2.setPaint(cs.col.get(2));
+									g2.fill((Path2D.Double) patch.params);
+								}
+								break;
+							case S4:
+								if ((cn == 4) && (pn > 0) && (cs.pat.get(0) == Patt.S)) {
+									g2.setPaint(cs.col.get(3));
 									g2.fill((Path2D.Double) patch.params);
 								}
 								break;

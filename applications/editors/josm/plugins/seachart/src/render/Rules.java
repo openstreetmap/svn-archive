@@ -229,6 +229,7 @@ public class Rules {
 			if (testObject(Obj.TSSBND)) for (Feature f : objects) if (testFeature(f)) separation();
 			if (testObject(Obj.ISTZNE)) for (Feature f : objects) if (testFeature(f)) separation();
 			if (testObject(Obj.SNDWAV)) for (Feature f : objects) if (testFeature(f)) areas();
+			if (testObject(Obj.WEDKLP)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.OSPARE)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.FAIRWY)) for (Feature f : objects) if (testFeature(f)) areas();
 			if (testObject(Obj.DRGARE)) for (Feature f : objects) if (testFeature(f)) areas();
@@ -255,7 +256,10 @@ public class Rules {
 			if (testObject(Obj.NOTMRK)) for (Feature f : objects) if (testFeature(f)) notices();
 			if (testObject(Obj.SMCFAC)) for (Feature f : objects) if (testFeature(f)) marinas();
 			if (testObject(Obj.BRIDGE)) for (Feature f : objects) if (testFeature(f)) bridges();
-			if (testObject(Obj.PILPNT)) for (Feature f : objects) if (testFeature(f)) lights();
+			if (testObject(Obj.PILPNT)) for (Feature f : objects) if (testFeature(f)) points();
+			if (testObject(Obj.TOPMAR)) for (Feature f : objects) if (testFeature(f)) points();
+			if (testObject(Obj.DAYMAR)) for (Feature f : objects) if (testFeature(f)) points();
+			if (testObject(Obj.FOGSIG)) for (Feature f : objects) if (testFeature(f)) points();
 			if (testObject(Obj.RDOCAL)) for (Feature f : objects) if (testFeature(f)) callpoint();
 			if (testObject(Obj.LITMIN)) for (Feature f : objects) if (testFeature(f)) lights();
 			if (testObject(Obj.LITMAJ)) for (Feature f : objects) if (testFeature(f)) lights();
@@ -427,6 +431,21 @@ public class Rules {
 			break;
 		case SNDWAV:
 			if (Renderer.zoom >= 12) Renderer.fillPattern(Areas.Sandwaves);
+			break;
+		case WEDKLP:
+			if (Renderer.zoom >= 12) {
+				switch ((CatWED) getAttEnum(feature.type, Att.CATWED)) {
+				case WED_KELP:
+					if (feature.geom.prim == Pflag.AREA) { 
+						Renderer.fillPattern(Areas.KelpA);
+					} else {
+						Renderer.symbol(Areas.KelpS);
+					}
+					break;
+				default:
+					break;
+				}
+			}
 			break;
 		case SPLARE:
 			if (Renderer.zoom >= 12) {
@@ -604,7 +623,7 @@ public class Rules {
 					Double dist = (Double) atts.get(Att.WTWDIS).val;
 					String str = "";
 					if (atts.containsKey(Att.HUNITS)) {
-						switch ((UniHLU) atts.get(Att.HUNITS).val) {
+						switch ((UniHLU) getAttEnum(Obj.DISMAR, Att.HUNITS)) {
 						case HLU_METR:
 							str += "m ";
 							break;
@@ -857,27 +876,60 @@ public class Rules {
 	}
 	
 	@SuppressWarnings("unchecked")
+	private static void points() {
+		boolean ok = false;
+		switch (feature.type) {
+		case FOGSIG:
+			if (Renderer.zoom >= 12) {
+				if (feature.objs.containsKey(Obj.LIGHTS))
+					lights();
+				else
+					Renderer.symbol(Harbours.Post);
+				ok = true;
+			}
+			break;
+		default:
+			if (Renderer.zoom >= 14) {
+				if (feature.objs.containsKey(Obj.LIGHTS))
+					lights();
+				else
+					Renderer.symbol(Harbours.Post);
+				ok = true;
+			}
+			break;
+		}
+		if (ok) {
+			if (feature.objs.containsKey(Obj.TOPMAR)) {
+				AttMap topmap = feature.objs.get(Obj.TOPMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.TOPMAR), null);
+				}
+			} else if (feature.objs.containsKey(Obj.DAYMAR)) {
+				AttMap topmap = feature.objs.get(Obj.DAYMAR).get(0);
+				if (topmap.containsKey(Att.TOPSHP)) {
+					Renderer.symbol(Topmarks.Shapes.get(((ArrayList<TopSHP>) (topmap.get(Att.TOPSHP).val)).get(0)), getScheme(Obj.DAYMAR), null);
+				}
+			}
+			Signals.addSignals();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	private static void lights() {
 		boolean ok = false;
 		switch (feature.type) {
 		case LITMAJ:
 		case LNDMRK:
-			Renderer.symbol(Beacons.LightMajor);
-			ok = true;
-			break;
-		case LITMIN:
-		case LIGHTS:
-			if (Renderer.zoom >= 14) {
-				Renderer.symbol(Beacons.LightMinor);
+			if (Renderer.zoom >= 12) {
+				Renderer.symbol(Beacons.LightMajor);
 				ok = true;
 			}
 			break;
+		case LITMIN:
+		case LIGHTS:
 		case PILPNT:
 			if (Renderer.zoom >= 14) {
-				if (feature.objs.containsKey(Obj.LIGHTS))
-					Renderer.symbol(Beacons.LightMinor);
-				else
-					Renderer.symbol(Harbours.Post);
+				Renderer.symbol(Beacons.LightMinor);
 				ok = true;
 			}
 			break;
@@ -958,9 +1010,11 @@ public class Rules {
 				return;
 			}
 			MarSYS sys = MarSYS.SYS_CEVN;
-//			BnkWTW bnk = BnkWTW.BWW_UNKN;
+			BnkWTW bnk = BnkWTW.BWW_UNKN;
 			AttVal<?> att = feature.atts.get(Att.MARSYS);
 			if (att != null) sys = (MarSYS)att.val;
+			att = feature.atts.get(Att.BNKWTW);
+			if (att != null) bnk = (BnkWTW)att.val;
 			ObjTab objs = feature.objs.get(Obj.NOTMRK);
 			int n = objs.size();
 			if (n > 5) {
@@ -968,10 +1022,12 @@ public class Rules {
 			} else {
 				int i = 0;
 				for (AttMap atts : objs.values()) {
-					if (atts.get(Att.MARSYS) != null) sys = (MarSYS)(atts.get(Att.MARSYS).val);
+					if (atts.get(Att.MARSYS) != null) sys = (MarSYS)(getAttEnum(Obj.NOTMRK, Att.MARSYS));
+					if (atts.get(Att.BNKWTW) != null) bnk = (BnkWTW)(getAttEnum(Obj.NOTMRK, Att.BNKWTW));
 					CatNMK cat = CatNMK.NMK_UNKN;
-					if (atts.get(Att.CATNMK) != null) cat = (CatNMK)(atts.get(Att.CATNMK).val);
-					Symbol sym = Notices.getNotice(cat, sys);
+					if (atts.get(Att.CATNMK) != null) cat = (CatNMK)(getAttEnum(Obj.NOTMRK, Att.CATNMK));
+					Symbol sym = Notices.getNotice(cat, sys, bnk);
+					Scheme sch = Notices.getScheme(sys, bnk);
 					Handle h = Handle.CC;
 					switch (i) {
 					case 0:
@@ -999,7 +1055,7 @@ public class Rules {
 						h = Handle.TL;
 						break;
 					}
-					if (h != null) Renderer.symbol(sym, new Delta(h, AffineTransform.getTranslateInstance(dx, dy)));
+					if (h != null) Renderer.symbol(sym, sch, new Delta(h, AffineTransform.getTranslateInstance(dx, dy)));
 					i++;
 				}
 			}

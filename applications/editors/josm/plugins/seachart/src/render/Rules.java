@@ -154,9 +154,9 @@ public class Rules {
 		return new Scheme(patterns, colours);
 	}
 
-	static boolean hasAttribute(Obj obj, int idx, Att att) {
+	static boolean hasAttribute(Obj obj, Att att) {
 		AttMap atts;
-		if ((atts = getAtts(obj, idx)) != null) {
+		if ((atts = getAtts(obj, 0)) != null) {
 			AttVal<?> item = atts.get(att);
 			return item != null;
 		}
@@ -844,11 +844,11 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	private static void landmarks() {
-		if (testAttribute(Obj.LNDMRK, Att.CATLMK, CatLMK.LMK_UNKN)
-				&& (testAttribute(Obj.LNDMRK, Att.CATLMK, FncFNC.FNC_UNKN) || testAttribute(Obj.LNDMRK, Att.CATLMK, FncFNC.FNC_LGHT))
+		if (!hasAttribute(Obj.LNDMRK, Att.CATLMK)
+				&& (!hasAttribute(Obj.LNDMRK, Att.FUNCTN) || testAttribute(Obj.LNDMRK, Att.FUNCTN, FncFNC.FNC_LGHT))
 				&& hasObject(Obj.LIGHTS))
 			lights();
-		if (Renderer.zoom >= 12) {
+		else if (Renderer.zoom >= 12) {
 			switch (feature.type) {
 			case LNDMRK:
 			ArrayList<CatLMK> cats = (ArrayList<CatLMK>) getAttList(feature.type, Att.CATLMK);

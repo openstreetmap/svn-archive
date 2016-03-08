@@ -136,6 +136,10 @@ public class Jrender {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		if (args.length < 5) {
+			System.err.println("Usage: java -jar jrender.jar <osm source directory> <tile directory> <zoom> <xtile> <ytile>");
+			System.exit(-1);
+		}
 		srcdir = args[0];
 		dstdir = args[1];
 		zoom = Integer.parseInt(args[2]);

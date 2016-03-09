@@ -226,12 +226,13 @@ public class ModelGeography
 	    if (multipolygon == null)
 	    {
 		multipolygon = new Relation();
-		dataSet.addPrimitive(multipolygon);
-		
-		multipolygon.removeAll();
-		multipolygon.put("type", "multipolygon");
-		addPolygonTags(type, level, multipolygon);
+		dataSet.addPrimitive(multipolygon);		
 	    }
+	    
+	    multipolygon.removeAll();
+	    multipolygon.put("type", "multipolygon");
+	    addPolygonTags(type, level, multipolygon);
+	    
 	    multipolygon.setMembers(members);
 	}
 	else

@@ -23,7 +23,10 @@ public class IndoorSweepline extends Plugin
     public static void refreshMenu()
     {
         JMenu menu = Main.main.menu.moreToolsMenu;
-        menu.addSeparator();
+        if (menu.isVisible())
+	    menu.addSeparator();
+	else
+	    menu.setVisible(true);
         menu.add(new JMenuItem(new IndoorSweeplineWizardAction()));
     }
 }

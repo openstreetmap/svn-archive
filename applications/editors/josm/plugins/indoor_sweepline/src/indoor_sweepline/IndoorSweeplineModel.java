@@ -9,6 +9,14 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 
+/* TODO:
+- offset
+- replicate last stopline
+- focus to useful table entry after cell edit
+- keyboard shortcuts
+*/
+
+
 public class IndoorSweeplineModel
 {
     public enum Type

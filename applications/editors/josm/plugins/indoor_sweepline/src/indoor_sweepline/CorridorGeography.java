@@ -16,7 +16,11 @@ public class CorridorGeography
     }
     
     
-    private void setExtraElements(CorridorPart.ReachableSide side, LatLon from, LatLon to, boolean extraWayUp)
+    private static final double MIN_LENGTH = 10.;
+    
+    
+    private void setExtraElements(CorridorPart.ReachableSide side, LatLon from, LatLon to,
+	boolean extraWayUp, double minLength)
     {
 	LatLon middleCoor = new LatLon((from.lat() + to.lat())/2.,
 	    (from.lon() + to.lon())/2.);
@@ -51,8 +55,11 @@ public class CorridorGeography
 	}
 	    
 	double scale = Math.cos(middleCoor.lat() * (Math.PI/180.));
-	LatLon detachedCoor = new LatLon(middleCoor.lat() + (start.lon() - middleCoor.lon()) * scale,
-	    middleCoor.lon() - (start.lat() - middleCoor.lat()) / scale);
+	double length = Math.sqrt((start.lat() - middleCoor.lat()) * (start.lat() - middleCoor.lat()) +
+	    (start.lon() - middleCoor.lon()) * (start.lon() - middleCoor.lon()) * scale * scale) / 180. * 20000000.;
+	double lengthFactor = length < minLength ? minLength / length : 1.;
+	LatLon detachedCoor = new LatLon(middleCoor.lat() + (start.lon() - middleCoor.lon()) * scale * lengthFactor,
+	    middleCoor.lon() - (start.lat() - middleCoor.lat()) / scale * lengthFactor);
 	if (detachedNode == null)
 	{
 	    detachedNode = new Node(detachedCoor);
@@ -88,7 +95,7 @@ public class CorridorGeography
     {
 	if (type == CorridorPart.Type.STAIRS_UP || type == CorridorPart.Type.STAIRS_DOWN)
 	{
-	    setExtraElements(side, from, to, type == CorridorPart.Type.STAIRS_UP);
+	    setExtraElements(side, from, to, type == CorridorPart.Type.STAIRS_UP, MIN_LENGTH);
 	    target.appendNode(middleNode);
 
 	    detachedNode.removeAll();
@@ -108,7 +115,7 @@ public class CorridorGeography
 	    setExtraElements(side, from, to,
 		type == CorridorPart.Type.ESCALATOR_UP_LEAVING
 		|| type == CorridorPart.Type.ESCALATOR_UP_ARRIVING
-		|| type == CorridorPart.Type.ESCALATOR_UP_BIDIRECTIONAL);
+		|| type == CorridorPart.Type.ESCALATOR_UP_BIDIRECTIONAL, MIN_LENGTH);
 	    target.appendNode(middleNode);
 
 	    detachedNode.removeAll();
@@ -128,7 +135,7 @@ public class CorridorGeography
 	}
 	else if (type == CorridorPart.Type.ELEVATOR)
 	{
-	    setExtraElements(side, from, to, true);
+	    setExtraElements(side, from, to, true, 0.);
 	    target.appendNode(middleNode);
 
 	    detachedNode.removeAll();

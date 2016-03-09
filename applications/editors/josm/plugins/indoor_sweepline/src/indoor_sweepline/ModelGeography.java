@@ -75,7 +75,7 @@ public class ModelGeography
 	    if (beamsGeography.elementAt(i) == null)
 		beamsGeography.setElementAt(new BeamGeography(dataSet, this), i);
 	    beamsGeography.elementAt(i).adjustNodes(new LatLon(center.lat(), addMetersToLon(center, offset)),
-		beams.elementAt(i).getBeamParts());
+		beams.elementAt(i).getBeamParts(), beams.elementAt(i).getBeamOffset());
 		
 	    if (i < strips.size())
 		offset += strips.elementAt(i).width;

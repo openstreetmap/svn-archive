@@ -72,6 +72,16 @@ public class IndoorSweeplineController implements MapView.LayerChangeListener
 	model.setStripWidth(index, value);
     }
     
+    public double getBeamOffset(int index)
+    {
+	return model.getBeamOffset(index);
+    }
+    
+    public void setBeamOffset(int index, double beamOffset)
+    {
+	model.setBeamOffset(index, beamOffset);
+    }
+    
     public List<CorridorPart> getBeamParts(int index)
     {
 	return model.getBeamParts(index);

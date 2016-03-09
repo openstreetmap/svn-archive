@@ -5,12 +5,34 @@ import java.util.Vector;
 
 public class Beam
 {
-    public Beam(double width, CorridorPart.ReachableSide defaultSide)
+    public Beam(Vector<Double> blueprint, double blueprintOffset, CorridorPart.ReachableSide defaultSide)
     {
+	offset = blueprintOffset;
 	parts = new Vector<CorridorPart>();
 	
-	setDefaultSide_(defaultSide);	
-	addCorridorPart_(true, width);
+	setDefaultSide_(defaultSide);
+	if (defaultSide == CorridorPart.ReachableSide.RIGHT)
+	{
+	    for (int i = 1; i < blueprint.size(); i += 2)
+	    {
+		addCorridorPart_(true, CorridorPart.Type.WALL,
+		    blueprint.elementAt(i).doubleValue() - blueprint.elementAt(i-1).doubleValue());
+		if (i+1 < blueprint.size())
+		    addCorridorPart_(true, CorridorPart.Type.VOID,
+			blueprint.elementAt(i+1).doubleValue() - blueprint.elementAt(i).doubleValue());
+	    }
+	}
+	else
+	{
+	    for (int i = 1; i < blueprint.size(); i += 2)
+	    {
+		addCorridorPart_(true, CorridorPart.Type.PASSAGE,
+		    blueprint.elementAt(i).doubleValue() - blueprint.elementAt(i-1).doubleValue());
+		if (i+1 < blueprint.size())
+		    addCorridorPart_(true, CorridorPart.Type.VOID,
+			blueprint.elementAt(i+1).doubleValue() - blueprint.elementAt(i).doubleValue());
+	    }
+	}
 	adjustStripCache();
     }
     
@@ -18,8 +40,6 @@ public class Beam
     private void setDefaultSide_(CorridorPart.ReachableSide defaultSide)
     {
 	this.defaultSide = defaultSide;
-	defaultType = defaultSide == CorridorPart.ReachableSide.RIGHT ?
-	    CorridorPart.Type.WALL : CorridorPart.Type.PASSAGE;
     }
     
     public void setDefaultSide(CorridorPart.ReachableSide defaultSide)
@@ -33,22 +53,35 @@ public class Beam
     {
 	return parts;
     }
+    
+    
+    public double getBeamOffset()
+    {
+	return offset;
+    }
+    
+    public void setBeamOffset(double beamOffset)
+    {
+	offset = beamOffset;
+    }
 
     
-    private void addCorridorPart_(boolean append, double width)
+    private void addCorridorPart_(boolean append, CorridorPart.Type type, double width)
     {
 	CorridorPart.ReachableSide side = defaultSide == CorridorPart.ReachableSide.RIGHT ?
 	    defaultSide : CorridorPart.ReachableSide.ALL;
 	    
 	if (append)
-	    parts.add(new CorridorPart(width, defaultType, side));
+	    parts.add(new CorridorPart(width, type, side));
 	else
-	    parts.add(0, new CorridorPart(width, defaultType, side));
+	    parts.add(0, new CorridorPart(width, type, side));
     }
 
     public void addCorridorPart(boolean append, double width)
     {
-	addCorridorPart_(append, width);
+	addCorridorPart_(append,
+	    defaultSide == CorridorPart.ReachableSide.RIGHT ? CorridorPart.Type.WALL : CorridorPart.Type.PASSAGE,
+	    width);
 	adjustStripCache();
     }
 
@@ -176,6 +209,7 @@ public class Beam
     }
     
     
+    private double offset;
     private Vector<CorridorPart> parts;
     private Vector<StripPosition> lhsStrips;
     private Vector<StripPosition> rhsStrips;
@@ -313,6 +347,5 @@ public class Beam
     }
     
     
-    private CorridorPart.Type defaultType;
     private CorridorPart.ReachableSide defaultSide;
 }

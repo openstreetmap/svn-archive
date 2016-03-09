@@ -45,12 +45,13 @@ public class BeamGeography
     }
 
     
-    public void adjustNodes(LatLon pivot, Vector<CorridorPart> parts)
+    public void adjustNodes(LatLon pivot, Vector<CorridorPart> parts, double beamOffset)
     {
+	double offset = -beamOffset;
 	this.parts = parts;
-	adjustNode(0, new LatLon(pivot.lat(), pivot.lon()));
+	
+	adjustNode(0, new LatLon(addMetersToLat(pivot, offset), pivot.lon()));
     
-	double offset = 0;
 	for (int i = 0; i < parts.size(); ++i)
 	{
 	    adjustPartGeography(i);

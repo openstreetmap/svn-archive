@@ -53,7 +53,7 @@ public class IndoorSweeplineWizardDialog extends JDialog
 	panel.add(structureBox(), 1, 2, 1, 1);	
 	panel.add(new JButton(next), 2, 2, 2, 1);
 
-	panel.add(new JLabel(tr("Strip width:")), 0, 3, 3, 1);
+	panel.add(makeWidthLabel(), 0, 3, 3, 1);
 	panel.add(makeWidthField(), 3, 3, 1, 1);
 
 	panel.add(makeStructureTable(), 0, 4, 4, 1);
@@ -84,11 +84,16 @@ public class IndoorSweeplineWizardDialog extends JDialog
 	
 	try
 	{
-	    stripWidth.setEditable(beamIndex % 2 == 1);
 	    if (beamIndex % 2 == 0)
-		stripWidth.setText("---");
+	    {
+		widthOffsetLabel.setText("Offset into background:");
+		stripWidth.setText(Double.toString(controller.getBeamOffset(beamIndex)));
+	    }
 	    else
+	    {
+		widthOffsetLabel.setText("Strip width:");
 		stripWidth.setText(Double.toString(controller.getStripWidth(beamIndex)));
+	    }
 	}
 	catch (IllegalStateException ex)
 	{
@@ -363,6 +368,15 @@ public class IndoorSweeplineWizardDialog extends JDialog
     }
     
     
+    private JLabel widthOffsetLabel;
+    
+    private JLabel makeWidthLabel()
+    {
+	widthOffsetLabel = new JLabel(tr("Offset into background:"));
+	return widthOffsetLabel;
+    }
+    
+    
     private JTextField stripWidth;
     
     private JTextField makeWidthField()
@@ -398,7 +412,9 @@ public class IndoorSweeplineWizardDialog extends JDialog
 	    
 	    try
 	    {
-		if (beamIndex % 2 == 1)
+		if (beamIndex % 2 == 0)
+		    controller.setBeamOffset(beamIndex, Double.parseDouble(stripWidth.getText()));
+		else
 		    controller.setStripWidth(beamIndex, Double.parseDouble(stripWidth.getText()));
 	    }
 	    catch (NumberFormatException ex)

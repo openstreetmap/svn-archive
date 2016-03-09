@@ -10,8 +10,6 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 
 /* TODO:
-- offset
-- replicate last stopline
 - focus to useful table entry after cell edit
 - keyboard shortcuts
 */
@@ -62,8 +60,17 @@ public class IndoorSweeplineModel
 	double offset = 0;
 	for (int i = 0; i < strips.size(); ++i)
 	    offset += strips.elementAt(i).width;
-	    
-	beams.add(new Beam(width, side));
+	
+	if (strips.size() == 0)
+	{
+	    Vector<Double> blueprint = new Vector<Double>();
+	    blueprint.addElement(0.);
+	    blueprint.addElement(10.);
+	    beams.add(new Beam(blueprint, 0., side));
+	}
+	else
+	    beams.add(new Beam(strips.elementAt(strips.size()-1).lhs,
+		beams.elementAt(beams.size()-1).getBeamOffset(), side));
 	
 	if (strips.size() > 0)
 	    strips.elementAt(beams.size()-2).rhs = beams.elementAt(beams.size()-1).leftHandSideStrips();
@@ -127,6 +134,18 @@ public class IndoorSweeplineModel
     {
 	strips.elementAt(index / 2).width = value;
 	
+	updateOsmModel();
+    }
+    
+    
+    public double getBeamOffset(int index)
+    {
+	return beams.elementAt(index / 2).getBeamOffset();
+    }
+    
+    public void setBeamOffset(int index, double beamOffset)
+    {
+	beams.elementAt(index / 2).setBeamOffset(beamOffset);	    
 	updateOsmModel();
     }
     

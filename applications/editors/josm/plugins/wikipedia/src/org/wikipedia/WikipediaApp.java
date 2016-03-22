@@ -271,6 +271,29 @@ public final class WikipediaApp {
         }
     }
 
+    static LatLon getCoordinateForArticle(String wikipediaLang, String article) {
+        try {
+            final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php" +
+                    "?action=query" +
+                    "&prop=coordinates" +
+                    "&titles=" + Utils.encodeUrl(article) +
+                    "&format=xml";
+            try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
+                final Document xml = DOCUMENT_BUILDER.parse(in);
+                final Node node = (Node) X_PATH.compile("//coordinates/co").evaluate(xml, XPathConstants.NODE);
+                if (node == null) {
+                    return null;
+                } else {
+                    final double lat = Double.parseDouble(node.getAttributes().getNamedItem("lat").getTextContent());
+                    final double lon = Double.parseDouble(node.getAttributes().getNamedItem("lon").getTextContent());
+                    return new LatLon(lat, lon);
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     static class WikipediaLangArticle {
 
         final String lang, article;

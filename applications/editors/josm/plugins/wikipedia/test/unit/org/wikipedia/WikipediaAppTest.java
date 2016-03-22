@@ -124,6 +124,13 @@ public class WikipediaAppTest {
     }
 
     @Test
+    public void testGetCoordinates() throws Exception {
+        assertThat(WikipediaApp.getCoordinateForArticle("de", "Marchreisenspitze"), is(new LatLon(47.1725, 11.30833333)));
+        assertThat(WikipediaApp.getCoordinateForArticle("en", "Austria"), is(new LatLon(47.33333333, 13.33333333)));
+        assertThat(WikipediaApp.getCoordinateForArticle("en", "Foobar2000"), nullValue());
+    }
+
+    @Test
     public void testGetBrowserUrl() {
         final WikipediaEntry entry = new WikipediaEntry("Sternheim & Emanuel", "de", "Sternheim & Emanuel");
         assertThat(entry.getBrowserUrl(), is("https://de.wikipedia.org/wiki/Sternheim_%26_Emanuel"));

@@ -19,6 +19,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingWorker;
 
 import org.openstreetmap.josm.Main;
@@ -52,7 +53,6 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                 new SideButton(new WikipediaLoadCategoryAction()),
                 new SideButton(new PasteWikipediaArticlesAction()),
                 new SideButton(new AddWikipediaTagAction()),
-                new SideButton(new OpenWikipediaArticleAction()),
                 new SideButton(new WikipediaSettingsAction(), false)));
         updateTitle();
     }
@@ -99,6 +99,11 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                     return label;
                 }
             });
+
+            final JPopupMenu popupMenu = new JPopupMenu();
+            popupMenu.add(new OpenWikipediaArticleAction());
+            popupMenu.add(new ZoomToWikipediaArticleAction());
+            setComponentPopupMenu(popupMenu);
         }
     };
 
@@ -278,6 +283,27 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
                     Main.worker.submit(new FetchWikidataAction.Fetcher(selected));
                 }
             }
+        }
+    }
+
+    class ZoomToWikipediaArticleAction extends AbstractAction {
+
+        ZoomToWikipediaArticleAction() {
+            super(tr("Zoom to selection"), ImageProvider.get("dialogs/autoscale", "selection"));
+            putValue(SHORT_DESCRIPTION, tr("Zoom to selection"));
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            final WikipediaEntry entry = list.getSelectedValue();
+            if (entry == null) {
+                return;
+            }
+            final LatLon latLon = WikipediaApp.getCoordinateForArticle(entry.wikipediaLang, entry.wikipediaArticle);
+            if (latLon == null) {
+                return;
+            }
+            Main.map.mapView.zoomTo(latLon);
         }
     }
 

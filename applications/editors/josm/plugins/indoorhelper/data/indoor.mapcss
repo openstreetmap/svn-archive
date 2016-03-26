@@ -1,0 +1,192 @@
+/* building shells and walls */
+
+node|z19-[indoor:entrance=yes]
+{
+	icon-image:	"entrance_icon.png";
+	icon-width:	30;
+  z-index:  3;
+}
+
+
+way[indoor:area=shell]
+{
+	fill-color: 	#EEEEEE;
+	fill-opacity: 	1.0;
+  
+	z-index:	0;
+}
+
+way[indoor:area=wall][indoor:wall:material=concrete]
+{
+	width: 		3;
+	color: 		#000000;
+	opacity: 	1.0;
+
+	fill-color: 	#BEBEBE;
+	fill-opacity: 	1.0;
+
+	z-index:	1;
+}
+
+way[indoor:area=wall][indoor:wall:material=glass]
+{
+	width: 		3;
+	color: 		#000000;
+	opacity: 	1.0;
+
+	fill-color: 	#00BFFF;
+	fill-opacity: 	1.0;
+
+	z-index:	1;
+}
+
+/* windows and openings */
+
+way|z19-[indoor:window=glass]
+{
+	width:		3;
+	color:		#00BFFF; 
+	opacity:	1.0;  
+  z-index:  1;
+}
+
+
+/* vertical passages */
+
+way|z19-[indoor:area=stairways]
+{
+	width: 		1;
+	color: 		#000000;
+	opacity:	1.0;
+	dashes:		15, 5;
+
+	fill-color: 	#a6ff96;
+	fill-opacity:	1.0;
+
+	z-index:	2;
+}
+
+way|z19-[indoor:area=elevator]
+{
+	width: 		1;
+	color: 		#000000;
+	opacity:	1.0;
+	dashes:		5, 5;
+
+	fill-color: 	#c3e5fa;
+	fill-opacity:	1.0;
+
+	z-index:	2;
+}
+
+way|z21-[indoor:area=elevator]
+{
+	icon-image:	"elevator_icon.png";
+	icon-width:	30;
+	z-index:	2;
+}
+
+/* indoor highways */
+
+way|z19-21[indoor:highway=service]
+{
+	width:		4;
+	color:		#ffffff; 
+	opacity:	1.0;
+	
+	casing-width:	2;
+	casing-color:	#000000;
+
+	z-index:	3;
+}
+
+way|z22-[indoor:highway=service]
+{
+	width:		20;
+	color:		#ffffff; 
+	opacity:	1.0;
+	
+	casing-width:	2;
+	casing-color:	#000000;
+
+	z-index:	3;
+}
+
+/* rooms */
+
+node|z21-[indoor:door]
+{
+	icon-image:	"entrance_door_icon.png";
+	icon-width:	30;
+  z-index:  3;
+}
+
+way|z19-[indoor:area=room]
+{
+	fill-color: 	#ffffa1;
+	fill-opacity: 	1.0;
+	z-index:	1;
+}
+
+way|z19-[ref][indoor:area=room]
+{
+	text:		ref;
+	text-position:  center;
+	font-size: 	12;
+	text-color: 	#000000;
+	z-index:	1;
+}
+
+way|z22-[name][indoor:area=room]
+{
+	text:		name;
+	text-position:  center;
+	font-size: 	12;
+	text-color: 	#000000;
+	z-index:	1;
+}
+
+/* zones */
+
+way|z19-[indoor:area=zone]
+{
+	fill-color: 	#FFDAB9;
+	fill-opacity: 	1.0;
+	z-index:	1;
+}
+
+
+/* toilets */
+
+node|z21-[amenity=toilets][male=yes]
+{
+	icon-image:	"toilet_man_icon.png";
+	icon-width:	30;
+  z-index:  3;
+}
+
+node|z21-[amenity=toilets][female=yes]
+{
+	icon-image:	"toilet_woman_icon.png";
+	icon-width:	30;
+  z-index:  3;
+}
+
+node|z21-[amenity=toilets][wheelchair=yes]
+{
+	icon-image:	"toilet_wheelchair_icon.png";
+	icon-width:	30;
+  z-index:  3;
+}
+
+/* charger */
+node|z20-[indoor:charger]
+{
+	icon-image:	"charger_icon.png";
+	icon-width:	30;
+  z-index:  3;
+}
+
+
+
+

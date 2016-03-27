@@ -252,22 +252,21 @@ public abstract class AbstractDataSetHandler {
 
     public final Collection<String> getOsmXapiRequests(Bounds bounds) {
         return getOsmXapiRequests(
-                LatLon.roundToOsmPrecisionStrict(bounds.getMin().lon())+","+
-                LatLon.roundToOsmPrecisionStrict(bounds.getMin().lat())+","+
-                LatLon.roundToOsmPrecisionStrict(bounds.getMax().lon())+","+
-                LatLon.roundToOsmPrecisionStrict(bounds.getMax().lat()));
+                LatLon.roundToOsmPrecision(bounds.getMin().lon())+","+
+                LatLon.roundToOsmPrecision(bounds.getMin().lat())+","+
+                LatLon.roundToOsmPrecision(bounds.getMax().lon())+","+
+                LatLon.roundToOsmPrecision(bounds.getMax().lat()));
     }
     
     protected Collection<String> getOsmXapiRequests(String bbox) {return null;}
     
     public final String getOverpassApiRequest(Bounds bounds) {
         return getOverpassApiRequest(
-                "w=\""+LatLon.roundToOsmPrecisionStrict(bounds.getMin().lon())+"\" "+
-                "s=\""+LatLon.roundToOsmPrecisionStrict(bounds.getMin().lat())+"\" "+
-                "e=\""+LatLon.roundToOsmPrecisionStrict(bounds.getMax().lon())+"\" "+
-                "n=\""+LatLon.roundToOsmPrecisionStrict(bounds.getMax().lat())+"\"");
+                "w=\""+LatLon.roundToOsmPrecision(bounds.getMin().lon())+"\" "+
+                "s=\""+LatLon.roundToOsmPrecision(bounds.getMin().lat())+"\" "+
+                "e=\""+LatLon.roundToOsmPrecision(bounds.getMax().lon())+"\" "+
+                "n=\""+LatLon.roundToOsmPrecision(bounds.getMax().lat())+"\"");
     }
-
 
     protected String getOverpassApiRequest(String bbox) {return null;}
 

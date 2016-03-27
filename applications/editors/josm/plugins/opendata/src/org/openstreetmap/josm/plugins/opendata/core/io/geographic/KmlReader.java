@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -31,7 +32,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 public class KmlReader extends AbstractReader {
 
     public static final String KML_PLACEMARK   = "Placemark";
-    public static final String KML_NAME           = "name";
+    public static final String KML_NAME        = "name";
     public static final String KML_COLOR       = "color";
     public static final String KML_SIMPLE_DATA = "SimpleData";
     public static final String KML_LINE_STRING = "LineString";
@@ -42,6 +43,7 @@ public class KmlReader extends AbstractReader {
     public static final String KML_LINEAR_RING = "LinearRing";
     public static final String KML_COORDINATES = "coordinates";
     
+    public static Pattern COLOR_PATTERN = Pattern.compile("\\p{XDigit}{8}");
 
     private XMLStreamReader parser;
     private Map<LatLon, Node> nodes = new HashMap<>();
@@ -53,7 +55,6 @@ public class KmlReader extends AbstractReader {
     public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
         InputStreamReader ir = UTFInputStreamReader.create(in);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
-        //XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(in, UTF8);
         return new KmlReader(parser).parseDoc();
     }
 
@@ -91,9 +92,10 @@ public class KmlReader extends AbstractReader {
             if (event == XMLStreamConstants.START_ELEMENT) {
                 if (parser.getLocalName().equals(KML_COLOR)) {
                     String s = parser.getElementText();
-                    // KML color format is aabbggrr, convert it to OSM (web) format: #rrggbb
-                    String rgbColor = '#'+s.substring(6,8)+s.substring(4,6)+s.substring(2,4);
-                    tags.put(KML_COLOR, rgbColor);
+                    if (COLOR_PATTERN.matcher(s).matches()) {
+                        // KML color format is aabbggrr, convert it to OSM (web) format: #rrggbb
+                        tags.put(KML_COLOR, '#'+s.substring(6,8)+s.substring(4,6)+s.substring(2,4));
+                    }
                 } else if (parser.getLocalName().equals(KML_NAME)) {
                     tags.put(KML_NAME, parser.getElementText());
                 } else if (parser.getLocalName().equals(KML_SIMPLE_DATA)) {

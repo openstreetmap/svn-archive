@@ -122,7 +122,7 @@ public class KmlReader extends AbstractReader {
                     for (int i = 0; i < tab.length; i ++) {
                         String[] values = tab[i].split(",");
                         if (values.length >= 2) {
-                            LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecisionStrict();
+                            LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecision();
                             node = nodes.get(ll);
                             if (node == null) {
                                 ds.addPrimitive(node = new Node(ll));

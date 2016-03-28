@@ -706,8 +706,8 @@ class ruianRecord {
           try {
             JsonArray node = adresniMisto.getJsonArray("pozice");
             am.setPosition(new LatLon(
-              LatLon.roundToOsmPrecisionStrict(node.getJsonNumber(1).doubleValue()),
-              LatLon.roundToOsmPrecisionStrict(node.getJsonNumber(0).doubleValue()))
+              LatLon.roundToOsmPrecision(node.getJsonNumber(1).doubleValue()),
+              LatLon.roundToOsmPrecision(node.getJsonNumber(0).doubleValue()))
             );
           } catch (Exception e) {
             System.out.println("adresni_mista.pozice: " + e.getMessage());

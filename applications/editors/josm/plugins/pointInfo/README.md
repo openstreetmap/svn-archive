@@ -33,6 +33,7 @@ Plugin could be easy extend to show another data source.
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/copy-tags.png)] Copy tags to clipboard
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr.png)] Create an address point on position where was clicked
     * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-addr-ruian.png)] Create an address point on position defined in RUIAN
+    * [![](https://raw.githubusercontent.com/mkyral/josm-pointInfo/master/images/dialogs/create-bug-report.png)] Report an issue with building
 
 ---
 ###The interface:

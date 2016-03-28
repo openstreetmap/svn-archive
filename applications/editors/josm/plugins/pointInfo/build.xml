@@ -2,9 +2,9 @@
 <project name="pointInfo" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="PointInfo: can load at runtime."/>
+    <property name="commit.message" value="PointInfo: Fix breakage caused by API cleaning."/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="10060"/>
 
     <!-- plugin can load at runtime -->
     <property name="plugin.canloadatruntime" value="true"/>

@@ -34,8 +34,8 @@ import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ValidateAction;
-import org.openstreetmap.josm.data.Preferences.MapListSetting;
-import org.openstreetmap.josm.data.Preferences.Setting;
+import org.openstreetmap.josm.data.preferences.MapListSetting;
+import org.openstreetmap.josm.data.preferences.Setting;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker;
@@ -526,26 +526,13 @@ public class IndoorHelperController {
 	 * Forces JOSM to load the validator and mappaint settings.
 	 */
 	private void updateSettings(){
-		try {
-			Main.pref.load();
-			Main.pref.init(false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		Main.pref.init(false);
 		MapCSSTagChecker tagChecker = OsmValidator.getTest(MapCSSTagChecker.class);
-        if (tagChecker != null) {
-            OsmValidator.initializeTests(Collections.singleton(tagChecker));
-        }
-        
-        MapPaintStyles.readFromPreferences();
+            if (tagChecker != null) {
+                OsmValidator.initializeTests(Collections.singleton(tagChecker));
+            }
+            
+            MapPaintStyles.readFromPreferences();
 	}
 }
 

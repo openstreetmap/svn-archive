@@ -57,6 +57,7 @@
         <ant target="dist" dir="imagewaypoint"/>
         <ant target="dist" dir="ImportImagePlugin"/>
         <ant target="dist" dir="importvec"/>
+        <ant target="dist" dir="indoorhelper"/>
         <ant target="dist" dir="infomode"/>
         <ant target="dist" dir="irsrectify"/>
         <ant target="dist" dir="junctionchecking"/>
@@ -166,6 +167,7 @@
         <ant target="clean" dir="imagewaypoint"/>
         <ant target="clean" dir="ImportImagePlugin"/>
         <ant target="clean" dir="importvec"/>
+        <ant target="clean" dir="indoorhelper"/>
         <ant target="clean" dir="infomode"/>
         <ant target="clean" dir="irsrectify"/>
         <ant target="clean" dir="jna"/>

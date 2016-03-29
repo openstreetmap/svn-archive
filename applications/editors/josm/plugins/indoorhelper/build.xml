@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** This is a template build file for a JOSM  plugin.
-**
-** Maintaining versions
-** ====================
-** See README.template
-**
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
-**
--->
 <project name="indoorhelper" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="Inital commit"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="9759"/>
 
     <!-- Configure these properties (replace "..." accordingly).
-
-
-
          See http://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Erik Gruschka"/>
@@ -39,5 +24,4 @@
 	
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-  
 </project>

@@ -407,14 +407,18 @@ public class IndoorHelperController {
 		
 		MapListSetting validatorMapListSetting = (MapListSetting) settings.
 				get("validator.org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker.entries");
-		List<Map<String, String>> validatorMaps;
-		validatorMaps = validatorMapListSetting.getValue();
+		List<Map<String, String>> validatorMaps = new ArrayList<>();
+		if(validatorMapListSetting!=null){
+			validatorMaps = validatorMapListSetting.getValue();
+		}
 		
 		MapListSetting styleMapListSetting = (MapListSetting) settings.
 				get("mappaint.style.entries");
-		List<Map<String, String>> styleMaps;
-		styleMaps = styleMapListSetting.getValue();
-				
+		List<Map<String, String>> styleMaps = new ArrayList<>();
+		if(styleMapListSetting != null){
+			styleMaps = styleMapListSetting.getValue();
+		}
+							
 		if(enabled){
 			//set the validator active
 			

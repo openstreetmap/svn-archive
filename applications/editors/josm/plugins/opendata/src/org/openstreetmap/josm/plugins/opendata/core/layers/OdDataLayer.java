@@ -9,17 +9,16 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.Action;
-import javax.swing.Icon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.actions.OpenLinkAction;
 import org.openstreetmap.josm.plugins.opendata.core.actions.ViewLicenseAction;
@@ -27,6 +26,7 @@ import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHand
 import org.openstreetmap.josm.plugins.opendata.core.io.OsmDownloader;
 import org.openstreetmap.josm.plugins.opendata.core.licenses.License;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeListener {
 
@@ -42,10 +42,13 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
         setUploadDiscouraged(true);
         this.handler = handler;
         for (Node node : data.getNodes()) {
-            if (this.bounds == null) {
-                this.bounds = new Bounds(node.getCoor());
-            } else {
-                this.bounds.extend(node.getCoor());
+            LatLon ll = node.getCoor();
+            if (ll != null) {
+                if (this.bounds == null) {
+                    this.bounds = new Bounds(ll);
+                } else {
+                    this.bounds.extend(ll);
+                }
             }
         }
         MapView.addLayerChangeListener(this);

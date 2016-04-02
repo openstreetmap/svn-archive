@@ -240,8 +240,6 @@ public class ShpReader extends GeographicReader {
                             instance.setCustomText(n+"/"+collection.size());
                         }
                     }
-                } catch (Throwable e) {
-                    e.printStackTrace();
                 } finally {
                     iterator.close();
                     nodes.clear();
@@ -253,9 +251,9 @@ public class ShpReader extends GeographicReader {
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw new IOException(t);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException(e);
         }
         return ds;
     }

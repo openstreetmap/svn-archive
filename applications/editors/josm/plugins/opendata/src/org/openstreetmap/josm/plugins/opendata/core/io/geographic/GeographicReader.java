@@ -100,6 +100,9 @@ public abstract class GeographicReader extends AbstractReader {
     }
 
     protected Node createOrGetNode(Point p, String ele) throws MismatchedDimensionException, TransformException {
+        if (!p.isValid()) {
+            throw new IllegalArgumentException("Invalid point: " + p);
+        }
         Point p2 = (Point) JTS.transform(p, transform);
         LatLon key = new LatLon(p2.getY(), p2.getX());
         Node n = getNode(p2, key);
@@ -156,8 +159,8 @@ public abstract class GeographicReader extends AbstractReader {
             for (int i=0; i<ls.getNumPoints(); i++) {
                 try {
                     tempWay.addNode(createOrGetNode(ls.getPointN(i)));
-                } catch (Exception e) {
-                    Main.error(e.getMessage());
+                } catch (TransformException | IllegalArgumentException e) {
+                    Main.error("Exception for " + ls + ": " + e.getClass().getName() + ": " + e.getMessage());
                 }
             }
             // Find possible duplicated ways

@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.opendata.core.io.geographic;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
 
 /**
@@ -27,7 +30,21 @@ public class ShpReaderTest {
     public static void setUp() {
         JOSMFixture.createUnitTestFixture().init();
     }
-    
+
+    /**
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12714">#12714/a>
+     * @throws IOException if an error occurs during reading
+     */
+    @Test
+    public void testTicket12714() throws IOException, XMLStreamException, FactoryConfigurationError {
+        File file = new File(TestUtils.getRegressionDataFile(12714, "linhas.shp"));
+        try (InputStream is = new FileInputStream(file)) {
+            for (Node n : ShpReader.parseDataSet(is, file, null, null).getNodes()) {
+                assertNotNull(n.toString(), n.getCoor());
+            }
+        }
+    }
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
      * @throws IOException if an error occurs during reading

@@ -456,7 +456,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             }
             catch (PrinterException ex) {
                 String msg = ex.getLocalizedMessage();
-                if (msg.length() == 0) {
+                if (msg == null || msg.length() == 0) {
                     msg = tr("Printing has failed.");
                 }
                 JOptionPane.showMessageDialog(Main.parent, msg,
@@ -469,7 +469,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             dispose();
         }
     }
-    
+
     protected void savePrintSettings() {
         // Save only one printer service attribute: printer name 
         PrintService service = job.getPrintService();

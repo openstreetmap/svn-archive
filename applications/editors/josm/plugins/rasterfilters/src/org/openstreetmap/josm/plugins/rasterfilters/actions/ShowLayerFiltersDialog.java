@@ -12,7 +12,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.dialogs.LayerListDialog.ShowHideLayerAction;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.Layer.LayerAction;
@@ -27,15 +26,12 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Nipel-Crumple
  *
  */
-public final class ShowLayerFiltersDialog extends AbstractAction implements
-		LayerAction {
+public final class ShowLayerFiltersDialog extends AbstractAction implements LayerAction {
 
 	private List<FiltersDialog> dialogs = new ArrayList<FiltersDialog>();
 
 	/**
-	 * Creates a {@link ShowHideLayerAction} which will toggle the visibility of
-	 * the currently selected layers
-	 *
+	 * Constructs a new {@code ShowLayerFiltersDialog}.
 	 */
 	public ShowLayerFiltersDialog() {
 		putValue(NAME, tr("Filters"));

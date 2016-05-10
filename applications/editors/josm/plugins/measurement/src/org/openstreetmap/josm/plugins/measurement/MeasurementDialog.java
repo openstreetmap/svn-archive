@@ -294,6 +294,9 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     @Override
     public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
         // Refresh selection to take into account new system of measurement
-        selectionChanged(Main.main.getCurrentDataSet().getSelected());
+        DataSet currentDs = Main.main.getCurrentDataSet();
+        if (currentDs != null) {
+            selectionChanged(currentDs.getSelected());
+        }
     }
 }

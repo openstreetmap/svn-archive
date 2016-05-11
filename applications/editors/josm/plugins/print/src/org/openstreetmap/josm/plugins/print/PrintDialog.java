@@ -129,12 +129,12 @@ public class PrintDialog extends JDialog implements ActionListener {
     /**
      * The printer job
      */
-    protected PrinterJob job;
+    protected transient PrinterJob job;
     
     /**
      * The custom printer job attributes
      */
-    PrintRequestAttributeSet attrs = new HashPrintRequestAttributeSet();
+    transient PrintRequestAttributeSet attrs = new HashPrintRequestAttributeSet();
     
     /** 
      * Create a new print dialog
@@ -151,7 +151,6 @@ public class PrintDialog extends JDialog implements ActionListener {
         loadPrintSettings();
         updateFields();
         pack();
-        //setMinimumSize(getPreferredSize());
         setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
     }
     
@@ -240,17 +239,18 @@ public class PrintDialog extends JDialog implements ActionListener {
         scaleModel = new SpinnerNumberModel(mapScale, 500, 5000000, 500);
         final JSpinner scaleField = new JSpinner(scaleModel);
         scaleField.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent evt) {
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             scaleField.commitEdit();
                             Main.pref.put("print.map-scale",scaleModel.getNumber().toString());
                             mapView.setFixedMapScale(scaleModel.getNumber().intValue());
                             printPreview.repaint();
-                        }
-                        catch (ParseException pe) {
-                            ; // NOP
+                        } catch (ParseException pe) {
+                            Main.error(pe);
                         }
                     }
                 });
@@ -268,16 +268,17 @@ public class PrintDialog extends JDialog implements ActionListener {
           30, 1200, 10 );
         final JSpinner resolutionField = new JSpinner(resolutionModel);
         resolutionField.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent evt) {
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             resolutionField.commitEdit();
                             Main.pref.put("print.resolution.dpi",resolutionModel.getNumber().toString());
                             printPreview.repaint();
-                        }
-                        catch (ParseException pe) {
-                            ; // NOP
+                        } catch (ParseException pe) {
+                            Main.error(pe);
                         }
                     }
                 });
@@ -295,19 +296,23 @@ public class PrintDialog extends JDialog implements ActionListener {
         attributionText.setLineWrap(true);
         attributionText.setWrapStyleWord(true);
         attributionText.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void insertUpdate(DocumentEvent evt) {
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         Main.pref.put("print.attribution", attributionText.getText());
                         printPreview.repaint();
                     }
                 });
             }
+            @Override
             public void removeUpdate(DocumentEvent evt) {
                 this.insertUpdate(evt);
             }
+            @Override
             public void changedUpdate(DocumentEvent evt) {
-                ; // NOP
+                // NOP
             }
         });
         JScrollPane attributionPane = new JScrollPane(attributionText);
@@ -351,7 +356,8 @@ public class PrintDialog extends JDialog implements ActionListener {
         if (previewCheckBox.isSelected()) {
             printPreview.setPrintable(mapView);
         }
-        JScrollPane previewPane = new JScrollPane(printPreview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane previewPane = new JScrollPane(printPreview, 
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         previewPane.setPreferredSize(Main.main != null ? Main.map.mapView.getSize() : new Dimension(210,297));
         add(previewPane, GBC.std(0,0).span(1, GBC.RELATIVE).fill().weight(5.0,5.0));
 
@@ -377,8 +383,7 @@ public class PrintDialog extends JDialog implements ActionListener {
             printerField.setText("-");
             paperField.setText("-");
             orientationField.setText("-");
-        }
-        else {
+        } else {
             printerField.setText(service.getName());
             if (! attrs.containsKey(Media.class)) {
                 attrs.add((Attribute) service.getDefaultAttributeValue(Media.class));
@@ -397,8 +402,10 @@ public class PrintDialog extends JDialog implements ActionListener {
             if (! attrs.containsKey(MediaPrintableArea.class)) {
                 PageFormat pf = job.defaultPage();
                 attrs.add(new MediaPrintableArea(
-                  (float)pf.getImageableX()/72,(float)pf.getImageableY()/72,
-                  (float)pf.getImageableWidth()/72,(float)pf.getImageableHeight()/72,
+                  (float)pf.getImageableX()/72f,
+                  (float)pf.getImageableY()/72f,
+                  (float)pf.getImageableWidth()/72f,
+                  (float)pf.getImageableHeight()/72f,
                   MediaPrintableArea.INCH) );
             }
             
@@ -412,40 +419,33 @@ public class PrintDialog extends JDialog implements ActionListener {
      * 
      * @param e an ActionEvent with one of the known commands
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
-        if (cmd.equals("printer-dialog")) {
+        if ("printer-dialog".equals(cmd)) {
             if (job.printDialog(attrs)) {
                 updateFields();
                 savePrintSettings();
             }
-        }
-        else if (cmd.equals("toggle-preview")) {
+        } else if ("toggle-preview".equals(cmd)) {
             Main.pref.put("print.preview.enabled", previewCheckBox.isSelected());
-            if (previewCheckBox.isSelected() == true) {
+            if (previewCheckBox.isSelected()) {
                 printPreview.setPrintable(mapView);
-            }
-            else {
+            } else {
                 printPreview.setPrintable(null);
             }
-        }
-        else if (cmd.equals("zoom-in")) {
+        } else if ("zoom-in".equals(cmd)) {
             printPreview.zoomIn();
-        }
-        else if (cmd.equals("zoom-out")) {
+        } else if ("zoom-out".equals(cmd)) {
             printPreview.zoomOut();
-        }
-        else if (cmd.equals("zoom-to-page")) {
+        } else if ("zoom-to-page".equals(cmd)) {
             printPreview.zoomToPage();
-        }
-        else if (cmd.equals("zoom-to-actual-size")) {
+        } else if ("zoom-to-actual-size".equals(cmd)) {
             printPreview.setZoom(1.0);
-        }
-        else if (cmd.equals("print")) {
+        } else if ("print".equals(cmd)) {
             try {
                 job.print(attrs);
-            }
-            catch (PrinterAbortException ex) {
+            } catch (PrinterAbortException ex) {
                 String msg = ex.getLocalizedMessage();
                 if (msg.length() == 0) {
                     msg = tr("Printing has been cancelled.");
@@ -453,8 +453,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(Main.parent, msg,
                   tr("Printing stopped"),
                   JOptionPane.WARNING_MESSAGE);
-            }
-            catch (PrinterException ex) {
+            } catch (PrinterException ex) {
                 String msg = ex.getLocalizedMessage();
                 if (msg == null || msg.length() == 0) {
                     msg = tr("Printing has failed.");
@@ -464,8 +463,7 @@ public class PrintDialog extends JDialog implements ActionListener {
                   JOptionPane.ERROR_MESSAGE);
             }
             dispose();
-        }
-        else if (cmd.equals("cancel")) {
+        } else if ("cancel".equals(cmd)) {
             dispose();
         }
     }
@@ -511,8 +509,7 @@ public class PrintDialog extends JDialog implements ActionListener {
     
     @SuppressWarnings("unchecked")
     protected Attribute unmarshallPrintSetting(Collection<String> setting) throws 
-        IllegalArgumentException, ClassNotFoundException, SecurityException, NoSuchMethodException, 
-        InstantiationException, IllegalAccessException, InvocationTargetException {
+        ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         
         if (setting == null || setting.size() != 4) {
             throw new IllegalArgumentException("Invalid setting: "+setting);
@@ -550,17 +547,16 @@ public class PrintDialog extends JDialog implements ActionListener {
                 if ("printer-name".equals(a.getName())) {
                     job.setPrintService(PrintServiceLookup.lookupPrintServices(null, new HashPrintServiceAttributeSet(a))[0]);
                 }
-            } catch (Exception e) {
+            } catch (PrinterException | ReflectiveOperationException e) {
                 Main.warn(e.getClass().getSimpleName()+": "+e.getMessage());
             }
         }
         for (Collection<String> setting : Main.pref.getArray("print.settings.request-attributes")) {
             try {
                 attrs.add(unmarshallPrintSetting(setting));
-            } catch (Exception e) {
+            } catch (ReflectiveOperationException e) {
                 Main.warn(e.getClass().getSimpleName()+": "+e.getMessage());
             }
         }
     }
 }
-

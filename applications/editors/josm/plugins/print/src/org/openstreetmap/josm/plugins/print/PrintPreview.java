@@ -59,7 +59,7 @@ class PrintPreview extends JPanel {
     /**
      * The PageFormat chosen for printing (and preview)
      */
-    protected transient PageFormat format = null;
+    protected transient PageFormat format;
     
     /**
      * The current zoom factor for the preview
@@ -75,12 +75,12 @@ class PrintPreview extends JPanel {
     /**
      * When this flag is true, no painting operations will be performed.
      */
-    protected boolean paintingDisabled = false;
+    protected boolean paintingDisabled;
     
     /**
      * the printable object for rendering preview contents
      */
-    protected transient Printable printable = null;
+    protected transient Printable printable;
     
     /**
      * Constructs a new preview component 
@@ -156,16 +156,16 @@ class PrintPreview extends JPanel {
     /**
      * Zoom to fit the page size
      * 
-     * Set the zoom factor such that the whole page fits into the 
-     * preview area.
+     * Set the zoom factor such that the whole page fits into the preview area.
      */
     public void zoomToPage() {
+        if (format == null)
+            return;
         Container parent = getParent();
         Dimension dim;
         if (parent instanceof JViewport) {
             dim = getParent().getSize(); // could get rid of scrollbars
-        }
-        else {
+        } else {
             dim = getVisibleRect().getSize();
         }
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -289,17 +289,19 @@ class PrintPreview extends JPanel {
         g2d.fillRect(0, 0, out.width, out.height);
 
         g2d.scale(scale, scale);
-        g2d.clip(new Rectangle2D.Double(format.getImageableX(), format.getImageableY(), format.getImageableWidth(), format.getImageableHeight()));
+        g2d.clip(new Rectangle2D.Double(
+                format.getImageableX(),
+                format.getImageableY(),
+                format.getImageableWidth(),
+                format.getImageableHeight()));
         if (printable != null) {
             try {
                 printable.print(g2d, format, 0);
-            }
-            catch (PrinterException e) {
+            } catch (PrinterException e) {
                 // should never happen since we are not printing
                 Main.error(e);
             }
-        }
-        else {
+        } else {
             g2d.setColor(Color.gray);
             g2d.fillRect(0, 0, (int)format.getWidth(), (int)format.getHeight());
         }

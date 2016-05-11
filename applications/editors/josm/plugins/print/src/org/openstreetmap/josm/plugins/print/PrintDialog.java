@@ -236,7 +236,7 @@ public class PrintDialog extends JDialog implements ActionListener {
         add(caption, std.grid(GBC.RELATIVE, row));
         int mapScale = Main.pref.getInteger("print.map-scale", PrintPlugin.DEF_MAP_SCALE);
         mapView.setFixedMapScale(mapScale);
-        scaleModel = new SpinnerNumberModel(mapScale, 500, 5000000, 500);
+        scaleModel = new SpinnerNumberModel(mapScale, 250, 5000000, 250);
         final JSpinner scaleField = new JSpinner(scaleModel);
         scaleField.addChangeListener(new ChangeListener() {
             @Override

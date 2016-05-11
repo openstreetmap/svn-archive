@@ -40,6 +40,8 @@ import javax.swing.JViewport;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
+import org.openstreetmap.josm.Main;
+
 /**
  * A generic print preview component
  * 
@@ -57,7 +59,7 @@ class PrintPreview extends JPanel {
     /**
      * The PageFormat chosen for printing (and preview)
      */
-    protected PageFormat format = null;
+    protected transient PageFormat format = null;
     
     /**
      * The current zoom factor for the preview
@@ -78,7 +80,7 @@ class PrintPreview extends JPanel {
     /**
      * the printable object for rendering preview contents
      */
-    protected Printable printable = null;
+    protected transient Printable printable = null;
     
     /**
      * Constructs a new preview component 
@@ -133,9 +135,9 @@ class PrintPreview extends JPanel {
      * Doubles the current zoom factor, if smaller than 5.0.
      */
     public void zoomIn() {
-        double zoom = getZoom();
-        if (zoom < 5.0) {
-            setZoom(2.0 * zoom);
+        double z = getZoom();
+        if (z < 5.0) {
+            setZoom(2.0 * z);
         }
     }
  
@@ -145,9 +147,9 @@ class PrintPreview extends JPanel {
      * Set the zoom factor to half its current value, if bigger than 0.1.
      */
     public void zoomOut() {
-        double zoom = getZoom();
-        if (zoom > 0.1) {
-            setZoom(0.5 * zoom);
+        double z = getZoom();
+        if (z > 0.1) {
+            setZoom(0.5 * z);
         }
     }
 
@@ -215,7 +217,7 @@ class PrintPreview extends JPanel {
      * @return the zoom factor 
      */
     public double getZoom() {
-        if (zoomToPage || zoom < 0.01) {
+        if (format != null && (zoomToPage || zoom < 0.01)) {
             // actually this is zoom-to-page 
             Dimension dim = getParent().getSize();
             int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -233,9 +235,9 @@ class PrintPreview extends JPanel {
      */
     public Dimension getZoomedPageDimension() {
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
-        double zoom = getZoom();
-        int width = (int)(zoom * resolution * format.getWidth() / 72.0);
-        int height = (int)(zoom * resolution * format.getHeight() / 72.0);
+        double z = getZoom();
+        int width = (int)(z * resolution * format.getWidth() / 72.0);
+        int height = (int)(z * resolution * format.getHeight() / 72.0);
         return new Dimension(width, height);
     }
 
@@ -247,7 +249,7 @@ class PrintPreview extends JPanel {
      */
     @Override
     public Dimension getPreferredSize() {
-        if (format == null || zoomToPage == true || zoom < 0.01) {
+        if (format == null || zoomToPage || zoom < 0.01) {
             return new Dimension(0,0);
         }
         return getZoomedPageDimension();
@@ -294,6 +296,7 @@ class PrintPreview extends JPanel {
             }
             catch (PrinterException e) {
                 // should never happen since we are not printing
+                Main.error(e);
             }
         }
         else {
@@ -303,5 +306,4 @@ class PrintPreview extends JPanel {
 
         g2d.setTransform(at);
     }
-
 }

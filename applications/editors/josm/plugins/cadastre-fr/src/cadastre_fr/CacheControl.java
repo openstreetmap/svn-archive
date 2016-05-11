@@ -19,6 +19,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 
 /**
  * This class handles the WMS layer cache mechanism. The design is oriented for a good performance (no
@@ -155,7 +156,13 @@ public class CacheControl implements Runnable {
             successfulRead = wmsLayer.read(file, ois, currentLambertZone);
         } catch (Exception ex) {
             Main.error(ex);
-            JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), tr("Error"), JOptionPane.ERROR_MESSAGE);
+            GuiHelper.runInEDTAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), 
+                            tr("Error"), JOptionPane.ERROR_MESSAGE);
+                }
+            });
             return false;
         }
         if (successfulRead && wmsLayer.isRaster()) {

@@ -1,7 +1,7 @@
 How to use:
 
 Prerequisites:
-a) You must have installed ant, perl, libwww-perl, libterm-readkey-perl, gettext, bzr
+a) You must have installed ant, perl, libwww-perl, libterm-readkey-perl, gettext, bzr, libxml2-utils
 b) You must register your SSH key with Launchpad. See https://launchpad.net/people/+me
 c) You must inform bzr of your Launchpad ID. See "bzr help launchpad-login".
 

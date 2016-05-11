@@ -34,6 +34,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.gui.preferences.map.MapPreference;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -484,17 +485,25 @@ public class CadastrePlugin extends Plugin {
         return src;
     }
 
+    /**
+     * Ask to change projection if current one is not suitable for French cadastre.
+     */
     public static void askToChangeProjection() {
-        if (JOptionPane.showConfirmDialog(Main.parent,
-                tr("To enable the cadastre WMS plugin, change\n"
-                        + "the current projection to one of the cadastre\n"
-                        + "projections and retry"),
-                        tr("Change the current projection"), JOptionPane.OK_CANCEL_OPTION)
-            == JOptionPane.OK_OPTION) {
-            PreferenceDialog p = new PreferenceDialog(Main.parent);
-            p.selectPreferencesTabByClass(MapPreference.class);
-            p.getTabbedPane().getSetting(ProjectionPreference.class).selectProjection(ProjectionPreference.lambert_cc9);
-            p.setVisible(true);
-        }
+        GuiHelper.runInEDTAndWait(new Runnable() {
+            @Override
+            public void run() {
+                if (JOptionPane.showConfirmDialog(Main.parent,
+                        tr("To enable the cadastre WMS plugin, change\n"
+                                + "the current projection to one of the cadastre\n"
+                                + "projections and retry"),
+                                tr("Change the current projection"), JOptionPane.OK_CANCEL_OPTION)
+                    == JOptionPane.OK_OPTION) {
+                    PreferenceDialog p = new PreferenceDialog(Main.parent);
+                    p.selectPreferencesTabByClass(MapPreference.class);
+                    p.getTabbedPane().getSetting(ProjectionPreference.class).selectProjection(ProjectionPreference.lambert_cc9);
+                    p.setVisible(true);
+                }
+            }
+        });
     }
 }

@@ -89,12 +89,13 @@ public class AlignWaysSegment implements MapViewPaintable {
     }
 
     protected void highlightSegment(Color c, Graphics2D g, MapView mv) {
+        if (segment.way.getNodesCount() == 0) {
+            return;
+        }
 
         g.setColor(c);
-        g.setStroke(new BasicStroke(6, BasicStroke.CAP_ROUND,
-                BasicStroke.JOIN_ROUND));
+        g.setStroke(new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         drawSegment(g, mv);
-
     }
 
     protected void drawSegment(Graphics2D g, MapView mv) {

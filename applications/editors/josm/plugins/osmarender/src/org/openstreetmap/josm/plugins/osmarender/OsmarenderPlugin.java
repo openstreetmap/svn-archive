@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.osmarender;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -66,7 +67,7 @@ public class OsmarenderPlugin extends Plugin {
 
             try {
                 writeGenerated(b);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 // how handle the exception?
             	Main.error(ex);
             }
@@ -123,13 +124,19 @@ public class OsmarenderPlugin extends Plugin {
                 // launch up the viewer
                 Runtime.getRuntime().exec(new String[]{firefox, argument});
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(Main.parent, tr("Firefox not found. Please set firefox executable in the Map Settings page of the preferences."));
+                JOptionPane.showMessageDialog(Main.parent, 
+                        tr("Firefox not found. Please set firefox executable in the Map Settings page of the preferences."));
             }
         }
     }
 
     private JMenuItem osmarenderMenu;
 
+    /**
+     * Constructs a new {@code OsmarenderPlugin}.
+     * @param info plugin info
+     * @throws IOException if files cannot be copied
+     */
     public OsmarenderPlugin(PluginInformation info) throws IOException {
         super(info);
         osmarenderMenu = MainMenu.add(Main.main.menu.viewMenu, new Action());
@@ -155,7 +162,7 @@ public class OsmarenderPlugin extends Plugin {
         return new OsmarenderPreferenceSetting();
     }
 
-    private class OsmarenderPreferenceSetting implements SubPreferenceSetting {
+    private static class OsmarenderPreferenceSetting implements SubPreferenceSetting {
 
         private JTextField firefox = new JTextField(10);
 
@@ -190,7 +197,7 @@ public class OsmarenderPlugin extends Plugin {
     }
 
     private void writeGenerated(Bounds b) throws IOException {
-        String bounds_tag = "<bounds " +
+        String boundsTag = "<bounds " +
             "minlat=\"" + b.getMin().lat() + "\" " +
             "maxlat=\"" + b.getMax().lat() + "\" " +
             "minlon=\"" + b.getMin().lon() + "\" " +
@@ -203,11 +210,11 @@ public class OsmarenderPlugin extends Plugin {
         ) {
             // osm-map-features.xml contain two placemark
             // (bounds_mkr1 and bounds_mkr2). We write the bounds tag between the two
-            String str = null;
+            String str;
             while( (str = reader.readLine()) != null ) {
                 if(str.contains("<!--bounds_mkr1-->")) {
                     writer.println(str);
-                    writer.println("    " + bounds_tag);
+                    writer.println("    " + boundsTag);
                     while(!str.contains("<!--bounds_mkr2-->")) {
                         str = reader.readLine();
                     }

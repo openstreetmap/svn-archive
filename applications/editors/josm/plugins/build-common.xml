@@ -149,6 +149,8 @@
                     <name name="META-INF/DEPENDENCIES"/>
                     <name name="META-INF/LICENSE"/>
                     <name name="META-INF/NOTICE"/>
+                    <name name="META-INF/*.RSA"/>
+                    <name name="META-INF/*.SF"/>
                 </or></not>
                 <archives>
                     <zips>

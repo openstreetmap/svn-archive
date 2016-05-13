@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,8 +67,10 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ExtendedDialog;
-import org.openstreetmap.josm.gui.widgets.MultiSplitLayout;
+import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Divider;
+import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Leaf;
 import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Node;
+import org.openstreetmap.josm.gui.widgets.MultiSplitLayout.Split;
 import org.openstreetmap.josm.gui.widgets.MultiSplitPane;
 import org.openstreetmap.josm.plugins.roadsigns.RoadSignsPlugin.PresetMetaData;
 import org.openstreetmap.josm.plugins.roadsigns.Sign.SignParameter;
@@ -178,12 +181,6 @@ class RoadSignInputDialog extends ExtendedDialog {
     }
 
     private JComponent buildSignsPanel() {
-        String layoutDef =
-            "(COLUMN "+
-                "(ROW weight=0.3 (LEAF name=upperleft weight=1.0) upperright) "+
-                "(ROW weight=0.5 (LEAF name=middleleft weight=0.5) (LEAF name=middleright weight=0.5)) "+
-                "(LEAF name=bottom weight=0.2))";
-
         FlowLayout fLayout = new FlowLayout(FlowLayout.LEFT);
         fLayout.setAlignOnBaseline(true);
 
@@ -200,8 +197,34 @@ class RoadSignInputDialog extends ExtendedDialog {
             Node model = (Node) decoder.readObject();
             multiSplitPane.getMultiSplitLayout().setModel(model);
             multiSplitPane.getMultiSplitLayout().setFloatingDividers(false);
-        } catch (Exception ex) {
-            Node modelRoot = MultiSplitLayout.parseModel(layoutDef);
+        } catch (IOException ex) {
+            // (COLUMN
+            //    (ROW weight=0.3 (LEAF name=upperleft weight=1.0) upperright)
+            //    (ROW weight=0.5 (LEAF name=middleleft weight=0.5) (LEAF name=middleright weight=0.5))
+            //    (LEAF name=bottom weight=0.2))
+
+            Split modelRoot = new Split();
+            modelRoot.setRowLayout(false);
+
+            Split row1 = new Split();
+            row1.setWeight(0.3);
+            Leaf upperleft = new Leaf("upperleft");
+            upperleft.setWeight(1.0);
+            row1.setChildren(Arrays.asList(upperleft, new Divider(), new Leaf("upperright")));
+
+            Split row2 = new Split();
+            row2.setWeight(0.5);
+            Leaf middleleft = new Leaf("middleleft");
+            middleleft.setWeight(0.5);
+            Leaf middleright = new Leaf("middleright");
+            middleright.setWeight(0.5);
+            row2.setChildren(Arrays.asList(middleleft, new Divider(), middleright));
+
+            Leaf bottom = new Leaf("bottom");
+            bottom.setWeight(0.2);
+
+            modelRoot.setChildren(Arrays.asList(row1, new Divider(), row2, new Divider(), bottom));
+
             multiSplitPane.getMultiSplitLayout().setModel(modelRoot);
         }
         multiSplitPane.add(new JScrollPane(pnlSignSelection), "upperleft");

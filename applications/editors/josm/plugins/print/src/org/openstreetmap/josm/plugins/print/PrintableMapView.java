@@ -33,6 +33,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.ComponentListener;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
@@ -40,10 +41,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -53,7 +50,6 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 /**
  * The PrintableMapView class implements a "Printable" perspective on
@@ -71,12 +67,7 @@ public class PrintableMapView extends MapView implements Printable {
      * The factor for scaling the printing graphics to the desired
      * resolution
      */
-     protected double g2dFactor;
-    
-    /**
-     * The real MapView which is the data source
-     */
-    protected MapView mapView;
+    protected double g2dFactor;
     
     /**
      * The font size for text added by PrintableMapView
@@ -88,16 +79,14 @@ public class PrintableMapView extends MapView implements Printable {
      */
     public PrintableMapView() {
         /* Initialize MapView with a dummy parent */
-        super(new JPanel(), null);
+        super(new PrintableLayerManager(), new JPanel(), null);
         
         /* Disable MapView's ComponentLister, 
          * as it will interfere with the main MapView. */
-        java.awt.event.ComponentListener listeners[] = getComponentListeners();
+        ComponentListener listeners[] = getComponentListeners();
         for (int i=0; i<listeners.length; i++) {
             removeComponentListener(listeners[i]);
         }
-        
-        mapView = Main.map.mapView;
     }
 
     /**
@@ -154,7 +143,7 @@ public class PrintableMapView extends MapView implements Printable {
         Dimension dim = getSize();
         if (dim.width != width || dim.height != height) {
             super.setSize(width, height);
-            zoomTo(mapView.getRealBounds());
+            zoomTo(Main.map.mapView.getRealBounds());
             rezoomToFixedScale();
         }
     }
@@ -167,7 +156,7 @@ public class PrintableMapView extends MapView implements Printable {
         Dimension dim = getSize();
         if (dim.width != newSize.width || dim.height != newSize.height) {
             super.setSize(newSize);
-            zoomTo(mapView.getRealBounds());
+            zoomTo(Main.map.mapView.getRealBounds());
             rezoomToFixedScale();
         }
     }
@@ -229,8 +218,7 @@ public class PrintableMapView extends MapView implements Printable {
         g2d.scale(g2dFactor, g2dFactor);
         
         Bounds box = getRealBounds();
-        List<Layer> visibleLayers = getVisibleLayersInZOrder();
-        for (Layer l : visibleLayers) {
+        for (Layer l : getLayerManager().getVisibleLayersInZOrder()) {
             if (l.getOpacity() < 1) {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,(float)l.getOpacity()));
             }
@@ -356,83 +344,29 @@ public class PrintableMapView extends MapView implements Printable {
     /**
      * Paint a text.
      * 
-     * This method will not only draw the letters but also a background 
-     * which improves redability.
+     * This method will not only draw the letters but also a background which improves redability.
      * 
      * @param g2d the graphics context to use for painting
      * @param text the text to be drawn
      * @param x the x coordinate
      * @param y the y coordinate
      */
-    
     public void paintText(Graphics2D g2d, String text, int x, int y) {
-            AffineTransform ax = g2d.getTransform();
-            g2d.translate(x,y);
+        AffineTransform ax = g2d.getTransform();
+        g2d.translate(x, y);
 
-            FontRenderContext frc = g2d.getFontRenderContext();
-            GlyphVector gv = g2d.getFont().createGlyphVector(frc, text);
-            Shape textOutline = gv.getOutline();
+        FontRenderContext frc = g2d.getFontRenderContext();
+        GlyphVector gv = g2d.getFont().createGlyphVector(frc, text);
+        Shape textOutline = gv.getOutline();
 
-            g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
-            g2d.setColor(Color.WHITE);
-            g2d.draw(textOutline);
-            
-            g2d.setStroke(new BasicStroke());
-            g2d.setColor(Color.BLACK);
-            g2d.drawString(text, 0, 0);
+        g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+        g2d.setColor(Color.WHITE);
+        g2d.draw(textOutline);
 
-            g2d.setTransform(ax);
-    }
+        g2d.setStroke(new BasicStroke());
+        g2d.setColor(Color.BLACK);
+        g2d.drawString(text, 0, 0);
 
-    /**
-     * Get the active layer
-     * 
-     * This method is implemented in MapView but we need at this instance.
-     */
-    @Override
-    public Layer getActiveLayer() {
-        return mapView.getActiveLayer();
-    }
-
-    /**
-     * Get the position of a particular layer in the stack of layers
-     * 
-     * This method is implemented in MapView but we need at this instance.
-     */
-    @Override
-    public int getLayerPos(Layer layer) {
-        return mapView.getLayerPos(layer);
-    }
-    
-    /**
-     * This method is implemented in MapView but protected.
-     * 
-     * The algorithm is slightly modified.
-     */
-    @Override
-    public List<Layer> getVisibleLayersInZOrder() {
-        ArrayList<Layer> layers = new ArrayList<>();
-        for (Layer l: mapView.getAllLayersAsList()) {
-            if (l.isVisible()) {
-                layers.add(l);
-            }
-        }
-        Collections.sort(
-            layers,
-            new Comparator<Layer>() {
-                @Override
-                public int compare(Layer l2, Layer l1) { // l1 and l2 swapped!
-                    if (l1 instanceof OsmDataLayer && l2 instanceof OsmDataLayer) {
-                        if (l1 == getActiveLayer()) return -1;
-                        if (l2 == getActiveLayer()) return 1;
-                        return Integer.valueOf(getLayerPos(l1)).
-                                     compareTo(getLayerPos(l2));
-                    } else
-                        return Integer.valueOf(getLayerPos(l1)).
-                                     compareTo(getLayerPos(l2));
-                }
-            }
-        );
-        return layers;
+        g2d.setTransform(ax);
     }
 }

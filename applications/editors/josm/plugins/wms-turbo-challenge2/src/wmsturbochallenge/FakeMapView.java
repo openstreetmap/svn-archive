@@ -36,7 +36,7 @@ class FakeMapView extends MapView {
     public double max_east_west;
 
     public FakeMapView(MapView parent, double scale) {
-        super(null, null); //TODO MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
+        super(null, null, null); //TODO MapView constructor contains registering listeners and other code, that probably shouldn't be called in fake map view
         this.parent = parent;
         this.scale = scale;
 

@@ -16,6 +16,8 @@
     <!--<property name="plugin.requires" value=""/>-->
     <property name="plugin.stage" value="10"/>
 
+    <property name="plugin.canloadatruntime" value="true"/>
+
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 

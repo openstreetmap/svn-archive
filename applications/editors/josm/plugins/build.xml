@@ -97,7 +97,7 @@
         <ant target="dist" dir="routes"/>
         <ant target="dist" dir="routing"/>
         <ant target="dist" dir="seachart"/>
-        <!--<ant target="dist" dir="seachartedit"/>-->
+        <ant target="dist" dir="seachartedit"/>
         <ant target="dist" dir="sds"/>
         <ant target="dist" dir="simplifyarea"/>
         <ant target="dist" dir="smed"/>

@@ -104,11 +104,11 @@ public class CadastreInterface {
      * @throws IOException
      */
     private void getCookie() throws IOException {
-        boolean cookied = false;
+        boolean sucess = false;
         int retries = cRetriesGetCookie;
         try {
             searchFormURL = new URL(baseURL + "/scpc/accueil.do");
-            while (cookied == false && retries > 0) {
+            while (sucess == false && retries > 0) {
                 urlConn = (HttpURLConnection)searchFormURL.openConnection();
                 urlConn.setRequestProperty("Connection", "close");
                 urlConn.setRequestMethod("GET");
@@ -117,15 +117,24 @@ public class CadastreInterface {
                     Main.info("GET "+searchFormURL);
                     BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
                     while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
-                    String headerName=null;
+                    sucess = true;
+                    String headerName;
                     for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
-                        if (headerName.equals("Set-Cookie")) {
-                            cookie = urlConn.getHeaderField(i);
-                            cookie = cookie.substring(0, cookie.indexOf(";"));
-                            cookieTimestamp = new Date().getTime();
-                            Main.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
-                            cookied = true;
+                        if (Main.isDebugEnabled()) {
+                            Main.debug(headerName + ": " + urlConn.getHeaderField(i));
                         }
+                        if ("Set-Cookie".equals(headerName)) {
+                            cookie = urlConn.getHeaderField(i);
+                            if (cookie.isEmpty()) {
+                                Main.warn("received empty cookie");
+                                cookie = null;
+                            } else {
+                                cookie = cookie.substring(0, cookie.indexOf(';'));
+                                cookieTimestamp = new Date().getTime();
+                                Main.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
+                                break;
+                            }
+                        } 
                     }
                 } else {
                     Main.warn("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");

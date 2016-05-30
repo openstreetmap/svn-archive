@@ -60,6 +60,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
             // we tried to grab onto a duplicated layer (removed)
             Main.warn("removed a duplicated layer");
         } catch (WMSException e) {
+            Main.warn(e);
             errorMessage = e.getMessage();
             wmsLayer.grabber.getWmsInterface().resetCookie();
         }

@@ -11,8 +11,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -25,16 +27,16 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
 public class CadastreInterface {
-    public boolean downloadCanceled = false;
-    public HttpURLConnection urlConn = null;
+    public boolean downloadCanceled;
+    public HttpURLConnection urlConn;
 
     private String cookie;
-    private String interfaceRef = null;
-    private String lastWMSLayerName = null;
+    private String interfaceRef;
+    private String lastWMSLayerName;
     private URL searchFormURL;
-    private Vector<String> listOfCommunes = new Vector<>();
-    private Vector<String> listOfTA = new Vector<>();
-    class PlanImage {
+    private List<String> listOfCommunes = new ArrayList<>();
+    private List<String> listOfTA = new ArrayList<>();
+    static class PlanImage {
         String name;
         String ref;
         PlanImage(String name, String ref) {
@@ -42,32 +44,32 @@ public class CadastreInterface {
             this.ref = ref;
         }
     }
-    private Vector<PlanImage> listOfFeuilles = new Vector<>();
+    private List<PlanImage> listOfFeuilles = new ArrayList<>();
     private long cookieTimestamp;
 
-    final String baseURL = "http://www.cadastre.gouv.fr";
-    final String cImageFormat = "Cette commune est au format ";
-    final String cCommuneListStart = "<select name=\"codeCommune\"";
-    final String cCommuneListEnd = "</select>";
-    final String c0ptionListStart = "<option value=\"";
-    final String cOptionListEnd = "</option>";
-    final String cBBoxCommunStart = "new GeoBox(";
-    final String cBBoxCommunEnd = ")";
+    static final String BASE_URL = "http://www.cadastre.gouv.fr";
+    static final String C_IMAGE_FORMAT = "Cette commune est au format ";
+    static final String C_COMMUNE_LIST_START = "<select name=\"codeCommune\"";
+    static final String C_COMMUNE_LIST_END = "</select>";
+    static final String C_OPTION_LIST_START = "<option value=\"";
+    static final String C_OPTION_LIST_END = "</option>";
+    static final String C_BBOX_COMMUN_START = "new GeoBox(";
+    static final String C_BBOX_COMMUN_END = ")";
 
-    final String cInterfaceVector = "afficherCarteCommune.do";
-    final String cInterfaceRasterTA = "afficherCarteTa.do";
-    final String cInterfaceRasterFeuille = "afficherCarteFeuille.do";
-    final String cImageLinkStart = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteFeuille.do?f=";
-    final String cTAImageLinkStart = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteTa.do?f=";
-    final String cImageNameStart = ">Feuille ";
-    final String cTAImageNameStart = "Tableau d'assemblage <strong>";
+    static final String C_INTERFACE_VECTOR = "afficherCarteCommune.do";
+    static final String C_INTERFACE_RASTER_TA = "afficherCarteTa.do";
+    static final String C_INTERFACE_RASTER_FEUILLE = "afficherCarteFeuille.do";
+    static final String C_IMAGE_LINK_START = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteFeuille.do?f=";
+    static final String C_TA_IMAGE_LINK_START = "<a href=\"#\" class=\"raster\" onClick=\"popup('afficherCarteTa.do?f=";
+    static final String C_IMAGE_NAME_START = ">Feuille ";
+    static final String C_TA_IMAGE_NAME_START = "Tableau d'assemblage <strong>";
 
-    final static long cCookieExpiration = 30 * 60 * 1000; // 30 minutes expressed in milliseconds
+    static final long COOKIE_EXPIRATION = 30 * 60 * 1000L; // 30 minutes expressed in milliseconds
 
-    final  int cRetriesGetCookie = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
+    static final int RETRIES_GET_COOKIE = 10; // 10 times every 3 seconds means 30 seconds trying to get a cookie
 
     public boolean retrieveInterface(WMSLayer wmsLayer) throws DuplicateLayerException, WMSException {
-        if (wmsLayer.getName().equals(""))
+        if (wmsLayer.getName().isEmpty())
             return false;
         boolean isCookieExpired = isCookieExpired();
         if (wmsLayer.getName().equals(lastWMSLayerName) && !isCookieExpired)
@@ -89,6 +91,7 @@ public class CadastreInterface {
             }
             openInterface();
         } catch (IOException e) {
+            Main.error(e);
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Town/city {0} not found or not available\n" +
                             "or action canceled", wmsLayer.getLocation()));
@@ -104,20 +107,22 @@ public class CadastreInterface {
      * @throws IOException
      */
     private void getCookie() throws IOException {
-        boolean sucess = false;
-        int retries = cRetriesGetCookie;
+        boolean success = false;
+        int retries = RETRIES_GET_COOKIE;
         try {
-            searchFormURL = new URL(baseURL + "/scpc/accueil.do");
-            while (sucess == false && retries > 0) {
+            searchFormURL = new URL(BASE_URL + "/scpc/accueil.do");
+            while (!success && retries > 0) {
                 urlConn = (HttpURLConnection)searchFormURL.openConnection();
                 urlConn.setRequestProperty("Connection", "close");
                 urlConn.setRequestMethod("GET");
                 urlConn.connect();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     Main.info("GET "+searchFormURL);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-                    while(in.readLine() != null) {}  // read the buffer otherwise we sent POST too early
-                    sucess = true;
+                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
+                    while(in.readLine() != null) {
+                        // read the buffer otherwise we sent POST too early
+                    }
+                    success = true;
                     String headerName;
                     for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
                         if (Main.isDebugEnabled()) {
@@ -154,7 +159,7 @@ public class CadastreInterface {
 
     public boolean isCookieExpired() {
         long now = new Date().getTime();
-        if ((now - cookieTimestamp) > cCookieExpiration) {
+        if ((now - cookieTimestamp) > COOKIE_EXPIRATION) {
             Main.info("cookie received at "+new Date(cookieTimestamp)+" expired (now is "+new Date(now)+")");
             return true;
         }
@@ -181,17 +186,16 @@ public class CadastreInterface {
         interfaceRef = postForm(wmsLayer, "");
         // second attempt either from known codeCommune (e.g. from cache) or from ComboBox
         if (interfaceRef == null) {
-            if (!wmsLayer.getCodeCommune().equals("")) {
+            if (!wmsLayer.getCodeCommune().isEmpty()) {
                 // codeCommune is already known (from previous request or from cache on disk)
                 interfaceRef = postForm(wmsLayer, wmsLayer.getCodeCommune());
             } else {
                 if (listOfCommunes.size() > 1) {
-                    // commune unknown, prompt the list of communes from
-                    // server and try with codeCommune
-                    String selected = selectMunicipalityDialog(wmsLayer);
+                    // commune unknown, prompt the list of communes from server and try with codeCommune
+                    String selected = selectMunicipalityDialog();
                     if (selected != null) {
-                        String newCodeCommune = selected.substring(1, selected.indexOf(">")-2);
-                        String newLocation = selected.substring(selected.indexOf(">")+1, selected.lastIndexOf(" - "));
+                        String newCodeCommune = selected.substring(1, selected.indexOf('>') - 2);
+                        String newLocation = selected.substring(selected.indexOf('>') + 1, selected.lastIndexOf(" - "));
                         wmsLayer.setCodeCommune(newCodeCommune);
                         wmsLayer.setLocation(newLocation);
                         Main.pref.put("cadastrewms.codeCommune", newCodeCommune);
@@ -204,7 +208,7 @@ public class CadastreInterface {
                     // commune known but raster format. Select "Feuille" (non-georeferenced image) from list.
                     int res = selectFeuilleDialog();
                     if (res != -1) {
-                        wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
+                        wmsLayer.setCodeCommune(listOfFeuilles.get(res).name);
                         checkLayerDuplicates(wmsLayer);
                         interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
                     }
@@ -219,9 +223,7 @@ public class CadastreInterface {
     private void openInterface() throws IOException  {
         try {
             // finally, open the interface on server side giving access to the wms server
-            String lines = null;
-            String ln = null;
-            URL interfaceURL = new URL(baseURL + "/scpc/"+interfaceRef);
+            URL interfaceURL = new URL(BASE_URL + "/scpc/"+interfaceRef);
             urlConn = (HttpURLConnection)interfaceURL.openConnection();
             urlConn.setRequestMethod("GET");
             setCookie();
@@ -230,13 +232,17 @@ public class CadastreInterface {
                 throw new IOException("Cannot open Cadastre interface. GET response:"+urlConn.getResponseCode());
             }
             Main.info("GET "+interfaceURL);
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
             // read the buffer otherwise we sent POST too early
+            StringBuilder lines = new StringBuilder();
+            String ln;
             while ((ln = in.readLine()) != null) {
-                lines += ln;
+                if (Main.isDebugEnabled()) {
+                    lines.append(ln);
+                }
             }
             if (Main.isDebugEnabled()) {
-                Main.debug(lines);
+                Main.debug(lines.toString());
             }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(
@@ -266,8 +272,6 @@ public class CadastreInterface {
      */
     private String postForm(WMSLayer wmsLayer, String codeCommune) throws IOException {
         try {
-            String ln = null;
-            String lines = null;
             listOfCommunes.clear();
             listOfTA.clear();
             // send a POST request with a city/town/village name
@@ -275,8 +279,8 @@ public class CadastreInterface {
             content += "&indiceRepetition=";
             content += "&nomvoie=";
             content += "&lieuDit=";
-            if (codeCommune == "") {
-                content += "&ville=" + new String(java.net.URLEncoder.encode(wmsLayer.getLocation(), "UTF-8"));
+            if (codeCommune.isEmpty()) {
+                content += "&ville=" + java.net.URLEncoder.encode(wmsLayer.getLocation(), "UTF-8");
                 content += "&codePostal=";
             } else {
                 content += "&codeCommune=" + codeCommune;
@@ -285,85 +289,87 @@ public class CadastreInterface {
             content += wmsLayer.getDepartement();
             content += "&nbResultatParPage=10";
             content += "&x=0&y=0";
-            searchFormURL = new URL(baseURL + "/scpc/rechercherPlan.do");
+            searchFormURL = new URL(BASE_URL + "/scpc/rechercherPlan.do");
             urlConn = (HttpURLConnection)searchFormURL.openConnection();
             urlConn.setRequestMethod("POST");
             urlConn.setDoOutput(true);
             urlConn.setDoInput(true);
             setCookie();
             try (OutputStream wr = urlConn.getOutputStream()) {
-                wr.write(content.getBytes());
+                wr.write(content.getBytes(StandardCharsets.UTF_8));
                 Main.info("POST "+content);
                 wr.flush();
             }
-            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream()))) {
+            String ln;
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8))) {
                 while ((ln = rd.readLine()) != null) {
-                    lines += ln;
+                    sb.append(ln);
                 }
             }
+            String lines = sb.toString();
             urlConn.disconnect();
             if (lines != null) {
-                if (lines.indexOf(cImageFormat) != -1) {
-                    int i = lines.indexOf(cImageFormat);
-                    int j = lines.indexOf(".", i);
-                    wmsLayer.setRaster(lines.substring(i+cImageFormat.length(), j).equals("image"));
+                if (lines.indexOf(C_IMAGE_FORMAT) != -1) {
+                    int i = lines.indexOf(C_IMAGE_FORMAT);
+                    int j = lines.indexOf('.', i);
+                    wmsLayer.setRaster("image".equals(lines.substring(i+C_IMAGE_FORMAT.length(), j)));
                 }
-                if (!wmsLayer.isRaster() && lines.indexOf(cInterfaceVector) != -1) {  // "afficherCarteCommune.do"
+                if (!wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_VECTOR) != -1) {  // "afficherCarteCommune.do"
                     // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
-                    lines = lines.substring(lines.indexOf(cInterfaceVector),lines.length());
-                    lines = lines.substring(0, lines.indexOf("'"));
+                    lines = lines.substring(lines.indexOf(C_INTERFACE_VECTOR),lines.length());
+                    lines = lines.substring(0, lines.indexOf('\''));
                     Main.info("interface ref.:"+lines);
                     return lines;
-                } else if (wmsLayer.isRaster() && lines.indexOf(cInterfaceRasterTA) != -1) { // "afficherCarteTa.do"
+                } else if (wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_RASTER_TA) != -1) { // "afficherCarteTa.do"
                     // list of values parsed in listOfFeuilles (list all non-georeferenced images)
                     lines = getFeuillesList();
                     if (!downloadCanceled) {
                         parseFeuillesList(lines);
-                        if (listOfFeuilles.size() > 0) {
+                        if (!listOfFeuilles.isEmpty()) {
                             int res = selectFeuilleDialog();
                             if (res != -1) {
-                                wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).name);
+                                wmsLayer.setCodeCommune(listOfFeuilles.get(res).name);
                                 checkLayerDuplicates(wmsLayer);
                                 interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
-                                wmsLayer.setCodeCommune(listOfFeuilles.elementAt(res).ref);
-                                lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.elementAt(res).ref);
+                                wmsLayer.setCodeCommune(listOfFeuilles.get(res).ref);
+                                lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.get(res).ref);
                                 Main.info("interface ref.:"+lines);
                                 return lines;
                             }
                         }
                     }
                     return null;
-                } else if (lines.indexOf(cCommuneListStart) != -1 && lines.indexOf(cCommuneListEnd) != -1) {
+                } else if (lines.indexOf(C_COMMUNE_LIST_START) != -1 && lines.indexOf(C_COMMUNE_LIST_END) != -1) {
                     // list of values parsed in listOfCommunes
-                    int i = lines.indexOf(cCommuneListStart);
-                    int j = lines.indexOf(cCommuneListEnd, i);
+                    int i = lines.indexOf(C_COMMUNE_LIST_START);
+                    int j = lines.indexOf(C_COMMUNE_LIST_END, i);
                     parseCommuneList(lines.substring(i, j));
                 }
             }
         } catch (MalformedURLException e) {
-            throw (IOException) new IOException(
-                "Illegal url.").initCause(e);
-        } catch (Exception e){
-            e.printStackTrace();
+            throw (IOException) new IOException("Illegal url.").initCause(e);
+        } catch (DuplicateLayerException e){
+            Main.error(e);
         }
         return null;
     }
 
     private void parseCommuneList(String input) {
-        if (input.indexOf(c0ptionListStart) != -1) {
+        if (input.indexOf(C_OPTION_LIST_START) != -1) {
             while (input.indexOf("<option value=\"") != -1) {
-                int i = input.indexOf(c0ptionListStart);
-                int j = input.indexOf(cOptionListEnd, i+c0ptionListStart.length());
-                int k = input.indexOf("\"", i+c0ptionListStart.length());
-                if (j != -1 && k > (i + c0ptionListStart.length())) {
-                    String lov = new String(input.substring(i+c0ptionListStart.length()-1, j));
-                    if (lov.indexOf(">") != -1) {
+                int i = input.indexOf(C_OPTION_LIST_START);
+                int j = input.indexOf(C_OPTION_LIST_END, i+C_OPTION_LIST_START.length());
+                int k = input.indexOf('"', i+C_OPTION_LIST_START.length());
+                if (j != -1 && k > (i + C_OPTION_LIST_START.length())) {
+                    String lov = input.substring(i+C_OPTION_LIST_START.length()-1, j);
+                    if (lov.indexOf('>') != -1) {
                         Main.info("parse "+lov);
                         listOfCommunes.add(lov);
                     } else
                         Main.error("unable to parse commune string:"+lov);
                 }
-                input = input.substring(j+cOptionListEnd.length());
+                input = input.substring(j+C_OPTION_LIST_END.length());
             }
         }
     }
@@ -371,17 +377,17 @@ public class CadastreInterface {
     private String getFeuillesList() {
         // get all images in one html page
         String ln = null;
-        String lines = null;
+        StringBuilder lines = new StringBuilder();
         HttpURLConnection urlConn2 = null;
         try {
-            URL getAllImagesURL = new URL(baseURL + "/scpc/listerFeuillesParcommune.do?keepVolatileSession=&offset=2000");
+            URL getAllImagesURL = new URL(BASE_URL + "/scpc/listerFeuillesParcommune.do?keepVolatileSession=&offset=2000");
             urlConn2 = (HttpURLConnection)getAllImagesURL.openConnection();
             setCookie(urlConn2);
             urlConn2.connect();
             Main.info("GET "+getAllImagesURL);
-            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream()))) {
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn2.getInputStream(), StandardCharsets.UTF_8))) {
                 while ((ln = rd.readLine()) != null) {
-                    lines += ln;
+                    lines.append(ln);
                 }
             }
             urlConn2.disconnect();
@@ -389,7 +395,7 @@ public class CadastreInterface {
             listOfFeuilles.clear();
             Main.error(e);
         }
-        return lines;
+        return lines.toString();
     }
 
     private void parseFeuillesList(String input) {
@@ -397,36 +403,35 @@ public class CadastreInterface {
         // get "Tableau d'assemblage"
         String inputTA = input;
         if (Main.pref.getBoolean("cadastrewms.useTA", false)) {
-            while (inputTA.indexOf(cTAImageLinkStart) != -1) {
-                inputTA = inputTA.substring(inputTA.indexOf(cTAImageLinkStart) + cTAImageLinkStart.length());
-                String refTA = inputTA.substring(0, inputTA.indexOf("'"));
-                String nameTA = inputTA.substring(inputTA.indexOf(cTAImageNameStart) + cTAImageNameStart.length());
-                nameTA = nameTA.substring(0, nameTA.indexOf("<"));
+            while (inputTA.indexOf(C_TA_IMAGE_LINK_START) != -1) {
+                inputTA = inputTA.substring(inputTA.indexOf(C_TA_IMAGE_LINK_START) + C_TA_IMAGE_LINK_START.length());
+                String refTA = inputTA.substring(0, inputTA.indexOf('\''));
+                String nameTA = inputTA.substring(inputTA.indexOf(C_TA_IMAGE_NAME_START) + C_TA_IMAGE_NAME_START.length());
+                nameTA = nameTA.substring(0, nameTA.indexOf('<'));
                 listOfFeuilles.add(new PlanImage(nameTA, refTA));
             }
         }
         // get "Feuilles"
-        while (input.indexOf(cImageLinkStart) != -1) {
-            input = input.substring(input.indexOf(cImageLinkStart)+cImageLinkStart.length());
-            String refFeuille = input.substring(0, input.indexOf("'"));
+        while (input.indexOf(C_IMAGE_LINK_START) != -1) {
+            input = input.substring(input.indexOf(C_IMAGE_LINK_START)+C_IMAGE_LINK_START.length());
+            String refFeuille = input.substring(0, input.indexOf('\''));
             String nameFeuille = input.substring(
-                    input.indexOf(cImageNameStart)+cImageNameStart.length(),
+                    input.indexOf(C_IMAGE_NAME_START)+C_IMAGE_NAME_START.length(),
                     input.indexOf(" -"));
             listOfFeuilles.add(new PlanImage(nameFeuille, refFeuille));
         }
     }
 
-    private String selectMunicipalityDialog(WMSLayer wmsLayer) {
+    private String selectMunicipalityDialog() {
         JPanel p = new JPanel(new GridBagLayout());
         String[] communeList = new String[listOfCommunes.size() + 1];
         communeList[0] = tr("Choose from...");
         for (int i = 0; i < listOfCommunes.size(); i++) {
-            communeList[i + 1] = listOfCommunes.elementAt(i).substring(listOfCommunes.elementAt(i).indexOf(">")+1);
+            communeList[i + 1] = listOfCommunes.get(i).substring(listOfCommunes.get(i).indexOf('>')+1);
         }
         JComboBox<String> inputCommuneList = new JComboBox<>(communeList);
         p.add(inputCommuneList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
         JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
-        //pane.createDialog(Main.parent, tr("Select commune")).setVisible(true);
         // this below is a temporary workaround to fix the "always on top" issue
         JDialog dialog = pane.createDialog(Main.parent, tr("Select commune"));
         CadastrePlugin.prepareDialog(dialog);
@@ -434,19 +439,18 @@ public class CadastreInterface {
         // till here
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
             return null;
-        return listOfCommunes.elementAt(inputCommuneList.getSelectedIndex()-1);
+        return listOfCommunes.get(inputCommuneList.getSelectedIndex()-1);
     }
 
     private int selectFeuilleDialog() {
         JPanel p = new JPanel(new GridBagLayout());
-        Vector<String> imageNames = new Vector<>();
+        List<String> imageNames = new ArrayList<>();
         for (PlanImage src : listOfFeuilles) {
             imageNames.add(src.name);
         }
-        JComboBox<String> inputFeuilleList = new JComboBox<>(imageNames);
+        JComboBox<String> inputFeuilleList = new JComboBox<>(imageNames.toArray(new String[]{}));
         p.add(inputFeuilleList, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
         JOptionPane pane = new JOptionPane(p, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null);
-        //pane.createDialog(Main.parent, tr("Select Feuille")).setVisible(true);
         // this below is a temporary workaround to fix the "always on top" issue
         JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
         CadastrePlugin.prepareDialog(dialog);
@@ -454,12 +458,11 @@ public class CadastreInterface {
         // till here
         if (!Integer.valueOf(JOptionPane.OK_OPTION).equals(pane.getValue()))
             return -1;
-        int result = inputFeuilleList.getSelectedIndex();
-        return result;
+        return inputFeuilleList.getSelectedIndex();
     }
 
-    private String buildRasterFeuilleInterfaceRef(String codeCommune) {
-        return cInterfaceRasterFeuille + "?f=" + codeCommune;
+    private static String buildRasterFeuilleInterfaceRef(String codeCommune) {
+        return C_INTERFACE_RASTER_FEUILLE + "?f=" + codeCommune;
     }
 
     /**
@@ -473,10 +476,8 @@ public class CadastreInterface {
     public void retrieveCommuneBBox(WMSLayer wmsLayer) throws IOException {
         if (interfaceRef == null)
             return;
-        String ln = null;
-        String line = null;
         // send GET opening normally the small window with the commune overview
-        String content = baseURL + "/scpc/" + interfaceRef;
+        String content = BASE_URL + "/scpc/" + interfaceRef;
         content += "&dontSaveLastForward&keepVolatileSession=";
         searchFormURL = new URL(content);
         urlConn = (HttpURLConnection)searchFormURL.openConnection();
@@ -487,34 +488,37 @@ public class CadastreInterface {
             throw new IOException("Cannot get Cadastre response.");
         }
         Main.info("GET "+searchFormURL);
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream()))) {
+        String ln;
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8))) {
             while ((ln = in.readLine()) != null) {
-                line += ln;
+                sb.append(ln);
             }
         }
         urlConn.disconnect();
+        String line = sb.toString();
         parseBBoxCommune(wmsLayer, line);
         if (wmsLayer.isRaster() && !wmsLayer.isAlreadyGeoreferenced()) {
             parseGeoreferences(wmsLayer, line);
         }
     }
 
-    private void parseBBoxCommune(WMSLayer wmsLayer, String input) {
-        if (input.indexOf(cBBoxCommunStart) != -1) {
-            input = input.substring(input.indexOf(cBBoxCommunStart));
-            int i = input.indexOf(",");
-            double minx = Double.parseDouble(input.substring(cBBoxCommunStart.length(), i));
-            int j = input.indexOf(",", i+1);
+    private static void parseBBoxCommune(WMSLayer wmsLayer, String input) {
+        if (input.indexOf(C_BBOX_COMMUN_START) != -1) {
+            input = input.substring(input.indexOf(C_BBOX_COMMUN_START));
+            int i = input.indexOf(',');
+            double minx = Double.parseDouble(input.substring(C_BBOX_COMMUN_START.length(), i));
+            int j = input.indexOf(',', i+1);
             double miny = Double.parseDouble(input.substring(i+1, j));
-            int k = input.indexOf(",", j+1);
+            int k = input.indexOf(',', j+1);
             double maxx = Double.parseDouble(input.substring(j+1, k));
-            int l = input.indexOf(cBBoxCommunEnd, k+1);
+            int l = input.indexOf(C_BBOX_COMMUN_END, k+1);
             double maxy = Double.parseDouble(input.substring(k+1, l));
             wmsLayer.setCommuneBBox( new EastNorthBound(new EastNorth(minx,miny), new EastNorth(maxx,maxy)));
         }
     }
 
-    private void parseGeoreferences(WMSLayer wmsLayer, String input) {
+    private static void parseGeoreferences(WMSLayer wmsLayer, String input) {
         /* commented since cadastre WMS changes mid july 2013
          * until new GeoBox coordinates parsing is solved */
 //        if (input.lastIndexOf(cBBoxCommunStart) != -1) {
@@ -546,15 +550,14 @@ public class CadastreInterface {
 //                wmsLayer.X0 = X0;
 //                wmsLayer.Y0 = Y0;
 //            }
-//            Main.info("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+
-//                    fY+","+X0+","+Y0);
+//            Main.info("parse georef:"+unknown_yet+","+angle+","+scale_origin+","+dpi+","+fX+","+fY+","+X0+","+Y0);
 //        }
     }
 
-    private void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {
+    private static void checkLayerDuplicates(WMSLayer wmsLayer) throws DuplicateLayerException {
         if (Main.map != null) {
             for (Layer l : Main.map.mapView.getAllLayers()) {
-                if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (l != wmsLayer)) {
+                if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (!l.equals(wmsLayer))) {
                     Main.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
                     Main.main.removeLayer(wmsLayer);
@@ -568,7 +571,6 @@ public class CadastreInterface {
         if (urlConn != null) {
             urlConn.setConnectTimeout(1);
             urlConn.setReadTimeout(1);
-            //urlConn.disconnect();
         }
         downloadCanceled = true;
         lastWMSLayerName = null;

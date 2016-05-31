@@ -17,8 +17,11 @@ import org.openstreetmap.josm.gui.layer.Layer;
 public class MenuActionLoadFromCache extends JosmAction {
     private static final long serialVersionUID = 1L;
 
-    public static String name = marktr("Load layer from cache");
+    public static final String name = marktr("Load layer from cache");
 
+    /**
+     * Constructs a new {@code MenuActionLoadFromCache}.
+     */
     public MenuActionLoadFromCache() {
         super(tr(name), "cadastre_small", tr("Load location from cache (only if cache is enabled)"), null, false, "cadastrefr/loadfromcache", true);
     }
@@ -35,19 +38,19 @@ public class MenuActionLoadFromCache extends JosmAction {
         for (File file : files) {
             if (file.exists()) {
                 String filename = file.getName();
-                String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
-                if ((ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z) &&
+                String ext = (filename.lastIndexOf('.')==-1)?"":filename.substring(filename.lastIndexOf('.')+1,filename.length());
+                if ((ext.length() == 3 && ext.substring(0, CacheControl.C_LAMBERT_CC_9Z.length()).equals(CacheControl.C_LAMBERT_CC_9Z) &&
                     !(CadastrePlugin.isLambert_cc9()))
-                    || (ext.length() == 4 && ext.substring(0, CacheControl.cUTM20N.length()).equals(CacheControl.cUTM20N) &&
+                    || (ext.length() == 4 && ext.substring(0, CacheControl.C_UTM20N.length()).equals(CacheControl.C_UTM20N) &&
                             !(CadastrePlugin.isUtm_france_dom()))
                     || (ext.length() == 1) && !(CadastrePlugin.isLambert())) {
                         JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue;
                 } else {
-                    String location = filename.substring(0, filename.lastIndexOf("."));
-                    if (ext.length() == 3 && ext.substring(0, CacheControl.cLambertCC9Z.length()).equals(CacheControl.cLambertCC9Z))
+                    String location = filename.substring(0, filename.lastIndexOf('.'));
+                    if (ext.length() == 3 && ext.substring(0, CacheControl.C_LAMBERT_CC_9Z.length()).equals(CacheControl.C_LAMBERT_CC_9Z))
                         ext = ext.substring(2);
-                    else if (ext.length() == 4 && ext.substring(0, CacheControl.cUTM20N.length()).equals(CacheControl.cUTM20N))
+                    else if (ext.length() == 4 && ext.substring(0, CacheControl.C_UTM20N.length()).equals(CacheControl.C_UTM20N))
                         ext = ext.substring(3);
                     // check the extension and its compatibility with current projection
                     try {

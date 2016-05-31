@@ -13,10 +13,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,7 +60,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.tools.Shortcut;
 
-public class Address extends MapMode implements MouseListener, MouseMotionListener, ActionListener {
+public class Address extends MapMode {
 
     // perhaps make all these tags configurable in the future
     private String tagHighway = "highway";
@@ -75,18 +73,18 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     private String relationAddrStreetRole = "street";
     private String relationMemberHouse = "house";
 
-    private JRadioButton plus_one = new JRadioButton("+1", false);
-    private JRadioButton plus_two = new JRadioButton("+2", true); // enable this by default
-    private JRadioButton minus_one = new JRadioButton("-1", false);
-    private JRadioButton minus_two = new JRadioButton("-2", false);
+    private JRadioButton plusOne = new JRadioButton("+1", false);
+    private JRadioButton plusTwo = new JRadioButton("+2", true); // enable this by default
+    private JRadioButton minusOne = new JRadioButton("-1", false);
+    private JRadioButton minusTwo = new JRadioButton("-2", false);
     final JCheckBox tagPolygon = new JCheckBox(tr("on polygon"));
 
-    JDialog dialog = null;
-    JButton clearButton = null;
+    JDialog dialog;
+    JButton clearButton;
     final JTextField inputNumber = new JTextField();
     final JTextField inputStreet = new JTextField();
     JLabel link = new JLabel();
-    private Way selectedWay;
+    private transient Way selectedWay;
     private boolean shift;
     private boolean ctrl;
 
@@ -113,8 +111,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
 //        dialog.setVisible(false);
         // kill the window completely to fix an issue on some linux distro and full screen mode.
-        if(dialog != null)
-        {
+        if(dialog != null) {
             dialog.dispose();
             dialog = null;
         }
@@ -130,7 +127,6 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         Point mousePos = e.getPoint();
         List<Way> mouseOnExistingWays = new ArrayList<>();
         List<Way> mouseOnExistingBuildingWays = new ArrayList<>();
-        mouseOnExistingWays = new ArrayList<>();
         Node currentMouseNode = mv.getNearestNode(mousePos, OsmPrimitive.isSelectablePredicate);
         if (currentMouseNode != null) {
             // click on existing node
@@ -139,7 +135,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             if (num != null
                     && currentMouseNode.get(tagHouseStreet) == null
                     && findWayInRelationAddr(currentMouseNode) == null
-                    && !inputStreet.getText().equals("")) {
+                    && !inputStreet.getText().isEmpty()) {
                 // house number already present but not linked to a street
                 Collection<Command> cmds = new LinkedList<>();
                 addStreetNameOrRelation(currentMouseNode, cmds);
@@ -198,9 +194,9 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 setSelectedWay(mouseOnExistingWays.get(0));
                 inputNumber.setText("");
                 setNewSelection(mouseOnExistingWays.get(0));
-            } else if (mouseOnExistingWays.size() == 0) {
+            } else if (mouseOnExistingWays.isEmpty()) {
                 // clicked a non highway and not a node => add the new address
-                if (inputStreet.getText().equals("") || inputNumber.getText().equals("")) {
+                if (inputStreet.getText().isEmpty() || inputNumber.getText().isEmpty()) {
                     Toolkit.getDefaultToolkit().beep();
                 } else {
                     Collection<Command> cmds = new LinkedList<>();
@@ -216,7 +212,6 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 }
             }
         }
-
     }
 
     private Way findWayInRelationAddr(Node n) {
@@ -296,7 +291,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         }
     }
 
-    private Node createNewNode(MouseEvent e, Collection<Command> cmds) {
+    private static Node createNewNode(MouseEvent e, Collection<Command> cmds) {
         // DrawAction.mouseReleased() but without key modifiers
         Node n = new Node(Main.map.mapView.getLatLon(e.getX(), e.getY()));
         cmds.add(new AddCommand(n));
@@ -397,8 +392,6 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     }
 
     private static void pruneSuccsAndReverse(List<Integer> is) {
-        //if (is.size() < 2) return;
-
         HashSet<Integer> is2 = new HashSet<>();
         for (int i : is) {
             if (!is2.contains(i - 1) && !is2.contains(i + 1)) {
@@ -414,33 +407,34 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
     private static Cursor getCursor() {
         try {
             return ImageProvider.getCursor("crosshair", null);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            Main.warn(e);
         }
         return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
     }
 
     private void applyInputNumberChange() {
         Integer num = Integer.parseInt(inputNumber.getText());
-        if (plus_one.isSelected())
+        if (plusOne.isSelected())
             num = num + 1;
-        if (plus_two.isSelected())
+        if (plusTwo.isSelected())
             num = num + 2;
-        if (minus_one.isSelected() && num > 1)
+        if (minusOne.isSelected() && num > 1)
             num = num - 1;
-        if (minus_two.isSelected() && num > 2)
+        if (minusTwo.isSelected() && num > 2)
             num = num - 2;
         inputNumber.setText(num.toString());
     }
 
     private void revertInputNumberChange() {
         Integer num = Integer.parseInt(inputNumber.getText());
-        if (plus_one.isSelected())
+        if (plusOne.isSelected())
             num = num - 1;
-        if (plus_two.isSelected())
+        if (plusTwo.isSelected())
             num = num - 2;
-        if (minus_one.isSelected() && num > 1)
+        if (minusOne.isSelected() && num > 1)
             num = num + 1;
-        if (minus_two.isSelected() && num > 2)
+        if (minusTwo.isSelected() && num > 2)
             num = num + 2;
         inputNumber.setText(num.toString());
     }
@@ -470,13 +464,12 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             }
         });
         ButtonGroup bgIncremental = new ButtonGroup();
-        bgIncremental.add(plus_one);
-        bgIncremental.add(plus_two);
-        bgIncremental.add(minus_one);
-        bgIncremental.add(minus_two);
-        p.add(minus_one, GBC.std().insets(10, 0, 10, 0));
-//        p.add(plus_one, GBC.eol().fill(GBC.HORIZONTAL).insets(10, 0, 0, 0));
-        p.add(plus_one, GBC.std().insets(0, 0, 10, 0));
+        bgIncremental.add(plusOne);
+        bgIncremental.add(plusTwo);
+        bgIncremental.add(minusOne);
+        bgIncremental.add(minusTwo);
+        p.add(minusOne, GBC.std().insets(10, 0, 10, 0));
+        p.add(plusOne, GBC.std().insets(0, 0, 10, 0));
         tagPolygon.setSelected(Main.pref.getBoolean("cadastrewms.addr.onBuilding", false));
         tagPolygon.addChangeListener(new ChangeListener() {
             @Override
@@ -485,8 +478,8 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
             }
         });
         p.add(tagPolygon, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
-        p.add(minus_two, GBC.std().insets(10, 0, 10, 0));
-        p.add(plus_two, GBC.std().insets(0, 0, 10, 0));
+        p.add(minusTwo, GBC.std().insets(10, 0, 10, 0));
+        p.add(plusTwo, GBC.std().insets(0, 0, 10, 0));
         p.add(clearButton, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 0));
 
         final Object[] options = {};
@@ -507,24 +500,12 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
                 rememberGeometry();
             }
         });
-        dialog.addWindowListener(new WindowListener() {
+        dialog.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent arg0) {
+            public void windowClosing(WindowEvent arg) {
                 exitMode();
                 Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
             }
-            @Override
-            public void windowClosed(WindowEvent e) {}
-            @Override
-            public void windowActivated(WindowEvent arg0) {}
-            @Override
-            public void windowDeactivated(WindowEvent arg0) {}
-            @Override
-            public void windowDeiconified(WindowEvent arg0) {}
-            @Override
-            public void windowIconified(WindowEvent arg0) {}
-            @Override
-            public void windowOpened(WindowEvent arg0) {}
         });
         String bounds = Main.pref.get("cadastrewms.addr.bounds",null);
         if (bounds != null) {
@@ -543,7 +524,7 @@ public class Address extends MapMode implements MouseListener, MouseMotionListen
         link.repaint();
     }
 
-    private void setNewSelection(OsmPrimitive osm) {
+    private static void setNewSelection(OsmPrimitive osm) {
         Collection<OsmPrimitive> newSelection = new LinkedList<>(Main.main.getCurrentDataSet().getSelected());
         newSelection.clear();
         newSelection.add(osm);

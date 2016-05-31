@@ -111,3 +111,4 @@ org.eclipse.jdt.core.compiler.problem.unusedTypeParameter=ignore
 org.eclipse.jdt.core.compiler.problem.unusedWarningToken=warning
 org.eclipse.jdt.core.compiler.problem.varargsArgumentNeedCast=warning
 org.eclipse.jdt.core.compiler.source=1.7
+org.eclipse.jdt.core.javaFormatter=org.eclipse.jdt.core.defaultJavaFormatter

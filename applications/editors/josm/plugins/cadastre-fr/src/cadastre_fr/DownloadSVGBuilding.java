@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -37,9 +38,9 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
     private CadastreInterface wmsInterface;
-    private String svg = null;
-    private static EastNorthBound currentView = null;
-    private EastNorthBound viewBox = null;
+    private String svg;
+    private static EastNorthBound currentView;
+    private EastNorthBound viewBox;
     private static String errorMessage;
 
     /**
@@ -81,6 +82,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
 
     @Override
     protected void finish() {
+        // Do nothing
     }
 
     private boolean getViewBox(String svg) {
@@ -118,7 +120,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 Node nodeToAdd = new Node(Main.getProjection().eastNorth2latlon(eastNorth));
                 // check if new node is not already created by another new path
                 Node nearestNewNode = checkNearestNode(nodeToAdd, svgDataSet.getNodes());
-                if (nearestNewNode == nodeToAdd)
+                if (nodeToAdd.equals(nearestNewNode))
                     svgDataSet.addPrimitive(nearestNewNode);
                 wayToAdd.addNode(nearestNewNode); // either a new node or an existing one
             }
@@ -174,7 +176,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         double dx = Double.parseDouble(coor[1]);
         double dy = Double.parseDouble(coor[2]);
         for (int i=3; i<coor.length; i+=2){
-            if (coor[i].equals("")) {
+            if (coor[i].isEmpty()) {
                 eastNorth.clear(); // some paths are just artifacts
                 return;
             }
@@ -196,7 +198,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
      * @param nodeToAdd the candidate as new node
      * @return the already existing node (if any), otherwise the new node candidate.
      */
-    private Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
+    private static Node checkNearestNode(Node nodeToAdd, Collection<Node> nodes) {
         double epsilon = 0.05; // smallest distance considering duplicate node
         for (Node n : nodes) {
             if (!n.isDeleted() && !n.isIncomplete()) {
@@ -219,8 +221,8 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         }
     }
 
-    private URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
-        String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
+    private static URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
+        String str = CadastreInterface.BASE_URL+"/scpc/wms?version=1.1&request=GetMap";
         str += "&layers=";
         str += "CDIF:LS2";
         str += "&format=image/svg";
@@ -242,17 +244,17 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
         File file = new File(CadastrePlugin.cacheDir + "building.svg");
-        String svg = new String();
+        String svg = "";
         try (InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE)) {
             if (file.exists())
                 file.delete();
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
-                 InputStreamReader isr = new InputStreamReader(is);
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
-                String line="";
+                String line;
                 while ( null!=(line=br.readLine())){
                     line += "\n";
-                    bos.write(line.getBytes());
+                    bos.write(line.getBytes(StandardCharsets.UTF_8));
                     svg += line;
                 }
             }

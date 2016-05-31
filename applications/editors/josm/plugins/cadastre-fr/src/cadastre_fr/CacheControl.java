@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,11 +33,11 @@ import org.openstreetmap.josm.gui.util.GuiHelper;
  */
 public class CacheControl implements Runnable {
 
-    public static final String cLambertCC9Z = "CC";
+    public static final String C_LAMBERT_CC_9Z = "CC";
 
-    public static final String cUTM20N = "UTM";
+    public static final String C_UTM20N = "UTM";
 
-    public class ObjectOutputStreamAppend extends ObjectOutputStream {
+    public static class ObjectOutputStreamAppend extends ObjectOutputStream {
         public ObjectOutputStreamAppend(OutputStream out) throws IOException {
             super(out);
         }
@@ -50,7 +51,7 @@ public class CacheControl implements Runnable {
 
     public static int cacheSize = 500;
 
-    public WMSLayer wmsLayer = null;
+    public WMSLayer wmsLayer;
 
     private ArrayList<GeorefImage> imagesToSave = new ArrayList<>();
     private Lock imagesLock = new ReentrantLock();
@@ -78,7 +79,7 @@ public class CacheControl implements Runnable {
         new Thread(this).start();
     }
 
-    private void checkDirSize(File path) {
+    private static void checkDirSize(File path) {
         if (cacheSize != 0) {
             long size = 0;
             long oldestFileDate = Long.MAX_VALUE;
@@ -104,42 +105,39 @@ public class CacheControl implements Runnable {
         if (!CadastrePlugin.isCadastreProjection()) {
             CadastrePlugin.askToChangeProjection();
         }
-        try {
-            File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
-            if (file.exists()) {
-                JOptionPane pane = new JOptionPane(
-                        tr("Location \"{0}\" found in cache.\n"+
-                        "Load cache first ?\n"+
-                        "(No = new cache)", wmsLayer.getName()),
-                        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null);
-                // this below is a temporary workaround to fix the "always on top" issue
-                JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
-                CadastrePlugin.prepareDialog(dialog);
-                dialog.setVisible(true);
-                int reply = (Integer)pane.getValue();
-                // till here
-
-                if (reply == JOptionPane.OK_OPTION && loadCache(file, wmsLayer.getLambertZone())) {
-                    return true;
-                } else {
-                    delete(file);
+        File file = new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension());
+        if (file.exists()) {
+            int reply = GuiHelper.runInEDTAndWaitAndReturn(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    JOptionPane pane = new JOptionPane(
+                            tr("Location \"{0}\" found in cache.\n"+
+                            "Load cache first ?\n"+
+                            "(No = new cache)", wmsLayer.getName()),
+                            JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null);
+                    // this below is a temporary workaround to fix the "always on top" issue
+                    JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
+                    CadastrePlugin.prepareDialog(dialog);
+                    dialog.setVisible(true);
+                    return (Integer)pane.getValue();
+                    // till here
                 }
+            });
+
+            if (reply == JOptionPane.OK_OPTION && loadCache(file, wmsLayer.getLambertZone())) {
+                return true;
+            } else {
+                delete(file);
             }
-        } catch (Exception e) {
-            Main.error(e);
         }
         return false;
     }
 
     public void deleteCacheFile() {
-        try {
-            delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension()));
-        } catch (Exception e) {
-            Main.error(e);
-        }
+        delete(new File(CadastrePlugin.cacheDir + wmsLayer.getName() + "." + WMSFileExtension()));
     }
 
-    private void delete(File file) {
+    private static void delete(File file) {
         Main.info("Delete file "+file);
         if (file.exists())
             file.delete();
@@ -154,7 +152,7 @@ public class CacheControl implements Runnable {
             ObjectInputStream ois = new ObjectInputStream(fis);
         ) {
             successfulRead = wmsLayer.read(file, ois, currentLambertZone);
-        } catch (Exception ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Main.error(ex);
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override
@@ -175,7 +173,7 @@ public class CacheControl implements Runnable {
     public synchronized void saveCache(GeorefImage image) {
         imagesLock.lock();
         this.imagesToSave.add(image);
-        this.notify();
+        this.notifyAll();
         imagesLock.unlock();
     }
 
@@ -223,11 +221,11 @@ public class CacheControl implements Runnable {
     }
 
     private String WMSFileExtension() {
-        String ext = String.valueOf((wmsLayer.getLambertZone() + 1));
+        String ext = String.valueOf(wmsLayer.getLambertZone() + 1);
         if (CadastrePlugin.isLambert_cc9())
-            ext = cLambertCC9Z + ext;
+            ext = C_LAMBERT_CC_9Z + ext;
         else if (CadastrePlugin.isUtm_france_dom())
-            ext = cUTM20N + ext;
+            ext = C_UTM20N + ext;
         return ext;
     }
 }

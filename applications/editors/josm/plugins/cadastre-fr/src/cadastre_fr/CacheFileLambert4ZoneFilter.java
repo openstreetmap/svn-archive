@@ -2,10 +2,13 @@
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.File;
+import java.util.Locale;
+
 import javax.swing.filechooser.FileFilter;
 
-public class CacheFileLambert4ZoneFilter extends FileFilter {
+public final class CacheFileLambert4ZoneFilter extends FileFilter {
 
     /**
      * Derived from ExtensionFileFilter writen by imi
@@ -13,7 +16,7 @@ public class CacheFileLambert4ZoneFilter extends FileFilter {
     private final String extension;
     private final String description;
 
-    public static CacheFileLambert4ZoneFilter[] filters = {
+    static final CacheFileLambert4ZoneFilter[] filters = {
         new CacheFileLambert4ZoneFilter("1", tr("Lambert Zone {0} cache file (.{0})", 1)),
         new CacheFileLambert4ZoneFilter("2", tr("Lambert Zone {0} cache file (.{0})", 2)),
         new CacheFileLambert4ZoneFilter("3", tr("Lambert Zone {0} cache file (.{0})", 3)),
@@ -30,7 +33,7 @@ public class CacheFileLambert4ZoneFilter extends FileFilter {
     }
 
     public boolean acceptName(String filename) {
-        String name = filename.toLowerCase();
+        String name = filename.toLowerCase(Locale.FRANCE);
         for (String ext : extension.split(","))
             if (name.endsWith("." + ext))
                 return true;
@@ -48,5 +51,4 @@ public class CacheFileLambert4ZoneFilter extends FileFilter {
     public String getDescription() {
         return description;
     }
-
 }

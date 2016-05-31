@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,8 +43,8 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
 
     private WMSLayer wmsLayer;
     private CadastreInterface wmsInterface;
-    private String svg = null;
-    private EastNorthBound viewBox = null;
+    private String svg;
+    private EastNorthBound viewBox;
     private static String errorMessage;
 
     /**
@@ -87,6 +88,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
 
     @Override
     protected void finish() {
+        // Do nothing
     }
 
     private boolean getViewBox(String svg) {
@@ -167,16 +169,14 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
 
     private String grabBoundary(EastNorthBound bbox) throws IOException, OsmTransferException {
         try {
-            URL url = null;
-            url = getURLsvg(bbox);
-            return grabSVG(url);
+            return grabSVG(getURLsvg(bbox));
         } catch (MalformedURLException e) {
             throw (IOException) new IOException(tr("CadastreGrabber: Illegal url.")).initCause(e);
         }
     }
 
-    private URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
-        String str = new String(wmsInterface.baseURL+"/scpc/wms?version=1.1&request=GetMap");
+    private static URL getURLsvg(EastNorthBound bbox) throws MalformedURLException {
+        String str = CadastreInterface.BASE_URL+"/scpc/wms?version=1.1&request=GetMap";
         str += "&layers=";
         str += "CDIF:COMMUNE";
         str += "&format=image/svg";
@@ -197,17 +197,17 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
         File file = new File(CadastrePlugin.cacheDir + "boundary.svg");
-        String svg = new String();
+        String svg = "";
         try (InputStream is = new ProgressInputStream(wmsInterface.urlConn, NullProgressMonitor.INSTANCE)) {
             if (file.exists())
                 file.delete();
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
                  InputStreamReader isr =new InputStreamReader(is);
                  BufferedReader br = new BufferedReader(isr)) {
-                String line="";
+                String line;
                 while ( null!=(line=br.readLine())){
                     line += "\n";
-                    bos.write(line.getBytes());
+                    bos.write(line.getBytes(StandardCharsets.UTF_8));
                     svg += line;
                 }
             }
@@ -218,7 +218,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     }
 
     public static void download(WMSLayer wmsLayer) {
-        if (CadastrePlugin.autoSourcing == false) {
+        if (!CadastrePlugin.autoSourcing) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("Please, enable auto-sourcing and check cadastre millesime."));
             return;
@@ -227,5 +227,4 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         if (errorMessage != null)
             JOptionPane.showMessageDialog(Main.parent, errorMessage);
     }
-
 }

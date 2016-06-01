@@ -8,12 +8,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.CookieHandler;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -23,6 +26,7 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.validation.util.Entities;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.tools.GBC;
 
@@ -123,23 +127,20 @@ public class CadastreInterface {
                         // read the buffer otherwise we sent POST too early
                     }
                     success = true;
-                    String headerName;
-                    for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
-                        if (Main.isDebugEnabled()) {
-                            Main.debug(headerName + ": " + urlConn.getHeaderField(i));
+                    // See https://bugs.openjdk.java.net/browse/JDK-8036017
+                    // When a cookie handler is setup, "Set-Cookie" header returns empty values
+                    CookieHandler cookieHandler = CookieHandler.getDefault();
+                    if (cookieHandler != null) {
+                        if (handleCookie(cookieHandler.get(searchFormURL.toURI(), new HashMap<String,List<String>>()).get("Cookie").get(0))) {
+                            break;
                         }
-                        if ("Set-Cookie".equals(headerName)) {
-                            cookie = urlConn.getHeaderField(i);
-                            if (cookie.isEmpty()) {
-                                Main.warn("received empty cookie");
-                                cookie = null;
-                            } else {
-                                cookie = cookie.substring(0, cookie.indexOf(';'));
-                                cookieTimestamp = new Date().getTime();
-                                Main.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
+                    } else {
+                        String headerName;
+                        for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
+                            if ("Set-Cookie".equals(headerName) && handleCookie(urlConn.getHeaderField(i))) {
                                 break;
-                            }
-                        } 
+                            } 
+                        }
                     }
                 } else {
                     Main.warn("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
@@ -147,9 +148,25 @@ public class CadastreInterface {
                     retries --;
                 }
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             throw new IOException("Illegal url.", e);
         }
+    }
+
+    private boolean handleCookie(String pCookie) {
+        cookie = pCookie;
+        if (cookie == null || cookie.isEmpty()) {
+            Main.warn("received empty cookie");
+            cookie = null;
+        } else {
+            int index = cookie.indexOf(';');
+            if (index > -1) {
+                cookie = cookie.substring(0, index);
+            }
+            cookieTimestamp = new Date().getTime();
+            Main.info("received cookie=" + cookie + " at " + new Date(cookieTimestamp));
+        }
+        return cookie != null;
     }
 
     public void resetCookie() {
@@ -319,6 +336,7 @@ public class CadastreInterface {
                     // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
                     lines = lines.substring(lines.indexOf(C_INTERFACE_VECTOR),lines.length());
                     lines = lines.substring(0, lines.indexOf('\''));
+                    lines = Entities.unescape(lines);
                     Main.info("interface ref.:"+lines);
                     return lines;
                 } else if (wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_RASTER_TA) != -1) { // "afficherCarteTa.do"
@@ -334,6 +352,7 @@ public class CadastreInterface {
                                 interfaceRef = buildRasterFeuilleInterfaceRef(wmsLayer.getCodeCommune());
                                 wmsLayer.setCodeCommune(listOfFeuilles.get(res).ref);
                                 lines = buildRasterFeuilleInterfaceRef(listOfFeuilles.get(res).ref);
+                                lines = Entities.unescape(lines);
                                 Main.info("interface ref.:"+lines);
                                 return lines;
                             }

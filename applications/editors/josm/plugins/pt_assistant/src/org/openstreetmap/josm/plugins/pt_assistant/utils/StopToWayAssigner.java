@@ -23,7 +23,7 @@ public final class StopToWayAssigner {
 				ways.add(member.getWay());
 			}
 		}
-		// TODO: Jo's algorithm with growing bounding boxes
+		// TODO: algorithm with growing bounding boxes
 		return null;
 	}
 

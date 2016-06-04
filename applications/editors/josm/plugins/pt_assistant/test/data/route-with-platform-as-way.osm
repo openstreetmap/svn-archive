@@ -1,0 +1,643 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='95970908' timestamp='2011-01-15T18:13:25Z' uid='36745' user='Gluko' visible='true' version='9' changeset='6980271' lat='51.3531378' lon='7.1227658' />
+  <node id='247073405' timestamp='2014-09-02T20:34:28Z' uid='16314' user='mighty_eighty' visible='true' version='4' changeset='25191544' lat='51.3542138' lon='7.1232615' />
+  <node id='247073406' timestamp='2011-02-20T18:41:23Z' uid='36745' user='Gluko' visible='true' version='3' changeset='7346147' lat='51.3536643' lon='7.1229605' />
+  <node id='254150207' timestamp='2014-09-02T20:34:29Z' uid='16314' user='mighty_eighty' visible='true' version='7' changeset='25191544' lat='51.3488377' lon='7.1231706' />
+  <node id='254150208' timestamp='2010-12-23T17:57:41Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6747975' lat='51.3483888' lon='7.1233177' />
+  <node id='254150209' timestamp='2011-01-04T10:56:53Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6859225' lat='51.3474594' lon='7.1242103' />
+  <node id='254150210' timestamp='2011-01-04T10:56:44Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6859225' lat='51.3465455' lon='7.1256824' />
+  <node id='254150211' timestamp='2011-01-04T10:56:45Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6859225' lat='51.3460323' lon='7.127491' />
+  <node id='254150212' timestamp='2011-01-04T10:56:49Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6859225' lat='51.3450871' lon='7.1293307' />
+  <node id='264127653' timestamp='2011-01-06T10:37:56Z' uid='36745' user='Gluko' visible='true' version='6' changeset='6880515' lat='51.34408' lon='7.1308976' />
+  <node id='264127654' timestamp='2011-01-06T10:37:57Z' uid='36745' user='Gluko' visible='true' version='6' changeset='6880515' lat='51.3441598' lon='7.1310125' />
+  <node id='264127661' timestamp='2014-08-02T22:05:04Z' uid='16314' user='mighty_eighty' visible='true' version='5' changeset='24505967' lat='51.3440346' lon='7.1308729'>
+    <tag k='fixme' v='Position prüfen.' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Dietrich-Bonhoeffer-Weg' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='264127662' timestamp='2015-01-14T12:16:33Z' uid='16314' user='mighty_eighty' visible='true' version='5' changeset='28133035' lat='51.3437528' lon='7.1308697'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127663' timestamp='2011-01-06T10:37:55Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6880515' lat='51.3434969' lon='7.130488'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127664' timestamp='2008-11-06T11:24:04Z' uid='76788' user='Gerdthiele' visible='true' version='2' changeset='700251' lat='51.3430886' lon='7.1298413'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127665' timestamp='2011-01-06T10:37:55Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6880515' lat='51.3430145' lon='7.1296441' />
+  <node id='264127666' timestamp='2011-01-06T10:37:56Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6880515' lat='51.3433807' lon='7.1293763' />
+  <node id='264127667' timestamp='2011-01-06T10:37:54Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6880515' lat='51.343769' lon='7.1287309' />
+  <node id='264127669' timestamp='2011-01-06T10:37:57Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6880515' lat='51.344738' lon='7.1258413'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127747' timestamp='2011-01-04T10:56:49Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6859225' lat='51.346734' lon='7.1252837' />
+  <node id='264127888' timestamp='2008-11-06T11:24:48Z' uid='76788' user='Gerdthiele' visible='true' version='4' changeset='700251' lat='51.3442791' lon='7.1261681'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127889' timestamp='2008-11-06T11:24:48Z' uid='76788' user='Gerdthiele' visible='true' version='4' changeset='700251' lat='51.3439104' lon='7.126554'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127890' timestamp='2011-01-06T10:37:57Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6880515' lat='51.3436532' lon='7.1270838'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127891' timestamp='2011-01-06T10:37:55Z' uid='36745' user='Gluko' visible='true' version='6' changeset='6880515' lat='51.3433331' lon='7.1274617'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127892' timestamp='2008-11-06T11:24:49Z' uid='76788' user='Gerdthiele' visible='true' version='4' changeset='700251' lat='51.3428312' lon='7.1275585'>
+    <tag k='highway' v='incline' />
+  </node>
+  <node id='264127893' timestamp='2014-08-02T22:05:03Z' uid='16314' user='mighty_eighty' visible='true' version='5' changeset='24505967' lat='51.3423104' lon='7.1276622'>
+    <tag k='fixme' v='Position prüfen.' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Brinker Höhe' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='264128009' timestamp='2011-01-02T17:34:07Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6840966' lat='51.351292' lon='7.1207179' />
+  <node id='264128010' timestamp='2010-12-23T18:22:40Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6748222' lat='51.351138' lon='7.120854' />
+  <node id='264128011' timestamp='2010-12-23T18:22:35Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6748222' lat='51.350699' lon='7.1212677' />
+  <node id='264128012' timestamp='2010-12-23T18:22:44Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6748222' lat='51.3501821' lon='7.1217769' />
+  <node id='264128013' timestamp='2014-08-02T22:05:04Z' uid='16314' user='mighty_eighty' visible='true' version='3' changeset='24505967' lat='51.3497513' lon='7.1220287'>
+    <tag k='fixme' v='Position prüfen.' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Wiemerstraße' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='264128014' timestamp='2010-12-23T17:57:33Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6747975' lat='51.3493281' lon='7.1224343' />
+  <node id='264128015' timestamp='2011-01-02T17:33:53Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6840966' lat='51.3490496' lon='7.1229561' />
+  <node id='264673054' timestamp='2014-09-02T20:49:06Z' uid='16314' user='mighty_eighty' visible='true' version='4' changeset='25191865' lat='51.354379' lon='7.1233385' />
+  <node id='264673188' timestamp='2011-01-14T13:59:24Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6967522' lat='51.3544358' lon='7.1231047' />
+  <node id='264673189' timestamp='2011-01-14T13:59:23Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6967522' lat='51.3544986' lon='7.1228456' />
+  <node id='264673190' timestamp='2011-01-14T13:59:30Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6967522' lat='51.354495' lon='7.1227643' />
+  <node id='277967591' timestamp='2014-09-02T20:34:30Z' uid='16314' user='mighty_eighty' visible='true' version='8' changeset='25191544' lat='51.3514681' lon='7.1235148'>
+    <tag k='TMC:cid_58:tabcd_1:Class' v='Point' />
+    <tag k='TMC:cid_58:tabcd_1:LCLversion' v='9.00' />
+    <tag k='TMC:cid_58:tabcd_1:LocationCode' v='55827' />
+    <tag k='TMC:cid_58:tabcd_1:PrevLocationCode' v='48166' />
+  </node>
+  <node id='277967592' timestamp='2010-12-23T18:14:04Z' uid='36745' user='Gluko' visible='true' version='16' changeset='6748142' lat='51.351328' lon='7.1225318' />
+  <node id='277967593' timestamp='2010-12-23T17:57:40Z' uid='36745' user='Gluko' visible='true' version='18' changeset='6747975' lat='51.3516039' lon='7.1218644' />
+  <node id='277967594' timestamp='2014-08-02T20:32:07Z' uid='16314' user='mighty_eighty' visible='true' version='16' changeset='24504683' lat='51.3516537' lon='7.121708'>
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Langenberg Markt' />
+    <tag k='public_transport' v='stop_position' />
+    <tag k='wheelchair' v='limited' />
+  </node>
+  <node id='279093220' timestamp='2011-01-15T18:13:26Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6980271' lat='51.3526983' lon='7.1227064' />
+  <node id='279094221' timestamp='2010-12-23T17:57:39Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6747975' lat='51.3513897' lon='7.1210695' />
+  <node id='279094222' timestamp='2010-12-23T17:57:35Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6747975' lat='51.3514735' lon='7.1211354' />
+  <node id='279094223' timestamp='2010-12-23T17:57:44Z' uid='36745' user='Gluko' visible='true' version='16' changeset='6747975' lat='51.3516192' lon='7.1211545' />
+  <node id='281466426' timestamp='2010-12-23T18:14:02Z' uid='36745' user='Gluko' visible='true' version='10' changeset='6748142' lat='51.3515817' lon='7.123417' />
+  <node id='281466600' timestamp='2010-12-23T18:13:59Z' uid='36745' user='Gluko' visible='true' version='14' changeset='6748142' lat='51.3513854' lon='7.123325' />
+  <node id='286158459' timestamp='2010-12-23T17:57:40Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6747975' lat='51.3495214' lon='7.1222247' />
+  <node id='286158462' timestamp='2010-12-23T17:57:43Z' uid='36745' user='Gluko' visible='true' version='14' changeset='6747975' lat='51.3516443' lon='7.1213178' />
+  <node id='286158569' timestamp='2010-12-23T18:22:41Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6748222' lat='51.3500721' lon='7.1218367' />
+  <node id='287610629' timestamp='2010-12-23T18:14:21Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6748142' lat='51.3524837' lon='7.1227705' />
+  <node id='287610637' timestamp='2011-01-04T10:56:44Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6859225' lat='51.3479481' lon='7.123592' />
+  <node id='309353480' timestamp='2011-01-06T10:37:53Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6880515' lat='51.3440967' lon='7.1278169' />
+  <node id='309924032' timestamp='2011-01-06T10:37:54Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6880515' lat='51.3435731' lon='7.1272332' />
+  <node id='310059372' timestamp='2010-12-23T17:57:46Z' uid='36745' user='Gluko' visible='true' version='26' changeset='6747975' lat='51.3516576' lon='7.121595' />
+  <node id='310090193' timestamp='2011-01-02T17:34:01Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6840966' lat='51.351348' lon='7.120904' />
+  <node id='438152047' timestamp='2010-12-23T18:15:15Z' uid='36745' user='Gluko' visible='true' version='5' changeset='6748142' lat='51.3512852' lon='7.122621' />
+  <node id='438152052' timestamp='2011-01-15T18:13:27Z' uid='36745' user='Gluko' visible='true' version='4' changeset='6980271' lat='51.3512865' lon='7.1230416' />
+  <node id='438152053' timestamp='2010-10-17T18:52:40Z' uid='42123' user='Ropino' visible='true' version='3' changeset='6070397' lat='51.3513081' lon='7.1231221' />
+  <node id='528235740' timestamp='2010-12-23T17:57:34Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6747975' lat='51.3516455' lon='7.1217832' />
+  <node id='684017554' timestamp='2010-12-23T17:57:38Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6747975' lat='51.3516375' lon='7.1212617' />
+  <node id='684020831' timestamp='2010-12-23T17:57:47Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6747975' lat='51.3516191' lon='7.1218332' />
+  <node id='880486364' timestamp='2011-01-04T10:56:54Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6859225' lat='51.3477217' lon='7.1238732' />
+  <node id='1059789004' timestamp='2010-12-23T17:57:26Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6747975' lat='51.3512705' lon='7.1226935' />
+  <node id='1059789067' timestamp='2010-12-23T17:57:27Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6747975' lat='51.3486151' lon='7.1232668' />
+  <node id='1059789077' timestamp='2010-12-23T18:14:00Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6748142' lat='51.3514584' lon='7.1222092' />
+  <node id='1059789158' timestamp='2014-09-02T20:34:23Z' uid='16314' user='mighty_eighty' visible='true' version='3' changeset='25191544' lat='51.3489633' lon='7.1230738'>
+    <tag k='highway' v='traffic_signals' />
+    <tag k='traffic_signals:direction' v='forward' />
+  </node>
+  <node id='1059789236' timestamp='2010-12-23T17:57:29Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6747975' lat='51.349183' lon='7.122666' />
+  <node id='1059838504' timestamp='2010-12-23T18:13:56Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6748142' lat='51.3512677' lon='7.1228581' />
+  <node id='1059838572' timestamp='2010-12-23T18:13:58Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6748142' lat='51.3520015' lon='7.1231167' />
+  <node id='1079054276' timestamp='2011-01-02T17:33:37Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6840966' lat='51.3494014' lon='7.1223548' />
+  <node id='1079054452' timestamp='2011-01-02T17:33:40Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6840966' lat='51.3491076' lon='7.1228023' />
+  <node id='1081928518' timestamp='2011-01-04T10:56:40Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3472414' lon='7.1245132' />
+  <node id='1081928527' timestamp='2011-01-04T10:56:41Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3442942' lon='7.1307902' />
+  <node id='1081928536' timestamp='2011-01-04T10:56:41Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3463428' lon='7.126779' />
+  <node id='1081928539' timestamp='2011-01-04T10:56:41Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3466261' lon='7.1254604' />
+  <node id='1081928542' timestamp='2011-01-04T10:56:41Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3481635' lon='7.1233659' />
+  <node id='1081928554' timestamp='2011-01-16T16:03:18Z' uid='36745' user='Gluko' visible='true' version='3' changeset='6989327' lat='51.3439039' lon='7.1309101' />
+  <node id='1081928572' timestamp='2011-01-18T09:32:07Z' uid='36745' user='Gluko' visible='true' version='2' changeset='7008434' lat='51.3469585' lon='7.1249703' />
+  <node id='1081928586' timestamp='2011-01-04T10:56:43Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3444539' lon='7.1304923' />
+  <node id='1081928591' timestamp='2011-01-04T10:56:43Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6859225' lat='51.3464219' lon='7.1263988' />
+  <node id='1085358298' timestamp='2011-01-06T10:37:51Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3435919' lon='7.1291424' />
+  <node id='1085358304' timestamp='2011-01-16T16:58:53Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6990172' lat='51.3440979' lon='7.1263332' />
+  <node id='1085358306' timestamp='2011-01-06T10:37:52Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3439631' lon='7.130874' />
+  <node id='1085358310' timestamp='2011-01-16T16:58:58Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6990172' lat='51.3443295' lon='7.1271486' />
+  <node id='1085358313' timestamp='2011-01-06T10:37:52Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3445848' lon='7.1259022' />
+  <node id='1085358314' timestamp='2011-01-06T10:37:52Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.343496' lon='7.1292934' />
+  <node id='1085358318' timestamp='2011-01-06T10:37:52Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3446901' lon='7.1260333' />
+  <node id='1085358320' timestamp='2011-01-06T10:37:53Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3434574' lon='7.1273551' />
+  <node id='1085358321' timestamp='2011-01-06T10:37:53Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3431286' lon='7.1294932' />
+  <node id='1085358326' timestamp='2011-01-06T10:37:53Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6880515' lat='51.3439304' lon='7.1283195' />
+  <node id='1085358330' timestamp='2011-01-16T16:03:19Z' uid='36745' user='Gluko' visible='true' version='2' changeset='6989327' lat='51.3436328' lon='7.1307208' />
+  <node id='1103236694' timestamp='2015-01-30T08:20:44Z' uid='105462' user='Weide' visible='true' version='4' changeset='28500192' lat='51.3543024' lon='7.1229083'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='local_ref' v='1' />
+    <tag k='name' v='Langenberg Bahnhof' />
+    <tag k='public_transport' v='stop_position' />
+    <tag k='ref' v='1' />
+    <tag k='wheelchair' v='limited' />
+  </node>
+  <node id='1104904326' timestamp='2011-01-15T18:12:50Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6980271' lat='51.3533449' lon='7.1228283' />
+  <node id='1104904500' timestamp='2011-01-15T18:12:56Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6980271' lat='51.3512735' lon='7.122953' />
+  <node id='1104904547' timestamp='2011-01-15T18:12:57Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6980271' lat='51.3526358' lon='7.122725' />
+  <node id='1104904658' timestamp='2011-01-15T18:13:00Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6980271' lat='51.352921' lon='7.1227198' />
+  <node id='1106291383' timestamp='2011-01-16T16:02:53Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6989327' lat='51.3427235' lon='7.12758' />
+  <node id='1106291449' timestamp='2011-01-16T16:02:56Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6989327' lat='51.3438614' lon='7.1309159' />
+  <node id='1106291589' timestamp='2011-01-16T16:03:00Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6989327' lat='51.3438181' lon='7.1309055' />
+  <node id='1106363288' timestamp='2011-01-16T16:57:13Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990172' lat='51.3444461' lon='7.1267565' />
+  <node id='1106363845' timestamp='2011-01-16T16:57:37Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990172' lat='51.3446399' lon='7.1261821' />
+  <node id='1106364080' timestamp='2011-01-16T16:57:52Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990172' lat='51.3433002' lon='7.1301765' />
+  <node id='1106364115' timestamp='2011-01-16T16:57:54Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990172' lat='51.3432672' lon='7.1294289' />
+  <node id='1106364216' timestamp='2011-01-16T16:57:59Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990172' lat='51.3432487' lon='7.1300949' />
+  <node id='1106394230' timestamp='2011-01-16T17:23:29Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990621' lat='51.3435532' lon='7.1272542' />
+  <node id='1106424970' timestamp='2011-01-18T09:32:07Z' uid='36745' user='Gluko' visible='true' version='2' changeset='7008434' lat='51.3470968' lon='7.1247736' />
+  <node id='1106425034' timestamp='2011-01-16T17:44:39Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6990981' lat='51.345741' lon='7.128058' />
+  <node id='1107411318' timestamp='2011-01-17T10:14:18Z' uid='36745' user='Gluko' visible='true' version='1' changeset='6997672' lat='51.3475775' lon='7.1240586' />
+  <node id='1163881956' timestamp='2011-02-20T18:37:37Z' uid='36745' user='Gluko' visible='true' version='1' changeset='7346092' lat='51.3537509' lon='7.1230022' />
+  <node id='1163881993' timestamp='2011-02-20T18:37:39Z' uid='36745' user='Gluko' visible='true' version='1' changeset='7346092' lat='51.3538285' lon='7.1230457' />
+  <node id='1429014208' timestamp='2011-09-10T15:45:45Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='9263156' lat='51.3542715' lon='7.1226935' />
+  <node id='1429053445' timestamp='2011-09-10T16:31:14Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='9263506' lat='51.3542111' lon='7.1229829' />
+  <node id='1577080387' timestamp='2012-01-04T18:22:53Z' uid='544855' user='Skyhead' visible='true' version='1' changeset='10293714' lat='51.348747' lon='7.1232098' />
+  <node id='1959304898' timestamp='2012-10-11T20:47:59Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='13459765' lat='51.3525648' lon='7.122741'>
+    <tag k='crossing' v='island' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2082552793' timestamp='2012-12-25T19:41:05Z' uid='461945' user='poppei82' visible='true' version='1' changeset='14404255' lat='51.3543305' lon='7.1233159' />
+  <node id='2187179521' timestamp='2013-03-05T14:09:15Z' uid='861006' user='Mond00' visible='true' version='1' changeset='15258927' lat='51.3516485' lon='7.1214051' />
+  <node id='2222130793' timestamp='2014-09-02T20:34:28Z' uid='16314' user='mighty_eighty' visible='true' version='2' changeset='25191544' lat='51.354095' lon='7.123195'>
+    <tag k='highway' v='traffic_signals' />
+    <tag k='traffic_signals:direction' v='forward' />
+  </node>
+  <node id='2988539852' timestamp='2014-07-30T21:49:29Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='24452784' lat='51.3468879' lon='7.1250689'>
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Am Brink' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2988539858' timestamp='2015-02-01T09:29:52Z' uid='105462' user='Weide' visible='true' version='2' changeset='28540523' lat='51.3482582' lon='7.1233456'>
+    <tag k='name' v='Donnerstraße' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2993036539' timestamp='2014-08-02T22:05:01Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='24505967' lat='51.3440421' lon='7.1279818'>
+    <tag k='fixme' v='Position prüfen.' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Gartenheimstraße 21' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2993036540' timestamp='2015-02-01T09:29:53Z' uid='105462' user='Weide' visible='true' version='2' changeset='28540523' lat='51.3431662' lon='7.1299642'>
+    <tag k='fixme' v='Position prüfen.' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Gartenheimstraße' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='3056340352' timestamp='2014-09-02T20:33:56Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='25191544' lat='51.348704' lon='7.1232284'>
+    <tag k='highway' v='traffic_signals' />
+    <tag k='traffic_signals:direction' v='backward' />
+  </node>
+  <node id='3056340365' timestamp='2014-09-02T20:33:56Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='25191544' lat='51.3514081' lon='7.123377'>
+    <tag k='highway' v='traffic_signals' />
+    <tag k='traffic_signals:direction' v='forward' />
+  </node>
+  <node id='3056340367' timestamp='2014-09-02T20:33:56Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='25191544' lat='51.3516107' lon='7.1233963'>
+    <tag k='highway' v='traffic_signals' />
+    <tag k='traffic_signals:direction' v='backward' />
+  </node>
+  <node id='3056340373' timestamp='2014-09-02T20:33:57Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='25191544' lat='51.3544001' lon='7.1232516'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='3314268061' timestamp='2015-01-27T12:34:59Z' uid='2385134' user='mentzdv_NR' visible='true' version='1' changeset='28441233' lat='51.3543321' lon='7.122806' />
+  <node id='3314268062' timestamp='2015-01-27T12:34:59Z' uid='2385134' user='mentzdv_NR' visible='true' version='1' changeset='28441233' lat='51.3543592' lon='7.1227344' />
+  <node id='3314268063' timestamp='2015-01-27T12:34:59Z' uid='2385134' user='mentzdv_NR' visible='true' version='1' changeset='28441233' lat='51.3544368' lon='7.1227426' />
+  <node id='4047427581' timestamp='2016-03-08T07:43:33Z' uid='16314' user='mighty_eighty' visible='true' version='1' changeset='37680775' lat='51.3516552' lon='7.1216634' />
+  <way id='23487117' timestamp='2015-02-12T18:40:32Z' uid='861006' user='Mond00' visible='true' version='35' changeset='28802125'>
+    <nd ref='254150207' />
+    <nd ref='1577080387' />
+    <nd ref='3056340352' />
+    <nd ref='1059789067' />
+    <nd ref='254150208' />
+    <tag k='cycleway' v='left' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='3' />
+    <tag k='lanes:backward' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Donnerstraße' />
+    <tag k='note' v='Großbaustelle L 433. Quelle: http://velbert.de/aktuelles/presse/pressemeldungen/default.asp?details=1&amp;Id=9146' />
+    <tag k='ref' v='L 433' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='surface' v='asphalt' />
+    <tag k='turn:lanes:backward' v='left|through;right' />
+  </way>
+  <way id='24285213' timestamp='2015-02-12T18:40:33Z' uid='861006' user='Mond00' visible='true' version='21' changeset='28802125'>
+    <nd ref='277967591' />
+    <nd ref='281466426' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='ref' v='L 107' />
+    <tag k='sidewalk' v='both' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='strassen-nrw:abs' v='4608038O4608035O' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='24347824' timestamp='2015-01-14T12:16:27Z' uid='16314' user='mighty_eighty' visible='true' version='12' changeset='28133035'>
+    <nd ref='264127669' />
+    <nd ref='1085358318' />
+    <nd ref='1106363845' />
+    <nd ref='1106363288' />
+    <nd ref='1085358310' />
+    <nd ref='309353480' />
+    <nd ref='2993036539' />
+    <nd ref='1085358326' />
+    <nd ref='264127667' />
+    <nd ref='1085358298' />
+    <nd ref='1085358314' />
+    <nd ref='264127666' />
+    <nd ref='1106364115' />
+    <nd ref='1085358321' />
+    <nd ref='264127665' />
+    <nd ref='264127664' />
+    <nd ref='2993036540' />
+    <nd ref='1106364216' />
+    <nd ref='1106364080' />
+    <nd ref='264127663' />
+    <nd ref='1085358330' />
+    <nd ref='264127662' />
+    <nd ref='1106291589' />
+    <nd ref='1106291449' />
+    <nd ref='1081928554' />
+    <nd ref='1085358306' />
+    <nd ref='264127661' />
+    <nd ref='264127653' />
+    <nd ref='264127654' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='name' v='Gartenheimstraße' />
+  </way>
+  <way id='24387063' timestamp='2015-01-13T05:48:50Z' uid='16314' user='mighty_eighty' visible='true' version='6' changeset='28103575'>
+    <nd ref='264128009' />
+    <nd ref='264128010' />
+    <nd ref='264128011' />
+    <nd ref='264128012' />
+    <nd ref='286158569' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='name' v='Wiemerstraße' />
+  </way>
+  <way id='24389425' timestamp='2015-02-12T18:27:01Z' uid='861006' user='Mond00' visible='true' version='8' changeset='28801823'>
+    <nd ref='264673054' />
+    <nd ref='3056340373' />
+    <nd ref='264673188' />
+    <nd ref='264673189' />
+    <tag k='highway' v='service' />
+    <tag k='lanes' v='1' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='24751699' timestamp='2015-02-12T18:27:02Z' uid='861006' user='Mond00' visible='true' version='16' changeset='28801823'>
+    <nd ref='95970908' />
+    <nd ref='1104904326' />
+    <nd ref='247073406' />
+    <nd ref='1163881956' />
+    <nd ref='1163881993' />
+    <nd ref='2222130793' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='ref' v='L 107' />
+    <tag k='sidewalk' v='both' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='strassen-nrw:abs' v='4608035O4608044O' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='25605725' timestamp='2015-01-13T05:48:50Z' uid='16314' user='mighty_eighty' visible='true' version='8' changeset='28103575'>
+    <nd ref='279094223' />
+    <nd ref='279094222' />
+    <nd ref='279094221' />
+    <nd ref='310090193' />
+    <nd ref='264128009' />
+    <tag k='highway' v='living_street' />
+    <tag k='lanes' v='2' />
+    <tag k='name' v='Wiemhof' />
+  </way>
+  <way id='30031724' timestamp='2015-02-12T18:27:00Z' uid='861006' user='Mond00' visible='true' version='8' changeset='28801823'>
+    <nd ref='247073405' />
+    <nd ref='2082552793' />
+    <nd ref='264673054' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='ref' v='L 107' />
+    <tag k='sidewalk' v='both' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='strassen-nrw:abs' v='4608035O4608044O' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='41964987' timestamp='2015-02-12T18:40:32Z' uid='861006' user='Mond00' visible='true' version='4' changeset='28802125'>
+    <nd ref='264128015' />
+    <nd ref='1059789158' />
+    <nd ref='254150207' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='3' />
+    <tag k='lanes:forward' v='2' />
+    <tag k='name' v='Donnerstraße' />
+    <tag k='surface' v='asphalt' />
+    <tag k='turn:lanes:forward' v='left|through;right' />
+  </way>
+  <way id='41965257' timestamp='2015-01-13T05:48:50Z' uid='16314' user='mighty_eighty' visible='true' version='4' changeset='28103575'>
+    <nd ref='286158569' />
+    <nd ref='264128013' />
+    <nd ref='286158459' />
+    <nd ref='1079054276' />
+    <nd ref='264128014' />
+    <nd ref='1059789236' />
+    <nd ref='1079054452' />
+    <nd ref='264128015' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='name' v='Wiemerstraße' />
+  </way>
+  <way id='41965441' timestamp='2016-03-08T07:43:34Z' uid='16314' user='mighty_eighty' visible='true' version='7' changeset='37680775'>
+    <nd ref='279094223' />
+    <nd ref='684017554' />
+    <nd ref='286158462' />
+    <nd ref='2187179521' />
+    <nd ref='310059372' />
+    <nd ref='4047427581' />
+    <nd ref='277967594' />
+    <nd ref='528235740' />
+    <tag k='highway' v='living_street' />
+    <tag k='incline' v='down' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='cobblestone' />
+  </way>
+  <way id='41965542' timestamp='2015-12-02T19:25:27Z' uid='16314' user='mighty_eighty' visible='true' version='10' changeset='35712982'>
+    <nd ref='254150210' />
+    <nd ref='1081928591' />
+    <nd ref='1081928536' />
+    <nd ref='254150211' />
+    <nd ref='1106425034' />
+    <nd ref='254150212' />
+    <nd ref='1081928586' />
+    <tag k='cycleway' v='left' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Donnerstraße' />
+    <tag k='ref' v='L 433' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+  </way>
+  <way id='41965630' timestamp='2015-01-14T12:16:24Z' uid='16314' user='mighty_eighty' visible='true' version='6' changeset='28133035'>
+    <nd ref='264127669' />
+    <nd ref='1085358313' />
+    <nd ref='264127888' />
+    <nd ref='1085358304' />
+    <nd ref='264127889' />
+    <nd ref='264127890' />
+    <nd ref='309924032' />
+    <nd ref='1106394230' />
+    <nd ref='1085358320' />
+    <nd ref='264127891' />
+    <nd ref='264127892' />
+    <nd ref='1106291383' />
+    <nd ref='264127893' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='name' v='Brinker Weg' />
+  </way>
+  <way id='42324724' timestamp='2012-10-11T20:49:28Z' uid='16314' user='mighty_eighty' visible='true' version='5' changeset='13459765'>
+    <nd ref='528235740' />
+    <nd ref='684020831' />
+    <tag k='highway' v='living_street' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='cobblestone' />
+  </way>
+  <way id='42324731' timestamp='2014-09-08T21:08:13Z' uid='16314' user='mighty_eighty' visible='true' version='9' changeset='25316634'>
+    <nd ref='438152047' />
+    <nd ref='1059789004' />
+    <nd ref='1059838504' />
+    <nd ref='1104904500' />
+    <nd ref='438152052' />
+    <nd ref='438152053' />
+    <nd ref='281466600' />
+    <nd ref='3056340365' />
+    <nd ref='277967591' />
+    <tag k='highway' v='living_street' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='cobblestone' />
+    <tag k='turn:lanes' v='left|right' />
+  </way>
+  <way id='42325207' timestamp='2015-02-12T18:27:03Z' uid='861006' user='Mond00' visible='true' version='4' changeset='28801823'>
+    <nd ref='264673189' />
+    <nd ref='264673190' />
+    <tag k='highway' v='service' />
+    <tag k='lanes' v='1' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='42325238' timestamp='2015-02-12T18:27:02Z' uid='861006' user='Mond00' visible='true' version='9' changeset='28801823'>
+    <nd ref='264673190' />
+    <nd ref='3314268063' />
+    <nd ref='3314268062' />
+    <nd ref='3314268061' />
+    <nd ref='1103236694' />
+    <tag k='highway' v='service' />
+    <tag k='lanes' v='1' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='60333678' timestamp='2013-03-05T14:09:15Z' uid='861006' user='Mond00' visible='true' version='5' changeset='15258927'>
+    <nd ref='684020831' />
+    <nd ref='277967593' />
+    <nd ref='1059789077' />
+    <nd ref='277967592' />
+    <nd ref='438152047' />
+    <tag k='highway' v='living_street' />
+    <tag k='incline' v='down' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='oneway' v='yes' />
+    <tag k='surface' v='cobblestone' />
+  </way>
+  <way id='185339180' timestamp='2015-02-12T18:40:33Z' uid='861006' user='Mond00' visible='true' version='4' changeset='28802125'>
+    <nd ref='1104904547' />
+    <nd ref='279093220' />
+    <nd ref='1104904658' />
+    <nd ref='95970908' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='3' />
+    <tag k='lanes:forward' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='ref' v='L 107' />
+    <tag k='sidewalk' v='both' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='strassen-nrw:abs' v='4608038O4608035O' />
+    <tag k='surface' v='asphalt' />
+    <tag k='turn:lanes:forward' v='left|through' />
+  </way>
+  <way id='186616812' timestamp='2015-02-12T18:40:33Z' uid='861006' user='Mond00' visible='true' version='4' changeset='28802125'>
+    <nd ref='281466426' />
+    <nd ref='3056340367' />
+    <nd ref='1059838572' />
+    <nd ref='287610629' />
+    <nd ref='1959304898' />
+    <nd ref='1104904547' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='ref' v='L 107' />
+    <tag k='sidewalk' v='both' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='strassen-nrw:abs' v='4608038O4608035O' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='212354444' timestamp='2015-02-12T18:26:59Z' uid='861006' user='Mond00' visible='true' version='3' changeset='28801823'>
+    <nd ref='2222130793' />
+    <nd ref='247073405' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hauptstraße' />
+    <tag k='ref' v='L 107' />
+    <tag k='sidewalk' v='both' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='strassen-nrw:abs' v='4608035O4608044O' />
+    <tag k='surface' v='asphalt' />
+  </way>
+  <way id='302370900' timestamp='2015-12-02T19:25:25Z' uid='16314' user='mighty_eighty' visible='true' version='3' changeset='35712982'>
+    <nd ref='254150208' />
+    <nd ref='2988539858' />
+    <nd ref='1081928542' />
+    <nd ref='287610637' />
+    <nd ref='880486364' />
+    <nd ref='1107411318' />
+    <nd ref='254150209' />
+    <nd ref='1081928518' />
+    <nd ref='1106424970' />
+    <nd ref='1081928572' />
+    <nd ref='2988539852' />
+    <nd ref='264127747' />
+    <nd ref='1081928539' />
+    <nd ref='254150210' />
+    <tag k='cycleway' v='left' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Donnerstraße' />
+    <tag k='note' v='Großbaustelle L 433. Quelle: http://velbert.de/aktuelles/presse/pressemeldungen/default.asp?details=1&amp;Id=9146' />
+    <tag k='ref' v='L 433' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+  </way>
+  <way id='302370902' timestamp='2015-12-02T19:25:27Z' uid='16314' user='mighty_eighty' visible='true' version='3' changeset='35712982'>
+    <nd ref='1081928586' />
+    <nd ref='1081928527' />
+    <nd ref='264127654' />
+    <tag k='cycleway' v='left' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='3' />
+    <tag k='lanes:forward' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Donnerstraße' />
+    <tag k='ref' v='L 433' />
+    <tag k='source' v='http://wiki.openstreetmap.org/wiki/Import/Catalogue/Strassen_NRW' />
+    <tag k='turn:lanes:forward' v='left|none' />
+  </way>
+  <way id='324748770' timestamp='2015-01-30T08:20:43Z' uid='105462' user='Weide' visible='true' version='2' changeset='28500192'>
+    <nd ref='1429053445' />
+    <nd ref='1429014208' />
+    <tag k='bus' v='yes' />
+    <tag k='description' v='Velbert-Langenbergg Bahnhof, Steig 1' />
+    <tag k='highway' v='platform' />
+    <tag k='local_ref' v='1' />
+    <tag k='name' v='Langenberg Bahnhof' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref' v='1' />
+  </way>
+  <relation id='3930279' timestamp='2015-01-27T12:35:32Z' uid='2385134' user='mentzdv_NR' visible='true' version='6' changeset='28441233'>
+    <member type='node' ref='264127893' role='stop_entry_only' />
+    <member type='node' ref='2993036539' role='stop' />
+    <member type='node' ref='2993036540' role='stop' />
+    <member type='node' ref='264127661' role='stop' />
+    <member type='node' ref='264128013' role='stop' />
+    <member type='node' ref='277967594' role='stop' />
+    <member type='way' ref='324748770' role='' />
+    <member type='node' ref='1103236694' role='stop_exit_only' />
+    <member type='way' ref='41965630' role='' />
+    <member type='way' ref='24347824' role='' />
+    <member type='way' ref='302370902' role='' />
+    <member type='way' ref='41965542' role='' />
+    <member type='way' ref='302370900' role='' />
+    <member type='way' ref='23487117' role='' />
+    <member type='way' ref='41964987' role='' />
+    <member type='way' ref='41965257' role='' />
+    <member type='way' ref='24387063' role='' />
+    <member type='way' ref='25605725' role='' />
+    <member type='way' ref='41965441' role='' />
+    <member type='way' ref='42324724' role='' />
+    <member type='way' ref='60333678' role='' />
+    <member type='way' ref='42324731' role='' />
+    <member type='way' ref='24285213' role='' />
+    <member type='way' ref='186616812' role='' />
+    <member type='way' ref='185339180' role='' />
+    <member type='way' ref='24751699' role='' />
+    <member type='way' ref='212354444' role='' />
+    <member type='way' ref='30031724' role='' />
+    <member type='way' ref='24389425' role='' />
+    <member type='way' ref='42325207' role='' />
+    <member type='way' ref='42325238' role='' />
+    <tag k='from' v='Brinker Höhe' />
+    <tag k='name' v='VRR Bus BBL5: Brinker Höhe =&gt; Langenberg Bf' />
+    <tag k='network' v='VRR' />
+    <tag k='operator' v='WSW' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='ref' v='BBL5' />
+    <tag k='route' v='bus' />
+    <tag k='to' v='Langenberg Bf' />
+    <tag k='type' v='route' />
+  </relation>
+  <relation id='3930280' timestamp='2015-01-12T12:49:26Z' uid='105462' user='Weide' visible='true' version='2' changeset='28085455'>
+    <member type='relation' ref='3930279' role='' />
+    <member type='relation' ref='280270' role='' />
+    <tag k='name' v='VRR Bus BBL5' />
+    <tag k='network' v='VRR' />
+    <tag k='ref' v='BBL5' />
+    <tag k='route_master' v='bus' />
+    <tag k='type' v='route_master' />
+  </relation>
+</osm>

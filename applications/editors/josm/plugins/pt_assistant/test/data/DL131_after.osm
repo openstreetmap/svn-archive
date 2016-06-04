@@ -1,0 +1,2023 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='26114334' timestamp='2015-01-09T21:32:57Z' uid='2563439' user='Wistar_B6' visible='true' version='14' changeset='28028768' lat='51.1731005' lon='4.3880427'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='26114336' timestamp='2013-12-26T10:01:31Z' uid='843430' user='déRahier' visible='true' version='7' changeset='19641191' lat='51.1731043' lon='4.3873898' />
+  <node id='26114337' timestamp='2013-12-26T10:01:31Z' uid='843430' user='déRahier' visible='true' version='7' changeset='19641191' lat='51.1729511' lon='4.3873414'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='26114574' timestamp='2013-12-26T10:01:32Z' uid='843430' user='déRahier' visible='true' version='6' changeset='19641191' lat='51.1721606' lon='4.3871227'>
+    <tag k='bicycle' v='yes' />
+    <tag k='crossing' v='traffic_signals' />
+    <tag k='foot' v='yes' />
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='26114599' timestamp='2014-04-11T16:01:10Z' uid='436365' user='escada' visible='true' version='4' changeset='21629648' lat='51.1730369' lon='4.3904604' />
+  <node id='26114600' timestamp='2014-04-11T16:01:10Z' uid='436365' user='escada' visible='true' version='3' changeset='21629648' lat='51.1730555' lon='4.389578' />
+  <node id='26114601' timestamp='2014-04-11T16:01:10Z' uid='436365' user='escada' visible='true' version='4' changeset='21629648' lat='51.17308' lon='4.38874' />
+  <node id='26114942' timestamp='2013-12-26T10:01:32Z' uid='843430' user='déRahier' visible='true' version='3' changeset='19641191' lat='51.1730715' lon='4.3914952' />
+  <node id='26114944' timestamp='2013-12-26T10:01:32Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1731759' lon='4.3940614'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='26114947' timestamp='2013-12-26T10:01:32Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.173045' lon='4.3940247'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='30349154' timestamp='2011-03-19T10:43:36Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7603341' lat='51.1299703' lon='4.4362258'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='30349170' timestamp='2015-09-11T05:16:05Z' uid='15188' user='Polyglot' visible='true' version='6' changeset='33947710' lat='51.1560335' lon='4.4314833'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='30349171' timestamp='2012-11-24T14:15:19Z' uid='436365' user='escada' visible='true' version='3' changeset='14012993' lat='51.1555883' lon='4.4356741' />
+  <node id='30349172' timestamp='2012-11-24T14:15:20Z' uid='436365' user='escada' visible='true' version='3' changeset='14012993' lat='51.1555968' lon='4.4362279' />
+  <node id='30349173' timestamp='2009-07-30T17:55:48Z' uid='6072' user='Eimai' visible='true' version='3' changeset='1986605' lat='51.1558251' lon='4.437474' />
+  <node id='30349181' timestamp='2013-03-24T00:00:50Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='15472848' lat='51.1556373' lon='4.4467834' />
+  <node id='31504230' timestamp='2008-10-01T08:28:15Z' uid='8323' user='Toi' visible='true' version='4' changeset='13501' lat='51.1455416' lon='4.4466179'>
+    <tag k='created_by' v='JOSM' />
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='31659869' timestamp='2011-03-20T16:51:43Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='7618691' lat='51.1352131' lon='4.4447163' />
+  <node id='31659870' timestamp='2011-03-19T09:33:19Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='7602705' lat='51.1362721' lon='4.4475071' />
+  <node id='32043578' timestamp='2011-03-19T10:43:30Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='7603341' lat='51.1299957' lon='4.4359921'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='32044005' timestamp='2011-03-19T09:32:52Z' uid='138772' user='lodde1949' visible='true' version='6' changeset='7602705' lat='51.1364416' lon='4.4479231' />
+  <node id='32044238' timestamp='2011-03-19T17:53:22Z' uid='138772' user='lodde1949' visible='true' version='11' changeset='7607864' lat='51.1367155' lon='4.4484516' />
+  <node id='32044291' timestamp='2011-03-19T17:53:23Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7607864' lat='51.1398343' lon='4.4462485' />
+  <node id='32044294' timestamp='2011-03-19T17:53:22Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='7607864' lat='51.1387745' lon='4.4466699' />
+  <node id='32044296' timestamp='2011-03-19T17:53:22Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='7607864' lat='51.1384043' lon='4.446838' />
+  <node id='32044297' timestamp='2011-03-19T17:53:22Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7607864' lat='51.1378925' lon='4.4471961' />
+  <node id='32044711' timestamp='2011-03-20T16:51:43Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='7618691' lat='51.1349938' lon='4.4449146' />
+  <node id='32313457' timestamp='2011-03-19T09:32:59Z' uid='138772' user='lodde1949' visible='true' version='8' changeset='7602705' lat='51.1429134' lon='4.4472866' />
+  <node id='32313458' timestamp='2011-03-19T09:33:02Z' uid='138772' user='lodde1949' visible='true' version='6' changeset='7602705' lat='51.1425189' lon='4.4472577' />
+  <node id='32313460' timestamp='2011-03-19T09:33:20Z' uid='138772' user='lodde1949' visible='true' version='6' changeset='7602705' lat='51.1418715' lon='4.4471202' />
+  <node id='32313461' timestamp='2011-03-19T09:32:48Z' uid='138772' user='lodde1949' visible='true' version='9' changeset='7602705' lat='51.1412475' lon='4.4469844' />
+  <node id='32313462' timestamp='2009-04-02T11:19:38Z' uid='41722' user='jvh' visible='true' version='7' changeset='78534' lat='51.1405886' lon='4.446819' />
+  <node id='32313463' timestamp='2011-03-19T17:38:59Z' uid='138772' user='lodde1949' visible='true' version='7' changeset='7607670' lat='51.1403336' lon='4.4465306' />
+  <node id='32871203' timestamp='2011-03-19T09:32:59Z' uid='138772' user='lodde1949' visible='true' version='8' changeset='7602705' lat='51.1413769' lon='4.4470089' />
+  <node id='34094855' timestamp='2011-08-29T07:28:09Z' uid='3921' user='cimm' visible='true' version='2' changeset='9154393' lat='51.1570408' lon='4.4454306' />
+  <node id='34094871' timestamp='2014-12-29T23:06:55Z' uid='15188' user='Polyglot' visible='true' version='18' changeset='27789403' lat='51.1698435' lon='4.3952234' />
+  <node id='34094875' timestamp='2013-12-26T10:01:39Z' uid='843430' user='déRahier' visible='true' version='6' changeset='19641191' lat='51.1725262' lon='4.3940292'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='34094879' timestamp='2008-10-22T17:16:20Z' uid='6072' user='Eimai' visible='true' version='6' changeset='508544' lat='51.168617' lon='4.3945619' />
+  <node id='34094881' timestamp='2013-12-26T10:01:39Z' uid='843430' user='déRahier' visible='true' version='13' changeset='19641191' lat='51.1652736' lon='4.3972704' />
+  <node id='34094883' timestamp='2008-10-22T20:59:30Z' uid='6072' user='Eimai' visible='true' version='8' changeset='508544' lat='51.1673684' lon='4.3954202' />
+  <node id='34094885' timestamp='2013-01-15T21:53:04Z' uid='649155' user='Matthias999' visible='true' version='11' changeset='14666678' lat='51.1697311' lon='4.3946068' />
+  <node id='34564880' timestamp='2012-11-23T19:54:45Z' uid='436365' user='escada' visible='true' version='4' changeset='14003728' lat='51.1497609' lon='4.4467652' />
+  <node id='34564883' timestamp='2012-11-23T19:54:45Z' uid='436365' user='escada' visible='true' version='3' changeset='14003728' lat='51.1510175' lon='4.4467024' />
+  <node id='34564889' timestamp='2012-07-05T19:38:25Z' uid='191979' user='It&apos;s so funny' visible='true' version='3' changeset='12123778' lat='51.1537575' lon='4.4460763' />
+  <node id='34564913' timestamp='2015-09-11T05:16:06Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='33947710' lat='51.1558694' lon='4.432896' />
+  <node id='34564914' timestamp='2012-11-24T14:15:20Z' uid='436365' user='escada' visible='true' version='3' changeset='14012993' lat='51.1557363' lon='4.4343698' />
+  <node id='34564915' timestamp='2012-11-24T14:15:20Z' uid='436365' user='escada' visible='true' version='4' changeset='14012993' lat='51.1557909' lon='4.4338398' />
+  <node id='34675936' timestamp='2013-12-26T10:01:40Z' uid='843430' user='déRahier' visible='true' version='4' changeset='19641191' lat='51.1591627' lon='4.4000195' />
+  <node id='34675937' timestamp='2008-12-16T16:34:13Z' uid='6072' user='Eimai' visible='true' version='4' changeset='415651' lat='51.152881' lon='4.4028021' />
+  <node id='35232663' timestamp='2015-09-11T05:16:06Z' uid='15188' user='Polyglot' visible='true' version='5' changeset='33947710' lat='51.156067' lon='4.4311778'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='36242664' timestamp='2012-11-23T19:54:46Z' uid='436365' user='escada' visible='true' version='4' changeset='14003728' lat='51.1520119' lon='4.4465633' />
+  <node id='36242666' timestamp='2012-11-24T13:08:21Z' uid='436365' user='escada' visible='true' version='4' changeset='14012142' lat='51.1478447' lon='4.4466943' />
+  <node id='36242667' timestamp='2011-08-29T07:28:09Z' uid='3921' user='cimm' visible='true' version='2' changeset='9154393' lat='51.1565137' lon='4.4460089' />
+  <node id='36242669' timestamp='2016-01-01T17:24:01Z' uid='138772' user='lodde1949' visible='true' version='6' changeset='36302154' lat='51.1576019' lon='4.444753' />
+  <node id='36507672' timestamp='2012-02-17T15:25:35Z' uid='6072' user='Eimai' visible='true' version='4' changeset='10712112' lat='51.1559583' lon='4.4193942' />
+  <node id='36507675' timestamp='2012-11-29T19:43:49Z' uid='436365' user='escada' visible='true' version='6' changeset='14090564' lat='51.1562314' lon='4.4265225' />
+  <node id='36507678' timestamp='2012-11-28T12:07:57Z' uid='436365' user='escada' visible='true' version='3' changeset='14072270' lat='51.1562748' lon='4.4296608' />
+  <node id='36508334' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='36301435' lat='51.1572377' lon='4.4441287' />
+  <node id='36757450' timestamp='2013-12-26T10:01:40Z' uid='843430' user='déRahier' visible='true' version='14' changeset='19641191' lat='51.163366' lon='4.3986341'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='38265026' timestamp='2011-03-20T23:24:40Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7623101' lat='51.1307474' lon='4.439922' />
+  <node id='38265032' timestamp='2011-03-20T22:58:53Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='7622936' lat='51.1299344' lon='4.4368659' />
+  <node id='38265041' timestamp='2011-03-20T22:58:54Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7622936' lat='51.1300229' lon='4.4374009' />
+  <node id='38265044' timestamp='2014-02-05T06:50:42Z' uid='15188' user='Polyglot' visible='true' version='5' changeset='20386453' lat='51.1304868' lon='4.4348445' />
+  <node id='48869439' timestamp='2011-03-20T18:00:04Z' uid='138772' user='lodde1949' visible='true' version='7' changeset='7619477' lat='51.1343286' lon='4.4440901' />
+  <node id='48869448' timestamp='2011-03-20T18:44:01Z' uid='138772' user='lodde1949' visible='true' version='11' changeset='7620026' lat='51.1314953' lon='4.4411539' />
+  <node id='48869450' timestamp='2009-04-10T21:18:59Z' uid='41722' user='jvh' visible='true' version='6' changeset='418864' lat='51.1311478' lon='4.4407948' />
+  <node id='48869576' timestamp='2011-03-20T16:51:42Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7618691' lat='51.134733' lon='4.4449603' />
+  <node id='130230217' timestamp='2013-06-24T15:29:08Z' uid='1578689' user='Adamar' visible='true' version='11' changeset='16685891' lat='51.1342221' lon='4.4437419' />
+  <node id='130230220' timestamp='2011-03-20T18:00:02Z' uid='138772' user='lodde1949' visible='true' version='14' changeset='7619477' lat='51.1339726' lon='4.4430491' />
+  <node id='130657104' timestamp='2011-03-20T16:51:44Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='7618691' lat='51.1355803' lon='4.445554' />
+  <node id='159616079' timestamp='2008-10-22T18:27:43Z' uid='6072' user='Eimai' visible='true' version='5' changeset='508544' lat='51.1719984' lon='4.3942192' />
+  <node id='159616084' timestamp='2008-10-22T18:27:43Z' uid='6072' user='Eimai' visible='true' version='5' changeset='508544' lat='51.1722675' lon='4.3940991' />
+  <node id='180274748' timestamp='2013-12-26T10:01:18Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1621756' lon='4.3991163' />
+  <node id='180275283' timestamp='2008-10-22T17:13:17Z' uid='6072' user='Eimai' visible='true' version='4' changeset='508544' lat='51.1647904' lon='4.3976862' />
+  <node id='180275285' timestamp='2013-12-26T10:01:19Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1641243' lon='4.3982546' />
+  <node id='180275286' timestamp='2013-12-26T10:01:19Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1639466' lon='4.3983709' />
+  <node id='180275827' timestamp='2008-10-22T17:16:21Z' uid='6072' user='Eimai' visible='true' version='6' changeset='508544' lat='51.1683049' lon='4.3946306' />
+  <node id='180275828' timestamp='2008-10-22T17:16:21Z' uid='6072' user='Eimai' visible='true' version='6' changeset='508544' lat='51.1679497' lon='4.3948881' />
+  <node id='180288736' timestamp='2015-07-09T11:05:56Z' uid='436365' user='escada' visible='true' version='8' changeset='32516092' lat='51.1632011' lon='4.3987183'>
+    <tag k='highway' v='traffic_signals' />
+  </node>
+  <node id='180289830' timestamp='2013-12-26T10:01:19Z' uid='843430' user='déRahier' visible='true' version='3' changeset='19641191' lat='51.1632482' lon='4.3988987' />
+  <node id='180289832' timestamp='2014-02-05T00:36:06Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1636869' lon='4.4004344' />
+  <node id='180289838' timestamp='2013-12-26T10:01:19Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1636915' lon='4.3998725' />
+  <node id='180290314' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='8' changeset='20383753' lat='51.1638354' lon='4.4003852' />
+  <node id='180290315' timestamp='2013-12-26T10:01:19Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1635266' lon='4.399269' />
+  <node id='180296654' timestamp='2013-12-26T10:01:19Z' uid='843430' user='déRahier' visible='true' version='4' changeset='19641191' lat='51.1634066' lon='4.3988215' />
+  <node id='223222731' timestamp='2011-03-20T16:51:42Z' uid='138772' user='lodde1949' visible='true' version='6' changeset='7618691' lat='51.1346638' lon='4.4449642' />
+  <node id='246674134' timestamp='2011-08-29T07:28:09Z' uid='3921' user='cimm' visible='true' version='3' changeset='9154393' lat='51.1559316' lon='4.4231144' />
+  <node id='246674135' timestamp='2012-11-29T19:43:49Z' uid='436365' user='escada' visible='true' version='4' changeset='14090564' lat='51.1562385' lon='4.4266313' />
+  <node id='246674136' timestamp='2012-11-28T12:07:57Z' uid='436365' user='escada' visible='true' version='4' changeset='14072270' lat='51.1562904' lon='4.4279849' />
+  <node id='246813143' timestamp='2012-02-17T15:25:35Z' uid='6072' user='Eimai' visible='true' version='4' changeset='10712112' lat='51.1560092' lon='4.4187159' />
+  <node id='247068352' timestamp='2012-11-24T13:08:21Z' uid='436365' user='escada' visible='true' version='5' changeset='14012142' lat='51.1496912' lon='4.4467661' />
+  <node id='247075065' timestamp='2011-08-27T21:41:13Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='9142168' lat='51.1558548' lon='4.4222719' />
+  <node id='247075080' timestamp='2011-08-27T21:41:13Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='9142168' lat='51.1559123' lon='4.420033' />
+  <node id='247075134' timestamp='2011-08-27T21:41:13Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='9142168' lat='51.1558272' lon='4.4212577' />
+  <node id='247084915' timestamp='2011-03-20T23:24:40Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='7623101' lat='51.1306102' lon='4.4389576' />
+  <node id='247084916' timestamp='2011-03-20T23:24:40Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='7623101' lat='51.1304356' lon='4.4384227' />
+  <node id='247085729' timestamp='2011-03-20T23:24:40Z' uid='138772' user='lodde1949' visible='true' version='8' changeset='7623101' lat='51.1327936' lon='4.439827' />
+  <node id='247086045' timestamp='2011-03-20T23:24:40Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='7623101' lat='51.1307703' lon='4.4396886' />
+  <node id='247086161' timestamp='2011-03-20T23:24:40Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='7623101' lat='51.1308706' lon='4.440125' />
+  <node id='247086278' timestamp='2011-03-20T18:43:57Z' uid='138772' user='lodde1949' visible='true' version='7' changeset='7620026' lat='51.1310221' lon='4.4405461' />
+  <node id='247086320' timestamp='2011-03-20T18:44:03Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='7620026' lat='51.1309582' lon='4.4403785' />
+  <node id='247271582' timestamp='2011-03-19T10:43:31Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='7603341' lat='51.1300479' lon='4.435805' />
+  <node id='247275776' timestamp='2012-11-23T19:54:44Z' uid='436365' user='escada' visible='true' version='4' changeset='14003728' lat='51.1449536' lon='4.4467363' />
+  <node id='247275777' timestamp='2008-10-01T08:28:15Z' uid='8323' user='Toi' visible='true' version='3' changeset='13501' lat='51.1454217' lon='4.4466435'>
+    <tag k='created_by' v='JOSM' />
+  </node>
+  <node id='247276320' timestamp='2012-07-21T14:44:01Z' uid='6072' user='Eimai' visible='true' version='2' changeset='12412236' lat='51.1432389' lon='4.4472468' />
+  <node id='247276511' timestamp='2008-11-19T00:53:46Z' uid='16258' user='arwan' visible='true' version='4' changeset='768665' lat='51.1452548' lon='4.4466486' />
+  <node id='247931902' timestamp='2011-03-19T09:32:48Z' uid='138772' user='lodde1949' visible='true' version='11' changeset='7602705' lat='51.1357281' lon='4.4460025' />
+  <node id='249468053' timestamp='2012-11-23T19:54:44Z' uid='436365' user='escada' visible='true' version='3' changeset='14003728' lat='51.1459584' lon='4.4465669'>
+    <tag k='name' v='Edegem' />
+    <tag k='traffic_sign' v='city_limit' />
+  </node>
+  <node id='249468138' timestamp='2008-12-16T16:47:49Z' uid='6072' user='Eimai' visible='true' version='5' changeset='415651' lat='51.1457231' lon='4.4465606' />
+  <node id='249470022' timestamp='2008-02-27T14:13:02Z' uid='6072' user='Eimai' visible='true' version='1' changeset='216654' lat='51.1458686' lon='4.4465628' />
+  <node id='250550596' timestamp='2013-12-26T10:01:25Z' uid='843430' user='déRahier' visible='true' version='3' changeset='19641191' lat='51.1592581' lon='4.3999833' />
+  <node id='250551121' timestamp='2013-12-26T10:01:25Z' uid='843430' user='déRahier' visible='true' version='3' changeset='19641191' lat='51.1563269' lon='4.401282' />
+  <node id='250551296' timestamp='2013-12-26T10:01:26Z' uid='843430' user='déRahier' visible='true' version='7' changeset='19641191' lat='51.1562412' lon='4.4013225' />
+  <node id='250554200' timestamp='2013-12-26T10:01:28Z' uid='843430' user='déRahier' visible='true' version='3' changeset='19641191' lat='51.1583432' lon='4.4003649' />
+  <node id='253787796' timestamp='2011-03-19T17:38:59Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='7607670' lat='51.1401324' lon='4.4463351' />
+  <node id='263388377' timestamp='2013-12-26T10:01:33Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.172058' lon='4.3870938' />
+  <node id='263388435' timestamp='2013-12-26T10:01:33Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.17226' lon='4.3871592' />
+  <node id='269936730' timestamp='2013-08-24T21:26:15Z' uid='6072' user='Eimai' visible='true' version='5' changeset='17490879' lat='51.1560418' lon='4.4179639' />
+  <node id='269936731' timestamp='2011-08-29T07:28:09Z' uid='3921' user='cimm' visible='true' version='2' changeset='9154393' lat='51.1559346' lon='4.41969' />
+  <node id='295404144' timestamp='2013-01-09T20:33:16Z' uid='649155' user='Matthias999' visible='true' version='13' changeset='14590847' lat='51.1706456' lon='4.3949068' />
+  <node id='295899939' timestamp='2011-08-29T07:28:09Z' uid='3921' user='cimm' visible='true' version='5' changeset='9154393' lat='51.1558255' lon='4.4467798' />
+  <node id='295899959' timestamp='2016-01-02T18:02:59Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='36323505' lat='51.1563395' lon='4.4462052' />
+  <node id='306442556' timestamp='2013-12-26T10:01:37Z' uid='843430' user='déRahier' visible='true' version='6' changeset='19641191' lat='51.1644078' lon='4.3980177' />
+  <node id='306443080' timestamp='2008-10-22T17:16:22Z' uid='6072' user='Eimai' visible='true' version='2' changeset='508544' lat='51.1685296' lon='4.3945545' />
+  <node id='306456161' timestamp='2008-10-22T18:27:43Z' uid='6072' user='Eimai' visible='true' version='5' changeset='508544' lat='51.1717123' lon='4.3943673' />
+  <node id='306456285' timestamp='2008-10-22T18:27:43Z' uid='6072' user='Eimai' visible='true' version='5' changeset='508544' lat='51.171425' lon='4.3945116' />
+  <node id='306456839' timestamp='2011-12-09T15:28:14Z' uid='436365' user='escada' visible='true' version='4' changeset='10073811' lat='51.1707482' lon='4.3948625'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='306457037' timestamp='2014-12-29T23:06:55Z' uid='15188' user='Polyglot' visible='true' version='8' changeset='27789403' lat='51.1704178' lon='4.3949523' />
+  <node id='306457081' timestamp='2011-12-09T15:28:15Z' uid='436365' user='escada' visible='true' version='5' changeset='10073811' lat='51.170528' lon='4.3949436' />
+  <node id='306490752' timestamp='2015-09-04T19:38:48Z' uid='436365' user='escada' visible='true' version='4' changeset='33802405' lat='51.1664643' lon='4.396221' />
+  <node id='312026364' timestamp='2013-12-26T10:01:38Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1588765' lon='4.4001375' />
+  <node id='312026482' timestamp='2013-12-26T10:01:38Z' uid='843430' user='déRahier' visible='true' version='5' changeset='19641191' lat='51.1615252' lon='4.3993453' />
+  <node id='332356854' timestamp='2011-03-20T16:51:45Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='7618691' lat='51.135133' lon='4.4448788' />
+  <node id='371820857' timestamp='2012-01-17T13:43:59Z' uid='583582' user='jerrevds' visible='true' version='4' changeset='10417658' lat='51.1355248' lon='4.4454886' />
+  <node id='425796350' timestamp='2011-03-19T17:53:22Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='7607864' lat='51.139917' lon='4.4460817' />
+  <node id='450940973' timestamp='2016-01-01T17:24:01Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='36302154' lat='51.1576785' lon='4.4445077' />
+  <node id='450940987' timestamp='2016-01-01T17:24:01Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='36302154' lat='51.1574806' lon='4.4443803' />
+  <node id='451847720' timestamp='2012-11-29T19:43:50Z' uid='436365' user='escada' visible='true' version='2' changeset='14090564' lat='51.1561581' lon='4.430611' />
+  <node id='451847823' timestamp='2012-11-29T19:43:50Z' uid='436365' user='escada' visible='true' version='4' changeset='14090564' lat='51.1562886' lon='4.4278285' />
+  <node id='451847917' timestamp='2015-09-11T05:16:07Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='33947710' lat='51.1559846' lon='4.4319282' />
+  <node id='451847971' timestamp='2015-09-11T05:16:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='33947710' lat='51.1558938' lon='4.4325458' />
+  <node id='451848004' timestamp='2012-11-24T14:15:20Z' uid='436365' user='escada' visible='true' version='2' changeset='14012993' lat='51.1555816' lon='4.4359391' />
+  <node id='451890505' timestamp='2011-08-27T21:41:11Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='9142168' lat='51.1558324' lon='4.4219425'>
+    <tag k='name' v='Antwerpen - Edegem' />
+    <tag k='traffic_sign' v='city_limit' />
+  </node>
+  <node id='451908618' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='36301435' lat='51.1570777' lon='4.4438444' />
+  <node id='451908623' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1570223' lon='4.443747' />
+  <node id='451909031' timestamp='2012-02-17T15:27:30Z' uid='6072' user='Eimai' visible='true' version='2' changeset='10712129' lat='51.1565067' lon='4.4407906' />
+  <node id='451909032' timestamp='2012-02-17T15:27:30Z' uid='6072' user='Eimai' visible='true' version='2' changeset='10712129' lat='51.1565428' lon='4.441124' />
+  <node id='451909035' timestamp='2012-02-17T15:27:30Z' uid='6072' user='Eimai' visible='true' version='2' changeset='10712129' lat='51.1565695' lon='4.4414911' />
+  <node id='451909038' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='36301435' lat='51.1565832' lon='4.4420024' />
+  <node id='451910103' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='3' changeset='36301435' lat='51.1566326' lon='4.4428466' />
+  <node id='451910105' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1566079' lon='4.4425445' />
+  <node id='451910110' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1566047' lon='4.4421533' />
+  <node id='451915857' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1569516' lon='4.4436774' />
+  <node id='451915858' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1568317' lon='4.4436624' />
+  <node id='451915970' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1567719' lon='4.4435179' />
+  <node id='451915971' timestamp='2016-01-03T09:29:49Z' uid='138772' user='lodde1949' visible='true' version='4' changeset='36333755' lat='51.1567463' lon='4.4434355' />
+  <node id='451915973' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.1566694' lon='4.4431143' />
+  <node id='451916275' timestamp='2016-01-01T16:52:50Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='36301435' lat='51.156678' lon='4.4432114' />
+  <node id='451937677' timestamp='2012-11-24T14:15:20Z' uid='436365' user='escada' visible='true' version='2' changeset='14012993' lat='51.1556428' lon='4.4351792' />
+  <node id='451951437' timestamp='2009-07-30T18:21:59Z' uid='6072' user='Eimai' visible='true' version='1' changeset='1986605' lat='51.1529719' lon='4.4463575' />
+  <node id='498404738' timestamp='2009-09-16T19:18:05Z' uid='6072' user='Eimai' visible='true' version='1' changeset='2505327' lat='51.1680676' lon='4.3948027' />
+  <node id='998205544' timestamp='2010-11-21T17:56:45Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='6424939' lat='51.1329525' lon='4.4401841' />
+  <node id='998207264' timestamp='2010-11-21T17:57:38Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='6424939' lat='51.1334' lon='4.4414436' />
+  <node id='998208402' timestamp='2010-11-21T17:58:17Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='6424939' lat='51.1331113' lon='4.4406097' />
+  <node id='998209333' timestamp='2011-03-20T22:58:53Z' uid='138772' user='lodde1949' visible='true' version='2' changeset='7622936' lat='51.1299545' lon='4.4371492' />
+  <node id='1209249983' timestamp='2011-03-19T17:52:53Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7607864' lat='51.1381025' lon='4.4469795' />
+  <node id='1210724692' timestamp='2012-01-17T13:43:59Z' uid='583582' user='jerrevds' visible='true' version='2' changeset='10417658' lat='51.1353832' lon='4.4449647' />
+  <node id='1210839982' timestamp='2011-03-20T17:58:28Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7619477' lat='51.1339221' lon='4.4429075' />
+  <node id='1210884800' timestamp='2011-03-20T18:43:15Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7620026' lat='51.1313024' lon='4.4409987' />
+  <node id='1211225390' timestamp='2011-03-20T22:58:40Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7622936' lat='51.129949' lon='4.4365372' />
+  <node id='1211225493' timestamp='2011-03-20T22:58:43Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7622936' lat='51.1299392' lon='4.436995' />
+  <node id='1211225657' timestamp='2011-03-20T22:58:48Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7622936' lat='51.1299837' lon='4.4372743' />
+  <node id='1211244756' timestamp='2011-03-20T23:24:11Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7623101' lat='51.1307584' lon='4.4398037' />
+  <node id='1211244940' timestamp='2011-03-20T23:24:19Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7623101' lat='51.1308114' lon='4.4400531' />
+  <node id='1211245061' timestamp='2011-03-20T23:24:25Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7623101' lat='51.1305257' lon='4.4386731' />
+  <node id='1211245126' timestamp='2011-03-20T23:24:27Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='7623101' lat='51.1307775' lon='4.4400018' />
+  <node id='1415371949' timestamp='2011-08-27T21:40:59Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='9142168' lat='51.1558187' lon='4.4215997' />
+  <node id='1538266297' timestamp='2014-12-29T23:06:55Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='27789403' lat='51.1700846' lon='4.3951986'>
+    <tag k='bin' v='yes' />
+    <tag k='bus' v='yes' />
+    <tag k='electronic_display' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Bist' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='102822' />
+    <tag k='route_ref:De_Lijn' v='17;21;33;131;141;180;181;182;183' />
+    <tag k='shelter' v='yes' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='1538266742' timestamp='2011-12-09T15:27:30Z' uid='436365' user='escada' visible='true' version='1' changeset='10073811' lat='51.1696059' lon='4.3945936'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1538266775' timestamp='2014-12-29T23:06:55Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='27789403' lat='51.169995' lon='4.3951518'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1538266967' timestamp='2011-12-09T15:27:40Z' uid='436365' user='escada' visible='true' version='1' changeset='10073811' lat='51.1724554' lon='4.3940458'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1538266990' timestamp='2011-12-09T15:27:41Z' uid='436365' user='escada' visible='true' version='1' changeset='10073811' lat='51.1726331' lon='4.394029'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1586003983' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529027' lon='4.4046372' />
+  <node id='1586003987' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529077' lon='4.4043545' />
+  <node id='1586003989' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529126' lon='4.4048721' />
+  <node id='1586003992' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529133' lon='4.4029777' />
+  <node id='1586003995' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529261' lon='4.4031379' />
+  <node id='1586003997' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529326' lon='4.4051349' />
+  <node id='1586004000' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529351' lon='4.4035423' />
+  <node id='1586004002' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529376' lon='4.4033313' />
+  <node id='1586004004' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529651' lon='4.4053777' />
+  <node id='1586004007' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1529976' lon='4.4055848' />
+  <node id='1586004008' timestamp='2013-12-26T10:01:18Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.1533549' lon='4.4072507' />
+  <node id='1586004010' timestamp='2012-01-11T19:10:35Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1539066' lon='4.4097692' />
+  <node id='1586004013' timestamp='2013-08-24T21:45:48Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1540072' lon='4.4102219' />
+  <node id='1586004019' timestamp='2013-08-24T21:45:48Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.154058' lon='4.4104388' />
+  <node id='1586004023' timestamp='2013-12-26T10:01:18Z' uid='843430' user='déRahier' visible='true' version='3' changeset='19641191' lat='51.1541774' lon='4.4108839' />
+  <node id='1586004026' timestamp='2013-08-24T21:36:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1542337' lon='4.4109479' />
+  <node id='1586004031' timestamp='2012-01-11T19:10:36Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1543161' lon='4.4111945' />
+  <node id='1586004035' timestamp='2012-01-11T19:10:36Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.154401' lon='4.4113976' />
+  <node id='1586004039' timestamp='2012-01-11T19:10:36Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1545159' lon='4.4116365' />
+  <node id='1586004044' timestamp='2012-01-11T19:10:36Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10363385' lat='51.1546058' lon='4.4117957' />
+  <node id='1586004048' timestamp='2013-12-26T10:01:18Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.1546905' lon='4.4119353' />
+  <node id='1586004064' timestamp='2013-08-24T21:36:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1548228' lon='4.412104' />
+  <node id='1586004066' timestamp='2013-08-24T21:36:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1548724' lon='4.4120742' />
+  <node id='1586004070' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1549208' lon='4.4120754' />
+  <node id='1586004073' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1549803' lon='4.4121103' />
+  <node id='1586004078' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1549986' lon='4.4121443' />
+  <node id='1586004091' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1550078' lon='4.412406' />
+  <node id='1586004095' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.155024' lon='4.4123511' />
+  <node id='1636671399' timestamp='2012-02-17T15:25:27Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712112' lat='51.1560314' lon='4.4186051' />
+  <node id='1636671400' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1560489' lon='4.4168167' />
+  <node id='1636671402' timestamp='2012-02-17T15:25:27Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712112' lat='51.1560397' lon='4.418379' />
+  <node id='1636672767' timestamp='2012-02-17T15:27:27Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.1561696' lon='4.4390781' />
+  <node id='1636672768' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.1562098' lon='4.4391298' />
+  <node id='1636672770' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.1562396' lon='4.4394075' />
+  <node id='1636672771' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.156251' lon='4.4393349' />
+  <node id='1636672772' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.1564785' lon='4.4406383' />
+  <node id='1636672773' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.1565284' lon='4.440976' />
+  <node id='1636672774' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.1565573' lon='4.4413165' />
+  <node id='1636672775' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129' lat='51.156573' lon='4.4417142' />
+  <node id='1637163899' timestamp='2012-02-17T23:25:38Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10716136' lat='51.1559869' lon='4.4190256' />
+  <node id='1667232156' timestamp='2012-11-29T20:30:34Z' uid='436365' user='escada' visible='true' version='2' changeset='14091196' lat='51.156017' lon='4.4316835'>
+    <tag k='crossing' v='traffic_signals' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1667232157' timestamp='2015-09-11T05:16:02Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='33947710' lat='51.1561061' lon='4.4309353'>
+    <tag k='crossing' v='traffic_signals' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1751756995' timestamp='2012-11-29T19:43:49Z' uid='436365' user='escada' visible='true' version='2' changeset='14090564' lat='51.1562738' lon='4.4272029' />
+  <node id='1812234652' timestamp='2016-01-02T17:14:42Z' uid='138772' user='lodde1949' visible='true' version='5' changeset='36322418' lat='51.1544197' lon='4.4457546' />
+  <node id='1833205577' timestamp='2012-07-21T14:43:59Z' uid='6072' user='Eimai' visible='true' version='1' changeset='12412236' lat='51.1430999' lon='4.4472771' />
+  <node id='1833205579' timestamp='2012-07-21T14:43:59Z' uid='6072' user='Eimai' visible='true' version='1' changeset='12412236' lat='51.1434244' lon='4.4472051' />
+  <node id='1833205582' timestamp='2012-07-21T14:44:00Z' uid='6072' user='Eimai' visible='true' version='1' changeset='12412236' lat='51.144065' lon='4.4470162' />
+  <node id='1850325758' timestamp='2014-11-13T10:03:28Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='26752525' lat='51.1637923' lon='4.400046'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Universiteitsplein' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='105595' />
+    <tag k='route_ref:De_Lijn' v='17;130;131;135;140;141;180;181;182;183' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='1874524935' timestamp='2014-04-11T16:01:10Z' uid='436365' user='escada' visible='true' version='2' changeset='21629648' lat='51.1730901' lon='4.3882967'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='1891595469' timestamp='2014-11-13T10:01:40Z' uid='15188' user='Polyglot' visible='true' version='5' changeset='26752525' lat='51.1714886' lon='4.3868693'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Jules Moretuslei' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='108355' />
+    <tag k='route_ref:De_Lijn' v='131;500' />
+    <tag k='shelter' v='yes' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='1911567553' timestamp='2013-12-26T10:01:20Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.1619774' lon='4.3991904' />
+  <node id='1961071840' timestamp='2012-10-12T18:05:47Z' uid='586389' user='D!zzy' visible='true' version='1' changeset='13470203' lat='51.13138' lon='4.4410611' />
+  <node id='1977621242' timestamp='2013-12-26T10:01:21Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.158409' lon='4.4003354' />
+  <node id='2028718785' timestamp='2014-11-13T10:01:16Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='26752525' lat='51.1522982' lon='4.4465903'>
+    <tag k='bench' v='yes' />
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Monseigneur Cardijnlaan' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='103995' />
+    <tag k='route_ref:De_Lijn' v='32;130;131;135' />
+    <tag k='shelter' v='yes' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2028718812' timestamp='2014-11-13T10:01:17Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='26752525' lat='51.1500786' lon='4.4468283'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Posdijk' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='104008' />
+    <tag k='route_ref:De_Lijn' v='32;130;131;135' />
+    <tag k='shelter' v='no' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2028718876' timestamp='2012-11-23T19:53:18Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.1451854' lon='4.4466688'>
+    <tag k='crossing' v='traffic_signals' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2028718997' timestamp='2012-11-23T19:53:19Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.1461314' lon='4.4465786' />
+  <node id='2028719828' timestamp='2012-11-23T19:53:29Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.149651' lon='4.4467678' />
+  <node id='2028719873' timestamp='2012-11-23T19:53:30Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.1498703' lon='4.4467625' />
+  <node id='2028719982' timestamp='2012-11-23T19:53:31Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.1502235' lon='4.4467436'>
+    <tag k='crossing' v='uncontrolled' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2028721189' timestamp='2012-11-23T19:53:49Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.1520659' lon='4.4465548'>
+    <tag k='crossing' v='uncontrolled' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2028721283' timestamp='2012-11-23T19:53:50Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728' lat='51.1524911' lon='4.4464877' />
+  <node id='2030054391' timestamp='2014-11-13T10:01:14Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='26752525' lat='51.1557604' lon='4.4347857'>
+    <tag k='bench' v='yes' />
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Baron De Celleslaan' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='101205' />
+    <tag k='route_ref:De_Lijn' v='32;130;131;135;140;141' />
+    <tag k='shelter' v='yes' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2030054989' timestamp='2012-11-24T14:14:57Z' uid='436365' user='escada' visible='true' version='1' changeset='14012993' lat='51.1555881' lon='4.4360621'>
+    <tag k='crossing' v='uncontrolled' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2030055000' timestamp='2012-11-24T14:14:57Z' uid='436365' user='escada' visible='true' version='1' changeset='14012993' lat='51.1557326' lon='4.4344016'>
+    <tag k='crossing' v='uncontrolled' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2030055002' timestamp='2012-11-24T14:14:58Z' uid='436365' user='escada' visible='true' version='1' changeset='14012993' lat='51.1558244' lon='4.4334677' />
+  <node id='2038110900' timestamp='2014-11-13T10:01:18Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='26752525' lat='51.1562706' lon='4.4261299'>
+    <tag k='bench' v='no' />
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Ter Borchtlaan' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='104006' />
+    <tag k='route_ref:De_Lijn' v='130;131;135;140;141' />
+    <tag k='shelter' v='no' />
+    <tag k='zone:De_Lijn' v='1' />
+  </node>
+  <node id='2038110908' timestamp='2012-11-29T19:43:49Z' uid='436365' user='escada' visible='true' version='2' changeset='14090564' lat='51.1562213' lon='4.426407'>
+    <tag k='crossing' v='uncontrolled' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2038110909' timestamp='2012-11-28T12:07:20Z' uid='436365' user='escada' visible='true' version='1' changeset='14072270' lat='51.1562832' lon='4.4295655' />
+  <node id='2038110910' timestamp='2012-11-28T12:07:20Z' uid='436365' user='escada' visible='true' version='1' changeset='14072270' lat='51.1562887' lon='4.4294461' />
+  <node id='2040671168' timestamp='2012-11-29T19:43:39Z' uid='436365' user='escada' visible='true' version='1' changeset='14090564' lat='51.1562565' lon='4.4269131' />
+  <node id='2040671173' timestamp='2012-11-29T19:43:39Z' uid='436365' user='escada' visible='true' version='1' changeset='14090564' lat='51.156289' lon='4.4277159'>
+    <tag k='crossing' v='uncontrolled' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2040813135' timestamp='2012-11-29T20:30:14Z' uid='436365' user='escada' visible='true' version='1' changeset='14091196' lat='51.1559267' lon='4.4323086' />
+  <node id='2040813139' timestamp='2012-11-29T20:30:14Z' uid='436365' user='escada' visible='true' version='1' changeset='14091196' lat='51.156269' lon='4.4297077' />
+  <node id='2049450546' timestamp='2012-12-04T09:23:29Z' uid='568970' user='GIS Edegem' visible='true' version='1' changeset='14149688' lat='51.1561042' lon='4.4250758' />
+  <node id='2105559060' timestamp='2014-11-13T10:01:20Z' uid='15188' user='Polyglot' visible='true' version='5' changeset='26752525' lat='51.1559378' lon='4.4210101'>
+    <tag k='bench' v='yes' />
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Willem Herreynsstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='104002' />
+    <tag k='route_ref:De_Lijn' v='130;131;135;140;141' />
+    <tag k='shelter' v='yes' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2105559150' timestamp='2013-01-11T12:03:40Z' uid='436365' user='escada' visible='true' version='1' changeset='14609092' lat='51.1558888' lon='4.4203717' />
+  <node id='2116899047' timestamp='2013-12-26T10:01:21Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.1593752' lon='4.3999367' />
+  <node id='2116899072' timestamp='2013-12-26T10:01:21Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.1609458' lon='4.3995118' />
+  <node id='2214288691' timestamp='2014-11-13T10:01:15Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1550942' lon='4.4465742'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Gemeentehuis' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='102977' />
+    <tag k='route_ref:De_Lijn' v='32;130;131;135' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2214288693' timestamp='2014-11-13T10:01:15Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1568065' lon='4.4434979'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Hof Ter Linden' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='102870' />
+    <tag k='route_ref:De_Lijn' v='32;130;131;135;140;141' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2214288695' timestamp='2014-11-13T10:01:16Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1562464' lon='4.4391607'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Kladdenbergstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='103615' />
+    <tag k='route_ref:De_Lijn' v='32;130;131;135;140;141' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2216116517' timestamp='2014-11-13T10:01:54Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1361505' lon='4.4472712'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich Edegemsesteenweg' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='107218' />
+    <tag k='route_ref:De_Lijn' v='91;92;130;131;132;133;135;191;242' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2216116526' timestamp='2014-11-13T10:01:56Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1349386' lon='4.4450509'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich Kerk' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='106891' />
+    <tag k='route_ref:De_Lijn' v='91;92;131;132;191' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2217561683' timestamp='2013-03-23T23:59:01Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='15472848' lat='51.1545257' lon='4.4460803' />
+  <node id='2217561691' timestamp='2013-03-23T23:59:01Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='15472848' lat='51.1557232' lon='4.4468153' />
+  <node id='2297516575' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1567328' lon='4.4118546' />
+  <node id='2297516576' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1566826' lon='4.4122514' />
+  <node id='2297516577' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1568022' lon='4.4119669' />
+  <node id='2297516578' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1568117' lon='4.4120457' />
+  <node id='2297516579' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1568018' lon='4.4121242' />
+  <node id='2297516580' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='3' changeset='17491003' lat='51.1554284' lon='4.4120542' />
+  <node id='2297516581' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1559703' lon='4.4155218' />
+  <node id='2297516583' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='3' changeset='17491003' lat='51.1554513' lon='4.4122025' />
+  <node id='2297516585' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1566579' lon='4.4118418' />
+  <node id='2297516587' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1558371' lon='4.4147472' />
+  <node id='2297516588' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1554161' lon='4.4133637' />
+  <node id='2297516590' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1565908' lon='4.4121913' />
+  <node id='2297516595' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1551837' lon='4.4128329' />
+  <node id='2297516596' timestamp='2013-05-09T19:59:08Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1550908' lon='4.4121376' />
+  <node id='2297516597' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='3' changeset='17491003' lat='51.1554761' lon='4.4120191' />
+  <node id='2297516598' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1551072' lon='4.412676' />
+  <node id='2297516599' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.155288' lon='4.4130629' />
+  <node id='2297516603' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.156633' lon='4.412236' />
+  <node id='2297516604' timestamp='2013-05-09T19:59:08Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1550336' lon='4.4121457' />
+  <node id='2297516605' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1556085' lon='4.4139209' />
+  <node id='2297516607' timestamp='2013-05-09T19:59:08Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1551429' lon='4.4121215' />
+  <node id='2297516610' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1560118' lon='4.4159073' />
+  <node id='2297516620' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1559286' lon='4.4152194' />
+  <node id='2297516622' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1567745' lon='4.4118999' />
+  <node id='2297516624' timestamp='2013-08-24T21:36:50Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1555181' lon='4.4136377' />
+  <node id='2297516628' timestamp='2013-05-09T19:59:09Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1551295' lon='4.4122771' />
+  <node id='2297516629' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1565745' lon='4.41216' />
+  <node id='2297516631' timestamp='2013-08-24T21:36:51Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1557016' lon='4.4142274' />
+  <node id='2297516634' timestamp='2013-05-09T19:59:09Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1550689' lon='4.4123039' />
+  <node id='2297516635' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1567738' lon='4.4121908' />
+  <node id='2297516636' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1560501' lon='4.4165212' />
+  <node id='2297516638' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.156732' lon='4.4122355' />
+  <node id='2297516639' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1565525' lon='4.4120446' />
+  <node id='2297516644' timestamp='2013-05-09T20:47:17Z' uid='1424070' user='marmet' visible='true' version='2' changeset='16053393' lat='51.155485' lon='4.4121773' />
+  <node id='2297516645' timestamp='2013-08-24T21:36:51Z' uid='6072' user='Eimai' visible='true' version='3' changeset='17491003' lat='51.1552574' lon='4.4122524' />
+  <node id='2297516646' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1560398' lon='4.4162983' />
+  <node id='2297560698' timestamp='2013-08-24T21:36:51Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1552424' lon='4.4121042' />
+  <node id='2297560701' timestamp='2013-08-24T21:36:51Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.155576' lon='4.4118922' />
+  <node id='2297560703' timestamp='2013-08-24T21:36:51Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491003' lat='51.1555233' lon='4.4119612' />
+  <node id='2297560712' timestamp='2013-05-09T20:47:15Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1555354' lon='4.412136' />
+  <node id='2297560714' timestamp='2013-08-24T21:45:48Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1561756' lon='4.4117132' />
+  <node id='2297560715' timestamp='2013-08-24T21:45:48Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1561306' lon='4.4116795' />
+  <node id='2297560716' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1565989' lon='4.4117661'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2297560723' timestamp='2013-05-09T20:47:15Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1559186' lon='4.4116277' />
+  <node id='2297560724' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='20383753' lat='51.1564919' lon='4.411978'>
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='2297560728' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1564033' lon='4.4119416' />
+  <node id='2297560732' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1560378' lon='4.411868' />
+  <node id='2297560738' timestamp='2013-05-09T20:47:16Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1556766' lon='4.4117763' />
+  <node id='2297560739' timestamp='2013-05-09T20:47:16Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1558063' lon='4.4116837' />
+  <node id='2297560740' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1560409' lon='4.4116116' />
+  <node id='2297560741' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1562663' lon='4.4117428' />
+  <node id='2297560743' timestamp='2013-05-09T20:47:16Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1555887' lon='4.4120659' />
+  <node id='2297560746' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1565041' lon='4.4116954' />
+  <node id='2297560748' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1560949' lon='4.4119391' />
+  <node id='2297560752' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='20383753' lat='51.1563288' lon='4.411941'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2297560754' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1564106' lon='4.4117144' />
+  <node id='2297560758' timestamp='2013-05-09T20:47:16Z' uid='1424070' user='marmet' visible='true' version='1' changeset='16053393' lat='51.1557229' lon='4.411874' />
+  <node id='2297560759' timestamp='2014-06-06T12:53:55Z' uid='763799' user='M!dgard' visible='true' version='2' changeset='22774786' lat='51.1558108' lon='4.4117927' />
+  <node id='2297560762' timestamp='2013-08-24T21:45:49Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17491069' lat='51.1562131' lon='4.4119509' />
+  <node id='2305122426' timestamp='2013-08-24T21:26:14Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1560459' lon='4.4169757' />
+  <node id='2344879085' timestamp='2013-08-24T21:26:15Z' uid='6072' user='Eimai' visible='true' version='2' changeset='17490879' lat='51.1560239' lon='4.4160918' />
+  <node id='2430526205' timestamp='2013-08-24T21:26:08Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17490879' lat='51.1557868' lon='4.4145282' />
+  <node id='2430526210' timestamp='2013-08-24T21:26:08Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17490879' lat='51.1558877' lon='4.414993' />
+  <node id='2430526219' timestamp='2013-08-24T21:26:09Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17490879' lat='51.1559902' lon='4.4157011' />
+  <node id='2430526224' timestamp='2015-07-27T18:33:02Z' uid='1929546' user='Wizzo' visible='true' version='2' changeset='32915799' lat='51.1560404' lon='4.4182561' />
+  <node id='2430526225' timestamp='2013-08-24T21:26:09Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17490879' lat='51.1560449' lon='4.4172714' />
+  <node id='2430531374' timestamp='2013-08-24T21:36:43Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1542523' lon='4.4110035' />
+  <node id='2430531399' timestamp='2013-08-24T21:36:44Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1547171' lon='4.4119777' />
+  <node id='2430531418' timestamp='2013-08-24T21:36:44Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1549453' lon='4.4120819' />
+  <node id='2430531427' timestamp='2013-08-24T21:36:44Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1550673' lon='4.4125831' />
+  <node id='2430531435' timestamp='2013-08-24T21:36:44Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1551294' lon='4.4121257' />
+  <node id='2430531442' timestamp='2013-08-24T21:36:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1551527' lon='4.4122726' />
+  <node id='2430531455' timestamp='2013-08-24T21:36:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1552893' lon='4.4121079' />
+  <node id='2430531458' timestamp='2013-08-24T21:36:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1553345' lon='4.4121045' />
+  <node id='2430531459' timestamp='2013-08-24T21:36:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1553388' lon='4.4122503' />
+  <node id='2430531464' timestamp='2013-08-24T21:36:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1553819' lon='4.4120873' />
+  <node id='2430531467' timestamp='2013-08-24T21:36:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491003' lat='51.1553948' lon='4.4122383' />
+  <node id='2430539799' timestamp='2013-08-24T21:45:44Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1540832' lon='4.4105488' />
+  <node id='2430539803' timestamp='2013-08-24T21:45:44Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.154114' lon='4.4106684' />
+  <node id='2430539858' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1557107' lon='4.411752' />
+  <node id='2430539861' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1557588' lon='4.4118273' />
+  <node id='2430539864' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1558468' lon='4.4117819' />
+  <node id='2430539867' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1558912' lon='4.4117765' />
+  <node id='2430539870' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1559708' lon='4.4116136' />
+  <node id='2430539873' timestamp='2014-06-06T12:53:55Z' uid='763799' user='M!dgard' visible='true' version='2' changeset='22774786' lat='51.1560012' lon='4.4117986' />
+  <node id='2430539876' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1560026' lon='4.4116056' />
+  <node id='2430539880' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1560856' lon='4.4116389' />
+  <node id='2430539902' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='20383753' lat='51.1562079' lon='4.4117333'>
+    <tag k='highway' v='give_way' />
+  </node>
+  <node id='2430539909' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='20383753' lat='51.1563286' lon='4.4117371' />
+  <node id='2430539912' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1564511' lon='4.4116954' />
+  <node id='2430539925' timestamp='2013-08-24T21:45:45Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069' lat='51.1565518' lon='4.4117212' />
+  <node id='2430539928' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='20383753' lat='51.156555' lon='4.4120852' />
+  <node id='2430539932' timestamp='2014-02-05T00:36:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='20383753' lat='51.1565625' lon='4.4121241' />
+  <node id='2486644025' timestamp='2013-10-07T15:56:52Z' uid='476789' user='CeesW' visible='true' version='1' changeset='18232241' lat='51.153024' lon='4.4027395' />
+  <node id='2486644038' timestamp='2013-10-07T15:56:52Z' uid='476789' user='CeesW' visible='true' version='1' changeset='18232241' lat='51.1531056' lon='4.4027038' />
+  <node id='2522474222' timestamp='2013-12-26T10:01:29Z' uid='843430' user='déRahier' visible='true' version='2' changeset='19641191' lat='51.1534063' lon='4.4074736' />
+  <node id='2591288679' timestamp='2014-11-13T10:01:53Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='26752525' lat='51.1395897' lon='4.446423'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich De Villermontstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='104009' />
+    <tag k='route_ref:De_Lijn' v='130;131;133;135' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2591288688' timestamp='2014-11-13T10:01:57Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.133935' lon='4.4430567'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich Kruisstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='106890' />
+    <tag k='route_ref:De_Lijn' v='131;132;191' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2591288696' timestamp='2014-11-13T10:01:58Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1305545' lon='4.4389123'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich Rubensstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='106887' />
+    <tag k='route_ref:De_Lijn' v='131;132;191' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2591288697' timestamp='2014-11-13T10:01:58Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.129883' lon='4.4367448'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich Sint-Ritacollege' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='109900' />
+    <tag k='route_ref:De_Lijn' v='131;191' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2591288698' timestamp='2014-11-13T10:01:58Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1305978' lon='4.4344377'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich Sint-Ritakerk' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='106885' />
+    <tag k='route_ref:De_Lijn' v='131;132;133' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2591288702' timestamp='2014-11-13T10:01:59Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1432913' lon='4.4472922'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kontich VTI' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='104021' />
+    <tag k='route_ref:De_Lijn' v='130;131;133;135' />
+    <tag k='zone:De_Lijn' v='76' />
+  </node>
+  <node id='2594967940' timestamp='2013-12-26T10:01:02Z' uid='843430' user='déRahier' visible='true' version='1' changeset='19641191' lat='51.1731043' lon='4.3921987' />
+  <node id='2594970530' timestamp='2014-11-13T10:01:07Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1597392' lon='4.3999659'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='102035' />
+    <tag k='route_ref:De_Lijn' v='130;131;135;140;141;180;181;182;183' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2594970532' timestamp='2014-11-13T10:01:17Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.1541524' lon='4.4104262'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Revarte' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='102956' />
+    <tag k='route_ref:De_Lijn' v='130;131;135;140;141' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2594970542' timestamp='2014-11-13T10:01:43Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='26752525' lat='51.165503' lon='4.3971279'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Kerkeveldstraat' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='103525' />
+    <tag k='route_ref:De_Lijn' v='131;141;180;181;182;183' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2655051455' timestamp='2014-12-29T01:56:50Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='27767584' lat='51.1563472' lon='4.4119683'>
+    <tag k='bus' v='yes' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Edegem Universitair Ziekenhuis Perron 11' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport' v='platform' />
+    <tag k='ref:De_Lijn' v='102951' />
+    <tag k='route_ref:De_Lijn' v='130;131;135' />
+    <tag k='zone:De_Lijn' v='01' />
+  </node>
+  <node id='2655051470' timestamp='2014-02-05T00:35:28Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753' lat='51.1564788' lon='4.4119727'>
+    <tag k='highway' v='give_way' />
+  </node>
+  <node id='2655051490' timestamp='2014-02-05T00:35:29Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753' lat='51.1565551' lon='4.412004' />
+  <node id='2655051505' timestamp='2014-02-05T00:35:30Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753' lat='51.1566164' lon='4.4117887'>
+    <tag k='highway' v='give_way' />
+  </node>
+  <node id='2655051518' timestamp='2014-02-05T00:35:30Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753' lat='51.1566833' lon='4.4118382' />
+  <node id='2655051546' timestamp='2014-02-05T00:35:30Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753' lat='51.1637484' lon='4.4000754'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2655402642' timestamp='2014-02-05T06:50:33Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20386453' lat='51.1306202' lon='4.4345176'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2655402649' timestamp='2014-02-05T06:50:33Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20386453' lat='51.1714808' lon='4.3869383'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='2655402665' timestamp='2014-04-11T16:01:10Z' uid='436365' user='escada' visible='true' version='2' changeset='21629648' lat='51.1730935' lon='4.38824' />
+  <node id='2783570838' timestamp='2014-04-11T16:01:06Z' uid='436365' user='escada' visible='true' version='1' changeset='21629648' lat='51.1730708' lon='4.3891615' />
+  <node id='3259067669' timestamp='2014-12-29T23:06:53Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='27789403' lat='51.1697634' lon='4.3947836'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='3259067670' timestamp='2014-12-29T23:06:53Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='27789403' lat='51.1697971' lon='4.3949683'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='3259067678' timestamp='2014-12-29T23:06:53Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='27789403' lat='51.1701056' lon='4.3950997'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='3642390961' timestamp='2015-07-09T11:04:56Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092' lat='51.1625217' lon='4.3989897' />
+  <node id='3642390962' timestamp='2015-07-09T11:04:56Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092' lat='51.1628315' lon='4.398863'>
+    <tag k='bus' v='yes' />
+    <tag k='public_transport' v='stop_position' />
+  </node>
+  <node id='3642390963' timestamp='2015-07-09T11:04:56Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092' lat='51.1628886' lon='4.3988396' />
+  <node id='3642390964' timestamp='2015-07-09T11:04:56Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092' lat='51.1634761' lon='4.3990805' />
+  <node id='3729738960' timestamp='2015-09-04T19:38:42Z' uid='436365' user='escada' visible='true' version='1' changeset='33802405' lat='51.1665374' lon='4.3961563'>
+    <tag k='crossing_ref' v='zebra' />
+    <tag k='highway' v='crossing' />
+  </node>
+  <node id='3738549342' timestamp='2015-09-11T05:08:51Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='33947710' lat='51.1560212' lon='4.4316323' />
+  <node id='3738549344' timestamp='2015-09-11T05:08:51Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='33947710' lat='51.1560968' lon='4.4309929' />
+  <node id='3922253258' timestamp='2016-01-01T17:23:46Z' uid='138772' user='lodde1949' visible='true' version='1' changeset='36302154' lat='51.1573448' lon='4.4442593' />
+  <node id='3995443647' timestamp='2016-02-08T13:36:49Z' uid='1604069' user='Marc39' visible='true' version='1' changeset='37079747' lat='51.1352939' lon='4.4448343' />
+  <node id='3995443961' timestamp='2016-02-08T13:36:50Z' uid='1604069' user='Marc39' visible='true' version='1' changeset='37079747' lat='51.1353404' lon='4.4449023' />
+  <way id='4907297' timestamp='2016-02-08T13:36:51Z' uid='1604069' user='Marc39' visible='true' version='10' changeset='37079747'>
+    <nd ref='31659869' />
+    <nd ref='3995443647' />
+    <nd ref='3995443961' />
+    <nd ref='1210724692' />
+    <nd ref='371820857' />
+    <nd ref='130657104' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Antwerpsesteenweg' />
+  </way>
+  <way id='5216370' timestamp='2013-03-24T00:00:41Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='15472848'>
+    <nd ref='1812234652' />
+    <nd ref='2217561683' />
+    <nd ref='30349181' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Trooststraat' />
+  </way>
+  <way id='5218149' timestamp='2012-10-22T08:14:16Z' uid='514888' user='EnriceV' visible='true' version='14' changeset='13589588'>
+    <nd ref='34675936' />
+    <nd ref='312026364' />
+    <nd ref='1977621242' />
+    <nd ref='250554200' />
+    <nd ref='250551121' />
+    <nd ref='250551296' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='old_ref' v='N106' />
+  </way>
+  <way id='7975826' timestamp='2014-02-05T06:50:40Z' uid='15188' user='Polyglot' visible='true' version='11' changeset='20386453'>
+    <nd ref='32043578' />
+    <nd ref='247271582' />
+    <nd ref='38265044' />
+    <nd ref='2655402642' />
+    <tag k='highway' v='tertiary' />
+    <tag k='name' v='Pierstraat' />
+  </way>
+  <way id='8034156' timestamp='2013-03-24T00:00:32Z' uid='15188' user='Polyglot' visible='true' version='7' changeset='15472848'>
+    <nd ref='30349181' />
+    <nd ref='2217561691' />
+    <nd ref='295899939' />
+    <nd ref='295899959' />
+    <nd ref='36242667' />
+    <nd ref='34094855' />
+    <nd ref='36242669' />
+    <tag k='highway' v='tertiary' />
+    <tag k='name' v='Doelveldstraat' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='8034569' timestamp='2015-11-07T10:45:17Z' uid='2879401' user='Ptcan' visible='true' version='14' changeset='35146398'>
+    <nd ref='38265026' />
+    <nd ref='1211245126' />
+    <nd ref='1211244940' />
+    <nd ref='247086161' />
+    <nd ref='247086320' />
+    <tag k='highway' v='living_street' />
+    <tag k='maxspeed' v='30' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Drabstraat' />
+  </way>
+  <way id='8161716' timestamp='2010-06-18T19:31:03Z' uid='10752' user='Filip' visible='true' version='10' changeset='5018758'>
+    <nd ref='36508334' />
+    <nd ref='451908618' />
+    <nd ref='451908623' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Strijdersstraat' />
+  </way>
+  <way id='8169083' timestamp='2015-11-07T10:45:14Z' uid='2879401' user='Ptcan' visible='true' version='11' changeset='35146398'>
+    <nd ref='247084916' />
+    <nd ref='1211245061' />
+    <nd ref='247084915' />
+    <nd ref='247086045' />
+    <nd ref='1211244756' />
+    <nd ref='38265026' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Drabstraat' />
+  </way>
+  <way id='8383284' timestamp='2013-12-08T21:03:35Z' uid='15188' user='Polyglot' visible='true' version='8' changeset='19348285'>
+    <nd ref='26114944' />
+    <nd ref='26114947' />
+    <tag k='cycleway' v='track' />
+    <tag k='cycleway:buffer' v='2.50' />
+    <tag k='cycleway:comfort' v='22' />
+    <tag k='cycleway:surface' v='paving_stones:30' />
+    <tag k='cycleway:width' v='1.50' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Heistraat' />
+  </way>
+  <way id='8501562' timestamp='2011-12-09T15:27:54Z' uid='436365' user='escada' visible='true' version='13' changeset='10073811'>
+    <nd ref='34094885' />
+    <nd ref='1538266742' />
+    <nd ref='34094879' />
+    <nd ref='306443080' />
+    <nd ref='180275827' />
+    <nd ref='498404738' />
+    <nd ref='180275828' />
+    <nd ref='34094883' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Doornstraat' />
+  </way>
+  <way id='8501563' timestamp='2014-12-29T23:06:54Z' uid='15188' user='Polyglot' visible='true' version='5' changeset='27789403'>
+    <nd ref='34094871' />
+    <nd ref='3259067670' />
+    <nd ref='3259067669' />
+    <nd ref='34094885' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Bist' />
+  </way>
+  <way id='8501565' timestamp='2014-12-29T23:06:55Z' uid='15188' user='Polyglot' visible='true' version='12' changeset='27789403'>
+    <nd ref='34094871' />
+    <nd ref='1538266775' />
+    <nd ref='3259067678' />
+    <nd ref='306457037' />
+    <nd ref='306457081' />
+    <nd ref='295404144' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Bist' />
+  </way>
+  <way id='8516733' timestamp='2012-03-10T11:26:53Z' uid='408433' user='SBes' visible='true' version='14' changeset='10930557'>
+    <nd ref='26114337' />
+    <nd ref='263388435' />
+    <nd ref='26114574' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Boomsesteenweg' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N177' />
+  </way>
+  <way id='17417440' timestamp='2015-07-09T11:05:55Z' uid='436365' user='escada' visible='true' version='5' changeset='32516092'>
+    <nd ref='180288736' />
+    <nd ref='180289830' />
+    <nd ref='180289832' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Universiteitsplein' />
+    <tag k='oneway' v='yes' />
+    <tag k='sidewalk' v='right' />
+  </way>
+  <way id='17417806' timestamp='2012-01-13T15:29:48Z' uid='400464' user='Regio Antwerpen-Brabant Deltamedia' visible='true' version='2' changeset='10379491'>
+    <nd ref='180290314' />
+    <nd ref='180289832' />
+    <tag k='highway' v='unclassified' />
+    <tag k='name' v='Fort VI-straat' />
+  </way>
+  <way id='17418016' timestamp='2014-02-05T00:36:05Z' uid='15188' user='Polyglot' visible='true' version='6' changeset='20383753'>
+    <nd ref='180290314' />
+    <nd ref='2655051546' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Universiteitsplein' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='19801109' timestamp='2015-07-09T11:05:55Z' uid='436365' user='escada' visible='true' version='2' changeset='32516092'>
+    <nd ref='180289838' />
+    <nd ref='180290315' />
+    <nd ref='3642390964' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Universiteitsplein' />
+    <tag k='oneway' v='yes' />
+    <tag k='sidewalk' v='right' />
+  </way>
+  <way id='19801111' timestamp='2015-09-04T19:38:45Z' uid='436365' user='escada' visible='true' version='6' changeset='33802405'>
+    <nd ref='34094883' />
+    <nd ref='3729738960' />
+    <nd ref='306490752' />
+    <nd ref='34094881' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Doornstraat' />
+  </way>
+  <way id='22935631' timestamp='2012-11-23T19:54:34Z' uid='436365' user='escada' visible='true' version='4' changeset='14003728'>
+    <nd ref='34564883' />
+    <nd ref='36242664' />
+    <nd ref='2028721189' />
+    <nd ref='2028721283' />
+    <nd ref='451951437' />
+    <nd ref='34564889' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+    <tag k='source:maxspeed' v='BE:urban' />
+  </way>
+  <way id='22935648' timestamp='2012-11-23T19:54:34Z' uid='436365' user='escada' visible='true' version='2' changeset='14003728'>
+    <nd ref='34564880' />
+    <nd ref='2028719873' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+    <tag k='source:maxspeed' v='BE:urban' />
+    <tag k='traffic_calming' v='table' />
+  </way>
+  <way id='22936584' timestamp='2012-12-04T09:23:30Z' uid='568970' user='GIS Edegem' visible='true' version='8' changeset='14149688'>
+    <nd ref='247075065' />
+    <nd ref='246674134' />
+    <nd ref='2049450546' />
+    <nd ref='2038110908' />
+    <nd ref='36507675' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='22936593' timestamp='2013-06-14T20:55:39Z' uid='476789' user='CeesW' visible='true' version='7' changeset='16556009'>
+    <nd ref='247075080' />
+    <nd ref='2105559150' />
+    <nd ref='247075134' />
+    <nd ref='1415371949' />
+    <nd ref='451890505' />
+    <nd ref='247075065' />
+    <tag k='cycleway' v='lane' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='22937657' timestamp='2013-12-08T21:03:47Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='19348285'>
+    <nd ref='30349154' />
+    <nd ref='32043578' />
+    <tag k='highway' v='tertiary' />
+    <tag k='name' v='Pierstraat' />
+  </way>
+  <way id='22937669' timestamp='2015-11-07T10:45:14Z' uid='2879401' user='Ptcan' visible='true' version='8' changeset='35146398'>
+    <nd ref='30349154' />
+    <nd ref='1211225390' />
+    <nd ref='38265032' />
+    <nd ref='1211225493' />
+    <nd ref='998209333' />
+    <nd ref='1211225657' />
+    <nd ref='38265041' />
+    <nd ref='247084916' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Drabstraat' />
+  </way>
+  <way id='22937747' timestamp='2013-06-24T15:23:07Z' uid='1578689' user='Adamar' visible='true' version='10' changeset='16685843'>
+    <nd ref='130230220' />
+    <nd ref='1210839982' />
+    <nd ref='998207264' />
+    <nd ref='998208402' />
+    <nd ref='998205544' />
+    <nd ref='247085729' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Rubensstraat' />
+    <tag k='oneway' v='no' />
+  </way>
+  <way id='22937757' timestamp='2013-06-24T15:23:07Z' uid='1578689' user='Adamar' visible='true' version='7' changeset='16685843'>
+    <nd ref='48869448' />
+    <nd ref='247085729' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Kongostraat' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='22937860' timestamp='2015-11-07T10:45:17Z' uid='2879401' user='Ptcan' visible='true' version='4' changeset='35146398'>
+    <nd ref='247086320' />
+    <nd ref='247086278' />
+    <tag k='highway' v='living_street' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Drabstraat' />
+  </way>
+  <way id='22937861' timestamp='2015-11-07T10:45:16Z' uid='2879401' user='Ptcan' visible='true' version='9' changeset='35146398'>
+    <nd ref='247086278' />
+    <nd ref='48869450' />
+    <nd ref='1210884800' />
+    <nd ref='1961071840' />
+    <nd ref='48869448' />
+    <tag k='highway' v='living_street' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Drabstraat' />
+    <tag k='oneway' v='no' />
+  </way>
+  <way id='22946083' timestamp='2012-11-23T19:54:34Z' uid='436365' user='escada' visible='true' version='2' changeset='14003728'>
+    <nd ref='247068352' />
+    <nd ref='34564880' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+    <tag k='source:maxspeed' v='BE:urban' />
+    <tag k='traffic_calming' v='table' />
+  </way>
+  <way id='22950047' timestamp='2015-05-04T15:18:17Z' uid='2879401' user='Ptcan' visible='true' version='7' changeset='30782070'>
+    <nd ref='32313463' />
+    <nd ref='32313462' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Edegemsesteenweg' />
+  </way>
+  <way id='23107297' timestamp='2012-11-23T19:54:34Z' uid='436365' user='escada' visible='true' version='7' changeset='14003728'>
+    <nd ref='31504230' />
+    <nd ref='249468138' />
+    <nd ref='249470022' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Kontichstraat' />
+  </way>
+  <way id='24215210' timestamp='2015-07-08T11:05:46Z' uid='436365' user='escada' visible='true' version='5' changeset='32492609'>
+    <nd ref='34094881' />
+    <nd ref='180275283' />
+    <nd ref='306442556' />
+    <nd ref='180275285' />
+    <nd ref='180275286' />
+    <nd ref='36757450' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='sidewalk' v='both' />
+  </way>
+  <way id='24215224' timestamp='2015-07-09T11:05:51Z' uid='436365' user='escada' visible='true' version='10' changeset='32516092'>
+    <nd ref='180288736' />
+    <nd ref='3642390963' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='4' />
+    <tag k='lanes:backward' v='3' />
+    <tag k='lanes:forward' v='1' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='old_ref' v='N106' />
+    <tag k='turn:lanes:backward' v='left|none|right' />
+  </way>
+  <way id='24327083' timestamp='2014-04-13T20:56:27Z' uid='2029979' user='koninklijke' visible='true' version='6' changeset='21674422'>
+    <nd ref='26114947' />
+    <nd ref='1538266990' />
+    <nd ref='34094875' />
+    <tag k='cycleway' v='track' />
+    <tag k='cycleway:buffer' v='2.50' />
+    <tag k='cycleway:comfort' v='22' />
+    <tag k='cycleway:surface' v='paving_stones:30' />
+    <tag k='cycleway:width' v='1.50' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Heistraat' />
+    <tag k='oneway' v='no' />
+  </way>
+  <way id='26548060' timestamp='2014-02-05T00:35:57Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='20383753'>
+    <nd ref='35232663' />
+    <nd ref='30349170' />
+    <tag k='highway' v='secondary' />
+    <tag k='name' v='Drie Eikenstraat' />
+  </way>
+  <way id='26548064' timestamp='2015-09-11T05:14:14Z' uid='15188' user='Polyglot' visible='true' version='22' changeset='33947710'>
+    <nd ref='30349170' />
+    <nd ref='3738549342' />
+    <nd ref='1667232156' />
+    <nd ref='451847917' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Drie Eikenstraat' />
+  </way>
+  <way id='27247756' timestamp='2013-10-07T15:56:56Z' uid='476789' user='CeesW' visible='true' version='5' changeset='18232241'>
+    <nd ref='250551296' />
+    <nd ref='2486644038' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='27247771' timestamp='2012-06-30T02:56:23Z' uid='6072' user='Eimai' visible='true' version='4' changeset='12062324'>
+    <nd ref='250550596' />
+    <nd ref='34675936' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='old_ref' v='N106' />
+  </way>
+  <way id='27915984' timestamp='2014-08-03T08:10:21Z' uid='2221769' user='dderycker' visible='true' version='7' changeset='24510360'>
+    <nd ref='295404144' />
+    <nd ref='306456839' />
+    <nd ref='306456285' />
+    <nd ref='306456161' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Heistraat' />
+  </way>
+  <way id='27918429' timestamp='2014-04-11T16:03:41Z' uid='436365' user='escada' visible='true' version='4' changeset='21629701'>
+    <nd ref='26114334' />
+    <nd ref='26114336' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='nat_ref' v='R11' />
+    <tag k='oneway' v='yes' />
+    <tag k='placement' v='middle_of:2' />
+    <tag k='ref' v='R11' />
+    <tag k='turn:lanes' v='left|none' />
+  </way>
+  <way id='32997122' timestamp='2013-06-24T17:48:10Z' uid='1578689' user='Adamar' visible='true' version='6' changeset='16687886'>
+    <nd ref='223222731' />
+    <nd ref='48869439' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Sint Martinusplein' />
+  </way>
+  <way id='36573376' timestamp='2015-05-04T15:18:17Z' uid='2879401' user='Ptcan' visible='true' version='7' changeset='30782070'>
+    <nd ref='32313461' />
+    <nd ref='32871203' />
+    <nd ref='32313460' />
+    <nd ref='32313458' />
+    <nd ref='32313457' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Edegemsesteenweg' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='36573790' timestamp='2014-02-23T19:58:37Z' uid='672253' user='JanFi' visible='true' version='7' changeset='20739218'>
+    <nd ref='32044238' />
+    <nd ref='32044297' />
+    <nd ref='1209249983' />
+    <nd ref='32044296' />
+    <nd ref='32044294' />
+    <nd ref='32044291' />
+    <nd ref='425796350' />
+    <tag k='cycleway' v='opposite' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Pluyseghemstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='oneway:bicycle' v='no' />
+    <tag k='oneway:moped_a' v='no' />
+  </way>
+  <way id='38249250' timestamp='2014-02-05T00:36:04Z' uid='15188' user='Polyglot' visible='true' version='4' changeset='20383753'>
+    <nd ref='36242669' />
+    <nd ref='450940973' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Strijdersstraat' />
+  </way>
+  <way id='38249251' timestamp='2016-01-01T17:24:00Z' uid='138772' user='lodde1949' visible='true' version='7' changeset='36302154'>
+    <nd ref='450940973' />
+    <nd ref='450940987' />
+    <nd ref='3922253258' />
+    <nd ref='36508334' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Strijdersstraat' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='38291188' timestamp='2015-07-27T16:21:15Z' uid='1929546' user='Wizzo' visible='true' version='11' changeset='32913102'>
+    <nd ref='36507675' />
+    <nd ref='246674135' />
+    <nd ref='2040671168' />
+    <nd ref='1751756995' />
+    <nd ref='2040671173' />
+    <nd ref='451847823' />
+    <nd ref='246674136' />
+    <nd ref='2038110910' />
+    <nd ref='2038110909' />
+    <nd ref='36507678' />
+    <nd ref='2040813139' />
+    <nd ref='451847720' />
+    <tag k='bicycle' v='no' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='38294976' timestamp='2010-06-18T19:30:51Z' uid='10752' user='Filip' visible='true' version='6' changeset='5018758'>
+    <nd ref='451915858' />
+    <nd ref='451915970' />
+    <nd ref='451915971' />
+    <nd ref='451916275' />
+    <nd ref='451915973' />
+    <nd ref='451910103' />
+    <nd ref='451910105' />
+    <nd ref='451910110' />
+    <nd ref='451909038' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='38295187' timestamp='2010-06-18T19:30:51Z' uid='10752' user='Filip' visible='true' version='3' changeset='5018758'>
+    <nd ref='451908623' />
+    <nd ref='451915857' />
+    <nd ref='451915858' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Strijdersstraat' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='40501179' timestamp='2014-03-09T17:48:58Z' uid='672253' user='JanFi' visible='true' version='11' changeset='21010203'>
+    <nd ref='26114574' />
+    <nd ref='263388377' />
+    <nd ref='2655402649' />
+    <tag k='cycleway' v='track' />
+    <tag k='cycleway:buffer' v='0' />
+    <tag k='cycleway:comfort' v='27' />
+    <tag k='cycleway:surface' v='paving_stones:30' />
+    <tag k='cycleway:width' v='1.80' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Boomsesteenweg' />
+    <tag k='oneway' v='yes' />
+    <tag k='oneway:bicycle' v='no' />
+    <tag k='oneway:moped_a' v='no' />
+    <tag k='ref' v='N177' />
+  </way>
+  <way id='42749202' timestamp='2015-05-10T10:57:54Z' uid='2879401' user='Ptcan' visible='true' version='2' changeset='30960596'>
+    <nd ref='425796350' />
+    <nd ref='253787796' />
+    <nd ref='32313463' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Edegemsesteenweg' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='62129775' timestamp='2012-11-23T19:54:32Z' uid='436365' user='escada' visible='true' version='4' changeset='14003728'>
+    <nd ref='247276320' />
+    <nd ref='1833205579' />
+    <nd ref='1833205582' />
+    <nd ref='247275776' />
+    <nd ref='2028718876' />
+    <nd ref='247276511' />
+    <nd ref='247275777' />
+    <nd ref='31504230' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Edegemsesteenweg' />
+  </way>
+  <way id='62191948' timestamp='2012-07-05T19:38:25Z' uid='191979' user='It&apos;s so funny' visible='true' version='3' changeset='12123778'>
+    <nd ref='34564889' />
+    <nd ref='1812234652' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Kontichstraat' />
+  </way>
+  <way id='145170563' timestamp='2013-11-06T19:22:49Z' uid='672253' user='JanFi' visible='true' version='7' changeset='18752889'>
+    <nd ref='34675937' />
+    <nd ref='1586003992' />
+    <nd ref='1586003995' />
+    <nd ref='1586004002' />
+    <nd ref='1586004000' />
+    <nd ref='1586003987' />
+    <nd ref='1586003983' />
+    <nd ref='1586003989' />
+    <nd ref='1586003997' />
+    <nd ref='1586004004' />
+    <nd ref='1586004007' />
+    <nd ref='1586004008' />
+    <nd ref='2522474222' />
+    <nd ref='1586004010' />
+    <nd ref='1586004013' />
+    <nd ref='1586004019' />
+    <nd ref='2430539799' />
+    <nd ref='2430539803' />
+    <nd ref='1586004023' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='145170566' timestamp='2013-10-07T15:56:57Z' uid='476789' user='CeesW' visible='true' version='5' changeset='18232241'>
+    <nd ref='1586004064' />
+    <nd ref='2430531399' />
+    <nd ref='1586004048' />
+    <nd ref='1586004044' />
+    <nd ref='1586004039' />
+    <nd ref='1586004035' />
+    <nd ref='1586004031' />
+    <nd ref='2430531374' />
+    <nd ref='1586004026' />
+    <nd ref='1586004023' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='150790581' timestamp='2015-07-27T16:35:37Z' uid='1929546' user='Wizzo' visible='true' version='6' changeset='32913363'>
+    <nd ref='246813143' />
+    <nd ref='1636671399' />
+    <nd ref='1636671402' />
+    <nd ref='2430526224' />
+    <nd ref='269936730' />
+    <tag k='bicycle' v='no' />
+    <tag k='cycleway' v='lane' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='150790750' timestamp='2012-02-17T15:27:28Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129'>
+    <nd ref='1636672770' />
+    <nd ref='1636672771' />
+    <nd ref='1636672768' />
+    <nd ref='1636672767' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='150790751' timestamp='2012-02-17T15:27:29Z' uid='6072' user='Eimai' visible='true' version='1' changeset='10712129'>
+    <nd ref='1636672770' />
+    <nd ref='1636672772' />
+    <nd ref='451909031' />
+    <nd ref='1636672773' />
+    <nd ref='451909032' />
+    <nd ref='1636672774' />
+    <nd ref='451909035' />
+    <nd ref='1636672775' />
+    <nd ref='451909038' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Drie Eikenstraat' />
+  </way>
+  <way id='150851784' timestamp='2015-07-27T16:35:38Z' uid='1929546' user='Wizzo' visible='true' version='3' changeset='32913363'>
+    <nd ref='246813143' />
+    <nd ref='1637163899' />
+    <nd ref='36507672' />
+    <nd ref='269936731' />
+    <nd ref='247075080' />
+    <tag k='bicycle' v='no' />
+    <tag k='cycleway' v='lane' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='181345107' timestamp='2016-03-20T23:26:12Z' uid='2029979' user='koninklijke' visible='true' version='3' changeset='37965957'>
+    <nd ref='332356854' />
+    <nd ref='31659869' />
+    <tag k='bicycle' v='yes' />
+    <tag k='cycleway' v='no' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Mechelsesteenweg' />
+  </way>
+  <way id='192313652' timestamp='2012-11-23T19:54:12Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728'>
+    <nd ref='249468053' />
+    <nd ref='2028718997' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+    <tag k='traffic_calming' v='table' />
+  </way>
+  <way id='192313654' timestamp='2012-11-23T19:54:12Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728'>
+    <nd ref='249470022' />
+    <nd ref='249468053' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Kontichstraat' />
+  </way>
+  <way id='192313657' timestamp='2012-11-23T19:54:12Z' uid='436365' user='escada' visible='true' version='1' changeset='14003728'>
+    <nd ref='2028719873' />
+    <nd ref='2028719982' />
+    <nd ref='34564883' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+    <tag k='source:maxspeed' v='BE:urban' />
+  </way>
+  <way id='192313658' timestamp='2013-03-22T12:53:53Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='15454069'>
+    <nd ref='2028718997' />
+    <nd ref='36242666' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+  </way>
+  <way id='193551718' timestamp='2015-09-11T05:14:13Z' uid='15188' user='Polyglot' visible='true' version='3' changeset='33947710'>
+    <nd ref='451847720' />
+    <nd ref='1667232157' />
+    <nd ref='3738549344' />
+    <nd ref='35232663' />
+    <tag k='bicycle' v='no' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='193565406' timestamp='2012-11-29T20:30:23Z' uid='436365' user='escada' visible='true' version='1' changeset='14091196'>
+    <nd ref='451847917' />
+    <nd ref='2040813135' />
+    <nd ref='451847971' />
+    <nd ref='34564913' />
+    <nd ref='2030055002' />
+    <nd ref='34564915' />
+    <nd ref='34564914' />
+    <nd ref='2030055000' />
+    <nd ref='451937677' />
+    <nd ref='30349171' />
+    <nd ref='451848004' />
+    <nd ref='2030054989' />
+    <nd ref='30349172' />
+    <nd ref='30349173' />
+    <nd ref='1636672767' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Drie Eikenstraat' />
+  </way>
+  <way id='211448546' timestamp='2013-03-22T12:53:30Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='15454069'>
+    <nd ref='36242666' />
+    <nd ref='2028719828' />
+    <nd ref='247068352' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='50' />
+    <tag k='motor_vehicle:conditional' v='delivery @ (weight&gt;7.5)' />
+    <tag k='name' v='Kontichstraat' />
+  </way>
+  <way id='211802714' timestamp='2013-03-23T23:59:09Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='15472848'>
+    <nd ref='223222731' />
+    <nd ref='48869576' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Mechelsesteenweg' />
+  </way>
+  <way id='211802715' timestamp='2015-04-30T14:44:07Z' uid='2879401' user='Ptcan' visible='true' version='2' changeset='30661944'>
+    <nd ref='48869576' />
+    <nd ref='32044711' />
+    <nd ref='332356854' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='30' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Mechelsesteenweg' />
+  </way>
+  <way id='211802732' timestamp='2013-03-23T23:59:10Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='15472848'>
+    <nd ref='130230217' />
+    <nd ref='130230220' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Sint Martinusplein' />
+  </way>
+  <way id='220660863' timestamp='2014-02-05T00:36:06Z' uid='15188' user='Polyglot' visible='true' version='5' changeset='20383753'>
+    <nd ref='2297516585' />
+    <nd ref='2655051505' />
+    <nd ref='2297560716' />
+    <nd ref='2430539925' />
+    <nd ref='2297560746' />
+    <nd ref='2430539912' />
+    <nd ref='2297560754' />
+    <nd ref='2430539909' />
+    <nd ref='2297560741' />
+    <nd ref='2430539902' />
+    <nd ref='2297560714' />
+    <nd ref='2297560715' />
+    <nd ref='2430539880' />
+    <nd ref='2297560740' />
+    <nd ref='2430539876' />
+    <nd ref='2430539870' />
+    <nd ref='2297560723' />
+    <nd ref='2297560739' />
+    <nd ref='2430539858' />
+    <nd ref='2297560738' />
+    <nd ref='2297560701' />
+    <nd ref='2297560703' />
+    <nd ref='2297516597' />
+    <nd ref='2297516580' />
+    <nd ref='2430531464' />
+    <nd ref='2430531458' />
+    <nd ref='2430531455' />
+    <nd ref='2297560698' />
+    <nd ref='2297516607' />
+    <nd ref='2430531435' />
+    <nd ref='2297516596' />
+    <nd ref='2297516604' />
+    <nd ref='1586004078' />
+    <tag k='highway' v='service' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='220660864' timestamp='2014-06-06T12:53:54Z' uid='763799' user='M!dgard' visible='true' version='6' changeset='22774786'>
+    <nd ref='2297516645' />
+    <nd ref='2430531459' />
+    <nd ref='2430531467' />
+    <nd ref='2297516583' />
+    <nd ref='2297516644' />
+    <nd ref='2297560712' />
+    <nd ref='2297560743' />
+    <nd ref='2297560758' />
+    <nd ref='2430539861' />
+    <nd ref='2297560759' />
+    <nd ref='2430539864' />
+    <nd ref='2430539867' />
+    <nd ref='2430539873' />
+    <tag k='highway' v='service' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='220660868' timestamp='2013-08-24T21:45:47Z' uid='6072' user='Eimai' visible='true' version='4' changeset='17491069'>
+    <nd ref='1586004095' />
+    <nd ref='2297516634' />
+    <nd ref='2297516628' />
+    <nd ref='2430531442' />
+    <nd ref='2297516645' />
+    <tag k='highway' v='service' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='220660872' timestamp='2013-06-14T20:55:38Z' uid='476789' user='CeesW' visible='true' version='2' changeset='16556009'>
+    <nd ref='2297516646' />
+    <nd ref='2344879085' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='225732676' timestamp='2013-10-07T15:56:57Z' uid='476789' user='CeesW' visible='true' version='4' changeset='18232241'>
+    <nd ref='2344879085' />
+    <nd ref='2297516610' />
+    <nd ref='2430526219' />
+    <nd ref='2297516581' />
+    <nd ref='2297516620' />
+    <nd ref='2430526210' />
+    <nd ref='2297516587' />
+    <nd ref='2430526205' />
+    <nd ref='2297516631' />
+    <nd ref='2297516605' />
+    <nd ref='2297516624' />
+    <nd ref='2297516588' />
+    <nd ref='2297516599' />
+    <nd ref='2297516595' />
+    <nd ref='2297516598' />
+    <nd ref='2430531427' />
+    <nd ref='1586004091' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='225732678' timestamp='2015-07-27T16:35:37Z' uid='1929546' user='Wizzo' visible='true' version='4' changeset='32913363'>
+    <nd ref='269936730' />
+    <nd ref='2430526225' />
+    <nd ref='2305122426' />
+    <tag k='bicycle' v='no' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='225732679' timestamp='2013-06-14T20:55:34Z' uid='476789' user='CeesW' visible='true' version='1' changeset='16556009'>
+    <nd ref='2297516636' />
+    <nd ref='2297516646' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='225732680' timestamp='2013-06-14T20:55:34Z' uid='476789' user='CeesW' visible='true' version='1' changeset='16556009'>
+    <nd ref='2305122426' />
+    <nd ref='1636671400' />
+    <nd ref='2297516636' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Drie Eikenstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='227200908' timestamp='2013-06-24T17:48:10Z' uid='1578689' user='Adamar' visible='true' version='1' changeset='16687886'>
+    <nd ref='48869439' />
+    <nd ref='130230217' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='name' v='Sint Martinusplein' />
+  </way>
+  <way id='234933759' timestamp='2013-08-24T21:45:46Z' uid='6072' user='Eimai' visible='true' version='1' changeset='17491069'>
+    <nd ref='2430539873' />
+    <nd ref='2297560732' />
+    <nd ref='2297560748' />
+    <tag k='highway' v='service' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='234933763' timestamp='2014-02-05T00:36:06Z' uid='15188' user='Polyglot' visible='true' version='2' changeset='20383753'>
+    <nd ref='2297560748' />
+    <nd ref='2297560762' />
+    <nd ref='2297560752' />
+    <tag k='highway' v='service' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='240981418' timestamp='2013-10-07T15:56:53Z' uid='476789' user='CeesW' visible='true' version='1' changeset='18232241'>
+    <nd ref='2486644038' />
+    <nd ref='2486644025' />
+    <nd ref='34675937' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='70' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='260042750' timestamp='2014-02-05T00:35:31Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='32044005' />
+    <nd ref='32044238' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Antwerpsesteenweg' />
+  </way>
+  <way id='260042751' timestamp='2014-02-05T00:35:31Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='31659870' />
+    <nd ref='32044005' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Antwerpsesteenweg' />
+  </way>
+  <way id='260042752' timestamp='2014-02-05T00:35:31Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='130657104' />
+    <nd ref='247931902' />
+    <nd ref='31659870' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Antwerpsesteenweg' />
+  </way>
+  <way id='260042754' timestamp='2014-02-05T00:35:31Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='1586004091' />
+    <nd ref='1586004095' />
+    <tag k='highway' v='secondary' />
+    <tag k='junction' v='roundabout' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='260042757' timestamp='2014-02-05T00:35:31Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='1586004078' />
+    <nd ref='1586004073' />
+    <nd ref='2430531418' />
+    <nd ref='1586004070' />
+    <nd ref='1586004066' />
+    <nd ref='1586004064' />
+    <tag k='highway' v='secondary' />
+    <tag k='junction' v='roundabout' />
+    <tag k='ref' v='N106' />
+  </way>
+  <way id='260042759' timestamp='2014-02-05T00:35:31Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='2655051546' />
+    <nd ref='180289838' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Universiteitsplein' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='260042762' timestamp='2014-02-05T00:35:32Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='2430539932' />
+    <nd ref='2297516629' />
+    <nd ref='2297516590' />
+    <nd ref='2297516603' />
+    <nd ref='2297516576' />
+    <nd ref='2297516638' />
+    <nd ref='2297516635' />
+    <nd ref='2297516579' />
+    <nd ref='2297516578' />
+    <nd ref='2297516577' />
+    <nd ref='2297516622' />
+    <nd ref='2297516575' />
+    <nd ref='2655051518' />
+    <nd ref='2297516585' />
+    <tag k='highway' v='service' />
+    <tag k='junction' v='roundabout' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='260042764' timestamp='2014-02-05T00:35:32Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='2297516639' />
+    <nd ref='2430539928' />
+    <tag k='highway' v='service' />
+    <tag k='junction' v='roundabout' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='260042765' timestamp='2014-02-05T00:35:32Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='2430539928' />
+    <nd ref='2430539932' />
+    <tag k='highway' v='service' />
+    <tag k='junction' v='roundabout' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='260042766' timestamp='2014-02-05T00:35:32Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='2655051490' />
+    <nd ref='2297516639' />
+    <tag k='highway' v='service' />
+    <tag k='junction' v='roundabout' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='260042776' timestamp='2014-02-05T00:35:33Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20383753'>
+    <nd ref='2297560752' />
+    <nd ref='2297560728' />
+    <nd ref='2655051470' />
+    <nd ref='2297560724' />
+    <nd ref='2655051490' />
+    <tag k='highway' v='service' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='260062348' timestamp='2014-02-05T06:50:35Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20386453'>
+    <nd ref='26114336' />
+    <nd ref='26114337' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='secondary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Boomsesteenweg' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='N177' />
+  </way>
+  <way id='260062356' timestamp='2014-04-11T16:01:09Z' uid='436365' user='escada' visible='true' version='2' changeset='21629648'>
+    <nd ref='26114944' />
+    <nd ref='2594967940' />
+    <nd ref='26114942' />
+    <nd ref='26114599' />
+    <tag k='highway' v='trunk' />
+    <tag k='lanes' v='2' />
+    <tag k='maxspeed' v='70' />
+    <tag k='maxspeed:source' v='traffic_sign' />
+    <tag k='oneway' v='yes' />
+    <tag k='ref' v='R11' />
+  </way>
+  <way id='273516571' timestamp='2014-04-11T16:01:07Z' uid='436365' user='escada' visible='true' version='1' changeset='21629648'>
+    <nd ref='26114599' />
+    <nd ref='26114600' />
+    <nd ref='2783570838' />
+    <nd ref='26114601' />
+    <nd ref='1874524935' />
+    <nd ref='2655402665' />
+    <nd ref='26114334' />
+    <tag k='highway' v='trunk' />
+    <tag k='lanes' v='3' />
+    <tag k='maxspeed' v='70' />
+    <tag k='maxspeed:source' v='traffic_sign' />
+    <tag k='oneway' v='yes' />
+    <tag k='placement' v='right_of:2' />
+    <tag k='ref' v='R11' />
+    <tag k='turn:lanes' v='left|none|right' />
+  </way>
+  <way id='295611847' timestamp='2014-08-03T08:10:21Z' uid='2221769' user='dderycker' visible='true' version='1' changeset='24510360'>
+    <nd ref='306456161' />
+    <nd ref='159616079' />
+    <nd ref='159616084' />
+    <nd ref='1538266967' />
+    <nd ref='34094875' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxspeed:default' v='built_up-area' />
+    <tag k='name' v='Heistraat' />
+  </way>
+  <way id='342761611' timestamp='2015-05-04T15:18:17Z' uid='2879401' user='Ptcan' visible='true' version='1' changeset='30782070'>
+    <nd ref='32313462' />
+    <nd ref='32313461' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Edegemsesteenweg' />
+    <tag k='oneway' v='yes' />
+  </way>
+  <way id='342761612' timestamp='2015-05-04T15:18:17Z' uid='2879401' user='Ptcan' visible='true' version='1' changeset='30782070'>
+    <nd ref='32313457' />
+    <nd ref='1833205577' />
+    <nd ref='247276320' />
+    <tag k='highway' v='residential' />
+    <tag k='maxspeed' v='30' />
+    <tag k='maxweight' v='7.5' />
+    <tag k='name' v='Edegemsesteenweg' />
+  </way>
+  <way id='359554245' timestamp='2015-07-09T11:05:00Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092'>
+    <nd ref='3642390963' />
+    <nd ref='3642390962' />
+    <nd ref='3642390961' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='3' />
+    <tag k='lanes:backward' v='2' />
+    <tag k='lanes:forward' v='1' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='old_ref' v='N106' />
+    <tag k='placement:backward' v='right_of:1' />
+    <tag k='turn:lanes:backward' v='left|none' />
+  </way>
+  <way id='359554246' timestamp='2015-07-09T11:05:00Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092'>
+    <nd ref='3642390961' />
+    <nd ref='180274748' />
+    <nd ref='1911567553' />
+    <nd ref='312026482' />
+    <nd ref='2116899072' />
+    <nd ref='2116899047' />
+    <nd ref='250550596' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='tertiary' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Doornstraat' />
+    <tag k='old_ref' v='N106' />
+  </way>
+  <way id='359554334' timestamp='2015-07-09T11:05:06Z' uid='436365' user='escada' visible='true' version='1' changeset='32516092'>
+    <nd ref='3642390964' />
+    <nd ref='180296654' />
+    <nd ref='36757450' />
+    <tag k='cycleway' v='track' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='name' v='Universiteitsplein' />
+    <tag k='oneway' v='yes' />
+    <tag k='sidewalk' v='right' />
+    <tag k='turn:lanes' v='left|through;right' />
+  </way>
+  <relation id='3489810' action='modify' timestamp='2015-07-09T11:05:17Z' uid='436365' user='escada' visible='true' version='6' changeset='32516092'>
+    <member type='node' ref='2591288698' role='platform' />
+    <member type='node' ref='2591288697' role='platform' />
+    <member type='node' ref='2591288696' role='platform' />
+    <member type='node' ref='2591288688' role='platform' />
+    <member type='node' ref='2216116526' role='platform' />
+    <member type='node' ref='2216116517' role='platform' />
+    <member type='node' ref='2591288679' role='platform' />
+    <member type='node' ref='2591288702' role='platform' />
+    <member type='node' ref='2028718812' role='platform' />
+    <member type='node' ref='2028718785' role='platform' />
+    <member type='node' ref='2214288691' role='platform' />
+    <member type='node' ref='2214288693' role='platform' />
+    <member type='node' ref='2214288695' role='platform' />
+    <member type='node' ref='2030054391' role='platform' />
+    <member type='node' ref='2038110900' role='platform' />
+    <member type='node' ref='2105559060' role='platform' />
+    <member type='node' ref='2655051455' role='platform' />
+    <member type='node' ref='2594970532' role='platform' />
+    <member type='node' ref='2594970530' role='platform' />
+    <member type='node' ref='1850325758' role='platform' />
+    <member type='node' ref='2594970542' role='platform' />
+    <member type='node' ref='1538266297' role='platform' />
+    <member type='node' ref='1891595469' role='platform' />
+    <member type='way' ref='7975826' role='' />
+    <member type='way' ref='22937657' role='' />
+    <member type='way' ref='22937669' role='' />
+    <member type='way' ref='8169083' role='' />
+    <member type='way' ref='8034569' role='' />
+    <member type='way' ref='22937860' role='' />
+    <member type='way' ref='22937861' role='' />
+    <member type='way' ref='22937757' role='' />
+    <member type='way' ref='22937747' role='' />
+    <member type='way' ref='211802732' role='' />
+    <member type='way' ref='227200908' role='' />
+    <member type='way' ref='32997122' role='' />
+    <member type='way' ref='211802714' role='' />
+    <member type='way' ref='211802715' role='' />
+    <member type='way' ref='181345107' role='' />
+    <member type='way' ref='4907297' role='' />
+    <member type='way' ref='260042752' role='' />
+    <member type='way' ref='260042751' role='' />
+    <member type='way' ref='260042750' role='' />
+    <member type='way' ref='36573790' role='' />
+    <member type='way' ref='42749202' role='' />
+    <member type='way' ref='22950047' role='' />
+    <member type='way' ref='342761611' role='' />
+    <member type='way' ref='36573376' role='' />
+    <member type='way' ref='342761612' role='' />
+    <member type='way' ref='62129775' role='' />
+    <member type='way' ref='23107297' role='' />
+    <member type='way' ref='192313654' role='' />
+    <member type='way' ref='192313652' role='' />
+    <member type='way' ref='192313658' role='' />
+    <member type='way' ref='211448546' role='' />
+    <member type='way' ref='22946083' role='' />
+    <member type='way' ref='22935648' role='' />
+    <member type='way' ref='192313657' role='' />
+    <member type='way' ref='22935631' role='' />
+    <member type='way' ref='62191948' role='' />
+    <member type='way' ref='5216370' role='' />
+    <member type='way' ref='8034156' role='' />
+    <member type='way' ref='38249250' role='' />
+    <member type='way' ref='38249251' role='' />
+    <member type='way' ref='8161716' role='' />
+    <member type='way' ref='38295187' role='' />
+    <member type='way' ref='38294976' role='' />
+    <member type='way' ref='150790751' role='' />
+    <member type='way' ref='150790750' role='' />
+    <member type='way' ref='193565406' role='' />
+    <member type='way' ref='26548064' role='' />
+    <member type='way' ref='26548060' role='' />
+    <member type='way' ref='193551718' role='' />
+    <member type='way' ref='38291188' role='' />
+    <member type='way' ref='22936584' role='' />
+    <member type='way' ref='22936593' role='' />
+    <member type='way' ref='150851784' role='' />
+    <member type='way' ref='150790581' role='' />
+    <member type='way' ref='225732678' role='' />
+    <member type='way' ref='225732680' role='' />
+    <member type='way' ref='225732679' role='' />
+    <member type='way' ref='220660872' role='' />
+    <member type='way' ref='225732676' role='' />
+    <member type='way' ref='260042754' role='' />
+    <member type='way' ref='220660868' role='' />
+    <member type='way' ref='220660864' role='' />
+    <member type='way' ref='234933759' role='' />
+    <member type='way' ref='234933763' role='' />
+    <member type='way' ref='260042776' role='' />
+    <member type='way' ref='260042766' role='' />
+    <member type='way' ref='260042764' role='' />
+    <member type='way' ref='260042765' role='' />
+    <member type='way' ref='260042762' role='' />
+    <member type='way' ref='220660863' role='' />
+    <member type='way' ref='260042757' role='' />
+    <member type='way' ref='145170566' role='' />
+    <member type='way' ref='145170563' role='' />
+    <member type='way' ref='240981418' role='' />
+    <member type='way' ref='27247756' role='' />
+    <member type='way' ref='5218149' role='' />
+    <member type='way' ref='27247771' role='' />
+    <member type='way' ref='359554246' role='' />
+    <member type='way' ref='359554245' role='' />
+    <member type='way' ref='24215224' role='' />
+    <member type='way' ref='17417440' role='' />
+    <member type='way' ref='17417806' role='' />
+    <member type='way' ref='17418016' role='' />
+    <member type='way' ref='260042759' role='' />
+    <member type='way' ref='19801109' role='' />
+    <member type='way' ref='359554334' role='' />
+    <member type='way' ref='24215210' role='' />
+    <member type='way' ref='19801111' role='' />
+    <member type='way' ref='8501562' role='' />
+    <member type='way' ref='8501563' role='' />
+    <member type='way' ref='8501565' role='' />
+    <member type='way' ref='27915984' role='' />
+    <member type='way' ref='295611847' role='' />
+    <member type='way' ref='24327083' role='' />
+    <member type='way' ref='8383284' role='' />
+    <member type='way' ref='260062356' role='' />
+    <member type='way' ref='273516571' role='' />
+    <member type='way' ref='27918429' role='' />
+    <member type='way' ref='260062348' role='' />
+    <member type='way' ref='8516733' role='' />
+    <member type='way' ref='40501179' role='' />
+    <tag k='bus' v='school' />
+    <tag k='from' v='Kontich Sint-Ritakerk' />
+    <tag k='name' v='De Lijn 131 Kontich Sint-Ritakerk - Jules Moretuslei' />
+    <tag k='network' v='DLAn' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='public_transport:version' v='2' />
+    <tag k='ref' v='131' />
+    <tag k='route' v='bus' />
+    <tag k='to' v='Jules Moretuslei' />
+    <tag k='type' v='route' />
+  </relation>
+  <relation id='3489811' timestamp='2014-02-05T06:54:57Z' uid='15188' user='Polyglot' visible='true' version='1' changeset='20386498'>
+    <member type='relation' ref='2409422' role='' />
+    <member type='relation' ref='3489810' role='' />
+    <tag k='bus' v='school' />
+    <tag k='colour' v='#005555' />
+    <tag k='name' v='Lier - Kontich scholen - Wilrijk' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='131' />
+    <tag k='ref:De_Lijn' v='1131' />
+    <tag k='route_master' v='bus' />
+    <tag k='type' v='route_master' />
+  </relation>
+</osm>

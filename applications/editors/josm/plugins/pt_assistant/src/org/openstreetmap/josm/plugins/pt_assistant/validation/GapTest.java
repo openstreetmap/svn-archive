@@ -40,12 +40,9 @@ public class GapTest extends Test {
 			List<RelationMember> members = r.getMembers();
 			final List<RelationMember> waysToCheck = new ArrayList<>();
 			for (RelationMember member : members) {
-				if (member.hasRole("") && OsmPrimitiveType.WAY.equals(member.getType())) {
-					Way way = member.getWay();
-					if (!way.hasTag("public_transport", "platform") && !way.hasTag("highway", "platform")
-							&& !way.hasTag("railway", "platform")) {
-						waysToCheck.add(member);
-					}
+
+				if (RouteUtils.isPTWay(member)) {
+					waysToCheck.add(member);
 				}
 			}
 
@@ -212,13 +209,21 @@ public class GapTest extends Test {
 
 			// if the error is a single overshoot:
 			if (testError.getCode() == ERROR_CODE_OVERSHOOT) {
-				// commands.add(testError.getFix());
+
 				for (OsmPrimitive primitive : testError.getPrimitives()) {
 					Relation originalRelation = (Relation) primitive;
 					Relation modifiedRelation = new Relation(originalRelation);
 					List<RelationMember> modifiedMembers = new ArrayList<>();
+					// add stops of a public transport route first:
 					for (RelationMember rm : originalRelation.getMembers()) {
-						if (rm.getType().equals(OsmPrimitiveType.WAY) && !overshootList.contains(rm)) {
+						if (RouteUtils.isPTStop(rm)) {
+							modifiedMembers.add(rm);
+						}
+						
+					}
+					// add ways of a public transport route (if they are not overshoots):
+					for (RelationMember rm: originalRelation.getMembers()) {
+						if (RouteUtils.isPTWay(rm) && !overshootList.contains(rm)) {
 							modifiedMembers.add(rm);
 						}
 					}

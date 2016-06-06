@@ -176,7 +176,7 @@ public class GapTest extends Test {
 					final List<RelationMember> stops = new ArrayList<>();
 					final List<RelationMember> ways = new ArrayList<>();
 					for (RelationMember member : members) {
-						if (member.hasRole("") && OsmPrimitiveType.WAY.equals(member.getType())) {
+						if (member.hasRole("") && OsmPrimitiveType.WAY.equals(member.getType())) { // FIXME
 							ways.add(member);
 						} else { // stops (and if the relation has anything
 									// besides ways and stops:

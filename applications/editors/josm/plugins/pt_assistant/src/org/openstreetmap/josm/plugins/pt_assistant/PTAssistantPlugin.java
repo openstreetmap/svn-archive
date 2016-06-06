@@ -6,6 +6,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.GapTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PlatformsFirstTest;
+import org.openstreetmap.josm.plugins.pt_assistant.validation.RoadTypeTest;
 
 /**
  * This is the main class of the PTAssistant plugin.
@@ -26,6 +27,7 @@ public class PTAssistantPlugin extends Plugin {
 		super(info);
 
 		OsmValidator.addTest(PlatformsFirstTest.class);
+		OsmValidator.addTest(RoadTypeTest.class);
 		OsmValidator.addTest(GapTest.class);
 
 	}

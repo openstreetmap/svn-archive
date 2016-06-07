@@ -78,7 +78,9 @@ public class GapTest extends Test {
 	}
 
 	/**
-	 * Checks if there is a gap for a given list of ways
+	 * Checks if there is a gap for a given list of ways. It does not check if
+	 * the way actually stands for a public transport platform - that should be
+	 * checked beforehand.
 	 * 
 	 * @param waysToCheck
 	 * @return
@@ -176,11 +178,28 @@ public class GapTest extends Test {
 					final List<RelationMember> stops = new ArrayList<>();
 					final List<RelationMember> ways = new ArrayList<>();
 					for (RelationMember member : members) {
-						if (member.hasRole("") && OsmPrimitiveType.WAY.equals(member.getType())) { // FIXME
-							ways.add(member);
-						} else { // stops (and if the relation has anything
-									// besides ways and stops:
-							stops.add(member);
+						if (RouteUtils.isPTWay(member)) {
+							if (member.getRole().equals("")) {
+								ways.add(member);
+							} else {
+								RelationMember modifiedMember = new RelationMember("", member.getWay());
+								ways.add(modifiedMember);
+							}
+
+						} else { // stops:
+							if (member.getRole().equals("stop_positon")) {
+								// it is not expected that stop_positions could be relations
+								if (member.getType().equals(OsmPrimitiveType.NODE)) {
+									RelationMember modifiedMember = new RelationMember("stop", member.getNode());
+									stops.add(modifiedMember);
+								} else { // if it is a primitive of type way:
+									RelationMember modifiedMember = new RelationMember("stop", member.getWay());
+									stops.add(modifiedMember);
+								}
+							} else { // if it is not a stop_position:
+								stops.add(member);
+							}
+
 						}
 					}
 
@@ -217,14 +236,33 @@ public class GapTest extends Test {
 					// add stops of a public transport route first:
 					for (RelationMember rm : originalRelation.getMembers()) {
 						if (RouteUtils.isPTStop(rm)) {
-							modifiedMembers.add(rm);
+							if (rm.hasRole("stop_position")) {
+								// it is not expected that stop_positions could be relations
+								if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+									RelationMember modifiedMember = new RelationMember("stop", rm.getNode());
+									modifiedMembers.add(modifiedMember);
+								} else { // if it is a primitive of type "way":
+									RelationMember modifiedMember = new RelationMember("stop", rm.getWay());
+									modifiedMembers.add(modifiedMember);
+								}
+							} else {
+								modifiedMembers.add(rm);
+							}
+
 						}
-						
+
 					}
-					// add ways of a public transport route (if they are not overshoots):
-					for (RelationMember rm: originalRelation.getMembers()) {
-						if (RouteUtils.isPTWay(rm) && !overshootList.contains(rm)) {
-							modifiedMembers.add(rm);
+					// add ways of a public transport route (if they are not
+					// overshoots):
+					for (RelationMember rm : originalRelation.getMembers()) {
+						if (RouteUtils.isPTWay(rm) && !overshootList.contains(rm)) {		
+							
+							if (rm.getRole().equals("")) {
+								modifiedMembers.add(rm);
+							} else {
+								RelationMember modifiedMember = new RelationMember("", rm.getWay());
+								modifiedMembers.add(modifiedMember);
+							}
 						}
 					}
 					modifiedRelation.setMembers(modifiedMembers);

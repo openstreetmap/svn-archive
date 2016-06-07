@@ -9,6 +9,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -30,17 +31,20 @@ public class RoadTypeTest extends Test {
 	public void visit(Relation r) {
 
 		if (RouteUtils.isTwoDirectionRoute(r)) {
-
+			
 			List<RelationMember> members = r.getMembers();
 
 			for (RelationMember rm : members) {
 				if (RouteUtils.isPTWay(rm)) {
-
+					
 					Way way = rm.getWay();
 					// at this point, the relation has already been checked to
 					// be a route of public_transport:version 2
 					boolean isCorrectRoadType = true;
 					if (r.hasTag("route", "bus") || r.hasTag("route", "share_taxi")) {
+						if (way.getId()==388339788 || way.getId() == 388339789) {
+
+						}
 						if (!RouteUtils.isWaySuitableForBuses(way)) {
 							isCorrectRoadType = false;
 						}
@@ -71,6 +75,7 @@ public class RoadTypeTest extends Test {
 					}
 
 					if (!isCorrectRoadType) {
+						
 						List<OsmPrimitive> primitiveList = new ArrayList<>(2);
 						primitiveList.add(0, r);
 						primitiveList.add(1, way);
@@ -90,7 +95,7 @@ public class RoadTypeTest extends Test {
 
 		List<Command> commands = new ArrayList<>(50);
 
-		if (testError.getTester().getClass().equals(GapTest.class) && testError.isFixable()) {
+		if (testError.getTester().getClass().equals(RoadTypeTest.class) && testError.isFixable()) {
 			List<OsmPrimitive> primitiveList = (List<OsmPrimitive>) testError.getPrimitives();
 			Relation originalRelation = (Relation) primitiveList.get(0);
 			Way wayToRemove = (Way) primitiveList.get(1);
@@ -98,18 +103,37 @@ public class RoadTypeTest extends Test {
 			Relation modifiedRelation = new Relation(originalRelation);
 			List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount()-1);
 			
-			// copy stop-related members first, public transport ways last:
+			// copy PT stops first, PT ways last:
 			for (RelationMember rm: originalRelation.getMembers()) {
 				if (RouteUtils.isPTStop(rm)) {
-					modifiedRelationMembers.add(rm);
+					
+					if (rm.getRole().equals("stop_position")) {
+						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+							RelationMember newMember = new RelationMember("stop", rm.getNode());
+							modifiedRelationMembers.add(newMember);
+						} else { // if it is a way:
+							RelationMember newMember = new RelationMember("stop", rm.getWay());
+							modifiedRelationMembers.add(newMember);
+						}
+					} else { 
+						// if the relation member does not have the role "stop_position":
+						modifiedRelationMembers.add(rm);
+					}
+					
 				} 
 			}
 			
+			// now copy PT ways:
 			for (RelationMember rm: originalRelation.getMembers()) {
 				if (RouteUtils.isPTWay(rm)) {
 					Way wayToCheck = rm.getWay();
 					if (wayToCheck != wayToRemove) {
-						modifiedRelationMembers.add(rm);
+						if (rm.getRole().equals("forward") || rm.getRole().equals("backward")) {
+							RelationMember modifiedMember = new RelationMember("", wayToCheck);
+							modifiedRelationMembers.add(modifiedMember);
+						} else {
+							modifiedRelationMembers.add(rm);
+						}
 					}
 				}
 			}
@@ -128,6 +152,7 @@ public class RoadTypeTest extends Test {
 		if (commands.size() == 1) {
 			return commands.get(0);
 		}
+		
 
 		return new SequenceCommand(tr("Remove way from route if it does not match the route type"), commands);	}
 

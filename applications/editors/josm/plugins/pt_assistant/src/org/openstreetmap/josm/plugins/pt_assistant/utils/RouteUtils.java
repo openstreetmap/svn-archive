@@ -48,7 +48,28 @@ public class RouteUtils {
 	 */
 	public static boolean isPTStop(RelationMember rm) {
 
-		return !isPTWay(rm);
+		if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+			return true;
+		}
+
+		if (rm.getType().equals(OsmPrimitiveType.RELATION)) {
+			if (rm.getRole().equals("stop_area")) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		Way w = rm.getWay();
+
+		if (w.hasTag("public_transport", "platform") || w.hasTag("highway", "platform")
+				|| w.hasTag("railway", "platform") || w.hasTag("public_transport", "platform_entry_only")
+				|| w.hasTag("highway", "platform_entry_only") || w.hasTag("railway", "platform_entry_only")
+				|| w.hasTag("public_transport", "platform_exit_only") || w.hasTag("highway", "platform_exit_only") || w.hasTag("railway", "platform_exit_only")) {
+			return true;
+		}
+
+		return false;
 
 	}
 
@@ -64,15 +85,7 @@ public class RouteUtils {
 	 */
 	public static boolean isPTWay(RelationMember rm) {
 
-		if (rm.hasRole("") && OsmPrimitiveType.WAY.equals(rm.getType())) {
-			Way way = rm.getWay();
-			if (!way.hasTag("public_transport", "platform") && !way.hasTag("highway", "platform")
-					&& !way.hasTag("railway", "platform")) {
-				return true;
-			}
-		}
-
-		return false;
+		return !isPTStop(rm);
 	}
 
 	/**
@@ -98,6 +111,5 @@ public class RouteUtils {
 
 		return false;
 	}
-
 
 }

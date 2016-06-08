@@ -53,6 +53,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
+        MapView.removeLayerChangeListener(this);
     }
 
     @Override

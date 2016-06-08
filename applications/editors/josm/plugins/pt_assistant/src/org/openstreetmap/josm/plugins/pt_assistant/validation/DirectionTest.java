@@ -79,7 +79,7 @@ public class DirectionTest extends Test {
 					primitiveList.add(0, r);
 					primitiveList.add(1, waysToCheck.get(i).getWay());
 					errors.add(new TestError(this, Severity.WARNING,
-							tr("PT: Route passes on oneway street in wrong direction"), ERROR_CODE_ROUNDABOUT,
+							tr("PT: Route passes on an unsplit roundabout"), ERROR_CODE_ROUNDABOUT,
 							primitiveList));
 				}
 			}

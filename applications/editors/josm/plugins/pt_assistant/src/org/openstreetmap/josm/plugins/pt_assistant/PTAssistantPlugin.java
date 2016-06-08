@@ -4,6 +4,7 @@ package org.openstreetmap.josm.plugins.pt_assistant;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.plugins.pt_assistant.validation.DirectionTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.GapTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PlatformsFirstTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.RoadTypeTest;
@@ -28,6 +29,7 @@ public class PTAssistantPlugin extends Plugin {
 
 		OsmValidator.addTest(PlatformsFirstTest.class);
 		OsmValidator.addTest(RoadTypeTest.class);
+		OsmValidator.addTest(DirectionTest.class);
 		OsmValidator.addTest(GapTest.class);
 
 	}

@@ -10,83 +10,80 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
-public class RoadTypeTest extends Test {
+public class DirectionTest extends Test {
 
-	public static final int ERROR_CODE_ROAD_TYPE = 3721;
+	public static final int ERROR_CODE_DIRECTION = 3731;
+	public static final int ERROR_CODE_ROUNDABOUT = 3732;
 
-	public RoadTypeTest() {
-		super(tr("Road Type Test"),
-				tr("Checks if the course of the route relation is compatible with the type of the road it passes on."));
+	public DirectionTest() {
+		super(tr("Direction Test"), tr("Checks if the route runs against the direction of underlying one-way roads"));
 	}
 
 	@Override
 	public void visit(Relation r) {
 
 		if (RouteUtils.isTwoDirectionRoute(r)) {
-			
-			List<RelationMember> members = r.getMembers();
 
-			for (RelationMember rm : members) {
-				if (RouteUtils.isPTWay(rm)) {
-					
-					Way way = rm.getWay();
-					// at this point, the relation has already been checked to
-					// be a route of public_transport:version 2
-					boolean isCorrectRoadType = true;
-					if (r.hasTag("route", "bus") || r.hasTag("route", "share_taxi")) {
-						if (way.getId()==388339788 || way.getId() == 388339789) {
+			List<RelationMember> waysToCheck = new ArrayList<>();
 
-						}
-						if (!RouteUtils.isWaySuitableForBuses(way)) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "trolleybus")) {
-						if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "tram")) {
-						if (!r.hasTag("railway", "tram")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "subway")) {
-						if (!r.hasTag("railway", "subway")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "light_rail")) {
-						if (!r.hasTag("raiilway", "subway")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "light_rail")) {
-						if (!r.hasTag("railway", "light_rail")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "train")) {
-						if (!r.hasTag("railway", "train")) {
-							isCorrectRoadType = false;
-						}
-					}
+			for (RelationMember rm : r.getMembers()) {
+				if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
+					waysToCheck.add(rm);
+				}
+			}
 
-					if (!isCorrectRoadType) {
-						
+			if (waysToCheck.isEmpty()) {
+				return;
+			}
+
+			WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
+			final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
+
+			for (int i = 0; i < links.size(); i++) {
+				if ((OsmUtils.isTrue(waysToCheck.get(i).getWay().get("oneway"))
+						&& links.get(i).direction.equals(WayConnectionType.Direction.BACKWARD))
+						|| (OsmUtils.isReversed(waysToCheck.get(i).getWay().get("oneway"))
+								&& links.get(i).direction.equals(WayConnectionType.Direction.FORWARD))) {
+
+					// At this point, the PTWay is going against the oneway
+					// direction. Check if this road allows buses to disregard
+					// the oneway restriction:
+
+					if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
+							&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
+							&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")) {
 						List<OsmPrimitive> primitiveList = new ArrayList<>(2);
 						primitiveList.add(0, r);
-						primitiveList.add(1, way);
-						
+						primitiveList.add(1, waysToCheck.get(i).getWay());
 						errors.add(new TestError(this, Severity.WARNING,
-								tr("PT: Route type does not match the type of the road it passes on"),
-								ERROR_CODE_ROAD_TYPE, primitiveList));
+								tr("PT: Route passes a oneway road in wrong direction"), ERROR_CODE_DIRECTION,
+								primitiveList));
 					}
 
 				}
+
+				if (links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_LEFT)
+						|| links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_RIGHT)) {
+					List<OsmPrimitive> primitiveList = new ArrayList<>(2);
+					primitiveList.add(0, r);
+					primitiveList.add(1, waysToCheck.get(i).getWay());
+					errors.add(new TestError(this, Severity.WARNING,
+							tr("PT: Route passes on oneway street in wrong direction"), ERROR_CODE_ROUNDABOUT,
+							primitiveList));
+				}
 			}
+
 		}
 	}
 
@@ -95,7 +92,7 @@ public class RoadTypeTest extends Test {
 
 		List<Command> commands = new ArrayList<>(50);
 
-		if (testError.getTester().getClass().equals(RoadTypeTest.class) && testError.isFixable()) {
+		if (testError.getTester().getClass().equals(DirectionTest.class) && testError.isFixable()) {
 			List<OsmPrimitive> primitiveList = (List<OsmPrimitive>) testError.getPrimitives();
 			Relation originalRelation = (Relation) primitiveList.get(0);
 			Way wayToRemove = (Way) primitiveList.get(1);
@@ -163,10 +160,10 @@ public class RoadTypeTest extends Test {
 	 */
 	@Override
 	public boolean isFixable(TestError testError) {
-		if (testError.getCode() == ERROR_CODE_ROAD_TYPE) {
+		if (testError.getCode() == ERROR_CODE_DIRECTION) {
 			return true;
 		}
-		return false; 
+		return false;
 	}
 
 }

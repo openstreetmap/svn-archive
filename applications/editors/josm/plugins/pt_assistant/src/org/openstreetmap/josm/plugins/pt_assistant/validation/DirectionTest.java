@@ -62,25 +62,24 @@ public class DirectionTest extends Test {
 
 					if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
 							&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
-							&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")) {
-						List<OsmPrimitive> primitiveList = new ArrayList<>(2);
-						primitiveList.add(0, r);
-						primitiveList.add(1, waysToCheck.get(i).getWay());
+							&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
+							&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")
+							&& !waysToCheck.get(i).getWay().hasTag("trolley_wire", "backward")) {
+						List<Relation> primitives = new ArrayList<>(1);
+						primitives.add(r);
+						List<Way> highlighted = new ArrayList<>(1);
+						highlighted.add(waysToCheck.get(i).getWay());
 						errors.add(new TestError(this, Severity.WARNING,
 								tr("PT: Route passes a oneway road in wrong direction"), ERROR_CODE_DIRECTION,
-								primitiveList));
+								primitives, highlighted));
 					}
 
 				}
 
 				if (links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_LEFT)
 						|| links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_RIGHT)) {
-					List<OsmPrimitive> primitiveList = new ArrayList<>(2);
-					primitiveList.add(0, r);
-					primitiveList.add(1, waysToCheck.get(i).getWay());
-					errors.add(new TestError(this, Severity.WARNING,
-							tr("PT: Route passes on an unsplit roundabout"), ERROR_CODE_ROUNDABOUT,
-							primitiveList));
+					errors.add(new TestError(this, Severity.WARNING, tr("PT: Route passes on an unsplit roundabout"),
+							ERROR_CODE_ROUNDABOUT, waysToCheck.get(i).getWay()));
 				}
 			}
 
@@ -93,17 +92,18 @@ public class DirectionTest extends Test {
 		List<Command> commands = new ArrayList<>(50);
 
 		if (testError.getTester().getClass().equals(DirectionTest.class) && testError.isFixable()) {
-			List<OsmPrimitive> primitiveList = (List<OsmPrimitive>) testError.getPrimitives();
-			Relation originalRelation = (Relation) primitiveList.get(0);
-			Way wayToRemove = (Way) primitiveList.get(1);
-			
+			List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
+			Relation originalRelation = (Relation) primitives.get(0);
+			List<OsmPrimitive> highlightedList = (List<OsmPrimitive>) testError.getHighlighted();
+			Way wayToRemove = (Way) highlightedList.get(0);
+
 			Relation modifiedRelation = new Relation(originalRelation);
-			List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount()-1);
-			
+			List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount() - 1);
+
 			// copy PT stops first, PT ways last:
-			for (RelationMember rm: originalRelation.getMembers()) {
+			for (RelationMember rm : originalRelation.getMembers()) {
 				if (RouteUtils.isPTStop(rm)) {
-					
+
 					if (rm.getRole().equals("stop_position")) {
 						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
 							RelationMember newMember = new RelationMember("stop", rm.getNode());
@@ -112,16 +112,17 @@ public class DirectionTest extends Test {
 							RelationMember newMember = new RelationMember("stop", rm.getWay());
 							modifiedRelationMembers.add(newMember);
 						}
-					} else { 
-						// if the relation member does not have the role "stop_position":
+					} else {
+						// if the relation member does not have the role
+						// "stop_position":
 						modifiedRelationMembers.add(rm);
 					}
-					
-				} 
+
+				}
 			}
-			
+
 			// now copy PT ways:
-			for (RelationMember rm: originalRelation.getMembers()) {
+			for (RelationMember rm : originalRelation.getMembers()) {
 				if (RouteUtils.isPTWay(rm)) {
 					Way wayToCheck = rm.getWay();
 					if (wayToCheck != wayToRemove) {
@@ -134,14 +135,14 @@ public class DirectionTest extends Test {
 					}
 				}
 			}
-			
+
 			modifiedRelation.setMembers(modifiedRelationMembers);
-			
+
 			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
 			commands.add(changeCommand);
-			
+
 		}
-		
+
 		if (commands.isEmpty()) {
 			return null;
 		}
@@ -149,10 +150,9 @@ public class DirectionTest extends Test {
 		if (commands.size() == 1) {
 			return commands.get(0);
 		}
-		
 
-		return new SequenceCommand(tr("Remove way from route if it does not match the route type"), commands);	
-		
+		return new SequenceCommand(tr("Remove way from route if it does not match the route type"), commands);
+
 	}
 
 	/**

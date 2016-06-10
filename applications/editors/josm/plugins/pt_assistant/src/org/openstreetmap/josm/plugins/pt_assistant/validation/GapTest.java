@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -25,6 +27,7 @@ public class GapTest extends Test {
 
 	public static final int ERROR_CODE_SORTING = 3711;
 	public static final int ERROR_CODE_OVERSHOOT = 3712;
+	public static final int ERROR_CODE_SPLITTING = 3713;
 	public static final int ERROR_CODE_OTHER_GAP = 3719;
 
 	private List<RelationMember> overshootList = new ArrayList<>();
@@ -35,42 +38,60 @@ public class GapTest extends Test {
 
 	@Override
 	public void visit(Relation r) {
+		
+		if (!RouteUtils.isTwoDirectionRoute(r)) {
+			return;
+		}
 
-		if (RouteUtils.isTwoDirectionRoute(r)) {
-			List<RelationMember> members = r.getMembers();
-			final List<RelationMember> waysToCheck = new ArrayList<>();
-			for (RelationMember member : members) {
+//		boolean isComplete = RouteUtils.ensureMemberCompleteness(r);
+//		if (!isComplete) {
+//			return;
+//		}
+		
+		if (RouteUtils.hasIncompleteMembers(r)) {
+			return;
+		}
+		
+		List<RelationMember> members = r.getMembers();
+		final List<RelationMember> waysToCheck = new ArrayList<>();
+		for (RelationMember member : members) {
 
-				if (RouteUtils.isPTWay(member)) {
-					waysToCheck.add(member);
-				}
+			if (RouteUtils.isPTWay(member)) {
+				waysToCheck.add(member);
 			}
+		}
 
-			if (waysToCheck.isEmpty()) {
-				return;
-			}
+		if (waysToCheck.isEmpty()) {
+			return;
+		}
 
-			if (hasGap(waysToCheck)) {
-				RelationSorter sorter = new RelationSorter();
-				List<RelationMember> correctedList = sorter.sortMembers(waysToCheck);
+		if (hasGap(waysToCheck)) {
+			RelationSorter sorter = new RelationSorter();
+			List<RelationMember> correctedList = sorter.sortMembers(waysToCheck);
 
-				if (!hasGap(correctedList)) {
+			if (!hasGap(correctedList)) {
+				errors.add(new TestError(this, Severity.WARNING,
+						tr("PT: Route contains a gap that can be fixed by sorting"), ERROR_CODE_SORTING, r));
+			} else {
+				// List<RelationMember> overshoots =
+				// this.getOvershoots(correctedList);
+				// if (!overshoots.isEmpty()) {
+				// // TODO: make sure that duplicates are removed first
+				// for (RelationMember overshoot : overshoots) {
+				// List<Relation> primitives = new ArrayList<>(1);
+				// primitives.add(r);
+				// List<Way> highlighted = new ArrayList<>(1);
+				// highlighted.add(overshoot.getWay());
+				// errors.add(new TestError(this, Severity.WARNING, tr("PT:
+				// Route contains an overshoot"),
+				// ERROR_CODE_OVERSHOOT, primitives, highlighted));
+				// }
+				//
+				// } else {
 					errors.add(new TestError(this, Severity.WARNING,
-							tr("PT: Route contains a gap that can be fixed by sorting"), ERROR_CODE_SORTING, r));
-				} else {
-					List<RelationMember> overshoots = this.getOvershoots(correctedList);
-					if (!overshoots.isEmpty()) {
-						// TODO: make sure that duplicates are removed first
-						overshootList = overshoots;
-						errors.add(new TestError(this, Severity.WARNING, tr("PT: Route contains an overshoot"),
-								ERROR_CODE_OVERSHOOT, r));
-					} else {
-						errors.add(new TestError(this, Severity.WARNING,
-								tr("PT: Route contains a gap that cannot be fixed by sorting the ways"),
-								ERROR_CODE_OTHER_GAP, r));
-					}
-				}
-
+							tr("PT: Route contains a gap that cannot be fixed by sorting the ways"),
+							ERROR_CODE_OTHER_GAP, r));
+//				}
 			}
 
 		}
@@ -97,8 +118,6 @@ public class GapTest extends Test {
 
 			}
 		}
-		
-		
 
 		return false;
 	}
@@ -190,7 +209,8 @@ public class GapTest extends Test {
 
 						} else { // stops:
 							if (member.getRole().equals("stop_positon")) {
-								// it is not expected that stop_positions could be relations
+								// it is not expected that stop_positions could
+								// be relations
 								if (member.getType().equals(OsmPrimitiveType.NODE)) {
 									RelationMember modifiedMember = new RelationMember("stop", member.getNode());
 									stops.add(modifiedMember);
@@ -229,51 +249,52 @@ public class GapTest extends Test {
 			}
 
 			// if the error is a single overshoot:
-			if (testError.getCode() == ERROR_CODE_OVERSHOOT) {
-
-				for (OsmPrimitive primitive : testError.getPrimitives()) {
-					Relation originalRelation = (Relation) primitive;
-					Relation modifiedRelation = new Relation(originalRelation);
-					List<RelationMember> modifiedMembers = new ArrayList<>();
-					// add stops of a public transport route first:
-					for (RelationMember rm : originalRelation.getMembers()) {
-						if (RouteUtils.isPTStop(rm)) {
-							if (rm.hasRole("stop_position")) {
-								// it is not expected that stop_positions could be relations
-								if (rm.getType().equals(OsmPrimitiveType.NODE)) {
-									RelationMember modifiedMember = new RelationMember("stop", rm.getNode());
-									modifiedMembers.add(modifiedMember);
-								} else { // if it is a primitive of type "way":
-									RelationMember modifiedMember = new RelationMember("stop", rm.getWay());
-									modifiedMembers.add(modifiedMember);
-								}
-							} else {
-								modifiedMembers.add(rm);
-							}
-
-						}
-
-					}
-					// add ways of a public transport route (if they are not
-					// overshoots):
-					for (RelationMember rm : originalRelation.getMembers()) {
-						if (RouteUtils.isPTWay(rm) && !overshootList.contains(rm)) {		
-							
-							if (rm.getRole().equals("")) {
-								modifiedMembers.add(rm);
-							} else {
-								RelationMember modifiedMember = new RelationMember("", rm.getWay());
-								modifiedMembers.add(modifiedMember);
-							}
-						}
-					}
-					modifiedRelation.setMembers(modifiedMembers);
-
-					ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
-					commands.add(changeCommand);
-				}
-
-			}
+//			if (testError.getCode() == ERROR_CODE_OVERSHOOT) {
+//
+//				for (OsmPrimitive primitive : testError.getPrimitives()) {
+//					Relation originalRelation = (Relation) primitive;
+//					Relation modifiedRelation = new Relation(originalRelation);
+//					List<RelationMember> modifiedMembers = new ArrayList<>();
+//					// add stops of a public transport route first:
+//					for (RelationMember rm : originalRelation.getMembers()) {
+//						if (RouteUtils.isPTStop(rm)) {
+//							if (rm.hasRole("stop_position")) {
+//								// it is not expected that stop_positions could
+//								// be relations
+//								if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+//									RelationMember modifiedMember = new RelationMember("stop", rm.getNode());
+//									modifiedMembers.add(modifiedMember);
+//								} else { // if it is a primitive of type "way":
+//									RelationMember modifiedMember = new RelationMember("stop", rm.getWay());
+//									modifiedMembers.add(modifiedMember);
+//								}
+//							} else {
+//								modifiedMembers.add(rm);
+//							}
+//
+//						}
+//
+//					}
+//					// add ways of a public transport route (if they are not
+//					// overshoots):
+//					for (RelationMember rm : originalRelation.getMembers()) {
+//						if (RouteUtils.isPTWay(rm) && !overshootList.contains(rm)) {
+//
+//							if (rm.getRole().equals("")) {
+//								modifiedMembers.add(rm);
+//							} else {
+//								RelationMember modifiedMember = new RelationMember("", rm.getWay());
+//								modifiedMembers.add(modifiedMember);
+//							}
+//						}
+//					}
+//					modifiedRelation.setMembers(modifiedMembers);
+//
+//					ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+//					commands.add(changeCommand);
+//				}
+//
+//			}
 		}
 
 		if (commands.isEmpty()) {
@@ -293,7 +314,7 @@ public class GapTest extends Test {
 	 */
 	@Override
 	public boolean isFixable(TestError testError) {
-		if (testError.getCode() == ERROR_CODE_SORTING || testError.getCode() == ERROR_CODE_OVERSHOOT) {
+		if (testError.getCode() == ERROR_CODE_SORTING ) {
 			return true;
 		}
 		return false;

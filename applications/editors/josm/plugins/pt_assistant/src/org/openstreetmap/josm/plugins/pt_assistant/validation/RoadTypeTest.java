@@ -30,64 +30,72 @@ public class RoadTypeTest extends Test {
 	@Override
 	public void visit(Relation r) {
 
-		if (RouteUtils.isTwoDirectionRoute(r)) {
-			
-			List<RelationMember> members = r.getMembers();
+		if (!RouteUtils.isTwoDirectionRoute(r)) {
+			return;
+		}
 
-			for (RelationMember rm : members) {
-				if (RouteUtils.isPTWay(rm)) {
-					
-					Way way = rm.getWay();
-					// at this point, the relation has already been checked to
-					// be a route of public_transport:version 2
-					boolean isCorrectRoadType = true;
-					if (r.hasTag("route", "bus") || r.hasTag("route", "share_taxi")) {
-						if (way.getId()==388339788 || way.getId() == 388339789) {
+//		boolean isComplete = RouteUtils.ensureMemberCompleteness(r);
+//		if (!isComplete) {
+//			return;
+//		}
+		
+		if (RouteUtils.hasIncompleteMembers(r)) {
+			return;
+		}
+		
+		List<RelationMember> members = r.getMembers();
 
-						}
-						if (!RouteUtils.isWaySuitableForBuses(way)) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "trolleybus")) {
-						if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "tram")) {
-						if (!r.hasTag("railway", "tram")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "subway")) {
-						if (!r.hasTag("railway", "subway")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "light_rail")) {
-						if (!r.hasTag("raiilway", "subway")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "light_rail")) {
-						if (!r.hasTag("railway", "light_rail")) {
-							isCorrectRoadType = false;
-						}
-					} else if (r.hasTag("route", "train")) {
-						if (!r.hasTag("railway", "train")) {
-							isCorrectRoadType = false;
-						}
+		for (RelationMember rm : members) {
+			if (RouteUtils.isPTWay(rm)) {
+
+				Way way = rm.getWay();
+				// at this point, the relation has already been checked to
+				// be a route of public_transport:version 2
+				boolean isCorrectRoadType = true;
+				if (r.hasTag("route", "bus") || r.hasTag("route", "share_taxi")) {
+					if (!RouteUtils.isWaySuitableForBuses(way)) {
+						isCorrectRoadType = false;
 					}
-
-					if (!isCorrectRoadType) {
-						
-						List<OsmPrimitive> primitiveList = new ArrayList<>(2);
-						primitiveList.add(0, r);
-						primitiveList.add(1, way);
-						
-						errors.add(new TestError(this, Severity.WARNING,
-								tr("PT: Route type does not match the type of the road it passes on"),
-								ERROR_CODE_ROAD_TYPE, primitiveList));
+				} else if (r.hasTag("route", "trolleybus")) {
+					if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
+						isCorrectRoadType = false;
 					}
-
+				} else if (r.hasTag("route", "tram")) {
+					if (!r.hasTag("railway", "tram")) {
+						isCorrectRoadType = false;
+					}
+				} else if (r.hasTag("route", "subway")) {
+					if (!r.hasTag("railway", "subway")) {
+						isCorrectRoadType = false;
+					}
+				} else if (r.hasTag("route", "light_rail")) {
+					if (!r.hasTag("raiilway", "subway")) {
+						isCorrectRoadType = false;
+					}
+				} else if (r.hasTag("route", "light_rail")) {
+					if (!r.hasTag("railway", "light_rail")) {
+						isCorrectRoadType = false;
+					}
+				} else if (r.hasTag("route", "train")) {
+					if (!r.hasTag("railway", "train")) {
+						isCorrectRoadType = false;
+					}
 				}
+
+				if (!isCorrectRoadType) {
+
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(r);
+					List<Way> highlighted = new ArrayList<>(1);
+					highlighted.add(way);
+					errors.add(new TestError(this, Severity.WARNING,
+							tr("PT: Route type does not match the type of the road it passes on"), ERROR_CODE_ROAD_TYPE,
+							primitives, highlighted));
+				}
+
 			}
 		}
+
 	}
 
 	@Override
@@ -96,17 +104,18 @@ public class RoadTypeTest extends Test {
 		List<Command> commands = new ArrayList<>(50);
 
 		if (testError.getTester().getClass().equals(RoadTypeTest.class) && testError.isFixable()) {
-			List<OsmPrimitive> primitiveList = (List<OsmPrimitive>) testError.getPrimitives();
-			Relation originalRelation = (Relation) primitiveList.get(0);
-			Way wayToRemove = (Way) primitiveList.get(1);
-			
+			List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
+			Relation originalRelation = (Relation) primitives.get(0);
+			List<OsmPrimitive> highlighted = (List<OsmPrimitive>) testError.getHighlighted();
+			Way wayToRemove = (Way) highlighted.get(0);
+
 			Relation modifiedRelation = new Relation(originalRelation);
-			List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount()-1);
-			
+			List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount() - 1);
+
 			// copy PT stops first, PT ways last:
-			for (RelationMember rm: originalRelation.getMembers()) {
+			for (RelationMember rm : originalRelation.getMembers()) {
 				if (RouteUtils.isPTStop(rm)) {
-					
+
 					if (rm.getRole().equals("stop_position")) {
 						if (rm.getType().equals(OsmPrimitiveType.NODE)) {
 							RelationMember newMember = new RelationMember("stop", rm.getNode());
@@ -115,16 +124,17 @@ public class RoadTypeTest extends Test {
 							RelationMember newMember = new RelationMember("stop", rm.getWay());
 							modifiedRelationMembers.add(newMember);
 						}
-					} else { 
-						// if the relation member does not have the role "stop_position":
+					} else {
+						// if the relation member does not have the role
+						// "stop_position":
 						modifiedRelationMembers.add(rm);
 					}
-					
-				} 
+
+				}
 			}
-			
+
 			// now copy PT ways:
-			for (RelationMember rm: originalRelation.getMembers()) {
+			for (RelationMember rm : originalRelation.getMembers()) {
 				if (RouteUtils.isPTWay(rm)) {
 					Way wayToCheck = rm.getWay();
 					if (wayToCheck != wayToRemove) {
@@ -137,14 +147,14 @@ public class RoadTypeTest extends Test {
 					}
 				}
 			}
-			
+
 			modifiedRelation.setMembers(modifiedRelationMembers);
-			
+
 			ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
 			commands.add(changeCommand);
-			
+
 		}
-		
+
 		if (commands.isEmpty()) {
 			return null;
 		}
@@ -152,10 +162,9 @@ public class RoadTypeTest extends Test {
 		if (commands.size() == 1) {
 			return commands.get(0);
 		}
-		
 
-		return new SequenceCommand(tr("Remove way from route if it does not match the route type"), commands);	
-		
+		return new SequenceCommand(tr("Remove way from route if it does not match the route type"), commands);
+
 	}
 
 	/**
@@ -166,7 +175,7 @@ public class RoadTypeTest extends Test {
 		if (testError.getCode() == ERROR_CODE_ROAD_TYPE) {
 			return true;
 		}
-		return false; 
+		return false;
 	}
 
 }

@@ -1,6 +1,16 @@
 package org.openstreetmap.josm.plugins.pt_assistant.utils;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+
+import org.openstreetmap.josm.actions.DownloadPrimitiveAction;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -12,6 +22,18 @@ import org.openstreetmap.josm.data.osm.Way;
  *
  */
 public class RouteUtils {
+
+	// indicates if the user needs to be asked before fetching incomplete
+	// members of a relation.
+
+	private enum ASK_TO_FETCH {
+		DO_ASK, DONT_ASK_AND_FETCH, DONT_ASK_AND_DONT_FETCH
+	};
+
+	private static ASK_TO_FETCH askToFetch = ASK_TO_FETCH.DO_ASK;
+	
+	// checks that the same relation is only fetched once
+	private static Relation lastRelationToFetch = null;
 
 	private RouteUtils() {
 		// private constructor for util classes
@@ -65,7 +87,8 @@ public class RouteUtils {
 		if (w.hasTag("public_transport", "platform") || w.hasTag("highway", "platform")
 				|| w.hasTag("railway", "platform") || w.hasTag("public_transport", "platform_entry_only")
 				|| w.hasTag("highway", "platform_entry_only") || w.hasTag("railway", "platform_entry_only")
-				|| w.hasTag("public_transport", "platform_exit_only") || w.hasTag("highway", "platform_exit_only") || w.hasTag("railway", "platform_exit_only")) {
+				|| w.hasTag("public_transport", "platform_exit_only") || w.hasTag("highway", "platform_exit_only")
+				|| w.hasTag("railway", "platform_exit_only")) {
 			return true;
 		}
 
@@ -111,5 +134,103 @@ public class RouteUtils {
 
 		return false;
 	}
+
+	/**
+	 * Checks if all members of a relation are complete. If not, the user is
+	 * asked to confirm the permission to fetch them, and they are fetched. The
+	 * completeness of the relation itself is not checked.
+	 * 
+	 * @param r
+	 *            relation
+	 * @return true if all relation members are complete (or fetched), false
+	 *         otherwise (including if the user denies permission to download
+	 *         data)
+	 * TODO: what should be done in case the connection to the server is broken
+	 */
+	public static boolean ensureMemberCompleteness(Relation r) {
+		
+		if (r == null) {
+			return false;
+		}
+
+		boolean isComplete = true;
+
+		// check if there is at least one incomplete relation member:
+		for (RelationMember rm : r.getMembers()) {
+			if ((rm.isNode() && rm.getNode().isIncomplete()) || (rm.isWay() && rm.getWay().isIncomplete())
+					|| (rm.isRelation() && rm.getRelation().isIncomplete())) {
+				isComplete = false;
+				break;
+			}
+		}
+
+		if (!isComplete && !r.equals(lastRelationToFetch)) {
+
+			int userInput = Integer.MIN_VALUE;
+			
+
+			if (askToFetch == ASK_TO_FETCH.DO_ASK) {
+				String message = tr("The relation (id=" + r.getId()
+						+ ") has incomplete members.\nThey need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?");
+				JCheckBox checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
+				Object[] params = { message, checkbox };
+				String[] options = { tr("Yes"), tr("No") };
+				// ask the user:
+				userInput = JOptionPane.showOptionDialog(null, params, tr("Fetch Request"), JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, 0);
+				
+
+				// if the user does not want to be asked:
+				if (checkbox.isSelected()) {
+					if (userInput == 0) {
+						askToFetch = ASK_TO_FETCH.DONT_ASK_AND_FETCH;
+					} else {
+						askToFetch = ASK_TO_FETCH.DONT_ASK_AND_DONT_FETCH;
+					}
+				}
+			}
+
+			// if the user does want to fetch:
+			if (userInput == 0 || askToFetch == ASK_TO_FETCH.DONT_ASK_AND_FETCH) {
+				List<PrimitiveId> list = new ArrayList<>(1);
+				list.add(r);
+				DownloadPrimitiveAction.processItems(false, list, false, true);
+				isComplete = true;
+				lastRelationToFetch = r;
+
+			}
+
+		}
+
+		return isComplete;
+	}
+	
+	
+	public static boolean hasIncompleteMembers(Relation r) {
+		if (r == null) {
+			return true;
+		}
+		for (RelationMember rm: r.getMembers()) {
+			if ((rm.isNode() && rm.getNode().isIncomplete()) || (rm.isWay() && rm.getWay().isIncomplete())
+					|| (rm.isRelation() && rm.getRelation().isIncomplete())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+//	/**
+//	 * TODO: this is temporal
+//	 */
+//	public static String getFetch() {
+//		if (askToFetch == ASK_TO_FETCH.DO_ASK) {
+//			return "do ask";
+//		} 
+//		if (askToFetch == ASK_TO_FETCH.DONT_ASK_AND_FETCH) {
+//			return "don;t ask and fetch";
+//		}
+//		return "don't ask and don't fetch";
+//	}
 
 }

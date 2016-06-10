@@ -5,9 +5,12 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.OsmUtils;
@@ -24,66 +27,92 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 public class DirectionTest extends Test {
 
 	public static final int ERROR_CODE_DIRECTION = 3731;
-	public static final int ERROR_CODE_ROUNDABOUT = 3732;
+	public static final int ERROR_CODE_UNSPLIT_ROUNDABOUT = 3732;
+	public static final int ERROR_CODE_SPLIT_ROUNDABOUT = 3733;
 
 	public DirectionTest() {
 		super(tr("Direction Test"), tr("Checks if the route runs against the direction of underlying one-way roads"));
+
 	}
 
 	@Override
 	public void visit(Relation r) {
 
-		if (RouteUtils.isTwoDirectionRoute(r)) {
+		if (!RouteUtils.isTwoDirectionRoute(r)) {
+			return;
+		}
 
-			List<RelationMember> waysToCheck = new ArrayList<>();
+//		boolean isComplete = RouteUtils.ensureMemberCompleteness(r);
+//		if (!isComplete) {
+//			return;
+//		}
+		
+		if (RouteUtils.hasIncompleteMembers(r)) {
+			return;
+		}
 
-			for (RelationMember rm : r.getMembers()) {
-				if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
-					waysToCheck.add(rm);
+		List<RelationMember> waysToCheck = new ArrayList<>();
+
+		for (RelationMember rm : r.getMembers()) {
+			if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
+				waysToCheck.add(rm);
+			}
+		}
+
+		if (waysToCheck.isEmpty()) {
+			return;
+		}
+
+		WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
+		final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
+
+		for (int i = 0; i < links.size(); i++) {
+			if ((OsmUtils.isTrue(waysToCheck.get(i).getWay().get("oneway"))
+					&& links.get(i).direction.equals(WayConnectionType.Direction.BACKWARD))
+					|| (OsmUtils.isReversed(waysToCheck.get(i).getWay().get("oneway"))
+							&& links.get(i).direction.equals(WayConnectionType.Direction.FORWARD))) {
+
+				// At this point, the PTWay is going against the oneway
+				// direction. Check if this road allows buses to disregard
+				// the oneway restriction:
+
+				if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
+						&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
+						&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
+						&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")
+						&& !waysToCheck.get(i).getWay().hasTag("trolley_wire", "backward")) {
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(r);
+					List<Way> highlighted = new ArrayList<>(1);
+					highlighted.add(waysToCheck.get(i).getWay());
+					errors.add(new TestError(this, Severity.WARNING,
+							tr("PT: Route passes a oneway road in wrong direction"), ERROR_CODE_DIRECTION, primitives,
+							highlighted));
+					return;
 				}
+
 			}
 
-			if (waysToCheck.isEmpty()) {
-				return;
-			}
-
-			WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
-			final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
-
-			for (int i = 0; i < links.size(); i++) {
-				if ((OsmUtils.isTrue(waysToCheck.get(i).getWay().get("oneway"))
-						&& links.get(i).direction.equals(WayConnectionType.Direction.BACKWARD))
-						|| (OsmUtils.isReversed(waysToCheck.get(i).getWay().get("oneway"))
-								&& links.get(i).direction.equals(WayConnectionType.Direction.FORWARD))) {
-
-					// At this point, the PTWay is going against the oneway
-					// direction. Check if this road allows buses to disregard
-					// the oneway restriction:
-
-					if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
-							&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
-							&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
-							&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")
-							&& !waysToCheck.get(i).getWay().hasTag("trolley_wire", "backward")) {
-						List<Relation> primitives = new ArrayList<>(1);
-						primitives.add(r);
-						List<Way> highlighted = new ArrayList<>(1);
-						highlighted.add(waysToCheck.get(i).getWay());
-						errors.add(new TestError(this, Severity.WARNING,
-								tr("PT: Route passes a oneway road in wrong direction"), ERROR_CODE_DIRECTION,
-								primitives, highlighted));
-					}
-
-				}
-
-				if (links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_LEFT)
-						|| links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_RIGHT)) {
-					errors.add(new TestError(this, Severity.WARNING, tr("PT: Route passes on an unsplit roundabout"),
-							ERROR_CODE_ROUNDABOUT, waysToCheck.get(i).getWay()));
-				}
-			}
+//			if (links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_LEFT)
+//					|| links.get(i).direction.equals(WayConnectionType.Direction.ROUNDABOUT_RIGHT)) {
+//				errors.add(new TestError(this, Severity.WARNING, tr("PT: Route passes on an unsplit roundabout"),
+//						ERROR_CODE_UNSPLIT_ROUNDABOUT, waysToCheck.get(i).getWay()));
+//				return;
+//			}
+			
+//			if (waysToCheck.get(i).getWay().hasTag("junction", "roundabout")) {
+//				JOptionPane.showMessageDialog(null, waysToCheck.get(i).getWay().getId() + " linkPrev: " + links.get(i).linkPrev + ", linkNext: " + links.get(i).linkNext);
+////				Node firstNode = waysToCheck.get(i).getWay().firstNode();
+////				Node lastNode = waysToCheck.get(index)
+////				if (i == 0 && waysToCheck.size() > 1) {
+////					// if this is the very first way:
+////					
+////				}
+//			}
+			
 
 		}
+
 	}
 
 	@Override

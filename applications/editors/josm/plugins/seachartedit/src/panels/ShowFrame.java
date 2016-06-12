@@ -73,7 +73,7 @@ public class ShowFrame extends JFrame {
 		}
 
 		@Override
-		public Color background() {
+		public Color background(S57map map) {
 			// TODO Auto-generated method stub
 			return null;
 		}

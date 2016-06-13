@@ -9,6 +9,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.DownloadPrimitiveAction;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -160,7 +161,9 @@ public class RouteUtils {
 			if ((rm.isNode() && rm.getNode().isIncomplete()) || (rm.isWay() && rm.getWay().isIncomplete())
 					|| (rm.isRelation() && rm.getRelation().isIncomplete())) {
 				isComplete = false;
+				
 				break;
+				
 			}
 		}
 
@@ -192,9 +195,26 @@ public class RouteUtils {
 
 			// if the user does want to fetch:
 			if (userInput == 0 || askToFetch == ASK_TO_FETCH.DONT_ASK_AND_FETCH) {
-				List<PrimitiveId> list = new ArrayList<>(1);
-				list.add(r);
-				DownloadPrimitiveAction.processItems(false, list, false, true);
+//				List<PrimitiveId> list = new ArrayList<>(1);
+//				list.add(r);
+				List<PrimitiveId> list = new ArrayList<>();
+				for (OsmPrimitive primitive: r.getIncompleteMembers()) {
+					list.add(primitive);
+				}
+				
+				Thread t = new Thread (new IncompleteMembersDownloader(list));
+				t.run();
+				try {
+					t.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				
+				
+//				DownloadPrimitiveAction.processItems(false, list, false, true);
+				JOptionPane.showMessageDialog(null, "download expected to be finished");
 				isComplete = true;
 				lastRelationToFetch = r;
 
@@ -232,5 +252,8 @@ public class RouteUtils {
 //		}
 //		return "don't ask and don't fetch";
 //	}
+	
 
 }
+
+

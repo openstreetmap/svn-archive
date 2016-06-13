@@ -8,10 +8,12 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.validation.OsmValidator;
+import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.DirectionTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.GapTest;
+import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssitantValidatorTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PlatformsFirstTest;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.RoadTypeTest;
 
@@ -33,10 +35,13 @@ public class PTAssistantPlugin extends Plugin {
 	public PTAssistantPlugin(PluginInformation info) {
 		super(info);
 
-		OsmValidator.addTest(PlatformsFirstTest.class);
-		OsmValidator.addTest(RoadTypeTest.class);
-		OsmValidator.addTest(DirectionTest.class);
-		OsmValidator.addTest(GapTest.class);
+//		OsmValidator.addTest(PlatformsFirstTest.class);
+//		OsmValidator.addTest(RoadTypeTest.class);
+//		OsmValidator.addTest(DirectionTest.class);
+//		OsmValidator.addTest(GapTest.class);
+		
+		OsmValidator.addTest(PTAssitantValidatorTest.class);
+		
 
 	}
 	

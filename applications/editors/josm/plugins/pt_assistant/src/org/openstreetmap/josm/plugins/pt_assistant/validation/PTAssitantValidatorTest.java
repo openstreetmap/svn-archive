@@ -41,7 +41,7 @@ public class PTAssitantValidatorTest extends Test {
 		if (r.hasIncompleteMembers()) {
 			 String message = tr("The relation (id=" + r.getId()
 			 + ") has incomplete members.\nThey need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?");
-			 JCheckBox checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
+			 JCheckBox checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
 			 Object[] params = { message, checkbox }; 
 			 String[] options = { tr("Yes"), tr("No") };
 			 int userInput = JOptionPane.showOptionDialog(null, params,

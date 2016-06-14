@@ -27,8 +27,8 @@ public class PTAssitantValidatorTest extends Test {
 	public static final int ERROR_CODE_DIRECTION = 3731;
 
 	public PTAssitantValidatorTest() {
-		 super(tr("Public Transport Assistant tests"),
-		 tr("Check if route relations are compatible with public transport version 2"));
+		super(tr("Public Transport Assistant tests"),
+				tr("Check if route relations are compatible with public transport version 2"));
 	}
 
 	@Override
@@ -39,14 +39,21 @@ public class PTAssitantValidatorTest extends Test {
 		}
 
 		if (r.hasIncompleteMembers()) {
-			 String message = tr("The relation (id=" + r.getId()
-			 + ") has incomplete members.\nThey need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?");
-			 JCheckBox checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
-			 Object[] params = { message, checkbox }; 
-			 String[] options = { tr("Yes"), tr("No") };
-			 int userInput = JOptionPane.showOptionDialog(null, params,
-			 tr("Fetch Request"), JOptionPane.YES_NO_OPTION,
-			 JOptionPane.QUESTION_MESSAGE, null, options, 0);
+
+			// IncompleteMembersDownloadDialog incompleteDialog = new
+			// IncompleteMembersDownloadDialog(r.getId());
+			//
+			// int userInput = incompleteDialog.getUserSelection();
+
+			String message = tr("The relation (id=" + r.getId()
+					+ ") has incomplete members.\nThey need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?");
+			JCheckBox checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
+			Object[] params = { message, checkbox };
+			String[] options = { tr("Yes"), tr("No") };
+
+			int userInput = Integer.MIN_VALUE;
+			userInput = JOptionPane.showOptionDialog(null, params, tr("Fetch Request"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, options, 0);
 
 			if (userInput == 0) {
 
@@ -60,9 +67,7 @@ public class PTAssitantValidatorTest extends Test {
 					}
 				}
 
-
 			}
-
 		}
 
 		List<RelationMember> waysToCheck = new ArrayList<>();
@@ -107,6 +112,11 @@ public class PTAssitantValidatorTest extends Test {
 
 			}
 		}
+		
+//		List<Relation> primitives = new ArrayList<>(1);
+//		primitives.add(r);
+//		errors.add(new TestError(this, Severity.WARNING, tr("PT: test warning"), ERROR_CODE_DIRECTION, primitives));
+		
 	}
 
 	/**

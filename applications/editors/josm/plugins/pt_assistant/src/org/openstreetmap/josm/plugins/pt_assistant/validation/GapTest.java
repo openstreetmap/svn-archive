@@ -43,11 +43,6 @@ public class GapTest extends Test {
 			return;
 		}
 
-//		boolean isComplete = RouteUtils.ensureMemberCompleteness(r);
-//		if (!isComplete) {
-//			return;
-//		}
-		
 		if (RouteUtils.hasIncompleteMembers(r)) {
 			return;
 		}

@@ -24,11 +24,17 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 public class PTAssitantValidatorTest extends Test {
 
+	public static final int ERROR_CODE_SORTING = 3711;
+	// public static final int ERROR_CODE_OVERSHOOT = 3712;
+	// public static final int ERROR_CODE_SPLITTING = 3713;
+	// public static final int ERROR_CODE_OTHER_GAP = 3719;
+	public static final int ERROR_CODE_ROAD_TYPE = 3721;
 	public static final int ERROR_CODE_DIRECTION = 3731;
 
 	public PTAssitantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
+
 	}
 
 	@Override
@@ -46,11 +52,17 @@ public class PTAssitantValidatorTest extends Test {
 			}
 		}
 
-		performDummyTest(r);
-
-
-
-
+		// Check individual ways using the oneway direction test and the road
+		// type test:
+		WayChecker wayChecker = new WayChecker(r, this);
+		this.errors.addAll(wayChecker.getErrors());
+		
+		// TODO: ask user if the found problems should be fixed
+		
+		// Check if the relation is correct, or only has a wrong sorting order:
+		RouteChecker routeChecker = new RouteChecker(r, this);
+		this.errors.addAll(routeChecker.getErrors());
+		
 
 	}
 
@@ -79,7 +91,7 @@ public class PTAssitantValidatorTest extends Test {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -95,56 +107,12 @@ public class PTAssitantValidatorTest extends Test {
 	public Command fixError(TestError testError) {
 		return null;
 	}
-	
-	private void performDirectionTest(Relation r) {
-		List<RelationMember> waysToCheck = new ArrayList<>();
 
-		for (RelationMember rm : r.getMembers()) {
-			if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
-				waysToCheck.add(rm);
-			}
-		}
-
-		if (waysToCheck.isEmpty()) {
-			return;
-		}
-		
-		WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
-		final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
-
-		for (int i = 0; i < links.size(); i++) {
-			if ((OsmUtils.isTrue(waysToCheck.get(i).getWay().get("oneway"))
-					&& links.get(i).direction.equals(WayConnectionType.Direction.BACKWARD))
-					|| (OsmUtils.isReversed(waysToCheck.get(i).getWay().get("oneway"))
-							&& links.get(i).direction.equals(WayConnectionType.Direction.FORWARD))) {
-
-				// At this point, the PTWay is going against the oneway
-				// direction. Check if this road allows buses to disregard
-				// the oneway restriction:
-
-				if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
-						&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
-						&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
-						&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")
-						&& !waysToCheck.get(i).getWay().hasTag("trolley_wire", "backward")) {
-					List<Relation> primitives = new ArrayList<>(1);
-					primitives.add(r);
-					List<Way> highlighted = new ArrayList<>(1);
-					highlighted.add(waysToCheck.get(i).getWay());
-					errors.add(new TestError(this, Severity.WARNING,
-							tr("PT: Route passes a oneway road in wrong direction"), ERROR_CODE_DIRECTION, primitives,
-							highlighted));
-					return;
-				}
-
-			}
-		}
-	}
-	
 	private void performDummyTest(Relation r) {
-		 List<Relation> primitives = new ArrayList<>(1);
-		 primitives.add(r);
-		 errors.add(new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
+		List<Relation> primitives = new ArrayList<>(1);
+		primitives.add(r);
+		errors.add(
+				new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
 	}
 
 }

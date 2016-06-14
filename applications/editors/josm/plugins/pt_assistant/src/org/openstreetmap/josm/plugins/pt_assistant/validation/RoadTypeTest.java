@@ -33,11 +33,6 @@ public class RoadTypeTest extends Test {
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
 			return;
 		}
-
-//		boolean isComplete = RouteUtils.ensureMemberCompleteness(r);
-//		if (!isComplete) {
-//			return;
-//		}
 		
 		if (RouteUtils.hasIncompleteMembers(r)) {
 			return;
@@ -46,7 +41,7 @@ public class RoadTypeTest extends Test {
 		List<RelationMember> members = r.getMembers();
 
 		for (RelationMember rm : members) {
-			if (RouteUtils.isPTWay(rm)) {
+			if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
 
 				Way way = rm.getWay();
 				// at this point, the relation has already been checked to
@@ -60,7 +55,7 @@ public class RoadTypeTest extends Test {
 					if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
 						isCorrectRoadType = false;
 					}
-				} else if (r.hasTag("route", "tram")) {
+				} else if (r.hasTag("route", "tram") && !way.hasTag("railway", "tram")) {
 					if (!r.hasTag("railway", "tram")) {
 						isCorrectRoadType = false;
 					}

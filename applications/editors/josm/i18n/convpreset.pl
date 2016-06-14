@@ -6,6 +6,7 @@
 use strict;
 
 my $item = "";
+my $chunk = "";
 my $group;
 my $combo_n;
 my $combo_type;
@@ -30,6 +31,16 @@ sub fix($)
   return $val;
 }
 
+sub infoblock
+{
+  my $r = "";
+  $r .= " item $item" if $item;
+  $r .= " chunk $chunk" if $chunk;
+  $r .= " group $group" if $group;
+  $r .= " $_[0]" if $_[0];
+  return $r ? "/* $r */ " : "";
+}
+
 my $linenr = 0;
 while(my $line = <>)
 {
@@ -43,12 +54,16 @@ while(my $line = <>)
     $item =~ s/""/\//;
     if($line =~ /name_context=(".*?")/)
     {
-      print "/* item $item */ trc($1, $val);\n";
+      print infoblock() . "trc($1, $val);\n";
     }
     else
     {
-      print "/* item $item */ tr($val);\n";
+      print infoblock() . "tr($val);\n";
     }
+  }
+  if($line =~ /<chunk\s+id=(".*?")/)
+  {
+    $chunk = fix($1);
   }
   elsif($line =~ /<group.*\s+name=(".*?")/)
   {
@@ -57,27 +72,27 @@ while(my $line = <>)
     $group =~ s/\"\"/\//;
     if($line =~ /name_context=(".*?")/)
     {
-      print "/* group $group */ trc($1,$gr);\n";
+      print infoblock() . "trc($1,$gr);\n";
     }
     else
     {
-      print "/* group $group */ tr($gr);\n";
+      print infoblock() . "tr($gr);\n";
     }
   }
   elsif($line =~ /<label.*\s+text=" "/)
   {
-    print "/* item $item empty label */\n";
+    print infoblock("empty label") . "\n";
   }
   elsif($line =~ /<label.*\s+text=(".*?")/)
   {
     my $text = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item label $text */ trc($1,$text);\n";
+      print infoblock("label $text") ."trc($1,$text);\n";
     }
     else
     {
-      print "/* item $item label $text */ tr($text);\n";
+      print infoblock("label $text") . "tr($text);\n";
     }
   }
   elsif($line =~ /<text.*\s+text=(".*?")/)
@@ -85,11 +100,11 @@ while(my $line = <>)
     my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item text $n */ trc($1,$n);\n";
+      print infoblock("text $n") . "trc($1,$n);\n";
     }
     else
     {
-      print "/* item $item text $n */ tr($n);\n";
+      print infoblock("text $n") . "tr($n);\n";
     }
   }
   elsif($line =~ /<check.*\s+text=(".*?")/)
@@ -97,11 +112,11 @@ while(my $line = <>)
     my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item check $n */ trc($1,$n);\n";
+      print infoblock("check $n") . "trc($1,$n);\n";
     }
     else
     {
-      print "/* item $item check $n */ tr($n);\n";
+      print infoblock("check $n") . "tr($n);\n";
     }
   }
   elsif($line =~ /<role.*\s+text=(".*?")/)
@@ -109,11 +124,11 @@ while(my $line = <>)
     my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item role $n */ trc($1,$n);\n";
+      print infoblock("role $n") . "trc($1,$n);\n";
     }
     else
     {
-      print "/* item $item role $n */ tr($n);\n";
+      print infoblock("role $n") . "tr($n);\n";
     }
   }
   elsif($line =~ /<optional.*\s+text=(".*?")/)
@@ -121,11 +136,11 @@ while(my $line = <>)
     my $n = fix($1);
     if($line =~ /text_context=(".*?")/)
     {
-      print "/* item $item optional $n */ trc($1,$n);\n";
+      print infoblock("optional $n") . "trc($1,$n);\n";
     }
     else
     {
-      print "/* item $item optional $n */ tr($n);\n";
+      print infoblock("optional $n") . "tr($n);\n";
     }
   }
   elsif($line =~ /<(combo|multiselect).*\s+text=(".*?")/)
@@ -136,7 +151,7 @@ while(my $line = <>)
     $vctx = ($line =~ /values_context=(".*?")/) ? $1 : undef;
     # text
     my $tctx = ($line =~ /text_context=(".*?")/) ? $1 : undef;
-    print "/* item $item $type $n */" . ($tctx ? " trc($tctx, $n);" : " tr($n);");
+    print infoblock("$type $n") . ($tctx ? " trc($tctx, $n);" : " tr($n);");
     # display_values / values
     my $sp = ($line =~ /delimiter="(.*?)"/) ? $1 : ($type eq "combo" ? ",":";");
     my $vals = ($line =~ / display_values="(.*?)"/) ? $1 : ($line =~ /values="(.*?)"/) ? $1 : undef;
@@ -148,7 +163,7 @@ while(my $line = <>)
       {
         next if $val =~ /^[0-9-]+$/; # search for non-numbers
         $val = fix($val);
-        print "/* item $item $type $n display value */" . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
+        print infoblock("$type $n display value") . ($vctx ? " trc($vctx, \"$val\");" : " tr(\"$val\");");
       }
     }
     print "\n";
@@ -160,17 +175,17 @@ while(my $line = <>)
     if($line =~ /display_value=(".*?")/)
     {
       my $val = fix($1);
-      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
+      print infoblock("$combo_type $combo_n entry $value display value") . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
     }
     else
     {
       my $val = fix($value);
-      print "/* item $item $combo_type $combo_n entry $value display value */" . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
+      print infoblock("$combo_type $combo_n entry $value display value") . ($vctxi ? " trc($vctxi, $val);" : " tr($val);");
     }
     if($line =~ /short_description=(".*?")/)
     {
       my $val = fix($1);
-      print "/* item $item $combo_type $combo_n entry $value short description */ tr($val);";
+      print infoblock("$combo_type $combo_n entry $value short description") . "tr($val);";
     }
     print "\n";
   }
@@ -183,6 +198,10 @@ while(my $line = <>)
   {
     $item = "";
     print "\n";
+  }
+  elsif($line =~ /<\/chunk>/)
+  {
+    $chunk = "";
   }
   elsif($line =~ /<\/(combo|multiselect)/)
   {

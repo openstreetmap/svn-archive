@@ -2,10 +2,8 @@ package org.openstreetmap.josm.plugins.pt_assistant.actions;
 
 import java.util.ArrayList;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.io.DownloadPrimitivesWithReferrersTask;
 
 public class IncompleteMembersDownloadThread extends Thread {
@@ -23,10 +21,8 @@ public class IncompleteMembersDownloadThread extends Thread {
 		 try {
 		synchronized (this) {
 
-			ArrayList<PrimitiveId> list = new ArrayList<>();
-			for (RelationMember rm : relation.getMembers()) {
-				list.add(rm);
-			}
+			ArrayList<PrimitiveId> list = new ArrayList<>(1);
+			list.add(relation);
 
 			DownloadPrimitivesWithReferrersTask task = new DownloadPrimitivesWithReferrersTask(false, list, false, true,
 					null, null);

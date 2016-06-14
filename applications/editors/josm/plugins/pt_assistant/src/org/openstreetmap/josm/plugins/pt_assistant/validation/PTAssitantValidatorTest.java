@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.command.Command;
@@ -20,6 +19,7 @@ import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 public class PTAssitantValidatorTest extends Test {
@@ -38,38 +38,65 @@ public class PTAssitantValidatorTest extends Test {
 			return;
 		}
 
+		// Download incomplete members. If the download does not work, finish.
 		if (r.hasIncompleteMembers()) {
-
-			// IncompleteMembersDownloadDialog incompleteDialog = new
-			// IncompleteMembersDownloadDialog(r.getId());
-			//
-			// int userInput = incompleteDialog.getUserSelection();
-
-			String message = tr("The relation (id=" + r.getId()
-					+ ") has incomplete members.\nThey need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?");
-			JCheckBox checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
-			Object[] params = { message, checkbox };
-			String[] options = { tr("Yes"), tr("No") };
-
-			int userInput = Integer.MIN_VALUE;
-			userInput = JOptionPane.showOptionDialog(null, params, tr("Fetch Request"), JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, options, 0);
-
-			if (userInput == 0) {
-
-				Thread t = new IncompleteMembersDownloadThread(r);
-				t.start();
-				synchronized (t) {
-					try {
-						t.wait();
-					} catch (InterruptedException e) {
-						return;
-					}
-				}
-
+			boolean downloadSuccessful = this.downloadIncompleteMembers(r);
+			if (!downloadSuccessful) {
+				return;
 			}
 		}
 
+		performDummyTest(r);
+
+
+
+
+
+	}
+
+	/**
+	 * Downloads incomplete relation members in an extra thread (user input
+	 * required)
+	 * 
+	 * @return true if successful, false if not successful
+	 */
+	private boolean downloadIncompleteMembers(Relation r) {
+		IncompleteMembersDownloadDialog incompleteMembersDownloadDialog = new IncompleteMembersDownloadDialog(
+				r.getId());
+
+		int userInput = incompleteMembersDownloadDialog.getUserSelection();
+
+		if (userInput == JOptionPane.YES_OPTION) {
+
+			Thread t = new IncompleteMembersDownloadThread(r);
+			t.start();
+			synchronized (t) {
+				try {
+					t.wait();
+				} catch (InterruptedException e) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Checks if the test error is fixable
+	 */
+	@Override
+	public boolean isFixable(TestError testError) {
+		return false;
+	}
+
+	@Override
+	public Command fixError(TestError testError) {
+		return null;
+	}
+	
+	private void performDirectionTest(Relation r) {
 		List<RelationMember> waysToCheck = new ArrayList<>();
 
 		for (RelationMember rm : r.getMembers()) {
@@ -81,7 +108,7 @@ public class PTAssitantValidatorTest extends Test {
 		if (waysToCheck.isEmpty()) {
 			return;
 		}
-
+		
 		WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
 		final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
 
@@ -112,24 +139,12 @@ public class PTAssitantValidatorTest extends Test {
 
 			}
 		}
-		
-//		List<Relation> primitives = new ArrayList<>(1);
-//		primitives.add(r);
-//		errors.add(new TestError(this, Severity.WARNING, tr("PT: test warning"), ERROR_CODE_DIRECTION, primitives));
-		
 	}
-
-	/**
-	 * Checks if the test error is fixable
-	 */
-	@Override
-	public boolean isFixable(TestError testError) {
-		return false;
-	}
-
-	@Override
-	public Command fixError(TestError testError) {
-		return null;
+	
+	private void performDummyTest(Relation r) {
+		 List<Relation> primitives = new ArrayList<>(1);
+		 primitives.add(r);
+		 errors.add(new TestError(this, Severity.WARNING, tr("PT: dummy test warning"), ERROR_CODE_DIRECTION, primitives));
 	}
 
 }

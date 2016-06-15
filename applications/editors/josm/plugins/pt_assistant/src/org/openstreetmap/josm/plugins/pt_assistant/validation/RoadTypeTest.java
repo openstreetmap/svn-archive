@@ -55,8 +55,8 @@ public class RoadTypeTest extends Test {
 					if (!(RouteUtils.isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
 						isCorrectRoadType = false;
 					}
-				} else if (r.hasTag("route", "tram") && !way.hasTag("railway", "tram")) {
-					if (!r.hasTag("railway", "tram")) {
+				} else if (r.hasTag("route", "tram")) {
+					if (!way.hasTag("railway", "tram")) {
 						isCorrectRoadType = false;
 					}
 				} else if (r.hasTag("route", "subway")) {

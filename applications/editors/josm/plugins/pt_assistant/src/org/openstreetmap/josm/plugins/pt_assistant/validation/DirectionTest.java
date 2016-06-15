@@ -46,6 +46,10 @@ public class DirectionTest extends Test {
 			return;
 		}
 
+		if (!r.hasTag("route", "bus") && !r.hasTag("route", "trolleybus") && !r.hasTag("route", "share_taxi")) {
+			return;
+		}
+		
 		List<RelationMember> waysToCheck = new ArrayList<>();
 
 		for (RelationMember rm : r.getMembers()) {
@@ -57,6 +61,8 @@ public class DirectionTest extends Test {
 		if (waysToCheck.isEmpty()) {
 			return;
 		}
+		
+		
 
 		WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
 		final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);

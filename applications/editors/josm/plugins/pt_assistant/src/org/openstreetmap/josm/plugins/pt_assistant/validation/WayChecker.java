@@ -48,6 +48,10 @@ public class WayChecker {
 	}
 
 	private void performRoadTypeTest() {
+		
+		if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus") && !relation.hasTag("route", "share_taxi")) {
+			return;
+		}
 
 		for (RelationMember rm : relation.getMembers()) {
 			if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
@@ -66,7 +70,7 @@ public class WayChecker {
 						isCorrectRoadType = false;
 					}
 				} else if (relation.hasTag("route", "tram")) {
-					if (!relation.hasTag("railway", "tram") && !way.hasTag("railway", "tram")) {
+					if (!way.hasTag("railway", "tram")) {
 						isCorrectRoadType = false;
 					}
 				} else if (relation.hasTag("route", "subway")) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
@@ -112,8 +113,8 @@ public class PTAssitantValidatorTest extends Test {
 			}
 		}
 
-		ProceedDialog proceedDialog = new ProceedDialog(r.getId(), numberOfDirectionErrors, numberOfRoadTypeErrors);
 
+		ProceedDialog proceedDialog = new ProceedDialog(r.getId(), numberOfDirectionErrors, numberOfRoadTypeErrors);
 		int userInput = proceedDialog.getUserSelection();
 
 		if (userInput == 0) {
@@ -137,6 +138,7 @@ public class PTAssitantValidatorTest extends Test {
 		// route.
 
 	}
+	
 
 	/**
 	 * Carries out the second stage of the testing: sorting

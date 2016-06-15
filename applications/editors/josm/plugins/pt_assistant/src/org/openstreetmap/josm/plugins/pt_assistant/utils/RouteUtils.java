@@ -126,6 +126,11 @@ public class RouteUtils {
 			return true;
 		}
 
+		if (way.hasTag("highway", "pedestrian") && (way.hasTag("bus", "yes") || way.hasTag("psv", "yes")
+				|| way.hasTag("bus", "designated") || way.hasTag("psv", "designated"))) {
+			return true;
+		}
+
 		return false;
 	}
 

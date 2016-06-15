@@ -14,6 +14,10 @@ public class IncompleteMembersDownloadThread extends Thread {
 		super();
 		relation = r;
 	}
+	
+	private void realRun() {
+		
+	}
 
 	@Override
 	public void run() {

@@ -41,15 +41,16 @@ public class WayChecker {
 
 		this.test = test;
 		this.relation = r;
-		
+
 		this.performDirectionTest();
 		this.performRoadTypeTest();
-		
+
 	}
 
 	private void performRoadTypeTest() {
-		
-		if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus") && !relation.hasTag("route", "share_taxi")) {
+
+		if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus")
+				&& !relation.hasTag("route", "share_taxi")) {
 			return;
 		}
 
@@ -136,6 +137,8 @@ public class WayChecker {
 				// the oneway restriction:
 
 				if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
+						&& !waysToCheck.get(i).getWay().hasTag("busway:left", "lane")
+						&& !waysToCheck.get(i).getWay().hasTag("busway:right", "lane")
 						&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
 						&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
 						&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")
@@ -179,6 +182,11 @@ public class WayChecker {
 				|| way.hasTag("highway", "tertiary_link") || way.hasTag("highway", "living_street")
 				|| way.hasTag("highway", "bus_guideway") || way.hasTag("highway", "road")
 				|| way.hasTag("cycleway", "share_busway") || way.hasTag("cycleway", "shared_lane")) {
+			return true;
+		}
+
+		if (way.hasTag("highway", "pedestrian") && (way.hasTag("bus", "yes") || way.hasTag("psv", "yes")
+				|| way.hasTag("bus", "designated") || way.hasTag("psv", "designated"))) {
 			return true;
 		}
 

@@ -2,7 +2,6 @@ package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.BoxLayout;
@@ -12,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
 
 public class ProceedDialog extends JPanel {
 
@@ -36,31 +36,29 @@ public class ProceedDialog extends JPanel {
 
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
+
 		JLabel label1 = new JLabel(tr("PT_Assistant plugin found that this relation (id=" + id + ") has errors:"));
 		panel.add(label1);
 		label1.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+
 		if (numberOfDirectionErrors != 0) {
 			JLabel label2 = new JLabel("     " + numberOfDirectionErrors + tr(" direction errors"));
 			panel.add(label2);
 			label2.setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
-		
+
 		if (numberOfRoadTypeErrors != 0) {
 			JLabel label3 = new JLabel("     " + numberOfRoadTypeErrors + tr(" road type errors"));
 			panel.add(label3);
 			label3.setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
-		
+
 		JLabel label4 = new JLabel(tr("How do you want to proceed?"));
 		panel.add(label4);
 		label4.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		radioButtonFixAutomatically = new JRadioButton("Fix all errors automatically and proceed",
-				true);
-		radioButtonFixManually = new JRadioButton(
-				"I will fix the erros manually and click the button to proceed");
+		radioButtonFixAutomatically = new JRadioButton("Fix all errors automatically and proceed", true);
+		radioButtonFixManually = new JRadioButton("I will fix the erros manually and click the button to proceed");
 		radioButtonDontFix = new JRadioButton("Do not fix anything and proceed with further tests");
 		ButtonGroup fixOptionButtonGroup = new ButtonGroup();
 		fixOptionButtonGroup.add(radioButtonFixAutomatically);
@@ -72,12 +70,11 @@ public class ProceedDialog extends JPanel {
 		radioButtonFixAutomatically.setAlignmentX(Component.LEFT_ALIGNMENT);
 		radioButtonFixManually.setAlignmentX(Component.LEFT_ALIGNMENT);
 		radioButtonDontFix.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
 
-		checkbox = new JCheckBox(tr("Remember my choice and don''t ask me again in this session"));
+		checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
 		panel.add(checkbox);
 		checkbox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+
 		options = new String[2];
 		options[0] = "OK";
 		options[1] = "Cancel & stop testing";
@@ -106,13 +103,10 @@ public class ProceedDialog extends JPanel {
 			return 2;
 		}
 
-		// FIXME: change to avoid EDT errors
+		// showDialog(); FIXME
 		selectedOption = JOptionPane.showOptionDialog(this, panel, tr("PT_Assistant Proceed Request"),
 				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
-		
-		
 
-		
 		if (selectedOption == 0) {
 			if (radioButtonFixAutomatically.isSelected()) {
 				if (checkbox.isSelected()) {
@@ -135,6 +129,27 @@ public class ProceedDialog extends JPanel {
 		}
 
 		return -1;
+	}
+
+	/**
+	 * 
+	 */
+	private void showDialog() {
+
+		if (!SwingUtilities.isEventDispatchThread()) {
+			selectedOption = JOptionPane.showOptionDialog(this, panel, tr("PT_Assistant Proceed Request"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, 0);
+		} else {
+
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					showDialog();
+				}
+			});
+
+		}
+
 	}
 
 }

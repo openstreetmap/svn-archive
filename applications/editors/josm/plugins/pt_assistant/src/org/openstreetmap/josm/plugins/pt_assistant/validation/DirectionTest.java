@@ -5,12 +5,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.OsmUtils;
@@ -78,6 +75,8 @@ public class DirectionTest extends Test {
 				// the oneway restriction:
 
 				if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
+						&& !waysToCheck.get(i).getWay().hasTag("busway:left", "lane")
+						&& !waysToCheck.get(i).getWay().hasTag("busway:right", "lane")
 						&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
 						&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
 						&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")

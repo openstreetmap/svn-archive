@@ -5,6 +5,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -23,10 +25,12 @@ public class RouteChecker {
 
 	// relation that is checked:
 	private Relation relation;
-	
+
 	// stores all found errors (on way level):
 	private ArrayList<TestError> errors = new ArrayList<>();
 	
+	private boolean hasGap;
+
 	List<RelationMember> sortedMembers;
 
 	public RouteChecker(Relation r, Test t) {
@@ -34,6 +38,8 @@ public class RouteChecker {
 		this.test = t;
 		this.relation = r;
 		
+		this.hasGap = false;
+
 		performSortingTest();
 
 	}
@@ -51,31 +57,34 @@ public class RouteChecker {
 		if (waysToCheck.isEmpty()) {
 			return;
 		}
-		
+
 		if (hasGap(waysToCheck)) {
+			
+			this.hasGap = true;
+			
 			RelationSorter sorter = new RelationSorter();
 			sortedMembers = sorter.sortMembers(waysToCheck);
 
 			if (!hasGap(sortedMembers)) {
 				TestError e = new TestError(this.test, Severity.WARNING,
-						tr("PT: Route contains a gap that can be fixed by sorting"), PTAssitantValidatorTest.ERROR_CODE_SORTING, relation);
+						tr("PT: Route contains a gap that can be fixed by sorting"),
+						PTAssitantValidatorTest.ERROR_CODE_SORTING, relation);
 				this.errors.add(e);
 
 			}
 
 		}
-		
-		
 
 	}
-	
+
 	/**
 	 * Checks if there is a gap for a given list of ways. It does not check if
 	 * the way actually stands for a public transport platform - that should be
 	 * checked beforehand.
 	 * 
 	 * @param waysToCheck
-	 * @return true if has gap (in the sense of continuity of ways in the Relation Editor), false otherwise
+	 * @return true if has gap (in the sense of continuity of ways in the
+	 *         Relation Editor), false otherwise
 	 */
 	private boolean hasGap(List<RelationMember> waysToCheck) {
 		WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
@@ -92,15 +101,24 @@ public class RouteChecker {
 
 		return false;
 	}
-	
+
+	/**
+	 * Returns errors
+	 */
 	public List<TestError> getErrors() {
 
 		return errors;
 	}
-	
+
 	public List<RelationMember> getSortedMembers() {
-		
+
 		return sortedMembers;
+
+	}
+	
+	public boolean getHasGap() {
+		
+		return this.hasGap;
 		
 	}
 

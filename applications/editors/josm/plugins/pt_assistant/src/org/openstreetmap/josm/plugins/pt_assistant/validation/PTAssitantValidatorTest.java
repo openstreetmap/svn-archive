@@ -19,6 +19,7 @@ import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
@@ -29,7 +30,7 @@ public class PTAssitantValidatorTest extends Test {
 	public static final int ERROR_CODE_SORTING = 3711;
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
 	public static final int ERROR_CODE_DIRECTION = 3731;
-
+	
 	public PTAssitantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
@@ -56,10 +57,11 @@ public class PTAssitantValidatorTest extends Test {
 		WayChecker wayChecker = new WayChecker(r, this);
 		this.errors.addAll(wayChecker.getErrors());
 
-		if (!this.errors.isEmpty()) {
+		if (this.errors.isEmpty()) {
+			proceedWithSorting(r);
+		} else {
 			this.proceedAfterWayCheckerErrors(r);
 		}
-
 
 	}
 
@@ -115,9 +117,7 @@ public class PTAssitantValidatorTest extends Test {
 		int userInput = proceedDialog.getUserSelection();
 
 		if (userInput == 0) {
-			for (TestError e : this.errors) {
-				fixError(e);
-			}
+			this.fixErrorFromPlugin(this.errors);
 			proceedWithSorting(r);
 			return;
 		}
@@ -129,6 +129,7 @@ public class PTAssitantValidatorTest extends Test {
 		}
 
 		if (userInput == 2) {
+			// TODO: should the errors be removed from the error list?
 			proceedWithSorting(r);
 		}
 
@@ -136,11 +137,50 @@ public class PTAssitantValidatorTest extends Test {
 		// route.
 
 	}
-	
+
+	/**
+	 * Carries out the second stage of the testing: sorting
+	 * @param r
+	 */
 	private void proceedWithSorting(Relation r) {
+		
 		// Check if the relation is correct, or only has a wrong sorting order:
 		RouteChecker routeChecker = new RouteChecker(r, this);
-		this.errors.addAll(routeChecker.getErrors());
+		List<TestError> routeCheckerErrors = routeChecker.getErrors();
+		
+		/*- At this point, there are 3 variants: 
+		 * 
+		 * 1) There are no errors => route is correct
+		 * 2) There is only a sorting error (can only be 1), but otherwise
+		 * correct.
+		 * 3) There are some other errors/gaps that cannot be fixed by
+		 * sorting => start further test (stop-by-stop) 
+		 * 
+		 * */
+		
+		
+		if (!routeCheckerErrors.isEmpty()) {
+			// Variant 2
+			// If there is only the sorting error, add it and stop testing.
+			this.errors.addAll(routeChecker.getErrors());
+			return;
+		}
+		
+		if (!routeChecker.getHasGap()) {
+			// Variant 1
+			// TODO: add the segments of this route to the list correct route segments		
+		}
+		
+		// Variant 3:
+		proceedAfterSorting(r);
+		
+		
+	}
+	
+	
+	private void proceedAfterSorting(Relation r) {
+		// TODO
+		performDummyTest(r);
 	}
 
 	/**
@@ -157,17 +197,17 @@ public class PTAssitantValidatorTest extends Test {
 
 	@Override
 	public Command fixError(TestError testError) {
-		
-		List<Command> commands = new ArrayList<>(50);
-		
+
+		List<Command> commands = new ArrayList<>();
+
 		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE) {
 			commands.add(fixErrorByRemovingWay(testError));
 		}
-		
+
 		if (testError.getCode() == ERROR_CODE_SORTING) {
 			commands.add(fixSortingError(testError));
 		}
-		
+
 		if (commands.isEmpty()) {
 			return null;
 		}
@@ -179,14 +219,41 @@ public class PTAssitantValidatorTest extends Test {
 		return new SequenceCommand(tr("Fix error"), commands);
 	}
 
+	/**
+	 * This method is the counterpart of the fixError(TestError testError)
+	 * method. The fixError method is invoked from the core validator (e.g. when
+	 * user presses the "Fix" button in the validator). This method is invoken
+	 * when the fix is initiated from within the plugin (e.g. automated fixes).
+	 * 
+	 * @return
+	 */
+	private void fixErrorFromPlugin(List<TestError> testErrors) {
+
+			
+			// run fix task asynchronously
+			FixTask fixTask = new FixTask(testErrors);
+//			Main.worker.submit(fixTask);
+			
+			Thread t = new Thread(fixTask);
+			t.start();
+			try {
+				t.join();
+				errors.removeAll(testErrors);
+
+			} catch (InterruptedException e) {
+				JOptionPane.showMessageDialog(null, "Error occurred during fixing");
+			}
+
+
+
+	}
 
 	private Command fixErrorByRemovingWay(TestError testError) {
-		
-	
+
 		if (testError.getCode() != ERROR_CODE_ROAD_TYPE && testError.getCode() != ERROR_CODE_DIRECTION) {
 			return null;
 		}
-		
+
 		List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
 		Relation originalRelation = (Relation) primitives.get(0);
 		List<OsmPrimitive> highlighted = (List<OsmPrimitive>) testError.getHighlighted();
@@ -235,7 +302,6 @@ public class PTAssitantValidatorTest extends Test {
 
 		ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
 
-		
 		return changeCommand;
 	}
 

@@ -20,17 +20,15 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 	// by default, the user should be asked
 	private static ASK_TO_FETCH askToFetch = ASK_TO_FETCH.DO_ASK;
 
-	private long relationId;
 	String message;
 	private JCheckBox checkbox;
 	private String[] options;
 	private int selectedOption;
 
 	public IncompleteMembersDownloadDialog(long id) {
-		relationId = id;
 		selectedOption = Integer.MIN_VALUE;
 
-		message = tr("The relation (id=" + relationId
+		message = tr("The relation (id=" + id
 				+ ") has incomplete members.\nThey need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?");
 		checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
 		options = new String[2];
@@ -60,7 +58,7 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 		
 
 		Object[] params = {message, checkbox};
-		selectedOption = JOptionPane.showOptionDialog(this, params, tr("Fetch Request"), JOptionPane.YES_NO_OPTION,
+		selectedOption = JOptionPane.showOptionDialog(this, params, tr("PT_Assistant Fetch Request"), JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, 0);
 		
 		if (checkbox.isSelected()) {

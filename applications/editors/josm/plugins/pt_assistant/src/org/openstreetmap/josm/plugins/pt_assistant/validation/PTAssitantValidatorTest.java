@@ -7,27 +7,27 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.AbstractPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
-import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
+import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 public class PTAssitantValidatorTest extends Test {
 
 	public static final int ERROR_CODE_SORTING = 3711;
-	// public static final int ERROR_CODE_OVERSHOOT = 3712;
-	// public static final int ERROR_CODE_SPLITTING = 3713;
-	// public static final int ERROR_CODE_OTHER_GAP = 3719;
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
 	public static final int ERROR_CODE_DIRECTION = 3731;
 
@@ -56,13 +56,11 @@ public class PTAssitantValidatorTest extends Test {
 		// type test:
 		WayChecker wayChecker = new WayChecker(r, this);
 		this.errors.addAll(wayChecker.getErrors());
-		
-		// TODO: ask user if the found problems should be fixed
-		
-		// Check if the relation is correct, or only has a wrong sorting order:
-		RouteChecker routeChecker = new RouteChecker(r, this);
-		this.errors.addAll(routeChecker.getErrors());
-		
+
+		if (!this.errors.isEmpty()) {
+			this.proceedAfterWayCheckerErrors(r);
+		}
+
 
 	}
 
@@ -96,16 +94,211 @@ public class PTAssitantValidatorTest extends Test {
 	}
 
 	/**
+	 * Gets user input after errors were detected by WayChecker (direction
+	 * errors and road type errors)
+	 */
+	private void proceedAfterWayCheckerErrors(Relation r) {
+
+		// count errors of each type:
+		int numberOfDirectionErrors = 0;
+		int numberOfRoadTypeErrors = 0;
+		for (TestError e : this.errors) {
+			if (e.getCode() == ERROR_CODE_DIRECTION) {
+				numberOfDirectionErrors++;
+			}
+			if (e.getCode() == ERROR_CODE_ROAD_TYPE) {
+				numberOfRoadTypeErrors++;
+			}
+		}
+
+		ProceedDialog proceedDialog = new ProceedDialog(r.getId(), numberOfDirectionErrors, numberOfRoadTypeErrors);
+
+		int userInput = proceedDialog.getUserSelection();
+
+		if (userInput == 0) {
+			for (TestError e : this.errors) {
+				fixError(e);
+			}
+			proceedWithSorting(r);
+			return;
+		}
+
+		if (userInput == 1) {
+			// TODO
+			JOptionPane.showMessageDialog(null, "This is not implemented yet!");
+			return;
+		}
+
+		if (userInput == 2) {
+			proceedWithSorting(r);
+		}
+
+		// if userInput==-1 (i.e. no input), do nothing and stop testing of the
+		// route.
+
+	}
+	
+	private void proceedWithSorting(Relation r) {
+		// Check if the relation is correct, or only has a wrong sorting order:
+		RouteChecker routeChecker = new RouteChecker(r, this);
+		this.errors.addAll(routeChecker.getErrors());
+	}
+
+	/**
 	 * Checks if the test error is fixable
 	 */
 	@Override
 	public boolean isFixable(TestError testError) {
+		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE
+				|| testError.getCode() == ERROR_CODE_SORTING) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public Command fixError(TestError testError) {
-		return null;
+		
+		List<Command> commands = new ArrayList<>(50);
+		
+		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE) {
+			commands.add(fixErrorByRemovingWay(testError));
+		}
+		
+		if (testError.getCode() == ERROR_CODE_SORTING) {
+			commands.add(fixSortingError(testError));
+		}
+		
+		if (commands.isEmpty()) {
+			return null;
+		}
+
+		if (commands.size() == 1) {
+			return commands.get(0);
+		}
+
+		return new SequenceCommand(tr("Fix error"), commands);
+	}
+
+
+	private Command fixErrorByRemovingWay(TestError testError) {
+		
+	
+		if (testError.getCode() != ERROR_CODE_ROAD_TYPE && testError.getCode() != ERROR_CODE_DIRECTION) {
+			return null;
+		}
+		
+		List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.get(0);
+		List<OsmPrimitive> highlighted = (List<OsmPrimitive>) testError.getHighlighted();
+		Way wayToRemove = (Way) highlighted.get(0);
+
+		Relation modifiedRelation = new Relation(originalRelation);
+		List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount() - 1);
+
+		// copy PT stops first, PT ways last:
+		for (RelationMember rm : originalRelation.getMembers()) {
+			if (RouteUtils.isPTStop(rm)) {
+
+				if (rm.getRole().equals("stop_position")) {
+					if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+						RelationMember newMember = new RelationMember("stop", rm.getNode());
+						modifiedRelationMembers.add(newMember);
+					} else { // if it is a way:
+						RelationMember newMember = new RelationMember("stop", rm.getWay());
+						modifiedRelationMembers.add(newMember);
+					}
+				} else {
+					// if the relation member does not have the role
+					// "stop_position":
+					modifiedRelationMembers.add(rm);
+				}
+
+			}
+		}
+
+		// now copy PT ways:
+		for (RelationMember rm : originalRelation.getMembers()) {
+			if (RouteUtils.isPTWay(rm)) {
+				Way wayToCheck = rm.getWay();
+				if (wayToCheck != wayToRemove) {
+					if (rm.getRole().equals("forward") || rm.getRole().equals("backward")) {
+						RelationMember modifiedMember = new RelationMember("", wayToCheck);
+						modifiedRelationMembers.add(modifiedMember);
+					} else {
+						modifiedRelationMembers.add(rm);
+					}
+				}
+			}
+		}
+
+		modifiedRelation.setMembers(modifiedRelationMembers);
+
+		ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+
+		
+		return changeCommand;
+	}
+
+	private Command fixSortingError(TestError testError) {
+		if (testError.getCode() != ERROR_CODE_SORTING) {
+			return null;
+		}
+
+		List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.get(0);
+
+		// separate ways from stops (because otherwise the order of
+		// stops/platforms can be messed up by the sorter:
+		List<RelationMember> members = originalRelation.getMembers();
+		final List<RelationMember> stops = new ArrayList<>();
+		final List<RelationMember> ways = new ArrayList<>();
+		for (RelationMember member : members) {
+			if (RouteUtils.isPTWay(member)) {
+				if (member.getRole().equals("")) {
+					ways.add(member);
+				} else {
+					RelationMember modifiedMember = new RelationMember("", member.getWay());
+					ways.add(modifiedMember);
+				}
+
+			} else { // stops:
+				if (member.getRole().equals("stop_positon")) {
+					// it is not expected that stop_positions could
+					// be relations
+					if (member.getType().equals(OsmPrimitiveType.NODE)) {
+						RelationMember modifiedMember = new RelationMember("stop", member.getNode());
+						stops.add(modifiedMember);
+					} else { // if it is a primitive of type way:
+						RelationMember modifiedMember = new RelationMember("stop", member.getWay());
+						stops.add(modifiedMember);
+					}
+				} else { // if it is not a stop_position:
+					stops.add(member);
+				}
+
+			}
+		}
+
+		// sort the ways:
+		RelationSorter sorter = new RelationSorter();
+		List<RelationMember> sortedWays = sorter.sortMembers(ways);
+
+		// create a new relation to pass to the command:
+		Relation sortedRelation = new Relation(originalRelation);
+		List<RelationMember> sortedRelationMembers = new ArrayList<>(members.size());
+		for (RelationMember rm : stops) {
+			sortedRelationMembers.add(rm);
+		}
+		for (RelationMember rm : sortedWays) {
+			sortedRelationMembers.add(rm);
+		}
+		sortedRelation.setMembers(sortedRelationMembers);
+
+		ChangeCommand changeCommand = new ChangeCommand(originalRelation, sortedRelation);
+
+		return changeCommand;
+
 	}
 
 	private void performDummyTest(Relation r) {

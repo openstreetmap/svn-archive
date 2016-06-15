@@ -23,16 +23,16 @@
         <mkdir dir="${i18n.build.dir}"/>
     </target>
     <target name="trans_.java" depends="builddir">
-        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_presets.java">
+        <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_presets.java">
             <arg line="convpreset.pl ${josm.presets}"/>
         </exec>
-        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_maps.java">
+        <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_maps.java">
             <arg line="convmaps.pl ${maps.srcfile}"/>
         </exec>
-        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_surveyor.java">
+        <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_surveyor.java">
             <arg line="convsurveyor.pl ${surveyor.srcfile}"/>
         </exec>
-        <exec executable="perl" failonerror="true" output="${i18n.build.dir}/trans_plugins.java">
+        <exec executable="perl" failonerror="true" logError="true" output="${i18n.build.dir}/trans_plugins.java">
             <arg line="convplugins.pl ${plugin.dir}/*/build.xml"/>
         </exec>
         <exec executable="perl" failonerror="true">

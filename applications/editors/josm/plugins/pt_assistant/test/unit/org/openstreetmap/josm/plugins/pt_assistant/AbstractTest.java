@@ -1,4 +1,4 @@
-package unit.org.openstreetmap.josm.plugins.pt_assistant;
+package org.openstreetmap.josm.plugins.pt_assistant;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;

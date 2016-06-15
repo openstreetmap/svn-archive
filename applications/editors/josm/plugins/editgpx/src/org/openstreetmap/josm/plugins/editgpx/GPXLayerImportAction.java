@@ -10,7 +10,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -52,11 +51,10 @@ class GPXLayerImportAction extends AbstractAction {
         DefaultListModel<GpxLayer> dModel = new DefaultListModel<>();
 
         final JList<GpxLayer> layerList = new JList<>(dModel);
-        Collection<Layer> data = Main.map.mapView.getAllLayers();
         int layerCnt = 0;
 
-        for (Layer l : data){
-            if(l instanceof GpxLayer){
+        for (Layer l : Main.map.mapView.getLayerManager().getLayers()){
+            if (l instanceof GpxLayer){
                 dModel.addElement((GpxLayer) l);
                 layerCnt++;
             }
@@ -64,7 +62,8 @@ class GPXLayerImportAction extends AbstractAction {
         if(layerCnt > 0){
             layerList.setSelectionInterval(0, layerCnt-1);
             layerList.setCellRenderer(new DefaultListCellRenderer(){
-                @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     Layer layer = (Layer)value;
                     JLabel label = (JLabel)super.getListCellRendererComponent(list,
                             layer.getName(), index, isSelected, cellHasFocus);
@@ -113,8 +112,8 @@ class GPXLayerImportAction extends AbstractAction {
 
     /**
      * called when pressing "Import.." from context menu of EditGpx layer
-     *
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         activateImport();
     }

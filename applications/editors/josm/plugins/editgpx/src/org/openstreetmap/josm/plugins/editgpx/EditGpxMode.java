@@ -17,9 +17,10 @@ import java.util.List;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxData;
 import org.openstreetmap.josm.plugins.editgpx.data.EditGpxTrack;
@@ -30,13 +31,17 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
     private static final long serialVersionUID = 7940589057093872411L;
     Point pointPressed;
-    MapFrame mapFrame;
+    private final MapFrame mapFrame;
     Rectangle oldRect;
-    MapFrame frame;
-    EditGpxLayer currentEditLayer;
+    transient EditGpxLayer currentEditLayer;
 
-    public EditGpxMode(MapFrame mapFrame, String name, String desc) {
-        super(name, "editgpx_mode.png", desc, mapFrame, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+    /**
+     * Constructs a new {@code EditGpxMode}.
+     * @param mapFrame map frame
+     */
+    public EditGpxMode(MapFrame mapFrame) {
+        super("editgpx", "editgpx_mode.png", tr("edit gpx tracks"), Main.map, Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        this.mapFrame = mapFrame;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
-        MapView.addLayerChangeListener(this);
+        Main.map.mapView.getLayerManager().addLayerChangeListener(this);
         updateLayer();
     }
 
@@ -53,7 +58,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         super.exitMode();
         Main.map.mapView.removeMouseListener(this);
         Main.map.mapView.removeMouseMotionListener(this);
-        MapView.removeLayerChangeListener(this);
+        Main.map.mapView.getLayerManager().removeLayerChangeListener(this);
     }
 
     @Override
@@ -77,9 +82,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
         requestFocusInMapView();
 
-        Point pointReleased = e.getPoint();
-
-        Rectangle r = createRect(pointReleased, pointPressed);
+        Rectangle r = createRect(e.getPoint(), pointPressed);
 
         //go through nodes and mark the ones in the selection rect as deleted
         if (currentEditLayer != null) {
@@ -132,8 +135,8 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
      * Draw a selection rectangle on screen.
      */
     private void paintRect(Point p1, Point p2) {
-        if (frame != null) {
-            Graphics g = frame.getGraphics();
+        if (mapFrame != null) {
+            Graphics g = mapFrame.getGraphics();
 
             Rectangle r = oldRect;
             if (r != null) {
@@ -151,35 +154,33 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
         }
     }
 
-    public void setFrame(MapFrame mapFrame) {
-        frame = mapFrame;
-    }
-
     /**
      * create new layer, add listeners and try importing gpx data.
      */
     private void updateLayer() {
 
-        List<EditGpxLayer> layers = Main.map.mapView.getLayersOfType(EditGpxLayer.class);
-        currentEditLayer = layers.isEmpty()?null:layers.get(0);
+        List<EditGpxLayer> layers = Main.map.mapView.getLayerManager().getLayersOfType(EditGpxLayer.class);
+        currentEditLayer = layers.isEmpty() ? null : layers.get(0);
 
         if(currentEditLayer == null) {
-            currentEditLayer = new EditGpxLayer(tr("EditGpx"), new EditGpxData());
+            currentEditLayer = new EditGpxLayer(new EditGpxData());
             Main.main.addLayer(currentEditLayer);
             currentEditLayer.initializeImport();
         }
         Main.map.mapView.repaint();
     }
 
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) { }
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+        // Do nothing
+    }
 
-    public void layerAdded(Layer newLayer) { }
-
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer instanceof EditGpxLayer) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() instanceof EditGpxLayer) {
             currentEditLayer = null;
             if (Main.map.mapMode instanceof EditGpxMode) {
-                if (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer) {
+                if (Main.map.mapView.getLayerManager().getActiveLayer() instanceof OsmDataLayer) {
                     Main.map.selectSelectTool(false);
                 } else {
                     Main.map.selectZoomTool(false);
@@ -189,8 +190,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
     }
 
     @Override
-    public void destroy() {
-        super.destroy();
-        MapView.removeLayerChangeListener(this);
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
     }
 }

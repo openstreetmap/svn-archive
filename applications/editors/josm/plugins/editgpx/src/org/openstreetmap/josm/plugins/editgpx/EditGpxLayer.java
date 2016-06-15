@@ -37,8 +37,12 @@ public class EditGpxLayer extends Layer {
     public final EditGpxData data;
     private GPXLayerImportAction layerImport;
 
-    public EditGpxLayer(String str, EditGpxData gpxData) {
-        super(str);
+    /**
+     * Constructs a new {@code EditGpxLayer}.
+     * @param gpxData edit gpx data
+     */
+    public EditGpxLayer(EditGpxData gpxData) {
+        super(tr("EditGpx"));
         data = gpxData;
         layerImport = new GPXLayerImportAction(data);
     }
@@ -48,12 +52,8 @@ public class EditGpxLayer extends Layer {
      * if so show import dialog to user
      */
     public void initializeImport() {
-        try {
-            if (data.isEmpty()) {
-                layerImport.activateImport();
-            }
-        } catch (Exception e) {
-            Main.error(e);
+        if (data.isEmpty()) {
+            layerImport.activateImport();
         }
     }
 
@@ -115,17 +115,14 @@ public class EditGpxLayer extends Layer {
         }
     }
 
-
     public void reset(){
         //TODO implement a reset
     }
-
 
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
         // TODO Auto-generated method stub
     }
-
 
     /**
      * convert a DataSet to GPX
@@ -141,15 +138,16 @@ public class EditGpxLayer extends Layer {
      * Context item "Convert to GPX layer"
      */
     public class ConvertToGpxLayerAction extends AbstractAction {
+        /**
+         * Constructs a new {@code ConvertToGpxLayerAction}.
+         */
         public ConvertToGpxLayerAction() {
             super(tr("Convert to GPX layer"), ImageProvider.get("converttogpx"));
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.map.mapMode instanceof EditGpxMode) {
-                if (!Main.map.selectSelectTool(false)) {
-                    Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
-                }
+            if (Main.map.mapMode instanceof EditGpxMode && !Main.map.selectSelectTool(false)) {
+                Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
             }
             Main.main.addLayer(new GpxLayer(toGpxData(false), tr("Converted from: {0}", getName())));
             Main.main.removeLayer(EditGpxLayer.this);
@@ -160,15 +158,16 @@ public class EditGpxLayer extends Layer {
      * Context item "Convert to GPX layer with anonymised time"
      */
     public class ConvertToAnonTimeGpxLayerAction extends AbstractAction {
+        /**
+         * Constructs a new {@code ConvertToAnonTimeGpxLayerAction}.
+         */
         public ConvertToAnonTimeGpxLayerAction() {
             super(tr("Convert to GPX layer with anonymised time"), ImageProvider.get("converttogpx"));
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.map.mapMode instanceof EditGpxMode) {
-                if (!Main.map.selectSelectTool(false)) {
-                    Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
-                }
+            if (Main.map.mapMode instanceof EditGpxMode && !Main.map.selectSelectTool(false)) {
+                Main.map.selectZoomTool(false); // Select tool might not be support of active layer, zoom is always supported
             }
             Main.main.addLayer(new GpxLayer(toGpxData(true), tr("Converted from: {0}", getName())));
             Main.main.removeLayer(EditGpxLayer.this);

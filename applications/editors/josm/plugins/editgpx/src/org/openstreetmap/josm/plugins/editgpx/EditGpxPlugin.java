@@ -3,10 +3,6 @@
  */
 package org.openstreetmap.josm.plugins.editgpx;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import java.net.URL;
-
 import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
@@ -25,20 +21,15 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * TODO:
  * - BUG: when importing eGpxLayer is shown as RawGpxLayer??
  * - implement reset if user made mistake while marking
- *
- *
  */
 public class EditGpxPlugin extends Plugin {
 
-    private IconToggleButton btn;
-    private EditGpxMode mode;
-
+    /**
+     * Constructs a new {@code EditGpxPlugin}.
+     * @param info plugin information
+     */
     public EditGpxPlugin(PluginInformation info) {
         super(info);
-        mode = new EditGpxMode(Main.map, "editgpx", tr("edit gpx tracks"));
-
-        btn = new IconToggleButton(mode);
-        btn.setVisible(true);
     }
 
     /**
@@ -46,15 +37,14 @@ public class EditGpxPlugin extends Plugin {
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        mode.setFrame(newFrame);
-        if (oldFrame == null && newFrame != null) {
+        if (newFrame != null) {
+            EditGpxMode mode = new EditGpxMode(newFrame);
             if (Main.map != null)
-                Main.map.addMapMode(btn);
+                Main.map.addMapMode(new IconToggleButton(mode));
         }
     }
 
     public static ImageIcon loadIcon(String name) {
-        URL url = EditGpxPlugin.class.getResource("/images/editgpx.png");
-        return new ImageIcon(url);
+        return new ImageIcon(EditGpxPlugin.class.getResource("/images/editgpx.png"));
     }
 }

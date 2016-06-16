@@ -247,7 +247,7 @@
         <ant target="test" dir="ImportImagePlugin"/>
         <ant target="test" dir="mapillary"/>
         <ant target="test" dir="opendata"/>
-        <ant target="test" dir="pt-assistant"/>
+        <ant target="test" dir="pt_assistant"/>
         <ant target="test" dir="turnrestrictions"/>
         <ant target="test" dir="wikipedia"/>
     </target>

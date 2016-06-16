@@ -2,7 +2,7 @@
 <project name="pbf" default="dist" basedir=".">
 
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7575"/>
+    <property name="plugin.main.version" value="10407"/>
 
     <property name="plugin.author" value="Don-vip"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.pbf.PbfPlugin"/>

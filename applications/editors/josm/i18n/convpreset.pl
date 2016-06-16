@@ -61,7 +61,7 @@ while(my $line = <>)
       print infoblock() . "tr($val);\n";
     }
   }
-  if($line =~ /<chunk\s+id=(".*?")/)
+  elsif($line =~ /<chunk\s+id=(".*?")/)
   {
     $chunk = fix($1);
   }

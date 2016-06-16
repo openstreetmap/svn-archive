@@ -8,7 +8,6 @@ public class ImportVecPlugin extends Plugin {
 
     public ImportVecPlugin(PluginInformation info) {
         super(info);
-	ExtensionFileFilter.importers.add(new SvgImporter());
+	ExtensionFileFilter.addImporter(new SvgImporter());
     }
-
 }

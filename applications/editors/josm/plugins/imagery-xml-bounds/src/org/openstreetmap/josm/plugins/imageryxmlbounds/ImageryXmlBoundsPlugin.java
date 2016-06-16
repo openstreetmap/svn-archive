@@ -27,15 +27,15 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.io.XmlBoundsImporter;
 public class ImageryXmlBoundsPlugin extends Plugin {
 
     /**
-     * Action showing bounds of the selected closed ways in Selection dialog 
+     * Action showing bounds of the selected closed ways in Selection dialog
      */
     private final ShowBoundsAction selectionListAction = new ShowBoundsAction();
 
     /**
-     * Action showing bounds of the selected multipolygons in Properties dialog 
+     * Action showing bounds of the selected multipolygons in Properties dialog
      */
     private final ShowBoundsAction propertiesListAction = new ShowBoundsAction();
-    
+
     /**
      * Action showing bounds of the selected multipolygons in Relations dialog
      */
@@ -45,12 +45,12 @@ public class ImageryXmlBoundsPlugin extends Plugin {
      * Action showing bounds of the current selection
      */
     private final ShowBoundsSelectionAction selectionAction = new ShowBoundsSelectionAction();
-    
+
     /**
      * Class modifying the Imagery preferences panel
      */
     private final XmlBoundsPreferenceSetting preferenceSetting = new XmlBoundsPreferenceSetting();
-    
+
     /**
      * Initializes the plugin.
      * @param info
@@ -58,16 +58,16 @@ public class ImageryXmlBoundsPlugin extends Plugin {
     public ImageryXmlBoundsPlugin(PluginInformation info) {
         super(info);
         // Allow JOSM to import *.imagery.xml files
-        ExtensionFileFilter.importers.add(0, new XmlBoundsImporter());
+        ExtensionFileFilter.addImporterFirst(new XmlBoundsImporter());
         // Allow JOSM to export *.imagery.xml files
-        ExtensionFileFilter.exporters.add(0, new XmlBoundsExporter());
+        ExtensionFileFilter.addExporterFirst(new XmlBoundsExporter());
         // Initialize the selection action
         DataSet.addSelectionListener(selectionAction);
         Main.toolbar.register(selectionAction);
         // Allow JOSM to download *.imagery.xml files
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadXmlBoundsTask.class);
     }
-    
+
     @Override
     public PreferenceSetting getPreferenceSetting() {
         return this.preferenceSetting;
@@ -76,7 +76,7 @@ public class ImageryXmlBoundsPlugin extends Plugin {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (newFrame != null) {
-            // Initialize dialogs actions only after the main frame is created 
+            // Initialize dialogs actions only after the main frame is created
             newFrame.selectionListDialog.getPopupMenuHandler().addSeparator();
             newFrame.selectionListDialog.getPopupMenuHandler().addAction(selectionListAction);
             newFrame.propertiesDialog.getMembershipPopupMenuHandler().addSeparator();

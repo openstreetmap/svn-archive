@@ -55,8 +55,9 @@ public class ImportImagePlugin extends Plugin{
      * constructor
      *
      * @param info
+     * @throws IOException if any I/O error occurs
      */
-    public ImportImagePlugin(PluginInformation info){
+    public ImportImagePlugin(PluginInformation info) throws IOException{
         super(info);
 
         try {
@@ -85,21 +86,13 @@ public class ImportImagePlugin extends Plugin{
             loadFileAction.setEnabled(true);
             if (Main.main != null) {
                 MainMenu.add(Main.main.menu.imagerySubMenu, loadFileAction);
-    
-                // add menu entries
-                //Main.main.menu.fileMenu.insert(loadFileAction, 8);
-                //Main.main.menu.fileMenu.insertSeparator(9);
             }
 
-            ExtensionFileFilter.importers.add(new ImportImageFileImporter());
+            ExtensionFileFilter.addImporter(new ImportImageFileImporter());
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.fatal("Error while loading plugin", e);
-            try {
-                throw e;
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+            throw e;
         }
 
         logger.info("Plugin successfully loaded.");

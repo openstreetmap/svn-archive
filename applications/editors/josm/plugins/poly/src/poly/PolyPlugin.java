@@ -12,10 +12,14 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  */
 public class PolyPlugin extends Plugin {
 
+    /**
+     * Constructs a new {@code PolyPlugin}.
+     * @param info plugin information
+     */
     public PolyPlugin(PluginInformation info) {
         super(info);
-        ExtensionFileFilter.importers.add(new PolyImporter());
-        ExtensionFileFilter.exporters.add(new PolyExporter());
+        ExtensionFileFilter.addImporter(new PolyImporter());
+        ExtensionFileFilter.addExporter(new PolyExporter());
         Main.main.menu.openLocation.addDownloadTaskClass(DownloadPolyTask.class);
     }
 }

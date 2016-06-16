@@ -94,7 +94,7 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
      */
     public ImageWayPointPlugin(PluginInformation info) {
         super(info);
-	ExtensionFileFilter.importers.add(new ImageWaypointImporter());
+	ExtensionFileFilter.addImporter(new ImageWaypointImporter());
     }
 
     @Override

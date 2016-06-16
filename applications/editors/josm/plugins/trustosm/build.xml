@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="New plugin for digital signing osm data"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="9241" />
+    <property name="plugin.main.version" value="10407" />
     <property name="plugin.author" value="Christoph Wagner" />
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin" />
     <property name="plugin.description" value="Plugin to digital sign OSM-Data" />

@@ -71,7 +71,7 @@ public final class OdPlugin extends Plugin {
                 new SevenZipImporter(), // 7Zip archive containing any of the others
                 xmlImporter // Generic importer for XML files (currently used for Neptune files)
         })) {
-            ExtensionFileFilter.importers.add(0, importer);
+            ExtensionFileFilter.addImporterFirst(importer);
         }
 
         menu = Main.main.menu.dataMenu;

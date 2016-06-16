@@ -71,8 +71,8 @@ public class TrustOSMplugin extends Plugin {
         refreshMenu();
         checkForUnrestrictedPolicyFiles();
         // register new SigImporter and SigExporter
-        ExtensionFileFilter.importers.add(new SigImporter());
-        ExtensionFileFilter.exporters.add(new SigExporter());
+        ExtensionFileFilter.addImporter(new SigImporter());
+        ExtensionFileFilter.addExporter(new SigExporter());
 
         gpg = new TrustGPG();
         setSettings();

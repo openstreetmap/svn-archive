@@ -18,20 +18,18 @@ import javax.swing.tree.TreeModel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdDataLayer;
 import org.openstreetmap.josm.plugins.opendata.core.layers.OdLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 
 @SuppressWarnings("serial")
-public class OdDialog extends ToggleDialog implements LayerChangeListener, EditLayerChangeListener {
+public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener {
 
     //private final SideButton selectButton;
     private final SideButton downloadButton;
@@ -121,9 +119,9 @@ public class OdDialog extends ToggleDialog implements LayerChangeListener, EditL
         
         createLayout(new JTree(treeModel), true, buttons);
         
-        MapView.addEditLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
-    
+
     private void disableAllButtons() {
         for (SideButton button : buttons) {
             button.setEnabled(false);
@@ -131,12 +129,8 @@ public class OdDialog extends ToggleDialog implements LayerChangeListener, EditL
     }
 
     @Override
-    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
-        activeLayerChange(oldLayer, newLayer);
-    }
-
-    @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        Layer newLayer = Main.getLayerManager().getActiveLayer();
         if (newLayer instanceof OdLayer) {
             dataLayer = ((OdLayer) newLayer).getDataLayer();
         } else {
@@ -156,18 +150,9 @@ public class OdDialog extends ToggleDialog implements LayerChangeListener, EditL
     }
 
     @Override
-    public void layerAdded(Layer newLayer) {
-    }
-
-    @Override
-    public void layerRemoved(Layer oldLayer) {
-    }
-
-    @Override
     public void destroy() {
         super.destroy();
-        MapView.removeLayerChangeListener(this);
-        MapView.removeEditLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
     }
 
     public OdDataLayer getDataLayer() {

@@ -1,4 +1,4 @@
-package unit.org.openstreetmap.josm.plugins.pt_assistant.validation;
+package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,8 +11,8 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.GapTest;
 
-import unit.org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
-import unit.org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
+import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
+import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 
 public class GapTestTest extends AbstractTest {
 

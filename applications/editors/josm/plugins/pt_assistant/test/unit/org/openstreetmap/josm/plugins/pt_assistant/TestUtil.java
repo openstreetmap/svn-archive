@@ -1,4 +1,4 @@
-package unit.org.openstreetmap.josm.plugins.pt_assistant;
+package org.openstreetmap.josm.plugins.pt_assistant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

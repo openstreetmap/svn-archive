@@ -18,22 +18,26 @@ import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
-/**
- * Performs tests of a route at the level of the whole route: sorting test
- * 
- * @author darya
- *
- */
-public class RouteChecker extends Checker {
+public class RouteChecker {
 
+	// test which created this WayChecker:
+	private final Test test;
+
+	// relation that is checked:
+	private Relation relation;
+
+	// stores all found errors (on way level):
+	private ArrayList<TestError> errors = new ArrayList<>();
+	
 	private boolean hasGap;
 
 	List<RelationMember> sortedMembers;
 
-	public RouteChecker(Relation relation, Test test) {
+	public RouteChecker(Relation r, Test t) {
 
-		super(relation, test);
-
+		this.test = t;
+		this.relation = r;
+		
 		this.hasGap = false;
 
 		performSortingTest();
@@ -55,9 +59,9 @@ public class RouteChecker extends Checker {
 		}
 
 		if (hasGap(waysToCheck)) {
-
+			
 			this.hasGap = true;
-
+			
 			RelationSorter sorter = new RelationSorter();
 			sortedMembers = sorter.sortMembers(waysToCheck);
 
@@ -98,16 +102,24 @@ public class RouteChecker extends Checker {
 		return false;
 	}
 
+	/**
+	 * Returns errors
+	 */
+	public List<TestError> getErrors() {
+
+		return errors;
+	}
+
 	public List<RelationMember> getSortedMembers() {
 
 		return sortedMembers;
 
 	}
-
+	
 	public boolean getHasGap() {
-
+		
 		return this.hasGap;
-
+		
 	}
 
 }

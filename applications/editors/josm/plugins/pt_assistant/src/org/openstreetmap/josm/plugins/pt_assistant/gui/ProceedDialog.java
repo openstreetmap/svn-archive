@@ -71,7 +71,7 @@ public class ProceedDialog extends JPanel {
 		radioButtonFixManually.setAlignmentX(Component.LEFT_ALIGNMENT);
 		radioButtonDontFix.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		checkbox = new JCheckBox(tr("Remember my choice and don't ask me again in this session"));
+		checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
 		panel.add(checkbox);
 		checkbox.setAlignmentX(Component.LEFT_ALIGNMENT);
 

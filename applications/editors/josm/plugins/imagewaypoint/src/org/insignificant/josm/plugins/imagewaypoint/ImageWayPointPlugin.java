@@ -1,15 +1,11 @@
 package org.insignificant.josm.plugins.imagewaypoint;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.filechooser.FileFilter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
@@ -22,22 +18,6 @@ import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
 public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Plugin {
-    private static final class ImageFileFilter extends FileFilter {
-        @Override
-        public final boolean accept(final File file) {
-            return file.isDirectory()
-                || file.getName().toLowerCase().endsWith(".jpg")
-                || file.getName().toLowerCase().endsWith(".jpeg")
-                || file.getName().toLowerCase().endsWith(".png")
-                || file.getName().toLowerCase().endsWith(".gif");
-        }
-
-        @Override
-        public final String getDescription() {
-            return tr("Image files (*.jpg, *.jpeg, *.png, *.gif)");
-        }
-    }
-
     private final class ImageWaypointImporter extends FileImporter {
 
         public ImageWaypointImporter() {
@@ -63,18 +43,15 @@ public final class ImageWayPointPlugin extends org.openstreetmap.josm.plugins.Pl
                 addFiles(allFiles, files.toArray(new File[0]));
 
                 // add files to ImageEntries
-                ImageEntries.getInstance()
-                    .add(allFiles.toArray(new File[allFiles.size()]));
+                ImageEntries.getInstance().add(allFiles.toArray(new File[allFiles.size()]));
 
                 // check to see whether there's already an ImageWayPointLayer
                 boolean foundImageWayPointLayer = false;
-                if (null != Main.map && null != Main.map.mapView) {
-                    final Collection<Layer> layerCollection = Main.map.mapView.getAllLayers();
-                    final Iterator<Layer> layerIterator = layerCollection.iterator();
-                    while (layerIterator.hasNext() && !foundImageWayPointLayer) {
-                        if (layerIterator.next() instanceof ImageWayPointLayer) {
-                            foundImageWayPointLayer = true;
-                        }
+                final Collection<Layer> layerCollection = Main.getLayerManager().getLayers();
+                final Iterator<Layer> layerIterator = layerCollection.iterator();
+                while (layerIterator.hasNext() && !foundImageWayPointLayer) {
+                    if (layerIterator.next() instanceof ImageWayPointLayer) {
+                        foundImageWayPointLayer = true;
                     }
                 }
                 if (!foundImageWayPointLayer) {

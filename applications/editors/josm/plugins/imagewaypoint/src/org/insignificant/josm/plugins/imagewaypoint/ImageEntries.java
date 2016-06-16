@@ -74,21 +74,19 @@ public final class ImageEntries {
         }
         this.locatedImages.clear();
 
-        if (null != Main.map && null != Main.map.mapView) {
-            final Collection<Layer> layerCollection = Main.map.mapView.getAllLayers();
-            final Layer[] layers = layerCollection.toArray(new Layer[layerCollection.size()]);
+        final Collection<Layer> layerCollection = Main.getLayerManager().getLayers();
+        final Layer[] layers = layerCollection.toArray(new Layer[layerCollection.size()]);
 
-            for (int index = 0; index < layers.length; index++) {
-                if (layers[index] instanceof GpxLayer
-                && null != ((GpxLayer) layers[index]).data
-                && !((GpxLayer) layers[index]).data.fromServer) {
-                    this.doAssociateLayer((GpxLayer) layers[index]);
-                }
+        for (int index = 0; index < layers.length; index++) {
+            if (layers[index] instanceof GpxLayer
+            && null != ((GpxLayer) layers[index]).data
+            && !((GpxLayer) layers[index]).data.fromServer) {
+                this.doAssociateLayer((GpxLayer) layers[index]);
             }
+        }
 
-            for (IImageChangeListener listener : this.listeners) {
-                listener.onSelectedImageEntryChanged(this);
-            }
+        for (IImageChangeListener listener : this.listeners) {
+            listener.onSelectedImageEntryChanged(this);
         }
     }
 

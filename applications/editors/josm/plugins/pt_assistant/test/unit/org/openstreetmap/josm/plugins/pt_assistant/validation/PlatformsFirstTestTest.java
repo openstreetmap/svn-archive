@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.pt_assistant.validation;
+package unit.org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,8 +11,8 @@ import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.TestError;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PlatformsFirstTest;
 
-import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
-import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
+import unit.org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
+import unit.org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 
 public class PlatformsFirstTestTest extends AbstractTest {
 

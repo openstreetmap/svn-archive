@@ -18,29 +18,16 @@ import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalcula
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
- * Performs the DirectionTest and RoadTypeTest at the level of single ways
+ * Performs tests of a route at the level of single ways: DirectionTest and RoadTypeTest
  * 
  * @author darya
  *
  */
-public class WayChecker {
+public class WayChecker extends Checker {
 
-	// test which created this WayChecker:
-	private final Test test;
+	public WayChecker(Relation relation, Test test) {
 
-	// relation that is checked:
-	private Relation relation;
-
-	// stores all found errors (on way level):
-	private ArrayList<TestError> errors = new ArrayList<>();
-
-	// stores all ways that were found wrong and need to be removed:
-	private ArrayList<Way> wrongWays = new ArrayList<>();
-
-	public WayChecker(Relation r, Test test) {
-
-		this.test = test;
-		this.relation = r;
+		super(relation, test);
 
 		this.performDirectionTest();
 		this.performRoadTypeTest();
@@ -157,11 +144,6 @@ public class WayChecker {
 			}
 		}
 
-	}
-
-	public List<TestError> getErrors() {
-
-		return errors;
 	}
 
 	/**

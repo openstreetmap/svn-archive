@@ -66,6 +66,8 @@ public class RouteUtils {
 		if (rm.getType().equals(OsmPrimitiveType.RELATION)) {
 			if (rm.getRole().equals("stop_area")) {
 				return true;
+			} else if (rm.getRole().equals("platform") || rm.getRole().equals("platform_entry_only") || rm.getRole().equals("platform_exit_only")){
+				return true;
 			} else {
 				return false;
 			}

@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.pt_assistant;
+package unit.org.openstreetmap.josm.plugins.pt_assistant;
 
 /**
  * This class provides functionality used by multiple test classes of pt_assistant plugin. 

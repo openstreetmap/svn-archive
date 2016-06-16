@@ -2,8 +2,8 @@
 <project name="OSMRecPlugin" default="dist" basedir=".">
 
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="8863"/>
-    <property name="plugin.version" value="2.0"/>
+    <property name="plugin.main.version" value="10358"/>
+    <property name="plugin.version" value="2.1"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

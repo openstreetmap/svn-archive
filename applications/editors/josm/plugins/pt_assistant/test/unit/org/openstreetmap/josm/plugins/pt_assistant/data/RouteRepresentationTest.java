@@ -44,7 +44,7 @@ public class RouteRepresentationTest extends AbstractTest {
 		// Create stops:
 		Node n1 = new Node(); 
 		n1.put("name", "Stop1");
-		RelationMember rm1 = new RelationMember("stop_position", n1);
+		RelationMember rm1 = new RelationMember("stop", n1);
 		members.add(rm1);
 		Way w1 = new Way();
 		w1.put("name", "Stop2");
@@ -57,7 +57,7 @@ public class RouteRepresentationTest extends AbstractTest {
 		members.add(rm3);
 		Node n2 = new Node();
 		n2.put("name", "Stop4");
-		RelationMember rm4 = new RelationMember("stop_position", n2);
+		RelationMember rm4 = new RelationMember("stop", n2);
 		members.add(rm4);
 		Node n3 = new Node();
 		n3.put("name", "Stop4");
@@ -111,7 +111,7 @@ public class RouteRepresentationTest extends AbstractTest {
 		// Create stops:
 		Node n1 = new Node(); 
 		n1.put("name", "Stop1");
-		RelationMember rm1 = new RelationMember("stop_position", n1);
+		RelationMember rm1 = new RelationMember("stop", n1);
 		members.add(rm1);
 		Way w1 = new Way();
 		w1.put("name", "Stop2");
@@ -124,7 +124,7 @@ public class RouteRepresentationTest extends AbstractTest {
 		members.add(rm3);
 		Node n2 = new Node();
 		n2.put("name", "Stop4");
-		RelationMember rm4 = new RelationMember("stop_position", n2);
+		RelationMember rm4 = new RelationMember("stop", n2);
 		members.add(rm4);
 		Node n3 = new Node();
 		n3.put("name", "Stop4");
@@ -185,7 +185,7 @@ public class RouteRepresentationTest extends AbstractTest {
 		// Create stops:
 		Node n1 = new Node(); 
 		n1.put("name", "Stop1");
-		RelationMember rm1 = new RelationMember("stop_position", n1);
+		RelationMember rm1 = new RelationMember("stop", n1);
 		members.add(rm1);
 		Way w1 = new Way();
 		w1.put("name", "Stop2");
@@ -198,7 +198,7 @@ public class RouteRepresentationTest extends AbstractTest {
 		members.add(rm3);
 		Node n2 = new Node();
 		n2.put("name", "Stop4");
-		RelationMember rm4 = new RelationMember("stop_position", n2);
+		RelationMember rm4 = new RelationMember("stop", n2);
 		members.add(rm4);
 		Node n3 = new Node();
 		n3.put("name", "Stop4");

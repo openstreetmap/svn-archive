@@ -19,13 +19,21 @@ public class PTStop extends RelationMember {
 
 		super(other);
 
-		if (other.getRole().equals("stop_position") && other.getType().equals(OsmPrimitiveType.NODE)) {
+		if (other.getRole().equals("stop") && other.getType().equals(OsmPrimitiveType.NODE)) {
 			this.stopPosition = other.getNode();
 		} else if (other.getRole().equals("platform") || other.getRole().equals("platform_entry_only")
 				|| other.getRole().equals("platform_exit_only")) {
 			this.platform = other.getMember();
 		} else if (other.getRole().equals("stop_area") && other.getType().equals(OsmPrimitiveType.RELATION)) {
 			this.stopArea = other.getRelation();
+			for (RelationMember rm: stopArea.getMembers()) {
+				if (rm.getRole().equals("stop") && rm.isNode()) {
+					this.stopPosition = rm.getNode();
+				}
+				if (rm.getRole().equals("platform") || rm.getRole().equals("platform_entry_only") || rm.getRole().equals("platform_exit_only")) {
+					this.platform = rm.getMember();
+				}
+			}
 		} else {
 			throw new IllegalArgumentException("The RelationMember type does not match its role");
 		}
@@ -49,7 +57,7 @@ public class PTStop extends RelationMember {
 		// each element is only allowed once per stop
 
 		// add stop position:
-		if (member.getRole().equals("stop_position")) {
+		if (member.getRole().equals("stop")) {
 			if (member.getType().equals(OsmPrimitiveType.NODE) && stopPosition == null) {
 				this.stopPosition = member.getNode();
 				return true;
@@ -69,6 +77,14 @@ public class PTStop extends RelationMember {
 		if (member.getRole().equals("stop_area") && member.getType().equals(OsmPrimitiveType.RELATION)) {
 			if (stopArea == null) {
 				stopArea = member.getRelation();
+				for (RelationMember rm: stopArea.getMembers()) {
+					if (rm.getRole().equals("stop") && rm.isNode()) {
+						this.stopPosition = rm.getNode();
+					}
+					if (rm.getRole().equals("platform") || rm.getRole().equals("platform_entry_only") || rm.getRole().equals("platform_exit_only")) {
+						this.platform = rm.getMember();
+					}
+				}
 				return true;
 			}
 		}

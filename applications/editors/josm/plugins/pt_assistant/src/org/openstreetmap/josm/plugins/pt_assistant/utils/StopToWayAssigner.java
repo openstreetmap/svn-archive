@@ -1,14 +1,14 @@
 package org.openstreetmap.josm.plugins.pt_assistant.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTStop;
+import org.openstreetmap.josm.plugins.pt_assistant.data.PTWay;
 
 /**
  * Assigns stops to ways in following steps: (1) checks if the stop is in the
@@ -18,44 +18,57 @@ import org.openstreetmap.josm.data.osm.Way;
  * @author darya
  *
  */
-public final class StopToWayAssigner {
+public class StopToWayAssigner {
 
-	private static HashMap<Long, Way> stopToWay = new HashMap<>();
-
-	private StopToWayAssigner(Relation r) {
-		// Hide default constructor for utils classes
+	/* contains assigned stops */
+	private static HashMap<PTStop, PTWay> stopToWay = new HashMap<>();
+	
+	/* contains all PTWays of the route relation for which this assigner was created */
+	private List<PTWay> ptways;
+	
+	public StopToWayAssigner(List<PTWay> ptways) {
+		this.ptways = ptways;
 	}
 
-	public static Way getWay(OsmPrimitive stop, Relation route) {
-		if (stopToWay.containsKey(stop.getId())) {
-			return stopToWay.get(stop.getId());
+	public PTWay get(PTStop stop) {
+		
+		// 1) Search if this stop has already been assigned:
+		if (stopToWay.containsKey(stop)) {
+			return stopToWay.get(stop);
 		}
-
-		if (stop.getType().equals(OsmPrimitiveType.NODE)) {
-			List<OsmPrimitive> referrers = stop.getReferrers();
-			List<Way> referredWays = new ArrayList<>();
-			for (OsmPrimitive referrer : referrers) {
-				if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
-					referredWays.add((Way) referrer);
+		
+		// 2) Search if the stop has a stop position:
+		Node stopPosition = stop.getStopPosition();
+		if (stopPosition != null) {
+			
+			// search in the referrers:
+			List<OsmPrimitive> referrers = stopPosition.getReferrers();
+			for (OsmPrimitive referredPrimitive: referrers) {
+				if (referredPrimitive.getType().equals(OsmPrimitiveType.WAY)) {
+					Way referredWay = (Way) referredPrimitive;
+					for (PTWay ptway: ptways) {
+						if (ptway.getWays().contains(referredWay)) {
+							stopToWay.put(stop, ptway);
+							return ptway;
+						}
+					}
 				}
 			}
-			if (stop.hasTag("public_transport", "stop_position")) {
-				// TODO
-				Node n = (Node) stop;
-			}
+			
 		}
+		
+	   // 3) Run the growing-bounding-boxes algorithm:
+		// TODO
 
-		// TODO: algorithm with growing bounding boxes
-		// TODO: if found, add to
 		return null;
 	}
 
 	/**
 	 * Remove a map entry
-	 * 
+	 * FIXME: keys should be PTStop
 	 * @param stopId
 	 */
-	public static void removeStopKey(long stopId) {
+	public static void removeStopKey(Long stopId) {
 		Long id = new Long(stopId);
 		if (stopToWay.containsKey(id)) {
 			stopToWay.remove(id);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -58,6 +59,32 @@ public class PTRouteDataManager {
 				ptways.add(ptway);
 			}
 		}
+	}
+	
+	/**
+	 * Assigns the given way to a PTWay of this route relation.
+	 * @param inputWay Way to be assigned to a PTWAy of this route relation
+	 * @return PTWay that contains the geometry of the inputWay, null if not found
+	 */
+	public PTWay getPTWay(Way inputWay) {
+		
+		for (PTWay curr: ptways) {
+			
+			if (curr.isWay() && curr.getWays().get(0) == inputWay) {
+				return curr;
+			}
+			
+			if (curr.isRelation()) {
+				for (RelationMember rm: curr.getRelation().getMembers()) {
+					Way wayInNestedRelation = rm.getWay();
+					if (wayInNestedRelation == inputWay) {
+						return curr;
+					}
+				}
+			}
+		}
+		
+		return null; // if not found
 	}
 	
 	public List<PTStop> getPTStops() {

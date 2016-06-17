@@ -31,6 +31,8 @@ public class PTAssitantValidatorTest extends Test {
 	public static final int ERROR_CODE_SORTING = 3711;
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
 	public static final int ERROR_CODE_DIRECTION = 3731;
+	public static final int ERROR_CODE_END_STOP = 3141;
+	public static final int ERROR_CODE_SPLIT_WAY = 3142;
 	
 	public PTAssitantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),

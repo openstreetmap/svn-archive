@@ -62,5 +62,26 @@ public class PTWay extends RelationMember {
 	public List<Way> getWays() {
 		return this.ways;
 	}
+	
+
+	/**
+	 * Determines if this PTWay is modeled by an OsmPrimitiveType.WAY
+	 */
+	public boolean isWay() {
+		if (this.getType().equals(OsmPrimitiveType.WAY)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines if this PTWay is modeled by an OsmPrimitieType.RELATION (i.e. this is a nested relation)
+	 */
+	public boolean isRelation() {
+		if (this.getType().equals(OsmPrimitiveType.RELATION)) {
+			return true;
+		}
+		return false;
+	}
 
 }

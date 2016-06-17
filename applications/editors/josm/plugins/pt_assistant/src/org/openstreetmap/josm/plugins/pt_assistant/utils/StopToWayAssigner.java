@@ -10,6 +10,14 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
+/**
+ * Assigns stops to ways in following steps: (1) checks if the stop is in the
+ * list of already assigned stops, (2) checks if the stop has a stop position,
+ * (3) calculates it using proximity / growing bounding boxes
+ * 
+ * @author darya
+ *
+ */
 public final class StopToWayAssigner {
 
 	private static HashMap<Long, Way> stopToWay = new HashMap<>();
@@ -22,16 +30,13 @@ public final class StopToWayAssigner {
 		if (stopToWay.containsKey(stop.getId())) {
 			return stopToWay.get(stop.getId());
 		}
-		
 
-		
-		
 		if (stop.getType().equals(OsmPrimitiveType.NODE)) {
 			List<OsmPrimitive> referrers = stop.getReferrers();
 			List<Way> referredWays = new ArrayList<>();
-			for (OsmPrimitive referrer: referrers) {
+			for (OsmPrimitive referrer : referrers) {
 				if (referrer.getType().equals(OsmPrimitiveType.WAY)) {
-					referredWays.add((Way)referrer);
+					referredWays.add((Way) referrer);
 				}
 			}
 			if (stop.hasTag("public_transport", "stop_position")) {
@@ -44,9 +49,10 @@ public final class StopToWayAssigner {
 		// TODO: if found, add to
 		return null;
 	}
-	
+
 	/**
 	 * Remove a map entry
+	 * 
 	 * @param stopId
 	 */
 	public static void removeStopKey(long stopId) {

@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.plugins.pt_assistant.validation.GapTest;
-
 import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
 import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 

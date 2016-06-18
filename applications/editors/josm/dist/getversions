@@ -23,7 +23,7 @@ foreach my $plugin (@names)
     $version = $1 if $manifest =~ /Plugin-Version: ([^\r\n]+)/;
     $mversion = $1 if $manifest =~ /Plugin-Mainversion: ([^\r\n]+)/;
   }
-  printf "%-${maxlength}s %28s %6s (%4s)", $plugin,$date,$version,$mversion;
+  printf "%-${maxlength}s %28s %10s (%5s)", $plugin,$date,$version,$mversion;
   my $svnfile = $oldsvn ? ".svn/text-base/$plugin.svn-base" : "getrev/$plugin";
   if(-f $svnfile && ($manifest = `unzip -c $svnfile META-INF/MANIFEST.MF`))
   {
@@ -35,7 +35,7 @@ foreach my $plugin (@names)
     $svnmversion = $1 if $manifest =~ /Plugin-Mainversion: ([^\r\n]+)/;
     my $changed = ($svndate ne $date || $svnversion ne $version);
     my $changedm = $svnmversion ne $mversion;
-    printf " SVN: %28s %6s (%4s)%s%s", $svndate,$svnversion,$svnmversion,
+    printf " SVN: %28s %10s (%5s)%s%s", $svndate,$svnversion,$svnmversion,
     $changed ? " changed" : "", $changedm ? " main" : "";
     `svn revert $plugin` if !$changed && !$changedm;
   }

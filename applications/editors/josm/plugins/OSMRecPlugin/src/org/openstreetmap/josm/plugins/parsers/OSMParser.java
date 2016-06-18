@@ -1,15 +1,5 @@
 package org.openstreetmap.josm.plugins.parsers;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import org.openstreetmap.josm.plugins.container.OSMNode;
-import org.openstreetmap.josm.plugins.container.OSMRelation;
-import org.openstreetmap.josm.plugins.container.OSMWay;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
@@ -29,16 +19,28 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.container.OSMNode;
+import org.openstreetmap.josm.plugins.container.OSMRelation;
+import org.openstreetmap.josm.plugins.container.OSMWay;
+import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Parses OSM xml file and constructs additional nodes of the OSM map into appropriate objects with attributes.
  *
  * @author imis-nkarag
  */
-
 public class OSMParser extends DefaultHandler {
     
     //private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(OSMParser.class);
@@ -61,7 +63,6 @@ public class OSMParser extends DefaultHandler {
     private boolean inRelation = false; //becomes true when the parser is in a relarion node
     
     public OSMParser(String osmXmlFileName)  {
-        //System.out.println("creating osmParser..");
         this.osmXmlFileName = osmXmlFileName;       
         nodeList = new ArrayList<>();
         wayList = new ArrayList<>();
@@ -72,24 +73,14 @@ public class OSMParser extends DefaultHandler {
         } catch (FactoryException ex) {
             Logger.getLogger(OSMParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //System.out.println("osmParser created!");
     }
 
     public void parseDocument() {
-        // parse        
-        System.out.println("parsing OSM file...");
-        SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
-            SAXParser parser = factory.newSAXParser();
-            parser.parse(osmXmlFileName, this);
-        } catch (ParserConfigurationException e) {
-            System.out.println("ParserConfig error " + e);
-        } catch (SAXException e) {
-            System.out.println("SAXException : xml not well formed " + e);
-        } catch (IOException e) {
-            System.out.println("IO error " + e);
+            Utils.newSafeSAXParser().parse(osmXmlFileName, this);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            Main.error(e);
         }
-    //LOG.info("Instances from OSM/XML file parsed!");    
     }
 
     @Override
@@ -129,7 +120,6 @@ public class OSMParser extends DefaultHandler {
             else{
                 wayTmp.setUser("undefined");
             }
-            //System.out.println("way user: " + attributes.getValue("user"));
                     
             inWay = true;
             inNode = false;
@@ -210,7 +200,7 @@ public class OSMParser extends DefaultHandler {
                 Point point = geometryFactory.createPoint(geom.getCoordinate());
                 wayTmp.setGeometry(point);
             }
-        wayList.add(wayTmp);
+            wayList.add(wayTmp);
         } 
         
         if(element.equalsIgnoreCase("relation")) {

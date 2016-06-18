@@ -1,16 +1,18 @@
 package org.openstreetmap.josm.plugins.extractor;
 
-import org.openstreetmap.josm.plugins.container.OSMNode;
-import org.openstreetmap.josm.plugins.container.OSMRelation;
-import org.openstreetmap.josm.plugins.container.OSMWay;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.container.OSMNode;
+import org.openstreetmap.josm.plugins.container.OSMRelation;
+import org.openstreetmap.josm.plugins.container.OSMWay;
+import org.openstreetmap.josm.tools.Utils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -49,20 +51,12 @@ public class FrequenceExtractor extends DefaultHandler {
     }
 
     public void parseDocument() {
-        // parse
-        System.out.println("extracting frequencies...");
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        Main.info("extracting frequencies...");
         try {
-            SAXParser parser = factory.newSAXParser();
-            parser.parse(osmXmlFileName, this);
-        } catch (ParserConfigurationException e) {
-            System.out.println("ParserConfig error " + e);
-        } catch (SAXException e) {
-            System.out.println("SAXException : xml not well formed " + e);
-        } catch (IOException e) {
-            System.out.println("IO error " + e);
+            Utils.newSafeSAXParser().parse(osmXmlFileName, this);
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            Main.error(e);
         }
-    //LOG.info("Frequencies from OSM/XML file parsed!");    
     }
 
     @Override

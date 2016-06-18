@@ -1,2 +1,5 @@
 /build
 /bin
+/checkstyle-josm-HouseNumberTaggingTool.xml
+/REVISION.XML
+/findbugs-josm-HouseNumberTaggingTool.xml

@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-apache-http.xml
+/findbugs-josm-apache-http.xml

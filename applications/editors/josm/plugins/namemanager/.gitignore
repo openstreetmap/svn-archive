@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-namemanager.xml
+/findbugs-josm-namemanager.xml

@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-indoor_sweepline.xml
+/findbugs-josm-indoor_sweepline.xml

@@ -1,1 +1,3 @@
 /build
+/checkstyle-josm-native_password_manager.xml
+/findbugs-josm-native_password_manager.xml

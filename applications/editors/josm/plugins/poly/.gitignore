@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-poly.xml
+/findbugs-josm-poly.xml

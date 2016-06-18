@@ -3,3 +3,5 @@
 /.project
 /bin
 /build
+/checkstyle-josm-ColumbusCSV.xml
+/findbugs-josm-ColumbusCSV.xml

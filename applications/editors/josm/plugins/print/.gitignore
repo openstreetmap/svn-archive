@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-print.xml
+/findbugs-josm-print.xml

@@ -1,3 +1,5 @@
 /build
 /bin
 /MANIFEST
+/checkstyle-josm-pdfimport.xml
+/findbugs-josm-pdfimport.xml

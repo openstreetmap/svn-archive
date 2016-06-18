@@ -1,3 +1,5 @@
 /build
 /bin
 /MANIFEST
+/checkstyle-josm-OSMRecPlugin.xml
+/findbugs-josm-OSMRecPlugin.xml

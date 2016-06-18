@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-trustosm.xml
+/findbugs-josm-trustosm.xml

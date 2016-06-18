@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-geochat.xml
+/findbugs-josm-geochat.xml

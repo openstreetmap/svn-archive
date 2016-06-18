@@ -1,3 +1,5 @@
 /build
 /REVISION
 /bin
+/checkstyle-josm-log4j.xml
+/findbugs-josm-log4j.xml

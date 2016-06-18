@@ -3,3 +3,5 @@
 /build.err
 /josm-site.xml
 /bin
+/checkstyle-josm-openvisible.xml
+/findbugs-josm-openvisible.xml

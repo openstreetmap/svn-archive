@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-tageditor.xml
+/findbugs-josm-tageditor.xml

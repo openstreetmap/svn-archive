@@ -1,1 +1,3 @@
 /build
+/checkstyle-josm-ext_tools.xml
+/findbugs-josm-ext_tools.xml

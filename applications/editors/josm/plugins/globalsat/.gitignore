@@ -2,3 +2,5 @@
 /build.log
 /build.err
 /dist
+/checkstyle-josm-globalsat.xml
+/findbugs-josm-globalsat.xml

@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-turnlanes.xml
+/findbugs-josm-turnlanes.xml

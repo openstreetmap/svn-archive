@@ -2,3 +2,5 @@
 /build.err
 /build
 /bin
+/checkstyle-josm-cadastre-fr.xml
+/findbugs-josm-cadastre-fr.xml

@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-public_transport_layer.xml
+/findbugs-josm-public_transport_layer.xml

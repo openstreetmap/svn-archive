@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-waypoint_search.xml
+/findbugs-josm-waypoint_search.xml

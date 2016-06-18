@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-sds.xml
+/findbugs-josm-sds.xml

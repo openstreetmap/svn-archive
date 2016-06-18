@@ -2,3 +2,5 @@
 /build
 /REVISION
 /MANIFEST
+/checkstyle-josm-geotools.xml
+/findbugs-josm-geotools.xml

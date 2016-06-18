@@ -5,3 +5,5 @@
 /build
 /doc
 /lib
+/checkstyle-josm-ElevationProfile.xml
+/findbugs-josm-ElevationProfile.xml

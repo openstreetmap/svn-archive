@@ -1,3 +1,5 @@
 /.git
 /bin
 /build
+/checkstyle-josm-rasterfilters.xml
+/findbugs-josm-rasterfilters.xml

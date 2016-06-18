@@ -2,3 +2,5 @@
 /.log.xsl.swp
 /.git
 /bin
+/checkstyle-josm-czechaddress.xml
+/findbugs-josm-czechaddress.xml

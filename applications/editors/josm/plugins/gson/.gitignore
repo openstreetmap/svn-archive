@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-gson.xml
+/findbugs-josm-gson.xml

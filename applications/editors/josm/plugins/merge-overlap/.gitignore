@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-merge-overlap.xml
+/findbugs-josm-merge-overlap.xml

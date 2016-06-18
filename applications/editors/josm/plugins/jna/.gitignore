@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-jna.xml
+/findbugs-josm-jna.xml

@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-ImportImagePlugin.xml
+/findbugs-josm-ImportImagePlugin.xml

@@ -1,2 +1,4 @@
 /build
 /bin
+/checkstyle-josm-apache-commons.xml
+/findbugs-josm-apache-commons.xml

@@ -1,2 +1,4 @@
 /bin
 /build
+/checkstyle-josm-Tracer2.xml
+/findbugs-josm-Tracer2.xml

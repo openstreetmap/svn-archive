@@ -1,1 +1,3 @@
 /build
+/checkstyle-josm-FixAddresses.xml
+/findbugs-josm-FixAddresses.xml

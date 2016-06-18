@@ -1,3 +1,5 @@
 /.gitignore
 /bin
 /build
+/checkstyle-josm-indoorhelper.xml
+/findbugs-josm-indoorhelper.xml

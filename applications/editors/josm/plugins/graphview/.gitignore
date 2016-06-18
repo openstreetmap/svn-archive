@@ -1,2 +1,4 @@
 /build
 /REVISION
+/checkstyle-josm-graphview.xml
+/findbugs-josm-graphview.xml

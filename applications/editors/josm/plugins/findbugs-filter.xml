@@ -10,6 +10,12 @@
 		<Class name="~com.google.*" />
 	</Match>
 	<Match>
+		<Class name="~crosby.*" />
+	</Match>
+	<Match>
+		<Class name="~edu.princeton.*" />
+	</Match>
+	<Match>
 		<Class name="~georegression.*" />
 	</Match>
     <Match>
@@ -24,6 +30,9 @@
     <Match>
         <Class name="~jj2000.*" />
     </Match>
+    <Match>
+        <Class name="~net.boplicity.*" />
+    </Match>
 	<Match>
 		<Class name="~oauth.signpost.*" />
 	</Match>
@@ -35,6 +44,9 @@
 	</Match>
 	<Match>
 		<Class name="~org.ddogleg.*" />
+	</Match>
+	<Match>
+		<Class name="~org.dinopolis.*" />
 	</Match>
 	<Match>
 		<Class name="~org.ejml.*" />
@@ -68,6 +80,9 @@
 	</Match>
 	<Match>
 		<Class name="~org.jsoup.*" />
+	</Match>
+	<Match>
+		<Class name="~org.kaintoch.*" />
 	</Match>
 	<Match>
 		<Class name="~org.marvinproject.*" />

@@ -12,21 +12,21 @@ import org.openstreetmap.josm.plugins.elevation.grid.ElevationGridLayer;
 
 public class AddElevationLayerAction extends JosmAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -745642875640041385L;
-	private Layer currentLayer;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -745642875640041385L;
+    private Layer currentLayer;
 
-	public AddElevationLayerAction() {
-		super(tr("Elevation Grid Layer (experimental!)"), "elevation", tr("Shows elevation grid layer"), null, true);
-	}
+    public AddElevationLayerAction() {
+        super(tr("Elevation Grid Layer (experimental!)"), "elevation", tr("Shows elevation grid layer"), null, true);
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (currentLayer == null) {
-			currentLayer = new ElevationGridLayer(tr("Elevation Grid")); // TODO: Better name
-			Main.main.addLayer(currentLayer);
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        if (currentLayer == null) {
+            currentLayer = new ElevationGridLayer(tr("Elevation Grid")); // TODO: Better name
+            Main.main.addLayer(currentLayer);
+        }
+    }
 }

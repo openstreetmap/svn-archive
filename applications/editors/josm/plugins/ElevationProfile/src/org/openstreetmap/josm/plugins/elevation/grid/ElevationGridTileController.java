@@ -15,41 +15,41 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  */
 public class ElevationGridTileController extends TileController {
 
-	/**
-	 * @param source
-	 * @param tileCache
-	 * @param listener
-	 */
-	public ElevationGridTileController(TileSource source, TileCache tileCache,
-			TileLoaderListener listener, TileLoader loader) {
-		super(source, tileCache, listener);
+    /**
+     * @param source
+     * @param tileCache
+     * @param listener
+     */
+    public ElevationGridTileController(TileSource source, TileCache tileCache,
+            TileLoaderListener listener, TileLoader loader) {
+        super(source, tileCache, listener);
 
-		tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!
-		tileLoader = loader; // FIXME: hard-coded in base class!
-	}
+        tileSource = source; // FIXME: hard-coded in base class (although parameter is given)!!
+        tileLoader = loader; // FIXME: hard-coded in base class!
+    }
 
-	@Override
-	public Tile getTile(int tilex, int tiley, int zoom) {
-		int max = (1 << zoom);
-		if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
-			return null;
-		Tile tile = tileCache.getTile(tileSource, tilex, tiley, zoom);
-		if (tile == null) {
-			// FIXME: Provide/use a factory method here
-			tile = new ElevationGridTile(tileSource, tilex, tiley, zoom);
-			tileCache.addTile(tile);
-			tile.loadPlaceholderFromCache(tileCache);
-		}
-		if (tile.hasError()) {
-			tile.loadPlaceholderFromCache(tileCache);
-		}
-		if (!tile.isLoaded()) {
-			tileLoader.createTileLoaderJob(tile).submit();
-		}
-		return tile;
-	}
+    @Override
+    public Tile getTile(int tilex, int tiley, int zoom) {
+        int max = (1 << zoom);
+        if (tilex < 0 || tilex >= max || tiley < 0 || tiley >= max)
+            return null;
+        Tile tile = tileCache.getTile(tileSource, tilex, tiley, zoom);
+        if (tile == null) {
+            // FIXME: Provide/use a factory method here
+            tile = new ElevationGridTile(tileSource, tilex, tiley, zoom);
+            tileCache.addTile(tile);
+            tile.loadPlaceholderFromCache(tileCache);
+        }
+        if (tile.hasError()) {
+            tile.loadPlaceholderFromCache(tileCache);
+        }
+        if (!tile.isLoaded()) {
+            tileLoader.createTileLoaderJob(tile).submit();
+        }
+        return tile;
+    }
 
-	/**
-	 *
-	 */
+    /**
+     *
+     */
 }

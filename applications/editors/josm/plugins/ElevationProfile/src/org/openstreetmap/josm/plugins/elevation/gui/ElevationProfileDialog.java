@@ -46,416 +46,416 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class ElevationProfileDialog extends ToggleDialog implements LayerChangeListener, ComponentListener {
 
-	private static final String EMPTY_DATA_STRING = "-";
-	private static final long serialVersionUID = -868463893732535577L;
-	/* Elevation profile instance */
-	private IElevationModel model;
-	/* GPX data */
-	private GpxLayer activeLayer = null;
-	private final HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<>();
+    private static final String EMPTY_DATA_STRING = "-";
+    private static final long serialVersionUID = -868463893732535577L;
+    /* Elevation profile instance */
+    private IElevationModel model;
+    /* GPX data */
+    private GpxLayer activeLayer = null;
+    private final HashMap<GpxLayer, ElevationModel> layerMap = new HashMap<>();
 
-	/* UI elements */
-	private final ElevationProfilePanel profPanel;
-	private final JLabel minHeightLabel;
-	private final JLabel maxHeightLabel;
-	private final JLabel avrgHeightLabel;
-	private final JLabel elevationGainLabel;
-	private final JLabel totalTimeLabel;
-	private final JLabel distLabel;
-	private final JComboBox<IElevationProfile> trackCombo;
-	private final JButton zoomButton;
+    /* UI elements */
+    private final ElevationProfilePanel profPanel;
+    private final JLabel minHeightLabel;
+    private final JLabel maxHeightLabel;
+    private final JLabel avrgHeightLabel;
+    private final JLabel elevationGainLabel;
+    private final JLabel totalTimeLabel;
+    private final JLabel distLabel;
+    private final JComboBox<IElevationProfile> trackCombo;
+    private final JButton zoomButton;
 
-	/* Listener to the elevation model */
-	private final List<IElevationModelListener> listeners = new ArrayList<>();
+    /* Listener to the elevation model */
+    private final List<IElevationModelListener> listeners = new ArrayList<>();
 
-	/**
-	 * Corresponding layer instance within map view.
-	 */
-	private ElevationProfileLayer profileLayer;
+    /**
+     * Corresponding layer instance within map view.
+     */
+    private ElevationProfileLayer profileLayer;
 
-	/**
-	 * Default constructor
-	 */
-	public ElevationProfileDialog() {
-		this(tr("Elevation Profile"), "elevation",
-				tr("Open the elevation profile window."), null, 200, true);
-	}
+    /**
+     * Default constructor
+     */
+    public ElevationProfileDialog() {
+        this(tr("Elevation Profile"), "elevation",
+                tr("Open the elevation profile window."), null, 200, true);
+    }
 
-	/**
-	 * Constructor (see below)
-	 */
-	public ElevationProfileDialog(String name, String iconName, String tooltip,
-			Shortcut shortcut, int preferredHeight) {
-		this(name, iconName, tooltip, shortcut, preferredHeight, false);
-	}
+    /**
+     * Constructor (see below)
+     */
+    public ElevationProfileDialog(String name, String iconName, String tooltip,
+            Shortcut shortcut, int preferredHeight) {
+        this(name, iconName, tooltip, shortcut, preferredHeight, false);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param name
-	 *            the name of the dialog
-	 * @param iconName
-	 *            the name of the icon to be displayed
-	 * @param tooltip
-	 *            the tool tip
-	 * @param shortcut
-	 *            the shortcut
-	 * @param preferredHeight
-	 *            the preferred height for the dialog
-	 * @param defShow
-	 *            if the dialog should be shown by default, if there is no
-	 *            preference
-	 */
-	public ElevationProfileDialog(String name, String iconName, String tooltip,
-			Shortcut shortcut, int preferredHeight, boolean defShow) {
-		super(name, iconName, tooltip, shortcut, preferredHeight, defShow);
+    /**
+     * Constructor
+     *
+     * @param name
+     *            the name of the dialog
+     * @param iconName
+     *            the name of the icon to be displayed
+     * @param tooltip
+     *            the tool tip
+     * @param shortcut
+     *            the shortcut
+     * @param preferredHeight
+     *            the preferred height for the dialog
+     * @param defShow
+     *            if the dialog should be shown by default, if there is no
+     *            preference
+     */
+    public ElevationProfileDialog(String name, String iconName, String tooltip,
+            Shortcut shortcut, int preferredHeight, boolean defShow) {
+        super(name, iconName, tooltip, shortcut, preferredHeight, defShow);
 
-		// create model
-		model = new ElevationModel();
+        // create model
+        model = new ElevationModel();
 
-		// top panel
-		JPanel rootPanel = new JPanel();
-		GridLayout gridLayout1 = new GridLayout(2, 1);
-		rootPanel.setLayout(gridLayout1);
+        // top panel
+        JPanel rootPanel = new JPanel();
+        GridLayout gridLayout1 = new GridLayout(2, 1);
+        rootPanel.setLayout(gridLayout1);
 
-		// statistics panel
-		JPanel statPanel = new JPanel();
-		GridLayout gridLayoutStat = new GridLayout(2, 6);
-		statPanel.setLayout(gridLayoutStat);
+        // statistics panel
+        JPanel statPanel = new JPanel();
+        GridLayout gridLayoutStat = new GridLayout(2, 6);
+        statPanel.setLayout(gridLayoutStat);
 
-		// first row: Headlines with bold font
-		String[] labels = new String[]{tr("Min"), tr("Avrg"), tr("Max"), tr("Dist"), tr("Gain"), tr("Time")};
-		for (int i = 0; i < labels.length; i++) {
-			JLabel lbl = new JLabel(labels[i]);
-			lbl.setFont(getFont().deriveFont(Font.BOLD));
-			statPanel.add(lbl);
-		}
+        // first row: Headlines with bold font
+        String[] labels = new String[]{tr("Min"), tr("Avrg"), tr("Max"), tr("Dist"), tr("Gain"), tr("Time")};
+        for (int i = 0; i < labels.length; i++) {
+            JLabel lbl = new JLabel(labels[i]);
+            lbl.setFont(getFont().deriveFont(Font.BOLD));
+            statPanel.add(lbl);
+        }
 
-		// second row
-		minHeightLabel = new JLabel("0 m");
-		statPanel.add(minHeightLabel);
-		avrgHeightLabel = new JLabel("0 m");
-		statPanel.add(avrgHeightLabel);
-		maxHeightLabel = new JLabel("0 m");
-		statPanel.add(maxHeightLabel);
-		distLabel = new JLabel("0 km");
-		statPanel.add(distLabel);
-		elevationGainLabel = new JLabel("0 m");
-		statPanel.add(elevationGainLabel);
-		totalTimeLabel = new JLabel("0");
-		statPanel.add(totalTimeLabel);
+        // second row
+        minHeightLabel = new JLabel("0 m");
+        statPanel.add(minHeightLabel);
+        avrgHeightLabel = new JLabel("0 m");
+        statPanel.add(avrgHeightLabel);
+        maxHeightLabel = new JLabel("0 m");
+        statPanel.add(maxHeightLabel);
+        distLabel = new JLabel("0 km");
+        statPanel.add(distLabel);
+        elevationGainLabel = new JLabel("0 m");
+        statPanel.add(elevationGainLabel);
+        totalTimeLabel = new JLabel("0");
+        statPanel.add(totalTimeLabel);
 
-		// track selection panel
-		JPanel trackPanel = new JPanel();
-		FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
-		trackPanel.setLayout(fl);
+        // track selection panel
+        JPanel trackPanel = new JPanel();
+        FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+        trackPanel.setLayout(fl);
 
-		JLabel lbTrack = new JLabel(tr("Tracks"));
-		lbTrack.setFont(getFont().deriveFont(Font.BOLD));
-		trackPanel.add(lbTrack);
+        JLabel lbTrack = new JLabel(tr("Tracks"));
+        lbTrack.setFont(getFont().deriveFont(Font.BOLD));
+        trackPanel.add(lbTrack);
 
-		zoomButton = new JButton(tr("Zoom"));
-		zoomButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (model != null) {
-					IElevationProfile profile = model.getCurrentProfile();
-					if (profile != null) {
-						Main.map.mapView.zoomTo(profile.getBounds());
-					}
-				}
+        zoomButton = new JButton(tr("Zoom"));
+        zoomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (model != null) {
+                    IElevationProfile profile = model.getCurrentProfile();
+                    if (profile != null) {
+                        Main.map.mapView.zoomTo(profile.getBounds());
+                    }
+                }
 
-			}
-		});
-		zoomButton.setEnabled(false);
+            }
+        });
+        zoomButton.setEnabled(false);
 
-		trackCombo = new JComboBox<>(new TrackModel());
-		trackCombo.setPreferredSize(new Dimension(200, 24)); // HACK!
-		trackCombo.setEnabled(false); // we have no model on startup
+        trackCombo = new JComboBox<>(new TrackModel());
+        trackCombo.setPreferredSize(new Dimension(200, 24)); // HACK!
+        trackCombo.setEnabled(false); // we have no model on startup
 
-		trackPanel.add(trackCombo);
-		trackPanel.add(zoomButton);
+        trackPanel.add(trackCombo);
+        trackPanel.add(zoomButton);
 
-		// assemble root panel
-		rootPanel.add(statPanel);
-		rootPanel.add(trackPanel);
+        // assemble root panel
+        rootPanel.add(statPanel);
+        rootPanel.add(trackPanel);
 
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.add(rootPanel, BorderLayout.PAGE_END);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(rootPanel, BorderLayout.PAGE_END);
 
-		// add chart component
-		profPanel = new ElevationProfilePanel(null);
-		mainPanel.add(profPanel, BorderLayout.CENTER);
-		profPanel.addComponentListener(this);
+        // add chart component
+        profPanel = new ElevationProfilePanel(null);
+        mainPanel.add(profPanel, BorderLayout.CENTER);
+        profPanel.addComponentListener(this);
 
-		createLayout(mainPanel, true, null);
-	}
+        createLayout(mainPanel, true, null);
+    }
 
-	@Override
-	public void showNotify() {
-		MapView.addLayerChangeListener(this);
-		if (Main.isDisplayingMapView()) {
-			Layer layer = Main.map.mapView.getActiveLayer();
-			if (layer instanceof GpxLayer) {
-				setActiveLayer((GpxLayer) layer);
-			}
-		}
-	}
+    @Override
+    public void showNotify() {
+        MapView.addLayerChangeListener(this);
+        if (Main.isDisplayingMapView()) {
+            Layer layer = Main.map.mapView.getActiveLayer();
+            if (layer instanceof GpxLayer) {
+                setActiveLayer((GpxLayer) layer);
+            }
+        }
+    }
 
-	@Override
-	public void hideNotify() {
-		MapView.removeLayerChangeListener(this);
-	}
+    @Override
+    public void hideNotify() {
+        MapView.removeLayerChangeListener(this);
+    }
 
-	/**
-	 * Gets the elevation model instance.
-	 * @return
-	 */
-	public IElevationModel getModel() {
-		return model;
-	}
+    /**
+     * Gets the elevation model instance.
+     * @return
+     */
+    public IElevationModel getModel() {
+        return model;
+    }
 
-	/**
-	 * Sets the elevation model instance.
-	 * @param model The new model.
-	 */
-	public void setModel(IElevationModel model) {
-		if (this.model != model) {
-			this.model = model;
-			profPanel.setElevationModel(model);
-			updateView();
-		}
-	}
+    /**
+     * Sets the elevation model instance.
+     * @param model The new model.
+     */
+    public void setModel(IElevationModel model) {
+        if (this.model != model) {
+            this.model = model;
+            profPanel.setElevationModel(model);
+            updateView();
+        }
+    }
 
-	/**
-	 * Gets the associated layer instance of the elevation profile.
-	 * @return
-	 */
-	public ElevationProfileLayer getProfileLayer() {
-		return profileLayer;
-	}
+    /**
+     * Gets the associated layer instance of the elevation profile.
+     * @return
+     */
+    public ElevationProfileLayer getProfileLayer() {
+        return profileLayer;
+    }
 
-	/**
-	 * Sets the associated layer instance of the elevation profile.
-	 * @param profileLayer The elevation profile layer.
-	 */
-	public void setProfileLayer(ElevationProfileLayer profileLayer) {
-		if (this.profileLayer != profileLayer) {
-			if (this.profileLayer != null) {
-				profPanel.removeSelectionListener(this.profileLayer);
-			}
-			this.profileLayer = profileLayer;
-			profPanel.addSelectionListener(this.profileLayer);
-		}
-	}
+    /**
+     * Sets the associated layer instance of the elevation profile.
+     * @param profileLayer The elevation profile layer.
+     */
+    public void setProfileLayer(ElevationProfileLayer profileLayer) {
+        if (this.profileLayer != profileLayer) {
+            if (this.profileLayer != null) {
+                profPanel.removeSelectionListener(this.profileLayer);
+            }
+            this.profileLayer = profileLayer;
+            profPanel.addSelectionListener(this.profileLayer);
+        }
+    }
 
-	/**
-	 * Refreshes the dialog when model data have changed and notifies clients
-	 * that the model has changed.
-	 */
-	private void updateView() {
-		if (model == null) {
-			disableView();
-			return;
-		}
+    /**
+     * Refreshes the dialog when model data have changed and notifies clients
+     * that the model has changed.
+     */
+    private void updateView() {
+        if (model == null) {
+            disableView();
+            return;
+        }
 
-		IElevationProfile profile = model.getCurrentProfile();
-		if (profile != null) {
-			// Show name of profile in title
-			setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
+        IElevationProfile profile = model.getCurrentProfile();
+        if (profile != null) {
+            // Show name of profile in title
+            setTitle(String.format("%s: %s", tr("Elevation Profile"), profile.getName()));
 
-			if (profile.hasElevationData()) {
-				// Show elevation data
-				minHeightLabel.setText(
-						ElevationHelper.getElevationText(profile.getMinHeight()));
-				maxHeightLabel.setText(
-						ElevationHelper.getElevationText(profile.getMaxHeight()));
-				avrgHeightLabel.setText(
-						ElevationHelper.getElevationText(profile.getAverageHeight()));
-				elevationGainLabel.setText(
-						ElevationHelper.getElevationText(profile.getGain()));
-			}
+            if (profile.hasElevationData()) {
+                // Show elevation data
+                minHeightLabel.setText(
+                        ElevationHelper.getElevationText(profile.getMinHeight()));
+                maxHeightLabel.setText(
+                        ElevationHelper.getElevationText(profile.getMaxHeight()));
+                avrgHeightLabel.setText(
+                        ElevationHelper.getElevationText(profile.getAverageHeight()));
+                elevationGainLabel.setText(
+                        ElevationHelper.getElevationText(profile.getGain()));
+            }
 
-			// compute values for time and distance
-			long diff = profile.getTimeDifference();
-			long minutes = diff / (1000 * 60);
-			long hours = minutes / 60;
-			minutes = minutes % 60;
+            // compute values for time and distance
+            long diff = profile.getTimeDifference();
+            long minutes = diff / (1000 * 60);
+            long hours = minutes / 60;
+            minutes = minutes % 60;
 
-			double dist = profile.getDistance();
+            double dist = profile.getDistance();
 
-			totalTimeLabel.setText(String.format("%d:%02d h", hours, minutes));
-			distLabel.setText(SystemOfMeasurement.getSystemOfMeasurement().getDistText(dist));
-			trackCombo.setEnabled(model.profileCount() > 1);
-			trackCombo.setModel(new TrackModel());
-			zoomButton.setEnabled(true);
-		} else { // no elevation data, -> switch back to empty view
-			disableView();
-		}
+            totalTimeLabel.setText(String.format("%d:%02d h", hours, minutes));
+            distLabel.setText(SystemOfMeasurement.getSystemOfMeasurement().getDistText(dist));
+            trackCombo.setEnabled(model.profileCount() > 1);
+            trackCombo.setModel(new TrackModel());
+            zoomButton.setEnabled(true);
+        } else { // no elevation data, -> switch back to empty view
+            disableView();
+        }
 
-		fireModelChanged();
-		repaint();
-	}
+        fireModelChanged();
+        repaint();
+    }
 
-	private void disableView() {
-		setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
+    private void disableView() {
+        setTitle(String.format("%s: (No data)", tr("Elevation Profile")));
 
-		minHeightLabel.setText(EMPTY_DATA_STRING);
-		maxHeightLabel.setText(EMPTY_DATA_STRING);
-		avrgHeightLabel.setText(EMPTY_DATA_STRING);
-		elevationGainLabel.setText(EMPTY_DATA_STRING);
-		totalTimeLabel.setText(EMPTY_DATA_STRING);
-		distLabel.setText(EMPTY_DATA_STRING);
-		trackCombo.setEnabled(false);
-		zoomButton.setEnabled(false);
-	}
+        minHeightLabel.setText(EMPTY_DATA_STRING);
+        maxHeightLabel.setText(EMPTY_DATA_STRING);
+        avrgHeightLabel.setText(EMPTY_DATA_STRING);
+        elevationGainLabel.setText(EMPTY_DATA_STRING);
+        totalTimeLabel.setText(EMPTY_DATA_STRING);
+        distLabel.setText(EMPTY_DATA_STRING);
+        trackCombo.setEnabled(false);
+        zoomButton.setEnabled(false);
+    }
 
-	/**
-	 * Fires the 'model changed' event to all listeners.
-	 */
-	protected void fireModelChanged() {
-		for (IElevationModelListener listener : listeners) {
-			listener.elevationProfileChanged(getModel().getCurrentProfile());
-		}
-	}
+    /**
+     * Fires the 'model changed' event to all listeners.
+     */
+    protected void fireModelChanged() {
+        for (IElevationModelListener listener : listeners) {
+            listener.elevationProfileChanged(getModel().getCurrentProfile());
+        }
+    }
 
-	/**
-	 * Adds a model listener to this instance.
-	 *
-	 * @param listener
-	 *            The listener to add.
-	 */
-	public void addModelListener(IElevationModelListener listener) {
-		this.listeners.add(listener);
-	}
+    /**
+     * Adds a model listener to this instance.
+     *
+     * @param listener
+     *            The listener to add.
+     */
+    public void addModelListener(IElevationModelListener listener) {
+        this.listeners.add(listener);
+    }
 
-	/**
-	 * Removes a model listener from this instance.
-	 *
-	 * @param listener
-	 *            The listener to remove.
-	 */
-	public void removeModelListener(IElevationModelListener listener) {
-		this.listeners.remove(listener);
-	}
+    /**
+     * Removes a model listener from this instance.
+     *
+     * @param listener
+     *            The listener to remove.
+     */
+    public void removeModelListener(IElevationModelListener listener) {
+        this.listeners.remove(listener);
+    }
 
-	/**
-	 * Removes all listeners from this instance.
-	 */
-	public void removeAllListeners() {
-		this.listeners.clear();
-	}
+    /**
+     * Removes all listeners from this instance.
+     */
+    public void removeAllListeners() {
+        this.listeners.clear();
+    }
 
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		if (newLayer instanceof GpxLayer) {
-			setActiveLayer((GpxLayer) newLayer);
-		}
-	}
+    @Override
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+        if (newLayer instanceof GpxLayer) {
+            setActiveLayer((GpxLayer) newLayer);
+        }
+    }
 
-	private void setActiveLayer(GpxLayer newLayer) {
-		if (activeLayer != newLayer) {
-			activeLayer = newLayer;
+    private void setActiveLayer(GpxLayer newLayer) {
+        if (activeLayer != newLayer) {
+            activeLayer = newLayer;
 
-			// layer does not exist -> create
-			if (!layerMap.containsKey(newLayer)) {
-				GpxData gpxData = newLayer.data;
-				ElevationModel newEM = new ElevationModel(newLayer.getName(),
-						gpxData);
-				layerMap.put(newLayer, newEM);
-			}
+            // layer does not exist -> create
+            if (!layerMap.containsKey(newLayer)) {
+                GpxData gpxData = newLayer.data;
+                ElevationModel newEM = new ElevationModel(newLayer.getName(),
+                        gpxData);
+                layerMap.put(newLayer, newEM);
+            }
 
-			ElevationModel em = layerMap.get(newLayer);
-			setModel(em);
-		}
-	}
+            ElevationModel em = layerMap.get(newLayer);
+            setModel(em);
+        }
+    }
 
-	@Override
-	public void layerAdded(Layer newLayer) {
-		if (newLayer instanceof GpxLayer) {
-			GpxLayer gpxLayer = (GpxLayer) newLayer;
-			setActiveLayer(gpxLayer);
-		}
-	}
+    @Override
+    public void layerAdded(Layer newLayer) {
+        if (newLayer instanceof GpxLayer) {
+            GpxLayer gpxLayer = (GpxLayer) newLayer;
+            setActiveLayer(gpxLayer);
+        }
+    }
 
-	@Override
-	public void layerRemoved(Layer oldLayer) {
-		if (layerMap.containsKey(oldLayer)) {
-			layerMap.remove(oldLayer);
-		}
+    @Override
+    public void layerRemoved(Layer oldLayer) {
+        if (layerMap.containsKey(oldLayer)) {
+            layerMap.remove(oldLayer);
+        }
 
-		if (layerMap.size() == 0) {
-			setModel(null);
-			if (profileLayer != null) {
-				profileLayer.setProfile(null);
-			}
-		}
-	}
+        if (layerMap.size() == 0) {
+            setModel(null);
+            if (profileLayer != null) {
+                profileLayer.setProfile(null);
+            }
+        }
+    }
 
-	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
+    @Override
+    public void componentHidden(ComponentEvent e) {
+    }
 
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
 
-	@Override
-	public void componentResized(ComponentEvent e) {
-	}
+    @Override
+    public void componentResized(ComponentEvent e) {
+    }
 
-	@Override
-	public void componentShown(ComponentEvent e) {
-	}
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
 
-	class TrackModel implements ComboBoxModel<IElevationProfile> {
-		private Collection<ListDataListener> listeners;
+    class TrackModel implements ComboBoxModel<IElevationProfile> {
+        private Collection<ListDataListener> listeners;
 
-		@Override
-		public void addListDataListener(ListDataListener arg0) {
-			if (listeners == null) {
-				listeners = new ArrayList<>();
-			}
-			listeners.add(arg0);
-		}
+        @Override
+        public void addListDataListener(ListDataListener arg0) {
+            if (listeners == null) {
+                listeners = new ArrayList<>();
+            }
+            listeners.add(arg0);
+        }
 
-		@Override
-		public IElevationProfile getElementAt(int index) {
-			if (model == null) return null;
+        @Override
+        public IElevationProfile getElementAt(int index) {
+            if (model == null) return null;
 
-			IElevationProfile ep = model.getProfiles().get(index);
-			return ep;
-		}
+            IElevationProfile ep = model.getProfiles().get(index);
+            return ep;
+        }
 
-		@Override
-		public int getSize() {
-			if (model == null) return 0;
+        @Override
+        public int getSize() {
+            if (model == null) return 0;
 
-			return model.profileCount();
-		}
+            return model.profileCount();
+        }
 
-		@Override
-		public void removeListDataListener(ListDataListener listener) {
-			if (listeners == null) return;
+        @Override
+        public void removeListDataListener(ListDataListener listener) {
+            if (listeners == null) return;
 
-			listeners.remove(listener);
-		}
+            listeners.remove(listener);
+        }
 
-		@Override
-		public IElevationProfile getSelectedItem() {
-			if (model == null) return null;
+        @Override
+        public IElevationProfile getSelectedItem() {
+            if (model == null) return null;
 
-			return model.getCurrentProfile();
-		}
+            return model.getCurrentProfile();
+        }
 
-		@Override
-		public void setSelectedItem(Object selectedObject) {
-			if (model != null && selectedObject instanceof IElevationProfile) {
-				model.setCurrentProfile((IElevationProfile) selectedObject);
-				profileLayer.setProfile(model.getCurrentProfile());
+        @Override
+        public void setSelectedItem(Object selectedObject) {
+            if (model != null && selectedObject instanceof IElevationProfile) {
+                model.setCurrentProfile((IElevationProfile) selectedObject);
+                profileLayer.setProfile(model.getCurrentProfile());
 
-				repaint();
-			}
-		}
-	}
+                repaint();
+            }
+        }
+    }
 }

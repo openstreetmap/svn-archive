@@ -1,6 +1,6 @@
 package org.openstreetmap.josm.plugins.photo_geotagging;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,6 +12,7 @@ import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -23,6 +24,7 @@ public class ExifGPSTaggerTest {
     public final TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
+    @Ignore("To enable after https://issues.apache.org/jira/browse/IMAGING-179 is fixed")
     public void testTicket11757() throws Exception {
         final File in = new File(TestUtils.getTestDataRoot(), "_DSC1234.jpg");
         ExifGPSTagger.setExifGPSTag(in, tempFolder.newFile(), 12, 34, new Date(), 12.34, Math.E, Math.PI);

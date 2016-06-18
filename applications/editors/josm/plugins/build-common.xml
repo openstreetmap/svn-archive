@@ -55,7 +55,7 @@
     ** compile - compiles the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init">
+    <target name="compile" depends="init" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
             <compilerarg value="-Xlint:deprecation"/>
@@ -102,7 +102,7 @@
     ** dist - creates the plugin jar
     **********************************************************
     -->
-    <target name="dist" depends="compile,revision">
+    <target name="dist" depends="compile,revision" unless="skip-dist">
         <echo message="creating ${ant.project.name}.jar ... "/>
         <antcall target="setup-dist" />
         <delete file="MANIFEST" failonerror="no"/>
@@ -268,7 +268,7 @@
         </tstamp>
         <echo file="REVISION.XML"><![CDATA[<info><entry><commit revision="UNKNOWN"><date>${current.time}</date></commit></entry></info>]]></echo>
     </target>
-    <target name="revision" depends="init-svn-revision-xml, init-git-svn-revision-xml, init-git-revision-xml, init-revision-fallback">
+    <target name="revision" depends="init-svn-revision-xml, init-git-svn-revision-xml, init-git-revision-xml, init-revision-fallback" unless="skip-revision">
       <xmlproperty file="REVISION.XML" prefix="version" keepRoot="false" collapseAttributes="true"/>
       <delete file="REVISION.XML"/>
     </target>
@@ -492,7 +492,7 @@
     <target name="checkstyle">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${checkstyle.jar}"/>
         <checkstyle config="../00_core_tools/checkstyle/josm_checks.xml">
-            <fileset dir="${basedir}/src" includes="**/*.java"/>
+            <fileset dir="${basedir}/src" includes="**/*.java" excludes="com/google/**/*.java,org/apache/**/*.java"/>
             <fileset dir="${basedir}/test" includes="**/*.java" erroronmissingdir="false"/>
             <formatter type="xml" toFile="checkstyle-josm-${ant.project.name}.xml"/>
         </checkstyle>
@@ -510,18 +510,18 @@
                 outputFile="findbugs-josm-${ant.project.name}.xml"
                 classpath="${findbugs-classpath}"
                 pluginList=""
-                excludeFilter="../00_core_tools/findbugs/josm-filter.xml"
+                excludeFilter="../findbugs-filter.xml"
                 effort="default"
                 reportLevel="low"
                 >
             <sourcePath path="${basedir}/src" />
             <class location="${plugin.jar}" />
+            <class location="${josm}" />
         </findbugs>
     </target>
 
     <target name="runjosm" depends="install">
-        <java jar="${josm}" fork="true">
-        </java>
+        <java jar="${josm}" fork="true"/>
     </target>
 
     <target name="profilejosm" depends="install">

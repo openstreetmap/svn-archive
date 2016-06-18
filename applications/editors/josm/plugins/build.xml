@@ -30,6 +30,7 @@
     <target name="dist" depends="compile_josm">
         <mkdir dir="../dist"/>
         <iterate target="dist"/>
+        <property name="skip-dist" value="true"/>
     </target>
     <target name="install" depends="dist">
         <iterate target="install"/>

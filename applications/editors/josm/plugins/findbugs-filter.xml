@@ -1,0 +1,94 @@
+<FindBugsFilter>
+
+	<Match>
+		<Class name="~au.com.*" />
+	</Match>
+	<Match>
+		<Class name="~boofcv.*" />
+	</Match>
+	<Match>
+		<Class name="~com.google.*" />
+	</Match>
+	<Match>
+		<Class name="~georegression.*" />
+	</Match>
+    <Match>
+        <Class name="~gnu.*" />
+    </Match>
+    <Match>
+        <Class name="~it.geosolutions.*" />
+    </Match>
+    <Match>
+        <Class name="~javax.*" />
+    </Match>
+    <Match>
+        <Class name="~jj2000.*" />
+    </Match>
+	<Match>
+		<Class name="~oauth.signpost.*" />
+	</Match>
+	<Match>
+		<Class name="~org.apache.*" />
+	</Match>
+	<Match>
+		<Class name="~org.bouncycastle.*" />
+	</Match>
+	<Match>
+		<Class name="~org.ddogleg.*" />
+	</Match>
+	<Match>
+		<Class name="~org.ejml.*" />
+	</Match>
+	<Match>
+		<Class name="~org.geotools.*" />
+	</Match>
+    <Match>
+        <Class name="~org.glassfish.*" />
+    </Match>
+	<Match>
+		<Class name="~org.hsqldb.*" />
+	</Match>
+	<Match>
+		<Class name="~org.j7zip.*" />
+	</Match>
+	<Match>
+		<Class name="~org.jaitools.*" />
+	</Match>
+	<Match>
+		<Class name="~org.jdesktop.*" />
+	</Match>
+	<Match>
+		<Class name="~org.jdom.*" />
+	</Match>
+	<Match>
+		<Class name="~org.jgrapht.*" />
+	</Match>
+	<Match>
+		<Class name="~org.jopendocument.*" />
+	</Match>
+	<Match>
+		<Class name="~org.jsoup.*" />
+	</Match>
+	<Match>
+		<Class name="~org.marvinproject.*" />
+	</Match>
+	<Match>
+		<Class name="~org.netbeans.*" />
+	</Match>
+	<Match>
+		<Class name="~org.opengis.*" />
+	</Match>
+	<Match>
+		<Class name="~org.osgeo.*" />
+	</Match>
+	<Match>
+		<Class name="~org.slf4j.*" />
+	</Match>
+    <Match>
+        <Class name="~org.w3._2001.xmlschema.*" />
+    </Match>
+    <Match>
+        <Class name="~uk.co.caprica.*" />
+    </Match>
+
+</FindBugsFilter>

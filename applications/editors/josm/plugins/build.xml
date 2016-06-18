@@ -6,35 +6,41 @@
     <target name="compile_josm_test" unless="skip-josm">
         <ant dir="../core" target="test-compile"/>
     </target>
-	<property name="ordered_plugins" value="jna/build.xml
-											jts/build.xml
-											gson/build.xml
-											ejml/build.xml
-											geotools/build.xml
-											utilsplugin2/build.xml
-											log4j/build.xml
-											apache-commons/build.xml
-											apache-http/build.xml"/>
-	<macrodef name="iterate">
-		<attribute name="target"/>
-		<sequential>
-			<subant target="@{target}">
-				<filelist dir="." files="${ordered_plugins}"/>
-				<fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml ${ordered_plugins}"/>
-			</subant>
-		</sequential>
-	</macrodef>
-	<target name="clean">
-		<iterate target="clean"/>
-	</target>
-	<target name="dist" depends="compile_josm">
+    <property name="ordered_plugins" value="jna/build.xml
+                                            jts/build.xml
+                                            gson/build.xml
+                                            ejml/build.xml
+                                            geotools/build.xml
+                                            utilsplugin2/build.xml
+                                            log4j/build.xml
+                                            apache-commons/build.xml
+                                            apache-http/build.xml"/>
+    <macrodef name="iterate">
+        <attribute name="target"/>
+        <sequential>
+            <subant target="@{target}">
+                <filelist dir="." files="${ordered_plugins}"/>
+                <fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml ${ordered_plugins}"/>
+            </subant>
+        </sequential>
+    </macrodef>
+    <target name="clean">
+        <iterate target="clean"/>
+    </target>
+    <target name="dist" depends="compile_josm">
         <mkdir dir="../dist"/>
-		<iterate target="dist"/>
-	</target>
-	<target name="install" depends="dist">
-		<iterate target="install"/>
-	</target>
-	<target name="test" depends="compile_josm_test">
-		<iterate target="test"/>
-	</target>
+        <iterate target="dist"/>
+    </target>
+    <target name="install" depends="dist">
+        <iterate target="install"/>
+    </target>
+    <target name="test" depends="compile_josm_test">
+        <iterate target="test"/>
+    </target>
+    <target name="checkstyle">
+        <iterate target="checkstyle"/>
+    </target>
+    <target name="findbugs">
+        <iterate target="findbugs"/>
+    </target>
 </project>

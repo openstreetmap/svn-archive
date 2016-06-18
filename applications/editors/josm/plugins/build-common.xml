@@ -42,6 +42,16 @@
     <!-- To be overriden in plugin build file before inclusion if other plugins are required -->
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}" includes="nothing"/>
 
+    <path id="plugin.classpath">
+        <pathelement location="${josm}"/>
+        <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
+            <include name="**/*.jar"/>
+            <exclude name="**/*-sources.jar"/>
+            <exclude name="**/*-javadoc.jar"/>
+        </fileset>
+        <fileset refid="plugin.requires.jars"/>
+    </path>
+
     <!--
     **********************************************************
     ** init - initializes the build
@@ -60,15 +70,7 @@
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
             <compilerarg value="-Xlint:deprecation"/>
             <compilerarg value="-Xlint:unchecked"/>
-            <classpath>
-                <pathelement location="${josm}"/>
-                <fileset dir="${plugin.lib.dir}" erroronmissingdir="no">
-                    <include name="**/*.jar"/>
-                    <exclude name="**/*-sources.jar"/>
-                    <exclude name="**/*-javadoc.jar"/>
-                </fileset>
-                <fileset refid="plugin.requires.jars"/>
-            </classpath>
+            <classpath refid="plugin.classpath"/>
         </javac>
     </target>
     <!--
@@ -514,9 +516,9 @@
                 effort="default"
                 reportLevel="low"
                 >
+			<auxClasspath refid="plugin.classpath" />
             <sourcePath path="${basedir}/src" />
             <class location="${plugin.jar}" />
-            <class location="${josm}" />
         </findbugs>
     </target>
 

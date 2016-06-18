@@ -429,7 +429,10 @@
             <replace file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_PASSWORD@" value="${osm.password}"/>
         </sequential>
     </macrodef>
-    <target name="test-init">
+    <target name="check-test">
+        <available file="${plugin.test.dir}" type="dir" property="test.present"/>
+    </target>
+    <target name="test-init" depends="check-test" if="test.present">
         <mkdir dir="${plugin.test.dir}/build"/>
         <mkdir dir="${plugin.test.dir}/build/unit"/>
         <mkdir dir="${plugin.test.dir}/report"/>
@@ -442,7 +445,7 @@
         <delete file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" />
         <delete dir="${plugin.test.dir}/config/unit-josm.home/cache" failonerror="false"/>
     </target>
-    <target name="test-compile" depends="test-init,dist">
+    <target name="test-compile" depends="test-init,dist" if="test.present">
         <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${groovy.jar}"/>
         <sequential>
             <groovyc srcdir="${plugin.test.dir}/unit" destdir="${plugin.test.dir}/build/unit" encoding="UTF-8">
@@ -457,7 +460,7 @@
             </groovyc>
         </sequential>
     </target>
-    <target name="test" depends="dist, test-clean, test-compile"
+    <target name="test" depends="dist, test-clean, test-compile" if="test.present"
         description="Run unit tests. OSM API (TEST) account shall be set with -Dosm.username and -Dosm.password">
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpath="../00_core_tools/jacocoant.jar" />
         <sequential>

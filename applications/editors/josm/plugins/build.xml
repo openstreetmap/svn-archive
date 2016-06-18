@@ -1,254 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="josm-plugins" default="build" basedir=".">
+<project name="josm-plugins" default="dist" basedir=".">
     <target name="compile_josm" unless="skip-josm">
         <ant dir="../core" target="dist"/>
     </target>
     <target name="compile_josm_test" unless="skip-josm">
         <ant dir="../core" target="test-compile"/>
     </target>
-    <target name="compile" depends="compile_josm"/>
-    <target name="build" depends="dist"/>
-    <target name="dist" depends="compile">
+	<property name="ordered_plugins" value="jna/build.xml
+											jts/build.xml
+											gson/build.xml
+											ejml/build.xml
+											geotools/build.xml
+											utilsplugin2/build.xml
+											log4j/build.xml
+											apache-commons/build.xml
+											apache-http/build.xml"/>
+	<macrodef name="iterate">
+		<attribute name="target"/>
+		<sequential>
+			<subant target="@{target}">
+				<filelist dir="." files="${ordered_plugins}"/>
+				<fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml ${ordered_plugins}"/>
+			</subant>
+		</sequential>
+	</macrodef>
+	<target name="clean">
+		<iterate target="clean"/>
+	</target>
+	<target name="dist" depends="compile_josm">
         <mkdir dir="../dist"/>
-        <!-- order important ! -->
-        <ant target="dist" dir="jna"/>
-        <ant target="dist" dir="jts"/>
-        <ant target="dist" dir="gson"/>
-        <ant target="dist" dir="ejml"/>
-        <ant target="dist" dir="geotools"/>
-        <ant target="dist" dir="utilsplugin2"/>
-        <ant target="dist" dir="log4j"/>
-        <ant target="dist" dir="apache-commons"/>
-        <ant target="dist" dir="apache-http"/>
-        <!-- order not important -->
-        <!-- to update, run $ ls -F | grep '/$' | tr -d '/' | grep -v '00_plugin_dir_template\|jna\|jts\|geotools\|utilsplugin2\|log4j\|apache-commons\|apache-http' | sed 's/^/<ant target="dist" dir="/' | sed 's/$/"\/>/' -->
-        <ant target="dist" dir="addrinterpolation"/>
-        <ant target="dist" dir="alignways"/>
-        <ant target="dist" dir="areaselector"/>
-        <ant target="dist" dir="buildings_tools"/>
-        <ant target="dist" dir="cadastre-fr"/>
-        <ant target="dist" dir="canvec_helper"/>
-        <ant target="dist" dir="colorscheme"/>
-        <ant target="dist" dir="conflation"/>
-        <ant target="dist" dir="ColumbusCSV"/>
-        <ant target="dist" dir="CommandLine"/>
-        <ant target="dist" dir="continuosDownload"/>
-        <ant target="dist" dir="Create_grid_of_ways"/>
-        <ant target="dist" dir="czechaddress"/>
-        <ant target="dist" dir="dataimport"/>
-        <ant target="dist" dir="DirectDownload"/>
-        <ant target="dist" dir="DirectUpload"/>
-        <ant target="dist" dir="download_along"/>
-        <ant target="dist" dir="editgpx"/>
-        <ant target="dist" dir="ElevationProfile"/>
-        <ant target="dist" dir="epci-fr"/>
-        <ant target="dist" dir="ext_tools"/>
-        <ant target="dist" dir="FastDraw"/>
-        <ant target="dist" dir="FixAddresses"/>
-        <ant target="dist" dir="geochat"/>
-        <ant target="dist" dir="globalsat"/>
-        <ant target="dist" dir="gpsblam"/>
-        <ant target="dist" dir="gpxfilter"/>
-        <ant target="dist" dir="graphview"/>
-        <ant target="dist" dir="HouseNumberTaggingTool"/>
-        <ant target="dist" dir="imageryadjust"/>
-        <ant target="dist" dir="imagery_offset_db"/>
-        <ant target="dist" dir="imagery-xml-bounds"/>
-        <ant target="dist" dir="imagewaypoint"/>
-        <ant target="dist" dir="ImportImagePlugin"/>
-        <ant target="dist" dir="importvec"/>
-        <ant target="dist" dir="indoorhelper"/>
-        <ant target="dist" dir="infomode"/>
-        <ant target="dist" dir="irsrectify"/>
-        <ant target="dist" dir="junctionchecking"/>
-        <ant target="dist" dir="lakewalker"/>
-        <ant target="dist" dir="livegps"/>
-        <ant target="dist" dir="mapdust"/>
-        <ant target="dist" dir="mapillary"/>
-        <ant target="dist" dir="measurement"/>
-        <ant target="dist" dir="merge-overlap"/>
-        <ant target="dist" dir="michigan_left"/>
-        <ant target="dist" dir="namemanager"/>
-        <ant target="dist" dir="NanoLog"/>
-        <ant target="dist" dir="native-password-manager"/>
-        <ant target="dist" dir="no_more_mapping"/>
-        <ant target="dist" dir="OpeningHoursEditor"/>
-        <ant target="dist" dir="opendata"/>
-        <ant target="dist" dir="openvisible"/>
-        <ant target="dist" dir="osmarender"/>
-        <ant target="dist" dir="OsmInspectorPlugin"/>
-        <ant target="dist" dir="OSMRecPlugin"/>
-        <ant target="dist" dir="pbf"/>
-        <ant target="dist" dir="pdfimport"/>
-        <ant target="dist" dir="photoadjust"/>
-        <ant target="dist" dir="photo_geotagging"/>
-        <ant target="dist" dir="piclayer"/>
-        <ant target="dist" dir="plastic_laf"/>
-        <ant target="dist" dir="pointInfo"/>
-        <ant target="dist" dir="poly"/>
-        <ant target="dist" dir="print"/>
-        <ant target="dist" dir="proj4j"/>
-        <ant target="dist" dir="public_transport"/>
-        <ant target="dist" dir="public_transport_layer"/>
-        <ant target="dist" dir="rasterfilters"/>
-        <ant target="dist" dir="reltoolbox"/>
-        <ant target="dist" dir="reverter"/>
-        <ant target="dist" dir="roadsigns"/>
-        <ant target="dist" dir="routes"/>
-        <ant target="dist" dir="routing"/>
-        <ant target="dist" dir="seachart"/>
-        <ant target="dist" dir="seachartedit"/>
-        <ant target="dist" dir="sds"/>
-        <ant target="dist" dir="simplifyarea"/>
-        <ant target="dist" dir="smed"/>
-        <ant target="dist" dir="splinex"/>
-        <ant target="dist" dir="sumoconvert"/>
-        <ant target="dist" dir="surveyor"/>
-        <ant target="dist" dir="tag2link"/>
-        <ant target="dist" dir="tageditor"/>
-        <ant target="dist" dir="tagging-preset-tester"/>
-        <ant target="dist" dir="terracer"/>
-        <ant target="dist" dir="tofix"/>
-        <ant target="dist" dir="touchscreenhelper"/>
-        <ant target="dist" dir="tracer"/>
-        <ant target="dist" dir="tracer2"/>
-        <ant target="dist" dir="trustosm"/>
-        <ant target="dist" dir="turnlanes"/>
-        <ant target="dist" dir="turnrestrictions"/>
-        <ant target="dist" dir="undelete"/>
-        <ant target="dist" dir="videomapping"/>
-        <ant target="dist" dir="walkingpapers"/>
-        <ant target="dist" dir="waydownloader"/>
-        <ant target="dist" dir="waypoint_search"/>
-        <ant target="dist" dir="wikipedia"/>
-        <ant target="dist" dir="wms-turbo-challenge2"/>
-    </target>
-    <target name="build_defect" depends="compile">
-    </target>
-    <target name="clean">
-        <ant target="clean" dir="00_plugin_dir_template"/>
-        <ant target="clean" dir="addrinterpolation"/>
-        <ant target="clean" dir="alignways"/>
-        <ant target="clean" dir="areaselector"/>
-        <ant target="clean" dir="buildings_tools"/>
-        <ant target="clean" dir="cadastre-fr"/>
-        <ant target="clean" dir="canvec_helper"/>
-        <ant target="clean" dir="colorscheme"/>
-        <ant target="clean" dir="apache-commons"/>
-        <ant target="clean" dir="apache-http"/>
-        <ant target="clean" dir="conflation"/>
-        <ant target="clean" dir="ColumbusCSV"/>
-        <ant target="clean" dir="CommandLine"/>
-        <ant target="clean" dir="continuosDownload"/>
-        <ant target="clean" dir="Create_grid_of_ways"/>
-        <ant target="clean" dir="czechaddress"/>
-        <ant target="clean" dir="dataimport"/>
-        <ant target="clean" dir="DirectDownload"/>
-        <ant target="clean" dir="DirectUpload"/>
-        <ant target="clean" dir="download_along"/>
-        <ant target="clean" dir="editgpx"/>
-        <ant target="clean" dir="ejml"/>
-        <ant target="clean" dir="ElevationProfile"/>
-        <ant target="clean" dir="epci-fr"/>
-        <ant target="clean" dir="ext_tools"/>
-        <ant target="clean" dir="FastDraw"/>
-        <ant target="clean" dir="FixAddresses"/>
-        <ant target="clean" dir="geochat"/>
-        <ant target="clean" dir="geotools"/>
-        <ant target="clean" dir="globalsat"/>
-        <ant target="clean" dir="gpsblam"/>
-        <ant target="clean" dir="gpxfilter"/>
-        <ant target="clean" dir="graphview"/>
-        <ant target="clean" dir="gson"/>
-        <ant target="clean" dir="HouseNumberTaggingTool"/>
-        <ant target="clean" dir="imageryadjust"/>
-        <ant target="clean" dir="imagery_offset_db"/>
-        <ant target="clean" dir="imagery-xml-bounds"/>
-        <ant target="clean" dir="imagewaypoint"/>
-        <ant target="clean" dir="ImportImagePlugin"/>
-        <ant target="clean" dir="importvec"/>
-        <ant target="clean" dir="indoorhelper"/>
-        <ant target="clean" dir="infomode"/>
-        <ant target="clean" dir="irsrectify"/>
-        <ant target="clean" dir="jna"/>
-        <ant target="clean" dir="jts"/>
-        <ant target="clean" dir="junctionchecking"/>
-        <ant target="clean" dir="lakewalker"/>
-        <ant target="clean" dir="livegps"/>
-        <ant target="clean" dir="log4j"/>
-        <ant target="clean" dir="mapdust"/>
-        <ant target="clean" dir="mapillary"/>
-        <ant target="clean" dir="measurement"/>
-        <ant target="clean" dir="merge-overlap"/>
-        <ant target="clean" dir="michigan_left"/>
-        <ant target="clean" dir="namemanager"/>
-        <ant target="clean" dir="no_more_mapping"/>
-        <ant target="clean" dir="NanoLog"/>
-        <ant target="clean" dir="native-password-manager"/>
-        <ant target="clean" dir="OpeningHoursEditor"/>
-        <ant target="clean" dir="opendata"/>
-        <ant target="clean" dir="openvisible"/>
-        <ant target="clean" dir="osmarender"/>
-        <ant target="clean" dir="OsmInspectorPlugin"/>
-        <ant target="clean" dir="OSMRecPlugin"/>
-        <ant target="clean" dir="pbf"/>
-        <ant target="clean" dir="pdfimport"/>
-        <ant target="clean" dir="photoadjust"/>
-        <ant target="clean" dir="photo_geotagging"/>
-        <ant target="clean" dir="piclayer"/>
-        <ant target="clean" dir="plastic_laf"/>
-        <ant target="clean" dir="pointInfo"/>
-        <ant target="clean" dir="poly"/>
-        <ant target="clean" dir="print"/>
-        <ant target="clean" dir="proj4j"/>
-        <ant target="clean" dir="public_transport"/>
-        <ant target="clean" dir="public_transport_layer"/>
-        <ant target="clean" dir="rasterfilters"/>
-        <ant target="clean" dir="reltoolbox"/>
-        <ant target="clean" dir="reverter"/>
-        <ant target="clean" dir="roadsigns"/>
-        <ant target="clean" dir="routes"/>
-        <ant target="clean" dir="routing"/>
-        <ant target="clean" dir="seachart"/>
-        <ant target="clean" dir="seachartedit"/>
-        <ant target="clean" dir="sds"/>
-        <ant target="clean" dir="simplifyarea"/>
-        <ant target="clean" dir="smed"/>
-        <ant target="clean" dir="splinex"/>
-        <ant target="clean" dir="sumoconvert"/>
-        <ant target="clean" dir="surveyor"/>
-        <ant target="clean" dir="tag2link"/>
-        <ant target="clean" dir="tageditor"/>
-        <ant target="clean" dir="tagging-preset-tester"/>
-        <ant target="clean" dir="terracer"/>
-        <ant target="clean" dir="tofix"/>
-        <ant target="clean" dir="touchscreenhelper"/>
-        <ant target="clean" dir="tracer"/>
-        <ant target="clean" dir="tracer2"/>
-        <ant target="clean" dir="turnlanes"/>
-        <ant target="clean" dir="trustosm"/>
-        <ant target="clean" dir="turnrestrictions"/>
-        <ant target="clean" dir="undelete"/>
-        <ant target="clean" dir="utilsplugin2"/>
-        <ant target="clean" dir="videomapping"/>
-        <ant target="clean" dir="walkingpapers"/>
-        <ant target="clean" dir="waydownloader"/>
-        <ant target="clean" dir="waypoint_search"/>
-        <ant target="clean" dir="wikipedia"/>
-        <ant target="clean" dir="wms-turbo-challenge2"/>
-    </target>
-    <target name="clean_install"/>
-    <target name="install" depends="dist"/>
-    <target name="test" depends="compile_josm_test">
-        <ant target="test" dir="alignways"/>
-        <ant target="test" dir="continuosDownload"/>
-        <ant target="test" dir="ElevationProfile"/>
-        <ant target="test" dir="graphview"/>
-        <ant target="test" dir="ImportImagePlugin"/>
-        <ant target="test" dir="mapillary"/>
-        <ant target="test" dir="opendata"/>
-        <ant target="test" dir="pt_assistant"/>
-        <ant target="test" dir="turnrestrictions"/>
-        <ant target="test" dir="wikipedia"/>
-    </target>
+		<iterate target="dist"/>
+	</target>
+	<target name="install" depends="dist">
+		<iterate target="install"/>
+	</target>
+	<target name="test" depends="compile_josm_test">
+		<iterate target="test"/>
+	</target>
 </project>

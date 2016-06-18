@@ -93,4 +93,6 @@
         <echo>Installing the plugin in ${local.install.path}</echo>
         <copy file="${plugin.jar}" todir="C:\Users\bwr57_000\AppData\Roaming\JOSM\plugins" />
     </target>	
+
+    <target name="test"/>
 </project>

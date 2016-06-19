@@ -20,5 +20,17 @@
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-  
+
+    <target name="pre-compile" depends="-jaxb_win, -jaxb_nix" unless="jaxb.notRequired">
+        <exec executable="${xjc}" failonerror="true">
+            <arg value="-d"/>
+            <arg value="src"/>
+            <arg value="-p"/>
+            <arg value="org.openstreetmap.josm.plugins.dataimport.io.tcx"/>
+            <arg value="-encoding"/>
+            <arg value="UTF-8"/>
+            <arg value="resources/tcx/TrainingCenterDatabasev2.xsd"/>
+        </exec>
+    </target>
+
 </project>

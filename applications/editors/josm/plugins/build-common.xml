@@ -65,7 +65,10 @@
     ** compile - compiles the source tree
     **********************************************************
     -->
-    <target name="compile" depends="init" unless="skip-compile">
+    <target name="pre-compile">
+        <!-- to be overidden by plugins that need to perform additional tasks before compiling -->
+    </target>
+    <target name="compile" depends="init, pre-compile" unless="skip-compile">
         <echo message="compiling sources for ${plugin.jar} ..."/>
         <javac srcdir="src" debug="true" destdir="${plugin.build.dir}" includeantruntime="false" encoding="UTF-8">
             <compilerarg value="-Xlint:deprecation"/>

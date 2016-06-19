@@ -36,7 +36,6 @@ import org.openstreetmap.josm.data.gpx.ImmutableGpxTrack;
 import org.openstreetmap.josm.data.gpx.WayPoint;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.WMSLayer;
 
 public class GameWindow extends JFrame implements ActionListener {
     public GameWindow(Layer ground) {
@@ -76,7 +75,7 @@ public class GameWindow extends JFrame implements ActionListener {
         car_gps = new gps();
         car_gps.start();
 
-        car_engine = new engine();
+        car_engine = new EngineSound();
         car_engine.start();
 
         for (int i = 0; i < maxsprites; i ++)
@@ -85,7 +84,7 @@ public class GameWindow extends JFrame implements ActionListener {
         generate_sky();
     }
 
-    protected engine car_engine;
+    protected EngineSound car_engine;
 
     protected gps car_gps;
     protected class gps extends Timer implements ActionListener {

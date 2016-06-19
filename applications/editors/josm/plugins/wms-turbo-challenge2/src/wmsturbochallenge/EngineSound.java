@@ -10,13 +10,13 @@ package wmsturbochallenge;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.AudioFormat;
 
-class engine {
-    public engine() {
+class EngineSound {
+    public EngineSound() {
         rpm = 0.0;
     }
 

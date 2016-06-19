@@ -18,7 +18,7 @@
     <macrodef name="iterate">
         <attribute name="target"/>
         <sequential>
-            <subant target="@{target}">
+            <subant target="@{target}" inheritall="true">
                 <filelist dir="." files="${ordered_plugins}"/>
                 <fileset  dir="." includes="*/build.xml" excludes="00_*/build.xml ${ordered_plugins}"/>
             </subant>

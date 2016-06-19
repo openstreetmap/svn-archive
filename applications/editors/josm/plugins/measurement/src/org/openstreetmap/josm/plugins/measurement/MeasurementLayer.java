@@ -233,7 +233,7 @@ public class MeasurementLayer extends Layer {
         public void actionPerformed(ActionEvent e) {
             Box panel = Box.createVerticalBox();
             final JList<GpxLayer> layerList = new JList<>(model);
-            Collection<Layer> data = Main.map.mapView.getAllLayers();
+            Collection<Layer> data = Main.getLayerManager().getLayers();
             Layer lastLayer = null;
             int layerCnt = 0;
 

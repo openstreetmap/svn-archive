@@ -32,7 +32,7 @@ public class TagSourceAction extends JosmAction {
 
     @Override
     public void actionPerformed( ActionEvent e ) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         if( selection.isEmpty() || source == null || source.length() == 0 )
             return;
 
@@ -41,12 +41,12 @@ public class TagSourceAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if( getCurrentDataSet() == null ) {
+        if( getLayerManager().getEditDataSet() == null ) {
             setEnabled(false);
             if( selectionBuf != null )
                 selectionBuf.clear();
         }  else
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override

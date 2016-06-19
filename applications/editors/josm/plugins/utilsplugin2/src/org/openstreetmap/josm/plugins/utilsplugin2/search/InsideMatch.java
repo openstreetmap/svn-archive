@@ -31,20 +31,20 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
     private void init() {
         Collection<OsmPrimitive> matchedAreas = new HashSet<>();
         // find all ways that match the expression
-        Collection<Way> ways = Main.main.getCurrentDataSet().getWays();
+        Collection<Way> ways = Main.getLayerManager().getEditDataSet().getWays();
         for (Way way : ways) {
             if (match.match(way)) {
                 matchedAreas.add(way);
             }
         }
         // find all relations that match the expression
-        Collection<Relation> rels = Main.main.getCurrentDataSet().getRelations();
+        Collection<Relation> rels = Main.getLayerManager().getEditDataSet().getRelations();
         for (Relation rel : rels) {
             if (match.match(rel)) {
                 matchedAreas.add(rel);
             }
         }
-        inside = NodeWayUtils.selectAllInside(matchedAreas, Main.main.getCurrentDataSet(), false);
+        inside = NodeWayUtils.selectAllInside(matchedAreas, Main.getLayerManager().getEditDataSet(), false);
     }
 
     @Override
@@ -54,5 +54,4 @@ public class InsideMatch extends SearchCompiler.UnaryMatch {
         }
         return inside.contains(osm);
     }
-    
 }

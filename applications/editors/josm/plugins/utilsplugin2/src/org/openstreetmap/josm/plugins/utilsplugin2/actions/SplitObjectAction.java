@@ -37,7 +37,6 @@ import org.openstreetmap.josm.tools.Shortcut;
  * This is similar to SplitWayAction with the addition that the split ways are closed
  * immediately.
  */
-
 public class SplitObjectAction extends JosmAction {
     /**
      * Create a new SplitObjectAction.
@@ -58,7 +57,7 @@ public class SplitObjectAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
 
         List<Node> selectedNodes = OsmPrimitive.getFilteredList(selection, Node.class);
         List<Way> selectedWays = OsmPrimitive.getFilteredList(selection, Way.class);
@@ -67,7 +66,6 @@ public class SplitObjectAction extends JosmAction {
             showWarningNotification(tr("The current selection cannot be used for splitting."));
             return;
         }
-
 
         Way selectedWay = null;
         Way splitWay = null;
@@ -189,7 +187,6 @@ public class SplitObjectAction extends JosmAction {
         }
 
         List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(selectedWay, selectedNodes);
-        //        List<List<Node>> wayChunks = buildSplitChunks(selectedWay, selectedNodes);
         if (wayChunks != null) {
             // close the chunks
             // update the logic - if we have splitWay not null, we have to add points from it to both chunks (in the correct direction)
@@ -212,12 +209,12 @@ public class SplitObjectAction extends JosmAction {
                     wayChunk.addAll(way);
                 }
             }
-            SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(getEditLayer(), selectedWay, wayChunks, Collections.<OsmPrimitive>emptyList());
-            //            SplitObjectResult result = splitObject(getEditLayer(),selectedWay, wayChunks);
+            SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(
+                    getLayerManager().getEditLayer(), selectedWay, wayChunks, Collections.<OsmPrimitive>emptyList());
             Main.main.undoRedo.add(result.getCommand());
             if (splitWay != null)
                 Main.main.undoRedo.add(new DeleteCommand(splitWay));
-            getCurrentDataSet().setSelected(result.getNewSelection());
+            getLayerManager().getEditDataSet().setSelected(result.getNewSelection());
         }
     }
 
@@ -244,11 +241,7 @@ public class SplitObjectAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

@@ -27,6 +27,10 @@ import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class AddIntersectionsAction extends JosmAction {
+    
+    /**
+     * Constructs a new {@code AddIntersectionsAction}.
+     */
     public AddIntersectionsAction() {
         super(tr("Add nodes at intersections"), "addintersect", tr("Add missing nodes at intersections of selected ways."),
                 Shortcut.registerShortcut("tools:addintersect", tr("Tool: {0}", tr("Add nodes at intersections")), KeyEvent.VK_I, Shortcut.SHIFT), true);
@@ -37,7 +41,7 @@ public class AddIntersectionsAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
         if (!isEnabled())
             return;
-        List<Way> ways = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
+        List<Way> ways = OsmPrimitive.getFilteredList(getLayerManager().getEditDataSet().getSelected(), Way.class);
         if (ways.isEmpty()) {
             new Notification(
                tr("Please select one or more ways with intersections of segments."))
@@ -55,22 +59,19 @@ public class AddIntersectionsAction extends JosmAction {
             for (Command cmd: cmds) if (cmd instanceof AddCommand){
                 Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
                 for ( OsmPrimitive p : pp) { // find all affected nodes
-                    if (p instanceof Node && p.isNew()) nodes.add((Node)p);
+                    if (p instanceof Node && p.isNew())
+                        nodes.add((Node)p);
                 }
                 if (!nodes.isEmpty()) {
-                    getCurrentDataSet().setSelected(nodes);
-                    }
+                    getLayerManager().getEditDataSet().setSelected(nodes);
                 }
+            }
         }
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

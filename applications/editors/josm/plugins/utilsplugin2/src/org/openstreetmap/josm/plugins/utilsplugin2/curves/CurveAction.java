@@ -52,10 +52,9 @@ public class CurveAction extends JosmAction {
 
         updatePreferences();
 
-        List<Node> selectedNodes = new ArrayList<>(getCurrentDataSet().getSelectedNodes());
-        List<Way> selectedWays = new ArrayList<>(getCurrentDataSet().getSelectedWays());
+        List<Node> selectedNodes = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedNodes());
+        List<Way> selectedWays = new ArrayList<>(getLayerManager().getEditDataSet().getSelectedWays());
 
-        // Collection<Command> cmds = doSpline(selectedNodes, selectedWays);
         Collection<Command> cmds = CircleArcMaker.doCircleArc(selectedNodes, selectedWays, angleSeparation);
         if (cmds != null)
             Main.main.undoRedo.add(new SequenceCommand("Create a curve", cmds));
@@ -63,19 +62,11 @@ public class CurveAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         setEnabled(selection != null && !selection.isEmpty());
     }
-
-    public static void main(String[] args) {
-    }
-
 }

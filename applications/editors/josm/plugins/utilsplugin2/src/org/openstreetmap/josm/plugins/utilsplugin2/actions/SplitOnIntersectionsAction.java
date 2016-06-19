@@ -33,7 +33,7 @@ public class SplitOnIntersectionsAction extends JosmAction {
     @Override
     public void actionPerformed( ActionEvent e ) {
         List<Command> list = new ArrayList<>();
-        List<Way> selectedWays = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
+        List<Way> selectedWays = OsmPrimitive.getFilteredList(getLayerManager().getEditDataSet().getSelected(), Way.class);
         Map<Way, List<Node>> splitWays = new HashMap<>();
 
         for( Way way : selectedWays ) {
@@ -78,23 +78,20 @@ public class SplitOnIntersectionsAction extends JosmAction {
             if( wayChunks != null ) {
                 List<OsmPrimitive> sel = new ArrayList<>(selectedWays.size());
                 sel.addAll(selectedWays);
-                SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(getEditLayer(), splitWay, wayChunks, sel);
+                SplitWayAction.SplitWayResult result = SplitWayAction.splitWay(getLayerManager().getEditLayer(), splitWay, wayChunks, sel);
                 list.add(result.getCommand());
             }
         }
 
         if( !list.isEmpty() ) {
             Main.main.undoRedo.add(list.size() == 1 ? list.get(0) : new SequenceCommand(TITLE, list));
-            getCurrentDataSet().clearSelection();
+            getLayerManager().getEditDataSet().clearSelection();
         }
     }
 
     @Override
     protected void updateEnabledState() {
-        if( getCurrentDataSet() == null ) {
-            setEnabled(false);
-        }  else
-            updateEnabledState(getCurrentDataSet().getSelected());
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

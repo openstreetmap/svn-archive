@@ -21,6 +21,9 @@ public class AlignWayNodesAction extends JosmAction {
     private static final String TITLE = tr("Align Way Nodes");
     private static final double MOVE_THRESHOLD = 1e-9;
 
+    /**
+     * Constructs a new {@code AlignWayNodesAction}.
+     */
     public AlignWayNodesAction() {
         super(TITLE, "dumbutils/alignwaynodes", tr("Align nodes in a way"),
                 Shortcut.registerShortcut("tools:alignwaynodes", tr("Tool: {0}", tr("Align Way Nodes")), KeyEvent.VK_L, Shortcut.SHIFT)
@@ -28,7 +31,7 @@ public class AlignWayNodesAction extends JosmAction {
     }
 
     public void actionPerformed( ActionEvent e ) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         Set<Node> selectedNodes = filterNodes(selection);
         int selectedNodesCount = selectedNodes.size();
         Set<Way> ways = findCommonWays(selectedNodes);
@@ -115,10 +118,7 @@ public class AlignWayNodesAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if( getCurrentDataSet() == null ) {
-            setEnabled(false);
-        }  else
-            updateEnabledState(getCurrentDataSet().getSelected());
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

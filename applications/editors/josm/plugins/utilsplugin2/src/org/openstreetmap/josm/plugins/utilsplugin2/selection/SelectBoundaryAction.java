@@ -39,8 +39,8 @@ public class SelectBoundaryAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
-        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Node.class);
+        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Way.class);
+        Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Node.class);
         
         Set<Way> newWays = new HashSet<>();
         
@@ -75,7 +75,6 @@ public class SelectBoundaryAction extends JosmAction {
 
         newWays.add(w);
         lastUsedStartingWay = w;
-        
                        
         // try going left at each turn
         if (! NodeWayUtils.addAreaBoundary(w, newWays, lastUsedLeft) ) {
@@ -83,31 +82,23 @@ public class SelectBoundaryAction extends JosmAction {
         }
         
         if (!newWays.isEmpty() ) {
-            getCurrentDataSet().setSelected(newWays);
+            getLayerManager().getEditDataSet().setSelected(newWays);
         } else{
-        new Notification(
-            tr("Nothing found. Please select way that is a part of some polygon formed by connected ways")
-            ).setIcon(JOptionPane.WARNING_MESSAGE).show();            
-    }
+            new Notification(tr("Nothing found. Please select way that is a part of some polygon formed by connected ways"))
+                .setIcon(JOptionPane.WARNING_MESSAGE).show();            
+        }
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-           // updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         if (selection == null) {
-         //   setEnabled(false);
             return;
         }
         setEnabled(true);
-        //setEnabled(!selection.isEmpty());
     }
 }

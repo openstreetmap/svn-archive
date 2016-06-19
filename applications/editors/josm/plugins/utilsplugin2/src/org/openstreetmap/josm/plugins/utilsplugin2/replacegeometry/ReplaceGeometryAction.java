@@ -29,12 +29,12 @@ public class ReplaceGeometryAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             return;
         }
 
         // There must be two ways selected: one with id > 0 and one new.
-        List<OsmPrimitive> selection = new ArrayList<>(getCurrentDataSet().getSelected());
+        List<OsmPrimitive> selection = new ArrayList<>(getLayerManager().getEditDataSet().getSelected());
         if (selection.size() != 2) {
             new Notification(
                     tr("This tool replaces geometry of one object with another, and so requires exactly two objects to be selected.")
@@ -67,10 +67,7 @@ public class ReplaceGeometryAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if( getCurrentDataSet() == null ) {
-            setEnabled(false);
-        }  else
-            updateEnabledState(getCurrentDataSet().getSelected());
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
@@ -78,4 +75,3 @@ public class ReplaceGeometryAction extends JosmAction {
         setEnabled(selection != null && selection.size() >= 2 );
     }
 }
-

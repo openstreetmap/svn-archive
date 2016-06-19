@@ -40,7 +40,7 @@ public class SelectWayNodesAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
 
         for (OsmPrimitive p : selection) {
             if (p instanceof Way) {
@@ -59,7 +59,7 @@ public class SelectWayNodesAction extends JosmAction {
             }
         }
             
-        getCurrentDataSet().setSelected(selectedNodes);
+        getLayerManager().getEditDataSet().setSelected(selectedNodes);
         selectedNodes = null;
     }
 
@@ -75,11 +75,7 @@ public class SelectWayNodesAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

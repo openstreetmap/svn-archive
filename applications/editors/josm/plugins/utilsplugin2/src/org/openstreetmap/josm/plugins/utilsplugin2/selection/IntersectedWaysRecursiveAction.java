@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
@@ -33,31 +34,25 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
+        DataSet ds = getLayerManager().getEditDataSet();
+        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(ds.getSelected(), Way.class);
 
         if (!selectedWays.isEmpty()) {
             Set<Way> newWays = new HashSet<>();
             NodeWayUtils.addWaysIntersectingWaysRecursively(
-                    getCurrentDataSet().getWays(),
+                    ds.getWays(),
                     selectedWays, newWays);
-            getCurrentDataSet().addSelected(newWays);
+            ds.addSelected(newWays);
         } else {
               new Notification(
                 tr("Please select some ways to find all connected and intersecting ways!")
                 ).setIcon(JOptionPane.WARNING_MESSAGE).show();
         }
-
     }
-
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
@@ -68,6 +63,4 @@ public class IntersectedWaysRecursiveAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
-
 }

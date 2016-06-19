@@ -36,13 +36,13 @@ public class PasteRelationsAction extends JosmAction {
 
     @Override
     public void actionPerformed( ActionEvent e ) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         if( selection.isEmpty() )
             return;
 
         Map<Relation, String> relations = new HashMap<>();
         for( PrimitiveData pdata : Main.pasteBuffer.getDirectlyAdded() ) {
-            OsmPrimitive p = getCurrentDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
+            OsmPrimitive p = getLayerManager().getEditDataSet().getPrimitiveById(pdata.getUniqueId(), pdata.getType());
             if (p != null) {
 	            for( Relation r : OsmPrimitive.getFilteredList(p.getReferrers(), Relation.class)) {
 	                String role = relations.get(r);
@@ -90,10 +90,7 @@ public class PasteRelationsAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if( getCurrentDataSet() == null ) {
-            setEnabled(false);
-        }  else
-            updateEnabledState(getCurrentDataSet().getSelected());
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

@@ -135,8 +135,8 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (jt.isSelected()) tableModel.shownTypes.add(type); else tableModel.shownTypes.remove(type);
-                    tableModel.updateData(Main.main.getCurrentDataSet().getSelected());
-                };
+                    tableModel.updateData(Main.getLayerManager().getEditDataSet().getSelected());
+                }
             });
             ImageProvider.get(type);
             p.add(jt);
@@ -207,7 +207,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private final TagSetChanger tagSetChanger = new TagSetChanger();
 
     private void initAutocompletion() {
-        OsmDataLayer l = Main.main.getEditLayer();
+        OsmDataLayer l = Main.getLayerManager().getEditLayer();
         AutoCompletionManager autocomplete = l.data.getAutoCompletionManager();
         for (int i=0; i<tableModel.mainTags.length; i++) {
                 if (tableModel.isSpecialTag[i]) continue;
@@ -232,7 +232,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         menu.add(new AbstractAction(tr("Select"), ImageProvider.get("dialogs", "select")) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.main.getCurrentDataSet().setSelected(getSelectedPrimitives());
+                Main.getLayerManager().getEditDataSet().setSelected(getSelectedPrimitives());
             }
         });
         menu.add(new AbstractAction(tr("Remove tag"), ImageProvider.get("dialogs", "delete")){

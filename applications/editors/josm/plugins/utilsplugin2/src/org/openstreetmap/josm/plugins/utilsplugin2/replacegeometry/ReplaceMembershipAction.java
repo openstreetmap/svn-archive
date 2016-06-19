@@ -36,7 +36,7 @@ public class ReplaceMembershipAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final Iterator<OsmPrimitive> selection = getCurrentDataSet().getSelected().iterator();
+        final Iterator<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected().iterator();
         final OsmPrimitive firstObject = selection.next();
         final OsmPrimitive secondObject = selection.next();
 
@@ -55,7 +55,6 @@ public class ReplaceMembershipAction extends JosmAction {
                     firstObject.getDisplayName(DefaultNameFormatter.getInstance())
             )).setIcon(JOptionPane.WARNING_MESSAGE).show();
         }
-
     }
 
     static ReplaceGeometryCommand getReplaceGeometryCommand(OsmPrimitive firstObject, OsmPrimitive secondObject) {
@@ -79,7 +78,7 @@ public class ReplaceMembershipAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        updateEnabledState(getCurrentDataSet() == null ? null : getCurrentDataSet().getSelected());
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

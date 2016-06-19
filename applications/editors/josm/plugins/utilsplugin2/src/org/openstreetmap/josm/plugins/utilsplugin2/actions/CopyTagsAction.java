@@ -44,8 +44,8 @@ public final class CopyTagsAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (isEmptySelection()) return;
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
-        copy(getEditLayer(), selection);
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
+        copy(getLayerManager().getEditLayer(), selection);
     }
 
     /**
@@ -66,11 +66,7 @@ public final class CopyTagsAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
@@ -78,8 +74,8 @@ public final class CopyTagsAction extends JosmAction {
         setEnabled(selection != null && !selection.isEmpty());
     }
 
-    private static boolean isEmptySelection() {
-        Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
+    private boolean isEmptySelection() {
+        Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
         if (sel.isEmpty()) {
             JOptionPane.showMessageDialog(
                     Main.parent,

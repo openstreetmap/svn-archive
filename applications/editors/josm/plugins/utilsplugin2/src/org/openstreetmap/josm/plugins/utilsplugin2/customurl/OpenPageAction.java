@@ -42,7 +42,7 @@ public final class OpenPageAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
         OsmPrimitive p=null;
         if (sel.size()>=1) {
             p=sel.iterator().next();
@@ -87,7 +87,7 @@ public final class OpenPageAction extends JosmAction {
             i++;
         }
         } catch (UnsupportedEncodingException ex) {
-            System.err.println("Encoding error");
+            Main.error(ex, "Encoding error");
             return;
         }
         for (int j=0;j<i;j++){
@@ -96,22 +96,16 @@ public final class OpenPageAction extends JosmAction {
         try {
             OpenBrowser.displayUrl(addr);
         } catch (Exception ex) {
-            System.err.println("Can not open URL"+addr);
+            Main.error(ex, "Can not open URL " + addr);
         }
         //Collection<Command> cmds = new LinkedList<Command>();
 
-          //  cmds.add(new MoveCommand(n, -2*ne*pr, -2*nn*pr ));
+        //cmds.add(new MoveCommand(n, -2*ne*pr, -2*nn*pr ));
         //Main.main.undoRedo.add(new SequenceCommand(tr("Symmetry"), cmds));
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-        }
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
-
-    
 }

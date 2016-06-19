@@ -29,7 +29,7 @@ public class IntersectingMatch extends SearchCompiler.UnaryMatch {
     private void init(boolean all) {
         Collection<Way> matchedWays = new HashSet<>();
         // find all ways that match the expression
-        Collection<Way> allWays = Main.main.getCurrentDataSet().getWays();
+        Collection<Way> allWays = Main.getLayerManager().getEditDataSet().getWays();
         for (Way way : allWays) {
             if (match.match(way)) {
                 matchedWays.add(way);

@@ -11,6 +11,7 @@ import java.util.Collection;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -29,10 +30,11 @@ public class SelectAllInsideAction extends JosmAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(getCurrentDataSet().getSelected(), getCurrentDataSet(), true);
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(ds.getSelected(), ds, true);
         
         if (!insideSelected.isEmpty()) {
-            getCurrentDataSet().addSelected(insideSelected);
+            ds.addSelected(insideSelected);
         } else{
             new Notification(
                 tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"))
@@ -43,11 +45,7 @@ public class SelectAllInsideAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

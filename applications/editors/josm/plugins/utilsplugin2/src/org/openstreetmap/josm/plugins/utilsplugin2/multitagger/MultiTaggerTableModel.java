@@ -53,9 +53,10 @@ public class MultiTaggerTableModel extends AbstractTableModel implements Selecti
 
     public void setWatchSelection(boolean watchSelection) {
         this.watchSelection = watchSelection;
-        if (watchSelection && Main.main.hasEditLayer()) selectionChanged(Main.main.getCurrentDataSet().getSelected());
+        if (watchSelection && Main.getLayerManager().getEditLayer() != null) 
+            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
     }
-    
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (columnIndex==0) {

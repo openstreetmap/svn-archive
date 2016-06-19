@@ -14,11 +14,13 @@ import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- *    Unselects all nodes
+ * Unselects all nodes
  */
 public class UnselectNodesAction extends JosmAction {
 
-    
+    /**
+     * Constructs a new {@code UnselectNodesAction}.
+     */
     public UnselectNodesAction() {
         super(tr("Unselect nodes"), "unsnodes",
                 tr("Removes all nodes from selection"),
@@ -29,18 +31,14 @@ public class UnselectNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        getCurrentDataSet().clearSelection(selectedNodes);
+        getLayerManager().getEditDataSet().clearSelection(selectedNodes);
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

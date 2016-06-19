@@ -28,9 +28,10 @@ public class ConnectedWaysAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selection = ds.getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
+        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(ds.getSelected(), Way.class);
 
         Set<Way> newWays = new HashSet<>();
 
@@ -44,17 +45,12 @@ public class ConnectedWaysAction extends JosmAction {
         NodeWayUtils.addWaysConnectedToWaysRecursively(selectedWays, newWays);
         
 //        System.out.printf("%d ways added to selection\n",newWays.size()-selectedWays.size());
-        getCurrentDataSet().setSelected(newWays);
-
+        ds.setSelected(newWays);
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
@@ -65,6 +61,4 @@ public class ConnectedWaysAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
-
 }

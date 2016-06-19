@@ -50,7 +50,7 @@ public class UnGlueRelationAction extends JosmAction {
 
         LinkedList<Command> cmds = new LinkedList<>();
         List<OsmPrimitive> newPrimitives = new LinkedList<>();
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
 
         for (OsmPrimitive p : selection) {
             boolean first = true;
@@ -82,23 +82,18 @@ public class UnGlueRelationAction extends JosmAction {
             Main.main.undoRedo.add(new SequenceCommand(tr("Unglued Relations"), cmds));
             //Set selection all primiteves (new and old)
             newPrimitives.addAll(selection);
-            getCurrentDataSet().setSelected(newPrimitives);
+            getLayerManager().getEditDataSet().setSelected(newPrimitives);
             Main.map.mapView.repaint();
         }
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         setEnabled(selection != null && !selection.isEmpty());
     }
-
 }

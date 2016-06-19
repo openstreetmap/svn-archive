@@ -15,6 +15,9 @@ public final class MultiTagAction extends JosmAction {
 
     MultiTagDialog dlg;
 
+    /**
+     * Constructs a new {@code MultiTagAction}.
+     */
     public MultiTagAction() {
         super(tr("Tag multiple objects [alpha]"), (String)null, tr("Edit tags of object list in table"),
                 Shortcut.registerShortcut("multitag", tr("Edit: {0}", tr("Tag multiple objects")), KeyEvent.VK_T, Shortcut.CTRL),
@@ -27,19 +30,18 @@ public final class MultiTagAction extends JosmAction {
         if (!isEnabled())
             return;
         dlg = new MultiTagDialog();
-        dlg.selectionChanged(getCurrentDataSet().getSelected());
+        dlg.selectionChanged(getLayerManager().getEditDataSet().getSelected());
         dlg.showDialog();
     }
 
-
     @Override
     protected void updateEnabledState() {
-        setEnabled(getEditLayer()!=null);
+        setEnabled(getLayerManager().getEditLayer()!=null);
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(getEditLayer()!=null);
+        setEnabled(getLayerManager().getEditLayer()!=null);
         if (dlg!=null && dlg.isVisible()) {
             dlg.selectionChanged(selection);
         }

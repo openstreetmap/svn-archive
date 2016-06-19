@@ -116,7 +116,7 @@ public final class ReplaceGeometryUtils {
         }
         // FIXME: handle different layers
         List<Command> commands = new ArrayList<>();
-        Command c = MergeNodesAction.mergeNodes(Main.main.getEditLayer(), Arrays.asList(subjectNode, referenceNode), referenceNode);
+        Command c = MergeNodesAction.mergeNodes(Main.getLayerManager().getEditLayer(), Arrays.asList(subjectNode, referenceNode), referenceNode);
         if (c == null) {
             // User canceled
             return null;
@@ -203,7 +203,7 @@ public final class ReplaceGeometryUtils {
             commands.add(new DeleteCommand(subjectNode));
         }
 
-        Main.main.getCurrentDataSet().setSelected(referenceObject);
+        Main.getLayerManager().getEditDataSet().setSelected(referenceObject);
 
         return new ReplaceGeometryCommand(
                 tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
@@ -242,7 +242,7 @@ public final class ReplaceGeometryUtils {
     
     public static ReplaceGeometryCommand buildReplaceWayCommand(Way subjectWay, Way referenceWay) {
 
-        Area a = Main.main.getCurrentDataSet().getDataSourceArea();
+        Area a = Main.getLayerManager().getEditDataSet().getDataSourceArea();
         if (!isInArea(subjectWay, a) || !isInArea(referenceWay, a)) {
             throw new ReplaceGeometryException(tr("The ways must be entirely within the downloaded area."));
         }
@@ -259,6 +259,7 @@ public final class ReplaceGeometryUtils {
             commands.addAll(getTagConflictResolutionCommands(referenceWay, subjectWay));
         } catch (UserCancelException e) {
             // user canceled tag merge dialog
+            Main.trace(e);
             return null;
         }
         
@@ -357,7 +358,7 @@ public final class ReplaceGeometryUtils {
             commands.add(new MoveCommand(nodeAssoc.get(node), node.getCoor()));
 
         // Remove geometry way from selection
-        Main.main.getCurrentDataSet().clearSelection(referenceWay);
+        Main.getLayerManager().getEditDataSet().clearSelection(referenceWay);
 
         // And delete old geometry way
         commands.add(new DeleteCommand(referenceWay));

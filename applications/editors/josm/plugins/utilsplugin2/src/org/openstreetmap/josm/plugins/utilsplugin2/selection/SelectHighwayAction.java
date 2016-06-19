@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -39,12 +40,13 @@ public class SelectHighwayAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<Way> selectedWays = OsmPrimitive.getFilteredList(getCurrentDataSet().getSelected(), Way.class);
+        DataSet ds = getLayerManager().getEditDataSet();
+        List<Way> selectedWays = OsmPrimitive.getFilteredList(ds.getSelected(), Way.class);
 
         if( selectedWays.size() == 1 ) {
-            getCurrentDataSet().setSelected(selectNamedRoad(selectedWays.get(0)));
+            ds.setSelected(selectNamedRoad(selectedWays.get(0)));
         } else if( selectedWays.size() == 2 ) {
-            getCurrentDataSet().setSelected(selectHighwayBetween(selectedWays.get(0), selectedWays.get(1)));
+            ds.setSelected(selectHighwayBetween(selectedWays.get(0), selectedWays.get(1)));
         } else {
             new Notification(
                 tr("Please select one or two ways for this action")
@@ -111,10 +113,7 @@ public class SelectHighwayAction extends JosmAction {
     
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null)
-            setEnabled(false);
-        else
-            updateEnabledState(getCurrentDataSet().getSelected());
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

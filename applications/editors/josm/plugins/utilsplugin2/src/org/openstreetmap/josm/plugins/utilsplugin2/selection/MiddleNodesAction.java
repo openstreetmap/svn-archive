@@ -34,7 +34,7 @@ public class MiddleNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
 
         // if no 2 nodes and no ways are selected, do nothing
@@ -50,18 +50,12 @@ public class MiddleNodesAction extends JosmAction {
         
         // select only newly found nodes
         newNodes.removeAll(selectedNodes);
-        getCurrentDataSet().addSelected(newNodes);
-        newNodes = null;
-
+        getLayerManager().getEditDataSet().addSelected(newNodes);
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
@@ -72,7 +66,4 @@ public class MiddleNodesAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
-
-
 }

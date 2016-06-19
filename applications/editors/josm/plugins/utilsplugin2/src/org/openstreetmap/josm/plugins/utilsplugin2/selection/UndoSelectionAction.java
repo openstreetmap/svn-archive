@@ -33,13 +33,12 @@ public class UndoSelectionAction extends JosmAction {
     private int index;
     @Override
     public void actionPerformed(ActionEvent e) {
-        LinkedList<Collection<? extends OsmPrimitive>> history
-                    = getCurrentDataSet().getSelectionHistory();
+        DataSet ds = getLayerManager().getEditDataSet();
+        LinkedList<Collection<? extends OsmPrimitive>> history = ds.getSelectionHistory();
         if (history==null || history.isEmpty()) return; // empty history
         int num=history.size();
         
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
-
+        Collection<OsmPrimitive> selection = ds.getSelected();
 
         if (selection!= null &&  selection.hashCode() != myAutomaticSelectionHash) {
             // manual selection or another pluging selection noticed
@@ -54,24 +53,20 @@ public class UndoSelectionAction extends JosmAction {
             // remove deleted entities from selection
             newsel.clear();
             newsel.addAll(histsel);
-            newsel.retainAll(getCurrentDataSet().allNonDeletedPrimitives());
+            newsel.retainAll(ds.allNonDeletedPrimitives());
             if (newsel.size() > 0 ) break;
             k++;
         } while ( k < num );
 
-        getCurrentDataSet().setSelected(newsel);
-        lastSel = getCurrentDataSet().getSelected();
+        ds.setSelected(newsel);
+        lastSel = ds.getSelected();
         myAutomaticSelectionHash = lastSel.hashCode();
         // remeber last automatic selection
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

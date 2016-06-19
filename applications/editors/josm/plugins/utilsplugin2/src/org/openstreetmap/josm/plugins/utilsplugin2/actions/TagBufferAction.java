@@ -29,6 +29,9 @@ public class TagBufferAction extends JosmAction {
     private Map<String, String> currentTags = new HashMap<>();
     private Set<OsmPrimitive> selectionBuf = new HashSet<>();
 
+    /**
+     * Constructs a new {@code TagBufferAction}.
+     */
     public TagBufferAction() {
         super(TITLE, "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
                 Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Copy tags from previous selection")), KeyEvent.VK_R, Shortcut.SHIFT)
@@ -39,7 +42,7 @@ public class TagBufferAction extends JosmAction {
 
     @Override
     public void actionPerformed( ActionEvent e ) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         if( selection.isEmpty() )
             return;
 
@@ -63,12 +66,12 @@ public class TagBufferAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if( getCurrentDataSet() == null ) {
+        if( getLayerManager().getEditDataSet() == null ) {
             setEnabled(false);
             if( selectionBuf != null )
                 selectionBuf.clear();
         }  else
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
@@ -93,7 +96,7 @@ public class TagBufferAction extends JosmAction {
             tags.clear();
             tags.putAll(currentTags);
         }
-        if( getCurrentDataSet() != null)
+        if( getLayerManager().getEditDataSet() != null)
             rememberSelectionTags();
 
         setEnabled(selection != null && !selection.isEmpty() && !tags.isEmpty());
@@ -101,7 +104,7 @@ public class TagBufferAction extends JosmAction {
 
     private void rememberSelectionTags() {
         // Fix #8350 - only care about tagged objects
-        final Collection<OsmPrimitive> selectedTaggedObjects = Utils.filter(getCurrentDataSet().getSelected(), IS_TAGGED_PREDICATE);
+        final Collection<OsmPrimitive> selectedTaggedObjects = Utils.filter(getLayerManager().getEditDataSet().getSelected(), IS_TAGGED_PREDICATE);
         if( !selectedTaggedObjects.isEmpty() ) {
             currentTags.clear();
             Set<String> bad = new HashSet<>();

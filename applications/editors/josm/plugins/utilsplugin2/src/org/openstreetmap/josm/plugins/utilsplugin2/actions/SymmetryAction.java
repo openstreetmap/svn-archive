@@ -34,6 +34,9 @@ import org.openstreetmap.josm.tools.Shortcut;
  */ 
 public final class SymmetryAction extends JosmAction {
 
+    /**
+     * Constructs a new {@code SymmetryAction}.
+     */
     public SymmetryAction() {
         super(tr("Symmetry"), "symmetry", tr("Mirror selected nodes and ways."),
                 Shortcut.registerShortcut("tools:symmetry", tr("Tool: {0}", tr("Symmetry")),
@@ -43,7 +46,7 @@ public final class SymmetryAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
         HashSet<Node> nodes = new HashSet<>();
         EastNorth p1=null,p2=null;
         
@@ -88,11 +91,7 @@ public final class SymmetryAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

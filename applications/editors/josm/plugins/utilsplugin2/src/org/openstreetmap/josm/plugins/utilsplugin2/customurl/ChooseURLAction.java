@@ -20,27 +20,21 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 public class ChooseURLAction extends JosmAction {
 
     public ChooseURLAction() {
-         super(tr("Select custom URL"), "selecturl", tr("Select custom URL"),null,true,true);
+        super(tr("Select custom URL"), "selecturl", tr("Select custom URL"),null,true,true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       showConfigDialog(false);
+        showConfigDialog(false);
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            setEnabled(true);
-        }
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
         
     public static void showConfigDialog(final boolean fast) {
-        JPanel all = new JPanel();
-        GridBagLayout layout = new GridBagLayout();
-        all.setLayout(layout);
+        JPanel all = new JPanel(new GridBagLayout());
         
         List<String> items = URLList.getURLList();
         String addr = URLList.getSelectedURL();

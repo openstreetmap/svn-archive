@@ -32,10 +32,11 @@ public class AdjacentNodesAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selection = ds.getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
 
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getCurrentDataSet().getSelected(), Way.class);
+        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(ds.getSelected(), Way.class);
         
         // if no nodes and no ways are selected, do nothing
         if (selectedNodes.isEmpty() && selectedWays.isEmpty()) return;
@@ -60,12 +61,12 @@ public class AdjacentNodesAction extends JosmAction {
             HashSet<Node> newNodes = new HashSet<>();
             NodeWayUtils.addNodesConnectedToWays(selectedWays, newNodes);
             activeWays.clear();
-            getCurrentDataSet().setSelected(newNodes);
+            ds.setSelected(newNodes);
             return;
         }
 
         if (activeWays.isEmpty()) {
-                NodeWayUtils.addWaysConnectedToNodes(selectedNodes, activeWays);
+            NodeWayUtils.addWaysConnectedToNodes(selectedNodes, activeWays);
         }
 
         Set<Node> newNodes = new HashSet <>();
@@ -87,18 +88,12 @@ public class AdjacentNodesAction extends JosmAction {
 //             System.out.println("No more points found, activeways cleared");
          }
 
-         getCurrentDataSet().addSelected(newNodes);
-         newNodes = null;
-
+         ds.addSelected(newNodes);
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override
@@ -109,7 +104,4 @@ public class AdjacentNodesAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
-
-
 }

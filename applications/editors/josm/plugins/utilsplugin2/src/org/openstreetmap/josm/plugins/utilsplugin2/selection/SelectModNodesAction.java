@@ -33,9 +33,10 @@ public class SelectModNodesAction extends JosmAction {
 
     @Override
      public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selection = ds.getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        getCurrentDataSet().clearSelection(selectedNodes);
+        ds.clearSelection(selectedNodes);
         Command cmd =null;
 
         if (Main.main.undoRedo.commands == null) return;
@@ -61,9 +62,9 @@ public class SelectModNodesAction extends JosmAction {
                 if (p instanceof Node && !p.isDeleted()) nodes.add((Node)p);
             }
             if (!nodes.isEmpty()) {
-                getCurrentDataSet().setSelected(nodes);
+                ds.setSelected(nodes);
                 lastCmd = cmd; // remember last used command and last selection
-                lastHash = getCurrentDataSet().getSelected().hashCode();
+                lastHash = ds.getSelected().hashCode();
                 return;
                 }
             k++;
@@ -74,11 +75,7 @@ public class SelectModNodesAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.Set;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -33,10 +34,11 @@ public class SelectModWaysAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> selection = ds.getSelected();
         Set<Node> selectedNodes = OsmPrimitive.getFilteredSet(selection, Node.class);
-        getCurrentDataSet().clearSelection(selectedNodes);
-        Command cmd =null;
+        ds.clearSelection(selectedNodes);
+        Command cmd;
 
         if (Main.main.undoRedo.commands == null) return;
         int num=Main.main.undoRedo.commands.size();
@@ -60,10 +62,10 @@ public class SelectModWaysAction extends JosmAction {
             for ( OsmPrimitive p : pp) {  // find all affected ways
                 if (p instanceof Way && !p.isDeleted()) ways.add((Way)p);
             }
-            if (!ways.isEmpty() && !getCurrentDataSet().getSelected().containsAll(ways)) {
-                getCurrentDataSet().setSelected(ways);
+            if (!ways.isEmpty() && !ds.getSelected().containsAll(ways)) {
+                ds.setSelected(ways);
                 lastCmd = cmd; // remember last used command and last selection
-                lastHash = getCurrentDataSet().getSelected().hashCode();
+                lastHash = ds.getSelected().hashCode();
                 return;
                 }
             k++;
@@ -73,11 +75,7 @@ public class SelectModWaysAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
-            setEnabled(false);
-        } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
-        }
+        updateEnabledStateOnCurrentSelection();
     }
 
     @Override

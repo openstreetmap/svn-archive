@@ -431,9 +431,9 @@
     </path>
     <macrodef name="init-test-preferences">
         <sequential>
-            <copy file="${plugin.test.dir}/config/preferences.template.xml" tofile="${plugin.test.dir}/config/unit-josm.home/preferences.xml"/>
-            <replace file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_USERNAME@" value="${osm.username}"/>
-            <replace file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_PASSWORD@" value="${osm.password}"/>
+            <copy file="../00_core_test_config/preferences.template.xml" tofile="../00_core_test_config/unit-josm.home/preferences.xml"/>
+            <replace file="../00_core_test_config/unit-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_USERNAME@" value="${osm.username}"/>
+            <replace file="../00_core_test_config/unit-josm.home/preferences.xml" encoding="UTF-8" token="@OSM_PASSWORD@" value="${osm.password}"/>
         </sequential>
     </macrodef>
     <target name="check-test">
@@ -449,8 +449,8 @@
         <delete dir="${plugin.test.dir}/build"/>
         <delete dir="${plugin.test.dir}/report"/>
         <delete file="${plugin.test.dir}/jacoco.exec" />
-        <delete file="${plugin.test.dir}/config/unit-josm.home/preferences.xml" />
-        <delete dir="${plugin.test.dir}/config/unit-josm.home/cache" failonerror="false"/>
+        <delete file="../00_core_test_config/unit-josm.home/preferences.xml" />
+        <delete dir="../00_core_test_config/unit-josm.home/cache" failonerror="false"/>
     </target>
     <target name="test-compile" depends="test-init,dist" if="test.present">
         <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${groovy.jar}"/>
@@ -475,7 +475,7 @@
             <jacoco:coverage destfile="${plugin.test.dir}/jacoco.exec">
                 <junit printsummary="yes" fork="true" forkmode="once" dir="${basedir}">
                     <jvmarg value="-Dfile.encoding=UTF-8"/>
-                    <sysproperty key="josm.home" value="${plugin.test.dir}/config/unit-josm.home"/>
+                    <sysproperty key="josm.home" value="../00_core_test_config/unit-josm.home"/>
                     <sysproperty key="josm.test.data" value="${plugin.test.dir}/data"/>
                     <sysproperty key="java.awt.headless" value="true"/>
                     <sysproperty key="suppressPermanentFailure" value="${suppressPermanentFailure}"/>

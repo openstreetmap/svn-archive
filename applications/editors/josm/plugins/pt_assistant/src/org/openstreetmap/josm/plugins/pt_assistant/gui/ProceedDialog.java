@@ -43,13 +43,13 @@ public class ProceedDialog extends JPanel {
 		label1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		if (numberOfDirectionErrors != 0) {
-			JLabel label2 = new JLabel("     " + tr("{0} direction error", "{0} direction errors", numberOfDirectionErrors, numberOfDirectionErrors));
+			JLabel label2 = new JLabel("     " + trn("{0} direction error", "{0} direction errors", numberOfDirectionErrors, numberOfDirectionErrors));
 			panel.add(label2);
 			label2.setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
 
 		if (numberOfRoadTypeErrors != 0) {
-			JLabel label3 = new JLabel("     " + tr("{0} road type error", "{0} road type errors", numberOfRoadTypeErrors, numberOfRoadTypeErrors));
+			JLabel label3 = new JLabel("     " + trn("{0} road type error", "{0} road type errors", numberOfRoadTypeErrors, numberOfRoadTypeErrors));
 			panel.add(label3);
 			label3.setAlignmentX(Component.LEFT_ALIGNMENT);
 		}

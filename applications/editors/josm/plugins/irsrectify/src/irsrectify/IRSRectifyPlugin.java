@@ -73,13 +73,13 @@ public class IRSRectifyPlugin extends Plugin {
             data.data.addPrimitive(offset);
             data.data.addPrimitive(way);
             data.data.setSelected(way.getPrimitiveId());
-            frame.mapView.setActiveLayer(data);
+            Main.getLayerManager().setActiveLayer(data);
         }
 
         private ImageryLayer findImageryLayer() {
             if( frame == null || frame.mapView == null )
                 return null;
-            for( Layer l : frame.mapView.getAllLayers() )
+            for( Layer l : Main.getLayerManager().getLayers() )
                 if( l instanceof ImageryLayer )
                     return (ImageryLayer)l;
             return null;
@@ -89,12 +89,12 @@ public class IRSRectifyPlugin extends Plugin {
             if( frame == null || frame.mapView == null )
                 return null;
 
-            OsmDataLayer l = frame.mapView.getEditLayer();
+            OsmDataLayer l = Main.getLayerManager().getEditLayer();
             if( isOffsetLayer(l) )
                 return l;
 
             // try to find among all layers
-            for( Layer layer : frame.mapView.getAllLayers() )
+            for( Layer layer : Main.getLayerManager().getLayers() )
                 if( layer instanceof OsmDataLayer && isOffsetLayer((OsmDataLayer)layer) )
                     return (OsmDataLayer) layer;
 

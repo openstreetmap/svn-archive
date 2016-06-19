@@ -36,8 +36,8 @@ public class SdsSaveAction extends SdsDiskAccessAction {
 
     public boolean doSave() {
         Layer layer = null;
-        if (Main.isDisplayingMapView() && (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer))
-            layer = Main.map.mapView.getActiveLayer();
+        if (Main.getLayerManager().getActiveLayer() instanceof OsmDataLayer)
+            layer = Main.getLayerManager().getActiveLayer();
 
         if (layer == null)
             return false;

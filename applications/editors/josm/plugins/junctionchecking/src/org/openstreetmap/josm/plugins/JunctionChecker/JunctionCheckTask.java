@@ -90,6 +90,6 @@ public class JunctionCheckTask extends PleaseWaitRunnable{
         for (int i = 0; i < jc.getSubJunction().size(); i++) {
             plugin.getChannelDigraph().addJunctioncandidateChannel(jc.getSubJunction().get(i));
         }
-        Main.map.mapView.setActiveLayer(plugin.getChannelDigraphLayer());
+        Main.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
     }
 }

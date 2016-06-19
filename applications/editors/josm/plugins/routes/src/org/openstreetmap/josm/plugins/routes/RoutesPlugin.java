@@ -78,7 +78,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
     private void checkLayers() {
         if (Main.map != null && Main.map.mapView != null) {
-            for (Layer layer:Main.map.mapView.getAllLayers()) {
+            for (Layer layer:Main.getLayerManager().getLayers()) {
                 if (layer instanceof OsmDataLayer) {
                     if (!isShown) {
                         isShown = true;

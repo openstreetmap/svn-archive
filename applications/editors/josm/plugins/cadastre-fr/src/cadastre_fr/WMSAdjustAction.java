@@ -40,8 +40,8 @@ public class WMSAdjustAction extends MapMode implements
 
     @Override public void enterMode() {
         if (Main.map != null) {
-            if (Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
-                modifiedLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
+            if (Main.getLayerManager().getActiveLayer() instanceof WMSLayer) {
+                modifiedLayer = (WMSLayer)Main.getLayerManager().getActiveLayer();
                 super.enterMode();
                 Main.map.mapView.addMouseListener(this);
                 Main.map.mapView.addMouseMotionListener(this);

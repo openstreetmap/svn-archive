@@ -10,6 +10,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.MainLayerManager;
 import org.openstreetmap.josm.io.OsmConnection;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.HttpClient;
@@ -48,10 +49,10 @@ public class UploadOsmConnection extends OsmConnection {
      */
     GpxData autoSelectTrace() {
         if (Main.map != null && Main.map.mapView != null) {
-            MapView mv = Main.map.mapView;
+            MainLayerManager lm = Main.getLayerManager();
 //            List<Layer> allLayers = new ArrayList<Layer>(mv.getAllLayersAsList());  // modifiable
             List<Layer> selectedLayers = LayerListDialog.getInstance().getModel().getSelectedLayers();
-            List<GpxLayer> gpxLayersRemaining = mv.getLayersOfType(GpxLayer.class);
+            List<GpxLayer> gpxLayersRemaining = lm.getLayersOfType(GpxLayer.class);
             gpxLayersRemaining.removeAll(selectedLayers);
             GpxLayer traceLayer = null;
             // find the first gpx layer inside selected layers
@@ -67,14 +68,13 @@ public class UploadOsmConnection extends OsmConnection {
                     traceLayer = gpxLayersRemaining.get(0);
                 }
                 // active layer
-                else if (mv.getActiveLayer() instanceof GpxLayer) {
-                    traceLayer = (GpxLayer) mv.getActiveLayer();
+                else if (lm.getActiveLayer() instanceof GpxLayer) {
+                    traceLayer = (GpxLayer) lm.getActiveLayer();
                 }
             }
 
             if (traceLayer != null) {
-                GpxData data = traceLayer.data;
-                return data;
+                return traceLayer.data;
             }
         }
 

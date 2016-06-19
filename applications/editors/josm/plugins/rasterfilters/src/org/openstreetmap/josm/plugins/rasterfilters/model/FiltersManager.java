@@ -130,7 +130,7 @@ ActionListener, ItemListener {
 		fp.setPreferredSize(new Dimension(300, fp.getNeededHeight()));
 
 		filter.changeFilterState(filterState.encodeJson());
-		Main.map.mapView.getActiveLayer().setFilterStateChanged();
+		Main.getLayerManager().getActiveLayer().setFilterStateChanged();
 
 		fp.createBottomPanel(this);
 
@@ -154,8 +154,8 @@ ActionListener, ItemListener {
 		if (filtersMap.get(filterId) != null)
 			filtersMap.get(filterId).changeFilterState(filterState.encodeJson());
 
-		if (Main.map.mapView.getActiveLayer() != null) {
-			Main.map.mapView.getActiveLayer().setFilterStateChanged();
+		if (Main.getLayerManager().getActiveLayer() != null) {
+			Main.getLayerManager().getActiveLayer().setFilterStateChanged();
 		}
 
 	}
@@ -238,7 +238,7 @@ ActionListener, ItemListener {
 			dialog.getAddButton().setEnabled(true);
 		}
 
-		Main.map.mapView.getActiveLayer().setFilterStateChanged();
+		Main.getLayerManager().getActiveLayer().setFilterStateChanged();
 
 	}
 
@@ -254,14 +254,14 @@ ActionListener, ItemListener {
 			UID filterId = filterPanel.getFilterId();
 			disabledFilters.add(filtersMap.get(filterId));
 
-			Main.map.mapView.getActiveLayer().setFilterStateChanged();
+			Main.getLayerManager().getActiveLayer().setFilterStateChanged();
 
 		} else {
 
 			UID filterId = filterPanel.getFilterId();
 			disabledFilters.remove(filtersMap.get(filterId));
 
-			Main.map.mapView.getActiveLayer().setFilterStateChanged();
+			Main.getLayerManager().getActiveLayer().setFilterStateChanged();
 
 		}
 	}

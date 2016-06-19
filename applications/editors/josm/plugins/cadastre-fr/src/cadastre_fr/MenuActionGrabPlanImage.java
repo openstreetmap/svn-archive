@@ -1,8 +1,8 @@
 // License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
 package cadastre_fr;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.layer.Layer;
 
 public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
 
@@ -35,14 +34,14 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
     protected void updateEnabledState() {
         if (wmsLayer == null || Main.map == null || Main.map.mapView == null) return;
         if (!rasterImageGeoreferencer.isRunning()) return;
-        for (Layer l : Main.map.mapView.getAllLayersAsList())
-            if (l == wmsLayer)
-                return;
+        if (Main.getLayerManager().containsLayer(wmsLayer))
+        	return;
         JOptionPane.showMessageDialog(Main.parent, tr("Georeferencing interrupted"));
         rasterImageGeoreferencer.actionInterrupted();
     }
 
-    public void actionPerformed(ActionEvent ae) {
+    @Override
+	public void actionPerformed(ActionEvent ae) {
         if (Main.map != null) {
             if (CadastrePlugin.isCadastreProjection()) {
                 wmsLayer = new MenuActionNewLocation().addNewLayer(new ArrayList<WMSLayer>());
@@ -57,7 +56,8 @@ public class MenuActionGrabPlanImage extends JosmAction implements Runnable {
         }
     }
 
-    public void run() {
+    @Override
+	public void run() {
         // wait until plan image is fully loaded and joined into one single image
         boolean loadedFromCache = downloadWMSPlanImage.waitFinished();
         if (loadedFromCache) {

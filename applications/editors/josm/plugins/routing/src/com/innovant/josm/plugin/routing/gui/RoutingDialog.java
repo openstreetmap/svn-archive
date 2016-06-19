@@ -130,8 +130,8 @@ public class RoutingDialog extends ToggleDialog {
 
     public void refresh() {
         clearNodes();
-        if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-            RoutingLayer routingLayer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+        if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+            RoutingLayer routingLayer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
             RoutingModel routingModel = routingLayer.getRoutingModel();
             for (Node n : routingModel.getSelectedNodes()) {
                 addNode(n);

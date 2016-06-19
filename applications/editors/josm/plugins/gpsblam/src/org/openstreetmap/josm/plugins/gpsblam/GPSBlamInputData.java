@@ -26,7 +26,7 @@ class GPSBlamInputData extends LinkedList<CachedLatLon> {
     // select a set of GPX points and count how many tracks they have come from,
     // within given radius of line between given points
     GPSBlamInputData(Point p1, Point p2, int radius) {
-        Collection<Layer> layers = Main.map.mapView.getAllLayers();
+        Collection<Layer> layers = Main.getLayerManager().getLayers();
         for (Layer l : layers) {
             if (l.isVisible() && l instanceof GpxLayer) {
                 for (GpxTrack track : ((GpxLayer)l).data.tracks) {

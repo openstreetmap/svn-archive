@@ -818,7 +818,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         public void actionPerformed(ActionEvent e) {
             if (Main.main.getActiveLayer() != getLayer()){
-                Main.map.mapView.setActiveLayer(getLayer());
+                Main.getLayerManager().setActiveLayer(getLayer());
             }
             Relation tr = getTurnRestriction();
             if (tr == null || tr.getDataSet() == null) return;

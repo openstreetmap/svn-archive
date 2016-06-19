@@ -17,7 +17,7 @@ class Engine {
         List<Marker> returnList = new ArrayList<>();
         if (gpxLayersExist()) {
             //Loop over marker (waypoint) layers.. it could be more than one
-            for (Iterator<MarkerLayer> it = Main.map.mapView.getLayersOfType(MarkerLayer.class).iterator(); it.hasNext();) {
+            for (Iterator<MarkerLayer> it = Main.getLayerManager().getLayersOfType(MarkerLayer.class).iterator(); it.hasNext();) {
                 //loop over each marker (waypoint)
                 for (Iterator<Marker> markerIterator = it.next().data.iterator(); markerIterator.hasNext();) {
                     Marker marker = markerIterator.next();
@@ -31,6 +31,6 @@ class Engine {
     }   
     
     static boolean gpxLayersExist() {
-        return Main.map != null && Main.map.mapView.hasLayers() && !Main.map.mapView.getLayersOfType(MarkerLayer.class).isEmpty();
+        return !Main.getLayerManager().getLayersOfType(MarkerLayer.class).isEmpty();
     }
 }

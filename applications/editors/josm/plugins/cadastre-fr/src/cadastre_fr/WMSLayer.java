@@ -159,7 +159,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         grabThread.setCanceled(false);
         grabThread.setGrabber(grabber);
         // if it is the first layer, use the communeBBox as grab bbox (and not divided)
-        if (Main.map.mapView.getAllLayers().size() == 1 ) {
+        if (Main.getLayerManager().getLayers().size() == 1 ) {
             final Bounds bounds = this.getCommuneBBox().toBounds();
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override

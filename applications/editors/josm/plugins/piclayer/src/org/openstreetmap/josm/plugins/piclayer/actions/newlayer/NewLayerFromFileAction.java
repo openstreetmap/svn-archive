@@ -118,8 +118,8 @@ public class NewLayerFromFileAction extends JosmAction {
             // The first loaded layer will be placed at the top of any other layer of the same class,
             // or at the bottom of the stack if there is no such layer yet
             // The next layers we load will be placed one after the other after this first layer
-            int newLayerPos = Main.map.mapView.getAllLayers().size();
-            for(Layer l : Main.map.mapView.getLayersOfType(PicLayerAbstract.class)) {
+            int newLayerPos = Main.getLayerManager().getLayers().size();
+            for(Layer l : Main.getLayerManager().getLayersOfType(PicLayerAbstract.class)) {
                 int pos = Main.map.mapView.getLayerPos(l);
                 if (pos < newLayerPos) newLayerPos = pos;
             }

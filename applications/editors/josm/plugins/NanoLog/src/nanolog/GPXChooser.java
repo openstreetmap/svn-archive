@@ -18,7 +18,7 @@ public class GPXChooser extends JDialog {
 
     public static GpxLayer topLayer() {
         // return first found local layer
-        for( Layer layer : Main.map.mapView.getAllLayers() ) {
+        for( Layer layer : Main.getLayerManager().getLayers() ) {
             if( layer instanceof GpxLayer && ((GpxLayer)layer).isLocalFile() )
                 return (GpxLayer)layer;
         }

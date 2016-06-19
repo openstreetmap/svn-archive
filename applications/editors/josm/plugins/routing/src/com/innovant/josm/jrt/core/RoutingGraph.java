@@ -349,7 +349,7 @@ public class RoutingGraph {
         List<OsmEdge> path = new ArrayList<>();
         Graph<Node,OsmEdge> g;
         double totalWeight = 0;
-        RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+        RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
         RoutingModel routingModel = layer.getRoutingModel();
 
         if (graph == null || routingModel.getOnewayChanged())

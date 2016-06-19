@@ -132,7 +132,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
         // Activate the mode only if the current layer is not a
         // GeoImageLayer.  GeoImageLayer's are handled by the plug-in
         // directly.
-        if (! (Main.map.mapView.getActiveLayer() instanceof GeoImageLayer)) {
+        if (! (Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
             activateMode();
         }
     }
@@ -207,7 +207,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
      */
     private boolean hasLayersToAdjust() {
         if (Main.map == null || Main.map.mapView == null) return false;
-        return ! Main.map.mapView.getLayersOfType(GeoImageLayer.class).isEmpty();
+        return ! Main.getLayerManager().getLayersOfType(GeoImageLayer.class).isEmpty();
     }
 
     /**
@@ -216,7 +216,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
      * @return list of visible GeoImageLayer's
      */
     private List<GeoImageLayer> getVisibleGeoImageLayers() {
-        List<GeoImageLayer> all = new ArrayList<>(Main.map.mapView.getLayersOfType(GeoImageLayer.class));
+        List<GeoImageLayer> all = new ArrayList<>(Main.getLayerManager().getLayersOfType(GeoImageLayer.class));
         Iterator<GeoImageLayer> it = all.iterator();
         while (it.hasNext()) {
             if (!it.next().isVisible()) it.remove();

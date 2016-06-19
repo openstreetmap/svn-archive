@@ -29,7 +29,7 @@ public class ImageryOffsetTools {
     public static ImageryLayer getTopImageryLayer() {
         if( Main.map == null || Main.map.mapView == null )
             return null;
-        List<ImageryLayer> layers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+        List<ImageryLayer> layers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
         for( ImageryLayer layer : layers ) {
             String url = layer.getInfo().getUrl();
             if( layer.isVisible() && url != null && !url.contains("gps-") ) {

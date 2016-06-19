@@ -64,7 +64,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
     OsmTransferException {
         //Prüfen, ob der ausgewählte Layer ein OSMDataLayer ist
         if (Main.map == null
-                || !Main.map.isVisible() || !(Main.map.mapView.getActiveLayer() instanceof OsmDataLayer)) {
+                || !Main.map.isVisible() || !(Main.getLayerManager().getActiveLayer() instanceof OsmDataLayer)) {
             JOptionPane.showMessageDialog(Main.parent, tr("this layer is no osm data layer"));
             return;
         }
@@ -83,7 +83,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
 
         OSMGraph graph = new OSMGraph();
         //Der vom Benutzer in JOSM ausgewählte, zur Zeit aktive Layer wird der PLugin-OSM-Layer
-        plugin.setOsmlayer((OsmDataLayer)Main.map.mapView.getActiveLayer());
+        plugin.setOsmlayer((OsmDataLayer)Main.getLayerManager().getActiveLayer());
         Iterator<Node> it = Main.main.getCurrentDataSet().getNodes().iterator();
         while (it.hasNext()) {
             graph.addNode(it.next());
@@ -146,6 +146,6 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         plugin.setNormalMapMode(Main.map.mapMode);
         Main.map.selectMapMode(plugin.getJcMapMode());
         Main.main.addLayer(plugin.getChannelDigraphLayer());
-        Main.map.mapView.setActiveLayer(plugin.getChannelDigraphLayer());
+        Main.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
     }
 }

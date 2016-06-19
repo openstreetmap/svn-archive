@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="bugfix of search when layer is added"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="10279"/>
 
     <property name="plugin.author" value="Åsmund Realfsen - realfsen at gmx.net"/>
     <property name="plugin.class"  value="org.openstreetmap.josm.plugins.waypointSearch.WaypointSearchPlugin"/>

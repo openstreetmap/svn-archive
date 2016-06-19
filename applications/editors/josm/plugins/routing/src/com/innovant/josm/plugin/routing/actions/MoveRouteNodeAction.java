@@ -95,9 +95,9 @@ public class MoveRouteNodeAction extends MapMode {
     @Override public void mousePressed(MouseEvent e) {
         // If left button is pressed
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
+            if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
                 requestFocusInMapView();
-                RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list
                 List<Node> nl = routingModel.getSelectedNodes();
@@ -128,8 +128,8 @@ public class MoveRouteNodeAction extends MapMode {
     }
 
     private void searchAndReplaceNode(Point point) {
-        if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-            RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+        if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+            RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
             RoutingModel routingModel = layer.getRoutingModel();
             RoutingDialog routingDialog = RoutingPlugin.getInstance().getRoutingDialog();
             // Search for nearest highway node

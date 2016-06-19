@@ -72,7 +72,7 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
         protected int getNumDataLayers() {
             int count = 0;
             if (!Main.isDisplayingMapView()) return 0;
-            for (Layer layer : Main.map.mapView.getAllLayers()) {
+            for (Layer layer : Main.getLayerManager().getLayers()) {
                 if (layer instanceof XmlBoundsLayer) {
                     count++;
                 }
@@ -83,7 +83,7 @@ public class DownloadXmlBoundsTask extends DownloadOsmTask implements XmlBoundsC
         @Override
         protected OsmDataLayer getFirstDataLayer() {
             if (!Main.isDisplayingMapView()) return null;
-            for (Layer layer : Main.map.mapView.getAllLayersAsList()) {
+            for (Layer layer : Main.getLayerManager().getLayers()) {
                 if (layer instanceof XmlBoundsLayer)
                     return (XmlBoundsLayer) layer;
             }

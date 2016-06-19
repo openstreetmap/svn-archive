@@ -362,7 +362,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         if (mapdustLayer != null && mapdustLayer.isVisible()) {
             if (event.getButton() == MouseEvent.BUTTON1) {
                 if (event.getClickCount() == 2 && !event.isConsumed()) {
-                    if (Main.map.mapView.getActiveLayer() == getMapdustLayer()) {
+                    if (Main.getLayerManager().getActiveLayer() == getMapdustLayer()) {
                         /* show add bug dialog */
                         MapdustBug bug = mapdustGUI.getSelectedBug();
                         if (bug != null) {
@@ -619,12 +619,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
      * <code>MapdustLayer</code> false otherwise
      */
     private boolean containsMapdustLayer() {
-        boolean contains = false;
-        List<Layer> all = Main.map.mapView.getAllLayersAsList();
-        if (mapdustLayer != null && all.contains(mapdustLayer)) {
-            contains = true;
-        }
-        return contains;
+        return mapdustLayer != null && Main.getLayerManager().containsLayer(mapdustLayer);
     }
 
     /**

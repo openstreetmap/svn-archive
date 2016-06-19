@@ -23,7 +23,7 @@ public class LayerUtil {
     public static <LayerType extends Layer> LayerType findGpsLayer(String layerName, Class<LayerType> layerType) {
         Layer result = null;
         if(Main.map != null && Main.map.mapView != null) {
-            for(Layer layer : Main.map.mapView.getAllLayers()) {
+            for(Layer layer : Main.getLayerManager().getLayers()) {
                 if(layerName.equals(layer.getName()) && layerType.isAssignableFrom(layer.getClass())) {
                     result = layer;
                     break;

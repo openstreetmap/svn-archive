@@ -124,7 +124,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
      */
     public GpxLayer getGpxLayer() {
         if(liveGpsLayer == null) {
-            Collection<Layer> layers = Main.map.mapView.getAllLayers();
+            Collection<Layer> layers = Main.getLayerManager().getLayers();
             for (Layer layer : layers) {
                 if(layer instanceof LiveGpsLayer) {
                     liveGpsLayer = (LiveGpsLayer) layer;

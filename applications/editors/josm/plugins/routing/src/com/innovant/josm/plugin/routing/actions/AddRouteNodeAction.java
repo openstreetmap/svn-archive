@@ -82,8 +82,8 @@ public class AddRouteNodeAction extends MapMode {
         if (e.getButton() == MouseEvent.BUTTON1) {
             // Search for nearest highway node
             Node node = null;
-            if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+            if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                 node = layer.getNearestHighwayNode(e.getPoint());
                 if(node == null) {
                     logger.debug("no selected node");

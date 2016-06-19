@@ -92,8 +92,8 @@ public class RoutingMenu extends JMenu {
         rshorter.setSelected(true);
         rshorter.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     if (e.getStateChange()==ItemEvent.SELECTED) {
                         routingModel.routingGraph.setTypeRoute(RouteType.SHORTEST);
@@ -121,8 +121,8 @@ public class RoutingMenu extends JMenu {
         JCheckBoxMenuItem cbmi = new JCheckBoxMenuItem(tr("Ignore oneways"));
         cbmi.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     if (e.getStateChange()==ItemEvent.SELECTED)
                         routingModel.routingGraph.getRoutingProfile().setOnewayUse(false);
@@ -141,8 +141,8 @@ public class RoutingMenu extends JMenu {
         reverseMI = new JMenuItem(tr("Reverse route"));
         reverseMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     routingModel.reverseNodes();
                     Main.map.repaint();
@@ -154,8 +154,8 @@ public class RoutingMenu extends JMenu {
         clearMI = new JMenuItem(tr("Clear route"));
         clearMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     // Reset routing nodes and paths
                     routingModel.reset();
@@ -170,8 +170,8 @@ public class RoutingMenu extends JMenu {
         regraphMI.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                    RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+                if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                    RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                     RoutingModel routingModel = layer.getRoutingModel();
                     routingModel.routingGraph.resetGraph();
                     routingModel.routingGraph.createGraph();

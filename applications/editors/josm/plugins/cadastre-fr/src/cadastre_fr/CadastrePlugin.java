@@ -455,8 +455,8 @@ public class CadastrePlugin extends Plugin {
      */
     public static void addWMSLayer(WMSLayer wmsLayer) {
         if (Main.map != null && Main.map.mapView != null) {
-            int wmsNewLayerPos = Main.map.mapView.getAllLayers().size();
-            for(Layer l : Main.map.mapView.getLayersOfType(WMSLayer.class)) {
+            int wmsNewLayerPos = Main.getLayerManager().getLayers().size();
+            for(Layer l : Main.getLayerManager().getLayersOfType(WMSLayer.class)) {
                 int wmsPos = Main.map.mapView.getLayerPos(l);
                 if (wmsPos < wmsNewLayerPos) wmsNewLayerPos = wmsPos;
             }

@@ -195,7 +195,7 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     public void showNotify() {
         MapView.addLayerChangeListener(this);
         if (Main.isDisplayingMapView()) {
-            Layer layer = Main.map.mapView.getActiveLayer();
+            Layer layer = Main.getLayerManager().getActiveLayer();
             if (layer instanceof GpxLayer) {
                 setActiveLayer((GpxLayer) layer);
             }

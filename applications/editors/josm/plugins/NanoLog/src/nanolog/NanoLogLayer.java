@@ -297,7 +297,7 @@ public class NanoLogLayer extends Layer implements JumpToMarkerActions.JumpToMar
         @Override
         public void mousePressed( MouseEvent e ) {
             int nearest = nearestEntry(e);
-            if( nearest > 0 && Main.map.mapView.getActiveLayer() == NanoLogLayer.this ) {
+            if( nearest > 0 && Main.getLayerManager().getActiveLayer() == NanoLogLayer.this ) {
                 dragging = nearest;
                 doDrag(e);
             }

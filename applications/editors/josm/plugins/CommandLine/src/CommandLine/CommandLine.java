@@ -368,10 +368,10 @@ public class CommandLine extends Plugin {
                 action = new DummyAction(currentMapFrame, this);
                 break;
             case IMAGERYURL:
-                Layer layer = Main.map.mapView.getActiveLayer();
+                Layer layer = Main.getLayerManager().getActiveLayer();
                 if (layer != null) {
                     if (!(layer instanceof ImageryLayer)) {
-                        List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+                        List<ImageryLayer> imageryLayers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             layer = imageryLayers.get(0);
                         }
@@ -388,10 +388,10 @@ public class CommandLine extends Plugin {
                 action = new DummyAction(currentMapFrame, this);
                 break;
             case IMAGERYOFFSET:
-                Layer olayer = Main.map.mapView.getActiveLayer();
+                Layer olayer = Main.getLayerManager().getActiveLayer();
                 if (olayer != null) {
                     if (!(olayer instanceof ImageryLayer)) {
-                        List<ImageryLayer> imageryLayers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+                        List<ImageryLayer> imageryLayers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
                         if (imageryLayers.size() == 1) {
                             olayer = imageryLayers.get(0);
                         }
@@ -596,7 +596,7 @@ public class CommandLine extends Plugin {
                     try (GpxWriter gpxWriter = new GpxWriter(printWriter)) {
                         GpxFilter gpxFilter = new GpxFilter();
                         gpxFilter.initBboxFilter(bbox);
-                        List<GpxLayer> gpxLayers = Main.map.mapView.getLayersOfType(GpxLayer.class);
+                        List<GpxLayer> gpxLayers = Main.getLayerManager().getLayersOfType(GpxLayer.class);
                         for (GpxLayer gpxLayer : gpxLayers) {
                             gpxFilter.addGpxData(gpxLayer.data);
                         }

@@ -41,7 +41,7 @@ public class RelationProducer {
                         .getId(), OsmPrimitiveType.WAY));
             }
         }
-        Main.map.mapView.setActiveLayer(plugin.getOsmlayer());
+        Main.getLayerManager().setActiveLayer(plugin.getOsmlayer());
         plugin.getOsmlayer().data.setSelected(ways);
 
         Relation jrelation = new Relation();

@@ -105,7 +105,7 @@ public class MenuActionNewLocation extends JosmAction {
             Main.pref.put("cadastrewms.codeCommune", codeCommune);
             Main.pref.put("cadastrewms.codeDepartement", codeDepartement);
             if (Main.map != null) {
-                for (Layer l : Main.map.mapView.getAllLayers()) {
+                for (Layer l : Main.getLayerManager().getLayers()) {
                     if (l instanceof WMSLayer && l.getName().equalsIgnoreCase(location)) {
                         return null;
                     }
@@ -117,8 +117,8 @@ public class MenuActionNewLocation extends JosmAction {
             wmsLayer.setDepartement(codeDepartement);
             CadastrePlugin.addWMSLayer(wmsLayer);
             Main.info("Add new layer with Location:" + inputTown.getText());
-        } else if (existingLayers != null && existingLayers.size() > 0 && Main.map.mapView.getActiveLayer() instanceof WMSLayer) {
-            wmsLayer = (WMSLayer)Main.map.mapView.getActiveLayer();
+        } else if (existingLayers != null && existingLayers.size() > 0 && Main.getLayerManager().getActiveLayer() instanceof WMSLayer) {
+            wmsLayer = (WMSLayer)Main.getLayerManager().getActiveLayer();
         }
 
         return wmsLayer;

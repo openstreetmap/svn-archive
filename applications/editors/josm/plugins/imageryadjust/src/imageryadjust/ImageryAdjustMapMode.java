@@ -53,7 +53,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     }
     
     private List<? extends Layer> getVisibleLayers() {
-        List<? extends Layer> all = new ArrayList<Layer>(Main.map.mapView.getLayersOfType(ImageryLayer.class));
+        List<? extends Layer> all = new ArrayList<Layer>(Main.getLayerManager().getLayersOfType(ImageryLayer.class));
         Iterator<? extends Layer> it = all.iterator();
         while (it.hasNext()) {
             if (!it.next().isVisible()) it.remove();
@@ -75,7 +75,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
             warnNoImageryLayers();
             return;
         }
-        List<ImageryLayer> layers = Main.map.mapView.getLayersOfType(ImageryLayer.class);
+        List<ImageryLayer> layers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
         if (layers.size() == 1) {
             adjustingLayer = layers.get(0);
         } else {
@@ -158,7 +158,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
                 return false;
             if (Main.map.mapView == null)
                 return false;
-            return Main.map.mapView.getActiveLayer() == layer;
+            return Main.getLayerManager().getActiveLayer() == layer;
         }
 
         @Override
@@ -229,7 +229,7 @@ public class ImageryAdjustMapMode extends MapMode implements MouseListener, Mous
     protected boolean hasImageryLayersToAdjust() {
         if (Main.map == null) return false;
         if (Main.map.mapView == null) return false;
-        boolean b = ! Main.map.mapView.getLayersOfType(ImageryLayer.class).isEmpty();
+        boolean b = ! Main.getLayerManager().getLayersOfType(ImageryLayer.class).isEmpty();
         return b;
     }
 

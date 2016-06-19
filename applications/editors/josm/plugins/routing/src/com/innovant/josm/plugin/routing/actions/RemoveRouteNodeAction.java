@@ -83,8 +83,8 @@ public class RemoveRouteNodeAction extends MapMode {
     @Override public void mouseClicked(MouseEvent e) {
         // If left button is clicked
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (Main.map.mapView.getActiveLayer() instanceof RoutingLayer) {
-                RoutingLayer layer = (RoutingLayer)Main.map.mapView.getActiveLayer();
+            if (Main.getLayerManager().getActiveLayer() instanceof RoutingLayer) {
+                RoutingLayer layer = (RoutingLayer)Main.getLayerManager().getActiveLayer();
                 RoutingModel routingModel = layer.getRoutingModel();
                 // Search for the nearest node in the list
                 List<Node> nl = routingModel.getSelectedNodes();

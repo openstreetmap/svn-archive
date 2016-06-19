@@ -54,7 +54,7 @@ public class SdsMenu extends JMenu implements LayerChangeListener {
     }
 
     void setEnabledState() {
-        boolean en = (Main.map != null) && (Main.map.mapView != null) && (Main.map.mapView.getActiveLayer() instanceof OsmDataLayer);
+        boolean en = Main.getLayerManager().getActiveLayer() instanceof OsmDataLayer;
         loadItem.setEnabled(en);
         saveItem.setEnabled(en);
     }

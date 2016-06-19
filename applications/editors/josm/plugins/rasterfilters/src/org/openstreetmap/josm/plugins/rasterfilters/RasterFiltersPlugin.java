@@ -118,7 +118,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 			action.removeFiltersDialog(dialog);
 		}
 
-		if (Main.map.mapView.getAllLayersAsList().size() == 0) {
+		if (Main.getLayerManager().getLayers().isEmpty()) {
 
 			Container container = filterButton.getParent();
 			if (container != null)

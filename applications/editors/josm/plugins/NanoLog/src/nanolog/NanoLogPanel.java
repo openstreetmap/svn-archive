@@ -36,7 +36,7 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
 
     public void updateMarkers() {
         List<NanoLogEntry> entries = new ArrayList<>();
-        for( NanoLogLayer l : Main.map.mapView.getLayersOfType(NanoLogLayer.class) ) {
+        for( NanoLogLayer l : Main.getLayerManager().getLayersOfType(NanoLogLayer.class) ) {
             entries.addAll(l.getEntries());
         }
         listModel.setEntries(entries);

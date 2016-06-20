@@ -173,11 +173,11 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
     }
 
     public void addLayer() {
-        OsmDataLayer osmLayer = Main.main.getEditLayer();
+        OsmDataLayer osmLayer = Main.getLayerManager().getEditLayer();
         if (osmLayer != null) {
             RoutingLayer layer = new RoutingLayer(tr("Routing") + " [" + osmLayer.getName() + "]", osmLayer);
             layers.add(layer);
-            Main.main.addLayer(layer);
+            Main.getLayerManager().addLayer(layer);
         }
     }
 
@@ -255,8 +255,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
                 if (layersArray[i].getDataLayer().equals(oldLayer)) {
                     try {
                         // Remove layer
-                        Main.main.removeLayer(layersArray[i]);
+                        Main.getLayerManager().removeLayer(layersArray[i]);
                     } catch (IllegalArgumentException e) {
+                        Main.error(e);
                     }
                 }
             }

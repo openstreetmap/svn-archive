@@ -220,7 +220,7 @@ public class RoutingLayer extends Layer {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
-        boolean isActiveLayer = (mv.getActiveLayer().equals(this));
+        boolean isActiveLayer = (mv.getLayerManager().getActiveLayer().equals(this));
         // Get routing nodes (start, middle, end)
         List<Node> nodes = routingModel.getSelectedNodes();
 

@@ -82,7 +82,7 @@ public class PTAssitantValidatorTest extends Test {
 
 		if (userInput == JOptionPane.YES_OPTION) {
 
-			Thread t = new IncompleteMembersDownloadThread(r);
+			Thread t = new IncompleteMembersDownloadThread();
 			t.start();
 			synchronized (t) {
 				try {

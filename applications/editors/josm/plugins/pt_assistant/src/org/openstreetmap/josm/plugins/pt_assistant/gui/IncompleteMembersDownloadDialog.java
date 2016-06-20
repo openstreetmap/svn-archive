@@ -28,8 +28,9 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 	public IncompleteMembersDownloadDialog(long id) {
 		selectedOption = Integer.MIN_VALUE;
 
-		message = tr("The relation (id={0}) has incomplete members.\n"+
-		    "They need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?", id);
+//		message = tr("The relation (id={0}) has incomplete members.\n"+
+//		    "They need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?", id);
+		message = tr("Route relations have incomplete members.\nThey need to be downloaded to proceed with validation.\nDo you want to download them?");
 		checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
 		options = new String[2];
 		options[0] = tr("Yes");

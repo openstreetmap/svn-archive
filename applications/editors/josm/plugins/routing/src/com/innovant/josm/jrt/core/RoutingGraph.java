@@ -253,9 +253,9 @@ public class RoutingGraph {
         if (fromLL == null || toLL == null) {
             return;
         }
-        double length = fromLL.greatCircleDistance(toLL);
 
         OsmEdge edge = new OsmEdge(way, from, to);
+        double length = edge.getLength();
         edge.setSpeed(12.1);
         graph.addEdge(from, to, edge);
         // weight = getWeight(way);

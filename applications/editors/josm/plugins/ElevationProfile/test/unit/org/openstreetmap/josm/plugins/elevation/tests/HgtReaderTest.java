@@ -8,14 +8,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import junit.framework.TestCase;
-
-import org.openstreetmap.josm.JOSMFixture;
+import org.junit.Rule;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.elevation.HgtReader;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
+
+import junit.framework.TestCase;
 
 public class HgtReaderTest extends TestCase {
+
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     /**
      * Setup test.
@@ -23,7 +27,6 @@ public class HgtReaderTest extends TestCase {
      */
     @Override
     public void setUp() throws IOException {
-        JOSMFixture.createUnitTestFixture().init();
         // Install SRTM files to plugin directory
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(TestUtils.getTestDataRoot()), "*.hgt")) {
             Path dir = Paths.get(System.getProperty("josm.home")).resolve("elevation");

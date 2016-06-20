@@ -11,12 +11,12 @@ import java.io.InputStream;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 /**
  * Unit tests of {@link ShpReader} class.
@@ -26,10 +26,8 @@ public class ShpReaderTest {
     /**
      * Setup test.
      */
-    @BeforeClass
-    public static void setUp() {
-        JOSMFixture.createUnitTestFixture().init();
-    }
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules();
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12714">#12714/a>

@@ -10,11 +10,11 @@ import java.io.InputStream;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
 
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.plugins.opendata.core.io.NonRegFunctionalTests;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 /**
  * Unit tests of {@link KmlReader} class.
@@ -24,10 +24,8 @@ public class KmlReaderTest {
     /**
      * Setup test.
      */
-    @BeforeClass
-    public static void setUp() {
-        JOSMFixture.createUnitTestFixture().init();
-    }
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules();
 
     /**
      * Unit test of {@link KmlReader#COLOR_PATTERN}

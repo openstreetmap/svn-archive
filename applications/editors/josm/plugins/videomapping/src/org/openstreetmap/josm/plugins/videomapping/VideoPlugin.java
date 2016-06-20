@@ -310,7 +310,7 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
                     inp.setCaretPosition(0);
                 }
             });
-            if (JOptionPane.showConfirmDialog(Main.panel,inp, tr("Jump to GPS time"),JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+            if (JOptionPane.showConfirmDialog(Main.parent,inp, tr("Jump to GPS time"),JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
             {
                     //add the day to the time
                     Date t = gpsTimeFormat.parse(inp.getText());	    		

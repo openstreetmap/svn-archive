@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="graphview" default="dist" basedir=".">
     <property name="commit.message" value="option to change graph colors; closes ticket 5523 in JOSM Trac"/>
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="10031"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

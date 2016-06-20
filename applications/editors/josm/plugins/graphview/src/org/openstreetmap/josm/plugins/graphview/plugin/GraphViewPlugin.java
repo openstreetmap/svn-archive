@@ -177,7 +177,7 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
     public void repaintGraphViewLayer() {
 
         if (graphViewLayer != null) {
-            Main.panel.repaint();
+            graphViewLayer.invalidate();
         }
 
     }

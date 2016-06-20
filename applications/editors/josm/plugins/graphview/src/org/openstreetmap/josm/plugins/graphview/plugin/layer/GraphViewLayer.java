@@ -45,7 +45,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * layer for displaying the graph visualization
  */
-public class GraphViewLayer extends Layer implements LayerChangeListener, WayGraphObserver {
+public class GraphViewLayer extends Layer implements  WayGraphObserver {
 
     private static final int NODE_RADIUS = 5;
 
@@ -97,7 +97,6 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 
     public GraphViewLayer() {
         super("Graph view");
-        MapView.addLayerChangeListener(this);
     }
 
     /** sets the WayGraph that is to be displayed by this layer, may be null */
@@ -114,14 +113,14 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
     /** sets the ColorScheme that is to be used for choosing colors, may be null */
     public void setColorScheme(ColorScheme colorScheme) {
         this.colorScheme = colorScheme;
-        Main.panel.repaint();
+        invalidate();
     }
 
     /** sets the arrowhead placement (relative offset from edge start) */
     public void setArrowheadPlacement(double arrowheadPlacement) {
     	assert arrowheadPlacement >= 0 && arrowheadPlacement <= 1;
         this.arrowheadPlacement = arrowheadPlacement;
-        Main.panel.repaint();
+        invalidate();
     }
 
     /**
@@ -133,7 +132,7 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
         if (nodePositioner == null) {
             this.nodePositioner = new NonMovingNodePositioner();
         }
-        Main.panel.repaint();
+        invalidate();
     }
 
     @Override
@@ -407,18 +406,6 @@ public class GraphViewLayer extends Layer implements LayerChangeListener, WayGra
 
     public void update(WayGraph wayGraph) {
         assert wayGraph == this.wayGraph;
-        Main.panel.repaint();
-    }
-
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-        //do nothing
-    }
-    public void layerAdded(Layer newLayer) {
-        //do nothing
-    }
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == this) {
-            MapView.removeLayerChangeListener(this);
-        }
+        invalidate();
     }
 }

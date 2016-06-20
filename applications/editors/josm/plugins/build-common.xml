@@ -204,22 +204,22 @@
     <!--
       ** Initializes the REVISION.XML file from SVN information
     -->
-    <target name="init-svn-revision-xml">
+    <target name="init-svn-revision-xml" unless="skip-revision">
         <exec append="false" output="REVISION.XML" executable="svn" failifexecutionfails="false" resultproperty="svn.info.result">
             <env key="LANG" value="C"/>
             <arg value="info"/>
             <arg value="--xml"/>
             <arg value="."/>
         </exec>
-        <condition property="svn.info.success">
-            <equals arg1="${svn.info.result}" arg2="0" />
+        <condition property="svn.info.fail">
+            <not><equals arg1="${svn.info.result}" arg2="0" /></not>
         </condition>
     </target>
     <!--
       ** Initializes the REVISION.XML file from git-svn information.
          Obtains the revision from the git-svn-id field.
     -->
-    <target name="init-git-svn-revision-xml" unless="svn.info.success">
+    <target name="init-git-svn-revision-xml" if="svn.info.fail" unless="skip-revision">
         <exec append="false" output="REVISION.XML" executable="git" failifexecutionfails="false" resultproperty="git.svn.info.result">
             <arg value="log"/>
             <arg value="-1"/>
@@ -248,7 +248,7 @@
       ** Initializes the REVISION.XML file from git (w/o svn) information.
          Uses Unix date as revision number.
     -->
-    <target name="init-git-revision-xml" if="git.svn.fail">
+    <target name="init-git-revision-xml" if="git.svn.fail" unless="skip-revision">
         <exec append="false" output="REVISION.XML" executable="git" failifexecutionfails="false" resultproperty="git.info.result">
             <arg value="log"/>
             <arg value="-1"/>
@@ -267,7 +267,7 @@
            </not>
        </condition>
     </target>
-    <target name="init-revision-fallback" if="git.fail">
+    <target name="init-revision-fallback" if="git.fail" unless="skip-revision">
         <tstamp>
             <format property="current.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSS" />
         </tstamp>

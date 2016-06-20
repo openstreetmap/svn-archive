@@ -31,6 +31,8 @@
         <mkdir dir="../dist"/>
         <iterate target="dist"/>
         <property name="skip-dist" value="true"/>
+        <property name="skip-compile" value="true"/>
+        <property name="skip-revision" value="true"/>
     </target>
     <target name="install" depends="dist">
         <iterate target="install"/>

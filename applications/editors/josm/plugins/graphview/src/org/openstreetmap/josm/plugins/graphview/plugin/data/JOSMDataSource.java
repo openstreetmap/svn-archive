@@ -42,15 +42,15 @@ public class JOSMDataSource implements DataSource<Node, Way, Relation, RelationM
     }
 
     public Iterable<Node> getNodes() {
-        return new FilteredOsmPrimitiveIterable<>(Main.main.getCurrentDataSet().getNodes());
+        return new FilteredOsmPrimitiveIterable<>(Main.getLayerManager().getEditDataSet().getNodes());
     }
 
     public Iterable<Relation> getRelations() {
-        return new FilteredRelationIterable(Main.main.getCurrentDataSet().getRelations());
+        return new FilteredRelationIterable(Main.getLayerManager().getEditDataSet().getRelations());
     }
 
     public Iterable<Way> getWays() {
-        return new FilteredOsmPrimitiveIterable<>(Main.main.getCurrentDataSet().getWays());
+        return new FilteredOsmPrimitiveIterable<>(Main.getLayerManager().getEditDataSet().getWays());
     }
 
     public TagGroup getTagsN(Node node) {

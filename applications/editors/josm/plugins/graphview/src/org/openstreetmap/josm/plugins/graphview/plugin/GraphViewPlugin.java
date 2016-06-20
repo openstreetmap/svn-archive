@@ -17,9 +17,10 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -80,7 +81,6 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
         super(info);
         preferences = GraphViewPreferences.getInstance();
         this.preferences.addObserver(this);
-
     }
 
     /** allows creation/update of GraphViewLayer */
@@ -121,30 +121,24 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                     graphViewLayer.setArrowheadPlacement(preferences.getArrowheadPlacement());
                     graphViewLayer.setNodePositioner(new DefaultNodePositioner());
 
-                    Main.main.addLayer(graphViewLayer);
-
+                    Main.getLayerManager().addLayer(graphViewLayer);
                 }
-
             }
-
         } catch (AccessRulesetSyntaxException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
-            e.printStackTrace();
+            Main.error(e);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n{0}", e));
-            e.printStackTrace();
+            Main.error(e);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
-            e.printStackTrace();
+            Main.error(e);
         }
-
     }
 
     /** allows update of GraphViewLayer */
     public void updateGraphViewLayer() {
-
         try {
-
             if (graphViewLayer != null) {
 
                 AccessRuleset accessRuleset = getAccessRuleset();
@@ -157,29 +151,24 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                             preferences.getCurrentParameterBookmark(), accessRuleset);
                     transitionStructure.forceUpdate();
                 }
-
             }
-
         } catch (AccessRulesetSyntaxException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Syntax exception in access ruleset:\n{0}", e));
-            e.printStackTrace();
+            Main.error(e);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("File not found:\n", e));
-            e.printStackTrace();
+            Main.error(e);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("Problem when accessing a file:\n{0}", e));
-            e.printStackTrace();
+            Main.error(e);
         }
-
     }
 
     /** repaints the GraphViewLayer without recalculating the graph (visual update) */
     public void repaintGraphViewLayer() {
-
         if (graphViewLayer != null) {
             graphViewLayer.invalidate();
         }
-
     }
 
     /**
@@ -210,7 +199,6 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             } else {
                 throw new FileNotFoundException(tr("Couldn''t find built-in ruleset {0}", ruleset));
             }
-
         } else {
 
             File rulesetFile = preferences.getCurrentRulesetFile();
@@ -220,11 +208,9 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
             }
 
             rulesetInputStream = new FileInputStream(rulesetFile);
-
         }
 
         return AccessRulesetReader.readAccessRuleset(rulesetInputStream);
-
     }
 
     @Override
@@ -240,38 +226,39 @@ public class GraphViewPlugin extends Plugin implements LayerChangeListener, Obse
                     = new GraphViewDialog(this);
                 newFrame.addToggleDialog(laneDialog);
             }
-            MapView.addLayerChangeListener(this);
+            Main.getLayerManager().addLayerChangeListener(this);
         } else {
-            MapView.removeLayerChangeListener(this);
+            Main.getLayerManager().removeLayerChangeListener(this);
         }
     }
 
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == graphViewLayer) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() == graphViewLayer) {
             graphViewLayer = null;
-        } else if (oldLayer == Main.main.getEditLayer()) { //data layer removed
+        } else if (e.getRemovedLayer() == Main.getLayerManager().getEditLayer()) { //data layer removed
             if (graphViewLayer != null) {
-                Main.main.removeLayer(graphViewLayer);
+                Main.getLayerManager().removeLayer(graphViewLayer);
                 graphViewLayer = null;
             }
         }
     }
 
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
         //do nothing
     }
 
-    public void layerAdded(Layer newLayer) {
+    @Override
+    public void layerAdded(LayerAddEvent e) {
         //do nothing
     }
 
+    @Override
     public void update(Observable arg0, Object arg1) {
-        if (arg0 == preferences) {
-            if (graphViewLayer != null) {
-                graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
-                graphViewLayer.setArrowheadPlacement(preferences.getArrowheadPlacement());
-            }
+        if (arg0 == preferences && graphViewLayer != null) {
+            graphViewLayer.setColorScheme(preferences.getCurrentColorScheme());
+            graphViewLayer.setArrowheadPlacement(preferences.getArrowheadPlacement());
         }
     }
-
 }

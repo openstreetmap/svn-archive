@@ -27,7 +27,7 @@ public class ShpReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules();
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12714">#12714/a>

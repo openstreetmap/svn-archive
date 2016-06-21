@@ -28,7 +28,7 @@ public class ZipReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules();
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     /**
      * Test for various zip files reading

@@ -25,7 +25,7 @@ public class KmlReaderTest {
      * Setup test.
      */
     @Rule
-    public JOSMTestRules rules = new JOSMTestRules();
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     /**
      * Unit test of {@link KmlReader#COLOR_PATTERN}

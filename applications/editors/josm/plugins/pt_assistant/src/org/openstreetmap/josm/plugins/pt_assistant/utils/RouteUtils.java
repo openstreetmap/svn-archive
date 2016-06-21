@@ -60,27 +60,32 @@ public class RouteUtils {
 	public static boolean isPTStop(RelationMember rm) {
 
 		if (rm.getType().equals(OsmPrimitiveType.NODE)) {
-			return true;
-		}
 
-		if (rm.getType().equals(OsmPrimitiveType.RELATION)) {
-			if (rm.getRole().equals("stop_area")) {
+			if (rm.getNode().hasTag("public_transport", "stop_position")
+					|| rm.getNode().hasTag("public_transport", "platform")
+					|| rm.getNode().hasTag("public_transport", "platform_entry_only")
+					|| rm.getNode().hasTag("public_transport", "platform_exit_only")
+					|| rm.getNode().hasTag("highway", "platform")
+					|| rm.getNode().hasTag("highway", "platform_entry_only")
+					|| rm.getNode().hasTag("highway", "platform_exit_only")
+					|| rm.getNode().hasTag("railway", "platform")
+					|| rm.getNode().hasTag("railway", "platform_entry_only")
+					|| rm.getNode().hasTag("railway", "platform_exit_only")) {
 				return true;
-			} else if (rm.getRole().equals("platform") || rm.getRole().equals("platform_entry_only") || rm.getRole().equals("platform_exit_only")){
-				return true;
-			} else {
-				return false;
 			}
+
 		}
 
-		Way w = rm.getWay();
-
-		if (w.hasTag("public_transport", "platform") || w.hasTag("highway", "platform")
-				|| w.hasTag("railway", "platform") || w.hasTag("public_transport", "platform_entry_only")
-				|| w.hasTag("highway", "platform_entry_only") || w.hasTag("railway", "platform_entry_only")
-				|| w.hasTag("public_transport", "platform_exit_only") || w.hasTag("highway", "platform_exit_only")
-				|| w.hasTag("railway", "platform_exit_only")) {
-			return true;
+		if (rm.getType().equals(OsmPrimitiveType.WAY)) {
+			if (rm.getWay().hasTag("public_transport", "platform")
+					|| rm.getWay().hasTag("public_transport", "platform_entry_only")
+					|| rm.getWay().hasTag("public_transport", "platform_exit_only")
+					|| rm.getWay().hasTag("highway", "platform") || rm.getWay().hasTag("highway", "platform_entry_only")
+					|| rm.getWay().hasTag("highway", "platform_exist_only") || rm.getWay().hasTag("railway", "platform")
+					|| rm.getWay().hasTag("railway", "platform_entry_only")
+					|| rm.getWay().hasTag("railway", "platform_exit_only")) {
+				return true;
+			}
 		}
 
 		return false;
@@ -100,6 +105,7 @@ public class RouteUtils {
 	public static boolean isPTWay(RelationMember rm) {
 
 		return !isPTStop(rm);
+
 	}
 
 	/**

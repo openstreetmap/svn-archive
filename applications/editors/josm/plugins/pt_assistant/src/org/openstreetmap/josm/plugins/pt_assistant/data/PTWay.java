@@ -83,5 +83,6 @@ public class PTWay extends RelationMember {
 		}
 		return false;
 	}
+	
 
 }

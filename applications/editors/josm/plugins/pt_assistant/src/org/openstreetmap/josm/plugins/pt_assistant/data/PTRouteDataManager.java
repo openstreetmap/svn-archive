@@ -3,6 +3,8 @@ package org.openstreetmap.josm.plugins.pt_assistant.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -39,6 +41,7 @@ public class PTRouteDataManager {
 		for (RelationMember member : this.relation.getMembers()) {
 
 			if (RouteUtils.isPTStop(member)) {
+				
 				// check if there are consecutive elements that belong to the
 				// same stop:
 				if (prev != null && prev.getName().equalsIgnoreCase(member.getMember().get("name"))) {

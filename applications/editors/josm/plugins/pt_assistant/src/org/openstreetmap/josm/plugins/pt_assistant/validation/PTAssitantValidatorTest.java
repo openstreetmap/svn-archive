@@ -42,10 +42,12 @@ public class PTAssitantValidatorTest extends Test {
 
 	@Override
 	public void visit(Relation r) {
+		
 
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
 			return;
 		}
+		
 
 		// Download incomplete members. If the download does not work, finish.
 		if (r.hasIncompleteMembers()) {
@@ -54,11 +56,16 @@ public class PTAssitantValidatorTest extends Test {
 				return;
 			}
 		}
+		
+		if (r.hasIncompleteMembers()) {
+			return;
+		}
 
 		// Check individual ways using the oneway direction test and the road
 		// type test:
 		WayChecker wayChecker = new WayChecker(r, this);
 		this.errors.addAll(wayChecker.getErrors());
+		
 
 		if (this.errors.isEmpty()) {
 			proceedWithSorting(r);
@@ -88,6 +95,7 @@ public class PTAssitantValidatorTest extends Test {
 				try {
 					t.wait();
 				} catch (InterruptedException e) {
+					// TODO: give the user a message that testing stops
 					return false;
 				}
 			}
@@ -183,8 +191,15 @@ public class PTAssitantValidatorTest extends Test {
 	
 	
 	private void proceedAfterSorting(Relation r) {
-		// TODO
-		performDummyTest(r);
+		
+		
+		
+		SegmentChecker segmentChecker = new SegmentChecker(r, this);
+		segmentChecker.performFirstStopTest();
+		segmentChecker.performLastStopTest();
+		// TODO: perform segment test
+		this.errors.addAll(segmentChecker.getErrors());
+//		performDummyTest(r);
 	}
 
 	/**

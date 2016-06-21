@@ -29,13 +29,16 @@ public class WayChecker extends Checker {
 
 		super(relation, test);
 
-		this.performDirectionTest();
-		this.performRoadTypeTest();
+		if (!relation.hasIncompleteMembers()) {
+			this.performDirectionTest();
+			this.performRoadTypeTest();
+		}
+
 
 	}
 
 	private void performRoadTypeTest() {
-
+		
 		if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus")
 				&& !relation.hasTag("route", "share_taxi")) {
 			return;

@@ -10,85 +10,79 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
-public class GTFSDeleteCommand extends Command
-{
-  private Vector< Integer > workingLines = null;
-  private Vector< Node > nodesForUndo = null;
-  private Vector< String > typesForUndo = null;
-  private GTFSStopTableModel gtfsStopTM = null;
+public class GTFSDeleteCommand extends Command {
+    private Vector<Integer> workingLines = null;
 
-  public GTFSDeleteCommand(GTFSImporterAction controller)
-  {
-    gtfsStopTM = controller.getGTFSStopTableModel();
-    workingLines = new Vector< Integer >();
-    nodesForUndo = new Vector< Node >();
-    typesForUndo = new Vector< String >();
+    private Vector<Node> nodesForUndo = null;
 
-    // use either selected lines or all lines if no line is selected
-    int[] selectedLines = controller.getDialog().getGTFSStopTable().getSelectedRows();
-    Vector< Integer > consideredLines = new Vector< Integer >();
-    if (selectedLines.length > 0)
-    {
-      for (int i = 0; i < selectedLines.length; ++i)
-    consideredLines.add(selectedLines[i]);
+    private Vector<String> typesForUndo = null;
+
+    private GTFSStopTableModel gtfsStopTM = null;
+
+    public GTFSDeleteCommand(GTFSImporterAction controller) {
+        gtfsStopTM = controller.getGTFSStopTableModel();
+        workingLines = new Vector<>();
+        nodesForUndo = new Vector<>();
+        typesForUndo = new Vector<>();
+
+        // use either selected lines or all lines if no line is selected
+        int[] selectedLines = controller.getDialog().getGTFSStopTable().getSelectedRows();
+        Vector<Integer> consideredLines = new Vector<>();
+        if (selectedLines.length > 0) {
+            for (int i = 0; i < selectedLines.length; ++i)
+                consideredLines.add(selectedLines[i]);
+        } else {
+            for (int i = 0; i < gtfsStopTM.getRowCount(); ++i)
+                consideredLines.add(new Integer(i));
+        }
+
+        // keep only lines where a node can be added
+        for (int i = 0; i < consideredLines.size(); ++i) {
+            if (gtfsStopTM.nodes.elementAt(consideredLines.elementAt(i)) != null)
+                workingLines.add(consideredLines.elementAt(i));
+        }
     }
-    else
-    {
-      for (int i = 0; i < gtfsStopTM.getRowCount(); ++i)
-    consideredLines.add(new Integer(i));
+
+    @Override
+    public boolean executeCommand() {
+        nodesForUndo.clear();
+        typesForUndo.clear();
+        for (int i = 0; i < workingLines.size(); ++i) {
+            int j = workingLines.elementAt(i).intValue();
+            Node node = gtfsStopTM.nodes.elementAt(j);
+            nodesForUndo.add(node);
+            typesForUndo.add((String) gtfsStopTM.getValueAt(j, 2));
+            if (node == null)
+                continue;
+            gtfsStopTM.nodes.set(j, null);
+            gtfsStopTM.setValueAt(tr("skipped"), j, 2);
+            Main.getLayerManager().getEditDataSet().removePrimitive(node);
+            node.setDeleted(true);
+        }
+        return true;
     }
 
-    // keep only lines where a node can be added
-    for (int i = 0; i < consideredLines.size(); ++i)
-    {
-      if (gtfsStopTM.nodes.elementAt(consideredLines.elementAt(i)) != null)
-    workingLines.add(consideredLines.elementAt(i));
+    @Override
+    public void undoCommand() {
+        for (int i = 0; i < workingLines.size(); ++i) {
+            int j = workingLines.elementAt(i).intValue();
+            Node node = nodesForUndo.elementAt(i);
+            gtfsStopTM.nodes.set(j, node);
+            gtfsStopTM.setValueAt(typesForUndo.elementAt(i), j, 2);
+            if (node == null)
+                continue;
+            node.setDeleted(false);
+            Main.getLayerManager().getEditDataSet().addPrimitive(node);
+        }
     }
-  }
 
-  public boolean executeCommand()
-  {
-    nodesForUndo.clear();
-    typesForUndo.clear();
-    for (int i = 0; i < workingLines.size(); ++i)
-    {
-      int j = workingLines.elementAt(i).intValue();
-      Node node = gtfsStopTM.nodes.elementAt(j);
-      nodesForUndo.add(node);
-      typesForUndo.add((String)gtfsStopTM.getValueAt(j, 2));
-      if (node == null)
-    continue;
-      gtfsStopTM.nodes.set(j, null);
-      gtfsStopTM.setValueAt(tr("skipped"), j, 2);
-      Main.main.getCurrentDataSet().removePrimitive(node);
-      node.setDeleted(true);
+    @Override
+    public void fillModifiedData(Collection<OsmPrimitive> modified,
+            Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {
     }
-    return true;
-  }
 
-  public void undoCommand()
-  {
-    for (int i = 0; i < workingLines.size(); ++i)
-    {
-      int j = workingLines.elementAt(i).intValue();
-      Node node = nodesForUndo.elementAt(i);
-      gtfsStopTM.nodes.set(j, node);
-      gtfsStopTM.setValueAt(typesForUndo.elementAt(i), j, 2);
-      if (node == null)
-    continue;
-      node.setDeleted(false);
-      Main.main.getCurrentDataSet().addPrimitive(node);
+    @Override
+    public String getDescriptionText() {
+        return tr("Public Transport: Disable GTFS");
     }
-  }
-
-  public void fillModifiedData
-    (Collection< OsmPrimitive > modified, Collection< OsmPrimitive > deleted,
-     Collection< OsmPrimitive > added)
-  {
-  }
-
-  @Override public String getDescriptionText()
-  {
-    return tr("Public Transport: Disable GTFS");
-  }
-};
+}

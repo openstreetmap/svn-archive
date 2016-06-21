@@ -23,79 +23,80 @@ import javax.swing.JTable;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 
-public class GTFSImporterAction extends JosmAction
-{
-  private static GTFSImporterDialog dialog = null;
-  private static DefaultListModel tracksListModel = null;
-  private static Vector< String > data = null;
-  private static TrackReference currentTrack = null;
-  private static GTFSStopTableModel gtfsStopTM = null;
-  public boolean inEvent = false;
+public class GTFSImporterAction extends JosmAction {
+    private static GTFSImporterDialog dialog = null;
 
-  public GTFSImporterAction()
-  {
-    super(tr("Create Stops from GTFS ..."), null,
-      tr("Create Stops from a GTFS file"), null, false);
-      putValue("toolbar", "publictransport/gtfsimporter");
-      Main.toolbar.register(this);
-  }
+    private static DefaultListModel<?> tracksListModel = null;
 
-  public GTFSStopTableModel getGTFSStopTableModel()
-  {
-    return gtfsStopTM;
-  }
+    private static Vector<String> data = null;
 
-  public GTFSImporterDialog getDialog()
-  {
-    return dialog;
-  }
+    private static TrackReference currentTrack = null;
 
-  public DefaultListModel getTracksListModel()
-  {
-    if (tracksListModel == null)
-      tracksListModel = new DefaultListModel();
-    return tracksListModel;
-  }
+    private static GTFSStopTableModel gtfsStopTM = null;
 
-  public TrackReference getCurrentTrack()
-  {
-    return currentTrack;
-  }
+    public boolean inEvent = false;
 
-  @Override
-public void actionPerformed(ActionEvent event) {
-
-    if (dialog == null)
-      dialog = new GTFSImporterDialog(this);
-
-    dialog.setVisible(true);
-
-    if (tr("Create Stops from GTFS ...").equals(event.getActionCommand()))
-    {
-      String curDir = Main.pref.get("lastDirectory");
-      if (curDir.equals(""))
-      {
-        curDir = ".";
-      }
-      JFileChooser fc = new JFileChooser(new File(curDir));
-      fc.setDialogTitle(tr("Select GTFS file (stops.txt)"));
-      fc.setMultiSelectionEnabled(false);
-
-      int answer = fc.showOpenDialog(Main.parent);
-      if (answer != JFileChooser.APPROVE_OPTION)
-        return;
-
-      if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
-        Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
-
-      importData(fc.getSelectedFile());
-
-      refreshData();
+    /**
+     * Constructs a new {@code GTFSImporterAction}.
+     */
+    public GTFSImporterAction() {
+        super(tr("Create Stops from GTFS ..."), null, tr("Create Stops from a GTFS file"), null,
+                false);
+        putValue("toolbar", "publictransport/gtfsimporter");
+        Main.toolbar.register(this);
     }
+
+    public GTFSStopTableModel getGTFSStopTableModel() {
+        return gtfsStopTM;
+    }
+
+    public GTFSImporterDialog getDialog() {
+        return dialog;
+    }
+
+    public DefaultListModel<?> getTracksListModel() {
+        if (tracksListModel == null)
+            tracksListModel = new DefaultListModel<>();
+        return tracksListModel;
+    }
+
+    public TrackReference getCurrentTrack() {
+        return currentTrack;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+
+        if (dialog == null)
+            dialog = new GTFSImporterDialog(this);
+
+        dialog.setVisible(true);
+
+        if (tr("Create Stops from GTFS ...").equals(event.getActionCommand())) {
+            String curDir = Main.pref.get("lastDirectory");
+            if (curDir.isEmpty()) {
+                curDir = ".";
+            }
+            JFileChooser fc = new JFileChooser(new File(curDir));
+            fc.setDialogTitle(tr("Select GTFS file (stops.txt)"));
+            fc.setMultiSelectionEnabled(false);
+
+            int answer = fc.showOpenDialog(Main.parent);
+            if (answer != JFileChooser.APPROVE_OPTION)
+                return;
+
+            if (!fc.getCurrentDirectory().getAbsolutePath().equals(curDir))
+                Main.pref.put("lastDirectory", fc.getCurrentDirectory().getAbsolutePath());
+
+            importData(fc.getSelectedFile());
+
+            refreshData();
+        }
 /*    else if ("stopImporter.settingsGPSTimeStart".equals(event.getActionCommand()))
     {
       if ((!inEvent) && (dialog.gpsTimeStartValid()) && (currentTrack != null))
@@ -129,101 +130,82 @@ public void actionPerformed(ActionEvent event) {
       Main.main.undoRedo.add(new TrackStoplistDetachCommand(this));
       dialog.getStoplistTable().clearSelection();
     }*/
-    else if ("gtfsImporter.gtfsStopsAdd".equals(event.getActionCommand()))
-      Main.main.undoRedo.add(new GTFSAddCommand(this));
-    else if ("gtfsImporter.gtfsStopsDelete".equals(event.getActionCommand()))
-      Main.main.undoRedo.add(new GTFSDeleteCommand(this));
-    else if ("gtfsImporter.gtfsStopsCatch".equals(event.getActionCommand()))
-      Main.main.undoRedo.add(new GTFSCatchCommand(this));
-    else if ("gtfsImporter.gtfsStopsJoin".equals(event.getActionCommand()))
-      Main.main.undoRedo.add(new GTFSJoinCommand(this));
-    else if ("gtfsImporter.gtfsStopsFind".equals(event.getActionCommand()))
-      findNodesInTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
-    else if ("gtfsImporter.gtfsStopsShow".equals(event.getActionCommand()))
-      showNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
-    else if ("gtfsImporter.gtfsStopsMark".equals(event.getActionCommand()))
-      markNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
-  }
-
-  private void importData(final File file)
-  {
-    try
-    {
-      FileReader is = new FileReader(file);
-      final BufferedReader r = new BufferedReader(is);
-
-      if (data == null)
-    data = new Vector< String >();
-      else
-    data.clear();
-
-      while (r.ready())
-    data.add(r.readLine());
+        else if ("gtfsImporter.gtfsStopsAdd".equals(event.getActionCommand()))
+            Main.main.undoRedo.add(new GTFSAddCommand(this));
+        else if ("gtfsImporter.gtfsStopsDelete".equals(event.getActionCommand()))
+            Main.main.undoRedo.add(new GTFSDeleteCommand(this));
+        else if ("gtfsImporter.gtfsStopsCatch".equals(event.getActionCommand()))
+            Main.main.undoRedo.add(new GTFSCatchCommand(this));
+        else if ("gtfsImporter.gtfsStopsJoin".equals(event.getActionCommand()))
+            Main.main.undoRedo.add(new GTFSJoinCommand(this));
+        else if ("gtfsImporter.gtfsStopsFind".equals(event.getActionCommand()))
+            findNodesInTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
+        else if ("gtfsImporter.gtfsStopsShow".equals(event.getActionCommand()))
+            showNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
+        else if ("gtfsImporter.gtfsStopsMark".equals(event.getActionCommand()))
+            markNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
     }
-    catch (FileNotFoundException e)
-    {
-      e.printStackTrace();
-      JOptionPane.showMessageDialog(null, tr("File \"{0}\" does not exist", file.getName()));
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-      JOptionPane.showMessageDialog(null, tr("IOException \"{0}\" occurred", e.toString()));
-    }
-  }
 
-  private void refreshData()
-  {
-    if (data != null)
-    {
-      Vector< Node > existingStops = new Vector< Node >();
+    private void importData(final File file) {
+        try {
+            FileReader is = new FileReader(file);
+            final BufferedReader r = new BufferedReader(is);
 
-      if (Main.main.getCurrentDataSet() == null)
-      {
-        JOptionPane.showMessageDialog(null, tr("There exists no dataset."
-        + " Try to download data from the server or open an OSM file."),
-        tr("No data found"), JOptionPane.ERROR_MESSAGE);
+            if (data == null)
+                data = new Vector<>();
+            else
+                data.clear();
 
-        return;
-      }
-      else
-      {
-        Iterator< Node > iter =
-        Main.main.getCurrentDataSet().getNodes().iterator();
-        while (iter.hasNext())
-        {
-          Node node = iter.next();
-          if ("bus_stop".equals(node.get("highway")))
-            existingStops.add(node);
+            while (r.ready())
+                data.add(r.readLine());
+        } catch (FileNotFoundException e) {
+            Main.error(e);
+            JOptionPane.showMessageDialog(null, tr("File \"{0}\" does not exist", file.getName()));
+        } catch (IOException e) {
+            Main.error(e);
+            JOptionPane.showMessageDialog(null, tr("IOException \"{0}\" occurred", e.toString()));
         }
-      }
-
-      Iterator< String > iter = data.iterator();
-      if (iter.hasNext())
-        gtfsStopTM = new GTFSStopTableModel(this, iter.next());
-      else
-      {
-        JOptionPane.showMessageDialog
-        (null, tr("The GTFS file was empty."), tr("No data found"),
-        JOptionPane.ERROR_MESSAGE);
-
-        return;
-      }
-
-      while (iter.hasNext())
-      {
-        String s = iter.next();
-        gtfsStopTM.addRow(s, existingStops);
-      }
-      dialog.setGTFSStopTableModel(gtfsStopTM);
     }
-    else
-    {
-      JOptionPane.showMessageDialog
-      (null, tr("The GTFS file was empty."), tr("No data found"),
-       JOptionPane.ERROR_MESSAGE);
+
+    private void refreshData() {
+        if (data != null) {
+            Vector<Node> existingStops = new Vector<>();
+
+            DataSet ds = Main.getLayerManager().getEditDataSet();
+            if (ds == null) {
+                JOptionPane.showMessageDialog(null,
+                        tr("There exists no dataset. Try to download data from the server or open an OSM file."),
+                        tr("No data found"), JOptionPane.ERROR_MESSAGE);
+
+                return;
+            } else {
+                Iterator<Node> iter = ds.getNodes().iterator();
+                while (iter.hasNext()) {
+                    Node node = iter.next();
+                    if ("bus_stop".equals(node.get("highway")))
+                        existingStops.add(node);
+                }
+            }
+
+            Iterator<String> iter = data.iterator();
+            if (iter.hasNext())
+                gtfsStopTM = new GTFSStopTableModel(this, iter.next());
+            else {
+                JOptionPane.showMessageDialog(null, tr("The GTFS file was empty."),
+                        tr("No data found"), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            while (iter.hasNext()) {
+                String s = iter.next();
+                gtfsStopTM.addRow(s, existingStops);
+            }
+            dialog.setGTFSStopTableModel(gtfsStopTM);
+        } else {
+            JOptionPane.showMessageDialog(null, tr("The GTFS file was empty."), tr("No data found"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
-  }
 
 //   public void tracksSelectionChanged(int selectedPos)
 //   {
@@ -248,122 +230,113 @@ public void actionPerformed(ActionEvent event) {
 //     }
 //   }
 
-  public static Node createNode(LatLon latLon, String id, String name)
-  {
-    Node node = new Node(latLon);
-    node.put("highway", "bus_stop");
-    node.put("stop_id", id);
-    node.put("name", name);
-    if (Main.main.getCurrentDataSet() == null)
-    {
-      JOptionPane.showMessageDialog(null, tr("There exists no dataset."
-      + " Try to download data from the server or open an OSM file."),
-      tr("No data found"), JOptionPane.ERROR_MESSAGE);
+    public static Node createNode(LatLon latLon, String id, String name) {
+        Node node = new Node(latLon);
+        node.put("highway", "bus_stop");
+        node.put("stop_id", id);
+        node.put("name", name);
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        if (ds == null) {
+            JOptionPane.showMessageDialog(null,
+                    tr("There exists no dataset."
+                            + " Try to download data from the server or open an OSM file."),
+                    tr("No data found"), JOptionPane.ERROR_MESSAGE);
 
-      return null;
+            return null;
+        }
+        ds.addPrimitive(node);
+        return node;
     }
-    Main.main.getCurrentDataSet().addPrimitive(node);
-    return node;
-  }
 
-  /* returns a collection of all selected lines or
-     a collection of all lines otherwise */
-  public static Vector< Integer > getConsideredLines(JTable table)
-  {
-    int[] selectedLines = table.getSelectedRows();
-    Vector< Integer > consideredLines = new Vector< Integer >();
-    if (selectedLines.length > 0)
-    {
-      for (int i = 0; i < selectedLines.length; ++i)
-        consideredLines.add(selectedLines[i]);
+    /**
+     * returns a collection of all selected lines or a collection of all lines otherwise
+     */
+    public static Vector<Integer> getConsideredLines(JTable table) {
+        int[] selectedLines = table.getSelectedRows();
+        Vector<Integer> consideredLines = new Vector<>();
+        if (selectedLines.length > 0) {
+            for (int i = 0; i < selectedLines.length; ++i)
+                consideredLines.add(selectedLines[i]);
+        } else {
+            for (int i = 0; i < table.getRowCount(); ++i)
+                consideredLines.add(new Integer(i));
+        }
+        return consideredLines;
     }
-    else
-    {
-      for (int i = 0; i < table.getRowCount(); ++i)
-        consideredLines.add(new Integer(i));
+
+    /** marks the table items whose nodes are marked on the map */
+    public static void findNodesInTable(JTable table, Vector<Node> nodes) {
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        if (ds == null)
+            return;
+
+        table.clearSelection();
+
+        for (int i = 0; i < table.getRowCount(); ++i) {
+            if ((nodes.elementAt(i) != null) && (ds.isSelected(nodes.elementAt(i))))
+                table.addRowSelectionInterval(i, i);
+        }
     }
-    return consideredLines;
-  }
 
-  /* marks the table items whose nodes are marked on the map */
-  public static void findNodesInTable(JTable table, Vector< Node > nodes)
-  {
-    if (Main.main.getCurrentDataSet() == null)
-      return;
-
-    table.clearSelection();
-
-    for (int i = 0; i < table.getRowCount(); ++i)
-    {
-      if ((nodes.elementAt(i) != null) &&
-      (Main.main.getCurrentDataSet().isSelected(nodes.elementAt(i))))
-        table.addRowSelectionInterval(i, i);
+    /**
+     * shows the nodes that correspond to the marked lines in the table. 
+     * If no lines are marked in the table, show all nodes from the vector
+     */
+    public static void showNodesFromTable(JTable table, Vector<Node> nodes) {
+        BoundingXYVisitor box = new BoundingXYVisitor();
+        Vector<Integer> consideredLines = getConsideredLines(table);
+        for (int i = 0; i < consideredLines.size(); ++i) {
+            int j = consideredLines.elementAt(i);
+            if (nodes.elementAt(j) != null)
+                nodes.elementAt(j).accept(box);
+        }
+        if (box.getBounds() == null)
+            return;
+        box.enlargeBoundingBox();
+        Main.map.mapView.zoomTo(box);
     }
-  }
 
-  /* shows the nodes that correspond to the marked lines in the table.
-     If no lines are marked in the table, show all nodes from the vector */
-  public static void showNodesFromTable(JTable table, Vector< Node > nodes)
-  {
-    BoundingXYVisitor box = new BoundingXYVisitor();
-    Vector< Integer > consideredLines = getConsideredLines(table);
-    for (int i = 0; i < consideredLines.size(); ++i)
-    {
-      int j = consideredLines.elementAt(i);
-      if (nodes.elementAt(j) != null)
-        nodes.elementAt(j).accept(box);
+    /**
+     * marks the nodes that correspond to the marked lines in the table. 
+     * If no lines are marked in the table, mark all nodes from the vector
+     */
+    public static void markNodesFromTable(JTable table, Vector<Node> nodes) {
+        OsmPrimitive[] osmp = { null };
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        ds.setSelected(osmp);
+        Vector<Integer> consideredLines = getConsideredLines(table);
+        for (int i = 0; i < consideredLines.size(); ++i) {
+            int j = consideredLines.elementAt(i);
+            if (nodes.elementAt(j) != null)
+                ds.addSelected(nodes.elementAt(j));
+        }
     }
-    if (box.getBounds() == null)
-      return;
-    box.enlargeBoundingBox();
-    Main.map.mapView.zoomTo(box);
-  }
 
-  /* marks the nodes that correspond to the marked lines in the table.
-  If no lines are marked in the table, mark all nodes from the vector */
-  public static void markNodesFromTable(JTable table, Vector< Node > nodes)
-  {
-    OsmPrimitive[] osmp = { null };
-    Main.main.getCurrentDataSet().setSelected(osmp);
-    Vector< Integer > consideredLines = getConsideredLines(table);
-    for (int i = 0; i < consideredLines.size(); ++i)
-    {
-      int j = consideredLines.elementAt(i);
-      if (nodes.elementAt(j) != null)
-        Main.main.getCurrentDataSet().addSelected(nodes.elementAt(j));
+    public static String timeOf(double t) {
+        t -= Math.floor(t / 24 / 60 / 60) * 24 * 60 * 60;
+
+        int hour = (int) Math.floor(t / 60 / 60);
+        t -= Math.floor(t / 60 / 60) * 60 * 60;
+        int minute = (int) Math.floor(t / 60);
+        t -= Math.floor(t / 60) * 60;
+        double second = t;
+
+        Format format = new DecimalFormat("00");
+        Format formatS = new DecimalFormat("00.###");
+        return format.format(hour) + ":" + format.format(minute) + ":" + formatS.format(second);
     }
-  }
 
-  public static String timeOf(double t)
-  {
-    t -= Math.floor(t/24/60/60)*24*60*60;
-
-    int hour = (int)Math.floor(t/60/60);
-    t -=  Math.floor(t/60/60)*60*60;
-    int minute = (int)Math.floor(t/60);
-    t -=  Math.floor(t/60)*60;
-    double second = t;
-
-    Format format = new DecimalFormat("00");
-    Format formatS = new DecimalFormat("00.###");
-    return (format.format(hour) + ":" + format.format(minute) + ":"
-    + formatS.format(second));
-  }
-
-  public Action getFocusAddAction()
-  {
-    return new FocusAddAction();
-  }
-
-  private class FocusAddAction extends AbstractAction
-  {
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-      Main.main.undoRedo.add(new GTFSAddCommand(GTFSImporterAction.this));
-      showNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
+    public Action getFocusAddAction() {
+        return new FocusAddAction();
     }
-  };
+
+    private class FocusAddAction extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Main.main.undoRedo.add(new GTFSAddCommand(GTFSImporterAction.this));
+            showNodesFromTable(dialog.getGTFSStopTable(), gtfsStopTM.nodes);
+        }
+    }
 
 /*  public Action getFocusWaypointShelterAction(String shelter)
   {

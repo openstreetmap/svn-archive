@@ -11,13 +11,21 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class TrackStoplistNameCommand extends Command {
     private int workingLine = 0;
+
     private TrackReference trackref = null;
+
     private String oldName = null;
+
     private String name = null;
+
     private String oldTime = null;
+
     private String time = null;
+
     private String oldShelter = null;
+
     private TransText shelter = null;
+
     private LatLon oldLatLon = null;
 
     public TrackStoplistNameCommand(TrackReference trackref, int workingLine) {
@@ -37,6 +45,7 @@ public class TrackStoplistNameCommand extends Command {
             this.shelter = null;
     }
 
+    @Override
     public boolean executeCommand() {
         Node node = trackref.stoplistTM.nodeAt(workingLine);
         if (node != null) {
@@ -59,6 +68,7 @@ public class TrackStoplistNameCommand extends Command {
         return true;
     }
 
+    @Override
     public void undoCommand() {
         Node node = trackref.stoplistTM.nodeAt(workingLine);
         if (node != null) {
@@ -79,12 +89,13 @@ public class TrackStoplistNameCommand extends Command {
         trackref.inEvent = false;
     }
 
-    public void fillModifiedData(Collection<OsmPrimitive> modified, Collection<OsmPrimitive> deleted,
-            Collection<OsmPrimitive> added) {
+    @Override
+    public void fillModifiedData(Collection<OsmPrimitive> modified,
+            Collection<OsmPrimitive> deleted, Collection<OsmPrimitive> added) {
     }
 
     @Override
     public String getDescriptionText() {
         return tr("Public Transport: Edit track stop list");
     }
-};
+}

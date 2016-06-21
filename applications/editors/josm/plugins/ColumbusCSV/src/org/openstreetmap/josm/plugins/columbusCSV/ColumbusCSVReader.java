@@ -513,8 +513,7 @@ public class ColumbusCSVReader {
      */
     public File getVoxFilePath(String fileDir, String voxFile) {
         // The FAT16 file name is interpreted differently from case-sensitive
-        // file systems, so we
-        // have to test several variants
+        // file systems, so we have to test several variants
         String[] fileNameVariants = new String[] { voxFile,
             voxFile.toLowerCase(), voxFile.toUpperCase() };
     
@@ -540,21 +539,21 @@ public class ColumbusCSVReader {
         Float f;
         // Position errors (dop = dilution of position)
         f = ColumbusCSVUtils.floatFromString(csvLine[11]);
-        if (f != Float.NaN) {
+        if (!Float.isNaN(f)) {
             wpt.attr.put(ColumbusCSVReader.PDOP_TAG, f);
         } else {
             dopConversionErrors++;
         }
     
         f = ColumbusCSVUtils.floatFromString(csvLine[12]);
-        if (f != Float.NaN) {
+        if (!Float.isNaN(f)) {
             wpt.attr.put(ColumbusCSVReader.HDOP_TAG, f);
         } else {
             dopConversionErrors++;
         }
     
         f = ColumbusCSVUtils.floatFromString(csvLine[13]);
-        if (f != Float.NaN) {
+        if (!Float.isNaN(f)) {
             wpt.attr.put(ColumbusCSVReader.VDOP_TAG, f);
         } else {
             dopConversionErrors++;

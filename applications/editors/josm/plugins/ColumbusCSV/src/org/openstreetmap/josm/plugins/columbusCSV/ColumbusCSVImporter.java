@@ -88,7 +88,7 @@ public class ColumbusCSVImporter extends FileImporter {
                 assert gpxLayer != null;
         
                 // add layer to show way points
-                Main.main.addLayer(gpxLayer);
+                Main.getLayerManager().addLayer(gpxLayer);
         
                 progressMonitor.setTicksCount(3);
         
@@ -110,7 +110,7 @@ public class ColumbusCSVImporter extends FileImporter {
                         Main.info("Layer: " + ml);
                         Main.info("Data size: " + ml.data.size());
             
-                        Main.main.addLayer(ml);
+                        Main.getLayerManager().addLayer(ml);
                         if (ml.data.isEmpty()) {
                             Main.warn("File contains no markers.");
                         }

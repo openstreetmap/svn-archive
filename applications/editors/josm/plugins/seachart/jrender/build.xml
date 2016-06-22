@@ -1,18 +1,19 @@
 <project name="jrender" default="dist" basedir=".">
   <property name="src" location="src"/>
+  <property name="srcmain" location="../src"/>
   <property name="build" location="build"/>
   <property name="jarfile" location="./jrender.jar"/>
-  <property name="batik.dir" value="/usr/local/bin/batik-1.7/"/>
+  <property name="batik.dir" value="../libs/"/>
   <path id="classpath">
     <fileset dir="${batik.dir}" includes="**/batik*.jar"/>
   </path>
-            
+
   <target name="init">
     <mkdir dir="${build}"/>
   </target>
 
   <target name="compile" depends="init" description="compile the source " >
-    <javac includeantruntime="false" srcdir="${src}" destdir="${build}" classpathref="classpath" encoding="UTF-8" />
+    <javac includeantruntime="false" sourcepath="${srcmain}" srcdir="${src}" destdir="${build}" classpathref="classpath" encoding="UTF-8" />
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution" >

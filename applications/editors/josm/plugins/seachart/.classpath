@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="jbasemap/src"/>
 	<classpathentry kind="src" path="jicons/src"/>
 	<classpathentry kind="src" path="jplotter/src"/>
 	<classpathentry kind="src" path="jrender/src"/>
 	<classpathentry kind="src" path="js57toosm/src"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="josmtos57/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
+	<classpathentry kind="lib" path="libs/batik-svggen-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/batik-dom-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/batik-util-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/batik-awt-util-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/batik-ext-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/batik-xml-1.8.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

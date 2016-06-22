@@ -6,28 +6,30 @@ import java.util.Set;
 
 import javax.swing.DefaultListSelectionModel;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 /**
  * This is the list model for the list of turn restrictions related to OSM
  * objects in the current selection.
  */
-public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListModel implements EditLayerChangeListener, SelectionChangedListener {
+public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListModel implements ActiveLayerChangeListener, SelectionChangedListener {
     //private static final Logger logger = Logger.getLogger(TurnRestrictionsInSelectionListModel.class.getName());
-    
+
     public TurnRestrictionsInSelectionListModel(
             DefaultListSelectionModel selectionModel) {
         super(selectionModel);
     }
-    
+
     /**
-     * Initializes the model with the turn restrictions the primitives in 
+     * Initializes the model with the turn restrictions the primitives in
      * {@code selection} participate.
-     * 
+     *
      * @param selection the collection of selected primitives
      */
     public void initFromSelection(Collection<? extends OsmPrimitive> selection) {
@@ -43,19 +45,22 @@ public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListMo
     }
 
     /* --------------------------------------------------------------------------- */
-    /* interface EditLayerChangeListener                                           */
+    /* interface ActiveLayerChangeListener                                         */
     /* --------------------------------------------------------------------------- */
-    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
         if (newLayer == null) {
             setTurnRestrictions(null);
             return;
         }
         initFromSelection(newLayer.data.getSelected());
     }
-    
+
     /* --------------------------------------------------------------------------- */
     /* interface SelectionChangedListener                                          */
-    /* --------------------------------------------------------------------------- */   
+    /* --------------------------------------------------------------------------- */
+    @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         initFromSelection(newSelection);
     }

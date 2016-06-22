@@ -13,13 +13,12 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 
 /**
- * This is the view for the list of turn restrictions related to objects in the 
+ * This is the view for the list of turn restrictions related to objects in the
  * current selection.
- * 
+ *
  */
 public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsListView {
 
@@ -30,25 +29,25 @@ public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsLis
         lstTurnRestrictions.setSelectionModel(selectionModel);
         lstTurnRestrictions.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         lstTurnRestrictions.setCellRenderer(new TurnRestrictionCellRenderer());
-        
+
         setLayout(new BorderLayout());
         add(new JScrollPane(lstTurnRestrictions), BorderLayout.CENTER);
     }
 
     protected void registerAsListener() {
-        MapView.addEditLayerChangeListener((EditLayerChangeListener)model);
+        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener)model);
         SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener)model, FireMode.IN_EDT_CONSOLIDATED);
         TurnRestrictionsInSelectionListModel m = (TurnRestrictionsInSelectionListModel)model;
-        if (Main.main.getEditLayer() != null){
-            m.initFromSelection(Main.main.getEditLayer().data.getSelected());
+        if (Main.getLayerManager().getEditLayer() != null){
+            m.initFromSelection(Main.getLayerManager().getEditLayer().data.getSelected());
         } else {
             m.initFromSelection(Collections.<OsmPrimitive>emptyList());
         }
     }
 
     protected void unregisterAsListener() {
-        MapView.removeEditLayerChangeListener((EditLayerChangeListener)model);
-        SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener)model);       
+        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener)model);
+        SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener)model);
     }
 
     public TurnRestrictionsInSelectionView() {

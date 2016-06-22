@@ -49,8 +49,9 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
         );
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
-        OsmDataLayer layer = Main.main.getEditLayer();
+        OsmDataLayer layer = Main.getLayerManager().getEditLayer();
         if (layer == null) return;
         Collection<Relation> trs = TurnRestrictionSelectionPopupPanel.getTurnRestrictionsParticipatingIn(layer.data.getSelected());
         if (trs.isEmpty()){

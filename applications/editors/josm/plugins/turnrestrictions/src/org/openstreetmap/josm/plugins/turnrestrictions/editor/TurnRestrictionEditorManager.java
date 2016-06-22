@@ -10,17 +10,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 /**
  * TurnRestrictionEditorManager keeps track of the open turn restriction editors.
  *
  */
-public class TurnRestrictionEditorManager extends WindowAdapter implements MapView.LayerChangeListener{
+public class TurnRestrictionEditorManager extends WindowAdapter implements LayerChangeListener {
     //static private final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
 
     /** keeps track of open relation editors */
@@ -34,7 +38,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
     static public TurnRestrictionEditorManager getInstance() {
         if (TurnRestrictionEditorManager.instance == null) {
             TurnRestrictionEditorManager.instance = new TurnRestrictionEditorManager();
-            MapView.addLayerChangeListener(TurnRestrictionEditorManager.instance);
+            Main.getLayerManager().addLayerChangeListener(TurnRestrictionEditorManager.instance);
         }
         return TurnRestrictionEditorManager.instance;
     }
@@ -102,7 +106,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
      * constructor
      */
     public TurnRestrictionEditorManager(){}
-    
+
     /**
      * Register the editor for a turn restriction managed by a
      * {@link OsmDataLayer}.
@@ -267,15 +271,14 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
             positionCloseToScreenCenter(editor);
         }
     }
-    
+
     /* ----------------------------------------------------------------------------------- */
-    /* interface MapView.LayerChangeListener                                               */
+    /* interface LayerChangeListener                                               */
     /* ----------------------------------------------------------------------------------- */
-    /**
-     * called when a layer is removed
-     *
-     */
-    public void layerRemoved(Layer oldLayer) {
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        Layer oldLayer = e.getRemovedLayer();
         if (oldLayer == null || ! (oldLayer instanceof OsmDataLayer))
             return;
         OsmDataLayer dataLayer = (OsmDataLayer)oldLayer;
@@ -292,6 +295,13 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements MapVi
         }
     }
 
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {/* irrelevant in this context */}
-    public void layerAdded(Layer newLayer) {/* irrelevant in this context */}
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+        // irrelevant in this context
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // irrelevant in this context
+    }
 }

@@ -23,40 +23,43 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvider;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * JosmSelectionListModel is the model for a list which displays the currently selected 
+ * JosmSelectionListModel is the model for a list which displays the currently selected
  * objects in the current edit layer.
- * 
+ *
  */
-public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> implements EditLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
+public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> implements ActiveLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
     //static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
-    
+
     private final List<OsmPrimitive> selection = new ArrayList<>();
     private final DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
     private OsmDataLayer layer;
 
     /**
      * Constructor
-     * 
+     *
      * @param selectionModel the selection model used in the list. Must not be null.
      * @param layer the layer this model is displaying the selection from. Must not be null.
      * @throws IllegalArgumentException thrown if {@code layer} is null
      */
-    public JosmSelectionListModel(OsmDataLayer layer) throws IllegalArgumentException{
+    public JosmSelectionListModel(OsmDataLayer layer) {
         CheckParameterUtil.ensureParameterNotNull(layer, "layer");
         this.layer = layer;
         setJOSMSelection(layer.data.getSelected());
     }
 
+    @Override
     public OsmPrimitive getElementAt(int index) {
         return selection.get(index);
     }
 
+    @Override
     public int getSize() {
         return selection.size();
     }
@@ -64,7 +67,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     /**
      * Replies the collection of OSM primitives currently selected in the view
      * of this model
-     * 
+     *
      * @return the selected primitives
      */
     public Collection<OsmPrimitive> getSelected() {
@@ -79,7 +82,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
 
     /**
      * Sets the OSM primitives to be selected in the view of this model
-     * 
+     *
      * @param sel the collection of primitives to select
      */
     public void setSelected(Collection<OsmPrimitive> sel) {
@@ -102,7 +105,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
 
     /**
      * Sets the collection of currently selected OSM objects
-     * 
+     *
      * @param selection the collection of currently selected OSM objects
      */
     public void setJOSMSelection(Collection<? extends OsmPrimitive> selection) {
@@ -113,10 +116,10 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
             return;
         }
         this.selection.addAll(selection);
-        fireContentsChanged(this, 0, getSize());       
-        setSelected(sel);       
+        fireContentsChanged(this, 0, getSize());
+        setSelected(sel);
         // if the user selects exactly one primitive (i.e. a way), we automatically
-        // select it in the list of selected JOSM objects too. 
+        // select it in the list of selected JOSM objects too.
         if (getSelected().isEmpty() && this.selection.size() == 1) {
             setSelected(this.selection);
         }
@@ -125,7 +128,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     /**
      * Triggers a refresh of the view for all primitives in {@code toUpdate}
      * which are currently displayed in the view
-     * 
+     *
      * @param toUpdate the collection of primitives to update
      */
     public void update(Collection<? extends OsmPrimitive> toUpdate) {
@@ -140,17 +143,19 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
         }
         setSelected(sel);
     }
-        
+
     public ListSelectionModel getListSelectionModel() {
         return selectionModel;
     }
 
     /* ------------------------------------------------------------------------ */
-    /* interface EditLayerChangeListener                                        */
+    /* interface ActiveLayerChangeListener                                      */
     /* ------------------------------------------------------------------------ */
-    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
         if (newLayer == null) {
-            // don't show a JOSM selection if we don't have a data layer 
+            // don't show a JOSM selection if we don't have a data layer
             setJOSMSelection(null);
         } else if (newLayer != layer){
             // don't show a JOSM selection if this turn restriction editor doesn't
@@ -164,10 +169,11 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     /* ------------------------------------------------------------------------ */
     /* interface SelectionChangeListener                                        */
     /* ------------------------------------------------------------------------ */
+    @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         // only update the JOSM selection if it is changed in the same data layer
         // this turn restriction editor is working on
-        OsmDataLayer layer = Main.main.getEditLayer();
+        OsmDataLayer layer = Main.getLayerManager().getEditLayer();
         if(layer == null) return;
         if (layer != this.layer) return;
         setJOSMSelection(newSelection);
@@ -176,47 +182,56 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     /* ------------------------------------------------------------------------ */
     /* interface DataSetListener                                                */
     /* ------------------------------------------------------------------------ */
+    @Override
     public void dataChanged(DataChangedEvent event) {
         if (event.getDataset() != layer.data) return;
         fireContentsChanged(this, 0, getSize());
     }
 
+    @Override
     public void nodeMoved(NodeMovedEvent event) {
         if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
+    @Override
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {
         if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
+    @Override
     public void relationMembersChanged(RelationMembersChangedEvent event) {
         if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
+    @Override
     public void tagsChanged(TagsChangedEvent event) {
         if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
+    @Override
     public void wayNodesChanged(WayNodesChangedEvent event) {
         if (event.getDataset() != layer.data) return;
         // may influence the display name of primitives, update the data
         update(event.getPrimitives());
     }
 
+    @Override
     public void primitivesAdded(PrimitivesAddedEvent event) {/* ignored - handled by SelectionChangeListener */}
+    @Override
     public void primitivesRemoved(PrimitivesRemovedEvent event) {/* ignored - handled by SelectionChangeListener*/}
-  
+
     /* ------------------------------------------------------------------------ */
     /* interface PrimitiveIdListProvider                                        */
     /* ------------------------------------------------------------------------ */
+    @Override
     public List<PrimitiveId> getSelectedPrimitiveIds() {
         List<PrimitiveId> ret = new ArrayList<>(getSelected().size());
         for(int i=0; i< selection.size(); i++) {

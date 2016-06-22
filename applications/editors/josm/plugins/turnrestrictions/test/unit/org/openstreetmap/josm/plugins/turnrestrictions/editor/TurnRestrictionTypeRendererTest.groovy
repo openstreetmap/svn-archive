@@ -6,15 +6,14 @@ import org.junit.*;
 import groovy.util.GroovyTestCase;
 
 import java.awt.Component
-import org.openstreetmap.josm.JOSMFixture;
+import org.openstreetmap.josm.JOSMFixture
+import org.openstreetmap.josm.testutils.JOSMTestRules;;
 
 class TurnRestrictionTypeRendererTest extends GroovyTestCase{
 
-	@Before
-	public void setUp() {
-		JOSMFixture.createUnitTestFixture().init()			
-	}
-	
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
+
 	@Test
 	public void test_Constructor() {
 		TurnRestrictionTypeRenderer renderer = new TurnRestrictionTypeRenderer();

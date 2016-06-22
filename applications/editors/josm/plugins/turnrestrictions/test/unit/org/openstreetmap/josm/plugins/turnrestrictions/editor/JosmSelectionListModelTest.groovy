@@ -3,7 +3,9 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 import groovy.util.GroovyTestCase;
 
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer
+import org.openstreetmap.josm.testutils.JOSMTestRules;
+
 import javax.swing.DefaultListSelectionModel;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.coor.*;
@@ -20,13 +22,11 @@ import junit.framework.TestResult;
  * Unit test for {@see JosmSelctionListModel}
  */
 class JosmSelectionListModelTest extends GroovyTestCase {
-	final shouldFail = new GroovyTestCase().&shouldFail
-	
-	@Before
-	public void setUp() {
-		JOSMFixture.createUnitTestFixture().init()
-	}
-	
+    final shouldFail = new GroovyTestCase().&shouldFail
+
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
+
 	@Test
 	public void test_Constructor(){
 		DataSet ds = new DataSet()

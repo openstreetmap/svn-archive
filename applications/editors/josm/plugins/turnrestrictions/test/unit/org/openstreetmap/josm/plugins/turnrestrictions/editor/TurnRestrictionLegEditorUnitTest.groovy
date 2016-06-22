@@ -3,8 +3,8 @@ package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 import groovy.util.GroovyTestCase;
 
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-
+import org.openstreetmap.josm.gui.layer.OsmDataLayer
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.openstreetmap.josm.JOSMFixture;
 
 import static org.junit.Assert.*;
@@ -14,8 +14,11 @@ import org.junit.*;
  * 
  */
 class TurnRestrictionLegEditorUnitTest extends GroovyTestCase {
-	final shouldFail = new GroovyTestCase().&shouldFail
-	
+    final shouldFail = new GroovyTestCase().&shouldFail
+
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
+
 	def navigationControlerMock = [
        gotoBasicEditor:{}, 
        gotoAdvancedEditor: {}
@@ -27,8 +30,6 @@ class TurnRestrictionLegEditorUnitTest extends GroovyTestCase {
 	
 	@Before
 	public void setUp() {
-		JOSMFixture.createUnitTestFixture().init()
-		
 		ds = new DataSet()
 		layer = new OsmDataLayer(ds, "test", null)		
 		model = new TurnRestrictionEditorModel(layer, navigationControlerMock);

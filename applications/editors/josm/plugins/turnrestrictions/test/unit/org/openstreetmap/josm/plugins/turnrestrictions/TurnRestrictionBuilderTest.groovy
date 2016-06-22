@@ -13,11 +13,15 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.data.coor.LatLon;
 import static org.openstreetmap.josm.plugins.turnrestrictions.TurnRestrictionBuilder.*
-import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType;
+import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionType
+import org.openstreetmap.josm.testutils.JOSMTestRules;;
 
 class TurnRestrictionBuilderTest{
 	
-	def TurnRestrictionBuilder builder;
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
+
+    def TurnRestrictionBuilder builder = new TurnRestrictionBuilder();
 
 	def boolean hasExactlyOneMemberWithRole(Relation r, String role ){
 		return r.getMembers().find {RelationMember rm -> rm.getRole() == role} != null
@@ -34,12 +38,6 @@ class TurnRestrictionBuilderTest{
 		assert r.getMembersCount() == 0
 	}
 	
-	@Before
-	public void setUp() {
-		JOSMFixture.createUnitTestFixture().init()
-		builder = new TurnRestrictionBuilder()
-	}
-
 	/**
 	 * Selection consist of one way and the start node of the way ->
 	 * propose a No-U-Turn restriction

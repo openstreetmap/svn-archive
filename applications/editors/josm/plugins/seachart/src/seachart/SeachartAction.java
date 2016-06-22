@@ -9,28 +9,42 @@
 
 package seachart;
 
-import java.awt.event.*;
-
-import javax.swing.*;
-
+import java.awt.event.ActionEvent;
 import java.util.Map.Entry;
 
+import javax.swing.SwingUtilities;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.*;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.imagery.ImageryInfo;
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.osm.event.*;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
 import s57.S57map;
-import s57.S57map.*;
 
-public class SeachartAction extends JosmAction implements EditLayerChangeListener, LayerChangeListener {
+public class SeachartAction extends JosmAction implements ActiveLayerChangeListener, LayerChangeListener {
 	private static String title = "SeaChart";
 	private boolean isOpen = false;
 	public static ChartImage rendering;
@@ -85,21 +99,21 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 	}
 
 	@Override
-	public void activeLayerChange(Layer arg0, Layer arg1) {
+	public void layerAdded(LayerAddEvent e) {
 	}
 
 	@Override
-	public void layerAdded(Layer arg0) {
-	}
-
-	@Override
-	public void layerRemoved(Layer arg0) {
-		if (arg0.getName().equals("SeaChart")) {
+	public void layerRemoving(LayerRemoveEvent e) {
+		if ("SeaChart".equals(e.getRemovedLayer().getName())) {
 			closeChartLayer();
 		}
 	}
 
-	@Override
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+    }
+
+    @Override
 	public void actionPerformed(ActionEvent arg0) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -113,26 +127,27 @@ public class SeachartAction extends JosmAction implements EditLayerChangeListene
 	protected void createChartLayer() {
 		rendering = new ChartImage(new ImageryInfo("SeaChart"));
 		rendering.setBackgroundLayer(true);
-		Main.main.addLayer(rendering);
-		MapView.addEditLayerChangeListener(this);
-		MapView.addLayerChangeListener(this);
-		editLayerChanged(Main.main.getEditLayer(), Main.main.getEditLayer());
+		Main.getLayerManager().addLayer(rendering);
+		Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
+		Main.getLayerManager().addLayerChangeListener(this);
 	}
 
 	public void closeChartLayer() {
 		if (isOpen) {
-			MapView.removeEditLayerChangeListener(this);
-			MapView.removeLayerChangeListener(this);
-			Main.main.removeLayer(rendering);
+		    Main.getLayerManager().removeActiveLayerChangeListener(this);
+			Main.getLayerManager().removeLayerChangeListener(this);
+			Main.getLayerManager().removeLayer(rendering);
 		}
 		isOpen = false;
 	}
 
 	@Override
-	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+	    OsmDataLayer oldLayer = e.getPreviousEditLayer();
 		if (oldLayer != null) {
 			oldLayer.data.removeDataSetListener(dataSetListener);
 		}
+	    OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data;

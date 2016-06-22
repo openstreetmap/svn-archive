@@ -184,7 +184,7 @@ public class PanelS57 extends JPanel {
 		}
 
 		OsmDataLayer layer = new OsmDataLayer(data, "S-57 Import", null);
-		Main.map.mapView.addLayer(layer);
+		Main.getLayerManager().addLayer(layer);
 		Main.map.mapView.zoomTo(new Bounds(Math.toDegrees(map.bounds.minlat), Math.toDegrees(map.bounds.minlon), Math.toDegrees(map.bounds.maxlat), Math.toDegrees(map.bounds.maxlon)));
 		PanelMain.setStatus("Import done", Color.green);
 	}

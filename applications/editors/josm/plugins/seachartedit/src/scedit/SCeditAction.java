@@ -9,33 +9,50 @@
 
 package scedit;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.swing.*;
-
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.Collection;
+import java.util.Map.Entry;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
-import org.openstreetmap.josm.gui.layer.*;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.data.osm.event.*;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataChangedEvent;
+import org.openstreetmap.josm.data.osm.event.DataSetListener;
+import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
+import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
+import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
+import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
-import s57.S57map;
-import s57.S57map.*;
-import panels.PanelS57;
 import panels.PanelMain;
+import panels.PanelS57;
 import panels.ShowFrame;
+import s57.S57map;
+import s57.S57map.Feature;
 
-public class SCeditAction extends JosmAction implements EditLayerChangeListener, SelectionChangedListener {
+public class SCeditAction extends JosmAction implements ActiveLayerChangeListener, SelectionChangedListener {
 	private static String title = tr("SeaChart Editor");
 	public static JFrame editFrame = null;
 	public static ShowFrame showFrame = null;
@@ -132,15 +149,13 @@ public class SCeditAction extends JosmAction implements EditLayerChangeListener,
 		showFrame.setEnabled(true);
 		showFrame.setVisible(false);
 
-		// System.out.println("hello");
-		MapView.addEditLayerChangeListener(this);
+		Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
 		DataSet.addSelectionListener(this);
-		editLayerChanged(Main.main.getEditLayer(), Main.main.getEditLayer());
 	}
 
 	public void closeDialog() {
 		if (isOpen) {
-			MapView.removeEditLayerChangeListener(this);
+		        Main.getLayerManager().removeActiveLayerChangeListener(this);
 			editFrame.setVisible(false);
 			editFrame.dispose();
 			data = null;
@@ -150,10 +165,11 @@ public class SCeditAction extends JosmAction implements EditLayerChangeListener,
 	}
 
 	@Override
-	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
-		if (oldLayer != null) {
-			oldLayer.data.removeDataSetListener(dataSetListener);
+	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+		if (e.getPreviousEditLayer() != null) {
+		    e.getPreviousEditLayer().data.removeDataSetListener(dataSetListener);
 		}
+		OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
 		if (newLayer != null) {
 			newLayer.data.addDataSetListener(dataSetListener);
 			data = newLayer.data;

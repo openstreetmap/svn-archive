@@ -61,19 +61,24 @@ public class RouteUtils {
 
 		if (rm.getType().equals(OsmPrimitiveType.NODE)) {
 
-			if (rm.getNode().hasTag("public_transport", "stop_position")
-					|| rm.getNode().hasTag("public_transport", "platform")
-					|| rm.getNode().hasTag("public_transport", "platform_entry_only")
-					|| rm.getNode().hasTag("public_transport", "platform_exit_only")
-					|| rm.getNode().hasTag("highway", "platform")
-					|| rm.getNode().hasTag("highway", "platform_entry_only")
-					|| rm.getNode().hasTag("highway", "platform_exit_only")
-					|| rm.getNode().hasTag("railway", "platform")
-					|| rm.getNode().hasTag("railway", "platform_entry_only")
-					|| rm.getNode().hasTag("railway", "platform_exit_only")) {
-				return true;
-			}
+			if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only")
+					|| rm.hasRole("platform") || rm.hasRole("platform_entry_only")
+					|| rm.hasRole("platform_exit_only")) {
 
+				if (rm.getNode().hasTag("public_transport", "stop_position")
+						|| rm.getNode().hasTag("highway", "bus_stop")
+						|| rm.getNode().hasTag("public_transport", "platform")
+						|| rm.getNode().hasTag("public_transport", "platform_entry_only")
+						|| rm.getNode().hasTag("public_transport", "platform_exit_only")
+						|| rm.getNode().hasTag("highway", "platform")
+						|| rm.getNode().hasTag("highway", "platform_entry_only")
+						|| rm.getNode().hasTag("highway", "platform_exit_only")
+						|| rm.getNode().hasTag("railway", "platform")
+						|| rm.getNode().hasTag("railway", "platform_entry_only")
+						|| rm.getNode().hasTag("railway", "platform_exit_only")) {
+					return true;
+				}
+			}
 		}
 
 		if (rm.getType().equals(OsmPrimitiveType.WAY)) {
@@ -104,8 +109,23 @@ public class RouteUtils {
 	 */
 	public static boolean isPTWay(RelationMember rm) {
 
-		return !isPTStop(rm);
+		if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+			return false;
+		}
 
+		if (rm.getType().equals(OsmPrimitiveType.WAY)) {
+			return true;
+		}
+
+		Relation nestedRelation = rm.getRelation();
+
+		for (RelationMember nestedRelationMember : nestedRelation.getMembers()) {
+			if (!nestedRelationMember.getType().equals(OsmPrimitiveType.WAY)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

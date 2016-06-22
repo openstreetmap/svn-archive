@@ -1,27 +1,30 @@
 package org.openstreetmap.josm.plugins.pt_assistant.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 
 public class PTStop extends RelationMember {
 
 	private Node stopPosition = null;
 	private OsmPrimitive platform = null;
-	
+
 	private String name = "";
 
 	public PTStop(RelationMember other) throws IllegalArgumentException {
 
 		super(other);
 
-		if ((other.hasRole("stop") || other.hasRole("stop_entry_only") || other.hasRole("stop_exit_only"))&& other.getType().equals(OsmPrimitiveType.NODE)) {
+		if ((other.hasRole("stop") || other.hasRole("stop_entry_only") || other.hasRole("stop_exit_only"))
+				&& other.getType().equals(OsmPrimitiveType.NODE)) {
 
 			this.stopPosition = other.getNode();
 			this.name = stopPosition.get("name");
@@ -33,7 +36,7 @@ public class PTStop extends RelationMember {
 			this.name = platform.get("name");
 
 		} else {
-			throw new IllegalArgumentException("The RelationMember type does not match its role");
+			throw new IllegalArgumentException("The RelationMember type does not match its role " + other.getMember().getName());
 		}
 
 	}
@@ -81,24 +84,6 @@ public class PTStop extends RelationMember {
 	 */
 	public Node getStopPosition() {
 
-		// List<OsmPrimitive> referrers = platform.getReferrers();
-		// List<Relation> stopAreaRelations = new ArrayList<>();
-		// for (OsmPrimitive referrer: referrers) {
-		// if (referrer.getType().equals(OsmPrimitiveType.RELATION) &&
-		// referrer.hasTag("public_tranport", "stop_area")) {
-		// stopAreaRelations.add((Relation)referrer);
-		// }
-		// }
-		//
-		// for (Relation stopArea: stopAreaRelations) {
-		// for (RelationMember rm: stopArea.getMembers()) {
-		// if (rm.hasRole("stop") && rm.getType().equals(OsmPrimitiveType.NODE))
-		// {
-		// this.stopPosition = rm.getNode();
-		// }
-		// }
-		// }
-
 		return this.stopPosition;
 	}
 
@@ -110,7 +95,7 @@ public class PTStop extends RelationMember {
 	public OsmPrimitive getPlatform() {
 		return this.platform;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
@@ -137,27 +122,48 @@ public class PTStop extends RelationMember {
 			return potentialStopPositions;
 		}
 
-		// 1) Look for any stop_area relations that this platform
-		// belongs to:
-		ArrayList<OsmPrimitive> platformList = new ArrayList<OsmPrimitive>(1);
-		platformList.add(platform);
-		Set<Relation> platformParentRelations = OsmPrimitive.getParentRelations(platformList);
-		ArrayList<Relation> stopAreaList = new ArrayList<Relation>();
-		for (Relation platformParentRelation : platformParentRelations) {
-			if (platformParentRelation.hasTag("public_transport", "stop_area")) {
-				stopAreaList.add(platformParentRelation);
+		// Look for a stop position within 100 m (around 0.002 degrees) of this platform:
+
+		LatLon platformCenter = platform.getBBox().getCenter();
+		Double ax = platformCenter.getX() - 0.002;
+		Double bx = platformCenter.getX() + 0.002;
+		Double ay = platformCenter.getY() - 0.002;
+		Double by = platformCenter.getY() + 0.002;
+		BBox platformBBox = new BBox(ax, ay, bx, by);
+
+		Collection<Node> allNodes = Main.getLayerManager().getEditDataSet().getNodes();
+		for (Node currentNode : allNodes) {
+			if (platformBBox.bounds(currentNode.getBBox()) && currentNode.hasTag("public_transport", "stop_position")) {
+				potentialStopPositions.add(currentNode);
 			}
 		}
 
-		// 2) Get all potential stop_positions from those stop_area relations:
-		for (Relation stopArea : stopAreaList) {
-			for (RelationMember rm : stopArea.getMembers()) {
-				if ((rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only"))&& rm.getType().equals(OsmPrimitiveType.NODE)
-						&& rm.getNode().hasTag("public_transport", "stop_position")) {
-					potentialStopPositions.add(rm.getNode());
-				}
-			}
-		}
+		// // 1) Look for any stop_area relations that this platform
+		// // belongs to:
+		// ArrayList<OsmPrimitive> platformList = new
+		// ArrayList<OsmPrimitive>(1);
+		// platformList.add(platform);
+		// Set<Relation> platformParentRelations =
+		// OsmPrimitive.getParentRelations(platformList);
+		// ArrayList<Relation> stopAreaList = new ArrayList<Relation>();
+		// for (Relation platformParentRelation : platformParentRelations) {
+		// if (platformParentRelation.hasTag("public_transport", "stop_area")) {
+		// stopAreaList.add(platformParentRelation);
+		// }
+		// }
+		//
+		// // 2) Get all potential stop_positions from those stop_area
+		// relations:
+		// for (Relation stopArea : stopAreaList) {
+		// for (RelationMember rm : stopArea.getMembers()) {
+		// if ((rm.hasRole("stop") || rm.hasRole("stop_entry_only") ||
+		// rm.hasRole("stop_exit_only"))&&
+		// rm.getType().equals(OsmPrimitiveType.NODE)
+		// && rm.getNode().hasTag("public_transport", "stop_position")) {
+		// potentialStopPositions.add(rm.getNode());
+		// }
+		// }
+		// }
 
 		return potentialStopPositions;
 	}

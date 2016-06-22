@@ -33,7 +33,8 @@ public class PTAssitantValidatorTest extends Test {
 	public static final int ERROR_CODE_DIRECTION = 3731;
 	public static final int ERROR_CODE_END_STOP = 3141;
 	public static final int ERROR_CODE_SPLIT_WAY = 3142;
-	
+	public static final int ERROR_CODE_RELAITON_MEMBER_ROLES = 3143;
+
 	public PTAssitantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
@@ -42,12 +43,10 @@ public class PTAssitantValidatorTest extends Test {
 
 	@Override
 	public void visit(Relation r) {
-		
 
 		if (!RouteUtils.isTwoDirectionRoute(r)) {
 			return;
 		}
-		
 
 		// Download incomplete members. If the download does not work, finish.
 		if (r.hasIncompleteMembers()) {
@@ -56,7 +55,7 @@ public class PTAssitantValidatorTest extends Test {
 				return;
 			}
 		}
-		
+
 		if (r.hasIncompleteMembers()) {
 			return;
 		}
@@ -65,7 +64,6 @@ public class PTAssitantValidatorTest extends Test {
 		// type test:
 		WayChecker wayChecker = new WayChecker(r, this);
 		this.errors.addAll(wayChecker.getErrors());
-		
 
 		if (this.errors.isEmpty()) {
 			proceedWithSorting(r);
@@ -123,7 +121,6 @@ public class PTAssitantValidatorTest extends Test {
 			}
 		}
 
-
 		ProceedDialog proceedDialog = new ProceedDialog(r.getId(), numberOfDirectionErrors, numberOfRoadTypeErrors);
 		int userInput = proceedDialog.getUserSelection();
 
@@ -148,18 +145,18 @@ public class PTAssitantValidatorTest extends Test {
 		// route.
 
 	}
-	
 
 	/**
 	 * Carries out the second stage of the testing: sorting
+	 * 
 	 * @param r
 	 */
 	private void proceedWithSorting(Relation r) {
-		
+
 		// Check if the relation is correct, or only has a wrong sorting order:
 		RouteChecker routeChecker = new RouteChecker(r, this);
 		List<TestError> routeCheckerErrors = routeChecker.getErrors();
-		
+
 		/*- At this point, there are 3 variants: 
 		 * 
 		 * 1) There are no errors => route is correct
@@ -169,34 +166,39 @@ public class PTAssitantValidatorTest extends Test {
 		 * sorting => start further test (stop-by-stop) 
 		 * 
 		 * */
-		
-		
+
 		if (!routeCheckerErrors.isEmpty()) {
 			// Variant 2
 			// If there is only the sorting error, add it and stop testing.
 			this.errors.addAll(routeChecker.getErrors());
 			return;
 		}
-		
+
 		if (!routeChecker.getHasGap()) {
 			// Variant 1
-			// TODO: add the segments of this route to the list correct route segments		
+			// TODO: add the segments of this route to the list correct route
+			// segments
 		}
-		
+
 		// Variant 3:
 		proceedAfterSorting(r);
-		
-		
+
 	}
-	
-	
+
 	private void proceedAfterSorting(Relation r) {
-		
-		
-		
+
 		SegmentChecker segmentChecker = new SegmentChecker(r, this);
+
+		// Check if the creation of the route data model in the segment checker
+		// worked. If it did not, it means the roles in the route relation do
+		// not match the tags of the route members. 
+		if (!segmentChecker.getErrors().isEmpty()) {
+			this.errors.addAll(segmentChecker.getErrors());
+		}
+
 		segmentChecker.performFirstStopTest();
 		segmentChecker.performLastStopTest();
+
 		// TODO: perform segment test
 		this.errors.addAll(segmentChecker.getErrors());
 //		performDummyTest(r);
@@ -248,22 +250,19 @@ public class PTAssitantValidatorTest extends Test {
 	 */
 	private void fixErrorFromPlugin(List<TestError> testErrors) {
 
-			
-			// run fix task asynchronously
-			FixTask fixTask = new FixTask(testErrors);
-//			Main.worker.submit(fixTask);
-			
-			Thread t = new Thread(fixTask);
-			t.start();
-			try {
-				t.join();
-				errors.removeAll(testErrors);
+		// run fix task asynchronously
+		FixTask fixTask = new FixTask(testErrors);
+		// Main.worker.submit(fixTask);
 
-			} catch (InterruptedException e) {
-				JOptionPane.showMessageDialog(null, "Error occurred during fixing");
-			}
+		Thread t = new Thread(fixTask);
+		t.start();
+		try {
+			t.join();
+			errors.removeAll(testErrors);
 
-
+		} catch (InterruptedException e) {
+			JOptionPane.showMessageDialog(null, "Error occurred during fixing");
+		}
 
 	}
 

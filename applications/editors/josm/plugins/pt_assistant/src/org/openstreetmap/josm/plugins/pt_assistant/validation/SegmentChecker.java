@@ -8,6 +8,7 @@ import java.util.List;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
@@ -33,16 +34,29 @@ public class SegmentChecker extends Checker {
 	/* Manager of the PTStops and PTWays of the current route */
 	private PTRouteDataManager manager;
 
-	/* Assigns PTStops to nearest PTWays and stores that correspondense */
+	/* Assigns PTStops to nearest PTWays and stores that correspondence */
 	private StopToWayAssigner assigner;
 
 	public SegmentChecker(Relation relation, Test test) {
 
 		super(relation, test);
-		
+
 		this.manager = new PTRouteDataManager(relation);
-		this.assigner = new StopToWayAssigner(manager.getPTWays());
 		
+		for (RelationMember rm: manager.getFailedMembers()) {
+			List<Relation> primitives = new ArrayList<>(1);
+			primitives.add(relation);
+			List<OsmPrimitive> highlighted = new ArrayList<>(1);
+			highlighted.add(rm.getMember());
+			TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Relation member roles do not match tags"),
+					PTAssitantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES, primitives, highlighted);
+			this.errors.add(e);
+		}
+
+
+		
+		this.assigner = new StopToWayAssigner(manager.getPTWays());
+
 	}
 
 	public void performFirstStopTest() {
@@ -58,6 +72,10 @@ public class SegmentChecker extends Checker {
 	}
 
 	private void performEndStopTest(PTStop endStop) {
+
+		if (endStop == null) {
+			return;
+		}
 
 		/*
 		 * This test checks: (1) that a stop position exists; (2) that it is the
@@ -95,7 +113,7 @@ public class SegmentChecker extends Checker {
 				this.errors.add(e);
 				return;
 			}
-			
+
 			if (stopPositionsOfThisRoute.size() == 1) {
 				endStop.setStopPosition(stopPositionsOfThisRoute.get(0));
 			}
@@ -114,12 +132,12 @@ public class SegmentChecker extends Checker {
 			}
 
 		} else {
-			
+
 			// if the stop_position is known:
 			int belongsToWay = this.belongsToAWayOfThisRoute(endStop.getStopPosition());
-			
+
 			if (belongsToWay == 1) {
-				
+
 				List<Relation> primitives = new ArrayList<>(1);
 				primitives.add(relation);
 				List<OsmPrimitive> highlighted = new ArrayList<>();

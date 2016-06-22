@@ -41,22 +41,19 @@ public class IncompleteMembersDownloadThread extends Thread {
 				for (Relation currentRelation : allRelations) {
 					if (RouteUtils.isTwoDirectionRoute(currentRelation)) {
 						list.add(currentRelation);
-						for (RelationMember rm : currentRelation.getMembers()) {
-							if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only")
-									|| rm.hasRole("platform") || rm.hasRole("platform_entry_only")
-									|| rm.hasRole("platform_exit_only")) {
-								List<OsmPrimitive> referrers = rm.getMember().getReferrers();
-								for (OsmPrimitive referrer : referrers) {
-									if (referrer.getType().equals(OsmPrimitiveType.RELATION)
-											&& referrer.hasTag("public_transport", "stop_area")) {
-										list.add(referrer);
-										// TODO: this may never be executed
-										// because the platform is an incomplete
-										// member yet.
-									}
-								}
-							}
-						}
+//						for (RelationMember rm : currentRelation.getMembers()) {
+//							if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only")
+//									|| rm.hasRole("platform") || rm.hasRole("platform_entry_only")
+//									|| rm.hasRole("platform_exit_only")) {
+//								List<OsmPrimitive> referrers = rm.getMember().getReferrers();
+//								for (OsmPrimitive referrer : referrers) {
+//									if (referrer.getType().equals(OsmPrimitiveType.RELATION)
+//											&& referrer.hasTag("public_transport", "stop_area")) {
+//										list.add(referrer);
+//									}
+//								}
+//							}
+//						}
 					}
 				}
 

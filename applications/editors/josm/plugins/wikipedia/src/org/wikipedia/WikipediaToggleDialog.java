@@ -118,7 +118,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class WikipediaLoadCoordinatesAction extends AbstractAction {
 
         public WikipediaLoadCoordinatesAction() {
-            super(tr("Coordinates"), ImageProvider.get("dialogs", "refresh"));
+            super(tr("Coordinates"));
+            new ImageProvider("dialogs", "refresh").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Fetches all coordinates from Wikipedia in the current view"));
         }
 
@@ -175,7 +176,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class WikipediaLoadCategoryAction extends AbstractAction {
 
         public WikipediaLoadCategoryAction() {
-            super(tr("Category"), ImageProvider.get("dialogs", "refresh"));
+            super(tr("Category"));
+            new ImageProvider("dialogs", "refresh").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Fetches a list of all Wikipedia articles of a category"));
         }
 
@@ -204,7 +206,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class PasteWikipediaArticlesAction extends AbstractAction {
 
         public PasteWikipediaArticlesAction() {
-            super(tr("Clipboard"), ImageProvider.get("paste"));
+            super(tr("Clipboard"));
+            new ImageProvider("paste").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Pastes Wikipedia articles from the system clipboard"));
         }
 
@@ -225,7 +228,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class OpenWikipediaArticleAction extends AbstractAction {
 
         public OpenWikipediaArticleAction() {
-            super(tr("Open Article"), ImageProvider.getIfAvailable("browser"));
+            super(tr("Open Article"));
+            new ImageProvider("browser").getResource().attachImageIcon(this);
             putValue(SHORT_DESCRIPTION, tr("Opens the Wikipedia article of the selected item in a browser"));
         }
 
@@ -242,7 +246,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class WikipediaSettingsAction extends AbstractAction {
 
         public WikipediaSettingsAction() {
-            super(tr("Language"), ImageProvider.get("dialogs/settings"));
+            super(tr("Language"));
+            new ImageProvider("dialogs/settings").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Sets the default language for the Wikipedia articles"));
         }
 
@@ -263,7 +268,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class AddWikipediaTagAction extends AbstractAction {
 
         public AddWikipediaTagAction() {
-            super(tr("Add Tag"), ImageProvider.get("pastetags"));
+            super(tr("Add Tag"));
+            new ImageProvider("pastetags").getResource().attachImageIcon(this, true);
             putValue(SHORT_DESCRIPTION, tr("Adds a ''wikipedia'' tag corresponding to this article to the selected objects"));
         }
 
@@ -289,7 +295,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     class ZoomToWikipediaArticleAction extends AbstractAction {
 
         ZoomToWikipediaArticleAction() {
-            super(tr("Zoom to selection"), ImageProvider.get("dialogs/autoscale", "selection"));
+            super(tr("Zoom to selection"));
+            new ImageProvider("dialogs/autoscale", "selection").getResource().attachImageIcon(this);
             putValue(SHORT_DESCRIPTION, tr("Zoom to selection"));
         }
 

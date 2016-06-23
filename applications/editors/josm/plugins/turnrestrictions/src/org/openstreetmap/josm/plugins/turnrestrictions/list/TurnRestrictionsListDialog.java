@@ -199,7 +199,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
     class EditAction extends AbstractAction implements ListSelectionListener{
         public EditAction() {
             putValue(SHORT_DESCRIPTION,tr("Open an editor for the selected turn restriction"));
-            new ImageProvider("dialogs", "edit").getResource().attachImageIcon(this);
+            new ImageProvider("dialogs", "edit").getResource().attachImageIcon(this, true);
             putValue(NAME, tr("Edit"));
             setEnabled(false);
         }
@@ -260,7 +260,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 
         public DeleteAction() {
             putValue(SHORT_DESCRIPTION,tr("Delete the selected turn restriction"));
-            new ImageProvider("dialogs", "delete").getResource().attachImageIcon(this);
+            new ImageProvider("dialogs", "delete").getResource().attachImageIcon(this, true);
             putValue(NAME, tr("Delete"));
             setEnabled(false);
         }
@@ -300,7 +300,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
      class NewAction extends AbstractAction implements ActiveLayerChangeListener {
         public NewAction() {
             putValue(SHORT_DESCRIPTION,tr("Create a new turn restriction"));
-            new ImageProvider("new").getResource().attachImageIcon(this);
+            new ImageProvider("new").getResource().attachImageIcon(this, true);
             putValue(NAME, tr("New"));
             updateEnabledState();
         }
@@ -340,7 +340,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 
         public SelectSelectedTurnRestrictions() {
             putValue(SHORT_DESCRIPTION,tr("Set the current JOSM selection to the selected turn restrictions"));
-            putValue(SMALL_ICON, ImageProvider.get("selectall"));
+            new ImageProvider("selectall").getResource().attachImageIcon(this);
             putValue(NAME, tr("Select in current data layer"));
             setEnabled(false);
         }
@@ -375,7 +375,7 @@ public class TurnRestrictionsListDialog extends ToggleDialog{
 
         public ZoomToAction() {
             putValue(SHORT_DESCRIPTION,tr("Zoom to the currently selected turn restrictions"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale/selection"));
+            new ImageProvider("dialogs/autoscale/selection").getResource().attachImageIcon(this);
             putValue(NAME, tr("Zoom to"));
             setEnabled(false);
         }

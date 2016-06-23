@@ -55,15 +55,15 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
     /** the button for creating a new turn restriction */
     private JButton btnNew;
     /** the table with the turn restrictions which can be edited */
-    private JTable tblTurnRestrictions; 
+    private JTable tblTurnRestrictions;
     private OsmDataLayer layer;
-    
+
     /**
      * Replies the collection of turn restrictions the primitives in {@code primitives}
      * currently participate in.
-     * 
+     *
      * @param primitives the collection of primitives. May be null.
-     * @return the collection of "parent" turn restrictions. 
+     * @return the collection of "parent" turn restrictions.
      */
     static public Collection<Relation> getTurnRestrictionsParticipatingIn(Collection<OsmPrimitive> primitives){
         HashSet<Relation> ret = new HashSet<>();
@@ -81,12 +81,12 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
         }
         return ret;
     }
-    
+
     /**
      * Registers 1..9 shortcuts for the first 9 turn restrictions to
      * edit
-     * 
-     * @param editCandiates the edit candidates 
+     *
+     * @param editCandiates the edit candidates
      */
     protected void registerEditShortcuts(Collection<Relation> editCandiates){
         for(int i=1; i <= Math.min(editCandiates.size(),9);i++){
@@ -106,10 +106,10 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
         }
     }
     /**
-     * Builds the panel with the turn restrictions table 
-     * 
-     * @param editCandiates the list of edit candiates  
-     * @return the panel 
+     * Builds the panel with the turn restrictions table
+     *
+     * @param editCandiates the list of edit candiates
+     * @return the panel
      */
     protected JPanel buildTurnRestrictionTablePanel(Collection<Relation> editCandiates) {
         tblTurnRestrictions = new JTable(new TurnRestrictionTableModel(editCandiates), new TurnRestrictionTableColumnModel());
@@ -117,32 +117,32 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
         tblTurnRestrictions.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         TurnRestrictionCellRenderer renderer = new TurnRestrictionCellRenderer();
         tblTurnRestrictions.setRowHeight((int)renderer.getPreferredSize().getHeight());
-        
-        // create a scroll pane, remove the table header 
+
+        // create a scroll pane, remove the table header
         JScrollPane pane = new JScrollPane(tblTurnRestrictions);
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         tblTurnRestrictions.setTableHeader(null);
         pane.setColumnHeaderView(null);
-        
-        // respond to double click and ENTER 
+
+        // respond to double click and ENTER
         EditSelectedTurnRestrictionAction action = new EditSelectedTurnRestrictionAction();
         tblTurnRestrictions.addMouseListener(action);
         tblTurnRestrictions.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0), WHEN_FOCUSED);
-        
+
         tblTurnRestrictions.addFocusListener(new FocusHandler());
-        
+
         JPanel pnl = new JPanel(new BorderLayout());
         pnl.add(pane, BorderLayout.CENTER);
-        
+
         pnl.setBackground(UIManager.getColor("Table.background"));
         pane.setBackground(UIManager.getColor("Table.background"));
-        return pnl;     
+        return pnl;
     }
-    
+
     /**
-     * Builds the panel 
-     * 
+     * Builds the panel
+     *
      * @param editCandiates the edit candidates
      */
     protected void build(Collection<Relation> editCandiates) {
@@ -152,21 +152,21 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
         btnNew.registerKeyboardAction(btnNew.getAction(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0), WHEN_FOCUSED);
         registerKeyboardAction(new CloseAction(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0), WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         registerKeyboardAction(btnNew.getAction(), KeyStroke.getKeyStroke(KeyEvent.VK_N,0), WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        
+
         btnNew.addFocusListener(new FocusHandler());
-        
+
         if (editCandiates != null && ! editCandiates.isEmpty()) {
-            add(buildTurnRestrictionTablePanel(editCandiates), BorderLayout.CENTER);    
+            add(buildTurnRestrictionTablePanel(editCandiates), BorderLayout.CENTER);
             registerEditShortcuts(editCandiates);
         }
-        
-        setBackground(UIManager.getColor("Table.background"));      
+
+        setBackground(UIManager.getColor("Table.background"));
     }
 
-    
+
     /**
      * Creates the panel
-     * 
+     *
      * @param layer the reference OSM data layer. Must not be null.
      * @throws IllegalArgumentException thrown if {@code layer} is null
      */
@@ -175,12 +175,12 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
         this.layer = layer;
         build(getTurnRestrictionsParticipatingIn(layer.data.getSelected()));
     }
-    
+
     /**
      * Creates the panel
-     * 
+     *
      * @param layer the reference OSM data layer. Must not be null.
-     * @param editCandidates a collection of turn restrictions as edit candidates. May be null. 
+     * @param editCandidates a collection of turn restrictions as edit candidates. May be null.
      * @throws IllegalArgumentException thrown if {@code layer} is null
      */
     public TurnRestrictionSelectionPopupPanel(OsmDataLayer layer, Collection<Relation> editCandiates) {
@@ -188,9 +188,9 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
         this.layer = layer;
         build(editCandiates);
     }
-    
+
     /**
-     * Launches a popup with this panel as content 
+     * Launches a popup with this panel as content
      */
     public void launch(){
         PointerInfo info = MouseInfo.getPointerInfo();
@@ -207,16 +207,16 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
               + 5;
         return new Dimension(300, bestheight);
     }
-    
+
     /* --------------------------------------------------------------------------------------- */
     /* inner classes                                                                           */
     /* --------------------------------------------------------------------------------------- */
-    
+
     private class NewAction extends AbstractAction {
         public NewAction() {
             putValue(NAME, tr("Create new turn restriction"));
             putValue(SHORT_DESCRIPTION, tr("Launch the turn restriction editor to create a new turn restriction"));
-            putValue(SMALL_ICON, ImageProvider.get("new"));
+            new ImageProvider("new").getResource().attachImageIcon(this);
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, 0));
         }
 
@@ -231,7 +231,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
             editor.setVisible(true);
         }
     }
-    
+
     abstract private  class AbstractEditTurnRestrictionAction extends AbstractAction {
         protected void launchEditor(Relation tr){
             TurnRestrictionEditorManager manager = TurnRestrictionEditorManager.getInstance();
@@ -250,20 +250,20 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
             }
         }
     }
-    
+
     private class EditTurnRestrictionAction extends AbstractEditTurnRestrictionAction {
         private int idx;
-        
+
         public EditTurnRestrictionAction(int idx){
             this.idx = idx;
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             Relation tr = (Relation)tblTurnRestrictions.getModel().getValueAt(idx, 1);
             launchEditor(tr);
-        }       
+        }
     }
-    
+
     private class EditSelectedTurnRestrictionAction extends AbstractEditTurnRestrictionAction implements MouseListener{
         public void editTurnRestrictionAtRow(int row){
             if (row < 0) return;
@@ -278,22 +278,22 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
             if (!(SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2)) return;
             int row = tblTurnRestrictions.rowAtPoint(e.getPoint());
             if (row < 0) return;
-            editTurnRestrictionAtRow(row);          
+            editTurnRestrictionAtRow(row);
         }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {}
         public void mouseReleased(MouseEvent e) {}
     }
-    
+
     private class CloseAction extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
             if (parentPopup != null){
                 parentPopup.hide();
             }
-        }       
+        }
     }
-    
+
     private static class TurnRestrictionTableModel extends AbstractTableModel {
         private final ArrayList<Relation> turnrestrictions = new ArrayList<>();
 
@@ -304,7 +304,7 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
             }
             fireTableDataChanged();
         }
-        
+
         public int getRowCount() {
             return turnrestrictions.size();
         }
@@ -328,29 +328,29 @@ public class TurnRestrictionSelectionPopupPanel extends JPanel{
             return null;
         }
     }
-    
-    private static class TurnRestrictionTableColumnModel extends DefaultTableColumnModel {      
-        public TurnRestrictionTableColumnModel() {          
+
+    private static class TurnRestrictionTableColumnModel extends DefaultTableColumnModel {
+        public TurnRestrictionTableColumnModel() {
             // the idx column
-            TableColumn col = new TableColumn(0);           
+            TableColumn col = new TableColumn(0);
             col.setResizable(false);
             col.setWidth(50);
             addColumn(col);
-            
-            // the column displaying turn restrictions 
-            col = new TableColumn(1);           
+
+            // the column displaying turn restrictions
+            col = new TableColumn(1);
             col.setResizable(false);
             col.setPreferredWidth(400);
             col.setCellRenderer(new TurnRestrictionCellRenderer());
-            addColumn(col);         
+            addColumn(col);
         }
     }
-    
-    private class FocusHandler extends FocusAdapter {       
+
+    private class FocusHandler extends FocusAdapter {
         @Override
         public void focusLost(FocusEvent e) {
             // if we loose the focus to a component outside of the popup panel
-            // we hide the popup            
+            // we hide the popup
             if (e.getOppositeComponent() == null ||!SwingUtilities.isDescendingFrom(e.getOppositeComponent(), TurnRestrictionSelectionPopupPanel.this)) {
                 if (parentPopup != null){
                     parentPopup.hide();

@@ -22,6 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -45,7 +46,6 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane;
 import org.openstreetmap.josm.gui.HelpAwareOptionPane.ButtonSpec;
-import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.help.ContextSensitiveHelpAction;
 import org.openstreetmap.josm.gui.help.HelpUtil;
@@ -98,12 +98,12 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         JPanel pnl = new JPanel();
         pnl.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        SideButton b;
-        pnl.add(b = new SideButton(new OKAction()));
+        JButton b;
+        pnl.add(b = new JButton(new OKAction()));
         b.setName("btnOK");
-        pnl.add(b = new SideButton(new CancelAction()));
+        pnl.add(b = new JButton(new CancelAction()));
         b.setName("btnCancel");
-        pnl.add(b = new SideButton(new ContextSensitiveHelpAction(ht("/Plugin/TurnRestrictions#TurnRestrictionEditor"))));
+        pnl.add(b = new JButton(new ContextSensitiveHelpAction(ht("/Plugin/TurnRestrictions#TurnRestrictionEditor"))));
         b.setName("btnHelp");
         return pnl;
     }
@@ -642,7 +642,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     class ApplyAction extends SavingAction {
         public ApplyAction() {
             putValue(SHORT_DESCRIPTION, tr("Apply the current updates"));
-            putValue(SMALL_ICON, ImageProvider.get("save"));
+            new ImageProvider("save").getResource().attachImageIcon(this);
             putValue(NAME, tr("Apply"));
             setEnabled(true);
         }
@@ -686,7 +686,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     class OKAction extends SavingAction {
         public OKAction() {
             putValue(SHORT_DESCRIPTION, tr("Apply the updates and close the dialog"));
-            putValue(SMALL_ICON, ImageProvider.get("ok"));
+            new ImageProvider("ok").getResource().attachImageIcon(this);
             putValue(NAME, tr("OK"));
             setEnabled(true);
         }
@@ -741,7 +741,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     class CancelAction extends AbstractAction {
         public CancelAction() {
             putValue(SHORT_DESCRIPTION, tr("Cancel the updates and close the dialog"));
-            putValue(SMALL_ICON, ImageProvider.get("cancel"));
+            new ImageProvider("cancel").getResource().attachImageIcon(this);
             putValue(NAME, tr("Cancel"));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ESCAPE"));
             TurnRestrictionEditor.this.getRootPane().registerKeyboardAction(this,KeyStroke.getKeyStroke("ESCAPE"), JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -758,7 +758,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         public DeleteAction() {
             putValue(NAME, tr("Delete"));
             putValue(SHORT_DESCRIPTION, tr("Delete this turn restriction"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "delete"));
+            new ImageProvider("dialogs", "delete").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
@@ -790,7 +790,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         public SelectAction() {
             putValue(NAME, tr("Select"));
             putValue(SHORT_DESCRIPTION, tr("Select this turn restriction"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "select"));
+            new ImageProvider("dialogs", "select").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
@@ -818,7 +818,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         public ZoomToAction() {
             putValue(NAME, tr("Zoom to"));
             putValue(SHORT_DESCRIPTION, tr("Activate the layer this turn restriction belongs to and zoom to it"));
-            putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale", "data"));
+            new ImageProvider("dialogs/autoscale", "data").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 

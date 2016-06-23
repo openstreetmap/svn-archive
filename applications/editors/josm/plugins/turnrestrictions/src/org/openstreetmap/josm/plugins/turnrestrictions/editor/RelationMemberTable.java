@@ -96,7 +96,7 @@ public class RelationMemberTable extends JTable {
         public DeleteAction() {
             putValue(NAME, tr("Delete"));
             putValue(SHORT_DESCRIPTION, tr("Clear the selected roles or delete the selected members"));
-            putValue(SMALL_ICON, ImageProvider.get("deletesmall"));
+            new ImageProvider("deletesmall").getResource().attachImageIcon(this);
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
             updateEnabledState();
         }
@@ -122,7 +122,7 @@ public class RelationMemberTable extends JTable {
         public PasteAction() {
             putValue(NAME, tr("Paste"));
             putValue(SHORT_DESCRIPTION, tr("Insert new relation members from object in the clipboard"));
-            putValue(SMALL_ICON, ImageProvider.get("paste"));
+            new ImageProvider("paste").getResource().attachImageIcon(this);
             putValue(ACCELERATOR_KEY, Shortcut.getPasteKeyStroke());
             updateEnabledState();
         }
@@ -163,7 +163,7 @@ public class RelationMemberTable extends JTable {
             putValue(NAME, tr("Move down"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected relation members down by one position"));
             putValue(ACCELERATOR_KEY,keyStroke);
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "movedown"));
+            new ImageProvider("dialogs", "movedown").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
@@ -190,7 +190,7 @@ public class RelationMemberTable extends JTable {
             putValue(NAME, tr("Move up"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected relation members up by one position"));
             putValue(ACCELERATOR_KEY,keyStroke);
-            putValue(SMALL_ICON, ImageProvider.get("dialogs", "moveup"));
+            new ImageProvider("dialogs", "moveup").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 

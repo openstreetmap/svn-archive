@@ -119,7 +119,7 @@ public class JosmSelectionPanel extends JPanel {
         public CopyAction(){
             putValue(NAME, tr("Copy"));
             putValue(SHORT_DESCRIPTION, tr("Copy to the clipboard"));
-            putValue(SMALL_ICON, ImageProvider.get("copy"));
+            new ImageProvider("copy").getResource().attachImageIcon(this);
             putValue(ACCELERATOR_KEY, Shortcut.getCopyKeyStroke());
             delegate = lstSelection.getActionMap().get("copy");
         }

@@ -1038,6 +1038,27 @@ public class Notices {
 		NoticeE24.add(new Instr(Form.SYMB, new Symbols.SubSymbol(Notices.Waterbike, 1.0, 0, 0, new Scheme(Color.white), null)));
 	}
 
+	public static final Symbol NoticeBoard = new Symbol();
+	static {
+		NoticeBoard.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,30)));
+		NoticeBoard.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-20,0); p.lineTo(20,0); p.lineTo(20,-15); p.lineTo(-20,-15); p.closePath();
+		NoticeBoard.add(new Instr(Form.FILL, Color.white));
+		NoticeBoard.add(new Instr(Form.PGON, p));
+		NoticeBoard.add(new Instr(Form.FILL, Color.black));
+		NoticeBoard.add(new Instr(Form.PLIN, p));
+	}
+	public static final Symbol NoticeTriangle = new Symbol();
+	static {
+		NoticeTriangle.add(new Instr(Form.BBOX, new Rectangle2D.Double(-30,-30,60,30)));
+		NoticeTriangle.add(new Instr(Form.STRK, new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER)));
+		Path2D.Double p = new Path2D.Double(); p.moveTo(-20,0); p.lineTo(20,0); p.lineTo(0,-15); p.closePath();
+		NoticeTriangle.add(new Instr(Form.FILL, Color.white));
+		NoticeTriangle.add(new Instr(Form.PGON, p));
+		NoticeTriangle.add(new Instr(Form.FILL, Color.black));
+		NoticeTriangle.add(new Instr(Form.PLIN, p));
+	}
+
 	public static final EnumMap<CatNMK, Symbol> NmkCevni = new EnumMap<CatNMK, Symbol>(CatNMK.class);
 	static {
 		NmkCevni.put(CatNMK.NMK_UNKN, Notice); NmkCevni.put(CatNMK.NMK_NENT, NoticeA1); NmkCevni.put(CatNMK.NMK_CLSA, NoticeA1a); NmkCevni.put(CatNMK.NMK_NOVK, NoticeA2);

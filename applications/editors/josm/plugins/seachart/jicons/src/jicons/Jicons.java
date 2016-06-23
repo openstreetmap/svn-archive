@@ -207,7 +207,7 @@ public class Jicons {
 		}
 
 		public RuleSet ruleset() {
-			return RuleSet.SEAMARK;
+			return RuleSet.ALL;
 		}
 	}
 }

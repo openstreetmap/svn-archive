@@ -20,6 +20,7 @@ public class S57dec { // S57 ENC file input & map conversion
 	public static void decodeChart(FileInputStream in, S57map map) throws IOException {
 		S57dat.rnum = 0;
 		byte[] leader = new byte[24];
+		byte[] record = new byte[0];
 		boolean ddr = false;
 		int length = 0;
 		int fields = 0;;
@@ -39,6 +40,7 @@ public class S57dec { // S57 ENC file input & map conversion
 		while (in.read(leader) == 24) {
 			try {
 			length = Integer.parseInt(new String(leader, 0, 5)) - 24;
+			record = new byte[length];
 			ddr = (leader[6] == 'L');
 			fields = Integer.parseInt(new String(leader, 12, 5)) - 24;
 			} catch (Exception e) {
@@ -49,7 +51,6 @@ public class S57dec { // S57 ENC file input & map conversion
 			mapfp = leader[21] - '0';
 			mapts = leader[23] - '0';
 			entry = mapfl + mapfp + mapts;
-			byte[] record = new byte[length];
 			if (in.read(record) != length)
 				break;
 			for (int idx = 0; idx < fields-1; idx += entry) {
@@ -60,11 +61,11 @@ public class S57dec { // S57 ENC file input & map conversion
 					switch (tag.toString()) {
 					case "0001":
 						int i8rn = ((Long) S57dat.decSubf(record, fields + pos, S57field.I8RI, S57subf.I8RN)).intValue();
-						if (i8rn != ++S57dat.rnum) {
-							System.err.println("Out of order record ID");
-							in.close();
-							System.exit(-1);
-						}
+//						if (i8rn != ++S57dat.rnum) {
+//							System.err.println("Out of order record ID");
+//							in.close();
+//							System.exit(-1);
+//						}
 						break;
 					case "DSSI":
 						S57dat.decSubf(record, fields + pos, S57field.DSSI, S57subf.AALL);
@@ -92,7 +93,7 @@ public class S57dec { // S57 ENC file input & map conversion
 						objl = (Long)S57dat.decSubf(S57subf.OBJL);
 						break;
 					case "FOID":
-						name = (Long) S57dat.decSubf(record, fields + pos, S57field.LNAM, S57subf.LNAM);
+						name = (long) S57dat.decSubf(record, fields + pos, S57field.LNAM, S57subf.LNAM);
 						map.newFeature(name, pflag, objl);
 						break;
 					case "ATTF":
@@ -108,16 +109,16 @@ public class S57dec { // S57 ENC file input & map conversion
 					case "FFPT":
 						S57dat.setField(record, fields + pos, S57field.FFPT, len);
 						do {
-							name = (Long) S57dat.decSubf(S57subf.LNAM);
+							name = (long) S57dat.decSubf(S57subf.LNAM);
 							int rind = ((Long) S57dat.decSubf(S57subf.RIND)).intValue();
 							S57dat.decSubf(S57subf.COMT);
-							map.newObj(name, rind);
+							map.refObj(name, rind);
 						} while (S57dat.more());
 						break;
 					case "FSPT":
 						S57dat.setField(record, fields + pos, S57field.FSPT, len);
 						do {
-							name = (Long) S57dat.decSubf(S57subf.NAME) << 16;
+							name = (long) S57dat.decSubf(S57subf.NAME) << 16;
 							map.newPrim(name, (Long) S57dat.decSubf(S57subf.ORNT), (Long) S57dat.decSubf(S57subf.USAG));
 							S57dat.decSubf(S57subf.MASK);
 						} while (S57dat.more());
@@ -137,7 +138,7 @@ public class S57dec { // S57 ENC file input & map conversion
 							break;
 						}
 						name <<= 32;
-						name += (Long) S57dat.decSubf(S57subf.RCID);
+						name += (long) S57dat.decSubf(S57subf.RCID);
 						name <<= 16;
 						if (nflag == Nflag.ANON) {
 							map.newEdge(name);

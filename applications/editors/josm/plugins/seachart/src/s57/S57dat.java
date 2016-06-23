@@ -223,7 +223,7 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 			return str;
 		} else {
 			int f = Math.abs(conv.bin);
-			if (f < 8) {
+			if (f < 5) {
 				long val = buffer[offset + --f];
 				if (conv.bin > 0)
 					val &= 0xff;
@@ -252,12 +252,29 @@ public class S57dat { // S57 ENC file fields lookup tables & methods
 				}
 				return val;
 			} else {
-				f /= 8;
-				long val = 0;
-				for (int i = 0; i < f; i++) {
+				if (f == 5) {
+					long val = buffer[offset++] & 0xff;
+					f--;
+					while (f > 0) {
+						val = (val << 8) + (buffer[offset + --f] & 0xff);
+					}
+					offset += 4;
+					return val;
+				} else {
+					long val = buffer[offset++] & 0xff;
 					val = (val << 8) + (buffer[offset++] & 0xff);
+					f = 4;
+					while (f > 0) {
+						val = (val << 8) + (buffer[offset + --f] & 0xff);
+					}
+					offset += 4;
+					f = 2;
+					while (f > 0) {
+						val = (val << 8) + (buffer[offset + --f] & 0xff);
+					}
+					offset += 2;
+					return val;
 				}
-				return val;
 			}
 		}
 	}

@@ -811,7 +811,7 @@ public class S57val { // S57 Attribute values lookup tables & methods
   Catnmk.put(CatNMK.NMK_PRTR, new S57enum(49, "proceed_to_right")); Catnmk.put(CatNMK.NMK_ENTP, new S57enum(50, "entry_permitted")); Catnmk.put(CatNMK.NMK_OVHC, new S57enum(51, "overhead_cable"));
   Catnmk.put(CatNMK.NMK_WEIR, new S57enum(52, "weir")); Catnmk.put(CatNMK.NMK_FERN, new S57enum(53, "ferry_non_independent"));  Catnmk.put(CatNMK.NMK_FERI, new S57enum(54, "ferry_independent"));
   Catnmk.put(CatNMK.NMK_BRTP, new S57enum(55, "berthing_permitted")); Catnmk.put(CatNMK.NMK_BTLL, new S57enum(56, "berthing_lateral_limit")); Catnmk.put(CatNMK.NMK_BTLS, new S57enum(57, "berthing_lateral_limits"));
-   Catnmk.put(CatNMK.NMK_BTRL, new S57enum(58, "berthing_rafting_limit"));  Catnmk.put(CatNMK.NMK_BTUP, new S57enum(59, "berthing_unmarked_pushing"));
+   Catnmk.put(CatNMK.NMK_BTRL, new S57enum(58, "berth_rafting_limit"));  Catnmk.put(CatNMK.NMK_BTUP, new S57enum(59, "berthing_unmarked_pushing"));
    Catnmk.put(CatNMK.NMK_BTP1, new S57enum(60, "berthing_marked_pushing_1")); Catnmk.put(CatNMK.NMK_BTP2, new S57enum(61, "berthing_marked_pushing_2"));
    Catnmk.put(CatNMK.NMK_BTP3, new S57enum(62, "berthing_marked_pushing_3")); Catnmk.put(CatNMK.NMK_BTUN, new S57enum(63, "berthing_unmarked_non-pushing"));
    Catnmk.put(CatNMK.NMK_BTN1, new S57enum(64, "berthing_marked_non-pushing_1")); Catnmk.put(CatNMK.NMK_BTN2, new S57enum(65, "berthing_marked_non-pushing_2"));

@@ -272,7 +272,7 @@ public class S57map { // S57/OSM map generation methods
 		}
 	}
 	
-	public void newObj(long id, int rind) {
+	public void refObj(long id, int rind) {
 		Rflag r = Rflag.UNKN;
 		switch (rind) {
 		case 1:

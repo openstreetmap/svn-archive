@@ -215,6 +215,10 @@ public class Rules {
 			if (testObject(Obj.ROADWY)) for (Feature f : objects) if (testFeature(f)) highways();
 			if (testObject(Obj.RAILWY)) for (Feature f : objects) if (testFeature(f)) highways();
 		}
+		if (Renderer.context.ruleset() == RuleSet.ALL) {
+			if (testObject(Obj.SOUNDG)) for (Feature f : objects) if (testFeature(f)) depths();
+			if (testObject(Obj.DEPCNT)) for (Feature f : objects) if (testFeature(f)) depths();
+		}
 		if (testObject(Obj.SLCONS)) for (Feature f : objects) if (testFeature(f)) shoreline();
 		if ((Renderer.context.ruleset() == RuleSet.ALL) || (Renderer.context.ruleset() == RuleSet.SEAMARK)) {
 			if (testObject(Obj.PIPSOL)) for (Feature f : objects) if (testFeature(f)) pipelines();
@@ -387,7 +391,7 @@ public class Rules {
 			case SEA_RECH:
 				if ((Renderer.zoom >= 10) && (name != null))
 					if (feature.geom.prim == Pflag.LINE) {
-						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
+						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 150), Color.black, -40);
 					} else {
 						Renderer.labelText(name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
 					}
@@ -395,7 +399,7 @@ public class Rules {
 			case SEA_BAY:
 				if ((Renderer.zoom >= 12) && (name != null))
 					if (feature.geom.prim == Pflag.LINE) {
-						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 150), Color.black, 0.5, -40);
+						Renderer.lineText(name, new Font("Arial", Font.PLAIN, 150), Color.black, -40);
 					} else {
 						Renderer.labelText(name, new Font("Arial", Font.PLAIN, 150), Color.black, new Delta(Handle.BC, AffineTransform.getTranslateInstance(0, -40)));
 					}
@@ -410,8 +414,8 @@ public class Rules {
 						}
 					} else if (feature.geom.prim == Pflag.LINE) {
 						if (name != null) {
-							Renderer.lineText(name, new Font("Arial", Font.ITALIC, 75), Color.black, 0.5, -40);
-							Renderer.lineText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, 0);
+							Renderer.lineText(name, new Font("Arial", Font.ITALIC, 75), Color.black, -40);
+							Renderer.lineText("(Shoal)", new Font("Arial", Font.PLAIN, 60), Color.black, 0);
 						}
 					} else {
 						if (name != null) {
@@ -502,6 +506,8 @@ public class Rules {
 					}
 				}
 			}
+			if (hasObject(Obj.NOTMRK))
+				notices();
 			addName(15, new Font("Arial", Font.BOLD, 40), new Delta(Handle.BL, AffineTransform.getTranslateInstance(60, -50)));
 			Signals.addSignals();
 		}
@@ -610,6 +616,36 @@ public class Rules {
 		}
 	}
 	
+	private static void depths() {
+		switch (feature.type) {
+		case SOUNDG:
+			if ((Renderer.zoom >= 14) && hasAttribute(Obj.SOUNDG, Att.VALSOU)) {
+				double depth = (double)getAttVal(Obj.SOUNDG, Att.VALSOU);
+				String dstr = df.format(depth);
+				String tok[] = dstr.split("[-.]");
+				String ul = "";
+				String id = tok[0];
+				String dd = "";
+				if (tok[0].equals("")) {
+					for (int i = 0; i <  tok[1].length(); i++)
+						ul += "_";
+					id = tok[1];
+					dd = (tok.length == 3) ? tok[2] : "";
+				} else {
+					dd = (tok.length == 2) ? tok[1] : "";
+				}
+				Renderer.labelText(ul, new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.RC, AffineTransform.getTranslateInstance(10,15)));
+				Renderer.labelText(id, new Font("Arial", Font.PLAIN, 30), Color.black, new Delta(Handle.RC, AffineTransform.getTranslateInstance(10,0)));
+				Renderer.labelText(dd, new Font("Arial", Font.PLAIN, 20), Color.black, new Delta(Handle.LC, AffineTransform.getTranslateInstance(15,10)));
+			}
+			break;
+		case DEPCNT:
+			break;
+		default:
+			break;
+		}
+	}
+	
 	private static void distances() {
 		if (Renderer.zoom >= 14) {
 			if (!testAttribute(Obj.DISMAR, Att.CATDIS, CatDIS.DIS_NONI)) {
@@ -699,9 +735,9 @@ public class Rules {
 		switch (feature.type) {
 		case ACHBRT:
 			if (Renderer.zoom >= 14) {
-				Renderer.symbol(Harbours.Anchorage, new Scheme(Symbols.Mline));
+				Renderer.symbol(Harbours.Anchor, new Scheme(Symbols.Msymb));
 				if (Renderer.zoom >= 15) {
-					Renderer.labelText(name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Symbols.Msymb, LabelStyle.RRCT, Symbols.Mline, Color.white, new Delta(Handle.BC));
+					Renderer.labelText(name == null ? "" : name, new Font("Arial", Font.PLAIN, 30), Symbols.Msymb, LabelStyle.RRCT, Symbols.Msymb, Color.white, new Delta(Handle.BC));
 				}
 			}
 			if (getAttVal(Obj.ACHBRT, Att.RADIUS) != null) {
@@ -992,6 +1028,7 @@ public class Rules {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void notices() {
 		if (Renderer.zoom >= 14) {
 			double dx = 0.0, dy = 0.0;
@@ -1001,7 +1038,11 @@ public class Rules {
 			case BCNLAT:
 			case BCNSAW:
 			case BCNSPP:
-				dy = 45.0;
+				if (testAttribute(Obj.TOPMAR, Att.TOPSHP, TopSHP.TOP_BORD) || testAttribute(Obj.DAYMAR, Att.TOPSHP, TopSHP.TOP_BORD)) {
+					dy = -100.0;
+				} else {
+					dy = -45.0;
+				}
 				break;
 			case NOTMRK:
 				dy = 0.0;
@@ -1022,22 +1063,30 @@ public class Rules {
 			} else {
 				int i = 0;
 				for (AttMap atts : objs.values()) {
-					if (atts.get(Att.MARSYS) != null) sys = (MarSYS)(getAttEnum(Obj.NOTMRK, Att.MARSYS));
-					if (atts.get(Att.BNKWTW) != null) bnk = (BnkWTW)(getAttEnum(Obj.NOTMRK, Att.BNKWTW));
+					if (atts.get(Att.MARSYS) != null) sys = ((ArrayList<MarSYS>)(atts.get(Att.MARSYS).val)).get(0);
+					if (atts.get(Att.BNKWTW) != null) bnk = ((ArrayList<BnkWTW>)(atts.get(Att.BNKWTW).val)).get(0);
 					CatNMK cat = CatNMK.NMK_UNKN;
-					if (atts.get(Att.CATNMK) != null) cat = (CatNMK)(getAttEnum(Obj.NOTMRK, Att.CATNMK));
+					if (atts.get(Att.CATNMK) != null) cat = ((ArrayList<CatNMK>)(atts.get(Att.CATNMK).val)).get(0);
 					Symbol sym = Notices.getNotice(cat, sys, bnk);
 					Scheme sch = Notices.getScheme(sys, bnk);
+					ArrayList<AddMRK> add = new ArrayList<>();
+					if (atts.get(Att.ADDMRK) != null) add = (ArrayList<AddMRK>)(atts.get(Att.ADDMRK).val);
 					Handle h = Handle.CC;
+					double ax = 0.0;
+					double ay = 0.0;
 					switch (i) {
 					case 0:
 						if (n != 1) h = null;
 						break;
 					case 1:
-						if (n <= 3)
+						if (n <= 3) {
 							h = Handle.RC;
-						else
+							ax = -30;
+							ay = dy;
+						}
+						else {
 							h = Handle.BR;
+						}
 						break;
 					case 2:
 						if (n <= 3)
@@ -1055,7 +1104,10 @@ public class Rules {
 						h = Handle.TL;
 						break;
 					}
-					if (h != null) Renderer.symbol(sym, sch, new Delta(h, AffineTransform.getTranslateInstance(dx, dy)));
+					if (h != null) {
+						Renderer.symbol(sym, sch, new Delta(h, AffineTransform.getTranslateInstance(dx, dy)));
+						if (!add.isEmpty()) Renderer.symbol(Notices.NoticeBoard, new Delta(Handle.BC, AffineTransform.getTranslateInstance(ax, ay - 30)));
+					}
 					i++;
 				}
 			}
@@ -1068,7 +1120,7 @@ public class Rules {
 			case OBS_BOOM:
 				Renderer.lineVector(new LineStyle(Color.black, 5, new float[] { 20, 20 }, null));
 				if (Renderer.zoom >= 15) {
-					Renderer.lineText("Boom", new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -20);
+					Renderer.lineText("Boom", new Font("Arial", Font.PLAIN, 80), Color.black, -20);
 				}
 			default:
 				break;
@@ -1185,12 +1237,12 @@ public class Rules {
 					if (lev == WatLEV.LEV_CVRS) {
 						Renderer.lineVector(new LineStyle(Color.black, 10, new float[] { 40, 40 }, null));
 						if (Renderer.zoom >= 15)
-							Renderer.lineText("(covers)", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, 80);
+							Renderer.lineText("(covers)", new Font("Arial", Font.PLAIN, 60), Color.black, 80);
 					} else {
 						Renderer.lineVector(new LineStyle(Color.black, 10, null, null));
 					}
 					if (Renderer.zoom >= 15)
-						Renderer.lineText("Training Wall", new Font("Arial", Font.PLAIN, 60), Color.black, 0.5, -30);
+						Renderer.lineText("Training Wall", new Font("Arial", Font.PLAIN, 60), Color.black, -30);
 					break;
 				case SLC_SWAY:
 					Renderer.lineVector(new LineStyle(Color.black, 2, null, new Color(0xffe000)));
@@ -1332,7 +1384,7 @@ public class Rules {
 			if ((ort = (Double) getAttVal(feature.type, Att.ORIENT)) != null) {
 				str += df.format(ort) + "º";
 				if (!str.isEmpty())
-					Renderer.lineText(str, new Font("Arial", Font.PLAIN, 80), Color.black, 0.5, -20);
+					Renderer.lineText(str, new Font("Arial", Font.PLAIN, 80), Color.black, -20);
 			}
 		}
 	}

@@ -390,7 +390,7 @@ public class Renderer {
 		if (bg == null) bg = new Color(0x00000000, true);
 		if ((str == null) || (str.isEmpty())) str = " ";
     FontRenderContext frc = g2.getFontRenderContext();
-    GlyphVector gv = font.deriveFont((float)(font.getSize())).createGlyphVector(frc, str.equals(" ") ? "!" : str);
+    GlyphVector gv = font.deriveFont((float)(font.getSize())).createGlyphVector(frc, str.equals(" ") ? "M" : str);
     Rectangle2D bounds = gv.getVisualBounds();
     double width = bounds.getWidth();
     double height = bounds.getHeight();
@@ -484,70 +484,66 @@ public class Renderer {
 		Symbols.drawSymbol(g2, label, sScale, point.getX(), point.getY(), null, delta);
 	}
 
-	public static void lineText(String str, Font font, Color colour, double offset, double dy) {
+	public static void lineText(String str, Font font, Color colour, double dy) {
 		if (!str.isEmpty()) {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	    g2.setPaint(colour);
-	    FontRenderContext frc = g2.getFontRenderContext();
-	    GlyphVector gv = font.deriveFont(font.getSize2D() * (float)sScale).createGlyphVector(frc, (" " + str));
-	    GeneralPath path = new GeneralPath();
-			Point2D prev = new Point2D.Double();
-			Point2D next = new Point2D.Double();
-			Point2D curr = new Point2D.Double();
-			Point2D succ = new Point2D.Double();
-			boolean piv = false;
-			double angle = 0;
-			int index = 0;
-			double gwidth = offset * (Rules.feature.geom.length * context.mile(Rules.feature) - gv.getLogicalBounds().getWidth()) + gv.getGlyphMetrics(0).getAdvance();
-			GeomIterator git = map.new GeomIterator(Rules.feature.geom);
-			while (git.hasComp()) {
-				git.nextComp();
-				boolean first = true;
-				while (git.hasEdge()) {
-					git.nextEdge();
-					while (git.hasNode()) {
-						Snode node = git.next();
-						if (node == null) continue;
-						prev = next;
-						next = context.getPoint(node);
-						angle = Math.atan2(next.getY() - prev.getY(), next.getX() - prev.getX());
-						piv = true;
-						if (first) {
-							curr = succ = next;
-							first = false;
-						} else {
-							while (curr.distance(next) >= gwidth) {
-								if (piv) {
-									double rem = gwidth;
-									double s = prev.distance(next);
-									double p = curr.distance(prev);
-									if ((s > 0) && (p > 0)) {
-										double n = curr.distance(next);
-										double theta = Math.acos((s * s + p * p - n * n) / 2 / s / p);
-										double phi = Math.asin(p / gwidth * Math.sin(theta));
-										rem = gwidth * Math.sin(Math.PI - theta - phi) / Math.sin(theta);
-									}
-									succ = new Point2D.Double(prev.getX() + (rem * Math.cos(angle)), prev.getY() + (rem * Math.sin(angle)));
-									piv = false;
+			g2.setPaint(colour);
+			FontRenderContext frc = g2.getFontRenderContext();
+			GlyphVector gv = font.deriveFont(font.getSize2D() * (float) sScale).createGlyphVector(frc, str);
+			double width = gv.getVisualBounds().getWidth();
+			double height = gv.getVisualBounds().getHeight();
+			double offset = (Rules.feature.geom.length * context.mile(Rules.feature) - width) / 2;
+			if (offset > 0) {
+				Point2D before = null;
+				Point2D after = null;
+				ArrayList<Point2D> between = new ArrayList<>();
+				Point2D prev = null;
+				Point2D next = null;
+				double length = 0;
+				double lb = 0;
+				double la = 0;
+				GeomIterator git = map.new GeomIterator(Rules.feature.geom);
+				if (git.hasComp()) {
+					git.nextComp();
+					while (git.hasEdge()) {
+						git.nextEdge();
+						while (git.hasNode()) {
+							Snode node = git.next();
+							if (node == null)
+								continue;
+							prev = next;
+							next = context.getPoint(node);
+							if (prev != null)
+								length += Math.sqrt(Math.pow((next.getX() - prev.getX()), 2) + Math.pow((next.getY() - prev.getY()), 2));
+							if (length < offset) {
+								before = next;
+								lb = la = length;
+							} else if (after == null) {
+								if (length > (offset + width)) {
+									after = next;
+									la = length;
+									break;
 								} else {
-									succ = new Point2D.Double(curr.getX() + (gwidth * Math.cos(angle)), curr.getY() + (gwidth * Math.sin(angle)));
-								}
-								Shape shape = gv.getGlyphOutline(index);
-								Point2D point = gv.getGlyphPosition(index);
-								AffineTransform at = AffineTransform.getTranslateInstance(curr.getX(), curr.getY());
-								at.rotate(Math.atan2((succ.getY() - curr.getY()), (succ.getX() - curr.getX())));
-								at.translate(-point.getX(), -point.getY() + (dy * sScale));
-								path.append(at.createTransformedShape(shape), false);
-								curr = succ;
-								if (++index < gv.getNumGlyphs()) {
-									gwidth = gv.getGlyphMetrics(index).getAdvance();
-								} else {
-									g2.fill(path);
-									return;
+									between.add(next);
 								}
 							}
 						}
+						if (after != null)
+							break;
 					}
+				}
+				if (after != null) {
+					double angle = Math.atan2((after.getY() - before.getY()), (after.getX() - before.getX()));
+					double rotate = Math.abs(angle) < (Math.PI / 2) ? angle : angle + Math.PI;
+					Point2D mid = new Point2D.Double((before.getX() + after.getX()) / 2, (before.getY() + after.getY()) / 2);
+					Point2D centre = context.getPoint(Rules.feature.geom.centre);
+					AffineTransform pos = AffineTransform.getTranslateInstance(-dy * Math.sin(rotate), dy * Math.cos(rotate));
+					pos.rotate(rotate);
+					pos.translate((mid.getX() - centre.getX()), (mid.getY() - centre.getY()));
+					Symbol label = new Symbol();
+					label.add(new Instr(Form.BBOX, new Rectangle2D.Double((-width / 2), (-height), width, height)));
+					label.add(new Instr(Form.TEXT, new Caption(str, font, colour, new Delta(Handle.BC))));
+					Symbols.drawSymbol(g2, label, sScale, centre.getX(), centre.getY(), null, new Delta(Handle.BC, pos));
 				}
 			}
 		}
@@ -579,22 +575,20 @@ public class Renderer {
 			g2.draw(new Arc2D.Double(centre.x - radial + arcWidth, centre.y - radial + arcWidth, 2 * (radial - arcWidth), 2 * (radial - arcWidth), -(s1 + 90), ((s1 < s2) ? (s1 - s2) : (s1 - s2 - 360)), Arc2D.OPEN));
 		}
 		if ((str != null) && (!str.isEmpty())) {
-			FontRenderContext frc = g2.getFontRenderContext();
 			Font font = new Font("Arial", Font.PLAIN, 40);
-			GlyphVector gv = font.deriveFont(font.getSize2D() * (float)sScale).createGlyphVector(frc, str);
 			double arc = (s2 > s1) ? (s2 - s1) : (s2 - s1 + 360);
 			double awidth = (Math.toRadians(arc) * radial);
 			boolean hand = ((mid > 270) || (mid < 90));
 			double phi = Math.toRadians(mid);
 			radial += 30 * sScale;
 			AffineTransform at = AffineTransform.getTranslateInstance(-radial * Math.sin(phi) / sScale, radial * Math.cos(phi) / sScale);
-			if (gv.getLogicalBounds().getWidth() < awidth) {
+			if ((font.getSize() * sScale * str.length()) < awidth) {
 				at.rotate(Math.toRadians(mid + (hand ? 0 : 180)));
-				Renderer.labelText(str, font, Color.black, new Delta(Handle.CC, at));
-			} else if (gv.getLogicalBounds().getHeight() < awidth) {
+				labelText(str, font, Color.black, new Delta(Handle.CC, at));
+			} else if ((font.getSize() * sScale) < awidth) {
 				hand = (mid < 180);
 				at.rotate(Math.toRadians(mid + (hand ? -90 : 90)));
-				Renderer.labelText(str, font, Color.black, hand ? new Delta(Handle.RC, at) : new Delta(Handle.LC, at));
+				labelText(str, font, Color.black, hand ? new Delta(Handle.RC, at) : new Delta(Handle.LC, at));
 			}
 			if (dir != null) {
 				font = new Font("Arial", Font.PLAIN, 30);
@@ -604,7 +598,7 @@ public class Renderer {
 				radial -= 70 * sScale;
 				at = AffineTransform.getTranslateInstance(-radial * Math.sin(phi) / sScale, radial * Math.cos(phi) / sScale);
 				at.rotate(Math.toRadians(dir + (hand ? 90 : -90)));
-				Renderer.labelText(str, font, Color.black, hand ? new Delta(Handle.BR, at) : new Delta(Handle.BL, at));
+				labelText(str, font, Color.black, hand ? new Delta(Handle.BR, at) : new Delta(Handle.BL, at));
 			}
 		}
 	}

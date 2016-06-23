@@ -85,7 +85,7 @@ public class Josmtos57 {
 		try {
 			in = new BufferedReader(new FileReader(new File(args[0])));
 			try {
-				S57osm.OSMmap(in, map, true);
+				S57osm.OSMmap(in, map, false);
 			} catch (Exception e) {
 				System.err.println("Input data error");
 				System.exit(-1);

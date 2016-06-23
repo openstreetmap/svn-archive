@@ -20,7 +20,8 @@ import java.util.ArrayList;
 public class Symbols {
 
 	public static final Color Yland = new Color(0xedbc0c);
-	public static final Color Bwater = new Color(0x78acd2);
+//	public static final Color Bwater = new Color(0x78acd2);
+	public static final Color Bwater = new Color(0x9bc5e3);
 	public static final Color Gdries = new Color(0x689868);
 	public static final Color Mline = new Color(0x9a6078);
 	public static final Color Msymb = new Color(0xa30075);

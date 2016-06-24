@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -24,13 +25,13 @@ import relcontext.ChosenRelationListener;
 
 /**
  * Downloads parent relations for this relation and all parent objects for its members.
- * 
+ *
  * @author Zverik
  */
 public class DownloadParentsAction extends AbstractAction implements ChosenRelationListener {
     private ChosenRelation rel;
 
-    public DownloadParentsAction( ChosenRelation rel ) {
+    public DownloadParentsAction(ChosenRelation rel) {
         super(tr("Download referrers"));
         putValue(SMALL_ICON, ImageProvider.get("download"));
         putValue(SHORT_DESCRIPTION, tr("Download referrers for the chosen relation and its members."));
@@ -39,30 +40,32 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         setEnabled(rel.get() != null && Main.main.getEditLayer() != null);
     }
 
-    public void actionPerformed( ActionEvent e ) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
         Relation relation = rel.get();
-        if( relation == null ) return;
+        if (relation == null ) return;
         List<OsmPrimitive> objects = new ArrayList<>();
         objects.add(relation);
         objects.addAll(relation.getMemberPrimitives());
         Main.worker.submit(new DownloadReferrersTask(Main.main.getEditLayer(), objects));
     }
 
-    public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
+    @Override
+    public void chosenRelationChanged(Relation oldRelation, Relation newRelation) {
         setEnabled(newRelation != null && Main.main.getEditLayer() != null);
     }
 
-    protected void downloadMembers( Relation rel ) {
-        if( !rel.isNew() ) {
+    protected void downloadMembers(Relation rel) {
+        if (!rel.isNew()) {
             Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.main.getEditLayer()));
         }
     }
 
-    protected void downloadIncomplete( Relation rel ) {
-        if( rel.isNew() ) return;
+    protected void downloadIncomplete(Relation rel) {
+        if (rel.isNew() ) return;
         Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
-        if( ret.isEmpty() ) return;
+        if (ret.isEmpty() ) return;
         Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));
     }
 }

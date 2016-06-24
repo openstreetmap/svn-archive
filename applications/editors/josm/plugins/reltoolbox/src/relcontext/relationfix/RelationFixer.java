@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.relationfix;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -19,11 +20,11 @@ public abstract class RelationFixer {
 
     /**
      * Construct new RelationFixer by a list of applicable types
-     * @param types
+     * @param types types
      */
     public RelationFixer(String... types) {
         applicableTypes = new ArrayList<>();
-        for(String type: types) {
+        for (String type: types) {
             applicableTypes.add(type);
         }
     }
@@ -32,7 +33,7 @@ public abstract class RelationFixer {
      * Check if given relation is of needed type. You may override this method to check first type
      * and then check desired relation properties.
      * Note that this only verifies if current RelationFixer can be used to check and fix given relation
-     * Deeper relation checking is at {@link isRelationGood}
+     * Deeper relation checking is at {@link #isRelationGood}
      *
      * @param rel Relation to check
      * @return true if relation can be verified by current RelationFixer
@@ -44,9 +45,10 @@ public abstract class RelationFixer {
             return false;
 
         String type = rel.get("type");
-        for(String oktype: applicableTypes)
+        for (String oktype: applicableTypes) {
             if (oktype.equals(type))
                 return true;
+        }
 
         return false;
     }
@@ -72,6 +74,7 @@ public abstract class RelationFixer {
     public void setFixAction(SortAndFixAction sortAndFixAction) {
         this.sortAndFixAction = sortAndFixAction;
     }
+
     protected void setWarningMessage(String text) {
         if (text == null) {
             clearWarningMessage();
@@ -79,8 +82,8 @@ public abstract class RelationFixer {
             sortAndFixAction.putValue(Action.SHORT_DESCRIPTION, text);
         }
     }
+
     protected void clearWarningMessage() {
         sortAndFixAction.putValue(Action.SHORT_DESCRIPTION, tr("Fix roles of the chosen relation members"));
     }
-
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.relationfix;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -45,7 +46,9 @@ public class AssociatedStreetFixer extends RelationFixer {
         }
         // check that all street members have same name as relation (???)
         String streetName = rel.get("name");
-        if (streetName == null) streetName = "";
+        if (streetName == null) {
+            streetName = "";
+        }
         for (RelationMember m : rel.getMembers()) {
             if ("street".equals(m.getRole()) && !streetName.equals(m.getWay().get("name"))) {
                 String anotherName = m.getWay().get("name");
@@ -100,15 +103,18 @@ public class AssociatedStreetFixer extends RelationFixer {
 
         // fill relation name
         Map<String, Integer> streetNames = new HashMap<>();
-        for (RelationMember m : rel.getMembers())
+        for (RelationMember m : rel.getMembers()) {
             if ("street".equals(m.getRole()) && m.isWay()) {
                 String name = m.getWay().get("name");
-                if (name == null || name.isEmpty()) continue;
+                if (name == null || name.isEmpty()) {
+                    continue;
+                }
 
                 Integer count = streetNames.get(name);
 
-                streetNames.put(name, count != null? count + 1 : 1);
+                streetNames.put(name, count != null ? count + 1 : 1);
             }
+        }
         String commonName = "";
         Integer commonCount = 0;
         for (Map.Entry<String, Integer> entry : streetNames.entrySet()) {
@@ -145,7 +151,7 @@ public class AssociatedStreetFixer extends RelationFixer {
 
                 commandList.add(new ChangeCommand(oldWay, newWay));
             }
-        */
+         */
         // return results
         if (commandList.size() == 0)
             return null;

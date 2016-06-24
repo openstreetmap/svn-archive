@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext;
 
 import org.openstreetmap.josm.data.osm.Relation;
@@ -9,13 +10,13 @@ import org.openstreetmap.josm.data.osm.Relation;
  */
 public class StaticChosenRelation extends ChosenRelation {
 
-    public StaticChosenRelation( Relation rel ) {
+    public StaticChosenRelation(Relation rel) {
         chosenRelation = rel;
         analyse();
     }
 
     @Override
-    public void set( Relation rel ) {
-//        throw new UnsupportedOperationException("Changing static relation is not supported.");
+    public void set(Relation rel) {
+        //        throw new UnsupportedOperationException("Changing static relation is not supported.");
     }
 }

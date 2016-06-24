@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.relationfix;
 
 import org.openstreetmap.josm.command.Command;
@@ -11,10 +12,12 @@ public class NothingFixer extends RelationFixer {
     public NothingFixer() {
         super("");
     }
+
     @Override
     public boolean isFixerApplicable(Relation rel) {
         return true;
     }
+
     @Override
     public boolean isRelationGood(Relation rel) {
         return true;
@@ -24,5 +27,4 @@ public class NothingFixer extends RelationFixer {
     public Command fixRelation(Relation rel) {
         return null;
     }
-
 }

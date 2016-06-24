@@ -1,10 +1,9 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.actions;
 
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * @see http://wiki.openstreetmap.org/wiki/Key:public_transport
@@ -25,30 +24,30 @@ public final class PublicTransportHelper {
     public final static String RAILWAY = "railway";
     public final static String BUS_STOP = "bus_stop";
     public final static String RAILWAY_HALT = "halt";
-    public final static String RAILWAY_STATION = "station";    
-    
+    public final static String RAILWAY_STATION = "station";
+
     private PublicTransportHelper() {
         // Hide default constructor for utils classes
-    }        
-    
+    }
+
     public static String getRoleByMember(RelationMember m) {
         if (isMemberStop(m)) return STOP;
         else if (isMemberPlatform(m)) return PLATFORM;
         return null;
     }
-    
+
     public static boolean isMemberStop(RelationMember m) {
         return isNodeStop(m);   // stop is only node
     }
-    
+
     public static boolean isMemberPlatform(RelationMember m) {
         return isNodePlatform(m) || isWayPlatform(m);
     }
-    
+
     public static boolean isNodeStop(RelationMember m) {
         return isNodeStop(m.getMember());
     }
-    
+
     public static boolean isNodeStop(OsmPrimitive p) {
         if (p.getType() == OsmPrimitiveType.NODE && !p.isIncomplete()) {
             if (p.hasKey(PUBLIC_TRANSPORT)) {
@@ -62,11 +61,11 @@ public final class PublicTransportHelper {
         }
         return false;
     }
-    
+
     public static boolean isNodePlatform(RelationMember m) {
         return isNodePlatform(m.getMember());
     }
-    
+
     public static boolean isNodePlatform(OsmPrimitive p) {
         if (p.getType() == OsmPrimitiveType.NODE && !p.isIncomplete()) {
             if (p.hasKey(PUBLIC_TRANSPORT)) {
@@ -86,7 +85,7 @@ public final class PublicTransportHelper {
     public static boolean isWayPlatform(RelationMember m) {
         return isWayPlatform(m.getMember());
     }
-    
+
     public static boolean isWayPlatform(OsmPrimitive p) {
         if (p.getType() == OsmPrimitiveType.WAY && !p.isIncomplete()) {
             if (p.hasKey(PUBLIC_TRANSPORT)) {
@@ -102,32 +101,31 @@ public final class PublicTransportHelper {
         }
         return false;
     }
-    
+
     public static boolean isMemberRouteway(RelationMember m) {
         return isWayRouteway(m.getMember());
     }
-    
+
     public static boolean isWayRouteway(OsmPrimitive p) {
-        if (p.getType() == OsmPrimitiveType.WAY && !p.isIncomplete()) {
+        if (p.getType() == OsmPrimitiveType.WAY && !p.isIncomplete())
             return p.hasKey(HIGHWAY) || p.hasKey(RAILWAY);
-        }
         return false;
     }
-    
+
     public static String getNameViaStoparea(RelationMember m) {
         return getNameViaStoparea(m.getMember());
     }
-    
+
     public static String getNameViaStoparea(OsmPrimitive prim) {
         String result = prim.getName();
         if (result != null) return result;
         // try to get name by stop_area
         for (OsmPrimitive refOp : prim.getReferrers())
             if (refOp.getType() == OsmPrimitiveType.RELATION
-                && refOp.hasTag(PUBLIC_TRANSPORT, STOP_AREA)) {
+            && refOp.hasTag(PUBLIC_TRANSPORT, STOP_AREA)) {
                 result = refOp.getName();
                 if (result != null) return result;
             }
         return result;
-    }    
+    }
 }

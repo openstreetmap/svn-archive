@@ -1,25 +1,30 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.AbstractAction;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
+
 import relcontext.ChosenRelation;
 import relcontext.ChosenRelationListener;
 
 public class RelationHelpAction extends AbstractAction implements ChosenRelationListener {
     private ChosenRelation rel;
 
-    public RelationHelpAction( ChosenRelation rel ) {
+    public RelationHelpAction(ChosenRelation rel) {
         super();
         putValue(NAME, tr("Open relation wiki page"));
         putValue(SHORT_DESCRIPTION, tr("Launch browser with wiki help for selected object"));
@@ -29,15 +34,17 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
         setEnabled(rel.get() != null);
     }
 
-    public void chosenRelationChanged( Relation oldRelation, Relation newRelation ) {
+    @Override
+    public void chosenRelationChanged(Relation oldRelation, Relation newRelation) {
         setEnabled(newRelation != null);
     }
 
     /**
      * Copypasted from {@link org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog.HelpAction}.
      */
-    public void actionPerformed( ActionEvent e ) {
-        if( rel.get() == null )
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (rel.get() == null )
             return;
         try {
             String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
@@ -54,6 +61,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
             uris.add(new URI(String.format("%sRelations", base)));
 
             Main.worker.execute(new Runnable(){
+                @Override
                 public void run() {
                     try {
                         // find a page that actually exists in the wiki
@@ -72,7 +80,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
                                 conn = (HttpURLConnection) new URI(u.toString()
                                         .replace("=", "%3D") /* do not URLencode whole string! */
                                         .replaceFirst("/wiki/", "/w/index.php?redirect=no&title=")
-                                ).toURL().openConnection();
+                                        ).toURL().openConnection();
                                 conn.setConnectTimeout(5000);
 
                                 /* redirect pages have different content length, but retrieving a "nonredirect"

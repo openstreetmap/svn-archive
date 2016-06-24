@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.relationfix;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -31,7 +32,7 @@ public class BoundaryFixer extends MultipolygonFixer {
 
     @Override
     public boolean isRelationGood(Relation rel) {
-        for( RelationMember m : rel.getMembers() ) {
+        for (RelationMember m : rel.getMembers()) {
             if (m.getType().equals(OsmPrimitiveType.RELATION) && !"subarea".equals(m.getRole())) {
                 setWarningMessage(tr("Relation without ''subarea'' role found"));
                 return false;
@@ -66,18 +67,18 @@ public class BoundaryFixer extends MultipolygonFixer {
         return fixed ? new ChangeCommand(rel, r) : null;
     }
 
-    private Relation fixBoundaryRoles( Relation source ) {
+    private Relation fixBoundaryRoles(Relation source) {
         Relation r = new Relation(source);
         boolean fixed = false;
-        for( int i = 0; i < r.getMembersCount(); i++ ) {
+        for (int i = 0; i < r.getMembersCount(); i++) {
             RelationMember m = r.getMember(i);
             String role = null;
-            if( m.isRelation() )
+            if (m.isRelation()) {
                 role = "subarea";
-            else if( m.isNode() ) {
-                Node n = (Node)m.getMember();
-                if( !n.isIncomplete() ) {
-                    if( n.hasKey("place") ) {
+            } else if (m.isNode()) {
+                Node n = (Node) m.getMember();
+                if (!n.isIncomplete()) {
+                    if (n.hasKey("place")) {
                         String place = n.get("place");
                         if (place.equals("state") || place.equals("country") ||
                                 place.equals("county") || place.equals("region")) {
@@ -85,11 +86,12 @@ public class BoundaryFixer extends MultipolygonFixer {
                         } else {
                             role = "admin_centre";
                         }
-                    } else
+                    } else {
                         role = "label";
+                    }
                 }
             }
-            if( role != null && !role.equals(m.getRole()) ) {
+            if (role != null && !role.equals(m.getRole())) {
                 r.setMember(i, new RelationMember(role, m.getMember()));
                 fixed = true;
             }

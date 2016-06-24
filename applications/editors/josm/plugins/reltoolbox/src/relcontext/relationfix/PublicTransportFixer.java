@@ -1,11 +1,14 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext.relationfix;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import static org.openstreetmap.josm.tools.I18n.tr;
+
 import relcontext.actions.PublicTransportHelper;
 
 /**
@@ -17,7 +20,7 @@ import relcontext.actions.PublicTransportHelper;
  * @author freeExec
  */
 public class PublicTransportFixer extends RelationFixer {
-    	
+
     public PublicTransportFixer() {
         super("route", "public_transport");
     }
@@ -29,7 +32,7 @@ public class PublicTransportFixer extends RelationFixer {
     @Override
     public boolean isRelationGood(Relation rel) {
         for (RelationMember m : rel.getMembers()) {
-            if (m.getType().equals(OsmPrimitiveType.NODE) 
+            if (m.getType().equals(OsmPrimitiveType.NODE)
                     && !(m.getRole().startsWith(PublicTransportHelper.STOP) || m.getRole().startsWith(PublicTransportHelper.PLATFORM))) {
                 setWarningMessage(tr("Node without ''stop'' or ''platform'' role found"));
                 return false;
@@ -61,11 +64,11 @@ public class PublicTransportFixer extends RelationFixer {
         }
         return fixed ? new ChangeCommand(rel, r) : null;
     }
-    
+
     private Relation fixStopPlatformRole(Relation source) {
         Relation r = new Relation(source);
         boolean fixed = false;
-        for( int i = 0; i < r.getMembersCount(); i++ ) {
+        for (int i = 0; i < r.getMembersCount(); i++) {
             RelationMember m = r.getMember(i);
             String role = PublicTransportHelper.getRoleByMember(m);
 
@@ -74,6 +77,6 @@ public class PublicTransportFixer extends RelationFixer {
                 fixed = true;
             }
         }
-        return fixed ? r : null;            
+        return fixed ? r : null;
     }
 }

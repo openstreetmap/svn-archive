@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package relcontext;
 
 import org.openstreetmap.josm.data.osm.Relation;
@@ -8,5 +9,5 @@ import org.openstreetmap.josm.data.osm.Relation;
  * @author Zverik
  */
 public interface ChosenRelationListener {
-    void chosenRelationChanged( Relation oldRelation, Relation newRelation );
+    void chosenRelationChanged(Relation oldRelation, Relation newRelation);
 }

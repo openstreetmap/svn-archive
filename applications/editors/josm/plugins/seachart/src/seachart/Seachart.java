@@ -16,7 +16,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class Seachart extends Plugin {
 
-	public Seachart(PluginInformation info) {
+    public Seachart(PluginInformation info) {
         super(info);
         MainMenu.add(Main.main.menu.imageryMenu, new SeachartAction());
     }

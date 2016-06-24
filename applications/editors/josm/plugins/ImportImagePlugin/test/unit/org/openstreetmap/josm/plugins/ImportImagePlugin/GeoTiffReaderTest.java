@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.geotools.coverage.grid.GridCoverage2D;
-import org.junit.BeforeClass;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.JOSMFixture;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.TestUtils;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 /**
  * Test that some geotiff sample files can be read.
@@ -25,9 +26,14 @@ import org.openstreetmap.josm.TestUtils;
  */
 public class GeoTiffReaderTest {
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        JOSMFixture.createUnitTestFixture().init();
+    /**
+     * Setup test.
+     */
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
+
+    @Before
+    public void setUp() throws Exception {
         new ImportImagePlugin(null);
     }
 

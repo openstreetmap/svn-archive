@@ -39,6 +39,7 @@ public class ExifGPSTaggerTest {
     }
 
     @Test
+    @Ignore("To enable after https://josm.openstreetmap.de/ticket/11902 is fixed")
     public void testTicket11902() throws Exception {
         final File in = new File(TestUtils.getTestDataRoot(), "IMG_7250_small.JPG");
         final File out = tempFolder.newFile();

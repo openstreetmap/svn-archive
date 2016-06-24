@@ -1059,7 +1059,7 @@ public class Notices {
 		NoticeTriangle.add(new Instr(Form.PLIN, p));
 	}
 
-	public static final EnumMap<CatNMK, Symbol> NmkCevni = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	public static final EnumMap<CatNMK, Symbol> NmkCevni = new EnumMap<>(CatNMK.class);
 	static {
 		NmkCevni.put(CatNMK.NMK_UNKN, Notice); NmkCevni.put(CatNMK.NMK_NENT, NoticeA1); NmkCevni.put(CatNMK.NMK_CLSA, NoticeA1a); NmkCevni.put(CatNMK.NMK_NOVK, NoticeA2);
 		NmkCevni.put(CatNMK.NMK_NCOV, NoticeA3); NmkCevni.put(CatNMK.NMK_NPAS, NoticeA4); NmkCevni.put(CatNMK.NMK_NCPS, NoticeA4_1); NmkCevni.put(CatNMK.NMK_NBRT, NoticeA5);
@@ -1309,7 +1309,7 @@ public class Notices {
 		Path2D.Double p = new Path2D.Double(); p.moveTo(0,-20); p.lineTo(-20,20); p.lineTo(20,20); p.closePath();
 		NoticeBoptl.add(new Instr(Form.PGON, p));
 	}
-	public static final EnumMap<CatNMK, Symbol> NmkBniwr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	public static final EnumMap<CatNMK, Symbol> NmkBniwr = new EnumMap<>(CatNMK.class);
 	static {
 		NmkBniwr.put(CatNMK.NMK_NANK, NoticeBnank); NmkBniwr.put(CatNMK.NMK_LMHR, NoticeBlmhr); NmkBniwr.put(CatNMK.NMK_OPTR, NoticeBoptr); NmkBniwr.put(CatNMK.NMK_OPTL, NoticeBoptl);
 		NmkBniwr.put(CatNMK.NMK_WRAL, NoticeBwral); NmkBniwr.put(CatNMK.NMK_WLAR, NoticeBwlar); NmkBniwr.put(CatNMK.NMK_KTPM, NoticeBktpm); NmkBniwr.put(CatNMK.NMK_KTSM, NoticeBktsm);
@@ -1501,26 +1501,26 @@ public class Notices {
 		NoticeRship.add(new Instr(Form.EARC, new Arc2D.Double(-13,-13,30,30,275,80,Arc2D.OPEN)));
 	}
 
-	public static final EnumMap<CatNMK, Symbol> NmkPpwbcl = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	public static final EnumMap<CatNMK, Symbol> NmkPpwbcl = new EnumMap<>(CatNMK.class);
 	static {
 		NmkPpwbcl.put(CatNMK.NMK_WRAL, NoticePwralL); NmkPpwbcl.put(CatNMK.NMK_WLAR, NoticePwlarL); NmkPpwbcl.put(CatNMK.NMK_KTPM, NoticePktmL); NmkPpwbcl.put(CatNMK.NMK_KTSM, NoticePktmL);
 		NmkPpwbcl.put(CatNMK.NMK_KTMR, NoticePktmrL); NmkPpwbcl.put(CatNMK.NMK_CRTP, NoticePcrL); NmkPpwbcl.put(CatNMK.NMK_CRTS, NoticePcrL);
 	}
 	
-	public static final EnumMap<CatNMK, Symbol> NmkPpwbcr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	public static final EnumMap<CatNMK, Symbol> NmkPpwbcr = new EnumMap<>(CatNMK.class);
 	static {
 		NmkPpwbcr.put(CatNMK.NMK_WRAL, NoticePwralR); NmkPpwbcr.put(CatNMK.NMK_WLAR, NoticePwlarR); NmkPpwbcr.put(CatNMK.NMK_KTPM, NoticePktmR); NmkPpwbcr.put(CatNMK.NMK_KTSM, NoticePktmR);
 		NmkPpwbcr.put(CatNMK.NMK_KTMR, NoticePktmrR); NmkPpwbcr.put(CatNMK.NMK_CRTP, NoticePcrR); NmkPpwbcr.put(CatNMK.NMK_CRTS, NoticePcrR);
 	}
 	
-	public static final EnumMap<CatNMK, Symbol> NmkRiwr = new EnumMap<CatNMK, Symbol>(CatNMK.class);
+	public static final EnumMap<CatNMK, Symbol> NmkRiwr = new EnumMap<>(CatNMK.class);
 	static {
 		NmkRiwr.put(CatNMK.NMK_NPAS, NoticeRnpas); NmkRiwr.put(CatNMK.NMK_NANK, NoticeRnank); NmkRiwr.put(CatNMK.NMK_NWSH, NoticeRnwsh); NmkRiwr.put(CatNMK.NMK_LMHR, NoticeRlmhr); NmkRiwr.put(CatNMK.NMK_TRNA, NoticeRtrna);
 		NmkRiwr.put(CatNMK.NMK_NCPS, NoticeRncps); NmkRiwr.put(CatNMK.NMK_NSMC, NoticeRnsmc); NmkRiwr.put(CatNMK.NMK_ATTN, NoticeRattn); NmkRiwr.put(CatNMK.NMK_FWCR, NoticeRfwcr); NmkRiwr.put(CatNMK.NMK_SHIP, NoticeRship);
 	}
 	
 	public static Scheme getScheme(MarSYS sys, BnkWTW bank) {
-		ArrayList<Color> colours = new ArrayList<Color>();
+		ArrayList<Color> colours = new ArrayList<>();
 		Scheme scheme = new Scheme(colours);
 		switch (sys) {
 		case SYS_BNWR:

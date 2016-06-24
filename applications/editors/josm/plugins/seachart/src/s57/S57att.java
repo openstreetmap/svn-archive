@@ -31,7 +31,7 @@ public class S57att { // S57 Attribute lookup tables & methods
    LC_CSI, LC_CSE, LC_ASI, LC_ASE, LC_CCI, LC_CCE, LC_BM1, LC_BM2, LC_LG1, LC_LG2, LC_DR1, LC_DR2, LC_SP1, LC_SP2, LC_WD1, LC_WD2, LITRAD, CATCVR, HUNITS
  }
 
- private static final EnumMap<Att, Integer> AttS57 = new EnumMap<Att, Integer>(Att.class);
+ private static final EnumMap<Att, Integer> AttS57 = new EnumMap<>(Att.class);
  static {
   AttS57.put(Att.UNKATT, 0); AttS57.put(Att.AGENCY, 1); AttS57.put(Att.BCNSHP, 2); AttS57.put(Att.BUISHP, 3); AttS57.put(Att.BOYSHP, 4); AttS57.put(Att.BURDEP, 5);
   AttS57.put(Att.CALSGN, 6); AttS57.put(Att.CATAIR, 7); AttS57.put(Att.CATACH, 8); AttS57.put(Att.CATBRG, 9); AttS57.put(Att.CATBUA, 10); AttS57.put(Att.CATCBL, 11);
@@ -64,7 +64,7 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttS57.put(Att.POSACC, 401); AttS57.put(Att.QUAPOS, 402);
  }
 
- private static final EnumMap<Att, Integer> AttIENC = new EnumMap<Att, Integer>(Att.class);
+ private static final EnumMap<Att, Integer> AttIENC = new EnumMap<>(Att.class);
  static {
   AttIENC.put(Att.CATACH, 17000); AttIENC.put(Att.CATDIS, 17001); AttIENC.put(Att.CATSIT, 17002); AttIENC.put(Att.CATSIW, 17003); AttIENC.put(Att.RESTRN, 17004);
   AttIENC.put(Att.VERDAT, 17005); AttIENC.put(Att.CATBRG, 17006); AttIENC.put(Att.CATFRY, 17007); AttIENC.put(Att.CATHAF, 17008); AttIENC.put(Att.MARSYS, 17009);
@@ -87,7 +87,7 @@ public class S57att { // S57 Attribute lookup tables & methods
   AttIENC.put(Att.SHPTYP, 33066); AttIENC.put(Att.UPDMSG, 40000); AttIENC.put(Att.BNKWTW, 17999);
  }
  
- private static final EnumMap<Att, String> AttStr = new EnumMap<Att, String>(Att.class);
+ private static final EnumMap<Att, String> AttStr = new EnumMap<>(Att.class);
  static {
   AttStr.put(Att.UNKATT, ""); AttStr.put(Att.AGENCY, "agency"); AttStr.put(Att.BCNSHP, "shape"); AttStr.put(Att.BUISHP, "shape"); AttStr.put(Att.BOYSHP, "shape");
   AttStr.put(Att.BURDEP, "depth_buried"); AttStr.put(Att.CALSGN, "callsign"); AttStr.put(Att.CATAIR, "category"); AttStr.put(Att.CATACH, "category");
@@ -306,7 +306,7 @@ public class S57att { // S57 Attribute lookup tables & methods
  private static final EnumMap<Obj, Att> Width = new EnumMap<>(Obj.class); static { Width.put(Obj.UNKOBJ, Att.HORWID); }
  private static final EnumMap<Obj, Att> Year = new EnumMap<>(Obj.class); static { Year.put(Obj.UNKOBJ, Att.RYRMGV); }
  
- private static final HashMap<String, EnumMap<Obj, Att>> StrAtt = new HashMap<String, EnumMap<Obj, Att>>();
+ private static final HashMap<String, EnumMap<Obj, Att>> StrAtt = new HashMap<>();
  static {
   StrAtt.put("accuracy", Accuracy); StrAtt.put("addition", Addition); StrAtt.put("agency", Agency); StrAtt.put("anomaly", Anomaly); StrAtt.put("authority", Authority);
   StrAtt.put("availability", Availability); StrAtt.put("bank", Bank); StrAtt.put("callsign", Callsign); StrAtt.put("category", Category); StrAtt.put("channel", Channel);

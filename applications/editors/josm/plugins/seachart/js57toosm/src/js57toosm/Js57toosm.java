@@ -29,14 +29,14 @@ public class Js57toosm {
 	static FileInputStream in;
 	static PrintStream out;
 	static S57map map;
-	static final ArrayList<Att> typatts = new ArrayList<Att>(); static {
+	static final ArrayList<Att> typatts = new ArrayList<>(); static {
 		typatts.add(Att.OBJNAM); typatts.add(Att.NOBJNM); typatts.add(Att.STATUS); typatts.add(Att.INFORM); typatts.add(Att.NINFOM);
 		typatts.add(Att.PEREND); typatts.add(Att.PERSTA); typatts.add(Att.CONDTN); typatts.add(Att.CONRAD); typatts.add(Att.CONVIS);
 	}
 	
 	public static void main(String[] args) throws IOException {
 
-		ArrayList<Long> done = new ArrayList<Long>();
+		ArrayList<Long> done = new ArrayList<>();
 
 		if (args.length < 3) {
 			System.err.println("Usage: java -jar js57toosm.jar S57_filename types_filename OSM_filename");
@@ -55,7 +55,7 @@ public class Js57toosm {
 			in.close();
 			System.exit(-1);
 		}
-		ArrayList<Obj> types = new ArrayList<Obj>();
+		ArrayList<Obj> types = new ArrayList<>();
 		try {
 			Scanner tin = new Scanner(new FileInputStream(args[1]));
 			while (tin.hasNext()) {

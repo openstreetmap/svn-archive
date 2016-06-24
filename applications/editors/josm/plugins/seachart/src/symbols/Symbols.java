@@ -68,7 +68,7 @@ public class Symbols {
 		public ArrayList<Color> col;
 
 		public Scheme(ArrayList<Color> icol) {
-			pat = new ArrayList<Patt>();
+			pat = new ArrayList<>();
 			col = icol;
 		}
 		public Scheme(ArrayList<Patt> ipat, ArrayList<Color> icol) {
@@ -76,13 +76,13 @@ public class Symbols {
 			col = icol;
 		}
 		public Scheme(Color icol) {
-			pat = new ArrayList<Patt>();
-			col = new ArrayList<Color>();
+			pat = new ArrayList<>();
+			col = new ArrayList<>();
 			col.add(icol);
 		}
 		public Scheme() {
-			pat = new ArrayList<Patt>();
-			col = new ArrayList<Color>();
+			pat = new ArrayList<>();
+			col = new ArrayList<>();
 		}
 	}
 

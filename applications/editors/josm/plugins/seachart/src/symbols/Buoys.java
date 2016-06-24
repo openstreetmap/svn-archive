@@ -248,7 +248,7 @@ public class Buoys {
     Super.add(new Instr(Form.PLIN, p));
 	}
 	
-	public static final EnumMap<BoySHP, Symbol> Shapes = new EnumMap<BoySHP, Symbol>(BoySHP.class);
+	public static final EnumMap<BoySHP, Symbol> Shapes = new EnumMap<>(BoySHP.class);
 	static {
 		Shapes.put(BoySHP.BOY_UNKN, Buoys.Pillar); Shapes.put(BoySHP.BOY_CONE, Buoys.Cone); Shapes.put(BoySHP.BOY_CAN, Buoys.Can);
 		Shapes.put(BoySHP.BOY_SPHR, Buoys.Sphere); Shapes.put(BoySHP.BOY_PILR, Buoys.Pillar); Shapes.put(BoySHP.BOY_SPAR, Buoys.Spar);

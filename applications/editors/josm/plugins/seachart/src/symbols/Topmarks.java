@@ -474,7 +474,7 @@ public class Topmarks {
 		
 	}
 	
-	public static final EnumMap<TopSHP, Symbol> Shapes = new EnumMap<TopSHP, Symbol>(TopSHP.class);
+	public static final EnumMap<TopSHP, Symbol> Shapes = new EnumMap<>(TopSHP.class);
 	static {
 		Shapes.put(TopSHP.TOP_BESM, TopBesom); Shapes.put(TopSHP.TOP_IBESM, TopIBesom); Shapes.put(TopSHP.TOP_BORD, TopBoard); Shapes.put(TopSHP.TOP_CAN, TopCan);
 		Shapes.put(TopSHP.TOP_CONE, TopCone); Shapes.put(TopSHP.TOP_CROS, TopCross); Shapes.put(TopSHP.TOP_EAST, TopEast); Shapes.put(TopSHP.TOP_ICONE, TopIcone);
@@ -488,7 +488,7 @@ public class Topmarks {
 		Shapes.put(TopSHP.TOP_CYSP, TopCanSphere); Shapes.put(TopSHP.TOP_OTHR, TopOther);
 	}
 
-	public static final EnumMap<BoySHP, Delta> BuoyDeltas = new EnumMap<BoySHP, Delta>(BoySHP.class);
+	public static final EnumMap<BoySHP, Delta> BuoyDeltas = new EnumMap<>(BoySHP.class);
 	static {
 		BuoyDeltas.put(BoySHP.BOY_PILR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 
 		BuoyDeltas.put(BoySHP.BOY_SPAR, new Delta(Handle.BC, new AffineTransform(0.948324, 0.317305, -0.3173047, 0.948324, 31.5, -95.0))); 

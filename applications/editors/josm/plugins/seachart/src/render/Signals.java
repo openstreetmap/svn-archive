@@ -29,7 +29,7 @@ import symbols.Symbols.*;
 
 public class Signals extends Rules{
 
-	static final EnumMap<ColCOL, Color> LightColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static final EnumMap<ColCOL, Color> LightColours = new EnumMap<>(ColCOL.class);
 	static {
 		LightColours.put(ColCOL.COL_WHT, new Color(0xffff00));
 		LightColours.put(ColCOL.COL_RED, new Color(0xff0000));
@@ -42,7 +42,7 @@ public class Signals extends Rules{
 		LightColours.put(ColCOL.COL_MAG, Color.magenta);
 	}
 
-	static final EnumMap<ColCOL, String> LightLetters = new EnumMap<ColCOL, String>(ColCOL.class);
+	static final EnumMap<ColCOL, String> LightLetters = new EnumMap<>(ColCOL.class);
 	static {
 		LightLetters.put(ColCOL.COL_WHT, "W");
 		LightLetters.put(ColCOL.COL_RED, "R");
@@ -54,7 +54,7 @@ public class Signals extends Rules{
 		LightLetters.put(ColCOL.COL_ORG, "Or");
 	}
 
-	static final EnumMap<LitCHR, String> LightCharacters = new EnumMap<LitCHR, String>(LitCHR.class);
+	static final EnumMap<LitCHR, String> LightCharacters = new EnumMap<>(LitCHR.class);
 	static {
 		LightCharacters.put(LitCHR.CHR_F, "F");
 		LightCharacters.put(LitCHR.CHR_FL, "Fl");
@@ -83,7 +83,7 @@ public class Signals extends Rules{
 		LightCharacters.put(LitCHR.CHR_ALFFL, "Al.FFl");
 	}
 	
-	static final EnumMap<CatFOG, String> fogSignals = new EnumMap<CatFOG, String>(CatFOG.class);
+	static final EnumMap<CatFOG, String> fogSignals = new EnumMap<>(CatFOG.class);
 	static {
 		fogSignals.put(CatFOG.FOG_EXPL, "Explos");
 		fogSignals.put(CatFOG.FOG_DIA, "Dia");
@@ -552,7 +552,7 @@ public class Signals extends Rules{
 							}
 						}
 						if (!found) {
-							ArrayList<LitSect> tmp = new ArrayList<LitSect>();
+							ArrayList<LitSect> tmp = new ArrayList<>();
 							tmp.add(lit);
 							groupings.add(tmp);
 						}

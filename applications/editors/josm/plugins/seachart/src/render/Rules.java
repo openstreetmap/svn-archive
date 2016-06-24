@@ -31,7 +31,7 @@ public class Rules {
 	
 	static final DecimalFormat df = new DecimalFormat("#.#");
 
-	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<ColCOL, Color>(ColCOL.class);
+	static final EnumMap<ColCOL, Color> bodyColours = new EnumMap<>(ColCOL.class);
 	static {
 		bodyColours.put(ColCOL.COL_UNK, new Color(0, true));
 		bodyColours.put(ColCOL.COL_WHT, new Color(0xffffff));
@@ -49,7 +49,7 @@ public class Rules {
 		bodyColours.put(ColCOL.COL_PNK, Color.pink);
 	}
 
-	static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<ColPAT, Patt>(ColPAT.class);
+	static final EnumMap<ColPAT, Patt> pattMap = new EnumMap<>(ColPAT.class);
 	static {
 		pattMap.put(ColPAT.PAT_UNKN, Patt.Z);
 		pattMap.put(ColPAT.PAT_HORI, Patt.H);
@@ -143,11 +143,11 @@ public class Rules {
 	
 	@SuppressWarnings("unchecked")
 	static Scheme getScheme(Obj obj) {
-		ArrayList<Color> colours = new ArrayList<Color>();
+		ArrayList<Color> colours = new ArrayList<>();
 		for (ColCOL col : (ArrayList<ColCOL>) getAttList(obj, Att.COLOUR)) {
 			colours.add(bodyColours.get(col));
 		}
-		ArrayList<Patt> patterns = new ArrayList<Patt>();
+		ArrayList<Patt> patterns = new ArrayList<>();
 		for (ColPAT pat : (ArrayList<ColPAT>) getAttList(obj, Att.COLPAT)) {
 			patterns.add(pattMap.get(pat));
 		}
@@ -805,7 +805,7 @@ public class Rules {
 			break;
 		case BUISGL:
 			if (Renderer.zoom >= 16) {
-				ArrayList<Symbol> symbols = new ArrayList<Symbol>();
+				ArrayList<Symbol> symbols = new ArrayList<>();
 				ArrayList<FncFNC> fncs = (ArrayList<FncFNC>) getAttList(Obj.BUISGL, Att.FUNCTN);
 				for (FncFNC fnc : fncs) {
 					symbols.add(Landmarks.Funcs.get(fnc));
@@ -991,7 +991,7 @@ public class Rules {
 	@SuppressWarnings("unchecked")
 	private static void marinas() {
 		if (Renderer.zoom >= 16) {
-			ArrayList<Symbol> symbols = new ArrayList<Symbol>();
+			ArrayList<Symbol> symbols = new ArrayList<>();
 			ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
 			for (CatSCF scf : scfs) {
 				symbols.add(Facilities.Cats.get(scf));
@@ -1247,7 +1247,7 @@ public class Rules {
 				case SLC_SWAY:
 					Renderer.lineVector(new LineStyle(Color.black, 2, null, new Color(0xffe000)));
 					if ((Renderer.zoom >= 16) && feature.objs.containsKey(Obj.SMCFAC)) {
-						ArrayList<Symbol> symbols = new ArrayList<Symbol>();
+						ArrayList<Symbol> symbols = new ArrayList<>();
 						ArrayList<CatSCF> scfs = (ArrayList<CatSCF>) getAttList(Obj.SMCFAC, Att.CATSCF);
 						for (CatSCF scf : scfs) {
 							symbols.add(Facilities.Cats.get(scf));

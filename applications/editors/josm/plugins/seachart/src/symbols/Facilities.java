@@ -190,7 +190,7 @@ public class Facilities {
 		VisitorMooring.add(new Instr(Form.PGON, p));
 	}
 
-	public static final EnumMap<CatSCF, Symbol> Cats = new EnumMap<CatSCF, Symbol>(CatSCF.class);
+	public static final EnumMap<CatSCF, Symbol> Cats = new EnumMap<>(CatSCF.class);
 	static {
 		Cats.put(CatSCF.SCF_BHST, Boatlift); Cats.put(CatSCF.SCF_BTYD, Boatyard); Cats.put(CatSCF.SCF_CHDR, Chandler); Cats.put(CatSCF.SCF_FUEL, Fuel); Cats.put(CatSCF.SCF_LAUN, Laundrette);
 		Cats.put(CatSCF.SCF_PMPO, PumpOut); Cats.put(CatSCF.SCF_CLUB, SailingClub); Cats.put(CatSCF.SCF_SHWR, Shower); Cats.put(CatSCF.SCF_SLPW, Slipway); Cats.put(CatSCF.SCF_WC, Toilet);

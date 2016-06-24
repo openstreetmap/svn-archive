@@ -83,7 +83,7 @@ public class S57map { // S57/OSM map generation methods
 		public Edge() {
 			first = 0;
 			last = 0;
-			nodes = new ArrayList<Long>();
+			nodes = new ArrayList<>();
 		}
 	}
 	

@@ -181,7 +181,7 @@ public class Beacons {
 		WithyStarboard.add(new Instr(Form.LINE, new Line2D.Double(-30,-21,0,-35)));
 	}
 	
-	public static final EnumMap<BcnSHP, Symbol> Shapes = new EnumMap<BcnSHP, Symbol>(BcnSHP.class);
+	public static final EnumMap<BcnSHP, Symbol> Shapes = new EnumMap<>(BcnSHP.class);
 	static {
 		Shapes.put(BcnSHP.BCN_UNKN, Beacons.Beacon); Shapes.put(BcnSHP.BCN_STAK, Beacons.Stake); Shapes.put(BcnSHP.BCN_TOWR, Beacons.Tower);
 		Shapes.put(BcnSHP.BCN_LATT, Beacons.Beacon); Shapes.put(BcnSHP.BCN_PILE, Beacons.Beacon); Shapes.put(BcnSHP.BCN_POLE, Beacons.Stake);

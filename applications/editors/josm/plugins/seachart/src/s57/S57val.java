@@ -1024,7 +1024,7 @@ public class S57val { // S57 Attribute values lookup tables & methods
  Catcvr.put(CatCVR.CVR_COVR, new S57enum(1, "coverage")); Catcvr.put(CatCVR.CVR_NCVR, new S57enum(2, "no_coverage"));
  }
 
- private static final EnumMap<Att, S57key> keys = new EnumMap<Att, S57key>(Att.class);
+ private static final EnumMap<Att, S57key> keys = new EnumMap<>(Att.class);
  static {
   keys.put(Att.UNKATT, new S57key(Conv.A, null)); keys.put(Att.AGENCY, new S57key(Conv.A, null)); keys.put(Att.BCNSHP, new S57key(Conv.E, Bcnshp));
   keys.put(Att.BUISHP, new S57key(Conv.E, Buishp)); keys.put(Att.BOYSHP, new S57key(Conv.E, Boyshp)); keys.put(Att.BURDEP, new S57key(Conv.F, null));
@@ -1142,26 +1142,26 @@ public class S57val { // S57 Attribute values lookup tables & methods
   switch (conv) {
   case A:
   case S:
-   return new AttVal<String>(conv, val);
+   return new AttVal<>(conv, val);
   case E:
-   ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
+   ArrayList<Enum<?>> list = new ArrayList<>();
    list.add(s57Enum(val, att));
    return new AttVal<ArrayList<?>>(Conv.E, list);
   case L:
-   list = new ArrayList<Enum<?>>();
+   list = new ArrayList<>();
    for (String item : val.split(",")) {
     list.add(s57Enum(item, att));
    }
    return new AttVal<ArrayList<?>>(Conv.L, list);
   case I:
    try {
-    return new AttVal<Long>(Conv.I, Long.parseLong(val));
+    return new AttVal<>(Conv.I, Long.parseLong(val));
    } catch (Exception e) {
     break;
    }
   case F:
    try {
-    return new AttVal<Double>(Conv.F, Double.parseDouble(val));
+    return new AttVal<>(Conv.F, Double.parseDouble(val));
    } catch (Exception e) {
     break;
    }
@@ -1235,31 +1235,31 @@ public class S57val { // S57 Attribute values lookup tables & methods
   switch (keys.get(att).conv) {
   case A:
   case S:
-   return new AttVal<String>(Conv.S, val);
+   return new AttVal<>(Conv.S, val);
   case E:
-   ArrayList<Enum<?>> list = new ArrayList<Enum<?>>();
+   ArrayList<Enum<?>> list = new ArrayList<>();
    list.add(osmEnum(val, att));
    return new AttVal<ArrayList<?>>(Conv.E, list);
   case L:
-   list = new ArrayList<Enum<?>>();
+   list = new ArrayList<>();
    for (String item : val.split(";")) {
     list.add(osmEnum(item, att));
    }
    return new AttVal<ArrayList<?>>(Conv.L, list);
   case I:
    try {
-    return new AttVal<Long>(Conv.I, Long.parseLong(val));
+    return new AttVal<>(Conv.I, Long.parseLong(val));
    } catch (Exception e) {
     break;
    }
   case F:
    try {
-    return new AttVal<Double>(Conv.F, Double.parseDouble(val));
+    return new AttVal<>(Conv.F, Double.parseDouble(val));
    } catch (Exception e) {
     break;
    }
   }
-  return new AttVal<Object>(keys.get(att).conv, null);
+  return new AttVal<>(keys.get(att).conv, null);
  }
  
  public static Enum<?> unknAtt(Att att) {

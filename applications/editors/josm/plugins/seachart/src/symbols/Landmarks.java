@@ -186,7 +186,7 @@ public class Landmarks {
 		Windsock.add(new Instr(Form.PLIN, p));
 	}
 	
-	public static final EnumMap<CatLMK, Symbol> Shapes = new EnumMap<CatLMK, Symbol>(CatLMK.class);
+	public static final EnumMap<CatLMK, Symbol> Shapes = new EnumMap<>(CatLMK.class);
 	static {
 		Shapes.put(CatLMK.LMK_CARN, Beacons.Cairn); Shapes.put(CatLMK.LMK_CHMY, Landmarks.Chimney);
 		Shapes.put(CatLMK.LMK_DISH, Landmarks.DishAerial); Shapes.put(CatLMK.LMK_FLAG, Landmarks.Flagstaff); Shapes.put(CatLMK.LMK_FLAR, Landmarks.FlareStack);
@@ -197,7 +197,7 @@ public class Landmarks {
 		Shapes.put(CatLMK.LMK_WNDG, Landmarks.WindMotor); Shapes.put(CatLMK.LMK_SPIR, Landmarks.Spire); Shapes.put(CatLMK.LMK_BLDR, Beacons.Cairn);
 	}
 
-	public static final EnumMap<FncFNC, Symbol> Funcs = new EnumMap<FncFNC, Symbol>(FncFNC.class);
+	public static final EnumMap<FncFNC, Symbol> Funcs = new EnumMap<>(FncFNC.class);
 	static {
 		Funcs.put(FncFNC.FNC_CHCH, Landmarks.Church); Funcs.put(FncFNC.FNC_CHPL, Landmarks.Church); Funcs.put(FncFNC.FNC_TMPL, Landmarks.Temple);
 		Funcs.put(FncFNC.FNC_PGDA, Landmarks.Temple); Funcs.put(FncFNC.FNC_SHSH, Landmarks.Temple); Funcs.put(FncFNC.FNC_BTMP, Landmarks.Temple);

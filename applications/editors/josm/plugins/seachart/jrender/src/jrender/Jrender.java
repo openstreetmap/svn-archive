@@ -104,7 +104,7 @@ public class Jrender {
 					writer.println(str);
 				}
 				writer.close();
-				send = new ArrayList<String>();
+				send = new ArrayList<>();
 			}
 		}
 		if ((z >= 12) && (z < 18) && ((z < 16) || (bos.size() > empty))) {
@@ -145,8 +145,8 @@ public class Jrender {
 		zoom = Integer.parseInt(args[2]);
 		xtile = Integer.parseInt(args[3]);
 		ytile = Integer.parseInt(args[4]);
-		send = new ArrayList<String>();
-		deletes = new HashMap<String, Boolean>();
+		send = new ArrayList<>();
+		deletes = new HashMap<>();
 		BufferedReader in = new BufferedReader(new FileReader(srcdir + xtile + "-" + ytile + "-" + zoom + ".osm"));
 		map = new S57map(true);
 		S57osm.OSMmap(in, map, false);

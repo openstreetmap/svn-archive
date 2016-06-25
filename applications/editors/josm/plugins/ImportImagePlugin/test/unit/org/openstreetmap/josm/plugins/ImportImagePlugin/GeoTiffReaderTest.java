@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.geotools.coverage.grid.GridCoverage2D;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.Main;
@@ -31,11 +30,6 @@ public class GeoTiffReaderTest {
      */
     @Rule
     public JOSMTestRules rules = new JOSMTestRules().preferences();
-
-    @Before
-    public void setUp() throws Exception {
-        new ImportImagePlugin(null);
-    }
 
     @Test
     public void testReadGeoTiffFiles() throws IOException {

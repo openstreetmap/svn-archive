@@ -18,6 +18,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.tools.Utils;
 
 /**
  * Plugin class.
@@ -122,13 +123,13 @@ public class ImportImagePlugin extends Plugin{
             // check if plugin directory exist
             File pluginDir = new File(PLUGIN_DIR);
             if(!pluginDir.exists()){
-                pluginDir.mkdir();
+                Utils.mkDirs(pluginDir);
             }
 
             // check if "lib" directory exist
             File libDir = new File(PLUGINLIBRARIES_DIR);
             if(!libDir.exists()){
-                libDir.mkdir();
+                Utils.mkDirs(libDir);
             }
 
             // create local properties file

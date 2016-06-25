@@ -57,7 +57,7 @@ public class ImportImageFileImporter extends FileImporter {
             }
 
             // Add layer:
-            Main.main.addLayer(layer);
+            Main.getLayerManager().addLayer(layer);
             BoundingXYVisitor boundingXYVisitor = new BoundingXYVisitor();
             layer.visitBoundingBox(boundingXYVisitor);
             Main.map.mapView.zoomTo(boundingXYVisitor);

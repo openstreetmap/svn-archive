@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.osmrec.personalization;
 
 import java.io.IOException;
@@ -24,8 +25,8 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.io.OsmApi;
-import org.openstreetmap.josm.plugins.container.OSMNode;
-import org.openstreetmap.josm.plugins.container.OSMWay;
+import org.openstreetmap.josm.plugins.osmrec.container.OSMNode;
+import org.openstreetmap.josm.plugins.osmrec.container.OSMWay;
 import org.openstreetmap.josm.tools.HttpClient;
 import org.openstreetmap.josm.tools.Utils;
 import org.w3c.dom.Node;
@@ -42,7 +43,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Parses the history of an OSM user's changesets using OSM API.
- * 
+ *
  * @author imis-nkarag
  */
 public class HistoryParser {
@@ -51,7 +52,7 @@ public class HistoryParser {
     private static final CoordinateReferenceSystem targetCRS = DefaultGeocentricCRS.CARTESIAN;
     private static final GeometryFactory geometryFactory = new GeometryFactory();
     private MathTransform transform;
-    private OSMNode nodeTmp;  
+    private OSMNode nodeTmp;
 
     private final List<OSMNode> nodeList;
     private final Map<String, OSMNode> nodesWithIDs;
@@ -63,7 +64,7 @@ public class HistoryParser {
      * Constructs a new {@code HistoryParser}.
      * @param username user name
      */
-    public HistoryParser(String username) {   
+    public HistoryParser(String username) {
         this.username = username;
         transform = null;
         try {
@@ -77,9 +78,9 @@ public class HistoryParser {
     }
 
     public void historyParse(String timeInterval) {
-        
+
         HashSet<String> changesetIDsList = new HashSet<>();
-        
+
         try {
             String osmUrl = OSM_API + "changesets?display_name=" + username + "&time=" + timeInterval;
             InputStream xml = HttpClient.create(new URL(osmUrl)).connect().getContent();
@@ -87,14 +88,14 @@ public class HistoryParser {
 
             Main.debug("changeset size "+ nodes.getLength());
             for (int i = 0; i < nodes.getLength(); i++) {
-            	Main.debug("attributes of " + i + "th changeset"); 
+                Main.debug("attributes of " + i + "th changeset");
                 String id = nodes.item(i).getAttributes().item(3).toString();
                 Main.debug("id:" + nodes.item(i).getAttributes().item(3));
                 id = stripQuotes(id);
-                changesetIDsList.add(id);                
+                changesetIDsList.add(id);
             }
 
-            for(String id : changesetIDsList){
+            for (String id : changesetIDsList) {
                 getChangesetByID(id);
             }
         } catch (IOException | ParserConfigurationException | SAXException ex) {
@@ -107,18 +108,18 @@ public class HistoryParser {
             String changesetByIDURL = OSM_API+ "changeset/" + id + "/download";
             InputStream xml = HttpClient.create(new URL(changesetByIDURL)).connect().getContent();
             Node osmChange = Utils.parseSafeDOM(xml).getFirstChild();
-  
+
             //get all nodes first, in order to be able to call all nodes references and create the geometries
-            for(int i = 0; i < osmChange.getChildNodes().getLength(); i++){
+            for (int i = 0; i < osmChange.getChildNodes().getLength(); i++) {
                 String changeType = osmChange.getChildNodes().item(i).getNodeName();
-                if(!(changeType.equals("#text") || changeType.equals("delete"))){
+                if (!(changeType.equals("#text") || changeType.equals("delete"))) {
 
                     NodeList changeChilds = osmChange.getChildNodes().item(i).getChildNodes();
 
                     Node osmObject = changeChilds.item(1);
 
-                    if(osmObject.getNodeName().equals("node")){
-                        //node data 
+                    if (osmObject.getNodeName().equals("node")) {
+                        //node data
                         nodeTmp = new OSMNode();
                         nodeTmp.setID(osmObject.getAttributes().getNamedItem("id").getNodeValue());
 
@@ -127,7 +128,7 @@ public class HistoryParser {
                         double latitude = Double.parseDouble(osmObject.getAttributes().getNamedItem("lat").getNodeValue());
                         Coordinate targetGeometry = null;
                         Coordinate sourceCoordinate = new Coordinate(longitude, latitude);
-                        try {    
+                        try {
                             targetGeometry = JTS.transform(sourceCoordinate, null, transform);
                         } catch (MismatchedDimensionException | TransformException ex) {
                             Logger.getLogger(HistoryParser.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,93 +136,88 @@ public class HistoryParser {
 
                         //create geometry object
                         Geometry geom = geometryFactory.createPoint(new Coordinate(targetGeometry));
-                        nodeTmp.setGeometry(geom);                    
+                        nodeTmp.setGeometry(geom);
 
                         nodeList.add(nodeTmp);
                         nodesWithIDs.put(nodeTmp.getID(), nodeTmp);
-                    }                        
+                    }
                 }
             }
-        
-            for(int i = 0; i < osmChange.getChildNodes().getLength(); i++){
+
+            for (int i = 0; i < osmChange.getChildNodes().getLength(); i++) {
                 String changeType = osmChange.getChildNodes().item(i).getNodeName();
-                if(!(changeType.equals("#text") || changeType.equals("delete"))){
+                if (!(changeType.equals("#text") || changeType.equals("delete"))) {
                     NodeList changeChilds = osmChange.getChildNodes().item(i).getChildNodes();
 
                     Node osmObject = changeChilds.item(1);
-                    if(osmObject.getNodeName().equals("way")){
+                    if (osmObject.getNodeName().equals("way")) {
 
                         //get way data
                         wayTmp = new OSMWay();
-                        wayTmp.setID(osmObject.getAttributes().getNamedItem("id").getNodeValue());  
-                        //osmObject.getChildNodes() <-extract tags, then set tags to osm object
+                        wayTmp.setID(osmObject.getAttributes().getNamedItem("id").getNodeValue());
+                        // extract tags, then set tags to osm object
                         Main.debug("\n\nWAY: " + wayTmp.getID());
-                        for(int l=0; l<osmObject.getChildNodes().getLength(); l++){
+                        for (int l = 0; l < osmObject.getChildNodes().getLength(); l++) {
                             String wayChild = osmObject.getChildNodes().item(l).getNodeName();
 
-                            if(wayChild.equals("tag")){
+                            if (wayChild.equals("tag")) {
                                 String key = osmObject.getChildNodes().item(l).getAttributes().getNamedItem("k").getNodeValue();
                                 String value = osmObject.getChildNodes().item(l).getAttributes().getNamedItem("v").getNodeValue();
                                 System.out.println("key: " + key + " value: " + value);
-                                wayTmp.setTagKeyValue(key,value);
-                            }
-                            else if(wayChild.equals("nd")){
+                                wayTmp.setTagKeyValue(key, value);
+                            } else if (wayChild.equals("nd")) {
                                 wayTmp.addNodeReference(osmObject.getChildNodes().item(l).getAttributes().getNamedItem("ref").getNodeValue());
                             }
                         }
-                        
+
                         //construct the Way geometry from each node of the node references
                         List<String> references = wayTmp.getNodeReferences();
 
                         for (String entry: references) {
-                           if(nodesWithIDs.containsKey(entry)){ 
+                            if (nodesWithIDs.containsKey(entry)) {
                                 Geometry geometry = nodesWithIDs.get(entry).getGeometry(); //get the geometry of the node with ID=entry
                                 wayTmp.addNodeGeometry(geometry); //add the node geometry in this way
-                           }
-                           else{
-                               Main.debug("nodes with ids, no entry " + entry);
-                               getNodeFromAPI(entry);
-                           }
+                            } else {
+                                Main.debug("nodes with ids, no entry " + entry);
+                                getNodeFromAPI(entry);
+                            }
                         }
 
                         Geometry geom = geometryFactory.buildGeometry(wayTmp.getNodeGeometries());
-                        if((wayTmp.getNodeGeometries().size()>3) && 
+                        if ((wayTmp.getNodeGeometries().size() > 3) &&
                                 wayTmp.getNodeGeometries().get(0).equals(wayTmp.getNodeGeometries()
-                                                                                    .get(wayTmp.getNodeGeometries().size()-1))){
-                        //checks if the beginning and ending node are the same and the number of nodes are more than 3. 
-                        //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.
+                                        .get(wayTmp.getNodeGeometries().size()-1))) {
+                            //checks if the beginning and ending node are the same and the number of nodes are more than 3.
+                            //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.
 
-                            if (!((wayTmp.getTagKeyValue().containsKey("barrier")) || wayTmp.getTagKeyValue().containsKey("highway"))){
-                            //this is not a barrier nor a road, so construct a polygon geometry
+                            if (!((wayTmp.getTagKeyValue().containsKey("barrier")) || wayTmp.getTagKeyValue().containsKey("highway"))) {
+                                //this is not a barrier nor a road, so construct a polygon geometry
 
-                            LinearRing linear = geometryFactory.createLinearRing(geom.getCoordinates());
-                            Polygon poly = new Polygon(linear, null, geometryFactory);
-                            wayTmp.setGeometry(poly);               
-                            }
-                            else {
-                            //it is either a barrier or a road, so construct a linear ring geometry 
                                 LinearRing linear = geometryFactory.createLinearRing(geom.getCoordinates());
-                                wayTmp.setGeometry(linear);  
+                                Polygon poly = new Polygon(linear, null, geometryFactory);
+                                wayTmp.setGeometry(poly);
+                            } else {
+                                //it is either a barrier or a road, so construct a linear ring geometry
+                                LinearRing linear = geometryFactory.createLinearRing(geom.getCoordinates());
+                                wayTmp.setGeometry(linear);
                             }
-                        }
-                        else if (wayTmp.getNodeGeometries().size() > 1){
-                        //it is an open geometry with more than one nodes, make it linestring 
+                        } else if (wayTmp.getNodeGeometries().size() > 1) {
+                            //it is an open geometry with more than one nodes, make it linestring
 
                             LineString lineString = geometryFactory.createLineString(geom.getCoordinates());
-                            wayTmp.setGeometry(lineString);               
-                        }
-                        else{ //we assume all the rest geometries are points
-                        //some ways happen to have only one point. Construct a  Point.
+                            wayTmp.setGeometry(lineString);
+                        } else { //we assume all the rest geometries are points
+                            //some ways happen to have only one point. Construct a  Point.
                             Point point = geometryFactory.createPoint(geom.getCoordinate());
                             wayTmp.setGeometry(point);
                         }
-                        wayList.add(wayTmp);    
-                    }   
+                        wayList.add(wayTmp);
+                    }
                 }
-            }                  
+            }
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(HistoryParser.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }
     }
 
     private String stripQuotes(String id) {
@@ -235,7 +231,7 @@ public class HistoryParser {
             NodeList nodes = Utils.parseSafeDOM(xml).getElementsByTagName("node");
             String lat = nodes.item(0).getAttributes().getNamedItem("lat").getNodeValue();
             String lon = nodes.item(0).getAttributes().getNamedItem("lon").getNodeValue();
-            
+
             nodeTmp = new OSMNode();
             nodeTmp.setID(nodeID);
 
@@ -244,7 +240,7 @@ public class HistoryParser {
             double latitude = Double.parseDouble(lat);
             Coordinate targetGeometry = null;
             Coordinate sourceCoordinate = new Coordinate(longitude, latitude);
-            try {    
+            try {
                 targetGeometry = JTS.transform(sourceCoordinate, null, transform);
             } catch (MismatchedDimensionException | TransformException ex) {
                 Logger.getLogger(HistoryParser.class.getName()).log(Level.SEVERE, null, ex);
@@ -252,17 +248,17 @@ public class HistoryParser {
 
             //create geometry object
             Geometry geom = geometryFactory.createPoint(new Coordinate(targetGeometry));
-            nodeTmp.setGeometry(geom);                    
+            nodeTmp.setGeometry(geom);
 
             nodeList.add(nodeTmp);
             nodesWithIDs.put(nodeTmp.getID(), nodeTmp);
-            
+
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             Logger.getLogger(HistoryParser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public List<OSMWay> getWayList(){
+
+    public List<OSMWay> getWayList() {
         return wayList;
     }
 }

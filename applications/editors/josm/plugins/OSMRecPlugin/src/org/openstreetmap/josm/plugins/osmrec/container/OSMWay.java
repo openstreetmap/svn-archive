@@ -1,4 +1,5 @@
-package org.openstreetmap.josm.plugins.container;
+// License: GPL. For details, see LICENSE file.
+package org.openstreetmap.josm.plugins.osmrec.container;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import de.bwaldvogel.liblinear.FeatureNode;
  *
  * @author imis-nkarag
  */
-public class OSMWay implements Serializable{
+public class OSMWay implements Serializable {
 
     private String id;
     private String user;
@@ -29,102 +30,101 @@ public class OSMWay implements Serializable{
     private Coordinate[] coordinateList;
     private Map<String, String> tags = new HashMap<>();
     private Geometry geometry;
-    private TreeMap<Integer,Double> indexVector = new TreeMap<>();
+    private TreeMap<Integer, Double> indexVector = new TreeMap<>();
     private ArrayList<FeatureNode> featureNodeList = new ArrayList<>();
-    //private Map<String, String> tags;
 
     //way attributes getters
-    public String getID(){
+    public String getID() {
         return id;
     }
 
-    public String getUser(){
+    public String getUser() {
         return user;
     }
 
-    public List<Geometry> getNodeGeometries(){
+    public List<Geometry> getNodeGeometries() {
         return nodeGeometries;
     }
 
-    public Coordinate[] getCoordinateList(){
+    public Coordinate[] getCoordinateList() {
         coordinateList = nodeGeometries.toArray(new Coordinate[0]);
         return coordinateList;
     }
 
-    public Geometry getGeometry(){
+    public Geometry getGeometry() {
         return geometry;
     }
 
-    public List<String> getNodeReferences(){
+    public List<String> getNodeReferences() {
         return nodeReferences;
     }
 
-    public int getNumberOfNodes(){
+    public int getNumberOfNodes() {
         return nodeReferences.size();
     }
 
-    public Map<String, String> getTagKeyValue(){
+    public Map<String, String> getTagKeyValue() {
         return tags;
     }
 
-    public int getClassID(){
+    public int getClassID() {
         return classID;
     }
 
-    public Set<Integer> getClassIDs(){
+    public Set<Integer> getClassIDs() {
         return classIDs;
     }
 
-    public TreeMap<Integer, Double> getIndexVector(){
+    public TreeMap<Integer, Double> getIndexVector() {
         return indexVector;
     }
 
-    public void setIndexVector(TreeMap<Integer, Double> indexVector){
+    public void setIndexVector(TreeMap<Integer, Double> indexVector) {
         this.indexVector = indexVector;
     }
 
     //way attributes setters
-    public void setID(String id){
+    public void setID(String id) {
         this.id = id;
     }
 
-    public void setUser(String user){
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public void setTagKeyValue(String tagKey, String tagValue){
+    public void setTagKeyValue(String tagKey, String tagValue) {
         this.tags.put(tagKey, tagValue);
     }
 
-    public void addNodeReference(String nodeReference){
+    public void addNodeReference(String nodeReference) {
         nodeReferences.add(nodeReference);
     }
 
-    public void addNodeGeometry(Geometry geometry){
+    public void addNodeGeometry(Geometry geometry) {
         nodeGeometries.add(geometry);
     }
 
-    public void setGeometry(Geometry geometry){
+    public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
     }
 
-    public void setClassID(int classID){
+    public void setClassID(int classID) {
         this.classID = classID;
     }
 
-    public void setClassIDs(Set<Integer> classIDs){
+    public void setClassIDs(Set<Integer> classIDs) {
         this.classIDs = classIDs;
     }
 
-    public void setFeature(FeatureNode featureNode){
+    public void setFeature(FeatureNode featureNode) {
         this.featureNodeList.add(featureNode);
     }
 
-    public List<FeatureNode> getFeatureNodeList(){
+    public List<FeatureNode> getFeatureNodeList() {
         return featureNodeList;
     }
 
-    public void setAllTags(Map<String, String> selectedTags){
+    public void setAllTags(Map<String, String> selectedTags) {
         tags.putAll(selectedTags);
     }
 }

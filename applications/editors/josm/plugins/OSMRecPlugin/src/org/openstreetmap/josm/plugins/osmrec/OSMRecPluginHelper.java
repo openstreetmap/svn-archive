@@ -1,15 +1,6 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.osmrec;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import de.bwaldvogel.liblinear.FeatureNode;
-import de.bwaldvogel.liblinear.Linear;
-import de.bwaldvogel.liblinear.Model;
 import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
@@ -18,21 +9,16 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -67,7 +53,6 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -87,7 +72,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -95,6 +79,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
+
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeocentricCRS;
@@ -104,7 +89,6 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
-
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -123,59 +107,67 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionManager;
 import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.gui.widgets.PopupMenuLauncher;
 import org.openstreetmap.josm.io.XmlWriter;
-import org.openstreetmap.josm.plugins.container.OSMWay;
-import org.openstreetmap.josm.plugins.core.TrainWorker;
-import org.openstreetmap.josm.plugins.extractor.LanguageDetector;
-import org.openstreetmap.josm.plugins.extractor.SampleModelsExtractor;
-import org.openstreetmap.josm.plugins.features.ClassFeatures;
-import org.openstreetmap.josm.plugins.features.GeometryFeatures;
-import org.openstreetmap.josm.plugins.features.OSMClassification;
-import org.openstreetmap.josm.plugins.features.TextualFeatures;
+import org.openstreetmap.josm.plugins.osmrec.container.OSMWay;
+import org.openstreetmap.josm.plugins.osmrec.core.TrainWorker;
+import org.openstreetmap.josm.plugins.osmrec.extractor.LanguageDetector;
+import org.openstreetmap.josm.plugins.osmrec.extractor.SampleModelsExtractor;
+import org.openstreetmap.josm.plugins.osmrec.features.ClassFeatures;
+import org.openstreetmap.josm.plugins.osmrec.features.GeometryFeatures;
+import org.openstreetmap.josm.plugins.osmrec.features.OSMClassification;
+import org.openstreetmap.josm.plugins.osmrec.features.TextualFeatures;
+import org.openstreetmap.josm.plugins.osmrec.parsers.Mapper;
+import org.openstreetmap.josm.plugins.osmrec.parsers.OSMParser;
+import org.openstreetmap.josm.plugins.osmrec.parsers.Ontology;
+import org.openstreetmap.josm.plugins.osmrec.parsers.TextualStatistics;
 import org.openstreetmap.josm.plugins.osmrec.personalization.UserDataExtractAndTrainWorker;
-import org.openstreetmap.josm.plugins.parsers.Mapper;
-import org.openstreetmap.josm.plugins.parsers.OSMParser;
-import org.openstreetmap.josm.plugins.parsers.Ontology;
-import org.openstreetmap.josm.plugins.parsers.TextualStatistics;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+
+import de.bwaldvogel.liblinear.FeatureNode;
+import de.bwaldvogel.liblinear.Linear;
+import de.bwaldvogel.liblinear.Model;
+
 /**
  * Modified PropertiesDialog(since 5633) to serve the plugin functionality.
- * 
+ *
  * @author imis-nkarag
  */
-
 class OSMRecPluginHelper {
-    
+
     private final DefaultTableModel tagData;
-    private final Map<String, Map<String, Integer>> valueCount;
     private static Collection<String> fileHistory;
     private Map<File, Double> filesAndWeights = new HashMap<>();
-    private boolean useCombinedModel = false;
-    
-    //the most recent file from history. 
+    private boolean useCombinedModel;
+
+    //the most recent file from history.
     //all necessary files will reside in a directory of this file
     private static String MAIN_PATH;
-    //private static final String MODEL_PATH = MAIN_PATH.substring(0, MAIN_PATH.lastIndexOf("/")) + "OSMRec_models/";
     private static String MODEL_PATH;
     private static String TEXTUAL_LIST_PATH;
     private static Map<String, List<String>> indirectClasses;
     private static Map<String, Integer> indirectClassesWithIDs;
     private static LanguageDetector languageDetector;
     private static String bestModelPath;
-    private boolean modelWithClasses;// = false;
+    private boolean modelWithClasses;
     private final String modelWithClassesPath;
     private boolean useCustomSVMModel = false;
     private String customSVMModelPath;
     private final String combinedModelClasses;
     private final String combinedModel;
-       
+
     // Selection that we are editing by using both dialogs
     Collection<OsmPrimitive> sel;
 
     private String changedKey;
-    private String objKey;
 
     Comparator<AutoCompletionListItem> defaultACItemComparator = new Comparator<AutoCompletionListItem>() {
         @Override
@@ -198,15 +190,12 @@ class OSMRecPluginHelper {
         }
     };
 
-    
     OSMRecPluginHelper(DefaultTableModel propertyData, Map<String, Map<String, Integer>> valueCount) {
         this.tagData = propertyData;
-        this.valueCount = valueCount;
         fileHistory = Main.pref.getCollection("file-open.history");
-        if(!fileHistory.isEmpty()){            
-            MAIN_PATH = (String) fileHistory.toArray()[0]; 
-        }
-        else{
+        if (!fileHistory.isEmpty()) {
+            MAIN_PATH = (String) fileHistory.toArray()[0];
+        } else {
             MAIN_PATH = System.getProperty("user.home");
         }
         MODEL_PATH = new File(MAIN_PATH).getParentFile() + "/OSMRec_models";
@@ -219,15 +208,13 @@ class OSMRecPluginHelper {
         languageDetector = LanguageDetector.getInstance(MODEL_PATH + "/profiles");
 
         SampleModelsExtractor sampleModelsExtractor = new SampleModelsExtractor();
-                
+
         sampleModelsExtractor.extractSampleSVMmodel("best_model", bestModelPath);
         sampleModelsExtractor.extractSampleSVMmodel("model_with_classes", modelWithClassesPath);
-        
     }
 
     /**
-     * Open the add selection dialog and add a new key/value to the table (and
-     * to the dataset, of course).
+     * Open the add selection dialog and add a new key/value to the table (and to the dataset, of course).
      */
     public void addTag() {
         changedKey = null;
@@ -235,7 +222,7 @@ class OSMRecPluginHelper {
         if (sel == null || sel.isEmpty()) return;
 
         final AddTagsDialog addDialog = new AddTagsDialog();
-        
+
         addDialog.showDialog();
 
         addDialog.destroyActions();
@@ -246,27 +233,22 @@ class OSMRecPluginHelper {
     }
 
     /**
-    * Edit the value in the tags table row.
-    * @param row The row of the table from which the value is edited.
-    * @param focusOnKey Determines if the initial focus should be set on key instead of value
-    * @since 5653
-    */
+     * Edit the value in the tags table row.
+     * @param row The row of the table from which the value is edited.
+     * @param focusOnKey Determines if the initial focus should be set on key instead of value
+     * @since 5653
+     */
     public void editTag(final int row, boolean focusOnKey) {
         changedKey = null;
         sel = Main.main.getInProgressSelection();
-        //if (sel == null || sel.isEmpty()) return;
-//        String key = tagData.getValueAt(row, 0).toString();
         String key = "";
-//        objKey=key;
 
         @SuppressWarnings("unchecked")
         Map<String, Integer> dumPar = new HashMap<>();
         dumPar.put(" ", -1);
         final TrainingDialog editDialog = new TrainingDialog(key, row,
-                dumPar, focusOnKey);                
+                dumPar, focusOnKey);
         editDialog.showDialog();
-        //if (editDialog.getValue() !=1 ) return;
-        //editDialog.performTagEdit();
     }
 
     /**
@@ -276,10 +258,6 @@ class OSMRecPluginHelper {
      */
     public String getChangedKey() {
         return changedKey;
-    }
-
-    public void resetChangedKey() {
-        changedKey = null;
     }
 
     /**
@@ -317,7 +295,7 @@ class OSMRecPluginHelper {
      */
     public void saveTagsIfNeeded() {
         if (PROPERTY_REMEMBER_TAGS.get() && !recentTags.isEmpty()) {
-            List<String> c = new ArrayList<>( recentTags.size()*2 );
+            List<String> c = new ArrayList<>(recentTags.size()*2);
             for (Tag t: recentTags.keySet()) {
                 c.add(t.getKey());
                 c.add(t.getValue());
@@ -348,33 +326,13 @@ class OSMRecPluginHelper {
 
     public final class TrainingDialog extends AbstractTagsDialog {
 
-        ListCellRenderer<AutoCompletionListItem> cellRenderer = new ListCellRenderer<AutoCompletionListItem>() {
-            final DefaultListCellRenderer def = new DefaultListCellRenderer();
-            @Override
-            public Component getListCellRendererComponent(JList<? extends AutoCompletionListItem> list,
-                    AutoCompletionListItem value, int index, boolean isSelected,  boolean cellHasFocus){
-                Component c = def.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (c instanceof JLabel) {
-                    String str = value.getValue();
-                    if (valueCount.containsKey(objKey)) {
-                        Map<String, Integer> m = valueCount.get(objKey);
-                        if (m.containsKey(str)) {
-                            str = tr("{0} ({1})", str, m.get(str));
-                            c.setFont(c.getFont().deriveFont(Font.ITALIC + Font.BOLD));
-                        }
-                    }
-                    ((JLabel) c).setText(str);
-                }
-                return c;
-            }
-        };
         private static final int FIELD_COLUMNS = 4;
         private final JTextField inputFileField;
         private final JLabel inputFileLabel;
         private final JTextField topKField;
         private final JTextField cParameterField;
         private final JTextField frequencyField;
-        
+
         private final JButton fileBrowseButton;
         private final JButton acceptConfigButton;
         private JRadioButton frequencyButton;
@@ -392,7 +350,6 @@ class OSMRecPluginHelper {
         private final JLabel inputFileErrorMessageLabel;
         private final JLabel frequencyErrorMessageLabel;
         private final JProgressBar trainingProgressBar;
-        //private final JLabel userHistoryLabel;
         private final JRadioButton byAreaRadioButton;
         private final JRadioButton byTimeRadioButton;
         private final JLabel userNameLabel;
@@ -405,55 +362,53 @@ class OSMRecPluginHelper {
         private String usernameValue;
         private TrainWorker trainWorker;
         private UserDataExtractAndTrainWorker userDataExtractAndTrainWorker;
-        
-        private TrainingDialog(String key, int row, Map<String, Integer> map, final boolean initialFocusOnKey) {
-            //super(Main.parent, tr("Training process configuration"), new String[] {tr("Start Training"),tr("Cancel")});
-            super(Main.parent, tr("Training process configuration"), 
-                    new String[] {tr("Cancel")});
 
-            setButtonIcons(new String[] {"ok","cancel"});
+        private TrainingDialog(String key, int row, Map<String, Integer> map, final boolean initialFocusOnKey) {
+            super(Main.parent, tr("Training process configuration"), new String[] {tr("Cancel")});
+
+            setButtonIcons(new String[] {"ok", "cancel"});
             setCancelButton(2);
-            
-            JPanel mainPanel = new JPanel(new BorderLayout(10,10));   //6,6
-            JPanel configPanel = new JPanel(new BorderLayout(10,10));  //6,6    //at NORTH of mainPanel
+
+            JPanel mainPanel = new JPanel(new BorderLayout(10, 10));   //6,6
+            JPanel configPanel = new JPanel(new BorderLayout(10, 10));  //6,6    //at NORTH of mainPanel
             JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));    //NORTH at config panel
-            JPanel paramPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));    //WEST at config panel //config panel has EAST free                                                                               
-                                         
+            JPanel paramPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));    //WEST at config panel //config panel has EAST free
+
             JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));    //SOUTH at config panel
             userHistoryPanel = new JPanel(); //CENTER of config
-            
-            trainingProgressBar = new javax.swing.JProgressBar(0,100);
+
+            trainingProgressBar = new JProgressBar(0, 100);
 
             ButtonGroup paramGroup = new ButtonGroup();
             ButtonGroup userGroup = new ButtonGroup();
-            inputFileLabel = new javax.swing.JLabel();
-            inputFileField = new javax.swing.JTextField();
-            cParameterField = new javax.swing.JTextField();  
-            topKField = new javax.swing.JTextField();
-            frequencyField = new javax.swing.JTextField();            
-            
+            inputFileLabel = new JLabel();
+            inputFileField = new JTextField();
+            cParameterField = new JTextField();
+            topKField = new JTextField();
+            frequencyField = new JTextField();
+
             cParameterCheckBox = new JCheckBox("Define C parameter");
             topKButton = new JRadioButton("Top-K terms");
             frequencyButton = new JRadioButton("Max-Frequency");
-            fileBrowseButton = new javax.swing.JButton();
-            acceptConfigButton = new javax.swing.JButton("Accept Configuration");                       
-            resetConfigButton = new javax.swing.JButton("Reset Configuration/Cancel training");
-            startTrainingButton = new javax.swing.JButton("Train Model");
-            
-            inputFileErrorMessageLabel = new javax.swing.JLabel("");
-            cErrorMessageLabel = new javax.swing.JLabel("");
-            topKErrorMessageLabel = new javax.swing.JLabel(""); 
-            frequencyErrorMessageLabel = new javax.swing.JLabel(""); 
-          
+            fileBrowseButton = new JButton();
+            acceptConfigButton = new JButton("Accept Configuration");
+            resetConfigButton = new JButton("Reset Configuration/Cancel training");
+            startTrainingButton = new JButton("Train Model");
+
+            inputFileErrorMessageLabel = new JLabel("");
+            cErrorMessageLabel = new JLabel("");
+            topKErrorMessageLabel = new JLabel("");
+            frequencyErrorMessageLabel = new JLabel("");
+
             trainFromUserCheckBox = new JCheckBox("Train Model From User");
             byAreaRadioButton = new JRadioButton("By Area");
             byTimeRadioButton = new JRadioButton("By Time");
-            userNameLabel = new javax.swing.JLabel("Username:");
-            userNameField = new javax.swing.JTextField();
-            
-            daysLabel = new javax.swing.JLabel("Days: ");
-            daysField = new javax.swing.JTextField();
-            
+            userNameLabel = new JLabel("Username:");
+            userNameField = new JTextField();
+
+            daysLabel = new JLabel("Days: ");
+            daysField = new JTextField();
+
             cParameterCheckBox.setSelected(true);
             userHistoryPanel.setEnabled(false);
             byAreaRadioButton.setEnabled(false);
@@ -464,14 +419,13 @@ class OSMRecPluginHelper {
             daysLabel.setEnabled(false);
             daysField.setEnabled(false);
             userNameField.setColumns(FIELD_COLUMNS);
-            daysField.setColumns(FIELD_COLUMNS);           
-            
+            daysField.setColumns(FIELD_COLUMNS);
+
             Collection<String> fileHistory = Main.pref.getCollection("file-open.history");
-            if(!fileHistory.isEmpty()){                
-                //System.out.println(fileName);
+            if (!fileHistory.isEmpty()) {
                 inputFileField.setText(MAIN_PATH);
             }
-                
+
             fileBrowseButton.setText("...");
             inputFileLabel.setText("OSM filepath: ");
             inputFileErrorMessageLabel.setForeground(Color.RED);
@@ -479,23 +433,23 @@ class OSMRecPluginHelper {
             topKField.setText("50");
             frequencyField.setText("200");
             cParameterField.setText("0.01");
-            
+
             cParameterField.setColumns(FIELD_COLUMNS);
             cParameterField.setEditable(false);
             cParameterField.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
             cErrorMessageLabel.setForeground(Color.RED);
-            cErrorMessageLabel.setMinimumSize(new Dimension(150,10));
-            
-            topKButton.setSelected(true);        
+            cErrorMessageLabel.setMinimumSize(new Dimension(150, 10));
+
+            topKButton.setSelected(true);
             topKField.setColumns(FIELD_COLUMNS);
             topKField.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
             topKErrorMessageLabel.setForeground(Color.RED);
-                    
+
             frequencyField.setEditable(false);
             frequencyField.setColumns(FIELD_COLUMNS);
             frequencyField.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
             frequencyErrorMessageLabel.setForeground(Color.RED);
-         
+
             fileBrowseButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -505,11 +459,10 @@ class OSMRecPluginHelper {
             topKButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(topKButton.isSelected()){                       
+                    if (topKButton.isSelected()) {
                         frequencyField.setEditable(false);
                         topKField.setEditable(true);
-                    }
-                    else{
+                    } else {
                         frequencyField.setEditable(true);
                         topKField.setEditable(false);
                     }
@@ -518,23 +471,21 @@ class OSMRecPluginHelper {
             frequencyButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(frequencyButton.isSelected()){
+                    if (frequencyButton.isSelected()) {
                         topKField.setEditable(false);
                         frequencyField.setEditable(true);
-                    }
-                    else{
+                    } else {
                         topKField.setEditable(true);
                         frequencyField.setEditable(false);
                     }
                 }
-            });           
+            });
             cParameterCheckBox.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(cParameterCheckBox.isSelected()){                       
-                        cParameterField.setEditable(true);                       
-                    }
-                    else{
+                    if (cParameterCheckBox.isSelected()) {
+                        cParameterField.setEditable(true);
+                    } else {
                         cParameterField.setEditable(false);
                     }
                 }
@@ -549,26 +500,24 @@ class OSMRecPluginHelper {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     resetConfigButtonActionPerformed();
-                    
                 }
             });
-                
+
             startTrainingButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(!acceptConfigButton.isEnabled()){
+                    if (!acceptConfigButton.isEnabled()) {
                         startTraining();
-                    }
-                    else{
+                    } else {
                         System.out.println("Set values first!");
                     }
                 }
             });
-            
+
             trainFromUserCheckBox.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(trainFromUserCheckBox.isSelected()){
+                    if (trainFromUserCheckBox.isSelected()) {
                         userHistoryPanel.setEnabled(true);
                         byAreaRadioButton.setEnabled(true);
                         byTimeRadioButton.setEnabled(true);
@@ -576,106 +525,64 @@ class OSMRecPluginHelper {
                         userNameField.setEnabled(true);
                         daysLabel.setEnabled(true);
                         daysField.setEnabled(true);
-                    }
-                    else{
+                    } else {
                         userHistoryPanel.setEnabled(false);
                         byAreaRadioButton.setEnabled(false);
                         byTimeRadioButton.setEnabled(false);
                         userNameLabel.setEnabled(false);
                         userNameField.setEnabled(false);
                         daysLabel.setEnabled(false);
-                        daysField.setEnabled(false);   
+                        daysField.setEnabled(false);
                     }
                 }
-            });  
-            
+            });
+
             byAreaRadioButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(byAreaRadioButton.isSelected()){
-                        daysField.setEditable(false);                        
-                    }
-                    else{
-                        daysField.setEditable(true);                       
+                    if (byAreaRadioButton.isSelected()) {
+                        daysField.setEditable(false);
+                    } else {
+                        daysField.setEditable(true);
                     }
                 }
-            });   
-            
+            });
+
             byTimeRadioButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(byTimeRadioButton.isSelected()){
-                        daysField.setEditable(true);                        
-                    }
-                    else{
-                        daysField.setEditable(false);                       
+                    if (byTimeRadioButton.isSelected()) {
+                        daysField.setEditable(true);
+                    } else {
+                        daysField.setEditable(false);
                     }
                 }
-            }); 
-            
+            });
+
             //grouplayout for input panel
-            GroupLayout inputGroupLayout = new GroupLayout(inputPanel);
-            inputPanel.setLayout(inputGroupLayout);
-            inputGroupLayout.setAutoCreateGaps(true);
-            inputGroupLayout.setAutoCreateContainerGaps(true);
-            
-            GroupLayout.SequentialGroup inputHorGroup = inputGroupLayout.createSequentialGroup();
-            inputHorGroup.addGroup(inputGroupLayout.createParallelGroup().addComponent(inputFileLabel).
-                    addComponent(inputFileErrorMessageLabel));
-            inputHorGroup.addGroup(inputGroupLayout.createParallelGroup().addComponent(inputFileField));
-            inputHorGroup.addGroup(inputGroupLayout.createParallelGroup().addComponent(fileBrowseButton));
-            inputGroupLayout.setHorizontalGroup(inputHorGroup);
-            
-            GroupLayout.SequentialGroup inputVerGroup = inputGroupLayout.createSequentialGroup();
-            inputVerGroup.addGroup(inputGroupLayout.createParallelGroup(Alignment.LEADING).addComponent(inputFileLabel).
-                    addComponent(inputFileField).addComponent(fileBrowseButton));
-            inputVerGroup.addGroup(inputGroupLayout.createParallelGroup(Alignment.LEADING).
-                    addComponent(inputFileErrorMessageLabel));
-            inputGroupLayout.setVerticalGroup(inputVerGroup);
-            
-            
+            buildInputPanelGroupLayout(inputPanel);
+
             //grouplayout for param panel
-            GroupLayout paramGroupLayout = new GroupLayout(paramPanel);
-            paramPanel.setLayout(paramGroupLayout);
-            paramGroupLayout.setAutoCreateGaps(true);
-            paramGroupLayout.setAutoCreateContainerGaps(true);
-            
-            GroupLayout.SequentialGroup paramHorGroup = paramGroupLayout.createSequentialGroup();
-            paramHorGroup.addGroup(paramGroupLayout.createParallelGroup().addComponent(topKButton).
-                    addComponent(frequencyButton).addComponent(cParameterCheckBox));
-            paramHorGroup.addGroup(paramGroupLayout.createParallelGroup().addComponent(cParameterField).
-                    addComponent(topKField).addComponent(frequencyField));            
-            paramHorGroup.addGroup(paramGroupLayout.createParallelGroup().addComponent(cErrorMessageLabel).
-                    addComponent(topKErrorMessageLabel).addComponent(frequencyErrorMessageLabel));
-            paramGroupLayout.setHorizontalGroup(paramHorGroup);
-                        
-            GroupLayout.SequentialGroup paramVerGroup = paramGroupLayout.createSequentialGroup();
-            paramVerGroup.addGroup(paramGroupLayout.createParallelGroup(Alignment.BASELINE).
-                    addComponent(cParameterCheckBox).addComponent(cParameterField).addComponent(cErrorMessageLabel));
-            paramVerGroup.addGroup(paramGroupLayout.createParallelGroup(Alignment.BASELINE).addComponent(topKButton).
-                    addComponent(topKField).addComponent(topKErrorMessageLabel));
-            paramVerGroup.addGroup(paramGroupLayout.createParallelGroup(Alignment.BASELINE).
-                    addComponent(frequencyButton).addComponent(frequencyField).addComponent(frequencyErrorMessageLabel));
-            paramGroupLayout.setVerticalGroup(paramVerGroup);      
-            
+            buildParamPanelGroupLayout(paramPanel);
+
             inputPanel.add(inputFileLabel);
-            inputPanel.add(inputFileField);            
-            inputPanel.add(fileBrowseButton);   
+            inputPanel.add(inputFileField);
+            inputPanel.add(fileBrowseButton);
             inputPanel.add(inputFileErrorMessageLabel);
-            
+
             paramGroup.add(topKButton);
             paramGroup.add(frequencyButton);
-            
+
             paramPanel.add(cParameterCheckBox);
             paramPanel.add(cParameterField);
             paramPanel.add(cErrorMessageLabel);
             paramPanel.add(topKButton);
-            paramPanel.add(topKField);  
+            paramPanel.add(topKField);
             paramPanel.add(topKErrorMessageLabel);
             paramPanel.add(frequencyButton);
             paramPanel.add(frequencyField);
             paramPanel.add(frequencyErrorMessageLabel);
-            
+
             southPanel.add(acceptConfigButton);
             southPanel.add(resetConfigButton);
             southPanel.add(trainFromUserCheckBox);
@@ -687,306 +594,323 @@ class OSMRecPluginHelper {
             userHistoryPanel.add(daysLabel);
             userHistoryPanel.add(daysField);
             userHistoryPanel.add(userNameLabel);
-            userHistoryPanel.add(userNameField);    
-            //userHistoryPanel.add(trainFromUserCheckBox);   
-            
+            userHistoryPanel.add(userNameField);
+
             //grouplayout for user history panel
-            /* 
+            /*
                 userNameLabel       userField
-                arearadiobutton 
+                arearadiobutton
                 timeradiobutton     daysLabel   daysField
-            */
-            GroupLayout userHistoryGroupLayout = new GroupLayout(userHistoryPanel);
-            //userHistoryGroupLayout.se
-            userHistoryPanel.setLayout(userHistoryGroupLayout);
-            userHistoryGroupLayout.setAutoCreateGaps(true);
-            userHistoryGroupLayout.setAutoCreateContainerGaps(true); 
-            userHistoryGroupLayout.linkSize(SwingConstants.HORIZONTAL, userNameField, daysLabel,daysField);
-            
-            GroupLayout.SequentialGroup userHistoryHorGroup = userHistoryGroupLayout.createSequentialGroup();
-            
-            userHistoryHorGroup.addGroup(userHistoryGroupLayout.createParallelGroup().addComponent(userNameLabel)
-            .addComponent(byAreaRadioButton).addComponent(byTimeRadioButton));                        
-            userHistoryHorGroup.addGroup(userHistoryGroupLayout.createParallelGroup().addComponent(userNameField)
-                    .addComponent(daysLabel));       
-            userHistoryHorGroup.addGroup(userHistoryGroupLayout.createParallelGroup().addComponent(daysField));
-            userHistoryGroupLayout.setHorizontalGroup(userHistoryHorGroup);
-            
-            GroupLayout.SequentialGroup userHistoryVerGroup = userHistoryGroupLayout.createSequentialGroup();
-            userHistoryVerGroup.addGroup(userHistoryGroupLayout.createParallelGroup(Alignment.BASELINE).
-                    addComponent(userNameLabel).addComponent(userNameField));            
-            userHistoryVerGroup.addGroup(userHistoryGroupLayout.createParallelGroup(Alignment.BASELINE).
-                    addComponent(byAreaRadioButton));            
-            userHistoryVerGroup.addGroup(userHistoryGroupLayout.createParallelGroup(Alignment.BASELINE).
-                    addComponent(byTimeRadioButton).addComponent(daysLabel).addComponent(daysField)); 
-            userHistoryGroupLayout.setVerticalGroup(userHistoryVerGroup);
-            
+             */
+            buildUserHistoryPanelGroupLayout();
+
             configPanel.add(inputPanel, BorderLayout.NORTH);
-            configPanel.add(userHistoryPanel, BorderLayout.EAST); 
+            configPanel.add(userHistoryPanel, BorderLayout.EAST);
             configPanel.add(paramPanel, BorderLayout.WEST);
-            configPanel.add(southPanel, BorderLayout.SOUTH);           
+            configPanel.add(southPanel, BorderLayout.SOUTH);
 
             userHistoryPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                    .createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE), "Train by user History"));            
+                    .createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE), "Train by user History"));
             paramPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                    .createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE), "SVM Configuration"));            
+                    .createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE), "SVM Configuration"));
             inputPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
-            configPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));            
-            
+            configPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
+
             mainPanel.add(configPanel, BorderLayout.NORTH);
             mainPanel.add(startTrainingButton, BorderLayout.CENTER);
             mainPanel.add(trainingProgressBar, BorderLayout.SOUTH);
-            
-            AutoCompletionManager autocomplete = Main.main.getEditLayer().data.getAutoCompletionManager();
+
+            AutoCompletionManager autocomplete = Main.getLayerManager().getEditLayer().data.getAutoCompletionManager();
             List<AutoCompletionListItem> keyList = autocomplete.getKeys();
             Collections.sort(keyList, defaultACItemComparator);
 
             setContent(mainPanel, false);
-
-            addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowOpened(WindowEvent e) {
-                    if (initialFocusOnKey) {
-                        selectKeysComboBox();
-                    } else {
-                        selectValuesCombobox();
-                    }
-                }
-            });
         }
-        
-        private void inputFileChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+
+        private void buildInputPanelGroupLayout(JPanel inputPanel) {
+            GroupLayout inputGroupLayout = new GroupLayout(inputPanel);
+            inputPanel.setLayout(inputGroupLayout);
+            inputGroupLayout.setAutoCreateGaps(true);
+            inputGroupLayout.setAutoCreateContainerGaps(true);
+
+            GroupLayout.SequentialGroup inputHorGroup = inputGroupLayout.createSequentialGroup();
+            inputHorGroup.addGroup(inputGroupLayout.createParallelGroup().addComponent(inputFileLabel).
+                    addComponent(inputFileErrorMessageLabel));
+            inputHorGroup.addGroup(inputGroupLayout.createParallelGroup().addComponent(inputFileField));
+            inputHorGroup.addGroup(inputGroupLayout.createParallelGroup().addComponent(fileBrowseButton));
+            inputGroupLayout.setHorizontalGroup(inputHorGroup);
+
+            GroupLayout.SequentialGroup inputVerGroup = inputGroupLayout.createSequentialGroup();
+            inputVerGroup.addGroup(inputGroupLayout.createParallelGroup(Alignment.LEADING).addComponent(inputFileLabel).
+                    addComponent(inputFileField).addComponent(fileBrowseButton));
+            inputVerGroup.addGroup(inputGroupLayout.createParallelGroup(Alignment.LEADING).
+                    addComponent(inputFileErrorMessageLabel));
+            inputGroupLayout.setVerticalGroup(inputVerGroup);
+        }
+
+        private void buildParamPanelGroupLayout(JPanel paramPanel) {
+            GroupLayout paramGroupLayout = new GroupLayout(paramPanel);
+            paramPanel.setLayout(paramGroupLayout);
+            paramGroupLayout.setAutoCreateGaps(true);
+            paramGroupLayout.setAutoCreateContainerGaps(true);
+
+            GroupLayout.SequentialGroup paramHorGroup = paramGroupLayout.createSequentialGroup();
+            paramHorGroup.addGroup(paramGroupLayout.createParallelGroup().addComponent(topKButton).
+                    addComponent(frequencyButton).addComponent(cParameterCheckBox));
+            paramHorGroup.addGroup(paramGroupLayout.createParallelGroup().addComponent(cParameterField).
+                    addComponent(topKField).addComponent(frequencyField));
+            paramHorGroup.addGroup(paramGroupLayout.createParallelGroup().addComponent(cErrorMessageLabel).
+                    addComponent(topKErrorMessageLabel).addComponent(frequencyErrorMessageLabel));
+            paramGroupLayout.setHorizontalGroup(paramHorGroup);
+
+            GroupLayout.SequentialGroup paramVerGroup = paramGroupLayout.createSequentialGroup();
+            paramVerGroup.addGroup(paramGroupLayout.createParallelGroup(Alignment.BASELINE).
+                    addComponent(cParameterCheckBox).addComponent(cParameterField).addComponent(cErrorMessageLabel));
+            paramVerGroup.addGroup(paramGroupLayout.createParallelGroup(Alignment.BASELINE).addComponent(topKButton).
+                    addComponent(topKField).addComponent(topKErrorMessageLabel));
+            paramVerGroup.addGroup(paramGroupLayout.createParallelGroup(Alignment.BASELINE).
+                    addComponent(frequencyButton).addComponent(frequencyField).addComponent(frequencyErrorMessageLabel));
+            paramGroupLayout.setVerticalGroup(paramVerGroup);
+        }
+
+        private void buildUserHistoryPanelGroupLayout() {
+            GroupLayout userHistoryGroupLayout = new GroupLayout(userHistoryPanel);
+            userHistoryPanel.setLayout(userHistoryGroupLayout);
+            userHistoryGroupLayout.setAutoCreateGaps(true);
+            userHistoryGroupLayout.setAutoCreateContainerGaps(true);
+            userHistoryGroupLayout.linkSize(SwingConstants.HORIZONTAL, userNameField, daysLabel, daysField);
+
+            GroupLayout.SequentialGroup userHistoryHorGroup = userHistoryGroupLayout.createSequentialGroup();
+
+            userHistoryHorGroup.addGroup(userHistoryGroupLayout.createParallelGroup().addComponent(userNameLabel)
+                    .addComponent(byAreaRadioButton).addComponent(byTimeRadioButton));
+            userHistoryHorGroup.addGroup(userHistoryGroupLayout.createParallelGroup().addComponent(userNameField)
+                    .addComponent(daysLabel));
+            userHistoryHorGroup.addGroup(userHistoryGroupLayout.createParallelGroup().addComponent(daysField));
+            userHistoryGroupLayout.setHorizontalGroup(userHistoryHorGroup);
+
+            GroupLayout.SequentialGroup userHistoryVerGroup = userHistoryGroupLayout.createSequentialGroup();
+            userHistoryVerGroup.addGroup(userHistoryGroupLayout.createParallelGroup(Alignment.BASELINE).
+                    addComponent(userNameLabel).addComponent(userNameField));
+            userHistoryVerGroup.addGroup(userHistoryGroupLayout.createParallelGroup(Alignment.BASELINE).
+                    addComponent(byAreaRadioButton));
+            userHistoryVerGroup.addGroup(userHistoryGroupLayout.createParallelGroup(Alignment.BASELINE).
+                    addComponent(byTimeRadioButton).addComponent(daysLabel).addComponent(daysField));
+            userHistoryGroupLayout.setVerticalGroup(userHistoryVerGroup);
+        }
+
+        private void inputFileChooserButtonActionPerformed(ActionEvent evt) {
             try {
                 final File file = new File(inputFileField.getText());
                 final JFileChooser fileChooser = new JFileChooser(file);
 
                 final int returnVal = fileChooser.showOpenDialog(this);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     inputFileField.setText(fileChooser.getSelectedFile().getAbsolutePath());
                 }
-            }
-            catch (RuntimeException ex) {
+            } catch (RuntimeException ex) {
                 Main.warn(ex);
-                //ex.printStackTrace();
             }
-        } 
-        
-        private void acceptConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        }
+
+        private void acceptConfigButtonActionPerformed(ActionEvent evt) {
             //parse values
             inputFileValue = inputFileField.getText();
-            
-            if(!new File(inputFileValue).exists()){
+
+            if (!new File(inputFileValue).exists()) {
                 inputFileErrorMessageLabel.setText("OSM file does not exist");
                 resetConfigButtonActionPerformed();
                 return;
             }
-            
-            if(cParameterCheckBox.isSelected()){
+
+            if (cParameterCheckBox.isSelected()) {
                 String c = cParameterField.getText();
                 try {
-                    cParameterValue = Double.parseDouble(c.replace(",","."));
+                    cParameterValue = Double.parseDouble(c.replace(",", "."));
                     cErrorMessageLabel.setText("");
-                }
-                catch(NumberFormatException ex){
-                    
+                } catch (NumberFormatException ex) {
                     cErrorMessageLabel.setText("Must be a number!");
-                    System.out.println("c must be a number!" + ex); //make empty textLabel beside c param to notify errors 
+                    System.out.println("c must be a number!" + ex); //make empty textLabel beside c param to notify errors
                     resetConfigButtonActionPerformed();
-                    return; 
+                    return;
                 }
-                crossValidateFlag = false;               
-            }
-            else{
+                crossValidateFlag = false;
+            } else {
                 crossValidateFlag = true;
             }
-            
-            if(topKButton.isSelected()){
+
+            if (topKButton.isSelected()) {
                 String k = topKField.getText();
                 try {
-                    topKvalue = Integer.parseInt(k); 
+                    topKvalue = Integer.parseInt(k);
                     topKErrorMessageLabel.setText("");
-                }
-                catch(NumberFormatException ex){
-                    topKErrorMessageLabel.setText("Must be an Integer!"); 
+                } catch (NumberFormatException ex) {
+                    topKErrorMessageLabel.setText("Must be an Integer!");
                     resetConfigButtonActionPerformed();
-                    return; 
+                    return;
                 }
-            }
-            else{
+            } else {
                 String f = frequencyField.getText();
-                try{
-                    frequencyValue = Integer.parseInt(f); 
+                try {
+                    frequencyValue = Integer.parseInt(f);
                     frequencyErrorMessageLabel.setText("");
-                }
-                catch(NumberFormatException ex){
-                    frequencyErrorMessageLabel.setText("Must be an Integer!"); 
+                } catch (NumberFormatException ex) {
+                    frequencyErrorMessageLabel.setText("Must be an Integer!");
                     resetConfigButtonActionPerformed();
                     return;
                 }
             }
-            
-            if(trainFromUserCheckBox.isSelected()){
+
+            if (trainFromUserCheckBox.isSelected()) {
                 usernameValue = userNameField.getText();
-                if(byTimeRadioButton.isSelected()){
-                    try{
+                if (byTimeRadioButton.isSelected()) {
+                    try {
                         daysValue = Integer.parseInt(daysField.getText());
-                    }
-                    catch (NumberFormatException ex){
+                    } catch (NumberFormatException ex) {
                         daysField.setText("Integer!");
                         Main.warn(ex);
-                    } 
+                    }
                 }
-                
+
                 userHistoryPanel.setEnabled(false);
                 byAreaRadioButton.setEnabled(false);
                 byTimeRadioButton.setEnabled(false);
                 userNameLabel.setEnabled(false);
                 userNameField.setEnabled(false);
                 daysLabel.setEnabled(false);
-                daysField.setEnabled(false);                
+                daysField.setEnabled(false);
             }
 
-            System.out.println("Running configuration:" + "\nC parameter: " + cParameterValue +" \ntopK: " + topKvalue 
-                    + "\nMax Frequency: " + frequencyValue + "\nCross Validate?: " + crossValidateFlag);                        
-            
+            System.out.println("Running configuration:" + "\nC parameter: " + cParameterValue +" \ntopK: " + topKvalue
+                    + "\nMax Frequency: " + frequencyValue + "\nCross Validate?: " + crossValidateFlag);
+
             trainFromUserCheckBox.setEnabled(false);
             inputFileField.setEditable(false);
-            cParameterField.setEditable(false);  
+            cParameterField.setEditable(false);
             topKField.setEditable(false);
-            frequencyField.setEditable(false);                                
-            cParameterCheckBox.setEnabled(false); 
+            frequencyField.setEditable(false);
+            cParameterCheckBox.setEnabled(false);
             topKButton.setEnabled(false);
             frequencyButton.setEnabled(false);
-            acceptConfigButton.setEnabled(false);          
-            fileBrowseButton.setEnabled(false); 
+            acceptConfigButton.setEnabled(false);
+            fileBrowseButton.setEnabled(false);
         }
 
-        private void resetConfigButtonActionPerformed() { 
-            if(trainWorker != null){
+        private void resetConfigButtonActionPerformed() {
+            if (trainWorker != null) {
                 try {
                     trainWorker.cancel(true);
-                }
-                catch(CancellationException ex){
-                   startTrainingButton.setEnabled(true);
-                   System.out.println(ex);
+                } catch (CancellationException ex) {
+                    startTrainingButton.setEnabled(true);
+                    System.out.println(ex);
                 }
             }
-            if(userDataExtractAndTrainWorker != null){
+            if (userDataExtractAndTrainWorker != null) {
                 try {
                     userDataExtractAndTrainWorker.cancel(true);
+                } catch (CancellationException ex) {
+                    startTrainingButton.setEnabled(true);
+                    System.out.println(ex);
                 }
-                catch(CancellationException ex){
-                   startTrainingButton.setEnabled(true);
-                   System.out.println(ex);
-                }                
             }
             inputFileField.setEditable(true);
-            cParameterField.setEditable(true);  
+            cParameterField.setEditable(true);
             topKField.setEditable(true);
-            frequencyField.setEditable(true);                                
-            cParameterCheckBox.setEnabled(true); 
+            frequencyField.setEditable(true);
+            cParameterCheckBox.setEnabled(true);
             topKButton.setEnabled(true);
             frequencyButton.setEnabled(true);
-            acceptConfigButton.setEnabled(true);          
+            acceptConfigButton.setEnabled(true);
             fileBrowseButton.setEnabled(true);
             trainFromUserCheckBox.setEnabled(true);
-            
-            if(trainFromUserCheckBox.isSelected()){
+
+            if (trainFromUserCheckBox.isSelected()) {
                 userHistoryPanel.setEnabled(true);
                 byAreaRadioButton.setEnabled(true);
                 byTimeRadioButton.setEnabled(true);
                 userNameLabel.setEnabled(true);
                 userNameField.setEnabled(true);
                 daysLabel.setEnabled(true);
-                daysField.setEnabled(true); 
-            }    
-        }       
-        
+                daysField.setEnabled(true);
+            }
+        }
+
         private void startTraining() {
             startTrainingButton.setEnabled(false);
-            
-            if(trainFromUserCheckBox.isSelected()){ //if user training. train by area or days
-  
-                java.awt.EventQueue.invokeLater(new Runnable() {                    
+
+            if (trainFromUserCheckBox.isSelected()) { //if user training. train by area or days
+                EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
 
-                    userDataExtractAndTrainWorker = new UserDataExtractAndTrainWorker
-                      (inputFileValue, usernameValue, daysValue, byAreaRadioButton.isSelected(),
-                         crossValidateFlag, cParameterValue, topKvalue, frequencyValue, 
-                              topKButton.isSelected(), languageDetector);                
-                
+                        userDataExtractAndTrainWorker = new UserDataExtractAndTrainWorker(inputFileValue, usernameValue, daysValue,
+                                byAreaRadioButton.isSelected(), crossValidateFlag, cParameterValue, topKvalue, frequencyValue,
+                                topKButton.isSelected(), languageDetector);
+
                         userDataExtractAndTrainWorker.addPropertyChangeListener(new PropertyChangeListener() {
-                            
-                            @Override 
+                            @Override
                             public void propertyChange(PropertyChangeEvent evt) {
-                                if("progress".equals(evt.getPropertyName())) {
+                                if ("progress".equals(evt.getPropertyName())) {
                                     int progress = (Integer) evt.getNewValue();
                                     trainingProgressBar.setValue(progress);
-                                    if(progress == 100){
+                                    if (progress == 100) {
                                         startTrainingButton.setEnabled(true);
                                     }
                                 }
-                            }                                                 
-                        });                                                  
+                            }
+                        });
 
                         try {
                             System.out.println("executing userDataExtractAndTrainWorker Thread..");
                             userDataExtractAndTrainWorker.execute();
                         } catch (Exception ex) {
                             Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
-                        }                    
+                        }
                     }
-                });                         
-            }
-            else {
-
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    //private TrainWorker trainWorker;
+                });
+            } else {
+                EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
+                        trainWorker = new TrainWorker(inputFileValue, crossValidateFlag, cParameterValue, topKvalue, frequencyValue,
+                                topKButton.isSelected(), languageDetector);
 
-                        trainWorker = new TrainWorker
-                                    (inputFileValue, crossValidateFlag, cParameterValue, topKvalue, frequencyValue, 
-                                            topKButton.isSelected(), languageDetector);
-                        
                         trainWorker.addPropertyChangeListener(new PropertyChangeListener() {
-                            @Override 
+                            @Override
                             public void propertyChange(PropertyChangeEvent evt) {
-                                if("progress".equals(evt.getPropertyName())) {
+                                if ("progress".equals(evt.getPropertyName())) {
                                     int progress = (Integer) evt.getNewValue();
                                     trainingProgressBar.setValue(progress);
-                                    if(progress == 100){
+                                    if (progress == 100) {
                                         startTrainingButton.setEnabled(true);
                                     }
                                 }
-    //                            if(cancelled){
-    //                                trainWorker.cancel(true);
-    //                            }
-                            }                                                 
-                        });                                                  
+                            }
+                        });
 
                         try {
                             trainWorker.execute();
                         } catch (Exception ex) {
                             Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
-                        }                    
+                        }
                     }
-                }); 
+                });
             }
         }
     }
 
-    public static final BooleanProperty PROPERTY_FIX_TAG_LOCALE = new BooleanProperty("properties.fix-tag-combobox-locale", false);
-    public static final BooleanProperty PROPERTY_REMEMBER_TAGS = new BooleanProperty("properties.remember-recently-added-tags", true);
-    public static final IntegerProperty PROPERTY_RECENT_TAGS_NUMBER = new IntegerProperty("properties.recently-added-tags", DEFAULT_LRU_TAGS_NUMBER);
+    public static final BooleanProperty PROPERTY_FIX_TAG_LOCALE =
+            new BooleanProperty("properties.fix-tag-combobox-locale", false);
+    public static final BooleanProperty PROPERTY_REMEMBER_TAGS =
+            new BooleanProperty("properties.remember-recently-added-tags", true);
+    public static final IntegerProperty PROPERTY_RECENT_TAGS_NUMBER =
+            new IntegerProperty("properties.recently-added-tags", DEFAULT_LRU_TAGS_NUMBER);
 
-    abstract class AbstractTagsDialog extends ExtendedDialog {
+    abstract static class AbstractTagsDialog extends ExtendedDialog {
         AutoCompletingComboBox keys;
         AutoCompletingComboBox values;
-        Component componentUnderMouse;
 
-        public AbstractTagsDialog(Component parent, String title, String[] buttonTexts) {
+        AbstractTagsDialog(Component parent, String title, String[] buttonTexts) {
             super(parent, title, buttonTexts);
             addMouseListener(new PopupMenuLauncher(popupMenu));
         }
@@ -1003,7 +927,7 @@ class OSMRecPluginHelper {
             // https://bugs.openjdk.java.net/browse/JDK-6464548
 
             setRememberWindowGeometry(getClass().getName() + ".geometry",
-                WindowGeometry.centerInWindow(Main.parent, size)); 
+                    WindowGeometry.centerInWindow(Main.parent, size));
         }
 
         @Override
@@ -1023,72 +947,49 @@ class OSMRecPluginHelper {
                     }
                     rememberWindowGeometry(geometry);
                 }
-                if(keys != null){
-                   keys.setFixedLocale(PROPERTY_FIX_TAG_LOCALE.get()); 
-                }               
+                if (keys != null) {
+                    keys.setFixedLocale(PROPERTY_FIX_TAG_LOCALE.get());
+                }
             }
             super.setVisible(visible);
         }
 
-        private void selectACComboBoxSavingUnixBuffer(AutoCompletingComboBox cb) {
-            // select combobox with saving unix system selection (middle mouse paste)
-            Clipboard sysSel = Toolkit.getDefaultToolkit().getSystemSelection();
-            if(sysSel != null) {
-                Transferable old = sysSel.getContents(null);
-                cb.requestFocusInWindow();
-                cb.getEditor().selectAll();
-                sysSel.setContents(old, null);
-            } else {
-                cb.requestFocusInWindow();
-                cb.getEditor().selectAll();
-            }
-        }
-
-        public void selectKeysComboBox() {
-            //selectACComboBoxSavingUnixBuffer(keys);
-        }
-
-        public void selectValuesCombobox()   {
-            //selectACComboBoxSavingUnixBuffer(values);
-        }
-
         /**
-        * Create a focus handling adapter and apply in to the editor component of value
-        * autocompletion box.
-        * @param autocomplete Manager handling the autocompletion
-        * @param comparator Class to decide what values are offered on autocompletion
-        * @return The created adapter
-        */
+         * Create a focus handling adapter and apply in to the editor component of value
+         * autocompletion box.
+         * @param autocomplete Manager handling the autocompletion
+         * @param comparator Class to decide what values are offered on autocompletion
+         * @return The created adapter
+         */
         protected FocusAdapter addFocusAdapter(final AutoCompletionManager autocomplete, final Comparator<AutoCompletionListItem> comparator) {
-           // get the combo box' editor component
-           JTextComponent editor = (JTextComponent)values.getEditor().getEditorComponent();
-           // Refresh the values model when focus is gained
-           FocusAdapter focus = new FocusAdapter() {
-               @Override
-               public void focusGained(FocusEvent e) {
-                   String key = keys.getEditor().getItem().toString();
+            // get the combo box' editor component
+            JTextComponent editor = (JTextComponent) values.getEditor().getEditorComponent();
+            // Refresh the values model when focus is gained
+            FocusAdapter focus = new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    String key = keys.getEditor().getItem().toString();
 
-                   List<AutoCompletionListItem> valueList = autocomplete.getValues(getAutocompletionKeys(key));
-                   Collections.sort(valueList, comparator);
+                    List<AutoCompletionListItem> valueList = autocomplete.getValues(getAutocompletionKeys(key));
+                    Collections.sort(valueList, comparator);
 
-                   values.setPossibleACItems(valueList);
-                   values.getEditor().selectAll();
-                   objKey=key;
-               }
-           };
-           editor.addFocusListener(focus);
-           return focus;
+                    values.setPossibleACItems(valueList);
+                    values.getEditor().selectAll();
+                }
+            };
+            editor.addFocusListener(focus);
+            return focus;
         }
 
         protected JPopupMenu popupMenu = new JPopupMenu() {
             JCheckBoxMenuItem fixTagLanguageCb = new JCheckBoxMenuItem(
-                new AbstractAction(tr("Use English language for tag by default")){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    boolean sel=((JCheckBoxMenuItem) e.getSource()).getState();
-                    PROPERTY_FIX_TAG_LOCALE.put(sel);
-                }
-            });
+                    new AbstractAction(tr("Use English language for tag by default")) {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            boolean sel = ((JCheckBoxMenuItem) e.getSource()).getState();
+                            PROPERTY_FIX_TAG_LOCALE.put(sel);
+                        }
+                    });
             {
                 add(fixTagLanguageCb);
                 fixTagLanguageCb.setState(PROPERTY_FIX_TAG_LOCALE.get());
@@ -1096,19 +997,16 @@ class OSMRecPluginHelper {
         };
     }
 
-    class ModelSettingsDialog extends JPanel{
-        
+    class ModelSettingsDialog extends JPanel {
+
         private final JLabel chooseModelLabel;
         private final JButton chooseModelButton;
         private final JTextField chooseModelTextField;
-        
+
         private final DefaultListModel<String> combinationDefaultListModel = new DefaultListModel<>();
-        private final JList<String> modelCombinationList = new javax.swing.JList<>(combinationDefaultListModel);
+        private final JList<String> modelCombinationList = new JList<>(combinationDefaultListModel);
         private final JPanel modelCombinationPanel;
-        //private final JTextField weightTextField;
         private final JPanel weightsPanel;
-        //private final int hei;
-        //private final int wi;
         private final JCheckBox useModelCombinationCheckbox;
         private final JButton acceptWeightsButton;
         private final JButton resetWeightsButton;
@@ -1125,96 +1023,88 @@ class OSMRecPluginHelper {
         private final TitledBorder modelTitle;
         private final TitledBorder weightTitle;
         private final TitledBorder combineTitle;
-        //private final BorderLayout mainBorderLayout;
-        //private final BorderLayout mainBorderLayoutDefault;
-        //private final Dimension combinationPanelDimension;
         private final Dimension singleSelectionDimension;
         private final Dimension modelCombinationDimension;
         private final Dimension mainPanelDimension;
-        
-        
-        public ModelSettingsDialog(Collection<OsmPrimitive> sel1, final AddTagsDialog addDialog){ 
-            
+
+        ModelSettingsDialog(Collection<OsmPrimitive> sel1, final AddTagsDialog addDialog) {
+
             loadPreviousCombinedSVMModel();
-            singleSelectionDimension = new Dimension(470,70);
-            modelCombinationDimension = new Dimension(450,250);
-            mainPanelDimension = new Dimension(600,350);
-            
+            singleSelectionDimension = new Dimension(470, 70);
+            modelCombinationDimension = new Dimension(450, 250);
+            mainPanelDimension = new Dimension(600, 350);
+
             //------- <NORTH of main> ---------//
-            mainPanel = new JPanel(new BorderLayout(10,10));
-            singleSelectionPanel = new JPanel(new BorderLayout(10,10));
+            mainPanel = new JPanel(new BorderLayout(10, 10));
+            singleSelectionPanel = new JPanel(new BorderLayout(10, 10));
             setResetWeightsPanel = new JPanel();
-            
-            chooseModelLabel = new javax.swing.JLabel("Choose a Model:");
-            chooseModelTextField = new javax.swing.JTextField();
-            chooseModelButton = new javax.swing.JButton("...");
-            chooseModelTextField.setText(MODEL_PATH);                        
-            
-            singleSelectionPanel.add(chooseModelLabel, BorderLayout.NORTH);  
+
+            chooseModelLabel = new JLabel("Choose a Model:");
+            chooseModelTextField = new JTextField();
+            chooseModelButton = new JButton("...");
+            chooseModelTextField.setText(MODEL_PATH);
+
+            singleSelectionPanel.add(chooseModelLabel, BorderLayout.NORTH);
             singleSelectionPanel.add(chooseModelTextField, BorderLayout.WEST);
-            singleSelectionPanel.add(chooseModelButton, BorderLayout.EAST); 
-            
+            singleSelectionPanel.add(chooseModelButton, BorderLayout.EAST);
+
             singleSelectionScrollPane = new JScrollPane(singleSelectionPanel);
             singleSelectionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             singleSelectionScrollPane.setPreferredSize(singleSelectionDimension);
-            
+
             //------- </NORTH of main> ---------//
 
             //------- <WEST of main> ---------//
-            //modelCombinationList = new javax.swing.JList<>(combinationDefaultListModel);
-            modelCombinationList.setFixedCellHeight(20);  
+            modelCombinationList.setFixedCellHeight(20);
             modelCombinationList.setEnabled(false);
-            modelCombinationPanel = new JPanel(new BorderLayout(10,10)); //new BorderLayout() 
+            modelCombinationPanel = new JPanel(new BorderLayout(10, 10));
 
             weightsPanel = new JPanel();
-            weightsPanel.setLayout(new BoxLayout(weightsPanel, BoxLayout.Y_AXIS)); 
+            weightsPanel.setLayout(new BoxLayout(weightsPanel, BoxLayout.Y_AXIS));
             weightsPanel.setEnabled(false);
-            
-            
-            acceptWeightsButton = new javax.swing.JButton("Set Weights/Normalize");
-            resetWeightsButton = new javax.swing.JButton("Reset Weights");
-            removeSelectedModelButton = new javax.swing.JButton("Remove Selected");
+
+
+            acceptWeightsButton = new JButton("Set Weights/Normalize");
+            resetWeightsButton = new JButton("Reset Weights");
+            removeSelectedModelButton = new JButton("Remove Selected");
             setResetWeightsPanel.add(acceptWeightsButton);
             setResetWeightsPanel.add(resetWeightsButton);
             setResetWeightsPanel.add(removeSelectedModelButton);
             removeSelectedModelButton.setEnabled(false);
             acceptWeightsButton.setEnabled(false);
             resetWeightsButton.setEnabled(false);
-            
+
             modelCombinationPanel.add(modelCombinationList, BorderLayout.CENTER);
             modelCombinationPanel.add(weightsPanel, BorderLayout.EAST);
-            modelCombinationPanel.add(setResetWeightsPanel, BorderLayout.SOUTH); 
+            modelCombinationPanel.add(setResetWeightsPanel, BorderLayout.SOUTH);
 
             combinationScrollPane = new JScrollPane(modelCombinationPanel);
-            
+
             combinationScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            combinationScrollPane.setPreferredSize(modelCombinationDimension);   //new Dimension(450,250) // w/h  
+            combinationScrollPane.setPreferredSize(modelCombinationDimension);   //new Dimension(450, 250) // w/h
 
             //------- </WEST of main> ---------//
 
             //------- <SOUTH of main> ---------//
             useModelCombinationCheckbox = new JCheckBox("Combine different models?");
-            
+
             //------- </SOUTH of main> ---------//
-            
+
             //------- <Borders> ---------//
             modelTitle = BorderFactory.createTitledBorder("Models");
             weightTitle = BorderFactory.createTitledBorder("W");
             combineTitle = BorderFactory.createTitledBorder("Combine Models");
             modelCombinationList.setBorder(modelTitle);
             weightsPanel.setBorder(weightTitle);
-            
-            for(Entry<JTextField, String> entry : weightFieldsAndPaths.entrySet()){
-                //modelCombinationList.add(entry.getValue());
-                combinationDefaultListModel.addElement(entry.getValue());
-                
-                JTextField weightTextField = new javax.swing.JTextField("0.00");                   
-                weightTextField.setMaximumSize(new Dimension(80,20));
-                weightsPanel.add(entry.getKey());               
 
-                //entry.getKey().setText("0.00");
-            }            
-            
+            for (Entry<JTextField, String> entry : weightFieldsAndPaths.entrySet()) {
+                combinationDefaultListModel.addElement(entry.getValue());
+
+                JTextField weightTextField = new JTextField("0.00");
+                weightTextField.setMaximumSize(new Dimension(80, 20));
+                weightsPanel.add(entry.getKey());
+            }
+
             //modelCombinationPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             modelCombinationPanel.setBorder(combineTitle);
             singleSelectionPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
@@ -1225,62 +1115,58 @@ class OSMRecPluginHelper {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     modelChooserButtonActionPerformed(evt);
                 }
-            }); 
-            
+            });
+
             useModelCombinationCheckbox.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     userCombinationCheckboxActionPerformed(evt);
                 }
             });
-            
+
             acceptWeightsButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     acceptWeightsButtonActionPerformed(evt);
                 }
-            });  
-            
+            });
+
             resetWeightsButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     resetWeightsButtonActionPerformed(evt);
                 }
-            });  
-            
+            });
+
             removeSelectedModelButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     removeSelectedModelButtonActionPerformed(evt);
                 }
-            });            
+            });
             mainPanel.add(singleSelectionScrollPane, BorderLayout.NORTH);
-            mainPanel.add(combinationScrollPane, BorderLayout.CENTER);  
-            mainPanel.add(useModelCombinationCheckbox,BorderLayout.SOUTH);
+            mainPanel.add(combinationScrollPane, BorderLayout.CENTER);
+            mainPanel.add(useModelCombinationCheckbox, BorderLayout.SOUTH);
 
             mainPanel.setPreferredSize(mainPanelDimension);
-            
+
             this.add(mainPanel);
-            //pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            
-            //final JFrame frame = new JFrame();
+
             pane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
                 @Override
                 public void setValue(Object newValue) {
                     super.setValue(newValue);
-                    if(newValue instanceof Integer && (int) newValue == 0 && useModelCombinationCheckbox.isSelected()){
+                    if (newValue instanceof Integer && (int) newValue == 0 && useModelCombinationCheckbox.isSelected()) {
                         System.out.println("model settings button value: " + newValue);
                         System.out.println("\nUSE COMBINED MODEL\n");
                         useCombinedModel = true;
                         useCustomSVMModel = false;
-                        
-                        addDialog.loadSVMmodel(); 
-                        addDialog.createOSMObject(sel);                              
+
+                        addDialog.loadSVMmodel();
+                        addDialog.createOSMObject(sel);
                         saveCombinedModel();
                         dlg.setVisible(false);
-                        //this.setVisible(false);
-                    }
-                    else if(newValue instanceof Integer && (int) newValue == -1 && useModelCombinationCheckbox.isSelected()){
+                    } else if (newValue instanceof Integer && (int) newValue == -1 && useModelCombinationCheckbox.isSelected()) {
                         System.out.println("model settings button value: " + newValue);
                         useCombinedModel = false;
                         useCustomSVMModel = false;
@@ -1289,8 +1175,7 @@ class OSMRecPluginHelper {
                         addDialog.loadSVMmodel();
                         addDialog.createOSMObject(sel);
                         dlg.setVisible(false);
-                    } 
-                    else if(newValue instanceof Integer && (int) newValue == 0 && !useModelCombinationCheckbox.isSelected() ){
+                    } else if (newValue instanceof Integer && (int) newValue == 0 && !useModelCombinationCheckbox.isSelected()) {
                         System.out.println("model settings button value: " + newValue);
                         System.out.println("Don t use combined model, use custom model");
                         useCombinedModel = false;
@@ -1298,8 +1183,7 @@ class OSMRecPluginHelper {
                         addDialog.loadSVMmodel();
                         addDialog.createOSMObject(sel);
                         dlg.setVisible(false);
-                    } 
-                    else if(newValue instanceof Integer && (int) newValue == -1 && !useModelCombinationCheckbox.isSelected() ){
+                    } else if (newValue instanceof Integer && (int) newValue == -1 && !useModelCombinationCheckbox.isSelected()) {
                         System.out.println("model settings button value: " + newValue);
                         System.out.println("Don t use combined model, use custom model");
                         useCombinedModel = false;
@@ -1307,80 +1191,72 @@ class OSMRecPluginHelper {
                         addDialog.loadSVMmodel();
                         addDialog.createOSMObject(sel);
                         dlg.setVisible(false);
-                    }      
-                    else if(newValue == null || newValue.equals("uninitializedValue")){
+                    } else if (newValue == null || newValue.equals("uninitializedValue")) {
                         System.out.println("uninitializedValue, do nothing");
                     }
-                    //JOptionPane.showMessageDialog(frame.getContentPane(), "You have hit " + newValue);
                 }
-            };            
+            };
 
             dlg = pane.createDialog(Main.parent, tr("Model Settings"));
-            dlg.setVisible(true);  
-            
-        }
-        
-        public void makeVisible(boolean visible){ 
             dlg.setVisible(true);
         }
-        
-        private void modelChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {   
-            
+
+        public void makeVisible(boolean visible) {
+            dlg.setVisible(true);
+        }
+
+        private void modelChooserButtonActionPerformed(ActionEvent evt) {
+
             try {
                 final File file = new File(chooseModelTextField.getText());
                 final JFileChooser fileChooser = new JFileChooser(file);
-            
+
                 final int returnVal = fileChooser.showOpenDialog(this);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     chooseModelTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
                     useCustomSVMModel = true;
                     customSVMModelPath = fileChooser.getSelectedFile().getAbsolutePath();
                 }
-                               
-                if(useModelCombinationCheckbox.isSelected()){
+
+                if (useModelCombinationCheckbox.isSelected()) {
                     String svmModelPath = fileChooser.getSelectedFile().getAbsolutePath();
                     String svmModelText;
-                    if(System.getProperty("os.name").contains("ux")){
-                        if(svmModelPath.contains("/")){
+                    if (System.getProperty("os.name").contains("ux")) {
+                        if (svmModelPath.contains("/")) {
                             svmModelText = svmModelPath.substring(svmModelPath.lastIndexOf("/"));
-                        }
-                        else{
+                        } else {
                             svmModelText = svmModelPath;
                         }
-                    }
-                    else{
-                         if(svmModelPath.contains("\\")){
+                    } else {
+                        if (svmModelPath.contains("\\")) {
                             svmModelText = svmModelPath.substring(svmModelPath.lastIndexOf("\\"));
-                        }
-                        else{
+                        } else {
                             svmModelText = svmModelPath;
-                        }                       
+                        }
                     }
                     combinationDefaultListModel.addElement(svmModelText);
-                    JTextField weightTextField = new javax.swing.JTextField("0.00");
+                    JTextField weightTextField = new JTextField("0.00");
                     weightFieldsAndPaths.put(weightTextField, svmModelPath);
                     System.out.println("weights size: " + weightFieldsAndPaths.size());
-                    
-                    weightTextField.setMaximumSize(new Dimension(80,20));
+
+                    weightTextField.setMaximumSize(new Dimension(80, 20));
                     weightsPanel.add(weightTextField);
                     //add additional textbox
-                }                  
-            }
-            catch (RuntimeException ex) {
+                }
+            } catch (RuntimeException ex) {
                 Main.warn(ex);
-                //ex.printStackTrace();
             }
         }
-        
+
         private void userCombinationCheckboxActionPerformed(java.awt.event.ActionEvent evt) {
 
-            if(useModelCombinationCheckbox.isSelected()){
+            if (useModelCombinationCheckbox.isSelected()) {
                 useCombinedModel = true;
                 useCustomSVMModel = false; //reseting the selected custom SVM model only here
                 removeSelectedModelButton.setEnabled(true);
                 acceptWeightsButton.setEnabled(true);
                 resetWeightsButton.setEnabled(true);
-                
+
                 chooseModelTextField.setEnabled(false);
                 modelCombinationList.setEnabled(true);
                 weightsPanel.setEnabled(true);
@@ -1388,15 +1264,13 @@ class OSMRecPluginHelper {
                 for (Component weightPanelComponent : weightPanelComponents) {
                     weightPanelComponent.setEnabled(true);
                 }
-                
-            }
-            else{
+            } else {
                 useCombinedModel = false;
                 useCustomSVMModel = true;
                 removeSelectedModelButton.setEnabled(false);
                 acceptWeightsButton.setEnabled(false);
                 resetWeightsButton.setEnabled(false);
-                
+
                 chooseModelTextField.setEnabled(true);
                 modelCombinationList.setEnabled(false);
                 weightsPanel.setEnabled(false);
@@ -1406,85 +1280,80 @@ class OSMRecPluginHelper {
                 }
             }
         }
-        
+
         private void acceptWeightsButtonActionPerformed(ActionEvent evt) {
             int weightsCount = 0;
             removeSelectedModelButton.setEnabled(false);
-            double weightSum = 0;            
-            for(JTextField weightField : weightFieldsAndPaths.keySet()){
-                if(weightField.getText().equals("")){
+            double weightSum = 0;
+            for (JTextField weightField : weightFieldsAndPaths.keySet()) {
+                if (weightField.getText().equals("")) {
                     weightField.setText("0.00");
                 }
-                
-                try{
+
+                try {
                     //TODO replace "," with "." to parse doubles with commas
                     Double weightValue = Double.parseDouble(weightField.getText());
 
                     weightValue = Math.abs(weightValue);
                     weightSum += weightValue;
-                }    
-                catch (NumberFormatException ex){
+                } catch (NumberFormatException ex) {
                     Main.warn(ex);
                 }
                 weightsCount++;
-            }  
-            
-            if(!filesAndWeights.isEmpty()){
+            }
+
+            if (!filesAndWeights.isEmpty()) {
                 filesAndWeights.clear();
             }
-            
-            for(JTextField weightField : weightFieldsAndPaths.keySet()){
-                try{
+
+            for (JTextField weightField : weightFieldsAndPaths.keySet()) {
+                try {
                     Double weightValue = Double.parseDouble(weightField.getText());
 
                     weightValue = Math.abs(weightValue)/weightSum; //normalize
-                    
-                    if(weightSum == 0){
-                        //System.out.println("Zero weights");
+
+                    if (weightSum == 0) {
                         weightValue = 1.0/weightsCount;
-                    }                    
-                    
+                    }
+
                     weightField.setText(new DecimalFormat("#.##").format(weightValue));
-                    normalizedPathsAndWeights.put(weightFieldsAndPaths.get(weightField), weightValue);                   
+                    normalizedPathsAndWeights.put(weightFieldsAndPaths.get(weightField), weightValue);
                     filesAndWeights.put(new File(weightFieldsAndPaths.get(weightField)), weightValue);
-                    System.out.println("normalized: " + weightFieldsAndPaths.get(weightField) + "->"  + weightValue); 
+                    System.out.println("normalized: " + weightFieldsAndPaths.get(weightField) + "->" + weightValue);
                     weightField.setEnabled(false);
 
-                }    
-                catch (NumberFormatException ex){
+                } catch (NumberFormatException ex) {
                     Main.warn(ex);
-                }      
+                }
             }
 
             useCombinedModel = true;
             useCustomSVMModel = false;
-            
-            //filesAndWeights.putAll(normalizedPathsAndWeights);
         }
-        
+
         private void resetWeightsButtonActionPerformed(ActionEvent evt) {
             removeSelectedModelButton.setEnabled(true);
-            for(JTextField weightField : weightFieldsAndPaths.keySet()){
+            for (JTextField weightField : weightFieldsAndPaths.keySet()) {
                 weightField.setEnabled(true);
             }
         }
-        
+
         private void removeSelectedModelButtonActionPerformed(ActionEvent evt) {
-            int index  = modelCombinationList.getSelectedIndex();
+            int index = modelCombinationList.getSelectedIndex();
             String modelToBeRemoved = combinationDefaultListModel.get(index);
-            combinationDefaultListModel.remove(index); 
+            combinationDefaultListModel.remove(index);
             System.out.println("model to be removed: " + modelToBeRemoved);
 
-            Iterator<Entry<JTextField, String>> it = weightFieldsAndPaths.entrySet().iterator();               
+            Iterator<Entry<JTextField, String>> it = weightFieldsAndPaths.entrySet().iterator();
             while (it.hasNext()) {
                 Entry<JTextField, String> en = it.next();
-                if(en.getValue().equals(modelToBeRemoved)){
+                if (en.getValue().equals(modelToBeRemoved)) {
                     it.remove();
                 }
             }
             System.out.println("model to be removed: " + modelToBeRemoved);
 
-            weightsPanel.remove(index); 
+            weightsPanel.remove(index);
             weightsPanel.revalidate();
             weightsPanel.repaint();
         }
@@ -1506,13 +1375,13 @@ class OSMRecPluginHelper {
                     Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     try {
-                        if(in!=null){
+                        if (in != null) {
                             in.close();
                         }
-                        if(fileIn!=null){
+                        if (fileIn != null) {
                             fileIn.close();
                         }
-                        
+
                     } catch (IOException ex) {
                         Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1528,15 +1397,15 @@ class OSMRecPluginHelper {
 
         private void saveCombinedModel() {
             try (FileOutputStream fileOut = new FileOutputStream(combinedModelClasses);
-                ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+                    ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
                 out.writeObject(weightFieldsAndPaths);
             } catch (IOException e) {
                 System.out.println("serialize error" + e);
             }
         }
     }
-    
-    class AddTagsDialog extends  AbstractTagsDialog {
+
+    class AddTagsDialog extends AbstractTagsDialog {
         List<JosmAction> recentTagsActions = new ArrayList<>();
 
         // Counter of added commands for possible undo
@@ -1553,144 +1422,130 @@ class OSMRecPluginHelper {
         private Map<String, Integer> mapperWithIDs;
         private Map<Integer, String> idsWithMappings;
         private List<String> textualList = new ArrayList<>();
-        //private boolean useClassFeatures = false;
-        private final JCheckBox useTagsCheckBox;  
+        private final JCheckBox useTagsCheckBox;
         private ModelSettingsDialog modelSettingsDialog;
         private static final int RECOMMENDATIONS_SIZE = 10;
 
-        public AddTagsDialog() {
-            super(Main.parent, tr("Add value?"), new String[] {tr("OK"),tr("Cancel")});
-            setButtonIcons(new String[] {"ok","cancel"});
+        AddTagsDialog() {
+            super(Main.parent, tr("Add value?"), new String[] {tr("OK"), tr("Cancel")});
+            setButtonIcons(new String[] {"ok", "cancel"});
             setCancelButton(2);
             configureContextsensitiveHelp("/Dialog/AddValue", true /* show help button */);
             final AddTagsDialog addTagsDialog = this;
-            
+
             loadOntology();
             //if the user did not train a model by running the training process
             //the list does not exist in a file and so we load the default list from the jar.
 
             System.out.println("path for textual: " + TEXTUAL_LIST_PATH);
             File textualListFile = new File(TEXTUAL_LIST_PATH);
-            if(textualListFile.exists()){
+            if (textualListFile.exists()) {
                 loadTextualList(textualListFile);
+            } else {
+                loadDefaultTextualList();
             }
-            else{
-                loadDefaultTextualList(); 
-            }
-            
-            //if training process has not been performed, we use two sample SVM models, extracted from the jar
-            //File bestModelFile = new File(bestModelPath);
-            //File bestModelWithClassesFile = new File(modelWithClassesPath);
 
-            JPanel splitPanel = new JPanel(new BorderLayout(10,10));            
-            JPanel mainPanel = new JPanel(new GridBagLayout()); //original panel, will be wrapped by the splitPanel                   
-            JPanel recommendPanel = new JPanel(new BorderLayout(10,10));   //will contain listPanel, action panel           
-            JPanel listPanel = new JPanel(new BorderLayout(10,10)); //class recommend label, recommendation list
+            //if training process has not been performed, we use two sample SVM models, extracted from the jar
+
+            JPanel splitPanel = new JPanel(new BorderLayout(10, 10));
+            JPanel mainPanel = new JPanel(new GridBagLayout()); //original panel, will be wrapped by the splitPanel
+            JPanel recommendPanel = new JPanel(new BorderLayout(10, 10));   //will contain listPanel, action panel
+            JPanel listPanel = new JPanel(new BorderLayout(10, 10)); //class recommend label, recommendation list
             JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); //model selection buttons or configuration
-            
-            addAndContinueButton = new javax.swing.JButton("Add and continue");
-            modelSettingsButton = new javax.swing.JButton("Model Settings"); 
-            useTagsCheckBox = new javax.swing.JCheckBox("Predict using tags");
-            recommendedClassesLabel = new javax.swing.JLabel("Recommended Classes:");           
-            
+
+            addAndContinueButton = new JButton("Add and continue");
+            modelSettingsButton = new JButton("Model Settings");
+            useTagsCheckBox = new JCheckBox("Predict using tags");
+            recommendedClassesLabel = new JLabel("Recommended Classes:");
+
             addAndContinueButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
-                public void actionPerformed(java.awt.event.ActionEvent evt) {                   
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
                     String selectedClass = categoryList.getSelectedValue();
                     addAndContinueButtonActionPerformed(evt, selectedClass);
-                    
+
                     //reconstruct vector for instance and use the model that was trained with classes here
-                    
+
                     List<OsmPrimitive> osmPrimitiveSelection = new ArrayList<>(sel);
                     OsmPrimitive s;
 
-                    
                     //get a simple selection
-                    if(!osmPrimitiveSelection.isEmpty()){
-                        s = osmPrimitiveSelection.get(0);                       
-                        if(s.getInterestingTags().isEmpty()){
+                    if (!osmPrimitiveSelection.isEmpty()) {
+                        s = osmPrimitiveSelection.get(0);
+                        if (s.getInterestingTags().isEmpty()) {
                             //load original model
                             modelWithClasses = false;
                             loadSVMmodel();
                             createOSMObject(sel); //create object without class features
-                        }
-                        else{
+                        } else {
                             //recommend using tags: set the checkbox selected to avoid confusing the user
                             useTagsCheckBox.setSelected(true);
-                            
-                            if(useTagsCheckBox.isSelected()){
+
+                            if (useTagsCheckBox.isSelected()) {
                                 //load model with classes
                                 modelWithClasses = true;
                                 loadSVMmodel();
-                                createOSMObject(sel); //create object including class features                              
-                            }
-                            else{
+                                createOSMObject(sel); //create object including class features
+                            } else {
                                 modelWithClasses = false;
                                 loadSVMmodel();
-                                createOSMObject(sel); //create object including class features    
+                                createOSMObject(sel); //create object including class features
                             }
-                        }                        
+                        }
                     }
                 }
             });
-            
+
             modelSettingsButton.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    if(modelSettingsDialog == null){
+                    if (modelSettingsDialog == null) {
                         System.out.println("new modelSettingsDialog");
-                        modelSettingsDialog = new ModelSettingsDialog(sel, addTagsDialog);  
-                        
-                        //modelSettingsDialog.makeVisible(true);
-                        //modelSettingsDialog.setVisible(true);
-                    }
-                    else{
+                        modelSettingsDialog = new ModelSettingsDialog(sel, addTagsDialog);
+                    } else {
                         System.out.println("set modelSettingsDialog visible");
                         modelSettingsDialog.makeVisible(true);
-                        //modelSettingsDialog.setVisible(true);
-                    } 
+                    }
                 }
-            });         
+            });
 
-            useTagsCheckBox.addActionListener(new java.awt.event.ActionListener() {                
+            useTagsCheckBox.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     List<OsmPrimitive> osmPrimitiveSelection = new ArrayList<>(sel);
                     OsmPrimitive s;
-                    if(!osmPrimitiveSelection.isEmpty()){
-                        s = osmPrimitiveSelection.get(0);                       
-                        if(s.getInterestingTags().isEmpty()){
+                    if (!osmPrimitiveSelection.isEmpty()) {
+                        s = osmPrimitiveSelection.get(0);
+                        if (s.getInterestingTags().isEmpty()) {
                             //load original model
                             modelWithClasses = false;
                             loadSVMmodel();
                             createOSMObject(sel); //create object without class features
-                        }
-                        else{
+                        } else {
                             //useTagsCheckBox
-                            if(useTagsCheckBox.isSelected()){
+                            if (useTagsCheckBox.isSelected()) {
                                 //load model with classes
                                 modelWithClasses = true;
                                 loadSVMmodel();
-                                createOSMObject(sel); //create object including class features                               
-                            }
-                            else{
+                                createOSMObject(sel); //create object including class features
+                            } else {
                                 modelWithClasses = false;
                                 loadSVMmodel();
-                                createOSMObject(sel); //create object including class features    
+                                createOSMObject(sel); //create object including class features
                             }
-                        }                        
-                    }                    
+                        }
+                    }
                 }
             });
-            
+
             keys = new AutoCompletingComboBox();
             values = new AutoCompletingComboBox();
 
             mainPanel.add(new JLabel("<html>"+trn("This will change up to {0} object.",
-                "This will change up to {0} objects.", sel.size(),sel.size())
-                +"<br><br>"+tr("Please select a key")), GBC.eol().fill(GBC.HORIZONTAL));
+                    "This will change up to {0} objects.", sel.size(), sel.size())
+            +"<br><br>"+tr("Please select a key")), GBC.eol().fill(GBC.HORIZONTAL));
 
-            AutoCompletionManager autocomplete = Main.main.getEditLayer().data.getAutoCompletionManager();
+            AutoCompletionManager autocomplete = Main.getLayerManager().getEditLayer().data.getAutoCompletionManager();
             List<AutoCompletionListItem> keyList = autocomplete.getKeys();
 
             AutoCompletionListItem itemToSelect = null;
@@ -1717,64 +1572,61 @@ class OSMRecPluginHelper {
             keys.setEditable(true);
 
             mainPanel.add(keys, GBC.eop().fill());
-            mainPanel.add(new JLabel(tr("Please select a value")), GBC.eol());            
- 
+            mainPanel.add(new JLabel(tr("Please select a value")), GBC.eol());
+
             model = new DefaultListModel<>();
-            
-            parseTagsMappedToClasses(); 
-            
+
+            parseTagsMappedToClasses();
+
             List<OsmPrimitive> osmPrimitiveSelection = new ArrayList<>(sel);
             OsmPrimitive s;
             //get a simple selection
-            if(!osmPrimitiveSelection.isEmpty()){
-                s = osmPrimitiveSelection.get(0);     
+            if (!osmPrimitiveSelection.isEmpty()) {
+                s = osmPrimitiveSelection.get(0);
                 File modelDirectory = new File(MODEL_PATH);
                 String modelWithClassesPath = modelDirectory.getAbsolutePath() + "/model_with_classes";
-                File modelWithClassesFile = new File(modelWithClassesPath); 
-                if(s.getInterestingTags().isEmpty() || !modelWithClassesFile.exists()){
+                File modelWithClassesFile = new File(modelWithClassesPath);
+                if (s.getInterestingTags().isEmpty() || !modelWithClassesFile.exists()) {
                     modelWithClasses = false;
-                    loadSVMmodel();//load original model
-                    createOSMObject(sel); //create object without class features                                   
-                }
-                else{
+                    loadSVMmodel(); //load original model
+                    createOSMObject(sel); //create object without class features
+                } else {
                     //recommend using tags: set the checkbox selected to avoid confusing the user
-                    useTagsCheckBox.setSelected(true);                   
+                    useTagsCheckBox.setSelected(true);
                     modelWithClasses = true;
-                    loadSVMmodel();//load model with classes          
-                    createOSMObject(sel); //create object including class features                              
-                }                        
-            } 
-            
+                    loadSVMmodel(); //load model with classes
+                    createOSMObject(sel); //create object including class features
+                }
+            }
+
             categoryList = new JList<>(model);
 
-            ListSelectionListener listSelectionListener = new ListSelectionListener() {       
+            ListSelectionListener listSelectionListener = new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                    if (!listSelectionEvent.getValueIsAdjusting()) {//This prevents double events
-                        //System.out.println("tag selected: " + categoryList.getSelectedValue());
-                        
+                    if (!listSelectionEvent.getValueIsAdjusting()) { //This prevents double events
+
                         String selectedClass = categoryList.getSelectedValue();
 
-                        if(selectedClass != null){ //null check, because the model is cleared after a new recommendation
-                                                   //tags become unselected 
-                            if((selectedClass.indexOf(" ")+1) > 0){
+                        if (selectedClass != null) { //null check, because the model is cleared after a new recommendation
+                            //tags become unselected
+                            if ((selectedClass.indexOf(" ")+1) > 0) {
                                 //add both key + value in tags
                                 String keyTag = selectedClass.substring(0, selectedClass.indexOf(" "));
                                 String valueTag = selectedClass.substring(selectedClass.indexOf(" ")+1, selectedClass.length());
                                 keys.setSelectedItem(keyTag); //adding selected tags to textBoxes
                                 values.setSelectedItem(valueTag);
-                            }
-                            else{
+                            } else {
                                 //value does not have a value, add the key tag only
                                 String keyTag = selectedClass; //test it
                                 keys.setSelectedItem(keyTag);
                                 values.setSelectedItem("");
                             }
                         }
-                    }                   
+                    }
                 }
             };
-            
+
             categoryList.addListSelectionListener(listSelectionListener);
             categoryList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             categoryList.setModel(model);
@@ -1797,38 +1649,25 @@ class OSMRecPluginHelper {
                 recentTagsToShow = MAX_LRU_TAGS_NUMBER;
             }
 
-            // Add tag on Shift-Enter
-//            mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-//                        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK), "addAndContinue");
-//                mainPanel.getActionMap().put("addAndContinue", new AbstractAction() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        performTagAdding();
-//                        selectKeysComboBox();
-//                    }
-//                });
-
             suggestRecentlyAddedTags(mainPanel, recentTagsToShow, focus);
 
             mainPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             listPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
             splitPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GRAY, Color.WHITE));
-            
+
             listPanel.add(recommendedClassesLabel, BorderLayout.NORTH);
             listPanel.add(categoryList, BorderLayout.SOUTH);
             actionsPanel.add(addAndContinueButton);
             actionsPanel.add(modelSettingsButton);
             actionsPanel.add(useTagsCheckBox);
-            
+
             recommendPanel.add(actionsPanel, BorderLayout.WEST);
             recommendPanel.add(listPanel, BorderLayout.NORTH);
-            
+
             splitPanel.add(mainPanel, BorderLayout.WEST);
             splitPanel.add(recommendPanel, BorderLayout.EAST);
-            
-            setContent(splitPanel, false);
 
-            selectKeysComboBox();
+            setContent(splitPanel, false);
 
             popupMenu.add(new AbstractAction(tr("Set number of recently added tags")) {
                 @Override
@@ -1837,29 +1676,27 @@ class OSMRecPluginHelper {
                 }
             });
             JCheckBoxMenuItem rememberLastTags = new JCheckBoxMenuItem(
-                new AbstractAction(tr("Remember last used tags after a restart")){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    boolean sel=((JCheckBoxMenuItem) e.getSource()).getState();
-                    PROPERTY_REMEMBER_TAGS.put(sel);
-                    if (sel) saveTagsIfNeeded();
-                }
-            });
+                    new AbstractAction(tr("Remember last used tags after a restart")) {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            boolean sel = ((JCheckBoxMenuItem) e.getSource()).getState();
+                            PROPERTY_REMEMBER_TAGS.put(sel);
+                            if (sel) saveTagsIfNeeded();
+                        }
+                    });
             rememberLastTags.setState(PROPERTY_REMEMBER_TAGS.get());
             popupMenu.add(rememberLastTags);
-
         }
-        
+
         private void addAndContinueButtonActionPerformed(ActionEvent evt, String selectedClass) {
             performTagAdding();
-            selectKeysComboBox();
         }
-        
+
         private void selectNumberOfTags() {
             String s = JOptionPane.showInputDialog(this, tr("Please enter the number of recently added tags to display"));
-            if (s!=null) try {
+            if (s != null) try {
                 int v = Integer.parseInt(s);
-                if (v>=0 && v<=MAX_LRU_TAGS_NUMBER) {
+                if (v >= 0 && v <= MAX_LRU_TAGS_NUMBER) {
                     PROPERTY_RECENT_TAGS_NUMBER.put(v);
                     return;
                 }
@@ -1877,32 +1714,32 @@ class OSMRecPluginHelper {
 
             int count = 1;
             // We store the maximum number (9) of recent tags to allow dynamic change of number of tags shown in the preferences.
-            // This implies to iterate in descending order, as the oldest elements will only be removed after we reach the maximum numbern and not the number of tags to show.
-            // However, as Set does not allow to iterate in descending order, we need to copy its elements into a List we can access in reverse order.
+            // This implies to iterate in descending order,
+            // as the oldest elements will only be removed after we reach the maximum numbern and not the number of tags to show.
+            // However, as Set does not allow to iterate in descending order,
+            // we need to copy its elements into a List we can access in reverse order.
             List<Tag> tags = new LinkedList<>(recentTags.keySet());
             for (int i = tags.size()-1; i >= 0 && count <= tagsToShow; i--, count++) {
                 final Tag t = tags.get(i);
                 // Create action for reusing the tag, with keyboard shortcut Ctrl+(1-5)
-                String actionShortcutKey = "properties:recent:"+count;
-                String actionShortcutShiftKey = "properties:recent:shift:"+count;
-                Shortcut sc = Shortcut.registerShortcut(actionShortcutKey, tr("Choose recent tag {0}", count), KeyEvent.VK_0+count, Shortcut.CTRL);
-                final JosmAction action = new JosmAction(actionShortcutKey, null, tr("Use this tag again"), sc, false) {
+                String scKey = "properties:recent:"+count;
+                String scsKey = "properties:recent:shift:"+count;
+                Shortcut sc = Shortcut.registerShortcut(scKey, tr("Choose recent tag {0}", count), KeyEvent.VK_0+count, Shortcut.CTRL);
+                final JosmAction action = new JosmAction(scKey, null, tr("Use this tag again"), sc, false) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         keys.setSelectedItem(t.getKey());
                         // fix #7951, #8298 - update list of values before setting value (?)
                         focus.focusGained(null);
                         values.setSelectedItem(t.getValue());
-                        selectValuesCombobox();
                     }
                 };
-                Shortcut scShift = Shortcut.registerShortcut(actionShortcutShiftKey, tr("Apply recent tag {0}", count), KeyEvent.VK_0+count, Shortcut.CTRL_SHIFT);
-                final JosmAction actionShift = new JosmAction(actionShortcutShiftKey, null, tr("Use this tag again"), scShift, false) {
+                Shortcut scs = Shortcut.registerShortcut(scsKey, tr("Apply recent tag {0}", count), KeyEvent.VK_0+count, Shortcut.CTRL_SHIFT);
+                final JosmAction actionShift = new JosmAction(scsKey, null, tr("Use this tag again"), scs, false) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         action.actionPerformed(null);
                         performTagAdding();
-                        selectKeysComboBox();
                     }
                 };
                 recentTagsActions.add(action);
@@ -1914,12 +1751,6 @@ class OSMRecPluginHelper {
                     // If no icon found in map style look at presets
                     Map<String, String> map = new HashMap<>();
                     map.put(t.getKey(), t.getValue());
-//                    for (TaggingPreset tp : TaggingPreset.getMatchingPresets(null, map, false)) {
-//                        icon = tp.getIcon();
-//                        if (icon != null) {
-//                            break;
-//                        }
-//                    }
                     // If still nothing display an empty icon
                     if (icon == null) {
                         icon = new ImageIcon(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
@@ -1931,14 +1762,14 @@ class OSMRecPluginHelper {
                 // Create tag label
                 final String color = action.isEnabled() ? "" : "; color:gray";
                 final JLabel tagLabel = new JLabel("<html>"
-                    + "<style>td{border:1px solid gray; font-weight:normal"+color+"}</style>"
-                    + "<table><tr><td>" + XmlWriter.encode(t.toString(), true) + "</td></tr></table></html>");
+                        + "<style>td{border:1px solid gray; font-weight:normal"+color+"}</style>"
+                        + "<table><tr><td>" + XmlWriter.encode(t.toString(), true) + "</td></tr></table></html>");
                 if (action.isEnabled()) {
                     // Register action
-                    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(sc.getKeyStroke(), actionShortcutKey);
-                    mainPanel.getActionMap().put(actionShortcutKey, action);
-                    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(scShift.getKeyStroke(), actionShortcutShiftKey);
-                    mainPanel.getActionMap().put(actionShortcutShiftKey, actionShift);
+                    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(sc.getKeyStroke(), scKey);
+                    mainPanel.getActionMap().put(scKey, action);
+                    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(scs.getKeyStroke(), scsKey);
+                    mainPanel.getActionMap().put(scsKey, actionShift);
                     // Make the tag label clickable and set tooltip to the action description (this displays also the keyboard shortcut)
                     tagLabel.setToolTipText((String) action.getValue(Action.SHORT_DESCRIPTION));
                     tagLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -1947,14 +1778,13 @@ class OSMRecPluginHelper {
                         public void mouseClicked(MouseEvent e) {
                             action.actionPerformed(null);
                             // add tags and close window on double-click
-                            
-                            if (e.getClickCount()>1) {
+
+                            if (e.getClickCount() > 1) {
                                 buttonAction(0, null); // emulate OK click and close the dialog
                             }
                             // add tags on Shift-Click
                             if (e.isShiftDown()) {
                                 performTagAdding();
-                                selectKeysComboBox();
                             }
                         }
                     });
@@ -2020,10 +1850,10 @@ class OSMRecPluginHelper {
         private void loadSVMmodel() {
             File modelDirectory = new File(MODEL_PATH);
             File modelFile;
-            if(useCombinedModel){
-                if(filesAndWeights.isEmpty()){
+            if (useCombinedModel) {
+                if (filesAndWeights.isEmpty()) {
                     System.out.println("No models selected! Loading defaults..");
-                    if(modelWithClasses){
+                    if (modelWithClasses) {
                         System.out.println("Using default/last model with classes: " + modelDirectory.getAbsolutePath() + "/model_with_classes");
                         modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
                         try {
@@ -2036,8 +1866,7 @@ class OSMRecPluginHelper {
                         }
                         modelSVMLabelSize = modelSVM.getLabels().length;
                         modelSVMLabels = modelSVM.getLabels();
-                    }
-                    else{
+                    } else {
                         System.out.println("Using default/last model without classes: " + modelDirectory.getAbsolutePath() + "/best_model");
                         modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
                         try {
@@ -2050,32 +1879,27 @@ class OSMRecPluginHelper {
                         }
                         modelSVMLabelSize = modelSVM.getLabels().length;
                         modelSVMLabels = modelSVM.getLabels();
-                    } 
-                }               
-                if(modelWithClasses){ //check filenames to define if model with classes is selected
+                    }
+                }
+                if (modelWithClasses) { //check filenames to define if model with classes is selected
                     System.out.println("Using combined model with classes");
                     useCombinedSVMmodels(sel, true);
-                }
-                else{
+                } else {
                     System.out.println("Using combined model without classes");
                     useCombinedSVMmodels(sel, false);
-                }               
-                                
-            }
-            else if(useCustomSVMModel){
+                }
+            } else if (useCustomSVMModel) {
                 System.out.println("custom path: " + customSVMModelPath);
-                File checkExistance = new File(customSVMModelPath);             
-                if(checkExistance.exists() && checkExistance.isFile()){
+                File checkExistance = new File(customSVMModelPath);
+                if (checkExistance.exists() && checkExistance.isFile()) {
                     if (modelWithClasses) {
                         System.out.println("Using custom model with classes: ");
                         if (customSVMModelPath.endsWith(".0")) {
-                            //String customSVMModelPathWithClasses = customSVMModelPath.replace(".0", ".1");
                             String customSVMModelPathWithClasses = customSVMModelPath.substring(0, customSVMModelPath.length() - 2) + ".1";
 
                             modelFile = new File(customSVMModelPathWithClasses);
                             System.out.println(customSVMModelPathWithClasses);
-                        } 
-                        else {
+                        } else {
                             modelFile = new File(customSVMModelPath);
                         }
                     } else {
@@ -2097,16 +1921,14 @@ class OSMRecPluginHelper {
                         Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     modelSVMLabelSize = modelSVM.getLabels().length;
-                    modelSVMLabels = modelSVM.getLabels();                    
+                    modelSVMLabels = modelSVM.getLabels();
 
-                } 
-                else {
+                } else {
                     //user chose to use a custom model, but did not provide a path to a model:
-                    if(modelWithClasses){
+                    if (modelWithClasses) {
                         System.out.println("Using default/last model with classes");
                         modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
-                    }
-                    else{
+                    } else {
                         System.out.println("Using default/last model without classes");
                         modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
                     }
@@ -2120,20 +1942,18 @@ class OSMRecPluginHelper {
                         Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     modelSVMLabelSize = modelSVM.getLabels().length;
-                    modelSVMLabels = modelSVM.getLabels();                    
-                    
+                    modelSVMLabels = modelSVM.getLabels();
+
                 }
-            } 
-            else {
-                if(modelWithClasses){
+            } else {
+                if (modelWithClasses) {
                     System.out.println("Using default/last model with classes");
                     modelFile = new File(modelDirectory.getAbsolutePath() + "/model_with_classes");
-                }
-                else{
+                } else {
                     System.out.println("Using default/last model without classes");
                     modelFile = new File(modelDirectory.getAbsolutePath() + "/best_model");
-                }  
-                
+                }
+
                 try {
                     System.out.println("try to load model: " + modelFile.getAbsolutePath());
                     modelSVM = Model.load(modelFile);
@@ -2143,20 +1963,20 @@ class OSMRecPluginHelper {
                     Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 modelSVMLabelSize = modelSVM.getLabels().length;
-                modelSVMLabels = modelSVM.getLabels();                
-            }                   
+                modelSVMLabels = modelSVM.getLabels();
+            }
         }
-        
-        private void useCombinedSVMmodels(Collection<OsmPrimitive> sel, boolean useClassFeatures){
-            System.out.println("The system will combine " + filesAndWeights.size() + " SVM models.");           
-            
+
+        private void useCombinedSVMmodels(Collection<OsmPrimitive> sel, boolean useClassFeatures) {
+            System.out.println("The system will combine " + filesAndWeights.size() + " SVM models.");
+
             MathTransform transform = null;
             GeometryFactory geometryFactory = new GeometryFactory();
             CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
             CoordinateReferenceSystem targetCRS = DefaultGeocentricCRS.CARTESIAN;
             try {
                 transform = CRS.findMathTransform(sourceCRS, targetCRS, true);
-                
+
             } catch (FactoryException ex) {
                 Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2164,432 +1984,358 @@ class OSMRecPluginHelper {
             OSMWay selectedInstance;
             List<OsmPrimitive> osmPrimitiveSelection = new ArrayList<>(sel);
             OsmPrimitive s;
-            
+
             //get a simple selection
-            if(!osmPrimitiveSelection.isEmpty()){
+            if (!osmPrimitiveSelection.isEmpty()) {
                 s = osmPrimitiveSelection.get(0);
-            }
-            else {
+            } else {
                 return;
             }
 
             selectedInstance = new OSMWay();
-            for(Way selectedWay : s.getDataSet().getSelectedWays()){   
-               // System.out.println(nod.getNodes());
+            for (Way selectedWay : s.getDataSet().getSelectedWays()) {
                 List<Node> selectedWayNodes = selectedWay.getNodes();
-                for(Node node : selectedWayNodes){
+                for (Node node : selectedWayNodes) {
                     node.getCoor();
-                    //System.out.println(node.getCoor()); 
-                    if(node.isLatLonKnown()){
+                    if (node.isLatLonKnown()) {
                         double lat = node.getCoor().lat();
                         double lon = node.getCoor().lon();
 
                         Coordinate sourceCoordinate = new Coordinate(lon, lat);
                         Coordinate targetGeometry = null;
-                        try {    
+                        try {
                             targetGeometry = JTS.transform(sourceCoordinate, null, transform);
                         } catch (MismatchedDimensionException | TransformException ex) {
                             Logger.getLogger(OSMParser.class.getName()).log(Level.SEVERE, null, ex);
-                        }                    
+                        }
 
-                        Geometry geom = geometryFactory.createPoint(new Coordinate(targetGeometry));   
+                        Geometry geom = geometryFactory.createPoint(new Coordinate(targetGeometry));
                         selectedInstance.addNodeGeometry(geom);
                     }
                 }
             }
             Geometry fullGeom = geometryFactory.buildGeometry(selectedInstance.getNodeGeometries());
-            if((selectedInstance.getNodeGeometries().size() > 3) && 
-                selectedInstance.getNodeGeometries().get(0).equals(selectedInstance.getNodeGeometries()
-                .get(selectedInstance.getNodeGeometries().size()-1)))
-            {
-                //checks if the beginning and ending node are the same and the number of nodes are more than 3. 
-                //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.                    
+            if ((selectedInstance.getNodeGeometries().size() > 3) &&
+                    selectedInstance.getNodeGeometries().get(0).equals(selectedInstance.getNodeGeometries()
+                            .get(selectedInstance.getNodeGeometries().size()-1))) {
+                //checks if the beginning and ending node are the same and the number of nodes are more than 3.
+                //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.
                 LinearRing linear = geometryFactory.createLinearRing(fullGeom.getCoordinates());
                 Polygon poly = new Polygon(linear, null, geometryFactory);
                 selectedInstance.setGeometry(poly);
 
                 System.out.println("\n\npolygon");
-            }
-            else if (selectedInstance.getNodeGeometries().size()>1){
-            //it is an open geometry with more than one nodes, make it linestring 
+            } else if (selectedInstance.getNodeGeometries().size() > 1) {
+                //it is an open geometry with more than one nodes, make it linestring
                 System.out.println("\n\nlinestring");
-                LineString lineString =  geometryFactory.createLineString(fullGeom.getCoordinates());
-                selectedInstance.setGeometry(lineString);               
-            }
-            else{ //we assume all the rest geometries are points
+                LineString lineString = geometryFactory.createLineString(fullGeom.getCoordinates());
+                selectedInstance.setGeometry(lineString);
+            } else { //we assume all the rest geometries are points
                 System.out.println("\n\npoint");
                 Point point = geometryFactory.createPoint(fullGeom.getCoordinate());
                 selectedInstance.setGeometry(point);
             }
 
             Map<String, String> selectedTags = s.getInterestingTags();
-            selectedInstance.setAllTags(selectedTags);             
- 
+            selectedInstance.setAllTags(selectedTags);
+
             //construct vector
-            if(selectedInstance != null){
+            if (selectedInstance != null) {
                 int id;
-                
+
                 OSMClassification classifier = new OSMClassification();
                 classifier.calculateClasses(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
-                
-                if(useClassFeatures){
+
+                if (useClassFeatures) {
                     ClassFeatures classFeatures = new ClassFeatures();
                     classFeatures.createClassFeatures(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
                     id = 1422;
-                }
-                else{
+                } else {
                     id = 1;
                 }
-                
+
                 GeometryFeatures geometryFeatures = new GeometryFeatures(id);
                 geometryFeatures.createGeometryFeatures(selectedInstance);
-                id=geometryFeatures.getLastID();
+                id = geometryFeatures.getLastID();
                 TextualFeatures textualFeatures = new TextualFeatures(id, textualList, languageDetector);
-                textualFeatures.createTextualFeatures(selectedInstance);               
-                
+                textualFeatures.createTextualFeatures(selectedInstance);
+
                 List<FeatureNode> featureNodeList = selectedInstance.getFeatureNodeList();
-                //System.out.println(featureNodeList);
-                
+
                 FeatureNode[] featureNodeArray = new FeatureNode[featureNodeList.size()];
 
                 int i = 0;
-                for(FeatureNode featureNode : featureNodeList){
-
+                for (FeatureNode featureNode : featureNodeList) {
                     featureNodeArray[i] = featureNode;
-                    //System.out.println("i: " + i + " array:" + featureNodeArray[i]);
                     i++;
+                }
+                FeatureNode[] testInstance2 = featureNodeArray;
 
-                }                    
-                FeatureNode[] testInstance2 = featureNodeArray;                                           
-                
                 //compute prediction list for every model
                 int[] ranks = new int[10];
-                
-                for(int l=0; l<10; l++){
+
+                for (int l = 0; l < 10; l++) {
                     ranks[l] = 10-l; //init from 10 to 1
                 }
-                
+
                 Map<String, Double> scoreMap = new HashMap<>();
 
                 Map<File, Double> alignedFilesAndWeights = getAlignedModels(filesAndWeights);
-                
-                for(File modelFile : alignedFilesAndWeights.keySet()){
-                    
+
+                for (File modelFile : alignedFilesAndWeights.keySet()) {
 
                     try {
                         modelSVM = Model.load(modelFile);
-                        //System.out.println("model loaded: " + modelFile.getAbsolutePath());
                     } catch (IOException ex) {
                         Logger.getLogger(TrainWorker.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     modelSVMLabelSize = modelSVM.getLabels().length;
-                    modelSVMLabels = modelSVM.getLabels();            
-                                                               
-                
+                    modelSVMLabels = modelSVM.getLabels();
+
                     Map<Integer, Integer> mapLabelsToIDs = new HashMap<>();
-                    for(int h =0; h < modelSVMLabelSize; h++){
-
+                    for (int h = 0; h < modelSVMLabelSize; h++) {
                         mapLabelsToIDs.put(modelSVMLabels[h], h);
-                        //System.out.println(h + "   <->    " + modelSVMLabels[h]);
-
-                    } 
+                    }
                     double[] scores = new double[modelSVMLabelSize];
                     Linear.predictValues(modelSVM, testInstance2, scores);
 
                     Map<Double, Integer> scoresValues = new HashMap<>();
-                    for(int h = 0; h < scores.length; h++){
+                    for (int h = 0; h < scores.length; h++) {
                         scoresValues.put(scores[h], h);
-                        //System.out.println(h + "   <->    " + scores[h]);
-                    }                
+                    }
 
                     Arrays.sort(scores);
-                    int predicted1 = modelSVMLabels[scoresValues.get(scores[scores.length-1])];  
+                    int predicted1 = modelSVMLabels[scoresValues.get(scores[scores.length-1])];
                     int predicted2 = modelSVMLabels[scoresValues.get(scores[scores.length-2])];
                     int predicted3 = modelSVMLabels[scoresValues.get(scores[scores.length-3])];
-                    int predicted4 = modelSVMLabels[scoresValues.get(scores[scores.length-4])];  
+                    int predicted4 = modelSVMLabels[scoresValues.get(scores[scores.length-4])];
                     int predicted5 = modelSVMLabels[scoresValues.get(scores[scores.length-5])];
                     int predicted6 = modelSVMLabels[scoresValues.get(scores[scores.length-6])];
-                    int predicted7 = modelSVMLabels[scoresValues.get(scores[scores.length-7])];  
+                    int predicted7 = modelSVMLabels[scoresValues.get(scores[scores.length-7])];
                     int predicted8 = modelSVMLabels[scoresValues.get(scores[scores.length-8])];
                     int predicted9 = modelSVMLabels[scoresValues.get(scores[scores.length-9])];
-                    int predicted10 = modelSVMLabels[scoresValues.get(scores[scores.length-10])];                  
+                    int predicted10 = modelSVMLabels[scoresValues.get(scores[scores.length-10])];
 
                     String[] predictedTags = new String[10];
-                    for( Map.Entry<String, Integer> entry : mapperWithIDs.entrySet()){
+                    for (Map.Entry<String, Integer> entry : mapperWithIDs.entrySet()) {
 
-                        if(entry.getValue().equals(predicted1)){
-                            //System.out.println("1st predicted class: " +entry.getKey());                     
+                        if (entry.getValue().equals(predicted1)) {
                             predictedTags[0] = entry.getKey();
-                        }
-                        else if(entry.getValue().equals(predicted2)){
+                        } else if (entry.getValue().equals(predicted2)) {
                             predictedTags[1] = entry.getKey();
-                            //System.out.println("2nd predicted class: " +entry.getKey());
-                        }
-                        else if(entry.getValue().equals(predicted3)){
+                        } else if (entry.getValue().equals(predicted3)) {
                             predictedTags[2] = entry.getKey();
-                            //System.out.println("3rd predicted class: " +entry.getKey()); 
-                        }
-                        else if(entry.getValue().equals(predicted4)){
+                        } else if (entry.getValue().equals(predicted4)) {
                             predictedTags[3] = entry.getKey();
-                            //System.out.println("2nd predicted class: " +entry.getKey());
-                        }
-                        else if(entry.getValue().equals(predicted5)){
+                        } else if (entry.getValue().equals(predicted5)) {
                             predictedTags[4] = entry.getKey();
-                            //System.out.println("3rd predicted class: " +entry.getKey()); 
-                        }                    
-                        else if(entry.getValue().equals(predicted6)){
+                        } else if (entry.getValue().equals(predicted6)) {
                             predictedTags[5] = entry.getKey();
-                            //System.out.println("2nd predicted class: " +entry.getKey());
-                        }
-                        else if(entry.getValue().equals(predicted7)){
+                        } else if (entry.getValue().equals(predicted7)) {
                             predictedTags[6] = entry.getKey();
-                            //System.out.println("3rd predicted class: " +entry.getKey()); 
-                        }
-                        else if(entry.getValue().equals(predicted8)){
+                        } else if (entry.getValue().equals(predicted8)) {
                             predictedTags[7] = entry.getKey();
-                            //System.out.println("2nd predicted class: " +entry.getKey());
-                        }
-                        else if(entry.getValue().equals(predicted9)){
+                        } else if (entry.getValue().equals(predicted9)) {
                             predictedTags[8] = entry.getKey();
-                            //System.out.println("3rd predicted class: " +entry.getKey()); 
-                        }     
-                        else if(entry.getValue().equals(predicted10)){
+                        } else if (entry.getValue().equals(predicted10)) {
                             predictedTags[9] = entry.getKey();
-                            //System.out.println("3rd predicted class: " +entry.getKey()); 
-                        }                     
+                        }
                     }
                     //clearing model, to add the new computed classes in jlist
                     model.clear();
-                    for(Map.Entry<String, String> tag : mappings.entrySet()){
+                    for (Map.Entry<String, String> tag : mappings.entrySet()) {
 
-                        for(int k=0; k<10; k++){
-                            if(tag.getValue().equals(predictedTags[k])){
+                        for (int k = 0; k < 10; k++) {
+                            if (tag.getValue().equals(predictedTags[k])) {
                                 predictedTags[k] = tag.getKey();
                                 model.addElement(tag.getKey());
                             }
                         }
                     }
                     System.out.println("combined, predicted classes: " + Arrays.toString(predictedTags));
-                    
-                    for(int r = 0; r<ranks.length; r++){
+
+                    for (int r = 0; r < ranks.length; r++) {
                         String predictedTag = predictedTags[r];
                         Double currentWeight = alignedFilesAndWeights.get(modelFile);
                         double finalRank = ranks[r]*currentWeight;
-                        //String roundedWeight = new DecimalFormat("##.###").format(finalRank);
-                        //double finalRounded = Double.parseDouble(roundedWeight);
-                        //System.out.println("rank: " + ranks[r] + ", weight: " + currentWeight 
-                               // + ", final rank: " + finalRounded + " " + predictedTags[r]);
-                       
-                        if(scoreMap.containsKey(predictedTag)){
+
+                        if (scoreMap.containsKey(predictedTag)) {
                             Double scoreToAdd = scoreMap.get(predictedTag);
                             scoreMap.put(predictedTag, finalRank+scoreToAdd);
-                        }
-                        else{
+                        } else {
                             scoreMap.put(predictedTag, finalRank);
-                        }                     
+                        }
                         //add final weight - predicted tag
-                    }                    
-                } //files iter  
+                    }
+                } //files iter
                 model.clear();
                 List<Double> scoresList = new ArrayList<>(scoreMap.values());
-                Collections.sort(scoresList ,Collections.reverseOrder());
-                
-                for(Double sco : scoresList){
-                    if(model.size()>9){
+                Collections.sort(scoresList, Collections.reverseOrder());
+
+                for (Double sco : scoresList) {
+                    if (model.size() > 9) {
                         break;
                     }
-                    for(Map.Entry<String, Double> scoreEntry : scoreMap.entrySet()){
-                    
-                        if(scoreEntry.getValue().equals(sco)){
-                            //model.addElement(scoreEntry.toString()); //displaying score                           
+                    for (Map.Entry<String, Double> scoreEntry : scoreMap.entrySet()) {
+                        if (scoreEntry.getValue().equals(sco)) {
                             model.addElement(scoreEntry.getKey());
                         }
                     }
                 }
-                //System.out.println("final list:" + scoreMap);
-            }           
+            }
         }
 
         private void createOSMObject(Collection<OsmPrimitive> sel) {
-                        
+
             MathTransform transform = null;
             GeometryFactory geometryFactory = new GeometryFactory();
             CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
             CoordinateReferenceSystem targetCRS = DefaultGeocentricCRS.CARTESIAN;
             try {
                 transform = CRS.findMathTransform(sourceCRS, targetCRS, true);
-                
+
             } catch (FactoryException ex) {
                 Logger.getLogger(OSMRecPluginHelper.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             //fire an error to the user if he has multiple selection from map
-            
+
             //we consider simple (one instance) selection, so we get the first of the sel list
-            //int singleSelectionCount = 0;
-            //Collection<OsmPrimitive> paa = Main.main.getInProgressSelection();
-            
+
             OSMWay selectedInstance;
             List<OsmPrimitive> osmPrimitiveSelection = new ArrayList<>(sel);
             OsmPrimitive s;
-            
+
             //get a simple selection
-            if(!osmPrimitiveSelection.isEmpty()){
+            if (!osmPrimitiveSelection.isEmpty()) {
                 s = osmPrimitiveSelection.get(0);
-            }
-            else {
+            } else {
                 return;
             }
 
             selectedInstance = new OSMWay();
-            for(Way selectedWay : s.getDataSet().getSelectedWays()){   
-               // System.out.println(nod.getNodes());
+            for (Way selectedWay : s.getDataSet().getSelectedWays()) {
                 List<Node> selectedWayNodes = selectedWay.getNodes();
-                for(Node node : selectedWayNodes){
+                for (Node node : selectedWayNodes) {
                     node.getCoor();
-                    //System.out.println(node.getCoor()); 
-                    if(node.isLatLonKnown()){
-                        //LatLon coord = nod.getCoor();
+                    if (node.isLatLonKnown()) {
                         double lat = node.getCoor().lat();
                         double lon = node.getCoor().lon();
 
                         Coordinate sourceCoordinate = new Coordinate(lon, lat);
                         Coordinate targetGeometry = null;
-                        try {    
+                        try {
                             targetGeometry = JTS.transform(sourceCoordinate, null, transform);
                         } catch (MismatchedDimensionException | TransformException ex) {
                             Logger.getLogger(OSMParser.class.getName()).log(Level.SEVERE, null, ex);
-                        }                    
+                        }
 
-                        Geometry geom = geometryFactory.createPoint(new Coordinate(targetGeometry));   
+                        Geometry geom = geometryFactory.createPoint(new Coordinate(targetGeometry));
                         selectedInstance.addNodeGeometry(geom);
                     }
                 }
             }
             Geometry fullGeom = geometryFactory.buildGeometry(selectedInstance.getNodeGeometries());
-            //System.out.println("full geom: " + fullGeom.toText());
 
             System.out.println("number of nodes: " + selectedInstance.getNodeGeometries().size());
 
-            if((selectedInstance.getNodeGeometries().size() > 3) && 
-                selectedInstance.getNodeGeometries().get(0).equals(selectedInstance.getNodeGeometries()
-                .get(selectedInstance.getNodeGeometries().size()-1)))
-            {
-                //checks if the beginning and ending node are the same and the number of nodes are more than 3. 
-                //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.                    
+            if ((selectedInstance.getNodeGeometries().size() > 3) &&
+                    selectedInstance.getNodeGeometries().get(0).equals(selectedInstance.getNodeGeometries()
+                            .get(selectedInstance.getNodeGeometries().size()-1))) {
+                //checks if the beginning and ending node are the same and the number of nodes are more than 3.
+                //the nodes must be more than 3, because jts does not allow a construction of a linear ring with less points.
                 LinearRing linear = geometryFactory.createLinearRing(fullGeom.getCoordinates());
                 Polygon poly = new Polygon(linear, null, geometryFactory);
                 selectedInstance.setGeometry(poly);
 
                 System.out.println("\n\npolygon");
-            }
-            else if (selectedInstance.getNodeGeometries().size()>1){
-            //it is an open geometry with more than one nodes, make it linestring 
+            } else if (selectedInstance.getNodeGeometries().size() > 1) {
+                //it is an open geometry with more than one nodes, make it linestring
                 System.out.println("\n\nlinestring");
-                LineString lineString =  geometryFactory.createLineString(fullGeom.getCoordinates());
-                selectedInstance.setGeometry(lineString);               
-            }
-            else{ //we assume all the rest geometries are points
+                LineString lineString = geometryFactory.createLineString(fullGeom.getCoordinates());
+                selectedInstance.setGeometry(lineString);
+            } else { //we assume all the rest geometries are points
                 System.out.println("\n\npoint");
                 Point point = geometryFactory.createPoint(fullGeom.getCoordinate());
                 selectedInstance.setGeometry(point);
             }
 
-            //System.out.println(tt + "  " + s.getDataSet().getNodes());
-            //Collection<Node> nodes = s.getDataSet().getNodes();
-            //nodeTmp.setGeometry(geom);
-
             Map<String, String> selectedTags = s.getInterestingTags();
             selectedInstance.setAllTags(selectedTags);
-            //System.out.println("selected instance interested tags: " + s.getInterestingTags());
-            //selectedInstance.setTagKeyValue(selectedTags);
 
-            //singleSelectionCount++;               
- 
             //construct vector here
-            if(selectedInstance != null){
+            if (selectedInstance != null) {
                 int id;
-                if(mappings == null){
-                   System.out.println("null mappings ERROR");
+                if (mappings == null) {
+                    System.out.println("null mappings ERROR");
                 }
-                
+
                 OSMClassification classifier = new OSMClassification();
                 classifier.calculateClasses(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
-                
-                if(modelWithClasses){
+
+                if (modelWithClasses) {
                     ClassFeatures classFeatures = new ClassFeatures();
                     classFeatures.createClassFeatures(selectedInstance, mappings, mapperWithIDs, indirectClasses, indirectClassesWithIDs);
                     id = 1422;
-                }
-                else{
+                } else {
                     id = 1;
                 }
-                
+
                 GeometryFeatures geometryFeatures = new GeometryFeatures(id);
                 geometryFeatures.createGeometryFeatures(selectedInstance);
-                id=geometryFeatures.getLastID();
+                id = geometryFeatures.getLastID();
                 TextualFeatures textualFeatures = new TextualFeatures(id, textualList, languageDetector);
-                textualFeatures.createTextualFeatures(selectedInstance);               
-                
+                textualFeatures.createTextualFeatures(selectedInstance);
+
                 List<FeatureNode> featureNodeList = selectedInstance.getFeatureNodeList();
                 System.out.println(featureNodeList);
-                
+
                 FeatureNode[] featureNodeArray = new FeatureNode[featureNodeList.size()];
 
                 int i = 0;
-                for(FeatureNode featureNode : featureNodeList){
-
+                for (FeatureNode featureNode : featureNodeList) {
                     featureNodeArray[i] = featureNode;
-                    //System.out.println("i: " + i + " array:" + featureNodeArray[i]);
                     i++;
+                }
+                FeatureNode[] testInstance2 = featureNodeArray;
 
-                }                    
-                FeatureNode[] testInstance2 = featureNodeArray;                                           
-                
                 Map<Integer, Integer> mapLabelsToIDs = new HashMap<>();
-                for(int h =0; h < modelSVMLabelSize; h++){
-                    
+                for (int h = 0; h < modelSVMLabelSize; h++) {
                     mapLabelsToIDs.put(modelSVMLabels[h], h);
-                    //System.out.println(h + "   <->    " + modelSVMLabels[h]);
-                    
-                }               
-                
+                }
+
                 double[] scores = new double[modelSVMLabelSize];
                 Linear.predictValues(modelSVM, testInstance2, scores);
-                       
+
                 Map<Double, Integer> scoresValues = new HashMap<>();
-                for(int h = 0; h < scores.length; h++){
+                for (int h = 0; h < scores.length; h++) {
                     scoresValues.put(scores[h], h);
-                    //System.out.println(h + "   <->    " + scores[h]);
                 }
 
                 Arrays.sort(scores);
-                
+
                 int[] preds = new int[RECOMMENDATIONS_SIZE];
-                for(int p=0; p < RECOMMENDATIONS_SIZE; p++){
+                for (int p = 0; p < RECOMMENDATIONS_SIZE; p++) {
                     preds[p] = modelSVMLabels[scoresValues.get(scores[scores.length-(p+1)])];
                 }
                 String[] predictedTags2 = new String[RECOMMENDATIONS_SIZE];
-                
-                for(int p=0; p<RECOMMENDATIONS_SIZE; p++){
-                    if(idsWithMappings.containsKey(preds[p])){
+
+                for (int p = 0; p < RECOMMENDATIONS_SIZE; p++) {
+                    if (idsWithMappings.containsKey(preds[p])) {
                         predictedTags2[p] = idsWithMappings.get(preds[p]);
                     }
+                }
 
-                }                
-                
                 //clearing model, to add the new computed classes in jlist
                 model.clear();
-                for(Map.Entry<String, String> tag : mappings.entrySet()){
-                    
-                    for(int k=0; k<10; k++){
-                        if(tag.getValue().equals(predictedTags2[k])){
+                for (Map.Entry<String, String> tag : mappings.entrySet()) {
+                    for (int k = 0; k < 10; k++) {
+                        if (tag.getValue().equals(predictedTags2[k])) {
                             predictedTags2[k] = tag.getKey();
                             model.addElement(tag.getKey());
                         }
                     }
                 }
-                //System.out.println("createdOSM object, predicted classes: " + Arrays.toString(predictedTags));
                 System.out.println("Optimized - create OSMObject, predicted classes: " + Arrays.toString(predictedTags2));
             }
         }
@@ -2598,34 +2344,31 @@ class OSMRecPluginHelper {
 
             InputStream tagsToClassesMapping = TrainWorker.class.getResourceAsStream("/resources/files/Map");
             Mapper mapper = new Mapper();
-            try {   
+            try {
                 mapper.parseFile(tagsToClassesMapping);
 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Mapper.class.getName()).log(Level.SEVERE, null, ex);
             }
             mappings = mapper.getMappings();
-            mapperWithIDs = mapper.getMappingsWithIDs(); 
+            mapperWithIDs = mapper.getMappingsWithIDs();
             idsWithMappings = mapper.getIDsWithMappings();
-            //System.out.println("mappings " + mappings);
-            //System.out.println("mapperWithIDs " + mapperWithIDs);
         }
 
         private void loadTextualList(File textualListFile) {
-          
+
             Scanner input = null;
-            
+
             try {
                 input = new Scanner(textualListFile);
-            } 
-            catch (FileNotFoundException ex) {
-                //Logger.getLogger(Statistics.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                Main.warn(ex);
             }
-            while(input.hasNext()) {
+            while (input.hasNext()) {
                 String nextLine = input.nextLine();
                 textualList.add(nextLine);
             }
-            System.out.println("Textual List parsed from file successfully." + textualList);  
+            System.out.println("Textual List parsed from file successfully." + textualList);
         }
 
         private void loadDefaultTextualList() {
@@ -2646,35 +2389,32 @@ class OSMRecPluginHelper {
 
         private Map<File, Double> getAlignedModels(Map<File, Double> filesAndWeights) {
             Map<File, Double> alignedFilesAndWeights = new HashMap<>();
-            if(modelWithClasses){
-                for(Entry<File, Double> entry : filesAndWeights.entrySet()){
+            if (modelWithClasses) {
+                for (Entry<File, Double> entry : filesAndWeights.entrySet()) {
                     String absolutePath = entry.getKey().getAbsolutePath();
-                    if(absolutePath.endsWith(".0")){
+                    if (absolutePath.endsWith(".0")) {
                         String newPath = absolutePath.substring(0, absolutePath.length()-2) + ".1";
                         File alignedFile = new File(newPath);
-                        if(alignedFile.exists()){
+                        if (alignedFile.exists()) {
                             alignedFilesAndWeights.put(alignedFile, entry.getValue());
-                        }                        
-                    }                    
-                    else{
+                        }
+                    } else {
                         alignedFilesAndWeights.put(entry.getKey(), entry.getValue());
-                    }                    
+                    }
                 }
-            }
-            else{
-                for(Entry<File, Double> entry : filesAndWeights.entrySet()){
+            } else {
+                for (Entry<File, Double> entry : filesAndWeights.entrySet()) {
                     String absolutePath = entry.getKey().getAbsolutePath();
-                    if(absolutePath.endsWith(".1")){
+                    if (absolutePath.endsWith(".1")) {
                         String newPath = absolutePath.substring(0, absolutePath.length()-2) + ".0";
                         File alignedFile = new File(newPath);
-                        if(alignedFile.exists()){
+                        if (alignedFile.exists()) {
                             alignedFilesAndWeights.put(alignedFile, entry.getValue());
-                        }                       
-                    }
-                    else{
+                        }
+                    } else {
                         alignedFilesAndWeights.put(entry.getKey(), entry.getValue());
-                    }                    
-                }                
+                    }
+                }
             }
             return alignedFilesAndWeights;
         }

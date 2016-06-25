@@ -1,5 +1,7 @@
-
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.osmrec;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -40,15 +43,13 @@ import org.openstreetmap.josm.data.osm.event.DataSetListenerAdapter;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import static org.openstreetmap.josm.tools.I18n.tr;
-import org.openstreetmap.josm.tools.Predicates;
+import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.tools.Utils;
 
 /**
  * This class is a modification of the PropertiesDialog for the OSMRec.
- * 
- * 
+ *
+ *
  * This dialog displays the tags of the current selected primitives.
  *
  * If no object is selected, the dialog list is empty.
@@ -100,8 +101,8 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
 
     private final AddAction addAction = new AddAction();
     private final EditActionTrain editAction = new EditActionTrain();
-//    private final DeleteAction deleteAction = new DeleteAction();
-//    private final JosmAction[] josmActions = new JosmAction[]{addAction, editAction, deleteAction};
+    //    private final DeleteAction deleteAction = new DeleteAction();
+    //    private final JosmAction[] josmActions = new JosmAction[]{addAction, editAction, deleteAction};
 
     /**
      * The Add button (needed to be able to disable it)
@@ -142,23 +143,23 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         tagTable.addMouseListener(mouseClickWatch);
         membershipTable.addMouseListener(mouseClickWatch);
         scrollPane.addMouseListener(mouseClickWatch);
-        editHelper.loadTagsIfNeeded(); 
+        editHelper.loadTagsIfNeeded();
 
     }
 
-     /**
+    /**
      * This simply fires up an {@link RelationEditor} for the relation shown; everything else
      * is the editor's business.
      *
      * @param row position
      */
     private void editMembership(int row) {
-        Relation relation = (Relation)membershipData.getValueAt(row, 0);
+        Relation relation = (Relation) membershipData.getValueAt(row, 0);
         Main.map.relationListDialog.selectRelation(relation);
     }
 
     private int findRow(TableModel model, Object value) {
-        for (int i=0; i<model.getRowCount(); i++) {
+        for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0).equals(value))
                 return i;
         }
@@ -173,7 +174,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         selectionChanged(null);
     }
 
-   // </editor-fold>
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Event listeners methods">
 
@@ -195,10 +196,10 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         Relation selectedRelation = null;
         selectedTag = editHelper.getChangedKey(); // select last added or last edited key by default
         if (selectedTag == null && tagTable.getSelectedRowCount() == 1) {
-            selectedTag = (String)tagData.getValueAt(tagTable.getSelectedRow(), 0);
+            selectedTag = (String) tagData.getValueAt(tagTable.getSelectedRow(), 0);
         }
         if (membershipTable.getSelectedRowCount() == 1) {
-            selectedRelation = (Relation)membershipData.getValueAt(membershipTable.getSelectedRow(), 0);
+            selectedRelation = (Relation) membershipData.getValueAt(membershipTable.getSelectedRow(), 0);
         }
 
         // re-load tag data
@@ -227,7 +228,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
                 if (ref instanceof Relation && !ref.isIncomplete() && !ref.isDeleted()) {
                     Relation r = (Relation) ref;
                     MemberInfo mi = roles.get(r);
-                    if(mi == null) {
+                    if (mi == null) {
                         mi = new MemberInfo(newSel);
                     }
                     roles.put(r, mi);
@@ -247,8 +248,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
             @Override public int compare(Relation o1, Relation o2) {
                 int comp = Boolean.valueOf(o1.isDisabledAndHidden()).compareTo(o2.isDisabledAndHidden());
                 return comp != 0 ? comp : DefaultNameFormatter.getInstance().getRelationComparator().compare(o1, o2);
-            }}
-                );
+            } });
 
         for (Relation r: sortedRelations) {
             membershipData.addRow(new Object[]{r, roles.get(r)});
@@ -260,22 +260,22 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         boolean hasSelection = !newSel.isEmpty();
         boolean hasTags = hasSelection && tagData.getRowCount() > 0;
         boolean hasMemberships = hasSelection && membershipData.getRowCount() > 0;
-          
+
         addAction.setEnabled(hasSelection);
         //editAction.setEnabled(hasTags || hasMemberships);
         editAction.setEnabled(true);
         tagTable.setVisible(hasTags);
         tagTable.getTableHeader().setVisible(hasTags);
         selectSth.setVisible(!hasSelection);
-        
+
         int selectedIndex;
         if (selectedTag != null && (selectedIndex = findRow(tagData, selectedTag)) != -1) {
             tagTable.changeSelection(selectedIndex, 0, false, false);
         } else if (selectedRelation != null && (selectedIndex = findRow(membershipData, selectedRelation)) != -1) {
             membershipTable.changeSelection(selectedIndex, 0, false, false);
-        } else if(hasTags) {
+        } else if (hasTags) {
             tagTable.changeSelection(0, 0, false, false);
-        } else if(hasMemberships) {
+        } else if (hasMemberships) {
             membershipTable.changeSelection(0, 0, false, false);
         }
     }
@@ -315,7 +315,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
 
     // </editor-fold>
 
-     /**
+    /**
      * Class that watches for mouse clicks
      * @author imi
      */
@@ -329,7 +329,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
                 } else if (e.getSource() == membershipTable) {
                     tagTable.clearSelection();
                 }
-            } else if (e.getSource() == tagTable ) {
+            } else if (e.getSource() == tagTable) {
                 // double click, edit or add tag
                 int row = tagTable.rowAtPoint(e.getPoint());
                 if (row > -1) {
@@ -337,7 +337,6 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
                     editHelper.editTag(row, focusOnKey);
                 } else {
                     editHelper.addTag();
-                    //btnAdd.requestFocusInWindow();
                 }
             } else if (e.getSource() == membershipTable) {
                 int row = membershipTable.rowAtPoint(e.getPoint());
@@ -346,7 +345,6 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
                 }
             } else {
                 editHelper.addTag();
-                //btnAdd.requestFocusInWindow();
             }
         }
 
@@ -378,34 +376,6 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
             position.add(p);
         }
 
-        String getPositionString() {
-            if (positionString == null) {
-                positionString = Utils.getPositionListString(position);
-                // if not all objects from the selection are member of this relation
-                if (Utils.exists(selection, Predicates.not(Predicates.inCollection(members)))) {
-                    positionString += ",\u2717";
-                }
-                members = null;
-                position = null;
-                selection = null;
-            }
-            return Utils.shortenString(positionString, 20);
-        }
-
-        String getRoleString() {
-            if (roleString == null) {
-                for (RelationMember r : role) {
-                    if (roleString == null) {
-                        roleString = r.getRole();
-                    } else if (!roleString.equals(r.getRole())) {
-                        roleString = tr("<different>");
-                        break;
-                    }
-                }
-            }
-            return roleString;
-        }
-
         @Override
         public String toString() {
             return "MemberInfo{" +
@@ -423,6 +393,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         public boolean isCellEditable(int row, int column) {
             return false;
         }
+
         @Override
         public Class<?> getColumnClass(int columnIndex) {
             return String.class;
@@ -442,7 +413,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         @Override
         public void actionPerformed(ActionEvent e) {
             editHelper.addTag();
-            btnAdd.requestFocusInWindow();            
+            btnAdd.requestFocusInWindow();
         }
     }
 
@@ -451,12 +422,12 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
      * training process dialog/configuration
      */
     class EditActionTrain extends JosmAction implements ListSelectionListener {
-        EditActionTrain() {            
+        EditActionTrain() {
             super(tr("Train a Model"), /* ICON() */ "dialogs/fix", tr("Start the training engine!"),
                     Shortcut.registerShortcut("properties:edit", tr("Edit Tags"), KeyEvent.VK_S,
                             Shortcut.ALT), false);
             setEnabled(true);
-            updateEnabledState(); 
+            updateEnabledState();
         }
 
         @Override
@@ -469,9 +440,7 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
             } else if (membershipTable.getSelectedRowCount() == 1) {
                 int row = membershipTable.getSelectedRow();
                 editHelper.editTag(row, false);
-                //editMembership(row);
-            }
-            else{
+            } else {
                 editHelper.editTag(1, false);
             }
         }
@@ -479,10 +448,6 @@ implements SelectionChangedListener, DataSetListenerAdapter.Listener {
         @Override
         protected void updateEnabledState() {
             setEnabled(true);
-//            setEnabled(
-//                    (tagTable != null && tagTable.getSelectedRowCount() == 1)
-//                    ^ (membershipTable != null && membershipTable.getSelectedRowCount() == 1)
-//                    );            
         }
 
         @Override

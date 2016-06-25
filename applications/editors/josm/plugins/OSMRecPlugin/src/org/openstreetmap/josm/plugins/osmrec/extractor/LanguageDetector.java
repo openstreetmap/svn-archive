@@ -1,4 +1,5 @@
-package org.openstreetmap.josm.plugins.extractor;
+// License: GPL. For details, see LICENSE file.
+package org.openstreetmap.josm.plugins.osmrec.extractor;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import com.cybozu.labs.langdetect.LangDetectException;
  *
  * @author imis-nkarag
  */
-public class LanguageDetector {
+public final class LanguageDetector {
 
     private static LanguageDetector languageDetector = null;
 
@@ -38,9 +39,9 @@ public class LanguageDetector {
 
     public static void loadProfilesFromStream(String languageProfilesPath) { //create profiles directory in system from stream and load them
 
-        /*  supported languages 
-            el:greek, en:english, de:german, fr:french, es:spanish, ru:russian, tr:turkish, zh-cn:chinese, hi:hindi 
-        */
+        /*  supported languages
+            el:greek, en:english, de:german, fr:french, es:spanish, ru:russian, tr:turkish, zh-cn:chinese, hi:hindi
+         */
         InputStream languageProfilesInputStreamEl = LanguageDetector.class.getResourceAsStream("/profiles/el");
         InputStream languageProfilesInputStreamEn = LanguageDetector.class.getResourceAsStream("/profiles/en");
         InputStream languageProfilesInputStreamDe = LanguageDetector.class.getResourceAsStream("/profiles/de");
@@ -49,13 +50,13 @@ public class LanguageDetector {
         InputStream languageProfilesInputStreamRu = LanguageDetector.class.getResourceAsStream("/profiles/ru");
         InputStream languageProfilesInputStreamTr = LanguageDetector.class.getResourceAsStream("/profiles/tr");
         InputStream languageProfilesInputStreamZh = LanguageDetector.class.getResourceAsStream("/profiles/zh-cn");
-        InputStream languageProfilesInputStreamHi = LanguageDetector.class.getResourceAsStream("/profiles/hi");       
+        InputStream languageProfilesInputStreamHi = LanguageDetector.class.getResourceAsStream("/profiles/hi");
         //InputStream languageProfilesInputStream2 = LanguageDetector.class.getResourceAsStream("/resources/profiles/en");
 
         if (!new File(languageProfilesPath).exists()) {
             Utils.mkDirs(new File(languageProfilesPath));
         }
-        
+
         File languageProfilesOutputFileEl = new File(languageProfilesPath + "/el");
         File languageProfilesOutputFileEn = new File(languageProfilesPath + "/en");
         File languageProfilesOutputFileDe = new File(languageProfilesPath + "/de");
@@ -82,15 +83,15 @@ public class LanguageDetector {
         }
 
         try {
-        	Files.copy(languageProfilesInputStreamEl, languageProfilesOutputFileEl.toPath());
-        	Files.copy(languageProfilesInputStreamEn, languageProfilesOutputFileEn.toPath());
-        	Files.copy(languageProfilesInputStreamDe, languageProfilesOutputFileDe.toPath());
-        	Files.copy(languageProfilesInputStreamFr, languageProfilesOutputFileFr.toPath());
-        	Files.copy(languageProfilesInputStreamEs, languageProfilesOutputFileEs.toPath());
-        	Files.copy(languageProfilesInputStreamRu, languageProfilesOutputFileRu.toPath());
-        	Files.copy(languageProfilesInputStreamTr, languageProfilesOutputFileTr.toPath());
-        	Files.copy(languageProfilesInputStreamZh, languageProfilesOutputFileZh.toPath());
-        	Files.copy(languageProfilesInputStreamHi, languageProfilesOutputFileHi.toPath());
+            Files.copy(languageProfilesInputStreamEl, languageProfilesOutputFileEl.toPath());
+            Files.copy(languageProfilesInputStreamEn, languageProfilesOutputFileEn.toPath());
+            Files.copy(languageProfilesInputStreamDe, languageProfilesOutputFileDe.toPath());
+            Files.copy(languageProfilesInputStreamFr, languageProfilesOutputFileFr.toPath());
+            Files.copy(languageProfilesInputStreamEs, languageProfilesOutputFileEs.toPath());
+            Files.copy(languageProfilesInputStreamRu, languageProfilesOutputFileRu.toPath());
+            Files.copy(languageProfilesInputStreamTr, languageProfilesOutputFileTr.toPath());
+            Files.copy(languageProfilesInputStreamZh, languageProfilesOutputFileZh.toPath());
+            Files.copy(languageProfilesInputStreamHi, languageProfilesOutputFileHi.toPath());
         } catch (IOException ex) {
             Logger.getLogger(LanguageDetector.class.getName()).log(Level.SEVERE, null, ex);
             Main.error(ex);

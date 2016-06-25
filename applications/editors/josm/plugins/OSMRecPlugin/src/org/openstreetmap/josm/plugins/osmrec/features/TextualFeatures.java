@@ -1,28 +1,32 @@
-package org.openstreetmap.josm.plugins.features;
+// License: GPL. For details, see LICENSE file.
+package org.openstreetmap.josm.plugins.osmrec.features;
 
-import com.cybozu.labs.langdetect.LangDetectException;
-import de.bwaldvogel.liblinear.FeatureNode;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.openstreetmap.josm.plugins.container.OSMWay;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.lucene.analysis.el.GreekAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.util.Version;
-import org.openstreetmap.josm.plugins.extractor.LanguageDetector;
+import org.openstreetmap.josm.plugins.osmrec.container.OSMWay;
+import org.openstreetmap.josm.plugins.osmrec.extractor.LanguageDetector;
+
+import com.cybozu.labs.langdetect.LangDetectException;
+
+import de.bwaldvogel.liblinear.FeatureNode;
 
 /**
  * Constructs the textual features from the given textual list.
- * 
+ *
  * @author imis-nkarag
  */
 
 public class TextualFeatures {
-    
+
     private int id;
     private int numberOfFeatures;
     private final List<String> textualList;
@@ -30,9 +34,9 @@ public class TextualFeatures {
     private final QueryParser greekParser;
     private final QueryParser englishParser;
     private final LanguageDetector languageDetector;
-    
+
     public TextualFeatures(int id, List<String> textualList, LanguageDetector languageDetector) {
-        
+
         this.id = id;
         this.textualList = textualList;
         this.languageDetector = languageDetector;
@@ -41,22 +45,21 @@ public class TextualFeatures {
         greekParser = new QueryParser(Version.LUCENE_36, "", greekAnalyzer);
         EnglishAnalyzer englishAnalyzer = new EnglishAnalyzer(Version.LUCENE_36);
         englishParser = new QueryParser(Version.LUCENE_36, "", englishAnalyzer);
-        
+
     }
-    
-    public void createTextualFeatures(OSMWay wayNode) {        
+
+    public void createTextualFeatures(OSMWay wayNode) {
         //namesList.indexOf(name) this index can be zero.
-        //In that case it conflicts the previous geometry id, so we increment id. 
-        //System.out.println("begin textual id from InstanceVectors = " + id);
-        
+        //In that case it conflicts the previous geometry id, so we increment id.
+
         //idWords: populated with the ID that will be ginen as a feature, mapped with the word found.
         //Chose to store the name for future use.
-        Map<Integer,String> idWords= new TreeMap<>(); 
+        Map<Integer, String> idWords = new TreeMap<>();
         Map<String, String> tags = wayNode.getTagKeyValue();
-        if (tags.keySet().contains("name")){           
+        if (tags.keySet().contains("name")) {
             String nameTag = tags.get("name"); //get the value of the name tag of the current node
-            String[] nameTagSplitList = nameTag.split("\\s");    //split the value to compare individually 
-                                                                 //with the namesList 
+            String[] nameTagSplitList = nameTag.split("\\s");    //split the value to compare individually
+            //with the namesList
             String lang = "";
             try {
                 lang = detectLanguage(nameTag);
@@ -64,56 +67,44 @@ public class TextualFeatures {
                 Logger.getLogger(TextualFeatures.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            for(String split : nameTagSplitList){
+            for (String split : nameTagSplitList) {
                 try {
-                    //System.out.println("split before: " + split);
-                    //detectLanguage(split);
-
                     //TOGGLE
                     split = split.replaceAll("[-+.^:,?;'{}\"!()\\[\\]]", "");
-                    if(lang.equals("el")){
-
-                        //if(false){
+                    if (lang.equals("el")) {
                         split = stemGreek(split);
-                        //System.out.println("en: split after stem: " + split);
-                    }
-                    else{
+                    } else {
                         split = stemEnglish(split);
-                        //System.out.println("el: split after stem: " + split);
                     }
 
-                    if(textualList.contains(split)){
+                    if (textualList.contains(split)) {
                         int currentID = textualList.indexOf(split) + id;
                         idWords.put(currentID, split);
-                        //System.out.println(currentID + " " + split);
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(TextualFeatures.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } 
-            
-            for(Integer wordID : idWords.keySet()){
+            }
+
+            for (Integer wordID : idWords.keySet()) {
                 wayNode.getFeatureNodeList().add(new FeatureNode(wordID, 1.0));
                 //System.out.println(wordID);
-            }  
-            //System.out.println("until textual " + wayNode.getFeatureNodeList());            
-        }        
-        //System.out.println("textual id (number of features):  " + (namesList.size()+id));
-        //System.out.println("textual id (number of features):  " + numberOfFeatures);
+            }
+            //System.out.println("until textual " + wayNode.getFeatureNodeList());
+        }
     }
-    
-    public int getLastID(){
+
+    public int getLastID() {
         return numberOfFeatures;
     }
-    
-    private String detectLanguage(String nameTag) throws LangDetectException{
-        //detect language        
-       
-        if(!nameTag.isEmpty()){
+
+    private String detectLanguage(String nameTag) throws LangDetectException {
+        //detect language
+
+        if (!nameTag.isEmpty()) {
             language = languageDetector.detect(nameTag);
             return language;
-        }
-        else{
+        } else {
             return "no_lang";
         }
     }
@@ -121,24 +112,22 @@ public class TextualFeatures {
     private String stemGreek(String word) throws ParseException {
         String stemmedWord;
 
-        if(!word.isEmpty()){
+        if (!word.isEmpty()) {
             stemmedWord = greekParser.parse(word).toString();
-        }
-        else{
+        } else {
             return word;
         }
 
         return stemmedWord;
     }
-    
-    private String stemEnglish(String word) throws ParseException{
+
+    private String stemEnglish(String word) throws ParseException {
 
         String stemmedWord;
 
-        if(!word.isEmpty()){
+        if (!word.isEmpty()) {
             stemmedWord = englishParser.parse(word).toString();
-        }
-        else{
+        } else {
             return word;
         }
 

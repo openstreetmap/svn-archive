@@ -55,14 +55,14 @@ public class CreateRelationAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         String type = askForType();
-        if (type == null )
+        if (type == null)
             return;
 
         Relation rel = new Relation();
-        if (type.length() > 0 ) {
+        if (type.length() > 0) {
             rel.put("type", type);
         }
-        for (OsmPrimitive selected : getCurrentDataSet().getSelected() ) {
+        for (OsmPrimitive selected : getLayerManager().getEditDataSet().getSelected()) {
             rel.addMember(new RelationMember("", selected));
         }
 
@@ -75,10 +75,10 @@ public class CreateRelationAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
         }
     }
 
@@ -129,7 +129,7 @@ public class CreateRelationAction extends JosmAction {
 
         Object answer = optionPane.getValue();
         if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE
-                || (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION))
+                || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))
             return null;
 
         String result = keys.getEditor().getItem().toString().trim();

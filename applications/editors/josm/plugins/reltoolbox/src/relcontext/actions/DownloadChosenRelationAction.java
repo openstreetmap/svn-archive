@@ -30,8 +30,6 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
     private ChosenRelation rel;
 
     public DownloadChosenRelationAction(ChosenRelation rel) {
-        super();
-        //        putValue(NAME, "D");
         putValue(SMALL_ICON, ImageProvider.get("relcontext", "download"));
         putValue(SHORT_DESCRIPTION, tr("Download incomplete members for the chosen relation"));
         this.rel = rel;
@@ -42,11 +40,10 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
     @Override
     public void actionPerformed(ActionEvent e) {
         Relation relation = rel.get();
-        if (relation == null || relation.isNew() ) return;
+        if (relation == null || relation.isNew()) return;
         int total = relation.getMembersCount();
         int incomplete = relation.getIncompleteMembers().size();
-        //        if (incomplete <= 5 || (incomplete <= 10 && incomplete * 3 < total) )
-        if (incomplete <= 10 && incomplete * 3 < total ) {
+        if (incomplete <= 10 && incomplete * 3 < total) {
             downloadIncomplete(relation);
         } else {
             downloadMembers(relation);
@@ -69,15 +66,15 @@ public class DownloadChosenRelationAction extends AbstractAction implements Chos
 
     protected void downloadMembers(Relation rel) {
         if (!rel.isNew()) {
-            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.main.getEditLayer()));
+            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.getLayerManager().getEditLayer()));
         }
     }
 
     protected void downloadIncomplete(Relation rel) {
-        if (rel.isNew() ) return;
+        if (rel.isNew()) return;
         Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
-        if (ret.isEmpty() ) return;
-        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));
+        if (ret.isEmpty()) return;
+        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.getLayerManager().getEditLayer()));
     }
 }

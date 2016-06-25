@@ -25,7 +25,7 @@ public class ExtraNameFormatHook implements NameFormatterHook {
 
     @Override
     public String checkFormat(IWay way, String defaultName) {
-        if (way.get("place") != null && way.get("name") == null && way.get("place_name") != null )
+        if (way.get("place") != null && way.get("name") == null && way.get("place_name") != null)
             return way.get("place_name") + " " + defaultName;
         return null;
     }
@@ -36,10 +36,10 @@ public class ExtraNameFormatHook implements NameFormatterHook {
         if (type != null) {
             String name = relation.get("destination");
             if (type.equals("destination_sign") && name != null) {
-                if (relation.get("distance") != null ) {
+                if (relation.get("distance") != null) {
                     name += " " + relation.get("distance");
                 }
-                if (defaultName.indexOf('"') < 0 )
+                if (defaultName.indexOf('"') < 0)
                     return '"' + name + "\" " + defaultName;
                 else
                     return defaultName.replaceFirst("\".?+\"", '"'+name+'"');

@@ -62,7 +62,8 @@ public class FindRelationAction extends JosmAction {
         relationsList.setSelectionModel(relationsData.getSelectionModel());
         relationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         relationsList.setCellRenderer(new OsmPrimitivRenderer());
-        panel.add(new JScrollPane(relationsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        panel.add(new JScrollPane(relationsList,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         panel.setPreferredSize(new Dimension(400, 400));
 
         final JOptionPane optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION) {
@@ -107,14 +108,14 @@ public class FindRelationAction extends JosmAction {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (shouldForward(e) ) {
+                if (shouldForward(e)) {
                     relationsList.dispatchEvent(e);
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (shouldForward(e) ) {
+                if (shouldForward(e)) {
                     relationsList.dispatchEvent(e);
                 }
             }
@@ -131,44 +132,47 @@ public class FindRelationAction extends JosmAction {
 
         Object answer = optionPane.getValue();
         if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE
-                || (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION))
+                || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))
             return;
 
         Relation r = relationsList.getSelectedValue();
-        if (r != null ) {
+        if (r != null) {
             chRel.set(r);
         }
     }
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 
     protected void updateRelationData(FindRelationListModel data, String filter) {
         String[] keywords = filter == null ? new String[0] : filter.split("\\s+");
         if (keywords.length > 0) {
             List<String> filteredKeywords = new ArrayList<>(keywords.length);
-            for (String s : keywords )
-                if (s.length() > 0 ) {
+            for (String s : keywords) {
+                if (s.length() > 0) {
                     filteredKeywords.add(s.trim().toLowerCase());
                 }
+            }
             keywords = filteredKeywords.toArray(new String[0]);
         }
 
-        System.out.println("keywords.length = " + keywords.length);
-        for (int i = 0; i < keywords.length; i++ ) {
-            System.out.println("keyword["+i+"] = " + keywords[i]);
+        if (Main.isDebugEnabled()) {
+            Main.debug("keywords.length = " + keywords.length);
+            for (int i = 0; i < keywords.length; i++) {
+                Main.debug("keyword["+i+"] = " + keywords[i]);
+            }
         }
 
         List<Relation> relations = new ArrayList<>();
-        if (getEditLayer() != null) {
-            for (Relation r : getEditLayer().data.getRelations()) {
+        if (getLayerManager().getEditLayer() != null) {
+            for (Relation r : getLayerManager().getEditLayer().data.getRelations()) {
                 if (!r.isDeleted() && r.isVisible() && !r.isIncomplete()) {
                     boolean add = true;
                     for (int i = 0; i < keywords.length && add; i++) {
                         boolean ok = false;
-                        if (String.valueOf(r.getPrimitiveId().getUniqueId()).contains(keywords[i]) ) {
+                        if (String.valueOf(r.getPrimitiveId().getUniqueId()).contains(keywords[i])) {
                             ok = true;
                         } else {
                             for (String key : r.keySet()) {
@@ -179,11 +183,11 @@ public class FindRelationAction extends JosmAction {
                                 }
                             }
                         }
-                        if (!ok ) {
+                        if (!ok) {
                             add = false;
                         }
                     }
-                    if (add ) {
+                    if (add) {
                         relations.add(r);
                     }
                 }
@@ -226,22 +230,22 @@ public class FindRelationAction extends JosmAction {
 
         public void setRelations(Collection<Relation> relations) {
             int selectedIndex = selectionModel.getMinSelectionIndex();
-            Relation sel =  selectedIndex < 0 ? null : getElementAt(selectedIndex);
+            Relation sel = selectedIndex < 0 ? null : getElementAt(selectedIndex);
 
             this.relations.clear();
             selectionModel.clearSelection();
-            if (relations != null ) {
+            if (relations != null) {
                 this.relations.addAll(relations);
             }
             fireIntervalAdded(this, 0, getSize());
 
             if (sel != null) {
                 selectedIndex = this.relations.indexOf(sel);
-                if (selectedIndex >= 0 ) {
+                if (selectedIndex >= 0) {
                     selectionModel.addSelectionInterval(selectedIndex, selectedIndex);
                 }
             }
-            if (selectionModel.isSelectionEmpty() && !this.relations.isEmpty() ) {
+            if (selectionModel.isSelectionEmpty() && !this.relations.isEmpty()) {
                 selectionModel.addSelectionInterval(0, 0);
             }
         }

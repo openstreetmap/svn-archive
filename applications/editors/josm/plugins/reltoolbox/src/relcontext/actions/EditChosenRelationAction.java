@@ -24,8 +24,6 @@ public class EditChosenRelationAction extends AbstractAction implements ChosenRe
     private ChosenRelation rel;
 
     public EditChosenRelationAction(ChosenRelation rel) {
-        super();
-        //        putValue(NAME, "E");
         putValue(SMALL_ICON, ImageProvider.get("dialogs/mappaint", "pencil"));
         putValue(SHORT_DESCRIPTION, tr("Open relation editor for the chosen relation"));
         this.rel = rel;
@@ -36,8 +34,8 @@ public class EditChosenRelationAction extends AbstractAction implements ChosenRe
     @Override
     public void actionPerformed(ActionEvent e) {
         Relation relation = rel.get();
-        if (relation == null ) return;
-        RelationEditor.getEditor(Main.main.getEditLayer(), relation, null).setVisible(true);
+        if (relation == null) return;
+        RelationEditor.getEditor(Main.getLayerManager().getEditLayer(), relation, null).setVisible(true);
     }
 
     @Override

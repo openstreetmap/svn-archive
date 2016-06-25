@@ -37,35 +37,35 @@ public class DownloadParentsAction extends AbstractAction implements ChosenRelat
         putValue(SHORT_DESCRIPTION, tr("Download referrers for the chosen relation and its members."));
         this.rel = rel;
         rel.addChosenRelationListener(this);
-        setEnabled(rel.get() != null && Main.main.getEditLayer() != null);
+        setEnabled(rel.get() != null && Main.getLayerManager().getEditLayer() != null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Relation relation = rel.get();
-        if (relation == null ) return;
+        if (relation == null) return;
         List<OsmPrimitive> objects = new ArrayList<>();
         objects.add(relation);
         objects.addAll(relation.getMemberPrimitives());
-        Main.worker.submit(new DownloadReferrersTask(Main.main.getEditLayer(), objects));
+        Main.worker.submit(new DownloadReferrersTask(Main.getLayerManager().getEditLayer(), objects));
     }
 
     @Override
     public void chosenRelationChanged(Relation oldRelation, Relation newRelation) {
-        setEnabled(newRelation != null && Main.main.getEditLayer() != null);
+        setEnabled(newRelation != null && Main.getLayerManager().getEditLayer() != null);
     }
 
     protected void downloadMembers(Relation rel) {
         if (!rel.isNew()) {
-            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.main.getEditLayer()));
+            Main.worker.submit(new DownloadRelationTask(Collections.singletonList(rel), Main.getLayerManager().getEditLayer()));
         }
     }
 
     protected void downloadIncomplete(Relation rel) {
-        if (rel.isNew() ) return;
+        if (rel.isNew()) return;
         Set<OsmPrimitive> ret = new HashSet<>();
         ret.addAll(rel.getIncompleteMembers());
-        if (ret.isEmpty() ) return;
-        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.main.getEditLayer()));
+        if (ret.isEmpty()) return;
+        Main.worker.submit(new DownloadRelationMemberTask(Collections.singletonList(rel), ret, Main.getLayerManager().getEditLayer()));
     }
 }

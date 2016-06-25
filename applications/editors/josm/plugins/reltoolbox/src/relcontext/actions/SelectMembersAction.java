@@ -27,7 +27,7 @@ public class SelectMembersAction extends AbstractAction implements ChosenRelatio
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Main.main.getEditLayer().data.setSelected(rel.get() == null ? null : rel.get().getMemberPrimitives());
+        Main.getLayerManager().getEditLayer().data.setSelected(rel.get() == null ? null : rel.get().getMemberPrimitives());
     }
 
     @Override

@@ -6,25 +6,21 @@ import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.RelationMember;
 
 /**
- * @see http://wiki.openstreetmap.org/wiki/Key:public_transport
- */
-
-/**
- *
  * @author freeExec
+ * @see http://wiki.openstreetmap.org/wiki/Key:public_transport
  */
 public final class PublicTransportHelper {
 
-    public final static String PUBLIC_TRANSPORT = "public_transport";
-    public final static String STOP_POSITION = "stop_position";
-    public final static String STOP = "stop";
-    public final static String STOP_AREA = "stop_area";
-    public final static String PLATFORM = "platform";
-    public final static String HIGHWAY = "highway";
-    public final static String RAILWAY = "railway";
-    public final static String BUS_STOP = "bus_stop";
-    public final static String RAILWAY_HALT = "halt";
-    public final static String RAILWAY_STATION = "station";
+    public static final String PUBLIC_TRANSPORT = "public_transport";
+    public static final String STOP_POSITION = "stop_position";
+    public static final String STOP = "stop";
+    public static final String STOP_AREA = "stop_area";
+    public static final String PLATFORM = "platform";
+    public static final String HIGHWAY = "highway";
+    public static final String RAILWAY = "railway";
+    public static final String BUS_STOP = "bus_stop";
+    public static final String RAILWAY_HALT = "halt";
+    public static final String RAILWAY_STATION = "station";
 
     private PublicTransportHelper() {
         // Hide default constructor for utils classes
@@ -53,8 +49,7 @@ public final class PublicTransportHelper {
             if (p.hasKey(PUBLIC_TRANSPORT)) {
                 String pt = p.get(PUBLIC_TRANSPORT);
                 if (STOP_POSITION.equals(pt)) return true;
-            }
-            else if (p.hasKey(RAILWAY)) {
+            } else if (p.hasKey(RAILWAY)) {
                 String rw = p.get(RAILWAY);
                 if (RAILWAY_HALT.equals(rw) || RAILWAY_STATION.equals(rw)) return true;
             }
@@ -82,6 +77,7 @@ public final class PublicTransportHelper {
         }
         return false;
     }
+
     public static boolean isWayPlatform(RelationMember m) {
         return isWayPlatform(m.getMember());
     }
@@ -120,12 +116,13 @@ public final class PublicTransportHelper {
         String result = prim.getName();
         if (result != null) return result;
         // try to get name by stop_area
-        for (OsmPrimitive refOp : prim.getReferrers())
+        for (OsmPrimitive refOp : prim.getReferrers()) {
             if (refOp.getType() == OsmPrimitiveType.RELATION
-            && refOp.hasTag(PUBLIC_TRANSPORT, STOP_AREA)) {
+                    && refOp.hasTag(PUBLIC_TRANSPORT, STOP_AREA)) {
                 result = refOp.getName();
                 if (result != null) return result;
             }
+        }
         return result;
     }
 }

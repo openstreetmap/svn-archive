@@ -69,11 +69,10 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.gui.DefaultNameFormatter;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletingComboBox;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -101,7 +100,7 @@ import relcontext.actions.SortAndFixAction;
  *
  * @author Zverik
  */
-public class RelContextDialog extends ToggleDialog implements EditLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
+public class RelContextDialog extends ToggleDialog implements ActiveLayerChangeListener, ChosenRelationListener, SelectionChangedListener {
 
     public static final String PREF_PREFIX = "reltoolbox";
 
@@ -135,7 +134,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         relationsData.setColumnIdentifiers(new String[] {tr("Member Of"), tr("Role")});
         final JTable relationsTable = new JTable(relationsData);
         configureRelationsTable(relationsTable);
-        rcPanel.add(new JScrollPane(relationsTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+        rcPanel.add(new JScrollPane(relationsTable,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 
         final MouseListener relationMouseAdapter = new ChosenRelationMouseAdapter();
         final JComboBox<String> roleBox = new JComboBox<>();
@@ -145,7 +145,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         roleBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.DESELECTED ) return;
+                if (e.getStateChange() == ItemEvent.DESELECTED) return;
                 String memberRole = roleBoxModel.getSelectedMembersRole();
                 String selectedRole = roleBoxModel.isAnotherRoleSelected() ? askForRoleName() : roleBoxModel.getSelectedRole();
                 if (memberRole != null && selectedRole != null && !memberRole.equals(selectedRole)) {
@@ -199,7 +199,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
         });
         downloadButton.setVisible(false);
-        if (Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false) ) {
+        if (Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false)) {
             chosenRelationPanel.setVisible(false);
         }
 
@@ -228,7 +228,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
 
             private void checkPopup(MouseEvent e) {
-                if (e.isPopupTrigger() ) {
+                if (e.isPopupTrigger()) {
                     multiPopupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -248,9 +248,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 Point p = e.getPoint();
                 int row = relationsTable.rowAtPoint(p);
                 if (SwingUtilities.isLeftMouseButton(e) && row >= 0) {
-                    Relation relation = (Relation)relationsData.getValueAt(row, 0);
+                    Relation relation = (Relation) relationsData.getValueAt(row, 0);
                     if (e.getClickCount() > 1) {
-                        Main.main.getEditLayer().data.setSelected(relation);
+                        Main.getLayerManager().getEditLayer().data.setSelected(relation);
                     }
                 }
             }
@@ -270,7 +270,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                     Point p = e.getPoint();
                     int row = relationsTable.rowAtPoint(p);
                     if (row > -1) {
-                        Relation relation = (Relation)relationsData.getValueAt(row, 0);
+                        Relation relation = (Relation) relationsData.getValueAt(row, 0);
                         JPopupMenu menu = chosenRelation.isSame(relation) ? popupMenu
                                 : new ChosenRelationPopupMenu(new StaticChosenRelation(relation));
                         menu.show(relationsTable, p.x, p.y-5);
@@ -287,9 +287,10 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
 
             @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (!isSelected && value instanceof Relation && chosenRelation.isSame(value) ) {
+                if (!isSelected && value instanceof Relation && chosenRelation.isSame(value)) {
                     c.setBackground(CHOSEN_RELATION_COLOR);
                 } else {
                     c.setBackground(table.getBackground());
@@ -300,9 +301,10 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         });
         columns.getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (!isSelected && chosenRelation.isSame(table.getValueAt(row, 0)) ) {
+                if (!isSelected && chosenRelation.isSame(table.getValueAt(row, 0))) {
                     c.setBackground(CHOSEN_RELATION_COLOR);
                 } else {
                     c.setBackground(table.getBackground());
@@ -317,7 +319,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             public void valueChanged(ListSelectionEvent e) {
                 int selectedRow = relationsTable.getSelectedRow();
                 if (selectedRow >= 0) {
-                    chosenRelation.set((Relation)relationsData.getValueAt(selectedRow, 0));
+                    chosenRelation.set((Relation) relationsData.getValueAt(selectedRow, 0));
                     relationsTable.clearSelection();
                 }
             }
@@ -333,7 +335,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     @Override
     public void hideNotify() {
         SelectionEventManager.getInstance().removeSelectionListener(this);
-        MapView.removeEditLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
         DatasetEventManager.getInstance().removeDatasetListener(chosenRelation);
         chosenRelation.clear();
     }
@@ -341,7 +343,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     @Override
     public void showNotify() {
         SelectionEventManager.getInstance().addSelectionListener(this, FireMode.IN_EDT_CONSOLIDATED);
-        MapView.addEditLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
         DatasetEventManager.getInstance().addDatasetListener(chosenRelation, FireMode.IN_EDT);
     }
 
@@ -351,25 +353,24 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     @Override
     public void chosenRelationChanged(Relation oldRelation, Relation newRelation) {
-        if (chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false) ) {
+        if (chosenRelationPanel != null && Main.pref.getBoolean(PREF_PREFIX + ".hidetopline", false)) {
             chosenRelationPanel.setVisible(newRelation != null);
         }
-        if (Main.main.getCurrentDataSet() != null ) {
-            selectionChanged(Main.main.getCurrentDataSet().getSelected());
+        if (Main.getLayerManager().getEditDataSet() != null) {
+            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
         }
         roleBoxModel.update();
-        // ?
     }
 
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-        if (!isVisible() || relationsData == null )
+        if (!isVisible() || relationsData == null)
             return;
         roleBoxModel.update();
         // repopulate relations table
         relationsData.setRowCount(0);
         sortAndFixAction.chosenRelationChanged(chosenRelation.get(), chosenRelation.get());
-        if (newSelection == null )
+        if (newSelection == null)
             return;
 
         Set<Relation> relations = new TreeSet<>(
@@ -387,7 +388,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             for (RelationMember m : rel.getMembers()) {
                 for (OsmPrimitive element : newSelection) {
                     if (m.getMember().equals(element)) {
-                        if (role == null ) {
+                        if (role == null) {
                             role = m.getRole();
                         } else if (!role.equals(m.getRole())) {
                             role = tr("<different>");
@@ -398,22 +399,23 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             }
             relationsData.addRow(new Object[] {rel, role == null ? "" : role});
         }
-        for (OsmPrimitive element : newSelection )
-            if (element instanceof Relation && !chosenRelation.isSame(element) ) {
+        for (OsmPrimitive element : newSelection) {
+            if (element instanceof Relation && !chosenRelation.isSame(element)) {
                 relationsData.addRow(new Object[] {element, ""});
             }
+        }
     }
 
     private void updateSelection() {
-        if (Main.main.getCurrentDataSet() == null) {
+        if (Main.getLayerManager().getEditDataSet() == null) {
             selectionChanged(Collections.<OsmPrimitive>emptyList());
         } else {
-            selectionChanged(Main.main.getCurrentDataSet().getSelected());
+            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
         }
     }
 
     @Override
-    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         updateSelection();
     }
 
@@ -434,23 +436,22 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         Map<String, List<String>> result = new HashMap<>();
 
         ClassLoader classLoader = RelContextDialog.class.getClassLoader();
-        try (
-                InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
+        try (InputStream possibleRolesStream = classLoader.getResourceAsStream(POSSIBLE_ROLES_FILE);
                 BufferedReader r = new BufferedReader(new InputStreamReader(possibleRolesStream));
                 ) {
-            while(r.ready()) {
+            while (r.ready()) {
                 String line = r.readLine();
                 StringTokenizer t = new StringTokenizer(line, " ,;:\"");
                 if (t.hasMoreTokens()) {
                     String type = t.nextToken();
                     List<String> roles = new ArrayList<>();
-                    while(t.hasMoreTokens() ) {
+                    while (t.hasMoreTokens()) {
                         roles.add(t.nextToken());
                     }
                     result.put(type, roles);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Main.error("[RelToolbox] Error reading possible roles file.");
             Main.error(e);
         }
@@ -462,7 +463,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         List<String> items = new ArrayList<>();
         for (String role : roleBoxModel.getRoles()) {
-            if (role.length() > 1 ) {
+            if (role.length() > 1) {
                 items.add(role);
             }
         }
@@ -496,7 +497,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         Object answer = optionPane.getValue();
         if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE
-                || (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION))
+                || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))
             return null;
 
         return role.getEditor().getItem().toString().trim();
@@ -505,9 +506,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     private class ChosenRelationMouseAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.isControlDown() || !(e.getComponent() instanceof JComboBox ) ) // do not use left click handler on combo box
-                if (SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null && Main.main.getEditLayer() != null) {
-                    Main.main.getEditLayer().data.setSelected(chosenRelation.get());
+            if (e.isControlDown() || !(e.getComponent() instanceof JComboBox)) // do not use left click handler on combo box
+                if (SwingUtilities.isLeftMouseButton(e) && chosenRelation.get() != null && Main.getLayerManager().getEditLayer() != null) {
+                    Main.getLayerManager().getEditLayer().data.setSelected(chosenRelation.get());
                 }
         }
 
@@ -529,7 +530,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     private class ChosenRelationPopupMenu extends JPopupMenu {
-        public ChosenRelationPopupMenu(ChosenRelation chosenRelation) {
+        ChosenRelationPopupMenu(ChosenRelation chosenRelation) {
             add(new SelectMembersAction(chosenRelation));
             add(new SelectRelationAction(chosenRelation));
             add(new DuplicateChosenRelationAction(chosenRelation));
@@ -544,15 +545,15 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
     }
 
     protected void applyRoleToSelection(String role) {
-        if (chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty()) {
-            Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+        if (chosenRelation != null && chosenRelation.get() != null
+                && Main.getLayerManager().getEditDataSet() != null && !Main.getLayerManager().getEditDataSet().selectionEmpty()) {
+            Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
             Relation r = chosenRelation.get();
             List<Command> commands = new ArrayList<>();
             for (int i = 0; i < r.getMembersCount(); i++) {
                 RelationMember m = r.getMember(i);
                 if (selected.contains(m.getMember())) {
                     if (!role.equals(m.getRole())) {
-                        //                        r.setMember(i, new RelationMember(role, m.getMember()));
                         commands.add(new ChangeRelationMemberRoleCommand(r, i, role));
                     }
                 }
@@ -575,23 +576,9 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
             return columnIndex == 0 ? Relation.class : String.class;
         }
     }
-    /*
-    private class MultipolygonSettingsAction extends AbstractAction {
-        public MultipolygonSettingsAction() {
-            super();
-            putValue(SMALL_ICON, ImageProvider.get("svpRight"));
-            putValue(SHORT_DESCRIPTION, tr("Change multipolygon creation settings"));
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            Component c = e.getSource() instanceof Component ? (Component)e.getSource() : Main.parent;
-            multiPopupMenu.show(c, 0, 0);
-        }
-    }*/
 
     private class MultipolygonSettingsPopup extends JPopupMenu implements ActionListener {
-        public MultipolygonSettingsPopup() {
-            super();
+        MultipolygonSettingsPopup() {
             addMenuItem("boundary", tr("Create administrative boundary relations"));
             addMenuItem("boundaryways", tr("Add tags boundary and admin_level to boundary relation ways"));
             addMenuItem("tags", tr("Move area tags from contour to relation"));
@@ -613,7 +600,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public void actionPerformed(ActionEvent e) {
             String property = e.getActionCommand();
             if (property != null && property.length() > 0 && e.getSource() instanceof JCheckBoxMenuItem) {
-                boolean value = ((JCheckBoxMenuItem)e.getSource()).isSelected();
+                boolean value = ((JCheckBoxMenuItem) e.getSource()).isSelected();
                 Main.pref.put(property, value);
                 show(getInvoker(), getX(), getY());
             }
@@ -622,8 +609,8 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
     private class EnterRoleAction extends JosmAction implements ChosenRelationListener {
 
-        public EnterRoleAction() {
-            super(tr("Change role"), (String)null, tr("Enter role for selected members"),
+        EnterRoleAction() {
+            super(tr("Change role"), (String) null, tr("Enter role for selected members"),
                     Shortcut.registerShortcut("reltoolbox:changerole", tr("Relation Toolbox: {0}", tr("Enter role for selected members")),
                             KeyEvent.VK_R, Shortcut.ALT_CTRL), false, "relcontext/enterrole", true);
             chosenRelation.addChosenRelationListener(this);
@@ -634,7 +621,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public void actionPerformed(ActionEvent e) {
             if (roleBoxModel.membersRole != null) {
                 String role = askForRoleName();
-                if (role != null ) {
+                if (role != null) {
                     applyRoleToSelection(role);
                 }
             }
@@ -654,7 +641,7 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         private final String EMPTY_ROLE = tr("<empty>");
         private final String ANOTHER_ROLE = tr("another...");
 
-        public RoleComboBoxModel(JComboBox<String> combobox) {
+        RoleComboBoxModel(JComboBox<String> combobox) {
             super();
             this.combobox = combobox;
             update();
@@ -663,12 +650,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
         public void update() {
             membersRole = getSelectedMembersRoleIntl();
             if (membersRole == null) {
-                if (combobox.isEnabled() ) {
+                if (combobox.isEnabled()) {
                     combobox.setEnabled(false);
                 }
                 return;
             }
-            if (!combobox.isEnabled() ) {
+            if (!combobox.isEnabled()) {
                 combobox.setEnabled(true);
             }
 
@@ -680,23 +667,24 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
                 }
                 if (chosenRelation.get().get("type") != null) {
                     List<String> values = possibleRoles.get(chosenRelation.get().get("type"));
-                    if (values != null ) {
+                    if (values != null) {
                         items.addAll(values);
                     }
                 }
-                for (RelationMember m : chosenRelation.get().getMembers() )
-                    if (m.getRole().length() > 0 && !items.contains(m.getRole()) ) {
+                for (RelationMember m : chosenRelation.get().getMembers()) {
+                    if (m.getRole().length() > 0 && !items.contains(m.getRole())) {
                         items.add(m.getRole());
                     }
+                }
             }
             items.add(EMPTY_ROLE);
-            if (!items.contains(membersRole) ) {
+            if (!items.contains(membersRole)) {
                 items.add(0, membersRole);
             }
             items.add(ANOTHER_ROLE);
             roles = Collections.unmodifiableList(items);
 
-            if (membersRole != null ) {
+            if (membersRole != null) {
                 setSelectedItem(membersRole);
             } else {
                 fireContentsChanged(this, -1, -1);
@@ -714,11 +702,12 @@ public class RelContextDialog extends ToggleDialog implements EditLayerChangeLis
 
         private String getSelectedMembersRoleIntl() {
             String role = null;
-            if (chosenRelation != null && chosenRelation.get() != null && Main.main.getCurrentDataSet() != null && !Main.main.getCurrentDataSet().selectionEmpty()) {
-                Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+            if (chosenRelation != null && chosenRelation.get() != null
+                    && Main.getLayerManager().getEditDataSet() != null && !Main.getLayerManager().getEditDataSet().selectionEmpty()) {
+                Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
                 for (RelationMember m : chosenRelation.get().getMembers()) {
                     if (selected.contains(m.getMember())) {
-                        if (role == null ) {
+                        if (role == null) {
                             role = m.getRole();
                         } else if (m.getRole() != null && !role.equals(m.getRole())) {
                             role = tr("<different>");

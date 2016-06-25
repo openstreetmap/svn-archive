@@ -59,14 +59,15 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
         List<Way> ways = new ArrayList<>();
         boolean wont = false;
         for (RelationMember m : r.getMembers()) {
-            if (m.isWay() ) {
+            if (m.isWay()) {
                 ways.add(m.getWay());
             } else {
                 wont = true;
             }
         }
         if (wont) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Multipolygon must consist only of ways"), tr("Reconstruct polygon"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Multipolygon must consist only of ways"), tr("Reconstruct polygon"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -78,15 +79,16 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
         }
 
         if (!mpc.innerWays.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent, tr("Reconstruction of polygons can be done only from outer ways"), tr("Reconstruct polygon"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Reconstruction of polygons can be done only from outer ways"), tr("Reconstruct polygon"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         rel.clear();
         List<Way> newSelection = new ArrayList<>();
         List<Command> commands = new ArrayList<>();
-        Command c = DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(r), true, true);
-        if (c == null )
+        Command c = DeleteCommand.delete(Main.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
+        if (c == null)
             return;
         commands.add(c);
 
@@ -105,10 +107,11 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
                     }
                 }
                 List<OsmPrimitive> referrers = w.getReferrers();
-                for (Iterator<OsmPrimitive> ref1 = relations.iterator(); ref1.hasNext(); )
-                    if (!referrers.contains(ref1.next()) ) {
+                for (Iterator<OsmPrimitive> ref1 = relations.iterator(); ref1.hasNext();) {
+                    if (!referrers.contains(ref1.next())) {
                         ref1.remove();
                     }
+                }
             }
             tags.putAll(r.getKeys());
             tags.remove("type");
@@ -122,7 +125,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
                     keys.removeAll(tags.keySet());
                     keys.removeAll(IRRELEVANT_KEYS);
                     if (keys.isEmpty()) {
-                        if (candidateWay == null ) {
+                        if (candidateWay == null) {
                             candidateWay = w;
                         } else {
                             if (candidateWay.isNew() && !w.isNew()) {
@@ -148,7 +151,7 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
 
         Main.main.undoRedo.add(new SequenceCommand(tr("Reconstruct polygons from relation {0}",
                 r.getDisplayName(DefaultNameFormatter.getInstance())), commands));
-        Main.main.getCurrentDataSet().setSelected(newSelection);
+        Main.getLayerManager().getEditDataSet().setSelected(newSelection);
     }
 
     @Override
@@ -157,12 +160,13 @@ public class ReconstructPolygonAction extends AbstractAction implements ChosenRe
     }
 
     private boolean isSuitableRelation(Relation newRelation) {
-        if (newRelation == null || !"multipolygon".equals(newRelation.get("type")) || newRelation.getMembersCount() == 0 )
+        if (newRelation == null || !"multipolygon".equals(newRelation.get("type")) || newRelation.getMembersCount() == 0)
             return false;
         else {
-            for (RelationMember m : newRelation.getMembers() )
-                if ("inner".equals(m.getRole()) )
+            for (RelationMember m : newRelation.getMembers()) {
+                if ("inner".equals(m.getRole()))
                     return false;
+            }
             return true;
         }
     }

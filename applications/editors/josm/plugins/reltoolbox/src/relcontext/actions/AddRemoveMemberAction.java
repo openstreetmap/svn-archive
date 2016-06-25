@@ -12,6 +12,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -48,12 +49,12 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (rel.get() == null )
+        if (rel.get() == null)
             return;
 
         Relation r = new Relation(rel.get());
 
-        Collection<OsmPrimitive> toAdd = new ArrayList<>(getCurrentDataSet().getSelected());
+        Collection<OsmPrimitive> toAdd = new ArrayList<>(getLayerManager().getEditDataSet().getSelected());
         toAdd.remove(rel.get());
         toAdd.removeAll(r.getMemberPrimitives());
 
@@ -61,12 +62,12 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         boolean isBroken = !toAdd.isEmpty() && sortAndFix.needsFixing(r);
 
         // 1. remove all present members
-        r.removeMembersFor(getCurrentDataSet().getSelected());
+        r.removeMembersFor(getLayerManager().getEditDataSet().getSelected());
 
         // 2. add all new members
         for (OsmPrimitive p : toAdd) {
             int pos = -1; //p instanceof Way ? findAdjacentMember(p, r) : -1;
-            if (pos < 0 ) {
+            if (pos < 0) {
                 r.addMember(new RelationMember("", p));
             } else {
                 r.addMember(pos, new RelationMember("", p));
@@ -75,11 +76,11 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
         // 3. check for roles again (temporary)
         Command roleFix = !isBroken && sortAndFix.needsFixing(r) ? sortAndFix.fixRelation(r) : null;
-        if (roleFix != null ) {
+        if (roleFix != null) {
             roleFix.executeCommand();
         }
 
-        if (!r.getMemberPrimitives().equals(rel.get().getMemberPrimitives()) ) {
+        if (!r.getMemberPrimitives().equals(rel.get().getMemberPrimitives())) {
             Main.main.undoRedo.add(new ChangeCommand(rel.get(), r));
         }
     }
@@ -95,10 +96,10 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         if (firstNode != null && !firstNode.equals(lastNode)) {
             for (int i = 0; i < r.getMembersCount(); i++) {
                 if (r.getMember(i).getType().equals(OsmPrimitiveType.WAY)) {
-                    Way rw = (Way)r.getMember(i).getMember();
+                    Way rw = (Way) r.getMember(i).getMember();
                     Node firstNodeR = rw.firstNode();
                     Node lastNodeR = rw.lastNode();
-                    if (firstNode.equals(firstNodeR) || firstNode.equals(lastNodeR) || lastNode.equals(firstNodeR) || lastNode.equals(lastNodeR) )
+                    if (firstNode.equals(firstNodeR) || firstNode.equals(lastNodeR) || lastNode.equals(firstNodeR) || lastNode.equals(lastNodeR))
                         return i + 1;
                 }
             }
@@ -113,7 +114,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
 
     @Override
     protected void updateEnabledState() {
-        updateEnabledState(getCurrentDataSet() == null ? null : getCurrentDataSet().getSelected());
+        updateEnabledState(getLayerManager().getEditDataSet() == null ? null : getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
@@ -133,20 +134,21 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
     protected void updateIcon() {
         // todo: change icon based on selection
         final int state; // 0=unknown, 1=add, 2=remove, 3=both
-        if (getCurrentDataSet() == null || getCurrentDataSet().getSelected() == null
-                || getCurrentDataSet().getSelected().isEmpty() || rel == null || rel.get() == null ) {
+        DataSet ds = getLayerManager().getEditDataSet();
+        if (ds == null || ds.getSelected() == null
+                || ds.getSelected().isEmpty() || rel == null || rel.get() == null) {
             state = 0;
         } else {
-            Collection<OsmPrimitive> toAdd = new ArrayList<>(getCurrentDataSet().getSelected());
+            Collection<OsmPrimitive> toAdd = new ArrayList<>(ds.getSelected());
             toAdd.remove(rel.get());
             int selectedSize = toAdd.size();
-            if (selectedSize == 0 ) {
+            if (selectedSize == 0) {
                 state = 0;
             } else {
                 toAdd.removeAll(rel.get().getMemberPrimitives());
-                if (toAdd.isEmpty() ) {
+                if (toAdd.isEmpty()) {
                     state = 2;
-                } else if (toAdd.size() < selectedSize ) {
+                } else if (toAdd.size() < selectedSize) {
                     state = 3;
                 } else {
                     state = 1;
@@ -156,10 +158,7 @@ public class AddRemoveMemberAction extends JosmAction implements ChosenRelationL
         GuiHelper.runInEDT(new Runnable() {
             @Override
             public void run() {
-                //        String name = state == 0 ? "?" : state == 1 ? "+" : state == 2 ? "-" : "±";
-                //        putValue(Action.NAME, name);
                 if (state == 0) {
-                    //            putValue(NAME, "?");
                     putValue(LARGE_ICON_KEY, ImageProvider.get("relcontext", "addremove"));
                 } else {
                     String iconName = state == 1 ? "add" : state == 2 ? "remove" : "addremove";

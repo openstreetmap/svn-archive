@@ -55,7 +55,7 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     @Override
     public void actionPerformed(ActionEvent e) {
         Command c = fixRelation(rel.get());
-        if (c != null ) {
+        if (c != null) {
             Main.main.undoRedo.add(c);
         }
     }
@@ -70,9 +70,10 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     }
 
     private RelationFixer getFixer(Relation rel) {
-        for (RelationFixer fixer : fixers)
+        for (RelationFixer fixer : fixers) {
             if (fixer.isFixerApplicable(rel))
                 return fixer;
+        }
         return new NothingFixer();
     }
 
@@ -81,12 +82,12 @@ public class SortAndFixAction extends AbstractAction implements ChosenRelationLi
     }
 
     protected static boolean isIncomplete(Relation r) {
-        if (r == null || r.isIncomplete() || r.isDeleted() )
+        if (r == null || r.isIncomplete() || r.isDeleted())
             return true;
-        for (RelationMember m : r.getMembers())
-            if (m.getMember().isIncomplete() )
+        for (RelationMember m : r.getMembers()) {
+            if (m.getMember().isIncomplete())
                 return true;
+        }
         return false;
     }
-
 }

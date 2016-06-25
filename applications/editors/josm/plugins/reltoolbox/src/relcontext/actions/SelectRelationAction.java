@@ -28,7 +28,7 @@ public class SelectRelationAction extends AbstractAction implements ChosenRelati
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Main.main.getEditLayer().data.setSelected(rel.get() == null ? null : rel.get());
+        Main.getLayerManager().getEditLayer().data.setSelected(rel.get() == null ? null : rel.get());
     }
 
     @Override

@@ -32,8 +32,8 @@ public class DeleteChosenRelationAction extends AbstractAction implements Chosen
     public void actionPerformed(ActionEvent e) {
         Relation r = rel.get();
         rel.clear();
-        Command c = DeleteCommand.delete(Main.main.getEditLayer(), Collections.singleton(r), true, true);
-        if (c != null ) {
+        Command c = DeleteCommand.delete(Main.getLayerManager().getEditLayer(), Collections.singleton(r), true, true);
+        if (c != null) {
             Main.main.undoRedo.add(c);
         }
     }

@@ -32,22 +32,26 @@ import org.openstreetmap.josm.tools.Geometry.PolygonIntersection;
  *
  * @author Zverik
  */
-public class SplittingMultipolygons {
+public final class SplittingMultipolygons {
     private static final String PREF_MULTIPOLY = "reltoolbox.multipolygon.";
+
+    private SplittingMultipolygons() {
+        // Hide default constructor for utilities classes
+    }
 
     public static boolean canProcess(Collection<Way> ways) {
         List<Way> rings = new ArrayList<>();
         List<Way> arcs = new ArrayList<>();
-        Area a = Main.main.getCurrentDataSet().getDataSourceArea();
+        Area a = Main.getLayerManager().getEditDataSet().getDataSourceArea();
         for (Way way : ways) {
-            if (way.isDeleted() )
+            if (way.isDeleted())
                 return false;
             for (Node n : way.getNodes()) {
                 LatLon ll = n.getCoor();
-                if (n.isIncomplete() || (a != null && !a.contains(ll.getX(), ll.getY())) )
+                if (n.isIncomplete() || (a != null && !a.contains(ll.getX(), ll.getY())))
                     return false;
             }
-            if (way.isClosed() ) {
+            if (way.isClosed()) {
                 rings.add(way);
             } else {
                 arcs.add(way);
@@ -58,23 +62,24 @@ public class SplittingMultipolygons {
         if (arcs.size() > 1) {
             for (Way segment : arcs) {
                 boolean found = false;
-                for (Way ring : rings )
-                    if (ring.containsNode(segment.firstNode()) && ring.containsNode(segment.lastNode()) ) {
+                for (Way ring : rings) {
+                    if (ring.containsNode(segment.firstNode()) && ring.containsNode(segment.lastNode())) {
                         found = true;
                     }
-                if (!found )
+                }
+                if (!found)
                     return false;
             }
         }
 
-        if (rings.isEmpty() && arcs.isEmpty() )
+        if (rings.isEmpty() && arcs.isEmpty())
             return false;
 
         // check for non-containment of rings
         for (int i = 0; i < rings.size() - 1; i++) {
             for (int j = i + 1; j < rings.size(); j++) {
                 PolygonIntersection intersection = Geometry.polygonIntersection(rings.get(i).getNodes(), rings.get(j).getNodes());
-                if (intersection == PolygonIntersection.FIRST_INSIDE_SECOND || intersection == PolygonIntersection.SECOND_INSIDE_FIRST )
+                if (intersection == PolygonIntersection.FIRST_INSIDE_SECOND || intersection == PolygonIntersection.SECOND_INSIDE_FIRST)
                     return false;
             }
         }
@@ -83,12 +88,11 @@ public class SplittingMultipolygons {
     }
 
     public static List<Relation> process(Collection<Way> selectedWays) {
-        //    System.out.println("---------------------------------------");
         List<Relation> result = new ArrayList<>();
         List<Way> rings = new ArrayList<>();
         List<Way> arcs = new ArrayList<>();
         for (Way way : selectedWays) {
-            if (way.isClosed() ) {
+            if (way.isClosed()) {
                 rings.add(way);
             } else {
                 arcs.add(way);
@@ -147,7 +151,7 @@ public class SplittingMultipolygons {
      */
     public static List<Way> splitWay(Way w, Node n1, Node n2, List<Command> commands) {
         List<Node> nodes = new ArrayList<>(w.getNodes());
-        if (w.isClosed() ) {
+        if (w.isClosed()) {
             nodes.remove(nodes.size() - 1);
         }
         int index1 = nodes.indexOf(n1);
@@ -158,9 +162,9 @@ public class SplittingMultipolygons {
             index2 = tmp;
         }
         // right now index2 >= index1
-        if (index2 < 1 || index1 >= w.getNodesCount() - 1 || index2 >= w.getNodesCount() )
+        if (index2 < 1 || index1 >= w.getNodesCount() - 1 || index2 >= w.getNodesCount())
             return Collections.emptyList();
-        if (w.isClosed() && (index1 < 0 || index1 == index2 || index1 + w.getNodesCount() == index2) )
+        if (w.isClosed() && (index1 < 0 || index1 == index2 || index1 + w.getNodesCount() == index2))
             return Collections.emptyList();
 
         // todo: download parent relations!
@@ -182,30 +186,24 @@ public class SplittingMultipolygons {
         if (w.isClosed()) {
             chunks.get(chunks.size() - 1).addAll(chunks.get(0));
             chunks.remove(0);
-        } else if (chunks.get(chunks.size() - 1).size() < 2 ) {
+        } else if (chunks.get(chunks.size() - 1).size() < 2) {
             chunks.remove(chunks.size() - 1);
         }
-
-        // todo remove debug: show chunks array contents
-        /*for (List<Node> c1 : chunks) {
-    for (Node cn1 : c1 )
-    System.out.print(cn1.getId() + ",");
-    System.out.println();
-    }*/
 
         // build a map of referencing relations
         Map<Relation, Integer> references = new HashMap<>();
         List<Command> relationCommands = new ArrayList<>();
         for (OsmPrimitive p : w.getReferrers()) {
             if (p instanceof Relation) {
-                Relation rel = commands == null ? (Relation)p : new Relation((Relation)p);
-                if (commands != null ) {
+                Relation rel = commands == null ? (Relation) p : new Relation((Relation) p);
+                if (commands != null) {
                     relationCommands.add(new ChangeCommand(p, rel));
                 }
-                for (int i = 0; i < rel.getMembersCount(); i++ )
-                    if (rel.getMember(i).getMember().equals(w) ) {
+                for (int i = 0; i < rel.getMembersCount(); i++) {
+                    if (rel.getMember(i).getMember().equals(w)) {
                         references.put(rel, Integer.valueOf(i));
                     }
+                }
             }
         }
 
@@ -228,11 +226,11 @@ public class SplittingMultipolygons {
                 rel.addMember(relIndex + 1, new RelationMember(rel.getMember(relIndex).getRole(), newWay));
             }
             newWay.setNodes(achunk);
-            if (commands != null ) {
+            if (commands != null) {
                 commands.add(new AddCommand(newWay));
             }
         }
-        if (commands != null ) {
+        if (commands != null) {
             commands.addAll(relationCommands);
         }
         return result;
@@ -246,7 +244,7 @@ public class SplittingMultipolygons {
      * Find a way the tips of a segment, ensure it's in a multipolygon and try to close the relation.
      */
     public static Relation tryToCloseOneWay(Way segment, List<Command> resultingCommands) {
-        if (segment.isClosed() || segment.isIncomplete() )
+        if (segment.isClosed() || segment.isIncomplete())
             return null;
 
         List<Way> ways = intersection(
@@ -255,15 +253,16 @@ public class SplittingMultipolygons {
         ways.remove(segment);
         for (Iterator<Way> iter = ways.iterator(); iter.hasNext();) {
             boolean save = false;
-            for (OsmPrimitive ref : iter.next().getReferrers() )
-                if (ref instanceof Relation && ((Relation)ref).isMultipolygon() && !ref.isDeleted() ) {
+            for (OsmPrimitive ref : iter.next().getReferrers()) {
+                if (ref instanceof Relation && ((Relation) ref).isMultipolygon() && !ref.isDeleted()) {
                     save = true;
                 }
-            if (!save ) {
+            }
+            if (!save) {
                 iter.remove();
             }
         }
-        if (ways.isEmpty() )
+        if (ways.isEmpty())
             return null; // well...
         Way target = ways.get(0);
 
@@ -282,7 +281,7 @@ public class SplittingMultipolygons {
                 changed = true;
             }
         }
-        if (changed ) {
+        if (changed) {
             commands.add(new ChangeCommand(segment, segmentCopy));
         }
 
@@ -317,10 +316,11 @@ public class SplittingMultipolygons {
      */
     private static <T> List<T> intersection(Collection<T> list1, Collection<T> list2) {
         List<T> result = new ArrayList<>();
-        for (T item : list1 )
-            if (list2.contains(item) ) {
+        for (T item : list1) {
+            if (list2.contains(item)) {
                 result.add(item);
             }
+        }
         return result;
     }
 
@@ -328,18 +328,18 @@ public class SplittingMultipolygons {
      * Make a multipolygon out of the ring, but split it to attach to neighboring multipolygons.
      */
     public static Relation attachRingToNeighbours(Way ring, List<Command> resultingCommands) {
-        if (!ring.isClosed() || ring.isIncomplete() )
+        if (!ring.isClosed() || ring.isIncomplete())
             return null;
         Map<Way, Boolean> touchingWays = new HashMap<>();
         for (Node n : ring.getNodes()) {
             for (OsmPrimitive p : n.getReferrers()) {
                 if (p instanceof Way && !p.equals(ring)) {
                     for (OsmPrimitive r : p.getReferrers()) {
-                        if (r instanceof Relation && ((Relation)r).hasKey("type") && ((Relation)r).get("type").equals("multipolygon")) {
-                            if (touchingWays.containsKey(p) ) {
-                                touchingWays.put((Way)p, Boolean.TRUE);
+                        if (r instanceof Relation && ((Relation) r).hasKey("type") && ((Relation) r).get("type").equals("multipolygon")) {
+                            if (touchingWays.containsKey(p)) {
+                                touchingWays.put((Way) p, Boolean.TRUE);
                             } else {
-                                touchingWays.put((Way)p, Boolean.FALSE);
+                                touchingWays.put((Way) p, Boolean.FALSE);
                             }
                             break;
                         }
@@ -349,32 +349,27 @@ public class SplittingMultipolygons {
         }
 
         List<TheRing> otherWays = new ArrayList<>();
-        for (Way w : touchingWays.keySet() )
+        for (Way w : touchingWays.keySet()) {
             if (touchingWays.get(w)) {
                 otherWays.add(new TheRing(w));
-                //        System.out.println("Touching ring: " + otherWays.get(otherWays.size()-1));
             }
-
-        //    for (Iterator<Way> keys = touchingWays.keySet().iterator(); keys.hasNext();) {
-        //        if (!touchingWays.get(keys.next()) )
-        //        keys.remove();
-        //    }
+        }
 
         // now touchingWays has only ways that touch the ring twice
         List<Command> commands = new ArrayList<>();
         TheRing theRing = new TheRing(ring); // this is actually useful
 
-        for (TheRing otherRing : otherWays ) {
+        for (TheRing otherRing : otherWays) {
             theRing.collide(otherRing);
         }
 
         theRing.putSourceWayFirst();
-        for (TheRing otherRing : otherWays ) {
+        for (TheRing otherRing : otherWays) {
             otherRing.putSourceWayFirst();
         }
 
         Map<Relation, Relation> relationCache = new HashMap<>();
-        for (TheRing otherRing : otherWays ) {
+        for (TheRing otherRing : otherWays) {
             commands.addAll(otherRing.getCommands(false, relationCache));
         }
         commands.addAll(theRing.getCommands(relationCache));

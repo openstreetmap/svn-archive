@@ -44,7 +44,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (rel.get() == null )
+        if (rel.get() == null)
             return;
         try {
             String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
@@ -60,7 +60,7 @@ public class RelationHelpAction extends AbstractAction implements ChosenRelation
             uris.add(new URI(String.format("%s%sRelations", base, lang)));
             uris.add(new URI(String.format("%sRelations", base)));
 
-            Main.worker.execute(new Runnable(){
+            Main.worker.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {

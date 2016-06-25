@@ -32,10 +32,10 @@ import relcontext.ChosenRelationListener;
  * Build in order stop/platforms, stop/platforms ... route
  * @author freeExec
  */
-public class ReconstructRouteAction  extends AbstractAction implements ChosenRelationListener {
+public class ReconstructRouteAction extends AbstractAction implements ChosenRelationListener {
     private final ChosenRelation rel;
 
-    public ReconstructRouteAction (ChosenRelation rel) {
+    public ReconstructRouteAction(ChosenRelation rel) {
         super(tr("Reconstruct route"));
         putValue(SMALL_ICON, ImageProvider.get("dialogs", "filter"));
         putValue(LONG_DESCRIPTION, "Reconstruct route relation to scheme of public_transport");
@@ -64,8 +64,7 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
                         m.hasRole() ? m.getRole() : PublicTransportHelper.STOP,
                                 m.getMember());
                 stopMembers.put(rm.getMember(), rm);
-            }
-            else if (PublicTransportHelper.isMemberPlatform(m)) {
+            } else if (PublicTransportHelper.isMemberPlatform(m)) {
                 RelationMember rm = new RelationMember(
                         m.hasRole() ? m.getRole() : PublicTransportHelper.PLATFORM,
                                 m.getMember());
@@ -80,8 +79,7 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
                     nList.add(rm);
                     platformMembers.put(platformName, nList);
                 }
-            }
-            else if (PublicTransportHelper.isMemberRouteway(m)) {
+            } else if (PublicTransportHelper.isMemberRouteway(m)) {
                 routeMembers.add(new RelationMember(m));
             } else {
                 wtfMembers.add(new RelationMember(m));
@@ -92,11 +90,11 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
 
         Node lastNode = null;
         for (int rIndex = 0; rIndex < routeMembers.size(); rIndex++) {
-            Way w = (Way)routeMembers.get(rIndex).getMember();
+            Way w = (Way) routeMembers.get(rIndex).getMember();
             boolean dirForward = false;
             if (lastNode == null) { // first segment
                 if (routeMembers.size() > 2) {
-                    Way nextWay = (Way)routeMembers.get(rIndex + 1).getMember();
+                    Way nextWay = (Way) routeMembers.get(rIndex + 1).getMember();
                     if (w.lastNode().equals(nextWay.lastNode()) || w.lastNode().equals(nextWay.firstNode())) {
                         dirForward = true;
                         lastNode = w.lastNode();
@@ -105,7 +103,9 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
                     }
                 } // else one segment - direction unknown
             } else {
-                if (lastNode.equals(w.firstNode())) { dirForward = true; lastNode = w.lastNode(); } else {
+                if (lastNode.equals(w.firstNode())) {
+                    dirForward = true; lastNode = w.lastNode();
+                } else {
                     lastNode = w.firstNode();
                 }
             }
@@ -125,7 +125,9 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
                             stopName = "";
                         }
                         boolean existsPlatform = platformMembers.containsKey(stopName);
-                        if (!existsPlatform) { stopName = ""; } // find of the nameless
+                        if (!existsPlatform) {
+                            stopName = ""; // find of the nameless
+                        }
                         if (existsPlatform || platformMembers.containsKey(stopName)) {
                             List<RelationMember> lMember = platformMembers.get(stopName);
                             if (lMember.size() == 1) {
@@ -152,7 +154,9 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
             recRel.addMember(stop);
             String stopName = PublicTransportHelper.getNameViaStoparea(stop);
             boolean existsPlatform = platformMembers.containsKey(stopName);
-            if (!existsPlatform) { stopName = ""; } // find of the nameless
+            if (!existsPlatform) {
+                stopName = ""; // find of the nameless
+            }
             if (existsPlatform || platformMembers.containsKey(stopName)) {
                 List<RelationMember> lMember = platformMembers.get(stopName);
                 if (lMember.size() == 1) {
@@ -223,7 +227,7 @@ public class ReconstructRouteAction  extends AbstractAction implements ChosenRel
         setEnabled(isSuitableRelation(newRelation));
     }
 
-    private boolean isSuitableRelation (Relation newRelation) {
+    private boolean isSuitableRelation(Relation newRelation) {
         return !(newRelation == null || !"route".equals(newRelation.get("type")) || newRelation.getMembersCount() == 0);
     }
 }

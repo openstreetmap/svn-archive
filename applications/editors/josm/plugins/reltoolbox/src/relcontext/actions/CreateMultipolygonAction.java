@@ -32,6 +32,7 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.MultipolygonBuilder;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -67,17 +68,17 @@ public class CreateMultipolygonAction extends JosmAction {
     }
 
     public static boolean getDefaultPropertyValue(String property) {
-        if (property.equals("boundary") )
+        if (property.equals("boundary"))
             return false;
-        else if (property.equals("boundaryways") )
+        else if (property.equals("boundaryways"))
             return true;
-        else if (property.equals("tags") )
+        else if (property.equals("tags"))
             return true;
-        else if (property.equals("alltags") )
+        else if (property.equals("alltags"))
             return false;
-        else if (property.equals("single") )
+        else if (property.equals("single"))
             return true;
-        else if (property.equals("allowsplit") )
+        else if (property.equals("allowsplit"))
             return false;
         throw new IllegalArgumentException(property);
     }
@@ -89,30 +90,31 @@ public class CreateMultipolygonAction extends JosmAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         boolean isBoundary = getPref("boundary");
-        Collection<Way> selectedWays = getCurrentDataSet().getSelectedWays();
+        DataSet ds = getLayerManager().getEditDataSet();
+        Collection<Way> selectedWays = ds.getSelectedWays();
         if (!isBoundary && getPref("tags")) {
             List<Relation> rels = null;
             if (getPref("allowsplit") || selectedWays.size() == 1) {
-                if (SplittingMultipolygons.canProcess(selectedWays) ) {
-                    rels = SplittingMultipolygons.process(getCurrentDataSet().getSelectedWays());
+                if (SplittingMultipolygons.canProcess(selectedWays)) {
+                    rels = SplittingMultipolygons.process(ds.getSelectedWays());
                 }
             } else {
                 if (TheRing.areAllOfThoseRings(selectedWays)) {
                     List<Command> commands = new ArrayList<>();
-                    rels = TheRing.makeManySimpleMultipolygons(getCurrentDataSet().getSelectedWays(), commands);
-                    if (!commands.isEmpty() ) {
+                    rels = TheRing.makeManySimpleMultipolygons(ds.getSelectedWays(), commands);
+                    if (!commands.isEmpty()) {
                         Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygons from rings"), commands));
                     }
                 }
             }
             if (rels != null && !rels.isEmpty()) {
-                if (chRel != null ) {
+                if (chRel != null) {
                     chRel.set(rels.size() == 1 ? rels.get(0) : null);
                 }
-                if (rels.size() == 1 ) {
-                    getCurrentDataSet().setSelected(rels);
+                if (rels.size() == 1) {
+                    ds.setSelected(rels);
                 } else {
-                    getCurrentDataSet().clearSelection();
+                    ds.clearSelection();
                 }
                 return;
             }
@@ -120,7 +122,7 @@ public class CreateMultipolygonAction extends JosmAction {
 
         // for now, just copying standard action
         MultipolygonBuilder mpc = new MultipolygonBuilder();
-        String error = mpc.makeFromWays(getCurrentDataSet().getSelectedWays());
+        String error = mpc.makeFromWays(getLayerManager().getEditDataSet().getSelectedWays());
         if (error != null) {
             JOptionPane.showMessageDialog(Main.parent, error);
             return;
@@ -132,13 +134,13 @@ public class CreateMultipolygonAction extends JosmAction {
         } else {
             rel.put("type", "multipolygon");
         }
-        for (MultipolygonBuilder.JoinedPolygon poly : mpc.outerWays ) {
-            for (Way w : poly.ways ) {
+        for (MultipolygonBuilder.JoinedPolygon poly : mpc.outerWays) {
+            for (Way w : poly.ways) {
                 rel.addMember(new RelationMember("outer", w));
             }
         }
-        for (MultipolygonBuilder.JoinedPolygon poly : mpc.innerWays ) {
-            for (Way w : poly.ways ) {
+        for (MultipolygonBuilder.JoinedPolygon poly : mpc.innerWays) {
+            for (Way w : poly.ways) {
                 rel.addMember(new RelationMember("inner", w));
             }
         }
@@ -148,36 +150,36 @@ public class CreateMultipolygonAction extends JosmAction {
             list = new ArrayList<>();
         }
         if (isBoundary) {
-            if (!askForAdminLevelAndName(rel) )
+            if (!askForAdminLevelAndName(rel))
                 return;
             addBoundaryMembers(rel);
-            if (getPref("boundaryways") ) {
+            if (getPref("boundaryways")) {
                 list.addAll(fixWayTagsForBoundary(rel));
             }
         }
         list.add(new AddCommand(rel));
         Main.main.undoRedo.add(new SequenceCommand(tr("Create multipolygon"), list));
 
-        if (chRel != null ) {
+        if (chRel != null) {
             chRel.set(rel);
         }
 
-        getCurrentDataSet().setSelected(rel);
+        getLayerManager().getEditDataSet().setSelected(rel);
     }
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
         }
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         boolean isEnabled = true;
-        if (selection == null || selection.isEmpty() ) {
+        if (selection == null || selection.isEmpty()) {
             isEnabled = false;
         } else {
             if (!getPref("boundary")) {
@@ -196,21 +198,21 @@ public class CreateMultipolygonAction extends JosmAction {
      * Add selected nodes and relations with corresponding roles.
      */
     private void addBoundaryMembers(Relation rel) {
-        for (OsmPrimitive p : getCurrentDataSet().getSelected()) {
+        for (OsmPrimitive p : getLayerManager().getEditDataSet().getSelected()) {
             String role = null;
             if (p.getType().equals(OsmPrimitiveType.RELATION)) {
                 role = "subarea";
             } else if (p.getType().equals(OsmPrimitiveType.NODE)) {
-                Node n = (Node)p;
+                Node n = (Node) p;
                 if (!n.isIncomplete()) {
-                    if (n.hasKey("place") ) {
+                    if (n.hasKey("place")) {
                         role = "admin_centre";
                     } else {
                         role = "label";
                     }
                 }
             }
-            if (role != null ) {
+            if (role != null) {
                 rel.addMember(new RelationMember(role, p));
             }
         }
@@ -221,13 +223,13 @@ public class CreateMultipolygonAction extends JosmAction {
      */
     private List<Command> fixWayTagsForBoundary(Relation rel) {
         List<Command> commands = new ArrayList<>();
-        if (!rel.hasKey("boundary") || !rel.hasKey("admin_level") )
+        if (!rel.hasKey("boundary") || !rel.hasKey("admin_level"))
             return commands;
         String adminLevelStr = rel.get("admin_level");
         int adminLevel = 0;
         try {
             adminLevel = Integer.parseInt(adminLevelStr);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return commands;
         }
         Set<OsmPrimitive> waysBoundary = new HashSet<>();
@@ -235,14 +237,14 @@ public class CreateMultipolygonAction extends JosmAction {
         for (OsmPrimitive p : rel.getMemberPrimitives()) {
             if (p instanceof Way) {
                 int count = 0;
-                if (p.hasKey("boundary") && p.get("boundary").equals("administrative") ) {
+                if (p.hasKey("boundary") && p.get("boundary").equals("administrative")) {
                     count++;
                 }
-                if (p.hasKey("admin_level") ) {
+                if (p.hasKey("admin_level")) {
                     count++;
                 }
                 if (p.keySet().size() - count == 0) {
-                    if (!p.hasKey("boundary") ) {
+                    if (!p.hasKey("boundary")) {
                         waysBoundary.add(p);
                     }
                     if (!p.hasKey("admin_level")) {
@@ -250,25 +252,27 @@ public class CreateMultipolygonAction extends JosmAction {
                     } else {
                         try {
                             int oldAdminLevel = Integer.parseInt(p.get("admin_level"));
-                            if (oldAdminLevel > adminLevel ) {
+                            if (oldAdminLevel > adminLevel) {
                                 waysAdminLevel.add(p);
                             }
-                        } catch(NumberFormatException e) {
+                        } catch (NumberFormatException e) {
                             waysAdminLevel.add(p); // some garbage, replace it
                         }
                     }
                 }
             }
         }
-        if (!waysBoundary.isEmpty() ) {
+        if (!waysBoundary.isEmpty()) {
             commands.add(new ChangePropertyCommand(waysBoundary, "boundary", "administrative"));
         }
-        if (!waysAdminLevel.isEmpty() ) {
+        if (!waysAdminLevel.isEmpty()) {
             commands.add(new ChangePropertyCommand(waysAdminLevel, "admin_level", adminLevelStr));
         }
         return commands;
     }
-    static public final List<String> DEFAULT_LINEAR_TAGS = Arrays.asList(new String[] {"barrier", "source"});
+
+    public static final List<String> DEFAULT_LINEAR_TAGS = Arrays.asList(new String[] {"barrier", "source"});
+
     private static final Set<String> REMOVE_FROM_BOUNDARY_TAGS = new TreeSet<>(Arrays.asList(new String[] {
             "boundary", "boundary_type", "type", "admin_level"
     }));
@@ -313,35 +317,38 @@ public class CreateMultipolygonAction extends JosmAction {
 
         // filter out empty key conflicts - we need second iteration
         boolean isBoundary = getPref("boundary");
-        if (isBoundary || !getPref("alltags") ) {
-            for (RelationMember m : relation.getMembers() )
-                if (m.hasRole() && m.getRole().equals("outer") && m.isWay() ) {
-                    for (String key : values.keySet() )
-                        if (!m.getWay().hasKey(key) && !relation.hasKey(key) ) {
+        if (isBoundary || !getPref("alltags")) {
+            for (RelationMember m : relation.getMembers()) {
+                if (m.hasRole() && m.getRole().equals("outer") && m.isWay()) {
+                    for (String key : values.keySet()) {
+                        if (!m.getWay().hasKey(key) && !relation.hasKey(key)) {
                             conflictingKeys.add(key);
                         }
+                    }
                 }
+            }
         }
 
-        for (String key : conflictingKeys ) {
+        for (String key : conflictingKeys) {
             values.remove(key);
         }
 
-        for (String linearTag : Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS) ) {
+        for (String linearTag : Main.pref.getCollection(PREF_MULTIPOLY + "lineartags", DEFAULT_LINEAR_TAGS)) {
             values.remove(linearTag);
         }
 
-        if (values.containsKey("natural") && values.get("natural").equals("coastline") ) {
+        if (values.containsKey("natural") && values.get("natural").equals("coastline")) {
             values.remove("natural");
         }
 
         String name = values.get("name");
         if (isBoundary) {
             Set<String> keySet = new TreeSet<>(values.keySet());
-            for (String key : keySet )
-                if (!REMOVE_FROM_BOUNDARY_TAGS.contains(key) ) {
+            for (String key : keySet) {
+                if (!REMOVE_FROM_BOUNDARY_TAGS.contains(key)) {
                     values.remove(key);
                 }
+            }
         }
 
         values.put("area", "yes");
@@ -375,7 +382,7 @@ public class CreateMultipolygonAction extends JosmAction {
 
         if (moveTags) {
             // add those tag values to the relation
-            if (isBoundary ) {
+            if (isBoundary) {
                 values.put("name", name);
             }
             boolean fixed = false;
@@ -383,7 +390,7 @@ public class CreateMultipolygonAction extends JosmAction {
             for (String key : values.keySet()) {
                 if (!r2.hasKey(key) && !key.equals("area")
                         && (!isBoundary || key.equals("admin_level") || key.equals("name"))) {
-                    if (relation.isNew() ) {
+                    if (relation.isNew()) {
                         relation.put(key, values.get(key));
                     } else {
                         r2.put(key, values.get(key));
@@ -391,7 +398,7 @@ public class CreateMultipolygonAction extends JosmAction {
                     fixed = true;
                 }
             }
-            if (fixed && !relation.isNew() ) {
+            if (fixed && !relation.isNew()) {
                 commands.add(new ChangeCommand(relation, r2));
             }
         }
@@ -401,13 +408,13 @@ public class CreateMultipolygonAction extends JosmAction {
 
     /**
      *
-     * @param rel
+     * @param rel relation
      * @return false if user pressed "cancel".
      */
     private boolean askForAdminLevelAndName(Relation rel) {
         String relAL = rel.get("admin_level");
         String relName = rel.get("name");
-        if (relAL != null && relName != null )
+        if (relAL != null && relName != null)
             return true;
 
         JPanel panel = new JPanel(new GridBagLayout());
@@ -420,7 +427,7 @@ public class CreateMultipolygonAction extends JosmAction {
         panel.add(admin, GBC.eol().fill(GBC.HORIZONTAL).insets(0, 0, 0, 5));
 
         final JTextField name = new JTextField();
-        if (relName != null ) {
+        if (relName != null) {
             name.setText(relName);
         }
         panel.add(new JLabel(tr("Name")), GBC.std());
@@ -449,7 +456,7 @@ public class CreateMultipolygonAction extends JosmAction {
 
         Object answer = optionPane.getValue();
         if (answer == null || answer == JOptionPane.UNINITIALIZED_VALUE
-                || (answer instanceof Integer && (Integer)answer != JOptionPane.OK_OPTION))
+                || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))
             return false;
 
         String admin_level = admin.getText().trim();
@@ -458,7 +465,7 @@ public class CreateMultipolygonAction extends JosmAction {
             rel.put("admin_level", admin_level);
             Main.pref.put(PREF_MULTIPOLY + "lastadmin", admin_level);
         }
-        if (new_name.length() > 0 ) {
+        if (new_name.length() > 0) {
             rel.put("name", new_name);
         }
         return true;

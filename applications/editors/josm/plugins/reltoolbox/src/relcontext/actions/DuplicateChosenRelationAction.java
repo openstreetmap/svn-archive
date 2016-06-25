@@ -33,8 +33,8 @@ public class DuplicateChosenRelationAction extends AbstractAction implements Cho
         Relation copy = new Relation(r, true);
         Main.main.undoRedo.add(new AddCommand(copy));
         rel.set(copy);
-        if (Main.main.getCurrentDataSet() != null ) {
-            Main.main.getCurrentDataSet().setSelected(copy);
+        if (Main.getLayerManager().getEditDataSet() != null) {
+            Main.getLayerManager().getEditDataSet().setSelected(copy);
         }
     }
 

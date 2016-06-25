@@ -89,7 +89,7 @@ public class AssociatedStreetFixer extends RelationFixer {
                 } else if (!"house".equals(m.getRole()) &&
                         (way.hasKey("building") || way.hasKey("addr:housenumber"))) {
                     fixed = true;
-                    rel.setMember(i,  new RelationMember("house", way));
+                    rel.setMember(i, new RelationMember("house", way));
                 }
             } else if (m.isRelation()) {
                 Relation relation = m.getRelation();

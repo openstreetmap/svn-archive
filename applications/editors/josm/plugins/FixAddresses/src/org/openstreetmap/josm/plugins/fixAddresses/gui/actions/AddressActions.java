@@ -3,33 +3,25 @@ package org.openstreetmap.josm.plugins.fixAddresses.gui.actions;
 
 public final class AddressActions {
     /* Global action objects */
-    private static SelectAddressesInMapAction selectAction = new SelectAddressesInMapAction();
-    private static GuessAddressDataAction guessDataAction = new GuessAddressDataAction();
-    private static ApplyAllGuessesAction applyGuessesAction = new ApplyAllGuessesAction();
-    private static RemoveAddressTagsAction removeTagsAction = new RemoveAddressTagsAction();
-    private static AssignAddressToStreetAction resolveAction = new AssignAddressToStreetAction();
-    private static ConvertToRelationAction convertToRelationAction = new ConvertToRelationAction();
-    private static ConvertAllToRelationAction convertAllToRelationAction = new ConvertAllToRelationAction();
-    
     public static SelectAddressesInMapAction getSelectAction() {
-        return selectAction;
+        return new SelectAddressesInMapAction();
     }
     public static GuessAddressDataAction getGuessAddressAction() {
-        return guessDataAction;
+        return new GuessAddressDataAction();
     }
     public static ApplyAllGuessesAction getApplyGuessesAction() {
-        return applyGuessesAction;
+        return new ApplyAllGuessesAction();
     }
     public static RemoveAddressTagsAction getRemoveTagsAction() {
-        return removeTagsAction;
+        return new RemoveAddressTagsAction();
     }
     public static AssignAddressToStreetAction getResolveAction() {
-        return resolveAction;
+        return new AssignAddressToStreetAction();
     }
     public static ConvertToRelationAction getConvertToRelationAction() {
-        return convertToRelationAction;
+        return new ConvertToRelationAction();
     }
     public static ConvertAllToRelationAction getConvertAllToRelationAction() {
-        return convertAllToRelationAction;
+        return new ConvertAllToRelationAction();
     }
 }

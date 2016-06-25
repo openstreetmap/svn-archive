@@ -10,6 +10,9 @@
 		<Class name="~com.google.*" />
 	</Match>
 	<Match>
+		<Class name="~com.sun.*" />
+	</Match>
+	<Match>
 		<Class name="~crosby.*" />
 	</Match>
 	<Match>

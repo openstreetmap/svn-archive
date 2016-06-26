@@ -16,6 +16,9 @@
 		<Class name="~com.hp.*" />
 	</Match>
 	<Match>
+		<Class name="~com.jgoodies.*" />
+	</Match>
+	<Match>
 		<Class name="~com.sun.*" />
 	</Match>
 	<Match>

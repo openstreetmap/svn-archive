@@ -19,6 +19,9 @@
 		<Class name="~com.sun.*" />
 	</Match>
 	<Match>
+		<Class name="~com.thoughtworks.*" />
+	</Match>
+	<Match>
 		<Class name="~crosby.*" />
 	</Match>
 	<Match>
@@ -41,6 +44,9 @@
     </Match>
     <Match>
         <Class name="~jj2000.*" />
+    </Match>
+    <Match>
+        <Class name="marvin.*" />
     </Match>
     <Match>
         <Class name="~net.arnx.*" />
@@ -112,6 +118,9 @@
 		<Class name="~org.opengis.*" />
 	</Match>
 	<Match>
+		<Class name="~org.openkinect.*" />
+	</Match>
+	<Match>
 		<Class name="~org.osgeo.*" />
 	</Match>
 	<Match>
@@ -122,6 +131,9 @@
 	</Match>
     <Match>
         <Class name="~org.w3._2001.xmlschema.*" />
+    </Match>
+    <Match>
+        <Class name="~org.xmlpull.*" />
     </Match>
     <Match>
         <Class name="~uk.co.caprica.*" />

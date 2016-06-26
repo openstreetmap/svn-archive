@@ -7,6 +7,9 @@
 		<Class name="~boofcv.*" />
 	</Match>
 	<Match>
+		<Class name="~com.fasterxml.*" />
+	</Match>
+	<Match>
 		<Class name="~com.google.*" />
 	</Match>
 	<Match>
@@ -62,6 +65,9 @@
 	</Match>
 	<Match>
 		<Class name="~org.ejml.*" />
+	</Match>
+	<Match>
+		<Class name="~org.geojson.*" />
 	</Match>
 	<Match>
 		<Class name="~org.geotools.*" />

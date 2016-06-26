@@ -1,12 +1,12 @@
-// License: GPL. Copyright 2011 by Alexei Kasatkin
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
-import org.openstreetmap.josm.data.osm.Relation;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -18,15 +18,11 @@ import org.openstreetmap.josm.data.osm.BBox;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Geometry;
-
-import static org.openstreetmap.josm.tools.I18n.tr;
-
 import org.openstreetmap.josm.tools.Pair;
-
-
 
 /**
  * Class with some useful functions that are reused in extend selection actions
@@ -38,6 +34,10 @@ public final class NodeWayUtils {
     static final int maxWays = Main.pref.getInteger("selection.maxfoundways", 2000);
     static final int maxWays1 = Main.pref.getInteger("selection.maxfoundways.intersection", 500);
 
+    private NodeWayUtils() {
+        // Hide default constructor for utilities classes
+    }
+
     /**
      * Find the neighbours of node n on the way w and put them in given collection
      * @param w way on which the search goes
@@ -46,7 +46,7 @@ public final class NodeWayUtils {
      */
     static void addNeighbours(Way w, Node n, Collection<Node> nodes) {
         List<Node> nodeList = w.getNodes();
-        
+
         int idx = nodeList.indexOf(n);
         if (idx == -1) return;
 
@@ -67,7 +67,7 @@ public final class NodeWayUtils {
                 nodes.add(nodeList.get(1));
             }
         }
-     }
+    }
 
     /**
      * Adds all ways attached to way to specified collection
@@ -75,7 +75,7 @@ public final class NodeWayUtils {
      * @param ways  collection to place the ways we found
      */
     static int addWaysConnectedToWay(Way w, Set<Way> ways) {
-         int s = ways.size();
+        int s = ways.size();
         List<Node> nodes = w.getNodes();
         boolean flag = ways.contains(w);
         for (Node n: nodes) {
@@ -102,22 +102,22 @@ public final class NodeWayUtils {
      * @param w way to check intersections
      * @param newWays set to place the ways we found
      */
-    static int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays,Set<Way> excludeWays) {
+    static int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays, Set<Way> excludeWays) {
         List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
-        int count=0;
+        int count = 0;
         for (Way anyway: ways) {
             if (anyway == w) continue;
-            if (newWays.contains(anyway) || excludeWays.contains(anyway) ) continue;
+            if (newWays.contains(anyway) || excludeWays.contains(anyway)) continue;
 
             List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
-            loop: for (Pair<Node,Node> p1 : nodePairs) {
-                for (Pair<Node,Node> p2 : nodePairs2) {
-                    if (null!=Geometry.getSegmentSegmentIntersection(
-                            p1.a.getEastNorth(),p1.b.getEastNorth(),
-                            p2.a.getEastNorth(),p2.b.getEastNorth())) {
-                            newWays.add(anyway);
-                            count++;
-                            break loop;
+            loop: for (Pair<Node, Node> p1 : nodePairs) {
+                for (Pair<Node, Node> p2 : nodePairs2) {
+                    if (null != Geometry.getSegmentSegmentIntersection(
+                            p1.a.getEastNorth(), p1.b.getEastNorth(),
+                            p2.a.getEastNorth(), p2.b.getEastNorth())) {
+                        newWays.add(anyway);
+                        count++;
+                        break loop;
                     }
                 }
             }
@@ -125,22 +125,21 @@ public final class NodeWayUtils {
         return count;
     }
 
-
-        static int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays) {
+    static int addWaysIntersectingWay(Collection<Way> ways, Way w, Set<Way> newWays) {
         List<Pair<Node, Node>> nodePairs = w.getNodePairs(false);
-        int count=0;
+        int count = 0;
         for (Way anyway: ways) {
             if (anyway == w) continue;
             if (newWays.contains(anyway)) continue;
             List<Pair<Node, Node>> nodePairs2 = anyway.getNodePairs(false);
-            loop: for (Pair<Node,Node> p1 : nodePairs) {
-                for (Pair<Node,Node> p2 : nodePairs2) {
-                    if (null!=Geometry.getSegmentSegmentIntersection(
-                            p1.a.getEastNorth(),p1.b.getEastNorth(),
-                            p2.a.getEastNorth(),p2.b.getEastNorth())) {
-                            newWays.add(anyway);
-                            count++;
-                            break loop;
+            loop: for (Pair<Node, Node> p1 : nodePairs) {
+                for (Pair<Node, Node> p2 : nodePairs2) {
+                    if (null != Geometry.getSegmentSegmentIntersection(
+                            p1.a.getEastNorth(), p1.b.getEastNorth(),
+                            p2.a.getEastNorth(), p2.b.getEastNorth())) {
+                        newWays.add(anyway);
+                        count++;
+                        break loop;
                     }
                 }
             }
@@ -155,15 +154,15 @@ public final class NodeWayUtils {
      * @param newWays set to place the ways we found
      */
     public static int addWaysIntersectingWays(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
-        int count=0;
-        for (Way w : initWays){
-            count+=addWaysIntersectingWay(allWays, w, newWays);
+        int count = 0;
+        for (Way w : initWays) {
+            count += addWaysIntersectingWay(allWays, w, newWays);
         }
         return count;
     }
-    
+
     public static void addWaysConnectedToWays(Collection<Way> ways, Set<Way> newWays) {
-        for (Way w : ways){
+        for (Way w : ways) {
             NodeWayUtils.addWaysConnectedToWay(w, newWays);
         }
     }
@@ -184,140 +183,135 @@ public final class NodeWayUtils {
         return newNodes.size()-s;
     }
 
-    public static void addWaysIntersectingWaysRecursively
-        (Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
+    public static void addWaysIntersectingWaysRecursively(Collection<Way> allWays, Collection<Way> initWays, Set<Way> newWays) {
         Set<Way> foundWays = new HashSet<>();
         foundWays.addAll(initWays);
         newWays.addAll(initWays);
         Set<Way> newFoundWays;
 
-        int level=0,c;
+        int level = 0, c;
         do {
-             c=0;
-             newFoundWays = new HashSet<>();
-             for (Way w : foundWays){
-                  c+=addWaysIntersectingWay(allWays, w, newFoundWays,newWays);
-             }
-             foundWays = newFoundWays;
-             newWays.addAll(newFoundWays);
-             level++;
-//                 System.out.printf("%d: %d ways added to selection intersectiong\n",level,c);
-             if (c>maxWays1) {
-                    new Notification(
-                        tr("Too many ways are added: {0}!",c)
-                        ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
-                   return;
-             }
-        } while ( c >0 && level < maxLevel );
+            c = 0;
+            newFoundWays = new HashSet<>();
+            for (Way w : foundWays) {
+                c += addWaysIntersectingWay(allWays, w, newFoundWays, newWays);
+            }
+            foundWays = newFoundWays;
+            newWays.addAll(newFoundWays);
+            level++;
+            if (c > maxWays1) {
+                new Notification(
+                        tr("Too many ways are added: {0}!", c)
+                        ).setIcon(JOptionPane.WARNING_MESSAGE).show();
+                return;
+            }
+        } while (c > 0 && level < maxLevel);
     }
 
-    public static void addWaysConnectedToWaysRecursively
-            (Collection<Way> initWays, Set<Way> newWays)
-    {
-        //long t = System.currentTimeMillis();
-        int level=0,c;
+    public static void addWaysConnectedToWaysRecursively(Collection<Way> initWays, Set<Way> newWays) {
+        int level = 0, c;
         newWays.addAll(initWays);
         do {
-             c=0;
-             Set<Way> foundWays = new HashSet<>();
-             foundWays.addAll(newWays);
-             for (Way w : foundWays){
-                  c+=addWaysConnectedToWay(w, newWays);
-             }
-             level++;
-//                 System.out.printf("%d: %d ways added to selection\n",level,c);
-             if (c>maxWays) {
+            c = 0;
+            Set<Way> foundWays = new HashSet<>();
+            foundWays.addAll(newWays);
+            for (Way w : foundWays) {
+                c += addWaysConnectedToWay(w, newWays);
+            }
+            level++;
+            if (c > maxWays) {
                 new Notification(
-                    tr("Too many ways are added: {0}!",c)
-                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();                       
-               return;
-             }
-        } while ( c >0 && level < maxLevel );
-       // System.out.println("time = "+(System.currentTimeMillis()-t)+" ways = "+newWays.size());
+                        tr("Too many ways are added: {0}!", c)
+                        ).setIcon(JOptionPane.WARNING_MESSAGE).show();
+                return;
+            }
+        } while (c > 0 && level < maxLevel);
     }
 
     static void addMiddle(Set<Node> selectedNodes, Set<Node> newNodes) {
-        Iterator<Node> it=selectedNodes.iterator();
+        Iterator<Node> it = selectedNodes.iterator();
         Node n1 = it.next();
         Node n2 = it.next();
-        Set<Way> ways=new HashSet<>();
+        Set<Way> ways = new HashSet<>();
         ways.addAll(OsmPrimitive.getFilteredList(n1.getReferrers(), Way.class));
         for (Way w: ways) {
 
             if (w.isUsable() && w.containsNode(n2) && w.containsNode(n1)) {
                 // Way w goes from n1 to n2
-                List <Node> nodes= w.getNodes();
+                List<Node> nodes = w.getNodes();
                 int i1 = nodes.indexOf(n1);
                 int i2 = nodes.indexOf(n2);
                 int n = nodes.size();
-                if (i1>i2) { int p=i2; i2=i1; i1=p; } // now i1<i2
+                if (i1 > i2) {
+                    int p = i2; i2 = i1; i1 = p; // now i1<i2
+                }
                 if (w.isClosed()) {
-                        if ((i2-i1)*2 <= n ) { // i1 ... i2
-                            for (int i=i1+1;i!=i2; i++) {
-                                newNodes.add(nodes.get(i));
-                            }
-                        } else { // i2 ... n-1 0 1 ... i1
-                            for (int i=i2+1;i!=i1; i=(i+1)%n) {
-                                newNodes.add(nodes.get(i));
-                            }
+                    if ((i2-i1)*2 <= n) { // i1 ... i2
+                        for (int i = i1+1; i != i2; i++) {
+                            newNodes.add(nodes.get(i));
                         }
-                    } else {
-                        for (int i=i1+1;i<i2;i++) {
+                    } else { // i2 ... n-1 0 1 ... i1
+                        for (int i = i2+1; i != i1; i = (i+1) % n) {
                             newNodes.add(nodes.get(i));
                         }
                     }
+                } else {
+                    for (int i = i1+1; i < i2; i++) {
+                        newNodes.add(nodes.get(i));
+                    }
+                }
             }
         }
         if (newNodes.isEmpty()) {
-                new Notification(
+            new Notification(
                     tr("Please select two nodes connected by way!")
-                ).setIcon(JOptionPane.WARNING_MESSAGE).show();  
-            }
+                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();
+        }
     }
-    
+
     static boolean addAreaBoundary(Way firstWay, Set<Way> newWays, boolean goingLeft) {
-        Way w=firstWay;
+        Way w = firstWay;
         Node curNode = w.lastNode();
         Node prevNode = w.getNode(w.getNodes().size()-2);
         Set<Way> newestWays = new HashSet<>();
-        while(true) {
+        while (true) {
 
             Node nextNode, endNode, otherEnd, preLast;
             Way nextWay;
 
             EastNorth en;
-            double startHeading,bestAngle;
+            double startHeading, bestAngle;
 
             en = curNode.getEastNorth();
-            startHeading = prevNode.getEastNorth().heading( en );
+            startHeading = prevNode.getEastNorth().heading(en);
 
-            bestAngle = goingLeft ? -1e5 : 1e5 ;
-            otherEnd=null; nextWay=null;
-            
+            bestAngle = goingLeft ? -1e5 : 1e5;
+            otherEnd = null;
+            nextWay = null;
+
             for (OsmPrimitive ref : curNode.getReferrers()) {
-                if (ref instanceof Way && ref!=w && ref.isSelectable()) {
+                if (ref instanceof Way && ref != w && ref.isSelectable()) {
                     //
                     Way w2 = (Way) ref;
                     //  -----[prevNode]-(curNode)-[nextNode]------[preLast]-(endNode)
                     //          w           |              w2
-                    if (w2.getNodesCount()<2 || w2.isClosed()) continue;
-
+                    if (w2.getNodesCount() < 2 || w2.isClosed()) continue;
 
                     if (curNode == w2.firstNode()) {
                         nextNode = w2.getNode(1);
                         preLast = w2.getNode(w2.getNodesCount()-2);
-                        endNode = w2.lastNode();
-                    } // forward direction
-                    else if (curNode == w2.lastNode()) {
+                        endNode = w2.lastNode(); // forward direction
+                    } else if (curNode == w2.lastNode()) {
                         nextNode = w2.getNode(w2.getNodesCount()-2);
                         preLast = w2.getNode(1);
-                        endNode = w2.firstNode();
-                    } // backward direction
-                        else continue; // we came to some way middle node
+                        endNode = w2.firstNode(); // backward direction
+                    } else continue; // we came to some way middle node
 
                     double angle = startHeading -Math.PI - en.heading(nextNode.getEastNorth());
-                    while (angle<0) angle+=2*Math.PI;
-                    
+                    while (angle < 0) {
+                        angle += 2*Math.PI;
+                    }
+
                     if (angle < bestAngle ^ goingLeft) {
                         bestAngle = angle;
                         otherEnd = endNode;
@@ -326,17 +320,17 @@ public final class NodeWayUtils {
                     }
                 }
             }
-            if (firstWay == nextWay ) {
-                //we came to starting way, but not not the right end 
-                if (otherEnd==firstWay.firstNode()) return false;
+            if (firstWay == nextWay) {
+                //we came to starting way, but not not the right end
+                if (otherEnd == firstWay.firstNode()) return false;
                 newWays.addAll(newestWays);
-                return true; // correct loop found 
+                return true; // correct loop found
             }
             if (newestWays.contains(nextWay)) {
                 // P - like loop found
                 return false;
             }
-            if (nextWay != null) { 
+            if (nextWay != null) {
                 newestWays.add(nextWay);
                 curNode = otherEnd;
                 w = nextWay;
@@ -344,21 +338,21 @@ public final class NodeWayUtils {
             } else {
                 // no closed loop found
                 return false;
-            } 
+            }
         }
     }
-    
+
     static boolean isPointInsideMultipolygon(EastNorth p, Relation rel) {
         Set<Way> usedWays = OsmPrimitive.getFilteredSet(rel.getMemberPrimitives(), Way.class);
         return isPointInsidePolygon(p, buildPointList(usedWays));
     }
-            
+
     static void addAllInsideMultipolygon(DataSet data, Relation rel, Set<Way> newWays, Set<Node> newNodes) {
         if (!rel.isMultipolygon()) return;
         BBox box = rel.getBBox();
         Collection<Way> usedWays = rel.getMemberPrimitives(Way.class);
         List<EastNorth> polyPoints = buildPointList(usedWays);
-       
+
         List<Node> searchNodes = data.searchNodes(box);
         Set<Node> newestNodes = new HashSet<>();
         Set<Way> newestWays = new HashSet<>();
@@ -368,7 +362,7 @@ public final class NodeWayUtils {
                 newestNodes.add(n);
             }
         }
-        
+
         List<Way> searchWays = data.searchWays(box);
         for (Way w : searchWays) {
             if (newestNodes.containsAll(w.getNodes())) {
@@ -379,7 +373,7 @@ public final class NodeWayUtils {
             newestNodes.removeAll(w.getNodes());
             // do not select nodes of already selected ways
         }
-        
+
         newNodes.addAll(newestNodes);
         newWays.addAll(newestWays);
     }
@@ -388,7 +382,7 @@ public final class NodeWayUtils {
         if (!way.isClosed()) return;
         BBox box = way.getBBox();
         Iterable<EastNorth> polyPoints = getWayPoints(way);
-        
+
         List<Node> searchNodes = data.searchNodes(box);
         Set<Node> newestNodes = new HashSet<>();
         Set<Way> newestWays = new HashSet<>();
@@ -398,22 +392,22 @@ public final class NodeWayUtils {
                 newestNodes.add(n);
             }
         }
-        
+
         List<Way> searchWays = data.searchWays(box);
         for (Way w : searchWays) {
             if (newestNodes.containsAll(w.getNodes())) {
                 newestWays.add(w);
             }
         }
-        
+
         newNodes.addAll(newestNodes);
         newWays.addAll(newestWays);
     }
-    
+
     public static boolean isPointInsidePolygon(EastNorth point, Iterable<EastNorth> polygonPoints) {
         int n = getRayIntersectionsCount(point, polygonPoints);
-        if (n<0) return true; // we are near node or near edge
-        return (n%2==1);
+        if (n < 0) return true; // we are near node or near edge
+        return (n % 2 == 1);
     }
 
     /**
@@ -422,43 +416,43 @@ public final class NodeWayUtils {
      * @return 0 =  not inside polygon, 1 = strictly inside, 2 = near edge, 3 = near vertex
      */
     public static int getRayIntersectionsCount(EastNorth point, Iterable<EastNorth> polygonPoints) {
-        if (point==null) return 0;
+        if (point == null) return 0;
         EastNorth oldPoint = null;
-        double n1,n2,n3,e1,e2,e3,d;
-        int interCount=0;
-        
+        double n1, n2, n3, e1, e2, e3, d;
+        int interCount = 0;
+
         for (EastNorth curPoint : polygonPoints) {
-            if (oldPoint==null || curPoint==null) {
+            if (oldPoint == null || curPoint == null) {
                 oldPoint = curPoint;
                 continue;
             }
-            n1 = curPoint.north(); n2 = oldPoint.north();  n3 =  point.north();
-            e1 = curPoint.east(); e2 = oldPoint.east();  e3 =  point.east();
-            
-            if (Math.abs(n1-n3)<1e-5 && Math.abs(e1-e3)<1e-5) return -3; // vertex
-            if (Math.abs(n2-n3)<1e-5 && Math.abs(e2-e3)<1e-5) return -3; // vertex
-            
+            n1 = curPoint.north(); n2 = oldPoint.north(); n3 = point.north();
+            e1 = curPoint.east(); e2 = oldPoint.east(); e3 = point.east();
+
+            if (Math.abs(n1-n3) < 1e-5 && Math.abs(e1-e3) < 1e-5) return -3; // vertex
+            if (Math.abs(n2-n3) < 1e-5 && Math.abs(e2-e3) < 1e-5) return -3; // vertex
+
             // looking at oldPoint-curPoint segment
-            if ( n1 > n2) {
+            if (n1 > n2) {
                 if (n1 > n3 && n3 >= n2) {
-                    n1-=n3; n2-=n3; e1-=e3; e2-=e3;
+                    n1 -= n3; n2 -= n3; e1 -= e3; e2 -= e3;
                     d = e1*n2 - n1*e2;
-                    if (d<-1e-5) {
-                        interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >=0
-                    } else if (d<=1e-5) return -2; // boundary detected
+                    if (d < -1e-5) {
+                        interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >= 0
+                    } else if (d <= 1e-5) return -2; // boundary detected
                 }
             } else if (n1 == n2) {
                 if (n1 == n3) {
-                    e1-=e3; e2-=e3;
-                    if ((e1 <=0 && e2 >= 0) || (e1 >=0 && e2 <= 0)) return -2;// boundary detected
+                    e1 -= e3; e2 -= e3;
+                    if ((e1 <= 0 && e2 >= 0) || (e1 >= 0 && e2 <= 0)) return -2; // boundary detected
                 }
             } else {
                 if (n1 <= n3 && n3 < n2) {
-                    n1-=n3; n2-=n3; e1-=e3; e2-=e3;
+                    n1 -= n3; n2 -= n3; e1 -= e3; e2 -= e3;
                     d = e1*n2 - n1*e2;
-                    if (d>1e-5) {
-                        interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >=0
-                    } else if (d>=-1e-5) return -2; // boundary detected
+                    if (d > 1e-5) {
+                        interCount++; // there is OX intersecthion at e = (e1n2-e2n1)/(n2-n1) >= 0
+                    } else if (d >= -1e-5) return -2; // boundary detected
                 }
             }
             oldPoint = curPoint;
@@ -466,11 +460,11 @@ public final class NodeWayUtils {
         // System.out.printf("Intersected intercount %d %s\n",interCount, point.toString());
         return interCount;
     }
-    
+
     public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset) {
         return selectAllInside(selected, dataset, true);
     }
-    
+
     public static Collection<OsmPrimitive> selectAllInside(Collection<OsmPrimitive> selected, DataSet dataset, boolean ignoreNodesOfFoundWays) {
         Set<Way> selectedWays = OsmPrimitive.getFilteredSet(selected, Way.class);
         Set<Relation> selectedRels = OsmPrimitive.getFilteredSet(selected, Relation.class);
@@ -487,21 +481,21 @@ public final class NodeWayUtils {
         // select nodes and ways inside slexcted ways and multipolygons
         if (!selectedWays.isEmpty()) {
             for (Way w: selectedWays) {
-                addAllInsideWay(dataset,w,newWays,newNodes);
+                addAllInsideWay(dataset, w, newWays, newNodes);
             }
         }
         if (!selectedRels.isEmpty()) {
             for (Relation r: selectedRels) {
-                addAllInsideMultipolygon(dataset,r,newWays,newNodes);
+                addAllInsideMultipolygon(dataset, r, newWays, newNodes);
             }
         }
         if (ignoreNodesOfFoundWays) {
             for (Way w : newWays) {
                 newNodes.removeAll(w.getNodes());
                 // do not select nodes of already selected ways
-            }            
+            }
         }
-        
+
         Set<OsmPrimitive> insideSelection = new HashSet<>();
         if (!newWays.isEmpty() || !newNodes.isEmpty()) {
             insideSelection.addAll(newWays);
@@ -520,7 +514,7 @@ public final class NodeWayUtils {
         }
         return points;
     }
-    
+
     public static Iterable<EastNorth> getWayPoints(final Way w) {
         return new Iterable<EastNorth>() {
             @Override
@@ -530,9 +524,11 @@ public final class NodeWayUtils {
                     @Override public boolean hasNext() {
                         return idx < w.getNodesCount();
                     }
+
                     @Override public EastNorth next() {
                         return w.getNode(idx++).getEastNorth();
                     }
+
                     @Override public void remove() {
                         throw new UnsupportedOperationException();
                     }

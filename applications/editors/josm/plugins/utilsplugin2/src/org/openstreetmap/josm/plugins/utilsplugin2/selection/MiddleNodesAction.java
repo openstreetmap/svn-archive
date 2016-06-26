@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2011 by Alexei Kasatkin and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -19,7 +19,7 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- *    Selects nodes between two selected
+ * Selects nodes between two selected
  */
 public class MiddleNodesAction extends JosmAction {
 
@@ -27,8 +27,7 @@ public class MiddleNodesAction extends JosmAction {
 
     public MiddleNodesAction() {
         super(tr("Middle nodes"), "midnodes", tr("Select middle nodes"),
-                Shortcut.registerShortcut("tools:midnodes", tr("Tool: {0}","Middle nodes"),
-                KeyEvent.VK_E,  Shortcut.ALT_SHIFT), true);
+                Shortcut.registerShortcut("tools:midnodes", tr("Tool: {0}", "Middle nodes"), KeyEvent.VK_E, Shortcut.ALT_SHIFT), true);
         putValue("help", ht("/Action/MiddleNodes"));
     }
 
@@ -40,14 +39,14 @@ public class MiddleNodesAction extends JosmAction {
         // if no 2 nodes and no ways are selected, do nothing
         if (selectedNodes.size() != 2) {
             new Notification(
-                tr("Please select two nodes connected by way!")
-            ).setIcon(JOptionPane.WARNING_MESSAGE).show();
+                    tr("Please select two nodes connected by way!")
+                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();
             return;
         }
 
-        Set<Node> newNodes = new HashSet <>();
+        Set<Node> newNodes = new HashSet<>();
         NodeWayUtils.addMiddle(selectedNodes, newNodes);
-        
+
         // select only newly found nodes
         newNodes.removeAll(selectedNodes);
         getLayerManager().getEditDataSet().addSelected(newNodes);

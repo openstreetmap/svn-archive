@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2011 by Ole Jørgen Brønner
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.curves;
 
 import java.util.ArrayList;
@@ -20,7 +20,12 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 
-public class CircleArcMaker {
+public final class CircleArcMaker {
+
+    private CircleArcMaker() {
+        // Hide default constructor for utilities classes
+    }
+
     public static Collection<Command> doCircleArc(List<Node> selectedNodes, List<Way> selectedWays, int angleSeparation) {
         Collection<Command> cmds = new LinkedList<>();
 
@@ -94,7 +99,7 @@ public class CircleArcMaker {
                 nodesHaveBeenChoosen = true;
             }
             // Fix #7341. Find the first way having all nodes in common to sort them in its nodes order
-            List<Node> consideredNodes = Arrays.asList(new Node[]{n1,n2,n3});
+            List<Node> consideredNodes = Arrays.asList(new Node[]{n1, n2, n3});
             for (Way w : selectedWays) {
                 final List<Node> nodes = w.getNodes();
                 if (nodes.containsAll(consideredNodes)) {
@@ -110,7 +115,7 @@ public class CircleArcMaker {
                     break;
                 }
             }
-            
+
             for (Node n : consideredNodes) {
                 targetWays.addAll(OsmPrimitive.getFilteredList(n.getReferrers(), Way.class));
             }
@@ -132,26 +137,23 @@ public class CircleArcMaker {
         //// Create the new arc nodes. Insert anchor nodes at correct positions.
         List<Node> arcNodes = new ArrayList<>(points.size());
         arcNodes.add(n1);
-        {
-            int i = 1;
-            for (EastNorth p : slice(points, 1, -2)) {
-                //            if (p == p2) {
-                if (i == p2Index.value) {
-                    Node n2new = new Node(n2);
-                    n2new.setEastNorth(p);
-                    arcNodes.add(n2); // add the original n2, or else we can't find it in the target ways
-                    cmds.add(new ChangeCommand(n2, n2new));
-                } else {
-                    Node n = new Node(p);
-                    arcNodes.add(n);
-                    cmds.add(new AddCommand(n));
-                }
-                i++;
+        int i = 1;
+        for (EastNorth p : slice(points, 1, -2)) {
+            if (i == p2Index.value) {
+                Node n2new = new Node(n2);
+                n2new.setEastNorth(p);
+                arcNodes.add(n2); // add the original n2, or else we can't find it in the target ways
+                cmds.add(new ChangeCommand(n2, n2new));
+            } else {
+                Node n = new Node(p);
+                arcNodes.add(n);
+                cmds.add(new AddCommand(n));
             }
+            i++;
         }
         arcNodes.add(n3);
 
-        Node[] anchorNodes = { n1, n2, n3 };
+        Node[] anchorNodes = {n1, n2, n3};
         //// "Fuse" the arc with all target ways
         fuseArc(anchorNodes, arcNodes, targetWays, cmds);
 
@@ -358,6 +360,7 @@ public class CircleArcMaker {
         }
         return a;
     }
+
     public static class ReturnValue<T> {
         public T value;
     }

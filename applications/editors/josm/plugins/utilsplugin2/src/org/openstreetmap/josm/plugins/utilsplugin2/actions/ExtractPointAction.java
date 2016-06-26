@@ -1,16 +1,18 @@
-// License: GPL. Copyright 2011 by Alexei Kasatkin and Martin Ždila
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
-import java.awt.Point;
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
@@ -18,9 +20,10 @@ import org.openstreetmap.josm.command.ChangeNodesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.MoveCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
-
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -34,8 +37,8 @@ public class ExtractPointAction extends JosmAction {
     public ExtractPointAction() {
         super(tr("Extract node"), "extnode",
                 tr("Extracts node from a way"),
-                Shortcut.registerShortcut("tools:extnode", tr("Tool: {0}","Extract node"),
-                KeyEvent.VK_J, Shortcut.ALT_SHIFT), true);
+                Shortcut.registerShortcut("tools:extnode", tr("Tool: {0}", "Extract node"),
+                        KeyEvent.VK_J, Shortcut.ALT_SHIFT), true);
         putValue("help", ht("/Action/ExtractNode"));
     }
 
@@ -43,9 +46,9 @@ public class ExtractPointAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         List<Node> selectedNodes = OsmPrimitive.getFilteredList(selection, Node.class);
-        if (selectedNodes.size()!=1) {
+        if (selectedNodes.size() != 1) {
             new Notification(tr("This tool extracts node from its ways and requires single node to be selected."))
-                .setIcon(JOptionPane.WARNING_MESSAGE).show();
+            .setIcon(JOptionPane.WARNING_MESSAGE).show();
             return;
         }
         Node nd = selectedNodes.get(0);
@@ -54,20 +57,20 @@ public class ExtractPointAction extends JosmAction {
 
         Point p = Main.map.mapView.getMousePosition();
         if (p != null)
-            cmds.add(new MoveCommand(nd,Main.map.mapView.getLatLon(p.x, p.y)));
+            cmds.add(new MoveCommand(nd, Main.map.mapView.getLatLon(p.x, p.y)));
         List<OsmPrimitive> refs = nd.getReferrers();
         cmds.add(new AddCommand(ndCopy));
-        
+
         for (OsmPrimitive pr: refs) {
             if (pr instanceof Way) {
-                Way w=(Way)pr;
+                Way w = (Way) pr;
                 List<Node> nodes = w.getNodes();
-                int idx=nodes.indexOf(nd);
+                int idx = nodes.indexOf(nd);
                 nodes.set(idx, ndCopy); // replace node with its copy
                 cmds.add(new ChangeNodesCommand(w, nodes));
             }
         }
-        if (cmds.size()>1) Main.main.undoRedo.add(new SequenceCommand(tr("Extract node from line"),cmds));
+        if (cmds.size() > 1) Main.main.undoRedo.add(new SequenceCommand(tr("Extract node from line"), cmds));
     }
 
     @Override
@@ -81,6 +84,6 @@ public class ExtractPointAction extends JosmAction {
             setEnabled(false);
             return;
         }
-        setEnabled(selection.size()==1);
+        setEnabled(selection.size() == 1);
     }
 }

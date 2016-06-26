@@ -27,13 +27,15 @@ import org.openstreetmap.josm.tools.Geometry;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class AddIntersectionsAction extends JosmAction {
-    
+
     /**
      * Constructs a new {@code AddIntersectionsAction}.
      */
     public AddIntersectionsAction() {
         super(tr("Add nodes at intersections"), "addintersect", tr("Add missing nodes at intersections of selected ways."),
-                Shortcut.registerShortcut("tools:addintersect", tr("Tool: {0}", tr("Add nodes at intersections")), KeyEvent.VK_I, Shortcut.SHIFT), true);
+                Shortcut.registerShortcut("tools:addintersect", tr("Tool: {0}", tr("Add nodes at intersections")),
+                        KeyEvent.VK_I, Shortcut.SHIFT),
+                true);
         putValue("help", ht("/Action/AddIntersections"));
     }
 
@@ -44,23 +46,23 @@ public class AddIntersectionsAction extends JosmAction {
         List<Way> ways = OsmPrimitive.getFilteredList(getLayerManager().getEditDataSet().getSelected(), Way.class);
         if (ways.isEmpty()) {
             new Notification(
-               tr("Please select one or more ways with intersections of segments."))
-               .setIcon(JOptionPane.INFORMATION_MESSAGE) 
-               .show();
+                    tr("Please select one or more ways with intersections of segments."))
+            .setIcon(JOptionPane.INFORMATION_MESSAGE)
+            .show();
             return;
         }
 
         LinkedList<Command> cmds = new LinkedList<>();
         Geometry.addIntersections(ways, false, cmds);
         if (!cmds.isEmpty()) {
-            Main.main.undoRedo.add(new SequenceCommand(tr("Add nodes at intersections"),cmds));
+            Main.main.undoRedo.add(new SequenceCommand(tr("Add nodes at intersections"), cmds));
             Set<Node> nodes = new HashSet<>(10);
             // find and select newly added nodes
-            for (Command cmd: cmds) if (cmd instanceof AddCommand){
+            for (Command cmd: cmds) if (cmd instanceof AddCommand) {
                 Collection<? extends OsmPrimitive> pp = cmd.getParticipatingPrimitives();
-                for ( OsmPrimitive p : pp) { // find all affected nodes
+                for (OsmPrimitive p : pp) { // find all affected nodes
                     if (p instanceof Node && p.isNew())
-                        nodes.add((Node)p);
+                        nodes.add((Node) p);
                 }
                 if (!nodes.isEmpty()) {
                     getLayerManager().getEditDataSet().setSelected(nodes);

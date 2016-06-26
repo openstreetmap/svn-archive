@@ -1,16 +1,16 @@
-// License: GPL v2 or later. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.search;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.search.SearchCompiler;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.utilsplugin2.selection.NodeWayUtils;
-
 
 /**
  * Matches all ways connected to [nodes and ways which match the expression]..
@@ -61,9 +61,9 @@ public class ConnectedMatch extends SearchCompiler.UnaryMatch {
             init(all); // lazy initialization
         }
         if (osm instanceof Way) {
-            return connected.contains((Way) osm);
+            return connected.contains(osm);
         }
         return false;
     }
-    
+
 }

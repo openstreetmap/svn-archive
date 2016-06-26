@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2011 by Alexei Kasatkin
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -17,29 +17,29 @@ import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
- *    Extends current selection by selecting nodes on all touched ways
+ * Extends current selection by selecting nodes on all touched ways
  */
 public class SelectAllInsideAction extends JosmAction {
 
     public SelectAllInsideAction() {
         super(tr("All inside [testing]"), "selinside", tr("Select all inside selected polygons"),
-                Shortcut.registerShortcut("tools:selinside", tr("Tool: {0}","All inside"),
-                KeyEvent.VK_I, Shortcut.ALT_SHIFT), true);
+                Shortcut.registerShortcut("tools:selinside", tr("Tool: {0}", "All inside"),
+                        KeyEvent.VK_I, Shortcut.ALT_SHIFT), true);
         putValue("help", ht("/Action/SelectAllInside"));
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = getLayerManager().getEditDataSet();
         Collection<OsmPrimitive> insideSelected = NodeWayUtils.selectAllInside(ds.getSelected(), ds, true);
-        
+
         if (!insideSelected.isEmpty()) {
             ds.addSelected(insideSelected);
-        } else{
+        } else {
             new Notification(
-                tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"))
-                .setIcon(JOptionPane.WARNING_MESSAGE)
-                .show();  
+                    tr("Nothing found. Please select some closed ways or multipolygons to find all primitives inside them!"))
+            .setIcon(JOptionPane.WARNING_MESSAGE)
+            .show();
         }
     }
 
@@ -56,6 +56,4 @@ public class SelectAllInsideAction extends JosmAction {
         }
         setEnabled(!selection.isEmpty());
     }
-
-
 }

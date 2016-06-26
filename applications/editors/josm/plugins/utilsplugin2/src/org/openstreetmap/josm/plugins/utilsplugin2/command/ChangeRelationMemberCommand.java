@@ -1,4 +1,4 @@
-// License: GPL v2 or later. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.command;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -43,7 +43,7 @@ public class ChangeRelationMemberCommand extends Command {
         }
         relation.setMembers(newrms);
     }
-    
+
     @Override
     public boolean executeCommand() {
         oldModified = relation.isModified();

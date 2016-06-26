@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.latlon;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -6,19 +6,18 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
 import java.util.Collection;
 import java.util.LinkedList;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.AddCommand;
-import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.actions.JosmAction;
 
 /**
  * This action displays a dialog where the user can enter a latitude and longitude,
@@ -46,7 +45,7 @@ public final class LatLonAction extends JosmAction {
         }
 
         dialog.showDialog();
-        
+
         if (dialog.getValue() != 1)
             return;
 

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -42,12 +43,13 @@ import edu.princeton.cs.algs4.AssignmentProblem;
  * @author joshdoe
  */
 public final class ReplaceGeometryUtils {
+
+    private ReplaceGeometryUtils() {
+        // Hide default constructor for utilities classes
+    }
+
     /**
      * Replace new or uploaded object with new object
-     * 
-     * @param firstObject
-     * @param secondObject
-     * @return 
      */
     public static ReplaceGeometryCommand buildReplaceWithNewCommand(OsmPrimitive firstObject, OsmPrimitive secondObject) {
         if (firstObject instanceof Node && secondObject instanceof Node) {
@@ -59,17 +61,14 @@ public final class ReplaceGeometryUtils {
         } else if (secondObject instanceof Node) {
             return buildUpgradeNodeCommand((Node) secondObject, firstObject);
         } else {
-            throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
+            throw new IllegalArgumentException(
+                    tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
     }
-    
+
     /**
      * Replace subjectObject geometry with referenceObject geometry and merge tags
      * and relation memberships.
-     * 
-     * @param subjectObject
-     * @param referenceSubject
-     * @return 
      */
     public static ReplaceGeometryCommand buildReplaceCommand(OsmPrimitive subjectObject, OsmPrimitive referenceSubject) {
         if (subjectObject instanceof Node && referenceSubject instanceof Node) {
@@ -82,15 +81,13 @@ public final class ReplaceGeometryUtils {
             // TODO: fix this illogical reversal?
             return buildUpgradeNodeCommand((Node) referenceSubject, subjectObject);
         } else {
-            throw new IllegalArgumentException(tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
+            throw new IllegalArgumentException(
+                    tr("This tool can only replace a node, upgrade a node to a way or a multipolygon, or replace a way with a way."));
         }
     }
 
     /**
      * Replace a new or uploaded node with a new node
-     * @param firstNode
-     * @param secondNode
-     * @return 
      */
     public static ReplaceGeometryCommand buildReplaceNodeWithNewCommand(Node firstNode, Node secondNode) {
         if (firstNode.isNew() && !secondNode.isNew())
@@ -102,13 +99,9 @@ public final class ReplaceGeometryUtils {
             // node to second
             return buildReplaceNodeCommand(firstNode, secondNode);
     }
-    
+
     /**
      * Replace a node with another node (similar to MergeNodesAction)
-     *
-     * @param subjectNode
-     * @param referenceNode
-     * @return
      */
     public static ReplaceGeometryCommand buildReplaceNodeCommand(Node subjectNode, Node referenceNode) {
         if (!OsmPrimitive.getFilteredList(subjectNode.getReferrers(), Way.class).isEmpty()) {
@@ -127,7 +120,7 @@ public final class ReplaceGeometryUtils {
                 tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands);
     }
-    
+
     /**
      * Upgrade a node to a way or multipolygon
      *
@@ -166,7 +159,7 @@ public final class ReplaceGeometryUtils {
         }
 
         List<Command> commands = new ArrayList<>();
-        AbstractMap<String, String> nodeTags = (AbstractMap<String, String>) subjectNode.getKeys();
+        AbstractMap<String, String> nodeTags = subjectNode.getKeys();
 
         // merge tags
         try {
@@ -209,12 +202,12 @@ public final class ReplaceGeometryUtils {
                 tr("Replace geometry for node {0}", subjectNode.getDisplayName(DefaultNameFormatter.getInstance())),
                 commands);
     }
-    
+
     public static ReplaceGeometryCommand buildReplaceWayWithNewCommand(List<Way> selection) {
         // determine which way will be replaced and which will provide the geometry
         boolean overrideNewCheck = false;
         int idxNew = selection.get(0).isNew() ? 0 : 1;
-        if( selection.get(1-idxNew).isNew() ) {
+        if (selection.get(1-idxNew).isNew()) {
             // if both are new, select the one with all the DB nodes
             boolean areNewNodes = false;
             for (Node n : selection.get(0).getNodes()) {
@@ -232,28 +225,28 @@ public final class ReplaceGeometryUtils {
         }
         Way referenceWay = selection.get(idxNew);
         Way subjectWay = selection.get(1 - idxNew);
-        
-        if( !overrideNewCheck && (subjectWay.isNew() || !referenceWay.isNew()) ) {
+
+        if (!overrideNewCheck && (subjectWay.isNew() || !referenceWay.isNew())) {
             throw new ReplaceGeometryException(
                     tr("Please select one way that exists in the database and one new way with correct geometry."));
         }
         return buildReplaceWayCommand(subjectWay, referenceWay);
     }
-    
+
     public static ReplaceGeometryCommand buildReplaceWayCommand(Way subjectWay, Way referenceWay) {
 
         Area a = Main.getLayerManager().getEditDataSet().getDataSourceArea();
         if (!isInArea(subjectWay, a) || !isInArea(referenceWay, a)) {
             throw new ReplaceGeometryException(tr("The ways must be entirely within the downloaded area."));
         }
-        
+
         if (hasImportantNode(referenceWay, subjectWay)) {
             throw new ReplaceGeometryException(
                     tr("The way to be replaced cannot have any nodes with properties or relation memberships unless they belong to both ways."));
         }
 
         List<Command> commands = new ArrayList<>();
-                
+
         // merge tags
         try {
             commands.addAll(getTagConflictResolutionCommands(referenceWay, subjectWay));
@@ -262,22 +255,22 @@ public final class ReplaceGeometryUtils {
             Main.trace(e);
             return null;
         }
-        
+
         // Prepare a list of nodes that are not used anywhere except in the way
         List<Node> nodePool = getUnimportantNodes(subjectWay);
 
         // And the same for geometry, list nodes that can be freely deleted
         List<Node> geometryPool = new LinkedList<>();
-        for( Node node : referenceWay.getNodes() ) {
+        for (Node node : referenceWay.getNodes()) {
             List<OsmPrimitive> referrers = node.getReferrers();
-            if( node.isNew() && !node.isDeleted() && referrers.size() == 1
+            if (node.isNew() && !node.isDeleted() && referrers.size() == 1
                     && referrers.get(0).equals(referenceWay) && !subjectWay.containsNode(node)
                     && !hasInterestingKey(node) && !geometryPool.contains(node))
                 geometryPool.add(node);
         }
 
         boolean useRobust = Main.pref.getBoolean("utilsplugin2.replace-geometry.robustAssignment", true);
-        
+
         // Find new nodes that are closest to the old ones, remove matching old ones from the pool
         // Assign node moves with least overall distance moved
         Map<Node, Node> nodeAssoc = new HashMap<>();
@@ -286,7 +279,7 @@ public final class ReplaceGeometryUtils {
                 int gLen = geometryPool.size();
                 int nLen = nodePool.size();
                 int N = Math.max(gLen, nLen);
-                double cost[][] = new double[N][N];
+                double[][] cost = new double[N][N];
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < N; j++) {
                         cost[i][j] = Double.MAX_VALUE;
@@ -318,12 +311,11 @@ public final class ReplaceGeometryUtils {
                     for (Node n : nodeAssoc.values()) {
                         nodePool.remove(n);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     useRobust = false;
                     new Notification(
-                        tr("Exceeded iteration limit for robust method, using simpler method.")
-                    ).setIcon(JOptionPane.WARNING_MESSAGE).show();     
+                            tr("Exceeded iteration limit for robust method, using simpler method.")
+                            ).setIcon(JOptionPane.WARNING_MESSAGE).show();
                     nodeAssoc = new HashMap<>();
                 }
             }
@@ -340,22 +332,25 @@ public final class ReplaceGeometryUtils {
         }
 
         // Now that we have replacement list, move all unused new nodes to nodePool (and delete them afterwards)
-        for( Node n : geometryPool )
-            if( nodeAssoc.containsKey(n) )
+        for (Node n : geometryPool) {
+            if (nodeAssoc.containsKey(n))
                 nodePool.add(n);
+        }
 
         // And prepare a list of nodes with all the replacements
         List<Node> geometryNodes = referenceWay.getNodes();
-        for( int i = 0; i < geometryNodes.size(); i++ )
-            if( nodeAssoc.containsKey(geometryNodes.get(i)) )
+        for (int i = 0; i < geometryNodes.size(); i++) {
+            if (nodeAssoc.containsKey(geometryNodes.get(i)))
                 geometryNodes.set(i, nodeAssoc.get(geometryNodes.get(i)));
+        }
 
         // Now do the replacement
         commands.add(new ChangeNodesCommand(subjectWay, geometryNodes));
 
         // Move old nodes to new positions
-        for( Node node : nodeAssoc.keySet() )
+        for (Node node : nodeAssoc.keySet()) {
             commands.add(new MoveCommand(nodeAssoc.get(node), node.getCoor()));
+        }
 
         // Remove geometry way from selection
         Main.getLayerManager().getEditDataSet().clearSelection(referenceWay);
@@ -364,7 +359,7 @@ public final class ReplaceGeometryUtils {
         commands.add(new DeleteCommand(referenceWay));
 
         // Delete nodes that are not used anymore
-        if( !nodePool.isEmpty() )
+        if (!nodePool.isEmpty())
             commands.add(new DeleteCommand(nodePool));
 
         // Two items in undo stack: change original way and delete geometry way
@@ -375,9 +370,6 @@ public final class ReplaceGeometryUtils {
 
     /**
      * Create a list of nodes that are not used anywhere except in the way.
-     *
-     * @param way
-     * @return 
      */
     protected static List<Node> getUnimportantNodes(Way way) {
         List<Node> nodePool = new LinkedList<>();
@@ -390,13 +382,10 @@ public final class ReplaceGeometryUtils {
         }
         return nodePool;
     }
-    
+
     /**
      * Checks if a way has at least one important node (e.g. interesting tag,
      * role membership), and thus cannot be safely modified.
-     * 
-     * @param way
-     * @return 
      */
     protected static boolean hasImportantNode(Way geometry, Way way) {
         for (Node n : way.getNodes()) {
@@ -416,7 +405,7 @@ public final class ReplaceGeometryUtils {
         }
         return false;
     }
-    
+
     protected static boolean hasInterestingKey(OsmPrimitive object) {
         for (String key : object.getKeys().keySet()) {
             if (!OsmPrimitive.isUninterestingKey(key)) {
@@ -433,7 +422,7 @@ public final class ReplaceGeometryUtils {
         }
         return false;
     }
-    
+
     protected static boolean isInArea(Way way, Area area) {
         if (area == null) {
             return true;
@@ -447,8 +436,8 @@ public final class ReplaceGeometryUtils {
 
         return true;
     }
-    
-     /**
+
+    /**
      * Merge tags from source to target object, showing resolution dialog if
      * needed.
      *
@@ -463,23 +452,23 @@ public final class ReplaceGeometryUtils {
         return CombinePrimitiveResolverDialog.launchIfNecessary(
                 TagCollection.unionOfAllPrimitives(primitives), primitives, Collections.singleton(target));
     }
-    
+
     /**
      * Find node from the collection which is nearest to <tt>node</tt>. Max distance is taken in consideration.
      * @return null if there is no such node.
      */
-    protected static Node findNearestNode( Node node, Collection<Node> nodes ) {
-        if( nodes.contains(node) )
+    protected static Node findNearestNode(Node node, Collection<Node> nodes) {
+        if (nodes.contains(node))
             return node;
-        
+
         Node nearest = null;
         // TODO: use meters instead of degrees, but do it fast
         double distance = Double.parseDouble(Main.pref.get("utilsplugin2.replace-geometry.max-distance", "1"));
         LatLon coor = node.getCoor();
 
-        for( Node n : nodes ) {
+        for (Node n : nodes) {
             double d = n.getCoor().distance(coor);
-            if( d < distance ) {
+            if (d < distance) {
                 distance = d;
                 nearest = n;
             }

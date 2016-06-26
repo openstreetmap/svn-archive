@@ -1,16 +1,27 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.*;
-import java.util.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Predicate;
 import org.openstreetmap.josm.tools.Shortcut;
-import java.awt.event.ActionEvent;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Utils;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Remembers tags of selected object(s) and when clicked, pastes them onto selection.
@@ -34,53 +45,54 @@ public class TagBufferAction extends JosmAction {
      */
     public TagBufferAction() {
         super(TITLE, "dumbutils/tagbuffer", tr("Pastes tags of previously selected object(s)"),
-                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Copy tags from previous selection")), KeyEvent.VK_R, Shortcut.SHIFT)
-        , true, false);
+                Shortcut.registerShortcut("tools:tagbuffer", tr("Tool: {0}", tr("Copy tags from previous selection")),
+                        KeyEvent.VK_R, Shortcut.SHIFT),
+                true, false);
         // The fields are not initialized while the super constructor is running, so we have to call this afterwards:
         installAdapters();
     }
 
     @Override
-    public void actionPerformed( ActionEvent e ) {
+    public void actionPerformed(ActionEvent e) {
         Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
-        if( selection.isEmpty() )
+        if (selection.isEmpty())
             return;
 
         List<Command> commands = new ArrayList<>();
-        for( String key : tags.keySet() ) {
+        for (String key : tags.keySet()) {
             String value = tags.get(key);
             boolean foundNew = false;
-            for( OsmPrimitive p : selection ) {
-                if( !p.hasKey(key) || !p.get(key).equals(value) ) {
+            for (OsmPrimitive p : selection) {
+                if (!p.hasKey(key) || !p.get(key).equals(value)) {
                     foundNew = true;
                     break;
                 }
             }
-            if( foundNew )
+            if (foundNew)
                 commands.add(new ChangePropertyCommand(selection, key, value));
         }
-        
-        if( !commands.isEmpty() )
+
+        if (!commands.isEmpty())
             Main.main.undoRedo.add(new SequenceCommand(TITLE, commands));
     }
 
     @Override
     protected void updateEnabledState() {
-        if( getLayerManager().getEditDataSet() == null ) {
+        if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
-            if( selectionBuf != null )
+            if (selectionBuf != null)
                 selectionBuf.clear();
-        }  else
+        } else
             updateEnabledState(getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
-    protected void updateEnabledState( Collection<? extends OsmPrimitive> selection ) {
+    protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
         // selection changed => check if selection is completely different from before
         boolean foundOld = false;
-        if( selection != null ) {
-            for( OsmPrimitive p : selectionBuf ) {
-                if( selection.contains(p) ) {
+        if (selection != null) {
+            for (OsmPrimitive p : selectionBuf) {
+                if (selection.contains(p)) {
                     foundOld = true;
                     break;
                 }
@@ -91,12 +103,12 @@ public class TagBufferAction extends JosmAction {
             foundOld = selectionBuf.isEmpty();
             selectionBuf.clear();
         }
-        if( !foundOld ) {
+        if (!foundOld) {
             // selection has completely changed, remember tags
             tags.clear();
             tags.putAll(currentTags);
         }
-        if( getLayerManager().getEditDataSet() != null)
+        if (getLayerManager().getEditDataSet() != null)
             rememberSelectionTags();
 
         setEnabled(selection != null && !selection.isEmpty() && !tags.isEmpty());
@@ -104,25 +116,30 @@ public class TagBufferAction extends JosmAction {
 
     private void rememberSelectionTags() {
         // Fix #8350 - only care about tagged objects
-        final Collection<OsmPrimitive> selectedTaggedObjects = Utils.filter(getLayerManager().getEditDataSet().getSelected(), IS_TAGGED_PREDICATE);
-        if( !selectedTaggedObjects.isEmpty() ) {
+        final Collection<OsmPrimitive> selectedTaggedObjects = Utils.filter(
+                getLayerManager().getEditDataSet().getSelected(), IS_TAGGED_PREDICATE);
+        if (!selectedTaggedObjects.isEmpty()) {
             currentTags.clear();
             Set<String> bad = new HashSet<>();
-            for( OsmPrimitive p : selectedTaggedObjects ) {
-                if( currentTags.isEmpty() ) {
-                    for( String key : p.keySet() )
+            for (OsmPrimitive p : selectedTaggedObjects) {
+                if (currentTags.isEmpty()) {
+                    for (String key : p.keySet()) {
                         currentTags.put(key, p.get(key));
+                    }
                 } else {
-                    for( String key : p.keySet() )
-                        if( !currentTags.containsKey(key) || !currentTags.get(key).equals(p.get(key)) )
+                    for (String key : p.keySet()) {
+                        if (!currentTags.containsKey(key) || !currentTags.get(key).equals(p.get(key)))
                             bad.add(key);
-                    for( String key : currentTags.keySet() )
-                        if( !p.hasKey(key) )
+                    }
+                    for (String key : currentTags.keySet()) {
+                        if (!p.hasKey(key))
                             bad.add(key);
+                    }
                 }
             }
-            for( String key : bad )
+            for (String key : bad) {
                 currentTags.remove(key);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2010 by Hanno Hecker
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -17,9 +17,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Select all nodes of a selected way.
- *
  */
-
 public class SelectWayNodesAction extends JosmAction {
 
     private ArrayList<Node> selectedNodes;
@@ -28,8 +26,9 @@ public class SelectWayNodesAction extends JosmAction {
      * Create a new SelectWayNodesAction
      */
     public SelectWayNodesAction() {
-        super(tr("Select Way Nodes"),"selectwaynodes" , tr("Select all nodes of a selected way."),
-                Shortcut.registerShortcut("tools:selectwaynodes", tr("Tool: {0}", tr("Select Way Nodes")), KeyEvent.VK_N, Shortcut.CTRL_SHIFT), true);
+        super(tr("Select Way Nodes"), "selectwaynodes", tr("Select all nodes of a selected way."),
+                Shortcut.registerShortcut("tools:selectwaynodes", tr("Tool: {0}", tr("Select Way Nodes")),
+                        KeyEvent.VK_N, Shortcut.CTRL_SHIFT), true);
         putValue("help", ht("/Action/SelectWayNodes"));
     }
 
@@ -49,8 +48,7 @@ public class SelectWayNodesAction extends JosmAction {
                     continue;
                 }
                 selectWayNodes(w);
-            }
-            else if (p instanceof Node) {
+            } else if (p instanceof Node) {
                 Node n = (Node) p;
                 if (selectedNodes == null) {
                     selectedNodes = new ArrayList<>();
@@ -58,13 +56,13 @@ public class SelectWayNodesAction extends JosmAction {
                 selectedNodes.add(n);
             }
         }
-            
+
         getLayerManager().getEditDataSet().setSelected(selectedNodes);
         selectedNodes = null;
     }
 
     private void selectWayNodes(Way w) {
-        
+
         for (Node n : w.getNodes()) {
             if (selectedNodes == null) {
                 selectedNodes = new ArrayList<>();

@@ -1,4 +1,4 @@
-// License: GPL v2 or later. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2;
 
 import javax.swing.JMenu;

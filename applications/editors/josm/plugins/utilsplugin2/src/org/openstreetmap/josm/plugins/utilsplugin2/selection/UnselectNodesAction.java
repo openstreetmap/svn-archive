@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2011 by Alexei Kasatkin and Martin Ždila
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.selection;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -8,9 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Set;
-import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.osm.*;
 
+import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -24,8 +25,8 @@ public class UnselectNodesAction extends JosmAction {
     public UnselectNodesAction() {
         super(tr("Unselect nodes"), "unsnodes",
                 tr("Removes all nodes from selection"),
-                Shortcut.registerShortcut("tools:unsnodes", tr("Tool: {0}","Unselect nodes"),
-                KeyEvent.VK_U, Shortcut.SHIFT), true);
+                Shortcut.registerShortcut("tools:unsnodes", tr("Tool: {0}", "Unselect nodes"),
+                        KeyEvent.VK_U, Shortcut.SHIFT), true);
         putValue("help", ht("/Action/UnselectNodes"));
     }
 

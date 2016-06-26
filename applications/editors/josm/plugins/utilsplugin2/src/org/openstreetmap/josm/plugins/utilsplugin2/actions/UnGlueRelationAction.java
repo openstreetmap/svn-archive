@@ -1,5 +1,4 @@
-// License: GPL v2 or later. Copyright 2010 by Kalle Lampila and others
-// See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -38,7 +37,8 @@ public class UnGlueRelationAction extends JosmAction {
      */
     public UnGlueRelationAction() {
         super(tr("UnGlue Relation"), "ungluerelations", tr("Duplicate nodes, ways and relations that are used by multiple relations."),
-              Shortcut.registerShortcut("tools:ungluerelation", tr("Tool: {0}", tr("UnGlue Relations")), KeyEvent.VK_G, Shortcut.ALT_SHIFT ), true);
+                Shortcut.registerShortcut("tools:ungluerelation", tr("Tool: {0}", tr("UnGlue Relations")), KeyEvent.VK_G, Shortcut.ALT_SHIFT),
+                true);
         putValue("help", ht("/Action/UnGlueRelation"));
     }
 
@@ -61,11 +61,11 @@ public class UnGlueRelationAction extends JosmAction {
                 if (!first) {
                     OsmPrimitive newp;
                     switch(p.getType()) {
-                    case NODE: newp = new Node((Node)p, true); break;
-                    case WAY: newp = new Way((Way)p, true); break;
-                    case RELATION: newp = new Relation((Relation)p, true); break;
+                    case NODE: newp = new Node((Node) p, true); break;
+                    case WAY: newp = new Way((Way) p, true); break;
+                    case RELATION: newp = new Relation((Relation) p, true); break;
                     default: throw new AssertionError();
-                    }                    
+                    }
                     newPrimitives.add(newp);
                     cmds.add(new AddCommand(newp));
                     cmds.add(new ChangeRelationMemberCommand(relation, p, newp));
@@ -75,10 +75,9 @@ public class UnGlueRelationAction extends JosmAction {
             }
         }
 
-        if (newPrimitives.isEmpty() ) {
+        if (newPrimitives.isEmpty()) {
             // error message nothing to do
-        }
-        else {
+        } else {
             Main.main.undoRedo.add(new SequenceCommand(tr("Unglued Relations"), cmds));
             //Set selection all primiteves (new and old)
             newPrimitives.addAll(selection);

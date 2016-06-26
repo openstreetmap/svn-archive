@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2011 by Ole Jørgen Brønner
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.curves;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;

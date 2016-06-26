@@ -17,16 +17,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
-
 import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
-
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -42,7 +40,7 @@ import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.WindowGeometry;
 
 public class LatLonDialog extends ExtendedDialog {
-    private static final Color BG_COLOR_ERROR = new Color(255,224,224);
+    private static final Color BG_COLOR_ERROR = new Color(255, 224, 224);
 
     public JTabbedPane tabs;
     private JTextArea taLatLon;
@@ -77,67 +75,65 @@ public class LatLonDialog extends ExtendedDialog {
 
     protected JPanel buildLatLon() {
         JPanel pnl = new JPanel(new GridBagLayout());
-        pnl.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        pnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        pnl.add(new JLabel(tr("Coordinates:")), GBC.std().insets(0,10,5,0));
+        pnl.add(new JLabel(tr("Coordinates:")), GBC.std().insets(0, 10, 5, 0));
 
-        taLatLon = new JTextArea(5,24);
+        taLatLon = new JTextArea(5, 24);
         taLatLon.getDocument().addDocumentListener(new CoordinateListener());
-	spScroll = new JScrollPane(taLatLon);
-        pnl.add(spScroll, GBC.eol().insets(0,10,0,0).fill().weight(2.0, 2.0));
+        spScroll = new JScrollPane(taLatLon);
+        pnl.add(spScroll, GBC.eol().insets(0, 10, 0, 0).fill().weight(2.0, 2.0));
 
-	//Radio button setup
-	bgType = new ButtonGroup();
+        //Radio button setup
+        bgType = new ButtonGroup();
 
-	rbNodes = new JRadioButton("Nodes", true);
-	rbNodes.setActionCommand("nodes");
-	bgType.add(rbNodes);
-	pnl.add(rbNodes);
+        rbNodes = new JRadioButton("Nodes", true);
+        rbNodes.setActionCommand("nodes");
+        bgType.add(rbNodes);
+        pnl.add(rbNodes);
 
-	rbWay = new JRadioButton("Way");
-	rbWay.setActionCommand("way");
-	bgType.add(rbWay);
-	pnl.add(rbWay);
+        rbWay = new JRadioButton("Way");
+        rbWay.setActionCommand("way");
+        bgType.add(rbWay);
+        pnl.add(rbWay);
 
-	rbClosedWay = new JRadioButton("Closed Way (Area)");
-	rbClosedWay.setActionCommand("area");
-	bgType.add(rbClosedWay);
-	pnl.add(rbClosedWay, GBC.eol());
+        rbClosedWay = new JRadioButton("Closed Way (Area)");
+        rbClosedWay.setActionCommand("area");
+        bgType.add(rbClosedWay);
+        pnl.add(rbClosedWay, GBC.eol());
 
-        //pnl.add(bgType, GBC.eol().insets(0,10,0,0).fill(GBC.HORIZONTAL).weight(2.0, 0.0));
-	//pnl.add(new JRadioButton("test"));
-	//pnl.add(bgType);
-
-        pnl.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(0,5,0,5));
+        pnl.add(new JSeparator(), GBC.eol().fill(GBC.HORIZONTAL).insets(0, 5, 0, 5));
 
         pnl.add(new HtmlPanel(
-                tr("Enter the coordinates for the new nodes, one for each line.<br/>If you enter two lines with the same coordinates there will be generated duplicate nodes.<br/>You can separate longitude and latitude with space, comma or semicolon.<br/>" +
-                    "Use positive numbers or N, E characters to indicate North or East cardinal direction.<br/>" +
-                    "For South and West cardinal directions you can use either negative numbers or S, W characters.<br/>" +
-                    "Coordinate value can be in one of three formats:<ul>" +
-                    "<li><i>degrees</i><tt>&deg;</tt></li>" +
-                    "<li><i>degrees</i><tt>&deg;</tt> <i>minutes</i><tt>&#39;</tt></li>" +
-                    "<li><i>degrees</i><tt>&deg;</tt> <i>minutes</i><tt>&#39;</tt> <i>seconds</i><tt>&quot</tt></li>" +
-                    "</ul>" +
-                    "Symbols <tt>&deg;</tt>, <tt>&#39;</tt>, <tt>&prime;</tt>, <tt>&quot;</tt>, <tt>&Prime;</tt> are optional.<br/><br/>" +
-                    "Some examples:<ul>" +
-                    "<li>49.29918&deg; 19.24788&deg;</li>" +
-                    "<li>N 49.29918 E 19.24788</li>" +
-                    "<li>W 49&deg;29.918&#39; S 19&deg;24.788&#39;</li>" +
-                    "<li>N 49&deg;29&#39;04&quot; E 19&deg;24&#39;43&quot;</li>" +
-                    "<li>49.29918 N, 19.24788 E</li>" +
-                    "<li>49&deg;29&#39;21&quot; N 19&deg;24&#39;38&quot; E</li>" +
-                    "<li>49 29 51, 19 24 18</li>" +
-                    "<li>49 29, 19 24</li>" +
-                    "<li>E 49 29, N 19 24</li>" +
-                    "<li>49&deg; 29; 19&deg; 24</li>" +
-                    "<li>N 49&deg; 29, W 19&deg; 24</li>" +
-                    "<li>49&deg; 29.5 S, 19&deg; 24.6 E</li>" +
-                    "<li>N 49 29.918 E 19 15.88</li>" +
-                    "<li>49 29.4 19 24.5</li>" +
-                    "<li>-49 29.4 N -19 24.5 W</li></ul>" +
-                    "<li>48 deg 42&#39; 52.13\" N, 21 deg 11&#39; 47.60\" E</li></ul>"
-                )),
+                tr("Enter the coordinates for the new nodes, one for each line.<br/>"+
+                        "If you enter two lines with the same coordinates there will be generated duplicate nodes.<br/>"+
+                        "You can separate longitude and latitude with space, comma or semicolon.<br/>" +
+                        "Use positive numbers or N, E characters to indicate North or East cardinal direction.<br/>" +
+                        "For South and West cardinal directions you can use either negative numbers or S, W characters.<br/>" +
+                        "Coordinate value can be in one of three formats:<ul>" +
+                        "<li><i>degrees</i><tt>&deg;</tt></li>" +
+                        "<li><i>degrees</i><tt>&deg;</tt> <i>minutes</i><tt>&#39;</tt></li>" +
+                        "<li><i>degrees</i><tt>&deg;</tt> <i>minutes</i><tt>&#39;</tt> <i>seconds</i><tt>&quot</tt></li>" +
+                        "</ul>" +
+                        "Symbols <tt>&deg;</tt>, <tt>&#39;</tt>, <tt>&prime;</tt>, <tt>&quot;</tt>, <tt>&Prime;</tt> are optional.<br/><br/>" +
+                        "Some examples:<ul>" +
+                        "<li>49.29918&deg; 19.24788&deg;</li>" +
+                        "<li>N 49.29918 E 19.24788</li>" +
+                        "<li>W 49&deg;29.918&#39; S 19&deg;24.788&#39;</li>" +
+                        "<li>N 49&deg;29&#39;04&quot; E 19&deg;24&#39;43&quot;</li>" +
+                        "<li>49.29918 N, 19.24788 E</li>" +
+                        "<li>49&deg;29&#39;21&quot; N 19&deg;24&#39;38&quot; E</li>" +
+                        "<li>49 29 51, 19 24 18</li>" +
+                        "<li>49 29, 19 24</li>" +
+                        "<li>E 49 29, N 19 24</li>" +
+                        "<li>49&deg; 29; 19&deg; 24</li>" +
+                        "<li>N 49&deg; 29, W 19&deg; 24</li>" +
+                        "<li>49&deg; 29.5 S, 19&deg; 24.6 E</li>" +
+                        "<li>N 49 29.918 E 19 15.88</li>" +
+                        "<li>49 29.4 19 24.5</li>" +
+                        "<li>-49 29.4 N -19 24.5 W</li></ul>" +
+                        "<li>48 deg 42&#39; 52.13\" N, 21 deg 11&#39; 47.60\" E</li></ul>"
+                        )),
                 GBC.eol().fill().weight(1.0, 1.0));
 
         // parse and verify input on the fly
@@ -159,8 +155,8 @@ public class LatLonDialog extends ExtendedDialog {
             @Override
             public void stateChanged(ChangeEvent e) {
                 switch (tabs.getModel().getSelectedIndex()) {
-                    case 0: parseLatLonUserInput(); break;
-                    default: throw new AssertionError();
+                case 0: parseLatLonUserInput(); break;
+                default: throw new AssertionError();
                 }
             }
         });
@@ -168,8 +164,8 @@ public class LatLonDialog extends ExtendedDialog {
     }
 
     public LatLonDialog(Component parent, String title, String help) {
-        super(Main.parent, tr("Add Node..."), new String[] { tr("Ok"), tr("Cancel") });
-        setButtonIcons(new String[] { "ok", "cancel" });
+        super(Main.parent, tr("Add Node..."), new String[] {tr("Ok"), tr("Cancel")});
+        setButtonIcons(new String[] {"ok", "cancel"});
         configureContextsensitiveHelp("/Action/AddNode", true);
 
         build();
@@ -181,9 +177,10 @@ public class LatLonDialog extends ExtendedDialog {
             ll = new LatLon[] {};
         }
         this.latLonCoordinates = ll;
-    String text = "";
-    for (LatLon latlon : ll) {
-            text = text + latlon.latToString(CoordinateFormat.getDefaultFormat()) + " " + latlon.lonToString(CoordinateFormat.getDefaultFormat()) + "\n";
+        String text = "";
+        for (LatLon latlon : ll) {
+            text = text + latlon.latToString(CoordinateFormat.getDefaultFormat())
+            + " " + latlon.lonToString(CoordinateFormat.getDefaultFormat()) + "\n";
         }
         taLatLon.setText(text);
         setOkEnabled(true);
@@ -223,34 +220,34 @@ public class LatLonDialog extends ExtendedDialog {
         // try to parse using the current locale
         //
         NumberFormat f = NumberFormat.getNumberInstance();
-        Number n=null;
+        Number n = null;
         ParsePosition pp = new ParsePosition(0);
-        n = f.parse(input,pp);
-        if (pp.getErrorIndex() >= 0 || pp.getIndex()<input.length()) {
+        n = f.parse(input, pp);
+        if (pp.getErrorIndex() >= 0 || pp.getIndex() < input.length()) {
             // fall back - try to parse with the english locale
             //
             pp = new ParsePosition(0);
             f = NumberFormat.getNumberInstance(Locale.ENGLISH);
             n = f.parse(input, pp);
-            if (pp.getErrorIndex() >= 0 || pp.getIndex()<input.length())
+            if (pp.getErrorIndex() >= 0 || pp.getIndex() < input.length())
                 return null;
         }
-        return n== null ? null : n.doubleValue();
+        return n == null ? null : n.doubleValue();
     }
 
     protected void parseLatLonUserInput() {
         LatLon[] latLons;
         try {
             latLons = parseLatLons(taLatLon.getText());
-        Boolean working = true;
-        int i=0;
-        while (working && i < latLons.length) {
-        if (!LatLon.isValidLat(latLons[i].lat()) || !LatLon.isValidLon(latLons[i].lon())) {
+            Boolean working = true;
+            int i = 0;
+            while (working && i < latLons.length) {
+                if (!LatLon.isValidLat(latLons[i].lat()) || !LatLon.isValidLon(latLons[i].lon())) {
                     latLons = null;
-            working = false;
+                    working = false;
                 }
-        i++;
-        }
+                i++;
+            }
         } catch (IllegalArgumentException e) {
             latLons = null;
         }
@@ -259,7 +256,7 @@ public class LatLonDialog extends ExtendedDialog {
             latLonCoordinates = null;
             setOkEnabled(false);
         } else {
-            clearErrorFeedback(taLatLon,tr("Please enter a GPS coordinates"));
+            clearErrorFeedback(taLatLon, tr("Please enter a GPS coordinates"));
             latLonCoordinates = latLons;
             setOkEnabled(true);
         }
@@ -278,7 +275,7 @@ public class LatLonDialog extends ExtendedDialog {
             new WindowGeometry(
                     preferenceKey,
                     WindowGeometry.centerInWindow(getParent(), getSize())
-            ).applySafe(this);
+                    ).applySafe(this);
         } else {
             new WindowGeometry(this).remember(preferenceKey);
         }
@@ -300,20 +297,21 @@ public class LatLonDialog extends ExtendedDialog {
     }
 
     static class TextFieldFocusHandler implements FocusListener {
-        @Override 
+        @Override
         public void focusGained(FocusEvent e) {
             Component c = e.getComponent();
             if (c instanceof JTextArea) {
-                JTextArea tf = (JTextArea)c;
+                JTextArea tf = (JTextArea) c;
                 tf.selectAll();
             }
         }
-        @Override 
+
+        @Override
         public void focusLost(FocusEvent e) {}
     }
 
     private static LatLon[] parseLatLons(final String text) {
-        String lines[] = text.split("\\r?\\n");
+        String[] lines = text.split("\\r?\\n");
         List<LatLon> latLons = new ArrayList<>();
         for (String line : lines) {
             latLons.add(parseLatLon(line));
@@ -425,7 +423,8 @@ public class LatLonDialog extends ExtendedDialog {
         setLatLon(latLon, coord2deg, coord2min, coord2sec, card2);
     }
 
-    private static void setLatLon(final LatLonHolder latLon, final double coordDeg, final double coordMin, final double coordSec, final String card) {
+    private static void setLatLon(final LatLonHolder latLon, final double coordDeg, final double coordMin, final double coordSec,
+            final String card) {
         if (coordDeg < -180 || coordDeg > 180 || coordMin < 0 || coordMin >= 60 || coordSec < 0 || coordSec > 60) {
             throw new IllegalArgumentException("out of range");
         }
@@ -451,12 +450,15 @@ public class LatLonDialog extends ExtendedDialog {
         @Override public void changedUpdate(DocumentEvent e) {
             //not fired
         }
+
         @Override public void insertUpdate(DocumentEvent e) {
             updateButtons();
         }
+
         @Override public void removeUpdate(DocumentEvent e) {
             updateButtons();
         }
+
         private void updateButtons() {
             String text = taLatLon.getText();
             String[] lines = text.split("\r\n|\r|\n");

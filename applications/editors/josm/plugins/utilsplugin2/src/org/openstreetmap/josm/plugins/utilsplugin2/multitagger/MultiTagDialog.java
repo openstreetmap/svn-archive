@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.multitagger;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -70,37 +71,36 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private List<OsmPrimitive> currentSelection;
 
     private static final String HISTORY_KEY = "utilsplugin2.multitaghistory";
-    String defaultHistory[] = {"addr:street, addr:housenumber, building, ${area}",
-        "highway, name, ${id}, ${length}",
-        "name name:en name:ru name:de"};
+    String[] defaultHistory = {"addr:street, addr:housenumber, building, ${area}",
+            "highway, name, ${id}, ${length}",
+    "name name:en name:ru name:de"};
 
     public MultiTagDialog() {
-        super(Main.parent,  tr("Edit tags"), new String[]{tr("Ok"), tr("Cancel")}, false);
+        super(Main.parent, tr("Edit tags"), new String[]{tr("Ok"), tr("Cancel")}, false);
         JPanel pnl = new JPanel(new GridBagLayout());
         tbl = createTable();
 
         cbTagSet.addItemListener(tagSetChanger);
         cbTagSet.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-           .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "applyTagSet");
+        .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "applyTagSet");
         cbTagSet.getActionMap().put("applyTagSet", tagSetChanger);
 
         tbl.addMouseListener(new PopupMenuLauncher(createPopupMenu()));
 
-        pnl.add(cbTagSet,GBC.std().fill(GBC.HORIZONTAL));
-        pnl.add(new JButton(new DeleteFromHistoryAction()),GBC.std());
-        pnl.add(new JButton(new FindMatchingAction()),GBC.std());
+        pnl.add(cbTagSet, GBC.std().fill(GBC.HORIZONTAL));
+        pnl.add(new JButton(new DeleteFromHistoryAction()), GBC.std());
+        pnl.add(new JButton(new FindMatchingAction()), GBC.std());
         final JToggleButton jt = new JToggleButton("", ImageProvider.get("restart"), true);
         jt.setToolTipText(tr("Sync with JOSM selection"));
-        jt.addActionListener(new ActionListener(){
+        jt.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 tableModel.setWatchSelection(jt.isSelected());
-            };
+            }
         });
-        pnl.add(jt,GBC.eol());
-
+        pnl.add(jt, GBC.eol());
 
         pnl.add(createTypeFilterPanel(), GBC.eol().fill(GBC.HORIZONTAL));
-        pnl.add(tbl.getTableHeader(),GBC.eop().fill(GBC.HORIZONTAL));
+        pnl.add(tbl.getTableHeader(), GBC.eop().fill(GBC.HORIZONTAL));
 
         pnl.add(new JScrollPane(tbl), GBC.eol().fill(GBC.BOTH));
         setContent(pnl);
@@ -131,7 +131,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
         for (final OsmPrimitiveType type: OsmPrimitiveType.values()) {
             final JToggleButton jt = new JToggleButton("", ImageProvider.get(type), true);
-            jt.addActionListener(new ActionListener(){
+            jt.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (jt.isSelected()) tableModel.shownTypes.add(type); else tableModel.shownTypes.remove(type);
@@ -168,17 +168,17 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     /*private OsmPrimitive getSelectedPrimitive() {
         int idx = tbl.getSelectedRow();
-        if (idx>=0) {
+        if (idx>= 0) {
             return tableModel.getPrimitiveAt(tbl.convertRowIndexToModel(idx));
         } else {
             return null;
         }
     }*/
 
-   private final MouseAdapter tableMouseAdapter = new MouseAdapter() {
+    private final MouseAdapter tableMouseAdapter = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount()>1 && Main.isDisplayingMapView()) {
+            if (e.getClickCount() > 1 && Main.isDisplayingMapView()) {
                 AutoScaleAction.zoomTo(currentSelection);
             }
         }
@@ -188,7 +188,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         @Override
         public void valueChanged(ListSelectionEvent e) {
             currentSelection = getSelectedPrimitives();
-            if (currentSelection != null && Main.isDisplayingMapView() ) {
+            if (currentSelection != null && Main.isDisplayingMapView()) {
                 if (highlightHelper.highlightOnly(currentSelection)) {
                     Main.map.mapView.repaint();
                 }
@@ -209,13 +209,13 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     private void initAutocompletion() {
         OsmDataLayer l = Main.getLayerManager().getEditLayer();
         AutoCompletionManager autocomplete = l.data.getAutoCompletionManager();
-        for (int i=0; i<tableModel.mainTags.length; i++) {
-                if (tableModel.isSpecialTag[i]) continue;
-                AutoCompletingTextField tf = new AutoCompletingTextField(0, false);
-                AutoCompletionList acList = new AutoCompletionList();
-                autocomplete.populateWithTagValues(acList, tableModel.mainTags[i]);
-                tf.setAutoCompletionList(acList);
-                tbl.getColumnModel().getColumn(i+1).setCellEditor(tf);
+        for (int i = 0; i < tableModel.mainTags.length; i++) {
+            if (tableModel.isSpecialTag[i]) continue;
+            AutoCompletingTextField tf = new AutoCompletingTextField(0, false);
+            AutoCompletionList acList = new AutoCompletionList();
+            autocomplete.populateWithTagValues(acList, tableModel.mainTags[i]);
+            tf.setAutoCompletionList(acList);
+            tbl.getColumnModel().getColumn(i+1).setCellEditor(tf);
         }
     }
 
@@ -235,7 +235,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 Main.getLayerManager().getEditDataSet().setSelected(getSelectedPrimitives());
             }
         });
-        menu.add(new AbstractAction(tr("Remove tag"), ImageProvider.get("dialogs", "delete")){
+        menu.add(new AbstractAction(tr("Remove tag"), ImageProvider.get("dialogs", "delete")) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tableModel.setAutoCommit(false);
@@ -248,19 +248,19 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
                 tableModel.setAutoCommit(true);
             }
         });
-        menu.add(new AbstractAction(tr("Duplicate tags from the first"), ImageProvider.get("copy")){
+        menu.add(new AbstractAction(tr("Duplicate tags from the first"), ImageProvider.get("copy")) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tableModel.setAutoCommit(false);
                 for (int c: tbl.getSelectedColumns()) {
-                    if (c==0 || tableModel.isSpecialTag[c-1]) continue;
+                    if (c == 0 || tableModel.isSpecialTag[c-1]) continue;
                     boolean first = true;
                     String value = "";
                     for (int r: tbl.getSelectedRows()) {
                         if (first) {
                             value = (String) tableModel.getValueAt(tbl.convertRowIndexToModel(r), tbl.convertColumnIndexToModel(c));
                         }
-                        first=false;
+                        first = false;
                         tableModel.setValueAt(value, tbl.convertRowIndexToModel(r), tbl.convertColumnIndexToModel(c));
                     }
                 }
@@ -284,8 +284,8 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     }
 
     private class DeleteFromHistoryAction extends AbstractAction {
-        public DeleteFromHistoryAction() {
-            super("", ImageProvider.get("dialogs","delete"));
+        DeleteFromHistoryAction() {
+            super("", ImageProvider.get("dialogs", "delete"));
             putValue(SHORT_DESCRIPTION, tr("Delete from history"));
         }
 
@@ -304,8 +304,8 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
     }
 
     private class FindMatchingAction extends AbstractAction {
-        public FindMatchingAction() {
-            super("", ImageProvider.get("dialogs","search"));
+        FindMatchingAction() {
+            super("", ImageProvider.get("dialogs", "search"));
             putValue(SHORT_DESCRIPTION, tr("Find primitives with these tags"));
         }
 
@@ -321,21 +321,20 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         @Override
         public void itemStateChanged(ItemEvent e) {
             // skip text-changing enevts, we need only combobox-selecting ones
-            if (cbTagSet.getSelectedIndex()<0) return;
+            if (cbTagSet.getSelectedIndex() < 0) return;
             actionPerformed(null);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             String s = cbTagSet.getText();
-            if (s==null || s.isEmpty() || s.equals(oldTags)) return;
+            if (s == null || s.isEmpty() || s.equals(oldTags)) return;
             oldTags = s;
             cbTagSet.addCurrentItemToHistory();
             Main.pref.putCollection(HISTORY_KEY, cbTagSet.getHistory());
             specifyTagSet(s);
         }
-
-    };
+    }
 
     private void specifyTagSet(String s) {
         Main.info("Multitagger tags="+s);
@@ -345,7 +344,7 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
         tbl.setAutoCreateRowSorter(true);
 
         tbl.getColumnModel().getColumn(0).setMaxWidth(20);
-        for (int i=1; i<tableModel.getColumnCount(); i++) {
+        for (int i = 1; i < tableModel.getColumnCount(); i++) {
             TableHelper.adjustColumnWidth(tbl, i, 100);
         }
         initAutocompletion();
@@ -354,14 +353,14 @@ public class MultiTagDialog extends ExtendedDialog implements SelectionChangedLi
 
     class ColoredRenderer extends DefaultTableCellRenderer {
         private final Color highlightColor =
-                Main.pref.getColor( marktr("Multitag Background: highlight"),
-                        new Color(255,255,200));
+                Main.pref.getColor(marktr("Multitag Background: highlight"),
+                        new Color(255, 255, 200));
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean
                 isSelected, boolean hasFocus, int row, int column) {
             int row1 = tbl.convertRowIndexToModel(row);
             JLabel label = (JLabel) super.getTableCellRendererComponent(
-                table, value, isSelected, hasFocus, row, column);
+                    table, value, isSelected, hasFocus, row, column);
             if (tbl.isRowSelected(row1) && !tbl.isColumnSelected(column)) {
                 label.setBackground(highlightColor);
             } else {

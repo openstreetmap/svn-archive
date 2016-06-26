@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.actions;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -25,7 +25,6 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.Notification;
-
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -43,9 +42,8 @@ public class SplitObjectAction extends JosmAction {
      */
     public SplitObjectAction() {
         super(tr("Split Object"), "splitobject", tr("Split an object at the selected nodes."),
-                Shortcut.registerShortcut("tools:splitobject", tr("Tool: {0}", tr("Split Object")),
-                KeyEvent.VK_X,  Shortcut.ALT)
-                , true);
+                Shortcut.registerShortcut("tools:splitobject", tr("Tool: {0}", tr("Split Object")), KeyEvent.VK_X, Shortcut.ALT),
+                true);
         putValue("help", ht("/Action/SplitObject"));
     }
 
@@ -74,12 +72,12 @@ public class SplitObjectAction extends JosmAction {
             selectedNodes.clear();                  // empty selected nodes (see #8237)
             for (Way selWay : selectedWays) {       // we assume not more 2 ways in the list
                 if (selWay != null &&               // If one of selected ways is not closed we have it to get split points
-                    selWay.isUsable() &&
-                    !selWay.isClosed() &&
-                    selWay.getKeys().isEmpty()) {
-                        selectedNodes.add(selWay.firstNode());
-                        selectedNodes.add(selWay.lastNode());
-                        splitWay = selWay;
+                        selWay.isUsable() &&
+                        !selWay.isClosed() &&
+                        selWay.getKeys().isEmpty()) {
+                    selectedNodes.add(selWay.firstNode());
+                    selectedNodes.add(selWay.lastNode());
+                    splitWay = selWay;
                 } else {
                     selectedWay = selWay;           // use another way as selected way
                 }
@@ -113,9 +111,9 @@ public class SplitObjectAction extends JosmAction {
             }
             if (wayOccurenceCounter.isEmpty()) {
                 showWarningNotification(
-                   trn("The selected node is not in the middle of any way.",
-                       "The selected nodes are not in the middle of any way.",
-                        selectedNodes.size()));
+                        trn("The selected node is not in the middle of any way.",
+                                "The selected nodes are not in the middle of any way.",
+                                selectedNodes.size()));
                 return;
             }
 
@@ -123,10 +121,10 @@ public class SplitObjectAction extends JosmAction {
                 if (entry.getValue().equals(selectedNodes.size())) {
                     if (selectedWay != null) {
                         showWarningNotification(
-                            trn("There is more than one way using the node you selected. Please select the way also.",
-                                    "There is more than one way using the nodes you selected. Please select the way also.",
-                                    selectedNodes.size())
-                            );
+                                trn("There is more than one way using the node you selected. Please select the way also.",
+                                        "There is more than one way using the nodes you selected. Please select the way also.",
+                                        selectedNodes.size())
+                                );
                         return;
                     }
                     selectedWay = entry.getKey();
@@ -149,14 +147,14 @@ public class SplitObjectAction extends JosmAction {
             nds.removeAll(selectedWay.getNodes());
             if (!nds.isEmpty()) {
                 showWarningNotification(
-                    trn("The selected way does not contain the selected node.",
-                            "The selected way does not contain all the selected nodes.",
-                            selectedNodes.size()));
+                        trn("The selected way does not contain the selected node.",
+                                "The selected way does not contain all the selected nodes.",
+                                selectedNodes.size()));
                 return;
             }
         } else if (selectedWay != null && selectedNodes.isEmpty()) {
             showWarningNotification(
-                tr("The selected way is not a split way, please select split points or split way too."));
+                    tr("The selected way is not a split way, please select split points or split way too."));
             return;
         }
 
@@ -182,7 +180,7 @@ public class SplitObjectAction extends JosmAction {
                 (nodeIndex1 == 0 && nodeIndex2 == selectedWay.getNodesCount() - 2) ||
                 (nodeIndex2 == 0 && nodeIndex1 == selectedWay.getNodesCount() - 2)) {
             showWarningNotification(
-                tr("The selected nodes can not be consecutive nodes in the object."));
+                    tr("The selected nodes can not be consecutive nodes in the object."));
             return;
         }
 
@@ -252,9 +250,9 @@ public class SplitObjectAction extends JosmAction {
         }
         setEnabled(checkSelection(selection));
     }
-    
+
     void showWarningNotification(String msg) {
         new Notification(msg)
-            .setIcon(JOptionPane.WARNING_MESSAGE).show();
+        .setIcon(JOptionPane.WARNING_MESSAGE).show();
     }
 }

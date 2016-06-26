@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.multitagger;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -19,7 +20,7 @@ public final class MultiTagAction extends JosmAction {
      * Constructs a new {@code MultiTagAction}.
      */
     public MultiTagAction() {
-        super(tr("Tag multiple objects [alpha]"), (String)null, tr("Edit tags of object list in table"),
+        super(tr("Tag multiple objects [alpha]"), (String) null, tr("Edit tags of object list in table"),
                 Shortcut.registerShortcut("multitag", tr("Edit: {0}", tr("Tag multiple objects")), KeyEvent.VK_T, Shortcut.CTRL),
                 true, "multitag", true);
         putValue("help", ht("/Action/MultiTag"));
@@ -36,13 +37,13 @@ public final class MultiTagAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getLayerManager().getEditLayer()!=null);
+        setEnabled(getLayerManager().getEditLayer() != null);
     }
 
     @Override
     protected void updateEnabledState(Collection<? extends OsmPrimitive> selection) {
-        setEnabled(getLayerManager().getEditLayer()!=null);
-        if (dlg!=null && dlg.isVisible()) {
+        setEnabled(getLayerManager().getEditLayer() != null);
+        if (dlg != null && dlg.isVisible()) {
             dlg.selectionChanged(selection);
         }
     }

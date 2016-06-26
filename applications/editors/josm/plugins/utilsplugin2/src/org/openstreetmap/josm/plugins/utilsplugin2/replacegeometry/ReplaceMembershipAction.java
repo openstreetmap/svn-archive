@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -49,11 +50,11 @@ public class ReplaceMembershipAction extends JosmAction {
                     firstObject.getDisplayName(DefaultNameFormatter.getInstance()),
                     secondObject.getDisplayName(DefaultNameFormatter.getInstance()),
                     affectedRelations
-            )).setIcon(JOptionPane.INFORMATION_MESSAGE).show();
+                    )).setIcon(JOptionPane.INFORMATION_MESSAGE).show();
         } else {
             new Notification(tr("The first selected object ''{0}'' is not part of any relation",
                     firstObject.getDisplayName(DefaultNameFormatter.getInstance())
-            )).setIcon(JOptionPane.WARNING_MESSAGE).show();
+                    )).setIcon(JOptionPane.WARNING_MESSAGE).show();
         }
     }
 

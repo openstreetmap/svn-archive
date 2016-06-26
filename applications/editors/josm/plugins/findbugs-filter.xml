@@ -10,6 +10,9 @@
 		<Class name="~com.google.*" />
 	</Match>
 	<Match>
+		<Class name="~com.hp.*" />
+	</Match>
+	<Match>
 		<Class name="~com.sun.*" />
 	</Match>
 	<Match>
@@ -31,7 +34,13 @@
         <Class name="~javax.*" />
     </Match>
     <Match>
+        <Class name="~jena.*" />
+    </Match>
+    <Match>
         <Class name="~jj2000.*" />
+    </Match>
+    <Match>
+        <Class name="~net.arnx.*" />
     </Match>
     <Match>
         <Class name="~net.boplicity.*" />
@@ -101,6 +110,9 @@
 	</Match>
 	<Match>
 		<Class name="~org.slf4j.*" />
+	</Match>
+	<Match>
+		<Class name="~org.tartarus.*" />
 	</Match>
     <Match>
         <Class name="~org.w3._2001.xmlschema.*" />

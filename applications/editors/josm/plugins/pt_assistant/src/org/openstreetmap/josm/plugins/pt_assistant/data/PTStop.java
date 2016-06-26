@@ -51,7 +51,7 @@ public class PTStop extends RelationMember {
 	 *         RelationMember does not match its role or that this PTStop
 	 *         already has an attribute with that role.
 	 */
-	public boolean addStopElement(RelationMember member) {
+	protected boolean addStopElement(RelationMember member) {
 
 		// each element is only allowed once per stop
 
@@ -96,7 +96,7 @@ public class PTStop extends RelationMember {
 		return this.platform;
 	}
 
-	public String getName() {
+	protected String getName() {
 		return this.name;
 	}
 

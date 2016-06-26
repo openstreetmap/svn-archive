@@ -21,6 +21,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 public class RoadTypeTest extends Test {
 
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
+	public static final int ERROR_CODE_CONSTRUCTION = 3722;
 
 	public RoadTypeTest() {
 		super(tr("Road Type Test"),
@@ -86,6 +87,17 @@ public class RoadTypeTest extends Test {
 					errors.add(new TestError(this, Severity.WARNING,
 							tr("PT: Route type does not match the type of the road it passes on"), ERROR_CODE_ROAD_TYPE,
 							primitives, highlighted));
+				}
+				
+				if ((way.hasTag("highway", "construction") || way.hasTag("railway", "construction")) && way.hasKey("construction")) {
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(r);
+					List<Way> highlighted = new ArrayList<>(1);
+					highlighted.add(way);
+					TestError e = new TestError(this, Severity.WARNING,
+							tr("PT: Road is under construction"),
+							PTAssitantValidatorTest.ERROR_CODE_CONSTRUCTION, primitives, highlighted);
+					errors.add(e);
 				}
 
 			}
@@ -167,7 +179,7 @@ public class RoadTypeTest extends Test {
 	 */
 	@Override
 	public boolean isFixable(TestError testError) {
-		if (testError.getCode() == ERROR_CODE_ROAD_TYPE) {
+		if (testError.getCode() == ERROR_CODE_ROAD_TYPE || testError.getCode() == ERROR_CODE_CONSTRUCTION) {
 			return true;
 		}
 		return false;

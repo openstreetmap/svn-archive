@@ -1,17 +1,6 @@
 package org.openstreetmap.josm.plugins.pt_assistant.utils;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
-
-import org.openstreetmap.josm.actions.DownloadPrimitiveAction;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -44,7 +33,11 @@ public class RouteUtils {
 		if (r.hasTag("route", "bus") || r.hasTag("route", "trolleybus") || r.hasTag("route", "share_taxi")
 				|| r.hasTag("route", "tram") || r.hasTag("route", "light_rail") || r.hasTag("route", "subway")
 				|| r.hasTag("route", "train")) {
-			return true;
+			
+			if (!r.hasTag("bus", "on_demand")) {
+				return true;
+			}
+			
 		}
 		return false;
 	}
@@ -59,37 +52,25 @@ public class RouteUtils {
 	 */
 	public static boolean isPTStop(RelationMember rm) {
 
-		if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+		if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only")
+				|| rm.hasRole("platform") || rm.hasRole("platform_entry_only") || rm.hasRole("platform_exit_only")) {
 
-			if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only")
-					|| rm.hasRole("platform") || rm.hasRole("platform_entry_only")
-					|| rm.hasRole("platform_exit_only")) {
+			if (rm.getType().equals(OsmPrimitiveType.NODE)) {
 
 				if (rm.getNode().hasTag("public_transport", "stop_position")
 						|| rm.getNode().hasTag("highway", "bus_stop")
 						|| rm.getNode().hasTag("public_transport", "platform")
-						|| rm.getNode().hasTag("public_transport", "platform_entry_only")
-						|| rm.getNode().hasTag("public_transport", "platform_exit_only")
-						|| rm.getNode().hasTag("highway", "platform")
-						|| rm.getNode().hasTag("highway", "platform_entry_only")
-						|| rm.getNode().hasTag("highway", "platform_exit_only")
-						|| rm.getNode().hasTag("railway", "platform")
-						|| rm.getNode().hasTag("railway", "platform_entry_only")
-						|| rm.getNode().hasTag("railway", "platform_exit_only")) {
+						|| rm.getNode().hasTag("highway", "platform") || rm.getNode().hasTag("railway", "platform")) {
 					return true;
+
 				}
 			}
-		}
 
-		if (rm.getType().equals(OsmPrimitiveType.WAY)) {
-			if (rm.getWay().hasTag("public_transport", "platform")
-					|| rm.getWay().hasTag("public_transport", "platform_entry_only")
-					|| rm.getWay().hasTag("public_transport", "platform_exit_only")
-					|| rm.getWay().hasTag("highway", "platform") || rm.getWay().hasTag("highway", "platform_entry_only")
-					|| rm.getWay().hasTag("highway", "platform_exist_only") || rm.getWay().hasTag("railway", "platform")
-					|| rm.getWay().hasTag("railway", "platform_entry_only")
-					|| rm.getWay().hasTag("railway", "platform_exit_only")) {
-				return true;
+			if (rm.getType().equals(OsmPrimitiveType.WAY)) {
+				if (rm.getWay().hasTag("public_transport", "platform") || rm.getWay().hasTag("highway", "platform")
+						|| rm.getWay().hasTag("railway", "platform")) {
+					return true;
+				}
 			}
 		}
 
@@ -114,6 +95,10 @@ public class RouteUtils {
 		}
 
 		if (rm.getType().equals(OsmPrimitiveType.WAY)) {
+			if (rm.getWay().hasTag("public_transport", "platform") || rm.getWay().hasTag("highway", "platform")
+					|| rm.getWay().hasTag("railway", "platform")) {
+				return false;
+			}
 			return true;
 		}
 

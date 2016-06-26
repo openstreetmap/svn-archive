@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -23,6 +24,7 @@ import org.openstreetmap.josm.gui.dialogs.relation.sort.RelationSorter;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.FixTask;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.IncompleteMembersDownloadThread;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.IncompleteMembersDownloadDialog;
+import org.openstreetmap.josm.plugins.pt_assistant.gui.PTAssistantLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.gui.ProceedDialog;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
@@ -30,14 +32,20 @@ public class PTAssitantValidatorTest extends Test {
 
 	public static final int ERROR_CODE_SORTING = 3711;
 	public static final int ERROR_CODE_ROAD_TYPE = 3721;
+	public static final int ERROR_CODE_CONSTRUCTION = 3722;
 	public static final int ERROR_CODE_DIRECTION = 3731;
 	public static final int ERROR_CODE_END_STOP = 3141;
 	public static final int ERROR_CODE_SPLIT_WAY = 3142;
 	public static final int ERROR_CODE_RELAITON_MEMBER_ROLES = 3143;
 
+	private PTAssistantLayer layer;
+
 	public PTAssitantValidatorTest() {
 		super(tr("Public Transport Assistant tests"),
 				tr("Check if route relations are compatible with public transport version 2"));
+
+		layer = new PTAssistantLayer();
+		DataSet.addSelectionListener(layer);
 
 	}
 
@@ -59,6 +67,12 @@ public class PTAssitantValidatorTest extends Test {
 		if (r.hasIncompleteMembers()) {
 			return;
 		}
+
+//		if (!Main.getLayerManager().containsLayer(layer)) {
+//			Main.getLayerManager().addLayer(layer);
+//		}
+//		layer.clear();
+//		layer.addPrimitive(r);
 
 		// Check individual ways using the oneway direction test and the road
 		// type test:
@@ -191,7 +205,7 @@ public class PTAssitantValidatorTest extends Test {
 
 		// Check if the creation of the route data model in the segment checker
 		// worked. If it did not, it means the roles in the route relation do
-		// not match the tags of the route members. 
+		// not match the tags of the route members.
 		if (!segmentChecker.getErrors().isEmpty()) {
 			this.errors.addAll(segmentChecker.getErrors());
 		}
@@ -201,7 +215,7 @@ public class PTAssitantValidatorTest extends Test {
 
 		// TODO: perform segment test
 		this.errors.addAll(segmentChecker.getErrors());
-//		performDummyTest(r);
+		// performDummyTest(r);
 	}
 
 	/**
@@ -210,7 +224,7 @@ public class PTAssitantValidatorTest extends Test {
 	@Override
 	public boolean isFixable(TestError testError) {
 		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE
-				|| testError.getCode() == ERROR_CODE_SORTING) {
+				|| testError.getCode() == ERROR_CODE_CONSTRUCTION || testError.getCode() == ERROR_CODE_SORTING) {
 			return true;
 		}
 		return false;
@@ -221,7 +235,8 @@ public class PTAssitantValidatorTest extends Test {
 
 		List<Command> commands = new ArrayList<>();
 
-		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE) {
+		if (testError.getCode() == ERROR_CODE_DIRECTION || testError.getCode() == ERROR_CODE_ROAD_TYPE
+				|| testError.getCode() == ERROR_CODE_CONSTRUCTION) {
 			commands.add(fixErrorByRemovingWay(testError));
 		}
 

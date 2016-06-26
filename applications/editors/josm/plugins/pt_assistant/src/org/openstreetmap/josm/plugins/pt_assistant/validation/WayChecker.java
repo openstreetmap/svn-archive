@@ -94,6 +94,17 @@ public class WayChecker extends Checker {
 					errors.add(e);
 
 				}
+				
+				if ((way.hasTag("highway", "construction") || way.hasTag("railway", "construction")) && way.hasKey("construction")) {
+					List<Relation> primitives = new ArrayList<>(1);
+					primitives.add(relation);
+					List<Way> highlighted = new ArrayList<>(1);
+					highlighted.add(way);
+					TestError e = new TestError(this.test, Severity.WARNING,
+							tr("PT: Road is under construction"),
+							PTAssitantValidatorTest.ERROR_CODE_CONSTRUCTION, primitives, highlighted);
+					errors.add(e);
+				}
 			}
 		}
 

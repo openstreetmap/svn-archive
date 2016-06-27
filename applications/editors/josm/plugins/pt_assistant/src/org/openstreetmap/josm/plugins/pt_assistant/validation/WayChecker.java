@@ -52,37 +52,59 @@ public class WayChecker extends Checker {
 				// be a route of public_transport:version 2
 
 				boolean isCorrectRoadType = true;
+				boolean isUnderConstruction = false;
 				if (relation.hasTag("route", "bus") || relation.hasTag("route", "share_taxi")) {
 					if (!isWaySuitableForBuses(way)) {
 						isCorrectRoadType = false;
+					}
+					if (way.hasTag("highway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "trolleybus")) {
 					if (!(isWaySuitableForBuses(way) && way.hasTag("trolley_wire", "yes"))) {
 						isCorrectRoadType = false;
 					}
+					if (way.hasTag("highway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
+					}
 				} else if (relation.hasTag("route", "tram")) {
 					if (!way.hasTag("railway", "tram")) {
 						isCorrectRoadType = false;
+					}
+					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "subway")) {
 					if (!relation.hasTag("railway", "subway")) {
 						isCorrectRoadType = false;
 					}
+					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
+					}
 				} else if (relation.hasTag("route", "light_rail")) {
 					if (!relation.hasTag("raiilway", "subway")) {
 						isCorrectRoadType = false;
+					}
+					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
 					}
 				} else if (relation.hasTag("route", "light_rail")) {
 					if (!relation.hasTag("railway", "light_rail")) {
 						isCorrectRoadType = false;
 					}
+					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
+					}
 				} else if (relation.hasTag("route", "train")) {
 					if (!relation.hasTag("railway", "train")) {
 						isCorrectRoadType = false;
 					}
+					if (way.hasTag("railway", "construction") && way.hasKey("construction")) {
+						isUnderConstruction = true;
+					}
 				}
 
-				if (!isCorrectRoadType) {
+				if (!isCorrectRoadType && !isUnderConstruction) {
 
 					List<Relation> primitives = new ArrayList<>(1);
 					primitives.add(relation);
@@ -95,7 +117,7 @@ public class WayChecker extends Checker {
 
 				}
 				
-				if ((way.hasTag("highway", "construction") || way.hasTag("railway", "construction")) && way.hasKey("construction")) {
+				if (isUnderConstruction) {
 					List<Relation> primitives = new ArrayList<>(1);
 					primitives.add(relation);
 					List<Way> highlighted = new ArrayList<>(1);

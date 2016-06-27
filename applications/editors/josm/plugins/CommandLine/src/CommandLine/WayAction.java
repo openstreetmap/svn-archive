@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -99,26 +100,26 @@ public class WayAction extends MapMode implements AWTEventListener {
             return;
         processMouseEvent(e);
         if (nearestWay != null) {
+            DataSet ds = Main.getLayerManager().getEditDataSet();
             if (isCtrlDown) {
-                Main.main.getCurrentDataSet().clearSelection(nearestWay);
+                ds.clearSelection(nearestWay);
                 Main.map.mapView.repaint();
-            }
-            else {
+            } else {
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 switch (maxInstances) {
                 case 0:
-                    Main.main.getCurrentDataSet().addSelected(nearestWay);
+                    ds.addSelected(nearestWay);
                     Main.map.mapView.repaint();
                     break;
                 case 1:
-                    Main.main.getCurrentDataSet().addSelected(nearestWay);
+                    ds.addSelected(nearestWay);
                     Main.map.mapView.repaint();
                     parentPlugin.loadParameter(nearestWay, true);
                     exitMode();
                     break;
                 default:
-                    if (Main.main.getCurrentDataSet().getSelected().size() < maxInstances) {
-                        Main.main.getCurrentDataSet().addSelected(nearestWay);
+                    if (ds.getSelected().size() < maxInstances) {
+                        ds.addSelected(nearestWay);
                         Main.map.mapView.repaint();
                     }
                     else

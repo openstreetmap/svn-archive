@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -76,26 +77,26 @@ public class AnyAction extends MapMode implements AWTEventListener {
             return;
         processMouseEvent(e);
         if (nearestPrimitive != null) {
+            DataSet ds = Main.getLayerManager().getEditDataSet();
             if (isCtrlDown) {
-                Main.main.getCurrentDataSet().clearSelection(nearestPrimitive);
+                ds.clearSelection(nearestPrimitive);
                 Main.map.mapView.repaint();
-            }
-            else {
+            } else {
                 int maxInstances = parentPlugin.currentCommand.parameters.get(parentPlugin.currentCommand.currentParameterNum).maxInstances;
                 switch (maxInstances) {
                 case 0:
-                    Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
+                    ds.addSelected(nearestPrimitive);
                     Main.map.mapView.repaint();
                     break;
                 case 1:
-                    Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
+                    ds.addSelected(nearestPrimitive);
                     Main.map.mapView.repaint();
                     parentPlugin.loadParameter(nearestPrimitive, true);
                     exitMode();
                     break;
                 default:
-                    if (Main.main.getCurrentDataSet().getSelected().size() < maxInstances) {
-                        Main.main.getCurrentDataSet().addSelected(nearestPrimitive);
+                    if (ds.getSelected().size() < maxInstances) {
+                        ds.addSelected(nearestPrimitive);
                         Main.map.mapView.repaint();
                     }
                     else

@@ -246,7 +246,7 @@ final class OsmToCmd {
                     cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
                 }
                 else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
@@ -258,7 +258,7 @@ final class OsmToCmd {
                     cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
                 }
                 else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));
@@ -270,7 +270,7 @@ final class OsmToCmd {
                     cmds.add(new DeleteCommand( targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()) ));
                 }
                 else if (currentPrimitive.isModified()) {
-                    cmds.add(new ChangeCommand(Main.main.getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
+                    cmds.add(new ChangeCommand(Main.getLayerManager().getEditLayer(), targetDataSet.getPrimitiveById(currentPrimitive.getPrimitiveId()), currentPrimitive));
                 }
                 else if (currentPrimitive.isNew()) {
                     cmds.add(new AddCommand(currentPrimitive));

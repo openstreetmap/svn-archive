@@ -51,7 +51,7 @@ public class PointAction extends MapMode implements AWTEventListener {
 
     @Override public void enterMode() {
         super.enterMode();
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             Main.map.selectSelectTool(false);
             return;
         }

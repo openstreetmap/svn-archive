@@ -120,7 +120,7 @@ public class CommandLine extends Plugin {
                             break;
                         case SELECTION:
                             if (currentMapFrame.mapMode instanceof WayAction || currentMapFrame.mapMode instanceof NodeAction || currentMapFrame.mapMode instanceof RelationAction || currentMapFrame.mapMode instanceof AnyAction) {
-                                Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+                                Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
                                 if (selected.size() > 0)
                                     loadParameter(selected, true);
                             }
@@ -213,7 +213,7 @@ public class CommandLine extends Plugin {
     protected void startCommand(Command command) {
         if (Main.map == null)
             return;
-        DataSet ds = Main.main.getCurrentDataSet();
+        DataSet ds = Main.getLayerManager().getEditDataSet();
         if (ds == null)
             return;
         currentCommand = command;
@@ -322,7 +322,7 @@ public class CommandLine extends Plugin {
     }
 
     protected void setMode(Mode targetMode) {
-        DataSet currentDataSet = Main.main.getCurrentDataSet();
+        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
         if (currentDataSet != null) {
             currentDataSet.clearSelection();
             Main.map.mapView.repaint();
@@ -616,7 +616,7 @@ public class CommandLine extends Plugin {
         });
 
         // Read stdout stream
-        final DataSet currentDataSet = Main.main.getCurrentDataSet();
+        final DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
         final CommandLine that = this;
         Thread osmParseThread = new Thread(new Runnable() {
             @Override

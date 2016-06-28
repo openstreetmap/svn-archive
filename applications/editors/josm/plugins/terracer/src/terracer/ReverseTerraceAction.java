@@ -50,7 +50,7 @@ public class ReverseTerraceAction extends JosmAction {
      * order.
      */
     public void actionPerformed(ActionEvent e) {
-        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
+        Collection<Way> selectedWays = Main.getLayerManager().getEditDataSet().getSelectedWays();
 
         // Set to keep track of all the nodes that have been visited - that is: if
         // we encounter them again we will not follow onto the connected ways.
@@ -122,11 +122,11 @@ public class ReverseTerraceAction extends JosmAction {
         }
 
         Main.main.undoRedo.add(new SequenceCommand(tr("Reverse Terrace"), commands));
-        Main.main.getCurrentDataSet().setSelected(orderedWays);
+        Main.getLayerManager().getEditDataSet().setSelected(orderedWays);
     }
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 }

@@ -314,7 +314,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
     private AutoCompletingComboBox getBuilding() {
 
         if (buildingComboBox == null) {
-            final List<AutoCompletionListItem> values = Main.main.getCurrentDataSet().getAutoCompletionManager().getValues("building");
+            final List<AutoCompletionListItem> values = Main.getLayerManager().getEditDataSet().getAutoCompletionManager().getValues("building");
 
             buildingComboBox = new AutoCompletingComboBox();
             buildingComboBox.setPossibleACItems(values);
@@ -366,7 +366,7 @@ public class HouseNumberInputDialog extends ExtendedDialog {
      */
     TreeSet<String> createAutoCompletionInfo() {
         final TreeSet<String> names = new TreeSet<>();
-        for (OsmPrimitive osm : Main.main.getCurrentDataSet()
+        for (OsmPrimitive osm : Main.getLayerManager().getEditDataSet()
                 .allNonDeletedPrimitives()) {
             if (osm.getKeys() != null && osm.keySet().contains("highway")
                     && osm.keySet().contains("name")) {

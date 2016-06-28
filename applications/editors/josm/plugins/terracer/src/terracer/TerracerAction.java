@@ -108,7 +108,7 @@ public final class TerracerAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> sel = getLayerManager().getEditDataSet().getSelected();
         Way outline = null;
         Way street = null;
         String streetname = null;
@@ -403,7 +403,7 @@ public final class TerracerAction extends JosmAction {
                     if (!n.hasKeys() && n.getReferrers().size() == 1 && !reusedNodes.contains(n))
                         nodesToDelete.add(n);
                 if (!nodesToDelete.isEmpty())
-                    this.commands.add(DeleteCommand.delete(Main.main.getEditLayer(), nodesToDelete));
+                    this.commands.add(DeleteCommand.delete(Main.getLayerManager().getEditLayer(), nodesToDelete));
             }
         } else {
             // Single building, just add the address details
@@ -413,7 +413,7 @@ public final class TerracerAction extends JosmAction {
         // Remove the address nodes since their tags have been incorporated into the terraces.
         // Or should removing them also be an option?
         if (!housenumbers.isEmpty()) {
-            commands.add(DeleteCommand.delete(Main.main.getEditLayer(),
+            commands.add(DeleteCommand.delete(Main.getLayerManager().getEditLayer(),
                     housenumbers, true, true));
         }
 
@@ -428,10 +428,10 @@ public final class TerracerAction extends JosmAction {
         Main.main.undoRedo.add(createTerracingCommand(outline));
         if (nb <= 1 && street != null) {
             // Select the way (for quick selection of a new house (with the same way))
-            Main.main.getCurrentDataSet().setSelected(street);
+            Main.getLayerManager().getEditDataSet().setSelected(street);
         } else {
             // Select the new building outlines (for quick reversing)
-            Main.main.getCurrentDataSet().setSelected(ways);
+            Main.getLayerManager().getEditDataSet().setSelected(ways);
         }
     }
 
@@ -776,6 +776,6 @@ public final class TerracerAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 }

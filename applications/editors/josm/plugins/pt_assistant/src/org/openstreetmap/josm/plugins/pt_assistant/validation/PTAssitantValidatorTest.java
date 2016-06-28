@@ -46,7 +46,7 @@ public class PTAssitantValidatorTest extends Test {
 
 		layer = new PTAssistantLayer();
 		DataSet.addSelectionListener(layer);
-
+		
 	}
 
 	@Override

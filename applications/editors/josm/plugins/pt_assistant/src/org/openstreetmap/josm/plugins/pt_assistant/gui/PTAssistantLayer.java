@@ -1,6 +1,9 @@
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
 import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,43 +22,45 @@ import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
+import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerPositionStrategy;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class PTAssistantLayer extends Layer implements SelectionChangedListener {
-	
+public class PTAssistantLayer extends Layer implements SelectionChangedListener, PropertyChangeListener {
+
 	private List<OsmPrimitive> primitives = new ArrayList<>();
 
-	
 	public PTAssistantLayer() {
 		super("pt_assistant layer");
+
+		 KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+
 	}
-	
+
 	public void addPrimitive(OsmPrimitive primitive) {
 		this.primitives.add(primitive);
 	}
-	
+
 	public void clear() {
 		this.primitives.clear();
 	}
 
-	
-    @Override
-    public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
+	@Override
+	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
 
-        PTAssistantPaintVisitor paintVisitor = new PTAssistantPaintVisitor(g, mv);
-        for (OsmPrimitive primitive: primitives) {
-            paintVisitor.visit(primitive);
+		PTAssistantPaintVisitor paintVisitor = new PTAssistantPaintVisitor(g, mv);
+		for (OsmPrimitive primitive : primitives) {
+			paintVisitor.visit(primitive);
 
-        }
-        
-    }
+		}
+
+	}
 
 	@Override
 	public Icon getIcon() {
-        return ImageProvider.get("layer", "osmdata_small");
+		return ImageProvider.get("layer", "osmdata_small");
 	}
 
 	@Override
@@ -65,13 +70,9 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener 
 
 	@Override
 	public Action[] getMenuEntries() {
-        return new Action[] {
-                LayerListDialog.getInstance().createShowHideLayerAction(),
-                LayerListDialog.getInstance().createDeleteLayerAction(),
-                SeparatorLayerAction.INSTANCE,
-                new RenameLayerAction(null, this),
-                SeparatorLayerAction.INSTANCE,
-                new LayerListPopup.InfoAction(this) };
+		return new Action[] { LayerListDialog.getInstance().createShowHideLayerAction(),
+				LayerListDialog.getInstance().createDeleteLayerAction(), SeparatorLayerAction.INSTANCE,
+				new RenameLayerAction(null, this), SeparatorLayerAction.INSTANCE, new LayerListPopup.InfoAction(this) };
 	}
 
 	@Override
@@ -87,36 +88,35 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener 
 	@Override
 	public void mergeFrom(Layer arg0) {
 		// do nothing
-		
+
 	}
 
 	@Override
 	public void visitBoundingBox(BoundingXYVisitor arg0) {
 		// do nothing
-		
+
 	}
 
-	
-    @Override
-    public LayerPositionStrategy getDefaultLayerPosition() {
-        return LayerPositionStrategy.IN_FRONT;
-    }
+	@Override
+	public LayerPositionStrategy getDefaultLayerPosition() {
+		return LayerPositionStrategy.IN_FRONT;
+	}
 
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		
-		
+
 		ArrayList<Relation> routes = new ArrayList<>();
-		
-		for (OsmPrimitive primitive: newSelection) {
+
+		for (OsmPrimitive primitive : newSelection) {
 			if (primitive.getType().equals(OsmPrimitiveType.RELATION)) {
 				Relation relation = (Relation) primitive;
 				if (RouteUtils.isTwoDirectionRoute(relation)) {
 					routes.add(relation);
 				}
+
 			}
 		}
-		
+
 		if (!routes.isEmpty()) {
 			this.primitives.clear();
 			this.primitives.addAll(routes);
@@ -124,10 +124,41 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener 
 				Main.getLayerManager().addLayer(this);
 			}
 		}
-		
 
-		
 	}
-    
-    
+	
+	
+	/**
+	 * Listens to a focus change
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+
+		if ("focusedWindow".equals(evt.getPropertyName())) {
+
+			if (evt.getNewValue() == null) {
+				return;
+			}
+
+			if (evt.getNewValue().getClass().equals(GenericRelationEditor.class)) {
+				
+				GenericRelationEditor editor = (GenericRelationEditor) evt.getNewValue(); 
+				Relation relation = editor.getRelation();
+				
+				if (RouteUtils.isTwoDirectionRoute(relation)) {
+					this.primitives.clear();
+					this.primitives.add(relation);
+					if (!Main.getLayerManager().containsLayer(this)) {
+						Main.getLayerManager().addLayer(this);
+					}
+//					Main.map.repaint();
+				}
+
+			}
+
+//			System.out.println("focusedWindow: ");
+//			System.out.println("GET NEW VALUE: " + evt.getNewValue().getClass());
+//			System.out.println("");
+		}
+	}
 }

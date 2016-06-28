@@ -7,6 +7,9 @@
 		<Class name="~boofcv.*" />
 	</Match>
 	<Match>
+		<Class name="~com.bric.*" />
+	</Match>
+	<Match>
 		<Class name="~com.fasterxml.*" />
 	</Match>
 	<Match>
@@ -23,6 +26,9 @@
 	</Match>
 	<Match>
 		<Class name="~com.thoughtworks.*" />
+	</Match>
+	<Match>
+		<Class name="~com.toedter.*" />
 	</Match>
 	<Match>
 		<Class name="~com.vividsolutions.*" />

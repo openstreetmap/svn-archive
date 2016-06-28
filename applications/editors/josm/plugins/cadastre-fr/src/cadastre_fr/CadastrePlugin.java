@@ -457,14 +457,14 @@ public class CadastrePlugin extends Plugin {
         if (Main.map != null && Main.map.mapView != null) {
             int wmsNewLayerPos = Main.getLayerManager().getLayers().size();
             for(Layer l : Main.getLayerManager().getLayersOfType(WMSLayer.class)) {
-                int wmsPos = Main.map.mapView.getLayerPos(l);
+                int wmsPos = Main.getLayerManager().getLayers().indexOf(l);
                 if (wmsPos < wmsNewLayerPos) wmsNewLayerPos = wmsPos;
             }
-            Main.main.addLayer(wmsLayer);
+            Main.getLayerManager().addLayer(wmsLayer);
             // Move the layer to its new position
             Main.map.mapView.moveLayer(wmsLayer, wmsNewLayerPos);
         } else
-            Main.main.addLayer(wmsLayer);
+            Main.getLayerManager().addLayer(wmsLayer);
     }
 
     private static String checkSourceMillesime() {

@@ -42,7 +42,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     if (wmsLayer.isRaster()) {
                         // set raster image commune bounding box based on current view (before adjustment)
                         JOptionPane.showMessageDialog(Main.parent,tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\""));
-                        Main.main.removeLayer(wmsLayer);
+                        Main.getLayerManager().removeLayer(wmsLayer);
                         wmsLayer = null;
                         return;
                     } else {
@@ -55,7 +55,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
             }
             else if(wmsLayer.getImages().size()==0)
               // failed to contact WMS of find this commune. Remove layer if empty.
-              Main.main.removeLayer(wmsLayer);
+              Main.getLayerManager().removeLayer(wmsLayer);
         } catch (DuplicateLayerException e) {
             // we tried to grab onto a duplicated layer (removed)
             Main.warn("removed a duplicated layer");

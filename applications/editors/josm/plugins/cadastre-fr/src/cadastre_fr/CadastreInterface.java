@@ -579,7 +579,7 @@ public class CadastreInterface {
                 if (l instanceof WMSLayer && l.getName().equals(wmsLayer.getName()) && (!l.equals(wmsLayer))) {
                     Main.info("Try to grab into a new layer when "+wmsLayer.getName()+" is already opened.");
                     // remove the duplicated layer
-                    Main.main.removeLayer(wmsLayer);
+                    Main.getLayerManager().removeLayer(wmsLayer);
                     throw new DuplicateLayerException();
                 }
             }

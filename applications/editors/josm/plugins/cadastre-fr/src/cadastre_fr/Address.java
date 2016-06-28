@@ -47,6 +47,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -525,9 +526,10 @@ public class Address extends MapMode {
     }
 
     private static void setNewSelection(OsmPrimitive osm) {
-        Collection<OsmPrimitive> newSelection = new LinkedList<>(Main.main.getCurrentDataSet().getSelected());
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        Collection<OsmPrimitive> newSelection = new LinkedList<>(ds.getSelected());
         newSelection.clear();
         newSelection.add(osm);
-        getCurrentDataSet().setSelected(osm);
+        ds.setSelected(osm);
     }
 }

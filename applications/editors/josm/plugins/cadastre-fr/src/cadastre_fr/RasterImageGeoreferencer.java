@@ -158,7 +158,7 @@ public class RasterImageGeoreferencer implements MouseListener {
      countMouseClicked = 0;
      if (selectedValue == 0) { // "Cancel"
          // remove layer
-         Main.main.removeLayer(wmsLayer);
+         Main.getLayerManager().removeLayer(wmsLayer);
          wmsLayer = null;
          Main.map.mapView.removeMouseListener(this);
          return false;
@@ -347,7 +347,7 @@ private boolean continueGeoreferencing() {
  public void actionInterrupted() {
      actionCompleted();
      if (wmsLayer != null) {
-         Main.main.removeLayer(wmsLayer);
+         Main.getLayerManager().removeLayer(wmsLayer);
          wmsLayer = null;
      }
  }

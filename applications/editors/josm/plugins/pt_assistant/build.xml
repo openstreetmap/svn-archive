@@ -10,7 +10,7 @@
   <property name="plugin.class" value="org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin"/>
   <property name="plugin.description" value="Provides validation and fixing for public transport route according to version 2 of the public transport schema"/>
   <property name="plugin.icon" value="..."/>
-  <property name="plugin.link" value="..."/>
+  <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/PT_Assistant"/>
   
   <!-- ** include targets that all plugins have in common ** -->
   <import file="../build-common.xml"/>

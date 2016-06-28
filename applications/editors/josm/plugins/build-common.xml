@@ -15,7 +15,7 @@
     <property name="josm"                   location="../../core/dist/josm-custom.jar"/>
     <property name="josm.test.build.dir"    location="../../core/test/build"/>
     <property name="groovy.jar"             location="../00_core_tools/groovy-all-2.4.7.jar"/>
-    <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-6.19-all.jar"/>
+    <property name="checkstyle.jar"         location="../00_core_tools/checkstyle/checkstyle-7.0-all.jar"/>
     <property name="findbugs-ant.jar"       location="../00_core_tools/findbugs/findbugs-ant.jar"/>
     <property name="annotations.jar"        location="../00_core_tools/findbugs/annotations.jar"/>
     <property name="plugin.build.dir"       location="build"/>

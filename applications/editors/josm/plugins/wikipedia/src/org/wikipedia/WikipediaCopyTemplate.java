@@ -13,6 +13,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.Preferences.pref;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -97,10 +98,11 @@ public class WikipediaCopyTemplate {
         }
 
         protected Node getSelectedNode() {
-            if (getCurrentDataSet() == null || getCurrentDataSet().getSelected() == null) {
+            DataSet ds = getLayerManager().getEditDataSet();
+            if (ds == null || ds.getSelected() == null) {
                 return null;
             } else {
-                Collection<Node> nodes = Utils.filteredCollection(getCurrentDataSet().getSelected(), Node.class);
+                Collection<Node> nodes = Utils.filteredCollection(ds.getSelected(), Node.class);
                 return nodes.isEmpty() ? null : nodes.iterator().next();
             }
         }

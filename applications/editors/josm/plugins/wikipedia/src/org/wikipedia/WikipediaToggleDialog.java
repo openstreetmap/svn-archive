@@ -38,13 +38,15 @@ import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.LanguageInfo;
 import org.openstreetmap.josm.tools.OpenBrowser;
 import org.wikipedia.WikipediaApp.WikipediaEntry;
 
-public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditLayerChangeListener, DataSetListenerAdapter.Listener {
+public class WikipediaToggleDialog extends ToggleDialog implements ActiveLayerChangeListener, DataSetListenerAdapter.Listener {
 
     public WikipediaToggleDialog() {
         super(tr("Wikipedia"), "wikipedia", tr("Fetch Wikipedia articles with coordinates"), null, 150);
@@ -278,7 +280,7 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
             if (list.getSelectedValue() != null) {
                 Tag tag = ((WikipediaEntry) list.getSelectedValue()).createWikipediaTag();
                 if (tag != null) {
-                    final Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+                    final Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
                     if (!GuiUtils.confirmOverwrite(tag.getKey(), tag.getValue(), selected)) {
                         return;
                     }
@@ -316,8 +318,8 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
 
     protected void updateWikipediaArticles() {
         articles.clear();
-        if (Main.main != null && Main.main.getCurrentDataSet() != null) {
-            for (final OsmPrimitive p : Main.main.getCurrentDataSet().allPrimitives()) {
+        if (Main.main != null && Main.getLayerManager().getEditDataSet() != null) {
+            for (final OsmPrimitive p : Main.getLayerManager().getEditDataSet().allPrimitives()) {
                 articles.addAll(WikipediaApp.getWikipediaArticles(wikipediaLang.get(), p));
             }
         }
@@ -328,19 +330,19 @@ public class WikipediaToggleDialog extends ToggleDialog implements MapView.EditL
     @Override
     public void showNotify() {
         DatasetEventManager.getInstance().addDatasetListener(dataChangedAdapter, FireMode.IN_EDT_CONSOLIDATED);
-        MapView.addEditLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
         updateWikipediaArticles();
     }
 
     @Override
     public void hideNotify() {
         DatasetEventManager.getInstance().removeDatasetListener(dataChangedAdapter);
-        MapView.removeEditLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
         articles.clear();
     }
 
     @Override
-    public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         updateWikipediaArticles();
         list.repaint();
     }

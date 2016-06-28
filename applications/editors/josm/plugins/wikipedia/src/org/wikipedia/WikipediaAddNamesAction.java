@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.preferences.StringProperty;
 import org.openstreetmap.josm.io.remotecontrol.AddTagsDialog;
@@ -39,21 +40,22 @@ public class WikipediaAddNamesAction extends JosmAction {
         if (Main.isDebugEnabled()) {
             Main.debug(tags.toString());
         }
-        AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia", Main.main.getCurrentDataSet().getSelected());
+        AddTagsDialog.addTags(tags.toArray(new String[tags.size()][]), "Wikipedia", getLayerManager().getEditDataSet().getSelected());
     }
 
     protected boolean useWikipediaLangArticle(WikipediaApp.WikipediaLangArticle i) {
         return (!Main.pref.getBoolean("wikipedia.filter-iso-languages", true)
                 || Arrays.asList(Locale.getISOLanguages()).contains(i.lang))
                 && (!Main.pref.getBoolean("wikipedia.filter-same-names", true)
-                || !i.article.equals(getCurrentDataSet().getSelected().iterator().next().get("name")));
+                || !i.article.equals(getLayerManager().getEditDataSet().getSelected().iterator().next().get("name")));
     }
 
     protected String getWikipediaValue() {
-        if (getCurrentDataSet() == null || getCurrentDataSet().getSelected() == null || getCurrentDataSet().getSelected().size() != 1) {
+        DataSet ds = getLayerManager().getEditDataSet();
+        if (ds == null || ds.getSelected() == null || ds.getSelected().size() != 1) {
             return null;
         } else {
-            return getCurrentDataSet().getSelected().iterator().next().get("wikipedia");
+            return ds.getSelected().iterator().next().get("wikipedia");
         }
     }
 

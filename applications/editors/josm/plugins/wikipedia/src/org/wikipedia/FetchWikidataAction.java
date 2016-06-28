@@ -19,6 +19,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.ConditionalOptionPaneUtil;
 import org.openstreetmap.josm.gui.Notification;
@@ -36,10 +37,11 @@ public class FetchWikidataAction extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (getCurrentDataSet() == null) {
+        DataSet ds = getLayerManager().getEditDataSet();
+        if (ds == null) {
             return;
         }
-        Main.worker.submit(new Fetcher(getCurrentDataSet().getSelected()));
+        Main.worker.submit(new Fetcher(ds.getSelected()));
     }
 
     static class Fetcher extends PleaseWaitRunnable {
@@ -155,10 +157,11 @@ public class FetchWikidataAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
+        DataSet ds = getLayerManager().getEditDataSet();
+        if (ds == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(ds.getSelected());
         }
     }
 

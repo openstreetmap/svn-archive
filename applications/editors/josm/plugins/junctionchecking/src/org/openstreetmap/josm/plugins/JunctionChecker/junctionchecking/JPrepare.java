@@ -1,6 +1,7 @@
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 
@@ -13,12 +14,10 @@ public class JPrepare {
     private final ArrayList<Channel> entries;
     private final ArrayList<Channel> exits;
     private ArrayList<Channel> vertices;
-    private final ChannelDiGraph digraph;
 
     public JPrepare(ChannelDiGraph digraph) {
         entries = new ArrayList<>();
         exits = new ArrayList<>();
-        this.digraph = digraph;
     }
 
     public void jPrepare (ArrayList<Channel> vertices) {

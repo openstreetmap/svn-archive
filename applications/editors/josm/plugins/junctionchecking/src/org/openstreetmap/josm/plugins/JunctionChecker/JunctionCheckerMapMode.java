@@ -8,20 +8,21 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 
 /**
  * Diese Klasse wurde aus der Klasse EditGpxMode Klasse des editGPX-Plugins erzeugt und nur an wenigen Stellen an
  * die eigenen Bedürfnisse angepaßt
  */
-public class JunctionCheckerMapMode extends MapMode implements LayerChangeListener{
+public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChangeListener {
 
     MapFrame frame;
     Point pointPressed;
@@ -39,7 +40,7 @@ public class JunctionCheckerMapMode extends MapMode implements LayerChangeListen
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     @Override public void exitMode() {
@@ -48,19 +49,13 @@ public class JunctionCheckerMapMode extends MapMode implements LayerChangeListen
         Main.map.mapView.removeMouseMotionListener(this);
     }
 
-
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        Layer newLayer = Main.getLayerManager().getActiveLayer();
         if (newLayer instanceof ChannelDiGraphLayer) {
             layer = (ChannelDiGraphLayer) newLayer;
         }
     }
-
-    public void layerAdded(Layer newLayer) {
-    }
-
-    public void layerRemoved(Layer oldLayer) {
-    }
-
 
     public void setFrame(MapFrame newFrame) {
         frame = newFrame;
@@ -168,6 +163,6 @@ public class JunctionCheckerMapMode extends MapMode implements LayerChangeListen
     @Override
     public void destroy() {
         super.destroy();
-        MapView.removeLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
     }
 }

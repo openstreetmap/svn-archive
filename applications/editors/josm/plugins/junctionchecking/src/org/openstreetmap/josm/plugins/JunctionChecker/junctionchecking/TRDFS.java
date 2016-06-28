@@ -1,19 +1,17 @@
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.connectedness.BacktrackingColors;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
-
 
 /**
  * @author  Jörg Possin
  */
 public class TRDFS {
 
-    private final ArrayList<Channel> vertices;
-    private Channel startNode;
     private final ArrayList<LeadsTo> cycleEdges;
     private final ChannelDiGraph digraph;
 
@@ -23,11 +21,9 @@ public class TRDFS {
      * @param adnodes
      */
     public TRDFS(ArrayList<Channel> adnodes, ChannelDiGraph digraph) {
-        this.vertices = adnodes;
         this.digraph = digraph;
         this.cycleEdges = new ArrayList<>();
     }
-
 
     public void trdfs(Channel startNode) {
         Channel succNode;

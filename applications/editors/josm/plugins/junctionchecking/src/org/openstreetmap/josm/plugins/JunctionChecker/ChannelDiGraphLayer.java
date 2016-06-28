@@ -21,8 +21,11 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMNode;
@@ -33,7 +36,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * Diese Klasse enthält Teile der Klasse graphviewLayer des graphview Plugins
  *
  */
-public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, PropertyChangeListener{
+public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, PropertyChangeListener {
 
     private ChannelDiGraph digraph;
     private static final int POINTSIZE = 5;//original 3
@@ -60,7 +63,7 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
 
     public ChannelDiGraphLayer(ColorSchemeXMLReader cXMLReader){
         super("ChannelDiGraphLayer");
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
         this.cXMLReader = cXMLReader;
         initColors();
     }
@@ -179,7 +182,6 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         return angle;
     }
 
-
     @Override
     public void visitBoundingBox(BoundingXYVisitor v) {
     }
@@ -188,16 +190,18 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         this.digraph = digraph;
     }
 
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
-    public void layerAdded(Layer newLayer) {
+    @Override
+    public void layerAdded(LayerAddEvent e) {
     }
 
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == this) {
-            MapView.removeLayerChangeListener(this);
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() == this) {
+            Main.getLayerManager().removeLayerChangeListener(this);
         }
     }
 
@@ -209,6 +213,7 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         this.digraph = digraph;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
     }
 }

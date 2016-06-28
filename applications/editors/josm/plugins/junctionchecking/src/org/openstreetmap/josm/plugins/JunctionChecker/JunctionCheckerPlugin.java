@@ -6,12 +6,15 @@ package org.openstreetmap.josm.plugins.JunctionChecker;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.io.File;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -25,7 +28,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.util.RelationProducer;
  * junction or searches in a subgraph after junctions.
  * 
  */
-public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener{
+public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener {
 
     private static final String COLORSCHEMEFILTERFILE = "/resources/xml/colorscheme.xml";
     private JunctionCheckDialog junctionCheckDialog;
@@ -52,9 +55,9 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
         if (newFrame != null) {
             junctionCheckDialog = new JunctionCheckDialog(this);
             newFrame.addToggleDialog(junctionCheckDialog);
-            MapView.addLayerChangeListener(this);
+            Main.getLayerManager().addLayerChangeListener(this);
         } else
-            MapView.removeLayerChangeListener(this);
+            Main.getLayerManager().removeLayerChangeListener(this);
     }
 
     public void activeLayerChange(Layer oldLayer, Layer newLayer) {
@@ -71,11 +74,17 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
         }
     }
 
-    public void layerAdded(Layer newLayer) {
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer == channelDigraphLayer) {
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+    }
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() == channelDigraphLayer) {
             channelDigraphLayer = null;
             this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
             return;

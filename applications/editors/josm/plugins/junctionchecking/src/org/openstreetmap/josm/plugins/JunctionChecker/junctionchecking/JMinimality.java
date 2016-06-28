@@ -13,8 +13,6 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 
-
-
 /**
  * Testet, dass ein subgraph keine kleinere Junction enth�lt
  * @author  Jörg Possin, Simon Scheider
@@ -28,7 +26,6 @@ public class JMinimality {
     private final ArrayList<Channel> OrEx;
     private final int n;
     private final List<List<Object>> L = new ArrayList<>(); //The list of columns to be sorted
-    private long EEovern = 0;
     private final HashSet<Channel> subgraph = new HashSet<>();//The candidate subgraph to be tested
     private ProgressMonitor pm;
     private final boolean pmenabled;
@@ -38,7 +35,6 @@ public class JMinimality {
     private final JPrepare jprepare;
     private boolean Check = false;
     private Iterator<int[]> it;
-
 
     public JMinimality(int[][] Grid, int n,
             ArrayList<Channel> E,
@@ -83,7 +79,7 @@ public class JMinimality {
         }
 
         Combination c = new Combination(Grid.length, n);
-        EEovern = (int) Combination.Choose(Grid.length*Grid.length, n*n);
+        //EEovern = (int) Combination.Choose(Grid.length*Grid.length, n*n);
         long ans = c.Choose(); //This is the number of subcolumns to be generated
         int[][] v; // this is a column variable containing n y-index entries plus true false values (0/1)
         List<Object> C; //The column is packed together with 2 indices into this variable

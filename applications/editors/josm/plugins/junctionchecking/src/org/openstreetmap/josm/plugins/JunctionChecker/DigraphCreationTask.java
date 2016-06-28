@@ -54,7 +54,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {
         if (canceled) {
-            Main.main.removeLayer(plugin.getChannelDigraphLayer());
+            Main.getLayerManager().removeLayer(plugin.getChannelDigraphLayer());
             return;
         }
     }
@@ -68,7 +68,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
             JOptionPane.showMessageDialog(Main.parent, tr("this layer is no osm data layer"));
             return;
         }
-        Main.main.removeLayer(plugin.getChannelDigraphLayer());
+        Main.getLayerManager().removeLayer(plugin.getChannelDigraphLayer());
         int tickscounter = 4;
         if (sealGraph) {
             tickscounter++;
@@ -84,22 +84,22 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         OSMGraph graph = new OSMGraph();
         //Der vom Benutzer in JOSM ausgewählte, zur Zeit aktive Layer wird der PLugin-OSM-Layer
         plugin.setOsmlayer((OsmDataLayer)Main.getLayerManager().getActiveLayer());
-        Iterator<Node> it = Main.main.getCurrentDataSet().getNodes().iterator();
+        Iterator<Node> it = Main.getLayerManager().getEditDataSet().getNodes().iterator();
         while (it.hasNext()) {
             graph.addNode(it.next());
         }
 
-        Iterator<Way> itway = Main.main.getCurrentDataSet().getWays()
+        Iterator<Way> itway = Main.getLayerManager().getEditDataSet().getWays()
         .iterator();
         while (itway.hasNext()) {
             graph.addWay(itway.next());
         }
-        Iterator<Relation> itrel = Main.main.getCurrentDataSet().getRelations()
+        Iterator<Relation> itrel = Main.getLayerManager().getEditDataSet().getRelations()
         .iterator();
         while (itrel.hasNext()) {
             graph.addRelation(itrel.next());
         }
-        Iterator<DataSource> itdata = Main.main.getCurrentDataSet().dataSources.iterator();
+        Iterator<DataSource> itdata = Main.getLayerManager().getEditDataSet().dataSources.iterator();
         while (itdata.hasNext()) {
             Bounds b = itdata.next().bounds;
             graph.setBbbottom(b.getMin().getY());
@@ -145,7 +145,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         plugin.getJcMapMode().setDigraph(cdgb.getDigraph());
         plugin.setNormalMapMode(Main.map.mapMode);
         Main.map.selectMapMode(plugin.getJcMapMode());
-        Main.main.addLayer(plugin.getChannelDigraphLayer());
+        Main.getLayerManager().addLayer(plugin.getChannelDigraphLayer());
         Main.getLayerManager().setActiveLayer(plugin.getChannelDigraphLayer());
     }
 }

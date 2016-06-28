@@ -72,7 +72,7 @@ public class FixTask extends PleaseWaitRunnable {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					Main.main.getCurrentDataSet().beginUpdate();
+					Main.getLayerManager().getEditDataSet().beginUpdate();
 				}
 			});
 			try {
@@ -88,7 +88,7 @@ public class FixTask extends PleaseWaitRunnable {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
-						Main.main.getCurrentDataSet().endUpdate();
+						Main.getLayerManager().getEditDataSet().endUpdate();
 					}
 				});
 			}
@@ -99,7 +99,7 @@ public class FixTask extends PleaseWaitRunnable {
 					Main.main.undoRedo.afterAdd();
 					Main.map.repaint();
 					// tree.resetErrors();
-					Main.main.getCurrentDataSet().fireSelectionChanged();
+					Main.getLayerManager().getEditDataSet().fireSelectionChanged();
 				}
 			});
 		} catch (InterruptedException | InvocationTargetException e) {

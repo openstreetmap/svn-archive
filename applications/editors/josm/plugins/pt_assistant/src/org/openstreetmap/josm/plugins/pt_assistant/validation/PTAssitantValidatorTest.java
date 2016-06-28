@@ -3,11 +3,11 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -287,10 +287,10 @@ public class PTAssitantValidatorTest extends Test {
 			return null;
 		}
 
-		List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
-		Relation originalRelation = (Relation) primitives.get(0);
-		List<OsmPrimitive> highlighted = (List<OsmPrimitive>) testError.getHighlighted();
-		Way wayToRemove = (Way) highlighted.get(0);
+		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.iterator().next();
+		Collection<?> highlighted = testError.getHighlighted();
+		Way wayToRemove = (Way) highlighted.iterator().next();
 
 		Relation modifiedRelation = new Relation(originalRelation);
 		List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount() - 1);
@@ -343,8 +343,8 @@ public class PTAssitantValidatorTest extends Test {
 			return null;
 		}
 
-		List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
-		Relation originalRelation = (Relation) primitives.get(0);
+		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.iterator().next();
 
 		// separate ways from stops (because otherwise the order of
 		// stops/platforms can be messed up by the sorter:

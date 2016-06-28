@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.openstreetmap.josm.command.ChangeCommand;
@@ -121,10 +122,10 @@ public class DirectionTest extends Test {
 		List<Command> commands = new ArrayList<>(50);
 
 		if (testError.getTester().getClass().equals(DirectionTest.class) && testError.isFixable()) {
-			List<OsmPrimitive> primitives = (List<OsmPrimitive>) testError.getPrimitives();
-			Relation originalRelation = (Relation) primitives.get(0);
-			List<OsmPrimitive> highlightedList = (List<OsmPrimitive>) testError.getHighlighted();
-			Way wayToRemove = (Way) highlightedList.get(0);
+		    Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+			Relation originalRelation = (Relation) primitives.iterator().next();
+			Collection<?> highlightedList = testError.getHighlighted();
+			Way wayToRemove = (Way) highlightedList.iterator().next();
 
 			Relation modifiedRelation = new Relation(originalRelation);
 			List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount() - 1);

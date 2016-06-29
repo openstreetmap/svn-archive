@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
@@ -32,10 +31,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class PTAssistantLayer extends Layer implements SelectionChangedListener, PropertyChangeListener {
 
 	private List<OsmPrimitive> primitives = new ArrayList<>();
-	private PTAssistantPaintVisitor paintVisitor;
 
 	public PTAssistantLayer() {
 		super("pt_assistant layer");
+
 		 KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
 
 	}
@@ -51,7 +50,7 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 	@Override
 	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
 
-		paintVisitor = new PTAssistantPaintVisitor(g, mv);
+		PTAssistantPaintVisitor paintVisitor = new PTAssistantPaintVisitor(g, mv);
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
 
@@ -103,9 +102,6 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 		return LayerPositionStrategy.IN_FRONT;
 	}
 
-	/**
-	 * Listens to a selection change 
-	 */
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
 
@@ -150,22 +146,19 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 				Relation relation = editor.getRelation();
 				
 				if (RouteUtils.isTwoDirectionRoute(relation)) {
-
 					this.primitives.clear();
 					this.primitives.add(relation);
 					if (!Main.getLayerManager().containsLayer(this)) {
 						Main.getLayerManager().addLayer(this);
 					}
-					Graphics g = paintVisitor.getGraphics();
-					paintVisitor = new PTAssistantPaintVisitor(g, Main.map.mapView);
-					for (OsmPrimitive primitive : primitives) {
-						paintVisitor.visit(primitive);
-
-					}
-					Main.map.repaint();
+//					Main.map.repaint();
 				}
 
 			}
+
+//			System.out.println("focusedWindow: ");
+//			System.out.println("GET NEW VALUE: " + evt.getNewValue().getClass());
+//			System.out.println("");
 		}
 	}
 }

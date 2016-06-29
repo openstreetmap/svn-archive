@@ -1,7 +1,6 @@
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
@@ -34,14 +33,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		int stopCount = 1;
 		for (RelationMember rm : r.getMembers()) {
 			if (RouteUtils.isPTStop(rm)) {
-				String label = "";
-				if (r.hasKey("ref")) {
-					label = label + r.get("ref");
-				} else if (r.hasKey("name")) {
-					label = label + r.get("name");
-				}
-				label = label + "." + stopCount;
-				drawStop(rm.getMember(), Color.BLUE, Color.BLACK,  label);
+				drawStop(rm.getMember(), Color.BLUE, Color.BLACK, (new Integer(stopCount)).toString());
 				stopCount++;
 			} else if (RouteUtils.isPTWay(rm)) {
 				if (rm.isWay()) {
@@ -69,7 +61,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 				lastN = n;
 				continue;
 			}
-			drawSegment(lastN, n, new Color(208, 80, 208, 179));
+			drawSegment(lastN, n, Color.BLUE);
 			lastN = n;
 		}
 	}
@@ -100,20 +92,12 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	protected void drawSegment(Point p1, Point p2, Color color) {
 
 		double t = Math.atan2((double) p2.x - p1.x, (double) p2.y - p1.y);
-		double cosT = 8 * Math.cos(t);
-		double sinT = 8 * Math.sin(t);
-		
-		
-		int[] xPoints = {(int)(p1.x+cosT), (int)(p2.x+cosT), (int)(p2.x-cosT), (int)(p1.x-cosT)};
-		int[] yPoints = {(int)(p1.y-sinT), (int)(p2.y-sinT), (int)(p2.y+sinT), (int)(p1.y+sinT)};
-		g.setColor(color);
-		g.fillPolygon(xPoints, yPoints, 4);
-		g.fillOval((int)(p1.x-8), (int)(p1.y-8), 16, 16);
-		g.fillOval((int)(p2.x-8), (int)(p2.y-8), 16, 16);
-		
+		double cosT = 5 * Math.cos(t);
+		double sinT = 5 * Math.sin(t);
 
-//		g.drawLine((int) (p1.x - cosT), (int) (p1.y - sinT), (int) (p2.x + cosT), (int) (p2.y - sinT));
-//		g.drawLine((int) (p1.x - cosT), (int) (p1.y + sinT), (int) (p2.x - cosT), (int) (p2.y + sinT));
+		g.setColor(color);
+		g.drawLine((int) (p1.x + cosT), (int) (p1.y - sinT), (int) (p2.x + cosT), (int) (p2.y - sinT));
+		g.drawLine((int) (p1.x - cosT), (int) (p1.y + sinT), (int) (p2.x - cosT), (int) (p2.y + sinT));
 
 	}
 
@@ -142,18 +126,12 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		Point p = mv.getPoint(n);
 
 		g.setColor(fillColor);
+		// g.drawRect(p.x-10, p.y-10, 20, 20);
 		g.fillOval(p.x - 5, p.y - 5, 10, 10);
 		g.setColor(outlineColor);
 		g.drawOval(p.x - 5, p.y - 5, 10, 10);
 
 		g.setColor(Color.WHITE);
-		Font stringFont = new Font( "SansSerif", Font.PLAIN, 18 );
-		g.setFont(stringFont);
 		g.drawString(label, p.x - 20, p.y - 20);
 	}
-	
-	protected Graphics getGraphics() {
-		return this.g;
-	}
-	
 }

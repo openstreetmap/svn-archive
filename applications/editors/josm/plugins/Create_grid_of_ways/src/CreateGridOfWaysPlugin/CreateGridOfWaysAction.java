@@ -45,7 +45,7 @@ public final class CreateGridOfWaysAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Collection<OsmPrimitive> sel = Main.main.getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> sel = Main.getLayerManager().getEditDataSet().getSelected();
         Collection<Node> nodesWay1 = new LinkedList<>();
         Collection<Node> nodesWay2 = new LinkedList<>();
         if ((sel.size() != 2) || !(sel.toArray()[0] instanceof Way) || !(sel.toArray()[1] instanceof Way)) {

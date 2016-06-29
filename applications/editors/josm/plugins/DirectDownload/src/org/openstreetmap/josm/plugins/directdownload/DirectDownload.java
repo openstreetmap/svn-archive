@@ -3,10 +3,6 @@ package org.openstreetmap.josm.plugins.directdownload;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
@@ -14,12 +10,8 @@ import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
-import org.openstreetmap.josm.io.GpxReader;
-import org.openstreetmap.josm.io.OsmApi;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.tools.Utils;
-import org.xml.sax.SAXException;
 
 public class DirectDownload extends Plugin {
     private DownloadAction openaction;
@@ -59,13 +51,13 @@ public class DirectDownload extends Plugin {
             final GpxLayer gpxLayer = new GpxLayer(data);
 
             if (data.hasRoutePoints() || data.hasTrackPoints()) {
-                Main.main.addLayer(gpxLayer);
+                Main.getLayerManager().addLayer(gpxLayer);
             }
 
             if (Main.pref.getBoolean("marker.makeautomarkers", true) && !data.waypoints.isEmpty()) {
                 MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", track.filename), null, gpxLayer);
                 if (ml.data.size() > 0) {
-                    Main.main.addLayer(ml);
+                    Main.getLayerManager().addLayer(ml);
                 }
             }
         }

@@ -94,11 +94,11 @@ public class OhePlugin extends Plugin {
 
         @Override
         protected void updateEnabledState() {
-            if (getCurrentDataSet() == null) {
+            if (getLayerManager().getEditDataSet() == null) {
                 // if there is no current dataset, then the action is disabled
                 setEnabled(false);
             } else {
-                updateEnabledState(getCurrentDataSet().getSelected());
+                updateEnabledState(getLayerManager().getEditDataSet().getSelected());
             }
         }
 
@@ -112,7 +112,7 @@ public class OhePlugin extends Plugin {
         @Override
         public void actionPerformed(ActionEvent evt) {
             // fetch active Layer
-            OsmDataLayer osmlayer = Main.main.getEditLayer();
+            OsmDataLayer osmlayer = getLayerManager().getEditLayer();
             if (osmlayer == null)
                 return;
             Collection<OsmPrimitive> selection = osmlayer.data.getSelected();

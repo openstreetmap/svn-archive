@@ -511,7 +511,7 @@ public class TagDialog extends ExtendedDialog {
          * Generates a list of all visible names of highways in order to do autocompletion on the road name.
          */
         Set<String> names = new TreeSet<>();
-        for (OsmPrimitive osm : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
+        for (OsmPrimitive osm : Main.getLayerManager().getEditDataSet().allNonDeletedPrimitives()) {
             if (osm.getKeys() != null && osm.keySet().contains("highway") && osm.keySet().contains("name")) {
                 names.add(osm.get("name"));
             }

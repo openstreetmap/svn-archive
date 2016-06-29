@@ -240,7 +240,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
             }
         });
 
-        DataSet currentDs = Main.main.getCurrentDataSet();
+        DataSet currentDs = Main.getLayerManager().getEditDataSet();
 
         if (ds != currentDs) {
             if (ds != null) {
@@ -279,7 +279,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
         Node n = event.getNode();
         // Refresh selection if a node belonging to a selected member has moved (example: scale action)
         if ((nodes != null && nodes.contains(n)) || waysContain(n)) {
-            selectionChanged(Main.main.getCurrentDataSet().getSelected());
+            selectionChanged(Main.getLayerManager().getEditDataSet().getSelected());
         }
     }
 
@@ -294,7 +294,7 @@ public class MeasurementDialog extends ToggleDialog implements SelectionChangedL
     @Override
     public void systemOfMeasurementChanged(String oldSoM, String newSoM) {
         // Refresh selection to take into account new system of measurement
-        DataSet currentDs = Main.main.getCurrentDataSet();
+        DataSet currentDs = Main.getLayerManager().getEditDataSet();
         if (currentDs != null) {
             selectionChanged(currentDs.getSelected());
         }

@@ -6,9 +6,13 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
@@ -41,17 +45,34 @@ public class MeasurementPlugin extends Plugin {
     public static MeasurementLayer getCurrentLayer() {
         if (currentLayer == null) {
             currentLayer = new MeasurementLayer(tr("Measurements"));
-            Main.main.addLayer(currentLayer);
-            MapView.addLayerChangeListener(new LayerChangeListener(){
-                public void activeLayerChange(final Layer oldLayer, final Layer newLayer) {
-                    if(newLayer instanceof MeasurementLayer)
+            Main.getLayerManager().addLayer(currentLayer);
+            final ActiveLayerChangeListener activeListener = new ActiveLayerChangeListener() {
+                @Override
+                public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+                    Layer newLayer = Main.getLayerManager().getActiveLayer();
+                    if (newLayer instanceof MeasurementLayer)
                         MeasurementPlugin.currentLayer = (MeasurementLayer)newLayer;
                 }
-                public void layerAdded(final Layer newLayer) {
+            };
+            Main.getLayerManager().addActiveLayerChangeListener(activeListener);
+            Main.getLayerManager().addLayerChangeListener(new LayerChangeListener(){
+                @Override
+                public void layerAdded(LayerAddEvent e) {
+                    // Do nothing
                 }
-                public void layerRemoved(final Layer oldLayer) {
-                    if (oldLayer != null && oldLayer == currentLayer)
-                        MapView.removeLayerChangeListener(this);
+
+                @Override
+                public void layerRemoving(LayerRemoveEvent e) {
+                    Layer oldLayer = e.getRemovedLayer();
+                    if (oldLayer != null && oldLayer == currentLayer) {
+                        Main.getLayerManager().removeActiveLayerChangeListener(activeListener);
+                        Main.getLayerManager().removeLayerChangeListener(this);
+                    }
+                }
+
+                @Override
+                public void layerOrderChanged(LayerOrderChangeEvent e) {
+                    // Do nothing
                 }
             });
         }

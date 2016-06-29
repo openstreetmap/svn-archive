@@ -48,7 +48,7 @@ public class MergeAddrPointsAction extends JosmAction {
     public void actionPerformed(ActionEvent arg0) {
         if (!isEnabled())
             return;
-        Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
         if (selection.isEmpty()) {
             new Notification(tr("Select both address nodes and building ways to merge"))
                     .setIcon(JOptionPane.INFORMATION_MESSAGE).show();
@@ -145,6 +145,6 @@ public class MergeAddrPointsAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 }

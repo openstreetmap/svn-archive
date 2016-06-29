@@ -19,7 +19,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.openstreetmap.josm.Main;
@@ -127,7 +126,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
     @Override
     public void enterMode() {
         super.enterMode();
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             Main.map.selectSelectTool(false);
             return;
         }
@@ -139,7 +138,7 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
         Main.map.keyDetector.addKeyListener(this);
         Main.map.keyDetector.addModifierListener(this);
         DataSet.addSelectionListener(this);
-        updateSnap(getCurrentDataSet().getSelected());
+        updateSnap(getLayerManager().getEditDataSet().getSelected());
     }
 
     @Override
@@ -306,8 +305,8 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
                 if (ToolSettings.isUsingAddr())
                     showAddrDialog(w);
                 if (ToolSettings.isAutoSelect()
-                        && (Main.main.getCurrentDataSet().getSelected().isEmpty() || shift)) {
-                    Main.main.getCurrentDataSet().setSelected(w);
+                        && (getLayerManager().getEditDataSet().getSelected().isEmpty() || shift)) {
+                    getLayerManager().getEditDataSet().setSelected(w);
                 }
             }
         }

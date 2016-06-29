@@ -206,7 +206,7 @@ class Building {
     }
 
     private Node findNode(EastNorth pos) {
-        DataSet ds = Main.main.getCurrentDataSet();
+        DataSet ds = Main.getLayerManager().getEditDataSet();
         LatLon l = eastNorth2latlon(pos);
         List<Node> nodes = ds.searchNodes(new BBox(l.lon() - 0.0000001, l.lat() - 0.0000001,
                 l.lon() + 0.0000001, l.lat() + 0.0000001));
@@ -233,7 +233,7 @@ class Building {
         bbox.add(eastNorth2latlon(en[3]));
         List<Node> nodes = new LinkedList<>();
         nodesloop:
-        for (Node n : Main.main.getCurrentDataSet().searchNodes(bbox)) {
+        for (Node n : Main.getLayerManager().getEditDataSet().searchNodes(bbox)) {
             if (!n.isUsable())
                 continue;
             tagcheck: do {

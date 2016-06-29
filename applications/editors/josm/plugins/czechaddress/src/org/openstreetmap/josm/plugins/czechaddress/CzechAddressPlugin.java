@@ -21,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
@@ -146,7 +147,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             for (Street street : location.getAllStreets())
                 reasoner.update(street);
 
-            org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+            DataSet dataSet = Main.getLayerManager().getEditDataSet();
             if (dataSet != null) {
                 for (OsmPrimitive prim : dataSet.allPrimitives()) {
                     if (House.isMatchable(prim) || Street.isMatchable(prim))

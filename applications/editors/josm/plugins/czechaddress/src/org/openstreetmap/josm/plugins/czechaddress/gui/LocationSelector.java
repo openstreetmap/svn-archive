@@ -86,7 +86,7 @@ public class LocationSelector extends ExtendedDialog {
         double bestLen = 0;
 
         BoundingXYVisitor visitor = new BoundingXYVisitor();
-        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.getLayerManager().getEditDataSet();
         if (dataSet == null) return;
 
         for (OsmPrimitive op : dataSet.allPrimitives()) {
@@ -109,7 +109,7 @@ public class LocationSelector extends ExtendedDialog {
         if (assertions)
             System.out.println("AUTO: Center is " + center);
 
-        for (OsmPrimitive op : Main.main.getCurrentDataSet().allPrimitives()) {
+        for (OsmPrimitive op : Main.getLayerManager().getEditDataSet().allPrimitives()) {
 
             if (!(op instanceof Node)) {
                 continue;

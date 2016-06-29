@@ -42,7 +42,7 @@ public class PointManipulatorAction extends JosmAction {
      * selected. If both conditions are satisfied, dialog is opened.</p>
      */
     public void actionPerformed(ActionEvent e) {
-        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.getLayerManager().getEditDataSet();
         if (dataSet == null) return;
         Collection<OsmPrimitive> data = dataSet.getSelected();
 

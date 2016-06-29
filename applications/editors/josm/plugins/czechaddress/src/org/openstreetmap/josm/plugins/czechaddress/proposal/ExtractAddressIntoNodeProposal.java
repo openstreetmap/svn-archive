@@ -65,7 +65,7 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
         for (String key : addrNode.keySet())
            way.remove(key);
 
-        Main.main.getCurrentDataSet().addPrimitive(addrNode);
+        Main.getLayerManager().getEditDataSet().addPrimitive(addrNode);
     }
 
     /**
@@ -77,7 +77,4 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
     public String toString() {
         return "Vytvořit z budovy samostatný adresní uzel.";
     }
-
-
-
 }

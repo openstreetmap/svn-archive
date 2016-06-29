@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -52,14 +53,14 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      * area.
      */
     public void actionPerformed(ActionEvent e) {
-
-        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
-        Collection<Way> newSelection = new LinkedList<>(Main.main.getCurrentDataSet().getSelectedWays());
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        Collection<Way> selectedWays = ds.getSelectedWays();
+        Collection<Way> newSelection = new LinkedList<>(ds.getSelectedWays());
 
         for (Way area : selectedWays) {
             if (! area.isClosed()) continue;
 
-            for (OsmPrimitive prim2 : Main.main.getCurrentDataSet().allNonDeletedPrimitives()) {
+            for (OsmPrimitive prim2 : ds.allNonDeletedPrimitives()) {
                 if (!(prim2 instanceof Way)) continue;
                 if (prim2.equals(area))      continue;
                 Way border = (Way) prim2;
@@ -81,8 +82,8 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
                 }
 
                 if (errorCode == 0) {
-                    Main.main.getCurrentDataSet().addPrimitive(newArea1);
-                    Main.main.getCurrentDataSet().addPrimitive(newArea2);
+                    ds.addPrimitive(newArea1);
+                    ds.addPrimitive(newArea2);
 
                     area.setDeleted(true);
                     border.setDeleted(true);
@@ -97,7 +98,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
             }
         }
 
-        Main.main.getCurrentDataSet().setSelected(newSelection);
+        ds.setSelected(newSelection);
     }
 
     /**
@@ -112,7 +113,7 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      */
     private int splitArea(Way area, Way border, Way newArea1, Way newArea2) {
 
-        for (Relation r : Main.main.getCurrentDataSet().getRelations())
+        for (Relation r : Main.getLayerManager().getEditDataSet().getRelations())
             for (RelationMember rm : r.getMembers())
                 if (rm.refersTo(area) || rm.refersTo(border))
                     return 2;

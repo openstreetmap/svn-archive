@@ -46,7 +46,7 @@ public class ManagerDialog extends ExtendedDialog {
 
         dbEditButton.setIcon(ImageProvider.get("actions", "edit.png"));
 
-        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.main.getCurrentDataSet();
+        org.openstreetmap.josm.data.osm.DataSet dataSet = Main.getLayerManager().getEditDataSet();
         if (dataSet != null) {
             Capitalizator cap = new Capitalizator(dataSet.allPrimitives(),
                                     CzechAddressPlugin.getLocation().getStreets());

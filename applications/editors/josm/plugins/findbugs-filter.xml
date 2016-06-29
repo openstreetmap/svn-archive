@@ -10,6 +10,9 @@
 		<Class name="~com.bric.*" />
 	</Match>
 	<Match>
+		<Class name="~com.cybozu.*" />
+	</Match>
+	<Match>
 		<Class name="~com.fasterxml.*" />
 	</Match>
 	<Match>
@@ -35,6 +38,9 @@
 	</Match>
 	<Match>
 		<Class name="~crosby.*" />
+	</Match>
+	<Match>
+		<Class name="~de.bwaldvogel.*" />
 	</Match>
 	<Match>
 		<Class name="~edu.princeton.*" />

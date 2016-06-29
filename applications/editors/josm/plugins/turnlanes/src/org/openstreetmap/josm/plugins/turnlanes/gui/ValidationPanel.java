@@ -36,7 +36,7 @@ class ValidationPanel extends JPanel {
         
         @Override
         public void actionPerformed(ActionEvent e) {
-            setIssues(new Validator().validate(Main.main.getCurrentDataSet()));
+            setIssues(new Validator().validate(Main.getLayerManager().getEditDataSet()));
         }
     };
     
@@ -61,9 +61,9 @@ class ValidationPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (selected.getRelation() == null) {
-                Main.main.getCurrentDataSet().setSelected(selected.getPrimitives());
+                Main.getLayerManager().getEditDataSet().setSelected(selected.getPrimitives());
             } else {
-                Main.main.getCurrentDataSet().setSelected(selected.getRelation());
+                Main.getLayerManager().getEditDataSet().setSelected(selected.getRelation());
             }
         }
     };

@@ -16,6 +16,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -31,22 +32,19 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.EditLayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.turnlanes.model.ModelContainer;
 
-public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeListener, SelectionChangedListener {
+public class TurnLanesDialog extends ToggleDialog implements ActiveLayerChangeListener, SelectionChangedListener {
     private class EditAction extends JosmAction {
         private static final long serialVersionUID = 4114119073563457706L;
         
         public EditAction() {
             super(tr("Edit"), "dialogs/edit", tr("Edit turn relations and lane lengths for selected node."), null,
                     false);
-            //putValue("toolbar", "turnlanes/edit");            Main.toolbar.register(this);
-	    // did not work in 5018
-
         }
         
         @Override
@@ -65,8 +63,6 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
         public ValidateAction() {
             super(tr("Validate"), "dialogs/validator", tr("Validate turn- and lane-length-relations for consistency."),
                     null, false);
-            // putValue("toolbar", "turnlanes/validate");            Main.toolbar.register(this);
-	    // did not work in 5018
         }
         
         @Override
@@ -149,7 +145,7 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
     public TurnLanesDialog() {
         super(tr("Turn Lanes"), "turnlanes.png", tr("Edit turn lanes"), null, 200);
         
-        MapView.addEditLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
         DataSet.addSelectionListener(this);
         
         final JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
@@ -191,34 +187,35 @@ public class TurnLanesDialog extends ToggleDialog implements EditLayerChangeList
         }
     }
 
-	@Override
-	public void editLayerChanged(OsmDataLayer oldLayer, OsmDataLayer newLayer) {
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        OsmDataLayer oldLayer = e.getPreviousEditLayer();
         if (oldLayer != null) {
             oldLayer.data.removeDataSetListener(dataSetListener);
         }
-        
+        OsmDataLayer newLayer = Main.getLayerManager().getEditLayer();
         if (newLayer != null) {
             newLayer.data.addDataSetListener(dataSetListener);
         }
-	}
+    }
 
-	@Override
-	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    @Override
+    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         if (selected.equals(new HashSet<>(newSelection))) {
             return;
         }
         selected.clear();
         selected.addAll(newSelection);
-        
-        refresh();
-	}
 
-	@Override
-	public void destroy() {
-		super.destroy();
-        MapView.removeEditLayerChangeListener(this);
+        refresh();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
         DataSet.removeSelectionListener(this);
         editAction.destroy();
         validateAction.destroy();
-	}
+    }
 }

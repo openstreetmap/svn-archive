@@ -103,7 +103,7 @@ public class RouteLayer extends Layer implements DataSetListenerAdapter.Listener
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bounds) {
 
-        DataSet dataset = Main.main.getCurrentDataSet();
+        DataSet dataset = Main.getLayerManager().getEditDataSet();
 
         if (dataset == null) {
             return;

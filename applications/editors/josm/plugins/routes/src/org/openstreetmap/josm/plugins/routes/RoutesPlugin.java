@@ -14,9 +14,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -30,7 +32,7 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
 
     public RoutesPlugin(PluginInformation info) {
         super(info);
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
 
         File routesFile = new File(getPluginDir() + File.separator + "routes.xml");
         if (!routesFile.exists()) {
@@ -39,9 +41,9 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
             try {
                 routesFile.getParentFile().mkdir();
                 try (
-                    OutputStream outputStream = new FileOutputStream(routesFile);
-                    InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
-                ) {
+                        OutputStream outputStream = new FileOutputStream(routesFile);
+                        InputStream inputStream = Routes.class.getResourceAsStream("routes.xml");
+                        ) {
                     byte[] b = new byte[512];
                     int read;
                     while ((read = inputStream.read(b)) != -1) {
@@ -83,9 +85,10 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
                     if (!isShown) {
                         isShown = true;
                         SwingUtilities.invokeLater(new Runnable() {
+                            @Override
                             public void run() {
                                 for (RouteLayer routeLayer:routeLayers) {
-                                    Main.main.addLayer(routeLayer);
+                                    Main.getLayerManager().addLayer(routeLayer);
                                 }
                             }
                         });
@@ -96,9 +99,10 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
             if (isShown) {
                 isShown = false;
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         for (RouteLayer routeLayer:routeLayers) {
-                            Main.main.removeLayer(routeLayer);
+                            Main.getLayerManager().removeLayer(routeLayer);
                         }
                     }
                 });
@@ -106,11 +110,18 @@ public class RoutesPlugin extends Plugin implements LayerChangeListener {
         }
     }
 
-    public void layerAdded(Layer newLayer) {
+    @Override
+    public void layerAdded(LayerAddEvent e) {
         checkLayers();
     }
 
-    public void layerRemoved(Layer oldLayer) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
         checkLayers();
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
     }
 }

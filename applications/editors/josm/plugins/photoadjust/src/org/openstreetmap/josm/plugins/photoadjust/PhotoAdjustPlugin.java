@@ -7,20 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
+import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
-import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 
 /**
  * This is the main class for the photo adjust plugin.  The plugin
  * allows to move photos on the map and to place photos without
  * coordinates (untagged photos) on the map.
  */
-public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
+public class PhotoAdjustPlugin extends Plugin implements ActiveLayerChangeListener {
   
     private GeoImageLayer imageLayer = null;
     private MouseAdapter mouseAdapter = null;
@@ -76,19 +76,19 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            MapView.addLayerChangeListener(this, true);
+            Main.getLayerManager().addAndFireActiveLayerChangeListener(this);
             PhotoAdjustMapMode adjustMode = new PhotoAdjustMapMode(newFrame, worker);
             adjustMode.installMapMode(newFrame);
-        } 
-        else {
-            MapView.removeLayerChangeListener(this);
+        } else {
+            Main.getLayerManager().removeActiveLayerChangeListener(this);
         }
     }
 
-    // LayerChangeListener: activeLayerChange/layerAdded/layerRemoved
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         worker.reset();
+        Layer oldLayer = e.getPreviousActiveLayer();
+        Layer newLayer = Main.getLayerManager().getActiveLayer();
         if ( oldLayer instanceof GeoImageLayer
              && newLayer instanceof GeoImageLayer) {
             imageLayer = (GeoImageLayer)newLayer;
@@ -106,10 +106,4 @@ public class PhotoAdjustPlugin extends Plugin implements LayerChangeListener {
             }
         }
     }
-
-    @Override
-    public void layerAdded(Layer newLayer) {}
-
-    @Override
-    public void layerRemoved(Layer oldLayer) {}
 }

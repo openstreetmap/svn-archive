@@ -52,7 +52,7 @@ public class UntaggedGeoImageLayerAction
                     layer.removePhotoByIdx(idx);
                 }
             }
-            Main.main.addLayer(new GeoImageLayer(untagged, layer.getGpxLayer(),
+            Main.getLayerManager().addLayer(new GeoImageLayer(untagged, layer.getGpxLayer(),
                                                  tr("Untagged Images"),
                                                  layer.isUseThumbs()));
         }

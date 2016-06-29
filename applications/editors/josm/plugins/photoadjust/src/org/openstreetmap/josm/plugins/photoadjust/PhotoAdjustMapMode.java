@@ -15,9 +15,13 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.geoimage.GeoImageLayer;
 import org.openstreetmap.josm.tools.Shortcut;
 
@@ -28,16 +32,16 @@ import org.openstreetmap.josm.tools.Shortcut;
  * inactive if the active layer is a GeoImageLayer as the main plug-in
  * handles it.
  */
-public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
+public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener, ActiveLayerChangeListener {
 
     /** True if this map mode waits for mouse events. */
     private boolean modeActive = false;
     /** True if the map mode button is selected and active. */
     private boolean modeSelected = false;
-    private MouseAdapter mouseAdapter = null;
-    private MouseMotionAdapter mouseMotionAdapter = null;
-    private IconToggleButton mmButton = null;
-    private PhotoAdjustWorker worker = null;
+    private MouseAdapter mouseAdapter;
+    private MouseMotionAdapter mouseMotionAdapter;
+    private IconToggleButton mmButton;
+    private PhotoAdjustWorker worker;
 
     public PhotoAdjustMapMode(MapFrame mapFrame, PhotoAdjustWorker worker) {
         super(tr("Adjust photos"), "photoadjust.png",
@@ -50,7 +54,8 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
         GeoImageLayer.registerSupportedMapMode(this);
         initAdapters();
         this.worker = worker;
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     /**
@@ -130,8 +135,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
         super.enterMode();
         modeSelected = true;
         // Activate the mode only if the current layer is not a
-        // GeoImageLayer.  GeoImageLayer's are handled by the plug-in
-        // directly.
+        // GeoImageLayer.  GeoImageLayer's are handled by the plug-in directly.
         if (! (Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer)) {
             activateMode();
         }
@@ -140,36 +144,37 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
     @Override
     public void exitMode() {
         super.exitMode();
-        MapView.removeLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
         deactivateMode();
         modeSelected = false;
     }
 
-    // LayerChangeListener: activeLayerChange/layerAdded/layerRemoved
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-        // The main part of the plugin takes care of all operations if
-        // a GeoImageLayer is active.
-        if (newLayer instanceof GeoImageLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        // The main part of the plugin takes care of all operations if a GeoImageLayer is active.
+        if (Main.getLayerManager().getActiveLayer() instanceof GeoImageLayer) {
             deactivateMode();
-        }
-        else {
+        } else {
             activateMode();
         }
     }
 
     @Override
-    public void layerAdded(Layer newLayer) {
+    public void layerAdded(LayerAddEvent e) {
         if (modeActive) updateStatusLine();
         updateButtonState();
     }
 
     @Override
-    public void layerRemoved(Layer oldLayer) {
+    public void layerRemoving(LayerRemoveEvent e) {
         if (modeActive) updateStatusLine();
         updateButtonState();
     }
-    // End LayerChangeListener
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+    }
 
     /**
      * Create mouse adapters similar to the main plug-in.
@@ -227,6 +232,7 @@ public class PhotoAdjustMapMode extends MapMode implements LayerChangeListener {
     @Override
     public void destroy() {
         super.destroy();
-        MapView.removeLayerChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
     }
 }

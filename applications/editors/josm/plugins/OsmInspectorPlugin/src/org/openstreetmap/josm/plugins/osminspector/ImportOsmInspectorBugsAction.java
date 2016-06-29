@@ -5,13 +5,18 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import javax.swing.ProgressMonitor;
 
+import org.opengis.referencing.FactoryException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.tools.Shortcut;
+
+import com.vividsolutions.jts.io.ParseException;
 
 public class ImportOsmInspectorBugsAction extends JosmAction {
 	OsmInspectorPlugin plugin;
@@ -48,7 +53,7 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 					GeoFabrikWFSClient wfs = new GeoFabrikWFSClient(bounds);
 					wfs.initializeDataStore();
 					inspector = new OsmInspectorLayer(wfs, monitor);
-					Main.main.addLayer(inspector);
+					Main.getLayerManager().addLayer(inspector);
 					plugin.setLayer(inspector);
 				} else {
 					GeoFabrikWFSClient wfs = new GeoFabrikWFSClient(bounds);
@@ -56,9 +61,8 @@ public class ImportOsmInspectorBugsAction extends JosmAction {
 					inspector.loadFeatures(wfs);
 
 				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (IOException | IndexOutOfBoundsException | NoSuchElementException | FactoryException | ParseException e) {
+				Main.error(e);
 			} finally {
 				monitor.close();
 				if (plugin.getLayer() != null) {

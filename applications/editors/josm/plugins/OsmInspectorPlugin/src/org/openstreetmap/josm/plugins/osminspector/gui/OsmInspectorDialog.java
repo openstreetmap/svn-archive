@@ -5,8 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Arrays;
 
 import javax.swing.AbstractAction;
@@ -20,10 +18,15 @@ import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.osminspector.OsmInspectorLayer;
 import org.openstreetmap.josm.plugins.osminspector.OsmInspectorLayer.BugInfo;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -31,8 +34,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
-public class OsmInspectorDialog extends ToggleDialog implements
-		ListSelectionListener, LayerChangeListener, MouseListener {
+public class OsmInspectorDialog extends ToggleDialog implements LayerChangeListener, ActiveLayerChangeListener {
 
 	private OsmInspectorLayer layer;
 	private JList<String> bugsList;
@@ -84,7 +86,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		// the next action
 		final SideButton nextButton = new SideButton(
 				actNext = new OsmInspectorNextAction(layer));
-		bugsList.getSelectionModel().addListSelectionListener(actNext);
 		nextButton.createArrow(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = bugsList.getSelectedIndex();
@@ -159,8 +160,7 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		}
 	}
 
-	public class OsmInspectorNextAction extends AbstractAction implements
-			ListSelectionListener {
+	public class OsmInspectorNextAction extends AbstractAction {
 
 		private OsmInspectorLayer inspectlayer;
 
@@ -181,10 +181,6 @@ public class OsmInspectorDialog extends ToggleDialog implements
 			bugInfoDialog.setBugDescription(next);
 			updateSelection(next);
 		}
-
-		@Override
-		public void valueChanged(ListSelectionEvent arg0) {
-		}
 	}
 
 	private void updateSelection(BugInfo prev) {
@@ -194,8 +190,7 @@ public class OsmInspectorDialog extends ToggleDialog implements
 		}
 	}
 
-	private class OsmInspectorPrevAction extends AbstractAction implements
-			ListSelectionListener {
+	private class OsmInspectorPrevAction extends AbstractAction {
 
 		private OsmInspectorLayer inspectlayer;
 
@@ -216,34 +211,11 @@ public class OsmInspectorDialog extends ToggleDialog implements
 			bugInfoDialog.setBugDescription(prev);
 			updateSelection(prev);
 		}
-
-		@Override
-		public void valueChanged(ListSelectionEvent e) {
-		}
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+	    Layer newLayer = Main.getLayerManager().getActiveLayer();
 		if (newLayer instanceof OsmInspectorLayer) {
 			this.layer = (OsmInspectorLayer) newLayer;
 			refreshModel();
@@ -257,7 +229,7 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	}
 
 	@Override
-	public void layerAdded(Layer layer) {
+	public void layerAdded(LayerAddEvent e) {
 		if (layer instanceof OsmInspectorLayer) {
 			refreshModel();
 			refreshBugList();
@@ -265,15 +237,14 @@ public class OsmInspectorDialog extends ToggleDialog implements
 	}
 
 	@Override
-	public void layerRemoved(Layer arg0) {
+	public void layerRemoving(LayerRemoveEvent e) {
 		if (layer instanceof OsmInspectorLayer) {
 			bugsList.clearSelection();
 			model.clear();
 		}
 	}
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		
-	}
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+    }
 }

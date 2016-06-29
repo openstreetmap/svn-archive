@@ -12,19 +12,16 @@ import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
-import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class OsmInspectorPlugin extends Plugin 
-implements LayerChangeListener, ZoomChangeListener, 
+implements ZoomChangeListener, 
 MouseListener, PreferenceChangedListener, DownloadSelection{
 
 	/** The JOSM user identity manager, it is used for obtaining the user name */
@@ -65,7 +62,6 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
 		Main.toolbar.register( new ImportOsmInspectorBugsAction( this ) );
 		if (newFrame == null) {
             /* if new MapFrame is null, remove listener */
-            MapView.removeLayerChangeListener(this);
             NavigatableComponent.removeZoomChangeListener(this);
         } else {
             /* add MapDust dialog window */
@@ -75,7 +71,6 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
                 
                 /* add Listeners */
                 NavigatableComponent.addZoomChangeListener(this);
-                MapView.addLayerChangeListener(this);
                 Main.map.mapView.addMouseListener(this);
                 Main.pref.addPreferenceChangeListener(this);
                 /* put username to preferences */
@@ -84,21 +79,6 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
                 Main.toolbar.control.add( new ImportOsmInspectorBugsAction( this ) );
             }
         }
-	}
-
-	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		
-	}
-
-	@Override
-	public void layerAdded(Layer newLayer) {
-		
-	}
-
-	@Override
-	public void layerRemoved(Layer oldLayer) {
-		
 	}
 
 	@Override
@@ -151,21 +131,13 @@ MouseListener, PreferenceChangedListener, DownloadSelection{
 		inspectorLayer = theLayer;
 	}
 
-
-
-
 	@Override
 	public void addGui(DownloadDialog gui) {
 		// TODO Auto-generated method stub
-		
 	}
-
-
-
 
 	@Override
 	public void setDownloadArea(Bounds bounds) {
 		// TODO Auto-generated method stub
-		
 	}
 }

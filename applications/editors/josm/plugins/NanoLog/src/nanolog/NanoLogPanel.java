@@ -13,9 +13,12 @@ import javax.swing.JList;
 import nanolog.NanoLogLayer.NanoLogLayerListener;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 
 /**
  * NanoLog Panel. Displays the selected log item, along with surrounding 30-50 lines.
@@ -43,19 +46,19 @@ public class NanoLogPanel extends ToggleDialog implements LayerChangeListener, N
     }
 
     @Override
-    public void activeLayerChange( Layer oldLayer, Layer newLayer ) {
-        // todo
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
     @Override
-    public void layerAdded( Layer newLayer ) {
-        if( newLayer instanceof NanoLogLayer )
-            ((NanoLogLayer)newLayer).addListener(this);
+    public void layerAdded(LayerAddEvent e) {
+        Layer newLayer = e.getAddedLayer();
+        if (newLayer instanceof NanoLogLayer )
+            ((NanoLogLayer) newLayer).addListener(this);
         updateMarkers();
     }
 
     @Override
-    public void layerRemoved( Layer oldLayer ) {
+    public void layerRemoving(LayerRemoveEvent e) {
         updateMarkers();
     }
 

@@ -1,17 +1,19 @@
 package nanolog;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Add NanoLog opening menu item and the panel.
@@ -29,7 +31,7 @@ public class NanoLogPlugin extends Plugin {
         if( oldFrame == null && newFrame != null ) {
             NanoLogPanel panel = new NanoLogPanel();
             newFrame.addToggleDialog(panel);
-            MapView.addLayerChangeListener(panel);
+            Main.getLayerManager().addLayerChangeListener(panel);
         }
     }
     
@@ -46,7 +48,7 @@ public class NanoLogPlugin extends Plugin {
                     List<NanoLogEntry> entries = NanoLogLayer.readNanoLog(fc.getSelectedFile());
                     if( !entries.isEmpty() ) {
                         NanoLogLayer layer = new NanoLogLayer(entries);
-                        Main.main.addLayer(layer);
+                        Main.getLayerManager().addLayer(layer);
                         layer.setupListeners();
                     }
                 } catch( IOException ex ) {

@@ -27,11 +27,15 @@ import javax.swing.event.ListDataListener;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SystemOfMeasurement;
 import org.openstreetmap.josm.data.gpx.GpxData;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.elevation.ElevationHelper;
 import org.openstreetmap.josm.plugins.elevation.IElevationModel;
 import org.openstreetmap.josm.plugins.elevation.IElevationModelListener;
@@ -44,7 +48,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * Implements a JOSM ToggleDialog to show the elevation profile. It monitors the
  * connection between layer and elevation profile.
  */
-public class ElevationProfileDialog extends ToggleDialog implements LayerChangeListener, ComponentListener {
+public class ElevationProfileDialog extends ToggleDialog implements LayerChangeListener, ActiveLayerChangeListener, ComponentListener {
 
     private static final String EMPTY_DATA_STRING = "-";
     private static final long serialVersionUID = -868463893732535577L;
@@ -193,7 +197,8 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     @Override
     public void showNotify() {
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
         if (Main.isDisplayingMapView()) {
             Layer layer = Main.getLayerManager().getActiveLayer();
             if (layer instanceof GpxLayer) {
@@ -204,7 +209,8 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
 
     @Override
     public void hideNotify() {
-        MapView.removeLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
     }
 
     /**
@@ -347,7 +353,8 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     }
 
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        Layer newLayer = Main.getLayerManager().getActiveLayer();
         if (newLayer instanceof GpxLayer) {
             setActiveLayer((GpxLayer) newLayer);
         }
@@ -365,13 +372,13 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
                 layerMap.put(newLayer, newEM);
             }
 
-            ElevationModel em = layerMap.get(newLayer);
-            setModel(em);
+            setModel(layerMap.get(newLayer));
         }
     }
 
     @Override
-    public void layerAdded(Layer newLayer) {
+    public void layerAdded(LayerAddEvent e) {
+        Layer newLayer = e.getAddedLayer();
         if (newLayer instanceof GpxLayer) {
             GpxLayer gpxLayer = (GpxLayer) newLayer;
             setActiveLayer(gpxLayer);
@@ -379,7 +386,8 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
     }
 
     @Override
-    public void layerRemoved(Layer oldLayer) {
+    public void layerRemoving(LayerRemoveEvent e) {
+        Layer oldLayer = e.getRemovedLayer();
         if (layerMap.containsKey(oldLayer)) {
             layerMap.remove(oldLayer);
         }
@@ -390,6 +398,10 @@ public class ElevationProfileDialog extends ToggleDialog implements LayerChangeL
                 profileLayer.setProfile(null);
             }
         }
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
     @Override

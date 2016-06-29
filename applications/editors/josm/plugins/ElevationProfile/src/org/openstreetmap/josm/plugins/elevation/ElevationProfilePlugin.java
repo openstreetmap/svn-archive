@@ -64,7 +64,7 @@ public class ElevationProfilePlugin extends Plugin {
     public static ElevationProfileLayer getCurrentLayer(){
         if(currentLayer == null){
             currentLayer = new ElevationProfileLayer(tr("Elevation Profile"));
-            Main.main.addLayer(currentLayer);
+            Main.getLayerManager().addLayer(currentLayer);
         }
         return currentLayer;
     }

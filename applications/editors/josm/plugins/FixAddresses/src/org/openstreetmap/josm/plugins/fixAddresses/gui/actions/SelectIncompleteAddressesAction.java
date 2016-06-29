@@ -34,12 +34,12 @@ public class SelectIncompleteAddressesAction extends JosmAction {
             for (OSMAddress aNode : addressEditContainer.getIncompleteAddresses()) {
                 osms.add(aNode.getOsmObject());
             }
-            getCurrentDataSet().setSelected(osms);
+            getLayerManager().getEditDataSet().setSelected(osms);
         }
     }
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 }

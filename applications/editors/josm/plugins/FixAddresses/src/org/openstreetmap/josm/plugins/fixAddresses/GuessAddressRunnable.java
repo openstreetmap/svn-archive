@@ -118,7 +118,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
     protected void realRun() throws SAXException, IOException,
     OsmTransferException {
 
-        if (Main.main.getCurrentDataSet() == null || addressesToGuess == null) return;
+        if (Main.getLayerManager().getEditDataSet() == null || addressesToGuess == null) return;
 
         isRunning = true;
         canceled = false;
@@ -151,7 +151,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                     guesser.setAddressNode(aNode);
 
                     // visit osm data
-                    for (Way way : Main.main.getCurrentDataSet().getWays()) {
+                    for (Way way : Main.getLayerManager().getEditDataSet().getWays()) {
                         if (canceled) {
                             break;
                         }
@@ -171,7 +171,7 @@ public class GuessAddressRunnable extends PleaseWaitRunnable {
                     guesser.setAddressNode(aNode);
 
                     // visit osm data
-                    for (Node node : Main.main.getCurrentDataSet().getNodes()) {
+                    for (Node node : Main.getLayerManager().getEditDataSet().getNodes()) {
                         if (canceled) {
                             break;
                         }

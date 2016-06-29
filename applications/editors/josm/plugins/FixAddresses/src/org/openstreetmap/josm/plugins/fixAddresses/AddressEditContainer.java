@@ -488,8 +488,8 @@ public class AddressEditContainer implements Visitor, DataSetListener, IAddressE
         if (workingSet != null) {
             invalidate(workingSet);
         } else {
-            if (Main.main.getCurrentDataSet() != null) {
-                invalidate(Main.main.getCurrentDataSet().allPrimitives());
+            if (Main.getLayerManager().getEditDataSet() != null) {
+                invalidate(Main.getLayerManager().getEditDataSet().allPrimitives());
             }
         }
     }

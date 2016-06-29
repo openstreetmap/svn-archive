@@ -58,7 +58,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class FixUnresolvedStreetsAction extends JosmAction implements SelectionC
             Collection<? extends OsmPrimitive> selection) {
         // Enable button if there is either a selection or at least a data set
         setEnabled( selection != null && !selection.isEmpty() ||
-                    (getCurrentDataSet() != null));
+                    (getLayerManager().getEditDataSet() != null));
     }
 
     /* This code is abused to generate tag utility code */

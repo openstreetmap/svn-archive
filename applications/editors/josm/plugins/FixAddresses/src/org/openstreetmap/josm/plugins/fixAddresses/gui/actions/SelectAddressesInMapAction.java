@@ -63,7 +63,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
 
         List<OsmPrimitive> sel = new ArrayList<>();
 
-        getCurrentDataSet().clearSelection();
+        getLayerManager().getEditDataSet().clearSelection();
         for (OSMAddress aNode : addrToSel) {
             sel.add(aNode.getOsmObject());
 
@@ -75,7 +75,7 @@ public class SelectAddressesInMapAction extends AbstractAddressEditAction {
             }
         }
 
-        getCurrentDataSet().setSelected(sel);
+        getLayerManager().getEditDataSet().setSelected(sel);
     }
 
 }

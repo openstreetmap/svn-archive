@@ -25,21 +25,28 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.LayerPositionStrategy;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class PTAssistantLayer extends Layer implements SelectionChangedListener, PropertyChangeListener {
+public class PTAssistantLayer extends Layer
+		implements SelectionChangedListener, PropertyChangeListener, LayerChangeListener {
 
 	private List<OsmPrimitive> primitives = new ArrayList<>();
 	private PTAssistantPaintVisitor paintVisitor;
 
 	public PTAssistantLayer() {
 		super("pt_assistant layer");
-		 KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+		Main.getLayerManager().addLayerChangeListener(this);
 
 	}
-
+	
 	public void addPrimitive(OsmPrimitive primitive) {
 		this.primitives.add(primitive);
 	}
@@ -104,11 +111,11 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 	}
 
 	/**
-	 * Listens to a selection change 
+	 * Listens to a selection change
 	 */
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-
+		
 		ArrayList<Relation> routes = new ArrayList<>();
 
 		for (OsmPrimitive primitive : newSelection) {
@@ -130,10 +137,10 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 		}
 
 	}
-	
-	
+
 	/**
-	 * Listens to a focus change
+	 * Listens to a focus change, sets the primitives attribute to the route
+	 * relation in the top Relation Editor and repaints the map
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -145,10 +152,10 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 			}
 
 			if (evt.getNewValue().getClass().equals(GenericRelationEditor.class)) {
-				
-				GenericRelationEditor editor = (GenericRelationEditor) evt.getNewValue(); 
+
+				GenericRelationEditor editor = (GenericRelationEditor) evt.getNewValue();
 				Relation relation = editor.getRelation();
-				
+
 				if (RouteUtils.isTwoDirectionRoute(relation)) {
 
 					this.primitives.clear();
@@ -167,5 +174,27 @@ public class PTAssistantLayer extends Layer implements SelectionChangedListener,
 
 			}
 		}
+	}
+
+	@Override
+	public void layerAdded(LayerAddEvent arg0) {
+		// do nothing
+	}
+
+	@Override
+	public void layerOrderChanged(LayerOrderChangeEvent arg0) {
+		// do nothing
+
+	}
+
+	@Override
+	public void layerRemoving(LayerRemoveEvent event) {
+		
+		if (event.getRemovedLayer() instanceof OsmDataLayer) {
+			
+			this.primitives.clear();
+			Main.map.repaint();
+		}
+
 	}
 }

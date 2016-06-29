@@ -67,7 +67,7 @@ public class PTAssitantValidatorTest extends Test {
 		if (r.hasIncompleteMembers()) {
 			return;
 		}
-
+		
 //		if (!Main.getLayerManager().containsLayer(layer)) {
 //			Main.getLayerManager().addLayer(layer);
 //		}

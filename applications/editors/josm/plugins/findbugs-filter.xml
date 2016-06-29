@@ -58,7 +58,7 @@
         <Class name="~jj2000.*" />
     </Match>
     <Match>
-        <Class name="marvin.*" />
+        <Class name="~marvin.*" />
     </Match>
     <Match>
         <Class name="~net.arnx.*" />

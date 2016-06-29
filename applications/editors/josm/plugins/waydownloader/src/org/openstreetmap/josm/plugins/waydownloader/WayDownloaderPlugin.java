@@ -66,14 +66,15 @@ public class WayDownloaderPlugin extends Plugin {
         @Override
         public void actionPerformed(ActionEvent e) {
             selectedNode = null;
-            Collection<Node> selection = Main.main.getCurrentDataSet().getSelectedNodes();
+            DataSet ds = Main.getLayerManager().getEditDataSet();
+            Collection<Node> selection = ds.getSelectedNodes();
             if (selection.isEmpty()) {
-                Collection<Way> selWays = Main.main.getCurrentDataSet().getSelectedWays();
+                Collection<Way> selWays = ds.getSelectedWays();
                 if (!workFromWaySelection(selWays)) {
                     showWarningMessage(tr("<html>Neither a node nor a way with an endpoint outside of the<br>current download areas is selected.<br>Select a node on the start or end of a way or an entire way first.</html>"));
                     return;
                 }
-                selection = Main.main.getCurrentDataSet().getSelectedNodes();
+                selection = ds.getSelectedNodes();
             }
 
             if ( selection.isEmpty() || selection.size()>1 || ! (selection.iterator().next() instanceof Node)) {
@@ -175,13 +176,13 @@ public class WayDownloaderPlugin extends Plugin {
                     if (ret != JOptionPane.YES_OPTION)
                         return;
                     Command cmd = MergeNodesAction.mergeNodes(
-                            Main.main.getEditLayer(),
+                            Main.getLayerManager().getEditLayer(),
                             Collections.singletonList(dupeNode),
                             selectedNode
                     );
                     if (cmd != null) {
                         Main.main.undoRedo.add(cmd);
-                        Main.main.getEditLayer().data.setSelected(selectedNode);
+                        Main.getLayerManager().getEditLayer().data.setSelected(selectedNode);
                     }
                     connectedWays = findConnectedWays(selectedNode);
                 } else {
@@ -212,14 +213,14 @@ public class WayDownloaderPlugin extends Plugin {
                 Node nextNode = findOtherEnd(nextWay, selectedNode);
 
                 //Select the next node
-                Main.main.getCurrentDataSet().setSelected(nextNode);
+                Main.getLayerManager().getEditDataSet().setSelected(nextNode);
                 Main.map.mapView.zoomTo(nextNode.getEastNorth());
             }
         }
 
         @Override
         protected void updateEnabledState() {
-            setEnabled(getEditLayer() != null);
+            setEnabled(getLayerManager().getEditLayer() != null);
         }
 
         @Override
@@ -235,7 +236,7 @@ public class WayDownloaderPlugin extends Plugin {
      * @return the potential duplicate node. null, if no duplicate found.
      */
     private Node findDuplicateNode(Node referenceNode) {
-        DataSet ds = Main.main.getCurrentDataSet();
+        DataSet ds = Main.getLayerManager().getEditDataSet();
         List<Node> candidates = ds.searchNodes(new Bounds(referenceNode.getCoor(), 0.0003, 0.0005).toBBox());
         for (Node candidate: candidates) {
             if (!candidate.equals(referenceNode)
@@ -288,12 +289,12 @@ public class WayDownloaderPlugin extends Plugin {
 
             if (isDownloaded(selectedNode)) return false;
         }
-        Main.main.getCurrentDataSet().setSelected(selectedNode);
+        Main.getLayerManager().getEditDataSet().setSelected(selectedNode);
         return true;
     }
 
     private boolean isDownloaded(Node node) {
-        for (DataSource datasource:Main.main.getCurrentDataSet().dataSources) {
+        for (DataSource datasource : Main.getLayerManager().getEditDataSet().dataSources) {
             Bounds bounds = datasource.bounds;
             if (bounds != null && bounds.contains(node.getCoor())) return true;
         }

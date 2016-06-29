@@ -6,6 +6,8 @@
  */
 package org.openstreetmap.josm.plugins.fastdraw;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -14,13 +16,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
@@ -45,7 +47,6 @@ import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.util.KeyPressReleaseListener;
 import org.openstreetmap.josm.gui.util.ModifierListener;
-import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.openstreetmap.josm.tools.TextTagParser;
@@ -109,7 +110,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
         mv = Main.map.mapView;
         line.setMv(mv);
         
-        if (getCurrentDataSet() == null) return;
+        if (getLayerManager().getEditDataSet() == null) return;
 
         Main.map.mapView.addMouseListener(this);
         Main.map.mapView.addMouseMotionListener(this);
@@ -144,7 +145,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getEditLayer() != null);
+        setEnabled(getLayerManager().getEditLayer() != null);
     }
 
     private final ArrayList<Point> fixedPoints =new ArrayList<>(3000); // tamporyrary storate for paint
@@ -592,14 +593,14 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
             oldWay = null; // that is all with this command
         } else cmds.add(new AddCommand(w));
         Command c = new SequenceCommand(tr("Draw the way by mouse"), cmds);
-        if (!Main.main.hasEditLayer()) return;
+        if (getLayerManager().getEditLayer() == null) return;
         Main.main.undoRedo.add(c);
         lineWasSaved = true;
         newDrawing(); // stop drawing
         if (autoExit) {
             // Select this way and switch drawing mode off
             exitMode();
-            getCurrentDataSet().setSelected(w);
+            getLayerManager().getEditDataSet().setSelected(w);
             Main.map.selectSelectTool(false);
         }
     }
@@ -690,7 +691,7 @@ class FastDrawingMode extends MapMode implements MapViewPaintable,
     
     private void tryToLoadWay() {
         updateCursor();
-        Collection<Way> selectedWays = Main.main.getCurrentDataSet().getSelectedWays();
+        Collection<Way> selectedWays = Main.getLayerManager().getEditDataSet().getSelectedWays();
         if (selectedWays!=null // if there is a selection
             && selectedWays.size()==1 // and one way is selected
             && line.getPoints().size()==0) /* and ther is no already drawn line */ {

@@ -74,7 +74,7 @@ public class ConnectWays {
     private static void getWays(Way way) {
     	BBox bbox = new BBox(way);
     	bbox.addPrimitive(way,s_dMinDistance);
-        s_oWays = Main.main.getCurrentDataSet().searchWays(bbox);
+        s_oWays = Main.getLayerManager().getEditDataSet().searchWays(bbox);
     }
     
     private static List<Way> getWaysOfNode(Node node) {
@@ -86,7 +86,7 @@ public class ConnectWays {
     private static void getNodes(Way way) {
     	BBox bbox = new BBox(way);
     	bbox.addPrimitive(way,s_dMinDistance);
-    	s_oNodes = Main.main.getCurrentDataSet().searchNodes(bbox);
+    	s_oNodes = Main.getLayerManager().getEditDataSet().searchNodes(bbox);
     }
     
     private static double calcAlpha(LatLon oP1, Node n) {

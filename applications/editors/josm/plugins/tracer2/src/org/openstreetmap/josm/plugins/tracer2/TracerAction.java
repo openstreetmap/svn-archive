@@ -26,9 +26,9 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -37,27 +37,26 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.xml.sax.SAXException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParam;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParamList;
 import org.openstreetmap.josm.plugins.tracer2.preferences.ServerParamSelectDialog;
-import org.openstreetmap.josm.plugins.tracer2.server.GetVersion;
 import org.openstreetmap.josm.plugins.tracer2.server.GetTrace;
+import org.openstreetmap.josm.plugins.tracer2.server.GetVersion;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.xml.sax.SAXException;
 
 class TracerAction extends MapMode implements MouseListener, KeyListener {
     private static final long serialVersionUID = 1L;
@@ -81,7 +80,7 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
     public void keyPressed(KeyEvent e) {
     	//System.out.println("keyPressed: key:" + e.getKeyChar() + " code" + e.getKeyCode() + " Loc" + e.getKeyLocation()+ " ID" + KeyEvent.getKeyText(e.getKeyCode()));
         
-    	Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+    	Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
     	List<Command> commands = new ArrayList<>();
     	
     	if ( checkActiveServerParam() == false ) return;
@@ -339,9 +338,9 @@ class TracerAction extends MapMode implements MouseListener, KeyListener {
             	Main.main.undoRedo.add(new SequenceCommand(strCommand, commands));
             	
                 if (m_bShift) {
-                    Main.main.getCurrentDataSet().addSelected(ConnectWays.s_oWay);
+                    getLayerManager().getEditDataSet().addSelected(ConnectWays.s_oWay);
                 } else {
-                    Main.main.getCurrentDataSet().setSelected(ConnectWays.s_oWay);
+                    getLayerManager().getEditDataSet().setSelected(ConnectWays.s_oWay);
                 }
             } else {
                 System.out.println("Failed");

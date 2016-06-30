@@ -53,7 +53,7 @@ public class TagValues {
         
     	// get values
         List<String> tagValues = new ArrayList<>();
-        List<AutoCompletionListItem> values = Main.main.getCurrentDataSet().getAutoCompletionManager().getValues(m_strTag);
+        List<AutoCompletionListItem> values = Main.getLayerManager().getEditDataSet().getAutoCompletionManager().getValues(m_strTag);
         for ( AutoCompletionListItem i : values ) {
         	tagValues.add(i.getValue());
         }

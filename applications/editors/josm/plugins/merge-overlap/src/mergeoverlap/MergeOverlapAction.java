@@ -81,7 +81,7 @@ public class MergeOverlapAction extends JosmAction {
         newRelations.clear();
 
         // For every selected way
-        for (OsmPrimitive osm : Main.main.getCurrentDataSet().getSelected()) {
+        for (OsmPrimitive osm : getLayerManager().getEditDataSet().getSelected()) {
             if (osm instanceof Way && !osm.isDeleted()) {
                 Way way = (Way) osm;
                 ways.add(way);
@@ -162,7 +162,7 @@ public class MergeOverlapAction extends JosmAction {
             }
             if (!nodes.isEmpty() && !way.isClosed() || nodes.size() >= 2) {
                 List<List<Node>> wayChunks = SplitWayAction.buildSplitChunks(way, new ArrayList<>(nodes));
-                SplitWayResult result = splitWay(getEditLayer(), way, wayChunks);
+                SplitWayResult result = splitWay(getLayerManager().getEditLayer(), way, wayChunks);
 
                 cmds.add(result.getCommand());
                 sel.remove(way);
@@ -236,7 +236,7 @@ public class MergeOverlapAction extends JosmAction {
 
         // Commit
         Main.main.undoRedo.add(new SequenceCommand(tr("Merge Overlap (combine)"), cmds));
-        getCurrentDataSet().setSelected(sel);
+        getLayerManager().getEditDataSet().setSelected(sel);
         Main.map.repaint();
 
         relations.clear();
@@ -680,10 +680,10 @@ public class MergeOverlapAction extends JosmAction {
     /** Enable this action only if something is selected */
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
         }
     }
 

@@ -38,7 +38,6 @@ import model.TagCatalog.IndoorObject;
  * 
  * @author egru
  */
-
 public class IndoorHelperModel{
 
 	private java.util.List<IndoorLevel> levelList;
@@ -260,7 +259,7 @@ public class IndoorHelperModel{
 	 * @param userTags the tags which are given by the user input
 	 */
 	public void addTagsToOSM(IndoorObject object, List<Tag> userTags){
-		if(!Main.main.getCurrentDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()){
+		if(!Main.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()){
 			
 			List<Tag> tags = this.getObjectTags(object);
 			tags.addAll(userTags);
@@ -278,12 +277,10 @@ public class IndoorHelperModel{
 				Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
 			}
 			
-		} else if(Main.main.getCurrentDataSet().selectionEmpty()){
+		} else if(Main.getLayerManager().getEditDataSet().selectionEmpty()){
 			
 			JOptionPane.showMessageDialog(null, "No data selected.", "Error", JOptionPane.ERROR_MESSAGE);
-			
 		}
-		
 	}
 	
 	/**
@@ -294,7 +291,7 @@ public class IndoorHelperModel{
 	 */
 	public void addTagsToOSM(IndoorObject object){
 		
-		if(!Main.main.getCurrentDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()){
+		if(!Main.getLayerManager().getEditDataSet().selectionEmpty() && !Main.main.getInProgressSelection().isEmpty()){
 			List<Tag> tags = this.getObjectTags(object);
 			tags.add(new Tag("indoor:level", Integer.toString(workingLevel)));
 			
@@ -305,11 +302,9 @@ public class IndoorHelperModel{
 			for(Tag t : tags){
 				Main.main.undoRedo.add(new ChangePropertyCommand(Main.main.getInProgressSelection(), t.getKey(), t.getValue()));
 			}
-		} else if(Main.main.getCurrentDataSet().selectionEmpty()){
+		} else if(Main.getLayerManager().getEditDataSet().selectionEmpty()){
 			JOptionPane.showMessageDialog(null, "No data selected.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		
 	}
 	
 	/**
@@ -320,7 +315,4 @@ public class IndoorHelperModel{
 	public List<IndoorObject> getPresetRanking(){
 		return counter.getRanking();
 	}
-	
-	
-
 }

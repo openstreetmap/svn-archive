@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,19 +29,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
-import javax.xml.stream.XMLStreamException;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ValidateAction;
+import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.preferences.MapListSetting;
 import org.openstreetmap.josm.data.preferences.Setting;
-import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.validation.OsmValidator;
 import org.openstreetmap.josm.data.validation.tests.MapCSSTagChecker;
 import org.openstreetmap.josm.gui.dialogs.FilterDialog;
 import org.openstreetmap.josm.gui.dialogs.FilterTableModel;
 import org.openstreetmap.josm.gui.mappaint.MapPaintStyles;
-import org.xml.sax.SAXException;
 
 import model.IndoorHelperModel;
 import model.TagCatalog.IndoorObject;
@@ -58,7 +55,6 @@ import views.ToolBoxView;
  * @author egru
  *
  */
-
 public class IndoorHelperController {
 
 	private IndoorHelperModel model;

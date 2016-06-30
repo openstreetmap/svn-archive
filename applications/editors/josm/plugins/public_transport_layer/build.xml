@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-** Usage
-** =====
-** Call "ant help" to get possible build targets.
--->
 <project name="public_transport_layer" default="dist" basedir=".">
 
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="9278"/>
+    <property name="plugin.main.version" value="10353"/>
 
     <!-- Configure these properties (replace "..." accordingly).
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins

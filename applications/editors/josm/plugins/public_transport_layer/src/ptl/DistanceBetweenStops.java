@@ -51,7 +51,6 @@ public class DistanceBetweenStops extends JosmAction {
         final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(routeSegments);
         for (int i = 0; i < links.size(); i++) {
             final WayConnectionType link = links.get(i);
-            final WayConnectionType.Direction direction = link.direction;
             final List<Node> nodes = routeSegments.get(i).getWay().getNodes();
             switch (link.direction) {
                 case BACKWARD:
@@ -130,11 +129,11 @@ public class DistanceBetweenStops extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             return;
         }
         final StringBuilder sb = new StringBuilder();
-        for (Relation relation : getCurrentDataSet().getSelectedRelations()) {
+        for (Relation relation : getLayerManager().getEditDataSet().getSelectedRelations()) {
             if (!isRouteSupported(relation)) {
                 JOptionPane.showMessageDialog(Main.parent, "<html>" + tr("A valid public_transport:version=2 route is required")
                         + Utils.joinAsHtmlUnorderedList(Collections.singleton(relation.getDisplayName(DefaultNameFormatter.getInstance()))),

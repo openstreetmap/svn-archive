@@ -45,12 +45,12 @@ public class PublicTransportLayer extends Layer {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds box) {
-        if (mv == null || mv.getEditLayer() == null || mv.getEditLayer().data.selectionEmpty()) {
+        if (mv == null || mv.getLayerManager().getEditLayer() == null || mv.getLayerManager().getEditLayer().data.selectionEmpty()) {
             return;
         }
         final StyledMapRenderer renderer = new StyledMapRenderer(g, mv, false);
 
-        final Collection<Relation> selectedRelations = mv.getEditLayer().data.getSelectedRelations();
+        final Collection<Relation> selectedRelations = mv.getLayerManager().getEditLayer().data.getSelectedRelations();
         final MultiMap<Pair<Node, Node>, String> segmentRefs = new MultiMap<>();
         for (final Relation relation : selectedRelations) {
             if (relation.isIncomplete() || relation.hasIncompleteMembers()
@@ -150,7 +150,7 @@ public class PublicTransportLayer extends Layer {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Main.main.addLayer(new PublicTransportLayer());
+            Main.getLayerManager().addLayer(new PublicTransportLayer());
         }
     }
 }

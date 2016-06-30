@@ -1,21 +1,28 @@
 package iodb;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Upload the current imagery offset or an calibration geometry information.
- * 
+ *
  * @author Zverik
  * @license WTFPL
  */
@@ -38,6 +45,7 @@ public class StoreImageryOffsetAction extends JosmAction {
      * This is because all server queries should be executed in workers,
      * and we don't have one when a user name is needed.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if( Main.map == null || Main.map.mapView == null )
             return;
@@ -55,11 +63,11 @@ public class StoreImageryOffsetAction extends JosmAction {
         }
         if( userName.indexOf('@') > 0 )
             userName = userName.replace('@', ',');
-            
+
         // check if an object suitable for calibration is selected
         OsmPrimitive calibration = null;
-        if( getCurrentDataSet() != null ) {
-            Collection<OsmPrimitive> selectedObjects = getCurrentDataSet().getSelected();
+        if (getLayerManager().getEditDataSet() != null) {
+            Collection<OsmPrimitive> selectedObjects = getLayerManager().getEditDataSet().getSelected();
             if( selectedObjects.size() == 1 ) {
                 OsmPrimitive selection = selectedObjects.iterator().next();
                 if( (selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1) ) {

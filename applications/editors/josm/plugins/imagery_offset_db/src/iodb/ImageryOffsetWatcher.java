@@ -1,11 +1,27 @@
 package iodb;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeMap;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.tools.Destroyable;
 
 /**
@@ -15,7 +31,7 @@ import org.openstreetmap.josm.tools.Destroyable;
  * @author Zverik
  * @license WTFPL
  */
-public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView.LayerChangeListener, Destroyable {
+public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeListener, ActiveLayerChangeListener, Destroyable {
     private static final double THRESHOLD = 1e-8;
     private static ImageryOffsetWatcher instance;
     private Map<Integer, ImageryLayerData> layers = new TreeMap<>();
@@ -31,7 +47,8 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
     private ImageryOffsetWatcher() {
         maxDistance = Main.pref.getDouble("iodb.offset.radius", 15);
         MapView.addZoomChangeListener(this);
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
         checkOffset(); // we assume there's at the most one imagery layer at this moment
         time = new Timer();
         time.schedule(new IntervalOffsetChecker(), 0, 2000);
@@ -40,9 +57,11 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
     /**
      * Unregister all events. This actually gets never called, but it's not a problem.
      */
+    @Override
     public void destroy() {
         MapView.removeZoomChangeListener(this);
-        MapView.removeLayerChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
+        Main.getLayerManager().removeActiveLayerChangeListener(this);
         time.cancel();
     }
 
@@ -164,22 +183,31 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
         public LatLon lastChecked;
     }
 
+    @Override
     public void zoomChanged() {
         checkOffset();
     }
 
-    public void activeLayerChange( Layer oldLayer, Layer newLayer ) {
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
         checkOffset();
     }
 
-    public void layerAdded( Layer newLayer ) {
-        if( newLayer instanceof ImageryLayer )
-            loadLayerOffset((ImageryLayer)newLayer);
+    @Override
+    public void layerAdded(LayerAddEvent e) {
+        Layer newLayer = e.getAddedLayer();
+        if (newLayer instanceof ImageryLayer)
+            loadLayerOffset((ImageryLayer) newLayer);
         checkOffset();
     }
 
-    public void layerRemoved( Layer oldLayer ) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
         checkOffset();
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
     /**
@@ -203,7 +231,7 @@ public class ImageryOffsetWatcher implements MapView.ZoomChangeListener, MapView
     }
 
     /**
-     * Loads the current imagery layer offset from preferences. 
+     * Loads the current imagery layer offset from preferences.
      */
     private void loadLayerOffset( ImageryLayer layer ) {
         String id = ImageryOffsetTools.getImageryID(layer);

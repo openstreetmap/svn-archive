@@ -37,6 +37,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
 import org.openstreetmap.josm.gui.layer.MapViewPaintable;
 import org.openstreetmap.josm.tools.HttpClient;
@@ -50,7 +51,7 @@ import org.openstreetmap.josm.tools.OpenBrowser;
  * @author Zverik
  * @license WTFPL
  */
-public class OffsetDialog extends JDialog implements ActionListener, MapView.ZoomChangeListener, MapViewPaintable {
+public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeListener, MapViewPaintable {
     protected static final String PREF_CALIBRATION = "iodb.show.calibration";
     protected static final String PREF_DEPRECATED = "iodb.show.deprecated";
     private static final int MAX_OFFSETS = Main.pref.getInteger("iodb.max.offsets", 4);
@@ -275,19 +276,19 @@ public class OffsetDialog extends JDialog implements ActionListener, MapView.Zoo
             if( !Main.pref.getBoolean("iodb.offset.message", false) ) {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("The topmost imagery layer has been shifted to presumably match\n"
-                        + "OSM data in the area. Please check that the offset is still valid\n"
-                        + "by downloading GPS tracks and comparing them and OSM data to the imagery."),
+                                + "OSM data in the area. Please check that the offset is still valid\n"
+                                + "by downloading GPS tracks and comparing them and OSM data to the imagery."),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
                 Main.pref.put("iodb.offset.message", true);
             }
         } else if( selectedOffset instanceof CalibrationObject ) {
             CalibrationLayer clayer = new CalibrationLayer((CalibrationObject)selectedOffset);
-            Main.map.mapView.addLayer(clayer);
+            Main.getLayerManager().addLayer(clayer);
             clayer.panToCenter();
             if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("A layer has been added with a calibration geometry. Hide data layers,\n"
-                        + "find the corresponding feature on the imagery layer and move it accordingly."),
+                                + "find the corresponding feature on the imagery layer and move it accordingly."),
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
                 Main.pref.put("iodb.calibration.message", true);
             }

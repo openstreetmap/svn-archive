@@ -108,7 +108,7 @@ public class OpenVisibleAction extends JosmAction {
         if (new OsmImporter().acceptFile(file)) {
             DataSet dataSet = OsmReader.parseDataSet(new FileInputStream(file), NullProgressMonitor.INSTANCE);
             OsmDataLayer layer = new OsmDataLayer(dataSet, fn, file);
-            Main.main.addLayer(layer);
+            Main.getLayerManager().addLayer(layer);
         }
         else
             JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(fn.lastIndexOf('.')+1)));
@@ -130,8 +130,8 @@ public class OpenVisibleAction extends JosmAction {
             }
             r.getGpxData().storageFile = file;
             GpxLayer gpxLayer = new GpxLayer(r.getGpxData(), fn);
-            Main.main.addLayer(gpxLayer);
-            Main.main.addLayer(new MarkerLayer(r.getGpxData(), tr("Markers from {0}", fn), file, gpxLayer));
+            Main.getLayerManager().addLayer(gpxLayer);
+            Main.getLayerManager().addLayer(new MarkerLayer(r.getGpxData(), tr("Markers from {0}", fn), file, gpxLayer));
 
         } else {
             throw new IllegalStateException();

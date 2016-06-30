@@ -103,7 +103,7 @@ public class IRSRectifyPlugin extends Plugin {
             if( ++newLayerNameCounter > 1 )
                 name = name + " " + newLayerNameCounter;
             l = new OsmDataLayer(new DataSet(), name, null);
-            Main.main.addLayer(l);
+            Main.getLayerManager().addLayer(l);
             return l;
         }
 

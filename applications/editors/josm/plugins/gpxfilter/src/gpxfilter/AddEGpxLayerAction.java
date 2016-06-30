@@ -21,11 +21,11 @@ public class AddEGpxLayerAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        setEnabled(getCurrentDataSet() != null);
+        setEnabled(getLayerManager().getEditDataSet() != null);
     }
 
     @Override
-	public void actionPerformed(ActionEvent arg0)  {
-        Main.main.addLayer(new EGpxLayer(Main.map.mapView.getRealBounds()));
+    public void actionPerformed(ActionEvent arg0)  {
+        getLayerManager().addLayer(new EGpxLayer(Main.map.mapView.getRealBounds()));
     }
 }

@@ -112,7 +112,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             if(markerLayer == null) {
                 // not found, add a new one
                 markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null, null);
-                Main.main.addLayer(markerLayer);
+                Main.getLayerManager().addLayer(markerLayer);
             }
         }
         return markerLayer;

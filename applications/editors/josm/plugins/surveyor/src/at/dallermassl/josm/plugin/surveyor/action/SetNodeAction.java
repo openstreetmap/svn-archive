@@ -62,7 +62,7 @@ public class SetNodeAction implements SurveyorAction {
             node.put(entry.a, entry.b);
         }
         synchronized(SurveyorLock.class) {
-            DataSet ds = Main.main.getCurrentDataSet();
+            DataSet ds = Main.getLayerManager().getEditDataSet();
             if(ds != null)
             {
                 ds.addPrimitive(node);

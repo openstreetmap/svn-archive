@@ -33,7 +33,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
 
     @Override
     public void run() {
-        OsmDataLayer layer = Main.main.getEditLayer();
+        OsmDataLayer layer = Main.getLayerManager().getEditLayer();
         if (layer == null) {
             return;
         }

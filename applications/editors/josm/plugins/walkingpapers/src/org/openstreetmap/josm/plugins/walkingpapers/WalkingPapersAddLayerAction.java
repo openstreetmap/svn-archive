@@ -84,8 +84,7 @@ public class WalkingPapersAddLayerAction extends JosmAction {
         Bounds b = new Bounds(new LatLon(south, west), new LatLon(north, east));
 
         WalkingPapersLayer wpl = new WalkingPapersLayer(mungedWpId, tile, b, minz, maxz);
-        Main.main.addLayer(wpl);
-
+        Main.getLayerManager().addLayer(wpl);
     }
 
     private static String getWalkingPapersId(String wpid) {

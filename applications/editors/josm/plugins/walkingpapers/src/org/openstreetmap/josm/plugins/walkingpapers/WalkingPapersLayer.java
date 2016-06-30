@@ -20,10 +20,15 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -66,28 +71,43 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
         clearTileStorage();
 
-        MapView.addLayerChangeListener(new LayerChangeListener() {
-            public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-                // if user changes to a walking papers layer, zoom there just as if
-                // it was newly added
-                layerAdded(newLayer);
+        final ActiveLayerChangeListener activeListener = new ActiveLayerChangeListener() {
+            @Override
+            public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+                // if user changes to a walking papers layer, zoom there just as if it was newly added
+                handleNewLayer(Main.getLayerManager().getActiveLayer());
+            }
+        };
+
+        Main.getLayerManager().addActiveLayerChangeListener(activeListener);
+        Main.getLayerManager().addLayerChangeListener(new LayerChangeListener() {
+
+            @Override
+            public void layerAdded(LayerAddEvent e) {
+                handleNewLayer(e.getAddedLayer());
             }
 
-            public void layerAdded(Layer newLayer) {
-                // only do something if we are affected
-                if (newLayer != WalkingPapersLayer.this) return;
-                BoundingXYVisitor bbox = new BoundingXYVisitor();
-                bbox.visit(printBounds);
-                Main.map.mapView.zoomTo(bbox);
-                needRedraw = true;
-            }
-
-            public void layerRemoved(Layer oldLayer) {
-                if (oldLayer == WalkingPapersLayer.this) {
-                    MapView.removeLayerChangeListener(this);
+            @Override
+            public void layerRemoving(LayerRemoveEvent e) {
+                if (e.getRemovedLayer() == WalkingPapersLayer.this) {
+                    Main.getLayerManager().removeLayerChangeListener(this);
+                    Main.getLayerManager().removeActiveLayerChangeListener(activeListener);
                 }
             }
+
+            @Override
+            public void layerOrderChanged(LayerOrderChangeEvent e) {
+            }
         });
+    }
+
+    private void handleNewLayer(Layer newLayer) {
+        // only do something if we are affected
+        if (newLayer != WalkingPapersLayer.this) return;
+        BoundingXYVisitor bbox = new BoundingXYVisitor();
+        bbox.visit(printBounds);
+        Main.map.mapView.zoomTo(bbox);
+        needRedraw = true;
     }
 
     /**
@@ -116,6 +136,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
     }
 
     static class TileTimeComp implements Comparator<WalkingPapersTile> {
+        @Override
         public int compare(WalkingPapersTile s1, WalkingPapersTile s2) {
             long t1 = s1.access_time();
             long t2 = s2.access_time();
@@ -169,7 +190,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
         int realWidth = img.getWidth(this);
         int realHeight = img.getHeight(this);
         if (realWidth == -1 || realHeight == -1)
-                return null;
+            return null;
         int drawWidth = p1.x - p0.x;
         int drawHeight = p1.x - p0.x;
 
@@ -188,8 +209,8 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
         Graphics2D oldg = g;
 
         if (botRight.lon() == 0.0 || botRight.lat() == 0) {
-                // probably still initializing
-                return;
+            // probably still initializing
+            return;
         }
         if (lastTopLeft != null && lastBotRight != null
                 && topLeft.equalsEpsilon(lastTopLeft)
@@ -208,9 +229,9 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
         g = (Graphics2D) bufferImage.getGraphics();
 
         if (!LatLon.isValidLat(topLeft.lat())  ||
-            !LatLon.isValidLat(botRight.lat()) ||
-            !LatLon.isValidLon(topLeft.lon())  ||
-            !LatLon.isValidLon(botRight.lon()))
+                !LatLon.isValidLat(botRight.lat()) ||
+                !LatLon.isValidLon(topLeft.lon())  ||
+                !LatLon.isValidLon(botRight.lon()))
             return;
 
         viewportMinX = lonToTileX(topLeft.lon());
@@ -256,7 +277,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
                 if (tile == null) {
                     // check if tile is in range
                     Bounds tileBounds = new Bounds(new LatLon(tileYToLat(y+1), tileXToLon(x)),
-                        new LatLon(tileYToLat(y), tileXToLon(x+1)));
+                            new LatLon(tileYToLat(y), tileXToLon(x+1)));
                     if (!tileBounds.asRect().intersects(printBounds.asRect())) continue;
                     tile = new WalkingPapersTile(x, y, currentZoomLevel, this);
                     tileStorage.put(key, tile);
@@ -396,6 +417,7 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
         return x * 45.0 / Math.pow(2.0, currentZoomLevel - 3) - 180.0;
     }
 
+    @Override
     public boolean imageUpdate(Image img, int infoflags, int x, int y,
             int width, int height) {
         boolean done = ((infoflags & (ERROR | FRAMEBITS | ALLBITS)) != 0);
@@ -413,9 +435,9 @@ public class WalkingPapersLayer extends Layer implements ImageObserver {
 
     public URL formatImageUrl(int x, int y, int z) {
         String urlstr = tileUrlTemplate.
-            replace("{x}", String.valueOf(x)).
-            replace("{y}", String.valueOf(y)).
-            replace("{z}", String.valueOf(z));
+                replace("{x}", String.valueOf(x)).
+                replace("{y}", String.valueOf(y)).
+                replace("{z}", String.valueOf(z));
         try {
             return new URL(urlstr);
         } catch (Exception ex) {

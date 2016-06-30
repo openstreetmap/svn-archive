@@ -28,14 +28,17 @@
 package org.openstreetmap.josm.plugins.mapdust;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
@@ -43,10 +46,12 @@ import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.gui.JosmUserIdentityManager;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.mapdust.gui.MapdustGUI;
@@ -151,14 +156,14 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
             newMapFrame.addToggleDialog(mapdustGUI);
             /* add Listeners */
             NavigatableComponent.addZoomChangeListener(this);
-            MapView.addLayerChangeListener(this);
+            Main.getLayerManager().addLayerChangeListener(this);
             newMapFrame.mapView.addMouseListener(this);
             /* put username to preferences */
             Main.pref.put("mapdust.josmUserName", JosmUserIdentityManager.getInstance().getUserName());
         } else {
             /* if new MapFrame is null, remove listener */
             oldMapFrame.mapView.removeMouseListener(this);
-            MapView.removeLayerChangeListener(this);
+            Main.getLayerManager().removeLayerChangeListener(this);
             NavigatableComponent.removeZoomChangeListener(this);
             mapdustGUI.removeObserver(this);
             mapdustGUI = null;
@@ -420,38 +425,33 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
         return nearestBug;
     }
 
-    /**
-     * No need to implement this.
-     */
     @Override
-    public void activeLayerChange(Layer arg0, Layer arg1) {}
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+    }
 
     /**
      * Adds the <code>MapdustLayer</code> to the JOSM editor. If the list of
      * <code>MapdustBug</code>s is null then down-loads the data from the
      * MapDust Service and updates the editor with this new data.
      *
-     * @param layer The <code>Layer</code> which will be added to the JOSM
-     * editor
+     * @param e The new added layer event
      */
     @Override
-    public void layerAdded(Layer layer) {}
+    public void layerAdded(LayerAddEvent e) {}
 
     /**
      * Removes the <code>MapdustLayer</code> from the JOSM editor. Also closes
      * the MapDust plug-in window.
      *
-     * @param layer The <code>Layer</code> which will be removed from the JOSM
-     * editor
+     * @param e The new added layer event
      */
     @Override
-    public void layerRemoved(Layer layer) {
-        if (layer instanceof MapdustLayer) {
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() instanceof MapdustLayer) {
             /* remove the layer */
             Main.pref.put("mapdust.pluginState",
                     MapdustPluginState.ONLINE.getValue());
             NavigatableComponent.removeZoomChangeListener(this);
-            Main.main.removeLayer(layer);
             if (mapdustGUI != null) {
                 Main.map.remove(mapdustGUI);
                 mapdustGUI.destroy();
@@ -587,7 +587,7 @@ public class MapdustPlugin extends Plugin implements LayerChangeListener,
                     /* create and add the layer */
                     mapdustLayer = new MapdustLayer("MapDust", mapdustGUI,
                             mapdustBugList);
-                    Main.main.addLayer(this.mapdustLayer);
+                    Main.getLayerManager().addLayer(this.mapdustLayer);
                     Main.map.mapView.moveLayer(this.mapdustLayer, 0);
                     Main.map.mapView.addMouseListener(this);
                     NavigatableComponent.addZoomChangeListener(this);

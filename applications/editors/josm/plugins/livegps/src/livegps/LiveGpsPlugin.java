@@ -16,9 +16,11 @@ import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.tools.Shortcut;
@@ -91,21 +93,22 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
     }
 
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
     }
 
     @Override
-    public void layerAdded(Layer newLayer) {
+    public void layerAdded(LayerAddEvent e) {
     }
 
     @Override
-    public void layerRemoved(Layer oldLayer) {
+    public void layerRemoving(LayerRemoveEvent e) {
+        Layer oldLayer = e.getRemovedLayer();
         if (oldLayer != lgpslayer)
-        return;
+            return;
 
         enableTracking(false);
         lgpscapture.setSelected(false);
-        MapView.removeLayerChangeListener(this);
+        Main.getLayerManager().removeLayerChangeListener(this);
         lgpslayer = null;
     }
 
@@ -168,8 +171,8 @@ public class LiveGpsPlugin extends Plugin implements LayerChangeListener {
 
             if (lgpslayer == null) {
                 lgpslayer = new LiveGpsLayer(data);
-                Main.main.addLayer(lgpslayer);
-                MapView.addLayerChangeListener(this);
+                Main.getLayerManager().addLayer(lgpslayer);
+                Main.getLayerManager().addLayerChangeListener(this);
                 lgpslayer.setAutoCenter(isAutoCenter());
             }
 

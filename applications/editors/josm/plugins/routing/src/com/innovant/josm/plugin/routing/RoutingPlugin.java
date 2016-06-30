@@ -41,9 +41,11 @@ import org.openstreetmap.josm.data.osm.event.DatasetEventManager;
 import org.openstreetmap.josm.data.osm.event.DatasetEventManager.FireMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -64,7 +66,7 @@ import com.innovant.josm.plugin.routing.gui.RoutingPreferenceDialog;
  *
  * @version 0.3
  */
-public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSetListenerAdapter.Listener {
+public class RoutingPlugin extends Plugin implements LayerChangeListener, DataSetListenerAdapter.Listener {
     /**
      * Logger
      */
@@ -151,7 +153,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
         // Add menu
         menu = new RoutingMenu();
         // Register this class as LayerChangeListener
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
         DatasetEventManager.getInstance().addDatasetListener(datasetAdapter, FireMode.IN_EDT_CONSOLIDATED);
         logger.debug("Finished loading plugin");
     }
@@ -227,7 +229,14 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
         }
     }
 
-    public void layerAdded(Layer newLayer) {
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
+    }
+
+    @Override
+    public void layerAdded(LayerAddEvent evt) {
+        Layer newLayer = evt.getAddedLayer();
         // Add button(s) to the tool bar when the routing layer is added
         if (newLayer instanceof RoutingLayer) {
             menu.enableRestOfItems();
@@ -237,7 +246,9 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
         }
     }
 
-    public void layerRemoved(Layer oldLayer) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent evt) {
+        Layer oldLayer = evt.getRemovedLayer();
         if ((oldLayer instanceof RoutingLayer) & (layers.size()==1)) {
             // Remove button(s) from the tool bar when the last routing layer is removed
             addRouteNodeButton.setVisible(false);
@@ -268,6 +279,7 @@ public class RoutingPlugin extends Plugin implements LayerChangeListener,DataSet
         }
     }
 
+    @Override
     public void processDatasetEvent(AbstractDatasetChangedEvent event){
 
     }

@@ -57,7 +57,7 @@ public class MichiganLeft extends Plugin {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Collection<OsmPrimitive> mainSelection = Main.main.getCurrentDataSet().getSelected();
+            Collection<OsmPrimitive> mainSelection = Main.getLayerManager().getEditDataSet().getSelected();
 
             ArrayList<OsmPrimitive> selection = new ArrayList<>();
 
@@ -227,7 +227,7 @@ public class MichiganLeft extends Plugin {
 
         @Override
         protected void updateEnabledState() {
-            setEnabled(getEditLayer() != null);
+            setEnabled(getLayerManager().getEditLayer() != null);
         }
 
         @Override

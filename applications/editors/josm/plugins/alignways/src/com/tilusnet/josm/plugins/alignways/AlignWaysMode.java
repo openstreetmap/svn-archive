@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -148,8 +149,9 @@ public class AlignWaysMode extends MapMode /* implements MapViewPaintable */{
             // TODO getCurrentDataSet may return null when the editable layer had
             // already been removed by JOSM. This happens e.g. when the user closes
             // JOSM while AlignWays mode is still active.
-            if (getCurrentDataSet() != null) {
-                getCurrentDataSet().clearSelection();
+            DataSet ds = getLayerManager().getEditDataSet();
+            if (ds != null) {
+                ds.clearSelection();
             }
         }
     }

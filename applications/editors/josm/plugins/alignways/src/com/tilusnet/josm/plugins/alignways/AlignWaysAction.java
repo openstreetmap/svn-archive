@@ -41,7 +41,7 @@ public class AlignWaysAction extends JosmAction {
     public void actionPerformed(ActionEvent e) {
         if (!isEnabled())
             return;
-        if (getCurrentDataSet() == null)
+        if (getLayerManager().getEditDataSet() == null)
             return;
 
         Collection<Node> affectableNodes = AlignWaysSegmentMgr.getInstance(

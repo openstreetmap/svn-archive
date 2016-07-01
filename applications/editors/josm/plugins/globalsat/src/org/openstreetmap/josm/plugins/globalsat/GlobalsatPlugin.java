@@ -66,7 +66,7 @@ public class GlobalsatPlugin extends Plugin {
                 Main.pref.put("globalsat.deleteAfterDownload", false);
             }
             if(data != null && data.hasTrackPoints()){
-                Main.main.addLayer(new GpxLayer(data, tr("imported data from {0}", "DG 100")));
+                Main.getLayerManager().addLayer(new GpxLayer(data, tr("imported data from {0}", "DG 100")));
                 Main.map.repaint();
             }else{
                 JOptionPane.showMessageDialog(Main.parent, tr("No data found on device."));

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.util.PDFOperator;
+import org.apache.pdfbox.util.operator.OperatorProcessor;
 
 import pdfimport.pdfbox.PageDrawer;
 
@@ -31,7 +32,7 @@ import pdfimport.pdfbox.PageDrawer;
  * @author <a href="mailto:andreas@lehmi.de">Andreas Lehmkühler</a>
  * @version $Revision: 1.0 $
  */
-public class CloseFillEvenOddAndStrokePath extends org.apache.pdfbox.util.operator.OperatorProcessor
+public class CloseFillEvenOddAndStrokePath extends OperatorProcessor
 {
 
 	/**

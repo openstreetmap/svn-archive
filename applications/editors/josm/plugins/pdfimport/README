@@ -4,7 +4,7 @@ README
 This is a plugin for extracting shapes from PDF files.
 Generally useful if you have a map in PDF file and want to automate data extraction.
 This plugin is available under the GPL licence (version 2.0 or later).
-Uses PDFClown library to parse PDF files, see http://sourceforge.net/projects/clown/ for more info.
+Uses PDFBox library to parse PDF files, see https://pdfbox.apache.org for more info.
 
 
 Layout
@@ -17,9 +17,8 @@ Layout
 
   GPL-v2.0.txt                          GPL version 2 license text
   GPL-v3.0.txt                          GPL version 3 license text
-  build.xml 				deployment build file
-  build-dev.xml 			vevelopment build file - uses local version of PDFClown
-   
+  build.xml                             deployment build file
+
   
 Build
 =====  
@@ -74,9 +73,3 @@ See also
   
 * List of JOSM Plugins
   http://josm.openstreetmap.de/wiki/Plugins
-  
-  
- 
-     
-
- 

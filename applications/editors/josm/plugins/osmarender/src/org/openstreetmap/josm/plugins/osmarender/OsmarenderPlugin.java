@@ -55,7 +55,7 @@ public class OsmarenderPlugin extends Plugin {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            DataSet ds = Main.main.getCurrentDataSet();
+            DataSet ds = Main.getLayerManager().getEditDataSet();
             if (ds == null) {
                 return;
             }

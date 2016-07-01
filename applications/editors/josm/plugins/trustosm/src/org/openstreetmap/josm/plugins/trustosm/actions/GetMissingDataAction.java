@@ -45,7 +45,7 @@ public class GetMissingDataAction extends JosmAction {
             int n = JOptionPane.showOptionDialog(Main.parent, tr("{0} of {1} OSM objects are referenced but not there.\nDo you want to load them from OSM-Server?",missingCount,itemCount), tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             if (n == JOptionPane.YES_OPTION) {
-                Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.main.getEditLayer()));
+                Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.getLayerManager().getEditLayer()));
                 return true;
             }
         }
@@ -54,7 +54,7 @@ public class GetMissingDataAction extends JosmAction {
     }
 
     public void getMissing(Map<String,TrustOsmPrimitive> trustitems, Collection<OsmPrimitive> missingData) {
-        Collection<OsmPrimitive> presentData = Main.main.getCurrentDataSet().allPrimitives();
+        Collection<OsmPrimitive> presentData = Main.getLayerManager().getEditDataSet().allPrimitives();
         for (TrustOsmPrimitive t : trustitems.values()) {
             OsmPrimitive osm = t.getOsmPrimitive();
             if (!presentData.contains(osm))

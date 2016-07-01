@@ -105,7 +105,7 @@ public class SigReader {
                     else if (qName.equals("trustrelation")) t = OsmPrimitiveType.RELATION;
 
                     // search corresponding OsmPrimitive
-                    OsmPrimitive osm = Main.main.getCurrentDataSet().getPrimitiveById(uid, t);
+                    OsmPrimitive osm = Main.getLayerManager().getEditDataSet().getPrimitiveById(uid, t);
                     if (osm == null) {
                         switch (t) {
                         case NODE: osm = new Node(uid); break;

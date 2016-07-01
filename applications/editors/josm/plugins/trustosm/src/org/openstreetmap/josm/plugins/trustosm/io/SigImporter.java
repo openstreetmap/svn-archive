@@ -42,10 +42,10 @@ public class SigImporter extends FileImporter {
     }
 
     protected void importData(InputStream in, File associatedFile) throws IllegalDataException {
-        if (!Main.main.hasEditLayer()) {
+        if (Main.getLayerManager().getEditLayer() == null) {
             DataSet dataSet = new DataSet();
             final OsmDataLayer layer = new OsmDataLayer(dataSet, associatedFile.getName(), associatedFile);
-            Main.main.addLayer(layer);
+            Main.getLayerManager().addLayer(layer);
         }
         //        Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
         Map<String,TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);

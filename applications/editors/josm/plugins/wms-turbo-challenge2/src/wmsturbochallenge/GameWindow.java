@@ -129,7 +129,7 @@ public class GameWindow extends JFrame implements ActionListener {
             data.tracks.add(new ImmutableGpxTrack(trackSegs,
                         new HashMap<String, Object>()));
 
-            ground_view.parent.addLayer(
+            ground_view.parent.getLayerManager().addLayer(
                     new GpxLayer(data, "Car GPS trace"));
         }
     }

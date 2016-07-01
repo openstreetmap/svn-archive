@@ -15,13 +15,17 @@ import javax.swing.JMenuItem;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
-public class WMSRacer extends Plugin implements LayerChangeListener {
+public class WMSRacer extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
     public WMSRacer(PluginInformation info) {
         super(info);
         driveAction.updateEnabledState();
@@ -46,6 +50,7 @@ public class WMSRacer extends Plugin implements LayerChangeListener {
             setEnabled(false);
         }
 
+        @Override
         public void actionPerformed(ActionEvent ev) {
             if (groundLayer == null ||
                     !groundLayer.isBackgroundLayer())
@@ -54,6 +59,7 @@ public class WMSRacer extends Plugin implements LayerChangeListener {
             new GameWindow(groundLayer);
         }
 
+        @Override
         public void updateEnabledState() {
             if (frame == null) {
                 groundLayer = null;
@@ -79,7 +85,7 @@ public class WMSRacer extends Plugin implements LayerChangeListener {
              * like that or rendering in "stripes" at different
              * horizontal scanlines (lines equidistant from
              * camera eye)) */
-            for (Layer l : frame.mapView.getAllLayers())
+            for (Layer l : frame.mapView.getLayerManager().getLayers())
                 if (l.isBackgroundLayer()) {
                     groundLayer = l;
                     setEnabled(true);
@@ -93,28 +99,40 @@ public class WMSRacer extends Plugin implements LayerChangeListener {
 
     protected DriveAction driveAction = new DriveAction();
 
+    @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (oldFrame != null)
-            MapView.removeLayerChangeListener(this);
+        if (oldFrame != null) {
+            Main.getLayerManager().removeLayerChangeListener(this);
+            Main.getLayerManager().removeActiveLayerChangeListener(this);
+        }
 
         driveAction.frame = newFrame;
         driveAction.updateEnabledState();
 
-        if (newFrame != null)
-            MapView.addLayerChangeListener(this);
+        if (newFrame != null) {
+            Main.getLayerManager().addLayerChangeListener(this);
+            Main.getLayerManager().addActiveLayerChangeListener(this);
+        }
     }
 
-    /* LayerChangeListener methods */
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-        driveAction.currentLayer = newLayer;
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        driveAction.currentLayer = Main.getLayerManager().getActiveLayer();
         driveAction.updateEnabledState();
     }
 
-    public void layerAdded(Layer newLayer) {
+    @Override
+    public void layerAdded(LayerAddEvent e) {
         driveAction.updateEnabledState();
     }
 
-    public void layerRemoved(Layer oldLayer) {
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
         driveAction.updateEnabledState();
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
     }
 }

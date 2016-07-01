@@ -73,7 +73,7 @@ public class XmlBoundsImporter extends FileImporter implements XmlBoundsConstant
                                 Main.parent, tr("No data found in file {0}.", source != null ? source : file.getPath()),
                                 tr("Open Imagery XML file"), JOptionPane.INFORMATION_MESSAGE);
                     }
-                    Main.main.addLayer(layer);
+                    Main.getLayerManager().addLayer(layer);
                     layer.onPostLoadFromFile();
                 }
             };

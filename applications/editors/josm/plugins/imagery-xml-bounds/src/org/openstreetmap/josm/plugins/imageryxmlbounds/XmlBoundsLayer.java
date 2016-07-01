@@ -13,9 +13,13 @@ import javax.swing.Icon;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.BoundsLayerSaveAction;
 import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.BoundsLayerSaveAsAction;
@@ -28,7 +32,7 @@ import org.openstreetmap.josm.plugins.imageryxmlbounds.actions.ShowBoundsAction;
  *
  * @author Don-vip
  */
-public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener, XmlBoundsConstants {
+public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener, ActiveLayerChangeListener, XmlBoundsConstants {
 
     @Override
     public Action[] getMenuEntries() {
@@ -79,7 +83,8 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
      */
     public XmlBoundsLayer(DataSet data, String name, File associatedFile) {
         super(data, name, associatedFile);
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     @Override
@@ -98,7 +103,9 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
     }
 
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        Layer newLayer = Main.getLayerManager().getActiveLayer();
+        Layer oldLayer = e.getPreviousActiveLayer();
         if (newLayer == this && !(oldLayer instanceof XmlBoundsLayer)) {
             for (JosmAction action : ACTIONS_TO_DISABLE) {
                 ACTIONS_STATES.put(action, action.isEnabled());
@@ -112,13 +119,18 @@ public class XmlBoundsLayer extends OsmDataLayer implements LayerChangeListener,
     }
 
     @Override
-    public void layerAdded(Layer newLayer) {
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
         // Do nothing
     }
 
     @Override
-    public void layerRemoved(Layer oldLayer) {
-        if (Main.main.getEditLayer() instanceof XmlBoundsLayer) {
+    public void layerAdded(LayerAddEvent e) {
+        // Do nothing
+    }
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (Main.getLayerManager().getEditLayer() instanceof XmlBoundsLayer) {
             for (JosmAction action : ACTIONS_TO_DISABLE) {
                 action.setEnabled(false);
             }

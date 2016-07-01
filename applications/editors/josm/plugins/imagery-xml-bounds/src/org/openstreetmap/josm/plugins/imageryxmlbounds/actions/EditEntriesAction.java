@@ -59,7 +59,7 @@ public class EditEntriesAction extends JosmAction implements XmlBoundsConstants,
         final Runnable uiStuff = new Runnable() {
             @Override
             public void run() {
-                Main.main.addLayer(layer);
+                Main.getLayerManager().addLayer(layer);
                 layer.onPostLoadFromFile();
             }
         };

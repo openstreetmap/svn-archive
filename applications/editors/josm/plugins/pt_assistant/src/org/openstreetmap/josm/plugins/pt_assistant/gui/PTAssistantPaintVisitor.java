@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.PaintVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
+
+import com.sun.org.apache.regexp.internal.recompile;
 
 public class PTAssistantPaintVisitor extends PaintVisitor {
 
@@ -33,30 +36,38 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	@Override
 	public void visit(Relation r) {
 
-		HashMap<Long, String> stopOrderMap = new HashMap<>();
-
-		int stopCount = 1;
-
+		// first, draw primitives:
 		for (RelationMember rm : r.getMembers()) {
 
-			// if (rm.getMember().isIncomplete() && (rm.isNode() ||
-			// rm.hasRole("stop") || rm.hasRole("stop_entry_only")
-			// || rm.hasRole("stop_exit_only") || rm.hasRole("platform") ||
-			// rm.hasRole("platform_entry_only")
-			// || rm.hasRole("platform_exit_only"))) {
-			//
-			// if (stopOrderMap.containsKey(rm.getUniqueId())) {
-			// label = stopOrderMap.get(rm.getUniqueId());
-			// label = label + ";" + stopCount;
-			// } else {
-			//
-			// }
-			// }
+			if (RouteUtils.isPTStop(rm)) {
+				
+				drawStop(rm.getMember());
 
+
+			} else if (RouteUtils.isPTWay(rm)) {
+				if (rm.isWay()) {
+					visit(rm.getWay());
+				} else if (rm.isRelation()) {
+					visit(rm.getRelation());
+				} else {
+					// if the relation has members that do not fit with the
+					// PT_Assistant data model, do nothing
+				}
+			} else {
+				// if the relation has members that do not fit with the
+				// PT_Assistant data model, do nothing
+			}
+		}
+
+		// in the end, draw labels:
+		HashMap<Long, String> stopOrderMap = new HashMap<>();
+		int stopCount = 1;
+		
+		for (RelationMember rm : r.getMembers()) {
 			if (RouteUtils.isPTStop(rm) || (rm.getMember().isIncomplete() && (rm.isNode() || rm.hasRole("stop")
 					|| rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only") || rm.hasRole("platform")
 					|| rm.hasRole("platform_entry_only") || rm.hasRole("platform_exit_only")))) {
-
+				
 				String label = "";
 
 				if (stopOrderMap.containsKey(rm.getUniqueId())) {
@@ -75,24 +86,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 				stopOrderMap.put(rm.getUniqueId(), label);
 				drawStopLabel(rm.getMember(), label);
-				if (!rm.getMember().isIncomplete()) {
-					drawStop(rm.getMember(), label);
-				}
-
 				stopCount++;
-
-			} else if (RouteUtils.isPTWay(rm)) {
-				if (rm.isWay()) {
-					visit(rm.getWay());
-				} else if (rm.isRelation()) {
-					visit(rm.getRelation());
-				} else {
-					// if the relation has members that do not fit with the
-					// PT_Assistant data model, do nothing
-				}
-			} else {
-				// if the relation has members that do not fit with the
-				// PT_Assistant data model, do nothing
 			}
 		}
 
@@ -244,11 +238,6 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		}
 
-		// g.drawLine((int) (p1.x - cosT), (int) (p1.y - sinT), (int) (p2.x +
-		// cosT), (int) (p2.y - sinT));
-		// g.drawLine((int) (p1.x - cosT), (int) (p1.y + sinT), (int) (p2.x -
-		// cosT), (int) (p2.y + sinT));
-
 	}
 
 	/**
@@ -268,7 +257,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	}
 
-	protected void drawStop(OsmPrimitive primitive, String label) {
+	protected void drawStop(OsmPrimitive primitive) {
 
 		// find the point to which the stop visualization will be linked:
 		Node n = new Node(primitive.getBBox().getCenter());
@@ -303,42 +292,39 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
 		g.setFont(stringFont);
 		g.drawString(label, p.x + 20, p.y - 20);
-		
-		// get the parents of the primitive that are routes:
+
+		// draw the ref values of all parent routes:
+		List<String> parentsLabelList = new ArrayList<>();
 		String parentsLabel = "";
-		for (OsmPrimitive parent: primitive.getReferrers()) {
+		for (OsmPrimitive parent : primitive.getReferrers()) {
 			if (parent.getType().equals(OsmPrimitiveType.RELATION)) {
 				Relation relation = (Relation) parent;
 				if (RouteUtils.isTwoDirectionRoute(relation)) {
-					parentsLabel = parentsLabel + relation.get("ref") + ";";
+
+					boolean stringFound = false;
+					for (String s : parentsLabelList) {
+						if (s.equals(relation.get("ref"))) {
+							stringFound = true;
+						}
+					}
+					if (!stringFound) {
+						parentsLabel = parentsLabel + relation.get("ref") + ";";
+						parentsLabelList.add(relation.get("ref"));
+					}
+
 				}
 			}
 		}
+
 		if (!parentsLabel.equals("")) {
 			// remove the last semicolon:
-			parentsLabel = parentsLabel.substring(0, parentsLabel.length()-1);
-			g.setColor(new Color(200, 200, 200));
+			parentsLabel = parentsLabel.substring(0, parentsLabel.length() - 1);
+			g.setColor(new Color(150, 150, 150));
 			Font parentLabelFont = new Font("SansSerif", Font.ITALIC, 20);
 			g.setFont(parentLabelFont);
 			g.drawString(parentsLabel, p.x + 20, p.y);
 		}
-		
-	}
-	
-//	protected void drawStopParentLabel(OsmPrimitive primitive, String label) {
-//		// find the point to which the stop visualization will be linked:
-//		Node n = new Node(primitive.getBBox().getCenter());
-//
-//		Point p = mv.getPoint(n);
-//
-//		g.setColor(Color.WHITE);
-//		Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
-//		g.setFont(stringFont);
-//		g.drawString(label, p.x - 20, p.y - 20);
-//	}
 
-	protected Graphics getGraphics() {
-		return this.g;
 	}
 
 }

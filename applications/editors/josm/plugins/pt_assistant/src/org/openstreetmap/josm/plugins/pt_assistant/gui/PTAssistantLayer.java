@@ -1,6 +1,5 @@
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
@@ -163,12 +162,11 @@ public class PTAssistantLayer extends Layer
 					if (!Main.getLayerManager().containsLayer(this)) {
 						Main.getLayerManager().addLayer(this);
 					}
-					Graphics g = paintVisitor.getGraphics();
-					paintVisitor = new PTAssistantPaintVisitor(g, Main.map.mapView);
+
 					for (OsmPrimitive primitive : primitives) {
 						paintVisitor.visit(primitive);
-
 					}
+					
 					Main.map.repaint();
 				}
 

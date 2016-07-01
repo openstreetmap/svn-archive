@@ -3,8 +3,13 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SelectCommand;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -29,15 +34,9 @@ public class WayChecker extends Checker {
 
 		super(relation, test);
 
-		if (!relation.hasIncompleteMembers()) {
-			this.performDirectionTest();
-			this.performRoadTypeTest();
-		}
-
-
 	}
 
-	private void performRoadTypeTest() {
+	protected void performRoadTypeTest() {
 		
 		if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus")
 				&& !relation.hasTag("route", "share_taxi")) {
@@ -132,7 +131,7 @@ public class WayChecker extends Checker {
 
 	}
 
-	private void performDirectionTest() {
+	protected void performDirectionTest() {
 
 		List<RelationMember> waysToCheck = new ArrayList<>();
 
@@ -171,7 +170,7 @@ public class WayChecker extends Checker {
 					List<Way> highlighted = new ArrayList<>(1);
 					highlighted.add(waysToCheck.get(i).getWay());
 					TestError e = new TestError(this.test, Severity.WARNING,
-							tr("PT: Route passes a oneway road in wrong direction"),
+							tr("PT: Route passes a oneway road in the wrong direction"),
 							PTAssitantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
 					this.errors.add(e);
 					return;
@@ -190,7 +189,7 @@ public class WayChecker extends Checker {
 	 *            to be checked
 	 * @return true if the way is suitable for buses, false otherwise.
 	 */
-	public boolean isWaySuitableForBuses(Way way) {
+	private boolean isWaySuitableForBuses(Way way) {
 		if (way.hasTag("highway", "motorway") || way.hasTag("highway", "trunk") || way.hasTag("highway", "primary")
 				|| way.hasTag("highway", "secondary") || way.hasTag("highway", "tertiary")
 				|| way.hasTag("highway", "unclassified") || way.hasTag("highway", "road")
@@ -210,5 +209,82 @@ public class WayChecker extends Checker {
 
 		return false;
 	}
+	
+	protected static Command fixErrorByRemovingWay(TestError testError) {
 
+		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE && testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
+			return null;
+		}
+
+		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.iterator().next();
+		Collection<?> highlighted = testError.getHighlighted();
+		Way wayToRemove = (Way) highlighted.iterator().next();
+
+		Relation modifiedRelation = new Relation(originalRelation);
+		List<RelationMember> modifiedRelationMembers = new ArrayList<>(originalRelation.getMembersCount() - 1);
+
+		// copy PT stops first, PT ways last:
+		for (RelationMember rm : originalRelation.getMembers()) {
+			if (RouteUtils.isPTStop(rm)) {
+
+				if (rm.getRole().equals("stop_position")) {
+					if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+						RelationMember newMember = new RelationMember("stop", rm.getNode());
+						modifiedRelationMembers.add(newMember);
+					} else { // if it is a way:
+						RelationMember newMember = new RelationMember("stop", rm.getWay());
+						modifiedRelationMembers.add(newMember);
+					}
+				} else {
+					// if the relation member does not have the role
+					// "stop_position":
+					modifiedRelationMembers.add(rm);
+				}
+
+			}
+		}
+
+		// now copy PT ways:
+		for (RelationMember rm : originalRelation.getMembers()) {
+			if (RouteUtils.isPTWay(rm)) {
+				Way wayToCheck = rm.getWay();
+				if (wayToCheck != wayToRemove) {
+					if (rm.getRole().equals("forward") || rm.getRole().equals("backward")) {
+						RelationMember modifiedMember = new RelationMember("", wayToCheck);
+						modifiedRelationMembers.add(modifiedMember);
+					} else {
+						modifiedRelationMembers.add(rm);
+					}
+				}
+			}
+		}
+
+		modifiedRelation.setMembers(modifiedRelationMembers);
+
+		ChangeCommand changeCommand = new ChangeCommand(originalRelation, modifiedRelation);
+
+		return changeCommand;
+	}
+	
+
+	protected static Command fixErrorByZooming(TestError testError) {
+		
+		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
+			return null;
+		}
+		
+//		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+//		Relation originalRelation = (Relation) primitives.iterator().next();
+		Collection<?> highlighted = testError.getHighlighted();
+		Way wayToHighlight = (Way) highlighted.iterator().next();
+		ArrayList<OsmPrimitive> primitivesToHighlight = new ArrayList<>(1);
+		primitivesToHighlight.add(wayToHighlight);
+
+		SelectCommand command = new SelectCommand(primitivesToHighlight);
+		
+		return command;
+		
+	}
+	
 }

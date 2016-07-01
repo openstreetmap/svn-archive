@@ -3,8 +3,12 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.openstreetmap.josm.command.ChangeCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
@@ -34,11 +38,9 @@ public class RouteChecker extends Checker {
 
 		this.hasGap = false;
 
-		performSortingTest();
-
 	}
 
-	private void performSortingTest() {
+	protected void performSortingTest() {
 
 		final List<RelationMember> waysToCheck = new ArrayList<>();
 		for (RelationMember rm : relation.getMembers()) {
@@ -105,6 +107,67 @@ public class RouteChecker extends Checker {
 	public boolean getHasGap() {
 
 		return this.hasGap;
+
+	}
+	
+	protected static Command fixSortingError(TestError testError) {
+		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_SORTING) {
+			return null;
+		}
+
+		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.iterator().next();
+
+		// separate ways from stops (because otherwise the order of
+		// stops/platforms can be messed up by the sorter:
+		List<RelationMember> members = originalRelation.getMembers();
+		final List<RelationMember> stops = new ArrayList<>();
+		final List<RelationMember> ways = new ArrayList<>();
+		for (RelationMember member : members) {
+			if (RouteUtils.isPTWay(member)) {
+				if (member.getRole().equals("")) {
+					ways.add(member);
+				} else {
+					RelationMember modifiedMember = new RelationMember("", member.getWay());
+					ways.add(modifiedMember);
+				}
+
+			} else { // stops:
+				if (member.getRole().equals("stop_positon")) {
+					// it is not expected that stop_positions could
+					// be relations
+					if (member.getType().equals(OsmPrimitiveType.NODE)) {
+						RelationMember modifiedMember = new RelationMember("stop", member.getNode());
+						stops.add(modifiedMember);
+					} else { // if it is a primitive of type way:
+						RelationMember modifiedMember = new RelationMember("stop", member.getWay());
+						stops.add(modifiedMember);
+					}
+				} else { // if it is not a stop_position:
+					stops.add(member);
+				}
+
+			}
+		}
+
+		// sort the ways:
+		RelationSorter sorter = new RelationSorter();
+		List<RelationMember> sortedWays = sorter.sortMembers(ways);
+
+		// create a new relation to pass to the command:
+		Relation sortedRelation = new Relation(originalRelation);
+		List<RelationMember> sortedRelationMembers = new ArrayList<>(members.size());
+		for (RelationMember rm : stops) {
+			sortedRelationMembers.add(rm);
+		}
+		for (RelationMember rm : sortedWays) {
+			sortedRelationMembers.add(rm);
+		}
+		sortedRelation.setMembers(sortedRelationMembers);
+
+		ChangeCommand changeCommand = new ChangeCommand(originalRelation, sortedRelation);
+
+		return changeCommand;
 
 	}
 

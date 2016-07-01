@@ -87,7 +87,7 @@ public class DirectionTest extends Test {
 					List<Way> highlighted = new ArrayList<>(1);
 					highlighted.add(waysToCheck.get(i).getWay());
 					errors.add(new TestError(this, Severity.WARNING,
-							tr("PT: Route passes a oneway road in wrong direction"), ERROR_CODE_DIRECTION, primitives,
+							tr("PT: Route passes a oneway road in the wrong direction"), ERROR_CODE_DIRECTION, primitives,
 							highlighted));
 					return;
 				}

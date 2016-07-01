@@ -73,22 +73,20 @@ public class Tcx extends FileImporter {
      */
     @Override
     public void importData(File tcxFile, ProgressMonitor progressMonitor) throws IOException {
-        //this.tcxFile = tcxFile;
         parseFile(tcxFile);
 
         GpxData gpxData = getGpxData();
         gpxData.storageFile = tcxFile;
         GpxLayer gpxLayer = new GpxLayer(gpxData, tcxFile.getName());
-        Main.main.addLayer(gpxLayer);
+        Main.getLayerManager().addLayer(gpxLayer);
         if (Main.pref.getBoolean("marker.makeautomarkers", true))
         {
             MarkerLayer ml = new MarkerLayer(gpxData, tr("Markers from {0}", tcxFile.getName()), tcxFile, gpxLayer);
             if (ml.data.size() > 0)
             {
-                Main.main.addLayer(ml);
+                Main.getLayerManager().addLayer(ml);
             }
         }
-
     }
 
     /**

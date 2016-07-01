@@ -81,11 +81,11 @@ public class TangoGPS extends FileImporter {
                 data.recalculateBounds();
                 data.storageFile = file;
                 GpxLayer gpxLayer = new GpxLayer(data, file.getName());
-                Main.main.addLayer(gpxLayer);
+                Main.getLayerManager().addLayer(gpxLayer);
                 if (Main.pref.getBoolean("marker.makeautomarkers", true)) {
                     MarkerLayer ml = new MarkerLayer(data, tr("Markers from {0}", file.getName()), file, gpxLayer);
                     if (ml.data.size() > 0) {
-                        Main.main.addLayer(ml);
+                        Main.getLayerManager().addLayer(ml);
                     }
                 }
             }

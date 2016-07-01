@@ -2,8 +2,8 @@ package indoor_sweepline;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 

@@ -1,9 +1,5 @@
 package indoor_sweepline;
 
-import java.util.List;
-import java.util.Vector;
-
-
 public class CorridorPart
 {
     public enum Type

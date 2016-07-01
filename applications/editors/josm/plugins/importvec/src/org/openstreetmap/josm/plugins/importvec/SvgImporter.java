@@ -31,7 +31,7 @@ public class SvgImporter extends FileImporter {
 
     @Override
     public void importData(List<File> files, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-        if (!Main.main.hasEditLayer()) {
+        if (Main.getLayerManager().getEditLayer() == null) {
             JOptionPane.showMessageDialog(Main.parent, tr("Please open or create data layer before importing"));
             return;
         }

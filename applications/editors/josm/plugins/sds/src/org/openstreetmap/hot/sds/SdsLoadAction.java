@@ -80,7 +80,7 @@ public class SdsLoadAction extends SdsDiskAccessAction {
                 InputStream fileStream;
                 try {
                     fileStream = new FileInputStream(f);
-                    SdsParser p = new SdsParser(Main.main.getCurrentDataSet(), plugin, false);
+                    SdsParser p = new SdsParser(getLayerManager().getEditDataSet(), plugin, false);
                     InputSource inputSource = new InputSource(fileStream);
                     SAXParserFactory.newInstance().newSAXParser().parse(inputSource, p);
                 } catch (UnsupportedEncodingException e1) {

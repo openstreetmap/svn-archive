@@ -20,14 +20,17 @@ import javax.swing.JTextArea;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.MainMenu;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 
 @SuppressWarnings("serial")
-public class SdsMenu extends JMenu implements LayerChangeListener {
+public class SdsMenu extends JMenu implements LayerChangeListener, ActiveLayerChangeListener {
 
     private JMenuItem saveItem;
     private JMenuItem loadItem;
@@ -49,7 +52,8 @@ public class SdsMenu extends JMenu implements LayerChangeListener {
         aboutItem = new JMenuItem(new SdsAboutAction());
         menu.add(aboutItem);
         
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
         setEnabledState();
     }
 
@@ -60,13 +64,16 @@ public class SdsMenu extends JMenu implements LayerChangeListener {
     }
   
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {    setEnabledState(); }
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {    setEnabledState(); }
 
     @Override
-    public void layerAdded(Layer newLayer) { setEnabledState(); }
+    public void layerOrderChanged(LayerOrderChangeEvent e) { }
 
     @Override
-    public void layerRemoved(Layer oldLayer) { setEnabledState(); }
+    public void layerAdded(LayerAddEvent e) { setEnabledState(); }
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) { setEnabledState(); }
 
     private class SdsAboutAction extends JosmAction {
 

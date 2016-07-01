@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -52,8 +53,9 @@ public class TaggingPresetTester extends JFrame {
         if (preset == null)
             return;
         Collection<OsmPrimitive> x;
-        if (Main.main!=null && Main.main.hasEditLayer()) {
-            x = Main.main.getCurrentDataSet().getSelected();
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        if (ds != null) {
+            x = ds.getSelected();
         } else {
             x = makeFakeSuitablePrimitive(preset);
         }

@@ -12,8 +12,8 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -178,11 +178,11 @@ public class NameManagerDialog extends JDialog {
         labelTagNameAM = new JLabel(tr(TAG_NAME));
         tagNameAM = new AutoCompletingTextField();
         AutoCompletionList list = new AutoCompletionList();
-        Main.main.getEditLayer().data.getAutoCompletionManager().populateWithKeys(list);
+        Main.getLayerManager().getEditLayer().data.getAutoCompletionManager().populateWithKeys(list);
         tagNameAM.setAutoCompletionList(list);
         labelTagValueAM = new JLabel(tr(TAG_VALUE));
         tagValueAM = new AutoCompletingTextField();
-        tagNameAM.addKeyListener(new KeyListener() {
+        tagNameAM.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent arg0) {
                 if (!"".equals(tagNameAM.getText())) {
@@ -191,17 +191,9 @@ public class NameManagerDialog extends JDialog {
                         list = new AutoCompletionList();
                     }
                     list.clear();
-                    Main.main.getEditLayer().data.getAutoCompletionManager().populateWithTagValues(list, tagNameAM.getText());
+                    Main.getLayerManager().getEditLayer().data.getAutoCompletionManager().populateWithTagValues(list, tagNameAM.getText());
                     tagValueAM.setAutoCompletionList(list);
                 }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent arg0) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent arg0) {
             }
         });
         addModifyButton = new JButton(new AddModifyAction());

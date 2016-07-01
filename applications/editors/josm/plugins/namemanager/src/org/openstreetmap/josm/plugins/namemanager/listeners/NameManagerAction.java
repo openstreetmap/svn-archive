@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -50,7 +49,7 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
             return;
         }
         NameManagerDialog dialog = NameManagerDialog.getInstance();
-        Way selectedWay = (Way) Main.main.getCurrentDataSet().getSelectedWays().iterator().next();
+        Way selectedWay = (Way) getLayerManager().getEditDataSet().getSelectedWays().iterator().next();
         dialog.setSelectedWay(selectedWay);
         dialog.setWaysInsideSelectedArea(NameManagerUtils.getWaysInsideSelectedArea(selectedWay));
         Document doc = NameManagerUtils.parseCountries();
@@ -70,7 +69,7 @@ public class NameManagerAction extends JosmAction implements SelectionChangedLis
     @Override
     public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
         boolean enabledState = false;
-        DataSet ds = Main.main.getCurrentDataSet();
+        DataSet ds = getLayerManager().getEditDataSet();
         if (newSelection != null && ds != null) {
             Collection<Way> selectedWays = ds.getSelectedWays();
             enabledState = selectedWays.size() == 1 && selectedWays.iterator().next().isClosed();

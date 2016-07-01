@@ -46,7 +46,7 @@ public class NameManagerUtils {
         if (areaBorder != null) {
             Coordinate topLeftCorner = getTopLeftCorener(areaBorder);
             List<Pair<Node, Node>> areaBorderLines = areaBorder.getNodePairs(true);
-            Collection<Way> ways = Main.main.getCurrentDataSet().getWays();
+            Collection<Way> ways = Main.getLayerManager().getEditDataSet().getWays();
             ways: for (Way way : ways) {
                 if (areaBorder == way) {
                     continue ways;

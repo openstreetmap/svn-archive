@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
@@ -38,24 +39,46 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		for (RelationMember rm : r.getMembers()) {
 
-			if (RouteUtils.isPTStop(rm)) {
+			// if (rm.getMember().isIncomplete() && (rm.isNode() ||
+			// rm.hasRole("stop") || rm.hasRole("stop_entry_only")
+			// || rm.hasRole("stop_exit_only") || rm.hasRole("platform") ||
+			// rm.hasRole("platform_entry_only")
+			// || rm.hasRole("platform_exit_only"))) {
+			//
+			// if (stopOrderMap.containsKey(rm.getUniqueId())) {
+			// label = stopOrderMap.get(rm.getUniqueId());
+			// label = label + ";" + stopCount;
+			// } else {
+			//
+			// }
+			// }
+
+			if (RouteUtils.isPTStop(rm) || (rm.getMember().isIncomplete() && (rm.isNode() || rm.hasRole("stop")
+					|| rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only") || rm.hasRole("platform")
+					|| rm.hasRole("platform_entry_only") || rm.hasRole("platform_exit_only")))) {
 
 				String label = "";
 
-				if (stopOrderMap.containsKey(rm.getMember().getId())) {
-					label = stopOrderMap.get(rm.getMember().getId());
+				if (stopOrderMap.containsKey(rm.getUniqueId())) {
+					label = stopOrderMap.get(rm.getUniqueId());
 					label = label + ";" + stopCount;
 				} else {
 					if (r.hasKey("ref")) {
 						label = label + r.get("ref");
 					} else if (r.hasKey("name")) {
 						label = label + r.get("name");
+					} else {
+						label = "NA";
 					}
-					label = label + ":" + stopCount;
+					label = label + " - " + stopCount;
 				}
 
-				stopOrderMap.put(rm.getMember().getId(), label);
-				drawStop(rm.getMember(), label);
+				stopOrderMap.put(rm.getUniqueId(), label);
+				drawStopLabel(rm.getMember(), label);
+				if (!rm.getMember().isIncomplete()) {
+					drawStop(rm.getMember(), label);
+				}
+
 				stopCount++;
 
 			} else if (RouteUtils.isPTWay(rm)) {
@@ -199,7 +222,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 							(int) (middleX - 2 * sinTriangle) };
 					int[] yDrawTriangle = { (int) (middleY - sinTriangle), (int) (middleY + sinTriangle),
 							(int) (middleY - 2 * cosTriangle) };
-					g.fillPolygon(xDrawTriangle, yDrawTriangle, 3);
+					g.drawPolygon(xDrawTriangle, yDrawTriangle, 3);
 				}
 			}
 
@@ -215,7 +238,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 							(int) (middleX + 2 * sinTriangle) };
 					int[] yDrawTriangle = { (int) (middleY - sinTriangle), (int) (middleY + sinTriangle),
 							(int) (middleY + 2 * cosTriangle) };
-					g.fillPolygon(xDrawTriangle, yDrawTriangle, 3);
+					g.drawPolygon(xDrawTriangle, yDrawTriangle, 3);
 				}
 			}
 
@@ -252,11 +275,6 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		Point p = mv.getPoint(n);
 
-		g.setColor(Color.WHITE);
-		Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
-		g.setFont(stringFont);
-		g.drawString(label, p.x + 20, p.y - 20);
-
 		Color fillColor = null;
 
 		if (primitive.hasTag("bus", "yes")) {
@@ -273,6 +291,51 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		}
 
 	}
+
+	protected void drawStopLabel(OsmPrimitive primitive, String label) {
+
+		// find the point to which the stop visualization will be linked:
+		Node n = new Node(primitive.getBBox().getCenter());
+
+		Point p = mv.getPoint(n);
+
+		g.setColor(Color.WHITE);
+		Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
+		g.setFont(stringFont);
+		g.drawString(label, p.x + 20, p.y - 20);
+		
+		// get the parents of the primitive that are routes:
+		String parentsLabel = "";
+		for (OsmPrimitive parent: primitive.getReferrers()) {
+			if (parent.getType().equals(OsmPrimitiveType.RELATION)) {
+				Relation relation = (Relation) parent;
+				if (RouteUtils.isTwoDirectionRoute(relation)) {
+					parentsLabel = parentsLabel + relation.get("ref") + ";";
+				}
+			}
+		}
+		if (!parentsLabel.equals("")) {
+			// remove the last semicolon:
+			parentsLabel = parentsLabel.substring(0, parentsLabel.length()-1);
+			g.setColor(new Color(200, 200, 200));
+			Font parentLabelFont = new Font("SansSerif", Font.ITALIC, 20);
+			g.setFont(parentLabelFont);
+			g.drawString(parentsLabel, p.x + 20, p.y);
+		}
+		
+	}
+	
+//	protected void drawStopParentLabel(OsmPrimitive primitive, String label) {
+//		// find the point to which the stop visualization will be linked:
+//		Node n = new Node(primitive.getBBox().getCenter());
+//
+//		Point p = mv.getPoint(n);
+//
+//		g.setColor(Color.WHITE);
+//		Font stringFont = new Font("SansSerif", Font.PLAIN, 24);
+//		g.setFont(stringFont);
+//		g.drawString(label, p.x - 20, p.y - 20);
+//	}
 
 	protected Graphics getGraphics() {
 		return this.g;

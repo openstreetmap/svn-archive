@@ -47,7 +47,7 @@ public final class SimplifyAreaAction extends JosmAction {
     }
 
     private List<Bounds> getCurrentEditBounds() {
-        return Main.main.getEditLayer().data.getDataSourceBounds();
+        return Main.getLayerManager().getEditLayer().data.getDataSourceBounds();
     }
 
     private static boolean isInBounds(final Node node, final List<Bounds> bounds) {
@@ -64,7 +64,8 @@ public final class SimplifyAreaAction extends JosmAction {
                 new ButtonSpec(tr("No, abort"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
         return 0 == HelpAwareOptionPane.showOptionDialog(
                 Main.parent,
-                "<html>" + trn("The selected way has nodes outside of the downloaded data region.", "The selected ways have nodes outside of the downloaded data region.", getCurrentDataSet().getSelectedWays().size())
+                "<html>" + trn("The selected way has nodes outside of the downloaded data region.", "The selected ways have nodes outside of the downloaded data region.", 
+                        Main.getLayerManager().getEditDataSet().getSelectedWays().size())
                 + "<br>" + tr("This can lead to nodes being deleted accidentally.") + "<br>" + tr("Do you want to delete them anyway?") + "</html>",
                 tr("Delete nodes outside of data regions?"), JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
@@ -77,14 +78,15 @@ public final class SimplifyAreaAction extends JosmAction {
     private boolean confirmSimplifyManyWays(final int numWays) {
         final ButtonSpec[] options = new ButtonSpec[] { new ButtonSpec(tr("Yes"), ImageProvider.get("ok"), tr("Simplify all selected ways"), null),
                 new ButtonSpec(tr("Cancel"), ImageProvider.get("cancel"), tr("Cancel operation"), null) };
-        return 0 == HelpAwareOptionPane.showOptionDialog(Main.parent, tr("The selection contains {0} ways. Are you sure you want to simplify them all?", numWays), tr("Simplify ways?"),
+        return 0 == HelpAwareOptionPane.showOptionDialog(Main.parent, tr("The selection contains {0} ways. Are you sure you want to simplify them all?", numWays), 
+                tr("Simplify ways?"),
                 JOptionPane.WARNING_MESSAGE, null, // no special icon
                 options, options[0], null);
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final Collection<OsmPrimitive> selection = getCurrentDataSet().getSelected();
+        final Collection<OsmPrimitive> selection = getLayerManager().getEditDataSet().getSelected();
 
         final List<Bounds> bounds = getCurrentEditBounds();
         for (final OsmPrimitive prim : selection) {
@@ -448,10 +450,10 @@ public final class SimplifyAreaAction extends JosmAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
         }
     }
 

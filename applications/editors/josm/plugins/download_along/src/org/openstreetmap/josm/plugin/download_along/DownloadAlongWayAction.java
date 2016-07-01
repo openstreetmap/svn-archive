@@ -41,7 +41,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(Main.main.getCurrentDataSet().getSelected(), Way.class);
+        Set<Way> selectedWays = OsmPrimitive.getFilteredSet(getLayerManager().getEditDataSet().getSelected(), Way.class);
 
         if (selectedWays.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent, tr("Please select 1 or more ways to download along"));
@@ -132,10 +132,10 @@ class DownloadAlongWayAction extends DownloadAlongAction {
 
     @Override
     protected void updateEnabledState() {
-        if (getCurrentDataSet() == null) {
+        if (getLayerManager().getEditDataSet() == null) {
             setEnabled(false);
         } else {
-            updateEnabledState(getCurrentDataSet().getSelected());
+            updateEnabledState(getLayerManager().getEditDataSet().getSelected());
         }
     }
 

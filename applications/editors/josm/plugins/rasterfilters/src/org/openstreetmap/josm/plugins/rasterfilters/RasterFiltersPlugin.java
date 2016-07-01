@@ -8,12 +8,15 @@ import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -21,6 +24,7 @@ import org.openstreetmap.josm.plugins.rasterfilters.actions.ShowLayerFiltersDial
 import org.openstreetmap.josm.plugins.rasterfilters.gui.FiltersDialog;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.FiltersDownloader;
 import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPreferences;
+
 /**
  * Main Plugin class. This class embed new plugin button for adding filter and
  * subtab in Preferences menu
@@ -28,7 +32,7 @@ import org.openstreetmap.josm.plugins.rasterfilters.preferences.RasterFiltersPre
  * @author Nipel-Crumple
  *
  */
-public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
+public class RasterFiltersPlugin extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
 
 	private SideButton filterButton;
 	private ShowLayerFiltersDialog action;
@@ -58,27 +62,26 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (Main.isDisplayingMapView()) {
-			MapView.addLayerChangeListener(this);
+			Main.getLayerManager().addLayerChangeListener(this);
+            Main.getLayerManager().addActiveLayerChangeListener(this);
 		}
 	}
 
 	@Override
-	public void activeLayerChange(Layer oldLayer, Layer newLayer) {
-		if (!(newLayer instanceof ImageryLayer)) {
+	public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+		if (!(Main.getLayerManager().getActiveLayer() instanceof ImageryLayer)) {
 			filterButton.setEnabled(false);
 		} else {
 			filterButton.setEnabled(true);
 		}
-
 	}
 
 	@Override
-	public void layerAdded(Layer newLayer) {
+	public void layerAdded(LayerAddEvent e) {
 
 		if (filterButton == null) {
 
-			// filter reading and adding to the collections of
-			// FilterDownloader
+			// filter reading and adding to the collections of FilterDownloader
 			FiltersDownloader.downloadFiltersInfoList();
 			FiltersDownloader.initFilters();
 
@@ -86,7 +89,7 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 				action = new ShowLayerFiltersDialog();
 			}
 
-			if (newLayer instanceof ImageryLayer) {
+			if (e.getAddedLayer() instanceof ImageryLayer) {
 				filterButton = new SideButton(action, false);
 				filterButton.setEnabled(true);
 			} else {
@@ -96,24 +99,23 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 
 			LayerListDialog dialog = LayerListDialog.getInstance();
 
-			JPanel buttonRowPanel = (JPanel) ((JPanel) dialog.getComponent(2))
-					.getComponent(0);
+			JPanel buttonRowPanel = (JPanel) ((JPanel) dialog.getComponent(2)).getComponent(0);
 			buttonRowPanel.add(filterButton);
 		}
 
-		if (newLayer instanceof ImageryLayer) {
-			FiltersDialog dialog = new FiltersDialog((ImageryLayer) newLayer);
+		if (e.getAddedLayer() instanceof ImageryLayer) {
+			FiltersDialog dialog = new FiltersDialog((ImageryLayer) e.getAddedLayer());
 			action.addFiltersDialog(dialog);
 		}
 
 	}
 
 	@Override
-	public void layerRemoved(Layer oldLayer) {
+	public void layerRemoving(LayerRemoveEvent e) {
 
-		if (oldLayer instanceof ImageryLayer) {
-			FiltersDialog dialog = action.getDialogByLayer(oldLayer);
-			((ImageryLayer) oldLayer).removeImageProcessor(dialog.getFiltersManager());
+		if (e.getRemovedLayer() instanceof ImageryLayer) {
+			FiltersDialog dialog = action.getDialogByLayer(e.getRemovedLayer());
+			((ImageryLayer) e.getRemovedLayer()).removeImageProcessor(dialog.getFiltersManager());
 			dialog.closeFrame();
 			action.removeFiltersDialog(dialog);
 		}
@@ -131,6 +133,11 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 	}
 
 	@Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
+    }
+
+    @Override
 	public PreferenceSetting getPreferenceSetting() {
 		if (setting == null) {
 			setting = new RasterFiltersPreferences();
@@ -138,5 +145,4 @@ public class RasterFiltersPlugin extends Plugin implements LayerChangeListener {
 
 		return setting;
 	}
-
 }

@@ -28,7 +28,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public final class ShowLayerFiltersDialog extends AbstractAction implements LayerAction {
 
-	private List<FiltersDialog> dialogs = new ArrayList<FiltersDialog>();
+	private List<FiltersDialog> dialogs = new ArrayList<>();
 
 	/**
 	 * Constructs a new {@code ShowLayerFiltersDialog}.

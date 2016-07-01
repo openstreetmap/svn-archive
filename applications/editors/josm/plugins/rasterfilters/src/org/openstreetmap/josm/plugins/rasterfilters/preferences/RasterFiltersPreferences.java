@@ -110,7 +110,7 @@ public class RasterFiltersPreferences implements SubPreferenceSetting {
 	class FiltersTableModel extends AbstractTableModel {
 
 		String[] columnNames = { "Filter Name", "Author", "Description", "" };
-		Class[] columnClasses = { String.class, String.class, String.class, Boolean.class };
+		Class<?>[] columnClasses = { String.class, String.class, String.class, Boolean.class };
 		List<FilterInfo> filtersInfoList;
 		Object[][] data;
 
@@ -160,7 +160,7 @@ public class RasterFiltersPreferences implements SubPreferenceSetting {
 		}
 
 		@Override
-		public Class getColumnClass(int col) {
+		public Class<?> getColumnClass(int col) {
 			return columnClasses[col];
 		}
 

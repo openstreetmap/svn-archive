@@ -38,7 +38,7 @@ public class FiltersDialog {
 	private JComboBox<String> filterChooser;
 	private JPanel pane;
 	private JButton addButton;
-	private DefaultComboBoxModel<String> listModel = new DefaultComboBoxModel<String>();
+	private DefaultComboBoxModel<String> listModel = new DefaultComboBoxModel<>();
 	private Set<String> showedFiltersTitles = new HashSet<>();
 	private JPanel filterContainer;
 	private Layer layer;

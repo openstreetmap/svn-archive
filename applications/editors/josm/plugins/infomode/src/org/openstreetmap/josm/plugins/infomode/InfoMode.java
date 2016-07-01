@@ -120,12 +120,12 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
 
     @Override
     public void paint(Graphics2D g, MapView mv, Bounds bbox) {
-        if (pos==null) return;
-        Layer curL= Main.main.getActiveLayer();
-        if (curL instanceof GpxLayer) showLayerInfo(g,curL,mv); else {
-            for (Layer l:mv.getAllLayers()) {
+        if (pos == null) return;
+        Layer curL= mv.getLayerManager().getActiveLayer();
+        if (curL instanceof GpxLayer) showLayerInfo(g, curL, mv); else {
+            for (Layer l : mv.getLayerManager().getLayers()) {
                 if (l instanceof GpxLayer) {
-                    if (showLayerInfo(g,l,mv)) return;
+                    if (showLayerInfo(g, l, mv)) return;
                 }
             }
         }
@@ -219,7 +219,7 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
     }*/
 
     private synchronized void filterTracks() {
-        Layer l = Main.main.getActiveLayer();
+        Layer l = getLayerManager().getActiveLayer();
 
         if (l instanceof GpxLayer && pos!=null) {
             GpxLayer gpxL = (GpxLayer )l;
@@ -234,8 +234,6 @@ class InfoMode extends MapMode implements MapViewPaintable, AWTEventListener {
                 if (f) toRemove.add(track);
             }
             gpxL.data.tracks.removeAll(toRemove);
-
-
         }
     }
 

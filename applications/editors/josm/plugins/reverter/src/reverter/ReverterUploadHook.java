@@ -22,7 +22,7 @@ public class ReverterUploadHook implements UploadHook {
         }
 
         if (hasRevertions) {
-            Main.main.getCurrentDataSet().addChangeSetTag("created_by", "reverter");
+            Main.getLayerManager().getEditDataSet().addChangeSetTag("created_by", "reverter");
         }
         return true;
     }

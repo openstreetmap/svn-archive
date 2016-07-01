@@ -105,7 +105,7 @@ public class ChangesetIdQuery extends ExtendedDialog {
         addWindowListener(new InternalWindowListener());
         super.setupDialog();
         
-        final DataSet ds = Main.main.getCurrentDataSet();
+        final DataSet ds = Main.getLayerManager().getEditDataSet();
         
         // Disables "Download in new layer" choice if there is no current data set (i.e no data layer)
         if (ds == null) {

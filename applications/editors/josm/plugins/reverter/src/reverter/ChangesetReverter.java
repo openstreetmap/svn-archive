@@ -135,7 +135,7 @@ public class ChangesetReverter {
             this.ds = new DataSet();
             this.layer = new OsmDataLayer(this.ds, tr("Reverted changeset") + tr(" [id: {0}]", String.valueOf(changesetId)), null);
         } else {
-            this.layer = Main.main.getEditLayer();
+            this.layer = Main.getLayerManager().getEditLayer();
             this.ds = layer.data;
         }
         this.revertType = revertType;
@@ -154,7 +154,7 @@ public class ChangesetReverter {
                 GuiHelper.runInEDT(new Runnable() {
                     @Override
                     public void run() {
-                        Main.main.addLayer(layer);
+                        Main.getLayerManager().addLayer(layer);
                     }
                 });
             }

@@ -67,7 +67,7 @@ public final class ImageWayPointLayer extends Layer {
     public ImageWayPointLayer() {
         super(tr("Imported Images"));
 
-        Main.main.addLayer(this);
+        Main.getLayerManager().addLayer(this);
 
         this.layerMouseListener = new ImageWayPointMouseListener(this);
         Main.map.mapView.addMouseListener(this.layerMouseListener);

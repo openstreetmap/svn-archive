@@ -52,7 +52,7 @@ public class ConnectWays {
 
             // bude se node slucovat s jinym?
             double minDistanceSq = MIN_DISTANCE;
-            List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(bbox);
+            List<Node> nodes = Main.getLayerManager().getEditDataSet().searchNodes(bbox);
             Node nearestNode = null;
             for (Node nn : nodes) {
                 if (!nn.isUsable() || way.containsNode(nn) || newWay.containsNode(nn) || !isInBuilding(nn)) {
@@ -132,7 +132,7 @@ public class ConnectWays {
 
         // node nebyl slouceny s jinym
         // hledani pripadne blizke usecky, kam bod pridat
-        List<Way> ways = Main.main.getCurrentDataSet().searchWays(bbox);
+        List<Way> ways = Main.getLayerManager().getEditDataSet().searchWays(bbox);
         double minDist = Double.MAX_VALUE;
         Way nearestWay = null;
         int nearestNodeIndex = 0;
@@ -189,7 +189,7 @@ public class ConnectWays {
             System.out.println(way.getNodes().get(i) + "-----" + way.getNodes().get((i + 1) % way.getNodesCount()));
             double minDistanceSq = MIN_DISTANCE_SQ;
             //double maxAngle = MAX_ANGLE;
-            List<Node> nodes = Main.main.getCurrentDataSet().searchNodes(new BBox(
+            List<Node> nodes = Main.getLayerManager().getEditDataSet().searchNodes(new BBox(
                 Math.min(n1.getX(), n2.getX()) - minDistanceSq,
                 Math.min(n1.getY(), n2.getY()) - minDistanceSq,
                 Math.max(n1.getX(), n2.getX()) + minDistanceSq,

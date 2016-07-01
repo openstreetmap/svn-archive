@@ -136,9 +136,9 @@ class TracerAction extends MapMode implements MouseListener {
                    Main.main.undoRedo.add(new SequenceCommand(tr("Tracer building"), commands));
 
                 if (shift) {
-                    Main.main.getCurrentDataSet().addSelected(way);
+                    Main.getLayerManager().getEditDataSet().addSelected(way);
                 } else {
-                    Main.main.getCurrentDataSet().setSelected(way);
+                    Main.getLayerManager().getEditDataSet().setSelected(way);
                 }
             } else {
                 System.out.println("Failed");

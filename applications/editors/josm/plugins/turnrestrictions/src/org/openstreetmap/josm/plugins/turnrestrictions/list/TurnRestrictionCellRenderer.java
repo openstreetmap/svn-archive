@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -33,16 +34,15 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This is a cell renderer for turn restrictions.
- * 
+ *
  * It can be used a cell renderer in lists of turn restrictions and as cell renderer in
- * {@link JTable}s displaying turn restrictions. 
- * 
+ * {@link JTable}s displaying turn restrictions.
+ *
  */
-public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer<Relation>, TableCellRenderer{
-    //static private final Logger logger = Logger.getLogger(TurnRestrictionCellRenderer.class.getName());
-    
+public class TurnRestrictionCellRenderer extends JPanel implements ListCellRenderer<Relation>, TableCellRenderer {
+
     /** the names of restriction types */
-    static private Set<String> RESTRICTION_TYPES = new HashSet<>(
+    private static Set<String> RESTRICTION_TYPES = new HashSet<>(
             Arrays.asList(new String[] {
                     "no_left_turn",
                     "no_right_turn",
@@ -53,13 +53,13 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
                     "only_straight_on"
             })
     );
-    
+
     /** components used to render the turn restriction */
     private JLabel icon;
     private JLabel from;
     private JLabel to;
     private String iconSet = "set-a";
-    
+
     public TurnRestrictionCellRenderer() {
         build();
     }
@@ -67,8 +67,8 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
     /**
      * Replies true if {@code restrictionType} is a valid restriction
      * type.
-     * 
-     * @param restrictionType the restriction type 
+     *
+     * @param restrictionType the restriction type
      * @return true if {@code restrictionType} is a valid restriction
      * type
      */
@@ -77,21 +77,21 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
         restrictionType = restrictionType.trim().toLowerCase();
         return RESTRICTION_TYPES.contains(restrictionType);
     }
-    
+
     /**
-     * Builds the icon name for a given restriction type 
-     * 
-     * @param restrictionType the restriction type 
-     * @return the icon name 
+     * Builds the icon name for a given restriction type
+     *
+     * @param restrictionType the restriction type
+     * @return the icon name
      */
     protected String buildImageName(String restrictionType) {
         return "types/" + iconSet + "/" + restrictionType;
     }
-    
+
     /**
-     * Replies the icon for a given restriction type 
-     * @param restrictionType the restriction type 
-     * @return the icon 
+     * Replies the icon for a given restriction type
+     * @param restrictionType the restriction type
+     * @return the icon
      */
     protected ImageIcon getIcon(String restrictionType) {
         if (!isValidRestrictionType(restrictionType)) {
@@ -99,49 +99,49 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
         }
         return ImageProvider.get(buildImageName(restrictionType));
     }
-    
+
     /**
-     * Builds the UI used to render turn restrictions 
+     * Builds the UI used to render turn restrictions
      */
     protected void build() {
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
-        
-        // the turn restriction icon        
+
+        // the turn restriction icon
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weightx = 0.0;
         gc.gridheight = 2;
         gc.anchor = GridBagConstraints.CENTER;
-        gc.insets = new Insets(0,0,2,2);
+        gc.insets = new Insets(0, 0, 2, 2);
         add(icon = new JLabel(), gc);
-        
-        
+
+
         // the name of the way with role "from"
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.gridx = 1;
         gc.gridheight = 1;
         gc.weightx = 0.0;
-        add(new JMultilineLabel("<html><strong>" + trc("turnrestrictions","From:") + "</strong></html>"), gc);
-        
+        add(new JMultilineLabel("<html><strong>" + trc("turnrestrictions", "From:") + "</strong></html>"), gc);
+
         gc.gridx = 2;
-        gc.weightx = 1.0; 
+        gc.weightx = 1.0;
         add(from = new JLabel(), gc);
-        
+
         // the name of the way with role "to"
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.gridx = 1;
         gc.gridy = 1;
         gc.weightx = 0.0;
-        add(new JMultilineLabel("<html><strong>" + trc("turnrestriction", "To:")  + "</strong></html>"), gc);
-        
+        add(new JMultilineLabel("<html><strong>" + trc("turnrestriction", "To:") + "</strong></html>"), gc);
+
         gc.gridx = 2;
         gc.weightx = 1.0;
         add(to = new JLabel(), gc);
     }
 
     /**
-     * Renders the icon for the turn restriction  
-     * 
+     * Renders the icon for the turn restriction
+     *
      * @param tr the turn restriction
      */
     protected void renderIcon(Relation tr) {
@@ -151,27 +151,27 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
 
     /**
      * Replies a way participating in this turn restriction in a given role
-     * 
-     * @param tr the turn restriction 
+     *
+     * @param tr the turn restriction
      * @param role the role (either "from" or "to")
      * @return the participating way; null, if no way is participating in this role
      */
-    private Way getParticipatingWay(Relation tr, String role){
-        for(RelationMember rm: tr.getMembers()){
+    private Way getParticipatingWay(Relation tr, String role) {
+        for (RelationMember rm: tr.getMembers()) {
             if (rm.getRole().trim().toLowerCase().equals(role) && rm.getType().equals(OsmPrimitiveType.WAY)) {
-                return (Way)rm.getMember();
+                return (Way) rm.getMember();
             }
         }
         return null;
     }
-    
+
     protected void renderFrom(Relation tr) {
         Way from = getParticipatingWay(tr, "from");
         if (from == null) {
             // FIXME: render as warning/error (red background?)
             this.from.setText(tr("no participating way with role ''from''"));
             return;
-        } 
+        }
         this.from.setText(DefaultNameFormatter.getInstance().format(from));
     }
 
@@ -181,14 +181,14 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
             // FIXME: render as warning/error (red background?)
             this.to.setText(tr("no participating way with role ''to''"));
             return;
-        } 
+        }
         this.to.setText(DefaultNameFormatter.getInstance().format(to));
     }
 
     /**
      * Renders the foreground and background color depending on whether
      * the turn restriction is selected
-     * 
+     *
      * @param isSelected true if the turn restriction is selected; false,
      * otherwise
      */
@@ -206,7 +206,7 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
         this.icon.setBackground(bg);
         this.from.setBackground(bg);
         this.to.setBackground(bg);
-        
+
         setForeground(fg);
         this.icon.setForeground(fg);
         this.from.setForeground(fg);
@@ -216,42 +216,44 @@ public class TurnRestrictionCellRenderer extends JPanel implements ListCellRende
     /**
      * Initializes the set of icons used from the preference key
      * {@link PreferenceKeys#ROAD_SIGNS}.
-     * 
-     * @param prefs the JOSM preferences 
+     *
+     * @param prefs the JOSM preferences
      */
-    public void initIconSetFromPreferences(Preferences prefs){
-        
+    public void initIconSetFromPreferences(Preferences prefs) {
+
         iconSet = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
         iconSet = iconSet.trim().toLowerCase();
         if (!iconSet.equals("set-a") && !iconSet.equals("set-b")) {
             iconSet = "set-a";
         }
     }
-    
+
     /* ---------------------------------------------------------------------------------- */
     /* interface ListCellRenderer                                                         */
     /* ---------------------------------------------------------------------------------- */
+    @Override
     public Component getListCellRendererComponent(JList<? extends Relation> list, Relation value,
             int index, boolean isSelected, boolean cellHasFocus) {
 
         renderColor(isSelected);
-        Relation tr = (Relation)value;
+        Relation tr = value;
         renderIcon(tr);
         renderFrom(tr);
-        renderTo(tr);       
+        renderTo(tr);
         return this;
     }
 
     /* ---------------------------------------------------------------------------------- */
     /* interface TableCellRenderer                                                        */
     /* ---------------------------------------------------------------------------------- */
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
-        renderColor(isSelected);        
-        Relation tr = (Relation)value;
+        renderColor(isSelected);
+        Relation tr = (Relation) value;
         renderIcon(tr);
         renderFrom(tr);
-        renderTo(tr);       
+        renderTo(tr);
         return this;
-    }   
+    }
 }

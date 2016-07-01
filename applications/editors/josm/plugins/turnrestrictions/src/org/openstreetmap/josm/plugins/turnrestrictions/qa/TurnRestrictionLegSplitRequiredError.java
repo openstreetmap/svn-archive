@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -25,32 +26,31 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * be split because they intersect.
  *
  */
-public class TurnRestrictionLegSplitRequiredError extends Issue{
-    //static private final Logger logger = Logger.getLogger(TurnRestrictionLegSplitRequiredError.class.getName());
-    
+public class TurnRestrictionLegSplitRequiredError extends Issue {
+
     private TurnRestrictionLegRole role;
     private Way from;
     private Way to;
     private Node intersect;
-    
+
     /**
      * <p>Creates the issue for a pair of ways {@code from} and {@code to} which intersect
      * at node {@code intersect}.</p>
-     * 
-     * @param parent the parent model 
+     *
+     * @param parent the parent model
      * @param from the way with role "from"
      * @param to the way with role "to"
-     * @param intersect the intersection node 
+     * @param intersect the intersection node
      */
-    public TurnRestrictionLegSplitRequiredError(IssuesModel parent, Way from, Way to){
+    public TurnRestrictionLegSplitRequiredError(IssuesModel parent, Way from, Way to) {
         super(parent, Severity.ERROR);
         CheckParameterUtil.ensureParameterNotNull(from, "from");
         CheckParameterUtil.ensureParameterNotNull(to, "to");
-        
-        intersect= TurnRestrictionBuilder.getUniqueCommonNode(from, to);
+
+        intersect = TurnRestrictionBuilder.getUniqueCommonNode(from, to);
         if (intersect == null)
             throw new IllegalArgumentException("exactly one intersecting node required");
-        
+
         this.from = from;
         this.to = to;
         this.role = null;
@@ -78,12 +78,12 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
     @Override
     public String getText() {
         String msg = null;
-        if (role == null){
+        if (role == null) {
             /*
              * from and to intersect at a common node. Both have to be split.
              */
             return tr("The way <span class=\"object-name\">{0}</span> with role <tt>from</tt> and the "
-                    + "way <span class=\"object-name\">{1}</span> with role <tt>to</tt> intersect "                    
+                    + "way <span class=\"object-name\">{1}</span> with role <tt>to</tt> intersect "
                     + "at node <span class=\"object-name\">{2}</span>. "
                     + "<p> "
                     + "Both ways should be split at the intersecting node.",
@@ -92,7 +92,7 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
                     intersect.getDisplayName(DefaultNameFormatter.getInstance())
                 );
         }
-        switch(role){
+        switch(role) {
         case FROM:
             /*
              * "to" joins "from" at a common node. Only from has to be split
@@ -122,26 +122,27 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
     }
 
     class SplitAction extends AbstractAction {
-        public SplitAction() {
+        SplitAction() {
             putValue(NAME, tr("Split now"));
             putValue(SHORT_DESCRIPTION, tr("Split the ways"));
         }
-        
+
+        @Override
         public void actionPerformed(ActionEvent e) {
 
             SplitWayResult result = null;
-            if (role == null || role.equals(TurnRestrictionLegRole.FROM)){
+            if (role == null || role.equals(TurnRestrictionLegRole.FROM)) {
                   result = SplitWayAction.split(
                           parent.getEditorModel().getLayer(),
                           from,
                           Collections.singletonList(intersect),
                           Collections.<OsmPrimitive>emptyList()
                   );
-                  if (result != null){
+                  if (result != null) {
                       Main.main.undoRedo.add(result.getCommand());
                   }
             }
-            
+
             if (role == null || role.equals(TurnRestrictionLegRole.TO)) {
                 result = SplitWayAction.split(
                         parent.getEditorModel().getLayer(),
@@ -149,11 +150,12 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
                         Collections.singletonList(intersect),
                         Collections.<OsmPrimitive>emptyList()
                 );
-                if (result != null){
+                if (result != null) {
                     Main.main.undoRedo.add(result.getCommand());
                 }
                 if (result == null) return;
-                TurnRestrictionType restrictionType = TurnRestrictionType.fromTagValue(getIssuesModel().getEditorModel().getRestrictionTagValue());
+                TurnRestrictionType restrictionType = TurnRestrictionType.fromTagValue(
+                        getIssuesModel().getEditorModel().getRestrictionTagValue());
                 if (restrictionType == null) return;
                 Way adjustedTo = TurnRestrictionBuilder.selectToWayAfterSplit(
                          from,
@@ -161,20 +163,20 @@ public class TurnRestrictionLegSplitRequiredError extends Issue{
                          result.getNewWays().get(0),
                          restrictionType
                 );
-    
+
                 if (adjustedTo == null) return;
                 getIssuesModel().getEditorModel().setTurnRestrictionLeg(
                          TurnRestrictionLegRole.TO,
                          adjustedTo
-                );         
+                );
                 getIssuesModel().getEditorModel().getLayer().data.setSelected(
                            Arrays.asList(from, adjustedTo)
-                 );    
+                 );
             } else {
                 getIssuesModel().getEditorModel().getLayer().data.setSelected(
                            Arrays.asList(from, to)
                  );
-            }           
+            }
         }
     }
 }

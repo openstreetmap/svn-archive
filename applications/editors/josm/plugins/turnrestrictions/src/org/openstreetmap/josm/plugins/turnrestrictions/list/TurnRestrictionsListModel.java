@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import org.openstreetmap.josm.gui.DefaultNameFormatter;
 
 /**
  * This is a list model for a list of turn restrictions.
- * 
+ *
  */
 public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
     private final ArrayList<Relation> turnrestrictions = new ArrayList<>();
@@ -26,7 +27,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
 
     /**
      * Creates the model
-     * 
+     *
      * @param selectionModel the selection model used in the turn restriction list
      */
     public TurnRestrictionsListModel(DefaultListSelectionModel selectionModel) {
@@ -35,8 +36,8 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
 
     /**
      * Replies the turn restriction at position {@code idx} in the list.
-     * 
-     * @param idx the index 
+     *
+     * @param idx the index
      * @return the turn restriction at position {@code idx} in the list.
      */
     public Relation getTurnRestriction(int idx) {
@@ -44,7 +45,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
     }
 
     /**
-     * Sorts the turn restrictions in this model 
+     * Sorts the turn restrictions in this model
      */
     public void sort() {
         Collections.sort(
@@ -52,6 +53,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
                 new Comparator<Relation>() {
                     NameFormatter formatter = DefaultNameFormatter.getInstance();
 
+                    @Override
                     public int compare(Relation r1, Relation r2) {
                         return r1.getDisplayName(formatter).compareTo(r2.getDisplayName(formatter));
                     }
@@ -62,34 +64,34 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
     protected boolean isValid(Relation r) {
         return !r.isDeleted() && r.isVisible() && !r.isIncomplete();
     }
-    
+
     /**
      * Replies true if the primitive {@code primitive} represents
-     * an OSM turn restriction.  
-     * 
-     * @param primitive the primitive 
+     * an OSM turn restriction.
+     *
+     * @param primitive the primitive
      * @return true if the primitive {@code primitive} represents
      * an OSM turn restriction; false, otherwise
      */
     protected boolean isTurnRestriction(OsmPrimitive primitive) {
         if (primitive == null) return false;
-        if (! (primitive instanceof Relation)) return false;
+        if (!(primitive instanceof Relation)) return false;
         String type = primitive.get("type");
-        if (type == null || ! type.equals("restriction")) return false;
+        if (type == null || !type.equals("restriction")) return false;
         return true;
     }
-    
+
     /**
      * Populates the model with the turn restrictions in {@code turnrestrictions}.
-     * 
-     * @param turnrestrictions the turn restrictions 
+     *
+     * @param turnrestrictions the turn restrictions
      */
     public void setTurnRestrictions(Collection<Relation> turnrestrictions) {
-        List<Relation> sel =  getSelectedTurnRestrictions();
+        List<Relation> sel = getSelectedTurnRestrictions();
         this.turnrestrictions.clear();
         if (turnrestrictions == null) {
             selectionModel.clearSelection();
-            fireContentsChanged(this,0,getSize());
+            fireContentsChanged(this, 0, getSize());
             return;
         }
         for (Relation r: turnrestrictions) {
@@ -112,11 +114,11 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
     public void addTurnRestrictions(Collection<? extends OsmPrimitive> addedPrimitives) {
         boolean added = false;
         for (OsmPrimitive p: addedPrimitives) {
-            if (! isTurnRestriction(p)) {
+            if (!isTurnRestriction(p)) {
                 continue;
             }
 
-            Relation r = (Relation)p;
+            Relation r = (Relation) p;
             if (!isValid(r)) continue;
             if (turnrestrictions.contains(r)) {
                 continue;
@@ -143,9 +145,9 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
         Set<Relation> removedTurnRestrictions = new HashSet<>();
         for (OsmPrimitive p: removedPrimitives) {
             if (!isTurnRestriction(p)) continue;
-            removedTurnRestrictions.add((Relation)p);
+            removedTurnRestrictions.add((Relation) p);
         }
-        if (removedTurnRestrictions.isEmpty())return;
+        if (removedTurnRestrictions.isEmpty()) return;
         int size = turnrestrictions.size();
         turnrestrictions.removeAll(removedTurnRestrictions);
         if (size != turnrestrictions.size()) {
@@ -156,10 +158,12 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
         }
     }
 
+    @Override
     public Relation getElementAt(int index) {
         return turnrestrictions.get(index);
     }
 
+    @Override
     public int getSize() {
         return turnrestrictions.size();
     }
@@ -172,7 +176,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
      */
     public List<Relation> getSelectedNonNewRelations() {
         ArrayList<Relation> ret = new ArrayList<>();
-        for (int i=0; i<getSize();i++) {
+        for (int i = 0; i < getSize(); i++) {
             if (!selectionModel.isSelectedIndex(i)) {
                 continue;
             }
@@ -192,7 +196,7 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
      */
     public List<Relation> getSelectedTurnRestrictions() {
         ArrayList<Relation> ret = new ArrayList<>();
-        for (int i=0; i<getSize();i++) {
+        for (int i = 0; i < getSize(); i++) {
             if (!selectionModel.isSelectedIndex(i)) {
                 continue;
             }
@@ -212,21 +216,21 @@ public class TurnRestrictionsListModel extends AbstractListModel<Relation> {
             return;
         for (Relation r: sel) {
             int i = turnrestrictions.indexOf(r);
-            if (i<0) {
+            if (i < 0) {
                 continue;
             }
-            selectionModel.addSelectionInterval(i,i);
+            selectionModel.addSelectionInterval(i, i);
         }
     }
 
     /**
-     * Returns the index of a turn restriction 
+     * Returns the index of a turn restriction
      *
      * @return index of relation (-1, if not found)
      */
     public int getTurnRestrictionIndex(Relation tr) {
         int i = turnrestrictions.indexOf(tr);
-        if (i<0)return -1;
+        if (i < 0) return -1;
         return i;
     }
 }

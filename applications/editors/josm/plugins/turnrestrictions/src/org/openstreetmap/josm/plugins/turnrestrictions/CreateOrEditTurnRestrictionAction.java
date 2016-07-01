@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -28,11 +29,9 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
 
     /**
      * Replies the unique instance of this action
-     *
-     * @return
      */
     public static CreateOrEditTurnRestrictionAction getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new CreateOrEditTurnRestrictionAction();
         }
         return instance;
@@ -43,7 +42,7 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
             tr("Create/Edit turn restriction..."),
             null,
             tr("Create or edit a turn restriction."),
-            Shortcut.registerShortcut("tools:turnrestriction", tr("Tool: {0}","Create or edit a turn restriction."),
+            Shortcut.registerShortcut("tools:turnrestriction", tr("Tool: {0}", "Create or edit a turn restriction."),
                 KeyEvent.VK_2, Shortcut.ALT_SHIFT),
             false
         );
@@ -54,12 +53,12 @@ public class CreateOrEditTurnRestrictionAction extends JosmAction {
         OsmDataLayer layer = Main.getLayerManager().getEditLayer();
         if (layer == null) return;
         Collection<Relation> trs = TurnRestrictionSelectionPopupPanel.getTurnRestrictionsParticipatingIn(layer.data.getSelected());
-        if (trs.isEmpty()){
+        if (trs.isEmpty()) {
             // current selection isn't participating in turn restrictions. Launch
             // an editor for a new turn restriction
             //
             Relation tr = new TurnRestrictionBuilder().buildFromSelection(layer);
-            TurnRestrictionEditor editor = new TurnRestrictionEditor(Main.map.mapView,layer,tr);
+            TurnRestrictionEditor editor = new TurnRestrictionEditor(Main.map.mapView, layer, tr);
             TurnRestrictionEditorManager.getInstance().positionOnScreen(editor);
             TurnRestrictionEditorManager.getInstance().register(layer, tr, editor);
             editor.setVisible(true);

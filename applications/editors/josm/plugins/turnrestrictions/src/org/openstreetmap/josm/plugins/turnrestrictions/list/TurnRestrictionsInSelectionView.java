@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import java.awt.BorderLayout;
@@ -35,10 +36,10 @@ public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsLis
     }
 
     protected void registerAsListener() {
-        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener)model);
-        SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener)model, FireMode.IN_EDT_CONSOLIDATED);
-        TurnRestrictionsInSelectionListModel m = (TurnRestrictionsInSelectionListModel)model;
-        if (Main.getLayerManager().getEditLayer() != null){
+        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        SelectionEventManager.getInstance().addSelectionListener((SelectionChangedListener) model, FireMode.IN_EDT_CONSOLIDATED);
+        TurnRestrictionsInSelectionListModel m = (TurnRestrictionsInSelectionListModel) model;
+        if (Main.getLayerManager().getEditLayer() != null) {
             m.initFromSelection(Main.getLayerManager().getEditLayer().data.getSelected());
         } else {
             m.initFromSelection(Collections.<OsmPrimitive>emptyList());
@@ -46,8 +47,8 @@ public class TurnRestrictionsInSelectionView extends AbstractTurnRestrictionsLis
     }
 
     protected void unregisterAsListener() {
-        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener)model);
-        SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener)model);
+        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        SelectionEventManager.getInstance().removeSelectionListener((SelectionChangedListener) model);
     }
 
     public TurnRestrictionsInSelectionView() {

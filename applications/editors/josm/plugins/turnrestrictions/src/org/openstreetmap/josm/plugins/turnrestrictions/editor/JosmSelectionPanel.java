@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -63,7 +64,7 @@ public class JosmSelectionPanel extends JPanel {
         add(new JScrollPane(lstSelection), BorderLayout.CENTER);
         add(new JLabel(tr("Selection")), BorderLayout.NORTH);
 
-        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         actCopy = new CopyAction();
         lstSelection.addMouseListener(new PopupLauncher());
     }
@@ -74,7 +75,7 @@ public class JosmSelectionPanel extends JPanel {
      * @param layer the data layer. Must not be null.
      * @exception IllegalArgumentException thrown if {@code layer} is null
      */
-    public JosmSelectionPanel(OsmDataLayer layer, JosmSelectionListModel model) throws IllegalArgumentException{
+    public JosmSelectionPanel(OsmDataLayer layer, JosmSelectionListModel model) throws IllegalArgumentException {
         CheckParameterUtil.ensureParameterNotNull(layer, "layer");
         this.model = model;
         build(layer);
@@ -106,7 +107,7 @@ public class JosmSelectionPanel extends JPanel {
     }
 
     class PopupMenu extends JPopupMenu {
-        public PopupMenu() {
+        PopupMenu() {
             JMenuItem item = add(actCopy);
             item.setTransferHandler(transferHandler);
             actCopy.setEnabled(!model.getSelected().isEmpty());
@@ -116,7 +117,7 @@ public class JosmSelectionPanel extends JPanel {
     class CopyAction extends AbstractAction {
         private Action delegate;
 
-        public CopyAction(){
+        CopyAction() {
             putValue(NAME, tr("Copy"));
             putValue(SHORT_DESCRIPTION, tr("Copy to the clipboard"));
             new ImageProvider("copy").getResource().attachImageIcon(this);
@@ -130,8 +131,8 @@ public class JosmSelectionPanel extends JPanel {
         }
     }
 
-    static private class JosmSelectionTransferHandler extends PrimitiveIdListTransferHandler {
-        public JosmSelectionTransferHandler(PrimitiveIdListProvider provider) {
+    private static class JosmSelectionTransferHandler extends PrimitiveIdListTransferHandler {
+        JosmSelectionTransferHandler(PrimitiveIdListProvider provider) {
             super(provider);
         }
 

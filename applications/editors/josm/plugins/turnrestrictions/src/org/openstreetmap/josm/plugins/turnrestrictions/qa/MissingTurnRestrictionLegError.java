@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 
 import static org.openstreetmap.josm.plugins.turnrestrictions.editor.NavigationControler.BasicEditorFokusTargets.FROM;
@@ -13,15 +14,15 @@ import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionLeg
 /**
  * A member with role 'from' or 'to' is missing. Can't be fixed automatically.
  * Redirect the user to the Basic editor panel.
- * 
+ *
  */
 public class MissingTurnRestrictionLegError extends Issue {
     private TurnRestrictionLegRole role;
 
     /**
-     * Creates the issue. 
-     * 
-     * @param parent the parent model 
+     * Creates the issue.
+     *
+     * @param parent the parent model
      * @param role the role of the missing way
      */
     public MissingTurnRestrictionLegError(IssuesModel parent, TurnRestrictionLegRole role) {
@@ -33,11 +34,11 @@ public class MissingTurnRestrictionLegError extends Issue {
     @Override
     public String getText() {
         String msg = "";
-        switch(role){
-        case FROM: 
+        switch(role) {
+        case FROM:
             msg = tr("A way with role <tt>from</tt> is required in a turn restriction.");
             break;
-        case TO: 
+        case TO:
             msg = tr("A way with role <tt>to</tt> is required in a turn restriction.");
             break;
         }
@@ -46,26 +47,28 @@ public class MissingTurnRestrictionLegError extends Issue {
     }
 
     class FixAction extends AbstractAction {
-        public FixAction() {
+        FixAction() {
             putValue(NAME, tr("Add in editor"));
-            switch(role){
+            switch(role) {
             case FROM:
                 putValue(SHORT_DESCRIPTION, tr("Add a way with role ''from''"));
                 break;
             case TO:
                 putValue(SHORT_DESCRIPTION, tr("Add a way with role ''to''"));
-                break;              
-            }           
+                break;
+            }
         }
+
+        @Override
         public void actionPerformed(ActionEvent e) {
-            switch(role){
+            switch(role) {
             case FROM:
                 getIssuesModel().getNavigationControler().gotoBasicEditor(FROM);
                 break;
             case TO:
                 getIssuesModel().getNavigationControler().gotoBasicEditor(TO);
-                break;              
-            }           
-        }       
+                break;
+            }
+        }
     }
 }

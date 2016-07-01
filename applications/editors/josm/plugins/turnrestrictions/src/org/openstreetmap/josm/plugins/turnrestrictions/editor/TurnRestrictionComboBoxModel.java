@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import java.util.ArrayList;
@@ -15,28 +16,27 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 /**
  * This is a model for a combo box to select a turn restriction type. The
  * user can choose from a list of standard types but the model also supports
- * non-standard tag values in the OSM data. 
+ * non-standard tag values in the OSM data.
  *
  */
-public class TurnRestrictionComboBoxModel implements ComboBoxModel<Object>, Observer{
-    //static private final Logger logger = Logger.getLogger(TurnRestrictionComboBoxModel.class.getName());
-    
+public class TurnRestrictionComboBoxModel implements ComboBoxModel<Object>, Observer {
+
     private TurnRestrictionEditorModel model;
-    final private List<Object> values = new ArrayList<>();
+    private final List<Object> values = new ArrayList<>();
     private String selectedTagValue = null;
     private final transient EventListenerList listeners = new EventListenerList();
-    
+
     /**
      * Populates the model with the list of standard values. If the
      * data contains a non-standard value it is displayed in the combo
-     * box as an additional element. 
+     * box as an additional element.
      */
     protected void populate() {
         values.clear();
         for (TurnRestrictionType type: TurnRestrictionType.values()) {
             values.add(type);
-        }       
-        
+        }
+
         String tagValue = model.getRestrictionTagValue();
         if (tagValue.trim().equals("")) {
             selectedTagValue = null;
@@ -51,70 +51,77 @@ public class TurnRestrictionComboBoxModel implements ComboBoxModel<Object>, Obse
         }
         fireContentsChanged();
     }
-    
+
     /**
-     * Creates the combo box model. 
-     * 
+     * Creates the combo box model.
+     *
      * @param model the turn restriction editor model. Must not be null.
      */
-    public TurnRestrictionComboBoxModel(TurnRestrictionEditorModel model){
+    public TurnRestrictionComboBoxModel(TurnRestrictionEditorModel model) {
         CheckParameterUtil.ensureParameterNotNull(model, "model");
         this.model = model;
         model.addObserver(this);
         populate();
     }
 
+    @Override
     public Object getSelectedItem() {
         TurnRestrictionType type = TurnRestrictionType.fromTagValue(selectedTagValue);
         if (type != null) return type;
         return selectedTagValue;
     }
 
+    @Override
     public void setSelectedItem(Object anItem) {
         String tagValue = null;
         if (anItem instanceof String) {
-            tagValue = (String)anItem;
-        } else if (anItem instanceof TurnRestrictionType){
-            tagValue = ((TurnRestrictionType)anItem).getTagValue();
+            tagValue = (String) anItem;
+        } else if (anItem instanceof TurnRestrictionType) {
+            tagValue = ((TurnRestrictionType) anItem).getTagValue();
         }
         model.setRestrictionTagValue(tagValue);
     }
 
+    @Override
     public Object getElementAt(int index) {
         return values.get(index);
     }
 
+    @Override
     public int getSize() {
         return values.size();
     }
-    
+
+    @Override
     public void addListDataListener(ListDataListener l) {
-        listeners.add(ListDataListener.class, l);       
+        listeners.add(ListDataListener.class, l);
     }
-    
+
+    @Override
     public void removeListDataListener(ListDataListener l) {
-        listeners.remove(ListDataListener.class, l);        
+        listeners.remove(ListDataListener.class, l);
     }
-    
+
     protected void fireContentsChanged() {
-        for(ListDataListener l: listeners.getListeners(ListDataListener.class)) {
+        for (ListDataListener l: listeners.getListeners(ListDataListener.class)) {
             l.contentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getSize()));
         }
     }
-    
+
     /* ------------------------------------------------------------------------------------ */
     /* interface Observer                                                                   */
     /* ------------------------------------------------------------------------------------ */
-    public void update(Observable o, Object arg) {      
+    @Override
+    public void update(Observable o, Object arg) {
         String tagValue = model.getRestrictionTagValue();
         if (tagValue == null && selectedTagValue != null) {
             populate();
-        } else if (tagValue != null && selectedTagValue == null){
+        } else if (tagValue != null && selectedTagValue == null) {
             populate();
         } else if (tagValue != null) {
             if (!tagValue.equals(selectedTagValue)) {
                 populate();
             }
-        } 
+        }
     }
 }

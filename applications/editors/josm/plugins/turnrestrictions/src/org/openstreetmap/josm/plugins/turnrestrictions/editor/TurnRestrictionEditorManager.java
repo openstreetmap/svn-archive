@@ -25,7 +25,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  *
  */
 public class TurnRestrictionEditorManager extends WindowAdapter implements LayerChangeListener {
-    //static private final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
+    //private static final Logger logger = Logger.getLogger(TurnRestrictionEditorManager.class.getName());
 
     /** keeps track of open relation editors */
     static TurnRestrictionEditorManager instance;
@@ -35,7 +35,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
      *
      * @return the singleton {@link TurnRestrictionEditorManager}
      */
-    static public TurnRestrictionEditorManager getInstance() {
+    public static TurnRestrictionEditorManager getInstance() {
         if (TurnRestrictionEditorManager.instance == null) {
             TurnRestrictionEditorManager.instance = new TurnRestrictionEditorManager();
             Main.getLayerManager().addLayerChangeListener(TurnRestrictionEditorManager.instance);
@@ -47,11 +47,11 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
      * Helper class for keeping the context of a turn restriction editor. A turn
      * restriction editor is open for turn restriction in a  {@link OsmDataLayer}
      */
-    static private class DialogContext {
+    private static class DialogContext {
         public final PrimitiveId primitiveId;
         public final OsmDataLayer layer;
 
-        public DialogContext(OsmDataLayer layer, PrimitiveId id) {
+        DialogContext(OsmDataLayer layer, PrimitiveId id) {
             this.layer = layer;
             this.primitiveId = id;
         }
@@ -100,12 +100,12 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
     }
 
     /** the map of open dialogs */
-    private final HashMap<DialogContext, TurnRestrictionEditor> openDialogs =  new HashMap<>();
+    private final HashMap<DialogContext, TurnRestrictionEditor> openDialogs = new HashMap<>();
 
     /**
      * constructor
      */
-    public TurnRestrictionEditorManager(){}
+    public TurnRestrictionEditorManager() {}
 
     /**
      * Register the editor for a turn restriction managed by a
@@ -189,7 +189,7 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
 
     @Override
     public void windowClosed(WindowEvent e) {
-        TurnRestrictionEditor editor = (TurnRestrictionEditor)e.getWindow();
+        TurnRestrictionEditor editor = (TurnRestrictionEditor) e.getWindow();
         DialogContext context = null;
         for (DialogContext c : openDialogs.keySet()) {
             if (editor.equals(openDialogs.get(c))) {
@@ -208,12 +208,12 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
      * @param editor the editor
      */
     protected void centerOnScreen(TurnRestrictionEditor editor) {
-        Point p = new Point(0,0);
+        Point p = new Point(0, 0);
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         p.x = (d.width - editor.getSize().width)/2;
         p.y = (d.height - editor.getSize().height)/2;
-        p.x = Math.max(p.x,0);
-        p.y = Math.max(p.y,0);
+        p.x = Math.max(p.x, 0);
+        p.y = Math.max(p.y, 0);
         editor.setLocation(p);
     }
 
@@ -238,17 +238,15 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
     /**
      * Positions a {@link TurnRestrictionEditor} close to the center of the screen, in such
      * a way, that it doesn't entirely cover another {@link TurnRestrictionEditor}
-     *
-     * @param editor
      */
     protected void positionCloseToScreenCenter(TurnRestrictionEditor editor) {
-        Point p = new Point(0,0);
+        Point p = new Point(0, 0);
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         p.x = (d.width - editor.getSize().width)/2;
         p.y = (d.height - editor.getSize().height)/2;
-        p.x = Math.max(p.x,0);
-        p.y = Math.max(p.y,0);
-        while(hasEditorWithCloseUpperLeftCorner(p)) {
+        p.x = Math.max(p.x, 0);
+        p.y = Math.max(p.y, 0);
+        while (hasEditorWithCloseUpperLeftCorner(p)) {
             p.x += 20;
             p.y += 20;
         }
@@ -279,13 +277,13 @@ public class TurnRestrictionEditorManager extends WindowAdapter implements Layer
     @Override
     public void layerRemoving(LayerRemoveEvent e) {
         Layer oldLayer = e.getRemovedLayer();
-        if (oldLayer == null || ! (oldLayer instanceof OsmDataLayer))
+        if (oldLayer == null || !(oldLayer instanceof OsmDataLayer))
             return;
-        OsmDataLayer dataLayer = (OsmDataLayer)oldLayer;
+        OsmDataLayer dataLayer = (OsmDataLayer) oldLayer;
 
-        Iterator<Entry<DialogContext,TurnRestrictionEditor>> it = openDialogs.entrySet().iterator();
-        while(it.hasNext()) {
-            Entry<DialogContext,TurnRestrictionEditor> entry = it.next();
+        Iterator<Entry<DialogContext, TurnRestrictionEditor>> it = openDialogs.entrySet().iterator();
+        while (it.hasNext()) {
+            Entry<DialogContext, TurnRestrictionEditor> entry = it.next();
             if (entry.getKey().matchesLayer(dataLayer)) {
                 TurnRestrictionEditor editor = entry.getValue();
                 it.remove();

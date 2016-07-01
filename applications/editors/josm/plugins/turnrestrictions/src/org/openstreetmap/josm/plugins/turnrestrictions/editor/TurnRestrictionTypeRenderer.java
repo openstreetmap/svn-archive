@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -17,49 +18,49 @@ import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.turnrestrictions.preferences.PreferenceKeys;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-
 public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRenderer<Object> {
- 
-    final private Map<TurnRestrictionType, ImageIcon> icons = new HashMap<>();
+
+    private final Map<TurnRestrictionType, ImageIcon> icons = new HashMap<>();
     private String iconSet = "set-a";
-    
+
     /**
-     * Loads the image icons for the rendered turn restriction types 
+     * Loads the image icons for the rendered turn restriction types
      */
     protected void loadImages() {
-        for(TurnRestrictionType type: TurnRestrictionType.values()) {
+        for (TurnRestrictionType type: TurnRestrictionType.values()) {
             try {
-                ImageIcon icon = new ImageIcon(ImageProvider.get("types/" + iconSet, type.getTagValue()).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-                icons.put(type,icon);
-            } catch(Exception e){
+                ImageIcon icon = new ImageIcon(ImageProvider.get("types/" + iconSet,
+                        type.getTagValue()).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+                icons.put(type, icon);
+            } catch (Exception e) {
                 System.out.println(tr("Warning: failed to load icon for turn restriction type ''{0}''", type.getTagValue()));
-                e.printStackTrace();                
+                e.printStackTrace();
             }
         }
     }
-    
+
     public TurnRestrictionTypeRenderer() {
         setOpaque(true);
         loadImages();
     }
-    
-    protected void renderColors(boolean isSelected){
-        if (isSelected){
+
+    protected void renderColors(boolean isSelected) {
+        if (isSelected) {
             setBackground(UIManager.getColor("List.selectionBackground"));
             setForeground(UIManager.getColor("List.selectionForeground"));
         } else {
             setBackground(UIManager.getColor("List.background"));
-            setForeground(UIManager.getColor("List.foreground"));           
+            setForeground(UIManager.getColor("List.foreground"));
         }
     }
-    
+
     /**
      * Initializes the set of icons used from the preference key
      * {@link PreferenceKeys#ROAD_SIGNS}.
-     * 
-     * @param prefs the JOSM preferences 
+     *
+     * @param prefs the JOSM preferences
      */
-    public void initIconSetFromPreferences(Preferences prefs){      
+    public void initIconSetFromPreferences(Preferences prefs) {
         iconSet = prefs.get(PreferenceKeys.ROAD_SIGNS, "set-a");
         iconSet = iconSet.trim().toLowerCase();
         if (!iconSet.equals("set-a") && !iconSet.equals("set-b")) {
@@ -67,22 +68,23 @@ public class TurnRestrictionTypeRenderer extends JLabel implements ListCellRende
         }
         loadImages();
     }
-    
+
+    @Override
     public Component getListCellRendererComponent(JList<? extends Object> list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
-        
+
         renderColors(isSelected);
         if (value == null) {
             setText(tr("please select a turn restriction type"));
             setIcon(null);
-        } else if (value instanceof String){
-            setText((String)value);
-            setIcon(null); // FIXME: special icon for non-standard types? 
-        } else if (value instanceof TurnRestrictionType){
-            TurnRestrictionType type = (TurnRestrictionType)value;
+        } else if (value instanceof String) {
+            setText((String) value);
+            setIcon(null); // FIXME: special icon for non-standard types?
+        } else if (value instanceof TurnRestrictionType) {
+            TurnRestrictionType type = (TurnRestrictionType) value;
             setText(type.getDisplayName());
             setIcon(icons.get(type));
         }
         return this;
-    }   
+    }
 }

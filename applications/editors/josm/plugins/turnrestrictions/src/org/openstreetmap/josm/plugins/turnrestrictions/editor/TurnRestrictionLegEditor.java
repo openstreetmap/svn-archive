@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -58,7 +59,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * This is an editor for one of the two legs of a turn restriction.
  */
 public class TurnRestrictionLegEditor extends JPanel implements Observer, PrimitiveIdListProvider {
-    //static private final Logger logger = Logger.getLogger(TurnRestrictionLegEditor.class.getName());
+    //private static final Logger logger = Logger.getLogger(TurnRestrictionLegEditor.class.getName());
 
     private JLabel lblOsmObject;
     private final Set<OsmPrimitive> legs = new HashSet<>();
@@ -81,11 +82,11 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
         setBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createEtchedBorder(),
-                        BorderFactory.createEmptyBorder(1,1,1,1)
+                        BorderFactory.createEmptyBorder(1, 1, 1, 1)
                 )
         );
 
-        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         pnlButtons.setBorder(null);
         JButton btn;
         actDelete = new DeleteAction();
@@ -102,7 +103,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
         add(pnlButtons, BorderLayout.EAST);
 
         // focus handling
-        FocusHandler fh  = new FocusHandler();
+        FocusHandler fh = new FocusHandler();
         lblOsmObject.setFocusable(true);
         lblOsmObject.addFocusListener(fh);
         this.addFocusListener(fh);
@@ -114,17 +115,17 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
         lblOsmObject.addMouseListener(new PopupLauncher());
 
         // enable DEL to remove the object from the turn restriction
-        registerKeyboardAction(actDelete,KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0) , JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        registerKeyboardAction(actDelete, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         getInputMap().put(Shortcut.getCopyKeyStroke(), TransferHandler.getCopyAction().getValue(Action.NAME));;
         getInputMap().put(Shortcut.getPasteKeyStroke(), TransferHandler.getPasteAction().getValue(Action.NAME));;
         getActionMap().put(TransferHandler.getCopyAction().getValue(Action.NAME), TransferHandler.getCopyAction());
         getActionMap().put(TransferHandler.getPasteAction().getValue(Action.NAME), TransferHandler.getPasteAction());
         lblOsmObject.setTransferHandler(transferHandler = new LegEditorTransferHandler(this));
-        lblOsmObject.addMouseMotionListener(new MouseMotionAdapter(){
+        lblOsmObject.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                JComponent c = (JComponent)e.getSource();
+                JComponent c = (JComponent) e.getSource();
                 TransferHandler th = c.getTransferHandler();
                 th.exportAsDrag(c, e, TransferHandler.COPY);
             }
@@ -152,7 +153,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
         refresh();
     }
 
-    protected void refresh(){
+    protected void refresh() {
         legs.clear();
         legs.addAll(model.getTurnRestrictionLeg(role));
         if (legs.isEmpty()) {
@@ -160,7 +161,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
             lblOsmObject.setIcon(null);
             lblOsmObject.setText(tr("please select a way"));
             lblOsmObject.setToolTipText(null);
-        } else if (legs.size() == 1){
+        } else if (legs.size() == 1) {
             OsmPrimitive leg = legs.iterator().next();
             lblOsmObject.setFont(UIManager.getFont("Label.font"));
             lblOsmObject.setIcon(ImageProvider.get("data", "way"));
@@ -169,7 +170,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
         } else {
             lblOsmObject.setFont(UIManager.getFont("Label.font").deriveFont(Font.ITALIC));
             lblOsmObject.setIcon(null);
-            lblOsmObject.setText(tr("multiple objects with role ''{0}''",this.role.getOsmRole()));
+            lblOsmObject.setText(tr("multiple objects with role ''{0}''", this.role.getOsmRole()));
             lblOsmObject.setToolTipText(null);
         }
         renderColors();
@@ -212,6 +213,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     /* ----------------------------------------------------------------------------- */
     /* interface Observer                                                            */
     /* ----------------------------------------------------------------------------- */
+    @Override
     public void update(Observable o, Object arg) {
         refresh();
     }
@@ -219,6 +221,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     /* ----------------------------------------------------------------------------- */
     /* interface PrimitiveIdListProvider                                                            */
     /* ----------------------------------------------------------------------------- */
+    @Override
     public List<PrimitiveId> getSelectedPrimitiveIds() {
         if (legs.size() == 1) {
             return Collections.singletonList(legs.iterator().next().getPrimitiveId());
@@ -255,20 +258,21 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
      * Deletes the way from the turn restriction
      */
     class DeleteAction extends AbstractAction {
-        public DeleteAction() {
+        DeleteAction() {
             putValue(SHORT_DESCRIPTION, tr("Delete from turn restriction"));
             putValue(NAME, tr("Delete"));
             new ImageProvider("deletesmall").getResource().attachImageIcon(this);
-            putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.setTurnRestrictionLeg(role, null);
         }
 
         public void updateEnabledState() {
-            setEnabled(legs.size()>0);
+            setEnabled(legs.size() > 0);
         }
     }
 
@@ -278,7 +282,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
      */
     class AcceptAction extends AbstractAction implements ListSelectionListener {
 
-        public AcceptAction() {
+        AcceptAction() {
              putValue(SHORT_DESCRIPTION, tr("Accept the currently selected way"));
              putValue(NAME, tr("Accept"));
              new ImageProvider("accept").getResource().attachImageIcon(this);
@@ -286,7 +290,8 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
              updateEnabledState();
         }
 
-         public void actionPerformed(ActionEvent e) {
+         @Override
+        public void actionPerformed(ActionEvent e) {
              List<Way> selWays = OsmPrimitive.getFilteredList(model.getJosmSelectionListModel().getSelected(), Way.class);
              if (selWays.size() != 1) return;
              Way w = selWays.get(0);
@@ -309,7 +314,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     class LegEditorTransferHandler extends PrimitiveIdListTransferHandler {
         Logger logger = Logger.getLogger(LegEditorTransferHandler.class.getName());
 
-        public LegEditorTransferHandler(PrimitiveIdListProvider provider){
+        LegEditorTransferHandler(PrimitiveIdListProvider provider) {
             super(provider);
         }
 
@@ -317,18 +322,18 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
         @Override
         public boolean importData(JComponent comp, Transferable t) {
             try {
-                List<PrimitiveId> ids = (List<PrimitiveId>)t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
-                if (ids.size() !=1) {
+                List<PrimitiveId> ids = (List<PrimitiveId>) t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
+                if (ids.size() != 1) {
                     return false;
                 }
                 PrimitiveId id = ids.get(0);
                 if (!id.getType().equals(OsmPrimitiveType.WAY)) return false;
                 model.setTurnRestrictionLeg(role, id);
                 return true;
-            } catch(IOException e) {
+            } catch (IOException e) {
                 // ignore
                 return false;
-            } catch(UnsupportedFlavorException e) {
+            } catch (UnsupportedFlavorException e) {
                 // ignore
                 return false;
             }
@@ -349,7 +354,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     }
 
     class PopupMenu extends JPopupMenu {
-        public PopupMenu() {
+        PopupMenu() {
             actCopy.updateEnabledState();
             JMenuItem item = add(actCopy);
             item.setTransferHandler(transferHandler);
@@ -364,7 +369,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
     class CopyAction extends AbstractAction {
         private Action delegate;
 
-        public CopyAction(){
+        CopyAction() {
             putValue(NAME, tr("Copy"));
             putValue(SHORT_DESCRIPTION, tr("Copy to the clipboard"));
             new ImageProvider("copy").getResource().attachImageIcon(this);
@@ -373,6 +378,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             delegate.actionPerformed(e);
         }
@@ -394,7 +400,7 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
             return false;
         }
 
-        public PasteAction(){
+        PasteAction() {
             putValue(NAME, tr("Paste"));
             putValue(SHORT_DESCRIPTION, tr("Paste from the clipboard"));
             new ImageProvider("paste").getResource().attachImageIcon(this);
@@ -406,10 +412,9 @@ public class TurnRestrictionLegEditor extends JPanel implements Observer, Primit
             setEnabled(canPaste());
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             delegate.actionPerformed(e);
         }
     }
-
-
 }

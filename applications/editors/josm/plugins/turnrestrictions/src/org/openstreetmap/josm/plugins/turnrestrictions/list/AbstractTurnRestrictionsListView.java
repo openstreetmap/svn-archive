@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import javax.swing.JList;
@@ -9,7 +10,7 @@ import org.openstreetmap.josm.data.osm.Relation;
 
 /**
  * The abstract base class for two views of turn restriction lists.
- * 
+ *
  * @see TurnRestrictionsInSelectionView
  * @see TurnRestrictionsInDatasetView
  *
@@ -17,25 +18,25 @@ import org.openstreetmap.josm.data.osm.Relation;
 abstract class AbstractTurnRestrictionsListView extends JPanel {
     protected TurnRestrictionsListModel model;
     protected JList<Relation> lstTurnRestrictions;
-    
-    public TurnRestrictionsListModel getModel(){
+
+    public TurnRestrictionsListModel getModel() {
         return model;
     }
-    
+
     public JList<Relation> getList() {
         return lstTurnRestrictions;
     }
-    
+
     public void addListSelectionListener(ListSelectionListener listener) {
         lstTurnRestrictions.addListSelectionListener(listener);
     }
-     
+
     public void removeListSelectionListener(ListSelectionListener listener) {
         lstTurnRestrictions.addListSelectionListener(listener);
     }
-    
-    public void initIconSetFromPreferences(Preferences prefs){
-        TurnRestrictionCellRenderer renderer = (TurnRestrictionCellRenderer)lstTurnRestrictions.getCellRenderer();
+
+    public void initIconSetFromPreferences(Preferences prefs) {
+        TurnRestrictionCellRenderer renderer = (TurnRestrictionCellRenderer) lstTurnRestrictions.getCellRenderer();
         renderer.initIconSetFromPreferences(prefs);
     }
 }

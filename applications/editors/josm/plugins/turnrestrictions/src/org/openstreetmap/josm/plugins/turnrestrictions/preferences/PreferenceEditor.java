@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.preferences;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,16 +42,14 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
 
     /**
      * builds the panel with the sponsoring information
-     *
-     * @return
      */
     protected JPanel buildCreditPanel() {
         JPanel pnl = new JPanel(new GridBagLayout());
-        pnl.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        pnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         GridBagConstraints gc = new GridBagConstraints();
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.insets = new Insets(0, 0,0, 5);
+        gc.insets = new Insets(0, 0, 0, 5);
         gc.weightx = 0.0;
         JLabel lbl = new JLabel();
         pnl.add(lbl, gc);
@@ -58,7 +57,7 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
 
         gc.gridx = 1;
         gc.weightx = 1.0;
-        HtmlPanel msg  =new HtmlPanel();
+        HtmlPanel msg = new HtmlPanel();
         msg.setText("<html><body>"
                 + tr("Development of the turn restriction plugin was sponsored "
                 + "by <a href=\"http://www.skobbler.de\">skobbler GmbH</a>.")
@@ -100,16 +99,18 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
         tp.add(buildIconPreferencePanel());
         tp.add(buildCreditPanel());
         tp.setTitleAt(0, tr("Preferences"));
-        tp.setToolTipTextAt(0,tr("Configure the preferences for the turnrestrictions plugin"));
+        tp.setToolTipTextAt(0, tr("Configure the preferences for the turnrestrictions plugin"));
         tp.setTitleAt(1, tr("Sponsor"));
         mainPanel.add(tp, BorderLayout.CENTER);
     }
 
+    @Override
     public void addGui(PreferenceTabbedPane gui) {
         JPanel tab = gui.createPreferenceTab(this);
         tab.add(mainPanel, GBC.eol().fill(GBC.BOTH));
     }
 
+    @Override
     public boolean ok() {
         pnlIconPreferences.saveToPreferences(Main.pref);
         return false;
@@ -123,6 +124,7 @@ public class PreferenceEditor extends DefaultTabPreferenceSetting {
             OpenBrowser.displayUrl("http://www.skobbler.de");
         }
 
+        @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
                 launchBrowser();

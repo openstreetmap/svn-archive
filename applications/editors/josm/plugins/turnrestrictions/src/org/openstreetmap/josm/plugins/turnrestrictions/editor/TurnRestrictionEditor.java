@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -55,19 +56,18 @@ import org.openstreetmap.josm.plugins.turnrestrictions.qa.IssuesView;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 import org.openstreetmap.josm.tools.ImageProvider;
 
-public class TurnRestrictionEditor extends JDialog implements NavigationControler{
-    //final private static Logger logger = Logger.getLogger(TurnRestrictionEditor.class.getName());
+public class TurnRestrictionEditor extends JDialog implements NavigationControler {
 
     /** the property name for the current turn restriction
      * @link #setRelation(Relation)
      * @link #getRelation()
      */
-    static public final String TURN_RESTRICION_PROP = RelationEditor.class.getName() + ".turnRestriction";
+    public static final String TURN_RESTRICION_PROP = RelationEditor.class.getName() + ".turnRestriction";
 
     /** the property name for the current relation snapshot
      * @link #getRelationSnapshot()
      */
-    static public final String TURN_RESTRICION_SNAPSHOT_PROP = RelationEditor.class.getName() + ".turnRestrictionSnapshot";
+    public static final String TURN_RESTRICION_SNAPSHOT_PROP = RelationEditor.class.getName() + ".turnRestrictionSnapshot";
 
     /**
      * The turn restriction this editor is working on
@@ -110,23 +110,20 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
     /**
      * builds the panel which displays the JOSM selection
-     * @return
      */
     protected JPanel buildJOSMSelectionPanel() {
-        pnlJosmSelection = new JosmSelectionPanel(layer,editorModel.getJosmSelectionListModel());
+        pnlJosmSelection = new JosmSelectionPanel(layer, editorModel.getJosmSelectionListModel());
         return pnlJosmSelection;
     }
 
     /**
      * Builds the panel with the editor forms (the left panel in the split pane of
      * this dialog)
-     *
-     * @return
      */
     protected JPanel buildEditorPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         tpEditors = new JTabbedPane();
-        JScrollPane pane = new JScrollPane(pnlBasicEditor =new BasicEditorPanel(editorModel));
+        JScrollPane pane = new JScrollPane(pnlBasicEditor = new BasicEditorPanel(editorModel));
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         tpEditors.add(pane);
@@ -148,8 +145,6 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     /**
      * Builds the content panel, i.e. the core area of the dialog with the editor
      * masks and the JOSM selection view
-     *
-     * @return
      */
     protected JPanel buildContentPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
@@ -175,7 +170,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * @return the toolbar
      */
     protected JToolBar buildToolBar() {
-        JToolBar tb  = new JToolBar();
+        JToolBar tb = new JToolBar();
         tb.setFloatable(false);
         tb.add(new ApplyAction());
         tb.addSeparator();
@@ -205,7 +200,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         c.add(buildOkCancelButtonPanel(), BorderLayout.SOUTH);
 
         editorModel.getIssuesModel().addObserver(new IssuesModelObserver());
-        setSize(600,600);
+        setSize(600, 600);
     }
 
     /**
@@ -227,8 +222,8 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * @param turnRestriction the relation. Can be null if a new relation is to be edited.
      * @throws IllegalArgumentException thrown if layer is null
      */
-    public TurnRestrictionEditor(Component owner, OsmDataLayer layer, Relation turnRestriction)  throws IllegalArgumentException{
-        super(JOptionPane.getFrameForComponent(owner),false /* not modal */);
+    public TurnRestrictionEditor(Component owner, OsmDataLayer layer, Relation turnRestriction) throws IllegalArgumentException {
+        super(JOptionPane.getFrameForComponent(owner), false /* not modal */);
         CheckParameterUtil.ensureParameterNotNull(layer, "layer");
         this.layer = layer;
         build();
@@ -323,7 +318,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * @return true if the currently edited turn restriction has been changed elsewhere.
      */
     protected boolean isDirtyTurnRestriction() {
-        return ! turnRestriction.hasEqualSemanticAttributes(turnRestrictionSnapshot);
+        return !turnRestriction.hasEqualSemanticAttributes(turnRestrictionSnapshot);
     }
 
     /**
@@ -335,7 +330,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
     @Override
     public void setVisible(boolean visible) {
-        if (visible && ! isVisible()) {
+        if (visible && !isVisible()) {
             pnlJosmSelection.wireListeners();
             editorModel.registerAsEventListener();
             Main.pref.addPreferenceChangeListener(this.preferenceChangeHandler = new PreferenceChangeHandler());
@@ -346,7 +341,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             Main.pref.removePreferenceChangeListener(preferenceChangeHandler);
         }
         super.setVisible(visible);
-        if (!visible){
+        if (!visible) {
             dispose();
         }
     }
@@ -354,7 +349,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     /* ----------------------------------------------------------------------- */
     /* property change support                                                 */
     /* ----------------------------------------------------------------------- */
-    final private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -382,7 +377,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     @Override
     public void gotoBasicEditor(BasicEditorFokusTargets focusTarget) {
         tpEditors.setSelectedIndex(0);
-        pnlBasicEditor.requestFocusFor(focusTarget);
+        pnlBasicEditor.requestFocusfor(focusTarget);
     }
 
     /**
@@ -390,7 +385,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * to the dataset.
      */
     abstract class SavingAction extends AbstractAction {
-        protected boolean confirmSaveDespiteOfErrorsAndWarnings(){
+        protected boolean confirmSaveDespiteOfErrorsAndWarnings() {
             int numErrors = editorModel.getIssuesModel().getNumErrors();
             int numWarnings = editorModel.getIssuesModel().getNumWarnings();
             if (numErrors + numWarnings == 0) return true;
@@ -445,7 +440,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
          */
         protected List<RelationMember> getDeletedRelationMembers(Relation r) {
             List<RelationMember> ret = new ArrayList<>();
-            for(RelationMember rm: r.getMembers()) {
+            for (RelationMember rm: r.getMembers()) {
                 if (rm.getMember().isDeleted() || !rm.getMember().isVisible()) {
                     ret.add(rm);
                 }
@@ -461,7 +456,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
          */
         protected void removeDeletedMembers(Relation tr) {
             List<RelationMember> members = tr.getMembers();
-            for(Iterator<RelationMember> it = members.iterator(); it.hasNext();) {
+            for (Iterator<RelationMember> it = members.iterator(); it.hasNext();) {
                 RelationMember rm = it.next();
                 if (rm.getMember().isDeleted() || !rm.getMember().isVisible()) {
                     it.remove();
@@ -489,7 +484,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                        "This turn restriction refers to {0} objects which were deleted outside "
                        + "of this turn restriction editor:", deletedMembers.size(), deletedMembers.size()));
             sb.append("<ul>");
-            for(RelationMember rm: deletedMembers){
+            for (RelationMember rm: deletedMembers) {
                 sb.append("<li>");
                 if (!rm.getRole().equals("")) {
                     sb.append(rm.getRole()).append(": ");
@@ -549,7 +544,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
                 removeDeletedMembers(newTurnRestriction);
             }
 
-            Main.main.undoRedo.add(new AddCommand(getLayer(),newTurnRestriction));
+            Main.main.undoRedo.add(new AddCommand(getLayer(), newTurnRestriction));
 
             // make sure everybody is notified about the changes
             //
@@ -571,7 +566,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             Relation toUpdate = new Relation(getTurnRestriction());
             editorModel.apply(toUpdate);
             Conflict<Relation> conflict = new Conflict<>(getTurnRestriction(), toUpdate);
-            Main.main.undoRedo.add(new ConflictAddCommand(getLayer(),conflict));
+            Main.main.undoRedo.add(new ConflictAddCommand(getLayer(), conflict));
         }
 
         /**
@@ -593,17 +588,17 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
 
         protected boolean confirmClosingBecauseOfDirtyState() {
-            ButtonSpec [] options = new ButtonSpec[] {
+            ButtonSpec[] options = new ButtonSpec[] {
                     new ButtonSpec(
                             tr("Yes, create a conflict and close"),
                             ImageProvider.get("ok"),
-                            tr("Create a conflict and close this turn restriction editor") ,
+                            tr("Create a conflict and close this turn restriction editor"),
                             null /* no specific help topic */
                     ),
                     new ButtonSpec(
                             tr("No, continue editing"),
                             ImageProvider.get("cancel"),
-                            tr("Return to the turn restriction editor and resume editing") ,
+                            tr("Return to the turn restriction editor and resume editing"),
                             null /* no specific help topic */
                     )
             };
@@ -640,7 +635,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
 
     class ApplyAction extends SavingAction {
-        public ApplyAction() {
+        ApplyAction() {
             putValue(SHORT_DESCRIPTION, tr("Apply the current updates"));
             new ImageProvider("save").getResource().attachImageIcon(this);
             putValue(NAME, tr("Apply"));
@@ -648,7 +643,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
 
         public void run() {
-            if (!confirmSaveDespiteOfErrorsAndWarnings()){
+            if (!confirmSaveDespiteOfErrorsAndWarnings()) {
                 tpEditors.setSelectedIndex(2); // show the errors and warnings
                 return;
             }
@@ -684,7 +679,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
     }
 
     class OKAction extends SavingAction {
-        public OKAction() {
+        OKAction() {
             putValue(SHORT_DESCRIPTION, tr("Apply the updates and close the dialog"));
             new ImageProvider("ok").getResource().attachImageIcon(this);
             putValue(NAME, tr("OK"));
@@ -692,7 +687,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
 
         public void run() {
-            if (!confirmSaveDespiteOfErrorsAndWarnings()){
+            if (!confirmSaveDespiteOfErrorsAndWarnings()) {
                 tpEditors.setSelectedIndex(2); // show the errors and warnings
                 return;
             }
@@ -706,7 +701,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
             Relation toUpdate = new Relation(getTurnRestriction());
             editorModel.apply(toUpdate);
-            if (TurnRestrictionEditorModel.hasSameMembersAndTags(toUpdate, getTurnRestriction())){
+            if (TurnRestrictionEditorModel.hasSameMembersAndTags(toUpdate, getTurnRestriction())) {
                 // nothing to update
                 setVisible(false);
                 return;
@@ -739,12 +734,13 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
      * Action for canceling the current dialog
      */
     class CancelAction extends AbstractAction {
-        public CancelAction() {
+        CancelAction() {
             putValue(SHORT_DESCRIPTION, tr("Cancel the updates and close the dialog"));
             new ImageProvider("cancel").getResource().attachImageIcon(this);
             putValue(NAME, tr("Cancel"));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ESCAPE"));
-            TurnRestrictionEditor.this.getRootPane().registerKeyboardAction(this,KeyStroke.getKeyStroke("ESCAPE"), JComponent.WHEN_IN_FOCUSED_WINDOW);
+            TurnRestrictionEditor.this.getRootPane().registerKeyboardAction(this,
+                    KeyStroke.getKeyStroke("ESCAPE"), JComponent.WHEN_IN_FOCUSED_WINDOW);
             setEnabled(true);
         }
 
@@ -754,8 +750,8 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
         }
     }
 
-    class DeleteAction extends AbstractAction implements PropertyChangeListener{
-        public DeleteAction() {
+    class DeleteAction extends AbstractAction implements PropertyChangeListener {
+        DeleteAction() {
             putValue(NAME, tr("Delete"));
             putValue(SHORT_DESCRIPTION, tr("Delete this turn restriction"));
             new ImageProvider("dialogs", "delete").getResource().attachImageIcon(this);
@@ -780,14 +776,14 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)){
+            if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)) {
                 updateEnabledState();
             }
         }
     }
 
-    class SelectAction extends AbstractAction implements PropertyChangeListener{
-        public SelectAction() {
+    class SelectAction extends AbstractAction implements PropertyChangeListener {
+        SelectAction() {
             putValue(NAME, tr("Select"));
             putValue(SHORT_DESCRIPTION, tr("Select this turn restriction"));
             new ImageProvider("dialogs", "select").getResource().attachImageIcon(this);
@@ -808,14 +804,14 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)){
+            if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)) {
                 updateEnabledState();
             }
         }
     }
 
-    class ZoomToAction extends AbstractAction implements PropertyChangeListener{
-        public ZoomToAction() {
+    class ZoomToAction extends AbstractAction implements PropertyChangeListener {
+        ZoomToAction() {
             putValue(NAME, tr("Zoom to"));
             putValue(SHORT_DESCRIPTION, tr("Activate the layer this turn restriction belongs to and zoom to it"));
             new ImageProvider("dialogs/autoscale", "data").getResource().attachImageIcon(this);
@@ -829,7 +825,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.getLayerManager().getActiveLayer() != getLayer()){
+            if (Main.getLayerManager().getActiveLayer() != getLayer()) {
                 Main.getLayerManager().setActiveLayer(getLayer());
             }
             Relation tr = getTurnRestriction();
@@ -840,7 +836,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)){
+            if (evt.getPropertyName().equals(TURN_RESTRICION_PROP)) {
                 updateEnabledState();
             }
         }
@@ -852,24 +848,24 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
             int numWarnings = editorModel.getIssuesModel().getNumWarnings();
             int numErrors = editorModel.getIssuesModel().getNumErrors();
             String warningText = null;
-            if (numWarnings > 0){
+            if (numWarnings > 0) {
                 warningText = trn("{0} warning", "{0} warnings", numWarnings, numWarnings);
             }
             String errorText = null;
-            if (numErrors > 0){
+            if (numErrors > 0) {
                 errorText = trn("{0} error", "{0} errors", numErrors, numErrors);
             }
             String title = "";
             if (errorText != null) {
                 title += errorText;
             }
-            if (warningText != null){
-                if (title.length() > 0){
+            if (warningText != null) {
+                if (title.length() > 0) {
                     title += "/";
                 }
                 title += warningText;
             }
-            if (title.length() == 0){
+            if (title.length() == 0) {
                 title = tr("no issues");
             }
             tpEditors.setTitleAt(2, title);
@@ -893,7 +889,7 @@ public class TurnRestrictionEditor extends JDialog implements NavigationControle
 
         @Override
         public void preferenceChanged(PreferenceChangeEvent evt) {
-            if (evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)){
+            if (evt.getKey().equals(PreferenceKeys.ROAD_SIGNS)) {
                 refreshIconSet();
             } else if (evt.getKey().equals(PreferenceKeys.SHOW_VIAS_IN_BASIC_EDITOR)) {
                 pnlBasicEditor.initViasVisibilityFromPreferences(Main.pref);

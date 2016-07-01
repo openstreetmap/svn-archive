@@ -14,10 +14,10 @@ import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionListItem;
 
 /**
  * The cell editor for member roles of relation members in a turn restriction.
- * 
+ *
  */
 public class MemberRoleCellEditor extends AbstractCellEditor implements TableCellEditor {
-    //static private Logger logger = Logger.getLogger(MemberRoleCellEditor.class.getName());
+    //private static Logger logger = Logger.getLogger(MemberRoleCellEditor.class.getName());
 
     private AutoCompletingTextField editor = null;
 
@@ -40,14 +40,16 @@ public class MemberRoleCellEditor extends AbstractCellEditor implements TableCel
     /**
      * replies the table cell editor
      */
+    @Override
     public Component getTableCellEditorComponent(JTable table,
             Object value, boolean isSelected, int row, int column) {
 
-        String role = (String)value;
-        editor.setText(role);        
+        String role = (String) value;
+        editor.setText(role);
         return editor;
     }
 
+    @Override
     public Object getCellEditorValue() {
         return editor.getText();
     }

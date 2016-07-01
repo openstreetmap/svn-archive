@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.qa;
 
 import java.awt.Container;
@@ -21,20 +22,23 @@ import org.openstreetmap.josm.plugins.turnrestrictions.editor.TurnRestrictionEdi
 @Ignore("no test")
 public class IssuesViewTest extends JFrame {
     private IssuesModel model;
-    
+
     protected void build() {
         Container c = getContentPane();
         c.setLayout(new GridBagLayout());
-        // mock a controler 
+        // mock a controler
         NavigationControler controler = new NavigationControler() {
+            @Override
             public void gotoAdvancedEditor() {
             }
 
+            @Override
             public void gotoBasicEditor() {
             }
 
+            @Override
             public void gotoBasicEditor(BasicEditorFokusTargets focusTarget) {
-            }           
+            }
         };
         OsmDataLayer layer = new OsmDataLayer(new DataSet(), "test", null);
         TurnRestrictionEditorModel editorModel = new TurnRestrictionEditorModel(layer, controler);
@@ -48,20 +52,20 @@ public class IssuesViewTest extends JFrame {
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         c.add(pane, gc);
-        
+
         List<Issue> issues = new ArrayList<>();
         issues.add(new RequiredTagMissingError(model, "type", "restriction"));
         issues.add(new MissingRestrictionTypeError(model));
         model.populate(issues);
     }
-    
+
     public IssuesViewTest() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400,600);
+        setSize(400, 600);
         build();
     }
-    
-    public static void main(String args[]) {
+
+    public static void main(String[] args) {
         new IssuesViewTest().setVisible(true);
     }
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import java.awt.BorderLayout;
@@ -29,129 +30,133 @@ import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListProvid
 import org.openstreetmap.josm.plugins.turnrestrictions.dnd.PrimitiveIdListTransferHandler;
 
 /**
- * Simple test application to test functionality and layout of the 
+ * Simple test application to test functionality and layout of the
  * {@see TurnRestrictionLegEditor}
  */
 @Ignore("no test")
 public class TurnRestrictionLegEditorTest extends JFrame {
-    
+
     private TurnRestrictionLegEditor editor;
     private TurnRestrictionEditorModel model;
     private JList<OsmPrimitive> lstObjects;
     private DefaultListModel<OsmPrimitive> listModel;
     private DataSet dataSet;
-    
+
     protected JPanel buildLegEditorPanel() {
         DataSet ds = new DataSet();
-        OsmDataLayer layer =new OsmDataLayer(ds, "test",null);
-        // mock a controler 
+        OsmDataLayer layer = new OsmDataLayer(ds, "test", null);
+        // mock a controler
         NavigationControler controler = new NavigationControler() {
+            @Override
             public void gotoAdvancedEditor() {
             }
 
+            @Override
             public void gotoBasicEditor() {
             }
 
+            @Override
             public void gotoBasicEditor(BasicEditorFokusTargets focusTarget) {
-            }           
+            }
         };
         JPanel pnl = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.weightx = 0.0;       
+        gc.weightx = 0.0;
         pnl.add(new JLabel("From"), gc);
-        
+
         gc.weightx = 1.0;
         gc.gridx = 1;
         model = new TurnRestrictionEditorModel(layer, controler);
         dataSet = new DataSet();
         model.populate(new Relation());
         pnl.add(editor = new TurnRestrictionLegEditor(model, TurnRestrictionLegRole.FROM), gc);
-        
+
         return pnl;
     }
-    
+
     protected JPanel buildObjectListPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         listModel = new DefaultListModel<>();
         pnl.add(new JScrollPane(lstObjects = new JList<>(listModel)), BorderLayout.CENTER);
-        lstObjects.setCellRenderer(new OsmPrimitivRenderer());      
-        
-        PrimitiveIdListProvider provider = new PrimitiveIdListProvider() {          
+        lstObjects.setCellRenderer(new OsmPrimitivRenderer());
+
+        PrimitiveIdListProvider provider = new PrimitiveIdListProvider() {
+            @Override
             public List<PrimitiveId> getSelectedPrimitiveIds() {
                 List<PrimitiveId> ret = new ArrayList<>();
-                int [] sel = lstObjects.getSelectedIndices();
-                for (int i: sel){
+                int[] sel = lstObjects.getSelectedIndices();
+                for (int i: sel) {
                     ret.add((lstObjects.getModel().getElementAt(i)).getPrimitiveId());
                 }
                 return ret;
             }
         };
-        
+
         lstObjects.setTransferHandler(new PrimitiveIdListTransferHandler(provider));
         lstObjects.setDragEnabled(true);
         return pnl;
     }
-    
+
     protected void build() {
         Container c = getContentPane();
         c.setLayout(new GridBagLayout());
-        
+
         GridBagConstraints gc = new GridBagConstraints();
         gc.anchor = GridBagConstraints.NORTHWEST;
-        gc.fill = GridBagConstraints.HORIZONTAL;    
+        gc.fill = GridBagConstraints.HORIZONTAL;
         gc.insets = new Insets(20, 0, 20, 0);
-        gc.weightx = 1.0;       
+        gc.weightx = 1.0;
         gc.weighty = 0.0;
         add(buildLegEditorPanel(), gc);
-        
+
         gc.gridy = 1;
         gc.weightx = 1.0;
         gc.weighty = 1.0;
         gc.fill = GridBagConstraints.BOTH;
         add(buildObjectListPanel(), gc);
-        setSize(600,600);   
+        setSize(600, 600);
     }
-    
+
     protected void initForTest1() {
         Way w = new Way(1);
         w.put("name", "way-1");
-        
+
         editor.getModel().setTurnRestrictionLeg(TurnRestrictionLegRole.FROM, w);
     }
-    
+
     protected void initForTest2() {
         Way w = new Way(1);
-        w.put("name", "way-1");     
+        w.put("name", "way-1");
         dataSet.addPrimitive(w);
         editor.getModel().setTurnRestrictionLeg(TurnRestrictionLegRole.FROM, w);
-        
-        Node n = new Node(new LatLon(1,1));
+
+        Node n = new Node(new LatLon(1, 1));
         n.setOsmId(1, 1);
         n.put("name", "node.1");
         dataSet.addPrimitive(n);
         listModel.addElement(n);
-        
+
         w = new Way();
-        w.setOsmId(2,1);
+        w.setOsmId(2, 1);
         w.put("name", "way.1");
         dataSet.addPrimitive(w);
         listModel.addElement(w);
-        
+
         Relation r = new Relation();
-        r.setOsmId(3,1);
+        r.setOsmId(3, 1);
         r.put("name", "relation.1");
         dataSet.addPrimitive(r);
         listModel.addElement(r);
     }
 
-    public TurnRestrictionLegEditorTest(){
+    public TurnRestrictionLegEditorTest() {
         build();
         initForTest2();
     }
-    
-    static public void main(String args[]) {
+
+    public static void main(String[] args) {
         new TurnRestrictionLegEditorTest().setVisible(true);
     }
 }

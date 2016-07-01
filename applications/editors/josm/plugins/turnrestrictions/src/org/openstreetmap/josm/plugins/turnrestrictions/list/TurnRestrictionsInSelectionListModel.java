@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import java.util.Collection;
@@ -18,8 +19,8 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  * This is the list model for the list of turn restrictions related to OSM
  * objects in the current selection.
  */
-public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListModel implements ActiveLayerChangeListener, SelectionChangedListener {
-    //private static final Logger logger = Logger.getLogger(TurnRestrictionsInSelectionListModel.class.getName());
+public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListModel
+    implements ActiveLayerChangeListener, SelectionChangedListener {
 
     public TurnRestrictionsInSelectionListModel(
             DefaultListSelectionModel selectionModel) {
@@ -38,7 +39,7 @@ public class TurnRestrictionsInSelectionListModel extends TurnRestrictionsListMo
         for (OsmPrimitive p: selection) {
             for (OsmPrimitive parent: p.getReferrers()) {
                 if (isTurnRestriction(parent))
-                    turnRestrictions.add((Relation)parent);
+                    turnRestrictions.add((Relation) parent);
             }
         }
         setTurnRestrictions(turnRestrictions);

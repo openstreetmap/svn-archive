@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import java.util.ArrayList;
@@ -34,8 +35,8 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * objects in the current edit layer.
  *
  */
-public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> implements ActiveLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider{
-    //static private final Logger logger = Logger.getLogger(JosmSelectionListModel.class.getName());
+public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive>
+    implements ActiveLayerChangeListener, SelectionChangedListener, DataSetListener, PrimitiveIdListProvider {
 
     private final List<OsmPrimitive> selection = new ArrayList<>();
     private final DefaultListSelectionModel selectionModel = new DefaultListSelectionModel();
@@ -72,7 +73,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
      */
     public Collection<OsmPrimitive> getSelected() {
         Set<OsmPrimitive> sel = new HashSet<>();
-        for(int i=0; i< getSize();i++) {
+        for (int i = 0; i < getSize(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 sel.add(selection.get(i));
             }
@@ -88,9 +89,9 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     public void setSelected(Collection<OsmPrimitive> sel) {
         selectionModel.clearSelection();
         if (sel == null) return;
-        for (OsmPrimitive p: sel){
+        for (OsmPrimitive p: sel) {
             int i = selection.indexOf(p);
-            if (i >= 0){
+            if (i >= 0) {
                 selectionModel.addSelectionInterval(i, i);
             }
         }
@@ -135,10 +136,10 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
         if (toUpdate == null) return;
         if (toUpdate.isEmpty()) return;
         Collection<OsmPrimitive> sel = getSelected();
-        for (OsmPrimitive p: toUpdate){
+        for (OsmPrimitive p: toUpdate) {
             int i = selection.indexOf(p);
             if (i >= 0) {
-                super.fireContentsChanged(this, i,i);
+                super.fireContentsChanged(this, i, i);
             }
         }
         setSelected(sel);
@@ -157,7 +158,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
         if (newLayer == null) {
             // don't show a JOSM selection if we don't have a data layer
             setJOSMSelection(null);
-        } else if (newLayer != layer){
+        } else if (newLayer != layer) {
             // don't show a JOSM selection if this turn restriction editor doesn't
             // manipulate data in the current data layer
             setJOSMSelection(null);
@@ -174,7 +175,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
         // only update the JOSM selection if it is changed in the same data layer
         // this turn restriction editor is working on
         OsmDataLayer layer = Main.getLayerManager().getEditLayer();
-        if(layer == null) return;
+        if (layer == null) return;
         if (layer != this.layer) return;
         setJOSMSelection(newSelection);
     }
@@ -225,6 +226,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
 
     @Override
     public void primitivesAdded(PrimitivesAddedEvent event) {/* ignored - handled by SelectionChangeListener */}
+
     @Override
     public void primitivesRemoved(PrimitivesRemovedEvent event) {/* ignored - handled by SelectionChangeListener*/}
 
@@ -234,7 +236,7 @@ public class JosmSelectionListModel extends AbstractListModel<OsmPrimitive> impl
     @Override
     public List<PrimitiveId> getSelectedPrimitiveIds() {
         List<PrimitiveId> ret = new ArrayList<>(getSelected().size());
-        for(int i=0; i< selection.size(); i++) {
+        for (int i = 0; i < selection.size(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 ret.add(selection.get(i).getPrimitiveId());
             }

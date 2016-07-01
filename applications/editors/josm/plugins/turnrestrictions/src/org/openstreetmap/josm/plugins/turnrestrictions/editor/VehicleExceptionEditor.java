@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -31,11 +32,10 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * VehicleExceptionEditor is UI widget for editing exceptions to a turn restriction
  * based on vehicle types.
- *  
+ *
  */
-public class VehicleExceptionEditor extends JPanel implements Observer{
-    //static private final Logger logger = Logger.getLogger(VehicleExceptionEditor.class.getName());
-    
+public class VehicleExceptionEditor extends JPanel implements Observer {
+
     private TurnRestrictionEditorModel model;
     private JCheckBox cbPsv;
     private JCheckBox cbBicyle;
@@ -49,9 +49,9 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     private JPanel pnlStandard;
     private JPanel pnlNonStandard;
     private ExceptValueModel exceptValue = new ExceptValueModel();
-    
+
     private StandardVehicleTypeChangeListener svtChangeListener;
-    
+
     private JPanel buildMessagePanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         HtmlPanel msg = new HtmlPanel();
@@ -63,19 +63,19 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         );
         return pnl;
     }
-    
+
     private JPanel buildStandardInputPanel() {
         if (pnlStandard != null)
             return pnlStandard;
-        
+
         svtChangeListener = new StandardVehicleTypeChangeListener();
-        
+
         GridBagConstraints gc = new GridBagConstraints();
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.gridx = 0;
         gc.gridy = 0;
-        
+
         pnlStandard = new JPanel(new GridBagLayout());
         JLabel lbl;
         cbPsv = new JCheckBox();
@@ -84,13 +84,13 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         lbl.setText(tr("Public Service Vehicles"));
         lbl.setToolTipText(tr("Public service vehicles like buses, tramways, etc."));
         lbl.setIcon(ImageProvider.get("vehicle", "psv"));
-        
+
         gc.weightx = 0.0;
         pnlStandard.add(cbPsv, gc);
         gc.weightx = 1.0;
         gc.gridx++;
         pnlStandard.add(lbl, gc);
-        
+
         cbHgv = new JCheckBox();
         cbHgv.addItemListener(svtChangeListener);
         lbl = new JLabel();
@@ -109,7 +109,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         lbl = new JLabel();
         lbl.setText(tr("Motorcars"));
         lbl.setIcon(ImageProvider.get("vehicle", "motorcar"));
-        
+
         gc.weightx = 0.0;
         gc.gridx = 0;
         gc.gridy = 1;
@@ -117,25 +117,25 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         gc.weightx = 1.0;
         gc.gridx++;
         pnlStandard.add(lbl, gc);
-        
+
         cbBicyle = new JCheckBox();
         cbBicyle.addItemListener(svtChangeListener);
         lbl = new JLabel();
         lbl.setText(tr("Bicycles"));
         lbl.setIcon(ImageProvider.get("vehicle", "bicycle"));
-        
+
         gc.weightx = 0.0;
         gc.gridx++;
         pnlStandard.add(cbBicyle, gc);
         gc.weightx = 1.0;
         gc.gridx++;
         pnlStandard.add(lbl, gc);
-        
+
         cbMoped = new JCheckBox();
         cbMoped.addItemListener(svtChangeListener);
         lbl = new JLabel(tr("Mopeds"));
         lbl.setIcon(ImageProvider.get("vehicle", "moped"));
-        
+
         gc.weightx = 0.0;
         gc.gridx = 0;
         gc.gridy = 2;
@@ -143,10 +143,10 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         gc.weightx = 1.0;
         gc.gridx++;
         pnlStandard.add(lbl, gc);
-        
+
         return pnlStandard;
     }
-    
+
     private JPanel buildNonStandardInputPanel() {
         if (pnlNonStandard != null)
             return pnlNonStandard;
@@ -158,21 +158,21 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         gc.insets = new Insets(0, 0, 4, 0);
         gc.gridx = 0;
         gc.gridy = 0;
-        
+
         pnlNonStandard.add(new JLabel(tr("Value:")), gc);
         gc.gridx = 1;
         gc.weightx = 1.0;
         pnlNonStandard.add(tfNonStandardValue = new JTextField(), gc);
         SelectAllOnFocusGainedDecorator.decorate(tfNonStandardValue);
-        
+
         NonStandardVehicleTypesHandler inputChangedHandler = new NonStandardVehicleTypesHandler();
         tfNonStandardValue.addActionListener(inputChangedHandler);
         tfNonStandardValue.addFocusListener(inputChangedHandler);
         return pnlNonStandard;
     }
-        
+
     /**
-     * Builds the UI for entering standard values 
+     * Builds the UI for entering standard values
      */
     protected void buildStandard() {
         setLayout(new GridBagLayout());
@@ -183,13 +183,13 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         gc.gridx = 0;
         gc.gridy = 0;
         add(buildMessagePanel(), gc);
-        
-        gc.gridy=1;
-        add(buildStandardInputPanel(), gc);     
+
+        gc.gridy = 1;
+        add(buildStandardInputPanel(), gc);
     }
-    
+
     /**
-     * Builds the UI for entering either standard or non-standard values 
+     * Builds the UI for entering either standard or non-standard values
      */
     protected void buildNonStandard() {
         setLayout(new GridBagLayout());
@@ -200,41 +200,41 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         gc.gridx = 0;
         gc.gridy = 0;
         add(buildMessagePanel(), gc);
-                
-        gc.gridx=0;
-        gc.gridy=1;
-        gc.insets = new Insets(0,0,0,0);
+
+        gc.gridx = 0;
+        gc.gridy = 1;
+        gc.insets = new Insets(0, 0, 0, 0);
         add(rbStandardException = new JRadioButton(tr("Use standard exceptions")), gc);
 
-        gc.gridx=0;
-        gc.gridy=2;
-        gc.insets = new Insets(0, 20, 0,0);
+        gc.gridx = 0;
+        gc.gridy = 2;
+        gc.insets = new Insets(0, 20, 0, 0);
         add(buildStandardInputPanel(), gc);
 
-        gc.gridx=0;
-        gc.gridy=3;
-        gc.insets = new Insets(0,0,0,0);
+        gc.gridx = 0;
+        gc.gridy = 3;
+        gc.insets = new Insets(0, 0, 0, 0);
         add(rbNonStandardException = new JRadioButton(tr("Use non-standard exceptions")), gc);
 
-        gc.gridx=0;
-        gc.gridy=4;
-        gc.insets = new Insets(0, 20, 0,0);
+        gc.gridx = 0;
+        gc.gridy = 4;
+        gc.insets = new Insets(0, 20, 0, 0);
         add(buildNonStandardInputPanel(), gc);
-        
+
         bgStandardOrNonStandard = new ButtonGroup();
         bgStandardOrNonStandard.add(rbNonStandardException);
         bgStandardOrNonStandard.add(rbStandardException);
-        
+
         StandardNonStandardChangeHandler changeHandler = new StandardNonStandardChangeHandler();
         rbNonStandardException.addItemListener(changeHandler);
         rbStandardException.addItemListener(changeHandler);
     }
-    
+
     protected void build() {
         removeAll();
         buildNonStandardInputPanel();
         buildStandardInputPanel();
-        if (exceptValue.isStandard()){
+        if (exceptValue.isStandard()) {
             buildStandard();
         } else {
             buildNonStandard();
@@ -242,7 +242,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         init();
         invalidate();
     }
-    
+
     protected void init() {
         try {
             // temporarily disable the checkbox listeners while initializing the
@@ -256,7 +256,7 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         } finally {
             this.svtChangeListener.setEnabled(true);
         }
-        if (!exceptValue.isStandard()){
+        if (!exceptValue.isStandard()) {
             rbNonStandardException.setSelected(true);
             tfNonStandardValue.setText(exceptValue.getValue());
             setEnabledNonStandardInputPanel(true);
@@ -266,23 +266,23 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
             setEnabledStandardInputPanel(true);
         }
     }
-    
+
     protected void setEnabledStandardInputPanel(boolean enabled) {
-        for (Component c: pnlStandard.getComponents()){
-            c.setEnabled(enabled);
-        }
-    }
-    
-    protected void setEnabledNonStandardInputPanel(boolean enabled) {
-        for (Component c: pnlNonStandard.getComponents()){
+        for (Component c: pnlStandard.getComponents()) {
             c.setEnabled(enabled);
         }
     }
 
-    
+    protected void setEnabledNonStandardInputPanel(boolean enabled) {
+        for (Component c: pnlNonStandard.getComponents()) {
+            c.setEnabled(enabled);
+        }
+    }
+
+
     /**
-     * Creates the editor 
-     * 
+     * Creates the editor
+     *
      * @param model the editor model. Must not be null.
      * @throws IllegalArgumentException thrown if {@code model} is null
      */
@@ -292,10 +292,11 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
         build();
         model.addObserver(this);
     }
-    
+
     /* ------------------------------------------------------------------------------------ */
     /* interface Observer                                                                   */
     /* ------------------------------------------------------------------------------------ */
+    @Override
     public void update(Observable o, Object arg) {
         if (!this.exceptValue.equals(model.getExcept())) {
             this.exceptValue = model.getExcept();
@@ -307,8 +308,9 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
     /* inner classes                                                                        */
     /* ------------------------------------------------------------------------------------ */
     class StandardNonStandardChangeHandler implements ItemListener {
+        @Override
         public void itemStateChanged(ItemEvent e) {
-            if (rbNonStandardException.isSelected()){
+            if (rbNonStandardException.isSelected()) {
                 setEnabledNonStandardInputPanel(true);
                 setEnabledStandardInputPanel(false);
                 exceptValue.setStandard(false);
@@ -320,38 +322,43 @@ public class VehicleExceptionEditor extends JPanel implements Observer{
             model.setExcept(exceptValue);
         }
     }
-    
+
     class StandardVehicleTypeChangeListener implements ItemListener {
         private boolean enabled = true;
-        
-        public void setEnabled(boolean enabled){
+
+        public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
-        
+
+        @Override
         public void itemStateChanged(ItemEvent e) {
             if (!enabled) return;
             exceptValue.setVehicleException("bicycle", cbBicyle.isSelected());
             exceptValue.setVehicleException("moped", cbMoped.isSelected());
             exceptValue.setVehicleException("hgv", cbHgv.isSelected());
             exceptValue.setVehicleException("psv", cbPsv.isSelected());
-            exceptValue.setVehicleException("motorcar", cbMotorcar.isSelected());            
+            exceptValue.setVehicleException("motorcar", cbMotorcar.isSelected());
             model.setExcept(exceptValue);
         }
     }
-    
+
     class NonStandardVehicleTypesHandler implements ActionListener, FocusListener {
         public void persist() {
             exceptValue.setValue(tfNonStandardValue.getText());
             model.setExcept(exceptValue);
         }
-        
+
+        @Override
         public void focusGained(FocusEvent e) {}
+
+        @Override
         public void focusLost(FocusEvent e) {
             persist();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
-            persist();          
+            persist();
         }
     }
 }

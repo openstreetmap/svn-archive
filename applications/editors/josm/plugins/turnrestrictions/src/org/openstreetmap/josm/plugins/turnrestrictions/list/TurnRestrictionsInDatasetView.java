@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import java.awt.BorderLayout;
@@ -30,16 +31,16 @@ public class TurnRestrictionsInDatasetView extends AbstractTurnRestrictionsListV
     }
 
     protected void registerAsListener() {
-        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener)model);
-        DatasetEventManager.getInstance().addDatasetListener((DataSetListener)model, FireMode.IN_EDT);
+        Main.getLayerManager().addActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        DatasetEventManager.getInstance().addDatasetListener((DataSetListener) model, FireMode.IN_EDT);
         if (Main.getLayerManager().getEditLayer() != null) {
             model.setTurnRestrictions(Main.getLayerManager().getEditLayer().data.getRelations());
         }
     }
 
     protected void unregisterAsListener() {
-        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener)model);
-        DatasetEventManager.getInstance().removeDatasetListener((DataSetListener)model);
+        Main.getLayerManager().removeActiveLayerChangeListener((ActiveLayerChangeListener) model);
+        DatasetEventManager.getInstance().removeDatasetListener((DataSetListener) model);
     }
 
     public TurnRestrictionsInDatasetView() {

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import javax.swing.JFrame;
@@ -11,17 +12,17 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
  */
 @Ignore("no test")
 public class TurnRestrictionEditorTest extends JFrame {
-    
+
     public TurnRestrictionEditorTest() {
-        setSize(10,10);
+        setSize(10, 10);
         TurnRestrictionEditor editor = new TurnRestrictionEditor(this, new OsmDataLayer(new DataSet(), "test", null));
-        editor.setSize(600,600);
+        editor.setSize(600, 600);
         editor.setVisible(true);
-        
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
-    static public void main(String args[]) {
+
+    public static void main(String[] args) {
         new TurnRestrictionEditorTest().setVisible(true);
     }
 }

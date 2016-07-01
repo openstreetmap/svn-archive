@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.list;
 
 import java.util.Collection;
@@ -49,9 +50,9 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
     protected List<Relation> filterTurnRestrictions(Collection<? extends OsmPrimitive> primitives) {
         List<Relation> ret = new LinkedList<>();
         if (primitives == null) return ret;
-        for(OsmPrimitive p: primitives){
+        for (OsmPrimitive p: primitives) {
             if (!isTurnRestriction(p)) continue;
-            ret.add((Relation)p);
+            ret.add((Relation) p);
         }
         return ret;
     }
@@ -110,10 +111,10 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
         List<Relation> turnRestrictions = filterTurnRestrictions(event.getPrimitives());
         if (!turnRestrictions.isEmpty()) {
             List<Relation> sel = getSelectedTurnRestrictions();
-            for(Relation tr: turnRestrictions) {
+            for (Relation tr: turnRestrictions) {
                 // enforce a repaint of the respective turn restriction
                 int idx = getTurnRestrictionIndex(tr);
-                fireContentsChanged(this, idx,idx);
+                fireContentsChanged(this, idx, idx);
             }
             setSelectedTurnRestrictions(sel);
         }
@@ -124,10 +125,10 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
         List<Relation> turnRestrictions = filterTurnRestrictions(event.getPrimitives());
         if (!turnRestrictions.isEmpty()) {
             List<Relation> sel = getSelectedTurnRestrictions();
-            for(Relation tr: turnRestrictions) {
+            for (Relation tr: turnRestrictions) {
                 // enforce a repaint of the respective turn restriction
                 int idx = getTurnRestrictionIndex(tr);
-                fireContentsChanged(this, idx,idx);
+                fireContentsChanged(this, idx, idx);
             }
             setSelectedTurnRestrictions(sel);
         }
@@ -135,8 +136,10 @@ public class TurnRestrictionsInDatasetListModel extends TurnRestrictionsListMode
 
     @Override
     public void wayNodesChanged(WayNodesChangedEvent event) {/* ignore */}
+
     @Override
     public void nodeMoved(NodeMovedEvent event) {/* ignore */}
+
     @Override
     public void otherDatasetChange(AbstractDatasetChangedEvent event) {/* ignore */}
 }

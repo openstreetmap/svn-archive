@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -47,7 +48,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  */
 public class ViaList extends JList<OsmPrimitive> {
 
-    //static private final Logger logger = Logger.getLogger(ViaList.class.getName());
+    //private static final Logger logger = Logger.getLogger(ViaList.class.getName());
 
     private ViaListModel model;
     private DeleteAction actDelete;
@@ -71,20 +72,22 @@ public class ViaList extends JList<OsmPrimitive> {
         setSelectionModel(selectionModel);
         setCellRenderer(new OsmPrimitivRenderer());
         setDragEnabled(true);
-        setTransferHandler(transferHandler =new ViaListTransferHandler(model));
+        setTransferHandler(transferHandler = new ViaListTransferHandler(model));
         setVisibleRowCount(4);
 
         actDelete = new DeleteAction();
         selectionModel.addListSelectionListener(actDelete);
-        registerKeyboardAction(actDelete, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        registerKeyboardAction(actDelete, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         actMoveDown = new MoveDownAction();
         selectionModel.addListSelectionListener(actMoveDown);
-        registerKeyboardAction(actMoveDown, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        registerKeyboardAction(actMoveDown,
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         actMoveUp = new MoveUpAction();
         selectionModel.addListSelectionListener(actMoveUp);
-        registerKeyboardAction(actMoveUp, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        registerKeyboardAction(actMoveUp,
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         actCopy = new CopyAction();
         actPaste = new PasteAction();
@@ -102,7 +105,7 @@ public class ViaList extends JList<OsmPrimitive> {
         private boolean isViaListInDragOperation = false;
         private List<Integer> selectedRowsMemento = null;
 
-        public ViaListTransferHandler(PrimitiveIdListProvider provider) {
+        ViaListTransferHandler(PrimitiveIdListProvider provider) {
             super(provider);
         }
 
@@ -120,16 +123,16 @@ public class ViaList extends JList<OsmPrimitive> {
             if (isViaListInDragOperation) {
                 // this is a drag operation on itself
                 int targetRow = getSelectedIndex();
-                if (targetRow <0) return true;
+                if (targetRow < 0) return true;
                 model.moveVias(selectedRowsMemento, targetRow);
             } else {
                 // this is a drag operation from another component
                 try {
-                    List<PrimitiveId> idsToAdd = (List<PrimitiveId>)t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
+                    List<PrimitiveId> idsToAdd = (List<PrimitiveId>) t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
                     model.insertVias(idsToAdd);
-                } catch(IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                } catch(UnsupportedFlavorException e){
+                } catch (UnsupportedFlavorException e) {
                     e.printStackTrace();
                 }
             }
@@ -151,14 +154,15 @@ public class ViaList extends JList<OsmPrimitive> {
     }
 
     class DeleteAction extends AbstractAction implements ListSelectionListener {
-        public DeleteAction() {
+        DeleteAction() {
             putValue(NAME, tr("Remove"));
             new ImageProvider("dialogs", "delete").getResource().attachImageIcon(this);
-            putValue(SHORT_DESCRIPTION,tr("Remove the currently selected vias"));
-            putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
+            putValue(SHORT_DESCRIPTION, tr("Remove the currently selected vias"));
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
             updateEnabledState();
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
@@ -167,25 +171,27 @@ public class ViaList extends JList<OsmPrimitive> {
             setEnabled(getSelectedIndex() >= 0);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.removeSelectedVias();
         }
     }
 
-    class MoveDownAction extends AbstractAction implements ListSelectionListener{
-        public MoveDownAction(){
+    class MoveDownAction extends AbstractAction implements ListSelectionListener {
+        MoveDownAction() {
             putValue(NAME, tr("Move down"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected vias down by one position"));
-            putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK));
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK));
             new ImageProvider("dialogs", "movedown").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.moveDown();
         }
 
-        public void updateEnabledState(){
+        public void updateEnabledState() {
             if (getSelectedIndex() < 0) {
                 setEnabled(false);
                 return;
@@ -193,25 +199,27 @@ public class ViaList extends JList<OsmPrimitive> {
             setEnabled(getSelectionModel().getMaxSelectionIndex() < getModel().getSize() -1);
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
     }
 
-    class MoveUpAction extends AbstractAction implements ListSelectionListener{
-        public MoveUpAction() {
+    class MoveUpAction extends AbstractAction implements ListSelectionListener {
+        MoveUpAction() {
             putValue(NAME, tr("Move up"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected vias up by one position"));
-            putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK));
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK));
             new ImageProvider("dialogs", "moveup").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.moveUp();
         }
 
-        public void updateEnabledState(){
+        public void updateEnabledState() {
             if (getSelectedIndex() < 0) {
                 setEnabled(false);
                 return;
@@ -219,6 +227,7 @@ public class ViaList extends JList<OsmPrimitive> {
             setEnabled(getSelectionModel().getMinSelectionIndex() > 0);
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
@@ -227,7 +236,7 @@ public class ViaList extends JList<OsmPrimitive> {
     class CopyAction extends AbstractAction implements ListSelectionListener {
         private Action delegate;
 
-        public CopyAction(){
+        CopyAction() {
             putValue(NAME, tr("Copy"));
             putValue(SHORT_DESCRIPTION, tr("Copy the selected vias to the clipboard"));
             new ImageProvider("copy").getResource().attachImageIcon(this);
@@ -235,6 +244,7 @@ public class ViaList extends JList<OsmPrimitive> {
             delegate = ViaList.this.getActionMap().get("copy");
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             delegate.actionPerformed(e);
         }
@@ -243,6 +253,7 @@ public class ViaList extends JList<OsmPrimitive> {
             setEnabled(!model.getSelectedVias().isEmpty());
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
@@ -260,7 +271,7 @@ public class ViaList extends JList<OsmPrimitive> {
             return false;
         }
 
-        public PasteAction(){
+        PasteAction() {
             putValue(NAME, tr("Paste"));
             putValue(SHORT_DESCRIPTION, tr("Insert ''via'' objects from the clipboard"));
             new ImageProvider("paste").getResource().attachImageIcon(this);
@@ -273,13 +284,14 @@ public class ViaList extends JList<OsmPrimitive> {
             setEnabled(canPaste());
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             delegate.actionPerformed(e);
         }
     }
 
     class ViaListPopupMenu extends JPopupMenu {
-        public ViaListPopupMenu() {
+        ViaListPopupMenu() {
             JMenuItem item = add(actCopy);
             item.setTransferHandler(transferHandler);
             item = add(actPaste);
@@ -296,9 +308,9 @@ public class ViaList extends JList<OsmPrimitive> {
     class ViaListPopupMenuLaucher extends PopupMenuLauncher {
         @Override
         public void launch(MouseEvent evt) {
-            if (getSelectedIndex() <0) {
+            if (getSelectedIndex() < 0) {
                 int idx = locationToIndex(evt.getPoint());
-                if (idx >=0) {
+                if (idx >= 0) {
                     setSelectedIndex(idx);
                 }
             }

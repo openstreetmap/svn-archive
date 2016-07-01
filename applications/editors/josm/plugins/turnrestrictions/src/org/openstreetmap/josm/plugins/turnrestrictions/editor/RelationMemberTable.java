@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -73,7 +74,7 @@ public class RelationMemberTable extends JTable {
         //
         actDelete = new DeleteAction();
         model.getRelationMemberEditorModel().getRowSelectionModel().addListSelectionListener(actDelete);
-        registerKeyboardAction(actDelete, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0), WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        registerKeyboardAction(actDelete, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         // initialize the paste action (will be used in the popup, the action map already includes
         // the standard paste action for transfer handling)
@@ -81,7 +82,7 @@ public class RelationMemberTable extends JTable {
 
         actMoveUp = new MoveUpAction();
         model.getRelationMemberEditorModel().getRowSelectionModel().addListSelectionListener(actMoveUp);
-        registerKeyboardAction(actMoveUp,actMoveUp.getKeyStroke(), WHEN_FOCUSED);
+        registerKeyboardAction(actMoveUp, actMoveUp.getKeyStroke(), WHEN_FOCUSED);
 
         actMoveDown = new MoveDownAction();
         model.getRelationMemberEditorModel().getRowSelectionModel().addListSelectionListener(actMoveDown);
@@ -92,23 +93,25 @@ public class RelationMemberTable extends JTable {
      * The action for deleting the selected table cells
      *
      */
-    class DeleteAction extends AbstractAction implements ListSelectionListener{
-        public DeleteAction() {
+    class DeleteAction extends AbstractAction implements ListSelectionListener {
+        DeleteAction() {
             putValue(NAME, tr("Delete"));
             putValue(SHORT_DESCRIPTION, tr("Clear the selected roles or delete the selected members"));
             new ImageProvider("deletesmall").getResource().attachImageIcon(this);
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
             updateEnabledState();
         }
 
         public void updateEnabledState() {
-            setEnabled(model.getRelationMemberEditorModel().getRowSelectionModel().getMinSelectionIndex()>=0);
+            setEnabled(model.getRelationMemberEditorModel().getRowSelectionModel().getMinSelectionIndex() >= 0);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.getRelationMemberEditorModel().deleteSelected();
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
@@ -118,8 +121,8 @@ public class RelationMemberTable extends JTable {
      * The action for pasting into the relation member table
      *
      */
-    class PasteAction extends AbstractAction{
-        public PasteAction() {
+    class PasteAction extends AbstractAction {
+        PasteAction() {
             putValue(NAME, tr("Paste"));
             putValue(SHORT_DESCRIPTION, tr("Insert new relation members from object in the clipboard"));
             new ImageProvider("paste").getResource().attachImageIcon(this);
@@ -132,6 +135,7 @@ public class RelationMemberTable extends JTable {
             setEnabled(PrimitiveIdListTransferHandler.isSupportedFlavor(flavors));
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public void actionPerformed(ActionEvent evt) {
             // tried to delegate to 'paste' action in the action map of the
@@ -142,70 +146,76 @@ public class RelationMemberTable extends JTable {
             if (!PrimitiveIdListTransferHandler.isSupportedFlavor(cp.getAvailableDataFlavors())) return;
             try {
                 List<PrimitiveId> ids;
-                ids = (List<PrimitiveId>)cp.getData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
+                ids = (List<PrimitiveId>) cp.getData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
                 try {
                     model.getRelationMemberEditorModel().insertMembers(ids);
-                } catch(IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                     // FIXME: provide user feedback
                 }
-            } catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch(UnsupportedFlavorException e){
+            } catch (UnsupportedFlavorException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    class MoveDownAction extends AbstractAction implements ListSelectionListener{
+    class MoveDownAction extends AbstractAction implements ListSelectionListener {
         private KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK);
-        public MoveDownAction(){
+        MoveDownAction() {
             putValue(NAME, tr("Move down"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected relation members down by one position"));
-            putValue(ACCELERATOR_KEY,keyStroke);
+            putValue(ACCELERATOR_KEY, keyStroke);
             new ImageProvider("dialogs", "movedown").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.getRelationMemberEditorModel().moveDownSelected();
         }
 
-        public void updateEnabledState(){
+        public void updateEnabledState() {
             setEnabled(model.getRelationMemberEditorModel().canMoveDown());
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
-        public KeyStroke getKeyStroke() {
+
+        KeyStroke getKeyStroke() {
             return keyStroke;
         }
     }
 
-    class MoveUpAction extends AbstractAction implements ListSelectionListener{
+    class MoveUpAction extends AbstractAction implements ListSelectionListener {
         private KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK);
 
-        public MoveUpAction() {
+        MoveUpAction() {
             putValue(NAME, tr("Move up"));
             putValue(SHORT_DESCRIPTION, tr("Move the selected relation members up by one position"));
-            putValue(ACCELERATOR_KEY,keyStroke);
+            putValue(ACCELERATOR_KEY, keyStroke);
             new ImageProvider("dialogs", "moveup").getResource().attachImageIcon(this);
             updateEnabledState();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.getRelationMemberEditorModel().moveUpSelected();
         }
 
-        public void updateEnabledState(){
+        public void updateEnabledState() {
             setEnabled(model.getRelationMemberEditorModel().canMoveUp());
         }
 
+        @Override
         public void valueChanged(ListSelectionEvent e) {
             updateEnabledState();
         }
-        public KeyStroke getKeyStroke() {
+
+        KeyStroke getKeyStroke() {
             return keyStroke;
         }
     }
@@ -214,7 +224,7 @@ public class RelationMemberTable extends JTable {
         @Override
         public void launch(MouseEvent evt) {
             int row = rowAtPoint(evt.getPoint());
-            if (getSelectionModel().getMinSelectionIndex() < 0 && row >=0){
+            if (getSelectionModel().getMinSelectionIndex() < 0 && row >= 0) {
                 getSelectionModel().setSelectionInterval(row, row);
                 getColumnModel().getSelectionModel().setSelectionInterval(0, 1);
             }
@@ -223,7 +233,7 @@ public class RelationMemberTable extends JTable {
     }
 
     class PopupMenu extends JPopupMenu {
-        public PopupMenu() {
+        PopupMenu() {
             JMenuItem item = add(actPaste);
             item.setTransferHandler(transferHandler);
             actPaste.updateEnabledState();
@@ -251,18 +261,18 @@ public class RelationMemberTable extends JTable {
         public boolean importData(JComponent comp, Transferable t) {
             try {
                 List<PrimitiveId> ids;
-                ids = (List<PrimitiveId>)t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
+                ids = (List<PrimitiveId>) t.getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
                 try {
                     model.getRelationMemberEditorModel().insertMembers(ids);
-                } catch(IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                     // FIXME: provide user feedback
                     return false;
                 }
                 return true;
-            } catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch(UnsupportedFlavorException e){
+            } catch (UnsupportedFlavorException e) {
                 e.printStackTrace();
             }
             return false;
@@ -270,7 +280,7 @@ public class RelationMemberTable extends JTable {
 
         @Override
         public int getSourceActions(JComponent c) {
-            return  COPY_OR_MOVE;
+            return COPY_OR_MOVE;
         }
     }
 
@@ -279,14 +289,13 @@ public class RelationMemberTable extends JTable {
      * disable colum selection model.
      *
      */
-    class RelationMemberTableDropTarget extends DropTarget{
+    class RelationMemberTableDropTarget extends DropTarget {
         private boolean dropAccepted = false;
 
         /**
          * Replies true if {@code transferFlavors} includes the data flavor {@link PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
 
          * @param transferFlavors an array of transferFlavors
-         * @return
          */
         protected boolean isSupportedFlavor(DataFlavor[] transferFlavors) {
             for (DataFlavor df: transferFlavors) {
@@ -295,12 +304,13 @@ public class RelationMemberTable extends JTable {
             return false;
         }
 
+        @Override
         public synchronized void dragEnter(DropTargetDragEvent dtde) {
             if (isSupportedFlavor(dtde.getCurrentDataFlavors())) {
-                if ((dtde.getSourceActions() & DnDConstants.ACTION_COPY_OR_MOVE) != 0){
+                if ((dtde.getSourceActions() & DnDConstants.ACTION_COPY_OR_MOVE) != 0) {
                     dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
                     setColumnSelectionAllowed(false);
-                    dropAccepted  = true;
+                    dropAccepted = true;
                 } else {
                     dtde.rejectDrag();
                 }
@@ -309,6 +319,7 @@ public class RelationMemberTable extends JTable {
             }
         }
 
+        @Override
         public synchronized void dragExit(DropTargetEvent dte) {
             setColumnSelectionAllowed(true);
             dropAccepted = false;
@@ -318,11 +329,12 @@ public class RelationMemberTable extends JTable {
         public synchronized void dragOver(DropTargetDragEvent dtde) {
             int row = rowAtPoint(dtde.getLocation());
             int selectedRow = getSelectionModel().getMinSelectionIndex();
-            if (row >= 0 && row != selectedRow){
+            if (row >= 0 && row != selectedRow) {
                 getSelectionModel().setSelectionInterval(row, row);
             }
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public synchronized void drop(DropTargetDropEvent dtde) {
             try {
@@ -331,22 +343,23 @@ public class RelationMemberTable extends JTable {
                     return;
                 }
                 List<PrimitiveId> ids;
-                ids = (List<PrimitiveId>)dtde.getTransferable().getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
+                ids = (List<PrimitiveId>) dtde.getTransferable().getTransferData(PrimitiveIdTransferable.PRIMITIVE_ID_LIST_FLAVOR);
                 try {
                     model.getRelationMemberEditorModel().insertMembers(ids);
-                } catch(IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                     // FIXME: provide user feedback
                 }
-            } catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch(UnsupportedFlavorException e){
+            } catch (UnsupportedFlavorException e) {
                 e.printStackTrace();
             } finally {
                 setColumnSelectionAllowed(true);
             }
         }
 
+        @Override
         public synchronized void dropActionChanged(DropTargetDragEvent dtde) {
             if ((dtde.getSourceActions() & DnDConstants.ACTION_COPY_OR_MOVE) == 0) {
                 dtde.rejectDrag();

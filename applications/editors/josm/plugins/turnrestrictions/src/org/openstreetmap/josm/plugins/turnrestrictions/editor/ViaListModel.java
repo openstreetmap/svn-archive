@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -19,18 +20,17 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
  * ViaListModel is a model for the list of 'via' objects of a turn restriction.
- * 
+ *
  */
-public class ViaListModel extends AbstractListModel<OsmPrimitive> implements PrimitiveIdListProvider, Observer{
-    //static private final Logger logger = Logger.getLogger(ViaListModel.class.getName());
-    
+public class ViaListModel extends AbstractListModel<OsmPrimitive> implements PrimitiveIdListProvider, Observer {
+
     private DefaultListSelectionModel selectionModel;
     private final ArrayList<OsmPrimitive> vias = new ArrayList<>();
     private TurnRestrictionEditorModel model;
-    
+
     /**
-     * Constructor 
-     * 
+     * Constructor
+     *
      * @param model the turn restriction editor model. Must not be null.
      * @param selectionModel the selection model. Must not be null.
      * @throws IllegalArgumentException thrown if model is null
@@ -47,64 +47,64 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
 
     /**
      * Replies the list of currently selected vias
-     * 
+     *
      * @return the list of currently selected vias
      */
     public List<OsmPrimitive> getSelectedVias() {
         ArrayList<OsmPrimitive> ret = new ArrayList<>();
-        for (int i=0; i < getSize(); i++) {
+        for (int i = 0; i < getSize(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 ret.add(vias.get(i));
             }
         }
         return ret;
     }
-    
+
     /**
      * Sets the collection of currently selected vias
-     * 
-     *  @param vias a collection of vias 
+     *
+     *  @param vias a collection of vias
      */
     public void setSelectedVias(Collection<OsmPrimitive> vias) {
         selectionModel.clearSelection();
         if (vias == null) return;
-        for(OsmPrimitive via: vias) {
+        for (OsmPrimitive via: vias) {
             int idx = this.vias.indexOf(via);
             if (idx < 0) continue;
             selectionModel.addSelectionInterval(idx, idx);
         }
     }
-    
+
     /**
-     * Replies the list of selected rows 
-     * 
+     * Replies the list of selected rows
+     *
      * @return the list of selected rows
      */
     public List<Integer> getSelectedRows() {
         ArrayList<Integer> ret = new ArrayList<>();
-        for (int i=0; i < getSize(); i++) {
+        for (int i = 0; i < getSize(); i++) {
             if (selectionModel.isSelectedIndex(i)) {
                 ret.add(i);
             }
         }
         return ret;
     }
-    
+
     protected List<Integer> moveUp(List<Integer> rows, int targetRow) {
         List<Integer> ret = new ArrayList<>(rows.size());
         int delta = rows.get(0) - targetRow;
-        for(int row: rows) {
+        for (int row: rows) {
             OsmPrimitive via = vias.remove(row);
             vias.add(row - delta, via);
             ret.add(row - delta);
         }
         return ret;
     }
-    
+
     protected List<Integer> moveDown(List<Integer> rows, int targetRow) {
         List<Integer> ret = new ArrayList<>(rows.size());
         int delta = targetRow - rows.get(0);
-        for(int i = rows.size()-1; i >=0; i--) {
+        for (int i = rows.size()-1; i >= 0; i--) {
             int row = rows.get(i);
             OsmPrimitive via = vias.remove(row);
             vias.add(row + delta, via);
@@ -112,10 +112,10 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
         }
         return ret;
     }
-    
-    public void moveVias(List<Integer> selectedRows, int targetRow){
+
+    public void moveVias(List<Integer> selectedRows, int targetRow) {
         if (selectedRows == null) return;
-        if (selectedRows.size() == 1){
+        if (selectedRows.size() == 1) {
             int sourceRow = selectedRows.get(0);
             if (sourceRow == targetRow) return;
             OsmPrimitive via = vias.remove(sourceRow);
@@ -123,27 +123,27 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
             fireContentsChanged(this, 0, getSize());
             selectionModel.setSelectionInterval(targetRow, targetRow);
             return;
-        } 
+        }
         int min = selectedRows.get(0);
         int max = selectedRows.get(selectedRows.size()-1);
         if (targetRow < min) {
             selectedRows = moveUp(selectedRows, targetRow);
-        } else if (targetRow == min){
+        } else if (targetRow == min) {
             // do nothing
-        } else if (targetRow - min < getSize() - max){
+        } else if (targetRow - min < getSize() - max) {
             int delta = Math.min(targetRow - min, getSize()-1 - max);
             targetRow = min + delta;
             if (targetRow > min) {
                 selectedRows = moveDown(selectedRows, targetRow);
             }
-        } 
+        }
         fireContentsChanged(this, 0, getSize());
         selectionModel.clearSelection();
-        for(int row: selectedRows) {
+        for (int row: selectedRows) {
             selectionModel.addSelectionInterval(row, row);
-        }       
+        }
     }
-    
+
     /**
      * Move the currently selected vias up by one position
      */
@@ -161,33 +161,33 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
         if (sel.isEmpty() || sel.get(sel.size()-1) == getSize()-1) return;
         moveVias(sel, sel.get(sel.size()-1)+1);
     }
-    
+
     /**
-     * Inserts a list of OSM objects given by OSM primitive ids. 
-     * 
+     * Inserts a list of OSM objects given by OSM primitive ids.
+     *
      * @param idsToInsert the ids of the objects to insert
      */
     public void insertVias(List<PrimitiveId> idsToInsert) {
         if (idsToInsert == null) return;
         List<OsmPrimitive> primitives = new ArrayList<>(idsToInsert.size());
         DataSet ds = model.getLayer().data;
-        for(PrimitiveId id: idsToInsert){
+        for (PrimitiveId id: idsToInsert) {
             OsmPrimitive p = ds.getPrimitiveById(id);
-            if (p == null){
+            if (p == null) {
                 System.out.println(tr("Failed to retrieve OSM object with id {0} from dataset {1}. Cannot add it as ''via''.", id, ds));
                 continue;
             }
             primitives.add(p);
         }
-        int targetRow = Math.max(selectionModel.getMinSelectionIndex(),0);
+        int targetRow = Math.max(selectionModel.getMinSelectionIndex(), 0);
         List<OsmPrimitive> newVias = new ArrayList<>(vias);
         newVias.addAll(targetRow, primitives);
         model.setVias(newVias);
         fireContentsChanged(this, 0, getSize());
         selectionModel.clearSelection();
-        for(int i=targetRow; i< targetRow + primitives.size();i++) {
+        for (int i = targetRow; i < targetRow + primitives.size(); i++) {
             selectionModel.addSelectionInterval(i, i);
-        }           
+        }
     }
 
     /**
@@ -196,7 +196,7 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     public void removeSelectedVias() {
         ArrayList<OsmPrimitive> newVias = new ArrayList<>(vias);
         int j = 0;
-        for(int i=0; i< getSize();i++){
+        for (int i = 0; i < getSize(); i++) {
             if (!selectionModel.isSelectedIndex(i)) continue;
             newVias.remove(i-j);
             j++;
@@ -204,30 +204,33 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
         if (j == 0) return; // nothing selected, nothing deleted
         model.setVias(newVias);
     }
-    
+
     /**
      * Refreshes the list of 'vias' in this model with the current list of
-     * vias from the turn restriction model. 
+     * vias from the turn restriction model.
      */
     protected void refresh() {
         List<OsmPrimitive> sel = getSelectedVias();
         vias.clear();
-        vias.addAll(model.getVias());       
+        vias.addAll(model.getVias());
         fireContentsChanged(this, 0, getSize());
         setSelectedVias(sel);
     }
 
+    @Override
     public OsmPrimitive getElementAt(int index) {
         return vias.get(index);
     }
 
+    @Override
     public int getSize() {
         return vias.size();
     }
-    
+
     /* ----------------------------------------------------------------------- */
     /* interface PrimitiveIdListProvider                                       */
     /* ----------------------------------------------------------------------- */
+    @Override
     public List<PrimitiveId> getSelectedPrimitiveIds() {
         ArrayList<PrimitiveId> ids = new ArrayList<>();
         for (OsmPrimitive p: getSelectedVias()) {
@@ -239,7 +242,8 @@ public class ViaListModel extends AbstractListModel<OsmPrimitive> implements Pri
     /* ----------------------------------------------------------------------- */
     /* interface Observer                                                      */
     /* ----------------------------------------------------------------------- */
+    @Override
     public void update(Observable o, Object arg) {
         refresh();
-    }   
+    }
 }

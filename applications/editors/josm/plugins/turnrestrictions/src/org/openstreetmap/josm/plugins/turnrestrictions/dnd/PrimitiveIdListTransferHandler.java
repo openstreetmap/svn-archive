@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.dnd;
 
 import java.awt.datatransfer.DataFlavor;
@@ -10,18 +11,17 @@ import org.openstreetmap.josm.data.osm.PrimitiveId;
 import org.openstreetmap.josm.tools.CheckParameterUtil;
 
 /**
- * <p>PrimitiveIdListTransferHandler is a transfer handler for components which 
+ * <p>PrimitiveIdListTransferHandler is a transfer handler for components which
  * provide and/or accept a list of {@link PrimitiveId} via copy/paste or
  * drag-and-drop.</p>
- * 
+ *
  * <p>It creates a {@link Transferable} by retrieving the list of primitive IDs
  * from a {@link PrimitiveIdListProvider}.</p>
- * 
+ *
  */
 public class PrimitiveIdListTransferHandler extends TransferHandler {
-    //static private final Logger logger = Logger.getLogger(PrimitiveIdListTransferHandler.class.getName());
     private PrimitiveIdListProvider provider;
-    
+
     /**
      * Replies true if {@code transferFlavors} includes the data flavor {@link PrimitiveIdTransferable#PRIMITIVE_ID_LIST_FLAVOR}.
 
@@ -34,28 +34,30 @@ public class PrimitiveIdListTransferHandler extends TransferHandler {
         }
         return false;
     }
-    
+
     /**
-     * Creates the transfer handler 
-     * 
+     * Creates the transfer handler
+     *
      * @param provider the provider of the primitive IDs. Must not be null.
      * @throws IllegalArgumentException thrown if provider is null.
      */
-    public PrimitiveIdListTransferHandler(PrimitiveIdListProvider provider) throws IllegalArgumentException{
+    public PrimitiveIdListTransferHandler(PrimitiveIdListProvider provider) throws IllegalArgumentException {
         CheckParameterUtil.ensureParameterNotNull(provider, "provider");
         this.provider = provider;
     }
-    
+
+    @Override
     protected Transferable createTransferable(JComponent c) {
-        return new PrimitiveIdTransferable(provider.getSelectedPrimitiveIds());         
+        return new PrimitiveIdTransferable(provider.getSelectedPrimitiveIds());
     }
 
+    @Override
     public int getSourceActions(JComponent c) {
         return COPY;
     }
 
     @Override
     public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
-        return isSupportedFlavor(transferFlavors);  
-    }   
+        return isSupportedFlavor(transferFlavors);
+    }
 }

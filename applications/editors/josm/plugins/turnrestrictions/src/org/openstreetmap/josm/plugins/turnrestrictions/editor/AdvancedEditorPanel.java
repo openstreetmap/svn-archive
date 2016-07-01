@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.turnrestrictions.editor;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -21,7 +22,6 @@ import org.openstreetmap.josm.tools.CheckParameterUtil;
  * restriction data: a tag editor and a relation member editor.
  */
 public class AdvancedEditorPanel extends JPanel {
-    //private static final Logger logger = Logger.getLogger(AdvancedEditorPanel.class.getName());
 
     private TurnRestrictionEditorModel model;
     private TagEditorPanel pnlTagEditor;
@@ -30,8 +30,6 @@ public class AdvancedEditorPanel extends JPanel {
 
     /**
      * Creates the panel with the tag editor
-     *
-     * @return
      */
     protected JPanel buildTagEditorPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
@@ -50,8 +48,6 @@ public class AdvancedEditorPanel extends JPanel {
 
     /**
      * Builds the panel with the table for editing relation members
-     *
-     * @return
      */
     protected JPanel buildMemberEditorPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
@@ -72,7 +68,6 @@ public class AdvancedEditorPanel extends JPanel {
 
     /**
      * Creates the main split panel
-     * @return
      */
     protected JSplitPane buildSplitPane() {
         spEditors = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -98,7 +93,7 @@ public class AdvancedEditorPanel extends JPanel {
      * @param model the editor model. Must not be null.
      * @throws IllegalArgumentException thrown if model is null
      */
-    public AdvancedEditorPanel(TurnRestrictionEditorModel model) throws IllegalArgumentException{
+    public AdvancedEditorPanel(TurnRestrictionEditorModel model) throws IllegalArgumentException {
         CheckParameterUtil.ensureParameterNotNull(model, "model");
         this.model = model;
         build();
@@ -110,6 +105,7 @@ public class AdvancedEditorPanel extends JPanel {
      * first time
      */
     class SplitPaneDividerInitializer implements HierarchyListener {
+        @Override
         public void hierarchyChanged(HierarchyEvent e) {
             if (isShowing()) {
                 spEditors.setDividerLocation(0.5);

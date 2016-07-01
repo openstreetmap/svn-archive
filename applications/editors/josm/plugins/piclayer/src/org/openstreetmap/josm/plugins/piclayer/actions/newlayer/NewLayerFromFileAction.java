@@ -120,7 +120,7 @@ public class NewLayerFromFileAction extends JosmAction {
             // The next layers we load will be placed one after the other after this first layer
             int newLayerPos = Main.getLayerManager().getLayers().size();
             for(Layer l : Main.getLayerManager().getLayersOfType(PicLayerAbstract.class)) {
-                int pos = Main.map.mapView.getLayerPos(l);
+                int pos = Main.getLayerManager().getLayers().indexOf(l);
                 if (pos < newLayerPos) newLayerPos = pos;
             }
 
@@ -164,7 +164,7 @@ public class NewLayerFromFileAction extends JosmAction {
     private void placeLayer(PicLayerAbstract layer, int newLayerPos, boolean isZoomToLayer) throws IOException {
         // Add layer only if successfully initialized
 
-        Main.main.addLayer( layer );
+        Main.getLayerManager().addLayer(layer);
         Main.map.mapView.moveLayer(layer, newLayerPos++);
 
         if ( isZoomToLayer && Main.pref.getInteger("piclayer.zoom-on-load", 1) != 0 ) {

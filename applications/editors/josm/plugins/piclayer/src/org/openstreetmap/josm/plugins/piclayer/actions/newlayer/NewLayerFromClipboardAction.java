@@ -63,6 +63,6 @@ public class NewLayerFromClipboardAction extends JosmAction {
             return;
         }
         // Add layer
-        Main.main.addLayer( layer );
+        Main.getLayerManager().addLayer( layer );
     }
 }

@@ -259,7 +259,7 @@ public abstract class PicLayerAbstract extends Layer {
             g.drawImage( image, -image.getWidth(null) / 2, -image.getHeight(null) / 2, null );
 
             // Draw additional rectangle for the active pic layer
-            if ( mv.getActiveLayer() == this ) {
+            if (mv.getLayerManager().getActiveLayer() == this) {
                 g.setColor( new Color( 0xFF0000 ) );
                 g.drawRect(
                     -image.getWidth(null) / 2,

@@ -20,18 +20,26 @@
 
 package org.openstreetmap.josm.plugins.piclayer;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainMenu;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.piclayer.actions.SavePictureCalibrationAction;
@@ -47,12 +55,11 @@ import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.MovePoin
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.RemovePointAction;
 import org.openstreetmap.josm.plugins.piclayer.actions.transform.affine.TransformPointAction;
 import org.openstreetmap.josm.plugins.piclayer.layer.PicLayerAbstract;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Main Plugin class.
  */
-public class PicLayerPlugin extends Plugin implements LayerChangeListener {
+public class PicLayerPlugin extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
 
     public static List<IconToggleButton> buttonList = null;
 
@@ -70,9 +77,10 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
         // Add menu items
         MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromFileAction);
         MainMenu.add(Main.main.menu.imagerySubMenu, newLayerFromClipboardAction);
-        layerRemoved(null); // update enabled status
+        updateEnabledState();
         // Listen to layers
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
+        Main.getLayerManager().addActiveLayerChangeListener(this);
     }
 
     /**
@@ -121,17 +129,24 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      * The toolbar buttons shall be active and visible only when the PicLayer is active.
      */
     @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        Layer oldLayer = e.getPreviousActiveLayer();
+        Layer newLayer = Main.getLayerManager().getActiveLayer();
         boolean oldPic = oldLayer instanceof PicLayerAbstract;
         boolean newPic = newLayer instanceof PicLayerAbstract;
 
         if (oldPic) {
-            ((PicLayerAbstract)oldLayer).setDrawPoints(false);
+            ((PicLayerAbstract) oldLayer).setDrawPoints(false);
         }
 
         if (newPic) {
-            ((PicLayerAbstract)newLayer).setDrawPoints(true);
+            ((PicLayerAbstract) newLayer).setDrawPoints(true);
         }
+    }
+
+    @Override
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
     }
 
     /**
@@ -140,7 +155,7 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      * one must exist first). User should not be able to load a picture too early.
      */
     @Override
-    public void layerAdded(Layer arg0) {
+    public void layerAdded(LayerAddEvent e) {
         newLayerFromFileAction.setEnabled(true);
         newLayerFromClipboardAction.setEnabled(true);
     }
@@ -149,16 +164,20 @@ public class PicLayerPlugin extends Plugin implements LayerChangeListener {
      * When all layers are gone - the menu is gone too.
      */
     @Override
-    public void layerRemoved(Layer arg0) {
-        if (arg0 instanceof PicLayerAbstract && ((PicLayerAbstract) arg0).getTransformer().isModified()) {
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() instanceof PicLayerAbstract && ((PicLayerAbstract) e.getRemovedLayer()).getTransformer().isModified()) {
             if (JOptionPane.showConfirmDialog(Main.parent, tr("Do you want to save current calibration of layer {0}?",
-                    ((PicLayerAbstract)arg0).getPicLayerName()),
+                    ((PicLayerAbstract) e.getRemovedLayer()).getPicLayerName()),
                     tr("Select an option"),
                     JOptionPane.YES_NO_OPTION) == 0)
-                new SavePictureCalibrationAction((PicLayerAbstract) arg0).actionPerformed(null);
+                new SavePictureCalibrationAction((PicLayerAbstract) e.getRemovedLayer()).actionPerformed(null);
         }
+        updateEnabledState();
+    }
+
+    private void updateEnabledState() {
         boolean enable = !Main.getLayerManager().getLayers().isEmpty();
         newLayerFromFileAction.setEnabled(enable);
         newLayerFromClipboardAction.setEnabled(enable);
     }
-};
+}

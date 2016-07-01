@@ -13,6 +13,6 @@ class CanvecHelperAction extends JosmAction {
 
     @Override
     public void actionPerformed(java.awt.event.ActionEvent action) {
-        Main.main.addLayer(new CanvecLayer("canvec tile helper",parentTemp));
+        Main.getLayerManager().addLayer(new CanvecLayer("canvec tile helper",parentTemp));
     }
 }

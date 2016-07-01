@@ -224,7 +224,7 @@ class CanVecTile {
                     OsmImporter importer = new OsmImporter();
                     OsmImporterData temp = importer.loadLayer(rawtile, null, entry.getName(), null);
                     Main.worker.submit(temp.getPostLayerTask());
-                    Main.main.addLayer(temp.getLayer());
+                    Main.getLayerManager().addLayer(temp.getLayer());
                     temp.getLayer().data.setUploadDiscouraged(false);
                 }
             }

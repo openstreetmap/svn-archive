@@ -24,9 +24,10 @@ import java.awt.geom.Path2D;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 
 class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelListener, AWTEventListener {
 
@@ -54,7 +55,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
             Main.error(ex);
         }
 
-        MapView.addLayerChangeListener(this);
+        getLayerManager().addLayerChangeListener(this);
     }
 
     @Override
@@ -116,7 +117,7 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
         if (!inputData.isEmpty()) {
             if(currentBlamLayer == null) {
                 currentBlamLayer = new GPSBlamLayer(tr("GPSBlam"));
-                Main.main.addLayer(currentBlamLayer);
+                getLayerManager().addLayer(currentBlamLayer);
             }
             currentBlamLayer.addBlamMarker(new GPSBlamMarker(inputData));
             Main.map.mapView.repaint();
@@ -199,18 +200,18 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     }
 
     @Override
-    public void activeLayerChange(Layer arg0, Layer arg1) {
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
         // Do nothing
     }
 
     @Override
-    public void layerAdded(Layer arg0) {
+    public void layerAdded(LayerAddEvent e) {
         // Do nothing
     }
 
     @Override
-    public void layerRemoved(Layer oldLayer) {
-        if (oldLayer instanceof GPSBlamLayer) {
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() instanceof GPSBlamLayer) {
             currentBlamLayer = null;
             if(Main.map.mapMode instanceof GPSBlamMode)
                 Main.map.selectSelectTool(false);
@@ -220,6 +221,6 @@ class GPSBlamMode extends MapMode implements LayerChangeListener, MouseWheelList
     @Override
     public void destroy() {
         super.destroy();
-        MapView.removeLayerChangeListener(this);
+        getLayerManager().removeLayerChangeListener(this);
     }
 }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.videomapping.video;
 import java.io.File;
 import java.util.Date;

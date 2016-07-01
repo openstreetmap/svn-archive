@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.videomapping;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -26,10 +27,14 @@ import javax.swing.text.MaskFormatter;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
+import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeListener;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
@@ -38,14 +43,11 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 import uk.co.caprica.vlcj.player.DeinterlaceMode;
 
-  /**
+/**
+ * This Plugin allows you to link multiple videos against a GPS track and playback both synchronously
  * @author Matthias Meißer (digi_c at arcor dot de)
- * @ released under GPL
- * This Plugin allows you to link multiple videos against a GPS track and playback both synchronously 
  */
-
-//Here we manage properties and start the other classes
-public class VideoPlugin extends Plugin implements LayerChangeListener{
+public class VideoPlugin extends Plugin implements LayerChangeListener, ActiveLayerChangeListener {
     private JMenu VMenu,VDeinterlacer;
     private JosmAction VAdd,/*VRemove,*/VStart,Vbackward,Vforward,VJump,Vfaster,Vslower,Vloop;
     private JRadioButtonMenuItem VIntBob,VIntNone,VIntLinear;
@@ -68,7 +70,8 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
     public VideoPlugin(PluginInformation info) {
         super(info);
         VideoEngine.setupPlayer();
-        MapView.addLayerChangeListener(this);				
+        Main.getLayerManager().addLayerChangeListener(this);				
+        Main.getLayerManager().addActiveLayerChangeListener(this);                            
         createMenusAndShortCuts();
         enableVideoControlMenus(false);
         setDefaults();
@@ -329,26 +332,34 @@ public class VideoPlugin extends Plugin implements LayerChangeListener{
         }
     }
 
-    @Override
-    public void activeLayerChange(Layer oldLayer, Layer newLayer) {
+    private void handleLayer(Layer l) {
         VMenu.setEnabled(true);
-        if (newLayer instanceof GpxLayer)
-        {
+        if (l instanceof GpxLayer) {
             VAdd.setEnabled(true);
-            gpsLayer=((GpxLayer) newLayer);            
+            gpsLayer = (GpxLayer) l;            
             //TODO append to GPS Layer menu
-        }        
+        }   
+    }
+    
+    @Override
+    public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
+        handleLayer(Main.getLayerManager().getActiveLayer());  
     }
 
     @Override
-    public void layerAdded(Layer arg0) {
-        activeLayerChange(null,arg0);
+    public void layerOrderChanged(LayerOrderChangeEvent e) {
+        // Do nothing
     }
 
     @Override
-    public void layerRemoved(Layer arg0) {
-        if(arg0 instanceof VideoPositionLayer)
-                enableVideoControlMenus(false);
-        activeLayerChange(null,arg0);
+    public void layerAdded(LayerAddEvent e) {
+        handleLayer(e.getAddedLayer());
+    }
+
+    @Override
+    public void layerRemoving(LayerRemoveEvent e) {
+        if (e.getRemovedLayer() instanceof VideoPositionLayer)
+            enableVideoControlMenus(false);
+        handleLayer(e.getRemovedLayer());
     }
   }

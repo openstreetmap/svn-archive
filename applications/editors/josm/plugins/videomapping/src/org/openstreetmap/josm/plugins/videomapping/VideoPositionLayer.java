@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.videomapping;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -7,8 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -36,7 +35,7 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.videomapping.video.GPSVideoPlayer;
 
 //Basic rendering and GPS layer interaction
-public class VideoPositionLayer extends Layer implements MouseListener,MouseMotionListener {
+public class VideoPositionLayer extends Layer {
     private List<WayPoint> gpsTrack;
     private ImageIcon layerIcon;
     private DateFormat gpsTimeFormat;
@@ -50,10 +49,8 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
         layerIcon = new ImageIcon("images/videomapping.png");
         gpsTrack=importGPSLayer(gpsLayer.data);
         gpsTimeFormat= new SimpleDateFormat("HH:mm:ss");
-        Main.map.mapView.addMouseListener(this);
-        Main.map.mapView.addMouseMotionListener(this);
         iconPosition=gpsTrack.get(0);
-        Main.main.addLayer(this);        
+        Main.getLayerManager().addLayer(this);        
     }
 
     //make a flat copy
@@ -292,24 +289,6 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
     @Override
     public void visitBoundingBox(BoundingXYVisitor arg0) {
     }
-
-    public void mouseClicked(MouseEvent arg0) {
-    }
-
-    public void mouseEntered(MouseEvent arg0) {
-    }
-
-    public void mouseExited(MouseEvent arg0) {
-    }
-
-    public void mousePressed(MouseEvent e) {
-    }
-
-    public void mouseDragged(MouseEvent arg0) {
-    }
-
-    public void mouseMoved(MouseEvent arg0) {
-    }
     
     public void setGPSVideoPlayer(GPSVideoPlayer player) {
         gpsVideoPlayer = player;
@@ -320,6 +299,6 @@ public class VideoPositionLayer extends Layer implements MouseListener,MouseMoti
     }
 
     public void unload() {
-        Main.main.removeLayer(this);
+        Main.getLayerManager().removeLayer(this);
     }
 }

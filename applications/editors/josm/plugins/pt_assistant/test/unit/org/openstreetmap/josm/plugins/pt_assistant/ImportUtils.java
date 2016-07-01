@@ -18,33 +18,33 @@ import org.openstreetmap.josm.io.OsmImporter;
 import org.openstreetmap.josm.io.OsmImporter.OsmImporterData;
 
 public class ImportUtils {
-	
-	private ImportUtils() {
-		// private constructor for utils classes
-	}
+    
+    private ImportUtils() {
+        // private constructor for utils classes
+    }
 
-	public static DataSet importOsmFile(File file, String layerName) {
+    public static DataSet importOsmFile(File file, String layerName) {
 
-		OsmImporter importer = new OsmImporter();
-		ProgressMonitor progressMonitor = NullProgressMonitor.INSTANCE;
+        OsmImporter importer = new OsmImporter();
+        ProgressMonitor progressMonitor = NullProgressMonitor.INSTANCE;
 
-		try {
-			InputStream in = new FileInputStream(file);
-			OsmImporterData oid = importer.loadLayer(in, file, layerName, progressMonitor);
-			OsmDataLayer layer = oid.getLayer();
-			return layer.data;
+        try {
+            InputStream in = new FileInputStream(file);
+            OsmImporterData oid = importer.loadLayer(in, file, layerName, progressMonitor);
+            OsmDataLayer layer = oid.getLayer();
+            return layer.data;
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalDataException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return null;
 
-	}
+    }
 
 
 

@@ -13,20 +13,20 @@ import org.openstreetmap.josm.plugins.pt_assistant.AbstractTest;
 import org.openstreetmap.josm.plugins.pt_assistant.ImportUtils;
 
 public class PlatformAsWayTest extends AbstractTest{
-	
-	@Test
-	public void sortingTest() {
-		File file = new File(AbstractTest.PATH_TO_PLATFORM_AS_WAY);
-		DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
-		
-		GapTest gapTest = new GapTest();
-		for (Relation r: ds.getRelations()) {
-			gapTest.visit(r);
-		}
-		
-		List<TestError> errors = gapTest.getErrors();
-		
-		assertEquals(errors.size(), 0);
-	}
+    
+    @Test
+    public void sortingTest() {
+        File file = new File(AbstractTest.PATH_TO_PLATFORM_AS_WAY);
+        DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
+        
+        GapTest gapTest = new GapTest();
+        for (Relation r: ds.getRelations()) {
+            gapTest.visit(r);
+        }
+        
+        List<TestError> errors = gapTest.getErrors();
+        
+        assertEquals(errors.size(), 0);
+    }
 
 }

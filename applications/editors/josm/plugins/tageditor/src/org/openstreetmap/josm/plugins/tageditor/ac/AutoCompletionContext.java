@@ -2,6 +2,7 @@
 package org.openstreetmap.josm.plugins.tageditor.ac;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.osm.DataSet;
 
 public class AutoCompletionContext {
 
@@ -14,10 +15,11 @@ public class AutoCompletionContext {
     }
 
     public void initFromJOSMSelection() {
-        selectionIncludesNodes = ! Main.main.getCurrentDataSet().getSelectedNodes().isEmpty();
-        selectionIncludesWays = !Main.main.getCurrentDataSet().getSelectedWays().isEmpty();
-        selectionIncludesRelations = !Main.main.getCurrentDataSet().getSelectedRelations().isEmpty();
-        selectionEmpty = (Main.main.getCurrentDataSet().getSelected().size() == 0);
+        DataSet ds = Main.getLayerManager().getEditDataSet();
+        selectionIncludesNodes = !ds.getSelectedNodes().isEmpty();
+        selectionIncludesWays = !ds.getSelectedWays().isEmpty();
+        selectionIncludesRelations = !ds.getSelectedRelations().isEmpty();
+        selectionEmpty = ds.getSelected().isEmpty();
     }
 
     public boolean isSelectionEmpty() {

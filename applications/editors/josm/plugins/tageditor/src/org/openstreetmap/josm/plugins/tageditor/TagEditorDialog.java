@@ -277,7 +277,7 @@ public class TagEditorDialog extends JDialog {
     public void startEditSession() {
         tagEditor.getModel().clearAppliedPresets();
         tagEditor.getModel().initFromJOSMSelection();
-        autocomplete = Main.main.getEditLayer().data.getAutoCompletionManager();
+        autocomplete = Main.getLayerManager().getEditLayer().data.getAutoCompletionManager();
         tagEditor.setAutoCompletionManager(autocomplete);
         getModel().ensureOneTag();
     }
@@ -312,7 +312,7 @@ public class TagEditorDialog extends JDialog {
             tagEditor.stopEditing();
             setVisible(false);
             tagEditor.getModel().updateJOSMSelection();
-            DataSet ds = Main.main.getCurrentDataSet();
+            DataSet ds = Main.getLayerManager().getEditDataSet();
             ds.fireSelectionChanged();
             Main.parent.repaint(); // repaint all - drawing could have been changed
         }

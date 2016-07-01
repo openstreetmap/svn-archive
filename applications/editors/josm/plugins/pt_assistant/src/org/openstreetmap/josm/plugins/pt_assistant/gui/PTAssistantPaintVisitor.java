@@ -18,8 +18,6 @@ import org.openstreetmap.josm.data.validation.PaintVisitor;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
-import com.sun.org.apache.regexp.internal.recompile;
-
 public class PTAssistantPaintVisitor extends PaintVisitor {
 
 	/** The graphics */

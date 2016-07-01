@@ -61,10 +61,10 @@ public class UndeleteAction extends JosmAction {
         
         Main.info("Undeleting "+ids+(parent==null?"":" with parent "+parent));
         
-        OsmDataLayer tmpLayer = Main.main.getEditLayer();
+        OsmDataLayer tmpLayer = Main.getLayerManager().getEditLayer();
         if ((tmpLayer == null) || newLayer) {
             tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
-            Main.main.addLayer(tmpLayer);
+            Main.getLayerManager().addLayer(tmpLayer);
         }
 
         final OsmDataLayer layer = tmpLayer;

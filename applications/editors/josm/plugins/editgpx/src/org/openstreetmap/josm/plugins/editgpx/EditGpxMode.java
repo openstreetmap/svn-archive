@@ -164,7 +164,7 @@ public class EditGpxMode extends MapMode implements LayerChangeListener {
 
         if(currentEditLayer == null) {
             currentEditLayer = new EditGpxLayer(new EditGpxData());
-            Main.main.addLayer(currentEditLayer);
+            Main.getLayerManager().addLayer(currentEditLayer);
             currentEditLayer.initializeImport();
         }
         Main.map.mapView.repaint();

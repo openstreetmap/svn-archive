@@ -133,7 +133,7 @@ class RoadSignInputDialog extends ExtendedDialog {
     @Override
     protected void buttonAction(int i, ActionEvent evt) {
         if (i == 0) { // OK Button
-            Collection<OsmPrimitive> selPrim = Main.main.getCurrentDataSet().getSelected();
+            Collection<OsmPrimitive> selPrim = Main.getLayerManager().getEditDataSet().getSelected();
             if (!selPrim.isEmpty()) {
                 Main.pref.put("plugin.roadsigns.addTrafficSignTag", addTrafficSignTag.isSelected());
 

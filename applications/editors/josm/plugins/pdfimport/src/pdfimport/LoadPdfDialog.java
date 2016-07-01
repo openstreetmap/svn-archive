@@ -714,7 +714,7 @@ public class LoadPdfDialog extends JFrame{
 	// Implementation methods
 
 	private EastNorth getSelectedCoor() {
-		Collection<OsmPrimitive> selected = Main.main.getCurrentDataSet().getSelected();
+		Collection<OsmPrimitive> selected = Main.getLayerManager().getEditDataSet().getSelected();
 
 		if (selected.size() != 1 || !(selected.iterator().next() instanceof Node)){
 			JOptionPane.showMessageDialog(Main.parent, tr("Please select exactly one node."));
@@ -1060,13 +1060,13 @@ public class LoadPdfDialog extends JFrame{
 	private void placeLayer(OsmDataLayer _layer, FilePlacement placement) {
 		this.removeLayer();
 		this.layer = _layer;
-		Main.main.addLayer(this.layer);
+		Main.getLayerManager().addLayer(this.layer);
 		Main.map.mapView.zoomTo(placement.getWorldBounds(this.data));
 	}
 
 	private void removeLayer() {
 		if (this.layer != null) {
-			Main.main.removeLayer(this.layer);
+			Main.getLayerManager().removeLayer(this.layer);
 			this.layer.data.clear(); //saves memory
 			this.layer = null;
 		}

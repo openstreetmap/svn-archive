@@ -534,7 +534,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
     // Returns relation description, or an empty string
     private String FindRelation() {
         String relationDescription = null;
-        DataSet currentDataSet = Main.main.getCurrentDataSet();
+        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
         if (currentDataSet != null) {
             for (Relation relation : currentDataSet.getRelations()) {
 
@@ -582,7 +582,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
 
         int namedWayCount = 0;
         int unNamedWayCount = 0;
-        DataSet currentDataSet = Main.main.getCurrentDataSet();
+        DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
         if (currentDataSet != null) {
             for (OsmPrimitive osm : currentDataSet.getSelectedWays()) {
                 Way way = (Way) osm;
@@ -1033,7 +1033,7 @@ public class AddrInterpolationDialog extends JDialog implements ActionListener  
             Node lastNode = addrInterpolationWay.getNode(addrInterpolationWay.getNodesCount()-1);
 
             // De-select address interpolation way; leave street selected
-            DataSet currentDataSet = Main.main.getCurrentDataSet();
+            DataSet currentDataSet = Main.getLayerManager().getEditDataSet();
             if (currentDataSet != null) {
                 currentDataSet.clearSelection(addrInterpolationWay);
                 currentDataSet.clearSelection(lastNode);  // Workaround for JOSM Bug #3838

@@ -27,13 +27,14 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-
+ */
 package org.openstreetmap.josm.plugins.trustosm.util;
 
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Container;
+
+import javax.swing.Spring;
 import javax.swing.SpringLayout;
-import java.awt.*;
 
 /**
  * A 1.4 file that provides utility methods for
@@ -41,7 +42,12 @@ import java.awt.*;
  * These utilities are used by several programs, such as
  * SpringBox and SpringCompactGrid.
  */
-public class SpringUtilities {
+public final class SpringUtilities {
+
+    private SpringUtilities() {
+        // Hide default constructors for utilities classes
+    }
+
     /**
      * A debugging utility that prints to stdout the component's
      * minimum, preferred, and maximum sizes.
@@ -72,7 +78,7 @@ public class SpringUtilities {
                                 int xPad, int yPad) {
         SpringLayout layout;
         try {
-            layout = (SpringLayout)parent.getLayout();
+            layout = (SpringLayout) parent.getLayout();
         } catch (ClassCastException exc) {
             System.err.println("The first argument to makeGrid must use SpringLayout.");
             return;
@@ -175,7 +181,7 @@ public class SpringUtilities {
                                        int xPad, int yPad) {
         SpringLayout layout;
         try {
-            layout = (SpringLayout)parent.getLayout();
+            layout = (SpringLayout) parent.getLayout();
         } catch (ClassCastException exc) {
             System.err.println("The first argument to makeCompactGrid must use SpringLayout.");
             return;

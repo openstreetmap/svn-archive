@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.util;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -134,7 +135,7 @@ public class TrustGPG {
         //            keyText = new String(Hex.encode(sigKey.getPublicKey().getFingerprint()),"UTF-8") + " ";
         Iterator<?> iter = k.getUserIDs();
         if (iter.hasNext()) {
-            keyText += (String)iter.next();
+            keyText += (String) iter.next();
         }
         /*            iter = sigKey.getUserIDs();
         while (iter.hasNext()) {
@@ -171,11 +172,11 @@ public class TrustGPG {
 
         while (rIt.hasNext()) {
 
-            PGPSecretKeyRing    kRing = (PGPSecretKeyRing)rIt.next();
-            Iterator<?>            kIt = kRing.getSecretKeys();
+            PGPSecretKeyRing kRing = (PGPSecretKeyRing) rIt.next();
+            Iterator<?> kIt = kRing.getSecretKeys();
 
             while (kIt.hasNext()) {
-                PGPSecretKey    k = (PGPSecretKey)kIt.next();
+                PGPSecretKey k = (PGPSecretKey) kIt.next();
 
                 if (k.isSigningKey()) {
                     sigKeys.add(k);
@@ -195,7 +196,7 @@ public class TrustGPG {
 
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-        Dimension d = new Dimension(0,20);
+        Dimension d = new Dimension(0, 20);
 
         JLabel head = new JLabel(tr("Select a signing key from your keyring-file:"));
         head.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -211,13 +212,12 @@ public class TrustGPG {
 
         JButton detailsButton = new JButton(tr("Details"), ImageProvider.get("keydetails"));
         detailsButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        detailsButton.addActionListener(new ActionListener(){
-
+        detailsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 PGPSecretKey sk = sigKeys.get(keyBox.getSelectedIndex());
                 showKeyDetails(getPublicKeyFromRing(sk.getKeyID()));
-            }});
+            } });
         p.add(detailsButton);
 
         JCheckBox random = new JCheckBox(tr("Use a random key from this list"));
@@ -228,7 +228,7 @@ public class TrustGPG {
 
         JButton createButton = new JButton(tr("Create new Key"), ImageProvider.get("key"));
         createButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        createButton.addActionListener(new ActionListener(){
+        createButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -238,28 +238,15 @@ public class TrustGPG {
                         keyBox.addItem(secKeytoString(secKey));
                         sigKeys.add(secKey);
                     }
-                } catch (NoSuchAlgorithmException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (NoSuchProviderException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (PGPException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException | NoSuchProviderException | PGPException | IOException e) {
+                    Main.error(e);
                 }
-
-            }});
+            } });
         p.add(createButton);
         p.add(Box.createRigidArea(d));
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Select a Key to sign"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, ImageProvider.get("keyring"), null, null);
+        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Select a Key to sign"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, ImageProvider.get("keyring"), null, null);
 
         if (n == JOptionPane.OK_OPTION) {
             keepkey = keepkeyBox.isSelected();
@@ -272,11 +259,6 @@ public class TrustGPG {
         } else {
             pgpSecKey = null;
         }
-        //String selection = (String) JOptionPane.showInputDialog(null, tr("Select a Key to sign"),tr("Secret Key Choice"), JOptionPane.OK_CANCEL_OPTION, null, keys, keys[0]);
-
-        //System.out.println(selection);
-
-        //        return pgpSecKey;
     }
 
     public void readGpgFiles() throws PGPException, IOException, NoSuchAlgorithmException, NoSuchProviderException {
@@ -300,7 +282,7 @@ public class TrustGPG {
     public void writeGpgFiles() throws FileNotFoundException, IOException {
         String path = Main.pref.getPluginsDirectory().getPath();
         try (FileOutputStream pubOut = new FileOutputStream(path + "/trustosm/gnupg/pubring.gpg");
-             FileOutputStream secOut = new FileOutputStream(path + "/trustosm/gnupg/secring.gpg")) {
+                FileOutputStream secOut = new FileOutputStream(path + "/trustosm/gnupg/secring.gpg")) {
             pgpSec.encode(secOut);
             pgpPub.encode(pubOut);
             pubOut.flush();
@@ -313,19 +295,18 @@ public class TrustGPG {
         final JPasswordField passwordField = new JPasswordField();
         JOptionPane jop = new JOptionPane(passwordField, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, ImageProvider.get("lock"));
         JDialog dialog = jop.createDialog("Password:");
-        dialog.addComponentListener(new ComponentAdapter(){
+        dialog.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentShown(ComponentEvent e){
+            public void componentShown(ComponentEvent e) {
                 passwordField.requestFocusInWindow();
             }
         });
         dialog.setVisible(true);
-        int result = (Integer)jop.getValue();
+        int result = (Integer) jop.getValue();
         dialog.dispose();
-        if(result == JOptionPane.OK_OPTION){
+        if (result == JOptionPane.OK_OPTION) {
             password = passwordField.getPassword();
         }
-
 
         /*final JPasswordField passwordField = new JPasswordField(10);
         JOptionPane.showMessageDialog(Main.parent, passwordField, "Enter password", JOptionPane.OK_OPTION, ImageProvider.get("lock"));
@@ -342,29 +323,32 @@ public class TrustGPG {
             }
     }
 
-
-
     /*    public void checkAll(TrustOsmPrimitive trust) {
         OsmPrimitive osm = trust.getOsmPrimitive();
         for (String key : osm.keySet()) {
             checkTag(trust, key);
         }
 
-        if(osm instanceof Node) {
+        if (osm instanceof Node) {
             checkNode((TrustNode) trust);
-        } else if(osm instanceof Way) {
+        } else if (osm instanceof Way) {
             /*            Iterator<Node> iter = ((Way)osm).getNodes().iterator();
             while (iter.hasNext()) {
                 checkNode(trust, iter.next());
             }/
-        } else if(osm instanceof Relation) {
+        } else if (osm instanceof Relation) {
 
         }
     }
      */
 
     public void invalidIDWarning(OsmPrimitive osm) {
-        JOptionPane.showMessageDialog(Main.parent, tr("The object with the ID \"{0}\" ({1}) is newly created.\nYou can not sign it, because the signature would lose the ID-Reference after uploading it to the OSM-server.",osm.getUniqueId(),osm.toString()), tr("Signing canceled!"), JOptionPane.ERROR_MESSAGE);
+        // CHECKSTYLE.OFF: LineLength
+        JOptionPane.showMessageDialog(Main.parent,
+                tr("The object with the ID \"{0}\" ({1}) is newly created.\nYou can not sign it, because the signature would lose the ID-Reference after uploading it to the OSM-server.",
+                        osm.getUniqueId(), osm.toString()),
+                tr("Signing canceled!"), JOptionPane.ERROR_MESSAGE);
+        // CHECKSTYLE.ON: LineLength
     }
     /*
     public TrustOsmPrimitive signGeometry(TrustOsmPrimitive trust) {
@@ -376,17 +360,17 @@ public class TrustGPG {
             invalidIDWarning(osm);
             return trust;
         }
-        if(osm instanceof Node) {
+        if (osm instanceof Node) {
             s = signNode(osm,(Node)osm, spGen);
             if (s != null) ((TrustNode)trust).storeNodeSig(s);
-        } else if(osm instanceof Way) {
+        } else if (osm instanceof Way) {
             Iterator<Node> iter = ((Way)osm).getNodes().iterator();
             while (iter.hasNext()) {
                 node = iter.next();
                 s = signNode(osm,node,spGen);
                 if (s != null) ((TrustNode)trust).storeNodeSig(s);
             }
-        } else if(osm instanceof Relation) {
+        } else if (osm instanceof Relation) {
 
         }
         return trust;
@@ -405,12 +389,12 @@ public class TrustGPG {
         if (s != null) trust.storeSegmentSig(nodes,s);
          */
         List<Node> wayNodes = w.getNodes();
-        for (int i=0; i<wayNodes.size()-1; i++) {
+        for (int i = 0; i < wayNodes.size()-1; i++) {
             List<Node> nodes = new ArrayList<>();
             nodes.add(wayNodes.get(i));
             nodes.add(wayNodes.get(i+1));
-            s = signSegment(trust,nodes);
-            if (s != null) trust.storeSegmentSig(nodes,s);
+            s = signSegment(trust, nodes);
+            if (s != null) trust.storeSegmentSig(nodes, s);
         }
 
         return trust;
@@ -422,14 +406,14 @@ public class TrustGPG {
             invalidIDWarning(w);
             return null;
         }
-        String tosign = TrustWay.generateSegmentSigtext(trust,nodes);
+        String tosign = TrustWay.generateSegmentSigtext(trust, nodes);
         PGPSignatureSubpacketGenerator spGen = chooseAccuracy();
-        return sign(tosign,spGen);
+        return sign(tosign, spGen);
     }
 
     public PGPSignature signNode(Node node) {
-        PGPSignatureSubpacketGenerator  spGen = chooseAccuracy();
-        return signNode(node,spGen);
+        PGPSignatureSubpacketGenerator spGen = chooseAccuracy();
+        return signNode(node, spGen);
     }
 
     public PGPSignature signNode(Node node, PGPSignatureSubpacketGenerator spGen) {
@@ -438,7 +422,7 @@ public class TrustGPG {
             return null;
         }
         String tosign = TrustNode.generateNodeSigtext(node);
-        return sign(tosign,spGen);
+        return sign(tosign, spGen);
     }
 
     public boolean signTag(TrustOsmPrimitive trust, String key) {
@@ -448,9 +432,8 @@ public class TrustGPG {
             return false;
         }
         PGPSignature s;
-        String tosign = TrustOsmPrimitive.generateTagSigtext(osm,key);
-        //s = sign(tosign);
-        s = sign(tosign,chooseInformationSource());
+        String tosign = TrustOsmPrimitive.generateTagSigtext(osm, key);
+        s = sign(tosign, chooseInformationSource());
         if (s != null) {
             trust.storeTagSig(key, s);
             return true;
@@ -460,12 +443,11 @@ public class TrustGPG {
 
     /**
      * Search in a given Signature for Tolerance information.
-     * @param sig
      * @return found tolerance as double or 0 if no Tolerance is given
      */
     public static double searchTolerance(PGPSignature sig) {
         /** Take the first NotationData packet that seems to have Tolerance information */
-        for (NotationData nd : sig.getHashedSubPackets().getNotationDataOccurrences()){
+        for (NotationData nd : sig.getHashedSubPackets().getNotationDataOccurrences()) {
             if (nd.getNotationName().equals(TrustGPG.NOTATION_DATA_KEY)) {
                 String notation = nd.getNotationValue();
                 Pattern p = Pattern.compile("^Tolerance:(\\d*\\.?\\d*)m");
@@ -479,18 +461,19 @@ public class TrustGPG {
     }
 
     public PGPSignatureSubpacketGenerator chooseAccuracy() {
-        PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
+        PGPSignatureSubpacketGenerator spGen = new PGPSignatureSubpacketGenerator();
         JPanel p = new JPanel(new GridBagLayout());
-        p.add(new JLabel(tr("Please give a tolerance in meters")),GBC.eol());
+        p.add(new JLabel(tr("Please give a tolerance in meters")), GBC.eol());
 
         JFormattedTextField meters = new JFormattedTextField(NumberFormat.getNumberInstance());
         meters.setValue(new Double(10));
         meters.setColumns(5);
 
-        p.add(meters,GBC.std());
-        p.add(new JLabel(tr("meters")),GBC.eol());
+        p.add(meters, GBC.std());
+        p.add(new JLabel(tr("meters")), GBC.eol());
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Accuracy"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Accuracy"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (n == JOptionPane.OK_OPTION) {
             spGen.setNotationData(false, true, TrustGPG.NOTATION_DATA_KEY, "Tolerance:"+meters.getValue()+"m");
@@ -500,23 +483,24 @@ public class TrustGPG {
     }
 
     public PGPSignatureSubpacketGenerator chooseInformationSource() {
-        PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
+        PGPSignatureSubpacketGenerator spGen = new PGPSignatureSubpacketGenerator();
         JPanel p = new JPanel(new GridBagLayout());
-        p.add(new JLabel(tr("Select as much as you like:")),GBC.eol());
+        p.add(new JLabel(tr("Select as much as you like:")), GBC.eol());
 
         JCheckBox survey = new JCheckBox(tr("Survey"));
-        p.add(survey,GBC.eol());
+        p.add(survey, GBC.eol());
 
         JCheckBox aerial = new JCheckBox(tr("Aerial Photography"));
-        p.add(aerial,GBC.eol());
+        p.add(aerial, GBC.eol());
 
         JCheckBox web = new JCheckBox(tr("Web Recherche"));
-        p.add(web,GBC.eol());
+        p.add(web, GBC.eol());
 
         JCheckBox trusted = new JCheckBox(tr("Trusted persons told me"));
-        p.add(trusted,GBC.eol());
+        p.add(trusted, GBC.eol());
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Which source did you use?"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Which source did you use?"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (n == JOptionPane.OK_OPTION) {
             String sources = "Sources:";
@@ -531,16 +515,15 @@ public class TrustGPG {
     }
 
     public PGPSignature sign(String tosign) {
-        PGPSignatureSubpacketGenerator  spGen = new PGPSignatureSubpacketGenerator();
-        return sign(tosign,spGen);
+        PGPSignatureSubpacketGenerator spGen = new PGPSignatureSubpacketGenerator();
+        return sign(tosign, spGen);
     }
 
     public PGPSignature sign(String tosign, PGPSignatureSubpacketGenerator spGen) {
 
         if (spGen == null) return null;
         PGPSignature sig;
-        try{
-
+        try {
             readSecretKey();
             if (pgpSec == null) return null;
 
@@ -550,16 +533,18 @@ public class TrustGPG {
 
             Provider provider = Security.getProvider("BC");
             PGPDigestCalculatorProvider digestCalculatorProvider = new JcaPGPDigestCalculatorProviderBuilder().setProvider(provider).build();
-            PBESecretKeyDecryptor secretKeyDecryptor = new JcePBESecretKeyDecryptorBuilder(digestCalculatorProvider).setProvider(provider).build(password);
+            PBESecretKeyDecryptor secretKeyDecryptor = new JcePBESecretKeyDecryptorBuilder(digestCalculatorProvider)
+                    .setProvider(provider).build(password);
             PGPPrivateKey pgpPrivKey = pgpSecKey.extractPrivateKey(secretKeyDecryptor);
             int keyAlgorithm = pgpSecKey.getPublicKey().getAlgorithm();
-            PGPContentSignerBuilder contentSignerBuilder = new JcaPGPContentSignerBuilder(keyAlgorithm, digest).setProvider(provider).setDigestProvider(provider);
+            PGPContentSignerBuilder contentSignerBuilder = new JcaPGPContentSignerBuilder(keyAlgorithm, digest)
+                    .setProvider(provider).setDigestProvider(provider);
             PGPSignatureGenerator sGen = new PGPSignatureGenerator(contentSignerBuilder);
             sGen.init(PGPSignature.CANONICAL_TEXT_DOCUMENT, pgpPrivKey);
 
             Iterator<?> it = pgpSecKey.getPublicKey().getUserIDs();
             if (it.hasNext()) {
-                spGen.setSignerUserID(false, (String)it.next());
+                spGen.setSignerUserID(false, (String) it.next());
             }
             sGen.setHashedSubpackets(spGen.generate());
             sGen.update(tosign.getBytes(Charset.forName("UTF-8")));
@@ -568,7 +553,7 @@ public class TrustGPG {
             //writeSignatureToFile(sig, tosign, new FileOutputStream("/tmp/sigtest.asc"));
             //sig.encode(new BCPGOutputStream(new ArmoredOutputStream(new FileOutputStream("/tmp/sigtest.asc"))));
             return sig;
-        }catch (Exception e){//Catch exception if any
+        } catch (Exception e) {
             System.err.println("PGP Signing Error: " + e.getMessage());
         }
 
@@ -599,12 +584,11 @@ public class TrustGPG {
             sig.init(contentVerifierBuilderProvider, pgpPub.getPublicKey(sig.getKeyID()));
             sig.update(sigtext.getBytes(Charset.forName("UTF-8")));
             return sig.verify();
-        }catch (Exception e){//Catch exception if any
+        } catch (Exception e) {
             System.err.println("PGP Verification Error: " + e.getMessage());
         }
         return false;
     }
-
 
     //    public static void writeSignatureToFile(PGPSignature sig, String clearText, FileOutputStream fout) throws Exception {
     //        ArmoredOutputStream aOut = new ArmoredOutputStream(fout);
@@ -636,7 +620,7 @@ public class TrustGPG {
         String userid = "Unknown";
         Iterator<?> iter = key.getUserIDs();
         if (iter.hasNext()) {
-            userid = (String)iter.next();
+            userid = (String) iter.next();
         }
 
         String fingerprint = new String(Hex.encode(key.getFingerprint())).toUpperCase();
@@ -681,8 +665,8 @@ public class TrustGPG {
             expirationTime = formatter.format(new Date(key.getCreationTime().getTime()+validSeconds*1000));
         }
 
-
-        String[] labels = {tr("Primary user-ID: "), tr("Key-ID: "), tr("Fingerprint: "), tr("Algorithm: "), tr("Strength in bit: "), tr("Creation date: "), tr("Expiration date: ")};
+        String[] labels = {tr("Primary user-ID: "), tr("Key-ID: "), tr("Fingerprint: "), tr("Algorithm: "),
+                tr("Strength in bit: "), tr("Creation date: "), tr("Expiration date: ")};
         String[] values = {userid, keyid, fingerprint, algorithm, strength, creationTime, expirationTime};
         int numPairs = labels.length;
 
@@ -708,14 +692,14 @@ public class TrustGPG {
         //        metaPanel.setLayout(new BoxLayout(metaPanel, BoxLayout.PAGE_AXIS));
         //        metaPanel.add(p);
         //        JScrollPane sp = new JScrollPane(new KeySignaturesDialog(key));
-        //        sp.setPreferredSize(new Dimension(0,200));
+        //        sp.setPreferredSize(new Dimension(0, 200));
         //        metaPanel.add(sp);
 
         JOptionPane.showMessageDialog(Main.parent, p, tr("PGP-Key details"), JOptionPane.INFORMATION_MESSAGE);
     }
 
-
-    public PGPSecretKey generateKey() throws NoSuchAlgorithmException, NoSuchProviderException, PGPException, FileNotFoundException, IOException {
+    public PGPSecretKey generateKey()
+            throws NoSuchAlgorithmException, NoSuchProviderException, PGPException, FileNotFoundException, IOException {
 
         JTextField userId = new JTextField();
         NameGenerator nameGen = new NameGenerator(Main.pref.getPluginsDirectory().getPath()+"/trustosm/resources/syllables.txt");
@@ -726,10 +710,19 @@ public class TrustGPG {
         final JComboBox<?> strengthBox = new JComboBox<Object>(sizes);
         strengthBox.setEnabled(false);
 
-        /*        final String[] curves = {"prime192v1", "prime192v2", "prime192v3", "prime239v1", "prime239v2", "prime239v3", "prime256v1", "secp224r1", "secp256r1", "secp384r1", "secp521r1", "P-224", "P-256", "P-384", "P-521", "c2pnb163v1", "c2pnb163v2", "c2pnb163v3", "c2pnb176w1", "c2tnb191v2", "c2tnb191v1", "c2tnb191v3", "c2pnb208w1", "c2tnb239v1", "c2tnb239v2", "c2tnb239v3", "c2pnb272w1", "c2pnb304w1", "c2tnb359v1", "c2pnb368w1", "c2tnb431r1", "sect163r2", "sect233r1", "sect283r1", "sect409r1", "sect571r1", "B-163", "B-233", "B-283", "B-409", "B-571", "brainpoolp160r1", "brainpoolp160t1", "brainpoolp192r1", "brainpoolp192t1", "brainpoolp224r1", "brainpoolp224t1", "brainpoolp256r1", "brainpoolp256t1", "brainpoolp320r1", "brainpoolp320t1", "brainpoolp384r1", "brainpoolp384t1", "brainpoolp512r1", "brainpoolp512t1"};
-        final String[] curvesizes = {"192", "192", "192", "239", "239", "239", "256", "224", "256", "384", "521", "224", "256", "384", "521", "163", "163", "163", "176", "191", "191", "191", "208", "239", "239", "239", "272", "304", "359", "368", "431", "163", "233", "283", "409", "571", "163", "233", "283", "409", "571", "160", "160", "192", "192", "224", "224", "256", "256", "320", "320", "384", "384", "512", "512"};
+        /* final String[] curves = {"prime192v1", "prime192v2", "prime192v3", "prime239v1", "prime239v2", "prime239v3", "prime256v1",
+           "secp224r1", "secp256r1", "secp384r1", "secp521r1", "P-224", "P-256", "P-384", "P-521", "c2pnb163v1", "c2pnb163v2", "c2pnb163v3",
+           "c2pnb176w1", "c2tnb191v2", "c2tnb191v1", "c2tnb191v3", "c2pnb208w1", "c2tnb239v1", "c2tnb239v2", "c2tnb239v3", "c2pnb272w1",
+           "c2pnb304w1", "c2tnb359v1", "c2pnb368w1", "c2tnb431r1", "sect163r2", "sect233r1", "sect283r1", "sect409r1", "sect571r1",
+           "B-163", "B-233", "B-283", "B-409", "B-571", "brainpoolp160r1", "brainpoolp160t1", "brainpoolp192r1", "brainpoolp192t1",
+           "brainpoolp224r1", "brainpoolp224t1", "brainpoolp256r1", "brainpoolp256t1", "brainpoolp320r1", "brainpoolp320t1", "brainpoolp384r1",
+           "brainpoolp384t1", "brainpoolp512r1", "brainpoolp512t1"};
+        final String[] curvesizes = {"192", "192", "192", "239", "239", "239", "256", "224", "256", "384", "521", "224", "256", "384", "521",
+            "163", "163", "163", "176", "191", "191", "191", "208", "239", "239", "239", "272", "304", "359", "368", "431", "163", "233",
+            "283", "409", "571", "163", "233", "283", "409", "571", "160", "160", "192", "192", "224", "224", "256", "256", "320", "320",
+            "384", "384", "512", "512"};
         final JComboBox curveBox = new JComboBox(curves);
-        curveBox.addActionListener(new ActionListener(){
+        curveBox.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -739,14 +732,14 @@ public class TrustGPG {
          */
 
         //        final String[] algos = {"DSA","RSA","ECDSA"};
-        final String[] algos = {"DSA","RSA"};
+        final String[] algos = {"DSA", "RSA"};
         final JComboBox<?> algoBox = new JComboBox<Object>(algos);
-        algoBox.addActionListener(new ActionListener(){
+        algoBox.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JComboBox<?> cb = (JComboBox<?>)e.getSource();
-                String alg = (String)cb.getSelectedItem();
+                JComboBox<?> cb = (JComboBox<?>) e.getSource();
+                String alg = (String) cb.getSelectedItem();
                 if (alg.equals("DSA")) {
                     strengthBox.setSelectedItem("1024");
                     strengthBox.setEnabled(false);
@@ -765,18 +758,18 @@ public class TrustGPG {
             }
         });
 
-
-
-
-
-        final String[] protectAlgos = {"AES_256", "AES_192", "AES_128", "BLOWFISH", "CAST5", "DES", "IDEA", "SAFER", "TRIPLE_DES", "TWOFISH", "NULL"};
-        int[] protAl = {PGPEncryptedData.AES_256, PGPEncryptedData.AES_192, PGPEncryptedData.AES_128, PGPEncryptedData.BLOWFISH, PGPEncryptedData.CAST5, PGPEncryptedData.DES, PGPEncryptedData.IDEA, PGPEncryptedData.SAFER, PGPEncryptedData.TRIPLE_DES, PGPEncryptedData.TWOFISH, PGPEncryptedData.NULL};
+        final String[] protectAlgos = {"AES_256", "AES_192", "AES_128", "BLOWFISH",
+                "CAST5", "DES", "IDEA", "SAFER", "TRIPLE_DES", "TWOFISH", "NULL"};
+        int[] protAl = {PGPEncryptedData.AES_256, PGPEncryptedData.AES_192, PGPEncryptedData.AES_128, PGPEncryptedData.BLOWFISH,
+                PGPEncryptedData.CAST5, PGPEncryptedData.DES, PGPEncryptedData.IDEA, PGPEncryptedData.SAFER, PGPEncryptedData.TRIPLE_DES,
+                PGPEncryptedData.TWOFISH, PGPEncryptedData.NULL};
         final JComboBox<?> protectBox = new JComboBox<Object>(protectAlgos);
 
         final JDateChooser cal = new JDateChooser(null, null, null, new JSpinnerDateEditor());
-        cal.setPreferredSize(new Dimension(130,cal.getPreferredSize().height));
+        cal.setPreferredSize(new Dimension(130, cal.getPreferredSize().height));
 
-        final String[] labels = {tr("User-ID:"), tr("Select algorithm:"), tr("Choose Bitlength (Strength):"), tr("Encryption algorithm to protect private key:"), tr("Choose an expiry date for the key:")};
+        final String[] labels = {tr("User-ID:"), tr("Select algorithm:"), tr("Choose Bitlength (Strength):"),
+                tr("Encryption algorithm to protect private key:"), tr("Choose an expiry date for the key:")};
         final JComponent[] values = {userId, algoBox, strengthBox, protectBox, cal};
 
         int numPairs = labels.length;
@@ -794,15 +787,16 @@ public class TrustGPG {
         SpringUtilities.makeCompactGrid(p,
                 numPairs, 2, //rows, cols
                 6, 6,        //initX, initY
-                16, 6);       //xPad, yPad
+                16, 6);      //xPad, yPad
 
-        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Create a new signing key"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+        int n = JOptionPane.showOptionDialog(Main.parent, p, tr("Create a new signing key"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (n != JOptionPane.OK_OPTION)
             return null;
 
 
-        String algo = (String)algoBox.getSelectedItem();
+        String algo = (String) algoBox.getSelectedItem();
 
         KeyPairGenerator Kpg = KeyPairGenerator.getInstance(algo, "BC");
 
@@ -819,7 +813,7 @@ public class TrustGPG {
             }
         }
         else {*/
-        Kpg.initialize(Integer.parseInt((String)strengthBox.getSelectedItem()));
+        Kpg.initialize(Integer.parseInt((String) strengthBox.getSelectedItem()));
         //
         // this takes a while as the key generator has to generate some DSA params
         // before it generates the key.
@@ -852,7 +846,7 @@ public class TrustGPG {
         PGPContentSignerBuilder signerBuilder = new JcaPGPContentSignerBuilder(pgpKp.getPublicKey().getAlgorithm(), HashAlgorithmTags.SHA1);
         PBESecretKeyEncryptor encryptor = new JcePBESecretKeyEncryptorBuilder(encAlgorithm).setProvider(provider).
                 setSecureRandom(new SecureRandom()).build(password);
-        
+
         PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(PGPSignature.POSITIVE_CERTIFICATION, pgpKp, userId.getText(),
                 checksumCalculator, subPck, null, signerBuilder, encryptor);
 

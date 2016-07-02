@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -28,14 +29,13 @@ public class KeySignaturesDialog extends JPanel {
     /** the label in the title bar which shows whether the toggle dialog is expanded or collapsed */
     private JLabel lblMinimized;
 
-
     public KeySignaturesDialog(PGPPublicKey key) {
         super(new BorderLayout());
 
         String userid = "Unknown";
         Iterator<?> iter = key.getUserIDs();
         if (iter.hasNext()) {
-            userid = (String)iter.next();
+            userid = (String) iter.next();
         }
 
         isCollapsed = false;
@@ -51,7 +51,7 @@ public class KeySignaturesDialog extends JPanel {
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
         Iterator<?> iter = key.getSignatures();
         while (iter.hasNext()) {
-            PGPSignature sig = (PGPSignature)iter.next();
+            PGPSignature sig = (PGPSignature) iter.next();
             String uid = "0x"+Long.toHexString(sig.getKeyID()).substring(8).toUpperCase();
             p.add(new JLabel(uid));
         }
@@ -66,12 +66,11 @@ public class KeySignaturesDialog extends JPanel {
         if (!isCollapsed) {
             //setContentVisible(false);
             isCollapsed = true;
-            setPreferredSize(new Dimension(0,20));
-            setMaximumSize(new Dimension(Integer.MAX_VALUE,20));
-            setMinimumSize(new Dimension(Integer.MAX_VALUE,20));
+            setPreferredSize(new Dimension(0, 20));
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+            setMinimumSize(new Dimension(Integer.MAX_VALUE, 20));
             lblMinimized.setIcon(ImageProvider.get("misc", "minimized"));
-        }
-        else throw new IllegalStateException();
+        } else throw new IllegalStateException();
     }
 
     /**
@@ -81,11 +80,10 @@ public class KeySignaturesDialog extends JPanel {
         if (isCollapsed) {
             //        setContentVisible(true);
             isCollapsed = false;
-            setPreferredSize(new Dimension(0,200));
+            setPreferredSize(new Dimension(0, 200));
             setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
             lblMinimized.setIcon(ImageProvider.get("misc", "normal"));
-        }
-        else throw new IllegalStateException();
+        } else throw new IllegalStateException();
     }
 
     /**
@@ -94,9 +92,9 @@ public class KeySignaturesDialog extends JPanel {
      * @param visible true, if the components should be visible; false otherwise
      */
     protected void setContentVisible(boolean visible) {
-        Component comps[] = getComponents();
-        for(int i=0; i<comps.length; i++) {
-            if(comps[i] != titleBar) {
+        Component[] comps = getComponents();
+        for (int i = 0; i < comps.length; i++) {
+            if (comps[i] != titleBar) {
                 comps[i].setVisible(visible);
             }
         }
@@ -104,10 +102,9 @@ public class KeySignaturesDialog extends JPanel {
 
     /**
      * The title bar displayed in docked mode
-     *
      */
     protected class TitleBar extends JPanel {
-        final private JLabel lblTitle;
+        private final JLabel lblTitle;
 
         public TitleBar(String toggleDialogName) {
             setLayout(new GridBagLayout());
@@ -129,7 +126,7 @@ public class KeySignaturesDialog extends JPanel {
                             }
                         }
                     }
-            );
+           );
 
             setToolTipText(tr("Click to minimize/maximize the panel content"));
             setTitle(toggleDialogName);

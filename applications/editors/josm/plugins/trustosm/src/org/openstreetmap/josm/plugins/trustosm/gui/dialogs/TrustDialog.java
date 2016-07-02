@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -65,15 +66,12 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class TrustDialog extends ToggleDialog implements SelectionChangedListener, MapViewPaintable {
 
-    public final static Color BGCOLOR_NO_SIG = new Color(234, 234, 234);
-    //    public final static Color BGCOLOR_VALID_SIG = new Color(235,255,177);
-    public final static Color BGCOLOR_VALID_SIG = new Color(74,245,106);
-    public final static Color BGCOLOR_BROKEN_SIG = new Color(255, 197, 197);
-    public final static Color BGCOLOR_REMOVED_ITEM = new Color(255, 100, 100);
-    public final static Color BGCOLOR_UPDATED_ITEM = new Color(249,221,95);
-
-    /** Use a TrustGPGPreparer to sign or validate signatures */
-    //private final TrustGPGPreparer gpg;
+    public static final Color BGCOLOR_NO_SIG = new Color(234, 234, 234);
+    //    public static final Color BGCOLOR_VALID_SIG = new Color(235, 255,177);
+    public static final Color BGCOLOR_VALID_SIG = new Color(74, 245, 106);
+    public static final Color BGCOLOR_BROKEN_SIG = new Color(255, 197, 197);
+    public static final Color BGCOLOR_REMOVED_ITEM = new Color(255, 100, 100);
+    public static final Color BGCOLOR_UPDATED_ITEM = new Color(249, 221, 95);
 
     /** The check signatures button */
     private final SideButton checkButton;
@@ -102,6 +100,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         @Override public boolean isCellEditable(int row, int column) {
             return false;
         }
+
         @Override public Class<?> getColumnClass(int columnIndex) {
             return String.class;
         }
@@ -114,10 +113,10 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
             Byte stat = rowStatus.get(getModel().getValueAt(row, 0));
             if (!isRowSelected(row))
                 switch (stat.byteValue()) {
-                case -2: c.setBackground( BGCOLOR_REMOVED_ITEM ); break;
-                case -1: c.setBackground( BGCOLOR_BROKEN_SIG ); break;
-                case 1: c.setBackground( BGCOLOR_VALID_SIG ); break;
-                default: c.setBackground( BGCOLOR_NO_SIG ); break;
+                case -2: c.setBackground(BGCOLOR_REMOVED_ITEM); break;
+                case -1: c.setBackground(BGCOLOR_BROKEN_SIG); break;
+                case 1: c.setBackground(BGCOLOR_VALID_SIG); break;
+                default: c.setBackground(BGCOLOR_NO_SIG); break;
                 }
             return c;
         }
@@ -141,10 +140,10 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
             Byte stat = rowStatus.get(getModel().getValueAt(row, 0));
             if (!isRowSelected(row))
                 switch (stat.byteValue()) {
-                case -2: c.setBackground( BGCOLOR_REMOVED_ITEM ); break;
-                case -1: c.setBackground( BGCOLOR_BROKEN_SIG ); break;
-                case 1: c.setBackground( BGCOLOR_VALID_SIG ); break;
-                default: c.setBackground( BGCOLOR_NO_SIG ); break;
+                case -2: c.setBackground( BGCOLOR_REMOVED_ITEM); break;
+                case -1: c.setBackground( BGCOLOR_BROKEN_SIG); break;
+                case 1: c.setBackground( BGCOLOR_VALID_SIG); break;
+                default: c.setBackground( BGCOLOR_NO_SIG); break;
                 }
             return c;
         }
@@ -161,11 +160,11 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         Main.map.mapView.addTemporaryLayer(this);
 
         // setting up the properties table
-        propertyData.setColumnIdentifiers(new String[]{tr("Key"),tr("Value")});
+        propertyData.setColumnIdentifiers(new String[]{tr("Key"), tr("Value")});
 
         // copy and paste from org.openstreetmap.josm.gui.dialogs.properties.PropertiesDialog
 
-        propertyTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer(){
+        propertyTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             /**
              *
              */
@@ -182,70 +181,65 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                     } else if (value instanceof Map<?, ?>) {
                         Map<?, ?> v = (Map<?, ?>) value;
                         if (v.size() != 1) {
-                            str=tr("<different>");
+                            str = tr("<different>");
                             c.setFont(c.getFont().deriveFont(Font.ITALIC));
                         } else {
                             final Map.Entry<?, ?> entry = v.entrySet().iterator().next();
                             str = (String) entry.getKey();
                         }
                     }
-                    ((JLabel)c).setText(str);
+                    ((JLabel) c).setText(str);
                 }
                 return c;
             }
         });
 
-        geomTree = new JTree( createTree() );
+        geomTree = new JTree(createTree());
 
-        geomTree.setBackground( BGCOLOR_NO_SIG );
+        geomTree.setBackground(BGCOLOR_NO_SIG);
         geomTree.setRootVisible(false);
-        geomTree.setCellRenderer(new DefaultTreeCellRenderer(){
-
+        geomTree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value,
-                    boolean selected, boolean expanded, boolean leaf, int row,
-                    boolean hasFocus)
-            {
+                    boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 if (node.isRoot()) return this;
-                setBackgroundNonSelectionColor( BGCOLOR_NO_SIG );
+                setBackgroundNonSelectionColor(BGCOLOR_NO_SIG);
                 Object o = node.getUserObject();
-                if (o instanceof OsmPrimitive){
+                if (o instanceof OsmPrimitive) {
                     OsmPrimitive osm = (OsmPrimitive) o;
                     setIcon(ImageProvider.get(OsmPrimitiveType.from(osm)));
                     setText(osm.getDisplayName(DefaultNameFormatter.getInstance()));
-
                     if (osm instanceof Node) {
                         TrustSignatures sigs;
                         String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-                        if (TrustOSMplugin.signedItems.containsKey(id) && (sigs = ((TrustNode)TrustOSMplugin.signedItems.get(id)).getNodeSigs()) != null) {
+                        if (TrustOSMplugin.signedItems.containsKey(id)
+                                && (sigs = ((TrustNode) TrustOSMplugin.signedItems.get(id)).getNodeSigs()) != null) {
                             byte stat = sigs.getStatus();
                             switch (stat) {
-                            case -2: setBackgroundNonSelectionColor( BGCOLOR_REMOVED_ITEM ); break;
-                            case -1: setBackgroundNonSelectionColor( BGCOLOR_BROKEN_SIG ); break;
-                            case 1: setBackgroundNonSelectionColor( BGCOLOR_VALID_SIG ); break;
-                            default: setBackgroundNonSelectionColor( BGCOLOR_NO_SIG ); break;
+                            case -2: setBackgroundNonSelectionColor(BGCOLOR_REMOVED_ITEM); break;
+                            case -1: setBackgroundNonSelectionColor(BGCOLOR_BROKEN_SIG); break;
+                            case 1: setBackgroundNonSelectionColor(BGCOLOR_VALID_SIG); break;
+                            default: setBackgroundNonSelectionColor(BGCOLOR_NO_SIG); break;
                             }
                         }
-                    } else if (osm instanceof Way) {
-                        //setBackgroundNonSelectionColor( BGCOLOR_NO_SIG );
                     }
-
-                } else if (o instanceof WaySegment){
+                } else if (o instanceof WaySegment) {
                     WaySegment seg = (WaySegment) o;
                     setIcon(ImageProvider.get("mapmode/addsegment"));
-                    setText(seg.getFirstNode().getDisplayName(DefaultNameFormatter.getInstance()) + " ----- " + seg.getSecondNode().getDisplayName(DefaultNameFormatter.getInstance()));
+                    setText(seg.getFirstNode().getDisplayName(DefaultNameFormatter.getInstance())
+                            + " ----- " +
+                            seg.getSecondNode().getDisplayName(DefaultNameFormatter.getInstance()));
                     TrustSignatures sigs;
                     String id = TrustOsmPrimitive.createUniqueObjectIdentifier(seg.way);
-                    if (TrustOSMplugin.signedItems.containsKey(id) && (sigs = ((TrustWay)TrustOSMplugin.signedItems.get(id)).getSigsOnSegment(seg)) != null) {
-                        byte stat = sigs.getStatus();
-                        switch (stat) {
-                        case -2: setBackgroundNonSelectionColor( BGCOLOR_REMOVED_ITEM ); break;
-                        case -1: setBackgroundNonSelectionColor( BGCOLOR_BROKEN_SIG ); break;
-                        case 1: setBackgroundNonSelectionColor( BGCOLOR_VALID_SIG ); break;
-                        default: setBackgroundNonSelectionColor( BGCOLOR_NO_SIG ); break;
+                    if (TrustOSMplugin.signedItems.containsKey(id)
+                            && (sigs = ((TrustWay) TrustOSMplugin.signedItems.get(id)).getSigsOnSegment(seg)) != null) {
+                        switch (sigs.getStatus()) {
+                        case -2: setBackgroundNonSelectionColor(BGCOLOR_REMOVED_ITEM); break;
+                        case -1: setBackgroundNonSelectionColor(BGCOLOR_BROKEN_SIG); break;
+                        case 1: setBackgroundNonSelectionColor(BGCOLOR_VALID_SIG); break;
+                        default: setBackgroundNonSelectionColor(BGCOLOR_NO_SIG); break;
                         }
                     }
                 }
@@ -262,7 +256,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                 }
                 selectedPrimitives.clear();
                 selectedSegments.clear();
-                if (geomTree.getSelectionPaths()!=null)
+                if (geomTree.getSelectionPaths() != null)
                     for (TreePath tp : geomTree.getSelectionPaths()) {
                         Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
                         if (o instanceof WaySegment) {
@@ -277,12 +271,11 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
             }
         });
 
-        propertyTable.addFocusListener(new FocusListener(){
+        propertyTable.addFocusListener(new FocusListener() {
 
             @Override
             public void focusGained(FocusEvent fe) {
                 geomTree.clearSelection();
-
             }
 
             @Override
@@ -291,7 +284,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
             }
         });
 
-        geomTree.addFocusListener(new FocusListener(){
+        geomTree.addFocusListener(new FocusListener() {
 
             @Override
             public void focusGained(FocusEvent fe) {
@@ -317,14 +310,14 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         showButton = new SideButton(new ShowAction());
 
         createLayout(dataPanel, true, Arrays.asList(new SideButton[] {
-            checkButton, signButton, showButton
+                checkButton, signButton, showButton
         }));
         DataSet.addSelectionListener(this);
     }
 
     private class CheckAction extends JosmAction {
 
-        public CheckAction() {
+        CheckAction() {
             super(tr("Check"), "checksignatures", tr("Check all available signatures for selected object."), null, false);
         }
 
@@ -335,7 +328,6 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                     String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
                     if (TrustOSMplugin.signedItems.containsKey(id))
                         TrustAnalyzer.checkEverything(TrustOSMplugin.signedItems.get(id));
-                    //checkedItems.put(osm, TrustOSMplugin.gpg.check(checkedItems.containsKey(osm)? checkedItems.get(osm) : new TrustOSMItem(osm)));
                 }
             }
             updateTable();
@@ -345,7 +337,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
     private class SignAction extends JosmAction {
 
-        public SignAction() {
+        SignAction() {
             super(tr("Sign"), "sign", tr("Digital sign selected Tags, if you believe they are correct."), null, false);
         }
 
@@ -353,18 +345,19 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         public void actionPerformed(ActionEvent e) {
             if (osmData != null) {
                 for (int i : propertyTable.getSelectedRows()) {
-                    String key = (String)propertyTable.getValueAt(i, 0);
+                    String key = (String) propertyTable.getValueAt(i, 0);
                     for (OsmPrimitive osm : osmData) {
                         if (osm.keySet().contains(key)) {
                             String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-                            TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+                            TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id) ?
+                                    TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
                             if (TrustOSMplugin.gpg.signTag(trust, key))
                                 TrustOSMplugin.signedItems.put(id, trust);
                         }
                     }
                 }
             }
-            if (geomTree.getSelectionPaths()!=null)
+            if (geomTree.getSelectionPaths() != null)
                 for (TreePath tp : geomTree.getSelectionPaths()) {
                     Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
                     if (o instanceof OsmPrimitive) {
@@ -372,10 +365,10 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                         String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
                         if (osm instanceof Node) {
                             Node osmNode = ((Node) osm);
-                            TrustNode trust = TrustOSMplugin.signedItems.containsKey(id)? (TrustNode) TrustOSMplugin.signedItems.get(id) : new TrustNode(osmNode);
+                            TrustNode trust = TrustOSMplugin.signedItems.containsKey(id) ?
+                                    (TrustNode) TrustOSMplugin.signedItems.get(id) : new TrustNode(osmNode);
                             trust.storeNodeSig(TrustOSMplugin.gpg.signNode(osmNode));
                             TrustOSMplugin.signedItems.put(id, trust);
-
 
                             /*                        TreePath parentPath = tp.getParentPath();
                             if (geomTree.isPathSelected(parentPath)) return;
@@ -385,14 +378,17 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                                 osm = (OsmPrimitive) ((DefaultMutableTreeNode) parentPath.getLastPathComponent()).getUserObject();
                                 id = String.valueOf(osm.getUniqueId());
                             }
-                            TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
+                            TrustOsmPrimitive trust = TrustOSMplugin.signedItems.containsKey(id) ?
+                                TrustOSMplugin.signedItems.get(id) : TrustOsmPrimitive.createTrustOsmPrimitive(osm);
                             trust.storeNodeSig(osmNode, TrustOSMplugin.gpg.signNode(osm,osmNode));
                             TrustOSMplugin.signedItems.put(id, trust);
                              */
                         } else if (osm instanceof Way) {
-                            TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signWay(TrustOSMplugin.signedItems.containsKey(id)? (TrustWay)TrustOSMplugin.signedItems.get(id) : new TrustWay(osm)));
+                            TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signWay(TrustOSMplugin.signedItems.containsKey(id) ?
+                                    (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(osm)));
                             /*Way osmWay = ((Way) osm);
-                            TrustWay trust = TrustOSMplugin.signedItems.containsKey(id)? (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(osmWay);
+                            TrustWay trust = TrustOSMplugin.signedItems.containsKey(id) ?
+                                (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(osmWay);
                             trust.storeSegmentSig(TrustOSMplugin.gpg.signWay(osmWay));
                             TrustOSMplugin.signedItems.put(id, trust);
                              */
@@ -406,8 +402,9 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                         nodes.add(seg.getSecondNode());
                         Way w = seg.way;
                         String id = TrustOsmPrimitive.createUniqueObjectIdentifier(w);
-                        TrustWay trust = TrustOSMplugin.signedItems.containsKey(id)? (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(w);
-                        trust.storeSegmentSig(nodes,TrustOSMplugin.gpg.signSegment(trust,nodes));
+                        TrustWay trust = TrustOSMplugin.signedItems.containsKey(id) ?
+                                (TrustWay) TrustOSMplugin.signedItems.get(id) : new TrustWay(w);
+                        trust.storeSegmentSig(nodes, TrustOSMplugin.gpg.signSegment(trust, nodes));
                         TrustOSMplugin.signedItems.put(id, trust);
                     }
                 }
@@ -418,7 +415,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
     private class ShowAction extends JosmAction {
 
-        public ShowAction() {
+        ShowAction() {
             super(tr("Show"), "showsig", tr("Show all available signatures for selected attribute."), null, false);
         }
 
@@ -426,7 +423,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         public void actionPerformed(ActionEvent e) {
             if (osmData != null) {
                 for (int i : propertyTable.getSelectedRows()) {
-                    String key = (String)propertyTable.getValueAt(i, 0);
+                    String key = (String) propertyTable.getValueAt(i, 0);
                     for (OsmPrimitive osm : osmData) {
                         String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
                         if (osm.keySet().contains(key) && TrustOSMplugin.signedItems.containsKey(id)) {
@@ -435,7 +432,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                     }
                 }
             }
-            if (geomTree.getSelectionPaths()!=null) {
+            if (geomTree.getSelectionPaths() != null) {
                 for (TreePath tp : geomTree.getSelectionPaths()) {
                     Object o = ((DefaultMutableTreeNode) tp.getLastPathComponent()).getUserObject();
                     if (o instanceof OsmPrimitive) {
@@ -445,9 +442,10 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                             if (TrustOSMplugin.signedItems.containsKey(id)) {
                                 TrustSignaturesDialog.showSignaturesDialog((TrustNode) TrustOSMplugin.signedItems.get(id));
                             }
-                        } else if (osm instanceof Way) {
-                            //TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signGeometry(TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : new TrustOSMItem(osm)));
-                        }
+                        } /*else if (osm instanceof Way) {
+                            TrustOSMplugin.signedItems.put(id, TrustOSMplugin.gpg.signGeometry(
+                                TrustOSMplugin.signedItems.containsKey(id)? TrustOSMplugin.signedItems.get(id) : new TrustOSMItem(osm)));
+                        }*/
                     } else if (o instanceof WaySegment) {
                         WaySegment seg = (WaySegment) o;
                         String id = TrustOsmPrimitive.createUniqueObjectIdentifier(seg.way);
@@ -455,7 +453,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                             List<Node> nodes = new ArrayList<>();
                             nodes.add(seg.getFirstNode());
                             nodes.add(seg.getSecondNode());
-                            TrustSignaturesDialog.showSignaturesDialog((TrustWay) TrustOSMplugin.signedItems.get(id),nodes);
+                            TrustSignaturesDialog.showSignaturesDialog((TrustWay) TrustOSMplugin.signedItems.get(id), nodes);
                         }
                     }
                 }
@@ -467,11 +465,12 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
     public void showSignaturesDialog(TrustOSMItem trust, String key) {
         TrustSignatures sigs;
         if ((sigs = trust.getSigsOnKey(key)) == null) {
-            JOptionPane.showMessageDialog(null,tr("Sorry, there are no Signatures for the selected Attribute."), tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, tr("Sorry, there are no Signatures for the selected Attribute."),
+                tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
         } else {
             JPanel p = new JPanel();
             p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-            Dimension d = new Dimension(0,20);
+            Dimension d = new Dimension(0, 20);
             JLabel head = new JLabel(tr("Selected key value pair was:\n{0}={1}",key,trust.getOsmItem().get(key)));
             head.setAlignmentX(LEFT_ALIGNMENT);
             p.add(head);
@@ -482,7 +481,8 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                 sigtext.setEditable(false);
                 sigtext.setAlignmentX(LEFT_ALIGNMENT);
                 p.add(sigtext);
-                JLabel siginfo = new JLabel(tr("Signature created at {0} by User {1}",formatter.format(s.getCreationTime()),s.getHashedSubPackets().getSignerUserID()));
+                JLabel siginfo = new JLabel(tr("Signature created at {0} by User {1}", formatter.format(s.getCreationTime()),
+                    s.getHashedSubPackets().getSignerUserID()));
                 siginfo.setAlignmentX(LEFT_ALIGNMENT);
                 p.add(siginfo);
                 p.add(Box.createRigidArea(d));
@@ -490,7 +490,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
 
             JScrollPane scroller = new JScrollPane(p);
             JPanel content = new JPanel();
-            content.setMaximumSize(new Dimension(600,500));
+            content.setMaximumSize(new Dimension(600, 500));
             content.add(scroller);
             JOptionPane.showMessageDialog(Main.parent,content, tr("Clearsigned Signature"), JOptionPane.PLAIN_MESSAGE);
         }
@@ -499,23 +499,23 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
     public static List<WaySegment> generateSegmentListFromWay(Way w) {
         List<WaySegment> segList = new ArrayList<>();
         for (int i = 0; i < w.getNodesCount()-1; i++) {
-            segList.add(new WaySegment(w,i));
+            segList.add(new WaySegment(w, i));
         }
         return segList;
     }
 
-    private DefaultTreeModel createTree(){
+    private DefaultTreeModel createTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
         DefaultMutableTreeNode wayNode;
-        if (osmData!=null)
+        if (osmData != null)
             for (OsmPrimitive osm : osmData) {
                 //String id = TrustOsmPrimitive.createUniqueObjectIdentifier(osm);
-                if(osm instanceof Node) {
+                if (osm instanceof Node) {
                     root.add(new DefaultMutableTreeNode(osm));
-                } else if(osm instanceof Way) {
+                } else if (osm instanceof Way) {
                     wayNode = new DefaultMutableTreeNode(osm);
-                    List<WaySegment> presentSegments = TrustDialog.generateSegmentListFromWay(((Way)osm));
-                    for (WaySegment seg : presentSegments ) {
+                    List<WaySegment> presentSegments = TrustDialog.generateSegmentListFromWay(((Way) osm));
+                    for (WaySegment seg : presentSegments) {
                         wayNode.add(new DefaultMutableTreeNode(seg));
                     }
 
@@ -541,7 +541,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                     }
                      */
                     root.add(wayNode);
-                } else if(osm instanceof Relation) {
+                } else if (osm instanceof Relation) {
 
                 }
             }
@@ -574,7 +574,7 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                     removedKeys.removeAll(tags.keySet());
                     for (String removedKey: removedKeys) {
                         TrustSignatures sigs = signedTags.get(removedKey);
-                        sigs.setStatus( TrustSignatures.ITEM_REMOVED );
+                        sigs.setStatus( TrustSignatures.ITEM_REMOVED);
                         String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(sigs.getOnePlainText());
                         tags.put(kv[0],kv[1]);
                     }
@@ -584,37 +584,36 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
                     sigsAvailable = false;
                 }
 
-                //        trust = TrustOSMplugin.signedItems.containsKey(osm) ? TrustOSMplugin.signedItems.get(osm) : new TrustOSMItem(osm);
-
                 for (String key: osm.keySet()) {
                     String value = osm.get(key);
-                    //keyCount.put(key, keyCount.containsKey(key) ? keyCount.get(key) + 1 : 1);
 
-                    byte status = sigsAvailable && trust.getTagSigs().containsKey(key) ? trust.getTagSigs().get(key).getStatus() : TrustSignatures.SIG_UNKNOWN ;
-                    Byte oldstatus = rowStatus.containsKey(key)? rowStatus.get(key) : new Byte(TrustSignatures.SIG_VALID);
+                    byte status = sigsAvailable && trust.getTagSigs().containsKey(key) ?
+                            trust.getTagSigs().get(key).getStatus() : TrustSignatures.SIG_UNKNOWN;
+                    Byte oldstatus = rowStatus.containsKey(key) ? rowStatus.get(key) : new Byte(TrustSignatures.SIG_VALID);
                     Byte sigstatus = new Byte(status);
                     Byte newstatus;
                     if (sigstatus.equals(new Byte(TrustSignatures.SIG_BROKEN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_BROKEN))) {
                         newstatus = new Byte(TrustSignatures.SIG_BROKEN);
-                    } else if (sigstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN)) || oldstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))) {
+                    } else if (sigstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))
+                            || oldstatus.equals(new Byte(TrustSignatures.SIG_UNKNOWN))) {
                         newstatus = new Byte(TrustSignatures.SIG_UNKNOWN);
                     } else newstatus = new Byte(TrustSignatures.SIG_VALID);
 
-                    rowStatus.put(key, newstatus );
+                    rowStatus.put(key, newstatus);
                     if (valueCount.containsKey(key)) {
                         Map<String, Integer> v = valueCount.get(key);
-                        v.put(value, v.containsKey(value)? v.get(value) + 1 : 1 );
+                        v.put(value, v.containsKey(value) ? v.get(value) + 1 : 1);
                     } else {
-                        TreeMap<String,Integer> v = new TreeMap<>();
+                        TreeMap<String, Integer> v = new TreeMap<>();
                         v.put(value, 1);
                         valueCount.put(key, v);
                     }
                 }
             }
             for (Entry<String, Map<String, Integer>> e : valueCount.entrySet()) {
-                int count=0;
+                int count = 0;
                 for (Entry<String, Integer> e1: e.getValue().entrySet()) {
-                    count+=e1.getValue();
+                    count += e1.getValue();
                 }
                 if (count < osmData.size()) {
                     e.getValue().put("", osmData.size()-count);
@@ -638,7 +637,6 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
             return;
         geomTree.setModel(createTree());
         updateTable();
-        //        signButton.setEnabled(newSelection.size() == 1);
     }
 
     @Override
@@ -656,10 +654,11 @@ public class TrustDialog extends ToggleDialog implements SelectionChangedListene
         // highlight all selected WaySegments
         for (WaySegment seg : selectedSegments) {
             GeneralPath b = new GeneralPath();
-            Point p1=mv.getPoint(seg.getFirstNode());
-            Point p2=mv.getPoint(seg.getSecondNode());
+            Point p1 = mv.getPoint(seg.getFirstNode());
+            Point p2 = mv.getPoint(seg.getSecondNode());
 
-            b.moveTo(p1.x,p1.y); b.lineTo(p2.x, p2.y);
+            b.moveTo(p1.x, p1.y);
+            b.lineTo(p2.x, p2.y);
 
             g2.draw(b);
         }

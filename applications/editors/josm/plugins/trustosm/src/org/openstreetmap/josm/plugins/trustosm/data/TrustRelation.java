@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.data;
 
 import java.util.HashMap;
@@ -13,19 +14,18 @@ import org.openstreetmap.josm.data.osm.RelationMember;
 
 public class TrustRelation extends TrustOsmPrimitive {
 
-
     public static RelationMember generateRelationMemberFromSigtext(String sigtext) {
         Pattern p = Pattern.compile("^RelID=(\\w*)\n(\\d*),(.*)");
         Matcher m = p.matcher(sigtext);
         if (m.matches()) {
             OsmPrimitive osm = createOsmPrimitiveFromUniqueObjectIdentifier(m.group(2));
-            return new RelationMember(m.group(3),osm);
+            return new RelationMember(m.group(3), osm);
         }
         return null;
     }
 
     public static String generateRelationMemberSigtext(TrustRelation trust, String memID) {
-        Relation r = (Relation)trust.getOsmPrimitive();
+        Relation r = (Relation) trust.getOsmPrimitive();
         List<RelationMember> members = r.getMembers();
         RelationMember member = null;
         for (RelationMember m : members) {
@@ -48,13 +48,12 @@ public class TrustRelation extends TrustOsmPrimitive {
 
     @Override
     public void setOsmPrimitive(OsmPrimitive osmItem) {
-        if(osmItem instanceof Relation) {
+        if (osmItem instanceof Relation) {
             osm = osmItem;
         } else {
             System.err.println("Error while creating TrustRelation: OsmPrimitive "+osmItem.getUniqueId()+" is not a Relation!");
         }
     }
-
 
     public void storeMemberSig(String memID, PGPSignature sig) {
         if (memberSig.containsKey(memID)) {
@@ -72,5 +71,4 @@ public class TrustRelation extends TrustOsmPrimitive {
     public Map<String, TrustSignatures> getMemberSigs() {
         return memberSig;
     }
-
 }

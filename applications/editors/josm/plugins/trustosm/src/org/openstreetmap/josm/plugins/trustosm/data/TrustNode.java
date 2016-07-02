@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.data;
 
 import java.util.regex.Matcher;
@@ -11,13 +12,12 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 public class TrustNode extends TrustOsmPrimitive {
 
-
     public static Node generateNodeFromSigtext(String sigtext) {
         Pattern p = Pattern.compile("^(\\d*)\\((\\d*\\.?\\d*),(\\d*\\.?\\d*)\\)");
         Matcher m = p.matcher(sigtext);
         if (m.matches()) {
             Node node = new Node(Long.parseLong(m.group(1)));
-            node.setCoor(new LatLon(Double.parseDouble(m.group(2)),Double.parseDouble(m.group(3))));
+            node.setCoor(new LatLon(Double.parseDouble(m.group(2)), Double.parseDouble(m.group(3))));
             return node;
         }
         return null;
@@ -39,7 +39,7 @@ public class TrustNode extends TrustOsmPrimitive {
 
     @Override
     public void setOsmPrimitive(OsmPrimitive osmItem) {
-        if(osmItem instanceof Node) {
+        if (osmItem instanceof Node) {
             osm = osmItem;
         } else {
             System.err.println("Error while creating TrustNode: OsmPrimitive "+osmItem.getUniqueId()+" is not a Node!");
@@ -55,11 +55,10 @@ public class TrustNode extends TrustOsmPrimitive {
     }
 
     public void setNodeRatings(TrustSignatures ratings) {
-        this.ratings =ratings;
+        this.ratings = ratings;
     }
 
     public TrustSignatures getNodeSigs() {
         return ratings;
     }
-
 }

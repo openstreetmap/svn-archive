@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui.dialogs;
 
 import java.awt.GridBagLayout;
@@ -20,36 +21,30 @@ public class JCollapsiblePanel extends JPanel {
     private class HeaderPanel extends JPanel {
         JLabel title;
 
-        public HeaderPanel(String text) {
+        HeaderPanel(String text) {
 
             setLayout(new GridBagLayout());
-            title = new JLabel(text,ImageProvider.get("misc", "minimized"),SwingConstants.LEADING);
-            add(title,GBC.eol());
+            title = new JLabel(text, ImageProvider.get("misc", "minimized"), SwingConstants.LEADING);
+            add(title, GBC.eol());
 
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    expanded = !expanded;
 
-            addMouseListener(
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            expanded = !expanded;
-
-                            if (contentPanel_.isShowing()) {
-                                contentPanel_.setVisible(false);
-                                title.setIcon(ImageProvider.get("misc", "minimized"));
-                            }
-                            else {
-                                contentPanel_.setVisible(true);
-                                title.setIcon(ImageProvider.get("misc", "normal"));
-                            }
-                            validate();
-
-                            headerPanel_.repaint();
-                        }
+                    if (contentPanel_.isShowing()) {
+                        contentPanel_.setVisible(false);
+                        title.setIcon(ImageProvider.get("misc", "minimized"));
+                    } else {
+                        contentPanel_.setVisible(true);
+                        title.setIcon(ImageProvider.get("misc", "normal"));
                     }
-            );
+                    validate();
 
+                    headerPanel_.repaint();
+                }
+            });
         }
-
     }
 
     public JCollapsiblePanel(String text, JPanel panel) {
@@ -61,5 +56,4 @@ public class JCollapsiblePanel extends JPanel {
         add(contentPanel_, GBC.eol());
         contentPanel_.setVisible(false);
     }
-
 }

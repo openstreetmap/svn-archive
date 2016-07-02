@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.data;
 
 import java.io.ByteArrayOutputStream;
@@ -16,10 +17,10 @@ import org.openstreetmap.josm.Main;
 
 public class TrustSignatures {
 
-    public final static byte SIG_UNKNOWN = 0;
-    public final static byte SIG_VALID = 1;
-    public final static byte SIG_BROKEN = -1;
-    public final static byte ITEM_REMOVED = -2;
+    public static final byte SIG_UNKNOWN = 0;
+    public static final byte SIG_VALID = 1;
+    public static final byte SIG_BROKEN = -1;
+    public static final byte ITEM_REMOVED = -2;
 
     //private final Vector<PGPSignature> signatures = new Vector<PGPSignature>();
     //    private final HashMap<PGPSignature, String> signatureTextMap = new HashMap<PGPSignature, String>();
@@ -124,7 +125,7 @@ public class TrustSignatures {
     }
 
     public String getArmoredFulltextSignatureAll(String plain) {
-        if (textsigs.containsKey(plain)){
+        if (textsigs.containsKey(plain)) {
             List<PGPSignature> l = textsigs.get(plain);
             PGPSignature first = l.get(0);
             if (first != null) {

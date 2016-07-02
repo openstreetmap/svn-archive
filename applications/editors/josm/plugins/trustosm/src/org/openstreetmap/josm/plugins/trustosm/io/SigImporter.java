@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -48,7 +49,7 @@ public class SigImporter extends FileImporter {
             Main.getLayerManager().addLayer(layer);
         }
         //        Set<OsmPrimitive> missingData = new HashSet<OsmPrimitive>();
-        Map<String,TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
+        Map<String, TrustOsmPrimitive> trustitems = SigReader.parseSignatureXML(in, NullProgressMonitor.INSTANCE);
         System.out.println(trustitems.size());
         /*
         int missingCount = missingData.size();
@@ -56,7 +57,9 @@ public class SigImporter extends FileImporter {
         if (missingCount == 0) {
             JOptionPane.showMessageDialog(Main.parent, tr("{0} Signatures loaded. All referenced OSM objects found.",itemCount));
         } else {
-            int n = JOptionPane.showOptionDialog(Main.parent, tr("{0} of {1} OSM objects are referenced but not there.\nDo you want to load them from OSM-Server?",missingCount,itemCount), tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            int n = JOptionPane.showOptionDialog(Main.parent,
+            tr("{0} of {1} OSM objects are referenced but not there.\nDo you want to load them from OSM-Server?",missingCount,itemCount),
+            tr("Load objects from server"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
             if (n == JOptionPane.YES_OPTION) {
                 Main.worker.submit(new DownloadSignedOsmDataTask(missingData, Main.main.getEditLayer()));
@@ -66,6 +69,5 @@ public class SigImporter extends FileImporter {
         TrustOSMplugin.signedItems.putAll(trustitems);
         new GetMissingDataAction().downloadMissing();
         //TrustOSMplugin.signedItems.putAll(TrustStoreHandler.loadSigsFromFile(in));
-
     }
 }

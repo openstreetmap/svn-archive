@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui.dialogs;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -34,18 +35,18 @@ import org.openstreetmap.josm.plugins.trustosm.util.TrustGPG;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.ImageProvider;
 
+public final class TrustSignaturesDialog {
 
-
-public class TrustSignaturesDialog {
-
+    private TrustSignaturesDialog() {
+        // Hide default constructors for utilities classes
+    }
 
     private static String createLabel(String plain, int type) {
         if (type == 0) {
             String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(plain);
-            return tr("Signed key value pair was: {0}={1}", kv[0],kv[1]);
+            return tr("Signed key value pair was: {0}={1}", kv[0], kv[1]);
         } else if (type == 1) {
             Node node = TrustNode.generateNodeFromSigtext(plain);
-            //return tr("Signed node was: {0}", node.getDisplayName(DefaultNameFormatter.getInstance()));
             return "ID:"+node.getUniqueId()+" ("+node.getCoor().toString() + ")";
         } else if (type == 2) {
             List<Node> nodes = TrustWay.generateSegmentFromSigtext(plain);
@@ -56,9 +57,7 @@ public class TrustSignaturesDialog {
 
     private static void showDialog(TrustSignatures sigs, String label, int type) {
         JPanel p = new JPanel(new GridBagLayout());
-        p.add(new JLabel(label),GBC.eol());
-
-        //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd:hh.mm.ss");
+        p.add(new JLabel(label), GBC.eol());
 
         for (String plain : sigs.getAllPlainTexts()) {
             JTextArea sigtext = new JTextArea(sigs.getArmoredFulltextSignatureAll(plain));
@@ -66,15 +65,12 @@ public class TrustSignaturesDialog {
             JPanel textcontent = new JPanel();
             textcontent.add(sigtext);
 
-            p.add(new JCollapsiblePanel(createLabel(plain, type),textcontent),GBC.eol());
+            p.add(new JCollapsiblePanel(createLabel(plain, type), textcontent), GBC.eol());
 
             List<PGPSignature> siglist = sigs.getSignaturesByPlaintext(plain);
             JPanel signerPanel = new JPanel(new GridBagLayout());
-            //signerPanel.add(createSignerTree(siglist));
             KeyTreeTableModel km = new KeyTreeTableModel(siglist);
-            final JXTreeTable t = new JXTreeTable( km );
-            //t.setHorizontalScrollEnabled(true);
-            //t.setRootVisible(false);
+            final JXTreeTable t = new JXTreeTable(km);
             t.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -82,7 +78,7 @@ public class TrustSignaturesDialog {
                         TreePath selPath = t.getPathForLocation(e.getX(), e.getY());
                         if (selPath == null)
                             return;
-                        SignatureTreeNode sn = (SignatureTreeNode)selPath.getLastPathComponent();
+                        SignatureTreeNode sn = (SignatureTreeNode) selPath.getLastPathComponent();
                         PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(sn.getSignature().getKeyID());
                         TrustGPG.showKeyDetails(pub);
                     }
@@ -96,52 +92,43 @@ public class TrustSignaturesDialog {
             t.collapseAll();
             signerPanel.add(new JScrollPane(t));
 
-
-            //            JTreeTable tt = new JTreeTable();
-
-            /*                for (PGPSignature s : siglist) {
-                signerPanel.add(createKeyButton(tr("Signature created at {0} by User {1}",formatter.format(s.getCreationTime()),s.getHashedSubPackets().getSignerUserID()),s.getKeyID()),GBC.eol());
-                //signerPanel.add(new JLabel(tr("Signature created at {0} by User {1}",formatter.format(s.getCreationTime()),s.getHashedSubPackets().getSignerUserID())),GBC.eol());
-            }*/
-
-            p.add(new JCollapsiblePanel(tr("{0} Signatures found.", siglist.size()),signerPanel),GBC.eol().insets(20,0,0,0));
+            p.add(new JCollapsiblePanel(tr("{0} Signatures found.", siglist.size()), signerPanel), GBC.eol().insets(20, 0, 0, 0));
         }
         p.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.BOTH));
         JScrollPane scroller = new JScrollPane(p);
-        //JPanel content = new JPanel();
-        scroller.setPreferredSize(new Dimension(700,500));
-        //content.add(scroller);
-        //JOptionPane.showMessageDialog(Main.parent,scroller, tr("Clearsigned Signature"), JOptionPane.PLAIN_MESSAGE);
+        scroller.setPreferredSize(new Dimension(700, 500));
         String[] buttons = {tr("Ok")};
-        ExtendedDialog info = new ExtendedDialog(Main.parent, tr("Signature Info"),buttons,false);
-        info.setContent(scroller,false);
+        ExtendedDialog info = new ExtendedDialog(Main.parent, tr("Signature Info"), buttons, false);
+        info.setContent(scroller, false);
         info.showDialog();
     }
-
 
     public static void showSignaturesDialog(TrustNode trust) {
         TrustSignatures sigs;
         if ((sigs = trust.getNodeSigs()) == null) {
-            JOptionPane.showMessageDialog(null,tr("Sorry, there are no Signatures for the selected Node."), tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, tr("Sorry, there are no Signatures for the selected Node."),
+                    tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
         } else {
-            String nodename = ((Node)trust.getOsmPrimitive()).getDisplayName(DefaultNameFormatter.getInstance());
-            showDialog(sigs, tr("Selected node was:\n{0}",nodename),1);
+            String nodename = ((Node) trust.getOsmPrimitive()).getDisplayName(DefaultNameFormatter.getInstance());
+            showDialog(sigs, tr("Selected node was:\n{0}", nodename), 1);
         }
     }
 
     public static void showSignaturesDialog(TrustOsmPrimitive trust, String key) {
         TrustSignatures sigs;
         if ((sigs = trust.getSigsOnKey(key)) == null) {
-            JOptionPane.showMessageDialog(null,tr("Sorry, there are no Signatures for the selected Attribute."), tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, tr("Sorry, there are no Signatures for the selected Attribute."),
+                    tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
         } else {
-            showDialog(sigs, tr("Selected key value pair was:\n{0}={1}",key,trust.getOsmPrimitive().get(key)), 0);
+            showDialog(sigs, tr("Selected key value pair was:\n{0}={1}", key, trust.getOsmPrimitive().get(key)), 0);
         }
     }
 
     public static void showSignaturesDialog(TrustWay trust, List<Node> nodes) {
         TrustSignatures sigs;
         if ((sigs = trust.getSigsOnSegment(nodes)) == null) {
-            JOptionPane.showMessageDialog(null,tr("Sorry, there are no Signatures for the selected Segment."), tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, tr("Sorry, there are no Signatures for the selected Segment."),
+                    tr("No Signature found"), JOptionPane.WARNING_MESSAGE);
         } else {
             showDialog(sigs, tr("Selected WaySegment was:"), 2);
         }
@@ -186,7 +173,7 @@ public class TrustSignaturesDialog {
             return sv.getSignerUserID();
 
         PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
-        if (pub != null){
+        if (pub != null) {
             Iterator i = pub.getUserIDs();
             if (i.hasNext())
                 return (String)i.next();
@@ -196,11 +183,11 @@ public class TrustSignaturesDialog {
 
     public static JTree createSignerTree(Collection<PGPSignature> sigs) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        for (PGPSignature s : sigs){
+        for (PGPSignature s : sigs) {
             DefaultMutableTreeNode sn = new DefaultMutableTreeNode(s);
             PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
             Iterator iter = pub.getSignatures();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 PGPSignature ks = (PGPSignature)iter.next();
                 sn.add(new DefaultMutableTreeNode(ks));
             }
@@ -211,7 +198,7 @@ public class TrustSignaturesDialog {
         JTree t = new JTree(new DefaultTreeModel(root));
         t.setRootVisible(false);
         t.setBackground(TrustDialog.BGCOLOR_NO_SIG);
-        t.setCellRenderer(new DefaultTreeCellRenderer(){
+        t.setCellRenderer(new DefaultTreeCellRenderer() {
 
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value,
@@ -228,7 +215,7 @@ public class TrustSignaturesDialog {
                 PGPSignatureSubpacketVector sv = s.getHashedSubPackets();
                 setBackgroundNonSelectionColor(TrustDialog.BGCOLOR_NO_SIG);
                 if (sv.hasSubpacket(SignatureSubpacketTags.NOTATION_DATA)) {
-                    for (NotationData nd : sv.getNotationDataOccurences()){
+                    for (NotationData nd : sv.getNotationDataOccurences()) {
                         System.out.println(nd.getNotationName()+"="+nd.getNotationValue());
                         if (nd.getNotationName().equals("trustosm@openstreetmap.org")) {
                             setBackgroundNonSelectionColor(TrustDialog.BGCOLOR_VALID_SIG);

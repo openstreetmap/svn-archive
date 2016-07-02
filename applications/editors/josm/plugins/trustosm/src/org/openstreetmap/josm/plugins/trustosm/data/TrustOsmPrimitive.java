@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.data;
 
 import java.util.HashMap;
@@ -10,15 +11,15 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
-abstract public class TrustOsmPrimitive {
+public abstract class TrustOsmPrimitive {
 
     public static String createUniqueObjectIdentifier(OsmPrimitive osm) {
         String id = "";
-        if(osm instanceof Node) {
+        if (osm instanceof Node) {
             id = "n";
-        } else if(osm instanceof Way) {
+        } else if (osm instanceof Way) {
             id = "w";
-        } else if(osm instanceof Relation) {
+        } else if (osm instanceof Relation) {
             id = "r";
         }
         id += osm.getUniqueId();
@@ -37,11 +38,11 @@ abstract public class TrustOsmPrimitive {
     }
 
     public static TrustOsmPrimitive createTrustOsmPrimitive(OsmPrimitive osm) {
-        if(osm instanceof Node) {
+        if (osm instanceof Node) {
             return new TrustNode((Node) osm);
-        } else if(osm instanceof Way) {
+        } else if (osm instanceof Way) {
             return new TrustWay(osm);
-        } else if(osm instanceof Relation) {
+        } else if (osm instanceof Relation) {
             return new TrustRelation(osm);
         }
         return null;
@@ -59,7 +60,6 @@ abstract public class TrustOsmPrimitive {
     }
 
     public abstract void setOsmPrimitive(OsmPrimitive osmItem);
-
 
     public static String[] generateTagsFromSigtext(String sigtext) {
         String[] keyValue = sigtext.substring(sigtext.indexOf('\n')+1).split("=");

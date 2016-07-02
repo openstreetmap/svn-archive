@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -22,7 +23,7 @@ import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 import org.openstreetmap.josm.plugins.trustosm.data.TrustOsmPrimitive;
 import org.xml.sax.SAXException;
 
-public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
+public class DownloadSignedOsmDataTask extends PleaseWaitRunnable {
 
     private boolean canceled;
     private Exception lastException;
@@ -40,11 +41,10 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
         this.curLayer = curLayer;
     }
 
-
     @Override
     protected void cancel() {
         canceled = true;
-        synchronized(this) {
+        synchronized (this) {
             if (objectReader != null) {
                 objectReader.cancel();
             }
@@ -67,7 +67,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
                 missing.size(),
                 missing.size(),
                 "Wurst"
-        );
+       );
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
             objectReader.append(missing);
             progressMonitor.indeterminateSubTask(
                     buildDownloadFeedbackMessage()
-            );
+           );
             final DataSet dataSet = objectReader.parseOsm(progressMonitor
                     .createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
             if (dataSet == null)
@@ -99,7 +99,7 @@ public class DownloadSignedOsmDataTask  extends PleaseWaitRunnable {
                             updateReferences(dataSet);
                         }
                     }
-            );
+           );
 
         } catch (Exception e) {
             if (canceled) {

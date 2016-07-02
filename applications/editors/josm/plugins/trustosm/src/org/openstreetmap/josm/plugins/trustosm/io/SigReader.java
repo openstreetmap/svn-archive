@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.io;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -46,10 +47,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SigReader {
 
-    private final Map<String,TrustOsmPrimitive> trustitems = new HashMap<>();
+    private final Map<String, TrustOsmPrimitive> trustitems = new HashMap<>();
     private final Set<OsmPrimitive> missingData = new HashSet<>();
 
-    public Map<String,TrustOsmPrimitive> getTrustItems() {
+    public Map<String, TrustOsmPrimitive> getTrustItems() {
         return trustitems;
     }
 
@@ -74,15 +75,12 @@ public class SigReader {
          */
         private TrustOsmPrimitive trust;
 
-
         /**
          * The current Signatures.
          */
         private TrustSignatures tsigs;
 
-
         private StringBuffer tmpbuf = new StringBuffer();
-
 
         @Override public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
 
@@ -93,7 +91,7 @@ public class SigReader {
                     }
 
                     String osmid = atts.getValue("osmid");
-                    if (osmid == null){
+                    if (osmid == null) {
                         throwException(tr("Missing mandatory attribute ''{0}''.", "osmid"));
                     } else if (!osmid.matches("\\d+")) {
                         throwException(tr("Only digits allowed in osmid: ''{0}''.", osmid));
@@ -130,23 +128,22 @@ public class SigReader {
             if (qName.equals("trustnode") || qName.equals("trustway") || qName.equals("trustrelation")) {
                 trustitems.put(TrustOsmPrimitive.createUniqueObjectIdentifier(trust.getOsmPrimitive()), trust);
             } else if (qName.equals("openpgp")) {
-                // System.out.println(tmpbuf.toString());
                 try {
                     parseOpenPGP(tmpbuf.toString());
                 } catch (IOException e) {
-                    throw new XmlParsingException(tr("Could not parse OpenPGP message."),e).rememberLocation(locator);
+                    throw new XmlParsingException(tr("Could not parse OpenPGP message."), e).rememberLocation(locator);
                 }
             } else if (qName.equals("key")) {
                 String[] kv = TrustOsmPrimitive.generateTagsFromSigtext(tsigs.getOnePlainText());
                 trust.setTagRatings(kv[0], tsigs);
             } else if (qName.equals("node")) {
-                ((TrustNode)trust).setNodeRatings(tsigs);
+                ((TrustNode) trust).setNodeRatings(tsigs);
             } else if (qName.equals("segment")) {
                 List<Node> nodes = TrustWay.generateSegmentFromSigtext(tsigs.getOnePlainText());
-                ((TrustWay)trust).setSegmentRatings(nodes,tsigs);
+                ((TrustWay) trust).setSegmentRatings(nodes, tsigs);
             } else if (qName.equals("member")) {
                 RelationMember member = TrustRelation.generateRelationMemberFromSigtext(tsigs.getOnePlainText());
-                ((TrustRelation)trust).setMemberRating(TrustOsmPrimitive.createUniqueObjectIdentifier(member.getMember()), tsigs);
+                ((TrustRelation) trust).setMemberRating(TrustOsmPrimitive.createUniqueObjectIdentifier(member.getMember()), tsigs);
             }
         }
 
@@ -177,15 +174,11 @@ public class SigReader {
             // remove the last \n because it is not part of the plaintext
             plain = plain.substring(0, plain.length()-1);
 
-            PGPSignatureList siglist = (PGPSignatureList)pgpFact.nextObject();
-            for (int i=0; i<siglist.size();i++) {
+            PGPSignatureList siglist = (PGPSignatureList) pgpFact.nextObject();
+            for (int i = 0; i < siglist.size(); i++) {
                 tsigs.addSignature(siglist.get(i), plain);
             }
-
-
         }
-
-
     }
 
     /**
@@ -198,7 +191,8 @@ public class SigReader {
      * @throws IllegalDataException thrown if the an error was found while parsing the data from the source
      * @throws IllegalArgumentException thrown if source is null
      */
-    public static Map<String,TrustOsmPrimitive> parseSignatureXML(InputStream source, ProgressMonitor progressMonitor) throws IllegalDataException {
+    public static Map<String, TrustOsmPrimitive> parseSignatureXML(InputStream source, ProgressMonitor progressMonitor)
+            throws IllegalDataException {
         if (progressMonitor == null) {
             progressMonitor = NullProgressMonitor.INSTANCE;
         }
@@ -215,18 +209,16 @@ public class SigReader {
             progressMonitor.worked(1);
 
             return reader.getTrustItems();
-        } catch(ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {
             throw new IllegalDataException(e.getMessage(), e);
         } catch (SAXParseException e) {
             throw new IllegalDataException(tr("Line {0} column {1}: ", e.getLineNumber(), e.getColumnNumber()) + e.getMessage(), e);
-        } catch(SAXException e) {
+        } catch (SAXException e) {
             throw new IllegalDataException(e.getMessage(), e);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new IllegalDataException(e);
         } finally {
             progressMonitor.finishTask();
         }
     }
-
-
 }

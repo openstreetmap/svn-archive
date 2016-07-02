@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -65,8 +66,8 @@ public class TrustOSMplugin extends Plugin {
             Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","lib"));
             Main.pref.put("trustosm.jarLibsExtracted", extractFiles("trustosm","resources"));
         }*/
-        extractFiles("trustosm","lib");
-        extractFiles("trustosm","resources");
+        extractFiles("trustosm", "lib");
+        extractFiles("trustosm", "resources");
 
         refreshMenu();
         checkForUnrestrictedPolicyFiles();
@@ -83,17 +84,17 @@ public class TrustOSMplugin extends Plugin {
     }
 
     public static void checkForUnrestrictedPolicyFiles() {
-        byte[] data = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
+        byte[] data = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
 
         // create a cipher and attempt to encrypt the data block with our key
-        try{
+        try {
             Cipher c = Cipher.getInstance("AES");
             // create a 192 bit secret key from raw bytes
 
-            SecretKey key192 = new SecretKeySpec(new byte[] { 0x00, 0x01, 0x02,
-                    0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
-                    0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16,
-                    0x17 }, "AES");
+            SecretKey key192 = new SecretKeySpec(new byte[] {0x00, 0x01, 0x02,
+                   0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
+                   0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16,
+                   0x17 }, "AES");
 
             // now try encrypting with the larger key
 
@@ -102,7 +103,6 @@ public class TrustOSMplugin extends Plugin {
         } catch (InvalidKeyException e) {
             Main.warn("It seems that the Unrestricted Policy Files are not available in this JVM. "+
                       "So high level crypto is not allowed. Problems may occur.");
-            //extractFiles("trustosm","jce");
             installUnrestrictedPolicyFiles();
         } catch (BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | NoSuchAlgorithmException e) {
             Main.error(e);
@@ -259,18 +259,16 @@ public class TrustOSMplugin extends Plugin {
             gpgJMenu = menu.addMenu("GPG", tr("GPG"), KeyEvent.VK_B, menu.getDefaultMenuPos(), ht("/Plugin/TrustOSM"));
             gpgJMenu.add(new JMenuItem(new ExportSigsAction()));
         }
-
     }
 
     public static void setSettings() {
-        Map<String,String> prefs = Main.pref.getAllPrefix("trustosm.");
+        Map<String, String> prefs = Main.pref.getAllPrefix("trustosm.");
 
         // if setting isn't present, we set a default
         // This makes sense for example when we start the plugin for the first time
         if (!prefs.containsKey("trustosm.gpg")) Main.pref.put("trustosm.gpg", "gpg");
         if (!prefs.containsKey("trustosm.gpg.separateHomedir")) Main.pref.put("trustosm.gpg.separateHomedir", true);
     }
-
 
     @Override
     public PreferenceSetting getPreferenceSetting() {
@@ -279,7 +277,7 @@ public class TrustOSMplugin extends Plugin {
 
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        if (oldFrame==null && newFrame!=null) {
+        if (oldFrame == null && newFrame != null) {
             trustDialog = new TrustDialog();
             newFrame.addToggleDialog(trustDialog);
         }

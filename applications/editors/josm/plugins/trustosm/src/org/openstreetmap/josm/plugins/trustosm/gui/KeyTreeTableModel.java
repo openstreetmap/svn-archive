@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -20,23 +21,23 @@ import org.openstreetmap.josm.plugins.trustosm.TrustOSMplugin;
 public class KeyTreeTableModel extends AbstractTreeTableModel {
 
     public static String convPGPSignatureToString(PGPSignature s) {
-        if (s==null) return null;
+        if (s == null) return null;
         PGPSignatureSubpacketVector sv = s.getHashedSubPackets();
         if (sv != null && sv.hasSubpacket(SignatureSubpacketTags.SIGNER_USER_ID))
             return sv.getSignerUserID();
 
         PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
-        if (pub != null){
+        if (pub != null) {
             Iterator<?> i = pub.getUserIDs();
             if (i.hasNext())
-                return (String)i.next();
+                return (String) i.next();
 
         }
         return tr("unknown");
     }
 
     private final SignatureTreeNode root;
-    private final String[] allTitle = {tr("UID"),tr("KeyID"),tr("OSM-Info"),tr("Signed")};
+    private final String[] allTitle = {tr("UID"), tr("KeyID"), tr("OSM-Info"), tr("Signed")};
     private final List<String> columns = new ArrayList<>(Arrays.asList(allTitle));
 
     public KeyTreeTableModel(Collection<PGPSignature> sigs) {
@@ -46,8 +47,8 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
                 SignatureTreeNode sn = new SignatureTreeNode(s);
                 PGPPublicKey pub = TrustOSMplugin.gpg.getPublicKeyFromRing(s.getKeyID());
                 Iterator<?> iter = pub.getSignatures();
-                while (iter.hasNext()){
-                    PGPSignature ks = (PGPSignature)iter.next();
+                while (iter.hasNext()) {
+                    PGPSignature ks = (PGPSignature) iter.next();
                     sn.getChildren().add(new SignatureTreeNode(ks));
                 }
                 root.getChildren().add(sn);
@@ -61,19 +62,18 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
     }
 
     @Override
-    public String getColumnName( int column ) {
+    public String getColumnName(int column) {
         String title = columns.get(column);
         if (title != null)
             return title;
         return tr("Unknown");
     }
 
-
     @Override
     public Object getValueAt(Object node, int column) {
-        SignatureTreeNode signode = ( SignatureTreeNode )node;
+        SignatureTreeNode signode = (SignatureTreeNode) node;
         String title = columns.get(column);
-        if (title != null){
+        if (title != null) {
             if (title.equals(allTitle[0]))
                 return signode.getUID();
             if (title.equals(allTitle[1]))
@@ -89,21 +89,21 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
 
     @Override
     public Object getChild(Object node, int index) {
-        SignatureTreeNode signode = ( SignatureTreeNode )node;
-        return signode.getChildren().get( index );
+        SignatureTreeNode signode = (SignatureTreeNode) node;
+        return signode.getChildren().get(index);
     }
 
     @Override
     public int getChildCount(Object node) {
-        SignatureTreeNode signode = ( SignatureTreeNode )node;
+        SignatureTreeNode signode = (SignatureTreeNode) node;
         return signode.getChildren().size();
     }
 
     @Override
-    public int getIndexOfChild( Object parent, Object child ) {
-        SignatureTreeNode signode = ( SignatureTreeNode )parent;
-        for( int i=0; i>signode.getChildren().size(); i++ ) {
-            if( signode.getChildren().get( i ) == child )
+    public int getIndexOfChild(Object parent, Object child) {
+        SignatureTreeNode signode = (SignatureTreeNode) parent;
+        for (int i = 0; i > signode.getChildren().size(); i++) {
+            if (signode.getChildren().get(i) == child)
                 return i;
         }
         return 0;
@@ -113,7 +113,6 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
     public Object getRoot() {
         return root;
     }
-
 
     public class SignatureTreeNode {
         private PGPSignature s;
@@ -126,30 +125,34 @@ public class KeyTreeTableModel extends AbstractTreeTableModel {
             this.s = s;
         }
 
-        public PGPSignature getSignature(){
+        public PGPSignature getSignature() {
             return s;
         }
+
         public String getUID() {
             return convPGPSignatureToString(s);
         }
+
         public String getKeyID() {
             return "0x"+Long.toHexString(s.getKeyID()).substring(8).toUpperCase();
         }
+
         public String getOsmCertificate() {
             String cert = "";
-            for (NotationData nd : s.getHashedSubPackets().getNotationDataOccurrences()){
+            for (NotationData nd : s.getHashedSubPackets().getNotationDataOccurrences()) {
                 if (nd.getNotationName().equals("trustosm@openstreetmap.org")) {
                     cert += nd.getNotationValue();
                 }
             }
             return cert;
         }
+
         public String getSignatureDate() {
             return formatter.format(s.getCreationTime());
         }
+
         public List<SignatureTreeNode> getChildren() {
             return children;
         }
-
     }
 }

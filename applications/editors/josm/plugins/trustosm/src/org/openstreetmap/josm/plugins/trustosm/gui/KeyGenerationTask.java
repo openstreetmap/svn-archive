@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -21,7 +22,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
     @Override
     protected void cancel() {
         canceled = true;
-        synchronized(this) {
+        synchronized (this) {
             /*        if (objectReader != null) {
                 objectReader.cancel();
             }*/
@@ -39,17 +40,16 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
     }
 
     @Override
-    protected void realRun() throws SAXException, IOException,
-    OsmTransferException {
-        try {
-            /*            synchronized (this) {
+    protected void realRun() throws SAXException, IOException, OsmTransferException {
+        /*try {
+                        synchronized (this) {
                 if (canceled) return;
                 objectReader = new MultiFetchServerObjectReader();
             }
             objectReader.append(missing);
             progressMonitor.indeterminateSubTask(
                     buildDownloadFeedbackMessage()
-            );
+           );
             final DataSet dataSet = objectReader.parseOsm(progressMonitor
                     .createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false));
             if (dataSet == null)
@@ -67,8 +67,8 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
                             AutoScaleAction.zoomTo(dataSet.allPrimitives());
                         }
                     }
-            );
-             */
+           );
+
         } catch (Exception e) {
             if (canceled) {
                 System.out.println(tr("Warning: Ignoring exception because task was canceled. Exception: {0}", e
@@ -76,8 +76,7 @@ public class KeyGenerationTask extends PleaseWaitRunnable {
                 return;
             }
             lastException = e;
-        }
-
+        }*/
     }
 
 }

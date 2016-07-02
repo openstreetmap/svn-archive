@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.io;
 
 import java.io.BufferedWriter;
@@ -74,9 +75,8 @@ public class SigWriter extends XmlWriter {
 
     private void writeSigs(TrustSignatures tsigs) {
         for (String plain : tsigs.getAllPlainTexts()) {
-            simpleTag("openpgp",tsigs.getArmoredFulltextSignatureAll(plain));
+            simpleTag("openpgp", tsigs.getArmoredFulltextSignatureAll(plain));
         }
-
     }
 
     private void writeTags(TrustOsmPrimitive trust) {
@@ -85,10 +85,8 @@ public class SigWriter extends XmlWriter {
         if (signedKeys.isEmpty()) return;
         openln("tags");
         for (String key : signedKeys) {
-            openAtt("key","k=\""+key+"\"");
-
+            openAtt("key", "k=\""+key+"\"");
             writeSigs(tagsigs.get(key));
-
             closeln("key");
         }
         closeln("tags");
@@ -130,7 +128,7 @@ public class SigWriter extends XmlWriter {
 
     private void writeItems(Collection<TrustOsmPrimitive> items) {
 
-        for (TrustOsmPrimitive trust : items){
+        for (TrustOsmPrimitive trust : items) {
             OsmPrimitive osm = trust.getOsmPrimitive();
             if (trust instanceof TrustNode) {
                 TrustNode tn = (TrustNode) trust;

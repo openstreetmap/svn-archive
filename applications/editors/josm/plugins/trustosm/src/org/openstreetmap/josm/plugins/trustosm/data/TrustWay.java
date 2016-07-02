@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.trustosm.data;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class TrustWay extends TrustOsmPrimitive {
     public static List<Node> generateSegmentFromSigtext(String sigtext) {
         String[] lines = sigtext.split("\n");
         List<Node> nodes = new ArrayList<>();
-        for (int i=1; i<lines.length; i++){
+        for (int i = 1; i < lines.length; i++) {
             nodes.add(TrustNode.generateNodeFromSigtext(lines[i]));
         }
         return nodes;
@@ -49,19 +50,18 @@ public class TrustWay extends TrustOsmPrimitive {
 
     @Override
     public void setOsmPrimitive(OsmPrimitive osmItem) {
-        if(osmItem instanceof Way) {
+        if (osmItem instanceof Way) {
             osm = osmItem;
         } else {
             System.err.println("Error while creating TrustWay: OsmPrimitive "+osmItem.getUniqueId()+" is not a Way!");
         }
     }
 
-
     public void storeSegmentSig(List<Node> nodes, PGPSignature sig) {
         if (segmentSig.containsKey(nodes)) {
-            segmentSig.get(nodes).addSignature(sig, TrustWay.generateSegmentSigtext(this,nodes));
+            segmentSig.get(nodes).addSignature(sig, TrustWay.generateSegmentSigtext(this, nodes));
         } else {
-            segmentSig.put(nodes, new TrustSignatures(sig, TrustWay.generateSegmentSigtext(this,nodes), TrustSignatures.SIG_VALID));
+            segmentSig.put(nodes, new TrustSignatures(sig, TrustWay.generateSegmentSigtext(this, nodes), TrustSignatures.SIG_VALID));
         }
     }
 

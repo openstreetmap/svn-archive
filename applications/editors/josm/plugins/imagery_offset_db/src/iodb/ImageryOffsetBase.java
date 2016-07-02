@@ -1,7 +1,9 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
 import java.util.Date;
 import java.util.Map;
+
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 
@@ -9,7 +11,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
  * Stores one offset record. It is the superclass for {@link ImageryOffset}
  * and {@link CalibrationObject} classes and contains common fields
  * like position, author and description.
- * 
+ *
  * @author Zverik
  * @license WTFPL
  */
@@ -23,12 +25,12 @@ public class ImageryOffsetBase {
     protected String abandonAuthor;
     protected String abandonReason;
     protected boolean flagged;
-    
+
     /**
      * Initialize object with the basic information. It's offset location, author, date
      * and description.
      */
-    public void setBasicInfo( LatLon position, String author, String description, Date date ) {
+    public void setBasicInfo(LatLon position, String author, String description, Date date) {
         this.position = position;
         this.author = author;
         this.description = description;
@@ -37,7 +39,7 @@ public class ImageryOffsetBase {
         this.flagged = false;
     }
 
-    public void setId( long id ) {
+    public void setId(long id) {
         this.offsetId = id;
     }
 
@@ -59,7 +61,7 @@ public class ImageryOffsetBase {
         return flagged;
     }
 
-    public void setFlagged( boolean flagged ) {
+    public void setFlagged(boolean flagged) {
         this.flagged = flagged;
     }
 
@@ -74,7 +76,7 @@ public class ImageryOffsetBase {
     public String getAbandonReason() {
         return abandonReason;
     }
-    
+
     /**
      * Check that {@link #getAbandonDate()} is not null. Note that
      * is doesn't say anything about abandonAuthor or abandonReason.
@@ -95,15 +97,15 @@ public class ImageryOffsetBase {
         return description;
     }
 
-    public void setDescription( String description ) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
     public LatLon getPosition() {
         return position;
     }
-    
-    public void putServerParams( Map<String, String> map ) {
+
+    public void putServerParams(Map<String, String> map) {
         map.put("lat", position.latToString(CoordinateFormat.DECIMAL_DEGREES));
         map.put("lon", position.lonToString(CoordinateFormat.DECIMAL_DEGREES));
         map.put("author", author);
@@ -112,6 +114,7 @@ public class ImageryOffsetBase {
 
     @Override
     public String toString() {
-        return "ImageryOffsetBase{" + "position=" + position + ", date=" + date + ", author=" + author + ", description=" + description + ", abandonDate=" + abandonDate + '}';
+        return "ImageryOffsetBase{" + "position=" + position + ", date=" + date + ", author=" + author +
+                ", description=" + description + ", abandonDate=" + abandonDate + '}';
     }
 }

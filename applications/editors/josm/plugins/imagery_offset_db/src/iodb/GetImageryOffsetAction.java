@@ -1,34 +1,38 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.List;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.coor.CoordinateFormat;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
  * Download a list of imagery offsets for the current position, let user choose which one to use.
- * 
+ *
  * @author Zverik
  * @license WTFPL
  */
 public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetWatcher.OffsetStateListener {
     private Icon iconOffsetOk;
     private Icon iconOffsetBad;
-    
+
     /**
      * Initialize the action. Sets "Ctrl+Alt+I" shortcut: the only shortcut in this plugin.
      * Also registers itself with {@link ImageryOffsetWatcher}.
@@ -36,7 +40,7 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
     public GetImageryOffsetAction() {
         super(tr("Get Imagery Offset..."), "getoffset", tr("Download offsets for current imagery from a server"),
                 Shortcut.registerShortcut("imageryoffset:get", tr("Imagery: {0}", tr("Get Imagery Offset...")),
-                KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
+                        KeyEvent.VK_I, Shortcut.ALT_CTRL), true);
         iconOffsetOk = new ImageProvider("getoffset").setSize(ImageProvider.ImageSizes.MENU).get();
         iconOffsetBad = new ImageProvider("getoffsetnow").setSize(ImageProvider.ImageSizes.MENU).get();
         ImageryOffsetWatcher.getInstance().register(this);
@@ -45,16 +49,17 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
     /**
      * The action just executes {@link DownloadOffsetsTask}.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
-        if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
+        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
             return;
         Projection proj = Main.map.mapView.getProjection();
         LatLon center = proj.eastNorth2latlon(Main.map.mapView.getCenter());
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
         String imagery = ImageryOffsetTools.getImageryID(layer);
-        if( imagery == null )
+        if (imagery == null)
             return;
-        
+
         DownloadOffsetsTask download = new DownloadOffsetsTask(center, layer, imagery);
         Main.worker.submit(download);
     }
@@ -66,35 +71,36 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
     @Override
     protected void updateEnabledState() {
         boolean state = true;
-        if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
+        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
             state = false;
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-        if( ImageryOffsetTools.getImageryID(layer) == null )
+        if (ImageryOffsetTools.getImageryID(layer) == null)
             state = false;
         setEnabled(state);
     }
-    
+
     /**
      * Display a dialog for choosing between offsets. If there are no offsets in
      * the list, displays the relevant message instead.
      * @param offsets List of offset objects to choose from.
      */
-    private void showOffsetDialog( List<ImageryOffsetBase> offsets ) {
-        if( offsets.isEmpty() ) {
+    private void showOffsetDialog(List<ImageryOffsetBase> offsets) {
+        if (offsets.isEmpty()) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("No data for this region. Please adjust imagery layer and upload an offset."),
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         OffsetDialog offsetDialog = new OffsetDialog(offsets);
-        if( offsetDialog.showDialog() != null )
+        if (offsetDialog.showDialog() != null)
             offsetDialog.applyOffset();
     }
 
     /**
      * Update action icon based on an offset state.
      */
-    public void offsetStateChanged( boolean isOffsetGood ) {
+    @Override
+    public void offsetStateChanged(boolean isOffsetGood) {
         putValue(Action.SMALL_ICON, isOffsetGood ? iconOffsetOk : iconOffsetBad);
     }
 
@@ -121,17 +127,17 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
          * @param layer The topmost imagery layer.
          * @param imagery Imagery ID for the layer.
          */
-        public DownloadOffsetsTask( LatLon center, ImageryLayer layer, String imagery ) {
+        DownloadOffsetsTask(LatLon center, ImageryLayer layer, String imagery) {
             super(null, tr("Loading imagery offsets..."));
             try {
                 String query = "get?lat=" + center.latToString(CoordinateFormat.DECIMAL_DEGREES)
-                        + "&lon=" + center.lonToString(CoordinateFormat.DECIMAL_DEGREES)
-                        + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
+                + "&lon=" + center.lonToString(CoordinateFormat.DECIMAL_DEGREES)
+                + "&imagery=" + URLEncoder.encode(imagery, "UTF8");
                 int radius = Main.pref.getInteger("iodb.radius", -1);
-                if( radius > 0 )
+                if (radius > 0)
                     query = query + "&radius=" + radius;
                 setQuery(query);
-            } catch( UnsupportedEncodingException e ) {
+            } catch (UnsupportedEncodingException e) {
                 throw new IllegalArgumentException(e);
             }
         }
@@ -141,21 +147,21 @@ public class GetImageryOffsetAction extends JosmAction implements ImageryOffsetW
          */
         @Override
         protected void afterFinish() {
-            if( !cancelled && offsets != null )
+            if (!cancelled && offsets != null)
                 showOffsetDialog(offsets);
         }
-        
+
         /**
          * Parses the response with {@link IODBReader}.
          * @param inp Response input stream.
          * @throws iodb.SimpleOffsetQueryTask.UploadException Thrown on XML parsing error.
          */
         @Override
-        protected void processResponse( InputStream inp ) throws UploadException {
+        protected void processResponse(InputStream inp) throws UploadException {
             offsets = null;
             try {
                 offsets = new IODBReader(inp).parse();
-            } catch( Exception e ) {
+            } catch (Exception e) {
                 throw new UploadException(tr("Error processing XML response: {0}", e.getMessage()));
             }
         }

@@ -1,9 +1,23 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
-import java.awt.*;
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.geom.GeneralPath;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Icon;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.data.Bounds;
@@ -13,7 +27,6 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
-import static org.openstreetmap.josm.tools.I18n.tr;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -28,7 +41,7 @@ public class CalibrationLayer extends Layer {
     private CalibrationObject obj;
     private LatLon center;
 
-    public CalibrationLayer( CalibrationObject obj ) {
+    public CalibrationLayer(CalibrationObject obj) {
         super(tr("Calibration Layer"));
         color = Color.RED;
         this.obj = obj;
@@ -39,13 +52,13 @@ public class CalibrationLayer extends Layer {
      * in case of a point).
      */
     @Override
-    public void paint( Graphics2D g, MapView mv, Bounds box ) {
+    public void paint(Graphics2D g, MapView mv, Bounds box) {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Stroke oldStroke = g.getStroke();
         g.setColor(color);
         g.setStroke(new BasicStroke(1));
         LatLon[] geometry = obj.getGeometry();
-        if( geometry.length == 1 ) {
+        if (geometry.length == 1) {
             // draw crosshair
             Point p = mv.getPoint(geometry[0]);
             g.drawLine(p.x, p.y, p.x, p.y);
@@ -53,12 +66,12 @@ public class CalibrationLayer extends Layer {
             g.drawLine(p.x + 10, p.y, p.x + 20, p.y);
             g.drawLine(p.x, p.y - 10, p.x, p.y - 20);
             g.drawLine(p.x, p.y + 10, p.x, p.y + 20);
-        } else if( geometry.length > 1 ) {
+        } else if (geometry.length > 1) {
             // draw a line
             GeneralPath path = new GeneralPath();
-            for( int i = 0; i < geometry.length; i++ ) {
+            for (int i = 0; i < geometry.length; i++) {
                 Point p = mv.getPoint(geometry[i]);
-                if( i == 0 )
+                if (i == 0)
                     path.moveTo(p.x, p.y);
                 else
                     path.lineTo(p.x, p.y);
@@ -70,17 +83,17 @@ public class CalibrationLayer extends Layer {
 
     @Override
     public Icon getIcon() {
-        if( icon == null )
+        if (icon == null)
             icon = ImageProvider.get("calibration_layer");
         return icon;
     }
 
     @Override
-    public void mergeFrom( Layer from ) {
+    public void mergeFrom(Layer from) {
     }
 
     @Override
-    public boolean isMergable( Layer other ) {
+    public boolean isMergable(Layer other) {
         return false;
     }
 
@@ -88,9 +101,10 @@ public class CalibrationLayer extends Layer {
      * This is for determining a bounding box for the layer.
      */
     @Override
-    public void visitBoundingBox( BoundingXYVisitor v ) {
-        for( LatLon ll : obj.getGeometry() )
+    public void visitBoundingBox(BoundingXYVisitor v) {
+        for (LatLon ll : obj.getGeometry()) {
             v.visit(ll);
+        }
     }
 
     /**
@@ -98,7 +112,7 @@ public class CalibrationLayer extends Layer {
      */
     @Override
     public String getToolTipText() {
-        if( obj.isDeprecated() )
+        if (obj.isDeprecated())
             return tr("A deprecated calibration geometry of {0} nodes by {1}", obj.getGeometry().length, obj.getAuthor());
         else
             return tr("A calibration geometry of {0} nodes by {1}", obj.getGeometry().length, obj.getAuthor());
@@ -115,15 +129,15 @@ public class CalibrationLayer extends Layer {
     @Override
     public Action[] getMenuEntries() {
         return new Action[] {
-            LayerListDialog.getInstance().createShowHideLayerAction(),
-            LayerListDialog.getInstance().createDeleteLayerAction(),
-            SeparatorLayerAction.INSTANCE,
-            new ZoomToLayerAction(),
-            new SelectColorAction(Color.RED),
-            new SelectColorAction(Color.CYAN),
-            new SelectColorAction(Color.YELLOW),
-            SeparatorLayerAction.INSTANCE,
-            new LayerListPopup.InfoAction(this)
+                LayerListDialog.getInstance().createShowHideLayerAction(),
+                LayerListDialog.getInstance().createDeleteLayerAction(),
+                SeparatorLayerAction.INSTANCE,
+                new ZoomToLayerAction(),
+                new SelectColorAction(Color.RED),
+                new SelectColorAction(Color.CYAN),
+                new SelectColorAction(Color.YELLOW),
+                SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this)
         };
     }
 
@@ -133,11 +147,11 @@ public class CalibrationLayer extends Layer {
      * doesn't have a relevant method.
      */
     public void panToCenter() {
-        if( center == null ) {
+        if (center == null) {
             LatLon[] geometry = obj.getGeometry();
             double lat = 0.0;
             double lon = 0.0;
-            for( int i = 0; i < geometry.length; i++ ) {
+            for (int i = 0; i < geometry.length; i++) {
                 lon += geometry[i].lon();
                 lat += geometry[i].lat();
             }
@@ -154,13 +168,14 @@ public class CalibrationLayer extends Layer {
     class SelectColorAction extends AbstractAction {
         private Color c;
 
-        public SelectColorAction( Color color ) {
+        SelectColorAction(Color color) {
             super(tr("Change Color"));
             putValue(SMALL_ICON, new SingleColorIcon(color));
             this.c = color;
         }
 
-        public void actionPerformed( ActionEvent e ) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             color = c;
             Main.map.mapView.repaint();
         }
@@ -172,23 +187,25 @@ public class CalibrationLayer extends Layer {
     class SingleColorIcon implements Icon {
         private Color color;
 
-        public SingleColorIcon( Color color ) {
+        SingleColorIcon(Color color) {
             this.color = color;
         }
 
-        public void paintIcon( Component c, Graphics g, int x, int y ) {
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
             g.setColor(color);
             g.fillRect(x, y, 24, 24);
         }
 
+        @Override
         public int getIconWidth() {
             return 24;
         }
 
+        @Override
         public int getIconHeight() {
             return 24;
         }
-
     }
 
     /**
@@ -196,12 +213,13 @@ public class CalibrationLayer extends Layer {
      * uses {@link #visitBoundingBox} to pan and zoom to the calibration geometry.
      */
     class ZoomToLayerAction extends AbstractAction {
-        public ZoomToLayerAction() {
+        ZoomToLayerAction() {
             super(tr("Zoom to {0}", tr("layer"))); // to use translation from AutoScaleAction
             putValue(SMALL_ICON, ImageProvider.get("dialogs/autoscale/layer"));
         }
 
-        public void actionPerformed( ActionEvent e ) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             AutoScaleAction.autoScale("layer");
         }
     }

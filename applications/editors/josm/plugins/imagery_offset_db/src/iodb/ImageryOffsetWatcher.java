@@ -1,3 +1,4 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import org.openstreetmap.josm.tools.Destroyable;
  * @author Zverik
  * @license WTFPL
  */
-public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeListener, ActiveLayerChangeListener, Destroyable {
+public final class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeListener, ActiveLayerChangeListener, Destroyable {
     private static final double THRESHOLD = 1e-8;
     private static ImageryOffsetWatcher instance;
     private Map<Integer, ImageryLayerData> layers = new TreeMap<>();
@@ -70,7 +71,7 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
      * creating it if neccessary.
      */
     public static ImageryOffsetWatcher getInstance() {
-        if( instance == null ) {
+        if (instance == null) {
             instance = new ImageryOffsetWatcher();
         }
         return instance;
@@ -79,7 +80,7 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
     /**
      * Register an offset state listener.
      */
-    public void register( OffsetStateListener listener ) {
+    public void register(OffsetStateListener listener) {
         listeners.add(listener);
         listener.offsetStateChanged(offsetGood);
     }
@@ -87,17 +88,18 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
     /**
      * Unregister an offset state listener.
      */
-    public void unregister( OffsetStateListener listener ) {
+    public void unregister(OffsetStateListener listener) {
         listeners.remove(listener);
     }
 
     /**
      * Change stored offset state, notify listeners if needed.
      */
-    private void setOffsetGood( boolean good ) {
-        if( good != offsetGood ) {
-            for( OffsetStateListener listener : listeners )
+    private void setOffsetGood(boolean good) {
+        if (good != offsetGood) {
+            for (OffsetStateListener listener : listeners) {
                 listener.offsetStateChanged(good);
+            }
         }
         offsetGood = good;
     }
@@ -106,25 +108,25 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
      * Check if the offset state has been changed.
      */
     private synchronized void checkOffset() {
-        if( maxDistance <= 0 ) {
+        if (maxDistance <= 0) {
             setOffsetGood(true);
             return;
         }
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-        if( layer == null ) {
+        if (layer == null) {
             setOffsetGood(true);
             return;
         }
         LatLon center = ImageryOffsetTools.getMapCenter();
         Integer hash = layer.hashCode();
         ImageryLayerData data = layers.get(hash);
-        if( data == null ) {
+        if (data == null) {
             // create entry for this layer and mark as needing alignment
             data = new ImageryLayerData();
             data.lastDx = layer.getDx();
             data.lastDy = layer.getDy();
             boolean r = false;
-            if( Math.abs(data.lastDx) + Math.abs(data.lastDy) > THRESHOLD ) {
+            if (Math.abs(data.lastDx) + Math.abs(data.lastDy) > THRESHOLD) {
                 data.lastChecked = center;
                 r = true;
             }
@@ -132,7 +134,7 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
             setOffsetGood(r);
         } else {
             // now, we have a returning layer.
-            if( Math.abs(data.lastDx - layer.getDx()) + Math.abs(data.lastDy - layer.getDy()) > THRESHOLD ) {
+            if (Math.abs(data.lastDx - layer.getDx()) + Math.abs(data.lastDy - layer.getDy()) > THRESHOLD) {
                 // offset has changed, record the current position
                 data.lastDx = layer.getDx();
                 data.lastDy = layer.getDy();
@@ -152,11 +154,11 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
      */
     public void markGood() {
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-        if( layer != null ) {
+        if (layer != null) {
             LatLon center = ImageryOffsetTools.getMapCenter();
             Integer hash = layer.hashCode();
             ImageryLayerData data = layers.get(hash);
-            if( data == null ) {
+            if (data == null) {
                 // create entry for this layer and mark as good
                 data = new ImageryLayerData();
                 data.lastDx = layer.getDx();
@@ -215,14 +217,14 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
      * collection of ':'-separated strings: imagery_id:lat:lon:dx:dy. No need for
      * projections: nobody uses them anyway.
      */
-    private void storeLayerOffset( ImageryLayer layer ) {
+    private void storeLayerOffset(ImageryLayer layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
-        if( !Main.pref.getBoolean("iodb.remember.offsets", true) || id == null )
+        if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
             return;
         Collection<String> offsets = new LinkedList<>(Main.pref.getCollection("iodb.stored.offsets"));
-        for( Iterator<String> iter = offsets.iterator(); iter.hasNext(); ) {
+        for (Iterator<String> iter = offsets.iterator(); iter.hasNext();) {
             String[] offset = iter.next().split(":");
-            if( offset.length == 5 && offset[0].equals(id) )
+            if (offset.length == 5 && offset[0].equals(id))
                 iter.remove();
         }
         LatLon center = ImageryOffsetTools.getMapCenter();
@@ -233,23 +235,24 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
     /**
      * Loads the current imagery layer offset from preferences.
      */
-    private void loadLayerOffset( ImageryLayer layer ) {
+    private void loadLayerOffset(ImageryLayer layer) {
         String id = ImageryOffsetTools.getImageryID(layer);
-        if( !Main.pref.getBoolean("iodb.remember.offsets", true) || id == null )
+        if (!Main.pref.getBoolean("iodb.remember.offsets", true) || id == null)
             return;
         Collection<String> offsets = Main.pref.getCollection("iodb.stored.offsets");
-        for( String offset : offsets ) {
+        for (String offset : offsets) {
             String[] parts = offset.split(":");
-            if( parts.length == 5 && parts[0].equals(id) ) {
+            if (parts.length == 5 && parts[0].equals(id)) {
                 double[] dparts = new double[4];
                 try {
-                    for( int i = 0; i < 4; i++ )
+                    for (int i = 0; i < 4; i++) {
                         dparts[i] = Double.parseDouble(parts[i+1]);
-                } catch( Exception e ) {
+                    }
+                } catch (Exception e) {
                     continue;
                 }
                 LatLon lastPos = new LatLon(dparts[0], dparts[1]);
-                if( lastPos.greatCircleDistance(ImageryOffsetTools.getMapCenter()) < Math.max(maxDistance, 3.0) * 1000 ) {
+                if (lastPos.greatCircleDistance(ImageryOffsetTools.getMapCenter()) < Math.max(maxDistance, 3.0) * 1000) {
                     // apply offset
                     layer.setOffset(dparts[2], dparts[3]);
                     return;
@@ -276,6 +279,6 @@ public class ImageryOffsetWatcher implements ZoomChangeListener, LayerChangeList
      * The interface for offset listeners.
      */
     public interface OffsetStateListener {
-        void offsetStateChanged( boolean isOffsetGood );
+        void offsetStateChanged(boolean isOffsetGood);
     }
 }

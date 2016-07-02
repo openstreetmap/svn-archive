@@ -1,3 +1,4 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -30,7 +31,7 @@ public class ImageryOffsetPlugin extends Plugin {
      * losing all changes, and other menus are either too long already,
      * or completely unsuitable for imagery offset actions.
      */
-    public ImageryOffsetPlugin( PluginInformation info ) {
+    public ImageryOffsetPlugin(PluginInformation info) {
         super(info);
 
         getAction = new GetImageryOffsetAction();
@@ -41,19 +42,19 @@ public class ImageryOffsetPlugin extends Plugin {
         int version = Version.getInstance().getVersion();
         JMenu offsetMenu = version < 5803
                 ? Main.main.menu.addMenu("Offset", tr("Offset"), KeyEvent.VK_O, 6, "help")
-                : Main.main.menu.imageryMenu;
-        offsetMenu.add(getAction);
-        offsetMenu.add(storeAction);
+                        : Main.main.menu.imageryMenu;
+                offsetMenu.add(getAction);
+                offsetMenu.add(storeAction);
 
-        // an ugly hack to add this plugin to the toolbar
-        if( Main.pref.getBoolean("iodb.modify.toolbar", true) ) {
-            Collection<String> toolbar = new LinkedList<>(ToolbarPreferences.getToolString());
-            if( !toolbar.contains("getoffset") ) {
-                toolbar.add("getoffset");
-                Main.pref.putCollection("toolbar", toolbar);
-                Main.toolbar.refreshToolbarControl();
-            }
-            Main.pref.put("iodb.modify.toolbar", false);
-        }
+                // an ugly hack to add this plugin to the toolbar
+                if (Main.pref.getBoolean("iodb.modify.toolbar", true)) {
+                    Collection<String> toolbar = new LinkedList<>(ToolbarPreferences.getToolString());
+                    if (!toolbar.contains("getoffset")) {
+                        toolbar.add("getoffset");
+                        Main.pref.putCollection("toolbar", toolbar);
+                        Main.toolbar.refreshToolbarControl();
+                    }
+                    Main.pref.put("iodb.modify.toolbar", false);
+                }
     }
 }

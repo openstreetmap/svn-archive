@@ -1,44 +1,51 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.List;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.ImageryLayer;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Some common static methods for querying and processing imagery layers.
- * 
+ *
  * @author Zverik
  * @license WTFPL
  */
-public class ImageryOffsetTools {
+public final class ImageryOffsetTools {
     /**
      * A title for all dialogs created in this plugin.
      */
     public static final String DIALOG_TITLE = tr("Imagery Offset Database");
-    
+
+    private ImageryOffsetTools() {
+        // Hide default constructor for utilities classes
+    }
+
     /**
      * Returns the topmost visible imagery layer.
      * @return the layer, or null if it hasn't been found.
      */
     public static ImageryLayer getTopImageryLayer() {
-        if( Main.map == null || Main.map.mapView == null )
+        if (Main.map == null || Main.map.mapView == null)
             return null;
         List<ImageryLayer> layers = Main.getLayerManager().getLayersOfType(ImageryLayer.class);
-        for( ImageryLayer layer : layers ) {
+        for (ImageryLayer layer : layers) {
             String url = layer.getInfo().getUrl();
-            if( layer.isVisible() && url != null && !url.contains("gps-") ) {
+            if (layer.isVisible() && url != null && !url.contains("gps-")) {
                 return layer;
             }
         }
         return null;
     }
-    
+
     /**
      * Calculates the center of a visible map area.
      * @return the center point, or (0; 0) if there's no map on the screen.
@@ -48,7 +55,7 @@ public class ImageryOffsetTools {
         return Main.map == null || Main.map.mapView == null
                 ? new LatLon(0, 0) : proj.eastNorth2latlon(Main.map.mapView.getCenter());
     }
-    
+
     /**
      * Calculates an imagery layer offset.
      * @param center The center of a visible map area.
@@ -56,20 +63,20 @@ public class ImageryOffsetTools {
      * center point on the map.
      * @see #applyLayerOffset
      */
-    public static LatLon getLayerOffset( ImageryLayer layer, LatLon center ) {
+    public static LatLon getLayerOffset(ImageryLayer layer, LatLon center) {
         Projection proj = Main.getProjection();
         EastNorth offsetCenter = Main.map.mapView.getCenter();
         EastNorth centerOffset = offsetCenter.add(-layer.getDx(), -layer.getDy());
         LatLon offsetLL = proj.eastNorth2latlon(centerOffset);
         return offsetLL;
     }
-    
+
     /**
      * Applies the offset to the imagery layer.
      * @see #calculateOffset(iodb.ImageryOffset)
      * @see #getLayerOffset
      */
-    public static void applyLayerOffset( ImageryLayer layer, ImageryOffset offset ) {
+    public static void applyLayerOffset(ImageryLayer layer, ImageryOffset offset) {
         double[] dxy = calculateOffset(offset);
         layer.setOffset(dxy[0], dxy[1]);
     }
@@ -79,21 +86,21 @@ public class ImageryOffsetTools {
      * @return An array of [dx, dy].
      * @see #applyLayerOffset
      */
-    public static double[] calculateOffset( ImageryOffset offset ) {
+    public static double[] calculateOffset(ImageryOffset offset) {
         Projection proj = Main.getProjection();
         EastNorth center = proj.latlon2eastNorth(offset.getPosition());
         EastNorth offsetPos = proj.latlon2eastNorth(offset.getImageryPos());
-        return new double[] { center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY() };
+        return new double[] {center.getX() - offsetPos.getX(), center.getY() - offsetPos.getY()};
     }
-    
+
     /**
      * Generate unique imagery identifier based on its type and URL.
      * @param layer imagery layer.
      * @return imagery id.
      */
-    public static String getImageryID( ImageryLayer layer ) {
+    public static String getImageryID(ImageryLayer layer) {
         return layer == null ? null :
-                ImageryIdGenerator.getImageryID(layer.getInfo().getUrl(), layer.getInfo().getImageryType());
+            ImageryIdGenerator.getImageryID(layer.getInfo().getUrl(), layer.getInfo().getImageryType());
     }
 
     // Following three methods were snatched from TMSLayer
@@ -133,14 +140,16 @@ public class ImageryOffsetTools {
     /**
      * Converts distance in meters to a human-readable string.
      */
-    public static String formatDistance( double d ) {
-        if( d < 0.0095 ) return formatDistance(d * 1000, tr("mm"), true);
-        if( d < 0.095 )  return formatDistance(d * 100,  tr("cm"), true );
-        if( d < 0.95 )   return formatDistance(d * 100,  tr("cm"), false);
-        if( d < 9.5 )    return formatDistance(d,        tr("m"),  true );
-        if( d < 950 )    return formatDistance(d,        tr("m"),  false );
-        if( d < 9500 )   return formatDistance(d / 1000, tr("km"), true);
-        if( d < 1e6 )    return formatDistance(d / 1000, tr("km"), false);
+    public static String formatDistance(double d) {
+        // CHECKSTYLE.OFF: SingleSpaceSeparator
+        if (d < 0.0095) return formatDistance(d * 1000, tr("mm"), true);
+        if (d < 0.095)  return formatDistance(d * 100,  tr("cm"), true);
+        if (d < 0.95)   return formatDistance(d * 100,  tr("cm"), false);
+        if (d < 9.5)    return formatDistance(d,        tr("m"),  true);
+        if (d < 950)    return formatDistance(d,        tr("m"),  false);
+        if (d < 9500)   return formatDistance(d / 1000, tr("km"), true);
+        if (d < 1e6)    return formatDistance(d / 1000, tr("km"), false);
+        // CHECKSTYLE.ON: SingleSpaceSeparator
         return "\u221E";
     }
 
@@ -151,7 +160,7 @@ public class ImageryOffsetTools {
      * @param floating Whether a floating point is needed.
      * @return A formatted string.
      */
-    private static String formatDistance( double d, String si, boolean floating ) {
+    private static String formatDistance(double d, String si, boolean floating) {
         return MessageFormat.format(floating ? "{0,number,0.0} {1}" : "{0,number,0} {1}", d, si);
     }
 }

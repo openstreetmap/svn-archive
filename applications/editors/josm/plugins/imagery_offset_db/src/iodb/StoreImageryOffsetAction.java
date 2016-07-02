@@ -1,3 +1,4 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -47,38 +48,38 @@ public class StoreImageryOffsetAction extends JosmAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if( Main.map == null || Main.map.mapView == null )
+        if (Main.map == null || Main.map.mapView == null)
             return;
 
         ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-        if( layer == null )
+        if (layer == null)
             return;
 
         String userName = JosmUserIdentityManager.getInstance().getUserName();
-        if( userName == null || userName.length() == 0 ) {
+        if (userName == null || userName.length() == 0) {
             JOptionPane.showMessageDialog(Main.parent,
                     tr("To store imagery offsets you must be a registered OSM user."),
                     ImageryOffsetTools.DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if( userName.indexOf('@') > 0 )
+        if (userName.indexOf('@') > 0)
             userName = userName.replace('@', ',');
 
         // check if an object suitable for calibration is selected
         OsmPrimitive calibration = null;
         if (getLayerManager().getEditDataSet() != null) {
             Collection<OsmPrimitive> selectedObjects = getLayerManager().getEditDataSet().getSelected();
-            if( selectedObjects.size() == 1 ) {
+            if (selectedObjects.size() == 1) {
                 OsmPrimitive selection = selectedObjects.iterator().next();
-                if( (selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1) ) {
+                if ((selection instanceof Node || selection instanceof Way) && !selection.isIncomplete() && !selection.isReferredByWays(1)) {
                     String[] options = new String[] {tr("Store calibration geometry"), tr("Store imagery offset")};
                     int result = JOptionPane.showOptionDialog(Main.parent,
                             tr("The selected object can be used as a calibration geometry. What do you intend to do?"),
                             ImageryOffsetTools.DIALOG_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                             null, options, options[0]);
-                    if( result == 2 || result == JOptionPane.CLOSED_OPTION )
+                    if (result == 2 || result == JOptionPane.CLOSED_OPTION)
                         return;
-                    if( result == 0 )
+                    if (result == 0)
                         calibration = selection;
                 }
             }
@@ -87,12 +88,12 @@ public class StoreImageryOffsetAction extends JosmAction {
         Object message;
         LatLon center = ImageryOffsetTools.getMapCenter();
         ImageryOffsetBase offsetObj;
-        if( calibration == null ) {
+        if (calibration == null) {
             // register imagery offset
-            if( Math.abs(layer.getDx()) < 1e-8 && Math.abs(layer.getDy()) < 1e-8 ) {
-                if( JOptionPane.showConfirmDialog(Main.parent,
+            if (Math.abs(layer.getDx()) < 1e-8 && Math.abs(layer.getDy()) < 1e-8) {
+                if (JOptionPane.showConfirmDialog(Main.parent,
                         tr("The topmost imagery layer has no offset. Are you sure you want to upload this?"),
-                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION )
+                        ImageryOffsetTools.DIALOG_TITLE, JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
             }
             LatLon offset = ImageryOffsetTools.getLayerOffset(layer, center);
@@ -106,7 +107,7 @@ public class StoreImageryOffsetAction extends JosmAction {
                     + "clearly visible boundaries on various satellite imagery. Please describe this object and its whereabouts.");
         }
         String description = queryDescription(message);
-        if( description == null )
+        if (description == null)
             return;
         offsetObj.setBasicInfo(center, userName, null, null);
         offsetObj.setDescription(description);
@@ -116,8 +117,8 @@ public class StoreImageryOffsetAction extends JosmAction {
             Map<String, String> params = new HashMap<>();
             offsetObj.putServerParams(params);
             StringBuilder query = null;
-            for( String key : params.keySet() ) {
-                if( query == null ) {
+            for (String key : params.keySet()) {
+                if (query == null) {
                     query = new StringBuilder("store?");
                 } else {
                     query.append('&');
@@ -125,8 +126,8 @@ public class StoreImageryOffsetAction extends JosmAction {
                 query.append(key).append('=').append(URLEncoder.encode(params.get(key), "UTF8"));
             }
             Main.worker.submit(new SimpleOffsetQueryTask(query.toString(), tr("Uploading a new offset...")));
-        } catch( UnsupportedEncodingException ex ) {
-            // WTF
+        } catch (UnsupportedEncodingException ex) {
+            Main.error(ex);
         }
     }
 
@@ -136,18 +137,19 @@ public class StoreImageryOffsetAction extends JosmAction {
      * @param message A prompt for the input dialog.
      * @return Either null or a string 3 to 200 letters long.
      */
-    public static String queryDescription( Object message ) {
+    public static String queryDescription(Object message) {
         String reason = null;
         boolean iterated = false;
         boolean ok = false;
-        while( !ok ) {
-            Object result = JOptionPane.showInputDialog(Main.parent, message, ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE, null, null, reason);
-            if( result == null || result.toString().length() == 0 ) {
+        while (!ok) {
+            Object result = JOptionPane.showInputDialog(Main.parent, message,
+                    ImageryOffsetTools.DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE, null, null, reason);
+            if (result == null || result.toString().length() == 0) {
                 return null;
             }
             reason = result.toString();
-            if( reason.length() < 3 || reason.length() > 200 ) {
-                if( !iterated ) {
+            if (reason.length() < 3 || reason.length() > 200) {
+                if (!iterated) {
                     message = message + "\n" + tr("This string should be 3 to 200 letters long.");
                     iterated = true;
                 }
@@ -164,9 +166,9 @@ public class StoreImageryOffsetAction extends JosmAction {
     @Override
     protected void updateEnabledState() {
         boolean state = true;
-        if( Main.map == null || Main.map.mapView == null || !Main.map.isVisible() )
+        if (Main.map == null || Main.map.mapView == null || !Main.map.isVisible())
             state = false;
-        if( ImageryOffsetTools.getTopImageryLayer() == null )
+        if (ImageryOffsetTools.getTopImageryLayer() == null)
             state = false;
         setEnabled(state);
     }

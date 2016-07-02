@@ -1,3 +1,4 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
 /**

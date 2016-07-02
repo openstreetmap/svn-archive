@@ -1,3 +1,4 @@
+// License: WTFPL. For details, see LICENSE file.
 package iodb;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -71,7 +72,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      * Initialize the dialog and install listeners.
      * @param offsets The list of offset to choose from.
      */
-    public OffsetDialog( List<ImageryOffsetBase> offsets ) {
+    public OffsetDialog(List<ImageryOffsetBase> offsets) {
         super(JOptionPane.getFrameForComponent(Main.parent), ImageryOffsetTools.DIALOG_TITLE,
                 MODAL ? ModalityType.DOCUMENT_MODAL : ModalityType.MODELESS);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -93,7 +94,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         calibrationBox.setSelected(Main.pref.getBoolean(PREF_CALIBRATION, true));
         calibrationBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 Main.pref.put(PREF_CALIBRATION, calibrationBox.isSelected());
                 updateButtonPanel();
             }
@@ -102,7 +103,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         deprecatedBox.setSelected(Main.pref.getBoolean(PREF_DEPRECATED, false));
         deprecatedBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed( ActionEvent e ) {
+            public void actionPerformed(ActionEvent e) {
                 Main.pref.put(PREF_DEPRECATED, deprecatedBox.isSelected());
                 updateButtonPanel();
             }
@@ -134,16 +135,16 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      */
     private void updateButtonPanel() {
         List<ImageryOffsetBase> filteredOffsets = filterOffsets();
-        if( buttonPanel == null )
+        if (buttonPanel == null)
             buttonPanel = new JPanel();
         buttonPanel.removeAll();
         buttonPanel.setLayout(new GridLayout(filteredOffsets.size(), 1, 0, 5));
-        for( ImageryOffsetBase offset : filteredOffsets ) {
+        for (ImageryOffsetBase offset : filteredOffsets) {
             OffsetDialogButton button = new OffsetDialogButton(offset);
             button.addActionListener(this);
             JPopupMenu popupMenu = new JPopupMenu();
             popupMenu.add(new OffsetInfoAction(offset));
-            if( !offset.isDeprecated() ) {
+            if (!offset.isDeprecated()) {
                 DeprecateOffsetAction action = new DeprecateOffsetAction(offset);
                 action.setListener(new DeprecateOffsetListener(offset));
                 popupMenu.add(action);
@@ -163,13 +164,13 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         boolean showCalibration = Main.pref.getBoolean(PREF_CALIBRATION, true);
         boolean showDeprecated = Main.pref.getBoolean(PREF_DEPRECATED, false);
         List<ImageryOffsetBase> filteredOffsets = new ArrayList<>();
-        for( ImageryOffsetBase offset : offsets ) {
-            if( offset.isDeprecated() && !showDeprecated )
+        for (ImageryOffsetBase offset : offsets) {
+            if (offset.isDeprecated() && !showDeprecated)
                 continue;
-            if( offset instanceof CalibrationObject && !showCalibration )
+            if (offset instanceof CalibrationObject && !showCalibration)
                 continue;
             filteredOffsets.add(offset);
-            if( filteredOffsets.size() >= MAX_OFFSETS )
+            if (filteredOffsets.size() >= MAX_OFFSETS)
                 break;
         }
         return filteredOffsets;
@@ -181,9 +182,9 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      */
     @Override
     public void zoomChanged() {
-        for( Component c : buttonPanel.getComponents() ) {
-            if( c instanceof OffsetDialogButton ) {
-                ((OffsetDialogButton)c).updateLocation();
+        for (Component c : buttonPanel.getComponents()) {
+            if (c instanceof OffsetDialogButton) {
+                ((OffsetDialogButton) c).updateLocation();
             }
         }
     }
@@ -193,14 +194,14 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      * value, but looks nice.
      */
     @Override
-    public void paint( Graphics2D g, MapView mv, Bounds bbox ) {
-        if( offsets == null )
+    public void paint(Graphics2D g, MapView mv, Bounds bbox) {
+        if (offsets == null)
             return;
 
-        Graphics2D g2 = (Graphics2D)g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(2));
-        for( ImageryOffsetBase offset : filterOffsets() ) {
+        for (ImageryOffsetBase offset : filterOffsets()) {
             Point p = mv.getPoint(offset.getPosition());
             g2.setColor(Color.BLACK);
             g2.fillOval(p.x - 2, p.y - 2, 5, 5);
@@ -220,7 +221,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         selectedOffset = null;
         prepareDialog();
         MapView.addZoomChangeListener(this);
-        if( !MODAL ) {
+        if (!MODAL) {
             Main.map.mapView.addTemporaryLayer(this);
             Main.map.mapView.repaint();
         }
@@ -236,31 +237,30 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      * @see #applyOffset()
      */
     @Override
-    public void actionPerformed( ActionEvent e ) {
-        if( e.getSource() instanceof OffsetDialogButton ) {
-            selectedOffset = ((OffsetDialogButton)e.getSource()).getOffset();
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof OffsetDialogButton) {
+            selectedOffset = ((OffsetDialogButton) e.getSource()).getOffset();
         } else
             selectedOffset = null;
         boolean closeDialog = MODAL || selectedOffset == null
                 || selectedOffset instanceof CalibrationObject
                 || Main.pref.getBoolean("iodb.close.on.select", true);
-        if( closeDialog ) {
+        if (closeDialog) {
             MapView.removeZoomChangeListener(this);
             setVisible(false);
         }
-        if( !MODAL ) {
-            if( closeDialog ) {
+        if (!MODAL) {
+            if (closeDialog) {
                 Main.map.mapView.removeTemporaryLayer(this);
                 Main.map.mapView.repaint();
             }
-            if( selectedOffset != null ) {
+            if (selectedOffset != null) {
                 applyOffset();
-                if( !closeDialog )
+                if (!closeDialog)
                     updateButtonPanel();
             }
         }
     }
-
 
     /**
      * Either applies imagery offset or adds a calibration geometry layer.
@@ -268,12 +268,12 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      * it displays an informational message.
      */
     public void applyOffset() {
-        if( selectedOffset instanceof ImageryOffset ) {
+        if (selectedOffset instanceof ImageryOffset) {
             ImageryLayer layer = ImageryOffsetTools.getTopImageryLayer();
-            ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset)selectedOffset);
+            ImageryOffsetTools.applyLayerOffset(layer, (ImageryOffset) selectedOffset);
             ImageryOffsetWatcher.getInstance().markGood();
             Main.map.repaint();
-            if( !Main.pref.getBoolean("iodb.offset.message", false) ) {
+            if (!Main.pref.getBoolean("iodb.offset.message", false)) {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("The topmost imagery layer has been shifted to presumably match\n"
                                 + "OSM data in the area. Please check that the offset is still valid\n"
@@ -281,11 +281,11 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
                         ImageryOffsetTools.DIALOG_TITLE, JOptionPane.INFORMATION_MESSAGE);
                 Main.pref.put("iodb.offset.message", true);
             }
-        } else if( selectedOffset instanceof CalibrationObject ) {
-            CalibrationLayer clayer = new CalibrationLayer((CalibrationObject)selectedOffset);
+        } else if (selectedOffset instanceof CalibrationObject) {
+            CalibrationLayer clayer = new CalibrationLayer((CalibrationObject) selectedOffset);
             Main.getLayerManager().addLayer(clayer);
             clayer.panToCenter();
-            if( !Main.pref.getBoolean("iodb.calibration.message", false) ) {
+            if (!Main.pref.getBoolean("iodb.calibration.message", false)) {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("A layer has been added with a calibration geometry. Hide data layers,\n"
                                 + "find the corresponding feature on the imagery layer and move it accordingly."),
@@ -304,7 +304,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
         /**
          * Initialize the listener with an offset.
          */
-        public DeprecateOffsetListener( ImageryOffsetBase offset ) {
+        DeprecateOffsetListener(ImageryOffsetBase offset) {
             this.offset = offset;
         }
 
@@ -323,13 +323,13 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
      */
     class HelpAction extends AbstractAction {
 
-        public HelpAction() {
+        HelpAction() {
             super(tr("Help"));
             putValue(SMALL_ICON, ImageProvider.get("help"));
         }
 
         @Override
-        public void actionPerformed( ActionEvent e ) {
+        public void actionPerformed(ActionEvent e) {
             String base = Main.pref.get("url.openstreetmap-wiki", "http://wiki.openstreetmap.org/wiki/");
             String lang = LanguageInfo.getWikiLanguagePrefix();
             String page = "Imagery_Offset_Database";
@@ -340,7 +340,7 @@ public class OffsetDialog extends JDialog implements ActionListener, ZoomChangeL
                     conn.disconnect();
                     lang = "";
                 }
-            } catch( IOException ex ) {
+            } catch (IOException ex) {
                 lang = "";
             }
             OpenBrowser.displayUrl(base + lang + page);

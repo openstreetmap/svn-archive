@@ -48,7 +48,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.main.getEditLayer() instanceof OdLayer) {
+            if (Main.getLayerManager().getEditLayer() instanceof OdLayer) {
                 dataLayer.downloadOsmData();
                 diffButton.setEnabled(dataLayer.osmLayer != null);
             }
@@ -71,7 +71,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (Main.main.getEditLayer() instanceof OdLayer) {
+            if (Main.getLayerManager().getEditLayer() instanceof OdLayer) {
                 dataLayer.makeDiff();
             }
         }
@@ -102,7 +102,7 @@ public class OdDialog extends ToggleDialog implements ActiveLayerChangeListener 
         this.toolsButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (Main.main.getEditLayer() instanceof OdLayer) {
+                if (Main.getLayerManager().getEditLayer() instanceof OdLayer) {
                     JPopupMenu popup = new JPopupMenu();
                     for (JosmAction tool : dataLayer.handler.getTools()) {
                         popup.add(tool);

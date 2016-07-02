@@ -64,12 +64,12 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
     public void addOsmLayer(OdOsmDataLayer layer) {
         removeOsmLayer();
         osmLayer = layer;
-        Main.main.addLayer(osmLayer);
+        Main.getLayerManager().addLayer(osmLayer);
     }
 
     public void removeOsmLayer() {
         if (osmLayer != null) {
-            Main.main.removeLayer(osmLayer);
+            Main.getLayerManager().removeLayer(osmLayer);
             osmLayer = null;
         }
     }
@@ -77,12 +77,12 @@ public class OdDataLayer extends OsmDataLayer implements OdLayer, LayerChangeLis
     public void addDiffLayer(OdDiffLayer layer) {
         removeDiffLayer();
         diffLayer = layer;
-        Main.main.addLayer(diffLayer);
+        Main.getLayerManager().addLayer(diffLayer);
     }
     
     public void removeDiffLayer() {
         if (diffLayer != null) {
-            Main.main.removeLayer(diffLayer);
+            Main.getLayerManager().removeLayer(diffLayer);
             diffLayer = null;
         }
     }

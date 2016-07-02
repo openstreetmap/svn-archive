@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package ptl;
 
 import org.openstreetmap.josm.Main;

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package ptl;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -74,6 +75,7 @@ public class PublicTransportLayer extends Layer {
             try {
                 color = ColorHelper.html2color(relation.get("colour"));
             } catch (RuntimeException ignore) {
+                Main.trace(ignore);
             }
             renderer.drawWay(way, color, new BasicStroke(1), null, null, 0, doDrawArrows, false, false, false);
         }
@@ -86,7 +88,8 @@ public class PublicTransportLayer extends Layer {
     protected void drawRefLabels(StyledMapRenderer renderer, MultiMap<Pair<Node, Node>, String> segmentRefs) {
         for (Pair<Node, Node> nodePair : segmentRefs.keySet()) {
             final String label = Utils.join(tr(", "), new TreeSet<>(segmentRefs.get(nodePair)));
-            final TextLabel text = new TextLabel(new LabelCompositionStrategy.StaticLabelCompositionStrategy(label), new Font("SansSerif", Font.PLAIN, 16), 0, 0, new Color(0x80FFFFFF, true), 0f, null);
+            final TextLabel text = new TextLabel(new LabelCompositionStrategy.StaticLabelCompositionStrategy(label),
+                    new Font("SansSerif", Font.PLAIN, 16), 0, 0, new Color(0x80FFFFFF, true), 0f, null);
             final Way way = new Way();
             way.addNode(nodePair.a);
             way.addNode(nodePair.b);

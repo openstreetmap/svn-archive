@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package ptl;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -53,12 +54,12 @@ public class DistanceBetweenStops extends JosmAction {
             final WayConnectionType link = links.get(i);
             final List<Node> nodes = routeSegments.get(i).getWay().getNodes();
             switch (link.direction) {
-                case BACKWARD:
-                    Collections.reverse(nodes);
-                    // fall through
-                case FORWARD:
-                    routeNodes.addAll(link.linkPrev ? nodes.subList(1, nodes.size()) : nodes);
-                    break;
+            case BACKWARD:
+                Collections.reverse(nodes);
+                // fall through
+            case FORWARD:
+                routeNodes.addAll(link.linkPrev ? nodes.subList(1, nodes.size()) : nodes);
+                break;
             }
         }
 
@@ -136,8 +137,8 @@ public class DistanceBetweenStops extends JosmAction {
         for (Relation relation : getLayerManager().getEditDataSet().getSelectedRelations()) {
             if (!isRouteSupported(relation)) {
                 JOptionPane.showMessageDialog(Main.parent, "<html>" + tr("A valid public_transport:version=2 route is required")
-                        + Utils.joinAsHtmlUnorderedList(Collections.singleton(relation.getDisplayName(DefaultNameFormatter.getInstance()))),
-                        tr("Invalid selection"), JOptionPane.WARNING_MESSAGE);
+                + Utils.joinAsHtmlUnorderedList(Collections.singleton(relation.getDisplayName(DefaultNameFormatter.getInstance()))),
+                tr("Invalid selection"), JOptionPane.WARNING_MESSAGE);
                 continue;
             }
             sb.append("\n");

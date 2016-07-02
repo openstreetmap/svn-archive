@@ -1,4 +1,4 @@
-//License: GPL
+// License: GPL. For details, see LICENSE file.
 package MichiganLeft;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -48,7 +48,7 @@ public class MichiganLeft extends Plugin {
     private class MichiganLeftAction extends JosmAction {
         private LinkedList<Command> cmds = new LinkedList<>();
 
-        public MichiganLeftAction() {
+        MichiganLeftAction() {
             super(tr("Michigan Left"), "michigan_left",
                 tr("Adds no left turn for sets of 4 or 5 ways."),
                 Shortcut.registerShortcut("tools:michigan_left",
@@ -61,8 +61,9 @@ public class MichiganLeft extends Plugin {
 
             ArrayList<OsmPrimitive> selection = new ArrayList<>();
 
-            for (OsmPrimitive prim : mainSelection)
+            for (OsmPrimitive prim : mainSelection) {
                 selection.add(prim);
+            }
 
             int ways = 0;
             for (OsmPrimitive prim : selection) {

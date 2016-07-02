@@ -1,12 +1,23 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.jts;
 
-import com.vividsolutions.jts.geom.*;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 import java.util.List;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 /**
  * Methods to convert JOSM geometry to JTS geometry
@@ -25,7 +36,6 @@ public class JTSConverter {
     /**
      * Conversions will use LatLon if useEastNorth is false, otherwise EastNorth
      * (the currently selected projection) will be used for coordinates.
-     * @param useEastNorth
      */
     public JTSConverter(boolean useEastNorth) {
         this.useEastNorth = useEastNorth;
@@ -63,7 +73,7 @@ public class JTSConverter {
     }
 
     public CoordinateSequence convertNodesToCoordinateSequence(List<Node> nodes) {
-        Coordinate coords[] = new Coordinate[nodes.size()];
+        Coordinate[] coords = new Coordinate[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
             coords[i] = convertNodeToCoordinate(nodes.get(i));
         }
@@ -71,7 +81,7 @@ public class JTSConverter {
     }
 
     public Point convertNode(Node node) {
-        Coordinate coords[] = {convertNodeToCoordinate(node)};
+        Coordinate[] coords = {convertNodeToCoordinate(node)};
         return new com.vividsolutions.jts.geom.Point(new CoordinateArraySequence(coords), getGeometryFactory());
     }
 

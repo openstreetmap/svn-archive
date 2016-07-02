@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2012 by Josh Doe and others
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.jts;
 
 import org.openstreetmap.josm.plugins.Plugin;

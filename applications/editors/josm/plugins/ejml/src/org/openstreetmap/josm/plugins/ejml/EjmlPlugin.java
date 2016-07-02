@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2015 Don-vip
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ejml;
 
 import org.openstreetmap.josm.plugins.Plugin;

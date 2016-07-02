@@ -135,6 +135,7 @@ public class ProceedDialog extends JPanel {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private void showDialog() {
 
 		if (!SwingUtilities.isEventDispatchThread()) {

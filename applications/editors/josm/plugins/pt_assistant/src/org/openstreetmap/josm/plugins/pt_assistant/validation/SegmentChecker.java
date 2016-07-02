@@ -29,12 +29,14 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.StopToWayAssigner;
 public class SegmentChecker extends Checker {
 
 	/* PTRouteSegments that have been validated and are correct */
+	@SuppressWarnings("unused")
 	private static List<PTRouteSegment> correctSegments = new ArrayList<PTRouteSegment>();
 
 	/* Manager of the PTStops and PTWays of the current route */
 	private PTRouteDataManager manager;
 
 	/* Assigns PTStops to nearest PTWays and stores that correspondence */
+	@SuppressWarnings("unused")
 	private StopToWayAssigner assigner;
 
 	public SegmentChecker(Relation relation, Test test) {
@@ -150,6 +152,7 @@ public class SegmentChecker extends Checker {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void performSegmentTest() {
 		// TODO
 	}

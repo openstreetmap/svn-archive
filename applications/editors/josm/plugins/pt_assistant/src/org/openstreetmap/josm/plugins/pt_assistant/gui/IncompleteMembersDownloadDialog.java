@@ -73,6 +73,7 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 		return selectedOption;
 	}
 
+	@SuppressWarnings("unused")
 	private void createDialog() {
 		if (!SwingUtilities.isEventDispatchThread()) {
 			Object[] params = {message, checkbox};

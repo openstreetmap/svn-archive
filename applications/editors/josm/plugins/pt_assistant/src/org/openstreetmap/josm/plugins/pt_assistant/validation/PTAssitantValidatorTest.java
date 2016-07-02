@@ -278,7 +278,8 @@ public class PTAssitantValidatorTest extends Test {
 
 	}
 
-
+	
+	@SuppressWarnings("unused")
 	private void performDummyTest(Relation r) {
 		List<Relation> primitives = new ArrayList<>(1);
 		primitives.add(r);

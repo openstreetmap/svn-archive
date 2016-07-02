@@ -28,8 +28,6 @@ public class GapTest extends Test {
 	public static final int ERROR_CODE_SPLITTING = 3713;
 	public static final int ERROR_CODE_OTHER_GAP = 3719;
 
-	private List<RelationMember> overshootList = new ArrayList<>();
-
 	public GapTest() {
 		super(tr("Gaps"), tr("Checks if there are gaps in the route relation."));
 	}
@@ -126,6 +124,7 @@ public class GapTest extends Test {
 	 *            are in a wrong order.
 	 * @return true is there is such a way, false otherwise
 	 */
+	@SuppressWarnings("unused")
 	private List<RelationMember> getOvershoots(List<RelationMember> sortedWays) {
 
 		List<RelationMember> overshoots = new ArrayList<>();

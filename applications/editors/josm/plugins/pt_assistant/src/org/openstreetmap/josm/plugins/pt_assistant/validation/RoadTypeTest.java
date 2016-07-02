@@ -29,6 +29,7 @@ public class RoadTypeTest extends Test {
 				tr("Checks if the course of the route relation is compatible with the type of the road it passes on."));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void visit(Relation r) {
 

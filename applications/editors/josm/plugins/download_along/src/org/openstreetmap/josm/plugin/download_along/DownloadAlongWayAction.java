@@ -33,7 +33,7 @@ class DownloadAlongWayAction extends DownloadAlongAction {
     private static final String PREF_DOWNLOAD_ALONG_WAY_OSM = "downloadAlongWay.download.osm";
     private static final String PREF_DOWNLOAD_ALONG_WAY_GPS = "downloadAlongWay.download.gps";
 
-    public DownloadAlongWayAction() {
+    DownloadAlongWayAction() {
         super(tr("Download along..."), "download_along", tr("Download OSM data along the selected ways."), 
                 Shortcut.registerShortcut("tools:download_along", tr("Tool: {0}", tr("Download Along")), 
                         KeyEvent.VK_D, Shortcut.ALT_SHIFT), true);

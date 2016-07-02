@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2012 Don-vip
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.geotools;
 
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class GeoToolsPlugin extends Plugin {
             try {
                 new ImageReadWriteSpi().updateRegistry(registry);
             } catch (IllegalArgumentException e) {
-                // See #10652: IllegalArgumentException: A descriptor is already registered against the name "ImageRead" under registry mode "rendered"
+                // See #10652: IAE: A descriptor is already registered against the name "ImageRead" under registry mode "rendered"
                 Main.warn("geotools: error in JAI/ImageReadWriteSpi initialization: "+e.getMessage());
             }
 
@@ -77,7 +77,7 @@ public class GeoToolsPlugin extends Plugin {
         Iterator<Class<?>> categories = ioRegistry.getCategories();
         while (categories.hasNext()) {
             @SuppressWarnings("unchecked")
-            Iterator<IIOServiceProvider> riter = ServiceLoader.load((Class<IIOServiceProvider>)categories.next(), loader).iterator();
+            Iterator<IIOServiceProvider> riter = ServiceLoader.load((Class<IIOServiceProvider>) categories.next(), loader).iterator();
             while (riter.hasNext()) {
                 ioRegistry.registerServiceProvider(riter.next());
             }

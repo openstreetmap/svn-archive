@@ -10,7 +10,7 @@
          See https://josm.openstreetmap.de/wiki/DevelopersGuide/DevelopingPlugins
     -->
     <property name="plugin.author" value="Imi"/>
-    <property name="plugin.class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTesterAction"/>
     <property name="plugin.description" value="Adds a tagging preset tester to the windows menu, which helps you developing of tagging presets (quick preview of the dialog that will popup). You can start the jar-file as standalone as well."/>
     <property name="plugin.icon" value="images/tagging-preset-tester.png"/>
     <!--<property name="plugin.link" value="..."/>-->
@@ -20,5 +20,10 @@
 
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
-  
+
+    <target name="additional-manifest">
+        <manifest file="MANIFEST" mode="update">
+            <attribute name="Main-Class" value="org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester"/>
+        </manifest>
+    </target>
 </project>

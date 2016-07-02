@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
@@ -56,7 +57,7 @@ public class PTAssistantLayer extends Layer
 
 	@Override
 	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
-
+		
 		paintVisitor = new PTAssistantPaintVisitor(g, mv);
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
@@ -161,6 +162,7 @@ public class PTAssistantLayer extends Layer
 					this.primitives.add(relation);
 					if (!Main.getLayerManager().containsLayer(this)) {
 						Main.getLayerManager().addLayer(this);
+						Main.map.repaint();
 					}
 
 					for (OsmPrimitive primitive : primitives) {

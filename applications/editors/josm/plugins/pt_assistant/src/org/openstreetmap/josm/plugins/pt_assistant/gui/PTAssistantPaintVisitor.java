@@ -5,7 +5,10 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.openstreetmap.josm.data.osm.Node;
@@ -38,9 +41,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		for (RelationMember rm : r.getMembers()) {
 
 			if (RouteUtils.isPTStop(rm)) {
-				
-				drawStop(rm.getMember());
 
+				drawStop(rm.getMember());
 
 			} else if (RouteUtils.isPTWay(rm)) {
 				if (rm.isWay()) {
@@ -60,12 +62,12 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		// in the end, draw labels:
 		HashMap<Long, String> stopOrderMap = new HashMap<>();
 		int stopCount = 1;
-		
+
 		for (RelationMember rm : r.getMembers()) {
 			if (RouteUtils.isPTStop(rm) || (rm.getMember().isIncomplete() && (rm.isNode() || rm.hasRole("stop")
 					|| rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only") || rm.hasRole("platform")
 					|| rm.hasRole("platform_entry_only") || rm.hasRole("platform_exit_only")))) {
-				
+
 				String label = "";
 
 				if (stopOrderMap.containsKey(rm.getUniqueId())) {
@@ -138,7 +140,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 				lastN = n;
 				continue;
 			}
-			this.drawSegment(lastN, n, new Color(208, 80, 208, 179), oneway);
+			this.drawSegment(lastN, n, new Color(128, 0, 128, 100), oneway);
 			lastN = n;
 		}
 	}
@@ -185,15 +187,15 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 	protected void drawSegment(Point p1, Point p2, Color color, int oneway) {
 
 		double t = Math.atan2((double) p2.x - p1.x, (double) p2.y - p1.y);
-		double cosT = 8 * Math.cos(t);
-		double sinT = 8 * Math.sin(t);
+		double cosT = 9 * Math.cos(t);
+		double sinT = 9 * Math.sin(t);
 
 		int[] xPoints = { (int) (p1.x + cosT), (int) (p2.x + cosT), (int) (p2.x - cosT), (int) (p1.x - cosT) };
 		int[] yPoints = { (int) (p1.y - sinT), (int) (p2.y - sinT), (int) (p2.y + sinT), (int) (p1.y + sinT) };
 		g.setColor(color);
 		g.fillPolygon(xPoints, yPoints, 4);
-		g.fillOval((int) (p1.x - 8), (int) (p1.y - 8), 16, 16);
-		g.fillOval((int) (p2.x - 8), (int) (p2.y - 8), 16, 16);
+		g.fillOval((int) (p1.x - 9), (int) (p1.y - 9), 18, 18);
+		g.fillOval((int) (p2.x - 9), (int) (p2.y - 9), 18, 18);
 
 		if (oneway != 0) {
 			double middleX = (double) (p1.x + p2.x) / 2.0;
@@ -262,14 +264,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		Point p = mv.getPoint(n);
 
-		Color fillColor = null;
-
-		if (primitive.hasTag("bus", "yes")) {
-			fillColor = Color.BLUE;
-		} else if (primitive.hasTag("tram", "yes")) {
-			fillColor = Color.RED;
-		} // TODO: add more options
-		g.setColor(fillColor);
+		g.setColor(Color.BLUE);
 
 		if (primitive.hasTag("public_transport", "stop_position")) {
 			g.fillOval(p.x - 8, p.y - 8, 16, 16);
@@ -293,11 +288,10 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 
 		// draw the ref values of all parent routes:
 		List<String> parentsLabelList = new ArrayList<>();
-		String parentsLabel = "";
 		for (OsmPrimitive parent : primitive.getReferrers()) {
 			if (parent.getType().equals(OsmPrimitiveType.RELATION)) {
 				Relation relation = (Relation) parent;
-				if (RouteUtils.isTwoDirectionRoute(relation)) {
+				if (RouteUtils.isTwoDirectionRoute(relation) && relation.get("ref") != null && !relation.get("ref").equals("")) {
 
 					boolean stringFound = false;
 					for (String s : parentsLabelList) {
@@ -306,7 +300,6 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 						}
 					}
 					if (!stringFound) {
-						parentsLabel = parentsLabel + relation.get("ref") + ";";
 						parentsLabelList.add(relation.get("ref"));
 					}
 
@@ -314,13 +307,58 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 			}
 		}
 
+		Collections.sort(parentsLabelList, new RefTagComparator());
+
+		String parentsLabel = "";
+		for (String s : parentsLabelList) {
+			parentsLabel = parentsLabel + s + ";";
+		}
+
 		if (!parentsLabel.equals("")) {
 			// remove the last semicolon:
 			parentsLabel = parentsLabel.substring(0, parentsLabel.length() - 1);
-			g.setColor(new Color(150, 150, 150));
+
+			g.setColor(new Color(128, 0, 128));
 			Font parentLabelFont = new Font("SansSerif", Font.ITALIC, 20);
 			g.setFont(parentLabelFont);
-			g.drawString(parentsLabel, p.x + 20, p.y);
+			g.drawString(parentsLabel, p.x + 20, p.y + 20);
+		}
+
+	}
+
+	private class RefTagComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String s1, String s2) {
+
+			if (s1 == null || s1.equals("")) {
+				if (s2 == null || s2.equals("")) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+
+			String firstNumberString1 = s1.split("\\D+")[0];
+			String firstNumberString2 = s2.split("\\D+")[0];
+			
+			try {
+				int firstNumber1 = Integer.valueOf(firstNumberString1);
+				int firstNumber2 = Integer.valueOf(firstNumberString2);
+				if (firstNumber1 > firstNumber2) {
+					return 1;
+				} else if (firstNumber1 < firstNumber2) {
+					return -1;
+				} else {
+					// if the first number is the same:
+
+					return s1.compareTo(s2);
+
+				}
+			} catch (NumberFormatException ex) {
+				return s1.compareTo(s2);
+			}
+
 		}
 
 	}

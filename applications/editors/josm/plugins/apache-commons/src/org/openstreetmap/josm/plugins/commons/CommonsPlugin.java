@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.commons;
 
 import org.openstreetmap.josm.plugins.Plugin;

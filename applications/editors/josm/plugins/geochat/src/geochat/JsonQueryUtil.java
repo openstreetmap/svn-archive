@@ -1,4 +1,4 @@
-// License: WTFPL
+// License: WTFPL. For details, see LICENSE file.
 package geochat;
 
 import java.awt.EventQueue;
@@ -19,7 +19,7 @@ import org.openstreetmap.josm.Main;
  *
  * @author zverik
  */
-public class JsonQueryUtil implements Runnable {
+public final class JsonQueryUtil implements Runnable {
 
     /**
      * Query the server synchronously.
@@ -27,27 +27,26 @@ public class JsonQueryUtil implements Runnable {
      * @return Parsed JsonObject if the query was successful, <tt>null</tt> otherwise.
      * @throws IOException There was a problem connecting to the server or parsing JSON.
      */
-    public static JsonObject query( String query ) throws IOException {
+    public static JsonObject query(String query) throws IOException {
         try {
             String serverURL = Main.pref.get("geochat.server", "http://zverik.dev.openstreetmap.org/osmochat.php?action=");
             URL url = new URL(serverURL + query);
-//            System.out.println("GeoChat URL = " + url.toString());
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-            if( connection.getResponseCode() != 200 ) {
+            if (connection.getResponseCode() != 200) {
                 throw new IOException("HTTP Response code " + connection.getResponseCode() + " (" + connection.getResponseMessage() + ")");
             }
             InputStream inp = connection.getInputStream();
-            if( inp == null )
+            if (inp == null)
                 throw new IOException("Empty response");
             try {
                 return Json.createReader(inp).readObject();
-            } catch( JsonException e ) {
+            } catch (JsonException e) {
                 throw new IOException("Failed to parse JSON: " + e.getMessage());
             } finally {
                 connection.disconnect();
             }
-        } catch( MalformedURLException ex ) {
+        } catch (MalformedURLException ex) {
             throw new IOException("Malformed URL: " + ex.getMessage());
         }
     }
@@ -59,7 +58,7 @@ public class JsonQueryUtil implements Runnable {
 
     private JsonQueryUtil() {}
 
-    private JsonQueryUtil( String query, JsonQueryCallback callback ) {
+    private JsonQueryUtil(String query, JsonQueryCallback callback) {
         this.query = query;
         this.callback = callback;
     }
@@ -69,25 +68,27 @@ public class JsonQueryUtil implements Runnable {
      * @param query Query string (see {@link #query}).
      * @param callback Callback listener to process the JSON response.
      */
-    public static void queryAsync( String query, JsonQueryCallback callback ) {
+    public static void queryAsync(String query, JsonQueryCallback callback) {
         Main.worker.submit(new JsonQueryUtil(query, callback));
     }
 
     private void doRealRun() {
-    	JsonObject obj;
+        JsonObject obj;
         try {
             obj = query(query);
-        } catch( IOException e ) {
+        } catch (IOException e) {
             Main.warn(e.getClass().getName() + " while connecting to a chat server: " + e.getMessage());
             obj = null;
         }
-        if( callback != null )
+        if (callback != null)
             callback.processJson(obj);
     }
 
+    @Override
     public void run() {
-        if( EventQueue.isDispatchThread() ) {
+        if (EventQueue.isDispatchThread()) {
             new Thread(new Runnable() {
+                @Override
                 public void run() {
                     doRealRun();
                 }

@@ -4,7 +4,7 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="[josm_geochat] copypaste from keyboard, font size advanced parameters"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="7001"/>
+    <property name="plugin.main.version" value="10420"/>
 
     <property name="plugin.author" value="Ilya Zverev"/>
     <property name="plugin.class" value="geochat.GeoChatPlugin"/>

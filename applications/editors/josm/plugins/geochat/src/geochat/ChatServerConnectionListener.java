@@ -1,7 +1,9 @@
-// License: WTFPL
+// License: WTFPL. For details, see LICENSE file.
 package geochat;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
@@ -14,38 +16,38 @@ public interface ChatServerConnectionListener {
      * User has been logged in.
      * @param userName Name of the logged in user.
      */
-    void loggedIn( String userName );
-    
+    void loggedIn(String userName);
+
     /**
      * User tried to log in, but failed.
      * @param reason Why. <tt>null</tt> if it is intended logout.
      */
-    void notLoggedIn( String reason );
+    void notLoggedIn(String reason);
 
     /**
      * Sending message failed.
      * @param reason Why.
      */
-    void messageSendFailed( String reason );
+    void messageSendFailed(String reason);
 
     /**
      * Chat has become active or not.
      * @param active Is the chat active.
      */
-    void statusChanged( boolean active );
+    void statusChanged(boolean active);
 
     /**
      * Received an update to users list.
      * @param users a hash of user names and coordinates.
      */
-    void updateUsers( Map<String, LatLon> users );
+    void updateUsers(Map<String, LatLon> users);
 
     /**
      * New messages were received. This would only be called in active state.
      * @param replace if set, remove all old messages.
      * @param messages new messages array.
      */
-    void receivedMessages( boolean replace, List<ChatMessage> messages );
+    void receivedMessages(boolean replace, List<ChatMessage> messages);
 
     /**
      * New private messages were received. See {@link #receivedMessages(boolean, java.util.List)}.
@@ -54,5 +56,5 @@ public interface ChatServerConnectionListener {
      * @param replace if set, remove all old messages.
      * @param messages list of new private messages.
      */
-    void receivedPrivateMessages( boolean replace, List<ChatMessage> messages );
+    void receivedPrivateMessages(boolean replace, List<ChatMessage> messages);
 }

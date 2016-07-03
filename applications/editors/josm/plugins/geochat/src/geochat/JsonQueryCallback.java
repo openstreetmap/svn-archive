@@ -1,4 +1,4 @@
-// License: WTFPL
+// License: WTFPL. For details, see LICENSE file.
 package geochat;
 
 import javax.json.JsonObject;
@@ -16,5 +16,5 @@ public interface JsonQueryCallback {
      *
      * @param json JSON parsed response or null if the query was unsuccessful.
      */
-    void processJson( JsonObject json );
+    void processJson(JsonObject json);
 }

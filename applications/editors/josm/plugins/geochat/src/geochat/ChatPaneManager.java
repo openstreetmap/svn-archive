@@ -1,17 +1,29 @@
-// License: WTFPL
+// License: WTFPL. For details, see LICENSE file.
 package geochat;
+
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.util.GuiHelper;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  *
@@ -25,25 +37,26 @@ class ChatPaneManager {
     private Map<String, ChatPane> chatPanes;
     private boolean collapsed;
 
-    public ChatPaneManager( GeoChatPanel panel, JTabbedPane tabs ) {
+    ChatPaneManager(GeoChatPanel panel, JTabbedPane tabs) {
         this.panel = panel;
         this.tabs = tabs;
         this.collapsed = panel.isDialogInCollapsedView();
         chatPanes = new HashMap<>();
         createChatPane(null);
         tabs.addChangeListener(new ChangeListener() {
-            public void stateChanged( ChangeEvent e ) {
+            @Override
+            public void stateChanged(ChangeEvent e) {
                 updateActiveTabStatus();
             }
         });
     }
 
-    public void setCollapsed( boolean collapsed ) {
+    public void setCollapsed(boolean collapsed) {
         this.collapsed = collapsed;
         updateActiveTabStatus();
     }
 
-    public boolean hasUser( String user ) {
+    public boolean hasUser(String user) {
         return chatPanes.containsKey(user == null ? PUBLIC_PANE : user);
     }
 
@@ -53,26 +66,26 @@ class ChatPaneManager {
 
     public int getNotifyLevel() {
         int alarm = 0;
-        for( ChatPane entry : chatPanes.values() ) {
-            if( entry.notify > alarm )
+        for (ChatPane entry : chatPanes.values()) {
+            if (entry.notify > alarm)
                 alarm = entry.notify;
         }
         return alarm;
     }
 
     public void updateActiveTabStatus() {
-        if( tabs.getSelectedIndex() >= 0 )
-            ((ChatTabTitleComponent)tabs.getTabComponentAt(tabs.getSelectedIndex())).updateAlarm();
+        if (tabs.getSelectedIndex() >= 0)
+            ((ChatTabTitleComponent) tabs.getTabComponentAt(tabs.getSelectedIndex())).updateAlarm();
     }
 
-    public void notify( String user, int alarmLevel ) {
-        if( alarmLevel <= 0 || !hasUser(user) )
+    public void notify(String user, int alarmLevel) {
+        if (alarmLevel <= 0 || !hasUser(user))
             return;
         ChatPane entry = chatPanes.get(user == null ? PUBLIC_PANE : user);
         entry.notify = alarmLevel;
         int idx = tabs.indexOfComponent(entry.component);
-        if( idx >= 0 )
-            ((ChatTabTitleComponent)tabs.getTabComponentAt(idx)).updateAlarm();
+        if (idx >= 0)
+            ((ChatTabTitleComponent) tabs.getTabComponentAt(idx)).updateAlarm();
     }
 
     public static int MESSAGE_TYPE_DEFAULT = 0;
@@ -80,43 +93,44 @@ class ChatPaneManager {
     public static int MESSAGE_TYPE_ATTENTION = 2;
     private static Color COLOR_ATTENTION = new Color(0, 0, 192);
 
-    private void addLineToChatPane( String userName, String line, final int messageType ) {
-        if( line.length() == 0 )
+    private void addLineToChatPane(String userName, String line, final int messageType) {
+        if (line.length() == 0)
             return;
-        if( !chatPanes.containsKey(userName) )
+        if (!chatPanes.containsKey(userName))
             createChatPane(userName);
         final String nline = line.startsWith("\n") ? line : "\n" + line;
         final JTextPane thepane = chatPanes.get(userName).pane;
         GuiHelper.runInEDT(new Runnable() {
+            @Override
             public void run() {
                 Document doc = thepane.getDocument();
                 try {
                     SimpleAttributeSet attrs = null;
-                    if( messageType != MESSAGE_TYPE_DEFAULT ) {
+                    if (messageType != MESSAGE_TYPE_DEFAULT) {
                         attrs = new SimpleAttributeSet();
-                        if( messageType == MESSAGE_TYPE_INFORMATION )
+                        if (messageType == MESSAGE_TYPE_INFORMATION)
                             StyleConstants.setItalic(attrs, true);
-                        else if( messageType == MESSAGE_TYPE_ATTENTION )
+                        else if (messageType == MESSAGE_TYPE_ATTENTION)
                             StyleConstants.setForeground(attrs, COLOR_ATTENTION);
                     }
                     doc.insertString(doc.getLength(), nline, attrs);
-                } catch( BadLocationException ex ) {
-                    // whatever
+                } catch (BadLocationException ex) {
+                    Main.warn(ex);
                 }
                 thepane.setCaretPosition(doc.getLength());
             }
         });
     }
 
-    public void addLineToChatPane( String userName, String line ) {
+    public void addLineToChatPane(String userName, String line) {
         addLineToChatPane(userName, line, MESSAGE_TYPE_DEFAULT);
     }
 
-    public void addLineToPublic( String line ) {
+    public void addLineToPublic(String line) {
         addLineToChatPane(PUBLIC_PANE, line);
     }
 
-    public void addLineToPublic( String line, int messageType ) {
+    public void addLineToPublic(String line, int messageType) {
         addLineToChatPane(PUBLIC_PANE, line, messageType);
     }
 
@@ -124,8 +138,8 @@ class ChatPaneManager {
         chatPanes.get(PUBLIC_PANE).pane.setText("");
     }
 
-    public void clearChatPane( String userName) {
-        if( userName == null || userName.equals(PUBLIC_PANE) )
+    public void clearChatPane(String userName) {
+        if (userName == null || userName.equals(PUBLIC_PANE))
             clearPublicChatPane();
         else
             chatPanes.get(userName).pane.setText("");
@@ -135,16 +149,16 @@ class ChatPaneManager {
         clearChatPane(getActiveChatPane());
     }
 
-    public ChatPane createChatPane( String userName ) {
+    public ChatPane createChatPane(String userName) {
         JTextPane chatPane = new JTextPane();
         chatPane.setEditable(false);
         Font font = chatPane.getFont();
         float size = Main.pref.getInteger("geochat.fontsize", -1);
-        if( size < 6 )
+        if (size < 6)
             size += font.getSize2D();
         chatPane.setFont(font.deriveFont(size));
-//        DefaultCaret caret = (DefaultCaret)chatPane.getCaret(); // does not work
-//        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        //        DefaultCaret caret = (DefaultCaret)chatPane.getCaret(); // does not work
+        //        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         JScrollPane scrollPane = new JScrollPane(chatPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chatPane.addMouseListener(new GeoChatPopupAdapter(panel));
 
@@ -168,11 +182,12 @@ class ChatPaneManager {
      */
     public String getActiveChatPane() {
         Component c = tabs.getSelectedComponent();
-        if( c == null )
+        if (c == null)
             return null;
-        for( String user : chatPanes.keySet() )
-            if( c.equals(chatPanes.get(user).component) )
+        for (String user : chatPanes.keySet()) {
+            if (c.equals(chatPanes.get(user).component))
                 return user;
+        }
         return null;
     }
 
@@ -181,8 +196,8 @@ class ChatPaneManager {
         return user == null || user.equals(PUBLIC_PANE) ? null : user;
     }
 
-    public void closeChatPane( String user ) {
-        if( user == null || user.equals(PUBLIC_PANE) || !chatPanes.containsKey(user) )
+    public void closeChatPane(String user) {
+        if (user == null || user.equals(PUBLIC_PANE) || !chatPanes.containsKey(user))
             return;
         tabs.remove(chatPanes.get(user).component);
         chatPanes.remove(user);
@@ -190,20 +205,21 @@ class ChatPaneManager {
 
     public void closeSelectedPrivatePane() {
         String pane = getRecipient();
-        if( pane != null )
+        if (pane != null)
             closeChatPane(pane);
     }
 
     public void closePrivateChatPanes() {
         List<String> entries = new ArrayList<>(chatPanes.keySet());
-        for( String user : entries )
-            if( !user.equals(PUBLIC_PANE) )
+        for (String user : entries) {
+            if (!user.equals(PUBLIC_PANE))
                 closeChatPane(user);
+        }
     }
-    
+
     public boolean hasSelectedText() {
         String user = getActiveChatPane();
-        if( user != null ) {
+        if (user != null) {
             JTextPane pane = chatPanes.get(user).pane;
             return pane.getSelectedText() != null;
         }
@@ -212,15 +228,14 @@ class ChatPaneManager {
 
     public void copySelectedText() {
         String user = getActiveChatPane();
-        if( user != null )
+        if (user != null)
             chatPanes.get(user).pane.copy();
     }
-    
 
     private class ChatTabTitleComponent extends JLabel {
         private ChatPane entry;
 
-        public ChatTabTitleComponent( ChatPane entry ) {
+        ChatTabTitleComponent(ChatPane entry) {
             super(entry.isPublic ? tr("Public") : entry.userName);
             this.entry = entry;
         }
@@ -229,12 +244,12 @@ class ChatPaneManager {
         private Font boldFont;
 
         public void updateAlarm() {
-            if( normalFont == null ) {
+            if (normalFont == null) {
                 // prepare cached fonts
                 normalFont = getFont().deriveFont(Font.PLAIN);
                 boldFont = getFont().deriveFont(Font.BOLD);
             }
-            if( entry.notify > 0 && !collapsed && tabs.getSelectedIndex() == tabs.indexOfComponent(entry.component) )
+            if (entry.notify > 0 && !collapsed && tabs.getSelectedIndex() == tabs.indexOfComponent(entry.component))
                 entry.notify = 0;
             setFont(entry.notify > 0 ? boldFont : normalFont);
             panel.updateTitleAlarm();

@@ -9,7 +9,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionChoice;
 import org.openstreetmap.josm.gui.preferences.projection.ProjectionPreference;
 
-public class ProjectionInfo {
+public final class ProjectionInfo {
     private static Map<String, ProjectionChoice> allCodesPC = new HashMap<>();
     private static Map<String, Projection> allCodes = new HashMap<>();
 
@@ -19,6 +19,10 @@ public class ProjectionInfo {
                 allCodesPC.put(code, pc);
             }
         }
+    }
+
+    private ProjectionInfo() {
+        // Hide default constructor for utilities classes
     }
 
     public static Projection getProjectionByCode(String code) {

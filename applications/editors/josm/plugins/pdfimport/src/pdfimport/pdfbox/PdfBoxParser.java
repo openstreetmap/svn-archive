@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package pdfimport.pdfbox;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -15,12 +16,12 @@ import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 
 import pdfimport.PathOptimizer;
 
-public class PdfBoxParser extends PDFStreamEngine{
-	private final PathOptimizer target;
+public class PdfBoxParser extends PDFStreamEngine {
+    private final PathOptimizer target;
 
-	public PdfBoxParser(PathOptimizer target){
-		this.target = target;
-	}
+    public PdfBoxParser(PathOptimizer target) {
+        this.target = target;
+    }
 
     public void parse(File file, int maxPaths, ProgressMonitor monitor) throws IOException {
         monitor.beginTask(tr("Parsing PDF", 1));
@@ -36,7 +37,7 @@ public class PdfBoxParser extends PDFStreamEngine{
             if (allPages.size() != 1) {
                 throw new IllegalArgumentException(tr("The PDF file must have exactly one page."));
             }
-            
+
             PDPage page = (PDPage) allPages.get(0);
             PDRectangle pageSize = page.findMediaBox();
             Integer rotationVal = page.getRotation();
@@ -44,12 +45,12 @@ public class PdfBoxParser extends PDFStreamEngine{
             if (rotationVal != null) {
                 rotation = rotationVal.intValue();
             }
-    
+
             new PageDrawer().drawPage(new GraphicsProcessor(target, rotation, maxPaths, monitor), page);
             this.target.bounds = new Rectangle2D.Double(
                     pageSize.getLowerLeftX(),
-                    pageSize.getLowerLeftY(), 
-                    pageSize.getWidth(), 
+                    pageSize.getLowerLeftY(),
+                    pageSize.getWidth(),
                     pageSize.getHeight());
         }
 

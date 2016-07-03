@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package pdfimport.pdfbox;
 
 import static org.junit.Assert.assertEquals;

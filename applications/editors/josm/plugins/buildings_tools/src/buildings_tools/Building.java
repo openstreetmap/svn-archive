@@ -79,8 +79,9 @@ class Building {
     public void reset() {
         len = 0;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) {
             en[i] = null;
+        }
     }
 
     public EastNorth getPoint(int num) {
@@ -103,8 +104,9 @@ class Building {
     }
 
     /**
+     * @param p
+     *            The point to project
      * @return Projection of the point to the heading vector in metres
-     * @param p The point to project
      */
     private double projection1(EastNorth p) {
         final EastNorth vec = p.subtract(en[0]);
@@ -112,9 +114,10 @@ class Building {
     }
 
     /**
+     * @param p
+     *            The point to project
      * @return Projection of the point to the perpendicular of the heading
-     *          vector in metres
-     * @param p The point to project
+     *         vector in metres
      */
     private double projection2(EastNorth p) {
         final EastNorth vec = p.subtract(en[0]);

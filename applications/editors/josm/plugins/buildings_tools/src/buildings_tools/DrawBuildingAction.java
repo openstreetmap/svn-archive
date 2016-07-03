@@ -300,8 +300,9 @@ public class DrawBuildingAction extends MapMode implements MapViewPaintable, Sel
             Way w = building.create();
             if (w != null) {
                 if (!alt || ToolSettings.isUsingAddr())
-                    for (Entry<String, String> kv : ToolSettings.getTags().entrySet())
+                    for (Entry<String, String> kv : ToolSettings.getTags().entrySet()) {
                         w.put(kv.getKey(), kv.getValue());
+                    }
                 if (ToolSettings.isUsingAddr())
                     showAddrDialog(w);
                 if (ToolSettings.isAutoSelect()

@@ -59,16 +59,18 @@ public class MergeAddrPointsAction extends JosmAction {
         scanSelection:
         for (OsmPrimitive p : selection) {
             if (p.getType() == OsmPrimitiveType.NODE) {
-                for (OsmPrimitive r : p.getReferrers())
+                for (OsmPrimitive r : p.getReferrers()) {
                     if (r.getType() == OsmPrimitiveType.WAY)
                        continue scanSelection; // Don't use nodes if they're referenced by ways
-                for (String key : p.getKeys().keySet())
+                }
+                for (String key : p.getKeys().keySet()) {
                     if (key.startsWith("addr:")) {
-                        addrNodes.add((Node)p); // Found address node
+                        addrNodes.add((Node) p); // Found address node
                         break;
                     }
+                }
             } else if (p.getType() == OsmPrimitiveType.WAY && p.getKeys().containsKey("building"))
-                buildings.add((Way)p);
+                buildings.add((Way) p);
         }
         if (addrNodes.isEmpty()) {
             new Notification(tr("No address nodes found in the selection"))
@@ -131,10 +133,12 @@ public class MergeAddrPointsAction extends JosmAction {
             }
         }
         if (multi != 0)
-            new Notification(trn("There is {0} building with multiple address nodes inside", "There are {0} buildings with multiple address nodes inside", multi, multi))
+            new Notification(trn("There is {0} building with multiple address nodes inside",
+                    "There are {0} buildings with multiple address nodes inside", multi, multi))
                     .setIcon(JOptionPane.WARNING_MESSAGE).show();
         if (conflicts != 0)
-            new Notification(trn("There is {0} building with address conflicts", "There are {0} buildings with address conflicts", conflicts, conflicts))
+            new Notification(trn("There is {0} building with address conflicts",
+                            "There are {0} buildings with address conflicts", conflicts, conflicts))
                     .setIcon(JOptionPane.WARNING_MESSAGE).show();
         if (cmds.isEmpty() && multi == 0 && conflicts == 0)
             new Notification(tr("No address nodes inside buildings found"))

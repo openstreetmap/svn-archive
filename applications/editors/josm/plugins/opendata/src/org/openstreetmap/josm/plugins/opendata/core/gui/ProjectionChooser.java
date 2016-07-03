@@ -51,7 +51,7 @@ public class ProjectionChooser extends ExtendedDialog {
     private Component projectionNameGlue;
     private JLabel projectionName = new JLabel();
     private JLabel bounds = new JLabel();
-    
+
     /**
      * This is the panel holding all projection preferences
      */
@@ -67,29 +67,29 @@ public class ProjectionChooser extends ExtendedDialog {
     public ProjectionChooser(Component parent) {
         this(parent, tr("Projection method"), new String[] {tr("OK"), tr("Cancel")});
     }
-    
+
     protected ProjectionChooser(Component parent, String title, String[] buttonTexts) {
         super(parent, title, buttonTexts);
         setMinimumSize(new Dimension(600, 200));
         addGui();
     }
-    
+
     public void addGui() {
-        projPanel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+        projPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         projPanel.setLayout(new GridBagLayout());
-        projPanel.add(new JLabel(tr("Projection method")), GBC.std().insets(5,5,0,5));
-        projPanel.add(GBC.glue(5,0), GBC.std().fill(GBC.HORIZONTAL));
-        projPanel.add(projectionCombo, GBC.eop().fill(GBC.HORIZONTAL).insets(0,5,5,5));
-        projPanel.add(projectionCodeLabel = new JLabel(tr("Projection code")), GBC.std().insets(25,5,0,5));
-        projPanel.add(projectionCodeGlue = GBC.glue(5,0), GBC.std().fill(GBC.HORIZONTAL));
-        projPanel.add(projectionCode, GBC.eop().fill(GBC.HORIZONTAL).insets(0,5,5,5));
-        projPanel.add(projectionNameLabel = new JLabel(tr("Projection name")), GBC.std().insets(25,5,0,5));
-        projPanel.add(projectionNameGlue = GBC.glue(5,0), GBC.std().fill(GBC.HORIZONTAL));
-        projPanel.add(projectionName, GBC.eop().fill(GBC.HORIZONTAL).insets(0,5,5,5));
-        projPanel.add(new JLabel(tr("Bounds")), GBC.std().insets(25,5,0,5));
-        projPanel.add(GBC.glue(5,0), GBC.std().fill(GBC.HORIZONTAL));
-        projPanel.add(bounds, GBC.eop().fill(GBC.HORIZONTAL).insets(0,5,5,5));
-        projPanel.add(projSubPrefPanelWrapper, GBC.eol().fill(GBC.HORIZONTAL).insets(20,5,5,5));
+        projPanel.add(new JLabel(tr("Projection method")), GBC.std().insets(5, 5, 0, 5));
+        projPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        projPanel.add(projectionCombo, GBC.eop().fill(GBC.HORIZONTAL).insets(0, 5, 5, 5));
+        projPanel.add(projectionCodeLabel = new JLabel(tr("Projection code")), GBC.std().insets(25, 5, 0, 5));
+        projPanel.add(projectionCodeGlue = GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        projPanel.add(projectionCode, GBC.eop().fill(GBC.HORIZONTAL).insets(0, 5, 5, 5));
+        projPanel.add(projectionNameLabel = new JLabel(tr("Projection name")), GBC.std().insets(25, 5, 0, 5));
+        projPanel.add(projectionNameGlue = GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        projPanel.add(projectionName, GBC.eop().fill(GBC.HORIZONTAL).insets(0, 5, 5, 5));
+        projPanel.add(new JLabel(tr("Bounds")), GBC.std().insets(25, 5, 0, 5));
+        projPanel.add(GBC.glue(5, 0), GBC.std().fill(GBC.HORIZONTAL));
+        projPanel.add(bounds, GBC.eop().fill(GBC.HORIZONTAL).insets(0, 5, 5, 5));
+        projPanel.add(projSubPrefPanelWrapper, GBC.eol().fill(GBC.HORIZONTAL).insets(20, 5, 5, 5));
 
         selectedProjectionChanged((ProjectionChoice) projectionCombo.getSelectedItem());
         projectionCombo.addActionListener(new ActionListener() {
@@ -101,11 +101,11 @@ public class ProjectionChooser extends ExtendedDialog {
         });
         setContent(projPanel);
     }
-    
+
     private void selectedProjectionChanged(final ProjectionChoice pc) {
         // Don't try to update if we're still starting up
         int size = projPanel.getComponentCount();
-        if(size < 1)
+        if (size < 1)
             return;
 
         final ActionListener listener = new ActionListener() {
@@ -123,7 +123,7 @@ public class ProjectionChooser extends ExtendedDialog {
         projSubPrefPanel.repaint();
         updateMeta(pc);
     }
-    
+
     private void updateMeta(ProjectionChoice pc) {
         pc.setPreferences(pc.getPreferences(projSubPrefPanel));
         Projection proj = pc.getProjection();
@@ -131,7 +131,8 @@ public class ProjectionChooser extends ExtendedDialog {
         projectionName.setText(proj.toString());
         Bounds b = proj.getWorldBoundsLatLon();
         CoordinateFormat cf = CoordinateFormat.getDefaultFormat();
-        bounds.setText(b.getMin().lonToString(cf)+", "+b.getMin().latToString(cf)+" : "+b.getMax().lonToString(cf)+", "+b.getMax().latToString(cf));
+        bounds.setText(b.getMin().lonToString(cf)+", "+b.getMin().latToString(cf)+" : "+
+                       b.getMax().lonToString(cf)+", "+b.getMax().latToString(cf));
         boolean showCode = true;
         boolean showName = false;
         if (pc instanceof SubPrefsOptions) {

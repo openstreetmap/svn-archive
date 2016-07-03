@@ -8,10 +8,10 @@ public interface BelgianConstants {
     /**
      * Portal
      */
-    public static final String BELGIAN_PORTAL = "http://data.gov.be/"+OdConstants.PATTERN_LANG+"/dataset/";
-    
+    String BELGIAN_PORTAL = "http://data.gov.be/"+OdConstants.PATTERN_LANG+"/dataset/";
+
     /**
      * Icon
      */
-    public static final String ICON_BE_24 = "be24.png";
+    String ICON_BE_24 = "be24.png";
 }

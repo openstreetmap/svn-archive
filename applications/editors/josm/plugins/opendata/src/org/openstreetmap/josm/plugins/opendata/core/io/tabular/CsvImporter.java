@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -21,7 +22,8 @@ public class CsvImporter extends AbstractImporter {
     public static final ExtensionFileFilter CSV_FILE_FILTER = new ExtensionFileFilter(
             OdConstants.CSV_EXT, OdConstants.CSV_EXT, tr("CSV files") + " (*."+OdConstants.CSV_EXT+")");
 
-    public static final String COLOMBUS_HEADER = "INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX";
+    public static final String COLOMBUS_HEADER =
+            "INDEX,TAG,DATE,TIME,LATITUDE N/S,LONGITUDE E/W,HEIGHT,SPEED,HEADING,FIX MODE,VALID,PDOP,HDOP,VDOP,VOX";
 
     public CsvImporter() {
         super(CSV_FILE_FILTER);
@@ -49,7 +51,7 @@ public class CsvImporter extends AbstractImporter {
                 String line = reader.readLine();
                 result = line != null && line.equalsIgnoreCase(COLOMBUS_HEADER);
             } catch (IOException e) {
-                // Ignore exceptions
+                Main.trace(e);
             }
         }
         return result;

@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * and {@see #getFailedModules()} replies the list of failed modules.
  *
  */
-public class ModuleDownloadTask extends PleaseWaitRunnable{
+public class ModuleDownloadTask extends PleaseWaitRunnable {
     private final Collection<ModuleInformation> toUpdate = new LinkedList<>();
     private final Collection<ModuleInformation> failed = new LinkedList<>();
     private final Collection<ModuleInformation> downloaded = new LinkedList<>();
@@ -47,7 +47,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
      * @param title the title to display in the {@see PleaseWaitDialog}
      * @throws IllegalArgumentException thrown if toUpdate is null
      */
-    public ModuleDownloadTask(Component parent, Collection<ModuleInformation> toUpdate, String title) throws IllegalArgumentException{
+    public ModuleDownloadTask(Component parent, Collection<ModuleInformation> toUpdate, String title) throws IllegalArgumentException {
         super(parent, title == null ? "" : title, false /* don't ignore exceptions */);
         CheckParameterUtil.ensureParameterNotNull(toUpdate, "toUpdate");
         this.toUpdate.addAll(toUpdate);
@@ -62,7 +62,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
      * @throws IllegalArgumentException thrown if toUpdate is null
      */
     public ModuleDownloadTask(ProgressMonitor monitor, Collection<ModuleInformation> toUpdate, String title) {
-        super(title, monitor == null? NullProgressMonitor.INSTANCE: monitor, false /* don't ignore exceptions */);
+        super(title, monitor == null ? NullProgressMonitor.INSTANCE : monitor, false /* don't ignore exceptions */);
         CheckParameterUtil.ensureParameterNotNull(toUpdate, "toUpdate");
         this.toUpdate.addAll(toUpdate);
     }
@@ -73,7 +73,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
      * @param toUpdate the collection of modules to update. Must not be null.
      * @throws IllegalArgumentException thrown if toUpdate is null
      */
-    public void setModulesToDownload(Collection<ModuleInformation> toUpdate) throws IllegalArgumentException{
+    public void setModulesToDownload(Collection<ModuleInformation> toUpdate) throws IllegalArgumentException {
         CheckParameterUtil.ensureParameterNotNull(toUpdate, "toUpdate");
         this.toUpdate.clear();
         this.toUpdate.addAll(toUpdate);
@@ -81,7 +81,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
 
     @Override protected void cancel() {
         this.canceled = true;
-        synchronized(this) {
+        synchronized (this) {
             if (downloadConnection != null) {
                 downloadConnection.disconnect();
             }
@@ -90,7 +90,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
 
     @Override protected void finish() {}
 
-    protected void download(ModuleInformation pi, File file) throws ModuleDownloadException{
+    protected void download(ModuleInformation pi, File file) throws ModuleDownloadException {
         try {
             if (pi.downloadlink == null) {
                 String msg = tr("Warning: Cannot download module ''{0}''. Its download link is not known. Skipping download.", pi.name);
@@ -98,24 +98,25 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
                 throw new ModuleDownloadException(msg);
             }
             URL url = new URL(pi.downloadlink);
-            synchronized(this) {
-                downloadConnection = (HttpURLConnection)url.openConnection();
+            synchronized (this) {
+                downloadConnection = (HttpURLConnection) url.openConnection();
                 downloadConnection.setRequestProperty("Cache-Control", "no-cache");
-                downloadConnection.setRequestProperty("User-Agent",Version.getInstance().getAgentString());
+                downloadConnection.setRequestProperty("User-Agent", Version.getInstance().getAgentString());
                 downloadConnection.setRequestProperty("Host", url.getHost());
                 downloadConnection.connect();
             }
             try (
-                InputStream in = downloadConnection.getInputStream();
-                OutputStream out = new FileOutputStream(file)
-            ) {
+                    InputStream in = downloadConnection.getInputStream();
+                    OutputStream out = new FileOutputStream(file)
+                    ) {
                 byte[] buffer = new byte[8192];
                 for (int read = in.read(buffer); read != -1; read = in.read(buffer)) {
                     out.write(buffer, 0, read);
                 }
             }
-        } catch(MalformedURLException e) {
-            String msg = tr("Warning: Cannot download module ''{0}''. Its download link ''{1}'' is not a valid URL. Skipping download.", pi.name, pi.downloadlink);
+        } catch (MalformedURLException e) {
+            String msg = tr("Warning: Cannot download module ''{0}''. Its download link ''{1}'' is not a valid URL. Skipping download.",
+                    pi.name, pi.downloadlink);
             Main.warn(msg);
             throw new ModuleDownloadException(msg);
         } catch (IOException e) {
@@ -123,7 +124,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
                 return;
             throw new ModuleDownloadException(e);
         } finally {
-            synchronized(this) {
+            synchronized (this) {
                 downloadConnection = null;
             }
         }
@@ -146,7 +147,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
             File moduleFile = new File(moduleDir, d.name + ".jar.new");
             try {
                 download(d, moduleFile);
-            } catch(ModuleDownloadException e) {
+            } catch (ModuleDownloadException e) {
                 e.printStackTrace();
                 failed.add(d);
                 continue;
@@ -159,7 +160,7 @@ public class ModuleDownloadTask extends PleaseWaitRunnable{
     /**
      * Replies true if the task was canceled by the user
      *
-     * @return
+     * @return {@code true} if the task was canceled by the user
      */
     public boolean isCanceled() {
         return canceled;

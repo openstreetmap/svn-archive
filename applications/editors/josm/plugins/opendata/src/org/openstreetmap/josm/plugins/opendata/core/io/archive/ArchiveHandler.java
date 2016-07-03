@@ -5,9 +5,9 @@ import java.io.File;
 
 public interface ArchiveHandler {
 
-    public void notifyTempFileWritten(File file);
+    void notifyTempFileWritten(File file);
 
-    public boolean skipXsdValidation();
+    boolean skipXsdValidation();
 
-    public void setSkipXsdValidation(boolean skip);
+    void setSkipXsdValidation(boolean skip);
 }

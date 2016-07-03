@@ -97,7 +97,7 @@ public final class OdPlugin extends Plugin {
         OdUtils.deletePreviousTempDirs();
     }
 
-    public static final OdPlugin getInstance() {
+    public static OdPlugin getInstance() {
         return instance;
     }
 
@@ -190,7 +190,7 @@ public final class OdPlugin extends Plugin {
         return new OdPreferenceSetting();
     }
 
-    private final void loadModules() {
+    private void loadModules() {
         List<ModuleInformation> modulesToLoad = ModuleHandler.buildListOfModulesToLoad(Main.parent);
         if (!modulesToLoad.isEmpty() && ModuleHandler.checkAndConfirmModuleUpdate(Main.parent)) {
             modulesToLoad = ModuleHandler.updateModules(Main.parent, modulesToLoad, null);
@@ -200,7 +200,7 @@ public final class OdPlugin extends Plugin {
         ModuleHandler.loadModules(Main.parent, modulesToLoad, null);
     }
 
-    private final File getSubDirectory(String name) {
+    private File getSubDirectory(String name) {
         File dir = new File(getPluginDir()+File.separator+name);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -208,11 +208,11 @@ public final class OdPlugin extends Plugin {
         return dir;
     }
 
-    public final File getModulesDirectory() {
+    public File getModulesDirectory() {
         return getSubDirectory("modules");
     }
 
-    public final File getResourcesDirectory() {
+    public File getResourcesDirectory() {
         return getSubDirectory("resources");
     }
 

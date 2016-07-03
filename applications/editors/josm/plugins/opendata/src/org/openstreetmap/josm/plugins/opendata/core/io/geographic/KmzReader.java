@@ -19,16 +19,17 @@ import org.openstreetmap.josm.io.AbstractReader;
 public class KmzReader extends AbstractReader {
 
     private ZipInputStream zis;
-    
+
     public KmzReader(ZipInputStream zis) {
         this.zis = zis;
     }
 
-    public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
+    public static DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IOException, XMLStreamException, FactoryConfigurationError {
         return new KmzReader(new ZipInputStream(in)).parseDoc(instance);
     }
 
-    private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError  {
+    private DataSet parseDoc(ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
         ZipEntry entry;
         do {
             entry = zis.getNextEntry();
@@ -58,7 +59,7 @@ public class KmzReader extends AbstractReader {
             } while (b != -1);
             buffer = out.toByteArray();
         }
-        
+
         return KmlReader.parseDataSet(new ByteArrayInputStream(buffer), instance);
     }
 }

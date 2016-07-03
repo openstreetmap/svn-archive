@@ -45,16 +45,16 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
     private HttpURLConnection connection;
     private List<ModuleInformation> availableModules;
 
-    protected enum CacheType {PLUGIN_LIST, ICON_LIST}
+    protected enum CacheType { PLUGIN_LIST, ICON_LIST }
 
-    protected void init(Collection<String> sites){
+    protected void init(Collection<String> sites) {
         this.sites = sites;
         if (sites == null) {
             this.sites = Collections.emptySet();
         }
         availableModules = new LinkedList<>();
-
     }
+
     /**
      * Creates the task
      *
@@ -72,14 +72,14 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
      * @param sites the collection of download sites. Defaults to the empty collection if null.
      */
     public ReadRemoteModuleInformationTask(ProgressMonitor monitor, Collection<String> sites) {
-        super(tr("Download module list..."), monitor == null ? NullProgressMonitor.INSTANCE: monitor, false /* don't ignore exceptions */);
+        super(tr("Download module list..."), monitor == null ? NullProgressMonitor.INSTANCE : monitor, false /* don't ignore exceptions */);
         init(sites);
     }
 
     @Override
     protected void cancel() {
         canceled = true;
-        synchronized(this) {
+        synchronized (this) {
             if (connection != null) {
                 connection.disconnect();
             }
@@ -109,7 +109,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
                 sb.append(url.getPort()).append("-");
             }
             String path = url.getPath();
-            for (int i =0;i<path.length()-4; i++) {
+            for (int i = 0; i < path.length()-4; i++) {
                 char c = path.charAt(i);
                 if (Character.isLetterOrDigit(c)) {
                     sb.append(c);
@@ -126,7 +126,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
                 break;
             }
             name = sb.toString();
-        } catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             name = "site-unknown.txt";
         }
         return new File(moduleDir, name);
@@ -149,30 +149,30 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             monitor.indeterminateSubTask(tr("Downloading module list from ''{0}''", printsite));
 
             URL url = new URL(printsite);
-            synchronized(this) {
-                connection = (HttpURLConnection)url.openConnection();
+            synchronized (this) {
+                connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Cache-Control", "no-cache");
-                connection.setRequestProperty("User-Agent",Version.getInstance().getAgentString());
+                connection.setRequestProperty("User-Agent", Version.getInstance().getAgentString());
                 connection.setRequestProperty("Host", url.getHost());
                 connection.setRequestProperty("Accept-Charset", "utf-8");
             }
             try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
                 String line;
-                while((line = in.readLine()) != null) {
+                while ((line = in.readLine()) != null) {
                     sb.append(line).append("\n");
                 }
                 return sb.toString();
             }
-        } catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             if (canceled) return null;
             e.printStackTrace();
             return null;
-        } catch(IOException e) {
+        } catch (IOException e) {
             if (canceled) return null;
             e.printStackTrace();
             return null;
         } finally {
-            synchronized(this) {
+            synchronized (this) {
                 if (connection != null) {
                     connection.disconnect();
                 }
@@ -196,31 +196,31 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             monitor.indeterminateSubTask(tr("Downloading module list from ''{0}''", site));
 
             URL url = new URL(site);
-            synchronized(this) {
-                connection = (HttpURLConnection)url.openConnection();
+            synchronized (this) {
+                connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Cache-Control", "no-cache");
-                connection.setRequestProperty("User-Agent",Version.getInstance().getAgentString());
+                connection.setRequestProperty("User-Agent", Version.getInstance().getAgentString());
                 connection.setRequestProperty("Host", url.getHost());
             }
             try (
-                InputStream in = connection.getInputStream();
-                OutputStream out = new FileOutputStream(destFile)
-            ) {
+                    InputStream in = connection.getInputStream();
+                    OutputStream out = new FileOutputStream(destFile)
+                    ) {
                 byte[] buffer = new byte[8192];
                 for (int read = in.read(buffer); read != -1; read = in.read(buffer)) {
                     out.write(buffer, 0, read);
                 }
             }
-        } catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
             if (canceled) return;
             e.printStackTrace();
             return;
-        } catch(IOException e) {
+        } catch (IOException e) {
             if (canceled) return;
             e.printStackTrace();
             return;
         } finally {
-            synchronized(this) {
+            synchronized (this) {
                 if (connection != null) {
                     connection.disconnect();
                 }
@@ -231,10 +231,10 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
         for (ModuleInformation pi : availableModules) {
             if (pi.icon == null && pi.iconPath != null) {
                 pi.icon = new ImageProvider(pi.name+".jar/"+pi.iconPath)
-                                .setArchive(destFile)
-                                .setMaxWidth(24)
-                                .setMaxHeight(24)
-                                .setOptional(true).get();
+                        .setArchive(destFile)
+                        .setMaxWidth(24)
+                        .setMaxHeight(24)
+                        .setOptional(true).get();
             }
         }
     }
@@ -249,7 +249,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
         try {
             File moduleDir = OdPlugin.getInstance().getModulesDirectory();
             if (!moduleDir.exists()) {
-                if (! moduleDir.mkdirs()) {
+                if (!moduleDir.mkdirs()) {
                     Main.warn(tr("Warning: failed to create module directory ''{0}''. Cannot cache module list from module site ''{1}''.",
                             moduleDir.toString(), site));
                 }
@@ -276,10 +276,10 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             getProgressMonitor().subTask(tr("Parsing module list from site ''{0}''", site));
             InputStream in = new ByteArrayInputStream(doc.getBytes("UTF-8"));
             availableModules.addAll(new ModuleListParser().parse(in));
-        } catch(UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             Main.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
             e.printStackTrace();
-        } catch(ModuleListParseException e) {
+        } catch (ModuleListParseException e) {
             Main.error(tr("Failed to parse module list document from site ''{0}''. Skipping site. Exception was: {1}", site, e.toString()));
             e.printStackTrace();
         }
@@ -294,16 +294,16 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
         // collect old cache files and remove if no longer in use
         List<File> siteCacheFiles = new LinkedList<>();
         for (String location : ModuleInformation.getModuleLocations()) {
-            File [] f = new File(location).listFiles(
+            File[] f = new File(location).listFiles(
                     new FilenameFilter() {
                         @Override
                         public boolean accept(File dir, String name) {
                             return name.matches("^([0-9]+-)?site.*\\.txt$") ||
-                            name.matches("^([0-9]+-)?site.*-icons\\.zip$");
+                                    name.matches("^([0-9]+-)?site.*-icons\\.zip$");
                         }
                     }
-            );
-            if(f != null && f.length > 0) {
+                    );
+            if (f != null && f.length > 0) {
                 siteCacheFiles.addAll(Arrays.asList(f));
             }
         }
@@ -315,8 +315,7 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
             if (canceled) return;
             siteCacheFiles.remove(createSiteCacheFile(moduleDir, site, CacheType.PLUGIN_LIST));
             siteCacheFiles.remove(createSiteCacheFile(moduleDir, site, CacheType.ICON_LIST));
-            if(list != null)
-            {
+            if (list != null) {
                 getProgressMonitor().worked(1);
                 cacheModuleList(site, list);
                 if (canceled) return;
@@ -326,17 +325,18 @@ public class ReadRemoteModuleInformationTask extends PleaseWaitRunnable {
                 getProgressMonitor().worked(1);
                 if (canceled) return;
             }
-            downloadModuleIcons(site.replace(".txt", "")+"-icons.zip", createSiteCacheFile(moduleDir, site, CacheType.ICON_LIST), getProgressMonitor().createSubTaskMonitor(0, false));
+            downloadModuleIcons(site.replace(".txt", "")+"-icons.zip",
+                    createSiteCacheFile(moduleDir, site, CacheType.ICON_LIST), getProgressMonitor().createSubTaskMonitor(0, false));
         }
-        for (File file: siteCacheFiles) /* remove old stuff or whole update process is broken */
-        {
+        for (File file: siteCacheFiles) {
+            // remove old stuff or whole update process is broken
             file.delete();
         }
     }
 
     /**
      * Replies true if the task was canceled
-     * @return
+     * @return {@code true} if the task was canceled
      */
     public boolean isCanceled() {
         return canceled;

@@ -27,13 +27,13 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
 
     private final List<Tag> relevantTags = new ArrayList<>();
     private final List<Tag> forbiddenTags = new ArrayList<>();
-    
+
     private final boolean relevantUnion;
-    
+
     public SimpleDataSetHandler() {
         this.relevantUnion = false;
     }
-            
+
     public SimpleDataSetHandler(String relevantTag) {
         addRelevantTag(relevantTag);
         this.relevantUnion = false;
@@ -46,7 +46,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         }
         setMenuIcon(MapPaintStyles.getNodeIcon(tag));
     }
-    
+
     public SimpleDataSetHandler(boolean relevantUnion, String ... relevantTags) {
         addRelevantTag(relevantTags);
         this.relevantUnion = relevantUnion;
@@ -60,7 +60,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         addRelevantTag(relevantTag);
         this.relevantUnion = false;
     }
-    
+
     public SimpleDataSetHandler(boolean relevantUnion, Tag ... relevantTags) {
         addRelevantTag(relevantTags);
         this.relevantUnion = relevantUnion;
@@ -85,8 +85,8 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
     public void addForbiddenTag(Tag ... forbiddenTags) {
         addTags(this.forbiddenTags, forbiddenTags);
     }
-    
-    private final void addTags(final List<Tag> list, String ... tags) {
+
+    private void addTags(final List<Tag> list, String ... tags) {
         if (tags != null) {
             for (String tag : tags) {
                 if (tag != null) {
@@ -101,7 +101,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         }
     }
 
-    private final void addTags(final List<Tag> list, Tag ... tags) {
+    private void addTags(final List<Tag> list, Tag ... tags) {
         if (tags != null) {
             for (Tag tag : tags) {
                 if (tag != null) {
@@ -110,7 +110,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
             }
         }
     }
-    
+
     @Override
     public boolean equals(IPrimitive p1, IPrimitive p2) {
         for (Tag tag : this.relevantTags) {
@@ -134,7 +134,7 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
         }
         return true;
     }
-    
+
     @Override
     public boolean isForbidden(IPrimitive p) {
         for (Tag tag : this.forbiddenTags) {
@@ -162,24 +162,24 @@ public abstract class SimpleDataSetHandler extends AbstractDataSetHandler {
     protected String getOverpassApiQueries(String bbox, String ... conditions) {
         String[] mpconditions = new String[conditions.length+1];
         mpconditions[0] = OverpassApi.hasKey("type", "multipolygon");
-        for (int i=0; i<conditions.length; i++) {
+        for (int i = 0; i < conditions.length; i++) {
             mpconditions[i+1] = conditions[i];
         }
-        return OverpassApi.query(bbox, NODE, conditions) + "\n" + // Nodes 
-            OverpassApi.recurse(NODE_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
-            OverpassApi.query(bbox, WAY, conditions) + "\n" + // Full ways and their full relations 
-            OverpassApi.recurse(WAY_NODE, "nodes") + "\n" +
-            OverpassApi.recurse(WAY_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
-            OverpassApi.query(bbox, RELATION, mpconditions) + "\n" + // Full multipolygons
-            OverpassApi.recurse(RELATION_WAY, WAY_NODE);
+        return OverpassApi.query(bbox, NODE, conditions) + "\n" + // Nodes
+        OverpassApi.recurse(NODE_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
+        OverpassApi.query(bbox, WAY, conditions) + "\n" + // Full ways and their full relations
+        OverpassApi.recurse(WAY_NODE, "nodes") + "\n" +
+        OverpassApi.recurse(WAY_RELATION, RELATION_WAY, WAY_NODE) + "\n" +
+        OverpassApi.query(bbox, RELATION, mpconditions) + "\n" + // Full multipolygons
+        OverpassApi.recurse(RELATION_WAY, WAY_NODE);
     }
-    
+
     @Override
     protected String getOverpassApiRequest(String bbox) {
         String result = "";
         if (this.relevantUnion) {
             for (Tag tag : this.relevantTags) {
-                result += getOverpassApiQueries(bbox, OverpassApi.hasKey(tag.getKey(), tag.getValue())); 
+                result += getOverpassApiQueries(bbox, OverpassApi.hasKey(tag.getKey(), tag.getValue()));
             }
             result = OverpassApi.union(result);
         } else {

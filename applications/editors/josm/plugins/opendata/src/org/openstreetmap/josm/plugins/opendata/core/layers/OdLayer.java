@@ -2,5 +2,5 @@
 package org.openstreetmap.josm.plugins.opendata.core.layers;
 
 public interface OdLayer {
-    public OdDataLayer getDataLayer();
+    OdDataLayer getDataLayer();
 }

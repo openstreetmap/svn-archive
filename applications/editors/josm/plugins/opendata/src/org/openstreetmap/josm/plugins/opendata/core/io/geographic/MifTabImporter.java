@@ -14,9 +14,10 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class MifTabImporter extends AbstractImporter {
-    
+
     public static final ExtensionFileFilter MIF_TAB_FILE_FILTER = new ExtensionFileFilter(
-            OdConstants.MIF_EXT+","+OdConstants.TAB_EXT, OdConstants.MIF_EXT, tr("MapInfo files") + " (*."+OdConstants.MIF_EXT+",*."+OdConstants.TAB_EXT+")");
+            OdConstants.MIF_EXT+","+OdConstants.TAB_EXT, OdConstants.MIF_EXT,
+            tr("MapInfo files") + " (*."+OdConstants.MIF_EXT+",*."+OdConstants.TAB_EXT+")");
 
     public MifTabImporter() {
         super(MIF_TAB_FILE_FILTER);

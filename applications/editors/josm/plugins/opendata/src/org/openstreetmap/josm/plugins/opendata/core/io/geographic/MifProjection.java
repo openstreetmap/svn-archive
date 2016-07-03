@@ -35,19 +35,19 @@ public enum MifProjection {
     Transverse_Mercator_modified_for_Sjaelland(22, "tmerc"),
     Transverse_Mercator_modified_for_Danish_System_45_Bornholm(23, "tmerc"),
     Transverse_Mercator_modified_for_Finnish_KKJ(24, "tmerc");
-    
+
     private final Integer code;
     private final String proj4id;
-    
-    private MifProjection(Integer code, String proj4id) {
+
+    MifProjection(Integer code, String proj4id) {
         this.code = code;
         this.proj4id = proj4id;
     }
-    
+
     public final Integer getCode() {
         return code;
     }
-    
+
     /**
      * Replies the Proj.4 identifier.
      *
@@ -57,7 +57,7 @@ public enum MifProjection {
     public final String getProj4Id() {
         return proj4id;
     }
-    
+
     public static MifProjection forCode(Integer code) {
         for (MifProjection p : values()) {
             if (p.getCode().equals(code)) {

@@ -66,28 +66,28 @@ public class ModulePreference implements SubPreferenceSetting {
         Collection<ModuleInformation> downloaded = task.getDownloadedModules();
         Collection<ModuleInformation> failed = task.getFailedModules();
         StringBuilder sb = new StringBuilder();
-        if (! downloaded.isEmpty()) {
+        if (!downloaded.isEmpty()) {
             sb.append(trn(
                     "The following module has been downloaded <strong>successfully</strong>:",
                     "The following {0} modules have been downloaded <strong>successfully</strong>:",
                     downloaded.size(),
                     downloaded.size()
-            ));
+                    ));
             sb.append("<ul>");
-            for(ModuleInformation pi: downloaded) {
+            for (ModuleInformation pi : downloaded) {
                 sb.append("<li>").append(pi.name).append(" (").append(pi.version).append(")").append("</li>");
             }
             sb.append("</ul>");
         }
-        if (! failed.isEmpty()) {
+        if (!failed.isEmpty()) {
             sb.append(trn(
                     "Downloading the following module has <strong>failed</strong>:",
                     "Downloading the following {0} modules has <strong>failed</strong>:",
                     failed.size(),
                     failed.size()
-            ));
+                    ));
             sb.append("<ul>");
-            for(ModuleInformation pi: failed) {
+            for (ModuleInformation pi : failed) {
                 sb.append("<li>").append(pi.name).append("</li>");
             }
             sb.append("</ul>");
@@ -107,14 +107,14 @@ public class ModulePreference implements SubPreferenceSetting {
     private boolean modulePreferencesActivated = false;
 
     protected JPanel buildSearchFieldPanel() {
-        JPanel pnl  = new JPanel(new GridBagLayout());
-        pnl.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        JPanel pnl = new JPanel(new GridBagLayout());
+        pnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         GridBagConstraints gc = new GridBagConstraints();
 
         gc.anchor = GridBagConstraints.NORTHWEST;
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weightx = 0.0;
-        gc.insets = new Insets(0,0,0,3);
+        gc.insets = new Insets(0, 0, 0, 3);
         pnl.add(new JLabel(tr("Search:")), gc);
 
         gc.gridx = 1;
@@ -127,7 +127,7 @@ public class ModulePreference implements SubPreferenceSetting {
     }
 
     protected JPanel buildActionPanel() {
-        JPanel pnl = new JPanel(new GridLayout(1,3));
+        JPanel pnl = new JPanel(new GridLayout(1, 3));
 
         pnl.add(new JButton(new DownloadAvailableModulesAction()));
         pnl.add(new JButton(new UpdateSelectedModulesAction()));
@@ -138,22 +138,23 @@ public class ModulePreference implements SubPreferenceSetting {
     protected JPanel buildModuleListPanel() {
         JPanel pnl = new JPanel(new BorderLayout());
         pnl.add(buildSearchFieldPanel(), BorderLayout.NORTH);
-        model  = new ModulePreferencesModel();
+        model = new ModulePreferencesModel();
         spModulePreferences = new JScrollPane(pnlModulePreferences = new ModuleListPanel(model));
         spModulePreferences.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         spModulePreferences.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         spModulePreferences.getVerticalScrollBar().addComponentListener(
-                new ComponentAdapter(){
+                new ComponentAdapter() {
                     @Override
                     public void componentShown(ComponentEvent e) {
                         spModulePreferences.setBorder(UIManager.getBorder("ScrollPane.border"));
                     }
+
                     @Override
                     public void componentHidden(ComponentEvent e) {
                         spModulePreferences.setBorder(null);
                     }
                 }
-        );
+                );
 
         pnl.add(spModulePreferences, BorderLayout.CENTER);
         pnl.add(buildActionPanel(), BorderLayout.SOUTH);
@@ -180,13 +181,13 @@ public class ModulePreference implements SubPreferenceSetting {
                         ImageProvider.get("ok"),
                         tr("Accept the new module sites and close the dialog"),
                         null /* no special help topic */
-                ),
+                        ),
                 new ButtonSpec(
                         tr("Cancel"),
                         ImageProvider.get("cancel"),
                         tr("Close the dialog"),
                         null /* no special help topic */
-                )
+                        )
         };
         ModuleConfigurationSitesPanel pnl = new ModuleConfigurationSitesPanel();
 
@@ -199,7 +200,7 @@ public class ModulePreference implements SubPreferenceSetting {
                 options,
                 options[0],
                 null /* no help topic */
-        );
+                );
         if (answer != 0 /* OK */)
             return;
         List<String> sites = pnl.getUpdateSites();
@@ -217,7 +218,7 @@ public class ModulePreference implements SubPreferenceSetting {
 
     @Override
     public boolean ok() {
-        if (! modulePreferencesActivated)
+        if (!modulePreferencesActivated)
             return false;
         if (model.isActiveModulesChanged()) {
             LinkedList<String> l = new LinkedList<>(model.getSelectedModuleNames());
@@ -259,8 +260,8 @@ public class ModulePreference implements SubPreferenceSetting {
      */
     class DownloadAvailableModulesAction extends AbstractAction {
 
-        public DownloadAvailableModulesAction() {
-            putValue(NAME,tr("Download list"));
+        DownloadAvailableModulesAction() {
+            putValue(NAME, tr("Download list"));
             putValue(SHORT_DESCRIPTION, tr("Download the list of available modules"));
             putValue(SMALL_ICON, ImageProvider.get("download"));
         }
@@ -291,8 +292,8 @@ public class ModulePreference implements SubPreferenceSetting {
      *
      */
     class UpdateSelectedModulesAction extends AbstractAction {
-        public UpdateSelectedModulesAction() {
-            putValue(NAME,tr("Update modules"));
+        UpdateSelectedModulesAction() {
+            putValue(NAME, tr("Update modules"));
             putValue(SHORT_DESCRIPTION, tr("Update the selected modules"));
             putValue(SMALL_ICON, ImageProvider.get("dialogs", "refresh"));
         }
@@ -313,7 +314,7 @@ public class ModulePreference implements SubPreferenceSetting {
                     tr("Update modules"),
                     !failed.isEmpty() ? JOptionPane.WARNING_MESSAGE : JOptionPane.INFORMATION_MESSAGE,
                             HelpUtil.ht("/Preferences/Modules")
-            );
+                    );
         }
 
         protected void alertNothingToUpdate() {
@@ -326,7 +327,7 @@ public class ModulePreference implements SubPreferenceSetting {
                             tr("Modules up to date"),
                             JOptionPane.INFORMATION_MESSAGE,
                             null // FIXME: provide help context
-                    );
+                            );
                 }
             });
         }
@@ -339,9 +340,10 @@ public class ModulePreference implements SubPreferenceSetting {
                     pnlModulePreferences,
                     toUpdate,
                     tr("Update modules")
-            );
+                    );
             // the async task for downloading module information
-            final ReadRemoteModuleInformationTask moduleInfoDownloadTask = new ReadRemoteModuleInformationTask(OdPreferenceSetting.getModuleSites());
+            final ReadRemoteModuleInformationTask moduleInfoDownloadTask =
+                    new ReadRemoteModuleInformationTask(OdPreferenceSetting.getModuleSites());
 
             // to be run asynchronously after the module download
             //
@@ -373,7 +375,7 @@ public class ModulePreference implements SubPreferenceSetting {
                     // select modules which actually have to be updated
                     //
                     Iterator<ModuleInformation> it = toUpdate.iterator();
-                    while(it.hasNext()) {
+                    while (it.hasNext()) {
                         ModuleInformation pi = it.next();
                         if (!pi.isUpdateRequired()) {
                             it.remove();
@@ -394,14 +396,13 @@ public class ModulePreference implements SubPreferenceSetting {
         }
     }
 
-
     /**
      * The action for configuring the module download sites
      *
      */
     class ConfigureSitesAction extends AbstractAction {
-        public ConfigureSitesAction() {
-            putValue(NAME,tr("Configure sites..."));
+        ConfigureSitesAction() {
+            putValue(NAME, tr("Configure sites..."));
             putValue(SHORT_DESCRIPTION, tr("Configure the list of sites where modules are downloaded from"));
             putValue(SMALL_ICON, ImageProvider.get("dialogs", "settings"));
         }
@@ -419,13 +420,13 @@ public class ModulePreference implements SubPreferenceSetting {
      */
     class ModulePreferenceActivationListener implements ChangeListener {
         private Component pane;
-        public ModulePreferenceActivationListener(Component preferencesPane) {
+        ModulePreferenceActivationListener(Component preferencesPane) {
             pane = preferencesPane;
         }
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            JTabbedPane tp = (JTabbedPane)e.getSource();
+            JTabbedPane tp = (JTabbedPane) e.getSource();
             if (tp.getSelectedComponent() == pane) {
                 readLocalModuleInformation();
                 modulePreferencesActivated = true;
@@ -463,7 +464,7 @@ public class ModulePreference implements SubPreferenceSetting {
         }
     }
 
-    static private class ModuleConfigurationSitesPanel extends JPanel {
+    private static class ModuleConfigurationSitesPanel extends JPanel {
 
         private DefaultListModel<String> model;
 
@@ -477,7 +478,7 @@ public class ModulePreference implements SubPreferenceSetting {
             final JList<String> list = new JList<>(model);
             add(new JScrollPane(list), GBC.std().fill());
             JPanel buttons = new JPanel(new GridBagLayout());
-            buttons.add(new JButton(new AbstractAction(tr("Add")){
+            buttons.add(new JButton(new AbstractAction(tr("Add")) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String s = JOptionPane.showInputDialog(
@@ -485,13 +486,13 @@ public class ModulePreference implements SubPreferenceSetting {
                             tr("Add Open Data Module description URL."),
                             tr("Enter URL"),
                             JOptionPane.QUESTION_MESSAGE
-                    );
+                            );
                     if (s != null) {
                         model.addElement(s);
                     }
                 }
             }), GBC.eol().fill(GBC.HORIZONTAL));
-            buttons.add(new JButton(new AbstractAction(tr("Edit")){
+            buttons.add(new JButton(new AbstractAction(tr("Edit")) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (list.getSelectedValue() == null) {
@@ -500,10 +501,10 @@ public class ModulePreference implements SubPreferenceSetting {
                                 tr("Please select an entry."),
                                 tr("Warning"),
                                 JOptionPane.WARNING_MESSAGE
-                        );
+                                );
                         return;
                     }
-                    String s = (String)JOptionPane.showInputDialog(
+                    String s = (String) JOptionPane.showInputDialog(
                             Main.parent,
                             tr("Edit Open Data Module description URL."),
                             tr("Open Data Module description URL"),
@@ -511,13 +512,13 @@ public class ModulePreference implements SubPreferenceSetting {
                             null,
                             null,
                             list.getSelectedValue()
-                    );
+                            );
                     if (s != null) {
                         model.setElementAt(s, list.getSelectedIndex());
                     }
                 }
             }), GBC.eol().fill(GBC.HORIZONTAL));
-            buttons.add(new JButton(new AbstractAction(tr("Delete")){
+            buttons.add(new JButton(new AbstractAction(tr("Delete")) {
                 @Override
                 public void actionPerformed(ActionEvent event) {
                     if (list.getSelectedValue() == null) {
@@ -526,7 +527,7 @@ public class ModulePreference implements SubPreferenceSetting {
                                 tr("Please select an entry."),
                                 tr("Warning"),
                                 JOptionPane.WARNING_MESSAGE
-                        );
+                                );
                         return;
                     }
                     model.removeElement(list.getSelectedValue());
@@ -535,14 +536,14 @@ public class ModulePreference implements SubPreferenceSetting {
             add(buttons, GBC.eol());
         }
 
-        public ModuleConfigurationSitesPanel() {
+        ModuleConfigurationSitesPanel() {
             build();
         }
 
         public List<String> getUpdateSites() {
             if (model.getSize() == 0) return Collections.emptyList();
             List<String> ret = new ArrayList<>(model.getSize());
-            for (int i=0; i< model.getSize();i++){
+            for (int i = 0; i < model.getSize(); i++) {
                 ret.add(model.get(i));
             }
             return ret;

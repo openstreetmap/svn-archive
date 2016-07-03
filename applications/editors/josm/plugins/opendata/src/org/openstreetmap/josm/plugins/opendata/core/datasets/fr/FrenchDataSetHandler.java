@@ -29,22 +29,22 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
     protected static final Projection utm22 = Projections.getProjectionByCode("EPSG:32622"); // UTM 22 N - Guyane
     protected static final Projection utm38 = Projections.getProjectionByCode("EPSG:32738"); // UTM 38 S - Mayotte
     protected static final Projection utm40 = Projections.getProjectionByCode("EPSG:32740"); // UTM 40 S - Reunion
-    
+
     protected static final Projection[] lambert4Zones = new Projection[4];
     static {
-        for (int i=0; i<lambert4Zones.length; i++) {
+        for (int i = 0; i < lambert4Zones.length; i++) {
             lambert4Zones[i] = Projections.getProjectionByCode("EPSG:"+Integer.toString(27561+i));
         }
     }
 
     protected static final Projection[] projections = new Projection[]{
-        lambert93, // France metropolitaine
-        utm20, // Guadeloupe, Martinique
-        utm22, // Guyane
-        utm38, // Mayotte
-        utm40, // Reunion
+            lambert93, // France metropolitaine
+            utm20, // Guadeloupe, Martinique
+            utm22, // Guyane
+            utm38, // Mayotte
+            utm40, // Reunion
     };
-    
+
     protected class InternalCsvHandler extends DefaultCsvHandler {
         /*@Override
         public List<Projection> getSpreadSheetProjections() {
@@ -54,7 +54,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
                 return Arrays.asList(projections);
             }
         }*/
-        
+
         @Override
         public LatLon getCoor(EastNorth en, String[] fields) {
             if (singleProjection != null) {
@@ -88,7 +88,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
         super(relevantUnion, relevantTags);
         init();
     }
-    
+
     private void init() {
         setShpHandler(new FrenchShpHandler());
         setCsvHandler(new InternalCsvHandler());
@@ -123,8 +123,9 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
     public String getNationalPortalIconName() {
         return ICON_FR_24;
     }
-    
+
     protected static final LatLon getLatLonByDptCode(EastNorth en, String dpt, boolean useCC9) {
+        // CHECKSTYLE.OFF: LineLength
         if (dpt.equals("971") || dpt.equals("972") || dpt.equals("977") || dpt.equals("978")) {    // Antilles
             return utm20.eastNorth2latlon(en);
         } else if (dpt.equals("973")) {    // Guyane
@@ -156,6 +157,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
         } else {
             throw new IllegalArgumentException("Unsupported department code: "+dpt);
         }
+        // CHECKSTYLE.ON: LineLength
     }
 
     private void replaceFaxPhone(OsmPrimitive p, String dataKey, String osmKey) {
@@ -169,17 +171,17 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
     protected void replaceFax(OsmPrimitive p, String dataKey) {
         replaceFaxPhone(p, dataKey, "contact:fax");
     }
-    
+
     protected void replacePhone(OsmPrimitive p, String dataKey) {
         replaceFaxPhone(p, dataKey, "contact:phone");
     }
-    
+
     private static final String dayFr = "L|Lu|M|Ma|Me|J|Je|V|Ve|S|Sa|D|Di";
     private static final String dayEn = "Mo|Mo|Tu|Tu|We|Th|Th|Fr|Fr|Sa|Sa|Su|Su";
-    
+
     private static final String[] dayFrSplit = dayFr.split("\\|");
     private static final String[] dayEnSplit = dayEn.split("\\|");
-    
+
     protected void replaceOpeningHours(OsmPrimitive p, String dataKey) {
         String hours = p.get(dataKey);
         if (hours != null) {
@@ -193,7 +195,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
             String dayGroup = "("+dayFr+")";
             String dayNcGroup = "(?:"+dayFr+")";
             // FIXME: this doesn't work yet
-            for (String sep : new String[]{"-",","}) {
+            for (String sep : new String[]{"-", ","}) {
                 boolean finished = false;
                 while (!finished) {
                     Matcher m = Pattern.compile(".*("+dayNcGroup+"(?:"+sep+dayNcGroup+")+).*").matcher(hours);
@@ -202,7 +204,7 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
                         Matcher m2 = Pattern.compile(dayGroup+"(?:"+sep+dayGroup+")+").matcher(range);
                         if (m2.matches()) {
                             String replacement = "";
-                            for (int i=0; i<m2.groupCount(); i++) {
+                            for (int i = 0; i < m2.groupCount(); i++) {
                                 if (i > 0) {
                                     replacement += sep;
                                 }
@@ -219,9 +221,9 @@ public abstract class FrenchDataSetHandler extends SimpleDataSetHandler implemen
             p.remove(dataKey);
         }
     }
-    
+
     private String getEnDay(String frDay) {
-        for (int i=0; i<dayFrSplit.length; i++) {
+        for (int i = 0; i < dayFrSplit.length; i++) {
             if (dayFrSplit[i].equals(frDay)) {
                 return dayEnSplit[i];
             }

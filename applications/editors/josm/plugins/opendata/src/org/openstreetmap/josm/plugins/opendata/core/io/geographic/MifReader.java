@@ -43,7 +43,7 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
  * </ul>
  * These files have been stored in reference directory to avoid future dead links.
  */
-public class MifReader extends AbstractMapInfoReader {
+public final class MifReader extends AbstractMapInfoReader {
 
     private enum State {
         UNKNOWN,
@@ -262,11 +262,13 @@ public class MifReader extends AbstractMapInfoReader {
         case Lambert_Conformal_Conic:
             if ((datum == GEODETIC_REFERENCE_SYSTEM_1980_GRS_80 || datum == CUSTOM) && equals(originLon, 3.0)) {
                 // This sounds good for Lambert 93 or Lambert CC 9
-                if (equals(originLat, 46.5) && equals(stdP1, 44.0) && equals(stdP2, 49.0) && equals(falseEasting, 700000.0) && equals(falseNorthing, 6600000.0)) {
+                if (equals(originLat, 46.5) && equals(stdP1, 44.0) && equals(stdP2, 49.0)
+                        && equals(falseEasting, 700000.0) && equals(falseNorthing, 6600000.0)) {
                     josmProj = Projections.getProjectionByCode("EPSG:2154"); // Lambert 93
                 } else if (equals(falseEasting, 1700000.0)) {
-                    for (int i=0; josmProj == null && i<9; i++) {
-                        if (equals(originLat, 42.0+i) && equals(stdP1, 41.25+i) && equals(stdP2, 42.75+i) && equals(falseNorthing, (i+1)*1000000.0 + 200000.0)) {
+                    for (int i = 0; josmProj == null && i < 9; i++) {
+                        if (equals(originLat, 42.0+i) && equals(stdP1, 41.25+i) && equals(stdP2, 42.75+i)
+                                && equals(falseNorthing, (i+1)*1000000.0 + 200000.0)) {
                             josmProj = Projections.getProjectionByCode("EPSG:"+Integer.toString(3942 + i)); // LambertCC9Zones
                         }
                     }
@@ -316,7 +318,7 @@ public class MifReader extends AbstractMapInfoReader {
     }
 
     private void parseCoordSys(String[] words) {
-        for (int i = 0; i<words.length; i++) {
+        for (int i = 0; i < words.length; i++) {
             words[i] = words[i].replace(",", "");
         }
         switch (words[1].toLowerCase()) {
@@ -326,6 +328,7 @@ public class MifReader extends AbstractMapInfoReader {
         case "nonearth":
             parseCoordSysSyntax2(words);
 
+            // CHECKSTYLE.OFF: LineLength
             // Syntax2 is not meant to be used for maps, and still... # 9592 happened
             // From MapInfo documentation:
             // http://testdrive.mapinfo.com/TDC/mxtreme4java.nsf/22fbc128f401ad818525666a00646bda/50100fdbe3e0a85085256a770053be1a/$FILE/coordsys.txt
@@ -333,6 +336,7 @@ public class MifReader extends AbstractMapInfoReader {
             // location on the surface of the Earth). The optional Projection parameters dictate what map projection, if any, should be used in conjunction with
             // the coordinate system. If the Projection clause is omitted, MapBasic uses a longitude, latitude coordinate system using the North American Datum of 1927 (NAD-27).
             // Use syntax 2 to explicitly define a non-Earth coordinate system, such as the coordinate system used in a floor plan or other CAD drawing.
+            // CHECKSTYLE.ON: LineLength
 
             if (handler != null && handler.getMifHandler() != null && handler.getMifHandler().getCoordSysNonEarthProjection() != null) {
                 josmProj = handler.getMifHandler().getCoordSysNonEarthProjection();
@@ -595,7 +599,7 @@ public class MifReader extends AbstractMapInfoReader {
                 if (columns.size() != fields.length) {
                     Main.error("Incoherence between MID and MIF files ("+columns.size()+" columns vs "+fields.length+" fields)");
                 }
-                for (int i=0; i<Math.min(columns.size(), fields.length); i++) {
+                for (int i = 0; i < Math.min(columns.size(), fields.length); i++) {
                     String field = fields[i].trim();
                     /*if (field.startsWith("\"") && field.endsWith("\"")) {
                         field = fields[i].substring(fields[i].indexOf('"')+1, fields[i].lastIndexOf('"'));
@@ -608,7 +612,7 @@ public class MifReader extends AbstractMapInfoReader {
         }
     }
 
-    protected final Node createNode(String x, String y) {
+    protected Node createNode(String x, String y) {
         Node node = new Node(josmProj.eastNorth2latlon(new EastNorth(Double.parseDouble(x), Double.parseDouble(y))));
         ds.addPrimitive(node);
         return node;
@@ -616,7 +620,7 @@ public class MifReader extends AbstractMapInfoReader {
 
     /** Compare two doubles within a default epsilon */
     public static boolean equals(Double a, Double b) {
-        if (a==b) return true;
+        if (a == b) return true;
         // If the difference is less than epsilon, treat as equal.
         return Math.abs(a - b) < 0.0000001;
     }

@@ -25,13 +25,14 @@ public class MifReaderTest {
      */
     @Rule
     public JOSMTestRules rules = new JOSMTestRules().preferences();
-    
+
     private static AbstractDataSetHandler newHandler(final String epsgCode) {
         AbstractDataSetHandler handler = new AbstractDataSetHandler() {
             @Override
             public boolean acceptsFilename(String filename) {
                 return true;
             }
+
             @Override
             public void updateDataSet(DataSet ds) {
             }
@@ -41,7 +42,7 @@ public class MifReaderTest {
         handler.setMifHandler(mifHandler);
         return handler;
     }
-    
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/9592">#9592</a>
      * @throws IOException if an error occurs during reading

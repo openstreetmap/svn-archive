@@ -18,7 +18,7 @@ public class CsvReader extends SpreadSheetReader {
 
     private final Charset charset;
     private String sep;
-    
+
     private BufferedReader reader;
     private String line;
 
@@ -31,7 +31,7 @@ public class CsvReader extends SpreadSheetReader {
         this.charset = handler != null && handler.getCharset() != null ? handler.getCharset() : Charset.forName(OdConstants.UTF8);
         this.sep = handler != null && handler.getSeparator() != null ? handler.getSeparator() : defaultSep;
     }
-    
+
     public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
         CsvHandler csvHandler = null;
         if (handler != null && handler.getSpreadSheetHandler() instanceof CsvHandler) {
@@ -64,8 +64,8 @@ public class CsvReader extends SpreadSheetReader {
         line = reader.readLine();
         return splitLine();
     }
-    
-    private final String[] splitLine() {
+
+    private String[] splitLine() {
         if (line != null) {
             return OdUtils.stripQuotesAndExtraChars(line.split(sep), sep);
         } else {

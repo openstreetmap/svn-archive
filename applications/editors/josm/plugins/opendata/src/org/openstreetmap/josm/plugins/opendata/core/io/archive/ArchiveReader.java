@@ -51,23 +51,23 @@ public abstract class ArchiveReader extends AbstractReader {
         this.archiveHandler = archiveHandler;
         this.promptUser = promptUser;
     }
-    
+
     public final File getReadFile() {
         return file;
     }
-    
+
     protected abstract void extractArchive(final File temp, final List<File> candidates) throws IOException, FileNotFoundException;
-    
+
     protected abstract String getTaskMessage();
-    
+
     protected Collection<File> getDocsToParse(final File temp, final ProgressMonitor progressMonitor) throws FileNotFoundException, IOException {
         final List<File> candidates = new ArrayList<>();
-        
+
         if (progressMonitor != null) {
             progressMonitor.beginTask(getTaskMessage());
         }
         extractArchive(temp, candidates);
-        
+
         if (promptUser && candidates.size() > 1) {
             DialogPrompter<CandidateChooser> prompt = new DialogPrompter<CandidateChooser>() {
                 @Override
@@ -83,8 +83,9 @@ public abstract class ArchiveReader extends AbstractReader {
         }
         return Collections.emptyList();
     }
-    
-    public Map<File, DataSet> parseDocs(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
+
+    public Map<File, DataSet> parseDocs(final ProgressMonitor progressMonitor)
+            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         Map<File, DataSet> result = new HashMap<>();
         File temp = OdUtils.createTempDir();
         try {
@@ -103,17 +104,18 @@ public abstract class ArchiveReader extends AbstractReader {
         }
         return result;
     }
-    
-    public DataSet parseDoc(final ProgressMonitor progressMonitor) throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException  {
+
+    public DataSet parseDoc(final ProgressMonitor progressMonitor)
+            throws IOException, XMLStreamException, FactoryConfigurationError, JAXBException {
         File temp = OdUtils.createTempDir();
-        
+
         try {
-            file = null;        
+            file = null;
             Collection<File> files = getDocsToParse(temp, progressMonitor);
             if (!files.isEmpty()) {
                 file = files.iterator().next();
             }
-            
+
             DataSet from = getDataForFile(file, progressMonitor);
             if (from != null) {
                 ds = from;
@@ -126,7 +128,7 @@ public abstract class ArchiveReader extends AbstractReader {
                 progressMonitor.finishTask();
             }
         }
-        
+
         return ds;
     }
 
@@ -185,7 +187,7 @@ public abstract class ArchiveReader extends AbstractReader {
             }
         }
         // Special treatment for XML files (check supported XSD), unless handler explicitely skip it
-        if (XmlImporter.XML_FILE_FILTER.accept(file) && ((archiveHandler != null && archiveHandler.skipXsdValidation()) 
+        if (XmlImporter.XML_FILE_FILTER.accept(file) && ((archiveHandler != null && archiveHandler.skipXsdValidation())
                 || OdPlugin.getInstance().xmlImporter.acceptFile(file))) {
             candidates.add(file);
         }

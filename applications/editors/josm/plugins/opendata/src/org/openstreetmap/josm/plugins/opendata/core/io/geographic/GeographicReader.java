@@ -65,10 +65,10 @@ public abstract class GeographicReader extends AbstractReader {
             e.printStackTrace();
         }
     }
-    
+
     private final GeographicHandler handler;
     private final GeographicHandler[] defaultHandlers;
-    
+
     protected final Map<LatLon, Node> nodes;
 
     protected CoordinateReferenceSystem crs;
@@ -79,7 +79,7 @@ public abstract class GeographicReader extends AbstractReader {
         this.handler = handler;
         this.defaultHandlers = defaultHandlers;
     }
-    
+
     protected Node getNode(Point p, LatLon key) {
         Node n = nodes.get(key);
         if (n == null && handler != null && handler.checkNodeProximity()) {
@@ -119,7 +119,7 @@ public abstract class GeographicReader extends AbstractReader {
         }
         return n;
     }
-    
+
     protected Node createOrGetEmptyNode(Point p) throws MismatchedDimensionException, TransformException {
         Point p2 = (Point) JTS.transform(p, transform);
         LatLon key = new LatLon(p2.getY(), p2.getX());
@@ -139,7 +139,7 @@ public abstract class GeographicReader extends AbstractReader {
         }
         return n;
     }
-        
+
     protected <T extends OsmPrimitive> T addOsmPrimitive(T p) {
         ds.addPrimitive(p);
         return p;
@@ -153,8 +153,8 @@ public abstract class GeographicReader extends AbstractReader {
         Way w = null;
         Way tempWay = new Way();
         if (ls != null) {
-            // Build list of nodes 
-            for (int i=0; i<ls.getNumPoints(); i++) {
+            // Build list of nodes
+            for (int i = 0; i < ls.getNumPoints(); i++) {
                 try {
                     tempWay.addNode(createOrGetNode(ls.getPointN(i)));
                 } catch (TransformException | IllegalArgumentException e) {
@@ -194,7 +194,7 @@ public abstract class GeographicReader extends AbstractReader {
     protected final void addWayToMp(Relation r, String role, Way w) {
         r.addMember(new RelationMember(role, w));
     }
-    
+
     /**
      * returns true if the user wants to cancel, false if they
      * want to continue
@@ -206,15 +206,17 @@ public abstract class GeographicReader extends AbstractReader {
                 final ExtendedDialog dlg = new ExtendedDialog(parent,
                         tr("Cannot transform to WGS84"),
                         new String[] {tr("Cancel"), tr("Continue")});
+                // CHECKSTYLE.OFF: LineLength
                 dlg.setContent("<html>" +
                         tr("JOSM was unable to find a strict mathematical transformation between ''{0}'' and WGS84.<br /><br />"+
-                                "Do you want to try a <i>lenient</i> method, which will perform a non-precise transformation (<b>with location errors up to 1 km</b>) ?<br/><br/>"+
-                                "If so, <b>do NOT upload</b> such data to OSM !", crs.getName())+
+                        "Do you want to try a <i>lenient</i> method, which will perform a non-precise transformation (<b>with location errors up to 1 km</b>) ?<br/><br/>"+
+                        "If so, <b>do NOT upload</b> such data to OSM !", crs.getName())+
                         "</html>");
-               dlg.setButtonIcons(new Icon[] {
+                // CHECKSTYLE.ON: LineLength
+                dlg.setButtonIcons(new Icon[] {
                         new ImageProvider("cancel").setMaxSize(ImageSizes.LARGEICON).get(),
                         new ImageProvider("ok").setMaxSize(ImageSizes.LARGEICON).addOverlay(
-                                new ImageOverlay(new ImageProvider("warning-small"), 0.5,0.5,1.0,1.0)).get()});
+                                new ImageOverlay(new ImageProvider("warning-small"), 0.5, 0.5, 1.0, 1.0)).get()});
                 dlg.setToolTipTexts(new String[] {
                         tr("Cancel"),
                         tr("Try lenient method")});
@@ -224,8 +226,8 @@ public abstract class GeographicReader extends AbstractReader {
             }
         }.promptInEdt().getValue() != 2;
     }
-    
-    private static final void compareDebug(CoordinateReferenceSystem crs1, CoordinateReferenceSystem crs2) {
+
+    private static void compareDebug(CoordinateReferenceSystem crs1, CoordinateReferenceSystem crs2) {
         Main.debug("-- COMPARING "+crs1.getName()+" WITH "+crs2.getName()+" --");
         compareDebug("class", crs1.getClass(), crs2.getClass());
         CoordinateSystem cs1 = crs1.getCoordinateSystem();
@@ -234,7 +236,7 @@ public abstract class GeographicReader extends AbstractReader {
             Integer dim1 = cs1.getDimension();
             Integer dim2 = cs2.getDimension();
             if (compareDebug("cs.dim", dim1, dim2)) {
-                for (int i = 0; i<dim1; i++) {
+                for (int i = 0; i < dim1; i++) {
                     compareDebug("cs.axis"+i, cs1.getAxis(i), cs1.getAxis(i));
                 }
             }
@@ -257,42 +259,43 @@ public abstract class GeographicReader extends AbstractReader {
         }
         Main.debug("-- COMPARING FINISHED --");
     }
-    
-    private static final boolean compareDebug(String text, Object o1, Object o2) {
+
+    private static boolean compareDebug(String text, Object o1, Object o2) {
         return compareDebug(text, o1.equals(o2), o1, o2);
     }
-    
-    private static final boolean compareDebug(String text, IdentifiedObject o1, IdentifiedObject o2) {
-        return compareDebug(text, (AbstractIdentifiedObject)o1, (AbstractIdentifiedObject)o2);
+
+    private static boolean compareDebug(String text, IdentifiedObject o1, IdentifiedObject o2) {
+        return compareDebug(text, (AbstractIdentifiedObject) o1, (AbstractIdentifiedObject) o2);
     }
-    
-    private static final boolean compareDebug(String text, AbstractIdentifiedObject o1, AbstractIdentifiedObject o2) {
+
+    private static boolean compareDebug(String text, AbstractIdentifiedObject o1, AbstractIdentifiedObject o2) {
         return compareDebug(text, o1.equals(o2, false), o1, o2);
     }
 
-    private static final boolean compareDebug(String text, boolean result, Object o1, Object o2) {
+    private static boolean compareDebug(String text, boolean result, Object o1, Object o2) {
         Main.debug(text + ": " + result + "("+o1+", "+o2+")");
         return result;
     }
-    
-    protected void findMathTransform(Component parent, boolean findSimiliarCrs) throws FactoryException, UserCancelException, GeoMathTransformException {
+
+    protected void findMathTransform(Component parent, boolean findSimiliarCrs)
+            throws FactoryException, UserCancelException, GeoMathTransformException {
         try {
             transform = CRS.findMathTransform(crs, wgs84);
         } catch (OperationNotFoundException e) {
             Main.info(crs.getName()+": "+e.getMessage()); // Bursa wolf parameters required.
-            
-            if (findSimiliarCrs) { 
+
+            if (findSimiliarCrs) {
                 List<CoordinateReferenceSystem> candidates = new ArrayList<>();
-                
+
                 // Find matching CRS with Bursa Wolf parameters in EPSG database
                 for (String code : CRS.getAuthorityFactory(false).getAuthorityCodes(ProjectedCRS.class)) {
                     try {
                         CoordinateReferenceSystem candidate = CRS.decode(code);
                         if (candidate instanceof AbstractCRS && crs instanceof AbstractIdentifiedObject) {
-                            
-                            Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, 
-                                    Main.pref.getDouble(OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE));
-                            if (((AbstractCRS)candidate).equals((AbstractIdentifiedObject)crs, false)) {
+
+                            Hints.putSystemDefault(Hints.COMPARISON_TOLERANCE, Main.pref.getDouble(
+                                    OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE));
+                            if (((AbstractCRS) candidate).equals((AbstractIdentifiedObject) crs, false)) {
                                 Main.info("Found a potential CRS: "+candidate.getName());
                                 candidates.add(candidate);
                             } else if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
@@ -301,15 +304,15 @@ public abstract class GeographicReader extends AbstractReader {
                             Hints.removeSystemDefault(Hints.COMPARISON_TOLERANCE);
                         }
                     } catch (FactoryException ex) {
-                        // Silently ignore exceptions
+                        Main.trace(ex);
                     }
                 }
-                
+
                 if (candidates.size() > 1) {
                     Main.warn("Found several potential CRS: "+Arrays.toString(candidates.toArray()));
                     // TODO: ask user which one to use
                 }
-                
+
                 if (candidates.size() > 0) {
                     CoordinateReferenceSystem newCRS = candidates.get(0);
                     try {
@@ -319,7 +322,7 @@ public abstract class GeographicReader extends AbstractReader {
                     }
                 }
             }
-            
+
             if (transform == null) {
                 if (handler != null) {
                     // ask handler if it can provide a math transform

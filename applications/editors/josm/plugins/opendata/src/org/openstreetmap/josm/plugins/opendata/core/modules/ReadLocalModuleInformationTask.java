@@ -30,9 +30,8 @@ import org.xml.sax.SAXException;
  *   <li>.jar-files, assuming that they represent module jars</li>
  *   <li>.jar.new-files, assuming that these are downloaded but not yet installed modules</li>
  *   <li>cached lists of available modules, downloaded for instance from
- *   <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt</a></li>
+ *   <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a></li>
  * </ul>
- *
  */
 public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     private Map<String, ModuleInformation> availableModules;
@@ -44,7 +43,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     }
 
     public ReadLocalModuleInformationTask(ProgressMonitor monitor) {
-        super(tr("Reading local module information.."),monitor, false);
+        super(tr("Reading local module information.."), monitor, false);
         availableModules = new HashMap<>();
     }
 
@@ -56,11 +55,11 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {}
 
-    protected void processJarFile(File f, String moduleName) throws ModuleException{
+    protected void processJarFile(File f, String moduleName) throws ModuleException {
         ModuleInformation info = new ModuleInformation(
                 f,
                 moduleName
-        );
+                );
         if (!availableModules.containsKey(info.getName())) {
             info.localversion = info.version;
             availableModules.put(info.getName(), info);
@@ -83,7 +82,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                         return name.matches("^([0-9]+-)?site.*\\.txt$");
                     }
                 }
-        );
+                );
         if (siteCacheFiles == null || siteCacheFiles.length == 0)
             return;
         monitor.subTask(tr("Processing module site cache files..."));
@@ -109,7 +108,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                         return name.matches("^([0-9]+-)?site.*modules-icons\\.zip$");
                     }
                 }
-        );
+                );
         if (siteCacheFiles == null || siteCacheFiles.length == 0)
             return;
         monitor.subTask(tr("Processing module site cache icon files..."));
@@ -120,10 +119,10 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
             for (ModuleInformation pi : availableModules.values()) {
                 if (pi.icon == null && pi.iconPath != null) {
                     pi.icon = new ImageProvider(pi.name+".jar/"+pi.iconPath)
-                                    .setArchive(f)
-                                    .setMaxWidth(24)
-                                    .setMaxHeight(24)
-                                    .setOptional(true).get();
+                            .setArchive(f)
+                            .setMaxWidth(24)
+                            .setMaxHeight(24)
+                            .setOptional(true).get();
                 }
             }
             monitor.worked(1);
@@ -138,7 +137,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                         return name.endsWith(".jar") || name.endsWith(".jar.new");
                     }
                 }
-        );
+                );
         if (moduleFiles == null || moduleFiles.length == 0)
             return;
         monitor.subTask(tr("Processing module files..."));
@@ -154,7 +153,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                     String moduleName = fname.substring(0, fname.length() - 8);
                     processJarFile(f, moduleName);
                 }
-            } catch(ModuleException e){
+            } catch (ModuleException e) {
                 Main.warn(tr("Warning: Failed to scan file ''{0}'' for module information. Skipping.", fname));
                 e.printStackTrace();
             }
@@ -175,7 +174,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
         }
     }
 
-    protected void processLocalModuleInformationFile(File file) throws ModuleListParseException{
+    protected void processLocalModuleInformationFile(File file) throws ModuleListParseException {
         try (FileInputStream fin = new FileInputStream(file)) {
             List<ModuleInformation> pis = new ModuleListParser().parse(fin);
             for (ModuleInformation pi : pis) {
@@ -185,7 +184,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
                 //
                 availableModules.put(pi.name, pi);
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new ModuleListParseException(e);
         }
     }
@@ -193,7 +192,7 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
     protected void analyseInProcessModules() {
         for (Module module : ModuleHandler.moduleList) {
             ModuleInformation info = module.getModuleInformation();
-            if (canceled)return;
+            if (canceled) return;
             if (!availableModules.containsKey(info.name)) {
                 availableModules.put(info.name, info);
             } else {
@@ -211,13 +210,13 @@ public class ReadLocalModuleInformationTask extends PleaseWaitRunnable {
             scanLocalModuleRepository(
                     getProgressMonitor().createSubTaskMonitor(1, false),
                     new File(location)
-            );
+                    );
             getProgressMonitor().worked(1);
-            if (canceled)return;
+            if (canceled) return;
         }
         analyseInProcessModules();
         getProgressMonitor().worked(1);
-        if (canceled)return;
+        if (canceled) return;
         getProgressMonitor().worked(1);
     }
 

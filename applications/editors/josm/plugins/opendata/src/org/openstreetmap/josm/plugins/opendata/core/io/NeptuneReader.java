@@ -22,6 +22,19 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.data.osm.RelationMember;
+import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.io.AbstractReader;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
+import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
+import org.xml.sax.SAXException;
+
 import neptune.ChouetteAreaType;
 import neptune.ChouettePTNetworkType;
 import neptune.ChouettePTNetworkType.ChouetteArea.AreaCentroid;
@@ -36,19 +49,6 @@ import neptune.PointType;
 import neptune.StopAreaType;
 import neptune.StopPointType;
 import neptune.TridentObjectType;
-
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.DataSet;
-import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Relation;
-import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.gui.progress.ProgressMonitor;
-import org.openstreetmap.josm.io.AbstractReader;
-import org.openstreetmap.josm.plugins.opendata.core.datasets.AbstractDataSetHandler;
-import org.openstreetmap.josm.plugins.opendata.core.datasets.fr.FrenchConstants;
-import org.xml.sax.SAXException;
 
 /**
  * NEPTUNE -> OSM converter
@@ -126,18 +126,18 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         JAXBContext jc = JAXBContext.newInstance(packageName, NeptuneReader.class.getClassLoader());
         Unmarshaller u = jc.createUnmarshaller();
         @SuppressWarnings("unchecked")
-        JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal(inputStream);
+        JAXBElement<T> doc = (JAXBElement<T>) u.unmarshal(inputStream);
         return doc.getValue();
     }
 
-    private final void linkTridentObjectToOsmPrimitive(TridentObjectType object, OsmPrimitive p) {
+    private void linkTridentObjectToOsmPrimitive(TridentObjectType object, OsmPrimitive p) {
         p.put("ref:neptune", object.getObjectId());
         if (tridentObjects.put(object.getObjectId(), p) != null) {
             Main.error("Trident object duplicated !!! : "+object.getObjectId());
         }
     }
 
-    protected Node createNode(LatLon latlon){
+    protected Node createNode(LatLon latlon) {
         Node n = new Node(latlon);
         ds.addPrimitive(n);
         return n;
@@ -151,14 +151,14 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         return n;
     }
 
-    protected Relation createRelation(String type){
+    protected Relation createRelation(String type) {
         Relation r = new Relation();
         r.put("type", type);
         ds.addPrimitive(r);
         return r;
     }
 
-    protected Relation createPtRelation(String pt, TridentObjectType object){
+    protected Relation createPtRelation(String pt, TridentObjectType object) {
         Relation r = createRelation(OSM_PUBLIC_TRANSPORT);
         r.put(OSM_PUBLIC_TRANSPORT, pt);
         linkTridentObjectToOsmPrimitive(object, r);
@@ -348,8 +348,8 @@ public class NeptuneReader extends AbstractReader implements FrenchConstants {
         return ds;
     }
 
-    private static final boolean addStopToRoute(Relation route, OsmPrimitive stop) {
-        if (route.getMembersCount() == 0 || !route.getMember(route.getMembersCount()-1).getMember().equals(stop) ) {
+    private static boolean addStopToRoute(Relation route, OsmPrimitive stop) {
+        if (route.getMembersCount() == 0 || !route.getMember(route.getMembersCount()-1).getMember().equals(stop)) {
             route.addMember(new RelationMember(stop.get(OSM_PUBLIC_TRANSPORT), stop));
             return true;
         } else {

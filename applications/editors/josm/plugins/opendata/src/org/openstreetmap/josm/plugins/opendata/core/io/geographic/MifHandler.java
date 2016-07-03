@@ -5,7 +5,7 @@ import org.openstreetmap.josm.data.projection.Projection;
 
 public interface MifHandler extends GeographicHandler {
 
-    public void setCoordSysNonEarthProjection(Projection p);
-    
-    public Projection getCoordSysNonEarthProjection();
+    void setCoordSysNonEarthProjection(Projection p);
+
+    Projection getCoordSysNonEarthProjection();
 }

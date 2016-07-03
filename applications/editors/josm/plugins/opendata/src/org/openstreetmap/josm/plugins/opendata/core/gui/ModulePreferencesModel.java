@@ -30,7 +30,7 @@ public class ModulePreferencesModel extends Observable {
     protected Collection<String> getModules(Collection<String> def) {
         return Main.pref.getCollection(OdConstants.PREF_MODULES, def);
     }
-    
+
     public ModulePreferencesModel() {
         currentActiveModules = new HashSet<>();
         currentActiveModules.addAll(getModules(currentActiveModules));
@@ -74,7 +74,7 @@ public class ModulePreferencesModel extends Observable {
         notifyObservers();
     }
 
-    protected  void updateAvailableModule(ModuleInformation other) {
+    protected void updateAvailableModule(ModuleInformation other) {
         if (other == null) return;
         ModuleInformation pi = getModuleInformation(other.name);
         if (pi == null) {
@@ -147,13 +147,14 @@ public class ModulePreferencesModel extends Observable {
         Collections.sort(
                 availableModules,
                 new Comparator<ModuleInformation>() {
+                    @Override
                     public int compare(ModuleInformation o1, ModuleInformation o2) {
                         String n1 = o1.getName() == null ? "" : o1.getName().toLowerCase();
                         String n2 = o2.getName() == null ? "" : o2.getName().toLowerCase();
                         return n1.compareTo(n2);
                     }
                 }
-        );
+                );
     }
 
     /**
@@ -192,7 +193,7 @@ public class ModulePreferencesModel extends Observable {
     public void setModuleSelected(String name, boolean selected) {
         ModuleInformation pi = getModuleInformation(name);
         if (pi != null) {
-            selectedModulesMap.put(pi,selected);
+            selectedModulesMap.put(pi, selected);
             if (pi.isUpdateRequired()) {
                 pendingDownloads.add(pi.name);
             }
@@ -208,9 +209,9 @@ public class ModulePreferencesModel extends Observable {
      *
      * @param modules the list of modules to clear for a pending download
      */
-    public void clearPendingModules(Collection<ModuleInformation> modules){
+    public void clearPendingModules(Collection<ModuleInformation> modules) {
         if (modules == null || modules.isEmpty()) return;
-        for(ModuleInformation pi: modules) {
+        for (ModuleInformation pi : modules) {
             pendingDownloads.remove(pi.name);
         }
     }
@@ -323,7 +324,7 @@ public class ModulePreferencesModel extends Observable {
      */
     public boolean isActiveModulesChanged() {
         Set<String> newActiveModules = getSelectedModuleNames();
-        return ! newActiveModules.equals(currentActiveModules);
+        return !newActiveModules.equals(currentActiveModules);
     }
 
     /**
@@ -354,7 +355,7 @@ public class ModulePreferencesModel extends Observable {
                     continue;
                 }
                 oldinfo.localversion = newinfo.version;
-            } catch(ModuleException e) {
+            } catch (ModuleException e) {
                 e.printStackTrace();
             }
         }

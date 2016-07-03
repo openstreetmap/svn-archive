@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * A parser for the module list provided by an opendata Module Download Site.
  *
- * See <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt</a>
+ * See <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a>
  * for a sample of the document. The format is a custom format, kind of mix of CSV and RFC822 style
  * name/value-pairs.
  *
@@ -29,16 +29,16 @@ public class ModuleListParser {
      * @param url the module download url
      * @param manifest the module manifest
      * @return a module information object
-     * @throws ModuleListParseException
+     * @throws ModuleListParseException if the list cannot be parsed
      */
-    protected ModuleInformation createInfo(String name, String url, String manifest) throws ModuleListParseException{
+    protected ModuleInformation createInfo(String name, String url, String manifest) throws ModuleListParseException {
         try {
             return new ModuleInformation(
                     new ByteArrayInputStream(manifest.getBytes("utf-8")),
                     name.substring(0, name.length() - 4),
                     url
-            );
-        } catch(UnsupportedEncodingException e) {
+                    );
+        } catch (UnsupportedEncodingException e) {
             throw new ModuleListParseException(tr("Failed to create module information from manifest for module ''{0}''", name), e);
         } catch (ModuleException e) {
             throw new ModuleListParseException(tr("Failed to create module information from manifest for module ''{0}''", name), e);
@@ -48,7 +48,7 @@ public class ModuleListParser {
     /**
      * Parses a module information document and replies a list of module information objects.
      *
-     * See <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt</a>
+     * See <a href="http://svn.openstreetmap.org/applications/editors/josm/plugins/opendata/modules.txt">OSM SVN</a>
      * for a sample of the document. The format is a custom format, kind of mix of CSV and RFC822 style
      * name/value-pairs.
      *
@@ -56,7 +56,7 @@ public class ModuleListParser {
      * @return the list of module information objects
      * @throws ModuleListParseException thrown if something goes wrong while parsing
      */
-    public List<ModuleInformation> parse(InputStream in) throws ModuleListParseException{
+    public List<ModuleInformation> parse(InputStream in) throws ModuleListParseException {
         List<ModuleInformation> ret = new LinkedList<>();
         BufferedReader r = null;
         try {
@@ -72,7 +72,7 @@ public class ModuleListParser {
                     C;
                 }
                 B;
-            */
+             */
             for (String line = r.readLine(); line != null; line = r.readLine()) {
                 if (line.startsWith("\t")) {
                     line = line.substring(1);
@@ -94,9 +94,9 @@ public class ModuleListParser {
                         ret.add(info);
                     }
                 }
-                String x[] = line.split(";");
-                if(x.length != 2)
-                  throw new IOException(tr("Illegal entry in module list."));
+                String[] x = line.split(";");
+                if (x.length != 2)
+                    throw new IOException(tr("Illegal entry in module list."));
                 name = x[0];
                 url = x[1];
                 manifest = new StringBuilder();

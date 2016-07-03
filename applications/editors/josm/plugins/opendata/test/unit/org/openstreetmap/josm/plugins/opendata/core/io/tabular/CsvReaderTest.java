@@ -28,13 +28,14 @@ public class CsvReaderTest {
      */
     @Rule
     public JOSMTestRules rules = new JOSMTestRules().preferences();
-    
+
     private static AbstractDataSetHandler newHandler(final String epsgCode) {
         AbstractDataSetHandler handler = new AbstractDataSetHandler() {
             @Override
             public boolean acceptsFilename(String filename) {
                 return true;
             }
+
             @Override
             public void updateDataSet(DataSet ds) {
             }
@@ -44,6 +45,7 @@ public class CsvReaderTest {
             public boolean handlesProjection() {
                 return true;
             }
+
             @Override
             public LatLon getCoor(EastNorth en, String[] fields) {
                 return Projections.getProjectionByCode(epsgCode).eastNorth2latlon(en);
@@ -51,7 +53,7 @@ public class CsvReaderTest {
         });
         return handler;
     }
-    
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/10214">#10214</a>
      * @throws IOException if an error occurs during reading
@@ -62,7 +64,7 @@ public class CsvReaderTest {
             NonRegFunctionalTests.testTicket10214(CsvReader.parseDataSet(is, newHandler("EPSG:4326"), null));
         }
     }
-    
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/8805">#8805</a>
      * @throws IOException if an error occurs during reading

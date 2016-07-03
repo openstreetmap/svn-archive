@@ -30,7 +30,7 @@ public class ShpReaderTest {
     public JOSMTestRules rules = new JOSMTestRules().preferences().timeout(60000);
 
     /**
-     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12714">#12714/a>
+     * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/12714">#12714</a>
      * @throws IOException if an error occurs during reading
      */
     @Test
@@ -54,7 +54,7 @@ public class ShpReaderTest {
             NonRegFunctionalTests.testTicket10214(ShpReader.parseDataSet(is, file, null, null));
         }
     }
-    
+
     /**
      * Non-regression test for ticket <a href="https://josm.openstreetmap.de/ticket/8309">#8309</a>
      * @throws IOException if an error occurs during reading

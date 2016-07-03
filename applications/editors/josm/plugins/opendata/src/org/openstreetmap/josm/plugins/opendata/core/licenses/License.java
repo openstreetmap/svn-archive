@@ -12,16 +12,16 @@ import javax.swing.Icon;
 import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 
 public abstract class License {
-    
+
     public static final ODbL ODbL = new ODbL();
     public static final LOOL LOOL = new LOOL();
-    
+
     private final Map<String, URL> urls = new HashMap<>();
     private final Map<String, URL> summaryURLs = new HashMap<>();
-    
+
     private Icon icon;
-    
-    private static final URL getURL(Map<String, URL> map) {
+
+    private static URL getURL(Map<String, URL> map) {
         // Find URL for current language
         String lang = OdUtils.getJosmLanguage();
         for (String l : map.keySet()) {
@@ -36,7 +36,7 @@ public abstract class License {
         }
         // If not found, return first non-null url
         if (map.keySet().size() > 0) {
-            for (Iterator<String> it=map.keySet().iterator(); it.hasNext(); ) {
+            for (Iterator<String> it = map.keySet().iterator(); it.hasNext();) {
                 url = map.get(it.next());
                 if (url != null) {
                     return url;
@@ -54,7 +54,7 @@ public abstract class License {
     public URL getSummaryURL() {
         return getURL(summaryURLs);
     }
-    
+
     public final void setURL(URL url) {
         setURL(url, "en");
     }

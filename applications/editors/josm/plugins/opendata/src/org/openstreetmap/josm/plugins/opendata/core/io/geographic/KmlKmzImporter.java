@@ -13,9 +13,10 @@ import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 import org.openstreetmap.josm.plugins.opendata.core.io.AbstractImporter;
 
 public class KmlKmzImporter extends AbstractImporter {
-    
+
     public static final ExtensionFileFilter KML_KMZ_FILE_FILTER = new ExtensionFileFilter(
-            OdConstants.KML_EXT+","+OdConstants.KMZ_EXT, OdConstants.KMZ_EXT, tr("KML/KMZ files") + " (*."+OdConstants.KML_EXT+",*."+OdConstants.KMZ_EXT+")");
+            OdConstants.KML_EXT+","+OdConstants.KMZ_EXT, OdConstants.KMZ_EXT, tr("KML/KMZ files") +
+            " (*."+OdConstants.KML_EXT+",*."+OdConstants.KMZ_EXT+")");
 
     public KmlKmzImporter() {
         super(KML_KMZ_FILE_FILTER);

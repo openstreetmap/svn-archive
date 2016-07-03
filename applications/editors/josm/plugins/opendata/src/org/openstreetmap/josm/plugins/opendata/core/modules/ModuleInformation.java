@@ -71,7 +71,7 @@ public class ModuleInformation {
      * @param name the module name
      * @throws ModuleException thrown if reading the manifest file fails
      */
-    public ModuleInformation(File file, String name) throws ModuleException{
+    public ModuleInformation(File file, String name) throws ModuleException {
         this.name = name;
         this.file = file;
         try (
@@ -102,7 +102,7 @@ public class ModuleInformation {
         try {
             Manifest manifest = new Manifest();
             manifest.read(manifestStream);
-            if(url != null) {
+            if (url != null) {
                 downloadlink = url;
             }
             scanManifest(manifest);
@@ -132,8 +132,9 @@ public class ModuleInformation {
         this.attr.putAll(other.attr);
     }
 
-    private static final ImageIcon extractIcon(String iconPath, File jarFile, boolean suppressWarnings) {
-        return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true).setSuppressWarnings(suppressWarnings).get();
+    private static ImageIcon extractIcon(String iconPath, File jarFile, boolean suppressWarnings) {
+        return new ImageProvider(iconPath).setArchive(jarFile).setMaxWidth(24).setMaxHeight(24).setOptional(true)
+                .setSuppressWarnings(suppressWarnings).get();
     }
 
     private void scanManifest(Manifest manifest) {
@@ -155,9 +156,9 @@ public class ModuleInformation {
         }
         link = s;
         s = attr.getValue(lang+"Module-Description");
-        if(s == null) {
+        if (s == null) {
             s = attr.getValue("Module-Description");
-            if(s != null) {
+            if (s != null) {
                 s = tr(s);
             }
         }
@@ -239,7 +240,7 @@ public class ModuleInformation {
     public Class<? extends Module> loadClass(ClassLoader classLoader) throws ModuleException {
         if (className == null)
             return null;
-        try{
+        try {
             return (Class<? extends Module>) Class.forName(className, true, classLoader);
         } catch (Exception t) {
             throw new ModuleException(name, t);
@@ -275,7 +276,7 @@ public class ModuleInformation {
      */
     public boolean isUpdateRequired(String referenceVersion) {
         if (this.downloadlink == null) return false;
-        if (this.version == null && referenceVersion!= null)
+        if (this.version == null && referenceVersion != null)
             return true;
         if (this.version != null && !this.version.equals(referenceVersion))
             return true;
@@ -310,7 +311,7 @@ public class ModuleInformation {
      */
     public boolean matches(String filter) {
         if (filter == null) return true;
-        String words[] = filter.split("\\s+");
+        String[] words = filter.split("\\s+");
         for (String word: words) {
             if (matches(word, name)
                     || matches(word, description)

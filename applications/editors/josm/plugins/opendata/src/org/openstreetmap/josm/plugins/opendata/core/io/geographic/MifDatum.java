@@ -30,6 +30,7 @@ import static org.openstreetmap.josm.plugins.opendata.core.io.geographic.MifElli
  * This file has been stored in reference directory to avoid future dead links.
  */
 public enum MifDatum {
+    // CHECKSTYLE.OFF: LineLength
     ADINDAN(1, "Ethiopia, Mali, Senegal, Sudan", CLARKE_1880),
     AFGOOYE(2, "Somalia", KRASSOVSKY),
     AIN_EL_ABD_1970(3, "Bahrain Island", INTERNATIONAL),
@@ -152,24 +153,30 @@ public enum MifDatum {
     YACARE(105, "", INTERNATIONAL),
     ZANDERIJ(106, "", INTERNATIONAL),
     CUSTOM(999, null, null);
+    // CHECKSTYLE.ON: LineLength
 
     private final Integer code;
     private final String area;
     private final MifEllipsoid ellipsoid;
-    private MifDatum(Integer code, String area, MifEllipsoid ellipsoid) {
+
+    MifDatum(Integer code, String area, MifEllipsoid ellipsoid) {
         this.code = code;
         this.area = area;
         this.ellipsoid = ellipsoid;
     }
+
     public final Integer getCode() {
         return code;
     }
+
     public final String getArea() {
         return area;
     }
+
     public final MifEllipsoid getEllipsoid() {
         return ellipsoid;
     }
+
     public static MifDatum forCode(Integer code) {
         for (MifDatum p : values()) {
             if (p.getCode().equals(code)) {

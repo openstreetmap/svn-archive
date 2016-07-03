@@ -31,7 +31,8 @@ public class FrenchShpHandler extends DefaultShpHandler {
         if (sourceCRS.getName().getCode().equalsIgnoreCase("Lambert I Nord")) {
             if (sourceCRS instanceof ProjectedCRS) {
                 GeodeticDatum datum = ((ProjectedCRS) sourceCRS).getDatum();
-                if (datum.getPrimeMeridian().getGreenwichLongitude() > 0.0 && ((ProjectedCRS) sourceCRS).getConversionFromBase().getMathTransform() instanceof LambertConformal2SP) {
+                if (datum.getPrimeMeridian().getGreenwichLongitude() > 0.0
+                        && ((ProjectedCRS) sourceCRS).getConversionFromBase().getMathTransform() instanceof LambertConformal2SP) {
                     LambertConformal2SP lambert = (LambertConformal2SP) ((ProjectedCRS) sourceCRS).getConversionFromBase().getMathTransform();
                     Double falseNorthing = get(lambert.getParameterValues(), AbstractProvider.FALSE_NORTHING);
                     Double centralmeridian = get(lambert.getParameterValues(), AbstractProvider.CENTRAL_MERIDIAN);

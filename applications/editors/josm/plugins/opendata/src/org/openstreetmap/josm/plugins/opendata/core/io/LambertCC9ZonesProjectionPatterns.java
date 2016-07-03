@@ -9,10 +9,10 @@ import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
 
 public class LambertCC9ZonesProjectionPatterns extends ProjectionPatterns {
-    
+
     public static final Projection[] lambertCC9Zones = new Projection[9];
     static {
-        for (int i=0; i<lambertCC9Zones.length; i++) {
+        for (int i = 0; i < lambertCC9Zones.length; i++) {
             lambertCC9Zones[i] = Projections.getProjectionByCode("EPSG:"+Integer.toString(3942+i));
         }
     }
@@ -31,7 +31,8 @@ public class LambertCC9ZonesProjectionPatterns extends ProjectionPatterns {
         String ccx = mx.group(1);
         String ccy = mx.group(1);
         if (!ccx.equals(ccy)) {
-            throw new IllegalArgumentException(tr("''Lambert CC 9 zones'' coordinates found with different zone codes for X and Y: "+xFieldName+", "+yFieldName));
+            throw new IllegalArgumentException(
+                    tr("''Lambert CC 9 zones'' coordinates found with different zone codes for X and Y: "+xFieldName+", "+yFieldName));
         }
         return lambertCC9Zones[Integer.parseInt(ccx)-42];
     }

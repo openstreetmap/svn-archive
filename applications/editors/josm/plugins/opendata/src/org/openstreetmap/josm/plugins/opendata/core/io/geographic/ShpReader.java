@@ -80,8 +80,8 @@ public class ShpReader extends GeographicReader {
         }
     }
 
-    private void parseFeature(Feature feature, final Component parent)
-            throws UserCancelException, GeoMathTransformException, FactoryException, GeoCrsException, MismatchedDimensionException, TransformException {
+    private void parseFeature(Feature feature, final Component parent) throws UserCancelException, GeoMathTransformException,
+    FactoryException, GeoCrsException, MismatchedDimensionException, TransformException {
         featurePrimitives.clear();
         GeometryAttribute geometry = feature.getDefaultGeometryProperty();
         if (geometry != null) {
@@ -100,7 +100,7 @@ public class ShpReader extends GeographicReader {
                                     tr("Unable to detect Coordinate Reference System.\nWould you like to fallback to ESPG:4326 (WGS 84) ?"),
                                     tr("Warning: CRS not found"),
                                     JOptionPane.YES_NO_CANCEL_OPTION
-                            )) {
+                                    )) {
                                 crs = wgs84;
                             }
                         }
@@ -130,19 +130,20 @@ public class ShpReader extends GeographicReader {
                     Relation r = null;
                     Way w = null;
 
-                    for (int i=0; i<nGeometries; i++) {
+                    for (int i = 0; i < nGeometries; i++) {
                         Geometry g = mp.getGeometryN(i);
                         if (g instanceof Polygon) {
                             Polygon p = (Polygon) g;
                             // Do not create relation if there's only one polygon without interior ring
                             // except if handler prefers it
-                            if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 || (handler != null && handler.preferMultipolygonToSimpleWay()))) {
+                            if (r == null && (nGeometries > 1 || p.getNumInteriorRing() > 0 ||
+                                    (handler != null && handler.preferMultipolygonToSimpleWay()))) {
                                 r = createMultipolygon();
                             }
                             w = createOrGetWay(p.getExteriorRing());
                             if (r != null) {
                                 addWayToMp(r, "outer", w);
-                                for (int j=0; j<p.getNumInteriorRing(); j++) {
+                                for (int j = 0; j < p.getNumInteriorRing(); j++) {
                                     addWayToMp(r, "inner", createOrGetWay(p.getInteriorRingN(j)));
                                 }
                             }
@@ -210,8 +211,8 @@ public class ShpReader extends GeographicReader {
                 String[] typeNames = dataStore.getTypeNames();
                 String typeName = typeNames[0];
 
-                FeatureSource<?,?> featureSource = dataStore.getFeatureSource(typeName);
-                FeatureCollection<?,?> collection = featureSource.getFeatures();
+                FeatureSource<?, ?> featureSource = dataStore.getFeatureSource(typeName);
+                FeatureCollection<?, ?> collection = featureSource.getFeatures();
                 FeatureIterator<?> iterator = collection.features();
 
                 if (instance != null) {
@@ -258,7 +259,7 @@ public class ShpReader extends GeographicReader {
         return ds;
     }
 
-    private static final void readNonGeometricAttributes(Feature feature, OsmPrimitive primitive) {
+    private static void readNonGeometricAttributes(Feature feature, OsmPrimitive primitive) {
         try {
             for (Property prop : feature.getProperties()) {
                 if (!(prop instanceof GeometryAttribute)) {

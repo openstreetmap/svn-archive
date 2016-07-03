@@ -22,11 +22,11 @@ import org.openstreetmap.josm.tools.Pair;
 public class OdDiffLayer extends Layer implements OdLayer {
 
     private final OdDataLayer dataLayer;
-    
-    public final List<Pair<OsmPrimitive,OsmPrimitive>> differentPrimitives;
+
+    public final List<Pair<OsmPrimitive, OsmPrimitive>> differentPrimitives;
     public final List<OsmPrimitive> onlyInTlsPrimitives;
     public final List<OsmPrimitive> onlyInOsmPrimitives;
-    
+
     public OdDiffLayer(OdDataLayer dataLayer, String name) {
         super(name);
         this.dataLayer = dataLayer;
@@ -35,7 +35,7 @@ public class OdDiffLayer extends Layer implements OdLayer {
         this.onlyInOsmPrimitives = new ArrayList<>();
         initDiff(dataLayer.data, dataLayer.osmLayer.data);
     }
-    
+
     private void initDiff(DataSet tlsData, DataSet osmData) {
         for (OsmPrimitive p1 : tlsData.allPrimitives()) {
             if (dataLayer.handler.isRelevant(p1)) {
@@ -55,11 +55,11 @@ public class OdDiffLayer extends Layer implements OdLayer {
             }
         }
     }
-    
+
     private double distance(OsmPrimitive p1, OsmPrimitive p2) {
         return p1.getBBox().getCenter().greatCircleDistance(p2.getBBox().getCenter());
     }
-    
+
     private OsmPrimitive findPrimitiveAt(DataSet dataSet, OsmPrimitive source) {
         double maxDistance = Main.pref.getDouble(OdConstants.PREF_MAXDISTANCE, OdConstants.DEFAULT_MAXDISTANCE);
         //List<OsmPrimitive> samePrimitives = new ArrayList<OsmPrimitive>();
@@ -68,7 +68,7 @@ public class OdDiffLayer extends Layer implements OdLayer {
         OsmPrimitive nearestPotentialPrimitive = null;
         for (OsmPrimitive p : dataSet.allPrimitives()) {
             if (dataLayer.handler.isRelevant(p)) {
-                double dist = distance(source, p); 
+                double dist = distance(source, p);
                 if (dist <= maxDistance) {
                     if (dataLayer.handler.equals(p, source)) {
                         //samePrimitives.add(p);

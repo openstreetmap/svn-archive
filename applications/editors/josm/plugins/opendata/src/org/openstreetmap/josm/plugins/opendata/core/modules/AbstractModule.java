@@ -114,7 +114,7 @@ public abstract class AbstractModule implements Module {
         return result;
     }
 
-    private final List<AbstractDataSetHandler> getInstanciatedHandlers() {
+    private List<AbstractDataSetHandler> getInstanciatedHandlers() {
         if (instanciatedHandlers.isEmpty()) {
             instanciatedHandlers.addAll(getNewlyInstanciatedHandlers());
         }

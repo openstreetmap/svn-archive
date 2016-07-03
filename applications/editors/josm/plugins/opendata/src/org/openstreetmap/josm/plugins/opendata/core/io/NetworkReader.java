@@ -41,7 +41,7 @@ public class NetworkReader extends OsmServerReader {
 
     private File file;
     private String filename;
-    
+
     /**
      * File readers
      */
@@ -57,7 +57,7 @@ public class NetworkReader extends OsmServerReader {
         FILE_READERS.put(OdConstants.MIF_EXT, MifReader.class);
         FILE_READERS.put(OdConstants.TAB_EXT, TabReader.class);
     }
-    
+
     public static final Map<String, Class<? extends AbstractReader>> FILE_AND_ARCHIVE_READERS = new HashMap<>(FILE_READERS);
     static {
         FILE_AND_ARCHIVE_READERS.put(OdConstants.ZIP_EXT, ZipReader.class);
@@ -71,7 +71,7 @@ public class NetworkReader extends OsmServerReader {
         this.readerClass = null;
         this.promptUser = promptUser;
     }
-    
+
     public final File getReadFile() {
         return file;
     }
@@ -104,7 +104,7 @@ public class NetworkReader extends OsmServerReader {
             //return OdsReader.class;//FIXME, can be anything
         } else if (contentType.startsWith("text/csv")) {
             return CsvReader.class;
-        } else if (contentType.startsWith("text/plain")) {//TODO: extract charset
+        } else if (contentType.startsWith("text/plain")) { //TODO: extract charset
             return CsvReader.class;
         } else if (contentType.startsWith("tdyn/html")) {
             //return CsvReader.class;//FIXME, can also be .tar.gz
@@ -143,17 +143,17 @@ public class NetworkReader extends OsmServerReader {
                 readerClass = findReaderByContentType();
             }
             if (readerClass == null) {
-                   throw new OsmTransferException("Cannot find appropriate reader !");//TODO handler job ?
+                throw new OsmTransferException("Cannot find appropriate reader !"); //TODO handler job ?
             } else if (findReaderByExtension(url) != null) {
                 filename = url.substring(url.lastIndexOf('/')+1);
             }
             instance = progressMonitor.createSubTaskMonitor(ProgressMonitor.ALL_TICKS, false);
             if (readerClass.equals(ZipReader.class) || readerClass.equals(SevenZipReader.class)) {
-                ArchiveReader zipReader = readerClass.equals(ZipReader.class) 
+                ArchiveReader zipReader = readerClass.equals(ZipReader.class)
                         ? new ZipReader(in, handler, promptUser) : new SevenZipReader(in, handler, promptUser);
-                DataSet ds = zipReader.parseDoc(instance);
-                file = zipReader.getReadFile();
-                return ds;
+                        DataSet ds = zipReader.parseDoc(instance);
+                        file = zipReader.getReadFile();
+                        return ds;
             } else if (readerClass.equals(KmlReader.class)) {
                 return KmlReader.parseDataSet(in, instance);
             } else if (readerClass.equals(KmzReader.class)) {
@@ -188,7 +188,9 @@ public class NetworkReader extends OsmServerReader {
                 if (in != null) {
                     in.close();
                 }
-            } catch (Exception e) {/* ignore it */}
+            } catch (Exception e) {
+                Main.trace(e);
+            }
         }
     }
 }

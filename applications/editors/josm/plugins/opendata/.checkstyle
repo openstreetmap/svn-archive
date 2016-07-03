@@ -7,4 +7,14 @@
   <fileset name="all" enabled="true" check-config-name="JOSM" local="true">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
+  <filter name="DerivedFiles" enabled="true"/>
+  <filter name="FilesFromPackage" enabled="true">
+    <filter-data value="src/org/geotools"/>
+    <filter-data value="data"/>
+    <filter-data value="images"/>
+    <filter-data value="includes"/>
+    <filter-data value="styles"/>
+    <filter-data value="resources"/>
+    <filter-data value="scripts"/>
+  </filter>
 </fileset-config>

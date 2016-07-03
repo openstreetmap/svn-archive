@@ -7,25 +7,28 @@ import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.gui.ExtendedDialog;
 
-public class DialogPrompter <T extends ExtendedDialog> implements Runnable {
-    
+public class DialogPrompter<T extends ExtendedDialog> implements Runnable {
+
     private T dialog;
     private int value = -1;
 
-    protected T buildDialog() {return null;} // To be overriden if needed
-    
+    protected T buildDialog() {
+        // To be overriden if needed
+        return null;
+    }
+
     public DialogPrompter() {
         this(null);
     }
-    
+
     public DialogPrompter(T dialog) {
         this.dialog = dialog;
     }
-    
+
     public final T getDialog() {
         return dialog;
     }
-    
+
     @Override
     public final void run() {
         if (dialog == null) {
@@ -35,7 +38,7 @@ public class DialogPrompter <T extends ExtendedDialog> implements Runnable {
             value = dialog.showDialog().getValue();
         }
     }
-    
+
     public final DialogPrompter<T> promptInEdt() {
         if (SwingUtilities.isEventDispatchThread()) {
             run();

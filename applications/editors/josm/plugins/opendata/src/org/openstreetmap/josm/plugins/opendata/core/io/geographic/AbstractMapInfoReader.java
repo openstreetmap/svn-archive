@@ -22,11 +22,11 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
     protected static final String VERSION_300 = "300";
     protected static final String VERSION_450 = "450";
 
-    protected static final String CHARSET_WINDOWS_LATIN    = "WindowsLatin1";
+    protected static final String CHARSET_WINDOWS_LATIN = "WindowsLatin1";
     protected static final String CHARSET_WINDOWS_CYRILLIC = "WindowsCyrillic";
     protected static final String CHARSET_NEUTRAL = "Neutral";
-    protected static final String CHARSET_MAC     = "MacRoman";
-    
+    protected static final String CHARSET_MAC = "MacRoman";
+
     protected BufferedReader headerReader;
 
     protected String line;
@@ -46,7 +46,7 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
         }
         return dataFile;
     }
-    
+
     protected final BufferedReader getDataReader(File headerFile, String extension, Charset charset) throws IOException {
         File dataFile = getDataFile(headerFile, extension);
         return dataFile.exists() ? Files.newBufferedReader(dataFile.toPath(), charset) : null;
@@ -75,7 +75,7 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
     protected void parseVersion(String[] words) {
         version = words[1];
     }
-    
+
     protected void parseColumns(String[] words) {
         columns = new ArrayList<>();
         numcolumns = Integer.parseInt(words[1]);
@@ -87,12 +87,12 @@ public abstract class AbstractMapInfoReader extends AbstractReader {
             while (line.contains("  ")) {
                 line = line.replace("  ", " ");
             }
-            String [] words = line.isEmpty() ? null : line.trim().split(" ");
+            String[] words = line.isEmpty() ? null : line.trim().split(" ");
             if (words != null && words.length > 0) {
                 parseHeaderLine(words);
             }
         }
     }
-    
+
     protected abstract void parseHeaderLine(String[] words) throws IOException;
 }

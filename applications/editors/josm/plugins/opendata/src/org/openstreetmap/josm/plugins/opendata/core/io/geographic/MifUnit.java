@@ -21,14 +21,17 @@ public enum MifUnit {
     Rods(32),
     US_Survey_Feet(8),
     Yards(4);
-        
+
     private final Integer code;
-    private MifUnit(Integer code) {
+
+    MifUnit(Integer code) {
         this.code = code;
     }
+
     public final Integer getCode() {
         return code;
     }
+
     public static MifUnit forCode(Integer code) {
         for (MifUnit p : values()) {
             if (p.getCode().equals(code)) {

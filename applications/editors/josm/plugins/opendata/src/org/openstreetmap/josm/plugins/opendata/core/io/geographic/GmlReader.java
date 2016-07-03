@@ -61,7 +61,7 @@ public class GmlReader extends GeographicReader {
         public CoordinateReferenceSystem crs;
         public MathTransform transform;
         public int dim;
-        public CrsData(CoordinateReferenceSystem crs, MathTransform transform, int dim) {
+        CrsData(CoordinateReferenceSystem crs, MathTransform transform, int dim) {
             this.crs = crs;
             this.transform = transform;
             this.dim = dim;
@@ -76,7 +76,8 @@ public class GmlReader extends GeographicReader {
         this.gmlHandler = handler;
     }
 
-    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException, XMLStreamException {
+    public static DataSet parseDataSet(InputStream in, AbstractDataSetHandler handler, ProgressMonitor instance)
+            throws IOException, XMLStreamException {
         InputStreamReader ir = UTFInputStreamReader.create(in, OdConstants.UTF8);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
         try {
@@ -86,11 +87,12 @@ public class GmlReader extends GeographicReader {
         }
     }
 
-    private final boolean isElement(String element) {
+    private boolean isElement(String element) {
         return parser.getLocalName().matches("(gml:)?"+element);
     }
 
-    private DataSet parseDoc(ProgressMonitor instance) throws XMLStreamException, GeoCrsException, FactoryException, GeoMathTransformException, MismatchedDimensionException, TransformException {
+    private DataSet parseDoc(ProgressMonitor instance) throws XMLStreamException, GeoCrsException, FactoryException,
+    GeoMathTransformException, MismatchedDimensionException, TransformException {
         Component parent = instance != null ? instance.getWindowParent() : Main.parent;
         while (parser.hasNext()) {
             int event = parser.next();
@@ -146,7 +148,8 @@ public class GmlReader extends GeographicReader {
         }
     }
 
-    private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException, UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
+    private void parseFeatureMember(Component parent) throws XMLStreamException, GeoCrsException, FactoryException,
+    UserCancelException, GeoMathTransformException, MismatchedDimensionException, TransformException {
         List<OsmPrimitive> list = new ArrayList<>();
         Way way = null;
         Node node = null;

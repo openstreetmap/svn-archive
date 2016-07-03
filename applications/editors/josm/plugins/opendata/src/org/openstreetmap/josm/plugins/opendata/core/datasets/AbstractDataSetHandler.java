@@ -20,8 +20,8 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.preferences.SourceEditor.ExtendedSourceEntry;
 import org.openstreetmap.josm.io.AbstractReader;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
-import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.archive.ArchiveHandler;
+import org.openstreetmap.josm.plugins.opendata.core.io.archive.DefaultArchiveHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultGmlHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.DefaultShpHandler;
 import org.openstreetmap.josm.plugins.opendata.core.io.geographic.GmlHandler;
@@ -36,13 +36,13 @@ import org.openstreetmap.josm.plugins.opendata.core.util.OdUtils;
 import org.openstreetmap.josm.tools.Pair;
 
 public abstract class AbstractDataSetHandler {
-    
+
     public abstract boolean acceptsFilename(String filename);
-    
+
     public boolean acceptsFile(File file) {
         return acceptsFilename(file.getName());
     }
-    
+
     public abstract void updateDataSet(DataSet ds);
 
     public void checkDataSetSource(DataSet ds) {
@@ -59,7 +59,7 @@ public abstract class AbstractDataSetHandler {
             }
         }
     }
-    
+
     public void checkNames(DataSet ds) {
         if (ds != null) {
             for (OsmPrimitive p : ds.allPrimitives()) {
@@ -82,13 +82,13 @@ public abstract class AbstractDataSetHandler {
         setCsvHandler(new DefaultCsvHandler());
         setGmlHandler(new DefaultGmlHandler());
     }
-    
-    private final boolean acceptsFilename(String filename, String[] expected, String ... extensions ) {
+
+    private boolean acceptsFilename(String filename, String[] expected, String ... extensions) {
         if (filename != null) {
             for (String name : expected) {
                 for (String ext : extensions) {
                     if (Pattern.compile(name+"\\."+ext, Pattern.CASE_INSENSITIVE).matcher(filename).matches()) {
-                    //if (filename.equalsIgnoreCase(name+"."+ext)) {
+                        //if (filename.equalsIgnoreCase(name+"."+ext)) {
                         return true;
                     }
                 }
@@ -96,7 +96,7 @@ public abstract class AbstractDataSetHandler {
         }
         return false;
     }
-    
+
     protected final boolean acceptsCsvFilename(String filename, String ... expected) {
         return acceptsFilename(filename, expected, OdConstants.CSV_EXT);
     }
@@ -156,15 +156,15 @@ public abstract class AbstractDataSetHandler {
     protected final boolean acceptsCsvKmzTabFilename(String filename, String ... expected) {
         return acceptsFilename(filename, expected, OdConstants.CSV_EXT, OdConstants.KMZ_EXT, OdConstants.TAB_EXT);
     }
-        
+
     protected final boolean acceptsCsvXlsFilename(String filename, String ... expected) {
         return acceptsFilename(filename, expected, OdConstants.CSV_EXT, OdConstants.XLS_EXT);
     }
-    
+
     // -------------------- License --------------------
-    
+
     private License license;
-    
+
     public License getLicense() {
         return license;
     }
@@ -174,12 +174,12 @@ public abstract class AbstractDataSetHandler {
     }
 
     // --------------------- URLs ---------------------
-    
+
     private URL dataURL;
     private URL wikiURL;
     private URL localPortalURL;
     private URL nationalPortalURL;
-    
+
     public URL getDataURL() {
         return dataURL;
     }
@@ -228,10 +228,14 @@ public abstract class AbstractDataSetHandler {
         setNationalPortalURL(new URL(nationalPortalURL));
     }
 
-    public List<Pair<String,URL>> getDataURLs() {return null;}
+    public List<Pair<String, URL>> getDataURLs() {
+        return null;
+    }
 
-    public AbstractReader getReaderForUrl(String url) {return null;}
-    
+    public AbstractReader getReaderForUrl(String url) {
+        return null;
+    }
+
     private boolean hasLicenseToBeAccepted = true;
 
     public final boolean hasLicenseToBeAccepted() {
@@ -251,29 +255,35 @@ public abstract class AbstractDataSetHandler {
     }
 
     public final Collection<String> getOsmXapiRequests(Bounds bounds) {
-        return getOsmXapiRequests(
-                LatLon.roundToOsmPrecision(bounds.getMin().lon())+","+
-                LatLon.roundToOsmPrecision(bounds.getMin().lat())+","+
-                LatLon.roundToOsmPrecision(bounds.getMax().lon())+","+
-                LatLon.roundToOsmPrecision(bounds.getMax().lat()));
+        return getOsmXapiRequests(LatLon.roundToOsmPrecision(bounds.getMin().lon())+","+
+                                  LatLon.roundToOsmPrecision(bounds.getMin().lat())+","+
+                                  LatLon.roundToOsmPrecision(bounds.getMax().lon())+","+
+                                  LatLon.roundToOsmPrecision(bounds.getMax().lat()));
     }
-    
-    protected Collection<String> getOsmXapiRequests(String bbox) {return null;}
-    
+
+    protected Collection<String> getOsmXapiRequests(String bbox) {
+        return null;
+    }
+
     public final String getOverpassApiRequest(Bounds bounds) {
-        return getOverpassApiRequest(
-                "w=\""+LatLon.roundToOsmPrecision(bounds.getMin().lon())+"\" "+
-                "s=\""+LatLon.roundToOsmPrecision(bounds.getMin().lat())+"\" "+
-                "e=\""+LatLon.roundToOsmPrecision(bounds.getMax().lon())+"\" "+
-                "n=\""+LatLon.roundToOsmPrecision(bounds.getMax().lat())+"\"");
+        return getOverpassApiRequest("w=\""+LatLon.roundToOsmPrecision(bounds.getMin().lon())+"\" "+
+                                     "s=\""+LatLon.roundToOsmPrecision(bounds.getMin().lat())+"\" "+
+                                     "e=\""+LatLon.roundToOsmPrecision(bounds.getMax().lon())+"\" "+
+                                     "n=\""+LatLon.roundToOsmPrecision(bounds.getMax().lat())+"\"");
     }
 
-    protected String getOverpassApiRequest(String bbox) {return null;}
+    protected String getOverpassApiRequest(String bbox) {
+        return null;
+    }
 
-    public boolean equals(IPrimitive p1, IPrimitive p2) {return false;}
-    
-    public boolean isRelevant(IPrimitive p) {return false;}
-    
+    public boolean equals(IPrimitive p1, IPrimitive p2) {
+        return false;
+    }
+
+    public boolean isRelevant(IPrimitive p) {
+        return false;
+    }
+
     public final Collection<IPrimitive> extractRelevantPrimitives(DataSet ds) {
         ArrayList<IPrimitive> result = new ArrayList<>();
         for (IPrimitive p : ds.allPrimitives()) {
@@ -283,15 +293,19 @@ public abstract class AbstractDataSetHandler {
         }
         return result;
     }
-    
-    public boolean isForbidden(IPrimitive p) {return false;}
-    
-    public boolean hasForbiddenTags() {return false;}
-    
-    public interface ValueReplacer {
-        public String replace(String value);
+
+    public boolean isForbidden(IPrimitive p) {
+        return false;
     }
-    
+
+    public boolean hasForbiddenTags() {
+        return false;
+    }
+
+    public interface ValueReplacer {
+        String replace(String value);
+    }
+
     protected final void replace(IPrimitive p, String dataKey, String osmKey) {
         addOrReplace(p, dataKey, osmKey, null, null, null, true);
     }
@@ -303,7 +317,7 @@ public abstract class AbstractDataSetHandler {
     protected final void replace(IPrimitive p, String dataKey, String osmKey, String[] dataValues, String[] osmValues) {
         addOrReplace(p, dataKey, osmKey, dataValues, osmValues, null, true);
     }
-    
+
     protected final void add(IPrimitive p, String dataKey, String osmKey, ValueReplacer replacer) {
         addOrReplace(p, dataKey, osmKey, null, null, replacer, false);
     }
@@ -311,8 +325,9 @@ public abstract class AbstractDataSetHandler {
     protected final void add(IPrimitive p, String dataKey, String osmKey, String[] dataValues, String[] osmValues) {
         addOrReplace(p, dataKey, osmKey, dataValues, osmValues, null, false);
     }
-    
-    private final void addOrReplace(IPrimitive p, String dataKey, String osmKey, String[] dataValues, String[] osmValues, ValueReplacer replacer, boolean replace) {
+
+    private void addOrReplace(IPrimitive p, String dataKey, String osmKey, String[] dataValues, String[] osmValues,
+            ValueReplacer replacer, boolean replace) {
         String value = p.get(dataKey);
         if (value != null) {
             int index = -1;
@@ -333,8 +348,8 @@ public abstract class AbstractDataSetHandler {
             }
         }
     }
-    
-    private final void doAddReplace(IPrimitive p, String dataKey, String osmKey, String osmValue, boolean replace) {
+
+    private void doAddReplace(IPrimitive p, String dataKey, String osmKey, String osmValue, boolean replace) {
         if (replace) {
             p.remove(dataKey);
         }
@@ -344,11 +359,11 @@ public abstract class AbstractDataSetHandler {
     public String getSource() {
         return null;
     }
-        
+
     public final String getSourceDate() {
         return sourceDate;
     }
-    
+
     public final void setSourceDate(String sourceDate) {
         this.sourceDate = sourceDate;
     }
@@ -356,7 +371,7 @@ public abstract class AbstractDataSetHandler {
     public final String getName() {
         return name;
     }
-    
+
     public final void setName(String name) {
         this.name = name;
     }
@@ -364,15 +379,15 @@ public abstract class AbstractDataSetHandler {
     public String getLocalPortalIconName() {
         return OdConstants.ICON_CORE_24;
     }
-        
+
     public String getNationalPortalIconName() {
         return OdConstants.ICON_CORE_24;
     }
-        
+
     public String getDataLayerIconName() {
         return OdConstants.ICON_CORE_16;
     }
-    
+
     public ExtendedSourceEntry getMapPaintStyle() {
         return null;
     }
@@ -386,11 +401,11 @@ public abstract class AbstractDataSetHandler {
     }
 
     protected final ExtendedSourceEntry getMapPaintStyle(String displayName, String fileNameWithoutExtension) {
-        return new ExtendedSourceEntry(displayName,    OdConstants.PROTO_RSRC+//"/"+
+        return new ExtendedSourceEntry(displayName, OdConstants.PROTO_RSRC+//"/"+
                 this.getClass().getPackage().getName().replace(".", "/")+"/"+
                 fileNameWithoutExtension+"."+OdConstants.MAPCSS_EXT);
     }
-    
+
     public final ImageIcon getMenuIcon() {
         return menuIcon;
     }
@@ -410,7 +425,7 @@ public abstract class AbstractDataSetHandler {
     public final File getAssociatedFile() {
         return this.associatedFile;
     }
-    
+
     public boolean acceptsUrl(String url) {
         URL dataURL = getDataURL();
         if (dataURL != null && url.equals(dataURL.toString())) {
@@ -426,55 +441,55 @@ public abstract class AbstractDataSetHandler {
         }
         return false;
     }
-    
+
     // --------- Shapefile handling ---------
-    
+
     private ShpHandler shpHandler;
 
     public final void setShpHandler(ShpHandler handler) {
         shpHandler = handler;
     }
-    
+
     public final ShpHandler getShpHandler() {
         return shpHandler;
     }
 
     // --------- MIF handling ---------
-    
+
     private MifHandler mifHandler;
 
     public final void setMifHandler(MifHandler handler) {
         mifHandler = handler;
     }
-    
+
     public final MifHandler getMifHandler() {
         return mifHandler;
     }
 
     // --------- GML handling ---------
-    
+
     private GmlHandler gmlHandler;
 
     public final void setGmlHandler(GmlHandler handler) {
         gmlHandler = handler;
     }
-    
+
     public final GmlHandler getGmlHandler() {
         return gmlHandler;
     }
 
     // ------------ Archive handling ------------
-    
+
     private ArchiveHandler archiveHandler;
 
     public final void setArchiveHandler(ArchiveHandler handler) {
         archiveHandler = handler;
     }
-    
+
     public ArchiveHandler getArchiveHandler() {
         return archiveHandler;
     }
-    
+
     // ------ Spreadsheet handling ----------
 
     private SpreadSheetHandler ssHandler;
@@ -482,7 +497,7 @@ public abstract class AbstractDataSetHandler {
     public final void setSpreadSheetHandler(SpreadSheetHandler handler) {
         ssHandler = handler;
     }
-    
+
     public final SpreadSheetHandler getSpreadSheetHandler() {
         return ssHandler;
     }
@@ -490,7 +505,7 @@ public abstract class AbstractDataSetHandler {
     public final void setCsvHandler(CsvHandler handler) {
         setSpreadSheetHandler(handler);
     }
-    
+
     public final CsvHandler getCsvHandler() {
         if (ssHandler instanceof CsvHandler) {
             return (CsvHandler) ssHandler;
@@ -498,19 +513,19 @@ public abstract class AbstractDataSetHandler {
             return null;
         }
     }
-    
+
     // Tools
 
     private final Collection<JosmAction> tools = new ArrayList<>();
-    
+
     public final Collection<JosmAction> getTools() {
         return tools;
     }
-    
+
     public final boolean addTool(JosmAction tool) {
         return tool != null ? tools.add(tool) : false;
     }
-    
+
     public final boolean removeTool(JosmAction tool) {
         return tool != null ? tools.remove(tool) : false;
     }

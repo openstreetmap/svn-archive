@@ -36,25 +36,26 @@ import org.openstreetmap.josm.tools.Pair;
 
 public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHandler {
 
-    private static final List<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>> 
-        ellipsoids = new ArrayList<>();
+    private static final List<Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>>
+    ellipsoids = new ArrayList<>();
     static {
         ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.GRS80, Ellipsoid.GRS80));
         ellipsoids.add(new Pair<org.opengis.referencing.datum.Ellipsoid, Ellipsoid>(DefaultEllipsoid.WGS84, Ellipsoid.WGS84));
     }
-    
+
     protected static final Double get(ParameterValueGroup values, ParameterDescriptor<?> desc) {
         return (Double) values.parameter(desc.getName().getCode()).getValue();
     }
-    
-    private static final boolean equals(Double a, Double b) {
-        boolean res = Math.abs(a - b) <= Main.pref.getDouble(OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE);
+
+    private static boolean equals(Double a, Double b) {
+        boolean res = Math.abs(a - b) <= Main.pref.getDouble(
+                OdConstants.PREF_CRS_COMPARISON_TOLERANCE, OdConstants.DEFAULT_CRS_COMPARISON_TOLERANCE);
         if (Main.pref.getBoolean(OdConstants.PREF_CRS_COMPARISON_DEBUG, false)) {
             Main.debug("Comparing "+a+" and "+b+" -> "+res);
         }
-        return res; 
+        return res;
     }
-    
+
     private Charset dbfCharset = null;
 
     @Override
@@ -79,20 +80,22 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
                                     boolean ok = true;
                                     ParameterValueGroup values = lambert.getParameterValues();
                                     Parameters params = ((LambertConformalConic) ap.getProj()).getParameters();
-                                    
+
                                     ok = ok ? equals(get(values, AbstractProvider.LATITUDE_OF_ORIGIN), params.latitudeOrigin) : ok;
                                     ok = ok ? equals(get(values, AbstractProvider.CENTRAL_MERIDIAN), ap.getCentralMeridian()) : ok;
                                     ok = ok ? equals(get(values, AbstractProvider.SCALE_FACTOR), ap.getScaleFactor()) : ok;
                                     ok = ok ? equals(get(values, AbstractProvider.FALSE_EASTING), ap.getFalseEasting()) : ok;
                                     ok = ok ? equals(get(values, AbstractProvider.FALSE_NORTHING), ap.getFalseNorthing()) : ok;
-                                    
+
                                     if (lambert instanceof LambertConformal2SP && params instanceof Parameters2SP) {
                                         Parameters2SP param = (Parameters2SP) params;
-                                        ok = ok ? equals(Math.min(get(values, AbstractProvider.STANDARD_PARALLEL_1),get(values, AbstractProvider.STANDARD_PARALLEL_2)), 
-                                                         Math.min(param.standardParallel1, param.standardParallel2)) : ok;
-                                        ok = ok ? equals(Math.max(get(values, AbstractProvider.STANDARD_PARALLEL_1), get(values, AbstractProvider.STANDARD_PARALLEL_2)),
-                                                         Math.max(param.standardParallel1, param.standardParallel2)) : ok;
-                                        
+                                        ok = ok ? equals(Math.min(get(values, AbstractProvider.STANDARD_PARALLEL_1),
+                                                get(values, AbstractProvider.STANDARD_PARALLEL_2)),
+                                                Math.min(param.standardParallel1, param.standardParallel2)) : ok;
+                                        ok = ok ? equals(Math.max(get(values, AbstractProvider.STANDARD_PARALLEL_1),
+                                                get(values, AbstractProvider.STANDARD_PARALLEL_2)),
+                                                Math.max(param.standardParallel1, param.standardParallel2)) : ok;
+
                                     } else if (!(lambert instanceof LambertConformal1SP && params instanceof Parameters1SP)) {
                                         ok = false;
                                     }
@@ -129,7 +132,7 @@ public class DefaultShpHandler extends DefaultGeographicHandler implements ShpHa
     public void setDbfCharset(Charset charset) {
         dbfCharset = charset;
     }
-    
+
     @Override
     public Charset getDbfCharset() {
         return dbfCharset;

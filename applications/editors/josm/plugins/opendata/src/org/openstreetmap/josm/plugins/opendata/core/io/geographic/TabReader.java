@@ -31,7 +31,7 @@ public class TabReader extends AbstractMapInfoReader {
 
     private Charset datCharset;
     private final AbstractDataSetHandler handler;
-    
+
     public TabReader(AbstractDataSetHandler handler) {
         this.handler = handler;
     }
@@ -40,11 +40,11 @@ public class TabReader extends AbstractMapInfoReader {
             AbstractDataSetHandler handler, ProgressMonitor instance) throws IOException {
         return new TabReader(handler).parse(in, file, instance, Charset.forName(OdConstants.ISO8859_15));
     }
-        
+
     private class TabOsmReader extends SpreadSheetReader {
 
         private final DbaseFileReader dbfReader;
-        public TabOsmReader(SpreadSheetHandler handler, TabFiles tabFiles) throws IOException {
+        TabOsmReader(SpreadSheetHandler handler, TabFiles tabFiles) throws IOException {
             super(handler);
             this.dbfReader = new DbaseFileReader(tabFiles, false, datCharset, null);
         }
@@ -62,7 +62,7 @@ public class TabReader extends AbstractMapInfoReader {
             }
             List<String> result = new ArrayList<>();
             Row row = dbfReader.readRow();
-            for (int i=0; i<columns.size(); i++) {
+            for (int i = 0; i < columns.size(); i++) {
                 Object o = row.read(i);
                 if (o != null) {
                     result.add(o.toString());

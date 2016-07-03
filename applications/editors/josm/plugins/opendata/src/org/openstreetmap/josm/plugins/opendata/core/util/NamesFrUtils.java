@@ -25,7 +25,7 @@ public abstract class NamesFrUtils {
             if (!result.isEmpty()) {
                 result += " ";
             }
-            result += dictionary.containsKey(word) ?  dictionary.get(word) : word;
+            result += dictionary.containsKey(word) ? dictionary.get(word) : word;
         }
         return result;
     }
@@ -94,7 +94,8 @@ public abstract class NamesFrUtils {
             return "Itinéraire";
         } else if (label.equals("Jardin")) {
             return label;
-        } else if (label.startsWith("L'") || label.equals("La") || label.equals("Le") || label.equals("Les") || label.equals("Saint")) { // Lieux-dits
+        } else if (label.startsWith("L'") || label.equals("La") || label.equals("Le") || label.equals("Les") ||
+                label.equals("Saint")) { // Lieux-dits
             return label;
         } else if (label.equals("Lot")) {
             return "Lotissement";

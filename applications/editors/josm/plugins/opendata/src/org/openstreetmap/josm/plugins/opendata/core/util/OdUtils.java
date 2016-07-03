@@ -20,17 +20,17 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Utils;
 
 public abstract class OdUtils {
-    
+
     private static final String TEMP_DIR_PREFIX = "josm_opendata_temp_";
-    
+
     public static final boolean isMultipolygon(OsmPrimitive p) {
         return p instanceof Relation && ((Relation) p).isMultipolygon();
     }
-    
+
     public static final String[] stripQuotesAndExtraChars(String[] split, String sep) {
         List<String> result = new ArrayList<>();
         boolean append = false;
-        for (int i = 0; i<split.length; i++) {
+        for (int i = 0; i < split.length; i++) {
             if (append) {
                 int index = result.size()-1;
                 if (split[i].endsWith("\"") && StringUtils.countMatches(split[i], "\"") % 2 == 1) {
@@ -52,23 +52,23 @@ public abstract class OdUtils {
         }
         return result.toArray(new String[0]);
     }
-    
+
     public static final ImageIcon getImageIcon(String iconName) {
         return getImageIcon(iconName, false);
     }
-    
+
     public static final ImageIcon getImageIcon(String iconName, boolean optional) {
         return getImageProvider(iconName, optional).get();
     }
-    
+
     public static final ImageProvider getImageProvider(String iconName) {
         return getImageProvider(iconName, false);
     }
-    
+
     public static final ImageProvider getImageProvider(String iconName, boolean optional) {
         return new ImageProvider(iconName).setOptional(optional).setAdditionalClassLoaders(ModuleHandler.getResourceClassLoaders());
     }
-    
+
     public static final String getJosmLanguage() {
         String lang = Main.pref.get("language");
         if (lang == null || lang.isEmpty()) {
@@ -76,7 +76,7 @@ public abstract class OdUtils {
         }
         return lang;
     }
-    
+
     public static final double convertMinuteSecond(double minute, double second) {
         return (minute/60.0) + (second/3600.0);
     }
@@ -84,7 +84,7 @@ public abstract class OdUtils {
     public static final double convertDegreeMinuteSecond(double degree, double minute, double second) {
         return degree + convertMinuteSecond(minute, second);
     }
-    
+
     public static final File createTempDir() throws IOException {
         final File temp = File.createTempFile(TEMP_DIR_PREFIX, Long.toString(System.nanoTime()));
 
@@ -95,10 +95,10 @@ public abstract class OdUtils {
         if (!temp.mkdir()) {
             throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
         }
-        
+
         return temp;
     }
-    
+
     public static final void deleteDir(File dir) {
         for (File file : dir.listFiles()) {
             if (!file.delete()) {
@@ -109,7 +109,7 @@ public abstract class OdUtils {
             dir.deleteOnExit();
         }
     }
-    
+
     public static final void deletePreviousTempDirs() {
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
         if (tmpDir.exists() && tmpDir.isDirectory()) {

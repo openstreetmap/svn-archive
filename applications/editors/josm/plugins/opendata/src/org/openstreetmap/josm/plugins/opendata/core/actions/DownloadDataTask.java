@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.opendata.core.modules.ModuleHandler;
 public class DownloadDataTask extends DownloadOsmTask {
 
     private AbstractDataSetHandler handler;
-    
+
     @Override
     public Future<?> download(boolean newLayer, Bounds downloadArea, ProgressMonitor progressMonitor) {
         return null;
@@ -62,7 +62,7 @@ public class DownloadDataTask extends DownloadOsmTask {
         }
         return false;
     }
-    
+
     @Override
     public String[] getPatterns() {
         String pattern = "";
@@ -88,8 +88,8 @@ public class DownloadDataTask extends DownloadOsmTask {
 
         @Override
         protected OsmDataLayer createNewLayer(String layerName) {
-            File associatedFile = ((NetworkReader)reader).getReadFile();
-            String filename = ((NetworkReader)reader).getReadFileName();
+            File associatedFile = ((NetworkReader) reader).getReadFile();
+            String filename = ((NetworkReader) reader).getReadFileName();
             if (layerName == null || layerName.isEmpty()) {
                 if (associatedFile != null) {
                     layerName = associatedFile.getName();
@@ -103,7 +103,7 @@ public class DownloadDataTask extends DownloadOsmTask {
             return new OdDataLayer(dataSet, layerName, associatedFile, handler);
         }
     }
-    
+
     /**
      * returns true if the user accepts the license, false if they refuse
      */
@@ -113,7 +113,7 @@ public class DownloadDataTask extends DownloadOsmTask {
         }
         try {
             return new AskLicenseAgreementDialog(license).showDialog().getValue() == 1;
-            
+
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Main.parent, tr("License URL not available: {0}", license.toString()));
             return false;

@@ -31,6 +31,7 @@ import org.openstreetmap.josm.plugins.opendata.core.io.ProjectionPatterns;
 
 public class KmlReader extends AbstractReader {
 
+    // CHECKSTYLE.OFF: SingleSpaceSeparator
     public static final String KML_PLACEMARK   = "Placemark";
     public static final String KML_NAME        = "name";
     public static final String KML_COLOR       = "color";
@@ -42,17 +43,19 @@ public class KmlReader extends AbstractReader {
     public static final String KML_INNER_BOUND = "innerBoundaryIs";
     public static final String KML_LINEAR_RING = "LinearRing";
     public static final String KML_COORDINATES = "coordinates";
-    
+    // CHECKSTYLE.ON: SingleSpaceSeparator
+
     public static Pattern COLOR_PATTERN = Pattern.compile("\\p{XDigit}{8}");
 
     private XMLStreamReader parser;
     private Map<LatLon, Node> nodes = new HashMap<>();
-    
+
     public KmlReader(XMLStreamReader parser) {
         this.parser = parser;
     }
 
-    public static DataSet parseDataSet(InputStream in, ProgressMonitor instance) throws IOException, XMLStreamException, FactoryConfigurationError {
+    public static DataSet parseDataSet(InputStream in, ProgressMonitor instance)
+            throws IOException, XMLStreamException, FactoryConfigurationError {
         InputStreamReader ir = UTFInputStreamReader.create(in);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(ir);
         return new KmlReader(parser).parseDoc();
@@ -70,7 +73,7 @@ public class KmlReader extends AbstractReader {
         }
         return ds;
     }
-    
+
     private static boolean keyIsIgnored(String key) {
         for (ProjectionPatterns pp : OdConstants.PROJECTIONS) {
             if (pp.getXPattern().matcher(key).matches() || pp.getYPattern().matcher(key).matches()) {
@@ -79,7 +82,7 @@ public class KmlReader extends AbstractReader {
         }
         return false;
     }
-    
+
     private void parsePlaceMark(DataSet ds) throws XMLStreamException {
         List<OsmPrimitive> list = new ArrayList<>();
         Way way = null;
@@ -94,7 +97,7 @@ public class KmlReader extends AbstractReader {
                     String s = parser.getElementText();
                     if (COLOR_PATTERN.matcher(s).matches()) {
                         // KML color format is aabbggrr, convert it to OSM (web) format: #rrggbb
-                        tags.put(KML_COLOR, '#'+s.substring(6,8)+s.substring(4,6)+s.substring(2,4));
+                        tags.put(KML_COLOR, '#'+s.substring(6, 8)+s.substring(4, 6)+s.substring(2, 4));
                     }
                 } else if (parser.getLocalName().equals(KML_NAME)) {
                     tags.put(KML_NAME, parser.getElementText());
@@ -121,7 +124,7 @@ public class KmlReader extends AbstractReader {
                     list.add(way);
                 } else if (parser.getLocalName().equals(KML_COORDINATES)) {
                     String[] tab = parser.getElementText().trim().split("\\s");
-                    for (int i = 0; i < tab.length; i ++) {
+                    for (int i = 0; i < tab.length; i++) {
                         String[] values = tab[i].split(",");
                         if (values.length >= 2) {
                             LatLon ll = new LatLon(Double.valueOf(values[1]), Double.valueOf(values[0])).getRoundedToOsmPrecision();

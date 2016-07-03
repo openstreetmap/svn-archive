@@ -55,12 +55,12 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * and manage the loaded modules.
  *
  */
-public class ModuleHandler {
+public final class ModuleHandler {
 
     /**
      * All installed and loaded modules (resp. their main classes)
      */
-    public final static Collection<Module> moduleList = new LinkedList<>();
+    public static final Collection<Module> moduleList = new LinkedList<>();
 
     /**
      * Add here all ClassLoader whose resource should be searched.
@@ -74,6 +74,10 @@ public class ModuleHandler {
         } catch (SecurityException ex) {
             sources.add(ImageProvider.class.getClassLoader());
         }
+    }
+
+    private ModuleHandler() {
+        // Hide default constructor for utilities classes
     }
 
     public static Collection<ClassLoader> getResourceClassLoaders() {
@@ -96,31 +100,31 @@ public class ModuleHandler {
         long tim = System.currentTimeMillis();
         long last = Main.pref.getLong("opendata.modulemanager.lastupdate", 0);
         Integer maxTime = Main.pref.getInteger("opendata.modulemanager.time-based-update.interval", 60);
-        long d = (tim - last) / (24 * 60 * 60 * 1000l);
+        long d = (tim - last) / (24 * 60 * 60 * 1000L);
         if ((last <= 0) || (maxTime <= 0)) {
             Main.pref.put("opendata.modulemanager.lastupdate", Long.toString(tim));
         } else if (d > maxTime) {
             message =
-                "<html>"
-                + tr("Last module update more than {0} days ago.", d)
-                + "</html>";
+                    "<html>"
+                            + tr("Last module update more than {0} days ago.", d)
+                            + "</html>";
             togglePreferenceKey = "opendata.modulemanager.time-based-update.policy";
         }
         if (message == null) return false;
 
-        ButtonSpec [] options = new ButtonSpec[] {
+        ButtonSpec[] options = new ButtonSpec[] {
                 new ButtonSpec(
                         tr("Update modules"),
                         ImageProvider.get("dialogs", "refresh"),
                         tr("Click to update the activated modules"),
                         null /* no specific help context */
-                ),
+                        ),
                 new ButtonSpec(
                         tr("Skip update"),
                         ImageProvider.get("cancel"),
                         tr("Click to skip updating the activated modules"),
                         null /* no specific help context */
-                )
+                        )
         };
 
         UpdateModulesMessagePanel pnlMessage = new UpdateModulesMessagePanel();
@@ -157,7 +161,7 @@ public class ModuleHandler {
                 options,
                 options[0],
                 null
-        );
+                );
 
         if (pnlMessage.isRememberDecision()) {
             switch(ret) {
@@ -246,7 +250,7 @@ public class ModuleHandler {
                 msg = tr("<html>Could not load module {0} because the module<br>main class ''{1}'' was not found.<br>"
                         + "Delete from preferences?</html>", module.name, module.className);
             }
-        }  catch (Exception e) {
+        } catch (Exception e) {
             Main.error(e);
         }
         if (msg != null && confirmDisableModule(parent, msg, module.name)) {
@@ -308,7 +312,7 @@ public class ModuleHandler {
             Future<?> future = service.submit(task);
             try {
                 future.get();
-            } catch(ExecutionException | InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 Main.error(e);
                 return null;
             }
@@ -343,7 +347,7 @@ public class ModuleHandler {
                 tr("Warning"),
                 JOptionPane.WARNING_MESSAGE,
                 HelpUtil.ht("/Module/Loading#MissingModuleInfos")
-        );
+                );
     }
 
     /**
@@ -355,7 +359,7 @@ public class ModuleHandler {
      */
     public static List<ModuleInformation> buildListOfModulesToLoad(Component parent) {
         Set<String> modules = new HashSet<>();
-        modules.addAll(Main.pref.getCollection(OdConstants.PREF_MODULES,  new LinkedList<String>()));
+        modules.addAll(Main.pref.getCollection(OdConstants.PREF_MODULES, new LinkedList<String>()));
         if (System.getProperty("josm."+OdConstants.PREF_MODULES) != null) {
             modules.addAll(Arrays.asList(System.getProperty("josm."+OdConstants.PREF_MODULES).split(",")));
         }
@@ -381,8 +385,8 @@ public class ModuleHandler {
                 "Updating the following module has failed:",
                 "Updating the following modules has failed:",
                 modules.size()
-        )
-        );
+                )
+                );
         sb.append("<ul>");
         for (ModuleInformation pi: modules) {
             sb.append("<li>").append(pi.name).append("</li>");
@@ -392,7 +396,7 @@ public class ModuleHandler {
                 "Please open the Preference Dialog after JOSM has started and try to update it manually.",
                 "Please open the Preference Dialog after JOSM has started and try to update them manually.",
                 modules.size()
-        ));
+                ));
         sb.append("</html>");
         HelpAwareOptionPane.showOptionDialog(
                 parent,
@@ -400,7 +404,7 @@ public class ModuleHandler {
                 tr("Module update failed"),
                 JOptionPane.ERROR_MESSAGE,
                 HelpUtil.ht("/Module/Loading#FailedModuleUpdated")
-        );
+                );
     }
 
     /**
@@ -411,9 +415,9 @@ public class ModuleHandler {
      * @param monitor the progress monitor. Defaults to {@see NullProgressMonitor#INSTANCE} if null.
      * @throws IllegalArgumentException thrown if modules is null
      */
-    public static List<ModuleInformation>  updateModules(Component parent,
+    public static List<ModuleInformation> updateModules(Component parent,
             List<ModuleInformation> modules, ProgressMonitor monitor)
-            throws IllegalArgumentException{
+                    throws IllegalArgumentException {
         CheckParameterUtil.ensureParameterNotNull(modules, "modules");
         if (monitor == null) {
             monitor = NullProgressMonitor.INSTANCE;
@@ -425,18 +429,18 @@ public class ModuleHandler {
             // try to download the module lists
             //
             ReadRemoteModuleInformationTask task1 = new ReadRemoteModuleInformationTask(
-                    monitor.createSubTaskMonitor(1,false),
+                    monitor.createSubTaskMonitor(1, false),
                     OdPreferenceSetting.getModuleSites()
-            );
+                    );
             Future<?> future = service.submit(task1);
             try {
                 future.get();
                 modules = buildListOfModulesToLoad(parent);
-            } catch(ExecutionException e) {
+            } catch (ExecutionException e) {
                 Main.warn(tr("Warning: failed to download module information list"));
                 e.printStackTrace();
                 // don't abort in case of error, continue with downloading modules below
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 Main.warn(tr("Warning: failed to download module information list"));
                 e.printStackTrace();
                 // don't abort in case of error, continue with downloading modules below
@@ -445,7 +449,7 @@ public class ModuleHandler {
             // filter modules which actually have to be updated
             //
             Collection<ModuleInformation> modulesToUpdate = new ArrayList<>();
-            for(ModuleInformation pi: modules) {
+            for (ModuleInformation pi: modules) {
                 if (pi.isUpdateRequired()) {
                     modulesToUpdate.add(pi);
                 }
@@ -455,26 +459,26 @@ public class ModuleHandler {
                 // try to update the locally installed modules
                 //
                 ModuleDownloadTask task2 = new ModuleDownloadTask(
-                        monitor.createSubTaskMonitor(1,false),
+                        monitor.createSubTaskMonitor(1, false),
                         modulesToUpdate,
                         tr("Update modules")
-                );
+                        );
 
                 future = service.submit(task2);
                 try {
                     future.get();
-                } catch(ExecutionException e) {
+                } catch (ExecutionException e) {
                     e.printStackTrace();
                     alertFailedModuleUpdate(parent, modulesToUpdate);
                     return modules;
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                     alertFailedModuleUpdate(parent, modulesToUpdate);
                     return modules;
                 }
                 // notify user if downloading a locally installed module failed
                 //
-                if (! task2.getFailedModules().isEmpty()) {
+                if (!task2.getFailedModules().isEmpty()) {
                     alertFailedModuleUpdate(parent, task2.getFailedModules());
                     return modules;
                 }
@@ -496,19 +500,19 @@ public class ModuleHandler {
      * @return true, if the module shall be disabled; false, otherwise
      */
     public static boolean confirmDisableModule(Component parent, String reason, String name) {
-        ButtonSpec [] options = new ButtonSpec[] {
+        ButtonSpec[] options = new ButtonSpec[] {
                 new ButtonSpec(
                         tr("Disable module"),
                         ImageProvider.get("dialogs", "delete"),
                         tr("Click to delete the module ''{0}''", name),
                         null /* no specific help context */
-                ),
+                        ),
                 new ButtonSpec(
                         tr("Keep module"),
                         ImageProvider.get("cancel"),
                         tr("Click to keep the module ''{0}''", name),
                         null /* no specific help context */
-                )
+                        )
         };
         int ret = HelpAwareOptionPane.showOptionDialog(
                 parent,
@@ -519,7 +523,7 @@ public class ModuleHandler {
                 options,
                 options[0],
                 null // FIXME: add help topic
-        );
+                );
         return ret == 0;
     }
 
@@ -542,19 +546,20 @@ public class ModuleHandler {
      */
     public static void installDownloadedModules(boolean dowarn) {
         File moduleDir = OdPlugin.getInstance().getModulesDirectory();
-        if (! moduleDir.exists() || ! moduleDir.isDirectory() || ! moduleDir.canWrite())
+        if (!moduleDir.exists() || !moduleDir.isDirectory() || !moduleDir.canWrite())
             return;
 
         final File[] files = moduleDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".jar.new");
-            }});
+            } });
 
         for (File updatedModule : files) {
             final String filePath = updatedModule.getPath();
             File module = new File(filePath.substring(0, filePath.length() - 4));
             String moduleName = updatedModule.getName().substring(0, updatedModule.getName().length() - 8);
+            // CHECKSTYLE.OFF: LineLength
             if (module.exists()) {
                 if (!module.delete() && dowarn) {
                     Main.warn(tr("Warning: failed to delete outdated module ''{0}''.", module.toString()));
@@ -566,6 +571,7 @@ public class ModuleHandler {
                 Main.warn(tr("Warning: failed to install module ''{0}'' from temporary download file ''{1}''. Renaming failed.", module.toString(), updatedModule.toString()));
                 Main.warn(tr("Warning: failed to install already downloaded module ''{0}''. Skipping installation. JOSM is still going to load the old module version.", moduleName));
             }
+            // CHECKSTYLE.ON: LineLength
         }
         return;
     }
@@ -735,7 +741,7 @@ public class ModuleHandler {
         return moduleTab;
     }*/
 
-    static private class UpdateModulesMessagePanel extends JPanel {
+    private static class UpdateModulesMessagePanel extends JPanel {
         private JMultilineLabel lblMessage;
         private JCheckBox cbDontShowAgain;
 
@@ -746,18 +752,19 @@ public class ModuleHandler {
             gc.fill = GridBagConstraints.BOTH;
             gc.weightx = 1.0;
             gc.weighty = 1.0;
-            gc.insets = new Insets(5,5,5,5);
+            gc.insets = new Insets(5, 5, 5, 5);
             add(lblMessage = new JMultilineLabel(""), gc);
             lblMessage.setFont(lblMessage.getFont().deriveFont(Font.PLAIN));
 
             gc.gridy = 1;
             gc.fill = GridBagConstraints.HORIZONTAL;
             gc.weighty = 0.0;
-            add(cbDontShowAgain = new JCheckBox(tr("Do not ask again and remember my decision (go to Preferences->Modules to change it later)")), gc);
+            add(cbDontShowAgain = new JCheckBox(
+                    tr("Do not ask again and remember my decision (go to Preferences->Modules to change it later)")), gc);
             cbDontShowAgain.setFont(cbDontShowAgain.getFont().deriveFont(Font.PLAIN));
         }
 
-        public UpdateModulesMessagePanel() {
+        UpdateModulesMessagePanel() {
             build();
         }
 
@@ -768,7 +775,7 @@ public class ModuleHandler {
         public void initDontShowAgain(String preferencesKey) {
             String policy = Main.pref.get(preferencesKey, "ask");
             policy = policy.trim().toLowerCase();
-            cbDontShowAgain.setSelected(! policy.equals("ask"));
+            cbDontShowAgain.setSelected(!policy.equals("ask"));
         }
 
         public boolean isRememberDecision() {

@@ -8,9 +8,13 @@ import java.util.Collection;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.opendata.core.OdConstants;
 
-public class OsmDownloader {
-    
-    public static final void downloadOapi(String oapiReq) {
+public final class OsmDownloader {
+
+    private OsmDownloader() {
+        // Hide default constructor for utilities classes
+    }
+
+    public static void downloadOapi(String oapiReq) {
         if (oapiReq != null) {
             try {
                 String oapiServer = Main.pref.get(OdConstants.PREF_OAPI, OdConstants.DEFAULT_OAPI);
@@ -22,8 +26,8 @@ public class OsmDownloader {
             }
         }
     }
-    
-    public static final void downloadXapi(Collection<String> xapiReqs) {
+
+    public static void downloadXapi(Collection<String> xapiReqs) {
         if (xapiReqs != null) {
             String xapiServer = Main.pref.get(OdConstants.PREF_XAPI, OdConstants.DEFAULT_XAPI);
             for (String xapiReq : xapiReqs) {

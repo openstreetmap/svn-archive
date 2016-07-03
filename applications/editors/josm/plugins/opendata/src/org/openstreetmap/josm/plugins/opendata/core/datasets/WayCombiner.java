@@ -25,8 +25,12 @@ import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 import org.openstreetmap.josm.tools.UserCancelException;
 
 // FIXME: Try to refactor CombineWayAction instead of using this class
-public class WayCombiner {
-    
+public final class WayCombiner {
+
+    private WayCombiner() {
+        // Hide default constructor for utilities classes
+    }
+
     protected static Way getTargetWay(Collection<Way> combinedWays) {
         // init with an arbitrary way
         Way targetWay = combinedWays.iterator().next();
@@ -41,11 +45,7 @@ public class WayCombiner {
         }
         return targetWay;
     }
-    
-    /**
-     * @param ways
-     * @throws UserCancelException
-     */
+
     public static void combineWays(Collection<Way> ways) throws UserCancelException {
 
         // prepare and clean the list of ways to combine
@@ -102,7 +102,7 @@ public class WayCombiner {
                 unreversedTagWays.removeAll(reversedWays);
                 ReverseWayTagCorrector reverseWayTagCorrector = new ReverseWayTagCorrector();
                 List<Way> reversedTagWays = new ArrayList<>();
-                Collection<Command> changePropertyCommands =  null;
+                Collection<Command> changePropertyCommands = null;
                 for (Way w : reversedWays) {
                     Way wnew = new Way(w);
                     reversedTagWays.add(wnew);
@@ -137,7 +137,7 @@ public class WayCombiner {
         dialog.getRelationMemberConflictResolverModel().populate(
                 parentRelations,
                 ways
-        );
+                );
         dialog.prepareDefaultDecisions();
 
         // resolve tag conflicts if necessary
@@ -145,7 +145,7 @@ public class WayCombiner {
         if (!completeWayTags.isApplicableToPrimitive() || !parentRelations.isEmpty()) {
             dialog.setVisible(true);
             //if (dialog.isCanceled()) // FIXME
-                throw new UserCancelException();
+            throw new UserCancelException();
         }
 
         LinkedList<Way> deletedWays = new LinkedList<>(ways);

@@ -26,7 +26,7 @@ import org.openstreetmap.josm.tools.OpenBrowser;
  * TODO
  *
  */
-public class ModuleListPanel extends VerticallyScrollablePanel{
+public class ModuleListPanel extends VerticallyScrollablePanel {
     private ModulePreferencesModel model;
 
     public ModuleListPanel() {
@@ -69,16 +69,15 @@ public class ModuleListPanel extends VerticallyScrollablePanel{
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(40,0,40,0);
+        gbc.insets = new Insets(40, 0, 40, 0);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
         HtmlPanel hint = new HtmlPanel();
-        hint.setText(
-                "<html>"
+        hint.setText("<html>"
                 + tr("Please click on <strong>Download list</strong> to download and display a list of available modules.")
                 + "</html>"
-        );
+                );
         add(hint, gbc);
     }
 
@@ -106,7 +105,8 @@ public class ModuleListPanel extends VerticallyScrollablePanel{
             final JCheckBox cbModule = new JCheckBox();
             cbModule.setSelected(selected);
             cbModule.setToolTipText(formatCheckboxTooltipText(pi));
-            cbModule.addActionListener(new ActionListener(){
+            cbModule.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     model.setModuleSelected(pi.getName(), cbModule.isSelected());
                 }
@@ -118,7 +118,7 @@ public class ModuleListPanel extends VerticallyScrollablePanel{
 
             gbc.gridx = 0;
             gbc.gridy = ++row;
-            gbc.insets = new Insets(5,5,0,5);
+            gbc.insets = new Insets(5, 5, 0, 5);
             gbc.weighty = 0.0;
             gbc.weightx = 0.0;
             add(cbModule, gbc);
@@ -130,8 +130,9 @@ public class ModuleListPanel extends VerticallyScrollablePanel{
             HtmlPanel description = new HtmlPanel();
             description.setText(pi.getDescriptionAsHtml());
             description.getEditorPane().addHyperlinkListener(new HyperlinkListener() {
+                @Override
                 public void hyperlinkUpdate(HyperlinkEvent e) {
-                    if(e.getEventType() == EventType.ACTIVATED) {
+                    if (e.getEventType() == EventType.ACTIVATED) {
                         OpenBrowser.displayUrl(e.getURL().toString());
                     }
                 }
@@ -139,7 +140,7 @@ public class ModuleListPanel extends VerticallyScrollablePanel{
 
             gbc.gridx = 1;
             gbc.gridy = ++row;
-            gbc.insets = new Insets(3,25,5,5);
+            gbc.insets = new Insets(3, 25, 5, 5);
             gbc.weighty = 1.0;
             add(description, gbc);
         }

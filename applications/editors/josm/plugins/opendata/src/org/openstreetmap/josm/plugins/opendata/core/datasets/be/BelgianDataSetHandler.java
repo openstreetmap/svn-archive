@@ -25,12 +25,12 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
 
     protected static final Projection lambert1972 = OdConstants.PRJ_LAMBERT_1972.getProjection();
     protected static final Projection lambert2008 = OdConstants.PRJ_LAMBERT_2008.getProjection();
-    
+
     protected static final Projection[] projections = new Projection[]{
-        lambert1972,
-        lambert2008
+            lambert1972,
+            lambert2008
     };
-    
+
     protected class InternalCsvHandler extends DefaultCsvHandler {
         /*@Override
         public List<Projection> getSpreadSheetProjections() {
@@ -40,7 +40,7 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
                 return Arrays.asList(projections);
             }
         }*/
-        
+
         @Override
         public LatLon getCoor(EastNorth en, String[] fields) {
             if (singleProjection != null) {
@@ -69,12 +69,13 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
         super(relevantUnion, relevantTags);
         init();
     }
-    
+
     private void init() {
         setCsvHandler(new InternalCsvHandler());
     }
 
-    protected final void setNationalPortalPath(String nationalPortalPathDe, String nationalPortalPathEn, String nationalPortalPathFr, String nationalPortalPathNl) {
+    protected final void setNationalPortalPath(String nationalPortalPathDe, String nationalPortalPathEn,
+            String nationalPortalPathFr, String nationalPortalPathNl) {
         this.nationalPortalPathDe = nationalPortalPathDe;
         this.nationalPortalPathEn = nationalPortalPathEn;
         this.nationalPortalPathFr = nationalPortalPathFr;
@@ -94,7 +95,7 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
             if (lang == null || lang.isEmpty()) {
                 lang = Locale.getDefault().toString();
             }
-                
+
             if (lang.startsWith("de") && nationalPortalPathDe != null) {
                 nationalPortalPath = nationalPortalPathDe;
             } else if (lang.startsWith("fr") && nationalPortalPathFr != null) {
@@ -104,7 +105,7 @@ public abstract class BelgianDataSetHandler extends SimpleDataSetHandler impleme
             } else {
                 nationalPortalPath = nationalPortalPathEn;
             }
-            return new URL(BELGIAN_PORTAL.replace(OdConstants.PATTERN_LANG, lang.substring(0, 2))+nationalPortalPath);//FIXME
+            return new URL(BELGIAN_PORTAL.replace(OdConstants.PATTERN_LANG, lang.substring(0, 2))+nationalPortalPath); //FIXME
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

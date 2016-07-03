@@ -317,7 +317,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 			// remove the last semicolon:
 			parentsLabel = parentsLabel.substring(0, parentsLabel.length() - 1);
 
-			g.setColor(new Color(128, 0, 128));
+			g.setColor(new Color(255, 20, 147));
 			Font parentLabelFont = new Font("SansSerif", Font.ITALIC, 20);
 			g.setFont(parentLabelFont);
 			g.drawString(parentsLabel, p.x + 20, p.y + 20);

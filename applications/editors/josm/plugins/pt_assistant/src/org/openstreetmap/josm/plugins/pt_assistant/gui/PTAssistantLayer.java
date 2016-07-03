@@ -1,5 +1,6 @@
 package org.openstreetmap.josm.plugins.pt_assistant.gui;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
@@ -45,7 +46,7 @@ public class PTAssistantLayer extends Layer
 		Main.getLayerManager().addLayerChangeListener(this);
 
 	}
-	
+
 	public void addPrimitive(OsmPrimitive primitive) {
 		this.primitives.add(primitive);
 	}
@@ -56,8 +57,9 @@ public class PTAssistantLayer extends Layer
 
 	@Override
 	public void paint(final Graphics2D g, final MapView mv, Bounds bounds) {
-		
+
 		paintVisitor = new PTAssistantPaintVisitor(g, mv);
+
 		for (OsmPrimitive primitive : primitives) {
 			paintVisitor.visit(primitive);
 
@@ -114,7 +116,7 @@ public class PTAssistantLayer extends Layer
 	 */
 	@Override
 	public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-		
+
 		ArrayList<Relation> routes = new ArrayList<>();
 
 		for (OsmPrimitive primitive : newSelection) {
@@ -161,13 +163,18 @@ public class PTAssistantLayer extends Layer
 					this.primitives.add(relation);
 					if (!Main.getLayerManager().containsLayer(this)) {
 						Main.getLayerManager().addLayer(this);
-						Main.map.repaint();
+					}
+
+					if (paintVisitor == null) {
+						Graphics g = Main.map.mapView.getGraphics();
+						MapView mv = Main.map.mapView;
+						paintVisitor = new PTAssistantPaintVisitor(g, mv);
 					}
 
 					for (OsmPrimitive primitive : primitives) {
 						paintVisitor.visit(primitive);
 					}
-					
+
 					Main.map.repaint();
 				}
 
@@ -188,9 +195,9 @@ public class PTAssistantLayer extends Layer
 
 	@Override
 	public void layerRemoving(LayerRemoveEvent event) {
-		
+
 		if (event.getRemovedLayer() instanceof OsmDataLayer) {
-			
+
 			this.primitives.clear();
 			Main.map.repaint();
 		}

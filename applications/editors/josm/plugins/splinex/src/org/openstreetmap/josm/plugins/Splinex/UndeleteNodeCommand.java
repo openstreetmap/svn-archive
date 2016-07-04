@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.Splinex;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -13,7 +14,7 @@ class UndeleteNodeCommand extends Command {
     Node n;
     boolean wasModified;
 
-    public UndeleteNodeCommand(Node n) {
+    UndeleteNodeCommand(Node n) {
         this.n = n;
     }
 

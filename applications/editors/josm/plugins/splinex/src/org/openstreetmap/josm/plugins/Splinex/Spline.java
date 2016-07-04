@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.Splinex;
 
 import static org.openstreetmap.josm.plugins.Splinex.SplinexPlugin.EPSILON;
@@ -128,7 +129,7 @@ public class Spline {
 
     public enum SplinePoint {
         ENDPOINT, CONTROL_PREV, CONTROL_NEXT
-    };
+    }
 
     public class PointHandle {
         public final int idx;
@@ -479,8 +480,9 @@ public class Spline {
 
     public List<OsmPrimitive> getNodes() {
         ArrayList<OsmPrimitive> result = new ArrayList<>(nodes.size());
-        for (SNode sn : nodes)
+        for (SNode sn : nodes) {
             result.add(sn.node);
+        }
         return result;
     }
 
@@ -495,8 +497,9 @@ public class Spline {
         public boolean executeCommand() {
             saveSegments = new SNode[nodes.size()];
             int i = 0;
-            for (SNode sn : nodes)
+            for (SNode sn : nodes) {
                 saveSegments[i++] = sn;
+            }
             nodes.clear();
             return super.executeCommand();
         }

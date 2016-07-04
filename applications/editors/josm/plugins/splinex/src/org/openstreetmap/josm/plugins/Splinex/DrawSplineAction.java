@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.Splinex;
 
 import static org.openstreetmap.josm.plugins.Splinex.SplinexPlugin.EPSILON;
@@ -307,8 +308,7 @@ public class DrawSplineAction extends MapMode implements MapViewPaintable, KeyPr
             if (!ctrl && spl.doesHit(e.getX(), e.getY(), Main.map.mapView)) {
                 helperEndpoint = null;
                 Main.map.mapView.setNewCursor(Cursor.MOVE_CURSOR, this);
-            } else
-            {
+            } else {
                 Node n = null;
                 if (!ctrl)
                     n = Main.map.mapView.getNearestNode(e.getPoint(), OsmPrimitive.isUsablePredicate);

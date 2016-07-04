@@ -1,11 +1,16 @@
+// License: WTFPL. For details, see LICENSE file.
 package nomore;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.io.IOException;
 import java.util.Date;
+
 import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import static org.openstreetmap.josm.tools.I18n.tr;
 
 /**
  * Prevent JOSM from loading.
@@ -14,6 +19,10 @@ import static org.openstreetmap.josm.tools.I18n.tr;
  */
 public class NoMorePlugin extends Plugin {
 
+    /**
+     * Constructs a new {@code NoMorePlugin}.
+     * @param info plugin information
+     */
     public NoMorePlugin(PluginInformation info) {
         super(info);
         long startDate = Main.pref.getLong("nomoremapping.date", 0);
@@ -22,18 +31,18 @@ public class NoMorePlugin extends Plugin {
                 Main.pref.getLong("cache.bing.attribution.xml", 0))) + Main.pref.get("osm-download.bounds", "").hashCode();
         boolean sameHash = Main.pref.getLong("nomoremapping.hash", 0) == lastHash;
         long today = new Date().getTime() / 1000;
-        if( startDate == 0 || !sameHash ) {
+        if (startDate == 0 || !sameHash) {
             startDate = today;
             Main.pref.putLong("nomoremapping.date", startDate);
             Main.pref.putLong("nomoremapping.hash", lastHash);
         }
         long days = Math.max(today - startDate, 0) / (60*60*24);
         String message;
-        if( days == 0 )
+        if (days == 0)
             message = "Make it one!";
-        else if( days < 7 )
+        else if (days < 7)
             message = "Keep going!";
-        else if( days < 31 )
+        else if (days < 31)
             message = "You're good. Keep on!";
         else
             message = "You don't use Potlach instead, do you?";
@@ -41,7 +50,7 @@ public class NoMorePlugin extends Plugin {
         String prefs;
         try {
              prefs = Main.pref.getPreferenceFile().getCanonicalPath();
-        } catch( Exception e ) {
+        } catch (IOException e) {
             prefs = Main.pref.getPreferenceFile().getAbsolutePath();
         }
         String howto = days > 0 ? "" : "\n\n" + tr("(To miserably continue mapping, edit out no_more_mapping\nfrom {0})", prefs);

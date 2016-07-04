@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.fastdraw;
 
 import java.awt.Point;
@@ -24,6 +25,7 @@ public class DrawnPolyLine {
     public DrawnPolyLine() {
         clear();
     }
+
     public void setMv(MapView mv) {
         this.mv = mv;
     }
@@ -34,57 +36,57 @@ public class DrawnPolyLine {
 
     double getLength() {
         List<LatLon> pts = getPoints();
-        Iterator<LatLon> it1,it2;
-        LatLon pp1,pp2;
-        if (pts.size()<2) return 0;
-        it1=pts.listIterator(0);
-        it2=pts.listIterator(1);
-        double len=0;
+        Iterator<LatLon> it1, it2;
+        LatLon pp1, pp2;
+        if (pts.size() < 2) return 0;
+        it1 = pts.listIterator(0);
+        it2 = pts.listIterator(1);
+        double len = 0;
         for (int i = 0; i < pts.size() - 1; i++) {
-                pp1 = it1.next();
-                pp2 = it2.next();
-                len+=pp1.greatCircleDistance(pp2);
+            pp1 = it1.next();
+            pp2 = it2.next();
+            len += pp1.greatCircleDistance(pp2);
         }
         return len;
     }
 
     LinkedList<LatLon> getPoints() {
-        if (simplePoints!=null) return simplePoints; else return points;
+        if (simplePoints != null) return simplePoints; else return points;
     }
 
     boolean wasSimplified() {
-        return (simplePoints!=null && simplePoints.size()>0);
+        return (simplePoints != null && simplePoints.size() > 0);
     }
 
     int findClosestPoint(Point p, double d) {
-        double x=p.x, y=p.y;
-        int n=points.size();
-        int idx=-1;
-        double dist,minD=1e10;
-        for (int i=0;i<n;i++) {
-            dist = Math.sqrt(getPoint(points.get(i)).distanceSq(x,y));
-            if (dist<d && dist<minD) {
-                idx=i;
-                minD=dist;
-            };
+        double x = p.x, y = p.y;
+        int n = points.size();
+        int idx = -1;
+        double dist, minD = 1e10;
+        for (int i = 0; i < n; i++) {
+            dist = Math.sqrt(getPoint(points.get(i)).distanceSq(x, y));
+            if (dist < d && dist < minD) {
+                idx = i;
+                minD = dist;
+            }
         }
         return idx;
     }
 
     void clear() {
         points.clear();
-        used=null;
-        lastIdx=0;
-        closedFlag=false;
+        used = null;
+        lastIdx = 0;
+        closedFlag = false;
         fixed.clear();
-        simplePoints=null;
+        simplePoints = null;
     }
 
     void undo() {
         //if (points.size() > 0) points.removeLast();
-        if (lastIdx>0 && lastIdx<points.size()){
-        points.remove(lastIdx);
-        lastIdx--;
+        if (lastIdx > 0 && lastIdx < points.size()) {
+            points.remove(lastIdx);
+            lastIdx--;
         }
     }
 
@@ -102,13 +104,13 @@ public class DrawnPolyLine {
     }
 
     void addLast(LatLon coor) {
-        if (closedFlag && lastIdx>points.size()-1) return;
-        if (lastIdx>=points.size()-1) {
+        if (closedFlag && lastIdx > points.size()-1) return;
+        if (lastIdx >= points.size()-1) {
             //
             if (points.isEmpty() || !coor.equals(points.getLast())) {
                 points.addLast(coor);
-                if (points.size()>1) lastIdx++;
-                }
+                if (points.size() > 1) lastIdx++;
+            }
         } else {
             // insert point into midlle of the line
             if (points.isEmpty() || !coor.equals(points.get(lastIdx))) {
@@ -119,7 +121,7 @@ public class DrawnPolyLine {
     }
 
     Point getLastPoint() {
-        if (lastIdx<points.size()) return getPoint(points.get(lastIdx));
+        if (lastIdx < points.size()) return getPoint(points.get(lastIdx));
         else return null;
     }
 
@@ -128,21 +130,21 @@ public class DrawnPolyLine {
     }
 
     int getSimplePointsCount() {
-        if (simplePoints!=null)return simplePoints.size(); else return -1;
+        if (simplePoints != null) return simplePoints.size(); else return -1;
     }
 
     /**
      * Increase epsilon to fit points count in maxPKM point per 1 km
      */
-    double autoSimplify(double initEpsilon,double ekf,int k,double maxPKM) {
-        double e=initEpsilon;
-        if (e<1e-3) e=1e-3;
-        if (ekf<1+1e-2) ekf=1.01;
+    double autoSimplify(double initEpsilon, double ekf, int k, double maxPKM) {
+        double e = initEpsilon;
+        if (e < 1e-3) e = 1e-3;
+        if (ekf < 1+1e-2) ekf = 1.01;
         simplify(e);
-        while (getNodesPerKm(k)>maxPKM && e<1e3) {
-             e=e*ekf;
-             simplify(e);
-             //System.out.printf("eps=%f n=%d\n", e,simplePoints.size());
+        while (getNodesPerKm(k) > maxPKM && e < 1e3) {
+            e = e*ekf;
+            simplify(e);
+            //System.out.printf("eps=%f n=%d\n", e,simplePoints.size());
         }
         return e;
     }
@@ -216,111 +218,118 @@ public class DrawnPolyLine {
      * Gets distance from point p1 to line p2-p3
      */
     public double pointLineDistance(Point p1, Point p2, Point p3) {
-        double x0 = p1.x;        double y0 = p1.y;
-        double x1 = p2.x;        double y1 = p2.y;
-        double x2 = p3.x;        double y2 = p3.y;
+        double x0 = p1.x; double y0 = p1.y;
+        double x1 = p2.x; double y1 = p2.y;
+        double x2 = p3.x; double y2 = p3.y;
         if (x2 == x1 && y2 == y1) {
             return Math.hypot(x1 - x0, y1 - y0);
         } else {
-            return Math.abs((x2-x1)*(y1-y0)-(x1-x0)*(y2-y1))/Math.hypot(x2 - x1,y2 - y1);
+            return Math.abs((x2-x1)*(y1-y0)-(x1-x0)*(y2-y1))/Math.hypot(x2 - x1, y2 - y1);
         }
     }
 
     void closeLine() {
         points.add(points.getFirst());
-        closedFlag=true;
+        closedFlag = true;
     }
+
     boolean isClosed() {
         return closedFlag;
     }
 
     void deleteNode(int idx) {
-        if (idx<=lastIdx) lastIdx--;
+        if (idx <= lastIdx) lastIdx--;
         fixed.remove(points.get(idx));
         points.remove(idx);
     }
+
     void tryToDeleteSegment(Point p) {
-        if (points.size()<3) return;
+        if (points.size() < 3) return;
 
         LatLon start;
         start = findBigSegment(p);
-        ListIterator<LatLon> it= points.listIterator();
+        ListIterator<LatLon> it = points.listIterator();
         LatLon pp;
-        boolean f=false;
-        int i=0,idx=-1;
+        boolean f = false;
+        int i = 0, idx = -1;
         while (it.hasNext()) {
-            pp=it.next();
-            if (f &&(fixed.contains(pp))) {
+            pp = it.next();
+            if (f && (fixed.contains(pp))) {
                 // if end of line fragment reached
-                lastIdx=idx;
+                lastIdx = idx;
                 return;
-            }if (f &&(!it.hasNext())) {
+            }
+            if (f && !it.hasNext()) {
                 // if end of whole line reached
-                closedFlag=false;
+                closedFlag = false;
                 it.remove();
-                lastIdx=points.size()-1;
+                lastIdx = points.size()-1;
                 return;
             }
 
             // if we are deleting this segment
             if (f) it.remove();
-            if (pp == start) {f=true;idx=i;} // next node should be removed
+            if (pp == start) {
+                f = true;
+                idx = i;
+            } // next node should be removed
             i++;
         }
-        lastIdx=points.size()-1;
-        }
+        lastIdx = points.size()-1;
+    }
 
     /** find starting point of the polyline line fragment close to p
      *  line fragment = segments between two fixed (green) nodes
-     * @param p
-     * @return
      */
     LatLon findBigSegment(Point p) {
-        if (points.size()<2) return null;
+        if (points.size() < 2) return null;
         Iterator<LatLon> it1 = points.listIterator(0);
         Iterator<LatLon> it2 = points.listIterator(1);
-        Point p1,p2;
-        LatLon pp1,pp2,start=null;
-        start=points.getFirst();
+        Point p1, p2;
+        LatLon pp1, pp2, start = null;
+        start = points.getFirst();
         do {
-        pp1=it1.next();
-        pp2=it2.next();
-        p1 = getPoint(pp1);
-        p2 = getPoint(pp2);
-        // maintain segment start end end
-        if (fixed.contains(pp1) ) { start=pp1; }
-        if (pointSegmentDistance(p,p1,p2) < 5) {
-            return start;
-        }
+            pp1 = it1.next();
+            pp2 = it2.next();
+            p1 = getPoint(pp1);
+            p2 = getPoint(pp2);
+            // maintain segment start end end
+            if (fixed.contains(pp1)) {
+                start = pp1;
+            }
+            if (pointSegmentDistance(p, p1, p2) < 5) {
+                return start;
+            }
         } while (it2.hasNext());
         return null;
-
     }
 
     private double pointSegmentDistance(Point p, Point p1, Point p2) {
-        double a,b,x,y,l,kt,kn,dist;
-        x=p.x-p1.x; y=p.y-p1.y;
-        a=p2.x-p1.x; b=p2.y-p1.y;
-        l=Math.hypot(a,b);
-        if (l==0) return Math.hypot(x, y); // p1 = p2
-        kt=(x*a+y*b)/l;
-        kn=Math.abs((-x*b+y*a)/l);
-        if (kt>=0 && kt<l) dist=kn; else {
-            dist=Math.min(Math.hypot(x, y), Math.hypot(x-a, y-b));
+        double a, b, x, y, l, kt, kn, dist;
+        x = p.x-p1.x;
+        y = p.y-p1.y;
+        a = p2.x-p1.x;
+        b = p2.y-p1.y;
+        l = Math.hypot(a, b);
+        if (l == 0) return Math.hypot(x, y); // p1 = p2
+        kt = (x*a+y*b)/l;
+        kn = Math.abs((-x*b+y*a)/l);
+        if (kt >= 0 && kt < l) dist = kn; else {
+            dist = Math.min(Math.hypot(x, y), Math.hypot(x-a, y-b));
         }
         return dist;
     }
 
     void clearSimplifiedVersion() {
-        simplePoints=null;
+        simplePoints = null;
     }
 
     boolean isLastPoint(int i) {
-        return (lastIdx==i);
+        return (lastIdx == i);
     }
 
     void moveToTheEnd() {
-        lastIdx=points.size()-1;
+        lastIdx = points.size()-1;
     }
 
     void toggleFixed(int idx) {
@@ -340,9 +349,9 @@ public class DrawnPolyLine {
             points.set(dragNode, coor);
         }
         if (fixed.contains(dragged)) {
-                fixed.remove(dragged);
-                fixed.add(coor);
-         }
+            fixed.remove(dragged);
+            fixed.add(coor);
+        }
     }
 
     /**
@@ -352,44 +361,46 @@ public class DrawnPolyLine {
      */
     public double getNodesPerKm(int k) {
         List<LatLon> pts = simplePoints;
-        if (!wasSimplified()) pts=points;
-        int n=pts.size();
-        if (n<2) return 0;
-        if (k<2) k=2;
-        if (k>n) k=n;
+        if (!wasSimplified()) pts = points;
+        int n = pts.size();
+        if (n < 2) return 0;
+        if (k < 2) k = 2;
+        if (k > n) k = n;
 
-        LatLon pp1, pp2=null;
-        Iterator<LatLon> it1,it2;
-        it1=pts.listIterator(0);
-        it2=pts.listIterator(1);
-        double lens[]=new double[n];
+        LatLon pp1, pp2 = null;
+        Iterator<LatLon> it1, it2;
+        it1 = pts.listIterator(0);
+        it2 = pts.listIterator(1);
+        double[] lens = new double[n];
         for (int i = 0; i < n-1; i++) {
-                pp1 = it1.next();
-                //p1 = getPoint(pp1);
-                pp2 = it2.next();
-                //p2 =sa getPoint(pp2);
-                lens[i]=pp1.greatCircleDistance(pp2);
-            }
-        double pkm=0,maxpkm=0;
-        double len=0;
-        int seg=0; // averaged segments counts
+            pp1 = it1.next();
+            //p1 = getPoint(pp1);
+            pp2 = it2.next();
+            //p2 =sa getPoint(pp2);
+            lens[i] = pp1.greatCircleDistance(pp2);
+        }
+        double pkm = 0, maxpkm = 0;
+        double len = 0;
+        int seg = 0; // averaged segments counts
         for (int i = 1; i < n; i++) {
-                len+=lens[i-1]; // add next next point
-                // remove old segment
-                if (i>k) {seg=k; len-=lens[i-k-1];} else seg=i;
-                if (i>=k || i==n-1) {
-                    // len is length of points[i-windowSize] .. points[i]
-                    if (len>0) pkm = seg / len * 1000;
-                    //System.out.println("i="+i+" pkm="+len+" pkm="+pkm);
-                    if (pkm > maxpkm) maxpkm=pkm;
-                }
+            len += lens[i-1]; // add next next point
+            // remove old segment
+            if (i > k) {
+                seg = k;
+                len -= lens[i-k-1];
+            } else
+                seg = i;
+            if (i >= k || i == n-1) {
+                // len is length of points[i-windowSize] .. points[i]
+                if (len > 0) pkm = seg / len * 1000;
+                //System.out.println("i="+i+" pkm="+len+" pkm="+pkm);
+                if (pkm > maxpkm) maxpkm = pkm;
             }
+        }
         return Math.round(maxpkm);
-
     }
 
     int getPointCount() {
         return points.size();
     }
-
 }

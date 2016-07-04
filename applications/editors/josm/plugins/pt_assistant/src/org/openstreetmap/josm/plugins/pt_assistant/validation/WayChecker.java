@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SelectCommand;
@@ -18,8 +20,11 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
+import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
+import org.openstreetmap.josm.gui.dialogs.relation.RelationDialogManager;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
@@ -274,15 +279,63 @@ public class WayChecker extends Checker {
 			return null;
 		}
 		
-//		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
-//		Relation originalRelation = (Relation) primitives.iterator().next();
+		 long startTime = System.currentTimeMillis();
+		
+		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
+		Relation originalRelation = (Relation) primitives.iterator().next();
 		Collection<?> highlighted = testError.getHighlighted();
 		Way wayToHighlight = (Way) highlighted.iterator().next();
 		ArrayList<OsmPrimitive> primitivesToHighlight = new ArrayList<>(1);
 		primitivesToHighlight.add(wayToHighlight);
-
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("obtaining primitives: " + (endTime - startTime));
+		startTime = endTime;
+		
 		SelectCommand command = new SelectCommand(primitivesToHighlight);
 		
+		endTime = System.currentTimeMillis();
+		System.out.println("constructing command: " + (endTime - startTime));
+		startTime = endTime;
+		
+		AutoScaleAction.zoomTo(primitivesToHighlight);
+		
+		endTime = System.currentTimeMillis();
+		System.out.println("AutoScaleAction done: " + (endTime - startTime));
+		startTime = endTime;
+		
+		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
+		for (OsmDataLayer osmDataLayer: listOfLayers) {
+			if (osmDataLayer.data == originalRelation.getDataSet()) {
+				endTime = System.currentTimeMillis();
+				System.out.println("getting to the necessary layer: " + (endTime - startTime));
+				startTime = endTime;
+				
+				GenericRelationEditor editor = new GenericRelationEditor(osmDataLayer, originalRelation, originalRelation.getMembersFor(primitivesToHighlight));
+				endTime = System.currentTimeMillis();
+				System.out.println("creating relation editor: " + (endTime - startTime));
+				startTime = endTime;
+				
+				RelationDialogManager.getRelationDialogManager().register(osmDataLayer, originalRelation, editor);
+				
+				endTime = System.currentTimeMillis();
+				System.out.println("registering relation editor: " + (endTime - startTime));
+				startTime = endTime;
+				
+				editor.setVisible(true);
+				
+				endTime = System.currentTimeMillis();
+				System.out.println("setting editor visible: " + (endTime - startTime));
+				startTime = endTime;
+				
+				break;
+			}
+		}
+		
+		endTime = System.currentTimeMillis();
+		System.out.println("whatever else: " + (endTime - startTime));
+		startTime = endTime;
+						
 		return command;
 		
 	}

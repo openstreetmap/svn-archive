@@ -5,7 +5,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class IncompleteMembersDownloadDialog extends JPanel {
 
@@ -25,11 +24,9 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 	private String[] options;
 	private int selectedOption;
 
-	public IncompleteMembersDownloadDialog(long id) {
+	public IncompleteMembersDownloadDialog() {
+		
 		selectedOption = Integer.MIN_VALUE;
-
-//		message = tr("The relation (id={0}) has incomplete members.\n"+
-//		    "They need to be downloaded to proceed with validation of this relation.\nDo you want to download incomplete members?", id);
 		message = tr("Route relations have incomplete members.\nThey need to be downloaded to proceed with validation.\nDo you want to download them?");
 		checkbox = new JCheckBox(tr("Remember my choice and do not ask me again in this session"));
 		options = new String[2];
@@ -55,9 +52,7 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 			return JOptionPane.NO_OPTION;
 		}
 
-		// this.createDialog(); // FIXME
 		
-
 		Object[] params = {message, checkbox};
 		selectedOption = JOptionPane.showOptionDialog(this, params, tr("PT_Assistant Fetch Request"), JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, 0);
@@ -71,23 +66,6 @@ public class IncompleteMembersDownloadDialog extends JPanel {
 		}
 
 		return selectedOption;
-	}
-
-	@SuppressWarnings("unused")
-	private void createDialog() {
-		if (!SwingUtilities.isEventDispatchThread()) {
-			Object[] params = {message, checkbox};
-			selectedOption = JOptionPane.showOptionDialog(null, params, tr("Fetch Request"), JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, options, 0);
-		} else {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					createDialog();
-				}
-			});
-
-		}
 	}
 
 }

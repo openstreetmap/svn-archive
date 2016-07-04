@@ -2,10 +2,12 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
@@ -39,7 +41,7 @@ public class PTAssitantValidatorTest extends Test {
 
 		layer = new PTAssistantLayer();
 		DataSet.addSelectionListener(layer);
-		
+
 	}
 
 	@Override
@@ -49,18 +51,20 @@ public class PTAssitantValidatorTest extends Test {
 			return;
 		}
 
-		// Download incomplete members. If the download does not work, finish.
+		// Download incomplete members. If the download does not work, return
+		// and do not do any testing.
 		if (r.hasIncompleteMembers()) {
-			boolean downloadSuccessful = this.downloadIncompleteMembers(r);
+
+			boolean downloadSuccessful = this.downloadIncompleteMembers();
 			if (!downloadSuccessful) {
 				return;
 			}
+
 		}
 
 		if (r.hasIncompleteMembers()) {
 			return;
 		}
-		
 
 		// Check individual ways using the oneway direction test and the road
 		// type test:
@@ -85,13 +89,37 @@ public class PTAssitantValidatorTest extends Test {
 	 * 
 	 * @return true if successful, false if not successful
 	 */
-	private boolean downloadIncompleteMembers(Relation r) {
-		IncompleteMembersDownloadDialog incompleteMembersDownloadDialog = new IncompleteMembersDownloadDialog(
-				r.getId());
+	private boolean downloadIncompleteMembers() {
 
-		int userInput = incompleteMembersDownloadDialog.getUserSelection();
+		final int[] userSelection = { 0 };
 
-		if (userInput == JOptionPane.YES_OPTION) {
+		try {
+
+			if (SwingUtilities.isEventDispatchThread()) {
+
+				userSelection[0] = realDownloadIncompleteMembers();
+
+			} else {
+
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							userSelection[0] = realDownloadIncompleteMembers();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
+
+			}
+
+		} catch (InterruptedException | InvocationTargetException e) {
+			return false;
+		}
+
+		if (userSelection[0] == JOptionPane.YES_OPTION) {
 
 			Thread t = new IncompleteMembersDownloadThread();
 			t.start();
@@ -99,14 +127,27 @@ public class PTAssitantValidatorTest extends Test {
 				try {
 					t.wait();
 				} catch (InterruptedException e) {
-					// TODO: give the user a message that testing stops
 					return false;
 				}
 			}
-			return true;
+
 		}
 
-		return false;
+		return true;
+
+	}
+
+	/**
+	 * Shows the dialog asking the user about an incomplete member download
+	 * 
+	 * @return user's selection
+	 * @throws InterruptedException
+	 */
+	private int realDownloadIncompleteMembers() throws InterruptedException {
+
+		IncompleteMembersDownloadDialog incompleteMembersDownloadDialog = new IncompleteMembersDownloadDialog();
+		return incompleteMembersDownloadDialog.getUserSelection();
+
 	}
 
 	/**
@@ -228,13 +269,13 @@ public class PTAssitantValidatorTest extends Test {
 
 		List<Command> commands = new ArrayList<>();
 
-		if (testError.getCode() == ERROR_CODE_ROAD_TYPE
-				|| testError.getCode() == ERROR_CODE_CONSTRUCTION) {
+		if (testError.getCode() == ERROR_CODE_ROAD_TYPE || testError.getCode() == ERROR_CODE_CONSTRUCTION) {
 			commands.add(WayChecker.fixErrorByRemovingWay(testError));
 		}
-		
+
 		if (testError.getCode() == ERROR_CODE_DIRECTION) {
 			commands.add(WayChecker.fixErrorByZooming(testError));
+
 		}
 
 		if (testError.getCode() == ERROR_CODE_SORTING) {
@@ -278,7 +319,6 @@ public class PTAssitantValidatorTest extends Test {
 
 	}
 
-	
 	@SuppressWarnings("unused")
 	private void performDummyTest(Relation r) {
 		List<Relation> primitives = new ArrayList<>(1);

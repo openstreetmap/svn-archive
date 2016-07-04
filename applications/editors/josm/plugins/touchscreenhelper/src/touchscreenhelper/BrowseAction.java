@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package touchscreenhelper;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -10,8 +11,8 @@ import java.awt.event.MouseMotionListener;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
-import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.tools.Shortcut;
 
 public class BrowseAction extends MapMode implements MouseListener,
@@ -27,12 +28,12 @@ public class BrowseAction extends MapMode implements MouseListener,
             mapFrame, Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         MapFrame.addMapModeChangeListener(this);
     }
-    
+
     @Override
     public void mapModeChange(MapMode oldMapMode, MapMode newMapMode) {
         this.oldMapMode = oldMapMode;
     }
-    
+
     @Override public void enterMode() {
         super.enterMode();
         Main.map.mapView.addMouseListener(this);
@@ -42,7 +43,7 @@ public class BrowseAction extends MapMode implements MouseListener,
             @Override
             protected void doKeyReleaseEvent(KeyEvent evt) {
                 if (evt.getKeyCode() == getShortcut().getKeyStroke().getKeyCode()) {
-                    if (oldMapMode!=null && !(oldMapMode instanceof BrowseAction))
+                    if (oldMapMode != null && !(oldMapMode instanceof BrowseAction))
                     Main.map.selectMapMode(oldMapMode);
                 }
             }
@@ -57,6 +58,7 @@ public class BrowseAction extends MapMode implements MouseListener,
         listener.stop();
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) !=
             MouseEvent.BUTTON1_DOWN_MASK) {

@@ -1,8 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package touchscreenhelper;
 
 // Thanks to http://www.arco.in-berlin.de/keyevent.html
 // (code simplified here)
-
 
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
@@ -11,13 +11,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.TreeSet;
+
 import javax.swing.Timer;
+
+import org.openstreetmap.josm.Main;
 
 public class TimedKeyReleaseListener implements AWTEventListener {
     private final TreeSet<Integer> set = new TreeSet<Integer>();
     private Timer timer;
     protected KeyEvent releaseEvent;
-    
+
     public TimedKeyReleaseListener() {
         timer = new Timer(0, new ActionListener() {
             @Override
@@ -28,13 +31,15 @@ public class TimedKeyReleaseListener implements AWTEventListener {
                  }
             }
         });
-        
+
         try {
             Toolkit.getDefaultToolkit().addAWTEventListener(this,
                     AWTEvent.KEY_EVENT_MASK);
         } catch (SecurityException ex) {
+            Main.error(ex);
         }
     }
+
     @Override
     public void eventDispatched(AWTEvent event) {
         if (!(event instanceof KeyEvent)) return;
@@ -56,16 +61,15 @@ public class TimedKeyReleaseListener implements AWTEventListener {
             }
         }
     }
-    
 
     public void stop() {
         try {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         } catch (SecurityException ex) {
+            Main.error(ex);
         }
     }
 
-    
     protected void doKeyReleaseEvent(KeyEvent evt) {
     }
 

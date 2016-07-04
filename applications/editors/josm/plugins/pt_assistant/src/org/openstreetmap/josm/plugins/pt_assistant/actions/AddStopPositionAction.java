@@ -13,7 +13,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.plugins.pt_assistant.PTAssistantPlugin;
+import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Shortcut;
 
 /**
@@ -30,7 +30,7 @@ public class AddStopPositionAction extends JosmAction {
 	private static final long serialVersionUID = -5140181388906670207L;
 
 	public AddStopPositionAction() {
-		super(tr("Add stop position"), PTAssistantPlugin.getProvider("next.svg"), tr("Add stop position"),
+		super(tr("Add stop position"), new ImageProvider("presets", "bus.png"), tr("Add stop position"),
 				Shortcut.registerShortcut("Add stop position", tr("Add stop position"), KeyEvent.VK_T, Shortcut.NONE),
 				false, "addStopPosition", false);
 

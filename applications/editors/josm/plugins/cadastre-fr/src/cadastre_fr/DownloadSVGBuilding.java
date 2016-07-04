@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -105,7 +105,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<>();
 
         // convert SVG nodes to eastNorth coordinates
-        for (int i=0; i< SVGpaths.length; i++) {
+        for (int i = 0; i < SVGpaths.length; i++) {
             ArrayList<EastNorth> eastNorth = new ArrayList<>();
             createNodes(SVGpaths[i], eastNorth);
             if (eastNorth.size() > 2)
@@ -146,11 +146,12 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                 // replace the SVG node by the OSM node
                 for (Way w : svgDataSet.getWays()) {
                     int replaced = 0;
-                    for (Node node : w.getNodes())
+                    for (Node node : w.getNodes()) {
                         if (node == n) {
                             node = nearestNewNode;
                             replaced++;
                         }
+                    }
                     if (w.getNodesCount() == replaced)
                         w.setDeleted(true);
                 }
@@ -160,12 +161,14 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         }
 
         Collection<Command> cmds = new LinkedList<>();
-        for (Node node : svgDataSet.getNodes())
+        for (Node node : svgDataSet.getNodes()) {
             if (!node.isDeleted())
                 cmds.add(new AddCommand(node));
-        for (Way way : svgDataSet.getWays())
+        }
+        for (Way way : svgDataSet.getWays()) {
             if (!way.isDeleted())
                 cmds.add(new AddCommand(way));
+        }
         Main.main.undoRedo.add(new SequenceCommand(tr("Create buildings"), cmds));
         Main.map.repaint();
     }
@@ -175,14 +178,14 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
         String[] coor = SVGpath.split("[MlZ ]"); //coor[1] is x, coor[2] is y
         double dx = Double.parseDouble(coor[1]);
         double dy = Double.parseDouble(coor[2]);
-        for (int i=3; i<coor.length; i+=2){
+        for (int i = 3; i < coor.length; i += 2) {
             if (coor[i].isEmpty()) {
                 eastNorth.clear(); // some paths are just artifacts
                 return;
             }
-            double east = dx+=Double.parseDouble(coor[i]);
-            double north = dy+=Double.parseDouble(coor[i+1]);
-            eastNorth.add(new EastNorth(east,north));
+            double east = dx += Double.parseDouble(coor[i]);
+            double north = dy += Double.parseDouble(coor[i+1]);
+            eastNorth.add(new EastNorth(east, north));
         }
         // flip the image (svg using a reversed Y coordinate system)
         double pivot = viewBox.min.getY() + (viewBox.max.getY() - viewBox.min.getY()) / 2;
@@ -239,7 +242,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
     }
 
     private String grabSVG(URL url) throws IOException, OsmTransferException {
-        wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
+        wmsInterface.urlConn = (HttpURLConnection) url.openConnection();
         wmsInterface.urlConn.setRequestProperty("Connection", "close");
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
@@ -252,7 +255,7 @@ public class DownloadSVGBuilding extends PleaseWaitRunnable {
                  InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
                 String line;
-                while ( null!=(line=br.readLine())){
+                while (null != (line = br.readLine())) {
                     line += "\n";
                     bos.write(line.getBytes(StandardCharsets.UTF_8));
                     svg += line;

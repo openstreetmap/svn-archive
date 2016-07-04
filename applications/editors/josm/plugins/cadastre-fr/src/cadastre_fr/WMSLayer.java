@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -76,7 +76,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     private String codeCommune = "";
 
-    public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0,0), new EastNorth(0,0));
+    public EastNorthBound communeBBox = new EastNorthBound(new EastNorth(0, 0), new EastNorth(0, 0));
 
     private boolean isRaster;
     private boolean isAlreadyGeoreferenced;
@@ -99,9 +99,10 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     @SuppressWarnings("serial")
     class ResetOffsetActionMenu extends JosmAction {
-        public ResetOffsetActionMenu() {
+        ResetOffsetActionMenu() {
             super(tr("Reset offset"), null, tr("Reset offset (only vector images)"), null, false);
         }
+
         @Override
         public void actionPerformed(ActionEvent arg0) {
             deltaEast = 0;
@@ -135,7 +136,7 @@ public class WMSLayer extends Layer implements ImageObserver {
     @Override
     public void destroy() {
         // if the layer is currently saving the images in the cache, wait until it's finished
-        if(grabThread != null)
+        if (grabThread != null)
                 grabThread.cancel();
         grabThread = null;
         super.destroy();
@@ -148,7 +149,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         String ret = location.toUpperCase(Locale.FRANCE);
         if (codeCommune != null && !codeCommune.isEmpty())
             ret += "(" + codeCommune + ")";
-        return  ret;
+        return ret;
     }
 
     private String rebuildName() {
@@ -159,7 +160,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         grabThread.setCanceled(false);
         grabThread.setGrabber(grabber);
         // if it is the first layer, use the communeBBox as grab bbox (and not divided)
-        if (Main.getLayerManager().getLayers().size() == 1 ) {
+        if (Main.getLayerManager().getLayers().size() == 1) {
             final Bounds bounds = this.getCommuneBBox().toBounds();
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override
@@ -173,7 +174,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 divideBbox(new Bounds(Main.getProjection().eastNorth2latlon(rasterMin), Main.getProjection().eastNorth2latlon(rasterMax)),
                         Integer.parseInt(Main.pref.get("cadastrewms.rasterDivider", CadastrePreferenceSetting.DEFAULT_RASTER_DIVIDER)));
             } else
-                divideBbox(b, 
+                divideBbox(b,
                         Integer.parseInt(Main.pref.get("cadastrewms.scale", CadastrePreferenceSetting.DEFAULT_GRAB_MULTIPLIER)));
         }
         grabThread.addImages(dividedBbox);
@@ -198,24 +199,25 @@ public class WMSLayer extends Layer implements ImageObserver {
         double dNorth = (lambertMax.north() - minNorth) / factor;
         dividedBbox.clear();
         if (factor < 4 || isRaster) {
-            for (int xEast = 0; xEast < factor; xEast++)
+            for (int xEast = 0; xEast < factor; xEast++) {
                 for (int xNorth = 0; xNorth < factor; xNorth++) {
                     dividedBbox.add(new EastNorthBound(new EastNorth(minEast + xEast * dEast, minNorth + xNorth * dNorth),
                                 new EastNorth(minEast + (xEast + 1) * dEast, minNorth + (xNorth + 1) * dNorth)));
+                }
             }
         } else {
             // divide to fixed size squares
             // grab all square in a spiral starting from the center (usually the most interesting place)
             int c = Integer.parseInt(Main.pref.get("cadastrewms.squareSize", String.valueOf(CadastrePreferenceSetting.DEFAULT_SQUARE_SIZE)));
-            lambertMin = lambertMin.add(- minEast%c, - minNorth%c);
-            lambertMax = lambertMax.add(c - lambertMax.east()%c, c - lambertMax.north()%c);
+            lambertMin = lambertMin.add(-minEast % c, -minNorth % c);
+            lambertMax = lambertMax.add(c - lambertMax.east() % c, c - lambertMax.north() % c);
             EastNorth mid = lambertMax.getCenter(lambertMin);
             mid = mid.add(-1, 1); // in case the boxes side is a pair, select the one one top,left to follow the rotation
-            mid = mid.add(- mid.east()%c, - mid.north()%c);
-            int x = (int)(lambertMax.east() - lambertMin.east())/c;
-            int y = (int)(lambertMax.north() - lambertMin.north())/c;
-            int dx[] = {+1, 0,-1, 0};
-            int dy[] = {0,-1, 0,+1};
+            mid = mid.add(-mid.east() % c, -mid.north() % c);
+            int x = (int) (lambertMax.east() -lambertMin.east())/c;
+            int y = (int) (lambertMax.north() -lambertMin.north())/c;
+            int[] dx = {+1, 0, -1, 0};
+            int[] dy = {0, -1, 0, +1};
             int currDir = -1, lDir = 1, i = 1, j = 0, k = -1;
             if (x == 1)
                 currDir = 0;
@@ -230,7 +232,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                         k = 0;
                     }
                     j = 0;
-                    currDir = (currDir+1)%4;
+                    currDir = (currDir+1) % 4;
                 } else if (currDir >= 0 && j >= (currDir == 0 || currDir == 2 ? (x-1) : (y-1))) {
                     // the overall is a rectangle, not a square. Jump to the other side to grab next square.
                     k++;
@@ -239,7 +241,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                         k = 0;
                     }
                     j = lDir-1;
-                    currDir = (currDir+1)%4;
+                    currDir = (currDir+1) % 4;
                     mid = new EastNorth(mid.east() + dx[currDir]*c*(lDir-1), mid.north() + dy[currDir]*c*(lDir-1));
                 }
                 mid = new EastNorth(mid.east() + dx[currDir]*c, mid.north() + dy[currDir]*c);
@@ -259,7 +261,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         if (isRaster) {
             str += "\n"+tr("Is not vectorized.");
             str += "\n"+tr("Bounding box: {0}", communeBBox);
-            if(!images.isEmpty())
+            if (!images.isEmpty())
                 str += "\n"+tr("Image size (px): {0}/{1}", images.get(0).image.getWidth(), images.get(0).image.getHeight());
         } else {
             str += "\n"+tr("Is vectorized.");
@@ -280,7 +282,7 @@ public class WMSLayer extends Layer implements ImageObserver {
 
     @Override
     public void paint(Graphics2D g, final MapView mv, Bounds bounds) {
-        synchronized(this){
+        synchronized (this) {
             Object savedInterpolation = g.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
             if (savedInterpolation == null) savedInterpolation = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
             String interpolation = Main.pref.get("cadastrewms.imageInterpolation", "standard");
@@ -291,9 +293,10 @@ public class WMSLayer extends Layer implements ImageObserver {
             else
                 g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
             imagesLock.lock();
-            for (GeorefImage img : images)
+            for (GeorefImage img : images) {
                 img.paint(g, mv, CadastrePlugin.backgroundTransparent,
                         CadastrePlugin.transparency, CadastrePlugin.drawBoundaries);
+            }
             imagesLock.unlock();
             g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, savedInterpolation);
         }
@@ -328,7 +331,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         refineGeoRef = new MenuActionRefineGeoRef(this);
         refineGeoRef.setEnabled(isRaster && grabThread.getImagesToGrabSize() == 0);
         Action resetOffset = new ResetOffsetActionMenu();
-        resetOffset.setEnabled(!isRaster && !images.isEmpty() && (deltaEast!=0.0 || deltaNorth!=0.0));
+        resetOffset.setEnabled(!isRaster && !images.isEmpty() && (deltaEast != 0.0 || deltaNorth != 0.0));
         return new Action[] {
                 LayerListDialog.getInstance().createShowHideLayerAction(),
                 LayerListDialog.getInstance().createDeleteLayerAction(),
@@ -446,8 +449,6 @@ public class WMSLayer extends Layer implements ImageObserver {
     /**
      * Called by CacheControl when a new cache file is created on disk.
      * Save only primitives to keep cache independent of software changes.
-     * @param oos
-     * @throws IOException
      */
     public void write(File associatedFile, ObjectOutputStream oos) throws IOException {
         currentFormat = this.serializeFormatVersion;
@@ -474,9 +475,6 @@ public class WMSLayer extends Layer implements ImageObserver {
     /**
      * Called by CacheControl when a cache file is read from disk.
      * Cache uses only primitives to stay independent of software changes.
-     * @param ois
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public boolean read(File associatedFile, ObjectInputStream ois, int currentLambertZone) throws IOException, ClassNotFoundException {
         currentFormat = ois.readInt();;
@@ -505,14 +503,14 @@ public class WMSLayer extends Layer implements ImageObserver {
         double minY = ois.readDouble();
         double maxX = ois.readDouble();
         double maxY = ois.readDouble();
-        this.communeBBox =  new EastNorthBound(new EastNorth(minX, minY), new EastNorth(maxX, maxY));
+        this.communeBBox = new EastNorthBound(new EastNorth(minX, minY), new EastNorth(maxX, maxY));
         if (this.lambertZone != currentLambertZone && currentLambertZone != -1) {
             JOptionPane.showMessageDialog(Main.parent, tr("Lambert zone {0} in cache "+
                     "incompatible with current Lambert zone {1}",
                     this.lambertZone+1, currentLambertZone), tr("Cache Lambert Zone Error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        synchronized(this){
+        synchronized (this) {
             boolean EOF = false;
             try {
                 while (!EOF) {
@@ -533,6 +531,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                 }
             } catch (EOFException ex) {
                 // expected exception when all images are read
+                Main.trace(ex);
             }
         }
         Main.info("Cache loaded for location "+location+" with "+images.size()+" images");
@@ -559,7 +558,7 @@ public class WMSLayer extends Layer implements ImageObserver {
             BufferedImage newImg = new BufferedImage(newWidth, newHeight, images.get(0).image.getType()/*BufferedImage.TYPE_INT_ARGB*/);
             Graphics g = newImg.getGraphics();
             // Coordinate (0,0) is on top,left corner where images are grabbed from bottom left
-            int rasterDivider = (int)Math.sqrt(images.size());
+            int rasterDivider = (int) Math.sqrt(images.size());
             for (int h = 0; h < lx.size(); h++) {
                 for (int v = 0; v < ly.size(); v++) {
                     int newx = h*oldImgWidth;
@@ -568,7 +567,7 @@ public class WMSLayer extends Layer implements ImageObserver {
                     g.drawImage(images.get(j).image, newx, newy, this);
                 }
             }
-            synchronized(this) {
+            synchronized (this) {
                 images.clear();
                 images.add(new GeorefImage(newImg, min, max, this));
             }
@@ -580,10 +579,8 @@ public class WMSLayer extends Layer implements ImageObserver {
      * Because it's coming from user mouse clics, we have to sort de positions first.
      * Works only for raster image layer (only one image in collection).
      * Updates layer georeferences.
-     * @param en1
-     * @param en2
      */
-    public void cropImage(EastNorth en1, EastNorth en2){
+    public void cropImage(EastNorth en1, EastNorth en2) {
         // adj1 is corner bottom, left
         EastNorth adj1 = new EastNorth(en1.east() <= en2.east() ? en1.east() : en2.east(),
                 en1.north() <= en2.north() ? en1.north() : en2.north());
@@ -595,8 +592,8 @@ public class WMSLayer extends Layer implements ImageObserver {
         rasterMin = adj1;
         rasterMax = adj2;
         setCommuneBBox(new EastNorthBound(
-                new EastNorth(0,0), 
-                new EastNorth(images.get(0).image.getWidth()-1,images.get(0).image.getHeight()-1)));
+                new EastNorth(0, 0),
+                new EastNorth(images.get(0).image.getWidth()-1, images.get(0).image.getHeight()-1)));
         rasterRatio = (rasterMax.getX()-rasterMin.getX())/(communeBBox.max.getX() - communeBBox.min.getX());
     }
 
@@ -612,7 +609,7 @@ public class WMSLayer extends Layer implements ImageObserver {
         double maxX = Double.MIN_VALUE;
         double minY = Double.MAX_VALUE;
         double maxY = Double.MIN_VALUE;
-        for (GeorefImage image:images){
+        for (GeorefImage image:images) {
             minX = image.min.east() < minX ? image.min.east() : minX;
             maxX = image.max.east() > maxX ? image.max.east() : maxX;
             minY = image.min.north() < minY ? image.min.north() : minY;
@@ -648,8 +645,8 @@ public class WMSLayer extends Layer implements ImageObserver {
             this.rasterMax = new EastNorth(rasterMax.east() + dx, rasterMax.north() + dy);
             images.get(0).shear(dx, dy);
         } else {
-            deltaEast+=dx;
-            deltaNorth+=dy;
+            deltaEast += dx;
+            deltaNorth += dy;
         }
     }
 
@@ -674,17 +671,17 @@ public class WMSLayer extends Layer implements ImageObserver {
             if (crosspieces.equals("3")) modulo = 100;
             EastNorthBound currentView = new EastNorthBound(mv.getEastNorth(0, mv.getHeight()),
                     mv.getEastNorth(mv.getWidth(), 0));
-            int minX = ((int)currentView.min.east()/modulo+1)*modulo;
-            int minY = ((int)currentView.min.north()/modulo+1)*modulo;
-            int maxX = ((int)currentView.max.east()/modulo)*modulo;
-            int maxY = ((int)currentView.max.north()/modulo)*modulo;
-            int size=(maxX-minX)/modulo;
-            if (size<20) {
-                int px= size > 10 ? 2 : Math.abs(12-size);
+            int minX = ((int) currentView.min.east()/modulo+1)*modulo;
+            int minY = ((int) currentView.min.north()/modulo+1)*modulo;
+            int maxX = ((int) currentView.max.east()/modulo)*modulo;
+            int maxY = ((int) currentView.max.north()/modulo)*modulo;
+            int size = (maxX-minX)/modulo;
+            if (size < 20) {
+                int px = size > 10 ? 2 : Math.abs(12-size);
                 g.setColor(Color.green);
-                for (int x=minX; x<=maxX; x+=modulo) {
-                    for (int y=minY; y<=maxY; y+=modulo) {
-                        Point p = mv.getPoint(new EastNorth(x,y));
+                for (int x = minX; x <= maxX; x += modulo) {
+                    for (int y = minY; y <= maxY; y += modulo) {
+                        Point p = mv.getPoint(new EastNorth(x, y));
                         g.drawLine(p.x-px, p.y, p.x+px, p.y);
                         g.drawLine(p.x, p.y-px, p.x, p.y+px);
                     }

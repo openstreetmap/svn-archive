@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -12,7 +12,7 @@ import org.openstreetmap.josm.Main;
 //import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.gui.layer.Layer;
 
-public class WMSDownloadAction /*extends JosmAction */{
+public class WMSDownloadAction /*extends JosmAction */ {
 
 //    public WMSDownloadAction(String layerName) {
 //        super(layerName, "wmsmenu", tr("Download WMS tile from {0}",layerName), null, false);
@@ -31,7 +31,7 @@ public class WMSDownloadAction /*extends JosmAction */{
                 return (WMSLayer) activeLayer;
             for (Layer l : Main.getLayerManager().getLayers()) {
                 if (l instanceof WMSLayer) {
-                    existingWMSlayers.add((WMSLayer)l);
+                    existingWMSlayers.add((WMSLayer) l);
                 }
             }
             if (existingWMSlayers.size() == 1)
@@ -49,5 +49,4 @@ public class WMSDownloadAction /*extends JosmAction */{
         }
         return null;
     }
-};
-
+}

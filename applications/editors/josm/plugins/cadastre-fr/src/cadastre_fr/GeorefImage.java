@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.awt.AlphaComposite;
@@ -43,11 +43,10 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
 
     private double pixelPerEast;
     private double pixelPerNorth;
-    
 
     public GeorefImage(BufferedImage img, EastNorth min, EastNorth max, WMSLayer wmsLayer) {
         image = img;
- 
+
         this.min = min;
         this.max = max;
         this.orgRaster[0] = min;
@@ -80,7 +79,7 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
      * @param p4 one of the bounding box corner
      */
     private EastNorthBound computeNewBounding(EastNorth p1, EastNorth p2, EastNorth p3, EastNorth p4) {
-        EastNorth pt[] = new EastNorth[4];
+        EastNorth[] pt = new EastNorth[4];
         pt[0] = p1;
         pt[1] = p2;
         pt[2] = p3;
@@ -89,7 +88,7 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         double smallestNorth = Double.MAX_VALUE;
         double highestEast = Double.MIN_VALUE;
         double highestNorth = Double.MIN_VALUE;
-        for(int i=0; i<=3; i++) {
+        for (int i = 0; i <= 3; i++) {
             smallestEast = Math.min(pt[i].east(), smallestEast);
             smallestNorth = Math.min(pt[i].north(), smallestNorth);
             highestEast = Math.max(pt[i].east(), highestEast);
@@ -110,8 +109,8 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
             return;
 
         // apply offsets defined manually when vector images are translated manually (not saved in cache)
-        double dx=0, dy=0;
-        if (wmsLayer!=null) {
+        double dx = 0, dy = 0;
+        if (wmsLayer != null) {
             dx = wmsLayer.deltaEast;
             dy = wmsLayer.deltaNorth;
         }
@@ -130,11 +129,12 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
                 g.drawRect(minPt.x, maxPt.y, maxPt.x - minPt.x, minPt.y - maxPt.y);
             } else {
                 Point[] croppedPoint = new Point[5];
-                for (int i=0; i<4; i++)
+                for (int i = 0; i < 4; i++) {
                     croppedPoint[i] = nc.getPoint(
                             new EastNorth(orgCroppedRaster[i].east()+dx, orgCroppedRaster[i].north()+dy));
+                }
                 croppedPoint[4] = croppedPoint[0];
-                for (int i=0; i<4; i++) {
+                for (int i = 0; i < 4; i++) {
                     g.setColor(Color.green);
                     g.drawLine(croppedPoint[i].x, croppedPoint[i].y, croppedPoint[i+1].x, croppedPoint[i+1].y);
                 }
@@ -172,8 +172,6 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
 
     /**
      * Make all pixels masked by the given georefImage transparent in this image
-     *
-     * @param georefImage
      */
     public void withdraw(GeorefImage georefImage) {
         double minMaskEast = (georefImage.min.east() > this.min.east()) ? georefImage.min.east() : this.min.east();
@@ -188,9 +186,11 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
             int widthXMaskPixel = Math.abs((int) ((maxMaskEast - minMaskEast) / pxPerEast));
             int heightYMaskPixel = Math.abs((int) ((maxMaskNorth - minMaskNorth) / pxPerNorth));
             Graphics g = image.getGraphics();
-            for (int x = minXMaskPixel; x < minXMaskPixel + widthXMaskPixel; x++)
-                for (int y = minYMaskPixel; y < minYMaskPixel + heightYMaskPixel; y++)
+            for (int x = minXMaskPixel; x < minXMaskPixel + widthXMaskPixel; x++) {
+                for (int y = minYMaskPixel; y < minYMaskPixel + heightYMaskPixel; y++) {
                     image.setRGB(x, y, VectorImageModifier.cadastreBackgroundTransp);
+                }
+            }
             g.dispose();
         }
     }
@@ -221,9 +221,9 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         }
         if (WMSLayer.currentFormat >= 4) {
             imageOriginalHeight = in.readInt();
-            imageOriginalWidth =  in.readInt();
+            imageOriginalWidth = in.readInt();
         }
-        image = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
+        image = ImageIO.read(ImageIO.createImageInputStream(in));
         updatePixelPer();
     }
 
@@ -284,21 +284,19 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
     public void shear(double dx, double dy) {
         min = new EastNorth(min.east() + dx, min.north() + dy);
         max = new EastNorth(max.east() + dx, max.north() + dy);
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             orgRaster[i] = new EastNorth(orgRaster[i].east() + dx, orgRaster[i].north() + dy);
             orgCroppedRaster[i] = new EastNorth(orgCroppedRaster[i].east() + dx, orgCroppedRaster[i].north() + dy);
         }
     }
-    
+
     /**
      * Change this image scale by moving the min,max coordinates around an anchor
-     * @param anchor
-     * @param proportion
      */
     public void scale(EastNorth anchor, double proportion) {
         min = anchor.interpolate(min, proportion);
         max = anchor.interpolate(max, proportion);
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             orgRaster[i] = anchor.interpolate(orgRaster[i], proportion);
             orgCroppedRaster[i] = anchor.interpolate(orgCroppedRaster[i], proportion);
         }
@@ -315,15 +313,15 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         if (orgRaster == null || orgCroppedRaster == null)
             return;
         // rotate the bounding boxes coordinates first
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             orgRaster[i] = orgRaster[i].rotate(anchor, delta_ang);
             orgCroppedRaster[i] = orgCroppedRaster[i].rotate(anchor, delta_ang);
         }
         // rotate the image now
         double sin = Math.abs(Math.sin(angle+delta_ang)), cos = Math.abs(Math.cos(angle+delta_ang));
         int w = imageOriginalWidth, h = imageOriginalHeight;
-        int neww = (int)Math.floor(w*cos+h*sin);
-        int newh = (int)Math.floor(h*cos+w*sin);
+        int neww = (int) Math.floor(w*cos+h*sin);
+        int newh = (int) Math.floor(h*cos+w*sin);
         GraphicsConfiguration gc = getDefaultConfiguration();
         BufferedImage result = gc.createCompatibleImage(neww, newh, image.getTransparency());
         Graphics2D g = result.createGraphics();
@@ -335,7 +333,7 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
         EastNorthBound enb = computeNewBounding(orgCroppedRaster[0], orgCroppedRaster[1], orgCroppedRaster[2], orgCroppedRaster[3]);
         min = enb.min;
         max = enb.max;
-        angle+=delta_ang;
+        angle += delta_ang;
     }
 
     /**
@@ -345,10 +343,10 @@ public class GeorefImage implements Serializable, ImageObserver, Cloneable {
      */
     public void crop(EastNorth adj1, EastNorth adj2) {
         // s1 and s2 have 0,0 at top, left where all EastNorth coord. have 0,0 at bottom, left
-        int sx1 = (int)((adj1.getX() - min.getX())*getPixelPerEast());
-        int sy1 = (int)((max.getY() - adj2.getY())*getPixelPerNorth());
-        int sx2 = (int)((adj2.getX() - min.getX())*getPixelPerEast());
-        int sy2 = (int)((max.getY() - adj1.getY())*getPixelPerNorth());
+        int sx1 = (int) ((adj1.getX() - min.getX())*getPixelPerEast());
+        int sy1 = (int) ((max.getY() - adj2.getY())*getPixelPerNorth());
+        int sx2 = (int) ((adj2.getX() - min.getX())*getPixelPerEast());
+        int sy2 = (int) ((max.getY() - adj1.getY())*getPixelPerNorth());
         int newWidth = Math.abs(sx2 - sx1);
         int newHeight = Math.abs(sy2 - sy1);
         BufferedImage new_img = new BufferedImage(newWidth, newHeight, image.getType());

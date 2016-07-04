@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 /**
@@ -23,6 +23,8 @@ public enum Scale {
     Scale(String value) {
         this.value = value;
     }
+
+    @Override
     public String toString() {
         return value;
     }

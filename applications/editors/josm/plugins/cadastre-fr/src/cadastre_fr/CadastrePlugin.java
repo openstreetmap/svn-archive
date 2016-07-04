@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -45,8 +45,8 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * limitation in case of no activity, or the request to the server shall provide
  * a city/town/village code.
  *
- * @author Pieren <pieren3@gmail.com>,
- *         <matthieu.lochegnies@gmail.com> for the extension to codeCommune
+ * @author Pieren &lt;pieren3@gmail.com&gt;,
+ *         &lt;matthieu.lochegnies@gmail.com&gt; for the extension to codeCommune
  *
  * @version 2.6
  * <br>History:
@@ -170,7 +170,7 @@ public class CadastrePlugin extends Plugin {
 
     public static String grabLayers, grabStyles = null;
 
-    static private boolean menuEnabled = false;
+    private static boolean menuEnabled = false;
 
     private static String LAYER_BULDINGS = "CDIF:LS2";
     private static String STYLE_BUILDING = "LS2_90";
@@ -203,7 +203,7 @@ public class CadastrePlugin extends Plugin {
         } else {
             cacheDir = Main.pref.get("cadastrewms.cacheDir");
         }
-        if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar )
+        if (cacheDir.charAt(cacheDir.length()-1) != File.separatorChar)
             cacheDir += File.separatorChar;
         Main.info("current cache directory: "+cacheDir);
 
@@ -211,7 +211,7 @@ public class CadastrePlugin extends Plugin {
 
         UploadAction.registerUploadHook(new CheckSourceUploadHook());
 
-        registerSessionLayerExporter(WMSLayer.class , CadastreSessionExporter.class);
+        registerSessionLayerExporter(WMSLayer.class, CadastreSessionExporter.class);
         registerSessionLayerImporter("cadastre-fr", CadastreSessionImporter.class);
     }
 
@@ -276,7 +276,7 @@ public class CadastrePlugin extends Plugin {
         String currentResolution = Main.pref.get("cadastrewms.resolution", "high");
         if (currentResolution.equals("high")) {
             imageWidth = 1000; imageHeight = 800;
-        } else if (currentResolution.equals("medium")){
+        } else if (currentResolution.equals("medium")) {
             imageWidth = 800; imageHeight = 600;
         } else {
             imageWidth = 600; imageHeight = 400;
@@ -338,7 +338,7 @@ public class CadastrePlugin extends Plugin {
             grabLayers = grabLayers.substring(0, grabLayers.length()-1);
             grabStyles = grabStyles.substring(0, grabStyles.length()-1);
         } else {
-            JOptionPane.showMessageDialog(Main.parent,tr("Please enable at least two WMS layers in the cadastre-fr "
+            JOptionPane.showMessageDialog(Main.parent, tr("Please enable at least two WMS layers in the cadastre-fr "
                     + "plugin configuration.\nLayers ''Building'' and ''Parcel'' added by default."));
             Main.pref.put("cadastrewms.layerBuilding", true);
             Main.pref.put("cadastrewms.layerParcel", true);
@@ -429,7 +429,9 @@ public class CadastrePlugin extends Plugin {
     public static void safeSleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+            Main.debug(e);
+        }
     }
 
     // See OptionPaneUtil
@@ -438,7 +440,7 @@ public class CadastrePlugin extends Plugin {
         if (Main.pref.getBoolean("window-handling.option-pane-always-on-top", true)) {
             try {
                 dialog.setAlwaysOnTop(true);
-            } catch(SecurityException e) {
+            } catch (SecurityException e) {
                 Main.warn(tr("Warning: failed to put option pane dialog always on top. Exception was: {0}", e.toString()));
             }
         }
@@ -456,7 +458,7 @@ public class CadastrePlugin extends Plugin {
     public static void addWMSLayer(WMSLayer wmsLayer) {
         if (Main.map != null && Main.map.mapView != null) {
             int wmsNewLayerPos = Main.getLayerManager().getLayers().size();
-            for(Layer l : Main.getLayerManager().getLayersOfType(WMSLayer.class)) {
+            for (Layer l : Main.getLayerManager().getLayersOfType(WMSLayer.class)) {
                 int wmsPos = Main.getLayerManager().getLayers().indexOf(l);
                 if (wmsPos < wmsNewLayerPos) wmsNewLayerPos = wmsPos;
             }
@@ -476,7 +478,9 @@ public class CadastrePlugin extends Plugin {
         Integer year = null;
         try {
             year = Integer.decode(srcYear);
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+            Main.debug(e);
+        }
         if (srcYear.equals("AAAA") || (year != null && year < currentYear)) {
             Main.info("Replace source year "+srcYear+" by current year "+currentYear);
             src = src.substring(0, src.lastIndexOf(" ")+1)+currentYear;

@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.awt.Color;
@@ -11,14 +11,14 @@ import org.openstreetmap.josm.Main;
 public class RasterImageModifier extends ImageModifier {
 
     private int cadastreBackground = -1; // white
-    
+
     public static int cadastreBackgroundTransp = 16777215; // original white but transparent
-    
+
     private boolean transparencyEnabled = false;
 
     public RasterImageModifier(BufferedImage bi) {
         bufferedImage = bi;
-        transparencyEnabled = Main.pref.getBoolean("cadastrewms.backgroundTransparent"); 
+        transparencyEnabled = Main.pref.getBoolean("cadastrewms.backgroundTransparent");
         if (transparencyEnabled)
             makeTransparent();
         if (Main.pref.getBoolean("cadastrewms.invertGrey"))
@@ -34,7 +34,7 @@ public class RasterImageModifier extends ImageModifier {
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 int pixel = bufferedImage.getRGB(x, y);
-                if ((!transparencyEnabled && pixel != cadastreBackground) 
+                if ((!transparencyEnabled && pixel != cadastreBackground)
                         || (transparencyEnabled && pixel != cadastreBackgroundTransp)) {
                     bufferedImage.setRGB(x, y, reverseIfGrey(pixel));
                 }
@@ -45,8 +45,6 @@ public class RasterImageModifier extends ImageModifier {
     /**
      * Reverse the grey value if the pixel is grey (light grey becomes dark grey)
      * Used for texts.
-     * @param pixel
-     * @return
      */
     private int reverseIfGrey(int pixel) {
         Color col = new Color(pixel);
@@ -76,10 +74,10 @@ public class RasterImageModifier extends ImageModifier {
                     int b = c.getBlue();
                     Color maskedColor;
                     if (rgb == cadastreBackground) {
-                        maskedColor = simplifyColors ? new Color(0xff, 0xff, 0xff, 0x00) : 
+                        maskedColor = simplifyColors ? new Color(0xff, 0xff, 0xff, 0x00) :
                             new Color(r, g, b, 0x00); // transparent
                     } else {
-                        maskedColor = simplifyColors ? new Color(0, 0, 0, 0xFF) : 
+                        maskedColor = simplifyColors ? new Color(0, 0, 0, 0xFF) :
                             new Color(r, g, b, 0xFF); // opaque
                     }
                     bi.setRGB(x, y, maskedColor.getRGB());
@@ -89,18 +87,17 @@ public class RasterImageModifier extends ImageModifier {
         }
         return;
     }
-    
+
     /**
-     * Temporary fix for Java6 which doesn't de-serialize correctly cached image on disk. 
-     * Recreate a new raster image based on what is loaded/serialized from disk cache. 
-     * @param img
+     * Temporary fix for Java6 which doesn't de-serialize correctly cached image on disk.
+     * Recreate a new raster image based on what is loaded/serialized from disk cache.
      * @return new image
      */
     public static BufferedImage fixRasterImage(BufferedImage img) {
         int width = img.getWidth();
         int height = img.getHeight();
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        int rgbArray[] = new int[width * height];
+        int[] rgbArray = new int[width * height];
         img.getRGB(0, 0, width, height, rgbArray, 0, width);
         bi.setRGB(0, 0, width, height, rgbArray, 0, width);
         return bi;

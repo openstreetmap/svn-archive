@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -29,14 +29,13 @@ import org.openstreetmap.josm.tools.GBC;
  * a tag "source=". If not and if auto-sourcing is enabled, it will add
  * automatically a tag "source"="Cadastre..." as defined in the plugin preferences.
  */
-public class CheckSourceUploadHook implements UploadHook
-{
+public class CheckSourceUploadHook implements UploadHook {
 
     /**
      * Add the tag "source" if it doesn't exist for all new Nodes and Ways before uploading
      */
-    public boolean checkUpload(APIDataSet apiDataSet)
-    {
+    @Override
+    public boolean checkUpload(APIDataSet apiDataSet) {
         if (CadastrePlugin.autoSourcing && CadastrePlugin.pluginUsed && !apiDataSet.getPrimitivesToAdd().isEmpty()) {
             Collection<OsmPrimitive> sel = new HashSet<>();
             for (OsmPrimitive osm : apiDataSet.getPrimitivesToAdd()) {
@@ -54,12 +53,11 @@ public class CheckSourceUploadHook implements UploadHook
 
     /**
      * Check whenever one of the keys of the object is "source"
-     * @param OsmPrimitive
      * @return true if one of keys is "source"
      */
     private boolean tagSourceExist(OsmPrimitive osm) {
         for (String key : osm.keySet()) {
-            if (key.equals("source") ) {
+            if (key.equals("source")) {
                 return true;
             }
         }
@@ -71,8 +69,7 @@ public class CheckSourceUploadHook implements UploadHook
      * source="cadastre.." if it is approved.
      * @param sel the list of elements added without a key "source"
      */
-    private void displaySource(Collection<OsmPrimitive> sel)
-    {
+    private void displaySource(Collection<OsmPrimitive> sel) {
         if (!sel.isEmpty()) {
             JPanel p = new JPanel(new GridBagLayout());
             OsmPrimitivRenderer renderer = new OsmPrimitivRenderer();

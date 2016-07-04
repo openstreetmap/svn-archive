@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -48,6 +48,7 @@ public class CadastreInterface {
             this.ref = ref;
         }
     }
+
     private List<PlanImage> listOfFeuilles = new ArrayList<>();
     private long cookieTimestamp;
 
@@ -108,7 +109,6 @@ public class CadastreInterface {
      *
      * @return true if a cookie is delivered by WMS and false is WMS is not opening a client session
      *         (too many clients or in maintenance)
-     * @throws IOException
      */
     private void getCookie() throws IOException {
         boolean success = false;
@@ -116,14 +116,14 @@ public class CadastreInterface {
         try {
             searchFormURL = new URL(BASE_URL + "/scpc/accueil.do");
             while (!success && retries > 0) {
-                urlConn = (HttpURLConnection)searchFormURL.openConnection();
+                urlConn = (HttpURLConnection) searchFormURL.openConnection();
                 urlConn.setRequestProperty("Connection", "close");
                 urlConn.setRequestMethod("GET");
                 urlConn.connect();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     Main.info("GET "+searchFormURL);
                     BufferedReader in = new BufferedReader(new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8));
-                    while(in.readLine() != null) {
+                    while (in.readLine() != null) {
                         // read the buffer otherwise we sent POST too early
                     }
                     success = true;
@@ -131,21 +131,21 @@ public class CadastreInterface {
                     // When a cookie handler is setup, "Set-Cookie" header returns empty values
                     CookieHandler cookieHandler = CookieHandler.getDefault();
                     if (cookieHandler != null) {
-                        if (handleCookie(cookieHandler.get(searchFormURL.toURI(), new HashMap<String,List<String>>()).get("Cookie").get(0))) {
+                        if (handleCookie(cookieHandler.get(searchFormURL.toURI(), new HashMap<String, List<String>>()).get("Cookie").get(0))) {
                             break;
                         }
                     } else {
                         String headerName;
-                        for (int i=1; (headerName = urlConn.getHeaderFieldKey(i))!=null; i++) {
+                        for (int i = 1; (headerName = urlConn.getHeaderFieldKey(i)) != null; i++) {
                             if ("Set-Cookie".equals(headerName) && handleCookie(urlConn.getHeaderField(i))) {
                                 break;
-                            } 
+                            }
                         }
                     }
                 } else {
                     Main.warn("Request to home page failed. Http error:"+urlConn.getResponseCode()+". Try again "+retries+" times");
                     CadastrePlugin.safeSleep(3000);
-                    retries --;
+                    retries--;
                 }
             }
         } catch (MalformedURLException | URISyntaxException e) {
@@ -237,11 +237,11 @@ public class CadastreInterface {
             throw new IOException("Town/city " + wmsLayer.getLocation() + " not found.");
     }
 
-    private void openInterface() throws IOException  {
+    private void openInterface() throws IOException {
         try {
             // finally, open the interface on server side giving access to the wms server
             URL interfaceURL = new URL(BASE_URL + "/scpc/"+interfaceRef);
-            urlConn = (HttpURLConnection)interfaceURL.openConnection();
+            urlConn = (HttpURLConnection) interfaceURL.openConnection();
             urlConn.setRequestMethod("GET");
             setCookie();
             urlConn.connect();
@@ -282,10 +282,7 @@ public class CadastreInterface {
      * The returned string is the interface name used in further requests, e.g. "afficherCarteCommune.do?c=QP224"
      * where QP224 is the code commune known by the WMS (or "afficherCarteTa.do?c=..." for raster images).
      *
-     * @param location
-     * @param codeCommune
      * @return retURL url to available code commune in the cadastre; "" if not found
-     * @throws IOException
      */
     private String postForm(WMSLayer wmsLayer, String codeCommune) throws IOException {
         try {
@@ -307,7 +304,7 @@ public class CadastreInterface {
             content += "&nbResultatParPage=10";
             content += "&x=0&y=0";
             searchFormURL = new URL(BASE_URL + "/scpc/rechercherPlan.do");
-            urlConn = (HttpURLConnection)searchFormURL.openConnection();
+            urlConn = (HttpURLConnection) searchFormURL.openConnection();
             urlConn.setRequestMethod("POST");
             urlConn.setDoOutput(true);
             urlConn.setDoInput(true);
@@ -334,7 +331,7 @@ public class CadastreInterface {
                 }
                 if (!wmsLayer.isRaster() && lines.indexOf(C_INTERFACE_VECTOR) != -1) {  // "afficherCarteCommune.do"
                     // shall be something like: interfaceRef = "afficherCarteCommune.do?c=X2269";
-                    lines = lines.substring(lines.indexOf(C_INTERFACE_VECTOR),lines.length());
+                    lines = lines.substring(lines.indexOf(C_INTERFACE_VECTOR), lines.length());
                     lines = lines.substring(0, lines.indexOf('\''));
                     lines = Entities.unescape(lines);
                     Main.info("interface ref.:"+lines);
@@ -368,7 +365,7 @@ public class CadastreInterface {
             }
         } catch (MalformedURLException e) {
             throw (IOException) new IOException("Illegal url.").initCause(e);
-        } catch (DuplicateLayerException e){
+        } catch (DuplicateLayerException e) {
             Main.error(e);
         }
         return null;
@@ -400,7 +397,7 @@ public class CadastreInterface {
         HttpURLConnection urlConn2 = null;
         try {
             URL getAllImagesURL = new URL(BASE_URL + "/scpc/listerFeuillesParcommune.do?keepVolatileSession=&offset=2000");
-            urlConn2 = (HttpURLConnection)getAllImagesURL.openConnection();
+            urlConn2 = (HttpURLConnection) getAllImagesURL.openConnection();
             setCookie(urlConn2);
             urlConn2.connect();
             Main.info("GET "+getAllImagesURL);
@@ -490,7 +487,6 @@ public class CadastreInterface {
      * In case of raster image, we also check in the same http request if the image is already georeferenced
      * and store the result in the wmsLayer as well.
      * @param wmsLayer the WMSLayer where the commune data and images are stored
-     * @throws IOException
      */
     public void retrieveCommuneBBox(WMSLayer wmsLayer) throws IOException {
         if (interfaceRef == null)
@@ -499,7 +495,7 @@ public class CadastreInterface {
         String content = BASE_URL + "/scpc/" + interfaceRef;
         content += "&dontSaveLastForward&keepVolatileSession=";
         searchFormURL = new URL(content);
-        urlConn = (HttpURLConnection)searchFormURL.openConnection();
+        urlConn = (HttpURLConnection) searchFormURL.openConnection();
         urlConn.setRequestMethod("GET");
         setCookie();
         urlConn.connect();
@@ -533,7 +529,7 @@ public class CadastreInterface {
             double maxx = Double.parseDouble(input.substring(j+1, k));
             int l = input.indexOf(C_BBOX_COMMUN_END, k+1);
             double maxy = Double.parseDouble(input.substring(k+1, l));
-            wmsLayer.setCommuneBBox( new EastNorthBound(new EastNorth(minx,miny), new EastNorth(maxx,maxy)));
+            wmsLayer.setCommuneBBox(new EastNorthBound(new EastNorth(minx, miny), new EastNorth(maxx, maxy)));
         }
     }
 

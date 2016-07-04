@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -112,7 +113,7 @@ public class Address extends MapMode {
         }
 //        dialog.setVisible(false);
         // kill the window completely to fix an issue on some linux distro and full screen mode.
-        if(dialog != null) {
+        if (dialog != null) {
             dialog.dispose();
             dialog = null;
         }
@@ -155,7 +156,7 @@ public class Address extends MapMode {
                     }
                 }
                 if (currentMouseNode.get(tagHouseStreet) != null) {
-                    if(Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
+                    if (Main.pref.getBoolean("cadastrewms.addr.dontUseRelation", false)) {
                         inputStreet.setText(currentMouseNode.get(tagHouseStreet));
                         if (ctrl) {
                             Collection<Command> cmds = new LinkedList<>();
@@ -163,7 +164,7 @@ public class Address extends MapMode {
                             if (num == null)
                                 applyInputNumberChange();
                         }
-                        setSelectedWay((Way)null);
+                        setSelectedWay((Way) null);
                     }
                 } else {
                     // check if the node belongs to an associatedStreet relation
@@ -183,7 +184,7 @@ public class Address extends MapMode {
             }
         } else {
             List<WaySegment> wss = mv.getNearestWaySegments(mousePos, OsmPrimitive.isSelectablePredicate);
-            for(WaySegment ws : wss) {
+            for (WaySegment ws : wss) {
                 if (ws.way.get(tagHighway) != null && ws.way.get(tagHighwayName) != null)
                     mouseOnExistingWays.add(ws.way);
                 else if (ws.way.get(tagBuilding) != null && ws.way.get(tagHouseNumber) == null)
@@ -219,11 +220,11 @@ public class Address extends MapMode {
         List<OsmPrimitive> l = n.getReferrers();
         for (OsmPrimitive osm : l) {
             if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
-                for (RelationMember rm : ((Relation)osm).getMembers()) {
+                for (RelationMember rm : ((Relation) osm).getMembers()) {
                     if (rm.getRole().equals(relationAddrStreetRole)) {
                         OsmPrimitive osp = rm.getMember();
                         if (osp instanceof Way && osp.hasKey(tagHighwayName)) {
-                            return (Way)osp;
+                            return (Way) osp;
                         }
                     }
                 }
@@ -263,7 +264,7 @@ public class Address extends MapMode {
         List<OsmPrimitive> l = w.getReferrers();
         for (OsmPrimitive osm : l) {
             if (osm instanceof Relation && osm.hasKey("type") && osm.get("type").equals(relationAddrType)) {
-                return (Relation)osm;
+                return (Relation) osm;
             }
         }
         return null;
@@ -309,7 +310,7 @@ public class Address extends MapMode {
 
             is.add(ws.lowerIndex);
         }
-        Set<Pair<Node,Node>> segSet = new HashSet<>();
+        Set<Pair<Node, Node>> segSet = new HashSet<>();
         ArrayList<Way> replacedWays = new ArrayList<>();
         ArrayList<Way> reuseWays = new ArrayList<>();
         for (Map.Entry<Way, List<Integer>> insertPoint : insertPoints.entrySet()) {
@@ -332,7 +333,7 @@ public class Address extends MapMode {
         return n;
     }
 
-    private static void adjustNode(Collection<Pair<Node,Node>> segs, Node n) {
+    private static void adjustNode(Collection<Pair<Node, Node>> segs, Node n) {
 
         switch (segs.size()) {
         case 0:
@@ -340,15 +341,15 @@ public class Address extends MapMode {
         case 2:
             // This computes the intersection between
             // the two segments and adjusts the node position.
-            Iterator<Pair<Node,Node>> i = segs.iterator();
-            Pair<Node,Node> seg = i.next();
+            Iterator<Pair<Node, Node>> i = segs.iterator();
+            Pair<Node, Node> seg = i.next();
             EastNorth A = seg.a.getEastNorth();
             EastNorth B = seg.b.getEastNorth();
             seg = i.next();
             EastNorth C = seg.a.getEastNorth();
             EastNorth D = seg.b.getEastNorth();
 
-            double u=det(B.east() - A.east(), B.north() - A.north(), C.east() - D.east(), C.north() - D.north());
+            double u = det(B.east() - A.east(), B.north() - A.north(), C.east() - D.east(), C.north() - D.north());
 
             // Check for parallel segments and do nothing if they are
             // In practice this will probably only happen when a way has been duplicated
@@ -365,7 +366,7 @@ public class Address extends MapMode {
                     B.north() + q * (A.north() - B.north()));
 
             int snapToIntersectionThreshold
-            = Main.pref.getInteger("edit.snap-intersection-threshold",10);
+            = Main.pref.getInteger("edit.snap-intersection-threshold", 10);
 
             // only adjust to intersection if within snapToIntersectionThreshold pixel of mouse click; otherwise
             // fall through to default action.
@@ -461,7 +462,7 @@ public class Address extends MapMode {
             public void actionPerformed(ActionEvent e) {
                 inputNumber.setText("");
                 inputStreet.setText("");
-                setSelectedWay((Way)null);
+                setSelectedWay((Way) null);
             }
         });
         ButtonGroup bgIncremental = new ButtonGroup();
@@ -494,9 +495,11 @@ public class Address extends MapMode {
             protected void rememberGeometry() {
                 Main.pref.put("cadastrewms.addr.bounds", dialog.getX()+","+dialog.getY()+","+dialog.getWidth()+","+dialog.getHeight());
             }
+
             @Override public void componentMoved(ComponentEvent e) {
                 rememberGeometry();
             }
+
             @Override public void componentResized(ComponentEvent e) {
                 rememberGeometry();
             }
@@ -505,14 +508,14 @@ public class Address extends MapMode {
             @Override
             public void windowClosing(WindowEvent arg) {
                 exitMode();
-                Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
+                Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
             }
         });
-        String bounds = Main.pref.get("cadastrewms.addr.bounds",null);
+        String bounds = Main.pref.get("cadastrewms.addr.bounds", null);
         if (bounds != null) {
             String[] b = bounds.split(",");
             dialog.setBounds(new Rectangle(
-                    Integer.parseInt(b[0]),Integer.parseInt(b[1]),Integer.parseInt(b[2]),Integer.parseInt(b[3])));
+                    Integer.parseInt(b[0]), Integer.parseInt(b[1]), Integer.parseInt(b[2]), Integer.parseInt(b[3])));
         }
     }
 

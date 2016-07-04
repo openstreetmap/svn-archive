@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -23,7 +24,7 @@ public class MenuActionRefineGeoRef extends JosmAction {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        if(!wmsLayer.isRaster()) {
+        if (!wmsLayer.isRaster()) {
             Main.info("MenuActionRefineGeoRef called for unexpected layer type");
             return;
         }

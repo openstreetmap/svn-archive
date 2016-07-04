@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -23,7 +23,7 @@ public class DownloadWMSPlanImage {
     private static String errorMessage;
 
     private class Task extends PleaseWaitRunnable {
-        public Task(WMSLayer wmsLayer, Bounds bounds) {
+        Task(WMSLayer wmsLayer, Bounds bounds) {
             super(tr("Downloading {0}", wmsLayer.getName()));
         }
 
@@ -34,17 +34,14 @@ public class DownloadWMSPlanImage {
             try {
                 if (wmsLayer.grabber.getWmsInterface().retrieveInterface(wmsLayer)) {
                     if (!wmsLayer.getImages().isEmpty()) {
-                        //JOptionPane.showMessageDialog(Main.parent,tr("Image already loaded"));
-                        JOptionPane pane = new JOptionPane(
-                                tr("Image already loaded")
-                                , JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane pane = new JOptionPane(tr("Image already loaded"), JOptionPane.INFORMATION_MESSAGE);
                         // this below is a temporary workaround to fix the "always on top" issue
                         JDialog dialog = pane.createDialog(Main.parent, "");
                         CadastrePlugin.prepareDialog(dialog);
                         dialog.setVisible(true);
                         // till here
                         dontGeoreference = true;
-                    } else if (wmsLayer.grabber.getWmsInterface().downloadCanceled){
+                    } else if (wmsLayer.grabber.getWmsInterface().downloadCanceled) {
                         // do nothing
                     } else {
                         // first time we grab an image for this layer
@@ -72,8 +69,8 @@ public class DownloadWMSPlanImage {
                             /*JOptionPane.showMessageDialog(Main.parent,tr("Municipality vectorized !\n"+
                                     "Use the normal Cadastre Grab menu."));*/
                             JOptionPane pane = new JOptionPane(
-                                    tr("Municipality vectorized !\nUse the normal Cadastre Grab menu.")
-                                    , JOptionPane.INFORMATION_MESSAGE);
+                                    tr("Municipality vectorized !\nUse the normal Cadastre Grab menu."),
+                                    JOptionPane.INFORMATION_MESSAGE);
                             // this below is a temporary workaround to fix the "always on top" issue
                             JDialog dialog = pane.createDialog(Main.parent, "");
                             CadastrePlugin.prepareDialog(dialog);

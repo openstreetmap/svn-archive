@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -42,6 +42,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
             }
             return file.getName().toLowerCase().endsWith(".png");
         }
+
         @Override
         public String getDescription() {
             return tr("PNG files (*.png)");
@@ -56,6 +57,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
             }
             return file.getName().toLowerCase().endsWith(".tif");
         }
+
         @Override
         public String getDescription() {
             return tr("GeoTiff files (*.tif)");
@@ -81,8 +83,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
             BufferedImage bi = wmsLayer.getImage(0).image;
-            if (fc.getFileFilter().equals(filtrePng))
-            {
+            if (fc.getFileFilter().equals(filtrePng)) {
                 if (!file.getName().endsWith(".png"))
                     file = new File(file.getParent(), file.getName()+".png");
                 try {
@@ -97,9 +98,7 @@ public class MenuActionSaveRasterAs extends JosmAction {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else if (fc.getFileFilter().equals(filtreTiff))
-            {
+            } else if (fc.getFileFilter().equals(filtreTiff)) {
                 boolean alpha = bi.getColorModel().hasAlpha();
                 Main.info("image with alpha channel : " + alpha);
                 try {

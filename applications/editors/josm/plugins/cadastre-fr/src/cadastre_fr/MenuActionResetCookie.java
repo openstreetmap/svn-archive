@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -18,6 +18,7 @@ public class MenuActionResetCookie extends JosmAction {
         super(tr("Reset cookie"), "cadastre_small", tr("Get a new cookie (session timeout)"), null, false);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         //CadastrePlugin.cadastreGrabber.getWmsInterface().resetCookie();
     }

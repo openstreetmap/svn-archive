@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,7 +41,8 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                     }
                     if (wmsLayer.isRaster()) {
                         // set raster image commune bounding box based on current view (before adjustment)
-                        JOptionPane.showMessageDialog(Main.parent,tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\""));
+                        JOptionPane.showMessageDialog(Main.parent,
+                                tr("This commune is not vectorized.\nPlease use the other menu entry to georeference a \"Plan image\""));
                         Main.getLayerManager().removeLayer(wmsLayer);
                         wmsLayer = null;
                         return;
@@ -52,8 +53,7 @@ public class DownloadWMSVectorImage extends PleaseWaitRunnable {
                 }
                 // grab new images from wms server into active layer
                 wmsLayer.grab(bounds);
-            }
-            else if(wmsLayer.getImages().size()==0)
+            } else if (wmsLayer.getImages().size() == 0)
               // failed to contact WMS of find this commune. Remove layer if empty.
               Main.getLayerManager().removeLayer(wmsLayer);
         } catch (DuplicateLayerException e) {

@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Imported from plugin UtilsPlugin
- * @author 
+ * @author
  *
  */
 public class SimplifyWay {
@@ -25,13 +25,14 @@ public class SimplifyWay {
             ArrayList<Node> ns = new ArrayList<>();
             simplifyWayRange(wnew, from, to, ns, thr);
             List<Node> nodes = wnew.getNodes();
-            for (int j = to - 1; j > from; j--)
+            for (int j = to - 1; j > from; j--) {
                 nodes.remove(j);
+            }
             nodes.addAll(from+1, ns);
             wnew.setNodes(nodes);
         }
     }
-    
+
     /*
      * Takes an interval [from,to] and adds nodes from (from,to) to ns.
      * (from and to are indices of wnew.nodes.)
@@ -59,7 +60,9 @@ public class SimplifyWay {
             simplifyWayRange(wnew, imax, to, ns, thr);
         }
     }
+
     public static double EARTH_RAD = 6378137.0;
+
     /* From Aviaton Formulary v1.3
      * http://williams.best.vwh.net/avform.htm
      */
@@ -73,11 +76,11 @@ public class SimplifyWay {
                 * Math.cos(lat2) * Math.cos(lon1 - lon2))
                 % (2 * Math.PI);
     }
+
     public static double xtd(double lat1, double lon1, double lat2, double lon2, double lat3, double lon3) {
         double dist_AD = dist(lat1, lon1, lat3, lon3);
         double crs_AD = course(lat1, lon1, lat3, lon3);
         double crs_AB = course(lat1, lon1, lat2, lon2);
         return Math.asin(Math.sin(dist_AD) * Math.sin(crs_AD - crs_AB));
     }
-
 }

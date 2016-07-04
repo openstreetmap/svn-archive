@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -6,7 +6,21 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.DefaultTabPreferenceSetting;
@@ -18,7 +32,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 /**
  * Preference settings for the French Cadastre plugin
  *
- * @author Pieren <pieren3@gmail.com>
+ * @author Pieren &lt;pieren3@gmail.com&gt;
  */
 public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
@@ -41,7 +55,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
     private JCheckBox disableImageCropping = new JCheckBox(tr("Disable image cropping during georeferencing."));
 
     private JCheckBox enableTableauAssemblage = new JCheckBox(tr("Use \"Tableau d''assemblage\""));
-    
+
     private JCheckBox simplify2BitsColors = new JCheckBox(tr("Replace grey shades by white color only"));
 
     private JCheckBox autoFirstLayer = new JCheckBox(tr("Select first WMS layer in list."));
@@ -91,7 +105,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
     private JTextField rasterDivider = new JTextField(10);
 
     static final int DEFAULT_CROSSPIECES = 0;
-    
+
     static final String DEFAULT_GRAB_MULTIPLIER = Scale.SQUARE_100M.value;
 
     /**
@@ -107,11 +121,12 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         );
     }
 
+    @Override
     public void addGui(final PreferenceTabbedPane gui) {
         JPanel cadastrewmsMast = gui.createPreferenceTab(this);
 
         JPanel cadastrewms = new JPanel(new GridBagLayout());
-        cadastrewms.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        cadastrewms.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         // option to automatically set the source tag when uploading
         sourcing.setText(CadastrePlugin.source);
@@ -127,11 +142,13 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
         // option to reverse the grey colors (to see texts background)
         reversGrey.setSelected(Main.pref.getBoolean("cadastrewms.invertGrey", false));
-        reversGrey.setToolTipText(tr("Invert the original black and white colors (and all intermediate greys). Useful for texts on dark backgrounds."));
+        reversGrey.setToolTipText(
+                tr("Invert the original black and white colors (and all intermediate greys). Useful for texts on dark backgrounds."));
         cadastrewms.add(reversGrey, GBC.eop().insets(0, 0, 0, 0));
 
         // option to enable transparency
         transparency.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 sliderTrans.setEnabled(transparency.isSelected());
             }
@@ -145,7 +162,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         sliderTrans.setToolTipText(tr("Set WMS layers transparency. Right is opaque, left is transparent."));
         sliderTrans.setMajorTickSpacing(10);
         sliderTrans.setMinorTickSpacing(1);
-        sliderTrans.setValue((int)(Float.parseFloat(Main.pref.get("cadastrewms.brightness", "1.0f"))*10));
+        sliderTrans.setValue((int) (Float.parseFloat(Main.pref.get("cadastrewms.brightness", "1.0f"))*10));
         sliderTrans.setPaintTicks(true);
         sliderTrans.setPaintLabels(false);
         sliderTrans.setEnabled(transparency.isSelected());
@@ -200,6 +217,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         cadastrewms.add(jLabelScale, GBC.std().insets(0, 5, 10, 0));
         ButtonGroup bgGrabMultiplier = new ButtonGroup();
         ActionListener multiplierActionListener = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent actionEvent) {
               AbstractButton button = (AbstractButton) actionEvent.getSource();
               grabMultiplier4Size.setEnabled(button == grabMultiplier4);
@@ -207,19 +225,19 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
           };
         grabMultiplier1.setIcon(ImageProvider.get("preferences", "unsel_box_1"));
         grabMultiplier1.setSelectedIcon(ImageProvider.get("preferences", "sel_box_1"));
-        grabMultiplier1.addActionListener( multiplierActionListener);
+        grabMultiplier1.addActionListener(multiplierActionListener);
         grabMultiplier1.setToolTipText(tr("Grab one image full screen"));
         grabMultiplier2.setIcon(ImageProvider.get("preferences", "unsel_box_2"));
         grabMultiplier2.setSelectedIcon(ImageProvider.get("preferences", "sel_box_2"));
-        grabMultiplier2.addActionListener( multiplierActionListener);
+        grabMultiplier2.addActionListener(multiplierActionListener);
         grabMultiplier2.setToolTipText(tr("Grab smaller images (higher quality but use more memory)"));
         grabMultiplier3.setIcon(ImageProvider.get("preferences", "unsel_box_3"));
         grabMultiplier3.setSelectedIcon(ImageProvider.get("preferences", "sel_box_3"));
-        grabMultiplier3.addActionListener( multiplierActionListener);
+        grabMultiplier3.addActionListener(multiplierActionListener);
         grabMultiplier3.setToolTipText(tr("Grab smaller images (higher quality but use more memory)"));
         grabMultiplier4.setIcon(ImageProvider.get("preferences", "unsel_box_4"));
         grabMultiplier4.setSelectedIcon(ImageProvider.get("preferences", "sel_box_4"));
-        grabMultiplier4.addActionListener( multiplierActionListener);
+        grabMultiplier4.addActionListener(multiplierActionListener);
         grabMultiplier4.setToolTipText(tr("Fixed size square (default is 100m)"));
         bgGrabMultiplier.add(grabMultiplier1);
         bgGrabMultiplier.add(grabMultiplier2);
@@ -320,6 +338,7 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
 
         // option to enable automatic caching
         enableCache.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 jLabelCacheSize.setEnabled(enableCache.isSelected());
                 cacheSize.setEnabled(enableCache.isSelected());
@@ -355,17 +374,18 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         // end of dialog, scroll bar
         cadastrewms.add(Box.createVerticalGlue(), GBC.eol().fill(GBC.VERTICAL));
         JScrollPane scrollpane = new JScrollPane(cadastrewms);
-        scrollpane.setBorder(BorderFactory.createEmptyBorder( 0, 0, 0, 0 ));
+        scrollpane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         cadastrewmsMast.add(scrollpane, GBC.eol().fill(GBC.BOTH));
     }
 
+    @Override
     public boolean ok() {
         Main.pref.put("cadastrewms.source", sourcing.getText());
         CadastrePlugin.source = sourcing.getText();
         Main.pref.put("cadastrewms.alterColors", alterColors.isSelected());
         Main.pref.put("cadastrewms.invertGrey", reversGrey.isSelected());
         Main.pref.put("cadastrewms.backgroundTransparent", transparency.isSelected());
-        Main.pref.put("cadastrewms.brightness", Float.toString((float)sliderTrans.getValue()/10));
+        Main.pref.put("cadastrewms.brightness", Float.toString((float) sliderTrans.getValue()/10));
         Main.pref.put("cadastrewms.drawBoundaries", drawBoundaries.isSelected());
         if (grabRes1.isSelected())
             Main.pref.put("cadastrewms.resolution", "high");
@@ -391,7 +411,8 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
                 int squareSize = Integer.parseInt(grabMultiplier4Size.getText());
                 if (squareSize >= 25 && squareSize <= 1000)
                     Main.pref.put("cadastrewms.squareSize", grabMultiplier4Size.getText());
-            } catch (NumberFormatException e) { // ignore the last input
+            } catch (NumberFormatException e) {
+                Main.debug(e);
             }
         }
         Main.pref.put("cadastrewms.layerWater", layerLS3.isSelected());
@@ -407,7 +428,8 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
             int i = Integer.parseInt(rasterDivider.getText());
             if (i > 0 && i < 13)
                 Main.pref.put("cadastrewms.rasterDivider", String.valueOf(i));
-        } catch (NumberFormatException e) { // ignore the last input
+        } catch (NumberFormatException e) {
+            Main.debug(e);
         }
         Main.pref.put("cadastrewms.noImageCropping", disableImageCropping.isSelected());
         Main.pref.put("cadastrewms.useTA", enableTableauAssemblage.isSelected());
@@ -422,7 +444,8 @@ public class CadastrePreferenceSetting extends DefaultTabPreferenceSetting {
         try {
             CacheControl.cacheSize = Integer.parseInt(cacheSize.getText());
             Main.pref.put("cadastrewms.cacheSize", String.valueOf(CacheControl.cacheSize));
-        } catch (NumberFormatException e) { // ignore the last input
+        } catch (NumberFormatException e) {
+            Main.debug(e);
         }
         Main.pref.put("cadastrewms.autoFirstLayer", autoFirstLayer.isSelected());
         CacheControl.cacheEnabled = enableCache.isSelected();

@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -15,20 +15,21 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.actions.mapmode.MapMode;
 import org.openstreetmap.josm.data.coor.EastNorth;
+import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 public class WMSAdjustAction extends MapMode implements
-        MouseListener, MouseMotionListener{
+        MouseListener, MouseMotionListener {
 
     private static final long serialVersionUID = 1L;
     private WMSLayer modifiedLayer = null;
     private boolean rasterMoved;
     private EastNorth prevEastNorth;
-    enum Mode { moveXY, moveZ, rotate}
+    enum Mode { moveXY, moveZ, rotate }
+
     private static Mode mode = null;
     private static EastNorth[] croppedRaster = new EastNorth[5];;
 
@@ -41,7 +42,7 @@ public class WMSAdjustAction extends MapMode implements
     @Override public void enterMode() {
         if (Main.map != null) {
             if (Main.getLayerManager().getActiveLayer() instanceof WMSLayer) {
-                modifiedLayer = (WMSLayer)Main.getLayerManager().getActiveLayer();
+                modifiedLayer = (WMSLayer) Main.getLayerManager().getActiveLayer();
                 super.enterMode();
                 Main.map.mapView.addMouseListener(this);
                 Main.map.mapView.addMouseMotionListener(this);
@@ -51,7 +52,7 @@ public class WMSAdjustAction extends MapMode implements
 //                JOptionPane.showMessageDialog(Main.parent,tr("This mode works only if active layer is\n"
 //                        +"a cadastre layer"));
                 exitMode();
-                Main.map.selectMapMode((MapMode)Main.map.getDefaultButtonAction());
+                Main.map.selectMapMode((MapMode) Main.map.getDefaultButtonAction());
             }
         }
     }
@@ -96,7 +97,7 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     @Override public void mouseDragged(MouseEvent e) {
-        EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
+        EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
         if (mode == Mode.rotate) {
             rotateFrameOnly(prevEastNorth, newEastNorth);
         } else {
@@ -104,20 +105,21 @@ public class WMSAdjustAction extends MapMode implements
                 displace(prevEastNorth, newEastNorth);
             } else if (mode == Mode.moveZ) {
                 resize(newEastNorth);
-            } 
+            }
             prevEastNorth = newEastNorth;
         }
         Main.map.mapView.repaint();
     }
-    
+
     public static void paintAdjustFrames(Graphics2D g, final MapView mv) {
         if (mode == Mode.rotate && croppedRaster != null) {
             g.setColor(Color.red);
-            for (int i=0; i<4; i++)
+            for (int i = 0; i < 4; i++) {
                 g.drawLine(mv.getPoint(croppedRaster[i]).x,
                         mv.getPoint(croppedRaster[i]).y,
                         mv.getPoint(croppedRaster[i+1]).x,
                         mv.getPoint(croppedRaster[i+1]).y);
+            }
         }
     }
 
@@ -147,7 +149,7 @@ public class WMSAdjustAction extends MapMode implements
             double endAngle = Math.atan2(end.east()-pivot.east(), end.north()-pivot.north());
             double rotationAngle = endAngle - startAngle;
             if (modifiedLayer.getImage(0).orgCroppedRaster != null) {
-                for (int i=0; i<4; i++) {
+                for (int i = 0; i < 4; i++) {
                     croppedRaster[i] = modifiedLayer.getImage(0).orgCroppedRaster[i].rotate(pivot, rotationAngle);
                 }
                 croppedRaster[4] = croppedRaster[0];
@@ -156,9 +158,8 @@ public class WMSAdjustAction extends MapMode implements
     }
 
     @Override public void mouseReleased(MouseEvent e) {
-        //Main.map.mapView.repaint();
         if (mode == Mode.rotate) {
-            EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(),e.getY());
+            EastNorth newEastNorth = Main.map.mapView.getEastNorth(e.getX(), e.getY());
             rotate(prevEastNorth, newEastNorth);
             Main.map.mapView.repaint();
         }
@@ -167,10 +168,15 @@ public class WMSAdjustAction extends MapMode implements
         mode = null;
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
+
+    @Override
     public void mouseExited(MouseEvent e) {
     }
+
+    @Override
     public void mouseMoved(MouseEvent e) {
     }
 

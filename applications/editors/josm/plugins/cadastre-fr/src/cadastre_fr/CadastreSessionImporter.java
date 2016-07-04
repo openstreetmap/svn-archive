@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -19,7 +20,7 @@ import org.openstreetmap.josm.io.session.SessionLayerImporter;
 import org.openstreetmap.josm.io.session.SessionReader.ImportSupport;
 import org.w3c.dom.Element;
 
-public class CadastreSessionImporter implements SessionLayerImporter{
+public class CadastreSessionImporter implements SessionLayerImporter {
 
     @Override
     public Layer load(Element elem, ImportSupport support,
@@ -40,8 +41,8 @@ public class CadastreSessionImporter implements SessionLayerImporter{
 
             fileStr = URLDecoder.decode(fileStr, "UTF-8");
             fileStr = fileStr.substring(fileStr.indexOf(":/")+2);
-            String filename = fileStr.substring(fileStr.lastIndexOf('/')+1,fileStr.length());
-            String ext = (filename.lastIndexOf('.')==-1)?"":filename.substring(filename.lastIndexOf('.')+1,filename.length());
+            String filename = fileStr.substring(fileStr.lastIndexOf('/')+1, fileStr.length());
+            String ext = (filename.lastIndexOf('.') == -1) ? "" : filename.substring(filename.lastIndexOf('.')+1, filename.length());
             // create layer and load cache
             if (ext.length() == 3 && ext.substring(0, CacheControl.C_LAMBERT_CC_9Z.length()).equals(CacheControl.C_LAMBERT_CC_9Z))
                 ext = ext.substring(2);

@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -22,7 +22,10 @@ public class MenuActionNewLocation extends JosmAction {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String departements[] = {
+    // CHECKSTYLE.OFF: LineLength
+    // CHECKSTYLE.OFF: SingleSpaceSeparator
+
+    private static final String[] departements = {
         "", tr("(optional)"),
         "001", "01 - Ain",                 "002", "02 - Aisne",              "003", "03 - Allier",                "004", "04 - Alpes de Haute-Provence", "005", "05 - Hautes-Alpes",
         "006", "06 - Alpes-Maritimes",     "007", "07 - Ard\u00eache",       "008", "08 - Ardennes",              "009", "09 - Ari\u00e8ge",             "010", "10 - Aube",
@@ -47,8 +50,12 @@ public class MenuActionNewLocation extends JosmAction {
         "971", "971 - Guadeloupe",         "972", "972 - Martinique",        "973", "973 - Guyane",               "974", "974 - R\u00e9union"
     };
 
+    // CHECKSTYLE.ON: SingleSpaceSeparator
+    // CHECKSTYLE.ON: LineLength
+
     public MenuActionNewLocation() {
-        super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false, "cadastrefr/newlocation", true);
+        super(tr("Change location"), "cadastre_small", tr("Set a new location for the next request"), null, false,
+                "cadastrefr/newlocation", true);
     }
 
     @Override
@@ -65,19 +72,20 @@ public class MenuActionNewLocation extends JosmAction {
         JLabel labelSectionNewLocation = new JLabel(tr("Add a new municipality layer"));
         JPanel p = new JPanel(new GridBagLayout());
         JLabel labelLocation = new JLabel(tr("Commune"));
-        final JTextField inputTown = new JTextField( Main.pref.get("cadastrewms.location") );
+        final JTextField inputTown = new JTextField(Main.pref.get("cadastrewms.location"));
         inputTown.setToolTipText(tr("<html>Enter the town,village or city name.<br>"
                 + "Use the syntax and punctuation known by www.cadastre.gouv.fr .</html>"));
-        JLabel labelDepartement =  new JLabel(tr("Departement"));
+        JLabel labelDepartement = new JLabel(tr("Departement"));
         final JComboBox<String> inputDepartement = new JComboBox<>();
-        for (int i=1; i<departements.length; i+=2) {
+        for (int i = 1; i < departements.length; i += 2) {
             inputDepartement.addItem(departements[i]);
         }
         inputDepartement.setToolTipText(tr("<html>Departement number (optional)</html>"));
         if (!Main.pref.get("cadastrewms.codeDepartement").equals("")) {
-            for (int i=0; i < departements.length; i=i+2)
+            for (int i = 0; i < departements.length; i += 2) {
                 if (departements[i].equals(Main.pref.get("cadastrewms.codeDepartement")))
                     inputDepartement.setSelectedIndex(i/2);
+            }
         }
         p.add(labelSectionNewLocation, GBC.eol());
         p.add(labelLocation, GBC.std().insets(10, 0, 0, 0));
@@ -118,7 +126,7 @@ public class MenuActionNewLocation extends JosmAction {
             CadastrePlugin.addWMSLayer(wmsLayer);
             Main.info("Add new layer with Location:" + inputTown.getText());
         } else if (existingLayers != null && existingLayers.size() > 0 && Main.getLayerManager().getActiveLayer() instanceof WMSLayer) {
-            wmsLayer = (WMSLayer)Main.getLayerManager().getActiveLayer();
+            wmsLayer = (WMSLayer) Main.getLayerManager().getActiveLayer();
         }
 
         return wmsLayer;

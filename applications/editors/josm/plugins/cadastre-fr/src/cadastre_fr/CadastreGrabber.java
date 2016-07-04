@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -53,7 +53,7 @@ public class CadastreGrabber {
         str += "&bbox=";
         str += wmsLayer.eastNorth2raster(lambertMin, lambertMax);
         str += "&width="+cRasterX+"&height="; // maximum allowed by wms server (576/345, 800/378, 1000/634)
-        str += (int)(cRasterX*(wmsLayer.communeBBox.max.getY() - wmsLayer.communeBBox.min.getY())/(wmsLayer.communeBBox.max.getX() - wmsLayer.communeBBox.min.getX()));
+        str += (int) (cRasterX*(wmsLayer.communeBBox.max.getY() - wmsLayer.communeBBox.min.getY())/(wmsLayer.communeBBox.max.getX() - wmsLayer.communeBBox.min.getX()));
         str += "&exception=application/vnd.ogc.se_inimage&styles="; // required for raster images
         Main.info("URL="+str);
         return new URL(str.replace(" ", "%20"));
@@ -83,7 +83,7 @@ public class CadastreGrabber {
     }
 
     private BufferedImage grab(URL url) throws IOException, OsmTransferException {
-        wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
+        wmsInterface.urlConn = (HttpURLConnection) url.openConnection();
         wmsInterface.urlConn.setRequestProperty("Connection", "close");
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();

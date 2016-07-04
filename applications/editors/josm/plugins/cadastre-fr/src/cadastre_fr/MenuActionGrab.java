@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -24,6 +24,7 @@ public class MenuActionGrab extends JosmAction {
                 KeyEvent.VK_F10, Shortcut.DIRECT), false, "cadastrefr/grab", true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (Main.map != null) {
             if (CadastrePlugin.isCadastreProjection()) {

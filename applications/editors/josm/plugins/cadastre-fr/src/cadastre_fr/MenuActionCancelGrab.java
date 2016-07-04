@@ -1,7 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
-import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.marktr;
+import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
 
@@ -19,12 +20,10 @@ public class MenuActionCancelGrab extends JosmAction {
         this.wmsLayer = wmsLayer;
     }
 
-
     @Override
     public void actionPerformed(ActionEvent arg0) {
         if (wmsLayer.grabThread.getImagesToGrabSize() > 0) {
             wmsLayer.grabThread.cancel();
         }
     }
-
 }

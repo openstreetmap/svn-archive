@@ -1,5 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
-// Some of the procedures below are imported from image4j.sourceforge.net, license LGPL.
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.awt.Color;
@@ -24,9 +23,10 @@ public abstract class ImageModifier {
 
     protected BufferedImage convert1(BufferedImage src) {
         IndexColorModel icm = new IndexColorModel(
-            1, 2, new byte[] { (byte) 0, (byte) 0xFF },
-            new byte[] { (byte) 0, (byte) 0xFF },
-            new byte[] { (byte) 0, (byte) 0xFF }
+            1, 2,
+            new byte[] {(byte) 0, (byte) 0xFF},
+            new byte[] {(byte) 0, (byte) 0xFF},
+            new byte[] {(byte) 0, (byte) 0xFF}
         );
 
         BufferedImage dest = new BufferedImage(
@@ -112,18 +112,20 @@ public abstract class ImageModifier {
       }
 
     public boolean isBuildingColor(int rgb, boolean ignoreParcelColor) {
-        for (int i = 0; i < cBuilingFootColors.length; i++)
+        for (int i = 0; i < cBuilingFootColors.length; i++) {
             if (rgb == cBuilingFootColors[i])
                     return true;
+        }
         if (ignoreParcelColor && (rgb == parcelColor))
             return true;
         return false;
     }
 
     public boolean isRoofColor(int rgb, boolean ignoreParcelColor) {
-        for (int i = 0; i < cRoofColors.length; i++)
+        for (int i = 0; i < cRoofColors.length; i++) {
             if (rgb == cRoofColors[i])
                     return true;
+        }
         if (ignoreParcelColor && (rgb == parcelColor))
             return true;
         return false;
@@ -152,8 +154,6 @@ public abstract class ImageModifier {
 
     /**
      * Checks if the rgb value is the black background color
-     * @param
-     * @return
      */
     public boolean isBackgroundColor(BufferedImage img, int x, int y) {
         return (img.getRGB(x, y) == -1);

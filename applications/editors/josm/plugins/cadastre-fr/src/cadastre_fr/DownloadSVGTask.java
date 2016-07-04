@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -110,9 +110,9 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         String[] SVGpaths = new SVGParser().getClosedPaths(svg);
         ArrayList<Double> fitViewBox = new ArrayList<>();
         ArrayList<ArrayList<EastNorth>> eastNorths = new ArrayList<>();
-        for (int i=0; i< SVGpaths.length; i++) {
+        for (int i = 0; i < SVGpaths.length; i++) {
             ArrayList<EastNorth> eastNorth = new ArrayList<>();
-            fitViewBox.add( createNodes(SVGpaths[i], eastNorth) );
+            fitViewBox.add(createNodes(SVGpaths[i], eastNorth));
             eastNorths.add(eastNorth);
         }
         // the smallest fitViewBox indicates the best fitting path in viewBox
@@ -148,10 +148,10 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
         double minX = Double.MAX_VALUE;
         double maxY = Double.MIN_VALUE;
         double maxX = Double.MIN_VALUE;
-        for (int i=3; i<coor.length; i+=2){
-            double east = dx+=Double.parseDouble(coor[i]);
-            double north = dy+=Double.parseDouble(coor[i+1]);
-            eastNorth.add(new EastNorth(east,north));
+        for (int i = 3; i < coor.length; i += 2) {
+            double east = dx += Double.parseDouble(coor[i]);
+            double north = dy += Double.parseDouble(coor[i+1]);
+            eastNorth.add(new EastNorth(east, north));
             minX = minX > east ? east : minX;
             minY = minY > north ? north : minY;
             maxX = maxX < east ? east : maxX;
@@ -192,7 +192,7 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
     }
 
     private String grabSVG(URL url) throws IOException, OsmTransferException {
-        wmsInterface.urlConn = (HttpURLConnection)url.openConnection();
+        wmsInterface.urlConn = (HttpURLConnection) url.openConnection();
         wmsInterface.urlConn.setRequestProperty("Connection", "close");
         wmsInterface.urlConn.setRequestMethod("GET");
         wmsInterface.setCookie();
@@ -202,10 +202,10 @@ public class DownloadSVGTask extends PleaseWaitRunnable {
             if (file.exists())
                 file.delete();
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
-                 InputStreamReader isr =new InputStreamReader(is);
+                 InputStreamReader isr = new InputStreamReader(is);
                  BufferedReader br = new BufferedReader(isr)) {
                 String line;
-                while ( null!=(line=br.readLine())){
+                while (null != (line = br.readLine())) {
                     line += "\n";
                     bos.write(line.getBytes(StandardCharsets.UTF_8));
                     svg += line;

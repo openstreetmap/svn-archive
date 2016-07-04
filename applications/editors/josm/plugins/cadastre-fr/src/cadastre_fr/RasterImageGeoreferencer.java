@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -38,7 +39,7 @@ public class RasterImageGeoreferencer implements MouseListener {
      */
     private int initialClickDelay;
 
-    public void addListener(){
+    public void addListener() {
         Main.map.mapView.addMouseListener(this);
     }
 
@@ -50,10 +51,10 @@ public class RasterImageGeoreferencer implements MouseListener {
        this.wmsLayer = wmsLayer;
        mode = cGetCorners;
        countMouseClicked = 0;
-       initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay",200);
+       initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay", 200);
        mouseClickedTime = System.currentTimeMillis();
-       Object[] options = { "OK", "Cancel" };
-       int ret = JOptionPane.showOptionDialog( null,
+       Object[] options = {"OK", "Cancel"};
+       int ret = JOptionPane.showOptionDialog(null,
                tr("Click first corner for image cropping\n(two points required)"),
                tr("Image cropping"),
                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -74,10 +75,10 @@ public class RasterImageGeoreferencer implements MouseListener {
       this.wmsLayer = wmsLayer;
       countMouseClicked = 0;
       mode = cGetLambertCrosspieces;
-      initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay",200);
+      initialClickDelay = Main.pref.getInteger("cadastrewms.georef-click-delay", 200);
       mouseClickedTime = System.currentTimeMillis();
-      Object[] options = { "OK", "Cancel" };
-      int ret = JOptionPane.showOptionDialog( null,
+      Object[] options = {"OK", "Cancel"};
+      int ret = JOptionPane.showOptionDialog(null,
               tr("Click first Lambert crosspiece for georeferencing\n(two points required)"),
               tr("Image georeferencing"),
               JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -90,8 +91,7 @@ public class RasterImageGeoreferencer implements MouseListener {
       return true;
   }
 
-  public boolean isRunning()
-  {
+  public boolean isRunning() {
       return (countMouseClicked != 0 || mode != 0);
   }
 
@@ -100,8 +100,7 @@ public class RasterImageGeoreferencer implements MouseListener {
       if (System.currentTimeMillis() - mouseClickedTime < initialClickDelay) {
           Main.info("mouse click bounce detected");
           return; // mouse click anti-bounce
-      }
-      else
+      } else
           mouseClickedTime = System.currentTimeMillis();
       if (e.getButton() != MouseEvent.BUTTON1)
           return;
@@ -114,8 +113,7 @@ public class RasterImageGeoreferencer implements MouseListener {
       } else {
           // ignore clicks outside the image
           if (ea.east() < wmsLayer.getImage(0).min.east() || ea.east() > wmsLayer.getImage(0).max.east()
-                  || ea.north() < wmsLayer.getImage(0).min.north() || ea.north() > wmsLayer.getImage(0).max.north())
-          {
+                  || ea.north() < wmsLayer.getImage(0).min.north() || ea.north() > wmsLayer.getImage(0).max.north()) {
               Main.info("ignore click outside the image");
               return;
           }
@@ -143,14 +141,13 @@ public class RasterImageGeoreferencer implements MouseListener {
       }
   }
 
-
   /**
    *
    * @return false if all operations are canceled
    */
  private boolean canceledOrRestartCurrAction(String action) {
-     Object[] options = { "Cancel", "Retry" };
-     int selectedValue = JOptionPane.showOptionDialog( null,
+     Object[] options = {"Cancel", "Retry"};
+     int selectedValue = JOptionPane.showOptionDialog(null,
              tr("Do you want to cancel completely\n"+
                      "or just retry "+action+" ?"), "",
              JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
@@ -176,8 +173,7 @@ public class RasterImageGeoreferencer implements MouseListener {
   */
  private void affineTransform(EastNorth org1, EastNorth org2, EastNorth dst1, EastNorth dst2) {
      // handle an NPE case I'm not able to reproduce
-     if(org1==null || org2==null || dst1==null || dst2==null)
-     {
+     if (org1 == null || org2 == null || dst1 == null || dst2 == null) {
          JOptionPane.showMessageDialog(Main.parent,
                  tr("Ooops. I failed to catch all coordinates\n"+
                     "correctly. Retry please."));
@@ -285,8 +281,8 @@ public class RasterImageGeoreferencer implements MouseListener {
  * @return false if all operations are canceled
  */
 private boolean continueCropping() {
-    Object[] options = { "OK", "Cancel" };
-    int ret = JOptionPane.showOptionDialog( null,
+    Object[] options = {"OK", "Cancel"};
+    int ret = JOptionPane.showOptionDialog(null,
             tr("Click second corner for image cropping"),
             tr("Image cropping"),
             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -315,8 +311,8 @@ public void transformGeoreferencedImg() {
  * @return false if all operations are canceled
  */
 private boolean continueGeoreferencing() {
-    Object[] options = { "OK", "Cancel" };
-    int ret = JOptionPane.showOptionDialog( null,
+    Object[] options = {"OK", "Cancel"};
+    int ret = JOptionPane.showOptionDialog(null,
             tr("Click second Lambert crosspiece for georeferencing"),
             tr("Image georeferencing"),
             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,

@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -41,6 +41,7 @@ public class CacheControl implements Runnable {
         public ObjectOutputStreamAppend(OutputStream out) throws IOException {
             super(out);
         }
+
         @Override
         protected void writeStreamHeader() throws IOException {
             reset();
@@ -87,12 +88,12 @@ public class CacheControl implements Runnable {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 size += files[i].length();
-                if (files[i].lastModified() <  oldestFileDate) {
+                if (files[i].lastModified() < oldestFileDate) {
                     oldestFile = i;
                     oldestFileDate = files[i].lastModified();
                 }
             }
-            if (size > (long)cacheSize*1024*1024) {
+            if (size > (long) cacheSize*1024*1024) {
                 Main.info("Delete oldest file  \""+ files[oldestFile].getName()
                         + "\" in cache dir to stay under the limit of " + cacheSize + " MB.");
                 files[oldestFile].delete();
@@ -119,7 +120,7 @@ public class CacheControl implements Runnable {
                     JDialog dialog = pane.createDialog(Main.parent, tr("Select Feuille"));
                     CadastrePlugin.prepareDialog(dialog);
                     dialog.setVisible(true);
-                    return (Integer)pane.getValue();
+                    return (Integer) pane.getValue();
                     // till here
                 }
             });
@@ -141,8 +142,9 @@ public class CacheControl implements Runnable {
         Main.info("Delete file "+file);
         if (file.exists())
             file.delete();
-        while (file.exists()) // wait until file is really gone (otherwise appends to existing one)
+        while (file.exists()) { // wait until file is really gone (otherwise appends to existing one)
             CadastrePlugin.safeSleep(500);
+        }
     }
 
     public boolean loadCache(File file, int currentLambertZone) {
@@ -157,7 +159,7 @@ public class CacheControl implements Runnable {
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."), 
+                    JOptionPane.showMessageDialog(Main.parent, tr("Error loading file.\nProbably an old version of the cache file."),
                             tr("Error"), JOptionPane.ERROR_MESSAGE);
                 }
             });
@@ -192,7 +194,7 @@ public class CacheControl implements Runnable {
                     if (file.exists()) {
                         try (ObjectOutputStreamAppend oos = new ObjectOutputStreamAppend(
                                 new BufferedOutputStream(new FileOutputStream(file, true)))) {
-                            for (int i=0; i < size; i++) {
+                            for (int i = 0; i < size; i++) {
                                 oos.writeObject(imagesToSave.get(i));
                             }
                         }
@@ -200,7 +202,7 @@ public class CacheControl implements Runnable {
                         try (ObjectOutputStream oos = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(file)))) {
                             wmsLayer.write(file, oos);
-                            for (int i=0; i < size; i++) {
+                            for (int i = 0; i < size; i++) {
                                 oos.writeObject(imagesToSave.get(i));
                             }
                         }
@@ -209,12 +211,14 @@ public class CacheControl implements Runnable {
                     Main.error(e);
                 }
                 imagesLock.lock();
-                for (int i=0; i < size; i++) {
+                for (int i = 0; i < size; i++) {
                     imagesToSave.remove(0);
                 }
                 imagesLock.unlock();
             }
-            try {wait();} catch (InterruptedException e) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
                 Main.error(e);
             }
         }

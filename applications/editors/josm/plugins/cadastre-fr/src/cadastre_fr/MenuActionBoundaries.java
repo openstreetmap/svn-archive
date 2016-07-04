@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -21,6 +21,7 @@ public class MenuActionBoundaries extends JosmAction {
         super(tr(name), "cadastre_small", tr("Extract commune boundary"), null, false);
     }
 
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         wmsLayer = WMSDownloadAction.getLayer();
         if (wmsLayer != null) {

@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * This class is not intended to be a real SVG parser. It's also not using existing
  * xml parsers. It's just extracting the required strings from an SVG file coming
- * from the French land registry cadastre.gouv.fr 
+ * from the French land registry cadastre.gouv.fr
  *
  */
 public class SVGParser {
@@ -28,10 +28,11 @@ public class SVGParser {
         if (s != -1 && e != -1) {
             try {
                 String str = svg.substring(s, e);
-                String [] viewBox = str.split(" ");
+                String[] viewBox = str.split(" ");
                 double[] dbox = new double[4];
-                for (int i = 0; i<4; i++)
-                    dbox[i] = Double.parseDouble(viewBox[i]); 
+                for (int i = 0; i < 4; i++) {
+                    dbox[i] = Double.parseDouble(viewBox[i]);
+                }
                 return dbox;
             } catch (Exception ex) {
                 return null;
@@ -39,20 +40,18 @@ public class SVGParser {
         }
         return null;
     }
-    
+
     /**
      * Closed SVG paths are finishing with a "Z" at the end of the moves list.
-     * @param svg
-     * @return
      */
-    public String [] getClosedPaths(String svg) {
+    public String[] getClosedPaths(String svg) {
         ArrayList<String> path = new ArrayList<>();
         int i = 0;
         while (svg.indexOf(cPathStart, i) != -1) {
             int s = svg.indexOf(cPathStart, i) + cViewBoxStart.length();
             int e = svg.indexOf(cClosedPathEnd, s);
             if (s != -1 && e != -1) {
-                String onePath = svg.substring(s, e); 
+                String onePath = svg.substring(s, e);
                 if (onePath.indexOf("Z") != -1) // only closed SVG path
                     path.add(onePath);
             } else

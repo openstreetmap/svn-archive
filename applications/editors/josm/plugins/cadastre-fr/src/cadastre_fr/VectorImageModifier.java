@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.awt.Color;
@@ -6,19 +6,22 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.ColorHelper;
 
 public class VectorImageModifier extends ImageModifier {
 
     private int cadastreBackground = -1; // white
-    
+
     public static int cadastreBackgroundTransp = 1; // original white but transparent
 
     private int backgroundPixel = 0;
 
-    public VectorImageModifier() {super();}
-    
+    public VectorImageModifier() {
+        super();
+    }
+
     public VectorImageModifier(BufferedImage bi, boolean monocolor) {
         bufferedImage = bi;
         if (Main.pref.getBoolean("cadastrewms.backgroundTransparent"))
@@ -69,8 +72,6 @@ public class VectorImageModifier extends ImageModifier {
     /**
      * Reverse the grey value if the pixel is grey (light grey becomes dark grey)
      * Used for texts.
-     * @param pixel
-     * @return
      */
     private int reverseIfGrey(int pixel) {
         Color col = new Color(pixel);

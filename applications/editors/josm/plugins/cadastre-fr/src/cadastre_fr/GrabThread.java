@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import java.awt.Color;
@@ -34,13 +34,12 @@ public class GrabThread extends Thread {
 
     /**
      * Call directly grabber for raster images or prepare thread for vector images
-     * @param moreImages
      */
     public void addImages(ArrayList<EastNorthBound> moreImages) {
         lockImagesToGrag.lock();
         imagesToGrab.addAll(moreImages);
         lockImagesToGrag.unlock();
-        synchronized(this) {
+        synchronized (this) {
             this.notify();
         }
         Main.info("Added " + moreImages.size() + " to the grab thread");
@@ -138,7 +137,8 @@ public class GrabThread extends Thread {
             if (wmsLayer.isRaster()) {
                 notifyWaiter();
             }
-            waitNotification();        }
+            waitNotification();
+        }
     }
 
     public void saveToCache(GeorefImage image) {
@@ -151,8 +151,9 @@ public class GrabThread extends Thread {
         if (CacheControl.cacheEnabled) {
             getCacheControl().deleteCacheFile();
             wmsLayer.imagesLock.lock();
-            for (GeorefImage image : wmsLayer.getImages())
+            for (GeorefImage image : wmsLayer.getImages()) {
                 getCacheControl().saveCache(image);
+            }
             wmsLayer.imagesLock.unlock();
         }
     }
@@ -198,7 +199,7 @@ public class GrabThread extends Thread {
         croppedPoint[2] = mv.getPoint(img.max);
         croppedPoint[3] = mv.getPoint(new EastNorth(img.max.east(), img.min.north()));
         croppedPoint[4] = croppedPoint[0];
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             g.setColor(color);
             g.drawLine(croppedPoint[i].x, croppedPoint[i].y, croppedPoint[i+1].x, croppedPoint[i+1].y);
         }

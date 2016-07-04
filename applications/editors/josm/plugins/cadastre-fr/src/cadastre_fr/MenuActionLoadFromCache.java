@@ -1,4 +1,4 @@
-// License: GPL. v2 and later. Copyright 2008-2009 by Pieren <pieren3@gmail.com> and others
+// License: GPL. For details, see LICENSE file.
 package cadastre_fr;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -38,13 +38,14 @@ public class MenuActionLoadFromCache extends JosmAction {
         for (File file : files) {
             if (file.exists()) {
                 String filename = file.getName();
-                String ext = (filename.lastIndexOf('.')==-1)?"":filename.substring(filename.lastIndexOf('.')+1,filename.length());
+                String ext = (filename.lastIndexOf('.') == -1) ? "" : filename.substring(filename.lastIndexOf('.')+1, filename.length());
                 if ((ext.length() == 3 && ext.substring(0, CacheControl.C_LAMBERT_CC_9Z.length()).equals(CacheControl.C_LAMBERT_CC_9Z) &&
                     !(CadastrePlugin.isLambert_cc9()))
                     || (ext.length() == 4 && ext.substring(0, CacheControl.C_UTM20N.length()).equals(CacheControl.C_UTM20N) &&
                             !(CadastrePlugin.isUtm_france_dom()))
                     || (ext.length() == 1) && !(CadastrePlugin.isLambert())) {
-                        JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(Main.parent, tr("{0} not allowed with the current projection", filename),
+                                tr("Error"), JOptionPane.ERROR_MESSAGE);
                         continue;
                 } else {
                     String location = filename.substring(0, filename.lastIndexOf('.'));
@@ -55,9 +56,11 @@ public class MenuActionLoadFromCache extends JosmAction {
                     // check the extension and its compatibility with current projection
                     try {
                         int cacheZone = Integer.parseInt(ext) - 1;
-                        if (cacheZone >=0 && cacheZone <= 9) {
+                        if (cacheZone >= 0 && cacheZone <= 9) {
                             if (cacheZone != layoutZone) {
-                                JOptionPane.showMessageDialog(Main.parent, tr("Cannot load cache {0} which is not compatible with current projection zone", filename), tr("Error"), JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(Main.parent,
+                                        tr("Cannot load cache {0} which is not compatible with current projection zone", filename),
+                                        tr("Error"), JOptionPane.ERROR_MESSAGE);
                                 continue nextFile;
                             } else
                                 Main.info("Load cache " + filename);

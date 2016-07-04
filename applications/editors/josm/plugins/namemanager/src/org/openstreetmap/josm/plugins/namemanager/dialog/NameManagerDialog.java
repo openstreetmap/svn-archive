@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.namemanager.dialog;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -54,7 +55,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Rafal Jachowicz, Harman/Becker Automotive Systems (master's thesis)
  * 
  */
-public class NameManagerDialog extends JDialog {
+public final class NameManagerDialog extends JDialog {
 
     private static final String TAG_NAME = "Tag name";
     private static final String TAG_VALUE = "Tag value";
@@ -381,7 +382,7 @@ public class NameManagerDialog extends JDialog {
     @SuppressWarnings("serial")
     class AddModifyAction extends AbstractAction {
 
-        public AddModifyAction() {
+        AddModifyAction() {
             putValue(Action.NAME, tr(ADD) + "/" + tr(EDIT));
             ImageIcon addModifyIcon = ImageProvider.get("", "addnode");
             if (addModifyIcon != null) {
@@ -407,7 +408,7 @@ public class NameManagerDialog extends JDialog {
     @SuppressWarnings("serial")
     class DeleteAction extends AbstractAction {
 
-        public DeleteAction() {
+        DeleteAction() {
             putValue(Action.NAME, tr(DELETE));
             ImageIcon deleteIcon = ImageProvider.get("", "purge");
             if (deleteIcon != null) {
@@ -433,7 +434,7 @@ public class NameManagerDialog extends JDialog {
     @SuppressWarnings("serial")
     class CancelAction extends AbstractAction {
 
-        public CancelAction() {
+        CancelAction() {
             putValue(Action.NAME, tr("Cancel"));
             putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
             ImageIcon cancelIcon = ImageProvider.get("", "cancel");
@@ -450,7 +451,7 @@ public class NameManagerDialog extends JDialog {
     @SuppressWarnings("serial")
     class SaveAction extends AbstractAction {
 
-        public SaveAction() {
+        SaveAction() {
             putValue(Action.NAME, tr("Save"));
             putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
             ImageIcon saveIcon = ImageProvider.get("", "save");

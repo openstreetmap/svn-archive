@@ -1,11 +1,16 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.namemanager.countryData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CountryDataMemory {
+public final class CountryDataMemory {
 
     private static Map<String, Country> countryCache;
+    
+    private CountryDataMemory() {
+        // Hide default constructor for utilities classes
+    }
 
     public static void instantiateCountryCache() {
         if (countryCache == null) {

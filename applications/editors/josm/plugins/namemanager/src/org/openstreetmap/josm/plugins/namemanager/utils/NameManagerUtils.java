@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.namemanager.utils;
 
 import java.awt.Component;
@@ -25,7 +26,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class NameManagerUtils {
+public final class NameManagerUtils {
+
+    private NameManagerUtils() {
+        // Hide default constructor for utilities classes
+    }
+
     /**
      * @return the top {@link Window} of the JOSM application.
      */

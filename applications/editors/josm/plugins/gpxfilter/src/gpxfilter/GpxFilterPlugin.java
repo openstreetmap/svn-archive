@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package gpxfilter;
 
 import org.openstreetmap.josm.Main;

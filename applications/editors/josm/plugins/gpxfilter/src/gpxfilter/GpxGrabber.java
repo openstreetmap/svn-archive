@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007 by Immanuel Scholz and others
+// License: GPL. For details, see LICENSE file.
 package gpxfilter;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class GpxGrabber extends OsmServerReader {
      *      contain only one list, since the server cannot distinguish between
      *      ways.
      */
-    public GpxData parseRawGps() throws IOException, SAXException,OsmTransferException {
+    public GpxData parseRawGps() throws IOException, SAXException, OsmTransferException {
         String url = "trackpoints?bbox="+lon1+","+lat1+","+lon2+","+lat2+"&page="+page;
         try (InputStream in = getInputStream(url, NullProgressMonitor.INSTANCE)) {
             GpxReader reader = new GpxReader(in);

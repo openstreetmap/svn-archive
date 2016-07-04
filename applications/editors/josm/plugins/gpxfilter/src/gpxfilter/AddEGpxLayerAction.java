@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package gpxfilter;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -13,7 +14,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 public class AddEGpxLayerAction extends JosmAction {
 
     public AddEGpxLayerAction() {
-        super(tr("Add EGPX layer"),(String)null,tr("Add EGPX layer"),
+        super(tr("Add EGPX layer"), (String) null, tr("Add EGPX layer"),
             Shortcut.registerShortcut("gpxfilter:egpx", tr("Tool: {0}", tr("Add EGPX layer")),
                  KeyEvent.VK_X, Shortcut.ALT_SHIFT),
             true, "gpxfilter/addegpxlayer", true);
@@ -25,7 +26,7 @@ public class AddEGpxLayerAction extends JosmAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0)  {
+    public void actionPerformed(ActionEvent arg0) {
         getLayerManager().addLayer(new EGpxLayer(Main.map.mapView.getRealBounds()));
     }
 }

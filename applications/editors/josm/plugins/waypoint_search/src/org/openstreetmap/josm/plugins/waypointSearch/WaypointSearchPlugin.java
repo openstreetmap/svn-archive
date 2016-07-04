@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.waypointSearch;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -17,7 +18,7 @@ import org.openstreetmap.josm.plugins.PluginInformation;
  * Pressing this buttons open the search dialog on the right side.
  * Click on one of the search results/waypoints to move the map.
  */
-public class WaypointSearchPlugin extends Plugin implements LayerChangeListener  {
+public class WaypointSearchPlugin extends Plugin implements LayerChangeListener {
     private SelectWaypointDialog waypointDialog;
     
     /**

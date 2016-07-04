@@ -1,14 +1,17 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.waypointSearch;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
-import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 
-class Engine {
-    
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
+import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+
+final class Engine {
+
     private Engine() {
         // Utility class
     }
@@ -24,12 +27,12 @@ class Engine {
                     if (Pattern.matches(".*\\Q"+waypointSearchPattern.toLowerCase()+"\\E.*", marker.getText().toLowerCase())) {
                         returnList.add(marker);
                     }
-                }               
+                }
             }
-        } 
+        }
         return returnList;
-    }   
-    
+    }
+
     static boolean gpxLayersExist() {
         return !Main.getLayerManager().getLayersOfType(MarkerLayer.class).isEmpty();
     }

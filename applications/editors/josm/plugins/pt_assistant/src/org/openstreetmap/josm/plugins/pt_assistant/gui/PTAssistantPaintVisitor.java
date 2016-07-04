@@ -290,7 +290,8 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		for (OsmPrimitive parent : primitive.getReferrers()) {
 			if (parent.getType().equals(OsmPrimitiveType.RELATION)) {
 				Relation relation = (Relation) parent;
-				if (RouteUtils.isTwoDirectionRoute(relation) && relation.get("ref") != null && !relation.get("ref").equals("")) {
+				if (RouteUtils.isTwoDirectionRoute(relation) && relation.get("ref") != null
+						&& !relation.get("ref").equals("")) {
 
 					boolean stringFound = false;
 					for (String s : parentsLabelList) {
@@ -330,17 +331,35 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 		@Override
 		public int compare(String s1, String s2) {
 
-			if (s1 == null || s1.equals("")) {
-				if (s2 == null || s2.equals("")) {
-					return 0;
-				} else {
-					return 1;
-				}
+			if (s1 == null || s1.equals("") || s2 == null || s2.equals("")) {
+				// if at least one of the strings is null or empty, there is no
+				// point in comparing:
+				return 0;
 			}
 
-			String firstNumberString1 = s1.split("\\D+")[0];
-			String firstNumberString2 = s2.split("\\D+")[0];
-			
+			String[] splitString1 = s1.split("\\D");
+			String[] splitString2 = s2.split("\\D");
+
+			if (splitString1.length == 0 && splitString2.length != 0) {
+				// if the first ref does not start a digit and the second ref
+				// starts with a digit:
+				return 1;
+			}
+
+			if (splitString1.length != 0 && splitString2.length == 0) {
+				// if the first ref starts a digit and the second ref does not
+				// start with a digit:
+				return -1;
+			}
+
+			if (splitString1.length == 0 && splitString2.length == 0) {
+				// if both ref values do not start with a digit:
+				return s1.compareTo(s2);
+			}
+
+			String firstNumberString1 = splitString1[0];
+			String firstNumberString2 = splitString2[0];
+
 			try {
 				int firstNumber1 = Integer.valueOf(firstNumberString1);
 				int firstNumber2 = Integer.valueOf(firstNumberString2);

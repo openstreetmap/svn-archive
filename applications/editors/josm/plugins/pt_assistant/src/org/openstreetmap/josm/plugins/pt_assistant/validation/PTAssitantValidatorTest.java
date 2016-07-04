@@ -97,7 +97,7 @@ public class PTAssitantValidatorTest extends Test {
 
 			if (SwingUtilities.isEventDispatchThread()) {
 
-				userSelection[0] = realDownloadIncompleteMembers();
+				userSelection[0] = showIncompleteMembersDownloadDialog();
 
 			} else {
 
@@ -105,7 +105,7 @@ public class PTAssitantValidatorTest extends Test {
 					@Override
 					public void run() {
 						try {
-							userSelection[0] = realDownloadIncompleteMembers();
+							userSelection[0] = showIncompleteMembersDownloadDialog();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -143,7 +143,7 @@ public class PTAssitantValidatorTest extends Test {
 	 * @return user's selection
 	 * @throws InterruptedException
 	 */
-	private int realDownloadIncompleteMembers() throws InterruptedException {
+	private int showIncompleteMembersDownloadDialog() throws InterruptedException {
 
 		IncompleteMembersDownloadDialog incompleteMembersDownloadDialog = new IncompleteMembersDownloadDialog();
 		return incompleteMembersDownloadDialog.getUserSelection();
@@ -168,28 +168,58 @@ public class PTAssitantValidatorTest extends Test {
 			}
 		}
 
-		ProceedDialog proceedDialog = new ProceedDialog(r.getId(), numberOfDirectionErrors, numberOfRoadTypeErrors);
-		int userInput = proceedDialog.getUserSelection();
+		final int[] userInput = { 0 };
+		final long idParameter = r.getId();
+		final int directionErrorParameter = numberOfDirectionErrors;
+		final int roadTypeErrorParameter = numberOfRoadTypeErrors;
 
-		if (userInput == 0) {
+		if (SwingUtilities.isEventDispatchThread()) {
+
+			userInput[0] = showProceedDialog(idParameter, directionErrorParameter, roadTypeErrorParameter);
+
+		} else {
+
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						userInput[0] = showProceedDialog(idParameter, roadTypeErrorParameter, roadTypeErrorParameter);
+
+					}
+				});
+			} catch (InvocationTargetException | InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}
+
+		if (userInput[0] == 0) {
 			this.fixErrorFromPlugin(this.errors);
 			proceedWithSorting(r);
 			return;
 		}
 
-		if (userInput == 1) {
+		if (userInput[0] == 1) {
 			// TODO
 			JOptionPane.showMessageDialog(null, "This is not implemented yet!");
 			return;
 		}
 
-		if (userInput == 2) {
+		if (userInput[0] == 2) {
 			// TODO: should the errors be removed from the error list?
 			proceedWithSorting(r);
 		}
 
 		// if userInput==-1 (i.e. no input), do nothing and stop testing of the
 		// route.
+
+	}
+
+	private int showProceedDialog(long id, int numberOfDirectionErrors, int numberOfRoadTypeErrors) {
+
+		ProceedDialog proceedDialog = new ProceedDialog(id, numberOfDirectionErrors, numberOfRoadTypeErrors);
+		return proceedDialog.getUserSelection();
 
 	}
 

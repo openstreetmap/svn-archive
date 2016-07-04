@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SelectCommand;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.OsmUtils;
@@ -28,13 +31,14 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
 /**
- * Performs tests of a route at the level of single ways: DirectionTest and RoadTypeTest
+ * Performs tests of a route at the level of single ways: DirectionTest and
+ * RoadTypeTest
  * 
  * @author darya
  *
  */
 public class WayChecker extends Checker {
-
+	
 	public WayChecker(Relation relation, Test test) {
 
 		super(relation, test);
@@ -42,7 +46,7 @@ public class WayChecker extends Checker {
 	}
 
 	protected void performRoadTypeTest() {
-		
+
 		if (!relation.hasTag("route", "bus") && !relation.hasTag("route", "trolleybus")
 				&& !relation.hasTag("route", "share_taxi")) {
 			return;
@@ -120,14 +124,13 @@ public class WayChecker extends Checker {
 					errors.add(e);
 
 				}
-				
+
 				if (isUnderConstruction) {
 					List<Relation> primitives = new ArrayList<>(1);
 					primitives.add(relation);
 					List<Way> highlighted = new ArrayList<>(1);
 					highlighted.add(way);
-					TestError e = new TestError(this.test, Severity.WARNING,
-							tr("PT: Road is under construction"),
+					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Road is under construction"),
 							PTAssitantValidatorTest.ERROR_CODE_CONSTRUCTION, primitives, highlighted);
 					errors.add(e);
 				}
@@ -214,10 +217,11 @@ public class WayChecker extends Checker {
 
 		return false;
 	}
-	
+
 	protected static Command fixErrorByRemovingWay(TestError testError) {
 
-		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE && testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
+		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE
+				&& testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
 			return null;
 		}
 
@@ -271,73 +275,76 @@ public class WayChecker extends Checker {
 
 		return changeCommand;
 	}
-	
 
 	protected static Command fixErrorByZooming(TestError testError) {
-		
+
 		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
 			return null;
 		}
 		
-		 long startTime = System.currentTimeMillis();
-		
+		ArrayList<Command> commands = new ArrayList<>();
+
 		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
 		Relation originalRelation = (Relation) primitives.iterator().next();
+		ArrayList<OsmPrimitive> primitivesToSelect = new ArrayList<>(1);
+		primitivesToSelect.add(originalRelation);
 		Collection<?> highlighted = testError.getHighlighted();
 		Way wayToHighlight = (Way) highlighted.iterator().next();
-		ArrayList<OsmPrimitive> primitivesToHighlight = new ArrayList<>(1);
-		primitivesToHighlight.add(wayToHighlight);
-		
-		long endTime = System.currentTimeMillis();
-		System.out.println("obtaining primitives: " + (endTime - startTime));
-		startTime = endTime;
-		
-		SelectCommand command = new SelectCommand(primitivesToHighlight);
-		
-		endTime = System.currentTimeMillis();
-		System.out.println("constructing command: " + (endTime - startTime));
-		startTime = endTime;
-		
-		AutoScaleAction.zoomTo(primitivesToHighlight);
-		
-		endTime = System.currentTimeMillis();
-		System.out.println("AutoScaleAction done: " + (endTime - startTime));
-		startTime = endTime;
-		
+		ArrayList<OsmPrimitive> primitivesToZoom = new ArrayList<>(1);
+		primitivesToZoom.add(wayToHighlight);
+
+		SelectCommand command1 = new SelectCommand(primitivesToSelect);
+		commands.add(command1);
+		SelectCommand command2 = new SelectCommand(primitivesToZoom);
+		commands.add(command2);
+
 		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
-		for (OsmDataLayer osmDataLayer: listOfLayers) {
+		for (OsmDataLayer osmDataLayer : listOfLayers) {
 			if (osmDataLayer.data == originalRelation.getDataSet()) {
-				endTime = System.currentTimeMillis();
-				System.out.println("getting to the necessary layer: " + (endTime - startTime));
-				startTime = endTime;
-				
-				GenericRelationEditor editor = new GenericRelationEditor(osmDataLayer, originalRelation, originalRelation.getMembersFor(primitivesToHighlight));
-				endTime = System.currentTimeMillis();
-				System.out.println("creating relation editor: " + (endTime - startTime));
-				startTime = endTime;
-				
-				RelationDialogManager.getRelationDialogManager().register(osmDataLayer, originalRelation, editor);
-				
-				endTime = System.currentTimeMillis();
-				System.out.println("registering relation editor: " + (endTime - startTime));
-				startTime = endTime;
-				
-				editor.setVisible(true);
-				
-				endTime = System.currentTimeMillis();
-				System.out.println("setting editor visible: " + (endTime - startTime));
-				startTime = endTime;
-				
-				break;
+
+				final OsmDataLayer layerParameter = osmDataLayer;
+				final Relation relationParameter = originalRelation;
+				final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
+
+				if (SwingUtilities.isEventDispatchThread()) {
+
+					showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
+
+				} else {
+
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+
+							showRelationEditorAndZoom(layerParameter, relationParameter, zoomParameter);
+
+						}
+					});
+
+				}
+
+				return new SequenceCommand(null, commands);
 			}
 		}
-		
-		endTime = System.currentTimeMillis();
-		System.out.println("whatever else: " + (endTime - startTime));
-		startTime = endTime;
-						
-		return command;
-		
+
+		return null;
+
 	}
-	
+
+	private static void showRelationEditorAndZoom(OsmDataLayer layer, Relation r, Collection<OsmPrimitive> primitives) {
+
+		AutoScaleAction.zoomTo(primitives);
+		GenericRelationEditor editor = new GenericRelationEditor(layer, r, r.getMembersFor(primitives));
+		RelationDialogManager.getRelationDialogManager().register(layer, r, editor);
+		
+		
+		editor.setVisible(true);
+//		editor.requestFocus();
+//		editor.requestFocusInWindow();
+		
+//		editor.firePropertyChange("focusedWindow", editor, editor);
+//		editor.setRelation(r);
+
+	}
+
 }

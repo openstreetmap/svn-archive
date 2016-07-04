@@ -1,10 +1,17 @@
 //License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.pt_assistant;
 
+import javax.swing.JMenuItem;
+
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.validation.OsmValidator;
+import org.openstreetmap.josm.gui.MainMenu;
+import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssitantValidatorTest;
+import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
+import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
+import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This is the main class of the PTAssistant plugin.
@@ -13,7 +20,9 @@ import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssitantValidato
  * 
  */
 public class PTAssistantPlugin extends Plugin {
-	
+
+	private JMenuItem addStopPositionMenu;
+
 	/**
 	 * Main constructor.
 	 *
@@ -24,18 +33,38 @@ public class PTAssistantPlugin extends Plugin {
 	public PTAssistantPlugin(PluginInformation info) {
 		super(info);
 
-//		OsmValidator.addTest(PlatformsFirstTest.class);
-//		OsmValidator.addTest(RoadTypeTest.class);
-//		OsmValidator.addTest(DirectionTest.class);
-//		OsmValidator.addTest(GapTest.class);
+		OsmValidator.addTest(PTAssistantValidatorTest.class);
 		
-		OsmValidator.addTest(PTAssitantValidatorTest.class);
-		
+		AddStopPositionAction addStopPositionAction = new AddStopPositionAction();
+		addStopPositionMenu = MainMenu.add(Main.main.menu.toolsMenu, addStopPositionAction, false);
 
 	}
+
+	/**
+	 * Called when the JOSM map frame is created or destroyed.
+	 */
+	@Override
+	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+		if (oldFrame == null && newFrame != null) {
+			addStopPositionMenu.setEnabled(true);
+		} else if (oldFrame != null && newFrame == null) {
+			addStopPositionMenu.setEnabled(false);
+		}
+	}
 	
-
-
-
+	/**
+	 * Returns a ImageProvider for the given string or null if in headless mode.
+	 *
+	 * @param s
+	 *            The name of the file where the picture is.
+	 * @return A ImageProvider object for the given string or null if in
+	 *         headless mode.
+	 */
+	public static ImageProvider getProvider(String s) {
+		if (Main.main == null) {
+			return null;
+		}
+		return new ImageProvider(s);
+	}
 
 }

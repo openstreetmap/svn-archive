@@ -120,7 +120,7 @@ public class WayChecker extends Checker {
 					highlighted.add(way);
 					TestError e = new TestError(this.test, Severity.WARNING,
 							tr("PT: Route type does not match the type of the road it passes on"),
-							PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE, primitives, highlighted);
+							PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE, primitives, highlighted);
 					errors.add(e);
 
 				}
@@ -131,7 +131,7 @@ public class WayChecker extends Checker {
 					List<Way> highlighted = new ArrayList<>(1);
 					highlighted.add(way);
 					TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Road is under construction"),
-							PTAssitantValidatorTest.ERROR_CODE_CONSTRUCTION, primitives, highlighted);
+							PTAssistantValidatorTest.ERROR_CODE_CONSTRUCTION, primitives, highlighted);
 					errors.add(e);
 				}
 			}
@@ -179,7 +179,7 @@ public class WayChecker extends Checker {
 					highlighted.add(waysToCheck.get(i).getWay());
 					TestError e = new TestError(this.test, Severity.WARNING,
 							tr("PT: Route passes a oneway road in the wrong direction"),
-							PTAssitantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
+							PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
 					this.errors.add(e);
 					return;
 				}
@@ -220,8 +220,8 @@ public class WayChecker extends Checker {
 
 	protected static Command fixErrorByRemovingWay(TestError testError) {
 
-		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE
-				&& testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
+		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE
+				&& testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
 			return null;
 		}
 
@@ -278,7 +278,7 @@ public class WayChecker extends Checker {
 
 	protected static Command fixErrorByZooming(TestError testError) {
 
-		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_DIRECTION) {
+		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
 			return null;
 		}
 		
@@ -336,14 +336,8 @@ public class WayChecker extends Checker {
 		AutoScaleAction.zoomTo(primitives);
 		GenericRelationEditor editor = new GenericRelationEditor(layer, r, r.getMembersFor(primitives));
 		RelationDialogManager.getRelationDialogManager().register(layer, r, editor);
-		
-		
 		editor.setVisible(true);
-//		editor.requestFocus();
-//		editor.requestFocusInWindow();
-		
-//		editor.firePropertyChange("focusedWindow", editor, editor);
-//		editor.setRelation(r);
+
 
 	}
 

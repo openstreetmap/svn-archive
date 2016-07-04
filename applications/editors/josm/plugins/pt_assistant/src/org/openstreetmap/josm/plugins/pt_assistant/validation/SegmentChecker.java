@@ -51,7 +51,7 @@ public class SegmentChecker extends Checker {
 			List<OsmPrimitive> highlighted = new ArrayList<>(1);
 			highlighted.add(rm.getMember());
 			TestError e = new TestError(this.test, Severity.WARNING, tr("PT: Relation member roles do not match tags"),
-					PTAssitantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES, primitives, highlighted);
+					PTAssistantValidatorTest.ERROR_CODE_RELAITON_MEMBER_ROLES, primitives, highlighted);
 			this.errors.add(e);
 		}
 
@@ -111,7 +111,7 @@ public class SegmentChecker extends Checker {
 				highlighted.add(endStop.getPlatform());
 				TestError e = new TestError(this.test, Severity.WARNING,
 						tr("PT: Route should start and end with a stop_position"),
-						PTAssitantValidatorTest.ERROR_CODE_END_STOP, primitives, highlighted);
+						PTAssistantValidatorTest.ERROR_CODE_END_STOP, primitives, highlighted);
 				this.errors.add(e);
 				return;
 			}
@@ -129,7 +129,7 @@ public class SegmentChecker extends Checker {
 				highlighted.addAll(stopPositionsOfThisRoute);
 
 				TestError e = new TestError(this.test, Severity.WARNING, tr("PT: First or last way needs to be split"),
-						PTAssitantValidatorTest.ERROR_CODE_SPLIT_WAY, primitives, highlighted);
+						PTAssistantValidatorTest.ERROR_CODE_SPLIT_WAY, primitives, highlighted);
 				this.errors.add(e);
 			}
 
@@ -145,7 +145,7 @@ public class SegmentChecker extends Checker {
 				List<OsmPrimitive> highlighted = new ArrayList<>();
 				highlighted.add(endStop.getStopPosition());
 				TestError e = new TestError(this.test, Severity.WARNING, tr("PT: First or last way needs to be split"),
-						PTAssitantValidatorTest.ERROR_CODE_SPLIT_WAY, primitives, highlighted);
+						PTAssistantValidatorTest.ERROR_CODE_SPLIT_WAY, primitives, highlighted);
 				this.errors.add(e);
 			}
 		}

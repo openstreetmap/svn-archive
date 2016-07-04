@@ -175,7 +175,7 @@ public class PTAssistantLayer extends Layer
 						paintVisitor.visit(primitive);
 					}
 
-					Main.map.repaint();
+					Main.map.mapView.repaint();
 				}
 
 			}
@@ -199,7 +199,7 @@ public class PTAssistantLayer extends Layer
 		if (event.getRemovedLayer() instanceof OsmDataLayer) {
 
 			this.primitives.clear();
-			Main.map.repaint();
+			Main.map.mapView.repaint();
 		}
 
 	}

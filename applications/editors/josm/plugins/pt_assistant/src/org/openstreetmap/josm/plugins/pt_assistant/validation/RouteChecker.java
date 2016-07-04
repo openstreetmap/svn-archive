@@ -64,7 +64,7 @@ public class RouteChecker extends Checker {
 			if (!hasGap(sortedMembers)) {
 				TestError e = new TestError(this.test, Severity.WARNING,
 						tr("PT: Route contains a gap that can be fixed by sorting"),
-						PTAssitantValidatorTest.ERROR_CODE_SORTING, relation);
+						PTAssistantValidatorTest.ERROR_CODE_SORTING, relation);
 				this.errors.add(e);
 
 			}
@@ -111,7 +111,7 @@ public class RouteChecker extends Checker {
 	}
 	
 	protected static Command fixSortingError(TestError testError) {
-		if (testError.getCode() != PTAssitantValidatorTest.ERROR_CODE_SORTING) {
+		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_SORTING) {
 			return null;
 		}
 

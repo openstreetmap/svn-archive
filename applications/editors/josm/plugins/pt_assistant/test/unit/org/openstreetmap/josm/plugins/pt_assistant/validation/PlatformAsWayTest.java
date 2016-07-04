@@ -3,6 +3,7 @@ package org.openstreetmap.josm.plugins.pt_assistant.validation;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -19,12 +20,19 @@ public class PlatformAsWayTest extends AbstractTest{
         File file = new File(AbstractTest.PATH_TO_PLATFORM_AS_WAY);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        GapTest gapTest = new GapTest();
-        for (Relation r: ds.getRelations()) {
-            gapTest.visit(r);
-        }
+        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
         
-        List<TestError> errors = gapTest.getErrors();
+        List<TestError> errors = new ArrayList<>();
+        
+        for (Relation r: ds.getRelations()) {
+        	WayChecker wayChecker = new WayChecker(r, test);
+        	wayChecker.performDirectionTest();
+        	wayChecker.performRoadTypeTest();
+        	errors.addAll(wayChecker.getErrors());
+        	RouteChecker routeChecker = new RouteChecker(r, test);
+        	routeChecker.performSortingTest();
+        	errors.addAll(routeChecker.getErrors());
+        }
         
         assertEquals(errors.size(), 0);
     }

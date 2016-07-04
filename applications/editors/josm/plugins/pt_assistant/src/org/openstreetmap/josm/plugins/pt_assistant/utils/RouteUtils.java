@@ -3,7 +3,6 @@ package org.openstreetmap.josm.plugins.pt_assistant.utils;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
-import org.openstreetmap.josm.data.osm.Way;
 
 /**
  * Utils class for routes
@@ -111,54 +110,6 @@ public class RouteUtils {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Checks if the type of the way is suitable for buses to go on it. The
-	 * direction of the way (i.e. one-way roads) is irrelevant for this test.
-	 * 
-	 * TODO: this test is duplicated in WayChecker, remove it here when the old
-	 * implementation is not needed anymore.
-	 * 
-	 * @deprecated
-	 * 
-	 * @param way
-	 *            to be checked
-	 * @return true if the way is suitable for buses, false otherwise.
-	 */
-	public static boolean isWaySuitableForBuses(Way way) {
-		if (way.hasTag("highway", "motorway") || way.hasTag("highway", "trunk") || way.hasTag("highway", "primary")
-				|| way.hasTag("highway", "secondary") || way.hasTag("highway", "tertiary")
-				|| way.hasTag("highway", "unclassified") || way.hasTag("highway", "road")
-				|| way.hasTag("highway", "residential") || way.hasTag("highway", "service")
-				|| way.hasTag("highway", "motorway_link") || way.hasTag("highway", "trunk_link")
-				|| way.hasTag("highway", "primary_link") || way.hasTag("highway", "secondary_link")
-				|| way.hasTag("highway", "tertiary_link") || way.hasTag("highway", "living_street")
-				|| way.hasTag("highway", "bus_guideway") || way.hasTag("highway", "road")
-				|| way.hasTag("cycleway", "share_busway") || way.hasTag("cycleway", "shared_lane")) {
-			return true;
-		}
-
-		if (way.hasTag("highway", "pedestrian") && (way.hasTag("bus", "yes") || way.hasTag("psv", "yes")
-				|| way.hasTag("bus", "designated") || way.hasTag("psv", "designated"))) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public static boolean hasIncompleteMembers(Relation r) {
-		if (r == null) {
-			return true;
-		}
-		for (RelationMember rm : r.getMembers()) {
-			if ((rm.isNode() && rm.getNode().isIncomplete()) || (rm.isWay() && rm.getWay().isIncomplete())
-					|| (rm.isRelation() && rm.getRelation().isIncomplete())) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 }

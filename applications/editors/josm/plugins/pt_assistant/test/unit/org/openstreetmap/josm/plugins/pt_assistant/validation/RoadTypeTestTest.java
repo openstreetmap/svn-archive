@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -23,16 +24,19 @@ public class RoadTypeTestTest extends AbstractTest {
         File file = new File(AbstractTest.PATH_TO_ROAD_TYPE_ERROR);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        RoadTypeTest roadTypeTest = new RoadTypeTest();
+        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
+        List<TestError> errors = new ArrayList<>();
+        
         for (Relation r: ds.getRelations()) {
-            roadTypeTest.visit(r);
+        	WayChecker wayChecker = new WayChecker(r, test);
+        	wayChecker.performRoadTypeTest();
+        	errors.addAll(wayChecker.getErrors());
         }
         
-        List<TestError> errors = roadTypeTest.getErrors();
         assertEquals(errors.size(), 2);
         
         for (TestError e: errors) {
-            assertEquals(e.getCode(), RoadTypeTest.ERROR_CODE_ROAD_TYPE);
+            assertEquals(e.getCode(), PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE);
             @SuppressWarnings("unchecked")
             List<OsmPrimitive> highlighted = (List<OsmPrimitive>) e.getHighlighted();
             Way way = (Way) highlighted.get(0);

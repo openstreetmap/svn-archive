@@ -17,7 +17,7 @@
         <manifest file="MANIFEST" mode="update">
             <attribute name="ru_Author" value="Илья Зверев"/>
             <attribute name="ru_Plugin-Description" value="Панель для общения с редактирующими карту поблизости, а также способ узнать, когда кто-то собирается править окрестности."/>
-            <attribute name="ru_Plugin_Link" value="https://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/GeoChat"/>
+            <attribute name="ru_Plugin-Link" value="https://wiki.openstreetmap.org/wiki/RU:JOSM/Plugins/GeoChat"/>
         </manifest>
     </target>
 

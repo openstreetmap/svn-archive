@@ -1,4 +1,4 @@
-// License: GPL. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.undelete;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -23,10 +23,10 @@ public class UndeleteDialog extends ExtendedDialog {
 
     private final JCheckBox layer = new JCheckBox(tr("Separate Layer"));
     private final OsmIdTextField tfId = new OsmIdTextField();
-    
+
     public UndeleteDialog(Component parent) {
         super(parent, tr("Undelete Object"), new String[] {tr("Undelete object"), tr("Cancel")});
-        
+
         JPanel all = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.HORIZONTAL;
@@ -34,7 +34,7 @@ public class UndeleteDialog extends ExtendedDialog {
         gc.gridy = 0;
         gc.weightx = 0;
         all.add(new JLabel(tr("Object ID:")), gc);
-        
+
         tfId.setText(Main.pref.get("undelete.osmid"));
         tfId.setToolTipText(tr("Enter the type and ID of the objects that should be undeleted, e.g., ''n1 w2''"));
         // forward the enter key stroke to the undelete button
@@ -51,19 +51,19 @@ public class UndeleteDialog extends ExtendedDialog {
         layer.setSelected(Main.pref.getBoolean("undelete.newlayer"));
         all.add(layer, gc);
         setContent(all, false);
-        setButtonIcons(new String[] { "undelete.png", "cancel.png" });
-        setToolTipTexts(new String[] { tr("Start undeleting"), tr("Close dialog and cancel") });
+        setButtonIcons(new String[] {"undelete.png", "cancel.png"});
+        setToolTipTexts(new String[] {tr("Start undeleting"), tr("Close dialog and cancel")});
         setDefaultButton(1);
     }
-    
+
     public final boolean isNewLayerSelected() {
         return layer.isSelected();
     }
-    
+
     public final String getOsmIdsString() {
         return tfId.getText();
     }
-    
+
     public final List<PrimitiveId> getOsmIds() {
         return tfId.getIds();
     }

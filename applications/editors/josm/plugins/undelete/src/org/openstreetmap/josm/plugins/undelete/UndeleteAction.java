@@ -1,4 +1,4 @@
-// License: GPL. See LICENSE file for details.
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.undelete;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -39,8 +39,164 @@ import org.openstreetmap.josm.tools.Shortcut;
 
 public class UndeleteAction extends JosmAction {
 
+    private final class Worker implements Runnable {
+        private final OsmPrimitive parent;
+
+        private final OsmDataLayer layer;
+
+        private final List<PrimitiveId> ids;
+
+        private Worker(OsmPrimitive parent, OsmDataLayer layer, List<PrimitiveId> ids) {
+            this.parent = parent;
+            this.layer = layer;
+            this.ids = ids;
+        }
+
+        @Override
+        public void run() {
+            List<Node> nodes = new ArrayList<>();
+            for (PrimitiveId pid : ids) {
+                OsmPrimitive primitive = layer.data.getPrimitiveById(pid);
+                if (primitive == null) {
+                    try {
+                        final Long id = pid.getUniqueId();
+                        final OsmPrimitiveType type = pid.getType();
+
+                        History h = HistoryDataSet.getInstance().getHistory(id, type);
+
+                        HistoryOsmPrimitive hPrimitive1 = h.getLatest();
+                        HistoryOsmPrimitive hPrimitive2;
+
+                        boolean visible = hPrimitive1.isVisible();
+
+                        if (visible) {
+                            // If the object is not deleted we get the real object
+                            DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
+                            download.run();
+
+                            primitive = layer.data.getPrimitiveById(id, type);
+                        } else {
+                            if (type.equals(OsmPrimitiveType.NODE)) {
+                                // We get version and user from the latest version,
+                                // coordinates and tags from n-1 version
+                                hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
+
+                                Node node = new Node(id, (int) hPrimitive1.getVersion());
+
+                                HistoryNode hNode = (HistoryNode) hPrimitive2;
+                                if (hNode != null) {
+                                    node.setCoor(hNode.getCoords());
+                                }
+
+                                primitive = node;
+                            } else if (type.equals(OsmPrimitiveType.WAY)) {
+                                // We get version and user from the latest version,
+                                // nodes and tags from n-1 version
+                                hPrimitive1 = h.getLatest();
+                                hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
+
+                                Way way = new Way(id, (int) hPrimitive1.getVersion());
+
+                                HistoryWay hWay = (HistoryWay) hPrimitive2;
+                                // System.out.println(tr("Primitive {0} version {1}: {2} nodes",
+                                // hPrimitive2.getId(), hPrimitive2.getVersion(),
+                                // hWay.getNumNodes()));
+                                List<PrimitiveId> nodeIds = new ArrayList<>();
+                                if (hWay != null) {
+                                    for (Long i : hWay.getNodes()) {
+                                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
+                                    }
+                                }
+                                undelete(false, nodeIds, way);
+
+                                primitive = way;
+                            } else {
+                                primitive = new Relation();
+                                hPrimitive1 = h.getLatest();
+                                hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
+
+                                Relation rel = new Relation(id, (int) hPrimitive1.getVersion());
+
+                                HistoryRelation hRel = (HistoryRelation) hPrimitive2;
+
+                                if (hRel != null) {
+                                    List<RelationMember> members = new ArrayList<>(hRel.getNumMembers());
+                                    for (RelationMemberData m : hRel.getMembers()) {
+                                        OsmPrimitive p = layer.data.getPrimitiveById(m.getMemberId(), m.getMemberType());
+                                        if (p == null) {
+                                            switch (m.getMemberType()) {
+                                            case NODE:
+                                                p = new Node(m.getMemberId());
+                                                break;
+                                            case CLOSEDWAY:
+                                            case WAY:
+                                                p = new Way(m.getMemberId());
+                                                break;
+                                            case MULTIPOLYGON:
+                                            case RELATION:
+                                                p = new Relation(m.getMemberId());
+                                                break;
+                                            }
+                                            layer.data.addPrimitive(p);
+                                        }
+                                        members.add(new RelationMember(m.getRole(), p));
+                                    }
+
+                                    rel.setMembers(members);
+                                }
+
+                                primitive = rel;
+                            }
+
+                            if (hPrimitive2 != null) {
+                                primitive.setChangesetId((int) hPrimitive1.getChangesetId());
+                                primitive.setTimestamp(hPrimitive1.getTimestamp());
+                                primitive.setUser(hPrimitive1.getUser());
+                                primitive.setVisible(hPrimitive1.isVisible());
+                                primitive.setKeys(hPrimitive2.getTags());
+                                primitive.setModified(true);
+
+                                layer.data.addPrimitive(primitive);
+                            } else {
+                              final String msg = OsmPrimitiveType.NODE.equals(type)
+                                  ? tr("Unable to undelete node {0}. Object has likely been redacted", id)
+                                  : OsmPrimitiveType.WAY.equals(type)
+                                  ? tr("Unable to undelete way {0}. Object has likely been redacted", id)
+                                  : OsmPrimitiveType.RELATION.equals(type)
+                                  ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
+                                  : null;
+                                GuiHelper.runInEDT(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show();
+                                    }
+                                });
+                                Main.warn(msg);
+                            }
+                        }
+                    } catch (Exception t) {
+                        Main.error(t);
+                    }
+                }
+                if (parent != null && primitive instanceof Node) {
+                    nodes.add((Node) primitive);
+                }
+            }
+            if (parent instanceof Way && !nodes.isEmpty()) {
+                ((Way) parent).setNodes(nodes);
+                Main.map.repaint();
+            }
+            GuiHelper.runInEDT(new Runnable() {
+                @Override
+                public void run() {
+                    AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives());
+                }
+            });
+        }
+    }
+
     public UndeleteAction() {
-        super(tr("Undelete object..."), "undelete", tr("Undelete object by id"), 
+        super(tr("Undelete object..."), "undelete", tr("Undelete object by id"),
                 Shortcut.registerShortcut("tools:undelete", tr("File: {0}", tr("Undelete object...")), KeyEvent.VK_U, Shortcut.ALT_SHIFT), true);
     }
 
@@ -53,14 +209,14 @@ public class UndeleteAction extends JosmAction {
         Main.pref.put("undelete.osmid", dialog.getOsmIdsString());
         undelete(dialog.isNewLayerSelected(), dialog.getOsmIds(), null);
     }
-    
+
     /**
      * // TODO: undelete relation members if necessary
      */
     public void undelete(boolean newLayer, final List<PrimitiveId> ids, final OsmPrimitive parent) {
-        
-        Main.info("Undeleting "+ids+(parent==null?"":" with parent "+parent));
-        
+
+        Main.info("Undeleting "+ids+(parent == null ? "" : " with parent "+parent));
+
         OsmDataLayer tmpLayer = Main.getLayerManager().getEditLayer();
         if ((tmpLayer == null) || newLayer) {
             tmpLayer = new OsmDataLayer(new DataSet(), OsmDataLayer.createNewName(), null);
@@ -75,150 +231,6 @@ public class UndeleteAction extends JosmAction {
         }
 
         Main.worker.execute(task);
-
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                List<Node> nodes = new ArrayList<>();
-                for (PrimitiveId pid : ids) {
-                    OsmPrimitive primitive = layer.data.getPrimitiveById(pid);
-                    if (primitive == null) { 
-                        try {
-                            final Long id = pid.getUniqueId();
-                            final OsmPrimitiveType type = pid.getType();
-
-                            History h = HistoryDataSet.getInstance().getHistory(id, type);
-
-                            HistoryOsmPrimitive hPrimitive1 = h.getLatest();
-                            HistoryOsmPrimitive hPrimitive2;
-        
-                            boolean visible = hPrimitive1.isVisible();
-        
-                            if (visible) {
-                                // If the object is not deleted we get the real object
-                                DownloadPrimitivesTask download = new DownloadPrimitivesTask(layer, Collections.singletonList(pid), true);
-                                download.run();
-        
-                                primitive = layer.data.getPrimitiveById(id, type);
-                            } else {
-                                if (type.equals(OsmPrimitiveType.NODE)) {
-                                    // We get version and user from the latest version,
-                                    // coordinates and tags from n-1 version
-                                    hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-        
-                                    Node node = new Node(id, (int) hPrimitive1.getVersion());
-        
-                                    HistoryNode hNode = (HistoryNode) hPrimitive2;
-                                    if (hNode != null) {
-                                    	node.setCoor(hNode.getCoords());
-                                    }
-        
-                                    primitive = node;
-                                } else if (type.equals(OsmPrimitiveType.WAY)) {
-                                    // We get version and user from the latest version,
-                                    // nodes and tags from n-1 version
-                                    hPrimitive1 = h.getLatest();
-                                    hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-        
-                                    Way way = new Way(id, (int) hPrimitive1.getVersion());
-        
-                                    HistoryWay hWay = (HistoryWay) hPrimitive2;
-                                    // System.out.println(tr("Primitive {0} version {1}: {2} nodes",
-                                    // hPrimitive2.getId(), hPrimitive2.getVersion(),
-                                    // hWay.getNumNodes()));
-                                    List<PrimitiveId> nodeIds = new ArrayList<>();
-                                    if (hWay != null) {
-	                                    for (Long i : hWay.getNodes()) {
-	                                        nodeIds.add(new SimplePrimitiveId(i, OsmPrimitiveType.NODE));
-	                                    }
-                                    }
-                                    undelete(false, nodeIds, way);
-        
-                                    primitive = way;
-                                } else {
-                                    primitive = new Relation();
-                                    hPrimitive1 = h.getLatest();
-                                    hPrimitive2 = h.getByVersion(h.getNumVersions() - 1);
-        
-                                    Relation rel = new Relation(id,(int) hPrimitive1.getVersion());
-        
-                                    HistoryRelation hRel = (HistoryRelation) hPrimitive2;
-        
-                                    if (hRel != null) {
-	                                    List<RelationMember> members = new ArrayList<>(hRel.getNumMembers());
-	                                    for (RelationMemberData m : hRel.getMembers()) {
-	                                        OsmPrimitive p = layer.data.getPrimitiveById(m.getMemberId(), m.getMemberType());
-	                                        if (p == null) {
-	                                            switch (m.getMemberType()) {
-	                                            case NODE:
-	                                                p = new Node(m.getMemberId());
-	                                                break;
-	                                            case CLOSEDWAY:
-	                                            case WAY:
-	                                                p = new Way(m.getMemberId());
-	                                                break;
-	                                            case MULTIPOLYGON:
-	                                            case RELATION:
-	                                                p = new Relation(m.getMemberId());
-	                                                break;
-	                                            }
-	                                            layer.data.addPrimitive(p);
-	                                        }
-	                                        members.add(new RelationMember(m.getRole(), p));
-	                                    }
-	        
-	                                    rel.setMembers(members);
-                                    }
-        
-                                    primitive = rel;
-                                }
-        
-                                if (hPrimitive2 != null) {
-                                    primitive.setChangesetId((int) hPrimitive1.getChangesetId());
-                                    primitive.setTimestamp(hPrimitive1.getTimestamp());
-                                    primitive.setUser(hPrimitive1.getUser());
-                                    primitive.setVisible(hPrimitive1.isVisible());
-                                    primitive.setKeys(hPrimitive2.getTags());
-                                    primitive.setModified(true);
-            
-                                    layer.data.addPrimitive(primitive);
-                                } else {
-                                  final String msg = OsmPrimitiveType.NODE.equals(type)
-                                      ? tr("Unable to undelete node {0}. Object has likely been redacted", id)
-                                      : OsmPrimitiveType.WAY.equals(type)
-                                      ? tr("Unable to undelete way {0}. Object has likely been redacted", id)
-                                      : OsmPrimitiveType.RELATION.equals(type)
-                                      ? tr("Unable to undelete relation {0}. Object has likely been redacted", id)
-                                      : null;
-                                	GuiHelper.runInEDT(new Runnable() {
-										@Override
-										public void run() {
-		                                	new Notification(msg).setIcon(JOptionPane.WARNING_MESSAGE).show();
-										}
-									});
-                                	Main.warn(msg);
-                                }
-                            }
-                        } catch (Exception t) {
-                            Main.error(t);
-                        }
-                    }
-                    if (parent != null && primitive instanceof Node) {
-                        nodes.add((Node) primitive);
-                    }
-                }
-                if (parent instanceof Way && !nodes.isEmpty()) {
-                    ((Way) parent).setNodes(nodes);
-                    Main.map.repaint();
-                }
-            	GuiHelper.runInEDT(new Runnable() {
-					@Override
-					public void run() {
-						AutoScaleAction.zoomTo(layer.data.allNonDeletedPrimitives());
-					}
-				});
-            }
-        };
-        Main.worker.submit(r);
+        Main.worker.submit(new Worker(parent, layer, ids));
     }
 }

@@ -1,7 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ViToCi is either a village, town or a city.

@@ -1,12 +1,14 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
+import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
+
 import java.util.List;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
-
-import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
 
 /**
  * Street is a member of {@link ElementWithStreets}

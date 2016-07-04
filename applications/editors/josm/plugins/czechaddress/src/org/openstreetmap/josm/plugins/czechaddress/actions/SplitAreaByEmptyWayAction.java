@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -52,22 +53,23 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      * by any untagged way, which starts and ends at the border line of that
      * area.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         DataSet ds = Main.getLayerManager().getEditDataSet();
         Collection<Way> selectedWays = ds.getSelectedWays();
         Collection<Way> newSelection = new LinkedList<>(ds.getSelectedWays());
 
         for (Way area : selectedWays) {
-            if (! area.isClosed()) continue;
+            if (!area.isClosed()) continue;
 
             for (OsmPrimitive prim2 : ds.allNonDeletedPrimitives()) {
                 if (!(prim2 instanceof Way)) continue;
-                if (prim2.equals(area))      continue;
+                if (prim2.equals(area)) continue;
                 Way border = (Way) prim2;
-                if (border.getNodes().isEmpty())   continue;
+                if (border.getNodes().isEmpty()) continue;
                 if (border.keySet().size() > 0) continue;
                 if (!area.getNodes().contains(border.firstNode())) continue;
-                if (!area.getNodes().contains(border.lastNode()))  continue;
+                if (!area.getNodes().contains(border.lastNode())) continue;
 
                 Way newArea1 = new Way();
                 Way newArea2 = new Way();
@@ -109,14 +111,15 @@ public class SplitAreaByEmptyWayAction extends JosmAction {
      * @param border border line, which goes across the area
      * @param newArea1 reference to the first new area
      * @param newArea2 reference to the second new area
-     * @return
      */
     private int splitArea(Way area, Way border, Way newArea1, Way newArea2) {
 
-        for (Relation r : Main.getLayerManager().getEditDataSet().getRelations())
-            for (RelationMember rm : r.getMembers())
+        for (Relation r : Main.getLayerManager().getEditDataSet().getRelations()) {
+            for (RelationMember rm : r.getMembers()) {
                 if (rm.refersTo(area) || rm.refersTo(border))
                     return 2;
+            }
+        }
 
         List<Node> bordNodes = border.getNodes();
         List<Node> areaNodes = area.getNodes();

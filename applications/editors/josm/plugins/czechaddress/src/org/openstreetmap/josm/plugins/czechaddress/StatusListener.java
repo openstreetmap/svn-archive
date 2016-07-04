@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
@@ -19,9 +20,8 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
  * {@link CzechAddressPlugin}{@code .addStatusListener()} or
  * {@code removeStatusListener()}.
  *
- * @see CzechAddressPlugin
- *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
+ * @see CzechAddressPlugin
  */
 public interface StatusListener {
 
@@ -33,7 +33,7 @@ public interface StatusListener {
      *
      * @see AddressElement
      */
-    static final int MESSAGE_LOCATION_CHANGED  = 1;
+    int MESSAGE_LOCATION_CHANGED = 1;
 
     /**
      * All parsers have finished their parsing.
@@ -44,7 +44,7 @@ public interface StatusListener {
      * @see CzechAddressPlugin
      * @see Database
      */
-    static final int MESSAGE_DATABASE_LOADED   = 2;
+    int MESSAGE_DATABASE_LOADED = 2;
 
     /**
      * Called when status of the plugin has changed.

@@ -1,7 +1,9 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;

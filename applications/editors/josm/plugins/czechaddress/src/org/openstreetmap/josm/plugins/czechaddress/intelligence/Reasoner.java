@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElement;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalContainer;
@@ -34,32 +36,31 @@ import org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalDatabase;
  *
  * @author Radomír Černoch radomir.cernoch@gmail.com
  */
-public class Reasoner {
+public final class Reasoner {
 
+    // CHECKSTYLE.OFF: SingleSpaceSeparator
     public static final int MATCH_OVERWRITE = 4;
     public static final int MATCH_ROCKSOLID = 3;
     public static final int MATCH_PARTIAL   = 2;
     public static final int MATCH_CONFLICT  = 1;
     public static final int MATCH_NOMATCH   = 0;
 
-    private     Map<OsmPrimitive, AddressElement> primBestIndex
-      = new HashMap<> ();
-    private     Map<AddressElement, OsmPrimitive> elemBestIndex
-      = new HashMap<> ();
-
-    private     Map<OsmPrimitive,   Map<AddressElement, Integer>> primMatchIndex
-      = new HashMap<> ();
-    private     Map<AddressElement, Map<OsmPrimitive,   Integer>> elemMatchIndex
-      = new HashMap<> ();
+    private Map<OsmPrimitive, AddressElement> primBestIndex = new HashMap<>();
+    private Map<AddressElement, OsmPrimitive> elemBestIndex = new HashMap<>();
+    private Map<OsmPrimitive,   Map<AddressElement, Integer>> primMatchIndex = new HashMap<>();
+    private Map<AddressElement, Map<OsmPrimitive,   Integer>> elemMatchIndex = new HashMap<>();
 
     private Set<OsmPrimitive>   primToUpdate = new HashSet<>();
     private Set<AddressElement> elemToUpdate = new HashSet<>();
+    // CHECKSTYLE.ON: SingleSpaceSeparator
 
     public static Logger logger = Logger.getLogger(Reasoner.class.getName());
 
     private Reasoner() {}
+
     private static Reasoner singleton = null;
-    public  static Reasoner getInstance() {
+
+    public static Reasoner getInstance() {
         if (singleton == null)
             singleton = new Reasoner();
         return singleton;

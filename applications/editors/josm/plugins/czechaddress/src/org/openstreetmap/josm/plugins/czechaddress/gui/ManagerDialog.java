@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
 import java.util.ArrayList;
@@ -65,9 +66,9 @@ public class ManagerDialog extends ExtendedDialog {
         }
 
         renameTable.setModel(streetModel);
-        renameTable.setDefaultRenderer( AddressElement.class,
+        renameTable.setDefaultRenderer(AddressElement.class,
                                         new AddressElementRenderer());
-        renameTable.setDefaultRenderer( String.class,
+        renameTable.setDefaultRenderer(String.class,
                                         new AddressElementRenderer());
 
         // And finalize initializing the form.
@@ -89,6 +90,7 @@ public class ManagerDialog extends ExtendedDialog {
             return CzechAddressPlugin.getLocation();
         }
 
+        @Override
         public Object getChild(Object parent, int index) {
 
             if (parent instanceof House)
@@ -100,12 +102,12 @@ public class ManagerDialog extends ExtendedDialog {
             if (parent instanceof Suburb) {
                 Suburb suburb = (Suburb) parent;
 
-                if (index< suburb.getHouses().size())
+                if (index < suburb.getHouses().size())
                     return suburb.getHouses().get(index);
                 else
                     index -= suburb.getHouses().size();
 
-                if (index< suburb.getStreets().size())
+                if (index < suburb.getStreets().size())
                     return suburb.getStreets().get(index);
                 else
                     return null;
@@ -114,17 +116,17 @@ public class ManagerDialog extends ExtendedDialog {
             if (parent instanceof ViToCi) {
                 ViToCi vitoci = (ViToCi) parent;
 
-                if (index< vitoci.getHouses().size())
+                if (index < vitoci.getHouses().size())
                     return vitoci.getHouses().get(index);
                 else
                     index -= vitoci.getHouses().size();
 
-                if (index< vitoci.getStreets().size())
+                if (index < vitoci.getStreets().size())
                     return vitoci.getStreets().get(index);
                 else
                     index -= vitoci.getStreets().size();
 
-                if (index< vitoci.getSuburbs().size())
+                if (index < vitoci.getSuburbs().size())
                     return vitoci.getSuburbs().get(index);
                 else
                     return null;
@@ -133,17 +135,17 @@ public class ManagerDialog extends ExtendedDialog {
             if (parent instanceof Region) {
                 Region region = (Region) parent;
 
-                if (index< region.getHouses().size())
+                if (index < region.getHouses().size())
                     return region.getHouses().get(index);
                 else
                     index -= region.getHouses().size();
 
-                if (index< region.getStreets().size())
+                if (index < region.getStreets().size())
                     return region.getStreets().get(index);
                 else
                     index -= region.getStreets().size();
 
-                if (index< region.getViToCis().size())
+                if (index < region.getViToCis().size())
                     return region.getViToCis().get(index);
                 else
                     return null;
@@ -155,6 +157,7 @@ public class ManagerDialog extends ExtendedDialog {
             return null;
         }
 
+        @Override
         public int getChildCount(Object parent) {
 
             if (parent instanceof House)
@@ -183,6 +186,7 @@ public class ManagerDialog extends ExtendedDialog {
             return 0;
         }
 
+        @Override
         public int getIndexOfChild(Object parent, Object child) {
             return 0;
         }
@@ -214,29 +218,31 @@ public class ManagerDialog extends ExtendedDialog {
         mainPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         renameTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
                 {null, null},
                 {null, null},
                 {null, null},
                 {null, null}
             },
-            new String [] {
+            new String[] {
                 "Původní název", "Návrh z mapy"
             }
         ) {
-            Class<?>[] types = new Class [] {
+            Class<?>[] types = new Class[] {
                 java.lang.Object.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[] {
                 false, true
             };
 
+            @Override
             public Class<?> getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         renameTable.setColumnSelectionAllowed(true);
@@ -244,6 +250,7 @@ public class ManagerDialog extends ExtendedDialog {
 
         renamerButton.setText("Použít navržené změny");
         renamerButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 renamerButtonActionPerformed(evt);
             }
@@ -271,6 +278,7 @@ public class ManagerDialog extends ExtendedDialog {
         tabbedPane.addTab("Návrhy na přejmenování", jPanel1);
 
         dbTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            @Override
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 dbTreeValueChanged(evt);
             }
@@ -280,6 +288,7 @@ public class ManagerDialog extends ExtendedDialog {
         dbEditButton.setText("Upravit");
         dbEditButton.setEnabled(false);
         dbEditButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dbEditButtonActionPerformed(evt);
             }
@@ -311,15 +320,15 @@ public class ManagerDialog extends ExtendedDialog {
         getContentPane().add(mainPanel);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void renamerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renamerButtonActionPerformed
+    private void renamerButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_renamerButtonActionPerformed
         assert streetModel.elems.size() == streetModel.names.size();
         Reasoner r = Reasoner.getInstance();
 
         synchronized (r) {
             r.openTransaction();
-            for(int i=0; i<streetModel.elems.size(); i++) {
+            for (int i = 0; i < streetModel.elems.size(); i++) {
                 streetModel.elems.get(i).setName(streetModel.names.get(i));
                 r.update(streetModel.elems.get(i));
             }
@@ -329,11 +338,11 @@ public class ManagerDialog extends ExtendedDialog {
         streetModel.elems.clear();
         streetModel.names.clear();
         jPanel1.setVisible(false);
-    }//GEN-LAST:event_renamerButtonActionPerformed
+    } //GEN-LAST:event_renamerButtonActionPerformed
 
     private AddressElement dbTreeValue = null;
 
-    private void dbTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_dbTreeValueChanged
+    private void dbTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) { //GEN-FIRST:event_dbTreeValueChanged
         try {
             dbTreeValue = (AddressElement) dbTree.getSelectionPath().getLastPathComponent();
         } catch (NullPointerException except) {
@@ -342,16 +351,16 @@ public class ManagerDialog extends ExtendedDialog {
                 " If you find a way to reproduce it, please report a bug!");
             except.printStackTrace();
         }
-        dbEditButton.setEnabled( EditorFactory.isEditable(dbTreeValue) );
-    }//GEN-LAST:event_dbTreeValueChanged
+        dbEditButton.setEnabled(EditorFactory.isEditable(dbTreeValue));
+    } //GEN-LAST:event_dbTreeValueChanged
 
-    private void dbEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dbEditButtonActionPerformed
+    private void dbEditButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_dbEditButtonActionPerformed
         if (EditorFactory.isEditable(dbTreeValue)) {
             if (EditorFactory.edit(dbTreeValue))
                 dbTree.repaint();
         } else
             dbEditButton.setEnabled(false);
-    }//GEN-LAST:event_dbEditButtonActionPerformed
+    } //GEN-LAST:event_dbEditButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton dbEditButton;
@@ -368,31 +377,34 @@ public class ManagerDialog extends ExtendedDialog {
 
     private class AddressElementRenderer extends DefaultTableCellRenderer {
 
-        public AddressElementRenderer() {}
+        AddressElementRenderer() {}
 
         @Override
         protected void setValue(Object value) {
             super.setValue(value);
 
             if (value instanceof AddressElement)
-                setText(((AddressElement) value).getName() );
+                setText(((AddressElement) value).getName());
         }
     }
 
     private class RenameModel<Element> implements TableModel {
 
         List<Element> elems = new ArrayList<>();
-        List<String>  names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
 
+        @Override
         public int getRowCount() {
             assert elems.size() == names.size();
             return elems.size();
         }
 
+        @Override
         public int getColumnCount() {
             return 2;
         }
 
+        @Override
         public String getColumnName(int columnIndex) {
             if (columnIndex == 0) return "Původní název";
             if (columnIndex == 1) return "Navržený název";
@@ -400,6 +412,7 @@ public class ManagerDialog extends ExtendedDialog {
             return null;
         }
 
+        @Override
         public Class<?> getColumnClass(int columnIndex) {
             if (columnIndex == 0) return AddressElement.class;
             if (columnIndex == 1) return String.class;
@@ -407,10 +420,12 @@ public class ManagerDialog extends ExtendedDialog {
             return null;
         }
 
+        @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return columnIndex == 1;
         }
 
+        @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             if (columnIndex == 0) return elems.get(rowIndex);
             if (columnIndex == 1) return names.get(rowIndex);
@@ -418,15 +433,18 @@ public class ManagerDialog extends ExtendedDialog {
             return null;
         }
 
+        @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             assert columnIndex == 1;
             names.set(rowIndex, (String) aValue);
         }
 
+        @Override
         public void addTableModelListener(TableModelListener l) {
 
         }
 
+        @Override
         public void removeTableModelListener(TableModelListener l) {
 
         }

@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.List;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
@@ -24,7 +26,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
     /**
      * Constructor setting the name of this element.
      */
-    public AddressElement (String name) {
+    public AddressElement(String name) {
         if (name == null)
             throw new NullPointerException("You must specify the name of this AddressElement");
         this.name = name;
@@ -49,7 +51,6 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         return name;
     }
 
-
     public static String getName(Object o) {
         if (o instanceof OsmPrimitive)
             return getName((OsmPrimitive) o);
@@ -61,11 +62,13 @@ public abstract class AddressElement implements Comparable<AddressElement> {
     }
 
     public static String getName(OsmPrimitive prim) {
+        // CHECKSTYLE.OFF: SingleSpaceSeparator
         String cp     = prim.get(PrimUtils.KEY_ADDR_CP);
         String co     = prim.get(PrimUtils.KEY_ADDR_CO);
         String street = prim.get(PrimUtils.KEY_ADDR_STREET);
         String city   = prim.get(PrimUtils.KEY_ADDR_CITY);
         String name   = prim.get(PrimUtils.KEY_NAME);
+        // CHECKSTYLE.ON: SingleSpaceSeparator
 
         String result = "";
 
@@ -136,7 +139,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
      * Compares 2 elements.
      *
      * <p>Basic criterion to comparing elements is their <i>name</i> and the
-     * </i>parent</i>. Notice that this behaviour might be changed
+     * <i>parent</i>. Notice that this behaviour might be changed
      * in subclasses.</p>
      *
      * @return {@code false} if <i>name</i> does not match, or <i>parent</i>
@@ -210,12 +213,11 @@ public abstract class AddressElement implements Comparable<AddressElement> {
      */
     public static int matchFieldAbbrev(String elemValue, String primValue) {
 
-        if (elemValue == null) return  0;
+        if (elemValue == null) return 0;
         if (primValue == null) return -1;
 
         return StringUtils.matchAbbrev(primValue, elemValue) ? 1 : -1;
     }
-
 
     protected int[] getFieldMatchList(OsmPrimitive primitive) {
         int[] result = {0};
@@ -249,7 +251,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         // Now find the max and min of this array.
         int minVal = fieldMatches[0];
         int maxVal = fieldMatches[0];
-        for (int i=1; i<fieldMatches.length; i++) {
+        for (int i = 1; i < fieldMatches.length; i++) {
             if (minVal > fieldMatches[i])
                 minVal = fieldMatches[i];
             if (maxVal < fieldMatches[i])
@@ -277,6 +279,7 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         return 0; // <-- just to make compilers happy. We cannot get here.
     }
 
+    @Override
     public int compareTo(AddressElement elem) {
 
         ParentResolver r1 = new ParentResolver(this);
@@ -285,6 +288,6 @@ public abstract class AddressElement implements Comparable<AddressElement> {
         int retVal = r1.compareTo(r2);
         if (retVal != 0) return retVal;
 
-        return toString().compareTo(((AddressElement) elem).toString());
+        return toString().compareTo(elem.toString());
     }
 }

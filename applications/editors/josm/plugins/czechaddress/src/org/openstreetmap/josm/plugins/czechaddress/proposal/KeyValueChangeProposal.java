@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.proposal;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -34,6 +35,4 @@ public class KeyValueChangeProposal extends Proposal {
         else
             return "Nahradit '" + oldKey + "=" + oldVal + "' za '" + newKey + "=" + newVal + "'";
     }
-
-
 }

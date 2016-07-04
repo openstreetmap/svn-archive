@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
 import java.awt.event.ActionEvent;
@@ -50,11 +51,12 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
     public PointManipulatorDialog(OsmPrimitive primitive) {
 
         super(Main.parent, "Adresní bod",
-                            new String[] { "OK", "Zrušit" }, true);
+                            new String[] {"OK", "Zrušit"}, true);
         initComponents();
 
         // Create action for delaying the database query...
         updateMatchesAction = new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 updateMatches();
             }
@@ -80,7 +82,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         // And finalize initializing the form.
         setContent(mainPanel, false);
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setButtonIcons(new String[] {"ok.png", "cancel.png"});
         setDefaultButton(1);
         setCancelButton(2);
         setupDialog();
@@ -139,10 +141,11 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         List<AddressElement> elems = new NotNullList<>();
 
         synchronized (r) {
-            Map<String,String> backup = prim.getKeys();
+            Map<String, String> backup = prim.getKeys();
             r.openTransaction();
-            for (AddressElement elem : r.getCandidates(prim))
+            for (AddressElement elem : r.getCandidates(prim)) {
                 r.unOverwrite(prim, elem);
+            }
             prim.setKeys(null);
             prim.put(PrimUtils.KEY_ADDR_CP, alternateNumberEdit.getText());
             r.update(prim);
@@ -169,6 +172,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
                 fakeHouse.getDiff(proposalContainer.getTarget()));
     }
 
+    @Override
     public void pluginStatusChanged(int message) {
 
         // If location changes, we block the dialog until reasoning is done.
@@ -222,6 +226,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         changeLocationButton.setText("Změnit");
         changeLocationButton.setFocusable(false);
         changeLocationButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changeLocationButtonActionPerformed(evt);
             }
@@ -237,6 +242,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
 
         //matchesComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "" }));
         matchesComboBox.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 matchChanged(evt);
             }
@@ -289,29 +295,29 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
         );
 
         getContentPane().add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void changeLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeLocationButtonActionPerformed
+    private void changeLocationButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_changeLocationButtonActionPerformed
         CzechAddressPlugin.changeLocation();
-    }//GEN-LAST:event_changeLocationButtonActionPerformed
+    } //GEN-LAST:event_changeLocationButtonActionPerformed
 
-    private void keyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyReleased
+    private void keyReleased(java.awt.event.KeyEvent evt) { //GEN-FIRST:event_keyReleased
         if (updateMatchesTimer != null)
             updateMatchesTimer.stop();
 
         updateMatchesTimer = new Timer(300, updateMatchesAction);
         updateMatchesTimer.setRepeats(false);
         updateMatchesTimer.start();
-    }//GEN-LAST:event_keyReleased
+    } //GEN-LAST:event_keyReleased
 
-    private void proposalListKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proposalListKeyReleased
+    private void proposalListKeyReleased(java.awt.event.KeyEvent evt) { //GEN-FIRST:event_proposalListKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             for (Object o : proposalList.getSelectedValuesList())
                 proposalContainer.removeProposal((Proposal) o);
         }
-    }//GEN-LAST:event_proposalListKeyReleased
+    } //GEN-LAST:event_proposalListKeyReleased
 
-    private void matchChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_matchChanged
+    private void matchChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_matchChanged
 
         if (matchesComboBox.getSelectedItem() == null) return;
         AddressElement selectedElement = (AddressElement) matchesComboBox.getSelectedItem();
@@ -327,7 +333,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             proposalContainer.addProposal(new AddKeyValueProposal("building", "yes"));
 
 
-    }//GEN-LAST:event_matchChanged
+    } //GEN-LAST:event_matchChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -359,6 +365,7 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
             notifyAllListeners();
         }
 
+        @Override
         public void setSelectedItem(Object anItem) {
             if (matches == null) return;
             selected = (AddressElement) anItem;
@@ -369,15 +376,18 @@ public class PointManipulatorDialog extends ExtendedDialog implements StatusList
                 statusLabel.setText(" ");
         }
 
+        @Override
         public Object getSelectedItem() {
             return selected;
         }
 
+        @Override
         public int getSize() {
             if (matches == null) return 0;
             return matches.size();
         }
 
+        @Override
         public AddressElement getElementAt(int index) {
             if (matches == null) return null;
             if (index >= matches.size()) return null;

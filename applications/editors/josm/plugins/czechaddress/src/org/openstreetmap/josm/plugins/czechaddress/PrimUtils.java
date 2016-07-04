@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import java.util.Comparator;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
@@ -32,6 +34,7 @@ public class PrimUtils {
      */
     public static final Comparator<OsmPrimitive> comparator =
         new Comparator<OsmPrimitive>() {
+        @Override
         public int compare(OsmPrimitive o1, OsmPrimitive o2) {
 
             for (String key : keysToCompare) {

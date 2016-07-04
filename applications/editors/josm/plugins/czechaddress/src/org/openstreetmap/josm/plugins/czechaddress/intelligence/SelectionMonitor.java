@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
 import java.util.Collection;
+
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -17,13 +19,15 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public class SelectionMonitor implements SelectionChangedListener {
+public final class SelectionMonitor implements SelectionChangedListener {
 
     Collection<OsmPrimitive> lastSelection = new NotNullList<>();
 
     private SelectionMonitor() {}
+
     private static SelectionMonitor singleton = null;
-    public  static SelectionMonitor getInstance() {
+
+    public static SelectionMonitor getInstance() {
         if (singleton == null) {
             singleton = new SelectionMonitor();
             DataSet.addSelectionListener(singleton);
@@ -31,11 +35,12 @@ public class SelectionMonitor implements SelectionChangedListener {
         return singleton;
     }
 
+    @Override
     public void selectionChanged(Collection<? extends OsmPrimitive>
                                                                  newSelection) {
         Reasoner r = Reasoner.getInstance();
 
-        synchronized(r) {
+        synchronized (r) {
             r.openTransaction();
             for (OsmPrimitive selectedPrim :newSelection)
                 if (House.isMatchable(selectedPrim) || Street.isMatchable(selectedPrim))

@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
 
 /**
@@ -9,16 +11,17 @@ import org.openstreetmap.josm.plugins.czechaddress.parser.DatabaseParser;
  * <p>Contains the tree of all regions, municipalities, suburbs, streets
  * and houses in the Czech republic.</p>
  *
+ * @author Radomír Černoch radomir.cernoch@gmail.com
  * @see AddressElement
  * @see DatabaseParser
-
- * @author Radomír Černoch radomir.cernoch@gmail.com
  */
-public class Database {
+public final class Database {
 
     private Database() {}
+
     private static Database singleton = null;
-    public  static Database getInstance() {
+
+    public static Database getInstance() {
         if (singleton == null)
             singleton = new Database();
 
@@ -43,11 +46,11 @@ public class Database {
             if (!region.getName().toUpperCase().equals(name))
                 continue;
 
-            if ( region.getNuts3Name() != null &&
+            if (region.getNuts3Name() != null &&
                 !region.getNuts3Name().toUpperCase().equals(nuts3))
                 continue;
 
-            if ( region.getNuts4Name() != null &&
+            if (region.getNuts4Name() != null &&
                 !region.getNuts4Name().toUpperCase().equals(nuts3))
                 continue;
 

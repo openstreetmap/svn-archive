@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress;
 
 
@@ -21,7 +22,7 @@ import org.openstreetmap.josm.gui.preferences.PreferenceTabbedPane;
  *
  * @author radek
  */
-public class Preferences extends DefaultTabPreferenceSetting {
+public final class Preferences extends DefaultTabPreferenceSetting {
 
     public JPanel thisPanel;
 
@@ -55,11 +56,11 @@ public class Preferences extends DefaultTabPreferenceSetting {
                 "Nastavení pluginu pro úpravu a zadávání adres na území ČR.");
         thisPanel = new JPanel();
         initComponents();
-        addBuildingTag = Main.pref.getBoolean(KEY_BUILDINGTAG,    buildingCheckBox.isSelected());
-        addNewTag      = Main.pref.getBoolean(KEY_ADDNEWTAG,      addNewTagCheckBox.isSelected());
-        addNewTagKey   = Main.pref.get(       KEY_ADDNEWTAGKEY,   addNewTagKeyField.getText());
-        addNewTagValue = Main.pref.get(       KEY_ADDNEWTAGVALUE, addNewTagValueField.getText());
-        optimize       = Main.pref.getInteger(KEY_OPTIMIZE,       optimizeComboBox.getSelectedIndex());
+        addBuildingTag = Main.pref.getBoolean(KEY_BUILDINGTAG, buildingCheckBox.isSelected());
+        addNewTag = Main.pref.getBoolean(KEY_ADDNEWTAG, addNewTagCheckBox.isSelected());
+        addNewTagKey = Main.pref.get(KEY_ADDNEWTAGKEY, addNewTagKeyField.getText());
+        addNewTagValue = Main.pref.get(KEY_ADDNEWTAGVALUE, addNewTagValueField.getText());
+        optimize = Main.pref.getInteger(KEY_OPTIMIZE, optimizeComboBox.getSelectedIndex());
     }
 
     public void reloadSettings() {
@@ -93,11 +94,13 @@ public class Preferences extends DefaultTabPreferenceSetting {
 
         addNewTagCheckBox.setText("Novým primitivám přidávat tag:");
         addNewTagCheckBox.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent evt) {
                 addNewTagChanged(evt);
             }
         });
         addNewTagCheckBox.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 addNewTagCheckBoxActionPerformed(evt);
             }
@@ -113,17 +116,19 @@ public class Preferences extends DefaultTabPreferenceSetting {
 
         jLabel2.setText("Optimalizovat algoritmus přiřazování:");
 
-        optimizeComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "pro rychlejší odezvu", "menší spotřebu paměti" }));
+        optimizeComboBox.setModel(new DefaultComboBoxModel<>(new String[] {"pro rychlejší odezvu", "menší spotřebu paměti"}));
         optimizeComboBox.setSelectedIndex(1);
         optimizeComboBox.setEnabled(false);
 
         buildingCheckBox.setText("Nově polygonům přidávat tag \"building=yes\"");
         buildingCheckBox.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent evt) {
                 buildingCheckBoxaddNewTagChanged(evt);
             }
         });
         buildingCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buildingCheckBoxActionPerformed(evt);
             }
@@ -170,31 +175,33 @@ public class Preferences extends DefaultTabPreferenceSetting {
         );
 
         thisPanel.add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void addNewTagChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_addNewTagChanged
+    private void addNewTagChanged(javax.swing.event.ChangeEvent evt) { //GEN-FIRST:event_addNewTagChanged
         addNewTagKeyField.setEnabled(addNewTagCheckBox.isSelected());
         addNewTagValueField.setEnabled(addNewTagCheckBox.isSelected());
-    }//GEN-LAST:event_addNewTagChanged
+    } //GEN-LAST:event_addNewTagChanged
 
-    private void addNewTagCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewTagCheckBoxActionPerformed
+    private void addNewTagCheckBoxActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_addNewTagCheckBoxActionPerformed
 
-    }//GEN-LAST:event_addNewTagCheckBoxActionPerformed
+    } //GEN-LAST:event_addNewTagCheckBoxActionPerformed
 
-    private void buildingCheckBoxaddNewTagChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_buildingCheckBoxaddNewTagChanged
+    private void buildingCheckBoxaddNewTagChanged(javax.swing.event.ChangeEvent evt) { //GEN-FIRST:event_buildingCheckBoxaddNewTagChanged
 
-    }//GEN-LAST:event_buildingCheckBoxaddNewTagChanged
+    } //GEN-LAST:event_buildingCheckBoxaddNewTagChanged
 
-    private void buildingCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buildingCheckBoxActionPerformed
+    private void buildingCheckBoxActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_buildingCheckBoxActionPerformed
 
-    }//GEN-LAST:event_buildingCheckBoxActionPerformed
+    } //GEN-LAST:event_buildingCheckBoxActionPerformed
 
+    @Override
     public void addGui(PreferenceTabbedPane gui) {
         JPanel p = gui.createPreferenceTab(this);
         p.add(mainPanel);
         reloadSettings();
     }
 
+    @Override
     public boolean ok() {
         addBuildingTag = buildingCheckBox.isSelected();
         Main.pref.put(KEY_BUILDINGTAG, addBuildingTag);

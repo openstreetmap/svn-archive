@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -10,8 +11,9 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.AddressElemen
  */
 public interface ReasonerListener {
 
-    public void elementChanged(AddressElement elem);
-    public void primitiveChanged(OsmPrimitive prim);
-    public void resonerReseted();
+    void elementChanged(AddressElement elem);
 
+    void primitiveChanged(OsmPrimitive prim);
+
+    void resonerReseted();
 }

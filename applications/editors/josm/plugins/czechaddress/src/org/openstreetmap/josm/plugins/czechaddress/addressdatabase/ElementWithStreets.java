@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.ArrayList;
@@ -32,9 +33,10 @@ public abstract class ElementWithStreets extends ElementWithHouses {
      * Adds new streets into this element.
      */
     public void addStreets(Collection<Street> streetsToAdd) {
-        streets.ensureCapacity(streets.size() + streetsToAdd.size() );
-        for (Street streetToAdd : streetsToAdd)
+        streets.ensureCapacity(streets.size() + streetsToAdd.size());
+        for (Street streetToAdd : streetsToAdd) {
             addStreet(streetToAdd);
+        }
     }
 
     /**
@@ -58,16 +60,16 @@ public abstract class ElementWithStreets extends ElementWithHouses {
         return getStreets();
     }
 
-
     public Street findStreet(String streetName) {
 
         if (streetName == null) return null;
 
         streetName = streetName.toUpperCase();
 
-        for (Street street : streets)
+        for (Street street : streets) {
             if (street.getName().toUpperCase().equals(streetName))
                 return street;
+        }
         return null;
     }
 
@@ -81,8 +83,9 @@ public abstract class ElementWithStreets extends ElementWithHouses {
 
         result.addAll(this.houses);
 
-        for (Street street : streets)
+        for (Street street : streets) {
             result.addAll(street.getHouses());
+        }
 
         return result;
     }

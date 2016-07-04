@@ -1,8 +1,10 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
@@ -24,7 +26,7 @@ public abstract class StringUtils {
      */
     public static String extractNumber(String s) {
         String result = "";
-        for (int i=0; i<s.length(); i++) {
+        for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (ch >= '0' && ch <= '9')
                 result += ch;
@@ -36,19 +38,19 @@ public abstract class StringUtils {
 
     public static String coordinateToString(double coor) {
         double degrees = Math.floor(coor);
-        double minutes = Math.floor( 60*(coor-degrees) );
+        double minutes = Math.floor(60*(coor-degrees));
         double seconds = 60*60*(coor-degrees-minutes/60);
 
-        return String.valueOf(Math.round(    degrees))     + "°" +
-               String.valueOf(Math.round(    minutes))     + "'" +
-               String.valueOf(Math.round(100*seconds)/100.0) + "\"";
+        return String.valueOf(Math.round(degrees)) + "°" +
+        String.valueOf(Math.round(minutes)) + "'" +
+        String.valueOf(Math.round(100*seconds)/100.0) + "\"";
     }
 
     public static String latLonToString(LatLon position) {
         if (position == null) return "";
 
         return "(lat: " + coordinateToString(position.lat())
-             + " lon: " + coordinateToString(position.lon()) + ")";
+        + " lon: " + coordinateToString(position.lon()) + ")";
     }
 
     /**
@@ -66,14 +68,14 @@ public abstract class StringUtils {
         List<Integer> beg2 = new ArrayList<>(4);
 
         char lastChar = ' ';
-        for (int i=0; i<s1.length(); i++) {
+        for (int i = 0; i < s1.length(); i++) {
             if (s1.charAt(i) != ' ' && lastChar == ' ')
                 beg1.add(i);
             lastChar = s1.charAt(i);
         }
 
         lastChar = ' ';
-        for (int i=0; i<s2.length(); i++) {
+        for (int i = 0; i < s2.length(); i++) {
             if (s2.charAt(i) != ' ' && lastChar == ' ')
                 beg2.add(i);
             lastChar = s2.charAt(i);
@@ -82,20 +84,21 @@ public abstract class StringUtils {
         if (beg1.size() != beg2.size())
             return false;
 
-        for (int i=0; i<beg1.size(); i++) {
+        for (int i = 0; i < beg1.size(); i++) {
 
             int pos1 = beg1.get(i);
             int pos2 = beg2.get(i);
 
             boolean doContinue = false;
             while (pos1 < s1.length() && pos2 < s2.length()) {
-                if (s1.charAt(pos1) == '.' || s2.charAt(pos2) == '.')
-                    {doContinue = true; break;}
-                if (s1.charAt(pos1) == ' ' && s2.charAt(pos2) == ' ')
-                     {doContinue = true; break;}
+                if (s1.charAt(pos1) == '.' || s2.charAt(pos2) == '.') {
+                    doContinue = true; break;
+                }
+                if (s1.charAt(pos1) == ' ' && s2.charAt(pos2) == ' ') {
+                    doContinue = true; break;
+                }
 
-                if (Character.toUpperCase(s1.charAt(pos1)) !=
-                    Character.toUpperCase(s2.charAt(pos2)))
+                if (Character.toUpperCase(s1.charAt(pos1)) != Character.toUpperCase(s2.charAt(pos2)))
                     return false;
 
                 pos1++;
@@ -128,10 +131,10 @@ public abstract class StringUtils {
         char[] charr = s.toCharArray();
         char last = ' ';
         char ch = last;
-        for (int i=0; i<charr.length; i++) {
+        for (int i = 0; i < charr.length; i++) {
             ch = charr[i];
             if ((last >= 'a') && (last <= 'ž') ||
-                (last >= 'A') && (last <= 'Ž'))
+                    (last >= 'A') && (last <= 'Ž'))
                 ch = Character.toLowerCase(ch);
             else
                 ch = Character.toTitleCase(ch);
@@ -141,26 +144,27 @@ public abstract class StringUtils {
         String result = String.valueOf(charr);
 
         result = result.replaceAll("Nábř. ", "nábřeží ");
-        result = result.replaceAll("Ul. ",   "ulice ");
-        result = result.replaceAll("Nám. ",  "náměstí ");
-        result = result.replaceAll("Kpt. ",  "kapitána ");
-        result = result.replaceAll("Bří. ",  "bratří ");
+        result = result.replaceAll("Ul. ", "ulice ");
+        result = result.replaceAll("Nám. ", "náměstí ");
+        result = result.replaceAll("Kpt. ", "kapitána ");
+        result = result.replaceAll("Bří. ", "bratří ");
 
-        String[] noCapitalize = { "Nad", "Pod", "U", "Na", "Z" };
-        for (String noc : noCapitalize)
+        String[] noCapitalize = {"Nad", "Pod", "U", "Na", "Z"};
+        for (String noc : noCapitalize) {
             result = result.replaceAll(" "+noc+" ", " "+noc.toLowerCase()+" ");
-
+        }
 
         String[] mesice = {"Ledna", "Února", "Března", "Dubna", "Května",
-            "Máje", "Června", "Července", "Srpna", "Září", "Října",
-            "Listopadu", "Prosince"};
-        for (String mesic : mesice)
+                "Máje", "Června", "Července", "Srpna", "Září", "Října",
+                "Listopadu", "Prosince"};
+        for (String mesic : mesice) {
             result = result.replaceAll("."+mesic, ". " + mesic.toLowerCase());
-
+        }
 
         String[] noBegCap = {"Třída", "Ulice", "Náměstí", "Nábřeží"};
-        for (String noc : noBegCap)
+        for (String noc : noBegCap) {
             result = result.replaceAll(noc, noc.toLowerCase());
+        }
 
         return result.replaceAll("  ", " ");
     }

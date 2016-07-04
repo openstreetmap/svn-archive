@@ -1,5 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,8 +13,10 @@ import java.util.logging.Logger;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.LayoutStyle;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -34,7 +39,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public class ConflictResolver extends ExtendedDialog {
+public final class ConflictResolver extends ExtendedDialog {
 
     private static ConflictResolver singleton = null;
     public static ConflictResolver getInstance() {
@@ -97,6 +102,7 @@ public class ConflictResolver extends ExtendedDialog {
         candZoomButton.setText("     ");
         candZoomButton.setEnabled(false);
         candZoomButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 candZoomButtonActionPerformed(evt);
             }
@@ -107,6 +113,7 @@ public class ConflictResolver extends ExtendedDialog {
         reassignButton.setText("Určit jako nejlepší přiřažení");
         reassignButton.setEnabled(false);
         reassignButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reassignButtonActionPerformed(evt);
             }
@@ -117,20 +124,22 @@ public class ConflictResolver extends ExtendedDialog {
         mainZoomButton.setText("     ");
         mainZoomButton.setEnabled(false);
         mainZoomButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mainZoomButtonActionPerformed(evt);
             }
         });
 
-        mainField.setModel(new javax.swing.DefaultComboBoxModel<Object>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        mainField.setModel(new javax.swing.DefaultComboBoxModel<Object>(new String[] {"Item 1", "Item 2", "Item 3", "Item 4"}));
         mainField.setRenderer(new UniversalListRenderer());
 
-        candField.setModel(new javax.swing.DefaultComboBoxModel<Object>(new String[] { " " }));
+        candField.setModel(new javax.swing.DefaultComboBoxModel<Object>(new String[] {" "}));
         candField.setRenderer(new UniversalListRenderer());
 
         candPickButton.setText("     ");
         candPickButton.setEnabled(false);
         candPickButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 candPickButtonActionPerformed(evt);
             }
@@ -138,69 +147,70 @@ public class ConflictResolver extends ExtendedDialog {
 
         mainPickButton.setText("     ");
         mainPickButton.setEnabled(false);
-        mainPickButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        mainPickButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
                 mainPickButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(candLabel)
                     .addComponent(mainLabel))
                 .addGap(6, 6, 6)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(candField, javax.swing.GroupLayout.Alignment.TRAILING, 0, 430, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(candField, GroupLayout.Alignment.TRAILING, 0, 430, Short.MAX_VALUE)
                     .addComponent(mainField, 0, 430, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(candZoomButton)
                     .addComponent(mainZoomButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(mainPickButton)
                     .addComponent(candPickButton)))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+            .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(reassignButton))
         );
         mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(mainField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(mainField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(mainLabel))
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(mainZoomButton)
                             .addComponent(mainPickButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(candPickButton)
                             .addComponent(candZoomButton)
-                            .addComponent(candField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(candField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(candLabel))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(reassignButton))
         );
 
         getContentPane().add(mainPanel);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void mainZoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainZoomButtonActionPerformed
+    private void mainZoomButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_mainZoomButtonActionPerformed
         zoomTo(mainField.getSelectedItem());
-    }//GEN-LAST:event_mainZoomButtonActionPerformed
+    } //GEN-LAST:event_mainZoomButtonActionPerformed
 
-    private void candZoomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_candZoomButtonActionPerformed
+    private void candZoomButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_candZoomButtonActionPerformed
         zoomTo(candField.getSelectedItem());
-    }//GEN-LAST:event_candZoomButtonActionPerformed
+    } //GEN-LAST:event_candZoomButtonActionPerformed
 
     private void zoomTo(Object item) {
         if (item instanceof OsmPrimitive)
@@ -222,7 +232,7 @@ public class ConflictResolver extends ExtendedDialog {
         }
     }
 
-    private void reassignButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reassignButtonActionPerformed
+    private void reassignButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_reassignButtonActionPerformed
 
         Reasoner r = Reasoner.getInstance();
 
@@ -265,17 +275,17 @@ public class ConflictResolver extends ExtendedDialog {
 
             r.closeTransaction();
         }
-    }//GEN-LAST:event_reassignButtonActionPerformed
+    } //GEN-LAST:event_reassignButtonActionPerformed
 
-    private void mainPickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainPickButtonActionPerformed
+    private void mainPickButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_mainPickButtonActionPerformed
         if (mainField.getSelectedItem() instanceof House)
             FactoryDialog.getInstance().setSelectedHouse((House) mainField.getSelectedItem());
-    }//GEN-LAST:event_mainPickButtonActionPerformed
+    } //GEN-LAST:event_mainPickButtonActionPerformed
 
-    private void candPickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_candPickButtonActionPerformed
+    private void candPickButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_candPickButtonActionPerformed
         if (candField.getSelectedItem() instanceof House)
             FactoryDialog.getInstance().setSelectedHouse((House) candField.getSelectedItem());
-    }//GEN-LAST:event_candPickButtonActionPerformed
+    } //GEN-LAST:event_candPickButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Object> candField;
@@ -297,6 +307,7 @@ public class ConflictResolver extends ExtendedDialog {
      */
     private class ReasonerHook implements ReasonerListener {
 
+        @Override
         public void elementChanged(AddressElement elem) {
             if (!(elem instanceof House)) return;
             logger.log(Level.FINER, "hook: element changed", elem.getName());
@@ -307,6 +318,7 @@ public class ConflictResolver extends ExtendedDialog {
                 conflictModel.remove(elem);
         }
 
+        @Override
         public void primitiveChanged(OsmPrimitive prim) {
             if (!House.isMatchable(prim)) return;
             logger.log(Level.FINER, "hook: primitive changed", AddressElement.getName(prim));
@@ -317,6 +329,7 @@ public class ConflictResolver extends ExtendedDialog {
                 conflictModel.remove(prim);
         }
 
+        @Override
         public void resonerReseted() {
         }
     }
@@ -424,6 +437,7 @@ public class ConflictResolver extends ExtendedDialog {
                 listener.contentsChanged(evt);
         }
 */
+        @Override
         public void setSelectedItem(Object anItem) {
 
             if (anItem == null && getSize() > 0) {
@@ -436,30 +450,35 @@ public class ConflictResolver extends ExtendedDialog {
             updateCandidatesModel(anItem);
         }
 
+        @Override
         public Object getSelectedItem() {
             return selected;
         }
 
+        @Override
         public int getSize() {
             return primitives.size() + elements.size();
         }
 
+        @Override
         public Object getElementAt(int index) {
-            if (index< elements.size())
+            if (index < elements.size())
                 return elements.get(index);
 
             index -= elements.size();
 
-            if (index< primitives.size())
+            if (index < primitives.size())
                 return primitives.get(index);
 
             return null;
         }
 
+        @Override
         public void addListDataListener(ListDataListener l) {
             listeners.add(l);
         }
 
+        @Override
         public void removeListDataListener(ListDataListener l) {
             listeners.remove(l);
         }
@@ -517,23 +536,24 @@ public class ConflictResolver extends ExtendedDialog {
         List<? extends E> primitives;
         Object selected = null;
 
-        public CandidatesModel(List<? extends E> data) {
+        CandidatesModel(List<? extends E> data) {
             primitives = data;
         }
 
+        @Override
         public void setSelectedItem(Object anItem) {
             selected = anItem;
             updateZoomButtons(selected, candZoomButton);
             updatePickButtons(selected, candPickButton);
 
             if (conflictModel.getSelectedItem() instanceof AddressElement) {
-                reassignButton.setEnabled( selected !=
+                reassignButton.setEnabled(selected !=
                         Reasoner.getInstance().getStrictlyBest(
                             (AddressElement) conflictModel.getSelectedItem()));
 
                 reassignButton.setEnabled(true);
             } else if (conflictModel.getSelectedItem() instanceof OsmPrimitive) {
-                reassignButton.setEnabled( selected !=
+                reassignButton.setEnabled(selected !=
                         Reasoner.getInstance().getStrictlyBest(
                             (OsmPrimitive) conflictModel.getSelectedItem()));
                 reassignButton.setEnabled(true);
@@ -541,24 +561,29 @@ public class ConflictResolver extends ExtendedDialog {
                 reassignButton.setEnabled(false);
         }
 
+        @Override
         public Object getSelectedItem() {
             return selected;
         }
 
+        @Override
         public int getSize() {
             return primitives.size();
         }
 
+        @Override
         public E getElementAt(int index) {
             if (index < primitives.size())
                 return primitives.get(index);
             return null;
         }
 
+        @Override
         public void addListDataListener(ListDataListener l) {
             listeners.add(l);
         }
 
+        @Override
         public void removeListDataListener(ListDataListener l) {
             listeners.remove(l);
         }

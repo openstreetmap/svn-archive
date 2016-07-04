@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 /**
@@ -61,6 +62,7 @@ public class ParentResolver implements Comparable<ParentResolver> {
         return result + "CZ";
     }
 
+    @Override
     public int compareTo(ParentResolver o) {
         int val = 0;
 

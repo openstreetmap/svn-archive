@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
 import java.util.ArrayList;
@@ -55,7 +56,6 @@ public class Region extends ElementWithStreets {
 
     /**
      * Default constructor setting the name of this region.
-     * @param name
      */
     public Region(String name) {
         super(name);

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.proposal;
 
 import org.openstreetmap.josm.Main;
@@ -25,13 +26,14 @@ public class ExtractAddressIntoNodeProposal extends Proposal {
      * @param primitive tested primitive
      * @return true if this proposal is applicable
      */
-    static public boolean isApplicable(OsmPrimitive primitive) {
+    public static boolean isApplicable(OsmPrimitive primitive) {
         if (!(primitive instanceof Way))
             return false;
 
-        for (String key : primitive.keySet())
+        for (String key : primitive.keySet()) {
             if (key.startsWith("addr:"))
                 return true;
+        }
 
         return false;
     }

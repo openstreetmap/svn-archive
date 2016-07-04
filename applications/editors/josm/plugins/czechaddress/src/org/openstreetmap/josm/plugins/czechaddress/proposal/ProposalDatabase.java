@@ -1,12 +1,15 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.proposal;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
@@ -39,7 +42,6 @@ public class ProposalDatabase implements TreeModel {
 
     /**
      * Adds a new {@link ProposalContainer} to the internal database.
-     * @param pac
      */
     public void addContainer(ProposalContainer newContainer) {
         assert !changeSet.contains(newContainer)
@@ -50,7 +52,6 @@ public class ProposalDatabase implements TreeModel {
 
     /**
      * Removes the given {@link ProposalContainer} from the internal list.
-     * @param containerToAdd
      */
     public void removeContainer(ProposalContainer containerToAdd) {
         changeSet.remove(containerToAdd);
@@ -67,9 +68,10 @@ public class ProposalDatabase implements TreeModel {
      * @return the ProposalContainer containing primitive or null
      */
     public ProposalContainer findContainer(OsmPrimitive primitive) {
-        for (ProposalContainer pac : changeSet)
+        for (ProposalContainer pac : changeSet) {
             if (pac.getTarget().equals(primitive))
                     return pac;
+        }
         return null;
     }
 
@@ -78,9 +80,6 @@ public class ProposalDatabase implements TreeModel {
      *
      * <p>If the primitive is already in the database, the proposal
      * is added to its container. If not, a new container is created.</p>
-     *
-     * @param primitive
-     * @param proposal
      */
     public void addProposals(OsmPrimitive primitive,
                              Collection<Proposal> proposal) {
@@ -132,10 +131,12 @@ public class ProposalDatabase implements TreeModel {
 //  IMPLEMENTATION OF THE TREEMODEL INTERFACE
 //==============================================================================
 
+    @Override
     public Object getRoot() {
         return root;
     }
 
+    @Override
     public Object getChild(Object parent, int index) {
         if (parent.equals(root))
             return changeSet.get(index);
@@ -146,6 +147,7 @@ public class ProposalDatabase implements TreeModel {
         return null;
     }
 
+    @Override
     public int getChildCount(Object parent) {
         if (parent.equals(root))
             return changeSet.size();
@@ -156,6 +158,7 @@ public class ProposalDatabase implements TreeModel {
         return 0;
     }
 
+    @Override
     public boolean isLeaf(Object node) {
         if (node.equals(root))
             return changeSet.size() == 0;
@@ -166,10 +169,12 @@ public class ProposalDatabase implements TreeModel {
         return true;
     }
 
+    @Override
     public void valueForPathChanged(TreePath path, Object newValue) {
         // We are a read-only model... Nothing to do here.
     }
 
+    @Override
     public int getIndexOfChild(Object parent, Object child) {
         if (parent.equals(root))
             return changeSet.indexOf(child);
@@ -180,10 +185,12 @@ public class ProposalDatabase implements TreeModel {
         return -1;
     }
 
+    @Override
     public void addTreeModelListener(TreeModelListener l) {
         listeners.add(l);
     }
 
+    @Override
     public void removeTreeModelListener(TreeModelListener l) {
         listeners.remove(l);
     }
@@ -202,7 +209,7 @@ public class ProposalDatabase implements TreeModel {
 
         // If path-length is 2, the whole ProposalContainer is deleted.
         if (path.getPathCount() == 2) {
-            changeSet.remove((ProposalContainer) path.getPathComponent(1));
+            changeSet.remove(path.getPathComponent(1));
 
             TreeModelEvent event = new TreeModelEvent(this, path);
             for (TreeModelListener l : listeners)
@@ -214,7 +221,7 @@ public class ProposalDatabase implements TreeModel {
         // If path-length is 3, only a single Proposal is deleted.
         ProposalContainer ac = (ProposalContainer) path.getPathComponent(1);
         if (path.getPathCount() == 3) {
-            ac.getProposals().remove((Proposal) path.getPathComponent(2));
+            ac.getProposals().remove(path.getPathComponent(2));
 
             TreeModelEvent event = new TreeModelEvent(this, path);
             for (TreeModelListener l : listeners)

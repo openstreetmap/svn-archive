@@ -1,13 +1,15 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.addressdatabase;
 
+import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getListFieldDiff;
+import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
+
 import java.util.List;
+
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.czechaddress.NotNullList;
 import org.openstreetmap.josm.plugins.czechaddress.PrimUtils;
 import org.openstreetmap.josm.plugins.czechaddress.proposal.Proposal;
-
-import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getStringFieldDiff;
-import static org.openstreetmap.josm.plugins.czechaddress.proposal.ProposalFactory.getListFieldDiff;
 
 /**
  * Represents a single house.
@@ -157,13 +159,13 @@ public class House extends AddressElement {
 
         // First field is the AlternateNubmer
         result[0] = matchField(this.cp, prim.get(PrimUtils.KEY_ADDR_CP));
-        result[2] = matchField(name,    prim.get(PrimUtils.KEY_ADDR_HOUSE_N));
+        result[2] = matchField(name, prim.get(PrimUtils.KEY_ADDR_HOUSE_N));
 
         // Second field is the Housenumber
         if (parent instanceof Street)
             result[1] = Math.min(
                 matchFieldAbbrev(parent.getName(), prim.get(PrimUtils.KEY_ADDR_STREET)),
-                matchField(      this.co,          prim.get(PrimUtils.KEY_ADDR_CO)) );
+                matchField(this.co, prim.get(PrimUtils.KEY_ADDR_CO)));
         return result;
     }
 

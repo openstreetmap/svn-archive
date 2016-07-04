@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
 import java.io.IOException;
@@ -16,9 +17,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * <p>This class has is capable of initialising the parser and handling errors,
  * but parsing the actual document must be done by subclasses.</p>
  *
- * @see Database
- *
  * @author Radomír Černoch, raodmir.cernoch@gmail.com
+ * @see Database
  */
 public abstract class XMLParser extends DatabaseParser
                                 implements ContentHandler {

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
 import java.awt.event.ActionEvent;
@@ -47,7 +48,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
      */
     public GroupManipulatorDialog() {
         super(Main.parent, "Přiřadit adresy",
-                            new String[] { "OK", "Zrušit" }, true);
+                            new String[] {"OK", "Zrušit"}, true);
         initComponents();
 
         // Do some nice-look stuff.
@@ -114,6 +115,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
 
         locationChangeButton.setText("Změnit");
         locationChangeButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 locationChangeButtonActionPerformed(evt);
             }
@@ -162,17 +164,17 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
         );
 
         add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
     /**
      * Event handler for clicking on the button, which changes
      * the current location.
      */
-    private void locationChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationChangeButtonActionPerformed
+    private void locationChangeButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_locationChangeButtonActionPerformed
         CzechAddressPlugin.changeLocation();
-    }//GEN-LAST:event_locationChangeButtonActionPerformed
+    } //GEN-LAST:event_locationChangeButtonActionPerformed
 
-    private void proposalTreeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_proposalTreeKeyReleased
+    private void proposalTreeKeyReleased(java.awt.event.KeyEvent evt) { //GEN-FIRST:event_proposalTreeKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
 
             for (TreePath path : proposalTree.getSelectionPaths()) {
@@ -185,12 +187,12 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
 
                 } else if (path.getLastPathComponent() instanceof ProposalContainer) {
                     ((ProposalDatabase) proposalTree.getModel())
-                            .removeContainer( (ProposalContainer)
-                                                    path.getLastPathComponent() );
+                            .removeContainer((ProposalContainer)
+                                                    path.getLastPathComponent());
                 }
             }
         }
-    }//GEN-LAST:event_proposalTreeKeyReleased
+    } //GEN-LAST:event_proposalTreeKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel3;
@@ -202,6 +204,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
     private javax.swing.JTree proposalTree;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void elementChanged(AddressElement elem) {
         for (ProposalContainer container : database.getContainers()) {
             if (Reasoner.getInstance().translate(elem) == container.getTarget()) {
@@ -211,6 +214,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
         }
     }
 
+    @Override
     public void primitiveChanged(OsmPrimitive prim) {
         for (ProposalContainer container : database.getContainers()) {
             if (container.getTarget() == prim) {
@@ -220,6 +224,7 @@ public class GroupManipulatorDialog extends ExtendedDialog implements ReasonerLi
         }
     }
 
+    @Override
     public void resonerReseted() {
         recreateProposals();
     }

@@ -1,4 +1,10 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
@@ -43,6 +49,7 @@ public class HouseEditor extends ExtendedDialog {
     public String getCO() {
         return coField.getText();
     }
+
     public String getCP() {
         return cpField.getText();
     }
@@ -55,15 +62,15 @@ public class HouseEditor extends ExtendedDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        parentField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        cpField = new javax.swing.JTextField();
-        coField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        parentEditButton = new javax.swing.JButton();
+        mainPanel = new JPanel();
+        jLabel1 = new JLabel();
+        jTextField1 = new JTextField();
+        parentField = new JTextField();
+        jLabel2 = new JLabel();
+        cpField = new JTextField();
+        coField = new JTextField();
+        jLabel3 = new JLabel();
+        parentEditButton = new JButton();
 
         setLayout(new java.awt.GridLayout());
 
@@ -79,6 +86,7 @@ public class HouseEditor extends ExtendedDialog {
 
         parentEditButton.setText("    ");
         parentEditButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 parentEditButtonActionPerformed(evt);
             }
@@ -122,13 +130,13 @@ public class HouseEditor extends ExtendedDialog {
         );
 
         add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void parentEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parentEditButtonActionPerformed
+    private void parentEditButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_parentEditButtonActionPerformed
         assert parent != null;
         if (EditorFactory.edit(parent))
             parentField.setText(parent.getName());
-    }//GEN-LAST:event_parentEditButtonActionPerformed
+    } //GEN-LAST:event_parentEditButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

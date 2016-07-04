@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.proposal;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -15,7 +16,7 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
  * @see KeyValueChangeProposal
  * @see ExtractAddressIntoNodeProposal
  */
-abstract public class Proposal {
+public abstract class Proposal {
 
     /**
      * Applies the stored modification to the given {@link OsmPrimitive}.
@@ -31,6 +32,5 @@ abstract public class Proposal {
      * @return the string representation
      */
     @Override
-    abstract public String toString();
-
+    public abstract String toString();
 }

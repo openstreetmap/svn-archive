@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.proposal;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.czechaddress.CzechAddressPlugin;
 
 /**
  * Proposal for removing a key-value pair.
@@ -38,6 +40,4 @@ public class RemoveKeyProposal extends Proposal {
     public String toString() {
         return "Odstranit atribut '" + key + "'";
     }
-
-
 }

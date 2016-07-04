@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress;
 
 import static org.openstreetmap.josm.gui.help.HelpUtil.ht;
@@ -92,7 +93,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         addStatusListener(this);
 
         if (!GraphicsEnvironment.isHeadless()) {
-        	ConflictResolver.getInstance();
+            ConflictResolver.getInstance();
         }
         SelectionMonitor.getInstance();
         Reasoner.getInstance();
@@ -119,7 +120,7 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
                System.err.println("CzechAddress: " +
                             "Selhalo načtení databáze. Plugin je neaktivní.");
             }
-        }};
+        } };
 
         t.setPriority(Thread.MIN_PRIORITY);
         t.start();
@@ -135,17 +136,19 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         newFrame.addMapMode(new IconToggleButton(new FactoryAction(newFrame)));
     }
 
-    static public void initReasoner() {
+    public static void initReasoner() {
         Reasoner reasoner = Reasoner.getInstance();
 
-        synchronized(reasoner) {
+        synchronized (reasoner) {
             reasoner.reset();
             reasoner.openTransaction();
-            for (House house : location.getAllHouses())
+            for (House house : location.getAllHouses()) {
                 reasoner.update(house);
+            }
 
-            for (Street street : location.getAllStreets())
+            for (Street street : location.getAllStreets()) {
                 reasoner.update(street);
+            }
 
             DataSet dataSet = Main.getLayerManager().getEditDataSet();
             if (dataSet != null) {
@@ -161,14 +164,15 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
             dialog.showDialog();
     }
 
-    static private ElementWithStreets location = null;
-    static public  ElementWithStreets getLocation() {
+    private static ElementWithStreets location = null;
+
+    public static ElementWithStreets getLocation() {
         if (location == null)
             changeLocation();
         return location;
     }
 
-    static public void changeLocation() {
+    public static void changeLocation() {
         ElementWithStreets newLocation = LocationSelector.selectLocation();
 
         if (newLocation != null && newLocation != location) {
@@ -177,19 +181,29 @@ public class CzechAddressPlugin extends Plugin implements StatusListener {
         }
     }
 
-    static private final Set<StatusListener> listeners = new HashSet<>();
-    static public synchronized void addStatusListener(StatusListener l)    {listeners.add(l);}
-    static public synchronized void removeStatusListener(StatusListener l) {listeners.remove(l);}
-    static public synchronized void broadcastStatusChange(int statusMessage) {
-        for (StatusListener listener : listeners)
-            listener.pluginStatusChanged(statusMessage);
+    private static final Set<StatusListener> listeners = new HashSet<>();
+
+    public static synchronized void addStatusListener(StatusListener l) {
+        listeners.add(l);
     }
 
+    public static synchronized void removeStatusListener(StatusListener l) {
+        listeners.remove(l);
+    }
+
+    public static synchronized void broadcastStatusChange(int statusMessage) {
+        for (StatusListener listener : listeners) {
+            listener.pluginStatusChanged(statusMessage);
+        }
+    }
+
+    @Override
     public void pluginStatusChanged(int message) {
         if (message == MESSAGE_DATABASE_LOADED) {
             GuiHelper.runInEDTAndWait(new Runnable() {
                 @Override public void run() {
-                    czechMenu = Main.main.menu.addMenu("Address", tr("Address"), KeyEvent.VK_Z, Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CzechAddress"));
+                    czechMenu = Main.main.menu.addMenu("Address", tr("Address"), KeyEvent.VK_Z,
+                            Main.main.menu.getDefaultMenuPos(), ht("/Plugin/CzechAddress"));
                     menuItems.add(MainMenu.add(czechMenu, new PointManipulatorAction()));
                     menuItems.add(MainMenu.add(czechMenu, new GroupManipulatorAction()));
                     menuItems.add(MainMenu.add(czechMenu, new ConflictResolveAction()));

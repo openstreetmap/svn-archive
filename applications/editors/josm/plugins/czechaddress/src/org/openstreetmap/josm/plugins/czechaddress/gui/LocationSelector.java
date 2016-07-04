@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
 import java.awt.Component;
@@ -29,7 +30,7 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.ViToCi;
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  * @author Libor Pechacek, lpechacek@gmx.com
  */
-public class LocationSelector extends ExtendedDialog {
+public final class LocationSelector extends ExtendedDialog {
 
     protected ElementWithStreets selectedElement;
     protected ArrayList<ItemListener> listeners = new ArrayList<>();
@@ -37,7 +38,6 @@ public class LocationSelector extends ExtendedDialog {
     protected ArrayList<AddressElement> hlRegions = new ArrayList<>();
     protected ArrayList<AddressElement> hlViToCis = new ArrayList<>();
     protected ArrayList<AddressElement> hlSuburbs = new ArrayList<>();
-
 
     public static ElementWithStreets selectLocation() {
         LocationSelector ls = (LocationSelector) new LocationSelector().showDialog();
@@ -50,7 +50,7 @@ public class LocationSelector extends ExtendedDialog {
 
     private LocationSelector() {
         super(Main.parent, "Výběr umístění",
-                            new String[] { "OK", "Zrušit"}, true);
+                            new String[] {"OK", "Zrušit"}, true);
 
         initComponents();
         setContent(mainPanel);
@@ -210,18 +210,21 @@ public class LocationSelector extends ExtendedDialog {
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         oblastComboBox.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 oblastComboBoxItemStateChanged(evt);
             }
         });
 
         suburbComboBox.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 suburbComboBoxItemStateChanged(evt);
             }
         });
 
         vitociComboBox.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 vitociComboBoxItemStateChanged(evt);
             }
@@ -266,7 +269,7 @@ public class LocationSelector extends ExtendedDialog {
         );
 
         getContentPane().add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
     /**
      * Notifies all listeners about
@@ -291,7 +294,7 @@ public class LocationSelector extends ExtendedDialog {
                 i.itemStateChanged(event);
     }*/
 
-    private void oblastComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_oblastComboBoxItemStateChanged
+    private void oblastComboBoxItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_oblastComboBoxItemStateChanged
 
         Region oblast = (Region) oblastComboBox.getSelectedItem();
         if (oblast == null) return;
@@ -302,16 +305,16 @@ public class LocationSelector extends ExtendedDialog {
         vitociComboBox.setSelectedItem(vitocis.getElementAt(0));
         vitociComboBox.setEnabled(vitociComboBox.getModel().getSize() > 1);
         vitociComboBoxItemStateChanged(null);
-    }//GEN-LAST:event_oblastComboBoxItemStateChanged
+    } //GEN-LAST:event_oblastComboBoxItemStateChanged
 
-    private void vitociComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_vitociComboBoxItemStateChanged
+    private void vitociComboBoxItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_vitociComboBoxItemStateChanged
 
         ViToCi obec = (ViToCi) vitociComboBox.getSelectedItem();
         if (obec == null) return;
 
         if (obec.getSuburbs().size() > 0) {
             ElementWithStreets[] suburbs = new ElementWithStreets[obec.getSuburbs().size() + 1];
-            for (int i=0; i<obec.getSuburbs().size(); i++)
+            for (int i = 0; i < obec.getSuburbs().size(); i++)
                 suburbs[i] = obec.getSuburbs().get(i);
             suburbs[obec.getSuburbs().size()] = obec;
             DefaultComboBoxModel<ElementWithStreets> suburbsList = new DefaultComboBoxModel<>(suburbs);
@@ -323,9 +326,9 @@ public class LocationSelector extends ExtendedDialog {
 
         suburbComboBox.setEnabled(suburbComboBox.getModel().getSize() > 1);
         suburbComboBoxItemStateChanged(null);
-    }//GEN-LAST:event_vitociComboBoxItemStateChanged
+    } //GEN-LAST:event_vitociComboBoxItemStateChanged
 
-        private void suburbComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_suburbComboBoxItemStateChanged
+        private void suburbComboBoxItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_suburbComboBoxItemStateChanged
 
         /*if (castObceComboBox.getSelectedItem() != null)
             checkSetSelected((ElementWithStreets) castObceComboBox.getSelectedItem());
@@ -345,7 +348,7 @@ public class LocationSelector extends ExtendedDialog {
         else if (oblastComboBox.getSelectedItem() != null)
             selectedElement = ((ElementWithStreets) oblastComboBox.getSelectedItem());
 
-        }//GEN-LAST:event_suburbComboBoxItemStateChanged
+        } //GEN-LAST:event_suburbComboBoxItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel castObceLabel;

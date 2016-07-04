@@ -1,8 +1,11 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui;
 
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -11,9 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
+import javax.swing.LayoutStyle;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -40,26 +46,26 @@ import org.openstreetmap.josm.tools.Shortcut;
  *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
  */
-public class FactoryDialog extends ToggleDialog
+public final class FactoryDialog extends ToggleDialog
         implements SelectionChangedListener, StatusListener, ReasonerListener {
 
-
     private static FactoryDialog singleton = null;
-    public  static FactoryDialog getInstance() {
+
+    public static FactoryDialog getInstance() {
         if (singleton == null)
             singleton = new FactoryDialog();
         return singleton;
     }
 
-    private HouseListModel  houseModel  = new HouseListModel();
+    private HouseListModel houseModel = new HouseListModel();
     private StreetListModel streetModel = new StreetListModel();
 
     private FactoryDialog() {
 
-        super( "Továrna na adresy",
+        super("Továrna na adresy",
                "envelope-scrollbar.png",
                "Umožňuje rychlé vytváření adresních bodů „jedním kliknutím.“",
-                Shortcut.registerShortcut("subwindow:addressfactory","Přepnout: Továrna na adresy",
+                Shortcut.registerShortcut("subwindow:addressfactory", "Přepnout: Továrna na adresy",
                     KeyEvent.VK_Q, Shortcut.ALT_CTRL_SHIFT),
                 200);
 
@@ -112,14 +118,14 @@ public class FactoryDialog extends ToggleDialog
 
     public void setSelectedHouse(House house) {
 
-        for (int i=0; i<streetModel.getSize(); i++)
+        for (int i = 0; i < streetModel.getSize(); i++)
             if (streetModel.getElementAt(i) == house.getParent()) {
                 streetComboBox.setSelectedIndex(i);
                 streetComboBox.repaint();
                 break;
             }
 
-        for (int i=0; i<houseModel.getSize(); i++)
+        for (int i = 0; i < houseModel.getSize(); i++)
             if (houseModel.getElementAt(i) == house) {
                 houseList.setSelectedIndex(i);
                 houseList.ensureIndexIsVisible(i);
@@ -129,7 +135,7 @@ public class FactoryDialog extends ToggleDialog
 
     public House getSelectedHouse() {
         if (houseList.getSelectedValue() instanceof House)
-            return (House) houseList.getSelectedValue();
+            return houseList.getSelectedValue();
         return null;
     }
 
@@ -138,14 +144,14 @@ public class FactoryDialog extends ToggleDialog
 
         int i = houseList.getSelectedIndex();
         while (i < houseModel.getSize()) {
-            if (r.translate((House) houseModel.getElementAt(i)) == null)
+            if (r.translate(houseModel.getElementAt(i)) == null)
                 return true;
             i++;
         }
 
         i = 0;
         while (i < houseList.getSelectedIndex()) {
-            if (r.translate((House) houseModel.getElementAt(i)) == null)
+            if (r.translate(houseModel.getElementAt(i)) == null)
                 return true;
             i++;
         }
@@ -158,9 +164,10 @@ public class FactoryDialog extends ToggleDialog
 
         index++; // Initial kick to do at least one move.
         House current;
-        while ( (current = houseModel.getElementAt(index)) != null
-             && Reasoner.getInstance().translate(current) != null)
+        while ((current = houseModel.getElementAt(index)) != null
+             && Reasoner.getInstance().translate(current) != null) {
             index++;
+        }
 
         if (index >= houseModel.getSize())
             index = 0;
@@ -194,7 +201,9 @@ public class FactoryDialog extends ToggleDialog
 
         // If anything goes wrong, we can silently ignore the errors.
         // The selected item just does not get updated...
-        } catch (Exception exp) {}
+        } catch (Exception exp) {
+            Main.trace(exp);
+        }
     }
 
     public void selectNextUnmatchedHouseByCheckBox() {
@@ -292,9 +301,9 @@ public class FactoryDialog extends ToggleDialog
 
         relocateButton.setText("Inicializovat");
         relocateButton.setEnabled(false);
-        relocateButton.addActionListener(new java.awt.event.ActionListener() {
+        relocateButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 relocateButtonActionPerformed(evt);
             }
         });
@@ -303,39 +312,39 @@ public class FactoryDialog extends ToggleDialog
         streetComboBox.setEnabled(false);
         streetComboBox.setFocusable(false);
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+            mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addComponent(streetComboBox, 0, 199, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(relocateButton))
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addComponent(keepOddityCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addComponent(keepOddityCheckBox, GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(streetComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(streetComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(relocateButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(keepOddityCheckBox))
         );
 
         add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void relocateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relocateButtonActionPerformed
+    private void relocateButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_relocateButtonActionPerformed
         CzechAddressPlugin.changeLocation();
-    }//GEN-LAST:event_relocateButtonActionPerformed
+    } //GEN-LAST:event_relocateButtonActionPerformed
 
-    private void houseListClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_houseListClicked
+    private void houseListClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_houseListClicked
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
             Reasoner r = Reasoner.getInstance();
 
@@ -344,7 +353,7 @@ public class FactoryDialog extends ToggleDialog
             else
                 ConflictResolver.getInstance().focusElement(getSelectedHouse());
         }
-    }//GEN-LAST:event_houseListClicked
+    } //GEN-LAST:event_houseListClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -360,8 +369,10 @@ public class FactoryDialog extends ToggleDialog
     public void elementChanged(AddressElement elem) {
         houseModel.notifyAllListeners();
     }
+
     @Override
     public void primitiveChanged(OsmPrimitive prim) {}
+
     @Override
     public void resonerReseted() {}
 
@@ -426,7 +437,7 @@ public class FactoryDialog extends ToggleDialog
 //==============================================================================
 
     private class AllStreetProvider extends ElementWithHouses {
-        public AllStreetProvider() {
+        AllStreetProvider() {
             super("všechny domy");
         }
 
@@ -439,15 +450,19 @@ public class FactoryDialog extends ToggleDialog
     private class FreeStreetProvider extends ElementWithHouses
                                      implements ReasonerListener {
 
-        public FreeStreetProvider() {
+        FreeStreetProvider() {
             super("nepřiřazené domy");
             Reasoner.getInstance().addListener(this);
         }
 
         @Override
-        public void resonerReseted() { houses.clear(); }
+        public void resonerReseted() {
+            houses.clear();
+        }
+
         @Override
         public void primitiveChanged(OsmPrimitive prim) {}
+
         @Override
         public void elementChanged(AddressElement elem) {
             if (!(elem instanceof House)) return;
@@ -457,7 +472,7 @@ public class FactoryDialog extends ToggleDialog
             if (Reasoner.getInstance().translate(house) != null) {
                 if (index >= 0) houses.remove(index);
             } else {
-                if (index < 0)  houses.add(-index-1, house);
+                if (index < 0) houses.add(-index-1, house);
             }
 
             houseModel.notifyAllListeners();
@@ -474,7 +489,7 @@ public class FactoryDialog extends ToggleDialog
         private List<ElementWithHouses> metaElem
                 = new ArrayList<>();
 
-        public StreetListModel() {
+        StreetListModel() {
             metaElem.add(null);
             metaElem.add(new AllStreetProvider());
             metaElem.add(new FreeStreetProvider());
@@ -490,7 +505,7 @@ public class FactoryDialog extends ToggleDialog
             if (parent == null) return;
 
             this.selected = parent;
-            this.parent   = parent;
+            this.parent = parent;
 
             metaElem.set(0, parent);
             metaElem.get(1).setHouses(parent.getAllHouses());
@@ -530,7 +545,7 @@ public class FactoryDialog extends ToggleDialog
     private class HouseListModel extends HalfCookedListModel<House>
                                  implements ReasonerListener {
 
-        public HouseListModel() {
+        HouseListModel() {
             Reasoner.getInstance().addListener(this);
         }
 
@@ -556,6 +571,7 @@ public class FactoryDialog extends ToggleDialog
 
         @Override
         public void primitiveChanged(OsmPrimitive prim) {}
+
         @Override
         public void elementChanged(AddressElement elem) {
             notifyAllListeners();

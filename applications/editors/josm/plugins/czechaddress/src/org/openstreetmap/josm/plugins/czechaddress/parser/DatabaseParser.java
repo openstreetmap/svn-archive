@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.parser;
 
 import java.io.BufferedOutputStream;
@@ -15,9 +16,8 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Database;
 /**
  * General superclass for any parser capable of filling the database.
  *
- * @see Database
- *
  * @author Radomír Černoch, raodmir.cernoch@gmail.com
+ * @see Database
  */
 public abstract class DatabaseParser {
 
@@ -95,7 +95,7 @@ public abstract class DatabaseParser {
         try {
 
             URL url = new URL(getDatabaseUrl());
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
             //Set timeout for 30 seconds.
             con.setReadTimeout(30000);
@@ -107,7 +107,7 @@ public abstract class DatabaseParser {
             // Check the status error code from server
             if (con.getResponseCode() != 200)
                 throw new DatabaseLoadException(
-                        "Požadavek na server selhal, číslo chyby: " + String.valueOf( con.getResponseCode() ));
+                        "Požadavek na server selhal, číslo chyby: " + String.valueOf(con.getResponseCode()));
 
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getDatabasePath()))) {
                 int total = 0, count;

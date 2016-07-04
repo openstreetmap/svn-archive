@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.KeyEvent;
@@ -24,9 +25,8 @@ import org.openstreetmap.josm.tools.Shortcut;
  * {@link FactoryDialog} and creates a node for, whenever user clicks
  * on the map.</p>
  *
- * @see FactoryDialog
- *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
+ * @see FactoryDialog
  */
 public class FactoryAction extends MapMode {
 
@@ -37,7 +37,7 @@ public class FactoryAction extends MapMode {
         super("Sputit továrnu na adresy",
               "envelope-cursor.png",
               "Vytváří adresní body jedním kliknutím",
-              Shortcut.registerShortcut( "mapmode:clickaddress",
+              Shortcut.registerShortcut("mapmode:clickaddress",
                   "Sputit továrnu na adresy",
                   KeyEvent.VK_K, Shortcut.ALT_SHIFT),
               frame,
@@ -98,7 +98,7 @@ public class FactoryAction extends MapMode {
         container.applyAll();
 
         Reasoner r = Reasoner.getInstance();
-        synchronized(r) {
+        synchronized (r) {
             r.openTransaction();
             r.doOverwrite(newNode, house);
             r.closeTransaction();

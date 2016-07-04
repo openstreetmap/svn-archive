@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui.databaseeditors;
 
 import javax.swing.DefaultComboBoxModel;
@@ -88,6 +89,7 @@ public class StreetEditor extends ExtendedDialog {
         jLabel3.setText("Domy:");
 
         houseList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 houseListChanged(evt);
             }
@@ -96,6 +98,7 @@ public class StreetEditor extends ExtendedDialog {
 
         parentEditButton.setText("    ");
         parentEditButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 parentEditButtonActionPerformed(evt);
             }
@@ -103,6 +106,7 @@ public class StreetEditor extends ExtendedDialog {
 
         houseEditButton.setText("    ");
         houseEditButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 houseEditButtonActionPerformed(evt);
             }
@@ -150,26 +154,26 @@ public class StreetEditor extends ExtendedDialog {
         );
 
         getContentPane().add(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
     private House selectedHouse = null;
 
-    private void houseListChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_houseListChanged
-        selectedHouse = (House) houseList.getSelectedValue();
+    private void houseListChanged(javax.swing.event.ListSelectionEvent evt) { //GEN-FIRST:event_houseListChanged
+        selectedHouse = houseList.getSelectedValue();
         houseEditButton.setEnabled(EditorFactory.isEditable(selectedHouse));
-    }//GEN-LAST:event_houseListChanged
+    } //GEN-LAST:event_houseListChanged
 
-    private void houseEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_houseEditButtonActionPerformed
+    private void houseEditButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_houseEditButtonActionPerformed
         assert selectedHouse != null;
         if (EditorFactory.editHouse(selectedHouse))
             houseList.setModel(new DefaultComboBoxModel<>(street.getHouses().toArray(new House[0])));
-    }//GEN-LAST:event_houseEditButtonActionPerformed
+    } //GEN-LAST:event_houseEditButtonActionPerformed
 
-    private void parentEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parentEditButtonActionPerformed
+    private void parentEditButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_parentEditButtonActionPerformed
         assert parent != null;
         if (EditorFactory.edit(parent))
             parentField.setText(parent.getName());
-    }//GEN-LAST:event_parentEditButtonActionPerformed
+    } //GEN-LAST:event_parentEditButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

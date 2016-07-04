@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ public class ManagerAction extends JosmAction {
 
     public ManagerAction() {
         super("Upravit databázi",
-              (String)null,//"envelope-closed-big.png",
+              (String) null, //"envelope-closed-big.png",
               "Upravit jména elemntů dle mapy",
               null,
               true, "czechaddress/manager", true);

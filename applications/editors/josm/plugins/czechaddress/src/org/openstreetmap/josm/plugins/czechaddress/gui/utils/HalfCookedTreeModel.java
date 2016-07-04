@@ -1,7 +1,9 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.gui.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -22,22 +24,27 @@ public abstract class HalfCookedTreeModel implements TreeModel {
     List<TreeModelListener> listeneres = new ArrayList<>();
 
     protected String root;
+    @Override
     public Object getRoot() {
         return root;
     }
 
+    @Override
     public void addTreeModelListener(TreeModelListener l) {
         listeneres.add(l);
     }
 
+    @Override
     public void removeTreeModelListener(TreeModelListener l) {
         listeneres.remove(l);
     }
 
+    @Override
     public boolean isLeaf(Object node) {
         return getChildCount(node) == 0;
     }
 
+    @Override
     public void valueForPathChanged(TreePath path, Object newValue) {
 
     }

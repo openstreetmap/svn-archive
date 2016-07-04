@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.intelligence;
 
 import java.util.Collection;
@@ -26,19 +27,20 @@ import org.openstreetmap.josm.plugins.czechaddress.addressdatabase.Street;
 public class Capitalizator {
 
     Map<Street, OsmPrimitive> map;
-    Logger logger =  Logger.getLogger(Capitalizator.class.getName());
+    Logger logger = Logger.getLogger(Capitalizator.class.getName());
 
     public Capitalizator(Collection<OsmPrimitive> prims, List<Street> elems) {
 
         int expResults = elems.size()/2;
 
-        map  = new HashMap<>(expResults);
+        map = new HashMap<>(expResults);
         ExecutorService serv = Executors.newCachedThreadPool();
         Map<Street, Future<OsmPrimitive>> results
                 = new HashMap<>(expResults);
 
-        for (Street elem : elems)
+        for (Street elem : elems) {
              results.put(elem, serv.submit(new StreetMatcher(elem, prims)));
+        }
 
         for (Street elem : results.keySet()) {
             try {
@@ -61,11 +63,12 @@ public class Capitalizator {
         private AddressElement elem;
         private Collection<OsmPrimitive> prims;
 
-        public StreetMatcher(AddressElement elem, Collection<OsmPrimitive> prims) {
+        StreetMatcher(AddressElement elem, Collection<OsmPrimitive> prims) {
             this.elem = elem;
             this.prims = prims;
         }
 
+        @Override
         public OsmPrimitive call() throws Exception {
 
             OsmPrimitive candidate = null;

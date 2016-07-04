@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
@@ -14,9 +15,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * Action adding a menu item for editing address points
  *
- * @see PointManipulatorDialog
- *
  * @author Radomír Černoch radomir.cernoch@gmail.com
+ * @see PointManipulatorDialog
  */
 public class PointManipulatorAction extends JosmAction {
 
@@ -41,6 +41,7 @@ public class PointManipulatorAction extends JosmAction {
      * (the {@link PointManipulatorDialog} assumes a location is already
      * selected. If both conditions are satisfied, dialog is opened.</p>
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         org.openstreetmap.josm.data.osm.DataSet dataSet = Main.getLayerManager().getEditDataSet();
         if (dataSet == null) return;

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
@@ -11,9 +12,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * Action, which shows the dialog for resolving conflicts.
  *
- * @see ConflictResolver
- *
  * @author Radomír Černoch, radomir.cernoch@gmail.com
+ * @see ConflictResolver
  */
 public class ConflictResolveAction extends JosmAction {
 
@@ -38,6 +38,7 @@ public class ConflictResolveAction extends JosmAction {
      * whole JOSM. Therefore the reference to the unique window is obtained
      * from {@link CzechAddressPlugin}{@code .conflictResolver}.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         ConflictResolver.getInstance().showDialog();
     }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.czechaddress.actions;
 
 import java.awt.event.ActionEvent;
@@ -11,9 +12,8 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * Action adding a menu item for doing address completion.
  *
- * @see GroupManipulatorDialog
- *
  * @author Radomír Černoch radomir.cernoch@gmail.com
+ * @see GroupManipulatorDialog
  */
 public class GroupManipulatorAction extends JosmAction {
 
@@ -37,6 +37,7 @@ public class GroupManipulatorAction extends JosmAction {
      * selected by the user. Therefore this action checks if the location is not
      * {@code null}. If so, nothing happens.</p>
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (CzechAddressPlugin.getLocation() == null) return;
         GroupManipulatorDialog.getInstance().setVisible(true);

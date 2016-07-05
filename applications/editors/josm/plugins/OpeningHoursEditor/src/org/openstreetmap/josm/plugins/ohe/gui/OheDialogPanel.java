@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ohe.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -46,10 +47,8 @@ public class OheDialogPanel extends JPanel {
     /**
      * The Panel for editing the time-values.
      * 
-     * @param plugin
-     * @param key
      * @param valuesToEdit
-     *            can be a String or a Map<String, Integer> which contains
+     *            can be a String or a Map&lt;String, Integer&gt; which contains
      *            multiple values and their number of occurences
      */
     public OheDialogPanel(OhePlugin plugin, String key, Object valuesToEdit, ClockSystem clockSystem) {
@@ -69,11 +68,12 @@ public class OheDialogPanel extends JPanel {
             else if (valuesMap.size() > 1) {
                 // TODO let the user choose which value he wants to edit (e.g. with a combobox)
                 int mostOccurences = 0;
-                for (String v : valuesMap.keySet())
+                for (String v : valuesMap.keySet()) {
                     if (valuesMap.get(v) > mostOccurences) {
                         value = v;
                         mostOccurences = valuesMap.get(v);
                     }
+                }
             }
         }
         valueField = new JTextField(value);
@@ -117,7 +117,7 @@ public class OheDialogPanel extends JPanel {
     }
 
     public String[] getChangedKeyValuePair() {
-        return new String[] { oldkey, keyField.getText(), valueField.getText() };
+        return new String[] {oldkey, keyField.getText(), valueField.getText()};
     }
 
     /**
@@ -134,22 +134,22 @@ public class OheDialogPanel extends JPanel {
             } catch (Exception | TokenMgrError t) {
                 Main.warn(t);
                 
-                int tColumns[] = null;
+                int[] tColumns = null;
                 String info = t.getMessage();
 
                 if (t instanceof ParseException) {
                     ParseException parserExc = (ParseException) t;
-                    tColumns = new int[] { parserExc.currentToken.beginColumn - 1, parserExc.currentToken.endColumn + 1 };
+                    tColumns = new int[] {parserExc.currentToken.beginColumn - 1, parserExc.currentToken.endColumn + 1};
                 } else if (t instanceof SyntaxException) {
                     SyntaxException syntaxError = (SyntaxException) t;
-                    tColumns = new int[] { syntaxError.getStartColumn(), syntaxError.getEndColumn() };
+                    tColumns = new int[] {syntaxError.getStartColumn(), syntaxError.getEndColumn()};
                 } else if (t instanceof TokenMgrError) {
                     try {
                         // With JavaCC 6 Message is: "Lexical error at line 1, column 20.  Encountered: "P" (80), after : ""
                         int idx = info.indexOf("column ");
                         if (idx > -1) {
                             int col = Integer.parseInt(info.substring(idx+"column ".length(), info.indexOf('.', idx)));
-                            tColumns = new int[] { col - 1, col + 1 };
+                            tColumns = new int[] {col - 1, col + 1};
                         }
                     } catch (IndexOutOfBoundsException e) {
                         Main.warn(e);

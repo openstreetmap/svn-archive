@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ohe;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -58,15 +59,15 @@ public class OhePlugin extends Plugin {
      * {key, value, key-to-edit} key and value can contain regular expressions
      */
     private final String[][] TAG_EDIT_STRINGS = new String[][] {
-            { "opening_hours", ".*", "opening_hours" },
-            { "collection_times", ".*", "collection_times" },
-            { "collection_times:local", ".*", "collection_times:local" },
-            { "shop", ".*", "opening_hours" },
-            { "amenity", "post_box", "collection_times" },
-            { "amenity", "recycling", "collection_times" },
-            { "amenity", ".*", "opening_hours" },
-            { "lit", ".*", "lit" },
-            { "highway", ".*", "lit" } };
+            {"opening_hours", ".*", "opening_hours"},
+            {"collection_times", ".*", "collection_times"},
+            {"collection_times:local", ".*", "collection_times:local"},
+            {"shop", ".*", "opening_hours"},
+            {"amenity", "post_box", "collection_times"},
+            {"amenity", "recycling", "collection_times"},
+            {"amenity", ".*", "opening_hours"},
+            {"lit", ".*", "lit"},
+            {"highway", ".*", "lit"} };
 
     /**
      * Will be invoked by JOSM to bootstrap the plugin
@@ -85,7 +86,7 @@ public class OhePlugin extends Plugin {
     class OheMenuAction extends JosmAction {
         private static final long serialVersionUID = 1456257438391417756L;
 
-        public OheMenuAction() {
+        OheMenuAction() {
             super(tr("Edit opening hours"), "opening_hours.png",
                     tr("Edit time-tag of selected element in a graphical interface"), Shortcut.registerShortcut(
                             "tools:opening_hourseditor", tr("Tool: {0}", tr("Edit opening hours")), KeyEvent.VK_O,
@@ -148,7 +149,7 @@ public class OhePlugin extends Plugin {
                     return String.class;
                 }
             };
-            propertyData.setColumnIdentifiers(new String[] { tr("Key"), tr("Value") });
+            propertyData.setColumnIdentifiers(new String[] {tr("Key"), tr("Value")});
             for (Entry<String, Map<String, Integer>> e : valueCount.entrySet()) {
                 int count = 0;
                 for (Entry<String, Integer> e1 : e.getValue().entrySet()) {
@@ -157,7 +158,7 @@ public class OhePlugin extends Plugin {
                 if (count < selection.size()) {
                     e.getValue().put("", selection.size() - count);
                 }
-                propertyData.addRow(new Object[] { e.getKey(), e.getValue() });
+                propertyData.addRow(new Object[] {e.getKey(), e.getValue()});
             }
             final JTable propertyTable = new JTable(propertyData);
             propertyTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
@@ -228,20 +229,22 @@ public class OhePlugin extends Plugin {
                             preSelectedKey = pattern[2];
                             break searchLoop;
                         } else if (value instanceof Map<?, ?>) {
-                            for (String v : ((Map<String, Integer>) value).keySet())
+                            for (String v : ((Map<String, Integer>) value).keySet()) {
                                 if (valuePattern.matcher(v).matches()) {
                                     preSelectedKey = pattern[2];
                                     break searchLoop;
                                 }
+                            }
                         }
                     }
                 }
             }
             int preSelectedRow = -1;
-            for (int i = 0; i < propertyData.getRowCount(); ++i)
+            for (int i = 0; i < propertyData.getRowCount(); ++i) {
                 if (preSelectedKey.equals(propertyData.getValueAt(i, 0))) {
                     preSelectedRow = i;
                 }
+            }
             if (preSelectedRow != -1) {
                 propertyTable.setEnabled(true);
                 newTagField.setEnabled(false);
@@ -303,7 +306,8 @@ public class OhePlugin extends Plugin {
 
             String[] changedKeyValuePair = null;
             answer = optionPane.getValue();
-            if (!(answer == null || answer == JOptionPane.UNINITIALIZED_VALUE || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))) {
+            if (!(answer == null || answer == JOptionPane.UNINITIALIZED_VALUE 
+              || (answer instanceof Integer && (Integer) answer != JOptionPane.OK_OPTION))) {
                 changedKeyValuePair = panel.getChangedKeyValuePair();
             }
             if (changedKeyValuePair == null)

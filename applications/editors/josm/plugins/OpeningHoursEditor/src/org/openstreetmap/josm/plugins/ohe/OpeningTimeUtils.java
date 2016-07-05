@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ohe;
 
 import java.util.ArrayList;
@@ -8,7 +9,11 @@ import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
 /**
  * Collection of utility methods.
  */
-public class OpeningTimeUtils {
+public final class OpeningTimeUtils {
+    
+    private OpeningTimeUtils() {
+        // Hide default constructors for utilities classes
+    }
     
     /**
      * Implements the subtraction of daytimes in spans of days when a day in the list occurs direct afterwards 
@@ -52,7 +57,7 @@ public class OpeningTimeUtils {
                 for (DaySpan dayspan : dateTime2.daySpans) {
                     for (DaytimeSpan timespan : dateTime2.daytimeSpans) {
                         if (!timespan.isOff()) {
-                            ret.add(new int[] { dayspan.startDay, dayspan.endDay, timespan.startMinute,
+                            ret.add(new int[] {dayspan.startDay, dayspan.endDay, timespan.startMinute,
                                     timespan.endMinute });
                         }
                     }
@@ -244,9 +249,10 @@ public class OpeningTimeUtils {
     }
 
     private static boolean isArrayEmpty(boolean[] bs) {
-        for (int i = 0; i < bs.length; i++)
+        for (int i = 0; i < bs.length; i++) {
             if (bs[i])
                 return false;
+        }
         return true;
     }
 
@@ -264,7 +270,7 @@ public class OpeningTimeUtils {
      * @param paramName The parameter name, used in error message
      * @throws IllegalArgumentException if the day is invalid
      */
-    public static final void ensureValidDay(int day, String paramName) throws IllegalArgumentException {
+    public static void ensureValidDay(int day, String paramName) throws IllegalArgumentException {
         if (day < 0 || day > 6) {
             throw new IllegalArgumentException(paramName + " is not a valid day (0-6). Given value is " + day);
         }
@@ -276,7 +282,7 @@ public class OpeningTimeUtils {
      * @param paramName The parameter name, used in error message
      * @throws IllegalArgumentException if the minute is invalid
      */
-    public static final void ensureValidMinute(int minute, String paramName) throws IllegalArgumentException {
+    public static void ensureValidMinute(int minute, String paramName) throws IllegalArgumentException {
         if (minute < 0 || minute > 24*60+1) {
             throw new IllegalArgumentException(paramName + " is not a valid minute (0-1441). Given value is " + minute);
         }

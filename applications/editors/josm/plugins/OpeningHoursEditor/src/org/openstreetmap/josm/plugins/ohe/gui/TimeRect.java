@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ohe.gui;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -33,15 +34,15 @@ public class TimeRect extends JPanel implements MouseListener, MouseMotionListen
     public static final int verticalNonDrawedPixels = 5;
 
     public static final boolean[][] transformDirections = new boolean[][] {
-            { true, true, true, true }, // Drag
-            { true, false, false, false }, // N
-            { true, true, false, false }, // NE
-            { false, true, false, false }, // E
-            { false, true, true, false }, // SE
-            { false, false, true, false }, // S
-            { false, false, true, true }, // SW
-            { false, false, false, true }, // W
-            { true, false, false, true }, // NW
+            {true, true, true, true}, // Drag
+            {true, false, false, false}, // N
+            {true, true, false, false}, // NE
+            {false, true, false, false}, // E
+            {false, true, true, false}, // SE
+            {false, false, true, false}, // S
+            {false, false, true, true}, // SW
+            {false, false, false, true}, // W
+            {true, false, false, true}, // NW
     };
 
     public static final int roundCornerSize = 8;

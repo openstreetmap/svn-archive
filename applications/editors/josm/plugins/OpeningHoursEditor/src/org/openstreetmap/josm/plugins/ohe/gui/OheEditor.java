@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.ohe.gui;
 
 import java.awt.BorderLayout;
@@ -19,74 +20,73 @@ import org.openstreetmap.josm.plugins.ohe.OpeningTimeUtils;
 import org.openstreetmap.josm.plugins.ohe.parser.OpeningTimeCompiler;
 
 public class OheEditor extends JPanel implements MouseListener, MouseMotionListener {
+    private final class OhePanel extends JPanel {
+        @Override
+        public void setSize(Dimension d) {
+            super.setSize(d);
+            repositionTimeRects();
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            if (OheEditor.this.isEnabled()) {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, getWidth(), getHeight());
+                
+                // draw the time from 12PM to 00AM in a different color
+                if (dialog.getHourMode() == ClockSystem.TWELVE_HOURS) {
+                    g.setColor(new Color(255, 255, 218));
+                    g.fillRect(0, getMinutePosition(12 * 60), getWidth(), getHeight() - getMinutePosition(12 * 60));
+                }
+
+                // horizontal Lines
+                for (int i = 0; i <= 24; ++i) {
+                    if (i % 3 == 0) {
+                        g.setColor(Color.BLACK);
+                    } else {
+                        g.setColor(Color.LIGHT_GRAY);
+                    }
+                    g.drawLine(0, getMinutePosition(i * 60), getWidth(), getMinutePosition(i * 60));
+                }
+
+                // vertical Lines
+                g.setColor(Color.BLACK);
+                for (int i = 0; i <= 7; ++i) {
+                    g.drawLine(getDayPosition(i), 0, getDayPosition(i), getHeight());
+                }
+
+                // if a new Rect is dragged draw it
+                if (day0 >= 0) {
+                    Graphics2D g2D = (Graphics2D) g;
+                    int day2 = Math.min(day0, day1);
+                    int day3 = Math.max(day0, day1);
+                    int minute2 = Math.min(minute0, minute1);
+                    int minute3 = Math.max(minute0, minute1);
+                    Rectangle bounds = getPanelBoundsForTimeinterval(day2, day3 + 1, minute2, minute3);
+                    TimeRect.drawTimeRect(g2D, bounds, minute2 == minute3, false);
+                }
+            } else {
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        }
+    }
+
     final OheDialogPanel dialog;
 
-    final private JScrollPane scrollPane;
+    private final JScrollPane scrollPane;
     final JPanel contentPanel;
 
     ArrayList<TimeRect> timeRects;
 
-    final private int dayAxisHeight = 20;
-    final private int timeAxisWidth = 45;
+    private final int dayAxisHeight = 20;
+    private final int timeAxisWidth = 45;
 
     public OheEditor(OheDialogPanel oheDialogPanel) {
         dialog = oheDialogPanel;
 
         // the MainPanel for showing the TimeRects
-        contentPanel = new JPanel() {
-            @Override
-            public void setSize(Dimension d) {
-                super.setSize(d);
-                repositionTimeRects();
-            }
-
-            @Override
-            public void paintComponent(Graphics g) {
-                if (OheEditor.this.isEnabled()) {
-                    g.setColor(Color.WHITE);
-                    g.fillRect(0, 0, getWidth(), getHeight());
-                    
-                    // draw the time from 12PM to 00AM in a different color
-                    if (dialog.getHourMode() == ClockSystem.TWELVE_HOURS) {
-                        g.setColor(new Color(255, 255, 218));
-                        g.fillRect(0, getMinutePosition(12 * 60), getWidth(), getHeight() - getMinutePosition(12 * 60));
-                    }
-
-                    // horizontal Lines
-                    for (int i = 0; i <= 24; ++i) {
-                        if (i % 3 == 0) {
-                            g.setColor(Color.BLACK);
-                        } else {
-                            g.setColor(Color.LIGHT_GRAY);
-                        }
-
-                        g.drawLine(0, getMinutePosition(i * 60), getWidth(), getMinutePosition(i * 60));
-                    }
-
-                    // vertical Lines
-                    g.setColor(Color.BLACK);
-                    for (int i = 0; i <= 7; ++i) {
-                        g.drawLine(getDayPosition(i), 0, getDayPosition(i), getHeight());
-                    }
-
-                    // if a new Rect is dragged draw it
-                    if (day0 >= 0) {
-                        Graphics2D g2D = (Graphics2D) g;
-
-                        int day2 = Math.min(day0, day1);
-                        int day3 = Math.max(day0, day1);
-                        int minute2 = Math.min(minute0, minute1);
-                        int minute3 = Math.max(minute0, minute1);
-                        Rectangle bounds = getPanelBoundsForTimeinterval(day2, day3 + 1, minute2, minute3);
-
-                        TimeRect.drawTimeRect(g2D, bounds, minute2 == minute3, false);
-                    }
-                } else {
-                    g.setColor(Color.LIGHT_GRAY);
-                    g.fillRect(0, 0, getWidth(), getHeight());
-                }
-            }
-        };
+        contentPanel = new OhePanel();
         contentPanel.addMouseListener(this);
         contentPanel.addMouseMotionListener(this);
         contentPanel.setLayout(null);

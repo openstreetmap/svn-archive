@@ -32,11 +32,11 @@ public class RouteUtils {
 		if (r.hasTag("route", "bus") || r.hasTag("route", "trolleybus") || r.hasTag("route", "share_taxi")
 				|| r.hasTag("route", "tram") || r.hasTag("route", "light_rail") || r.hasTag("route", "subway")
 				|| r.hasTag("route", "train")) {
-			
+
 			if (!r.hasTag("bus", "on_demand")) {
 				return true;
 			}
-			
+
 		}
 		return false;
 	}
@@ -51,27 +51,28 @@ public class RouteUtils {
 	 */
 	public static boolean isPTStop(RelationMember rm) {
 
-		if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") || rm.hasRole("stop_exit_only")
-				|| rm.hasRole("platform") || rm.hasRole("platform_entry_only") || rm.hasRole("platform_exit_only")) {
+		// if (rm.hasRole("stop") || rm.hasRole("stop_entry_only") ||
+		// rm.hasRole("stop_exit_only")
+		// || rm.hasRole("platform") || rm.hasRole("platform_entry_only") ||
+		// rm.hasRole("platform_exit_only")) {
 
-			if (rm.getType().equals(OsmPrimitiveType.NODE)) {
+		if (rm.getType().equals(OsmPrimitiveType.NODE)) {
 
-				if (rm.getNode().hasTag("public_transport", "stop_position")
-						|| rm.getNode().hasTag("highway", "bus_stop")
-						|| rm.getNode().hasTag("public_transport", "platform")
-						|| rm.getNode().hasTag("highway", "platform") || rm.getNode().hasTag("railway", "platform")) {
-					return true;
+			if (rm.getNode().hasTag("public_transport", "stop_position") || rm.getNode().hasTag("highway", "bus_stop")
+					|| rm.getNode().hasTag("public_transport", "platform") || rm.getNode().hasTag("highway", "platform")
+					|| rm.getNode().hasTag("railway", "platform")) {
+				return true;
 
-				}
-			}
-
-			if (rm.getType().equals(OsmPrimitiveType.WAY)) {
-				if (rm.getWay().hasTag("public_transport", "platform") || rm.getWay().hasTag("highway", "platform")
-						|| rm.getWay().hasTag("railway", "platform")) {
-					return true;
-				}
 			}
 		}
+
+		if (rm.getType().equals(OsmPrimitiveType.WAY)) {
+			if (rm.getWay().hasTag("public_transport", "platform") || rm.getWay().hasTag("highway", "platform")
+					|| rm.getWay().hasTag("railway", "platform")) {
+				return true;
+			}
+		}
+		// }
 
 		return false;
 

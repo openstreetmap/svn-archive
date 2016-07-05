@@ -11,7 +11,6 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.pt_assistant.actions.AddStopPositionAction;
 import org.openstreetmap.josm.plugins.pt_assistant.validation.PTAssistantValidatorTest;
-import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * This is the main class of the PTAssistant plugin.
@@ -50,21 +49,6 @@ public class PTAssistantPlugin extends Plugin {
 		} else if (oldFrame != null && newFrame == null) {
 			addStopPositionMenu.setEnabled(false);
 		}
-	}
-	
-	/**
-	 * Returns a ImageProvider for the given string or null if in headless mode.
-	 *
-	 * @param s
-	 *            The name of the file where the picture is.
-	 * @return A ImageProvider object for the given string or null if in
-	 *         headless mode.
-	 */
-	public static ImageProvider getProvider(String s) {
-		if (Main.main == null) {
-			return null;
-		}
-		return new ImageProvider(s);
 	}
 
 }

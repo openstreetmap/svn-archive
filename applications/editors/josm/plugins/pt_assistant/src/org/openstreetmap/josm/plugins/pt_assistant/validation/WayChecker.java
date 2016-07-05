@@ -298,12 +298,16 @@ public class WayChecker extends Checker {
 		SelectCommand command2 = new SelectCommand(primitivesToZoom);
 		commands.add(command2);
 
+		List<RelationMember> sortedRelationMembers = listStopMembers(originalRelation);
+		sortedRelationMembers.addAll(listNotStopMembers(originalRelation));
+		
 		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
 		for (OsmDataLayer osmDataLayer : listOfLayers) {
 			if (osmDataLayer.data == originalRelation.getDataSet()) {
 
 				final OsmDataLayer layerParameter = osmDataLayer;
-				final Relation relationParameter = originalRelation;
+				final Relation relationParameter = new Relation(originalRelation);
+				relationParameter.setMembers(sortedRelationMembers);
 				final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
 
 				if (SwingUtilities.isEventDispatchThread()) {
@@ -337,6 +341,7 @@ public class WayChecker extends Checker {
 		GenericRelationEditor editor = new GenericRelationEditor(layer, r, r.getMembersFor(primitives));
 		RelationDialogManager.getRelationDialogManager().register(layer, r, editor);
 		editor.setVisible(true);
+		
 
 
 	}

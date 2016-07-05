@@ -23,20 +23,28 @@ public class PTStop extends RelationMember {
 
 		super(other);
 
-		if ((other.hasRole("stop") || other.hasRole("stop_entry_only") || other.hasRole("stop_exit_only"))
-				&& other.getType().equals(OsmPrimitiveType.NODE)) {
+		// if ((other.hasRole("stop") || other.hasRole("stop_entry_only") ||
+		// other.hasRole("stop_exit_only"))
+		// && other.getType().equals(OsmPrimitiveType.NODE)) {
+
+		if (other.getMember().hasTag("public_transport", "stop_position")) {
 
 			this.stopPosition = other.getNode();
 			this.name = stopPosition.get("name");
 
-		} else if (other.getRole().equals("platform") || other.getRole().equals("platform_entry_only")
-				|| other.getRole().equals("platform_exit_only")) {
+			// } else if (other.getRole().equals("platform") ||
+			// other.getRole().equals("platform_entry_only")
+			// || other.getRole().equals("platform_exit_only")) {
+		} else if (other.getMember().hasTag("highway", "bus_stop")
+				|| other.getMember().hasTag("public_transport", "platform")
+				|| other.getMember().hasTag("highway", "platform") || other.getMember().hasTag("railway", "platform")) {
 
 			this.platform = other.getMember();
 			this.name = platform.get("name");
 
 		} else {
-			throw new IllegalArgumentException("The RelationMember type does not match its role " + other.getMember().getName());
+			throw new IllegalArgumentException(
+					"The RelationMember type does not match its role " + other.getMember().getName());
 		}
 
 	}
@@ -56,7 +64,9 @@ public class PTStop extends RelationMember {
 		// each element is only allowed once per stop
 
 		// add stop position:
-		if (member.hasRole("stop") || member.hasRole("stop_entry_only") || member.hasRole("stop_exit_only")) {
+		// if (member.hasRole("stop") || member.hasRole("stop_entry_only") ||
+		// member.hasRole("stop_exit_only")) {
+		if (member.getMember().hasTag("public_transport", "stop_position")) {
 			if (member.getType().equals(OsmPrimitiveType.NODE) && stopPosition == null) {
 				this.stopPosition = member.getNode();
 				return true;
@@ -64,8 +74,12 @@ public class PTStop extends RelationMember {
 		}
 
 		// add platform:
-		if (member.getRole().equals("platform") || member.getRole().equals("platform_entry_only")
-				|| member.getRole().equals("platform_exit_only")) {
+		// if (member.getRole().equals("platform") ||
+		// member.getRole().equals("platform_entry_only")
+		// || member.getRole().equals("platform_exit_only")) {
+		if (member.getMember().hasTag("highway", "bus_stop")
+				|| member.getMember().hasTag("public_transport", "platform")
+				|| member.getMember().hasTag("highway", "platform") || member.getMember().hasTag("railway", "platform")) {
 			if (platform == null) {
 				platform = member.getMember();
 				return true;
@@ -122,7 +136,8 @@ public class PTStop extends RelationMember {
 			return potentialStopPositions;
 		}
 
-		// Look for a stop position within 100 m (around 0.002 degrees) of this platform:
+		// Look for a stop position within 100 m (around 0.002 degrees) of this
+		// platform:
 
 		LatLon platformCenter = platform.getBBox().getCenter();
 		Double ax = platformCenter.getX() - 0.002;
@@ -137,33 +152,6 @@ public class PTStop extends RelationMember {
 				potentialStopPositions.add(currentNode);
 			}
 		}
-
-		// // 1) Look for any stop_area relations that this platform
-		// // belongs to:
-		// ArrayList<OsmPrimitive> platformList = new
-		// ArrayList<OsmPrimitive>(1);
-		// platformList.add(platform);
-		// Set<Relation> platformParentRelations =
-		// OsmPrimitive.getParentRelations(platformList);
-		// ArrayList<Relation> stopAreaList = new ArrayList<Relation>();
-		// for (Relation platformParentRelation : platformParentRelations) {
-		// if (platformParentRelation.hasTag("public_transport", "stop_area")) {
-		// stopAreaList.add(platformParentRelation);
-		// }
-		// }
-		//
-		// // 2) Get all potential stop_positions from those stop_area
-		// relations:
-		// for (Relation stopArea : stopAreaList) {
-		// for (RelationMember rm : stopArea.getMembers()) {
-		// if ((rm.hasRole("stop") || rm.hasRole("stop_entry_only") ||
-		// rm.hasRole("stop_exit_only"))&&
-		// rm.getType().equals(OsmPrimitiveType.NODE)
-		// && rm.getNode().hasTag("public_transport", "stop_position")) {
-		// potentialStopPositions.add(rm.getNode());
-		// }
-		// }
-		// }
 
 		return potentialStopPositions;
 	}

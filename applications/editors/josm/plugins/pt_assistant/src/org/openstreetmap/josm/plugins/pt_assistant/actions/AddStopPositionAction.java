@@ -8,7 +8,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.JoinNodeWayAction;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.actions.SplitWayAction;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -43,10 +45,13 @@ public class AddStopPositionAction extends JosmAction {
 		if (!isEnabled() || !Main.isDisplayingMapView()) {
 			return;
 		}
+		
+		final ActionEvent actionEventParameter = e;
 
 		Main.map.mapView.addMouseListener(new MouseAdapter() {
 
 			LatLon clickPosition;
+
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -64,6 +69,14 @@ public class AddStopPositionAction extends JosmAction {
 						osmDataLayer.data.addPrimitive(newNode);
 						osmDataLayer.data.setSelected(newNode);
 						Main.map.mapView.repaint();
+						
+						// make the stop position node part of the way:
+						JoinNodeWayAction joinNodeWayAction = JoinNodeWayAction.createJoinNodeToWayAction();
+						joinNodeWayAction.actionPerformed(actionEventParameter);
+						
+						// split the way:
+						SplitWayAction splitWayAction = new SplitWayAction();
+						splitWayAction.actionPerformed(actionEventParameter);
 
 					}
 

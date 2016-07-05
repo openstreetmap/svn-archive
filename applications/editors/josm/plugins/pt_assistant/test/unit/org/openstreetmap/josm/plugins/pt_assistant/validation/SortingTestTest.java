@@ -20,7 +20,7 @@ public class SortingTestTest extends AbstractTest {
         File file = new File(AbstractTest.PATH_TO_DL131_BEFORE);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
+        PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
         List<TestError> errors = new ArrayList<>();
         
@@ -32,8 +32,8 @@ public class SortingTestTest extends AbstractTest {
         }
 
         assertEquals(errors.size(), 1);
-        assertEquals(errors.iterator().next().getCode(), PTAssitantValidatorTest.ERROR_CODE_SORTING);
-        assertEquals(errors.iterator().next().getTester().getClass().getName(), PTAssitantValidatorTest.class.getName());
+        assertEquals(errors.iterator().next().getCode(), PTAssistantValidatorTest.ERROR_CODE_SORTING);
+        assertEquals(errors.iterator().next().getTester().getClass().getName(), PTAssistantValidatorTest.class.getName());
     }
 
     @Test
@@ -41,8 +41,7 @@ public class SortingTestTest extends AbstractTest {
         File file = new File(AbstractTest.PATH_TO_DL131_AFTER);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        
-        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
+        PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
         List<TestError> errors = new ArrayList<>();
         
@@ -81,7 +80,7 @@ public class SortingTestTest extends AbstractTest {
         File file = new File(AbstractTest.PATH_TO_DL286_AFTER);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
+        PTAssistantValidatorTest test = new PTAssistantValidatorTest();
 
         List<TestError> errors = new ArrayList<>();
         
@@ -93,5 +92,4 @@ public class SortingTestTest extends AbstractTest {
 
         assertEquals(errors.size(), 0);
     }
-
 }

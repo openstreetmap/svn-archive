@@ -24,7 +24,7 @@ public class RoadTypeTestTest extends AbstractTest {
         File file = new File(AbstractTest.PATH_TO_ROAD_TYPE_ERROR);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
+        PTAssistantValidatorTest test = new PTAssistantValidatorTest();
         List<TestError> errors = new ArrayList<>();
         
         for (Relation r: ds.getRelations()) {
@@ -36,13 +36,11 @@ public class RoadTypeTestTest extends AbstractTest {
         assertEquals(errors.size(), 2);
         
         for (TestError e: errors) {
-            assertEquals(e.getCode(), PTAssitantValidatorTest.ERROR_CODE_ROAD_TYPE);
+            assertEquals(e.getCode(), PTAssistantValidatorTest.ERROR_CODE_ROAD_TYPE);
             @SuppressWarnings("unchecked")
             List<OsmPrimitive> highlighted = (List<OsmPrimitive>) e.getHighlighted();
             Way way = (Way) highlighted.get(0);
             assertTrue(way.getId() == 8169083 || way.getId() == 8034569);
         }
     }
-
-
 }

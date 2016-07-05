@@ -20,7 +20,7 @@ public class PlatformAsWayTest extends AbstractTest{
         File file = new File(AbstractTest.PATH_TO_PLATFORM_AS_WAY);
         DataSet ds = ImportUtils.importOsmFile(file, "testLayer");
         
-        PTAssitantValidatorTest test = new PTAssitantValidatorTest();
+        PTAssistantValidatorTest test = new PTAssistantValidatorTest();
         
         List<TestError> errors = new ArrayList<>();
         
@@ -36,5 +36,4 @@ public class PlatformAsWayTest extends AbstractTest{
         
         assertEquals(errors.size(), 0);
     }
-
 }

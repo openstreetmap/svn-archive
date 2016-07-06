@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
@@ -201,7 +203,7 @@ public class PTAssistantPaintVisitor extends PaintVisitor {
 			double middleY = (double) (p1.y + p2.y) / 2.0;
 			double cosTriangle = 6 * Math.cos(t);
 			double sinTriangle = 6 * Math.sin(t);
-			g.setColor(new Color(50, 50, 50));
+			g.setColor(Color.WHITE);
 
 			if (oneway > 0) {
 				int[] xFillTriangle = { (int) (middleX + cosTriangle), (int) (middleX - cosTriangle),

@@ -193,6 +193,7 @@ public class PTAssistantLayer extends Layer
 
 	}
 
+
 	@Override
 	public void layerRemoving(LayerRemoveEvent event) {
 

@@ -56,20 +56,20 @@ public abstract class Checker {
 			if (RouteUtils.isPTStop(rm)) {
 
 				if (rm.getMember().hasTag("public_transport", "stop_position")) {
-//					if (!rm.hasRole("stop") && !rm.hasRole("stop_entry_only") && !rm.hasRole("stop_exit_only")) {
-//						RelationMember newMember = new RelationMember("stop", rm.getMember());
-//						resultList.add(newMember);
-//					} else {
+					if (!rm.hasRole("stop") && !rm.hasRole("stop_entry_only") && !rm.hasRole("stop_exit_only")) {
+						RelationMember newMember = new RelationMember("stop", rm.getMember());
+						resultList.add(newMember);
+					} else {
 						resultList.add(rm);
-//					}
+					}
 				} else { // if platform
-//					if (!rm.hasRole("platform") && !rm.hasRole("platform_entry_only")
-//							&& !rm.hasRole("platform_exit_only")) {
-//						RelationMember newMember = new RelationMember("platform", rm.getMember());
-//						resultList.add(newMember);
-//					} else {
+					if (!rm.hasRole("platform") && !rm.hasRole("platform_entry_only")
+							&& !rm.hasRole("platform_exit_only")) {
+						RelationMember newMember = new RelationMember("platform", rm.getMember());
+						resultList.add(newMember);
+					} else {
 						resultList.add(rm);
-//					}
+					}
 				}
 
 			}

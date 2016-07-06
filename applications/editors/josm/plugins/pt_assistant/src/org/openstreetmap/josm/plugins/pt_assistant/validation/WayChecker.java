@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
@@ -15,19 +14,17 @@ import org.openstreetmap.josm.command.ChangeCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SelectCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.OsmPrimitiveType;
-import org.openstreetmap.josm.data.osm.OsmUtils;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.gui.dialogs.relation.RelationDialogManager;
+import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
-import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
-import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
 
@@ -39,7 +36,7 @@ import org.openstreetmap.josm.plugins.pt_assistant.utils.RouteUtils;
  *
  */
 public class WayChecker extends Checker {
-	
+
 	public WayChecker(Relation relation, Test test) {
 
 		super(relation, test);
@@ -142,50 +139,65 @@ public class WayChecker extends Checker {
 
 	protected void performDirectionTest() {
 
-		List<RelationMember> waysToCheck = new ArrayList<>();
+		List<Way> waysToCheck = new ArrayList<>();
 
 		for (RelationMember rm : relation.getMembers()) {
-			if (RouteUtils.isPTWay(rm) && rm.getType().equals(OsmPrimitiveType.WAY)) {
-				waysToCheck.add(rm);
+			if (RouteUtils.isPTWay(rm)) {
+				if (rm.isWay()) {
+					waysToCheck.add(rm.getWay());
+				} else {
+					Relation nestedRelation = rm.getRelation();
+					for (RelationMember nestedRelationMember : nestedRelation.getMembers()) {
+						waysToCheck.add(nestedRelationMember.getWay());
+					}
+				}
 			}
 		}
 
-		if (waysToCheck.isEmpty()) {
+		if (waysToCheck.size() <= 1) {
 			return;
 		}
 
-		WayConnectionTypeCalculator connectionTypeCalculator = new WayConnectionTypeCalculator();
-		final List<WayConnectionType> links = connectionTypeCalculator.updateLinks(waysToCheck);
+		List<Way> problematicWays = new ArrayList<>();
 
-		for (int i = 0; i < links.size(); i++) {
-			if ((OsmUtils.isTrue(waysToCheck.get(i).getWay().get("oneway"))
-					&& links.get(i).direction.equals(WayConnectionType.Direction.BACKWARD))
-					|| (OsmUtils.isReversed(waysToCheck.get(i).getWay().get("oneway"))
-							&& links.get(i).direction.equals(WayConnectionType.Direction.FORWARD))) {
+		for (int i = 0; i < waysToCheck.size(); i++) {
 
-				// At this point, the PTWay is going against the oneway
-				// direction. Check if this road allows buses to disregard
-				// the oneway restriction:
+			Way curr = waysToCheck.get(i);
 
-				if (!waysToCheck.get(i).getWay().hasTag("busway", "lane")
-						&& !waysToCheck.get(i).getWay().hasTag("busway:left", "lane")
-						&& !waysToCheck.get(i).getWay().hasTag("busway:right", "lane")
-						&& !waysToCheck.get(i).getWay().hasTag("oneway:bus", "no")
-						&& !waysToCheck.get(i).getWay().hasTag("busway", "opposite_lane")
-						&& !waysToCheck.get(i).getWay().hasTag("oneway:psv", "no")
-						&& !waysToCheck.get(i).getWay().hasTag("trolley_wire", "backward")) {
-					List<Relation> primitives = new ArrayList<>(1);
-					primitives.add(relation);
-					List<Way> highlighted = new ArrayList<>(1);
-					highlighted.add(waysToCheck.get(i).getWay());
-					TestError e = new TestError(this.test, Severity.WARNING,
-							tr("PT: Route passes a oneway road in the wrong direction"),
-							PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
-					this.errors.add(e);
-					return;
+			if (i == 0) {
+				// first way:
+				Way next = waysToCheck.get(i + 1);
+				if (!touchCorrectly(null, curr, next)) {
+					problematicWays.add(curr);
 				}
 
+			} else if (i == waysToCheck.size() - 1) {
+				// last way:
+				Way prev = waysToCheck.get(i - 1);
+				if (!touchCorrectly(prev, curr, null)) {
+					problematicWays.add(curr);
+				}
+
+			} else {
+				// all other ways:
+				Way prev = waysToCheck.get(i - 1);
+				Way next = waysToCheck.get(i + 1);
+				if (!touchCorrectly(prev, curr, next)) {
+					problematicWays.add(curr);
+				}
 			}
+		}
+
+		for (Way problematicWay : problematicWays) {
+
+			List<Relation> primitives = new ArrayList<>(1);
+			primitives.add(relation);
+			List<Way> highlighted = new ArrayList<>(1);
+			highlighted.add(problematicWay);
+			TestError e = new TestError(this.test, Severity.WARNING,
+					tr("PT: Route passes a oneway road in the wrong direction"),
+					PTAssistantValidatorTest.ERROR_CODE_DIRECTION, primitives, highlighted);
+			this.errors.add(e);
 		}
 
 	}
@@ -282,7 +294,7 @@ public class WayChecker extends Checker {
 		if (testError.getCode() != PTAssistantValidatorTest.ERROR_CODE_DIRECTION) {
 			return null;
 		}
-		
+
 		ArrayList<Command> commands = new ArrayList<>();
 
 		Collection<? extends OsmPrimitive> primitives = testError.getPrimitives();
@@ -298,18 +310,12 @@ public class WayChecker extends Checker {
 		commands.add(command1);
 		SelectCommand command2 = new SelectCommand(primitivesToZoom);
 		commands.add(command2);
-//
-//		List<RelationMember> sortedRelationMembers = listStopMembers(originalRelation);
-//		sortedRelationMembers.addAll(listNotStopMembers(originalRelation));
-//		originalRelation.setMembers(sortedRelationMembers);
-		
+
 		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
 		for (OsmDataLayer osmDataLayer : listOfLayers) {
 			if (osmDataLayer.data == originalRelation.getDataSet()) {
 
 				final OsmDataLayer layerParameter = osmDataLayer;
-//				final Relation relationParameter = new Relation(originalRelation);
-//				relationParameter.setMembers(sortedRelationMembers);
 				final Relation relationParameter = originalRelation;
 				final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
 
@@ -340,11 +346,74 @@ public class WayChecker extends Checker {
 
 	private static void showRelationEditorAndZoom(OsmDataLayer layer, Relation r, Collection<OsmPrimitive> primitives) {
 
+		// zoom to problem:
 		AutoScaleAction.zoomTo(primitives);
-		RelationEditor editor = RelationEditor.getEditor(layer, r, r.getMembersFor(primitives));
-		editor.setVisible(true);
-		
 
+		// create editor:
+		GenericRelationEditor editor = (GenericRelationEditor) RelationEditor.getEditor(layer, r,
+				r.getMembersFor(primitives));
+
+		// put stop-related members to the front and edit roles if necessary:
+		List<RelationMember> sortedRelationMembers = listStopMembers(r);
+		sortedRelationMembers.addAll(listNotStopMembers(r));
+		r.setMembers(sortedRelationMembers);
+		editor.reloadDataFromRelation();
+
+		// open editor:
+		editor.setVisible(true);
+
+	}
+
+	/**
+	 * Checks if the current way touches its neighbouring was correctly
+	 * 
+	 * @param prev
+	 *            can be null
+	 * @param curr
+	 *            cannot be null
+	 * @param next
+	 *            can be null
+	 * @return
+	 */
+	private boolean touchCorrectly(Way prev, Way curr, Way next) {
+
+		if (RouteUtils.isOnewayForPublicTransport(curr) == 0) {
+			return true;
+		}
+
+		if (prev != null) {
+
+			if (RouteUtils.waysTouch(curr, prev)) {
+				Node nodeInQuestion;
+				if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+					nodeInQuestion = curr.firstNode();
+				} else {
+					nodeInQuestion = curr.lastNode();
+				}
+
+				if (nodeInQuestion != prev.firstNode() && nodeInQuestion != prev.lastNode()) {
+					return false;
+				}
+			}
+		}
+
+		if (next != null) {
+
+			if (RouteUtils.waysTouch(curr, next)) {
+				Node nodeInQuestion;
+				if (RouteUtils.isOnewayForPublicTransport(curr) == 1) {
+					nodeInQuestion = curr.lastNode();
+				} else {
+					nodeInQuestion = curr.firstNode();
+				}
+
+				if (nodeInQuestion != next.firstNode() && nodeInQuestion != next.lastNode()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 
 	}
 

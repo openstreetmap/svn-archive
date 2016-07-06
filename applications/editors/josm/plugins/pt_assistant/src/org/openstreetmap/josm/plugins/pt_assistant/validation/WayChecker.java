@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.openstreetmap.josm.Main;
@@ -23,8 +24,8 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.validation.Severity;
 import org.openstreetmap.josm.data.validation.Test;
 import org.openstreetmap.josm.data.validation.TestError;
-import org.openstreetmap.josm.gui.dialogs.relation.GenericRelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.RelationDialogManager;
+import org.openstreetmap.josm.gui.dialogs.relation.RelationEditor;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionType;
 import org.openstreetmap.josm.gui.dialogs.relation.sort.WayConnectionTypeCalculator;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -297,17 +298,19 @@ public class WayChecker extends Checker {
 		commands.add(command1);
 		SelectCommand command2 = new SelectCommand(primitivesToZoom);
 		commands.add(command2);
-
-		List<RelationMember> sortedRelationMembers = listStopMembers(originalRelation);
-		sortedRelationMembers.addAll(listNotStopMembers(originalRelation));
+//
+//		List<RelationMember> sortedRelationMembers = listStopMembers(originalRelation);
+//		sortedRelationMembers.addAll(listNotStopMembers(originalRelation));
+//		originalRelation.setMembers(sortedRelationMembers);
 		
 		List<OsmDataLayer> listOfLayers = Main.getLayerManager().getLayersOfType(OsmDataLayer.class);
 		for (OsmDataLayer osmDataLayer : listOfLayers) {
 			if (osmDataLayer.data == originalRelation.getDataSet()) {
 
 				final OsmDataLayer layerParameter = osmDataLayer;
-				final Relation relationParameter = new Relation(originalRelation);
-				relationParameter.setMembers(sortedRelationMembers);
+//				final Relation relationParameter = new Relation(originalRelation);
+//				relationParameter.setMembers(sortedRelationMembers);
+				final Relation relationParameter = originalRelation;
 				final Collection<OsmPrimitive> zoomParameter = primitivesToZoom;
 
 				if (SwingUtilities.isEventDispatchThread()) {
@@ -338,8 +341,7 @@ public class WayChecker extends Checker {
 	private static void showRelationEditorAndZoom(OsmDataLayer layer, Relation r, Collection<OsmPrimitive> primitives) {
 
 		AutoScaleAction.zoomTo(primitives);
-		GenericRelationEditor editor = new GenericRelationEditor(layer, r, r.getMembersFor(primitives));
-		RelationDialogManager.getRelationDialogManager().register(layer, r, editor);
+		RelationEditor editor = RelationEditor.getEditor(layer, r, r.getMembersFor(primitives));
 		editor.setVisible(true);
 		
 

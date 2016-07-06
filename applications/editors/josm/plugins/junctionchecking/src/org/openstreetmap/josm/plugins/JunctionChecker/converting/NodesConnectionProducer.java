@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.converting;
 
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMGraph;
@@ -10,7 +11,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMWay;
  * @author  joerg
  */
 public class NodesConnectionProducer {
-    
+
     private OSMGraph osmgraph;
     private OSMWay[] osmways;
 
@@ -18,7 +19,7 @@ public class NodesConnectionProducer {
         this.osmgraph = osmgraph;
         osmways = this.osmgraph.getWays();
     }
-    
+
     public void produceNodesConnections() {
         OSMNode[] waynodes;
         for (int i = 0; i < osmways.length; i++) {

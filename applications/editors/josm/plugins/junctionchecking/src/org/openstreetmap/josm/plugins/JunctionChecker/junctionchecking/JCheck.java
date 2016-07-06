@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 
 /**
@@ -17,13 +19,13 @@ public class JCheck {
             exits.get(i).setEnnrZero();
         }
         if (!(entries.size() == exits.size() && exits.size() == n)) {
-            result="Rule 1 broken: " + entries.size() + " entries but "
+            result = "Rule 1 broken: " + entries.size() + " entries but "
                     + exits.size() + " exits and n=" + n;
             return false;
         }
         for (int i = 0; i < entries.size(); i++) {
             if (!(entries.get(i).getIndegree() + entries.get(i).getOutdegree() >= 2)) {
-                result="rule 4 broken: indegree from entrynode with ID: "
+                result = "rule 4 broken: indegree from entrynode with ID: "
                         + entries.get(i).getNewid() + ": "
                         + entries.get(i).getIndegree() + " OutDegree: "
                         + entries.get(i).getOutdegree();
@@ -32,7 +34,7 @@ public class JCheck {
             exnr = 0;
             for (int j = 0; j < exits.size(); j++) {
                 if (!(exits.get(j).getIndegree() + exits.get(j).getOutdegree() >= 2)) {
-                    result="Rule 4 broken, indegree from exitnode with ID: "
+                    result = "Rule 4 broken, indegree from exitnode with ID: "
                             + exits.get(j).getNewid() + ": "
                             + exits.get(j).getIndegree() + " and outdegree: "
                             + exits.get(j).getOutdegree();
@@ -44,7 +46,7 @@ public class JCheck {
                     exits.get(j).increaseEnnr();
                 }
                 if (exits.get(j).equals(entries.get(i))) {
-                    result="Rule 2 broken: node with ID: "
+                    result = "Rule 2 broken: node with ID: "
                             + "entries.get(i).getNode().getId()"
                             + "is both entry and exit node";
                     return false;
@@ -53,12 +55,12 @@ public class JCheck {
 
         }
         if (!(exnr >= n - 1)) {
-            result="Rule 1 broken";
+            result = "Rule 1 broken";
             return false;
         }
         for (int i = 0; i < exits.size(); i++) {
             if (!(exits.get(i).getEnnr() >= (n - 1))) {
-                result="Rule 1 broken, exit node with ID "
+                result = "Rule 1 broken, exit node with ID "
                         + exits.get(i).getNewid() + "can only reached from "
                         + exits.get(i).getEnnr() + " entries.";
                 return false;
@@ -67,10 +69,9 @@ public class JCheck {
         result = "Jcheck erfolgreich bestanden";
         return true;
     }
-    
+
     /**
      * gibt das Ergebnis des JChecks in Form als Satz mit Informationen zurück
-     * @return
      */
     public String getResult() {
         return result;

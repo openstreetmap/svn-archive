@@ -1,19 +1,20 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.RelationMember;
 import org.openstreetmap.josm.data.osm.Way;
 
-
 /**
  * @author  joerg
  */
-public class OSMGraph extends Graph{
+public class OSMGraph extends Graph {
 
     private final HashMap<Long, OSMWay> ways = new HashMap<>();
     private HashMap<Long, OSMRelation> relations = new HashMap<>();
@@ -26,7 +27,6 @@ public class OSMGraph extends Graph{
     /**
      * gibt den Knoten mit der gesuchten OSM-ID zurück
      * @param id OSM-iD des Knotens!
-     * @return
      */
     public OSMNode getNode(long id) {
         return nodes.get(id);
@@ -36,8 +36,8 @@ public class OSMGraph extends Graph{
         ways.remove(way);
     }
 
-    public OSMNode[] getNodes(){
-        OSMNode[] nodearray= new OSMNode[nodes.size()];
+    public OSMNode[] getNodes() {
+        OSMNode[] nodearray = new OSMNode[nodes.size()];
         return nodes.values().toArray(nodearray);
     }
 
@@ -53,16 +53,16 @@ public class OSMGraph extends Graph{
         return relations.get(id);
     }
 
-    public  HashMap<Long, OSMRelation> getRelationsAshashmap() {
+    public HashMap<Long, OSMRelation> getRelationsAshashmap() {
         return relations;
     }
 
-    public void setRelations( HashMap<Long, OSMRelation> relations) {
+    public void setRelations(HashMap<Long, OSMRelation> relations) {
         this.relations = relations;
     }
 
     public OSMWay[] getWays() {
-        OSMWay[] wayarray= new OSMWay[ways.size()];
+        OSMWay[] wayarray = new OSMWay[ways.size()];
         return ways.values().toArray(wayarray);
     }
 
@@ -70,7 +70,7 @@ public class OSMGraph extends Graph{
         relations.put(relation.getId(), relation);
     }
 
-    public OSMRelation[] getRelations(){
+    public OSMRelation[] getRelations() {
         OSMRelation[] relationarray = new OSMRelation[relations.size()];
         return relations.values().toArray(relationarray);
     }
@@ -85,7 +85,7 @@ public class OSMGraph extends Graph{
 
     public ArrayList<Long> getIDsfromWay(int id) {
         OSMWay w = ways.get(id);
-        ArrayList<Long> ids  = new ArrayList<>();
+        ArrayList<Long> ids = new ArrayList<>();
         ids.add(w.getToNode().getId());
         ids.add(w.getFromNode().getId());
         return ids;
@@ -120,8 +120,7 @@ public class OSMGraph extends Graph{
             rmember = relation.getMember(i);
             if (rmember.getMember() instanceof Node) {
                 osmrelation.addMember(getNode(rmember.getMember().getId()), rmember.getRole());
-            }
-            else if (rmember.getMember() instanceof Way) {
+            } else if (rmember.getMember() instanceof Way) {
                 osmrelation.addMember(getWay(rmember.getMember().getId()), rmember.getRole());
             }
         }

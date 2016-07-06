@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import static org.openstreetmap.josm.tools.I18n.marktr;
@@ -30,7 +31,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 /**
  * @author  joerg
  */
-public class JunctionCheckDialog extends ToggleDialog implements SelectionChangedListener{
+public class JunctionCheckDialog extends ToggleDialog implements SelectionChangedListener {
 
     private final JunctionCheckerPlugin plugin;
     /** Serializable ID */
@@ -66,7 +67,7 @@ public class JunctionCheckDialog extends ToggleDialog implements SelectionChange
         jcPanel.setBorder(new TitledBorder(tr("Junctionchecking/junctions searching")));
 
         //Elemente für Grad-Auswahl der Kreuzung
-        JPanel spinnerpanel = new JPanel(new GridLayout(1,2));
+        JPanel spinnerpanel = new JPanel(new GridLayout(1, 2));
         smodel = new SpinnerNumberModel(3, 1, 20, 1);
         nways = new JSpinner(smodel);
         nwayslabel = new JLabel(tr("order of junction (n):"));
@@ -136,7 +137,6 @@ public class JunctionCheckDialog extends ToggleDialog implements SelectionChange
 
     /**
      * (de)aktiviert Buttons zum JunctionCheck oder Suche
-     * @param activate
      */
     public void setActivateJunctionCheckOrSearch(boolean activate) {
         checkJunctionButton.setEnabled(activate);
@@ -148,7 +148,6 @@ public class JunctionCheckDialog extends ToggleDialog implements SelectionChange
 
     /**
      * (de)aktiviert Buttons zur Channel Digraph Erstellung
-     * @param activate
      */
     public void setActivateCreateDigraph(final boolean activate) {
         GuiHelper.runInEDTAndWait(new Runnable() {

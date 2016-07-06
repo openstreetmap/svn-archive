@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import java.util.HashSet;
@@ -26,7 +27,6 @@ public class PrepareJunctionCheckorSearch {
         this.produceRelation = producerelation;
     }
 
-
     protected void prepareJunctionCheck() {
         if (prepareSubset()) {
             jct = new JunctionCheckTask(plugin, n, subset, produceRelation);
@@ -41,7 +41,7 @@ public class PrepareJunctionCheckorSearch {
         }
     }
 
-    private boolean prepareSubset(){
+    private boolean prepareSubset() {
         if (plugin.getChannelDigraph().getSelectedChannels().size() < 6) {
             JOptionPane.showMessageDialog(Main.parent, "Less then 6 channels are selected");
             return false;

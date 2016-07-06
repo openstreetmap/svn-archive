@@ -1,8 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
-
 
 /**
  * Klasse für die Backpropagation
@@ -17,7 +17,7 @@ public class BackPropagation {
     }
 
     /**
-     * 
+     *
      * @param y fromNode
      * @param z toNode
      */

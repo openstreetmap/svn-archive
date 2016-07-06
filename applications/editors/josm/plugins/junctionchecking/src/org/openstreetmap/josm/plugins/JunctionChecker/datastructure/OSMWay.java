@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 import java.util.Vector;
@@ -11,7 +12,7 @@ public class OSMWay extends OSMEntity {
 
     public OSMNode[] getNodes() {
         OSMNode[] nodearray = new OSMNode[nodes.size()];
-        return (OSMNode[]) nodes.toArray(nodearray);
+        return nodes.toArray(nodearray);
     }
 
     public OSMNode getToNode() {
@@ -35,7 +36,7 @@ public class OSMWay extends OSMEntity {
 
     /**
      * ist der OSMWay eine Einbahnstraße?
-     * 
+     *
      * @return true wenn ja, sonst nein
      */
     public boolean isOneWay() {
@@ -51,9 +52,7 @@ public class OSMWay extends OSMEntity {
         if (t != null) {
             if (t.equals("motorway") || t.equals("motorway_link")) {
                 return true;
-            }
-
-            else {
+            } else {
                 return false;
             }
         } else

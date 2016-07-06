@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -19,7 +20,7 @@ import org.xml.sax.SAXException;
  * Diese Klasse wird aufgerufen, wenn in einer Teilmenge von Channels nach Kreuzungen gesucht wird.
  * @author  joerg
  */
-public class JunctionSearchTask extends PleaseWaitRunnable{
+public class JunctionSearchTask extends PleaseWaitRunnable {
 
     private final JunctionChecker jc;
     private final JunctionCheckerPlugin plugin;
@@ -31,7 +32,7 @@ public class JunctionSearchTask extends PleaseWaitRunnable{
     public JunctionSearchTask(JunctionCheckerPlugin plugin, int n,
             HashSet<Channel> subset,
             boolean produceRelation) {
-        super("JunctionSearch",false);
+        super("JunctionSearch", false);
         this.plugin = plugin;
         this.n = n;
         this.subset = subset;
@@ -55,7 +56,7 @@ public class JunctionSearchTask extends PleaseWaitRunnable{
         JOptionPane.showMessageDialog(Main.parent, tr("Number of {0}-ways junctions found: {1}", n, junctions.size()));
         if (produceRelation) {
             for (int i = 0; i < junctions.size(); i++) {
-                plugin.getRelationProducer().produceRelation(junctions.get(i) , n);
+                plugin.getRelationProducer().produceRelation(junctions.get(i), n);
             }
         }
     }
@@ -65,5 +66,4 @@ public class JunctionSearchTask extends PleaseWaitRunnable{
     OsmTransferException {
         jc.junctionSearch(new ArrayList<>(subset), getProgressMonitor());
     }
-
 }

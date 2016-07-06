@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ public class BasicChannel {
 
     /**
      * setzt den ToNode
-     * @param toNode
      */
     public void setToNode(OSMNode toNode) {
         this.toNode = toNode;
@@ -60,7 +60,6 @@ public class BasicChannel {
 
     /**
      * fügt eine LeadsTo-Beziehung hinzu
-     * @param leadsTo
      */
     public void addLeadsTo(LeadsTo leadsTo) {
         this.leadsTo.add(leadsTo);
@@ -82,7 +81,6 @@ public class BasicChannel {
 
     /**
      * gibt alle leadsTo zurück
-     * @return
      */
     public ArrayList<LeadsTo> getLeadsTo() {
         return leadsTo;
@@ -91,7 +89,6 @@ public class BasicChannel {
     /**
      * fügt einen Way hinzu, aus dem der Channel enstanden ist
      * es gibt immer mind. einen Way, es können aber auch mehr sein
-     * @param way
      */
     public void addWay(OSMWay way) {
         this.ways.add(way);
@@ -99,7 +96,6 @@ public class BasicChannel {
 
     /**
      * gibt alle Ways zurück
-     * @return
      */
     public ArrayList<OSMWay> getWays() {
         return ways;
@@ -110,15 +106,14 @@ public class BasicChannel {
      * XML-datei-Erzeugung benutzt, um den Way, der aus dem Channel entsteht,
      * mit Werten zu füllen dabei gehen Informationen verloren, da ein Channel
      * aus mehr als einem Way bestehen kann
-     * 
-     * @return
      */
     public OSMWay getWay() {
         return ways.get(0);
     }
 
     /**
-     * setzt die ID des Channels. es kann nicht die ID des Ways übernommen werden, da aus einem Way oftmals mehrere Channels entstehen (z.B. bei jeder Nichteinbahnstraße mind. 2)
+     * setzt die ID des Channels.
+     * es kann nicht die ID des Ways übernommen werden, da aus einem Way oftmals mehrere Channels entstehen (z.B. bei jeder Nichteinbahnstraße mind. 2)
      */
     public void setNewid(int newid) {
         this.newid = newid;
@@ -133,7 +128,6 @@ public class BasicChannel {
 
     /**
      * gibt alle VorgängerChannels zurück
-     * @return
      */
     public ArrayList<Channel> getPredChannels() {
         return predChannels;
@@ -144,7 +138,7 @@ public class BasicChannel {
      */
     @Override
     public String toString() {
-        String lt ="";
+        String lt = "";
         for (int i = 0; i < leadsTo.size(); i++) {
             lt += leadsTo.get(i).getToChannel().getNewid() + ", ";
         }
@@ -152,7 +146,8 @@ public class BasicChannel {
         for (int i = 0; i < predChannels.size(); i++) {
             predch += predChannels.get(i).getNewid() + ", ";
         }
-        return "[ChannelID: "+ newid + ":AnzahlPredCH: " + predChannels.size() + ":PredCh: " + predch +  ":AnzahlSuccCH: " + leadsTo.size() +":LeadsTo: " + lt+ ":backCHID: " + backChannelID + "]";
+        return "[ChannelID: "+ newid + ":AnzahlPredCH: " + predChannels.size() + ":PredCh: " + predch +
+                ":AnzahlSuccCH: " + leadsTo.size() +":LeadsTo: " + lt+ ":backCHID: " + backChannelID + "]";
     }
 
     public void setBackChannelID(int backChannelID) {
@@ -172,7 +167,7 @@ public class BasicChannel {
         OSMWay way = new OSMWay();
         way.addNode(this.fromNode);
         way.addNode(this.toNode);
-        way.setId((long)this.newid);
+        way.setId((long) this.newid);
         if (this.getWay() != null) {
             way.setHashmap(this.getWay().getHashmap());
         }

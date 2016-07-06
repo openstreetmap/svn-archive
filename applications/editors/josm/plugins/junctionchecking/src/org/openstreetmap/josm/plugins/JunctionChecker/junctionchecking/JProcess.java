@@ -1,11 +1,12 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.connectedness.BacktrackingColors;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
-
 
 /**
  * erzeugt
@@ -29,8 +30,6 @@ public class JProcess {
     /**
      * ruft den TR-DFS und danach den Backpropagation-Algorithmus auf jPrepare
      * muß vorher durchgelaufen sein (die Eingänge müssen bekannt sein)
-     * 
-     * @param entries
      */
     public void jProcess(ArrayList<Channel> entries) {
         ArrayList<Channel> nodes = digraph.getChannels();

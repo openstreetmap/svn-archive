@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 import java.util.ArrayList;
@@ -41,8 +42,6 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * löscht den übergebenden Channel im Digraphen
-     * 
-     * @param channel
      */
     public void removeChannel(Channel channel) {
         channels.remove(channel);
@@ -50,7 +49,7 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * fügt einen Channel des ChannelDigraphen hinzu
-     * 
+     *
      * @param channel
      *            hinzuzufügender Channel
      */
@@ -60,7 +59,7 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * Anzahl der innerhalb des DiGraphen gespeicherten Channels
-     * 
+     *
      * @return Anzahl der Channels
      */
     public int numberOfChannels() {
@@ -69,7 +68,7 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * gibt Channel i an der Position i in der ArrayList zurück
-     * 
+     *
      * @param i
      *            Position innerhalb der ArrayList
      * @return gewünschter Channel
@@ -95,7 +94,7 @@ public class ChannelDiGraph extends Graph {
     /**
      * gibt alle From und To OSMNodes eines Graphen zurück (nicht die
      * ZWischenknoten)
-     * 
+     *
      * @return alle From und To Nodes aller Channels des Digraphen
      */
     public OSMNode[] getAllOSMNodes() {
@@ -135,7 +134,6 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * fügt eine leadsto-relation dem digraphen und dem entsprechendem Channel hinzu
-     * @param leadsTo
      */
     public void addLeadsTo(LeadsTo leadsTo) {
         leadsTos.add(leadsTo);
@@ -160,10 +158,6 @@ public class ChannelDiGraph extends Graph {
     /**
      * gibt den Channel zurück, der paßt. Sind Channel doppelt vorhanden, wird
      * nur der erste passende zurückgegeben!
-     * 
-     * @param fromChannel
-     * @param toChannel
-     * @return
      */
     public LeadsTo getLeadsTo(Channel fromChannel, Channel toChannel) {
         for (int i = 0; i < leadsTos.size(); i++) {
@@ -180,10 +174,8 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * gibt alle Channels zurück, die von diesen OSM-Knoten abgehen/hingehen
-     * @param nodes
-     * @return
      */
-    public ArrayList<Channel> getChannelsTouchingOSMNodes (ArrayList<OSMNode> nodes) {
+    public ArrayList<Channel> getChannelsTouchingOSMNodes(ArrayList<OSMNode> nodes) {
         ArrayList<Channel> touchingChannel = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < channels.size(); j++) {
@@ -191,8 +183,7 @@ public class ChannelDiGraph extends Graph {
                     if (!touchingChannel.contains(channels.get(j))) {
                         touchingChannel.add(channels.get(j));
                     }
-                }
-                else if (channels.get(j).getToNode().getId() == nodes.get(i).getId()) {
+                } else if (channels.get(j).getToNode().getId() == nodes.get(i).getId()) {
                     if (!touchingChannel.contains(channels.get(j))) {
                         touchingChannel.add(channels.get(j));
                     }
@@ -217,9 +208,6 @@ public class ChannelDiGraph extends Graph {
 
     /**
      * gibt den oder die Channels twischen diesen OSM-Punkten zurück
-     * @param idfrom
-     * @param idto
-     * @return
      */
     public ArrayList<Channel> getChannelsBetween(int idfrom, int idto) {
         ArrayList<Channel> channelsresult = new ArrayList<>();
@@ -228,8 +216,7 @@ public class ChannelDiGraph extends Graph {
                 if (channels.get(i).getToNode().getId() == idto) {
                     channelsresult.add(channels.get(i));
                 }
-            }
-            else if (channels.get(i).getFromNode().getId() == idto) {
+            } else if (channels.get(i).getFromNode().getId() == idto) {
                 if (channels.get(i).getToNode().getId() == idfrom) {
                     channelsresult.add(channels.get(i));
                 }
@@ -251,13 +238,13 @@ public class ChannelDiGraph extends Graph {
     public void detectSelectedChannels(double left, double top, double right, double bottom) {
         for (int i = 0; i < channels.size(); i++) {
             //log.trace(channels.get(i).getFromNode().toString());
-            if ( (channels.get(i).getFromNode().getLatitude() <= top) && (channels.get(i).getFromNode().getLatitude() >= bottom)
-                    && (channels.get(i).getFromNode().getLongitude() >= left) && (channels.get(i).getFromNode().getLongitude() <=right)) {
+            if ((channels.get(i).getFromNode().getLatitude() <= top) && (channels.get(i).getFromNode().getLatitude() >= bottom)
+                    && (channels.get(i).getFromNode().getLongitude() >= left) && (channels.get(i).getFromNode().getLongitude() <= right)) {
                 channels.get(i).setSelected(true);
                 selectedChannels.add(channels.get(i));
             }
-            if ( (channels.get(i).getToNode().getLatitude() <= top) && (channels.get(i).getToNode().getLatitude() >= bottom)
-                    && (channels.get(i).getToNode().getLongitude() >= left) && (channels.get(i).getToNode().getLongitude() <=right)) {
+            if ((channels.get(i).getToNode().getLatitude() <= top) && (channels.get(i).getToNode().getLatitude() >= bottom)
+                    && (channels.get(i).getToNode().getLongitude() >= left) && (channels.get(i).getToNode().getLongitude() <= right)) {
                 channels.get(i).setSelected(true);
                 selectedChannels.add(channels.get(i));
             }
@@ -297,7 +284,6 @@ public class ChannelDiGraph extends Graph {
     /**
      * setzt die Channels eines Kreuzungskandidaten
      * falls in im Hashset vorher Channels gespeichert waren, werden diese vorher gelöscht!
-     * @param junctionCandidate
      */
     public void setJunctioncandidate(HashSet<Channel> junctionCandidate) {
         this.junctioncandidate.clear();

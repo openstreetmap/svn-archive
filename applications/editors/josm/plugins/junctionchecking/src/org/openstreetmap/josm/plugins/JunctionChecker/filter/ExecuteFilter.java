@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.filter;
 
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMGraph;
@@ -8,13 +9,13 @@ import org.openstreetmap.josm.plugins.JunctionChecker.reader.XMLFilterReader;
  * @author  joerg
  */
 public class ExecuteFilter {
-    
+
     private Filter[] filter;
     private XMLFilterReader xmlfilterreader;
     private OSMGraph incominggraph;
     private OSMGraph outgoinggraph;
-    
-    public ExecuteFilter(Filter[] filter, OSMGraph incoming){
+
+    public ExecuteFilter(Filter[] filter, OSMGraph incoming) {
         this.filter = filter;
         this.incominggraph = incoming;
         outgoinggraph = new OSMGraph();
@@ -24,11 +25,11 @@ public class ExecuteFilter {
         outgoinggraph.setBbtop(incoming.getBbtop());
         outgoinggraph.setRelations(incoming.getRelationsAshashmap());
     }
-    
+
     public ExecuteFilter() {
     }
-    
-    public void filter(){
+
+    public void filter() {
         OSMWay[] tempWays = incominggraph.getWays();
         String key;
         //alle Einträge im Filter durchgehen
@@ -48,14 +49,14 @@ public class ExecuteFilter {
                             if (!outgoinggraph.hasNode(tempWays[j].getNodes()[j2].getId())) {
                                 outgoinggraph.addNode(tempWays[j].getNodes()[j2]);
                             }
-                            
+
                         }
                     }
                 }
             }
         }
     }
-    
+
     public Filter[] getFilter() {
         return filter;
     }

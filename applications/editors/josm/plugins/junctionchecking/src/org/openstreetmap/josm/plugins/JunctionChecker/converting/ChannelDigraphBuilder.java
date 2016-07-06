@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.converting;
 
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
@@ -48,7 +49,6 @@ public class ChannelDigraphBuilder {
      * @param fromNode fromNode des zu erstellenden Channels
      * @param toNode toNode  des zu erstellnenden Channels
      * @param way ein zu dem Channel gehörender Way
-     * @return
      */
     private Channel createChannel(OSMNode fromNode, OSMNode toNode, OSMWay way) {
         newChannel = new Channel();
@@ -94,22 +94,20 @@ public class ChannelDigraphBuilder {
                     createBackChannel(nodes[i], lastUsedNode, way, tempChannel);
                 }
                 lastUsedNode = nodes[i];
-            }
             // wenn der betrachtete Knoten keine Nachfolger hat, ist ein
             // Straßenende erreicht. Auch in diesem Fall muß ein Channel erzeugt werden
-            else if (nodes[i].getSuccNodeList().size() == 0) {
+            } else if (nodes[i].getSuccNodeList().size() == 0) {
                 tempChannel = createChannel(lastUsedNode, nodes[i], way);
                 // Rückrichtung wird nur erzeugt, wenn der OSM-Way keine Einbahnstraße ist
                 if (oneway == false) {
                     createBackChannel(nodes[i], lastUsedNode, way, tempChannel);
                 }
-            }
             // eine Straße besteht aus 2 Ways, obwohl eigentlich eine reicht
             // tritt z.b. bei einer brücke auf, brücke wird neuer channel
             //TODO: kann an dieser stelle das erzeugen von pseudo-channels verhindert werden?
             //      Idee: speichern eines flags, um diese erzeugten Channels zu markieren. aus diesen informationen
             //            später den CHannel löschen!!!
-            else if (i == nodes.length - 1
+            } else if (i == nodes.length - 1
                     && nodes[i].getSuccNodeList().size() == 1) {
                 // damit ist ein Channel gefunden, und wird mit Werten gefüllt
                 tempChannel = createChannel(lastUsedNode, nodes[i], way);
@@ -119,9 +117,7 @@ public class ChannelDigraphBuilder {
                     createBackChannel(nodes[i], lastUsedNode, way, tempChannel);
                 }
                 lastUsedNode = nodes[i];
-
             }
-
         }
     }
 

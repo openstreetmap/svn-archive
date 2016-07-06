@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 /**
@@ -45,8 +46,6 @@ public class LeadsTo {
 
     @Override
     public String toString() {
-        return "fromChannel:::" + fromChannel.getNewid()  + ", toChannel:::" + toChannel.getNewid() + " über Node " + toChannel.getFromNode().getId();
+        return "fromChannel:::" + fromChannel.getNewid() + ", toChannel:::" + toChannel.getNewid() + " über Node " + toChannel.getFromNode().getId();
     }
-
-
 }

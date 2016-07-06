@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class JPrepare {
         exits = new ArrayList<>();
     }
 
-    public void jPrepare (ArrayList<Channel> vertices) {
+    public void jPrepare(ArrayList<Channel> vertices) {
         this.vertices = vertices;
         entries.clear();
         exits.clear();
@@ -35,12 +36,11 @@ public class JPrepare {
         }
         for (int i = 0; i < vertices.size(); i++) {
             for (int j = 0; j < vertices.get(i).getPredChannels().size(); j++) {
-                if (vertices.get(i).getPredChannels().get(j).isSubgraph() == false ) {
+                if (vertices.get(i).getPredChannels().get(j).isSubgraph() == false) {
                     if (!entries.contains(vertices.get(i))) {
                         entries.add(vertices.get(i));
                     }
-                }
-                else {
+                } else {
                     vertices.get(i).countupIndegree();
                     //log.trace(vertices.get(i).toString());
                 }
@@ -50,15 +50,14 @@ public class JPrepare {
                     if (!exits.contains(vertices.get(i))) {
                         exits.add(vertices.get(i));
                     }
-                }
-                else {
+                } else {
                     vertices.get(i).countupOutdegree();
                 }
             }
         }
     }
 
-    public void resetSubgraph(){
+    public void resetSubgraph() {
         for (int i = 0; i < vertices.size(); i++) {
             vertices.get(i).setSubgraph(false);
             vertices.get(i).setIndegree(0);
@@ -68,7 +67,6 @@ public class JPrepare {
 
     /**
      * gibt die Anzahl der gefundenen Eingänge zurück
-     * @return
      */
     public ArrayList<Channel> getEntries() {
         return entries;
@@ -76,7 +74,6 @@ public class JPrepare {
 
     /**
      * gibt die Anzahl der gefundenen Ausgänge zurück
-     * @return
      */
     public ArrayList<Channel> getExits() {
         return exits;

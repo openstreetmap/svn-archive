@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -21,12 +22,12 @@ public class JMinimality {
 
     private boolean CheckMinimal = true;
     private final ArrayList<Channel> E;
-    private final int Grid[][];
+    private final int[][] Grid;
     private final ArrayList<Channel> OrEn;
     private final ArrayList<Channel> OrEx;
     private final int n;
     private final List<List<Object>> L = new ArrayList<>(); //The list of columns to be sorted
-    private final HashSet<Channel> subgraph = new HashSet<>();//The candidate subgraph to be tested
+    private final HashSet<Channel> subgraph = new HashSet<>(); //The candidate subgraph to be tested
     private ProgressMonitor pm;
     private final boolean pmenabled;
     private final ArrayList<HashSet<Channel>> junctions = new ArrayList<>();
@@ -73,9 +74,9 @@ public class JMinimality {
         //this.jCheck= new JCheck();
     }
 
-    public void GenerateSubcolumns () {/*Generates all combinations of subcolumns in the grid*/
+    public void GenerateSubcolumns() { //Generates all combinations of subcolumns in the grid
         if (pmenabled) {
-            pm.setCustomText(tr ("generate all combinations from entrie/exit candidates"));
+            pm.setCustomText(tr("generate all combinations from entrie/exit candidates"));
         }
 
         Combination c = new Combination(Grid.length, n);
@@ -83,42 +84,43 @@ public class JMinimality {
         long ans = c.Choose(); //This is the number of subcolumns to be generated
         int[][] v; // this is a column variable containing n y-index entries plus true false values (0/1)
         List<Object> C; //The column is packed together with 2 indices into this variable
-        for (int i = 0; i < Grid.length;i++) {
+        for (int i = 0; i < Grid.length; i++) {
             int h = 0;    //this is the index denoting the "n out of Grid.length"- combination, indicating a subcolumn of length n
             do {
                 int missing = 0;
                 C = new ArrayList<>(3);
                 v = new int[n][2];
-                C.add(i);//the first position of column variable C is the column index
-                C.add(h);//the second is the entry-subset index
-                for(int t = 0; t < c.data.length; t++){
-                    if (Grid[(int)c.data[t]][i] == 0){
+                C.add(i); //the first position of column variable C is the column index
+                C.add(h); //the second is the entry-subset index
+                for (int t = 0; t < c.data.length; t++) {
+                    if (Grid[(int) c.data[t]][i] == 0) {
                         missing++;
-                        v[t][1]= 0; //false
-                    }
-                    else{
-                        v[t][1]= 1;
+                        v[t][1] = 0; //false
+                    } else {
+                        v[t][1] = 1;
                     } //true
-                    v[t][0]=(int)c.data[t];    //Write a y index of the combination into column
+                    v[t][0] = (int) c.data[t];    //Write a y index of the combination into column
                 }
-                if (missing <=1){//If column has at most one missing entry
-                    C.add(v);//insert column as the third position of column variable C
+                if (missing <= 1) { //If column has at most one missing entry
+                    C.add(v); //insert column as the third position of column variable C
                     L.add(C); //Insert C in list to be ordered
                 }
                 h++; //Iterate through all subcolumns
-                if (h < ans){c = c.Successor();}//generate the next combination
-            }while(h < ans);
+                if (h < ans) {
+                    c = c.Successor(); //generate the next combination
+                }
+            } while (h < ans);
             c = new Combination(Grid.length, n); //For each original column in the grid, generate new subcolumns
         }
         Collections.sort(L, new Comparator<List<Object>>() {
             @Override
-			public int compare(List<Object> o1, List<Object> o2) {
-                return (Integer)o1.get(1) - (Integer)o2.get(1); //sort according to h index in each column
-            }});
+            public int compare(List<Object> o1, List<Object> o2) {
+                return (Integer) o1.get(1) - (Integer) o2.get(1); //sort according to h index in each column
+            } });
     }
 
-    public boolean IterateThroughKn() {//Iterates through all K_{n-1} subgrids of the Grid and tests them
-        if (L.size()==0) {
+    public boolean IterateThroughKn() { //Iterates through all K_{n-1} subgrids of the Grid and tests them
+        if (L.size() == 0) {
             return true;
         }
         if (pmenabled) {
@@ -129,7 +131,7 @@ public class JMinimality {
         Iterator<List<Object>> l = L.listIterator();
         List<Object> C;
         ArrayList<int[]> CandidateK = new ArrayList<>(n*n); //saves the candidate K_{n-1} in entry-exit pairs
-        long lindex= 0;
+        long lindex = 0;
         int h = 0;
         int m = 0;
         int[][] v;
@@ -139,59 +141,62 @@ public class JMinimality {
         boolean mchanged = false;
         boolean hchanged = false;
         C = l.next();
-        do{ //Loop over list of columns L
-            if (mchanged){
+        do { //Loop over list of columns L
+            if (mchanged) {
                 C = l.next(); //Iterator in L
                 lindex++; //Index in L
                 if (hchanged) {
-                    m=1;
+                    m = 1;
                     hchanged = false;
                 }
             }
-            if ((Integer)C.get(1)==h && l.hasNext()){ //m counts the set of columns with index h
+            if ((Integer) C.get(1) == h && l.hasNext()) { //m counts the set of columns with index h
                 m++;
                 mchanged = true;
-            }
-            else{
-                if (l.hasNext()==false){
-                    m++;lindex++;
+            } else {
+                if (l.hasNext() == false) {
+                    m++;
+                    lindex++;
                 } //At the end of L, counter are set one up
                 c = new Combination(m, n);
                 long ans = c.Choose();
                 int missing = 0;
                 boolean smallerjunction = false;
-                for (int k =0; k<ans;k++){ //Makes sure that subset of m columns contains an n*n subgrid, because ans = m over n would be 0 otherwise
-                    for (int y = 0; y < n; y++){//Iterates over all rows of subgrid k
-                        missing =0;    //test = "";
-                        for (int x = 0; x <c.data.length;x++) { //Iterates over all columns of subgrid k
-                            x_i=((Integer)L.get((int)(lindex-m+c.data[x])).get(0));//columnindex in grid
-                            v=((int[][])(L.get((int)(lindex-m+c.data[x])).get(2))); //subcolumn of grid
-                            y_j= v[y][0]; //rowindex in grid
-                            if (v[y][1]==0){
+                for (int k = 0; k < ans; k++) { //Makes sure that subset of m columns contains an n*n subgrid, because ans = m over n would be 0 otherwise
+                    for (int y = 0; y < n; y++) { //Iterates over all rows of subgrid k
+                        missing = 0;    //test = "";
+                        for (int x = 0; x < c.data.length; x++) { //Iterates over all columns of subgrid k
+                            x_i = ((Integer) L.get((int) (lindex-m+c.data[x])).get(0)); //columnindex in grid
+                            v = ((int[][]) (L.get((int) (lindex-m+c.data[x])).get(2))); //subcolumn of grid
+                            y_j = v[y][0]; //rowindex in grid
+                            if (v[y][1] == 0) {
                                 missing++;
-                            }else{
-                                CandidateK.add(new int[]{y_j,x_i});
-                            }//save entry/exit tuple
-                            if (smallerjunction == false && ((!OrEn.contains(E.get(v[y][0]))) &&(!OrEx.contains(E.get(x_i))))){ // Tests, whether y or x is not an original entry/exit
+                            } else {
+                                CandidateK.add(new int[]{y_j, x_i});
+                            } //save entry/exit tuple
+                            if (!smallerjunction && ((!OrEn.contains(E.get(v[y][0])))
+                                    && (!OrEx.contains(E.get(x_i))))) { // Tests, whether y or x is not an original entry/exit
                                 smallerjunction = true; //Then k identifies a different junction than the original one
                             }
                             //test = test+" ("+y_j+", "+x_i+", "+v[y][1]+")";
                         }
-                        if (missing > 1){
+                        if (missing > 1) {
                             break;
-                        }//If a row has more than one missing value, break
+                        } //If a row has more than one missing value, break
                     }
-                    if (missing <=1 && smallerjunction == true){//The k-subgrid is a different junction candidate satisfying total reachability
-                        CheckMinimal = CheckSmallJunction(CandidateK)==false;// If the candidate is a smaller junction, then minimality is false
+                    if (missing <= 1 && smallerjunction) { //The k-subgrid is a different junction candidate satisfying total reachability
+                        CheckMinimal = !CheckSmallJunction(CandidateK); // If the candidate is a smaller junction, then minimality is false
                         //log.info("durchlauf: " + durchlauf + " Wert von CheckMinimal: " + CheckMinimal);
                         if (!CheckMinimal) {
                             break;
                         }
                     }
                     CandidateK.clear();
-                    if (k+1 < ans){c = c.Successor();} //Produces the m over n combinations
+                    if (k+1 < ans) {
+                        c = c.Successor();
+                    } //Produces the m over n combinations
                 }
-                m=1; //Sets m to the first column with next index h+1
+                m = 1; //Sets m to the first column with next index h+1
                 h++;
                 mchanged = false;
                 hchanged = true;
@@ -201,24 +206,22 @@ public class JMinimality {
                 pm.setTicks(progressmonitorcounter);
             }
         }
-        while(l.hasNext() && CheckMinimal);
+        while (l.hasNext() && CheckMinimal);
         return CheckMinimal;
     }
 
     /**
      * gibt true zurück, wenn Kandidat eine Kreuzung ist, aber nicht, wenn junctionsearch auf true gesetzt ist
-     * @param CandidateK
-     * @return
      */
-    public boolean CheckSmallJunction(ArrayList<int[]> CandidateK){
+    public boolean CheckSmallJunction(ArrayList<int[]> CandidateK) {
         Check = false;
-        subgraph.clear();//Zu konstruierender Subgraph
+        subgraph.clear(); //Zu konstruierender Subgraph
         it = CandidateK.iterator();
         //Reconstruct small Junction from paths
-        while (it.hasNext()){
+        while (it.hasNext()) {
             int[]point = it.next();
             for (int j = 0; j < E.get(point[0]).getReachableNodes().size(); j++) {
-                if(E.get(point[0]).getReachableNodeAt(j).equals(E.get(point[1]))){
+                if (E.get(point[0]).getReachableNodeAt(j).equals(E.get(point[1]))) {
                     subgraph.addAll(E.get(point[0]).getPathsAt(E.get(point[0]).getReachableNodeAt(j)));
                     subgraph.add(E.get(point[0]));
                 }
@@ -259,15 +262,13 @@ public class JMinimality {
 
     /**
      * enthält alle Channels des zuletzt durchlaufenden Kreuzungskandidaten (muß keine gültige Kreuzung sein)
-     * @return
      */
-    public ArrayList<Channel> getSubJunctionCandidate(){
+    public ArrayList<Channel> getSubJunctionCandidate() {
         return new ArrayList<>(subgraph);
     }
 
     /**
      * gibt alle gefundenen Kreuzungskandidaten zurück (ist leer, wenn junctionsearch auf true gesetzt wurde)
-     * @return
      */
     public ArrayList<HashSet<Channel>> getJunctionCandidates() {
         return junctions;

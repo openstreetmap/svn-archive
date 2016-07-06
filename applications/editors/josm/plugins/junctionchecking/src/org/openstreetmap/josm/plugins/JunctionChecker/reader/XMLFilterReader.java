@@ -1,14 +1,17 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.reader;
 
 import java.util.Vector;
+
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.filter.Filter;
 
 /**
  * @author  joerg
  */
-public class XMLFilterReader extends XMLReader{
+public class XMLFilterReader extends XMLReader {
 
     Vector<Filter> filters;
     Filter filter;
@@ -20,8 +23,8 @@ public class XMLFilterReader extends XMLReader{
 
     @Override
     public void parseXML() {
-        String tempValue ="";
-        String tempKeyValue ="";
+        String tempValue = "";
+        String tempKeyValue = "";
         try {
             while (parser.hasNext()) {
 
@@ -53,7 +56,7 @@ public class XMLFilterReader extends XMLReader{
     }
 
     public Filter[] getFilters() {
-        Filter[] filterarray= new Filter[filters.size()];
+        Filter[] filterarray = new Filter[filters.size()];
         return filters.toArray(filterarray);
     }
 }

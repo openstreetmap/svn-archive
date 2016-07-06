@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -39,14 +40,14 @@ import org.openstreetmap.josm.tools.ImageProvider;
 public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, PropertyChangeListener {
 
     private ChannelDiGraph digraph;
-    private static final int POINTSIZE = 5;//original 3
+    private static final int POINTSIZE = 5; //original 3
     private static final float LINEWIDTH = 4; //original 2
     private final ColorSchemeXMLReader cXMLReader;
     private static final Shape ARROW_HEAD;
 
     static {
         Polygon head = new Polygon();
-        head.addPoint(  0,  0);
+        head.addPoint(0, 0);
         head.addPoint(-15, +4);
         head.addPoint(-15, -4);
         ARROW_HEAD = head;
@@ -61,7 +62,7 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
     private Color selectedChannelColor;
     private Color partOfJunctionColor;
 
-    public ChannelDiGraphLayer(ColorSchemeXMLReader cXMLReader){
+    public ChannelDiGraphLayer(ColorSchemeXMLReader cXMLReader) {
         super("ChannelDiGraphLayer");
         Main.getLayerManager().addLayerChangeListener(this);
         this.cXMLReader = cXMLReader;
@@ -96,7 +97,7 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
 
     @Override
     public String getToolTipText() {
-        return tr ("Channel-Digraph created from the active OSM-Layer");
+        return tr("Channel-Digraph created from the active OSM-Layer");
     }
 
     @Override
@@ -127,17 +128,13 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         Color c;
         if (channel.isPartOfJunction()) {
             c = partOfJunctionColor;
-        }
-        else if (channel.isSelected() == true) {
+        } else if (channel.isSelected() == true) {
             c = selectedChannelColor;
-        }
-        else if (channel.isStrongConnected() == false) {
-            c= nsccChannelColor;
-        }
-        else if (channel.getBackChannelID() != -100) {
+        } else if (channel.isStrongConnected() == false) {
+            c = nsccChannelColor;
+        } else if (channel.getBackChannelID() != -100) {
             c = twoWayChannelColor;
-        }
-        else {
+        } else {
             c = oneWayChannelColor;
         }
         g.setColor(c);
@@ -148,7 +145,6 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         head = AffineTransform.getRotateInstance(angle).createTransformedShape(head);
         head = AffineTransform.getTranslateInstance(toPoint.x, toPoint.y).createTransformedShape(head);
         g.fill(head);
-
     }
 
     private Point getCoord(OSMNode node, MapView mv) {
@@ -167,11 +163,11 @@ public class ChannelDiGraphLayer extends Layer implements LayerChangeListener, P
         final float vecX = p2.x - p1.x;
         final float vecY = p2.y - p1.y;
 
-        final float vecLength = (float)Math.sqrt(vecX*vecX + vecY*vecY);
+        final float vecLength = (float) Math.sqrt(vecX*vecX + vecY*vecY);
 
         final float dotProductVecAxis = vecX;
 
-        float angle = (float)Math.acos(dotProductVecAxis / vecLength);
+        float angle = (float) Math.acos(dotProductVecAxis / vecLength);
 
         if (p2.y < p1.y) {
             angle = -angle;

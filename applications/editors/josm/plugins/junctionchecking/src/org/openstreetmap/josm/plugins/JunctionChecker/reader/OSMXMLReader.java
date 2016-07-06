@@ -1,9 +1,12 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.reader;
 
 import java.io.File;
 import java.util.HashMap;
+
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMEntity;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMNode;
@@ -62,13 +65,11 @@ public class OSMXMLReader extends XMLReader {
             relation.addMember(osmgraph.getNode(Integer.parseInt(parser
                     .getAttributeValue(null, "ref"))), parser
                     .getAttributeValue(null, "role"));
-        }
-        else if (parser.getAttributeValue(null, "type").equals("way")) {
+        } else if (parser.getAttributeValue(null, "type").equals("way")) {
             relation.addMember(osmgraph.getWay(Long.parseLong(parser
                     .getAttributeValue(null, "ref"))), parser
                     .getAttributeValue(null, "role"));
-        }
-        else if (parser.getAttributeValue(null, "type").equals("relation")) {
+        } else if (parser.getAttributeValue(null, "type").equals("relation")) {
             relation.addMember(osmgraph.getRelation(Integer.parseInt(parser
                     .getAttributeValue(null, "ref"))), parser
                     .getAttributeValue(null, "role"));

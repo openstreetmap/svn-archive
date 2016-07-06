@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -20,7 +21,7 @@ import org.xml.sax.SAXException;
  * wird.
  * @author  joerg
  */
-public class JunctionCheckTask extends PleaseWaitRunnable{
+public class JunctionCheckTask extends PleaseWaitRunnable {
 
     private final JunctionChecker jc;
     private final JunctionCheckerPlugin plugin;
@@ -35,7 +36,7 @@ public class JunctionCheckTask extends PleaseWaitRunnable{
         this.n = n;
         this.subset = subset;
         this.producerelation = produceRelation;
-        jc = new JunctionChecker(plugin.getChannelDigraph() , n);
+        jc = new JunctionChecker(plugin.getChannelDigraph(), n);
     }
 
     @Override
@@ -50,13 +51,13 @@ public class JunctionCheckTask extends PleaseWaitRunnable{
             return;
         }
         progressMonitor.finishTask();
-        if (jc.isSmallerJunction() ) {
+        if (jc.isSmallerJunction()) {
             showjunction();
-            JOptionPane.showMessageDialog(Main.parent, tr ("The marked channels contains a junctioncandidate (white). To test this candidat mark these channel and press the \"Check\" button again."));
-        }
-        else if (jc.getCheck()) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("The marked channels contains a junctioncandidate (white). To test this candidat mark these channel and press the \"Check\" button again."));
+        } else if (jc.getCheck()) {
             showjunction();
-            JOptionPane.showMessageDialog(Main.parent, tr ("The marked channels are a {0}-ways junction", n));
+            JOptionPane.showMessageDialog(Main.parent, tr("The marked channels are a {0}-ways junction", n));
             plugin.getChannelDigraph().ereaseJunctioncandidate();
             for (int i = 0; i < jc.getSubJunction().size(); i++) {
                 plugin.getChannelDigraph().addJunctioncandidateChannel(jc.getSubJunction().get(i));
@@ -64,12 +65,9 @@ public class JunctionCheckTask extends PleaseWaitRunnable{
             if (producerelation) {
                 this.plugin.getRelationProducer().produceRelation(subset, n);
             }
+        } else if (!jc.getCheck()) {
+            JOptionPane.showMessageDialog(Main.parent, tr("The marked channels are not a junction:") + jc.getJCheckResult());
         }
-        else if (!jc.getCheck()) {
-            JOptionPane.showMessageDialog(Main.parent, tr ("The marked channels are not a junction:") + jc.getJCheckResult());
-
-        }
-
     }
 
     @Override

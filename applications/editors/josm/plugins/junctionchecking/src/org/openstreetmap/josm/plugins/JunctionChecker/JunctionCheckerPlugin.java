@@ -1,6 +1,4 @@
-/**
- * License: GPL. Copyright 2011. Jörg Possin (joerg.possin@uni-muenster.de)
- */
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -23,10 +21,10 @@ import org.openstreetmap.josm.plugins.JunctionChecker.reader.ColorSchemeXMLReade
 import org.openstreetmap.josm.plugins.JunctionChecker.util.RelationProducer;
 
 /**
- * 
- * This plugins helps to create a channel digraph und check channels in this network if it is a 
+ *
+ * This plugins helps to create a channel digraph und check channels in this network if it is a
  * junction or searches in a subgraph after junctions.
- * 
+ * @author Jörg Possin (joerg.possin@uni-muenster.de)
  */
 public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener {
 
@@ -88,8 +86,7 @@ public class JunctionCheckerPlugin extends Plugin implements LayerChangeListener
             channelDigraphLayer = null;
             this.getJunctionCheckDialog().setActivateJunctionCheckOrSearch(false);
             return;
-        }
-        else {
+        } else {
             this.getJunctionCheckDialog().setActivateCreateDigraph(false);
         }
     }

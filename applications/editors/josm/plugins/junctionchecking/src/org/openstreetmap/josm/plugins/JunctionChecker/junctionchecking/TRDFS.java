@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
@@ -15,11 +16,6 @@ public class TRDFS {
     private final ArrayList<LeadsTo> cycleEdges;
     private final ChannelDiGraph digraph;
 
-    /**
-     * 
-     * 
-     * @param adnodes
-     */
     public TRDFS(ArrayList<Channel> adnodes, ChannelDiGraph digraph) {
         this.digraph = digraph;
         this.cycleEdges = new ArrayList<>();

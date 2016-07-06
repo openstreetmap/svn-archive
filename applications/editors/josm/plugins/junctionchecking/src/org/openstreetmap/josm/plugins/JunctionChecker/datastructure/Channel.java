@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.connectedness.Backtracking
  * Diese Klasse erweitert BasicChannel um die Dinge, die für die Kreuzungsalgorithmen benötigt werden
  * @author  joerg
  */
-public class Channel extends BasicChannel{
+public class Channel extends BasicChannel {
 
     //für den Junctioncheck
     private int indegree;
@@ -21,9 +22,8 @@ public class Channel extends BasicChannel{
     private boolean isStrongConnected = true;
     private boolean isSelected = false; //wird für den eigenen Layer benötigt, um markierte Channels zu erhalten
     private boolean isPartOfJunction = false; //wird für den eigenen Layer benötigt, um Teile einer Kreuzung farbig repräsentieren zu können
-    
-    private final HashMap<Channel , ArrayList<Channel>> paths2 = new HashMap<>();
 
+    private final HashMap<Channel, ArrayList<Channel>> paths2 = new HashMap<>();
 
     public Channel(OSMNode fromNode, OSMNode toNode) {
         super();
@@ -34,7 +34,7 @@ public class Channel extends BasicChannel{
         this.outdegree = 0;
     }
 
-    public Channel(){
+    public Channel() {
         super();
         //this.insidenodes = new ArrayList<OSMNode>();
         this.subgraph = false;
@@ -44,7 +44,6 @@ public class Channel extends BasicChannel{
 
     /**
      * gibt die Anzahl der auf diesen Channel verweisenden leadsTo zurück
-     * @return
      */
     public int getIndegree() {
         return indegree;
@@ -52,7 +51,6 @@ public class Channel extends BasicChannel{
 
     /**
      * gibt die Anzahl der aus diesem Channel gehenden leadsTo zurück
-     * @return
      */
     public int getOutdegree() {
         return outdegree;
@@ -62,7 +60,7 @@ public class Channel extends BasicChannel{
         this.indegree = i;
     }
 
-    public void setOutdegree(int i){
+    public void setOutdegree(int i) {
         this.outdegree = i;
     }
 
@@ -90,7 +88,6 @@ public class Channel extends BasicChannel{
 
     /**
      * gibt die von diesem Channel zu erreichenden anderen CHannels zurück
-     * @return
      */
     public ArrayList<Channel> getReachableNodes() {
         return reachableNodes;
@@ -98,7 +95,6 @@ public class Channel extends BasicChannel{
 
     /**
      * setzt die zu erreichenden Channels alle anderen werden gelöscht
-     * @param  reachableNodes
      */
     public int getEnnr() {
         return ennr;
@@ -106,7 +102,6 @@ public class Channel extends BasicChannel{
 
     /**
      * setzt die Anzahl der EingangsChannel
-     * @param  ennr
      */
     public void setEnnr(int ennr) {
         this.ennr = ennr;
@@ -128,7 +123,6 @@ public class Channel extends BasicChannel{
 
     /**
      * fügt einen erreichbaren Channel hinzu
-     * @param node
      */
     public void addReachableNode(Channel node) {
         if (!reachableNodes.contains(node)) {
@@ -139,8 +133,6 @@ public class Channel extends BasicChannel{
 
     /**
      * gibt den an der Position i gespeicherten erreichbaren Channel zurück
-     * @param i
-     * @return
      */
     public Channel getReachableNodeAt(int i) {
         return reachableNodes.get(i);
@@ -167,10 +159,8 @@ public class Channel extends BasicChannel{
         ennr++;
     }
 
-
     /**
      * fügt einen Pfad den Pfaden zu
-     * @param path
      */
     public void appendPath(Channel node, ArrayList<Channel> path) {
         for (int i = 0; i < path.size(); i++) {
@@ -187,13 +177,11 @@ public class Channel extends BasicChannel{
         }
         if (!paths2.get(node).contains(channel)) {
             paths2.get(node).add(channel);
-
         }
     }
 
     /**
      * gibt alle Pfade zurück
-     * @return
      */
     public ArrayList<ArrayList<Channel>> getPaths() {
         ArrayList<ArrayList<Channel>> t = new ArrayList<>();
@@ -204,12 +192,10 @@ public class Channel extends BasicChannel{
     public ArrayList<Channel> getPathsAt(Channel node) {
         if (paths2.containsKey(node)) {
             return paths2.get(node);
-        }
-        else {
+        } else {
             //log.error("das darf nicht bei Channel: " + this.getNewid() + ", kein Node " + node.getNewid());
             return null;
         }
-
     }
 
     public boolean isStrongConnected() {
@@ -235,6 +221,4 @@ public class Channel extends BasicChannel{
     public void setPartOfJunction(boolean isPartOfJunction) {
         this.isPartOfJunction = isPartOfJunction;
     }
-
-    
 }

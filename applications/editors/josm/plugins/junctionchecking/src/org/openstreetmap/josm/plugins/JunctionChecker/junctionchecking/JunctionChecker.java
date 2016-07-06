@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.junctionchecking;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class JunctionChecker {
     private final ChannelDiGraph channeldigraph;
     private final JCheck jCheck;
     private ArrayList<Channel> E;
-    private int Grid[][];
+    private int[][] Grid;
     private boolean Check;
     private boolean smallerJunction;
     private JMinimality m;
@@ -49,8 +50,6 @@ public class JunctionChecker {
 
     /**
      * startet das Überprüfen einer Teilmenge auf die Kreuzungskriterien
-     * @param subgraph
-     * @param pm
      */
     public void checkjunctions(ArrayList<Channel> subgraph, ProgressMonitor pm) {
         jPrepare.jPrepare(subgraph);
@@ -80,7 +79,6 @@ public class JunctionChecker {
      * Diese Methode wird aufgerufen, wenn nach Kreuzungen in einer Teilmenge
      * gesucht werden soll
      *
-     * @param subgraph
      * @param firstjunction soll nur die erste mögliche Kreuzung ausgegeben werden oder alle
      */
     public void junctionSearch(ArrayList<Channel> subgraph, ProgressMonitor pm) {
@@ -120,7 +118,7 @@ public class JunctionChecker {
      * Überprüft die Kreuzunskandidaten, die JMinimality gefunden hat, welche davon eine Kreuzung darstellen (eine Kreuzung
      * darf keine weiteren Kreuzungen enthalten)
      */
-    private ArrayList<HashSet<Channel>> checkJunctionCandidates(ArrayList<HashSet<Channel>> junctioncandidates){
+    private ArrayList<HashSet<Channel>> checkJunctionCandidates(ArrayList<HashSet<Channel>> junctioncandidates) {
         @SuppressWarnings("unchecked")
         ArrayList<HashSet<Channel>> junctions = (ArrayList<HashSet<Channel>>) junctioncandidates.clone();
         for (int i = 0; i < junctioncandidates.size(); i++) {
@@ -128,13 +126,10 @@ public class JunctionChecker {
                 if (junctioncandidates.get(i).containsAll(junctioncandidates.get(j))) {
                     junctions.removeAll(junctioncandidates.get(i));
                 }
-                else {
-                }
             }
         }
         return junctions;
     }
-
 
     private void collectECandidates(ArrayList<Channel> subgraph) {
         E = new ArrayList<>();
@@ -215,8 +210,6 @@ public class JunctionChecker {
 
     /**
      * gibt die kleinere, gefundene Kreuzung zurück (wenn es sie gibt)
-     *
-     * @return
      */
     public ArrayList<Channel> getSubJunction() {
         return subjunction;
@@ -246,8 +239,6 @@ public class JunctionChecker {
 
     /**
      * das Ergebnis des JCheck als String
-     *
-     * @return
      */
     public String getJCheckResult() {
         return jCheck.getResult();
@@ -256,8 +247,6 @@ public class JunctionChecker {
     /**
      * gitb die bei der Kruezungssuche gefundenen Kreuzungen zurück, sonst
      * nichts
-     *
-     * @return
      */
     public ArrayList<HashSet<Channel>> getJunctions() {
         return junctions;

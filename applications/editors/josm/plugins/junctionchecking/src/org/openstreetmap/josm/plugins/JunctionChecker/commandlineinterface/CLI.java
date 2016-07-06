@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.commandlineinterface;
 
 import java.io.File;
@@ -15,11 +16,10 @@ import org.openstreetmap.josm.plugins.JunctionChecker.reader.OSMXMLReader;
 import org.openstreetmap.josm.plugins.JunctionChecker.reader.XMLFilterReader;
 import org.openstreetmap.josm.plugins.JunctionChecker.writing.OSMXMLWriter;
 
-public class CLI {
+public final class CLI {
 
     /**
      * Die Klasse ist zum Erstellen statistischer Tests, oder zur Erzeugung einer Channel-Digraph-XML-Datei
-     * @param args
      */
     public static void main(String[] args) {
 
@@ -135,7 +135,7 @@ public class CLI {
         for (int i = 5; i < maxchannelsearch; i = i + ticks) {
             measuredIterateThroughTime = 0;
             measuredGenerateSubColumnTime = 0;
-            measuredTime =0;
+            measuredTime = 0;
             jcf = 0;
             //System.out.println("maxchannel: " + i);
             for (int j = 0; j < runs; j++) {
@@ -147,7 +147,7 @@ public class CLI {
                             (int) ((cdgb.getDigraph().getChannels()
                                     .size()) * Math.random()));
                 }
-                while(!seed.isStrongConnected());
+                while (!seed.isStrongConnected());
                 subset.add(seed);
                 //System.out.println("Seed: " + seed.getNewid());
                 vorChannel = seed;
@@ -160,12 +160,11 @@ public class CLI {
                             //System.out.println("zugefügt: " + tempChannel.getNewid());
                             seed = tempChannel;
                             isIn = true;
-                        }
-                        else {
+                        } else {
                             vorChannel = tempChannel;
                             isIn = false;
                         }
-                    }while (isIn == false);
+                    } while (isIn == false);
                 }
                 start = System.currentTimeMillis();
                 jc.junctionSearch(subset);
@@ -175,22 +174,22 @@ public class CLI {
                 measuredGenerateSubColumnTime += jc.getMeasuredGenerateTime();
                 jcf = jcf + jc.getJunctions().size();
             }
-            System.out.println("Channels: " + (i) + " Time(Iterate): " + (measuredIterateThroughTime/runs) + " Time(Generate): " + (measuredGenerateSubColumnTime/runs) +" Time(overall): "+ (measuredTime/runs) + " junctionsfound: " + jcf);
+            System.out.println("Channels: " + (i) +
+                    " Time(Iterate): " + (measuredIterateThroughTime/runs) +
+                    " Time(Generate): " + (measuredGenerateSubColumnTime/runs) +
+                    " Time(overall): "+ (measuredTime/runs) + " junctionsfound: " + jcf);
         }
     }
 
     private static Channel getNeighbourChannel(Channel seedChannel) {
         if (Math.random() < 0.5) {
-            if (seedChannel.getPredChannels().size() >=1 ) {
+            if (seedChannel.getPredChannels().size() >= 1) {
                 return seedChannel.getPredChannels().get((int) (seedChannel.getPredChannels().size() * Math.random()));
-            }
-            else return seedChannel;
-        }
-        else {
-            if (seedChannel.getLeadsTo().size() >=1 ) {
+            } else return seedChannel;
+        } else {
+            if (seedChannel.getLeadsTo().size() >= 1) {
                 return seedChannel.getLeadsTo().get((int) (seedChannel.getLeadsTo().size() * Math.random())).getToChannel();
-            }
-            else return seedChannel;
+            } else return seedChannel;
         }
     }
 }

@@ -1,7 +1,7 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.datastructure;
 
 import java.util.ArrayList;
-
 
 /**
  * @author  joerg
@@ -17,11 +17,9 @@ public class OSMRelation extends OSMEntity {
     public ArrayList<Member> getMembers() {
         return members;
     }
-    
+
     /**
      * gibt den Member mit der Rolle zurück, wenn vorhanden. Sonst null
-     * @param role
-     * @return
      */
     public OSMEntity getMember(String role) {
         for (int i = 0; i < members.size(); i++) {
@@ -31,23 +29,24 @@ public class OSMRelation extends OSMEntity {
         }
         return null;
     }
-    
+
     public void addMember(OSMEntity member, String role) {
         members.add(new Member(member, role));
     }
-    
+
     public String getRelationType(String key) {
         return this.getValue(key);
     }
-    
+
+    @Override
     public String toString() {
         String s = ("Relation-ID: " + this.getId() + " Relation-Type: " + this.getRelationType("type") +"\n");
         for (int i = 0; i < members.size(); i++) {
-            s += ("Member: " + members.get(i).getRole() + ", ref:" + members.get(i).getId() + ", type:" + members.get(i).getType().getClass().getName() );
+            s += ("Member: " + members.get(i).getRole() + ", ref:" + members.get(i).getId() + ", type:" + members.get(i).getType().getClass().getName());
         }
         return s;
     }
-    
+
 
     /**
      * Klasse dient zum Verwalten eines Member-Objektes. Muß ein Objekt vom Typ OSMEntitysein.
@@ -58,11 +57,11 @@ public class OSMRelation extends OSMEntity {
         private OSMEntity member;
         private String role;
 
-        public Member(OSMEntity member, String role) {
+        Member(OSMEntity member, String role) {
             this.member = member;
             this.setRole(role);
         }
-        
+
         public Class<? extends OSMEntity> getType() {
             return member.getClass();
         }

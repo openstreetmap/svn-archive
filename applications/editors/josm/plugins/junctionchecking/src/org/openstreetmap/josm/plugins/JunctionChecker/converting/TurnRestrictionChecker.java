@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.converting;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
@@ -12,7 +14,7 @@ import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.OSMRelation;
  * Abbiegerestriktionen in den Relationen und paßt die Abiegerestriktionen der
  * Channels des aus dem OSMGraphen erzeugten ChannelDigraphen dementsprechend
  * an. wird vom ChannelDigraphBuilder aufgerufen
- * 
+ *
  * @author Jörg Possin
  */
 public class TurnRestrictionChecker {
@@ -61,11 +63,10 @@ public class TurnRestrictionChecker {
                 tempLeadsTo = new LeadsTo(fromChannel, toChannel);
                 channelDigraph.addLeadsTo(tempLeadsTo);
                 toChannel.addPredChannel(fromChannel);
-            }
             /*
              * der no_* Fall: wie oben, nur das hier nichts geschieht
              */
-            else if (turnrestrictionsrelations.get(relationpointer).getValue(
+            } else if (turnrestrictionsrelations.get(relationpointer).getValue(
             "restriction").startsWith("no")) {
                 for (int i = 0; i < fromChannel.getToNode()
                 .getOutgoingChannels().size(); i++) {

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import java.awt.Color;
@@ -65,9 +66,8 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
         pointPressed = new Point(e.getPoint());
     }
 
-
     @Override public void mouseDragged(MouseEvent e) {
-        if ( (e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) ==  InputEvent.BUTTON1_DOWN_MASK) {
+        if ((e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK) {
             //if button1 is hold, draw the rectangle.
             paintRect(pointPressed, e.getPoint());
         }
@@ -78,7 +78,7 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
             return;
         }
         requestFocusInMapView();
-        digraph.ereaseJunctioncandidate();//um zu verhindern, dass gefundene Kreuzungen/Kandidaten weiterhin weiß gezeichnet werden
+        digraph.ereaseJunctioncandidate(); //um zu verhindern, dass gefundene Kreuzungen/Kandidaten weiterhin weiß gezeichnet werden
         Point pointReleased = e.getPoint();
 
         Rectangle r = createRect(pointReleased, pointPressed);
@@ -103,7 +103,7 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
      * create rectangle out of two given corners
      */
     public Rectangle createRect(Point p1, Point p2) {
-        int x,y,w,h;
+        int x, y, w, h;
         if (p1.x == p2.x && p1.y == p2.y) {
             //if p1 and p2 same points draw a small rectangle around them
             x = p1.x -1;
@@ -111,7 +111,7 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
             w = 3;
             h = 3;
         } else {
-            if (p1.x < p2.x){
+            if (p1.x < p2.x) {
                 x = p1.x;
                 w = p2.x-p1.x;
             } else {
@@ -126,7 +126,7 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
                 h = p1.y-p2.y;
             }
         }
-        return new Rectangle(x,y,w,h);
+        return new Rectangle(x, y, w, h);
     }
 
     /**
@@ -135,19 +135,19 @@ public class JunctionCheckerMapMode extends MapMode implements ActiveLayerChange
     private void paintRect(Point p1, Point p2) {
         if (frame != null) {
             Graphics g = frame.getGraphics();
-    
+
             Rectangle r = oldRect;
             if (r != null) {
                 //overwrite old rct
                 g.setXORMode(Color.BLACK);
                 g.setColor(Color.WHITE);
-                g.drawRect(r.x,r.y,r.width,r.height);
+                g.drawRect(r.x, r.y, r.width, r.height);
             }
-    
+
             g.setXORMode(Color.BLACK);
             g.setColor(Color.WHITE);
-            r = createRect(p1,p2);
-            g.drawRect(r.x,r.y,r.width,r.height);
+            r = createRect(p1, p2);
+            g.drawRect(r.x, r.y, r.width, r.height);
             oldRect = r;
         }
     }

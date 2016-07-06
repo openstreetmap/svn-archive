@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.writing;
 
 import java.io.FileNotFoundException;
@@ -33,12 +34,12 @@ public class OSMXMLWriter {
     public void writeXML() throws FileNotFoundException, XMLStreamException {
         XMLOutputFactory factory = XMLOutputFactory.newInstance();
         writer = factory.createXMLStreamWriter(
-                                           new FileOutputStream(  filename ) );
+                                           new FileOutputStream(filename));
         // Der XML-Header wird erzeugt
         writer.writeStartDocument("utf-8", "1.0");
         // Zuerst wird das Wurzelelement mit Attribut geschrieben
-          writer.writeStartElement( "osm" );
-            writer.writeAttribute( "version", "0.6" );
+          writer.writeStartElement("osm");
+            writer.writeAttribute("version", "0.6");
             writer.writeAttribute("generator", "channelGenerator");
 
             writer.writeEmptyElement("bounds");
@@ -84,8 +85,7 @@ public class OSMXMLWriter {
                   writer.writeAttribute("k", "SCC");
                   if (ways.get(i).isStrongConnected()) {
                       writer.writeAttribute("v", "true");
-                  }
-                  else {
+                  } else {
                       writer.writeAttribute("v", "false");
                   }
                   writer.writeEndElement();
@@ -96,14 +96,14 @@ public class OSMXMLWriter {
         writer.close();
     }
 
-    private void writeAttributes(OSMEntity ent) throws FileNotFoundException, XMLStreamException{
+    private void writeAttributes(OSMEntity ent) throws FileNotFoundException, XMLStreamException {
         if (ent instanceof OSMNode) {
-            writer.writeAttribute("id", Long.toString(ent.getId()) );
+            writer.writeAttribute("id", Long.toString(ent.getId()));
             writer.writeAttribute("lat", Double.toString(((OSMNode) ent).getLatitude()));
             writer.writeAttribute("lon", Double.toString(((OSMNode) ent).getLongitude()));
         }
 
-        if (ent.getTimestamp()!=null) {
+        if (ent.getTimestamp() != null) {
             writer.writeAttribute("timestamp", ent.getTimestamp());
         }
         if (ent.isVisible())

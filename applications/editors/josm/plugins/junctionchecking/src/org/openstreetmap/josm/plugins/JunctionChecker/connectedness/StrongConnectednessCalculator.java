@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.connectedness;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 
@@ -95,7 +97,6 @@ public class StrongConnectednessCalculator {
     /**
      * gibt eine Arraylist mit all den Channels zurück, welche nicht
      * im größten zusammenhägendem Teil des Channel-Digraphen sind
-     * @return
      */
     public ArrayList<Channel> getNotConnectedChannels() {
         return nsccchannels;
@@ -115,8 +116,7 @@ public class StrongConnectednessCalculator {
                 //log.trace("n hat index =-1");
                 tarjan(n);
                 v.setLowlink(Math.min(v.getLowlink(), n.getLowlink()));
-            }
-            else if (stack.contains(n)) {
+            } else if (stack.contains(n)) {
                 //log.trace("setze lowlink von n auf: " + v.getLowlink());
                 v.setLowlink(Math.min(v.getLowlink(), n.getLowlink()));
             }

@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.connectedness;
 
 import java.util.Vector;
@@ -5,7 +6,6 @@ import java.util.Vector;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
-
 
 /**
  * Diese Klasse versiegelt einen Digraphen, also die Enden eines outgoingChannels außerhalb einer Boundingbox werden mit dem Anfang eines bel. incomingChannels außerhalb der Boundigbox verbunden unbd umgekehrt
@@ -104,7 +104,7 @@ public class DiGraphSealer {
         }
         this.deleteDuplicateChannels();
     }
-    
+
     /*
     private void showLeadsTo() {
         for (int i = 0; i < digraph.getChannels().size(); i++) {
@@ -134,18 +134,14 @@ public class DiGraphSealer {
         }
     }
 
-    /*
-     * setzt Wert für IDs für neu angelegte Ways
-     */
     /**
-     * @param newID
+     * setzt Wert für IDs für neu angelegte Ways
      */
     public void setNewID(int newID) {
         this.newID = newID;
     }
 
     /**
-     * @return
      * @uml.property  name="newID"
      */
     public int getNewID() {

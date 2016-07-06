@@ -1,6 +1,8 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.converting;
 
 import java.util.ArrayList;
+
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.Channel;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.ChannelDiGraph;
 import org.openstreetmap.josm.plugins.JunctionChecker.datastructure.LeadsTo;
@@ -47,7 +49,7 @@ public class PseudoChannelRemover {
         }
 
         //TODO: quick'n'dirty
-        ArrayList< LeadsTo> tls = succChannel.getLeadsTo();
+        ArrayList<LeadsTo> tls = succChannel.getLeadsTo();
         for (int i = 0; i < tls.size(); i++) {
             digraph.removeLeadsTo(tls.get(i));
         }

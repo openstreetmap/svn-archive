@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -39,7 +40,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
     private static final String WAYFILTERFILE = "/resources/xml/waysfilter.xml";
 
     public DigraphCreationTask(JunctionCheckerPlugin plugin, boolean sealGraph, boolean calculateSCC) {
-        super(tr ("Create Channel Digraph"), false);
+        super(tr("Create Channel Digraph"), false);
         this.plugin = plugin;
         this.sealGraph = sealGraph;
         this.calculateSCC = calculateSCC;
@@ -78,12 +79,12 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         }
         getProgressMonitor().setTicksCount(tickscounter);
         tickscounter = 1;
-        getProgressMonitor().subTask(tr ("Converting OSM graph into Channel Digraph"));
+        getProgressMonitor().subTask(tr("Converting OSM graph into Channel Digraph"));
         getProgressMonitor().setTicks(tickscounter++);
 
         OSMGraph graph = new OSMGraph();
         //Der vom Benutzer in JOSM ausgewählte, zur Zeit aktive Layer wird der PLugin-OSM-Layer
-        plugin.setOsmlayer((OsmDataLayer)Main.getLayerManager().getActiveLayer());
+        plugin.setOsmlayer((OsmDataLayer) Main.getLayerManager().getActiveLayer());
         Iterator<Node> it = Main.getLayerManager().getEditDataSet().getNodes().iterator();
         while (it.hasNext()) {
             graph.addNode(it.next());
@@ -116,7 +117,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         // gewünschte Ways filtern
         ExecuteFilter ef = new ExecuteFilter(reader.getFilters(), graph);
         ef.filter();
-        getProgressMonitor().subTask(tr ("creating Channel-Digraph"));
+        getProgressMonitor().subTask(tr("creating Channel-Digraph"));
         getProgressMonitor().setTicks(tickscounter++);
         // ChannelDiGraphen erzeugen
         ChannelDigraphBuilder cdgb = new ChannelDigraphBuilder(ef.getOutgoinggraph());
@@ -124,7 +125,7 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         StrongConnectednessCalculator scc = new StrongConnectednessCalculator(cdgb.getDigraph());
         // DiGraph "versiegeln"
         if (sealGraph) {
-            getProgressMonitor().subTask(tr ("sealing Digraph"));
+            getProgressMonitor().subTask(tr("sealing Digraph"));
             getProgressMonitor().setTicks(tickscounter++);
             DiGraphSealer sealer = new DiGraphSealer(cdgb.getDigraph(), cdgb
                     .getNewid());
@@ -132,11 +133,11 @@ public class DigraphCreationTask extends PleaseWaitRunnable {
         }
         //Digraph starke Zusammenhangskomponenten berechnen
         if (calculateSCC) {
-            getProgressMonitor().subTask(tr ("calculating Strong Connectedness"));
+            getProgressMonitor().subTask(tr("calculating Strong Connectedness"));
             getProgressMonitor().setTicks(tickscounter++);
             scc.calculateSCC();
         }
-        getProgressMonitor().subTask(tr ("creating DigraphLayer"));
+        getProgressMonitor().subTask(tr("creating DigraphLayer"));
         getProgressMonitor().setTicks(tickscounter++);
         plugin.setChannelDigraph(cdgb.getDigraph());
         plugin.getOsmlayer().setBackgroundLayer(true);

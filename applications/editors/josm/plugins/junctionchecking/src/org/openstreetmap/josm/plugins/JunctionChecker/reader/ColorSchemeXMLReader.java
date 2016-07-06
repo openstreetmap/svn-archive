@@ -1,11 +1,13 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.JunctionChecker.reader;
 
 import java.awt.Color;
 import java.util.HashMap;
+
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 
-public class ColorSchemeXMLReader extends XMLReader{
+public class ColorSchemeXMLReader extends XMLReader {
 
     private HashMap<String, Color> colorScheme;
 
@@ -22,8 +24,7 @@ public class ColorSchemeXMLReader extends XMLReader{
     public Color getColor(String s) {
         if (colorScheme.containsKey(s)) {
             return colorScheme.get(s);
-        }
-        else {
+        } else {
             return Color.GRAY;
         }
     }
@@ -42,7 +43,7 @@ public class ColorSchemeXMLReader extends XMLReader{
                     if (tempValue != null) {
                         String[] erg = tempValue.split(",");
                         Color c = new Color(Integer.parseInt(erg[0]), Integer.parseInt(erg[1]), Integer.parseInt(erg[2]));
-                        colorScheme.put(parser.getLocalName(),c);
+                        colorScheme.put(parser.getLocalName(), c);
                     }
                     break;
                 }

@@ -1,15 +1,13 @@
+// License: GPL. For details, see LICENSE file.
 package indoor_sweepline;
-
 
 import java.util.Vector;
 
 import org.openstreetmap.josm.data.osm.DataSet;
 
+public class Strip {
 
-public class Strip
-{
-    public Strip(DataSet dataSet)
-    {
+    public Strip(DataSet dataSet) {
         width = 10.;
         parts = new Vector<>();
         partsGeography = new Vector<>();
@@ -19,11 +17,8 @@ public class Strip
         this.dataSet = dataSet;
     }
 
-
-    public void setCorridorPartType(int partIndex, CorridorPart.Type type)
-    {
-        while (parts.size() <= partIndex)
-        {
+    public void setCorridorPartType(int partIndex, CorridorPart.Type type) {
+        while (parts.size() <= partIndex) {
             parts.add(new CorridorPart(0., CorridorPart.Type.WALL,
                     parts.size() % 2 == 0 ? CorridorPart.ReachableSide.FRONT :
                         CorridorPart.ReachableSide.BACK));
@@ -32,11 +27,8 @@ public class Strip
         parts.elementAt(partIndex).setType(type, CorridorPart.ReachableSide.ALL);
     }
 
-
-    public CorridorPart partAt(int i)
-    {
-        while (parts.size() <= i)
-        {
+    public CorridorPart partAt(int i) {
+        while (parts.size() <= i) {
             parts.add(new CorridorPart(0., CorridorPart.Type.WALL,
                     parts.size() % 2 == 0 ? CorridorPart.ReachableSide.FRONT :
                         CorridorPart.ReachableSide.BACK));
@@ -45,11 +37,8 @@ public class Strip
         return parts.elementAt(i);
     }
 
-
-    public CorridorGeography geographyAt(int i)
-    {
-        while (parts.size() <= i)
-        {
+    public CorridorGeography geographyAt(int i) {
+        while (parts.size() <= i) {
             parts.add(new CorridorPart(0., CorridorPart.Type.WALL,
                     parts.size() % 2 == 0 ? CorridorPart.ReachableSide.FRONT :
                         CorridorPart.ReachableSide.BACK));
@@ -57,7 +46,6 @@ public class Strip
         }
         return partsGeography.elementAt(i);
     }
-
 
     public double width;
     public Vector<CorridorPart> parts;

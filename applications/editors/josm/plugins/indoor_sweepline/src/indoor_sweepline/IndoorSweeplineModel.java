@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package indoor_sweepline;
 
 import java.util.List;
@@ -9,24 +10,17 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 
-
 /* TODO:
 - focus to useful table entry after cell edit
 - keyboard shortcuts
  */
-
-
-public class IndoorSweeplineModel
-{
-    public enum Type
-    {
+public class IndoorSweeplineModel {
+    public enum Type {
         CORRIDOR,
         PLATFORM
-    };
+    }
 
-
-    public IndoorSweeplineModel(OsmDataLayer activeLayer, LatLon center)
-    {
+    public IndoorSweeplineModel(OsmDataLayer activeLayer, LatLon center) {
         target = new ModelGeography(activeLayer.data, center);
 
         beams = new Vector<>();
@@ -40,36 +34,30 @@ public class IndoorSweeplineModel
         structureBox = new DefaultComboBoxModel<>();
     }
 
-
     private ModelGeography target;
 
-
-    public void addBeam()
-    {
+    public void addBeam() {
         CorridorPart.ReachableSide side = CorridorPart.ReachableSide.LEFT;
         if (beams.size() == 0)
             side = CorridorPart.ReachableSide.RIGHT;
 
         /*double width = 10.;
-	if (beams.size() > 0)
-	{
-	    width = 0;
-	    for (CorridorPart part : beams.elementAt(beams.size() - 1).getBeamParts())
-		width += part.width;
-	}
+        if (beams.size() > 0) {
+            width = 0;
+            for (CorridorPart part : beams.elementAt(beams.size() - 1).getBeamParts())
+                width += part.width;
+        }
 
-	double offset = 0;
-	for (int i = 0; i < strips.size(); ++i)
-	    offset += strips.elementAt(i).width;*/
+        double offset = 0;
+        for (int i = 0; i < strips.size(); ++i)
+            offset += strips.elementAt(i).width;*/
 
-        if (strips.size() == 0)
-        {
+        if (strips.size() == 0) {
             Vector<Double> blueprint = new Vector<>();
             blueprint.addElement(0.);
             blueprint.addElement(10.);
             beams.add(new Beam(blueprint, 0., side));
-        }
-        else
+        } else
             beams.add(new Beam(strips.elementAt(strips.size()-1).lhs,
                     beams.elementAt(beams.size()-1).getBeamOffset(), side));
 
@@ -79,12 +67,9 @@ public class IndoorSweeplineModel
         updateOsmModel();
     }
 
-
-    public void addStrip()
-    {
+    public void addStrip() {
         strips.add(new Strip(target.getDataSet()));
-        if (beams.size() > 1)
-        {
+        if (beams.size() > 1) {
             beams.elementAt(beams.size()-1).setDefaultSide(CorridorPart.ReachableSide.ALL);
             strips.elementAt(strips.size()-2).rhs = beams.elementAt(strips.size()-1).leftHandSideStrips();
         }
@@ -93,19 +78,14 @@ public class IndoorSweeplineModel
         updateOsmModel();
     }
 
-
-    public int leftRightCount()
-    {
+    public int leftRightCount() {
         return beams.size() + strips.size();
     }
 
-
-    public DefaultComboBoxModel<String> structures()
-    {
+    public DefaultComboBoxModel<String> structures() {
         structureBox.removeAllElements();
         double offset = 0;
-        for (int i = 0; i < strips.size(); ++i)
-        {
+        for (int i = 0; i < strips.size(); ++i) {
             if (i < beams.size())
                 structureBox.addElement(Double.toString(offset));
             structureBox.addElement(Double.toString(offset) + " - "
@@ -118,47 +98,33 @@ public class IndoorSweeplineModel
         return structureBox;
     }
 
-
-    public Strip getStrip(int index)
-    {
+    public Strip getStrip(int index) {
         return strips.elementAt(index / 2);
     }
 
-
-    public double getStripWidth(int index)
-    {
+    public double getStripWidth(int index) {
         return strips.elementAt(index / 2).width;
     }
 
-
-    public void setStripWidth(int index, double value)
-    {
+    public void setStripWidth(int index, double value) {
         strips.elementAt(index / 2).width = value;
-
         updateOsmModel();
     }
 
-
-    public double getBeamOffset(int index)
-    {
+    public double getBeamOffset(int index) {
         return beams.elementAt(index / 2).getBeamOffset();
     }
 
-    public void setBeamOffset(int index, double beamOffset)
-    {
+    public void setBeamOffset(int index, double beamOffset) {
         beams.elementAt(index / 2).setBeamOffset(beamOffset);
         updateOsmModel();
     }
 
-
-    public List<CorridorPart> getBeamParts(int index)
-    {
+    public List<CorridorPart> getBeamParts(int index) {
         return beams.elementAt(index / 2).getBeamParts();
     }
 
-
-    public void addCorridorPart(int beamIndex, boolean append, double value)
-    {
+    public void addCorridorPart(int beamIndex, boolean append, double value) {
         beams.elementAt(beamIndex / 2).addCorridorPart(append, value);
         if (beamIndex / 2 > 0)
             strips.elementAt(beamIndex / 2 - 1).rhs = beams.elementAt(beamIndex / 2).leftHandSideStrips();
@@ -168,9 +134,7 @@ public class IndoorSweeplineModel
         updateOsmModel();
     }
 
-
-    public void setCorridorPartWidth(int beamIndex, int partIndex, double value)
-    {
+    public void setCorridorPartWidth(int beamIndex, int partIndex, double value) {
         beams.elementAt(beamIndex / 2).setCorridorPartWidth(partIndex, value);
         if (beamIndex / 2 > 0)
             strips.elementAt(beamIndex / 2 - 1).rhs = beams.elementAt(beamIndex / 2).leftHandSideStrips();
@@ -180,19 +144,14 @@ public class IndoorSweeplineModel
         updateOsmModel();
     }
 
-
-    public void setCorridorPartType(int beamIndex, int partIndex, CorridorPart.Type type)
-    {
-        if (beamIndex % 2 == 0)
-        {
+    public void setCorridorPartType(int beamIndex, int partIndex, CorridorPart.Type type) {
+        if (beamIndex % 2 == 0) {
             beams.elementAt(beamIndex / 2).setCorridorPartType(partIndex, type);
             if (beamIndex / 2 > 0)
                 strips.elementAt(beamIndex / 2 - 1).rhs = beams.elementAt(beamIndex / 2).leftHandSideStrips();
             if (beamIndex / 2 < strips.size())
                 strips.elementAt(beamIndex / 2).lhs = beams.elementAt(beamIndex / 2).rightHandSideStrips();
-        }
-        else
-        {
+        } else {
             if (type != CorridorPart.Type.PASSAGE && type != CorridorPart.Type.VOID)
                 strips.elementAt(beamIndex / 2).setCorridorPartType(partIndex, type);
         }
@@ -200,9 +159,7 @@ public class IndoorSweeplineModel
         updateOsmModel();
     }
 
-
-    public void setCorridorPartSide(int beamIndex, int partIndex, CorridorPart.ReachableSide side)
-    {
+    public void setCorridorPartSide(int beamIndex, int partIndex, CorridorPart.ReachableSide side) {
         beams.elementAt(beamIndex / 2).setCorridorPartSide(partIndex, side);
         if (beamIndex / 2 > 0)
             strips.elementAt(beamIndex / 2 - 1).rhs = beams.elementAt(beamIndex / 2).leftHandSideStrips();
@@ -212,30 +169,23 @@ public class IndoorSweeplineModel
         updateOsmModel();
     }
 
-
-    public Type getType()
-    {
+    public Type getType() {
         return type;
     }
 
-    public void setType(Type type)
-    {
+    public void setType(Type type) {
         this.type = type;
         updateOsmModel();
     }
 
-
-    public String getLevel()
-    {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(String level)
-    {
+    public void setLevel(String level) {
         this.level = level;
         updateOsmModel();
     }
-
 
     private Vector<Beam> beams;
     private Vector<Strip> strips;
@@ -244,24 +194,18 @@ public class IndoorSweeplineModel
 
     DefaultComboBoxModel<String> structureBox;
 
-
-    private void updateOsmModel()
-    {
+    private void updateOsmModel() {
         distributeWays();
         Main.map.mapView.repaint();
     }
 
-
-    public class SweepPolygonCursor
-    {
-        public SweepPolygonCursor(int stripIndex, int partIndex)
-        {
+    public class SweepPolygonCursor {
+        public SweepPolygonCursor(int stripIndex, int partIndex) {
             this.stripIndex = stripIndex;
             this.partIndex = partIndex;
         }
 
-        public boolean equals(SweepPolygonCursor rhs)
-        {
+        public boolean equals(SweepPolygonCursor rhs) {
             return rhs != null
                     && stripIndex == rhs.stripIndex && partIndex == rhs.partIndex;
         }
@@ -270,14 +214,11 @@ public class IndoorSweeplineModel
         public int partIndex;
     }
 
-
-    private void distributeWays()
-    {
+    private void distributeWays() {
         target.startGeographyBuild(beams, strips);
 
         Vector<Vector<Boolean>> stripRefs = new Vector<>();
-        for (Strip strip : strips)
-        {
+        for (Strip strip : strips) {
             Vector<Boolean> refs = new Vector<>();
             if (strip.lhs.size() < strip.rhs.size())
                 refs.setSize(strip.rhs.size());
@@ -287,23 +228,18 @@ public class IndoorSweeplineModel
         }
 
         Boolean truePtr = new Boolean(true);
-        for (int i = 0; i < stripRefs.size(); ++i)
-        {
+        for (int i = 0; i < stripRefs.size(); ++i) {
             Vector<Boolean> refs = stripRefs.elementAt(i);
-            for (int j = 0; j < refs.size(); ++j)
-            {
-                if (refs.elementAt(j) == null)
-                {
+            for (int j = 0; j < refs.size(); ++j) {
+                if (refs.elementAt(j) == null) {
                     target.startWay();
 
                     SweepPolygonCursor cursor = new SweepPolygonCursor(i, j);
 
                     boolean toTheLeft = true;
-                    while (stripRefs.elementAt(cursor.stripIndex).elementAt(cursor.partIndex) == null)
-                    {
+                    while (stripRefs.elementAt(cursor.stripIndex).elementAt(cursor.partIndex) == null) {
                         stripRefs.elementAt(cursor.stripIndex).setElementAt(truePtr, cursor.partIndex);
-                        if (toTheLeft && cursor.partIndex < strips.elementAt(cursor.stripIndex).lhs.size())
-                        {
+                        if (toTheLeft && cursor.partIndex < strips.elementAt(cursor.stripIndex).lhs.size()) {
                             target.appendCorridorPart(
                                     strips.elementAt(cursor.stripIndex).partAt(cursor.partIndex),
                                     strips.elementAt(cursor.stripIndex).geographyAt(cursor.partIndex),
@@ -312,9 +248,7 @@ public class IndoorSweeplineModel
                                     level);
                             toTheLeft = beams.elementAt(cursor.stripIndex).appendNodes(
                                     cursor, toTheLeft, target.beamAt(cursor.stripIndex), level);
-                        }
-                        else if (!toTheLeft && cursor.partIndex < strips.elementAt(cursor.stripIndex).rhs.size())
-                        {
+                        } else if (!toTheLeft && cursor.partIndex < strips.elementAt(cursor.stripIndex).rhs.size()) {
                             target.appendCorridorPart(
                                     strips.elementAt(cursor.stripIndex).partAt(cursor.partIndex),
                                     strips.elementAt(cursor.stripIndex).geographyAt(cursor.partIndex),
@@ -323,8 +257,7 @@ public class IndoorSweeplineModel
                                     level);
                             toTheLeft = beams.elementAt(cursor.stripIndex + 1).appendNodes(
                                     cursor, toTheLeft, target.beamAt(cursor.stripIndex + 1), level);
-                        }
-                        else
+                        } else
                             toTheLeft = appendUturn(cursor, toTheLeft);
                     }
 
@@ -336,9 +269,7 @@ public class IndoorSweeplineModel
         target.finishGeographyBuild(type, level);
     }
 
-
-    private boolean appendUturn(SweepPolygonCursor cursor, boolean toTheLeft)
-    {
+    private boolean appendUturn(SweepPolygonCursor cursor, boolean toTheLeft) {
         Strip strip = strips.elementAt(cursor.stripIndex);
         target.appendUturnNode(strip, cursor.partIndex, cursor.stripIndex,
                 beams.elementAt(toTheLeft ? cursor.stripIndex + 1 : cursor.stripIndex).

@@ -60,29 +60,30 @@ public final class WikipediaApp {
 
     static List<WikipediaEntry> getEntriesFromCoordinates(String wikipediaLang, LatLon min, LatLon max) {
         try {
-            final String bbox = min.lon() + "," + min.lat() + "," + max.lon() + "," + max.lat();
             // construct url
-            final String url = "https://tools.wmflabs.org/wp-world/marks.php?"
-                    + "bbox=" + bbox + "&LANG=" + wikipediaLang;
+            final String url = "https://" + wikipediaLang + ".wikipedia.org/w/api.php"
+                    + "?action=query"
+                    + "&list=geosearch"
+                    + "&format=xml"
+                    + "&gslimit=500"
+                    + "&gsbbox=" + max.lat() + "|" + min.lon() + "|" + min.lat() + "|" + max.lon();
             // parse XML document
-            final XPathExpression xpathPlacemark = X_PATH.compile("//Placemark");
-            final XPathExpression xpathName = X_PATH.compile("name/text()");
-            final XPathExpression xpathCoord = X_PATH.compile("Point/coordinates/text()");
-            final XPathExpression xpathDescr = X_PATH.compile("description");
+            final XPathExpression xpathPlacemark = X_PATH.compile("//gs");
+            final XPathExpression xpathName = X_PATH.compile("@title");
+            final XPathExpression xpathLat = X_PATH.compile("@lat");
+            final XPathExpression xpathLon = X_PATH.compile("@lon");
             try (final InputStream in = HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContent()) {
                 Document doc = DOCUMENT_BUILDER.parse(in);
                 NodeList nodes = (NodeList) xpathPlacemark.evaluate(doc, XPathConstants.NODESET);
                 // construct WikipediaEntry for each XML element
                 List<WikipediaEntry> entries = new ArrayList<>(nodes.getLength());
                 for (int i = 0; i < nodes.getLength(); i++) {
-                    final String[] coord = xpathCoord.evaluate(nodes.item(i)).split(",");
-                    if (coord.length <= 2) {
-                        continue;
-                    }
-                    final String name = xpathName.evaluate(nodes.item(i));
-                    final String descr = xpathDescr.evaluate(nodes.item(i));
-                    entries.add(new WikipediaEntry(name, descr,
-                            new LatLon(Double.parseDouble(coord[1]), Double.parseDouble(coord[0]))));
+                    final Node node = nodes.item(i);
+                    final String name = xpathName.evaluate(node);
+                    entries.add(new WikipediaEntry(name, wikipediaLang, name, new LatLon((
+                            (double) xpathLat.evaluate(node, XPathConstants.NUMBER)),
+                            (double) xpathLon.evaluate(node, XPathConstants.NUMBER))
+                    ));
                 }
                 return entries;
             }
@@ -368,54 +369,19 @@ public final class WikipediaApp {
         final LatLon coordinate;
         private Boolean wiwosmStatus;
 
-        public WikipediaEntry(String name, String description, LatLon coordinate) {
-            this.name = name;
-            this.coordinate = coordinate;
-
-            final WikipediaLangArticle wp = WikipediaLangArticle.parseFromUrl(getHrefFromDescription(description));
-            if (wp == null) {
-                Main.warn("Could not extract Wikipedia tag from: " + getHrefFromDescription(description));
-            }
-            this.wikipediaLang = wp == null ? null : wp.lang;
-            this.wikipediaArticle = wp == null ? null : wp.article;
+        public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle) {
+            this(name, wikipediaLang, wikipediaArticle, null);
         }
 
-        public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle) {
+        public WikipediaEntry(String name, String wikipediaLang, String wikipediaArticle, LatLon coordinate) {
             this.name = name;
             this.wikipediaLang = wikipediaLang;
             this.wikipediaArticle = wikipediaArticle;
-            this.coordinate = null;
-        }
-
-        protected final String getHrefFromDescription(final String description) {
-            if (description == null) {
-                return null;
-            }
-            final Matcher m = Pattern.compile(".*href=\"(.+?)\".*").matcher(description);
-            if (m.matches()) {
-                return m.group(1);
-            } else {
-                Main.warn("Could not parse URL from: " + description);
-                return null;
-            }
+            this.coordinate = coordinate;
         }
 
         protected final Tag createWikipediaTag() {
             return new Tag("wikipedia", wikipediaLang + ":" + wikipediaArticle);
-        }
-
-        private void updateWiwosmStatus() {
-            try {
-                final String url = "https://tools.wmflabs.org/wiwosm/osmjson/getGeoJSON.php?action=check"
-                        + "&lang=" + wikipediaLang
-                        + "&article=" + Utils.encodeUrl(wikipediaArticle);
-                try (final Scanner scanner = new Scanner(
-                        HttpClient.create(new URL(url)).setReasonForRequest("Wikipedia").connect().getContentReader())) {
-                    wiwosmStatus = scanner.hasNextInt() && scanner.nextInt() == 1;
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
         }
 
         public void setWiwosmStatus(Boolean wiwosmStatus) {

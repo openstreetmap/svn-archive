@@ -143,7 +143,7 @@ public class WikipediaAppTest {
         assertTrue(Utils.exists(entries, new Predicate<WikipediaEntry>() {
             @Override
             public boolean evaluate(WikipediaEntry entry) {
-                return "Deutscher Bundestag".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang);
+                return "Reichstagsgebäude".equals(entry.wikipediaArticle) && "de".equals(entry.wikipediaLang);
             }
         }));
     }
